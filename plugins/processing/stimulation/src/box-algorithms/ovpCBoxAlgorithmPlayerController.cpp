@@ -12,7 +12,8 @@ bool CBoxAlgorithmPlayerController::initialize()
 	m_ui64StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_ui64ActionIdentifier      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
+	m_pStreamDecoder = &this->getAlgorithmManager().
+							  getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
 	m_pStreamDecoder->initialize();
 
 	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
@@ -60,7 +61,8 @@ bool CBoxAlgorithmPlayerController::process()
 				if (l_pStimulationSet->getStimulationIdentifier(j) == m_ui64StimulationIdentifier)
 				{
 					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
-							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) << "] causing action ["
+							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) <<
+							"] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
 
 					bool l_bResult = false;
@@ -70,7 +72,8 @@ bool CBoxAlgorithmPlayerController::process()
 					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward) { l_bResult = this->getPlayerContext().forward(); }
 
 					OV_ERROR_UNLESS_KRF(l_bResult,
-										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]",
+										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
+											m_ui64ActionIdentifier) << "]",
 										OpenViBE::Kernel::ErrorType::BadConfig);
 				}
 			}

@@ -304,22 +304,17 @@ bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 	m_pFileHandle = LoadLibrary(sFileName);
 	if (!m_pFileHandle)
 	{
-		if (pError)
-		{
-			*pError = this->getLastErrorMessageString();
-		}
+		if (pError) { *pError = this->getLastErrorMessageString(); }
 		return false;
 	}
 
 	onInitializeCB                 = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
 	onUninitializeCB               = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
+	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&))GetProcAddress(
+		m_pFileHandle, "onGetPluginObjectDescription");
 	if (!onGetPluginObjectDescriptionCB)
 	{
-		if (pError)
-		{
-			*pError = this->getLastErrorMessageString();
-		}
+		if (pError) { *pError = this->getLastErrorMessageString(); }
 
 		FreeLibrary(m_pFileHandle);
 		m_pFileHandle                  = nullptr;
@@ -349,27 +344,19 @@ bool CPluginModuleWindows::unload(CString* pError)
 	return true;
 }
 
-bool CPluginModuleWindows::isOpen() const
-{
-	return m_pFileHandle != nullptr;
-}
+bool CPluginModuleWindows::isOpen() const { return m_pFileHandle != nullptr; }
 
 CString CPluginModuleWindows::getLastErrorMessageString()
 {
 	CString l_sResult;
 
 	char* l_pMessageBuffer = nullptr;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, (LPTSTR)&l_pMessageBuffer, 0, nullptr);
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0,
+				  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 	if (l_pMessageBuffer)
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);
-		for (size_t i = 0; i < l_iMessageLength; i++)
-		{
-			if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r')
-			{
-				l_pMessageBuffer[i] = ' ';
-			}
-		}
+		for (size_t i = 0; i < l_iMessageLength; i++) { if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r') { l_pMessageBuffer[i] = ' '; } }
 		l_sResult = l_pMessageBuffer;
 	}
 	LocalFree((LPVOID)l_pMessageBuffer);
@@ -397,20 +384,11 @@ CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
 
 CPluginModule::~CPluginModule() { delete m_pImplementation; }
 
-bool CPluginModule::load(const CString& sFileName, CString* pError)
-{
-	return !m_pImplementation ? false : m_pImplementation->load(sFileName, pError);
-}
+bool CPluginModule::load(const CString& filename, CString* pError) { return !m_pImplementation ? false : m_pImplementation->load(filename, pError); }
 
-bool CPluginModule::unload(CString* pError)
-{
-	return !m_pImplementation ? false : m_pImplementation->unload(pError);
-}
+bool CPluginModule::unload(CString* pError) { return !m_pImplementation ? false : m_pImplementation->unload(pError); }
 
-bool CPluginModule::initialize()
-{
-	return !m_pImplementation ? false : m_pImplementation->initialize();
-}
+bool CPluginModule::initialize() { return !m_pImplementation ? false : m_pImplementation->initialize(); }
 
 bool CPluginModule::getPluginObjectDescription(uint32_t index,
 											   IPluginObjectDesc*& rpPluginObjectDescription)
@@ -418,12 +396,6 @@ bool CPluginModule::getPluginObjectDescription(uint32_t index,
 	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(index, rpPluginObjectDescription);
 }
 
-bool CPluginModule::uninitialize()
-{
-	return !m_pImplementation ? false : m_pImplementation->uninitialize();
-}
+bool CPluginModule::uninitialize() { return !m_pImplementation ? false : m_pImplementation->uninitialize(); }
 
-bool CPluginModule::getFileName(CString& rFileName) const
-{
-	return !m_pImplementation ? false : m_pImplementation->getFileName(rFileName);
-}
+bool CPluginModule::getFileName(CString& rFileName) const { return !m_pImplementation ? false : m_pImplementation->getFileName(rFileName); }

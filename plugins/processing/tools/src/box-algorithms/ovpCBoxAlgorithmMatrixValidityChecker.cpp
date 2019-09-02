@@ -16,10 +16,15 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	uint64_t logLevel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_eLogLevel               = ELogLevel(logLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	if (boxContext.getSettingCount() == 1) { m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); } // note that for boxes with one setting, we fallback to the old behavior 
+	if (boxContext.getSettingCount() == 1
+	)
+	{
+		m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger();
+	} // note that for boxes with one setting, we fallback to the old behavior 
 
 	OV_ERROR_UNLESS_KRF(boxContext.getSettingCount() <= 1 || boxContext.getInputCount() == boxContext.getOutputCount(),
-						"Invalid input count [" << boxContext.getInputCount() << "] (expected same value as output count [" << boxContext.getOutputCount() << "])",
+						"Invalid input count [" << boxContext.getInputCount() << "] (expected same value as output count [" << boxContext.getOutputCount() <<
+						"])",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_vStreamDecoder.resize(boxContext.getInputCount());
@@ -64,7 +69,7 @@ bool CBoxAlgorithmMatrixValidityChecker::processInput(const uint32_t /*index*/)
 bool CBoxAlgorithmMatrixValidityChecker::process()
 {
 	IBoxIO& boxContext    = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	const size_t nInput   = this->getStaticBoxContext().getInputCount();
 	const size_t nSetting = this->getStaticBoxContext().getSettingCount();
 
 	for (uint32_t i = 0; i < nInput; i++)
@@ -93,7 +98,8 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				{
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " << time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
+								time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
 					}
 				}
 					// stop player
@@ -102,8 +108,10 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
 						this->getPlayerContext().stop();
-						OV_ERROR_KRF("Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(boxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "]",
-									 OpenViBE::Kernel::ErrorType::BadInput);
+						OV_ERROR_KRF(
+							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(boxContext.
+								getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "]",
+							OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
 					// interpolate
@@ -136,7 +144,8 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// log management
 					if (nInterpolatedSample > 0 && m_ui32TotalInterpolatedSampleCount[i] == nInterpolatedSample) // beginning of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(boxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(
+							boxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
 					}
 					if (nInterpolatedSample > 0) // update of ChunkCount during interpolation
 					{
@@ -144,22 +153,18 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 					if (nInterpolatedSample == 0 && m_ui32TotalInterpolatedSampleCount[i] > 0) // end of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_ui32TotalInterpolatedSampleCount[i] / (m_ui32TotalInterpolatedChunkCount[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(boxContext.getInputChunkStartTime(i, j)) << ".\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_ui32TotalInterpolatedSampleCount[i] / (
+							m_ui32TotalInterpolatedChunkCount[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(
+							boxContext.getInputChunkStartTime(i, j)) << ".\n";
 						m_ui32TotalInterpolatedSampleCount[i] = 0; // reset
 						m_ui32TotalInterpolatedChunkCount[i]  = 0;
 					}
 				}
-				else
-				{
-					OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]");
-				}
+				else { OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]"); }
 
 				if (nSetting > 1) { m_vStreamEncoder[i].encodeBuffer(); }
 			}
-			if (m_vStreamDecoder[i].isEndReceived())
-			{
-				if (nSetting > 1) { m_vStreamEncoder[i].encodeEnd(); }
-			}
+			if (m_vStreamDecoder[i].isEndReceived()) { if (nSetting > 1) { m_vStreamEncoder[i].encodeEnd(); } }
 			if (nSetting > 1) { boxContext.markOutputAsReadyToSend(i, boxContext.getInputChunkStartTime(i, j), boxContext.getInputChunkEndTime(i, j)); }
 		}
 	}

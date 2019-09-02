@@ -77,7 +77,7 @@ namespace OpenViBEPlugins
 			//gets the first buffer from the concerned input
 			l_pBoxIO->getInputChunk(index, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, lastBufferChunkSize, lastBuffer);
 
-			uint64_t tStart = 0, tEnd   = 0;
+			uint64_t tStart = 0, tEnd = 0;
 
 			bool readyToProcess = true;
 
@@ -88,10 +88,7 @@ namespace OpenViBEPlugins
 				{
 					l_pBoxIO->getInputChunk(i, 0, tStart, tEnd, bufferChunkSize, buffer);
 					//if the first buffers don't have the same starting/ending dates, stop
-					if (tStart != m_ui64LastChunkStartTime || tEnd != m_ui64LastChunkEndTime)
-					{
-						readyToProcess = false;
-					}
+					if (tStart != m_ui64LastChunkStartTime || tEnd != m_ui64LastChunkEndTime) { readyToProcess = false; }
 
 					//checks for problems, buffer lengths differents...
 					if (tEnd - tStart != m_ui64LastChunkEndTime - m_ui64LastChunkStartTime)
@@ -99,10 +96,7 @@ namespace OpenViBEPlugins
 						//marks everything as deprecated and sends a warning
 						for (uint32_t input = 0; input < m_ui32NumberOfInput; input++)
 						{
-							for (uint32_t chunk = 0; chunk < l_pBoxIO->getInputChunkCount(input); chunk++)
-							{
-								l_pBoxIO->markInputAsDeprecated(input, chunk);
-							}
+							for (uint32_t chunk = 0; chunk < l_pBoxIO->getInputChunkCount(input); chunk++) { l_pBoxIO->markInputAsDeprecated(input, chunk); }
 						}
 
 						readyToProcess = false;
@@ -122,12 +116,12 @@ namespace OpenViBEPlugins
 		bool CBoxAlgorithmFeatureAggregator::process()
 		{
 			const IBox* boxContext = getBoxAlgorithmContext()->getStaticBoxContext();
-			IBoxIO* boxIO                = getBoxAlgorithmContext()->getDynamicBoxContext();
+			IBoxIO* boxIO          = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 			IMatrix* oMatrix = m_pFeatureVectorEncoder->getInputMatrix();
 			std::vector<double> bufferElements;
 			uint64_t totalBufferSize = 0;
-			bool bufferReceived         = false;
+			bool bufferReceived      = false;
 
 			for (uint32_t input = 0; input < boxContext->getInputCount(); input++)
 			{
@@ -170,10 +164,7 @@ namespace OpenViBEPlugins
 			if (m_bHeaderSent && bufferReceived)
 			{
 				double* oBuffer = oMatrix->getBuffer();
-				for (uint32_t i = 0; i < bufferElements.size(); i++)
-				{
-					oBuffer[i] = bufferElements[i];
-				}
+				for (uint32_t i = 0; i < bufferElements.size(); i++) { oBuffer[i] = bufferElements[i]; }
 				m_pFeatureVectorEncoder->encodeBuffer();
 				boxIO->markOutputAsReadyToSend(0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime);
 			}

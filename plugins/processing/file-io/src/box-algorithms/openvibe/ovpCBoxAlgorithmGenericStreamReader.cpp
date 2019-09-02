@@ -63,12 +63,9 @@ bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& messageClock)
 
 bool CBoxAlgorithmGenericStreamReader::process()
 {
-	if (m_pFile == nullptr)
-	{
-		if (!initializeFile()) { return false; }
-	}
+	if (m_pFile == nullptr) { if (!initializeFile()) { return false; } }
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxContext              = this->getDynamicBoxContext();
 
 	uint64_t l_ui64Time = this->getPlayerContext().getCurrentTime();
 	bool l_bFinished    = false;
@@ -87,10 +84,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				boxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_ui64StartTime, m_ui64EndTime);
 				m_bPending = false;
 			}
-			else
-			{
-				l_bFinished = true;
-			}
+			else { l_bFinished = true; }
 		}
 		else
 		{
@@ -145,10 +139,7 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& rIdent
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
-	if (l_rTop == EBML_Identifier_Header)
-	{
-		m_bHasEBMLHeader = true;
-	}
+	if (l_rTop == EBML_Identifier_Header) { m_bHasEBMLHeader = true; }
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header)
 	{
 		if (!m_bHasEBMLHeader)
@@ -190,14 +181,8 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* buffer, cons
 			m_ui32OutputIndex = m_vStreamIndexToOutputIndex[l_ui32StreamIndex];
 		}
 	}
-	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StartTime)
-	{
-		m_ui64StartTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size);
-	}
-	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_EndTime)
-	{
-		m_ui64EndTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size);
-	}
+	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_ui64StartTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
+	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { m_ui64EndTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_Content)
 	{
 		m_oPendingChunk.setSize(0, true);
@@ -222,10 +207,10 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		for (std::map<uint32_t, CIdentifier>::const_iterator it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
 			CIdentifier l_oOutputTypeIdentifier;
-			uint32_t l_ui32Index = std::numeric_limits<uint32_t>::max();
+			uint32_t index = std::numeric_limits<uint32_t>::max();
 
 			// Find the first box output with this type that has no file stream connected
-			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32_t>::max(); i++)
+			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); i++)
 			{
 				if (l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
 				{
@@ -233,15 +218,15 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 					{
 						if (l_oOutputTypeIdentifier == it->second)
 						{
-							const CString l_sTypeName = this->getTypeManager().getTypeName(it->second);
-							l_ui32Index               = i;
+							//const CString l_sTypeName = this->getTypeManager().getTypeName(it->second);
+							index               = i;
 						}
 					}
 				}
 			}
 
 			// In case no suitable output was found, see if we can downcast some type
-			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32_t>::max(); i++)
+			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); i++)
 			{
 				if (l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
 				{
@@ -253,14 +238,14 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 							const CString l_sOutputTypeName = this->getTypeManager().getTypeName(l_oOutputTypeIdentifier);
 							this->getLogManager() << LogLevel_Info << "Note: downcasting output " << i + 1 << " from "
 									<< l_sSourceTypeName << " to " << l_sOutputTypeName << ", as there is no exactly type-matching output connector.\n";
-							l_ui32Index = i;
+							index = i;
 						}
 					}
 				}
 			}
 
 			// In case it was not found
-			if (l_ui32Index == std::numeric_limits<uint32_t>::max())
+			if (index == std::numeric_limits<uint32_t>::max())
 			{
 				CString l_sTypeName = this->getTypeManager().getTypeName(it->second);
 
@@ -271,8 +256,8 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			}
 			else
 			{
-				m_vStreamIndexToOutputIndex[it->first]   = l_ui32Index;
-				l_vOutputIndexToStreamIndex[l_ui32Index] = it->first;
+				m_vStreamIndexToOutputIndex[it->first]   = index;
+				l_vOutputIndexToStreamIndex[index] = it->first;
 			}
 		}
 
@@ -287,7 +272,8 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		}
 
 		// When both outputs and streams were lost, there most probably was a damn mistake
-		OV_ERROR_UNLESS_KRV(!l_bLastOutputs || !l_bLostStreams, "Invalid configuration: missing output for stream(s) and missing stream for output(s)", OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRV(!l_bLastOutputs || !l_bLostStreams, "Invalid configuration: missing output for stream(s) and missing stream for output(s)",
+							OpenViBE::Kernel::ErrorType::BadConfig);
 	}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer)

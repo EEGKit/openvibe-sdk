@@ -57,7 +57,8 @@ bool CAlgorithmConditionedCovariance::process()
 	TParameterHandler<IMatrix*> op_pCovarianceMatrix(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
 	double l_f64Shrinkage = ip_f64Shrinkage;
 
-	OV_ERROR_UNLESS_KRF(l_f64Shrinkage <= 1.0, "Invalid shrinkage value " << l_f64Shrinkage << "(expected value <= 1.0)", OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(l_f64Shrinkage <= 1.0, "Invalid shrinkage value " << l_f64Shrinkage << "(expected value <= 1.0)",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 
 	OV_ERROR_UNLESS_KRF(ip_pFeatureVectorSet->getDimensionCount() == 2,
@@ -117,10 +118,7 @@ bool CAlgorithmConditionedCovariance::process()
 
 		dumpMatrix(this->getLogManager(), l_oPhiMat, "PhiMat");
 	}
-	else
-	{
-		this->getLogManager() << LogLevel_Debug << "Using user-provided shrinkage weight " << l_f64Shrinkage << "\n";
-	}
+	else { this->getLogManager() << LogLevel_Debug << "Using user-provided shrinkage weight " << l_f64Shrinkage << "\n"; }
 
 	// Use the output as a buffer to avoid copying
 	Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), l_ui32nCols, l_ui32nCols);

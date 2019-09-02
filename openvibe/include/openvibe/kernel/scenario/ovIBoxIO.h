@@ -52,7 +52,8 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const = 0;
+			virtual bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize,
+									   const uint8_t*& rpChunkBuffer) const = 0;
 			/**
 			 * \brief Gets an input chunk.
 			 * \param inputIdx [in] : the index of the desired input.

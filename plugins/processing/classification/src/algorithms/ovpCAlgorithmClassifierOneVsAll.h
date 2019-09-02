@@ -21,7 +21,8 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distanceValue, OpenViBEToolkit::IVector& probabilityValue) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distanceValue,
+						  OpenViBEToolkit::IVector& probabilityValue) override;
 			bool designArchitecture(const OpenViBE::CIdentifier& id, uint32_t nClass) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* configurationNode) override;

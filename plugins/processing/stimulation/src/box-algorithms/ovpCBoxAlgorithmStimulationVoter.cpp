@@ -17,12 +17,14 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() == 1, "Invalid number of inputs [" << boxContext.getInputCount() << "] (expected 1 single input)", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() == 1, "Invalid number of inputs [" << boxContext.getInputCount() << "] (expected 1 single input)",
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 	CIdentifier typeID;
 	boxContext.getInputType(0, typeID);
 
-	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.toString() << "] (expected OV_TypeId_Stimulations type)", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.toString() << "] (expected OV_TypeId_Stimulations type)",
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 	m_pEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
 	m_pEncoder->initialize();
@@ -40,7 +42,8 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	m_ui64RejectClassLabel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 	m_oRejectClass_CanWin  = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
 
-	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_oClearVotes << ", timestamp at " << m_oOutputDateMode << ", reject mode " << m_oRejectClass_CanWin << "\n";
+	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_oClearVotes << ", timestamp at " << m_oOutputDateMode << ", reject mode " <<
+			m_oRejectClass_CanWin << "\n";
 
 	m_ui64LatestStimulusDate = 0;
 	m_ui64LastTime           = 0;
@@ -71,8 +74,10 @@ bool CBoxAlgorithmStimulationVoter::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	TParameterHandler<IStimulationSet*> ip_pStimulationSet(m_pEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_pEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IStimulationSet*> ip_pStimulationSet(
+		m_pEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
+	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(
+		m_pEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue

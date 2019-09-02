@@ -2,7 +2,8 @@
 
 namespace Socket
 {
-	IConnectionSerialDelegate::IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) : TConnectionDelegate<IConnectionSerial>(oConnectionSerialDelegate.oConnectionDelegate) { }
+	IConnectionSerialDelegate::IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) : TConnectionDelegate<IConnectionSerial>(
+		oConnectionSerialDelegate.oConnectionDelegate) { }
 
 	IConnectionSerialDelegate::~IConnectionSerialDelegate() { }
 
@@ -21,16 +22,27 @@ namespace Socket
 			return m_oConnectionSerialDelegate.fpConnect(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, url, baudRate);
 		}
 
-		uint32_t getPendingByteCount() override { return m_oConnectionSerialDelegate.fpGetPendingByteCount(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
+		uint32_t getPendingByteCount() override
+		{
+			return m_oConnectionSerialDelegate.fpGetPendingByteCount(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
+		}
 
 		bool flush() override { return m_oConnectionSerialDelegate.fpFlush(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
 
 		const char* getLastError() override { return m_oConnectionSerialDelegate.fpGetLastError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
 
-		bool isErrorRaised() override { return false; }	// return m_oConnectionSerialDelegate.fpIsErrorRaised(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
+		bool isErrorRaised()
+		override { return false; }	// return m_oConnectionSerialDelegate.fpIsErrorRaised(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
 		void clearError() override { }					// return m_oConnectionSerialDelegate.fpClearError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
-		bool setTimeouts(const uint32_t /*decisecondsTimeout*/) override { return true; }	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, decisecondsTimeout);
+		bool setTimeouts(const uint32_t /*decisecondsTimeout*/)
+		override
+		{
+			return true;
+		}	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, decisecondsTimeout);
 	};
 
-	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) { return new CConnectionSerialDelegate(oConnectionSerialDelegate); }
+	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate)
+	{
+		return new CConnectionSerialDelegate(oConnectionSerialDelegate);
+	}
 } // namespace Socket

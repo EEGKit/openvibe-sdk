@@ -64,20 +64,39 @@ namespace OpenViBEPlugins
 				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer, "Encode buffer");
 				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeEnd, "Encode end");
 
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectIdentifier, "Subject identifier", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectAge, "Subject age", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectGender, "Subject gender", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalMatrix, "Signal matrix", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSamplingRate, "Signal sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_ChannelLocalisation, "Channel localisation", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_ChannelUnits, "Channel units", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectIdentifier, "Subject identifier",
+					OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectAge, "Subject age", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectGender, "Subject gender", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalMatrix, "Signal matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSamplingRate, "Signal sampling rate",
+					OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_StimulationSet, "Stimulation set",
+					OpenViBE::Kernel::ParameterType_StimulationSet);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_ChannelLocalisation, "Channel localisation",
+					OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_ChannelUnits, "Channel units", OpenViBE::Kernel::ParameterType_Matrix);
 
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelLocalisationData, "Encode channel localisation data", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelUnitData, "Encode channel unit data", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelLocalisationData, "Encode channel localisation data",
+					OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelUnitData, "Encode channel unit data",
+					OpenViBE::Kernel::ParameterType_Boolean);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
 
 				return true;
 			}

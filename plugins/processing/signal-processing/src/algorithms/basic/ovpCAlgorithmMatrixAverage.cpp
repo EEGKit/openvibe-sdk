@@ -50,7 +50,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset))
 	{
-		for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete* it; }
+		for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete*it; }
 
 		m_vHistory.clear();
 
@@ -120,10 +120,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_vHistory.push_back(l_pInputMatrix);
 			l_bShouldPerformAverage = true;
 		}
-		else
-		{
-			l_bShouldPerformAverage = false;
-		}
+		else { l_bShouldPerformAverage = false; }
 	}
 
 	if (l_bShouldPerformAverage)

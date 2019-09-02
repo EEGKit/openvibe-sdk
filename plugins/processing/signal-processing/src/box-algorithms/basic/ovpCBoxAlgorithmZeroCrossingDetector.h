@@ -117,14 +117,8 @@ namespace OpenViBEPlugins
 						}
 					}
 				}
-				if (index == 1)
-				{
-					box.setOutputType(1, OV_TypeId_Stimulations);
-				}
-				if (index == 2)
-				{
-					box.setOutputType(2, OV_TypeId_StreamedMatrix);
-				}
+				if (index == 1) { box.setOutputType(1, OV_TypeId_Stimulations); }
+				if (index == 2) { box.setOutputType(2, OV_TypeId_StreamedMatrix); }
 
 				return true;
 			}
@@ -140,7 +134,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Detects zero-crossings of the signal"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Detects zero-crossings of the signal for each channel, with 1 for positive zero-crossings (negative-to-positive), -1 for negatives ones (positive-to-negative), 0 otherwise. For all channels, stimulations mark positive and negatives zero-crossings. For each channel, the rythm is computed in events per min."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Detects zero-crossings of the signal for each channel, with 1 for positive zero-crossings (negative-to-positive), -1 for negatives ones (positive-to-negative), 0 otherwise. For all channels, stimulations mark positive and negatives zero-crossings. For each channel, the rythm is computed in events per min.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

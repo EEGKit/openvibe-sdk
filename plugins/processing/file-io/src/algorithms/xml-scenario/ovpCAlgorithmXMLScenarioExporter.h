@@ -22,7 +22,8 @@ namespace OpenViBEPlugins
 			CAlgorithmXMLScenarioExporter();
 			~CAlgorithmXMLScenarioExporter() override;
 			bool exportStart(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier) override;
-			bool exportIdentifier(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CIdentifier& rValue) override;
+			bool exportIdentifier(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier,
+								  const OpenViBE::CIdentifier& rValue) override;
 			bool exportString(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CString& rValue) override;
 			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& identifier, uint64_t value) override;
 			bool exportStop(OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
@@ -44,7 +45,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("A sample XML scenario exporter"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This scenario exporter uses simple XML format to output the scenario"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("This scenario exporter uses simple XML format to output the scenario");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/XML Scenario"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			// virtual OpenViBE::CString getFileExtension() const       { return OpenViBE::CString("xml;XML"); }

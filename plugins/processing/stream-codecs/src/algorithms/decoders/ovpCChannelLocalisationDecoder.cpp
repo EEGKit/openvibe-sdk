@@ -60,10 +60,7 @@ void CChannelLocalisationDecoder::processChildData(const void* buffer, const uin
 			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false);
 		}
 	}
-	else
-	{
-		CStreamedMatrixDecoder::processChildData(buffer, size);
-	}
+	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CChannelLocalisationDecoder::closeChild()

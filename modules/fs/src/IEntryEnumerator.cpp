@@ -59,15 +59,15 @@ namespace FS
 		bool isExecutable() override { return m_bIsExecutable; }
 		uint64_t getSize() override { return m_ui64Size; }
 
-		bool m_bIsFile = false;
-		bool m_bIsDirectory = false;
+		bool m_bIsFile         = false;
+		bool m_bIsDirectory    = false;
 		bool m_bIsSymbolicLink = false;
-		bool m_bIsArchive = false;
-		bool m_bIsReadOnly = false;
-		bool m_bIsHidden = false;
-		bool m_bIsSystem = false;
-		bool m_bIsExecutable = false;
-		uint64_t m_ui64Size = 0;
+		bool m_bIsArchive      = false;
+		bool m_bIsReadOnly     = false;
+		bool m_bIsHidden       = false;
+		bool m_bIsSystem       = false;
+		bool m_bIsExecutable   = false;
+		uint64_t m_ui64Size    = 0;
 	};
 }  // namespace FS
 
@@ -253,10 +253,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 						}
 					}
 
-					if (!FindNextFile(l_pFileHandle, &l_oFindData))
-					{
-						l_bFinished = true;
-					}
+					if (!FindNextFile(l_pFileHandle, &l_oFindData)) { l_bFinished = true; }
 				}
 				FindClose(l_pFileHandle);
 			}
@@ -296,15 +293,9 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 				l_oAttributes.m_ui64Size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
 
 				// Sends to callback
-				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
-				{
-					l_bFinished = true;
-				}
+				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes)) { l_bFinished = true; }
 
-				if (!FindNextFile(l_pFileHandle, &l_oFindData))
-				{
-					l_bFinished = true;
-				}
+				if (!FindNextFile(l_pFileHandle, &l_oFindData)) { l_bFinished = true; }
 			}
 			FindClose(l_pFileHandle);
 		}

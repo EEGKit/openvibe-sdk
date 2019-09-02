@@ -37,21 +37,15 @@ namespace OpenViBE
 		 * \param ui64Time : elapsed time in fixed point format
 		 * \return Sample count corresponding to the input parameters
 		 */
-		static uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const uint64_t ui64Time)
-		{
-			return ((ui64Time + 1) * ui64SamplingRate - 1) >> 32;
-		}
+		static uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const uint64_t ui64Time) { return ((ui64Time + 1) * ui64SamplingRate - 1) >> 32; }
 		
 		/**
 		 * \brief Get the time in seconds given a fixed point time
-		 * \param ui64FixedPointTime : time in fixed point format
+		 * \param ui64Time : time in fixed point format
 		 * \return Regular floating point time in seconds
 		 *
 		 */
-		static double timeToSeconds(const uint64_t ui64Time)
-		{
-			return ui64Time / double(1LL << 32);
-		}
+		static double timeToSeconds(const uint64_t ui64Time) { return ui64Time / double(1LL << 32); }
 
 		/**
 		 * \brief Get the time in fixed point format given float time in seconds
@@ -59,10 +53,7 @@ namespace OpenViBE
 		 * \return Time in fixed point format
 		 *
 		 */
-		static uint64_t secondsToTime(const double f64Time)
-		{
-			return uint64_t(f64Time * double(1LL << 32));
-		}
+		static uint64_t secondsToTime(const double f64Time) { return uint64_t(f64Time * double(1LL << 32)); }
 
 	private:
 		// Static class, don't allow instances

@@ -201,28 +201,19 @@ namespace r8b
 		 * @return The next "Hann" window function coefficient.
 		 */
 
-		double calcWindowHann()
-		{
-			return (0.5 + 0.5 * w1.generate());
-		}
+		double calcWindowHann() { return (0.5 + 0.5 * w1.generate()); }
 
 		/**
 		 * @return The next "Hamming" window function coefficient.
 		 */
 
-		double calcWindowHamming()
-		{
-			return (0.54 + 0.46 * w1.generate());
-		}
+		double calcWindowHamming() { return (0.54 + 0.46 * w1.generate()); }
 
 		/**
 		 * @return The next "Blackman" window function coefficient.
 		 */
 
-		double calcWindowBlackman()
-		{
-			return (0.42 + 0.5 * w1.generate() + 0.08 * w2.generate());
-		}
+		double calcWindowBlackman() { return (0.42 + 0.5 * w1.generate() + 0.08 * w2.generate()); }
 
 		/**
 		 * @return The next "Nuttall" window function coefficient.
@@ -789,18 +780,9 @@ namespace r8b
 
 				Power = (UsePower && Params != nullptr ? Params[0] : -1.0);
 			}
-			else if (WinType == wftKaiser)
-			{
-				setWindowKaiser(Params, UsePower, IsCentered);
-			}
-			else if (WinType == wftGaussian)
-			{
-				setWindowGaussian(Params, UsePower, IsCentered);
-			}
-			else
-			{
-				setWindowVaneev(Params, IsCentered);
-			}
+			else if (WinType == wftKaiser) { setWindowKaiser(Params, UsePower, IsCentered); }
+			else if (WinType == wftGaussian) { setWindowGaussian(Params, UsePower, IsCentered); }
+			else { setWindowVaneev(Params, IsCentered); }
 		}
 	};
 } // namespace r8b

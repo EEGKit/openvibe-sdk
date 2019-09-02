@@ -54,23 +54,24 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 
 	if (typeID == OV_TypeId_Signal)
 	{
-		OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
-		OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>
+				(*this, 0);
+		OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>
+				(*this, 0);
 		l_pEncoder->getInputSamplingRate().setReferenceTarget(l_pDecoder->getOutputSamplingRate());
 		m_oDecoder  = l_pDecoder;
 		m_oEncoder0 = l_pEncoder;
 	}
 	else if (typeID == OV_TypeId_StreamedMatrix)
 	{
-		OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
-		OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
-		m_oDecoder                                                                             = l_pDecoder;
-		m_oEncoder0                                                                            = l_pEncoder;
+		OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<
+			CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<
+			CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		m_oDecoder  = l_pDecoder;
+		m_oEncoder0 = l_pEncoder;
 	}
-	else
-	{
-		OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput);
-	}
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
 	return true;
 }
@@ -131,8 +132,9 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 		{
 			if (m_ui64ChunkCount == 0)
 			{
-				m_ui32SamplingRate = l_ui32SampleCount * uint32_t((1LL << 32) / (boxContext.getInputChunkEndTime(0, i) - boxContext.getInputChunkStartTime(0, i)));
-				m_ui32WindowTime   = uint32_t(m_f64WindowTime * m_ui32SamplingRate);
+				m_ui32SamplingRate = l_ui32SampleCount * uint32_t(
+										 (1LL << 32) / (boxContext.getInputChunkEndTime(0, i) - boxContext.getInputChunkStartTime(0, i)));
+				m_ui32WindowTime = uint32_t(m_f64WindowTime * m_ui32SamplingRate);
 			}
 
 			double* l_pInputBuffer   = m_oDecoder.getOutputMatrix()->getBuffer();
@@ -146,16 +148,10 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 			{
 				// signal, with the last sample of the previous chunk
 				l_vSignal[0] = m_vSignalHistory[j];
-				for (k = 0; k < l_ui32SampleCount; k++)
-				{
-					l_vSignal[k + 1] = l_pInputBuffer[k + j * l_ui32SampleCount];
-				}
+				for (k = 0; k < l_ui32SampleCount; k++) { l_vSignal[k + 1] = l_pInputBuffer[k + j * l_ui32SampleCount]; }
 				m_vSignalHistory[j] = l_vSignal.back();
 
-				if (m_ui64ChunkCount == 0)
-				{
-					m_vStateHistory[j] = (l_vSignal[1] >= 0) ? 1 : -1;
-				}
+				if (m_ui64ChunkCount == 0) { m_vStateHistory[j] = (l_vSignal[1] >= 0) ? 1 : -1; }
 
 				for (k = 0; k < l_ui32SampleCount; k++)
 				{
@@ -164,13 +160,11 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					{
 						stimulationDate = boxContext.getInputChunkStartTime(0, i) + ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, k);
 					}
-					else if (l_ui32SampleCount == 1)
-					{
-						stimulationDate = boxContext.getInputChunkEndTime(0, i);
-					}
+					else if (l_ui32SampleCount == 1) { stimulationDate = boxContext.getInputChunkEndTime(0, i); }
 					else
 					{
-						OV_ERROR_KRF("Can only process chunks with sampling rate larger or equal to 1 or chunks with exactly one sample.", ErrorType::OutOfBound);
+						OV_ERROR_KRF("Can only process chunks with sampling rate larger or equal to 1 or chunks with exactly one sample.",
+									 ErrorType::OutOfBound);
 					}
 
 					if ((m_vStateHistory[j] == 1) && (l_vSignal[k] > -m_f64HysteresisThreshold) && (l_vSignal[k + 1] < -m_f64HysteresisThreshold))
@@ -191,10 +185,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 						m_vMemoryChunk[j].push_back(m_ui64ChunkCount);
 						m_vMemorySample[j].push_back(k);
 					}
-					else
-					{
-						l_pOutputBuffer0[k + j * l_ui32SampleCount] = 0;
-					}
+					else { l_pOutputBuffer0[k + j * l_ui32SampleCount] = 0; }
 				}
 			}
 
@@ -218,10 +209,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					}
 				}
 
-				for (k = 0; k < l_ui32SampleCount; k++)
-				{
-					l_pOutputBuffer2[k + j * l_ui32SampleCount] = 60.0 * compt / m_f64WindowTime;
-				}
+				for (k = 0; k < l_ui32SampleCount; k++) { l_pOutputBuffer2[k + j * l_ui32SampleCount] = 60.0 * compt / m_f64WindowTime; }
 			}
 
 			m_ui64ChunkCount++;

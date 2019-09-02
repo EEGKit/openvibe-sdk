@@ -38,7 +38,7 @@ bool importScenarioFromFile(const char* filename)
 bool checkForSchemaValidationError()
 {
 	auto& errorManager = g_context->getErrorManager();
-	auto error = errorManager.getLastError();
+	auto error         = errorManager.getLastError();
 
 	while (error)
 	{

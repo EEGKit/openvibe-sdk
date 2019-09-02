@@ -25,14 +25,8 @@ int main(int argc, char** argv)
 
 	for (int i = 0; i < argc; i++)
 	{
-		if (std::strcmp(argv[i], "--connection-id") == 0)
-		{
-			if (argc > i + 1) { connectionID = argv[i + 1]; }
-		}
-		else if (std::strcmp(argv[i], "--port") == 0)
-		{
-			if (argc > i + 1) { port = static_cast<unsigned int>(std::stoi(argv[i + 1])); }
-		}
+		if (std::strcmp(argv[i], "--connection-id") == 0) { if (argc > i + 1) { connectionID = argv[i + 1]; } }
+		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = static_cast<unsigned int>(std::stoi(argv[i + 1])); } }
 	}
 	didRequestForcedQuit = false;
 
@@ -68,10 +62,7 @@ int main(int argc, char** argv)
 		uint64_t type;
 		std::string name;
 
-		if (client.getInput(i, index, type, name))
-		{
-			std::cout << "Input:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n";
-		}
+		if (client.getInput(i, index, type, name)) { std::cout << "Input:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
 	for (size_t i = 0; i < client.getOutputCount(); i++)
@@ -80,10 +71,7 @@ int main(int argc, char** argv)
 		uint64_t type;
 		std::string name;
 
-		if (client.getOutput(i, index, type, name))
-		{
-			std::cout << "Output:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n";
-		}
+		if (client.getOutput(i, index, type, name)) { std::cout << "Output:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
 	for (size_t i = 0; i < client.getParameterCount(); i++)
@@ -201,10 +189,7 @@ int main(int argc, char** argv)
 	std::cout << "Processing stopped.\n";
 
 
-	if (!client.close())
-	{
-		std::cerr << "Failed to close the connection\n";
-	}
+	if (!client.close()) { std::cerr << "Failed to close the connection\n"; }
 
 	return 0;
 }

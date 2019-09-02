@@ -38,10 +38,7 @@ int main(int argc, char** argv)
 		}
 		cout << "Analyze parameter: [" << i << " : " << argv[i] << "]." << endl;
 
-		if (strcmp(argv[i], "--ignore-metaboxes") == 0)
-		{
-			ignoreMetaboxes = true;
-		}
+		if (strcmp(argv[i], "--ignore-metaboxes") == 0) { ignoreMetaboxes = true; }
 		else if (i < argc && strcmp(argv[i], "--box-doc-directory") == 0)
 		{
 			if (++i >= argc)
@@ -67,10 +64,7 @@ int main(int argc, char** argv)
 	CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
-	if (!kernelLoader.load(kernelFile, &errorMsg))
-	{
-		cout << "[ FAILED ] Error loading kernel (" << errorMsg << ")" << " from [" << kernelFile << "]\n";
-	}
+	if (!kernelLoader.load(kernelFile, &errorMsg)) { cout << "[ FAILED ] Error loading kernel (" << errorMsg << ")" << " from [" << kernelFile << "]\n"; }
 	else
 	{
 		cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << endl;
@@ -78,19 +72,13 @@ int main(int argc, char** argv)
 		IKernelContext* kernelContext = nullptr;
 		kernelLoader.initialize();
 		kernelLoader.getKernelDesc(kernelDesc);
-		if (!kernelDesc)
-		{
-			cout << "[ FAILED ] No kernel descriptor" << endl;
-		}
+		if (!kernelDesc) { cout << "[ FAILED ] No kernel descriptor" << endl; }
 		else
 		{
 			cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
 
 			kernelContext = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
-			if (!kernelContext)
-			{
-				cout << "[ FAILED ] No kernel created by kernel descriptor" << endl;
-			}
+			if (!kernelContext) { cout << "[ FAILED ] No kernel created by kernel descriptor" << endl; }
 			else
 			{
 				kernelContext->initialize();
@@ -98,13 +86,13 @@ int main(int argc, char** argv)
 
 				IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
 
-				if (pluginFilestoLoad.empty())
-				{
-					kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
-				}
+				if (pluginFilestoLoad.empty()) { kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}")); }
 				else
 				{
-					for (string pluginFiletoLoad : pluginFilestoLoad) { kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str()))); }
+					for (string pluginFiletoLoad : pluginFilestoLoad)
+					{
+						kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str())));
+					}
 				}
 
 				kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
@@ -119,7 +107,8 @@ int main(int argc, char** argv)
 
 				if (!ignoreMetaboxes)
 				{
-					kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
+					kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << boxAlgorithmDocTemplateDirectory <<
+							"]\n";
 					// Do not load the binary metaboxes as they would only be duplicated
 					//kernelContext->getScenarioManager().unregisterScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mbb");
 					configurationManager.addOrReplaceConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/");
@@ -129,7 +118,11 @@ int main(int argc, char** argv)
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
 					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
 					CIdentifier metaboxDescIdentifier;
-					while ((metaboxDescIdentifier = kernelContext->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) != OV_UndefinedIdentifier) { metaboxPluginObjectDescriptors.push_back(kernelContext->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier)); }
+					while ((metaboxDescIdentifier = kernelContext->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) !=
+						   OV_UndefinedIdentifier)
+					{
+						metaboxPluginObjectDescriptors.push_back(kernelContext->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier));
+					}
 					boxTemplateGenerator.enumeratePluginObjectDesc(metaboxPluginObjectDescriptors);
 				}
 

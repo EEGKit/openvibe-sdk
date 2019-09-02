@@ -37,7 +37,8 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue, OpenViBEToolkit::IVector& rProbabilityValue) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue,
+						  OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;
@@ -88,9 +89,12 @@ namespace OpenViBEPlugins
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
 
 
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);

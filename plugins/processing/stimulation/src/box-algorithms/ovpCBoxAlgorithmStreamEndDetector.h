@@ -72,7 +72,8 @@ namespace OpenViBEPlugins
 			{
 				prototype.addInput("EBML Stream", OV_TypeId_EBMLStream, CBoxAlgorithmStreamEndDetector::id_InputEBML());
 				prototype.addOutput("Output Stimulations", OV_TypeId_Stimulations, CBoxAlgorithmStreamEndDetector::id_OutputStimulations());
-				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false, CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
+				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false,
+									 CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
 
 				return true;
 			}

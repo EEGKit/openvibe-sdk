@@ -76,9 +76,11 @@ namespace OpenViBE
 
 		_parameter_template_instance_object_(CMatrixParameter, OpenViBE::CMatrix, OpenViBE::IMatrix*, OVK_ClassId_Kernel_MatrixParameter)
 
-		_parameter_template_instance_object_(CStimulationSetParameter, OpenViBE::CStimulationSet, OpenViBE::IStimulationSet*, OVK_ClassId_Kernel_StimulationSetParameter)
+		_parameter_template_instance_object_(CStimulationSetParameter, OpenViBE::CStimulationSet, OpenViBE::IStimulationSet*,
+											 OVK_ClassId_Kernel_StimulationSetParameter)
 
-		_parameter_template_instance_object_(CMemoryBufferParameter, OpenViBE::CMemoryBuffer, OpenViBE::IMemoryBuffer*, OVK_ClassId_Kernel_MemoryBufferParameter)
+		_parameter_template_instance_object_(CMemoryBufferParameter, OpenViBE::CMemoryBuffer, OpenViBE::IMemoryBuffer*,
+											 OVK_ClassId_Kernel_MemoryBufferParameter)
 
 		_parameter_template_instance_object_(CObjectParameter, OpenViBE::CNullObject, OpenViBE::IObject*, OVK_ClassId_Kernel_ObjectParameter)
 

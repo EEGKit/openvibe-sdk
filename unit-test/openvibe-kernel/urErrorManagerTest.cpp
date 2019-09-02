@@ -115,10 +115,7 @@ TEST(error_manager_test_case, test_stress_push)
 
 	errorManager.releaseErrors();
 	unsigned int expectedErrorCount = 10;
-	for (unsigned int i = 0; i < expectedErrorCount; ++i)
-	{
-		errorManager.pushError(ErrorType::Unknown, "Error");
-	}
+	for (unsigned int i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
 
 	unsigned int errorCount = 0;
 	auto error              = errorManager.getLastError();

@@ -51,15 +51,9 @@ ExpressionProgram::ExpressionProgram(const ParsedExpression& expression) : maxAr
 	}
 }
 
-ExpressionProgram::~ExpressionProgram()
-{
-	for (int i = 0; i < (int)operations.size(); i++) delete operations[i];
-}
+ExpressionProgram::~ExpressionProgram() { for (int i = 0; i < (int)operations.size(); i++) delete operations[i]; }
 
-ExpressionProgram::ExpressionProgram(const ExpressionProgram& program)
-{
-	*this = program;
-}
+ExpressionProgram::ExpressionProgram(const ExpressionProgram& program) { *this = program; }
 
 ExpressionProgram& ExpressionProgram::operator=(const ExpressionProgram& program)
 {
@@ -82,10 +76,7 @@ const Operation& ExpressionProgram::getOperation(int index) const { return *oper
 
 int ExpressionProgram::getStackSize() const { return stackSize; }
 
-double ExpressionProgram::evaluate() const
-{
-	return evaluate(map<string, double>());
-}
+double ExpressionProgram::evaluate() const { return evaluate(map<string, double>()); }
 
 double ExpressionProgram::evaluate(const std::map<std::string, double>& variables) const
 {

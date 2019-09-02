@@ -22,8 +22,9 @@ namespace
 	* \brief Check the setting value (if the setting is numeric),
 	* test if it is a correct arithmetic expression, should be used after
 	* retrieving the value with "getSettingValue"
-	* \param sValue [in] : The value of setting to check
-	* \param oTypeIdentifier [in] : The type of setting to check
+	* \param value [in] : The value of setting to check
+	* \param typeID [in] : The type of setting to check
+	* \param typeManager [in] :
 	* \return \e true in case of success (numeric value is well formed).
 	* \return \e false in case of error. In such case,
 	*         \c rValue remains unchanged.
@@ -32,8 +33,8 @@ namespace
 	{
 		if (typeManager.isEnumeration(typeID))
 		{
-			auto enumerationEntryValue        = typeManager.getEnumerationEntryValueFromName(typeID, value);
-			auto enumerationEntryReversedName = typeManager.getEnumerationEntryNameFromValue(typeID, enumerationEntryValue);
+			const auto enumerationEntryValue        = typeManager.getEnumerationEntryValueFromName(typeID, value);
+			const auto enumerationEntryReversedName = typeManager.getEnumerationEntryNameFromValue(typeID, enumerationEntryValue);
 			// We need to compare the reversed name of the enumerations because some enumeration values actually use max int
 			// which is the same value as the guard value for incorrect stimulations
 			if (enumerationEntryValue == OV_IncorrectStimulation && enumerationEntryReversedName != value) { return false; }

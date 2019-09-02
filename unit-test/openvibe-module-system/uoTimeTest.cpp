@@ -52,10 +52,7 @@ uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t
 		sleepFunction(0);
 		const uint64_t processingTime = timeFunction() - preTime;
 
-		if (processingTime > maxTime)
-		{
-			maxTime = processingTime;
-		}
+		if (processingTime > maxTime) { maxTime = processingTime; }
 	}
 
 	return maxTime;
@@ -106,10 +103,10 @@ std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigne
 	std::vector<uint64_t> cumulativeSteps;
 	cumulativeSteps.reserve(sampleCountGuess);
 
-	bool monotonic        = true;
-	const uint64_t startTime    = timeFunction();
-	uint64_t nowTime      = startTime;
-	uint64_t previousTime = nowTime;
+	bool monotonic           = true;
+	const uint64_t startTime = timeFunction();
+	uint64_t nowTime         = startTime;
+	uint64_t previousTime    = nowTime;
 
 	while (nowTime - startTime < samplePeriod)
 	{
@@ -158,10 +155,7 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 		const double deviation = std::abs(double(chronoData.count()) / 1000 - mean);
 		jitterMSE += std::pow(deviation, 2) / measurements.size();
 
-		if (deviation - jitterMax > std::numeric_limits<double>::epsilon())
-		{
-			jitterMax = deviation;
-		}
+		if (deviation - jitterMax > std::numeric_limits<double>::epsilon()) { jitterMax = deviation; }
 	}
 
 	return std::make_tuple(mean, jitterMax, std::sqrt(jitterMSE));
@@ -203,7 +197,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
 	const unsigned int warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime,
-													  OpenViBE::ITimeArithmetics::secondsToTime(0.005));
+															OpenViBE::ITimeArithmetics::secondsToTime(0.005));
 
 	// relax this threshold in case there is some recurrent problems
 	// according to the runtime environment

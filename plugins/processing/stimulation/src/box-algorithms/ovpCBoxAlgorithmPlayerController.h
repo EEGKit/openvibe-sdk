@@ -40,7 +40,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Controls the player execution"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Add some settings to configure the way you want to control the player"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Add some settings to configure the way you want to control the player");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

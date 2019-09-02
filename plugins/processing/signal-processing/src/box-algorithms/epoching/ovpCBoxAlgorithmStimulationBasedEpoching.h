@@ -78,8 +78,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Stimulation based epoching"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legeny"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event.");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Epoching"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

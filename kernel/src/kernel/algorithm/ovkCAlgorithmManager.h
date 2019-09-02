@@ -22,7 +22,7 @@ namespace OpenViBE
 			bool releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
 			bool releaseAlgorithm(IAlgorithmProxy& rAlgorithm) override;
 			IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
-			CIdentifier getNextAlgorithmIdentifier(const CIdentifier& rPreviousIdentifier) const override;
+			CIdentifier getNextAlgorithmIdentifier(const CIdentifier& previousID) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmManager>, OVK_ClassId_Kernel_Algorithm_AlgorithmManager)
 

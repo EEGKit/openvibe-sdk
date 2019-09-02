@@ -31,7 +31,8 @@ CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& rAlgorithmClas
 	const IAlgorithmDesc* algorithmDesc = nullptr;
 	IAlgorithm* algorithm               = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmClassIdentifier, &algorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(), ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(),
+						ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
@@ -52,7 +53,8 @@ CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& rAlgorithmD
 
 	IAlgorithm* algorithm = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(), ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(),
+						ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
@@ -128,14 +130,14 @@ IAlgorithmProxy& CAlgorithmManager::getAlgorithm(const CIdentifier& rAlgorithmId
 	return *itAlgorithm->second;
 }
 
-CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(const CIdentifier& rPreviousIdentifier) const
+CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(const CIdentifier& previousID) const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.begin();
-	if (rPreviousIdentifier != OV_UndefinedIdentifier)
+	if (previousID != OV_UndefinedIdentifier)
 	{
-		itAlgorithm = m_vAlgorithms.find(rPreviousIdentifier);
+		itAlgorithm = m_vAlgorithms.find(previousID);
 		if (itAlgorithm == m_vAlgorithms.end()) { return OV_UndefinedIdentifier; }
 		++itAlgorithm;
 	}

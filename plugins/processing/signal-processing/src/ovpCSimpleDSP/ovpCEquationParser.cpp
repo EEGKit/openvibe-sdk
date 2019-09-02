@@ -153,21 +153,16 @@ bool CEquationParser::compileEquation(const char* pEquation)
 	const size_t errorPosition = l_sEquation.find(l_oInfo.stop);
 	if (errorPosition != std::string::npos)
 	{
-		for (size_t i = 0; i < errorPosition; i++)
-		{
-			l_oErrorString += " ";
-		}
+		for (size_t i = 0; i < errorPosition; i++) { l_oErrorString += " "; }
 		l_oErrorString += "^--Here\n";
 	}
 
 	OV_ERROR("Failed parsing equation \n[" << pEquation << "]\n " << l_oErrorString.c_str(), OpenViBE::Kernel::ErrorType::BadParsing, false,
-			 m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(), m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
+			 m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
+			 m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 }
 
-void CEquationParser::createAbstractTree(tree_parse_info<> oInfo)
-{
-	m_pTree = new CAbstractTree(createNode(oInfo.trees.begin()));
-}
+void CEquationParser::createAbstractTree(tree_parse_info<> oInfo) { m_pTree = new CAbstractTree(createNode(oInfo.trees.begin())); }
 
 CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 {
@@ -180,7 +175,9 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		//replaces (- X Y) by (+ X (-Y)) (in fact (+ X (* -1 Y)) )
 		if (*i->value.begin() == '-')
 		{
-			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin() + 1), true), true);
+			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()),
+											   new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin() + 1), true),
+											   true);
 		}
 	}
 	else if (i->value.id() == CEquationGrammar::termID)
@@ -189,10 +186,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
 		}
-		if (*i->value.begin() == '/')
-		{
-			return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1));
-		}
+		if (*i->value.begin() == '/') { return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1)); }
 	}
 	else if (i->value.id() == CEquationGrammar::factorID)
 	{
@@ -257,7 +251,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == CEquationGrammar::ifthenID)
 	{
-		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1), createNode(i->children.begin() + 2), false);
+		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1),
+										   createNode(i->children.begin() + 2), false);
 	}
 	else if (i->value.id() == CEquationGrammar::comparisonID)
 	{
@@ -477,10 +472,7 @@ void CEquationParser::op_bool_or(double*& pStack, functionContext& /*pContext*/)
 	pStack[0] = (pStack[1] != 0 || pStack[0] != 0 ? 1 : 0);
 }
 
-void CEquationParser::op_bool_not(double*& pStack, functionContext& /*pContext*/)
-{
-	pStack[0] = pStack[0] != 0 ? 0 : 1;
-}
+void CEquationParser::op_bool_not(double*& pStack, functionContext& /*pContext*/) { pStack[0] = pStack[0] != 0 ? 0 : 1; }
 
 void CEquationParser::op_bool_xor(double*& pStack, functionContext& /*pContext*/)
 {

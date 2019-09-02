@@ -22,13 +22,13 @@ namespace
 bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 {
 	m_EpochDurationInSeconds = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	const double epochOffset       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	const double epochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_StimulationId          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	m_EpochDuration = ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds);
 
 	const int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
-	m_EpochOffset       = epochOffsetSign * int64_t(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
+	m_EpochOffset             = epochOffsetSign * int64_t(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
 	m_LastReceivedStimulationDate   = 0;
 	m_LastStimulationChunkStartTime = 0;
@@ -93,7 +93,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.",
 								ErrorType::Internal);
 
-			m_SampleCountPerOutputEpoch = uint32_t(ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
+			m_SampleCountPerOutputEpoch = uint32_t(
+				ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
 
 			outputMatrix->setDimensionCount(2);
 			outputMatrix->setDimensionSize(0, m_ChannelCount);
@@ -140,7 +141,9 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 					uint64_t stimulationDate = m_StimulationDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
 					if (stimulationDate < m_LastReceivedStimulationDate)
 					{
-						OV_WARNING_K("Skipping stimulation (received at date " << time64(stimulationDate) << ") that predates an already received stimulation (at date " << time64(m_LastReceivedStimulationDate) << ")");
+						OV_WARNING_K(
+							"Skipping stimulation (received at date " << time64(stimulationDate) << ") that predates an already received stimulation (at date "
+							<< time64(m_LastReceivedStimulationDate) << ")");
 					}
 					else if (int64_t(stimulationDate) + m_EpochOffset >= 0)
 					{
@@ -195,7 +198,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 				while (currentSampleIndexInOutputBuffer < m_SampleCountPerOutputEpoch)
 				{
-					const auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, currentSampleIndexInOutputBuffer);
+					const auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(
+															 m_SamplingRate, currentSampleIndexInOutputBuffer);
 
 					// If we handle non-dyadic sampling rates then we do not have a guarantee that all chunks will be
 					// dated with exact values. We add a bit of wiggle room around the incoming chunks to consider
@@ -222,15 +226,13 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 						const auto& inputBuffer = m_CachedChunks[cachedChunkIndex].matrix->getBuffer();
 						for (uint32_t channel = 0; channel < m_ChannelCount; ++channel)
 						{
-							outputBuffer[channel * m_SampleCountPerOutputEpoch + currentSampleIndexInOutputBuffer] = inputBuffer[channel * m_SampleCountPerInputBuffer + currentSampleIndexInInputBuffer];
+							outputBuffer[channel * m_SampleCountPerOutputEpoch + currentSampleIndexInOutputBuffer] = inputBuffer[
+								channel * m_SampleCountPerInputBuffer + currentSampleIndexInInputBuffer];
 						}
 						currentSampleIndexInOutputBuffer += 1;
 						currentSampleIndexInInputBuffer += 1;
 					}
-					else
-					{
-						OV_ERROR_KRF("Can not construct the output chunk due to internal error", ErrorType::Internal);
-					}
+					else { OV_ERROR_KRF("Can not construct the output chunk due to internal error", ErrorType::Internal); }
 				}
 			}
 
@@ -253,10 +255,11 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	}
 
 	// Remove all stimulations for which the epochs have been constructed and sent
-	m_ReceivedStimulations.erase(std::remove_if(m_ReceivedStimulations.begin(), m_ReceivedStimulations.end(), [&lastProcessedStimulationDate](const uint64_t& stimulationDate)
-	{
-		return stimulationDate <= lastProcessedStimulationDate;
-	}), m_ReceivedStimulations.end());
+	m_ReceivedStimulations.erase(std::remove_if(m_ReceivedStimulations.begin(), m_ReceivedStimulations.end(),
+												[&lastProcessedStimulationDate](const uint64_t& stimulationDate)
+												{
+													return stimulationDate <= lastProcessedStimulationDate;
+												}), m_ReceivedStimulations.end());
 
 	// Deprecate cached chunks which will no longer be used because they are too far back in history compared to received stimulations
 	const uint64_t lastUsefulChunkEndTime = m_ReceivedStimulations.empty() ? m_LastStimulationChunkStartTime : m_ReceivedStimulations.front();

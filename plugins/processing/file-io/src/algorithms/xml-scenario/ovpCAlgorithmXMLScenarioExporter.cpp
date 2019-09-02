@@ -15,17 +15,11 @@ using namespace std;
 //___________________________________________________________________//
 //                                                                   //
 
-CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter()
-{
-	m_pWriter = createWriter(*this);
-}
+CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter() { m_pWriter = createWriter(*this); }
 
 CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter() { m_pWriter->release(); }
 
-void CAlgorithmXMLScenarioExporter::write(const char* sString)
-{
-	m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(sString), strlen(sString));
-}
+void CAlgorithmXMLScenarioExporter::write(const char* sString) { m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(sString), strlen(sString)); }
 
 bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier)
 {

@@ -39,10 +39,7 @@ bool Matrix::copyDescription(IMatrix& dst, const IMatrix& src)
 	{
 		const uint32_t dimSize = src.getDimensionSize(i);
 		if (!dst.setDimensionSize(i, dimSize)) { return false; }
-		for (uint32_t j = 0; j < dimSize; j++)
-		{
-			if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; }
-		}
+		for (uint32_t j = 0; j < dimSize; j++) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
 	}
 	return true;
 }
@@ -55,7 +52,7 @@ bool Matrix::copyContent(IMatrix& dst, const IMatrix& src)
 	const uint32_t nElementOut = dst.getBufferElementCount();
 	if (nElementOut != nElementIn) { return false; }
 	const double* bufferIn = src.getBuffer();
-	double* bufferOut  = dst.getBuffer();
+	double* bufferOut      = dst.getBuffer();
 	System::Memory::copy(bufferOut, bufferIn, nElementIn * sizeof(double));
 	return true;
 }
@@ -72,10 +69,7 @@ bool Matrix::isDescriptionSimilar(const IMatrix& src1, const IMatrix& src2, cons
 
 	if (src1.getDimensionCount() != src2.getDimensionCount()) { return false; }
 
-	for (uint32_t i = 0; i < src1.getDimensionCount(); i++)
-	{
-		if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; }
-	}
+	for (uint32_t i = 0; i < src1.getDimensionCount(); i++) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
 
 	if (bCheckLabels)
 	{
@@ -188,7 +182,10 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }								// ignore rest of line by skipping to last character
 						//header starting
 					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET) { status = Status_ParsingHeader; }	// update status
-					else if (!std::isspace(*it, locale)) { return false; }								// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << l_sWhat.c_str() << ", parsing aborted\n";
+					else if (!std::isspace(*it, locale))
+					{
+						return false;
+					}								// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << l_sWhat.c_str() << ", parsing aborted\n";
 					break;
 
 					//parse header
@@ -207,7 +204,8 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
 					{
 						//ensure at least one dimension was found
-						if (dimSize.empty()) { return false; } // getLogManager() << LogLevel_Trace << "End of header section reached, found 0 dimensions : parsing aborted\n";
+						if (dimSize.empty()
+						) { return false; } // getLogManager() << LogLevel_Trace << "End of header section reached, found 0 dimensions : parsing aborted\n";
 
 						//resize matrix
 						rMatrix.setDimensionCount(uint32_t(dimSize.size()));
@@ -219,10 +217,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						uint32_t l_ui32Element = 0;
 						for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
 						{
-							for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++)
-							{
-								rMatrix.setDimensionLabel(i, j, labels[l_ui32Element++].c_str());
-							}
+							for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++) { rMatrix.setDimensionLabel(i, j, labels[l_ui32Element++].c_str()); }
 						}
 
 						/*
@@ -306,10 +301,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						status = Status_ParsingHeaderDimension;
 					}
 						//otherwise, keep parsing current label
-					else
-					{
-						curString.append(1, *it);
-					}
+					else { curString.append(1, *it); }
 					break;
 
 				case Status_ParsingBuffer:
@@ -416,7 +408,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						}
 
 						//retrieve value
-						errno                   = 0;
+						errno              = 0;
 						const double value = atof(curString.c_str());
 #if defined TARGET_OS_Windows
 						if (errno == ERANGE)
@@ -439,10 +431,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						status = Status_ParsingBuffer;
 					}
 						//otherwise, append current character to current string
-					else
-					{
-						curString.append(1, *it);
-					}
+					else { curString.append(1, *it); }
 					break;
 
 				default:
@@ -474,10 +463,7 @@ bool dumpMatrixBuffer(const IMatrix& rMatrix, std::stringstream& buffer, uint32_
 	if (ui32DimensionIndex == rMatrix.getDimensionCount() - 1)
 	{
 		//dimension start
-		for (uint32_t j = 0; j < ui32DimensionIndex; j++)
-		{
-			buffer << CONSTANT_TAB;
-		}
+		for (uint32_t j = 0; j < ui32DimensionIndex; j++) { buffer << CONSTANT_TAB; }
 		buffer << CONSTANT_LEFT_SQUARE_BRACKET;
 
 		//dump current cell contents
@@ -495,19 +481,13 @@ bool dumpMatrixBuffer(const IMatrix& rMatrix, std::stringstream& buffer, uint32_
 		for (uint32_t i = 0; i < rMatrix.getDimensionSize(ui32DimensionIndex); i++)
 		{
 			//dimension start
-			for (uint32_t j = 0; j < ui32DimensionIndex; j++)
-			{
-				buffer << CONSTANT_TAB;
-			}
+			for (uint32_t j = 0; j < ui32DimensionIndex; j++) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
 			dumpMatrixBuffer(rMatrix, buffer, ui32DimensionIndex + 1, ui32ElementIndex);
 
 			//dimension end
-			for (uint32_t j = 0; j < ui32DimensionIndex; j++)
-			{
-				buffer << CONSTANT_TAB;
-			}
+			for (uint32_t j = 0; j < ui32DimensionIndex; j++) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
 		}
 	}

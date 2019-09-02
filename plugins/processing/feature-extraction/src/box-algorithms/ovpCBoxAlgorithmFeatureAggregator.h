@@ -100,7 +100,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Bruno Renier"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Aggregates input to feature vectors"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Each chunk of input will be catenated into one feature vector."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Each chunk of input will be catenated into one feature vector.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Feature extraction"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

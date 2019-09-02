@@ -86,10 +86,7 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	IBoxIO& boxContext    = this->getDynamicBoxContext();
 	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
 
-	if (!m_bIsHeaderGenerate)
-	{
-		if (!generateFileHeader()) { return false; }
-	}
+	if (!m_bIsHeaderGenerate) { if (!generateFileHeader()) { return false; } }
 
 	m_oSwap.setSize(0, true);
 
@@ -127,7 +124,4 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	return true;
 }
 
-void CBoxAlgorithmGenericStreamWriter::write(const void* buffer, const uint64_t size)
-{
-	m_oSwap.append(reinterpret_cast<const uint8_t*>(buffer), size);
-}
+void CBoxAlgorithmGenericStreamWriter::write(const void* buffer, const uint64_t size) { m_oSwap.append(reinterpret_cast<const uint8_t*>(buffer), size); }

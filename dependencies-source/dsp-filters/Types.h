@@ -57,33 +57,21 @@ namespace Dsp
 					const complex_t& c2)
 			: complex_pair_t(c1, c2) { }
 
-		bool isConjugate() const
-		{
-			return second == std::conj(first);
-		}
+		bool isConjugate() const { return second == std::conj(first); }
 
-		bool isReal() const
-		{
-			return first.imag() == 0 && second.imag() == 0;
-		}
+		bool isReal() const { return first.imag() == 0 && second.imag() == 0; }
 
 		// Returns true if this is either a conjugate pair,
 		// or a pair of reals where neither is zero.
 		bool isMatchedPair() const
 		{
-			if (first.imag() != 0)
-			{
-				return second == std::conj(first);
-			}
+			if (first.imag() != 0) { return second == std::conj(first); }
 			return second.imag() == 0 &&
 				   second.real() != 0 &&
 				   first.real() != 0;
 		}
 
-		bool is_nan() const
-		{
-			return Dsp::is_nan(first) || Dsp::is_nan(second);
-		}
+		bool is_nan() const { return Dsp::is_nan(first) || Dsp::is_nan(second); }
 	};
 
 	// A pair of pole/zeros. This fits in a biquad (but is missing the gain)
@@ -104,15 +92,9 @@ namespace Dsp
 			: poles(p1, p2)
 			  , zeros(z1, z2) { }
 
-		bool isSinglePole() const
-		{
-			return poles.second == 0. && zeros.second == 0.;
-		}
+		bool isSinglePole() const { return poles.second == 0. && zeros.second == 0.; }
 
-		bool is_nan() const
-		{
-			return poles.is_nan() || zeros.is_nan();
-		}
+		bool is_nan() const { return poles.is_nan() || zeros.is_nan(); }
 	};
 
 	// Identifies the general class of filter

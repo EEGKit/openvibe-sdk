@@ -47,7 +47,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	{
 		CString name;
 		boxContext.getSettingName(i, name);
-		const CString value           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
+		const CString value   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 		(*m_pParameter)[name] = value;
 	}
 
@@ -59,8 +59,10 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	CIdentifier l_oClassifierAlgorithmClassIdentifier;
 
-	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
-	l_oClassifierAlgorithmClassIdentifier  = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[ALGORITHM_SETTING_NAME]);
+	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(
+		OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
+	l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(
+		OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[ALGORITHM_SETTING_NAME]);
 
 	if (l_oStrategyClassIdentifier == OV_UndefinedIdentifier)
 	{
@@ -76,7 +78,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	}
 	else
 	{
-		isPairing  = true;
+		isPairing     = true;
 		m_pClassifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(l_oStrategyClassIdentifier));
 		m_pClassifier->initialize();
 	}
@@ -103,7 +105,8 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	m_vFeatureCount.clear();
 
-	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() >= 2, "Invalid input count [" << boxContext.getInputCount() << "] (at least 2 input expected)", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() >= 2, "Invalid input count [" << boxContext.getInputCount() << "] (at least 2 input expected)",
+						OpenViBE::Kernel::ErrorType::BadSetting);
 
 	// Provide the number of classes to the classifier
 	const uint32_t nClass = boxContext.getInputCount() - 1;
@@ -116,7 +119,8 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 		TParameterHandler<CIdentifier*> ip_oClassId(m_pClassifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
 		ip_oClassId = &l_oClassifierAlgorithmClassIdentifier;
 
-		OV_ERROR_UNLESS_KRF(m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture), "Failed to design architecture", OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture), "Failed to design architecture",
+							OpenViBE::Kernel::ErrorType::Internal);
 	}
 
 	return true;
@@ -141,7 +145,6 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	m_vFeatureVectorDecoder.clear();
 
 	m_oStimulationEncoder.uninitialize();
-
 	m_oStimulationDecoder.uninitialize();
 
 	for (uint32_t i = 0; i < m_vDataset.size(); i++)
@@ -179,7 +182,6 @@ bool CBoxAlgorithmClassifierTrainer::processInput(const uint32_t /*index*/)
 bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
-
 	const uint32_t nClass = boxContext.getInputCount() - 1;
 
 	this->getLogManager() << LogLevel_Info << "Balancing dataset...\n";
@@ -191,10 +193,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 
 	// Count how many vectors the largest class has
 	uint32_t nMax = 0;
-	for (uint32_t i = 0; i < nClass; i++)
-	{
-		nMax = std::max<uint32_t>(nMax, classIndexes[i].size());
-	}
+	for (uint32_t i = 0; i < nClass; i++) { nMax = std::max<uint32_t>(nMax, classIndexes[i].size()); }
 
 	m_vBalancedDataset.clear();
 
@@ -208,10 +207,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 			this->getLogManager() << LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
 			continue;
 		}
-		if (paddingNeeded > 0)
-		{
-			this->getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << paddingNeeded << " examples\n";
-		}
+		if (paddingNeeded > 0) { this->getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << paddingNeeded << " examples\n"; }
 
 		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_vDataset owns the data pointer.
@@ -220,7 +216,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 
 		for (uint32_t j = 0; j < paddingNeeded; j++)
 		{
-			const uint32_t sampledIndex     = System::Math::randomUInteger32WithCeiling(examplesInClass);
+			const uint32_t sampledIndex        = System::Math::randomUInteger32WithCeiling(examplesInClass);
 			const SFeatureVector& sourceVector = m_vDataset[thisClassesIndexes[sampledIndex]];
 			m_vBalancedDataset.push_back(sourceVector);
 		}
@@ -249,14 +245,14 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		if (m_oStimulationDecoder.isBufferReceived())
 		{
 			const IStimulationSet* iStimulationSet = m_oStimulationDecoder.getOutputStimulationSet();
-			IStimulationSet* oStimulationSet      = m_oStimulationEncoder.getInputStimulationSet();
+			IStimulationSet* oStimulationSet       = m_oStimulationEncoder.getInputStimulationSet();
 			oStimulationSet->clear();
 
 			for (uint64_t j = 0; j < iStimulationSet->getStimulationCount(); j++)
 			{
 				if (iStimulationSet->getStimulationIdentifier(j) == m_ui64TrainStimulation)
 				{
-					startTrain = true;
+					startTrain            = true;
 					const uint64_t stimId = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, "OVTK_StimulationId_TrainCompleted");
 					oStimulationSet->appendStimulation(stimId, iStimulationSet->getStimulationDate(j), 0);
 				}
@@ -353,16 +349,18 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_ui64PartitionCount);
 				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_ui64PartitionCount);
 
-				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << uint32_t(startIdx) << " to " << uint32_t(stopIdx) - 1 << ")...\n";
+				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << uint32_t(startIdx) << " to " <<
+						uint32_t(stopIdx) - 1 << ")...\n";
 
 				OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, startIdx, stopIdx),
 									"Training failed: bailing out (from xval)", OpenViBE::Kernel::ErrorType::Internal);
 
-				partitionAccuracy                  = this->getAccuracy(actualDataset, featurePermutation, startIdx, stopIdx, confusion);
+				partitionAccuracy      = this->getAccuracy(actualDataset, featurePermutation, startIdx, stopIdx, confusion);
 				partitionAccuracies[i] = partitionAccuracy;
 				finalAccuracy += partitionAccuracy;
 
-				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_ui64PartitionCount << " (performance : " << partitionAccuracy << "%)\n";
+				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_ui64PartitionCount << " (performance : " <<
+						partitionAccuracy << "%)\n";
 			}
 
 			const double mean = finalAccuracy / m_ui64PartitionCount;
@@ -404,12 +402,13 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, const size_t startIndex, const size_t stopIndex)
+bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, const size_t startIndex,
+										   const size_t stopIndex)
 {
 	OV_ERROR_UNLESS_KRF(stopIndex - startIndex != 1, "Invalid indexes: stopIndex - trainIndex = 1", OpenViBE::Kernel::ErrorType::BadArgument);
 
-	const uint32_t nFeatureVector = rDataset.size() - (stopIndex - startIndex);
-	const uint32_t featureVectorSize  = rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
+	const uint32_t nFeatureVector    = rDataset.size() - (stopIndex - startIndex);
+	const uint32_t featureVectorSize = rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
@@ -466,7 +465,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 		const size_t k = rPermutation[j];
 
 		double* featureVectorBuffer = ip_pFeatureVector->getBuffer();
-		const double correctValue = double(rDataset[k].m_ui32InputIndex);
+		const double correctValue   = double(rDataset[k].m_ui32InputIndex);
 
 		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
@@ -502,7 +501,8 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	if (rows > 10 && !this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_ForceConfusionMatrixPrint}"))
 	{
-		this->getLogManager() << LogLevel_Info << "Over 10 classes, not printing the confusion matrix. If needed, override with setting Plugin_Classification_ForceConfusionMatrixPrint token to true.\n";
+		this->getLogManager() << LogLevel_Info <<
+				"Over 10 classes, not printing the confusion matrix. If needed, override with setting Plugin_Classification_ForceConfusionMatrixPrint token to true.\n";
 		return true;
 	}
 
@@ -531,10 +531,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	{
 		ss.str("");
 		ss << "  Target " << setw(2) << (i + 1) << ": ";
-		for (uint32_t j = 0; j < rows; j++)
-		{
-			ss << setw(6) << tmp[i * rows + j] * 100;
-		}
+		for (uint32_t j = 0; j < rows; j++) { ss << setw(6) << tmp[i * rows + j] * 100; }
 		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << uint32_t(rowSum[i]) << " examples\n";
 	}
 
@@ -550,10 +547,7 @@ bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 	algorithmConfigurationNode->addChild(static_cast<XML::IXMLNode*>(op_pConfiguration));
 
 	XML::IXMLHandler* handler = XML::createXMLHandler();
-	CString configurationFilename(this->getConfigurationManager().expand((*m_pParameter)[FILENAME_SETTING_NAME]));
-
-	const CString strategyClassIdentifier            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	const CString classifierAlgorithmClassIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	const CString configurationFilename(this->getConfigurationManager().expand((*m_pParameter)[FILENAME_SETTING_NAME]));
 
 	XML::IXMLNode* root = XML::createNode(CLASSIFICATION_BOX_ROOT);
 	std::stringstream version;
@@ -569,14 +563,15 @@ bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 	root->addAttribute(CREATOR_ATTRIBUTE_NAME, this->getConfigurationManager().expand("${Application_Name}"));
 	root->addAttribute(CREATOR_VERSION_ATTRIBUTE_NAME, this->getConfigurationManager().expand("${Application_Version}"));
 
-	XML::IXMLNode* tempNode             = XML::createNode(STRATEGY_NODE_NAME);
+	XML::IXMLNode* tempNode           = XML::createNode(STRATEGY_NODE_NAME);
 	const CIdentifier strategyClassId = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
 	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, strategyClassId.toString());
 	tempNode->setPCData((*m_pParameter)[MULTICLASS_STRATEGY_SETTING_NAME].toASCIIString());
 	root->addChild(tempNode);
 
 	tempNode                            = XML::createNode(ALGORITHM_NODE_NAME);
-	const CIdentifier classifierClassId = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[ALGORITHM_SETTING_NAME]);
+	const CIdentifier classifierClassId = this->getTypeManager().getEnumerationEntryValueFromName(
+		OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[ALGORITHM_SETTING_NAME]);
 	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, classifierClassId.toString());
 	tempNode->setPCData((*m_pParameter)[ALGORITHM_SETTING_NAME].toASCIIString());
 	root->addChild(tempNode);

@@ -43,9 +43,9 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh = 2;
-			int l_i32VersionLow  = 0;
-			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
+			int l_i32VersionHigh   = 2;
+			int l_i32VersionLow    = 0;
+			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
@@ -56,9 +56,9 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh = 2;
-			int l_i32VersionLow  = 0;
-			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
+			int l_i32VersionHigh   = 2;
+			int l_i32VersionLow    = 0;
+			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
@@ -187,10 +187,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool isConnected() const
-		{
-			return m_i32Socket != -1;
-		}
+		virtual bool isConnected() const { return m_i32Socket != -1; }
 
 		virtual void release()
 		{

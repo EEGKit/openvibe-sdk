@@ -21,7 +21,7 @@ namespace
 	//const char* const BIAS_DISTANCE_NODE_NAME = "Bias-distance";
 	//const char* const COEFFICIENT_PROBABILITY_NODE_NAME = "Coefficient-probability";
 	const char* const COMPUTATION_HELPERS_CONFIGURATION_NODE = "Class-config-list";
-	const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME   = "version";
+	const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
 }
 
 extern const char* const CLASSIFIER_ROOT;
@@ -30,10 +30,12 @@ int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix&
 {
 	//We first need to find the best classification of each.
 	double* l_pClassificationValueBuffer = firstClassificationValue.getBuffer();
-	const double l_f64MaxFirst           = *(std::max_element(l_pClassificationValueBuffer, l_pClassificationValueBuffer + firstClassificationValue.getBufferElementCount()));
+	const double l_f64MaxFirst           = *(std::max_element(l_pClassificationValueBuffer,
+															  l_pClassificationValueBuffer + firstClassificationValue.getBufferElementCount()));
 
 	l_pClassificationValueBuffer = secondClassificationValue.getBuffer();
-	const double l_f64MaxSecond  = *(std::max_element(l_pClassificationValueBuffer, l_pClassificationValueBuffer + secondClassificationValue.getBufferElementCount()));
+	const double l_f64MaxSecond  = *(std::max_element(l_pClassificationValueBuffer,
+													  l_pClassificationValueBuffer + secondClassificationValue.getBufferElementCount()));
 
 	//Then we just compared them
 	if (ov_float_equal(l_f64MaxFirst, l_f64MaxSecond)) { return 0; }
@@ -76,7 +78,8 @@ uint32_t CAlgorithmClassifierLDA::getOutputDistanceVectorLength() { return m_vDi
 bool CAlgorithmClassifierLDA::initialize()
 {
 	// Initialize the Conditioned Covariance Matrix algorithm
-	m_pCovarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
+	m_pCovarianceAlgorithm = &this->getAlgorithmManager().
+									getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
 
 	OV_ERROR_UNLESS_KRF(m_pCovarianceAlgorithm->initialize(), "Failed to initialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
@@ -133,15 +136,18 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 
 	// IO to the covariance alg
 	TParameterHandler<IMatrix*> op_pMean(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
-	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	TParameterHandler<IMatrix*> op_pCovarianceMatrix(
+		m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(
+		m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
 	const uint32_t nRows = featureVectorSet.getFeatureVectorCount();
 	const uint32_t nCols = (nRows > 0 ? featureVectorSet[0].getSize() : 0);
 	this->getLogManager() << LogLevel_Debug << "Feature set input dims ["
 			<< featureVectorSet.getFeatureVectorCount() << "x" << nCols << "]\n";
 
-	OV_ERROR_UNLESS_KRF(nRows != 0 && nCols != 0, "Input data has a zero-size dimension, dims = [" << nRows << "x" << nCols << "]", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(nRows != 0 && nCols != 0, "Input data has a zero-size dimension, dims = [" << nRows << "x" << nCols << "]",
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 	// The max amount of classes to be expected
 	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
@@ -254,13 +260,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	SelfAdjointEigenSolver<MatrixXd> l_oEigenSolver;
 	l_oEigenSolver.compute(l_oGlobalCov);
 	VectorXd l_oEigenValues = l_oEigenSolver.eigenvalues();
-	for (uint32_t i = 0; i < nCols; i++)
-	{
-		if (l_oEigenValues(i) >= l_f64Tolerance)
-		{
-			l_oEigenValues(i) = 1.0 / l_oEigenValues(i);
-		}
-	}
+	for (uint32_t i = 0; i < nCols; i++) { if (l_oEigenValues(i) >= l_f64Tolerance) { l_oEigenValues(i) = 1.0 / l_oEigenValues(i); } }
 	const MatrixXd l_oGlobalCovInv = l_oEigenSolver.eigenvectors() * l_oEigenValues.asDiagonal() * l_oEigenSolver.eigenvectors().inverse();
 
 	// const MatrixXd l_oGlobalCovInv = l_oGlobalCov.inverse();
@@ -277,7 +277,8 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 			const MatrixXd l_oInter  = -0.5 * l_oPerClassMeans[i].transpose() * l_oGlobalCovInv * l_oPerClassMeans[i];
 			const double l_f64Bias   = l_oInter(0, 0) + std::log(l_f64ExamplesInClass / l_ui32TotalExamples);
 
-			this->getLogManager() << LogLevel_Debug << "Bias for " << static_cast<const uint64_t>(i) << " is " << l_f64Bias << ", from " << l_f64ExamplesInClass / l_ui32TotalExamples
+			this->getLogManager() << LogLevel_Debug << "Bias for " << static_cast<const uint64_t>(i) << " is " << l_f64Bias << ", from " << l_f64ExamplesInClass
+					/ l_ui32TotalExamples
 					<< ", " << l_f64ExamplesInClass << "/" << l_ui32TotalExamples << ", int=" << l_oInter(0, 0)
 					<< "\n";
 			// dumpMatrix(this->getLogManager(), l_oPerClassMeans[i], "Means");
@@ -285,10 +286,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 			m_vDiscriminantFunctions[i].setWeight(l_oWeight);
 			m_vDiscriminantFunctions[i].setBias(l_f64Bias);
 		}
-		else
-		{
-			this->getLogManager() << LogLevel_Debug << "Class " << static_cast<const uint64_t>(i) << " has no examples\n";
-		}
+		else { this->getLogManager() << LogLevel_Debug << "Class " << static_cast<const uint64_t>(i) << " has no examples\n"; }
 	}
 
 	// Hack for classes with zero examples, give them valid models but such that will always lose
@@ -323,7 +321,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	return true;
 }
 
-bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, double& classId, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, double& classId, IVector& rDistanceValue, IVector& rProbabilityValue)
 {
 	OV_ERROR_UNLESS_KRF(!m_vDiscriminantFunctions.empty(), "LDA discriminant function list is empty", OpenViBE::Kernel::ErrorType::BadConfig);
 
@@ -338,10 +336,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, doub
 	double* l_pValueArray       = new double[l_ui32ClassCount];
 	double* l_pProbabilityValue = new double[l_ui32ClassCount];
 	//We ask for all computation helper to give the corresponding class value
-	for (size_t i = 0; i < l_ui32ClassCount; ++i)
-	{
-		l_pValueArray[i] = m_vDiscriminantFunctions[i].getValue(l_oWeights);
-	}
+	for (size_t i = 0; i < l_ui32ClassCount; ++i) { l_pValueArray[i] = m_vDiscriminantFunctions[i].getValue(l_oWeights); }
 
 	//p(Ck | x) = exp(ak) / sum[j](exp (aj))
 	// with aj = (Weight for class j).transpose() * x + (Bias for class j)
@@ -354,10 +349,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, doub
 	for (size_t i = 0; i < l_ui32ClassCount; ++i)
 	{
 		double l_f64ExpSum = 0.;
-		for (size_t j = 0; j < l_ui32ClassCount; ++j)
-		{
-			l_f64ExpSum += exp(l_pValueArray[j] - l_pValueArray[i]);
-		}
+		for (size_t j = 0; j < l_ui32ClassCount; ++j) { l_f64ExpSum += exp(l_pValueArray[j] - l_pValueArray[i]); }
 		l_pProbabilityValue[i] = 1 / l_f64ExpSum;
 		// std::cout << "p " << i << " = " << l_pProbabilityValue[i] << ", v=" << l_pValueArray[i] << ", " << errno << "\n";
 	}
@@ -365,13 +357,13 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, doub
 	//Then we just find the highest probability and take it as a result
 	size_t l_ui32ClassIndex = size_t(std::distance(l_pValueArray, std::max_element(l_pValueArray, l_pValueArray + l_ui32ClassCount)));
 
-	rClassificationValues.setSize(l_ui32ClassCount);
+	rDistanceValue.setSize(l_ui32ClassCount);
 	rProbabilityValue.setSize(l_ui32ClassCount);
 
 	for (size_t i = 0; i < l_ui32ClassCount; ++i)
 	{
-		rClassificationValues[i] = l_pValueArray[i];
-		rProbabilityValue[i]     = l_pProbabilityValue[i];
+		rDistanceValue[i]    = l_pValueArray[i];
+		rProbabilityValue[i] = l_pProbabilityValue[i];
 	}
 
 	classId = m_vLabelList[l_ui32ClassIndex];

@@ -52,8 +52,9 @@ namespace OpenViBEPlugins
 				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual bool train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t startIdx, size_t stopIndex); 
-			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t uiStartIndex, size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
+			virtual bool train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t startIdx, size_t stopIndex);
+			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t uiStartIndex,
+									   size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
 			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
 			virtual bool balanceDataset();
 
@@ -87,8 +88,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Classifier trainer"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Generic classifier trainer, relying on several box algorithms"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Performs classifier training with cross-validation -based error estimation"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Generic classifier trainer, relying on several box algorithms");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Performs classifier training with cross-validation -based error estimation");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Classification"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
@@ -124,7 +134,11 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCommonClassifierListener(OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override
+			{
+				return new CBoxAlgorithmCommonClassifierListener(OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount);
+			}
+
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierTrainerDesc)

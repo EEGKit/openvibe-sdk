@@ -43,8 +43,8 @@ bool CBoxAlgorithmStimulationListener::processInput(const uint32_t /*index*/)
 bool CBoxAlgorithmStimulationListener::process()
 {
 	const IBox& staticBoxContext = this->getStaticBoxContext();
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	IBoxIO& boxContext           = this->getDynamicBoxContext();
+	const size_t nInput          = this->getStaticBoxContext().getInputCount();
 
 	for (uint32_t i = 0; i < nInput; i++)
 	{
@@ -63,13 +63,17 @@ bool CBoxAlgorithmStimulationListener::process()
 					this->getLogManager() << m_eLogLevel
 							<< "For input " << i << " with name " << inputName
 							<< " got stimulation " << op_pStimulationSet->getStimulationIdentifier(k)
-							<< "[" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, op_pStimulationSet->getStimulationIdentifier(k)) << "]"
+							<< "[" << this->getTypeManager().getEnumerationEntryNameFromValue(
+								OV_TypeId_Stimulation, op_pStimulationSet->getStimulationIdentifier(k)) << "]"
 							<< " at date " << time64(op_pStimulationSet->getStimulationDate(k))
 							<< " and duration " << time64(op_pStimulationSet->getStimulationDuration(k))
 							<< "\n";
 
-					OV_WARNING_UNLESS_K(op_pStimulationSet->getStimulationDate(k) >= boxContext.getInputChunkStartTime(i, j) && op_pStimulationSet->getStimulationDate(k) <= boxContext.getInputChunkEndTime(i, j),
-										"Invalid out of range date [" << time64(op_pStimulationSet->getStimulationDate(k)) << "] (expected value between [" << time64(boxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "])");
+					OV_WARNING_UNLESS_K(
+						op_pStimulationSet->getStimulationDate(k) >= boxContext.getInputChunkStartTime(i, j) && op_pStimulationSet->getStimulationDate(k) <=
+						boxContext.getInputChunkEndTime(i, j),
+						"Invalid out of range date [" << time64(op_pStimulationSet->getStimulationDate(k)) << "] (expected value between [" << time64(boxContext
+							.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "])");
 				}
 				/*
 				if(ITimeArithmetics::timeToSeconds(boxContext.getInputChunkStartTime(i, j)) > 234 && op_pStimulationSet->getStimulationCount()==0)

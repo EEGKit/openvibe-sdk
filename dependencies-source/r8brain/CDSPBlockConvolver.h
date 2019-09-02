@@ -126,10 +126,7 @@ namespace r8b
 							Delay = DownFactor - Delay;
 							Latency += Delay;
 
-							if (Delay < UpFactor)
-							{
-								UpSkipInit = Delay;
-							}
+							if (Delay < UpFactor) { UpSkipInit = Delay; }
 							else
 							{
 								UpSkipInit = UpFactor - 1;
@@ -137,10 +134,7 @@ namespace r8b
 							}
 						}
 
-						if (!DoConsumeLatency)
-						{
-							Latency /= DownFactor;
-						}
+						if (!DoConsumeLatency) { Latency /= DownFactor; }
 					}
 				}
 			}
@@ -158,10 +152,7 @@ namespace r8b
 
 			fftin = new CDSPRealFFTKeeper(fftinBits);
 
-			if (fftoutBits == fftinBits)
-			{
-				fftout = fftin;
-			}
+			if (fftoutBits == fftinBits) { fftout = fftin; }
 			else
 			{
 				ffto2  = new CDSPRealFFTKeeper(fftoutBits);
@@ -183,10 +174,7 @@ namespace r8b
 
 		~CDSPBlockConvolver() override { Filter->unref(); }
 
-		int getLatency() const override
-		{
-			return (DoConsumeLatency ? 0 : Latency);
-		}
+		int getLatency() const override { return (DoConsumeLatency ? 0 : Latency); }
 
 		double getLatencyFrac() const override { return (LatencyFrac); }
 
@@ -208,10 +196,7 @@ namespace r8b
 		{
 			memset(&PrevInput[0], 0, PrevInputLen * sizeof(double));
 
-			if (DoConsumeLatency)
-			{
-				LatencyLeft = Latency;
-			}
+			if (DoConsumeLatency) { LatencyLeft = Latency; }
 			else
 			{
 				LatencyLeft = 0;
@@ -260,10 +245,7 @@ namespace r8b
 						memcpy(&CurInput[Offs >> UpShift], ip,
 							   (l >> UpShift) * sizeof(double));
 					}
-					else
-					{
-						copyUpsample(ip, &CurInput[Offs], l);
-					}
+					else { copyUpsample(ip, &CurInput[Offs], l); }
 
 					copyToOutput(Offs - OutOffset, op, l, l0);
 					break;
@@ -466,10 +448,7 @@ namespace r8b
 				{
 					op[0] = *ip;
 
-					for (int j = 1; j < UpFactor; j++)
-					{
-						op[j] = 0.0;
-					}
+					for (int j = 1; j < UpFactor; j++) { op[j] = 0.0; }
 
 					ip++;
 					op += UpFactor;
@@ -511,10 +490,7 @@ namespace r8b
 		{
 			if (Offs < 0)
 			{
-				if (Offs + b <= 0)
-				{
-					Offs += BlockLen2;
-				}
+				if (Offs + b <= 0) { Offs += BlockLen2; }
 				else
 				{
 					copyToOutput(Offs + BlockLen2, op0, -Offs, l0);

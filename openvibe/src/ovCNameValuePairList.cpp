@@ -15,14 +15,11 @@ namespace OpenViBE
 	};
 }
 
-CNameValuePairList::CNameValuePairList()
-{
-	m_pNameValuePairListImpl = new CNameValuePairListImpl();
-}
+CNameValuePairList::CNameValuePairList() { m_pNameValuePairListImpl = new CNameValuePairListImpl(); }
 
 CNameValuePairList::CNameValuePairList(const CNameValuePairList& rNameValuePairList)
 {
-	m_pNameValuePairListImpl         = new CNameValuePairListImpl();
+	m_pNameValuePairListImpl        = new CNameValuePairListImpl();
 	m_pNameValuePairListImpl->m_Map = rNameValuePairList.m_pNameValuePairListImpl->m_Map;
 }
 
@@ -73,10 +70,7 @@ bool CNameValuePairList::getValue(const CString& rName, double& rValue) const
 	if (m_pNameValuePairListImpl->m_Map.find(rName) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
 	double temp;
 
-	try
-	{
-		temp = std::stod(m_pNameValuePairListImpl->m_Map[rName].toASCIIString());
-	}
+	try { temp = std::stod(m_pNameValuePairListImpl->m_Map[rName].toASCIIString()); }
 	catch (const std::exception&) { return false; }
 
 	rValue = temp;

@@ -55,8 +55,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Signal Decimation"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Reduces the sampling frequency to a divider of the original sampling frequency"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("No pre filtering applied - Number of samples per block have to be a multiple of the decimation factor"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Reduces the sampling frequency to a divider of the original sampling frequency");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("No pre filtering applied - Number of samples per block have to be a multiple of the decimation factor");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

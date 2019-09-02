@@ -169,10 +169,7 @@ namespace Dsp
 			template <class FilterClass>
 			struct TypeI : TypeIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
 			};
 
 			struct TypeIIBase : DesignBase
@@ -191,10 +188,7 @@ namespace Dsp
 			template <class FilterClass>
 			struct TypeII : TypeIIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]); }
 			};
 
 			struct TypeIIIBase : DesignBase
@@ -285,7 +279,11 @@ namespace Dsp
 			template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
 			struct OrderBase : TypeClass<FilterClass<MaxOrder>>
 			{
-				ParamInfo getParamInfo_1() const { return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue, &ParamInfo::Int_toString); }
+				ParamInfo getParamInfo_1() const
+				{
+					return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue,
+									 &ParamInfo::Int_toString);
+				}
 			};
 
 			//------------------------------------------------------------------------------

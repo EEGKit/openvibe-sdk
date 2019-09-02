@@ -23,30 +23,15 @@ const CIdentifier& CIdentifier::operator=(const CIdentifier& rIdentifier)
 
 namespace EBML
 {
-	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier;
-	}
+	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier; }
 
-	bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier != rIdentifier2.m_ui64Identifier;
-	}
+	bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier != rIdentifier2.m_ui64Identifier; }
 
-	bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier <= rIdentifier2.m_ui64Identifier;
-	}
+	bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier <= rIdentifier2.m_ui64Identifier; }
 
-	bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier >= rIdentifier2.m_ui64Identifier;
-	}
+	bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier >= rIdentifier2.m_ui64Identifier; }
 
-	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier;
-	}
+	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier; }
 
 	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier; }
 } // namespace EBML

@@ -29,15 +29,15 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next type identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousID [in] : The identifier
 			 *        for the preceeding type
 			 * \return The identifier of the next type in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first type
 			 *       identifier.
 			 */
-			virtual CIdentifier getNextTypeIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextTypeIdentifier(const CIdentifier& previousID) const = 0;
 			
 			/**
 			 * \brief Get a sorted vector of pairs of registered types identifiers associated to types names, 

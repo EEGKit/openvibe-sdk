@@ -36,7 +36,8 @@ IPlayer& CPlayerManager::getPlayer(const CIdentifier& rPlayerIdentifier)
 
 	// use fatal here because the signature does not allow
 	// proper checking
-	OV_FATAL_UNLESS_K(itPlayer != m_vPlayer.end(), "Trying to retrieve non existing player with id " << rPlayerIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itPlayer != m_vPlayer.end(), "Trying to retrieve non existing player with id " << rPlayerIdentifier.toString(),
+					  ErrorType::ResourceNotFound);
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the manager implementation
@@ -45,9 +46,9 @@ IPlayer& CPlayerManager::getPlayer(const CIdentifier& rPlayerIdentifier)
 	return *itPlayer->second;
 }
 
-CIdentifier CPlayerManager::getNextPlayerIdentifier(const CIdentifier& rPreviousIdentifier) const
+CIdentifier CPlayerManager::getNextPlayerIdentifier(const CIdentifier& previousID) const
 {
-	return getNextIdentifier<CPlayer*>(m_vPlayer, rPreviousIdentifier);
+	return getNextIdentifier<CPlayer*>(m_vPlayer, previousID);
 }
 
 CIdentifier CPlayerManager::getUnusedIdentifier() const

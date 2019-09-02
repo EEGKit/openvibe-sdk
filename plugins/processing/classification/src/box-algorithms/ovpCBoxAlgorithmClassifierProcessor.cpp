@@ -133,11 +133,14 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	TParameterHandler<IMatrix*> ip_oFeatureVector = m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
 	ip_oFeatureVector.setReferenceTarget(m_oFeatureVectorDecoder.getOutputMatrix());
 
-	m_oHyperplaneValuesEncoder.getInputMatrix().setReferenceTarget(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	m_oProbabilityValuesEncoder.getInputMatrix().setReferenceTarget(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+	m_oHyperplaneValuesEncoder.getInputMatrix().setReferenceTarget(
+		m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	m_oProbabilityValuesEncoder.getInputMatrix().setReferenceTarget(
+		m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 	// note: labelsencoder cannot be directly bound here as the classifier returns a float, but we need to output a stimulation
 
-	TParameterHandler<XML::IXMLNode*> ip_pClassificationConfiguration(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> ip_pClassificationConfiguration(
+		m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 	ip_pClassificationConfiguration = l_pRootNode->getChildByName(CLASSIFIER_ROOT)->getChild(0);
 
 	OV_ERROR_UNLESS_KRF(

@@ -18,7 +18,8 @@ namespace System
 		// Load a library in a matter compliant with non-ascii path
 		// returns the eventual error code
 		static BOOL utf16CompliantCreateProcess(char* sApplicationName, char* sCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
-												LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, char* sCurrentDirectory,
+												LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment,
+												char* sCurrentDirectory,
 												LPSTARTUPINFO pStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
 				
 		// Load a library in a matter compliant with non-ascii path

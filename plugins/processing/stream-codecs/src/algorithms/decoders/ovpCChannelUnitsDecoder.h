@@ -56,7 +56,8 @@ namespace OpenViBEPlugins
 			{
 				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 
 				return true;
 			}

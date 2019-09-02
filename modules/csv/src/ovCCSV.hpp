@@ -68,7 +68,8 @@ namespace OpenViBE
 			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) override;
 			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) override;
 
-			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, uint32_t samplingRate) override;
+			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
+										uint32_t samplingRate) override;
 			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) override;
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames) override;
@@ -310,6 +311,7 @@ namespace OpenViBE
 			 * \param inputStream The stream to read.
 			 * \param outputString The string before the next delimitor.
 			 * \param delimiter The delimiter .
+			 * \param bufferHistory
 			 */
 			bool streamReader(std::istream& inputStream, std::string& outputString, char delimiter, std::string& bufferHistory) const;
 
@@ -317,7 +319,7 @@ namespace OpenViBE
 			std::string m_Filename;
 			std::deque<SMatrixChunk> m_Chunks;
 			std::deque<SStimulationChunk> m_Stimulations;
-			ELogErrorCodes m_LogError = LogErrorCodes_NoError;
+			ELogErrorCodes m_LogError     = LogErrorCodes_NoError;
 			std::string m_LastStringError = "";
 
 			EStreamType m_InputTypeIdentifier;
@@ -327,18 +329,18 @@ namespace OpenViBE
 			std::vector<uint32_t> m_DimensionSizes;
 			std::vector<std::string> m_DimensionLabels;
 			uint32_t m_SampleCountPerBuffer = 0;
-			double m_NoEventSince = 0;
+			double m_NoEventSince           = 0;
 
 			std::vector<double> m_FrequencyAbscissa;
 
 			uint32_t m_SamplingRate = 0;
-			size_t m_ColumnCount = 0;
+			size_t m_ColumnCount    = 0;
 
-			bool m_HasInputType = false;
+			bool m_HasInputType       = false;
 			bool m_IsFirstLineWritten = false;
-			bool m_IsHeaderRead = false;
-			bool m_IsSetInfoCalled = false;
-			bool m_HasEpoch = false;
+			bool m_IsHeaderRead       = false;
+			bool m_IsSetInfoCalled    = false;
+			bool m_HasEpoch           = false;
 
 			uint32_t m_OriginalSampleNumber = 0;
 			uint32_t m_OutputFloatPrecision = 10;

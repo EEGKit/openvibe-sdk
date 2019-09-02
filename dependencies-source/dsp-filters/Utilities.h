@@ -70,10 +70,7 @@ namespace Dsp
 				src += srcSkip;
 			}
 		}
-		else
-		{
-			while (--samples >= 0) *dest++ += Td(*src++);
-		}
+		else { while (--samples >= 0) *dest++ += Td(*src++); }
 	}
 
 	// Multichannel add
@@ -82,10 +79,7 @@ namespace Dsp
 	void add(int channels,
 			 int samples,
 			 Td* const* dest,
-			 Ts const* const* src)
-	{
-		for (int i = channels; --i >= 0;) add(samples, dest[i], src[i]);
-	}
+			 Ts const* const* src) { for (int i = channels; --i >= 0;) add(samples, dest[i], src[i]); }
 
 	//--------------------------------------------------------------------------
 
@@ -131,10 +125,7 @@ namespace Dsp
 				dest += destSkip;
 			}
 		}
-		else
-		{
-			while (--samples >= 0) *dest++ = *src++;
-		}
+		else { while (--samples >= 0) *dest++ = *src++; }
 	}
 
 	// Wrapper that uses memcpy if there is no skip and the types are the same
@@ -157,10 +148,7 @@ namespace Dsp
 			  Td* const* dest,
 			  Ts const* const* src,
 			  int destSkip = 0,
-			  int srcSkip  = 0)
-	{
-		for (int i = channels; --i >= 0;) copy(samples, dest[i], src[i], destSkip, srcSkip);
-	}
+			  int srcSkip  = 0) { for (int i = channels; --i >= 0;) copy(samples, dest[i], src[i], destSkip, srcSkip); }
 
 	//--------------------------------------------------------------------------
 
@@ -253,10 +241,7 @@ namespace Dsp
 			  int samples,
 			  Td* const* dest,
 			  Ty start = 0,
-			  Ty end   = 1)
-	{
-		for (int i = channels; --i >= 0;) fade(samples, dest[i], start, end);
-	}
+			  Ty end   = 1) { for (int i = channels; --i >= 0;) fade(samples, dest[i], start, end); }
 
 	// Fade src into dest
 	template <typename Td,
@@ -288,10 +273,7 @@ namespace Dsp
 			  Td* const* dest,
 			  Ts const* const* src,
 			  Ty start = 0,
-			  Ty end   = 1)
-	{
-		for (int i = channels; --i >= 0;) fade(samples, dest[i], src[i], start, end);
-	}
+			  Ty end   = 1) { for (int i = channels; --i >= 0;) fade(samples, dest[i], src[i], start, end); }
 
 	//--------------------------------------------------------------------------
 
@@ -344,11 +326,8 @@ namespace Dsp
 			}
 			break;
 
-			default:
-			{
-				for (int i = channels; --i >= 0;) copy(samples, dest + i, src[i], channels - 1, 0);
-			}
-				break;
+			default: { for (int i = channels; --i >= 0;) copy(samples, dest + i, src[i], channels - 1, 0); }
+			break;
 		}
 	}
 
@@ -404,10 +383,7 @@ namespace Dsp
 				  int samples,
 				  Td* const* dest,
 				  Ty factor,
-				  int destSkip = 0)
-	{
-		for (int i = channels; --i >= 0;) multiply(samples, dest[i], factor, destSkip);
-	}
+				  int destSkip = 0) { for (int i = channels; --i >= 0;) multiply(samples, dest[i], factor, destSkip); }
 
 	//--------------------------------------------------------------------------
 
@@ -434,17 +410,11 @@ namespace Dsp
 				dest += destSkip;
 			}
 		}
-		else
-		{
-			while (--samples >= 0) *dest++ = *--src;
-		}
+		else { while (--samples >= 0) *dest++ = *--src; }
 	}
 
 	template <typename Td, typename Ts>
-	void reverse(int channels, size_t frames, Td* const* dest, const Ts* const* src)
-	{
-		for (int i = channels; --i >= 0;) reverse(frames, dest[i], src[i]);
-	}
+	void reverse(int channels, size_t frames, Td* const* dest, const Ts* const* src) { for (int i = channels; --i >= 0;) reverse(frames, dest[i], src[i]); }
 
 	//--------------------------------------------------------------------------
 
@@ -549,10 +519,7 @@ void zero (int samples,
 				dest += destSkip;
 			}
 		}
-		else
-		{
-			std::fill(dest, dest + samples, Ty());
-		}
+		else { std::fill(dest, dest + samples, Ty()); }
 	}
 
 #endif
@@ -562,10 +529,7 @@ void zero (int samples,
 	void zero(int channels,
 			  int samples,
 			  Ty* const* dest,
-			  int destSkip = 0)
-	{
-		for (int i = channels; --i >= 0;) zero(samples, dest[i], destSkip);
-	}
+			  int destSkip = 0) { for (int i = channels; --i >= 0;) zero(samples, dest[i], destSkip); }
 
 	//------------------------------------------------------------------------------
 
@@ -678,10 +642,7 @@ void zero (int samples,
 	class EnvelopeFollower
 	{
 	public:
-		EnvelopeFollower()
-		{
-			for (int i = 0; i < Channels; i++) m_env[i] = 0;
-		}
+		EnvelopeFollower() { for (int i = 0; i < Channels; i++) m_env[i] = 0; }
 
 		Value operator[](int channel) const { return m_env[channel]; }
 
@@ -722,10 +683,7 @@ void zero (int samples,
 	class SlopeDetector
 	{
 	public:
-		SlopeDetector() : m_firstTime(true)
-		{
-			for (int i = 0; i < Channels; ++i) m_slope[i] = 0;
-		}
+		SlopeDetector() : m_firstTime(true) { for (int i = 0; i < Channels; ++i) m_slope[i] = 0; }
 
 		Value getSlope(int channel) const { return m_slope[channel]; }
 

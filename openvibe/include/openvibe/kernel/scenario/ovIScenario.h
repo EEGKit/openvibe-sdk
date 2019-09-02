@@ -274,7 +274,8 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID) = 0;
+			virtual bool disconnect(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, const CIdentifier& dstBoxID,
+									const CIdentifier& dstBoxInputID) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes

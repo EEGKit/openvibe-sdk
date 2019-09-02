@@ -125,6 +125,7 @@ namespace Communication
 		/**
 		 * \brief Get the oldest error message, if available.
 		 *
+		 * \param packetId
 		 * \param[out]	type		The error's type.
 		 * \param[out]	guiltyId	Identifier of the guilty message
 		 *
@@ -136,6 +137,7 @@ namespace Communication
 		/**
 		 * \brief Get the oldest EBML message, if available.
 		 *
+		 * \param packetId
 		 * \param[out]	index	 	Box input index.
 		 * \param[out]	startTime	The start time.
 		 * \param[out]	endTime  	The end time.

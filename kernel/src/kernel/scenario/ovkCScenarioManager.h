@@ -17,21 +17,27 @@ namespace OpenViBE
 			explicit CScenarioManager(const IKernelContext& rKernelContext);
 			~CScenarioManager() override;
 			void cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager) override;
-			CIdentifier getNextScenarioIdentifier(const CIdentifier& rPreviousIdentifier) const override;
+			CIdentifier getNextScenarioIdentifier(const CIdentifier& previousID) const override;
 			bool isScenario(const CIdentifier& scenarioID) const override;
 			bool createScenario(CIdentifier& scenarioID) override;
-			bool importScenario(CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
-			bool importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
+			bool importScenario(CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer,
+								const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
+			bool importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CString& fileName,
+										const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
 			bool importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CIdentifier& importContext, const CString& fileName) override;
-			bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension, const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
+			bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension,
+										  const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
 			bool unregisterScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) override;
 			CIdentifier getNextScenarioImportContext(const CIdentifier& importContext) const override;
 			CString getNextScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) const override;
 			CIdentifier getScenarioImporterAlgorithmIdentifier(const CIdentifier& importContext, const CString& fileNameExtension) const override;
-			bool exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmIdentifier) const override;
-			bool exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmIdentifier) const override;
+			bool exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioID,
+								const CIdentifier& scenarioExporterAlgorithmIdentifier) const override;
+			bool exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioID,
+									  const CIdentifier& scenarioExporterAlgorithmIdentifier) const override;
 			bool exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioID) override;
-			bool registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension, const CIdentifier& scenarioExporterAlgorithmIdentifier) override;
+			bool registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension,
+										  const CIdentifier& scenarioExporterAlgorithmIdentifier) override;
 			bool unregisterScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension) override;
 			CIdentifier getNextScenarioExportContext(const CIdentifier& exportContext) const override;
 			CString getNextScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension) const override;

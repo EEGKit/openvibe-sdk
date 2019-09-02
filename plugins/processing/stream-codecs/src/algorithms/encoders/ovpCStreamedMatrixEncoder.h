@@ -51,7 +51,8 @@ namespace OpenViBEPlugins
 			{
 				CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;
 			}

@@ -28,7 +28,8 @@ namespace
 		void SetUp() override
 		{
 			m_KernelContext.initialize();
-			m_KernelContext->getPluginManager().addPluginsFromFiles(m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
+			m_KernelContext->getPluginManager().addPluginsFromFiles(
+				m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
 			m_DecoderId = OV_UndefinedIdentifier;
 			m_DecoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);
@@ -74,8 +75,10 @@ namespace
 		ASSERT_TRUE(mat.setDimensionSize(0, 0));
 
 		TParameterHandler<const IMatrix*> inputMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-		TParameterHandler<const IMemoryBuffer*> outputBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-		TParameterHandler<const IMemoryBuffer*> inputBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<const IMemoryBuffer*> outputBuffer(
+			encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+		TParameterHandler<const IMemoryBuffer*> inputBuffer(
+			decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<const IMatrix*> outputMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 
 		inputMatrix = &mat;
@@ -113,14 +116,13 @@ namespace
 			}
 			elemCount *= size;
 		}
-		for (size_t i = 0; i < elemCount; ++i)
-		{
-			mat.getBuffer()[i] = double(i);
-		}
+		for (size_t i = 0; i < elemCount; ++i) { mat.getBuffer()[i] = double(i); }
 
 		TParameterHandler<const IMatrix*> inputMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-		TParameterHandler<const IMemoryBuffer*> outputBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-		TParameterHandler<const IMemoryBuffer*> inputBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<const IMemoryBuffer*> outputBuffer(
+			encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+		TParameterHandler<const IMemoryBuffer*> inputBuffer(
+			decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<const IMatrix*> outputMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 
 		inputMatrix = &mat;

@@ -32,23 +32,34 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ExperimentInformationStreamDecoder));
+			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_pBoxAlgorithm->getAlgorithmManager().
+								 createAlgorithm(OVP_GD_ClassId_Algorithm_ExperimentInformationStreamDecoder));
 			m_pCodec->initialize();
 
-			m_pInputMemoryBuffer.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_InputParameterId_MemoryBufferToDecode));
+			m_pInputMemoryBuffer.initialize(
+				m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_InputParameterId_MemoryBufferToDecode));
 
-			m_ui64OutputExperimentIdentifier.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_ExperimentIdentifier));
-			m_pOutputpExperimentDate.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_ExperimentDate));
+			m_ui64OutputExperimentIdentifier.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_ExperimentIdentifier));
+			m_pOutputpExperimentDate.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_ExperimentDate));
 
-			m_ui64OutputSubjectIdentifier.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_SubjectIdentifier));
+			m_ui64OutputSubjectIdentifier.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_SubjectIdentifier));
 			m_pOutputpSubjectName.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_SubjectName));
 			m_ui64OutputSubjectAge.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_SubjectAge));
-			m_ui64OutputSubjectGender.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_SubjectGender));
+			m_ui64OutputSubjectGender.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_SubjectGender));
 
-			m_ui64OutputLaboratoryIdentifier.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_LaboratoryIdentifier));
-			m_pOutputpLaboratoryName.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_LaboratoryName));
-			m_ui64OutputTechnicianIdentifier.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_TechnicianIdentifier));
-			m_pOutputpTechnicianName.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_TechnicianName));
+			m_ui64OutputLaboratoryIdentifier.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_LaboratoryIdentifier));
+			m_pOutputpLaboratoryName.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_LaboratoryName));
+			m_ui64OutputTechnicianIdentifier.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_TechnicianIdentifier));
+			m_pOutputpTechnicianName.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputParameterId_TechnicianName));
 
 			return true;
 		}
@@ -99,11 +110,20 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputTechnicianName() { return m_pOutputpTechnicianName; }
 
-		virtual bool isHeaderReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedHeader); }
+		virtual bool isHeaderReceived()
+		{
+			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedHeader);
+		}
 
-		virtual bool isBufferReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedBuffer); }
+		virtual bool isBufferReceived()
+		{
+			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedBuffer);
+		}
 
-		virtual bool isEndReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedEnd); }
+		virtual bool isEndReceived()
+		{
+			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedEnd);
+		}
 	};
 
 	template <class T>

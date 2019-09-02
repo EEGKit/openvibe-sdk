@@ -66,15 +66,15 @@ namespace OpenViBE
 			virtual IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier) = 0;
 			/**
 			 * \brief Gets next algorithm identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousID [in] : The identifier
 			 *        for the preceeding algorithm
 			 * \return The identifier of the next algorithm in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first algorithm
 			 *       identifier.
 			 */
-			virtual CIdentifier getNextAlgorithmIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextAlgorithmIdentifier(const CIdentifier& previousID) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmManager)
 		};

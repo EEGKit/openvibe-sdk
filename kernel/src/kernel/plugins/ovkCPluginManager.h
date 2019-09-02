@@ -18,8 +18,8 @@ namespace OpenViBE
 			~CPluginManager() override;
 			bool addPluginsFromFiles(const CString& rFileNameWildCard) override;
 			bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) override;
-			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const override;
-			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const override;
+			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID) const override;
+			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& rBaseClassIdentifier) const override;
 			bool canCreatePluginObject(const CIdentifier& rClassIdentifier) override;
 			const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& rClassIdentifier) const override;
 			const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const override;

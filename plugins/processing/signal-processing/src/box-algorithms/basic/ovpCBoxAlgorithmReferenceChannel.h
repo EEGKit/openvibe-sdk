@@ -36,8 +36,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Reference Channel"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Subtracts the value of the reference channel from all other channels"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Reference channel must be specified as a parameter for the box"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Subtracts the value of the reference channel from all other channels");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Reference channel must be specified as a parameter for the box");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Channels"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

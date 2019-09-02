@@ -79,10 +79,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool append(const IMemoryBuffer& rMemoryBuffer)
-		{
-			return this->append(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
-		}
+		virtual bool append(const IMemoryBuffer& rMemoryBuffer) { return this->append(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize()); }
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer)
 

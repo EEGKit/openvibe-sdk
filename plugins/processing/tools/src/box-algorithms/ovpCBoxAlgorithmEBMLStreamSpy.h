@@ -42,10 +42,10 @@ namespace OpenViBEPlugins
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
 			std::map<EBML::CIdentifier, std::string> m_vType;
-			uint64_t m_ui64ExpandValuesCount = 0;
-			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			EBML::IReader* m_pReader             = nullptr;
-			EBML::IReaderHelper* m_pReaderHelper = nullptr;
+			uint64_t m_ui64ExpandValuesCount        = 0;
+			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
+			EBML::IReader* m_pReader                = nullptr;
+			EBML::IReaderHelper* m_pReaderHelper    = nullptr;
 		};
 
 		class CBoxAlgorithmEBMLStreamSpyListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -80,7 +80,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("EBML stream tree viewer"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This sample EBML stream analyzer prints the EBML tree structure to the console"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("This sample EBML stream analyzer prints the EBML tree structure to the console");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tools"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

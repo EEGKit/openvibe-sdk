@@ -138,20 +138,11 @@ void openStream(T& rStream, const char* sFile, std::ios_base::openmode oMode)
 	catch (const std::logic_error&) { rStream.open(sFile, oMode); }
 }
 
-void Files::openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode)
-{
-	openStream<std::ofstream>(rStream, sFile, oMode);
-}
+void Files::openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode) { openStream<std::ofstream>(rStream, sFile, oMode); }
 
-void Files::openIFStream(std::ifstream& rStream, const char* sFile, std::ios_base::openmode oMode)
-{
-	openStream<std::ifstream>(rStream, sFile, oMode);
-}
+void Files::openIFStream(std::ifstream& rStream, const char* sFile, std::ios_base::openmode oMode) { openStream<std::ifstream>(rStream, sFile, oMode); }
 
-void Files::openFStream(std::fstream& rStream, const char* sFile, std::ios_base::openmode oMode)
-{
-	openStream<std::fstream>(rStream, sFile, oMode);
-}
+void Files::openFStream(std::fstream& rStream, const char* sFile, std::ios_base::openmode oMode) { openStream<std::fstream>(rStream, sFile, oMode); }
 
 #endif
 
@@ -194,18 +185,17 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 	bool l_bResult = true;
 	if (pFile1 && pFile2)
 	{
-		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-		HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
+										 nullptr);
+		HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
+										 nullptr);
 		if (l_pHandle1 && l_pHandle2)
 		{
 			BY_HANDLE_FILE_INFORMATION l_oStat1;
 			BY_HANDLE_FILE_INFORMATION l_oStat2;
 			BOOL l_bStat1 = GetFileInformationByHandle(l_pHandle1, &l_oStat1);
 			BOOL l_bStat2 = GetFileInformationByHandle(l_pHandle2, &l_oStat2);
-			if (!l_bStat1 && !l_bStat2)
-			{
-				l_bResult = true;
-			}
+			if (!l_bStat1 && !l_bStat2) { l_bResult = true; }
 			else if (l_bStat1 && l_bStat2)
 			{
 				l_bResult =
@@ -217,10 +207,7 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 						(l_oStat1.ftLastWriteTime.dwHighDateTime == l_oStat2.ftLastWriteTime.dwHighDateTime) &&
 						(l_oStat1.ftLastWriteTime.dwLowDateTime == l_oStat2.ftLastWriteTime.dwLowDateTime);
 			}
-			else
-			{
-				l_bResult = false;
-			}
+			else { l_bResult = false; }
 			CloseHandle(l_pHandle1);
 			CloseHandle(l_pHandle2);
 		}

@@ -40,8 +40,8 @@ int findnexte(int M)
 
 conv_object conv_init(int N, int L)
 {
-	conv_object obj = NULL;
-	const int conv_len    = N + L - 1;
+	conv_object obj    = NULL;
+	const int conv_len = N + L - 1;
 
 	obj = (conv_object)malloc(sizeof(struct conv_set));
 	 
@@ -64,13 +64,7 @@ void conv_directx(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 	for (int k = 0; k < M; ++k)
 	{
 		oup[k] = 0.0;
-		for (int n = 0; n < N; ++n)
-		{
-			if ((k - n) >= 0 && (k - n) < L)
-			{
-				oup[k] += inp1[n] * inp2[k - n];
-			}
-		}
+		for (int n = 0; n < N; ++n) { if ((k - n) >= 0 && (k - n) < L) { oup[k] += inp1[n] * inp2[k - n]; } }
 	}
 }
 
@@ -80,17 +74,14 @@ void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 	fft_type t1, tmin;
 
 	const int M = N + L - 1;
-	int i = 0;
+	int i       = 0;
 
 	if (N >= L)
 	{
 		for (k = 0; k < L; k++)
 		{
 			oup[k] = 0.0;
-			for (m = 0; m <= k; m++)
-			{
-				oup[k] += inp1[m] * inp2[k - m];
-			}
+			for (m = 0; m <= k; m++) { oup[k] += inp1[m] * inp2[k - m]; }
 		}
 
 		for (k = L; k < M; k++)
@@ -99,10 +90,7 @@ void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 			i++;
 			t1   = L + i;
 			tmin = MIN(t1, N);
-			for (m = i; m < tmin; m++)
-			{
-				oup[k] += inp1[m] * inp2[k - m];
-			}
+			for (m = i; m < tmin; m++) { oup[k] += inp1[m] * inp2[k - m]; }
 		}
 	}
 	else
@@ -110,10 +98,7 @@ void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 		for (k = 0; k < N; k++)
 		{
 			oup[k] = 0.0;
-			for (m = 0; m <= k; m++)
-			{
-				oup[k] += inp2[m] * inp1[k - m];
-			}
+			for (m = 0; m <= k; m++) { oup[k] += inp2[m] * inp1[k - m]; }
 		}
 
 		for (k = N; k < M; k++)
@@ -122,10 +107,7 @@ void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 			i++;
 			t1   = N + i;
 			tmin = MIN(t1, L);
-			for (m = i; m < tmin; m++)
-			{
-				oup[k] += inp2[m] * inp1[k - m];
-			}
+			for (m = i; m < tmin; m++) { oup[k] += inp2[m] * inp1[k - m]; }
 		}
 	}
 }
@@ -149,23 +131,11 @@ void conv_fft(const conv_object obj,fft_type* inp1,fft_type* inp2,fft_type* oup)
 
 	for (i = 0; i < N; i++)
 	{
-		if (i < L1)
-		{
-			a[i] = inp1[i];
-		}
-		else
-		{
-			a[i] = 0.0;
-		}
+		if (i < L1) { a[i] = inp1[i]; }
+		else { a[i] = 0.0; }
 
-		if (i < L2)
-		{
-			b[i] = inp2[i];
-		}
-		else
-		{
-			b[i] = 0.0;
-		}
+		if (i < L2) { b[i] = inp2[i]; }
+		else { b[i] = 0.0; }
 	}
 
 	fft_r2c_exec(obj->fobj, a, ao);

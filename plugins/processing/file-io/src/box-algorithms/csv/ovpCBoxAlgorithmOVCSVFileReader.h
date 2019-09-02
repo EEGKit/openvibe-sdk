@@ -76,10 +76,7 @@ namespace OpenViBEPlugins
 										"Failed to reset output type to stimulations",
 										OpenViBE::Kernel::ErrorType::Internal);
 				}
-				else if (index > 1)
-				{
-					OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal);
-				}
+				else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal); }
 
 				return true;
 			}

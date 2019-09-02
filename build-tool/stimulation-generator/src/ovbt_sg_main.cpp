@@ -92,7 +92,10 @@ int main(int argc, char** argv)
 	for (vector<SStimulation>::iterator it = l_oStimulationList.begin(); it != l_oStimulationList.end(); ++it)
 	{
 		SStimulation& l_oTemp = *it;
-		for (vector<CFileGeneratorBase*>::iterator it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen) { (*it_gen)->appendStimulation(l_oTemp); }
+		for (vector<CFileGeneratorBase*>::iterator it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen)
+		{
+			(*it_gen)->appendStimulation(l_oTemp);
+		}
 	}
 
 	for (vector<CFileGeneratorBase*>::iterator it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen) { (*it_gen)->closeFile(); }

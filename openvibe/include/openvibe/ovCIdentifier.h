@@ -162,10 +162,7 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-		{
-			return !(rIdentifier1 > rIdentifier2);
-		}
+		friend OV_API bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return !(rIdentifier1 > rIdentifier2); }
 		/**
 		 * \brief Order test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -178,10 +175,7 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-		{
-			return !(rIdentifier1 < rIdentifier2);
-		}
+		friend OV_API bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return !(rIdentifier1 < rIdentifier2); }
 
 		//@}
 

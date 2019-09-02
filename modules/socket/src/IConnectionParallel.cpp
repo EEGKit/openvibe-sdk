@@ -55,10 +55,7 @@ namespace Socket
 					this->release();
 				}
 			}
-			else
-			{
-				m_sLastError = "Cannot found or open TVicPort.dll: " + this->getLastErrorFormated();
-			}
+			else { m_sLastError = "Cannot found or open TVicPort.dll: " + this->getLastErrorFormated(); }
 #endif
 		}
 
@@ -163,20 +160,17 @@ namespace Socket
 
 		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
-			const char* p   = reinterpret_cast<const char*>(buffer);
+			const char* p            = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
-			{
-				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-			}
+			while (l_ui32BytesLeft != 0 && this->isConnected()) { l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft); }
 
 			return this->isConnected();
 		}
 
 		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
-			char* p         = reinterpret_cast<char*>(buffer);
+			char* p                  = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -244,7 +238,7 @@ namespace Socket
 #endif
 		}
 
-		std::string getLastError() override {return m_sLastError;}
+		std::string getLastError() override { return m_sLastError; }
 
 		std::string getLastErrorFormated()
 		{

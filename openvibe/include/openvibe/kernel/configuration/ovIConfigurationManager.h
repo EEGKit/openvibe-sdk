@@ -249,7 +249,8 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::expand
 			 * \sa ITypeManager
 			 */
-			virtual uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier, uint64_t ui64FallbackValue = 0) const = 0;
+			virtual uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier,
+														   uint64_t ui64FallbackValue = 0) const = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

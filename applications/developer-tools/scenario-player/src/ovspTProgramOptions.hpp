@@ -376,7 +376,7 @@ namespace OpenViBE
 
 		for (int i = 1; i < argc; ++i)
 		{
-			std::string arg = args[i];
+			std::string arg     = args[i];
 			const auto argSplit = arg.find_first_of("=");				// = is the separator for value option
 			std::string key;
 
@@ -387,7 +387,8 @@ namespace OpenViBE
 			auto keyMatch = std::find_if(m_DescMap.begin(), m_DescMap.end(), [&](const std::pair<std::string, FullOptionDesc>& p)
 										 {
 											 auto desc = p.second.second;
-											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (("--" + desc.m_ShortName) == key);
+											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (
+														("--" + desc.m_ShortName) == key);
 										 }
 			);
 

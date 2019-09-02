@@ -65,7 +65,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Incrementally computes covariance with shrinkage."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Regularized covariance output is computed as (diag*shrink + cov)"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Regularized covariance output is computed as (diag*shrink + cov)");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.5"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
@@ -76,14 +81,21 @@ namespace OpenViBEPlugins
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage, "Shrinkage", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors, "Input vectors", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod, "Cov update method", OpenViBE::Kernel::ParameterType_Enumeration, OVP_TypeId_OnlineCovariance_UpdateMethod);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization, "Trace normalization", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage, "Shrinkage", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors, "Input vectors", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod, "Cov update method", OpenViBE::Kernel::ParameterType_Enumeration,
+					OVP_TypeId_OnlineCovariance_UpdateMethod);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization, "Trace normalization", OpenViBE::Kernel::ParameterType_Boolean);
 
 				// The algorithm returns these outputs
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Reset, "Reset the algorithm");
 				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Update, "Append a chunk of data");

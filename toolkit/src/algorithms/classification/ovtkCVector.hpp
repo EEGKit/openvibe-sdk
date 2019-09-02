@@ -26,10 +26,7 @@ namespace OpenViBEToolkit
 
 		virtual const double* getBuffer() const { return m_rMatrix.getBuffer(); }
 
-		virtual const char* getElementLabel(const uint32_t index) const
-		{
-			return m_rMatrix.getDimensionLabel(0, index);
-		}
+		virtual const char* getElementLabel(const uint32_t index) const { return m_rMatrix.getDimensionLabel(0, index); }
 
 		virtual bool setElementLabel(const uint32_t index, const char* sElementLabel)
 		{

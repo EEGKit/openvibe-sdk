@@ -20,10 +20,7 @@ namespace OpenViBEToolkit
 		using T::m_pBoxAlgorithm;
 		using T::m_ui32ConnectorIndex;
 
-		virtual void setInputChunk(const OpenViBE::IMemoryBuffer* pInputChunkMemoryBuffer)
-		{
-			m_pInputMemoryBuffer = pInputChunkMemoryBuffer;
-		}
+		virtual void setInputChunk(const OpenViBE::IMemoryBuffer* pInputChunkMemoryBuffer) { m_pInputMemoryBuffer = pInputChunkMemoryBuffer; }
 
 		virtual OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>& getInputMemoryBuffer() { return m_pInputMemoryBuffer; }
 

@@ -111,10 +111,7 @@ void CAcquisitionDecoder::processChildData(const void* buffer, const uint64_t si
 		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, buffer, size); }
 		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, buffer, size); }
 	}
-	else
-	{
-		CEBMLBaseDecoder::processChildData(buffer, size);
-	}
+	else { CEBMLBaseDecoder::processChildData(buffer, size); }
 }
 
 void CAcquisitionDecoder::closeChild()

@@ -69,7 +69,7 @@ string Parser::trim(const string& expression)
 
 	int start, end;
 	for (start = 0; start < (int)expression.size() && isspace(expression[start]); start++) { }
-	for (end   = (int)expression.size() - 1; end > start && isspace(expression[end]); end--) { }
+	for (end = (int)expression.size() - 1; end > start && isspace(expression[end]); end--) { }
 	if (start == end && isspace(expression[end])) { return ""; }
 	return expression.substr(start, end - start + 1);
 }
@@ -110,10 +110,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 			if ((c == 'e' || c == 'E') && !foundExp)
 			{
 				foundExp = true;
-				if (pos < (int)expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+'))
-				{
-					pos++;
-				}
+				if (pos < (int)expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+')) { pos++; }
 				continue;
 			}
 			break;
@@ -127,7 +124,8 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 	{
 		c = expression[pos];
 		if (c == '(') return ParseToken(expression.substr(start, pos - start + 1), ParseToken::Function);
-		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c)) return ParseToken(expression.substr(start, pos - start), ParseToken::Variable);
+		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c)) return ParseToken(
+			expression.substr(start, pos - start), ParseToken::Variable);
 	}
 	return ParseToken(expression.substr(start, string::npos), ParseToken::Variable);
 }
@@ -145,10 +143,7 @@ vector<ParseToken> Parser::tokenize(const string& expression)
 	return tokens;
 }
 
-ParsedExpression Parser::parse(const string& expression)
-{
-	return parse(expression, map<string, CustomFunction*>());
-}
+ParsedExpression Parser::parse(const string& expression) { return parse(expression, map<string, CustomFunction*>()); }
 
 ParsedExpression Parser::parse(const string& expression, const map<string, CustomFunction*>& customFunctions)
 {
@@ -185,10 +180,7 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	vector<ParseToken> tokens = tokenize(primaryExpression);
 	int pos                   = 0;
 	ExpressionTreeNode result = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
-	if (pos != tokens.size())
-	{
-		throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText());
-	}
+	if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText()); }
 	return ParsedExpression(result);
 }
 
@@ -240,10 +232,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen) { throw Exception("Parse error: unbalanced parentheses"); }
 		pos++;
 		Operation* op = getFunctionOperation(token.getText(), customFunctions);
-		try
-		{
-			result = ExpressionTreeNode(op, args);
-		}
+		try { result = ExpressionTreeNode(op, args); }
 		catch (...)
 		{
 			delete op;
@@ -256,10 +245,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		const ExpressionTreeNode toNegate = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 2);
 		result                            = ExpressionTreeNode(new Operation::Negate(), toNegate);
 	}
-	else
-	{
-		throw Exception("Parse error: unexpected token: " + token.getText());
-	}
+	else { throw Exception("Parse error: unexpected token: " + token.getText()); }
 
 	// Now deal with the next binary operator.
 
@@ -272,10 +258,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		pos++;
 		ExpressionTreeNode arg = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, LeftAssociative[opIndex] ? opPrecedence + 1 : opPrecedence);
 		Operation* op          = getOperatorOperation(token.getText());
-		try
-		{
-			result = ExpressionTreeNode(op, result, arg);
-		}
+		try { result = ExpressionTreeNode(op, result, arg); }
 		catch (...)
 		{
 			delete op;
@@ -345,10 +328,7 @@ Operation* Parser::getFunctionOperation(const std::string& name, const map<strin
 	// Now try standard functions.
 
 	const auto iter = opMap.find(trimmed);
-	if (iter == opMap.end())
-	{
-		throw Exception("Parse error: unknown function: " + trimmed);
-	}
+	if (iter == opMap.end()) { throw Exception("Parse error: unknown function: " + trimmed); }
 	switch (iter->second)
 	{
 		case Operation::SQRT:

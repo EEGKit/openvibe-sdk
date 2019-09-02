@@ -2,9 +2,7 @@
 
 using namespace EBML;
 
-CReaderHelper::CReaderHelper(){
-	m_pReaderHelperImplementation = createReaderHelper();
-}
+CReaderHelper::CReaderHelper() { m_pReaderHelperImplementation = createReaderHelper(); }
 
 CReaderHelper::~CReaderHelper() { m_pReaderHelperImplementation->release(); }
 

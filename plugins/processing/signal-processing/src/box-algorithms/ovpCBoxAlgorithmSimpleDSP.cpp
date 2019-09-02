@@ -21,14 +21,16 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 	m_ppVariable = new double*[boxContext.getInputCount()];
 
-	OV_ERROR_UNLESS_KRF(m_ppVariable, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs", OpenViBE::Kernel::ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_ppVariable, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs",
+						OpenViBE::Kernel::ErrorType::BadAlloc);
 
 	const CString l_sEquation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_pEquationParser   = new CEquationParser(*this, m_ppVariable, boxContext.getInputCount());
+	m_pEquationParser         = new CEquationParser(*this, m_ppVariable, boxContext.getInputCount());
 
 	OV_ERROR_UNLESS_KRF(m_pEquationParser, "Failed to create equation parser", OpenViBE::Kernel::ErrorType::BadAlloc);
 
-	OV_ERROR_UNLESS_KRF(m_pEquationParser->compileEquation(l_sEquation.toASCIIString()), "Failed to compile equation [" << l_sEquation << "]", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_pEquationParser->compileEquation(l_sEquation.toASCIIString()), "Failed to compile equation [" << l_sEquation << "]",
+						OpenViBE::Kernel::ErrorType::Internal);
 
 	m_ui64EquationType            = m_pEquationParser->getTreeCategory();
 	m_f64SpecialEquationParameter = m_pEquationParser->getTreeParameter();
@@ -42,22 +44,26 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 	if (l_oStreamType == OV_TypeId_StreamedMatrix)
 	{
-		m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
+		m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(
+			this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
 		m_pStreamEncoder->initialize();
 		for (i = 0; i < boxContext.getInputCount(); i++)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
+			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
 			l_pStreamDecoder->initialize();
 			m_vStreamDecoder.push_back(l_pStreamDecoder);
 		}
 	}
 	else if (l_oStreamType == OV_TypeId_FeatureVector)
 	{
-		m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamEncoder));
+		m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(
+			this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamEncoder));
 		m_pStreamEncoder->initialize();
 		for (i = 0; i < boxContext.getInputCount(); i++)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamDecoder));
+			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamDecoder));
 			l_pStreamDecoder->initialize();
 			m_vStreamDecoder.push_back(l_pStreamDecoder);
 		}
@@ -68,32 +74,41 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 		m_pStreamEncoder->initialize();
 		for (i = 0; i < boxContext.getInputCount(); i++)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
+			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
 			l_pStreamDecoder->initialize();
-			TParameterHandler<uint64_t> ip_ui64SamplingRate(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
-			TParameterHandler<uint64_t> op_ui64SamplingRate(l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+			TParameterHandler<uint64_t> ip_ui64SamplingRate(
+				m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
+			TParameterHandler<uint64_t> op_ui64SamplingRate(
+				l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 			ip_ui64SamplingRate.setReferenceTarget(op_ui64SamplingRate);
 			m_vStreamDecoder.push_back(l_pStreamDecoder);
 		}
 	}
 	else if (l_oStreamType == OV_TypeId_Spectrum)
 	{
-		m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
+		m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(
+			this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
 		m_pStreamEncoder->initialize();
 		for (i = 0; i < boxContext.getInputCount(); i++)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
+			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 			l_pStreamDecoder->initialize();
-			TParameterHandler<IMatrix*> op_ui64CenterFrequencyBands(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
-			TParameterHandler<IMatrix*> ip_ui64CenterFrequencyBands(l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+			TParameterHandler<IMatrix*> op_ui64CenterFrequencyBands(
+				m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
+			TParameterHandler<IMatrix*> ip_ui64CenterFrequencyBands(
+				l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
 			ip_ui64CenterFrequencyBands.setReferenceTarget(op_ui64CenterFrequencyBands);
-			l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate)->setReferenceTarget(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
+			l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate)->setReferenceTarget(
+				m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
 			m_vStreamDecoder.push_back(l_pStreamDecoder);
 		}
 	}
 	else
 	{
-		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(l_oStreamType) << ":id=" << l_oStreamType.toString() << "] not yet implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
+		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(l_oStreamType) << ":id=" << l_oStreamType.toString() << "] not yet implemented",
+					 OpenViBE::Kernel::ErrorType::NotImplemented);
 	}
 
 	m_bCheckChunkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
@@ -130,8 +145,8 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t /*index*/)
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
-	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
-	
+	const uint32_t nInput          = this->getStaticBoxContext().getInputCount();
+
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }
 
 	uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
@@ -154,23 +169,25 @@ bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t /*index*/)
 
 bool CBoxAlgorithmSimpleDSP::process()
 {
-	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
-	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
-	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	IDynamicBoxContext& boxContext  = this->getDynamicBoxContext();
+	const uint32_t nInput           = this->getStaticBoxContext().getInputCount();
 
 	uint32_t l_ui32HeaderCount = 0;
 	uint32_t l_ui32BufferCount = 0;
 	uint32_t l_ui32EndCount    = 0;
 
 	TParameterHandler<IMatrix*> ip_pMatrix(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(
+		m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_vMatrix.clear();
 
 	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 	for (uint32_t i = 0; i < nInput; i++)
 	{
-		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(
+			m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<IMatrix*> op_pMatrix(m_vStreamDecoder[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 		ip_pMemoryBuffer = boxContext.getInputChunk(i, 0);
 		m_vStreamDecoder[i]->process();
@@ -179,19 +196,14 @@ bool CBoxAlgorithmSimpleDSP::process()
 			if (i != 0)
 			{
 				OV_ERROR_UNLESS_KRF(m_vMatrix[0]->getBufferElementCount() == op_pMatrix->getBufferElementCount(),
-									"Invalid matrix dimension [" << m_vMatrix[0]->getBufferElementCount() << "] (expected value = " << op_pMatrix->getBufferElementCount() <<")",
+									"Invalid matrix dimension [" << m_vMatrix[0]->getBufferElementCount() << "] (expected value = " << op_pMatrix->
+									getBufferElementCount() <<")",
 									OpenViBE::Kernel::ErrorType::BadValue);
 			}
 			l_ui32HeaderCount++;
 		}
-		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer))
-		{
-			l_ui32BufferCount++;
-		}
-		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd))
-		{
-			l_ui32EndCount++;
-		}
+		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer)) { l_ui32BufferCount++; }
+		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd)) { l_ui32EndCount++; }
 		m_vMatrix.push_back(op_pMatrix);
 		boxContext.markInputAsDeprecated(i, 0);
 	}
@@ -225,10 +237,7 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
-	{
-		m_ppVariable[i] = m_vMatrix[i]->getBuffer();
-	}
+	for (uint32_t i = 0; i < boxContext.getInputCount(); i++) { m_ppVariable[i] = m_vMatrix[i]->getBuffer(); }
 
 	TParameterHandler<IMatrix*> ip_pMatrix(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
 	double* buffer    = ip_pMatrix->getBuffer();

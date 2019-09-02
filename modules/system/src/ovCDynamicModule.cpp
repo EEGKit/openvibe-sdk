@@ -55,7 +55,7 @@ namespace
 					  LPTSTR(&l_ErrorText),                        // output
 					  0,                                           // minimum size for output buffer
 					  nullptr
-					  );                                           // arguments - see note
+		);                                           // arguments - see note
 
 		return std::string(l_ErrorText);
 	}
@@ -153,7 +153,8 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		if (GetProcAddress(HMODULE(m_Handle), symbolNameCheck) == nullptr)
 		{
 			this->unload();
-			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error: " + formatWindowsError(GetLastError()));
+			this->setError(LogErrorCodes_InvalidSymbol,
+						   "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error: " + formatWindowsError(GetLastError()));
 			return false;
 		}
 	}
@@ -246,7 +247,8 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 #endif
 
 #if defined TARGET_OS_Windows
-bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck)
+bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath,
+									  const char* symbolNameCheck)
 {
 	char l_DLLPath[MAX_PATH];
 	DWORD l_Size = sizeof(l_DLLPath);

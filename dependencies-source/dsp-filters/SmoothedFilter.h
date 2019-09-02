@@ -72,10 +72,7 @@ namespace Dsp
 				// interpolate parameters for each sample
 				const double t = 1. / m_remainingSamples;
 				double dp[maxParameters];
-				for (int i = 0; i < DesignClass::NumParams; ++i)
-				{
-					dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;
-				}
+				for (int i = 0; i < DesignClass::NumParams; ++i) { dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t; }
 
 				for (int n = 0; n < remainingSamples; ++n)
 				{
@@ -114,10 +111,7 @@ namespace Dsp
 	protected:
 		void doSetParams(const Params& parameters) override
 		{
-			if (m_remainingSamples >= 0)
-			{
-				m_remainingSamples = m_transitionSamples;
-			}
+			if (m_remainingSamples >= 0) { m_remainingSamples = m_transitionSamples; }
 			else
 			{
 				// first time

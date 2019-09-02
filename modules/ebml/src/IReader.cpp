@@ -59,7 +59,7 @@ inline uint64_t getValue(unsigned char* buffer, unsigned long ulBufferLength)
 {
 	uint64_t result            = 0;
 	const unsigned long length = getCodedSizeLength(buffer, ulBufferLength);
-	unsigned long ithBit = length;
+	unsigned long ithBit       = length;
 	for (unsigned long i = 0; i < length; i++)
 	{
 		result = (result << 8) + (buffer[i]);
@@ -88,9 +88,9 @@ namespace EBML
 
 			CReaderNode* m_pParentNode = nullptr;
 			CIdentifier m_oIdentifier;
-			uint64_t m_ui64ContentSize = 0;
+			uint64_t m_ui64ContentSize     = 0;
 			uint64_t m_ui64ReadContentSize = 0;
-			unsigned char* m_pBuffer = nullptr;
+			unsigned char* m_pBuffer       = nullptr;
 			//			bool m_bBufferShouldBeDeleted;
 		};
 	} // namespace
@@ -110,7 +110,7 @@ namespace EBML
 		{
 		public:
 
-			explicit CReader(IReaderCallback& rReaderCallback);
+			explicit CReader(IReaderCallback& rReaderCallback) : m_rReaderCallback(rReaderCallback) { }
 			~CReader() override;
 			bool processData(const void* buffer, uint64_t size) override;
 			CIdentifier getCurrentNodeIdentifier() const override;
@@ -127,13 +127,13 @@ namespace EBML
 			};
 
 			IReaderCallback& m_rReaderCallback;
-			CReaderNode* m_pCurrentNode = nullptr;
-			uint64_t m_ui64PendingSize = 0;
-			uint64_t m_ui64PendingCount = 0;
-			unsigned char* m_pPending = nullptr;
-			Status m_eStatus = FillingIdentifier;
-			Status m_eLastStatus;
-			CIdentifier m_oCurrentIdentifier;
+			CReaderNode* m_pCurrentNode       = nullptr;
+			uint64_t m_ui64PendingSize        = 0;
+			uint64_t m_ui64PendingCount       = 0;
+			unsigned char* m_pPending         = nullptr;
+			Status m_eStatus                  = FillingIdentifier;
+			Status m_eLastStatus              = FillingIdentifier;
+			CIdentifier m_oCurrentIdentifier  = 0;
 			uint64_t m_ui64CurrentContentSize = 0;
 
 			uint64_t m_ui64TotalBytes = 0;
@@ -143,8 +143,6 @@ namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
-
-CReader::CReader(IReaderCallback& rReaderCallback) : m_rReaderCallback(rReaderCallback), m_oCurrentIdentifier(0) { }
 
 CReader::~CReader()
 {
@@ -164,18 +162,15 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 	if (_Debug_)
 	{
 		printf("Received %i byte(s) new buffer :", int(size));
-		for (int i = 0; i < int(size) /* && i<4*/; i++)
-		{
-			printf("[%02X]", ((unsigned char*)buffer)[i]);
-		}
+		for (int i = 0; i < int(size) /* && i<4*/; i++) { printf("[%02X]", ((unsigned char*)buffer)[i]); }
 		std::cout << "...\n";
 	}
 
 	if (!buffer || !size) { return true; }
 
-	unsigned char* tmpBuffer  = (unsigned char*)buffer;
-	uint64_t currentSize = size;
-	bool l_bFinished          = false;
+	unsigned char* tmpBuffer = (unsigned char*)buffer;
+	uint64_t currentSize     = size;
+	bool l_bFinished         = false;
 	while (!l_bFinished)
 	{
 		uint64_t l_ui64ProcessedPendingBytes = 0;
@@ -187,9 +182,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 			if (m_ui64PendingCount)
 			{
 				printf("%i byte(s) pending : ", int(m_ui64PendingCount));
-				for (int i = 0; i < int(m_ui64PendingCount); i++){
-					printf("[%02X]", m_pPending[i]);
-				}
+				for (int i = 0; i < int(m_ui64PendingCount); i++) { printf("[%02X]", m_pPending[i]); }
 				std::cout << "\n";
 			}
 		}
@@ -218,15 +211,12 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 					}
 				}
 
-				const unsigned long codedSizeLength = getCodedSizeLength(m_ui64PendingCount ? m_pPending : tmpBuffer, 
+				const unsigned long codedSizeLength = getCodedSizeLength(m_ui64PendingCount ? m_pPending : tmpBuffer,
 																		 static_cast<unsigned long>(m_ui64PendingCount ? m_ui64PendingCount : currentSize));
-				if (codedSizeLength > currentSize + m_ui64PendingCount)
-				{
-					l_bFinished = true;
-				}
+				if (codedSizeLength > currentSize + m_ui64PendingCount) { l_bFinished = true; }
 				else
 				{
-					unsigned char* encodedBuffer   = new unsigned char[codedSizeLength];
+					unsigned char* encodedBuffer      = new unsigned char[codedSizeLength];
 					const uint64_t pendingBytesToCopy = (codedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : codedSizeLength);
 					memcpy(encodedBuffer, m_pPending, size_t(pendingBytesToCopy));
 					memcpy(encodedBuffer + pendingBytesToCopy, tmpBuffer, size_t(codedSizeLength - pendingBytesToCopy));
@@ -243,7 +233,8 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 							m_eStatus            = FillingContentSize;
 							if (_Debug_)
 							{
-								printf("Found identifier 0x%llX - Changing status to FillingContentSize...\n", static_cast<unsigned long long>(m_oCurrentIdentifier));
+								printf("Found identifier 0x%llX - Changing status to FillingContentSize...\n",
+									   static_cast<unsigned long long>(m_oCurrentIdentifier));
 							}
 						}
 						break;
@@ -256,7 +247,8 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 								m_eStatus = FillingIdentifier;
 								if (_Debug_)
 								{
-									std::cout << "Found content size " << m_ui64CurrentContentSize << " of master node - Changing status to FillingIdentifier...\n";
+									std::cout << "Found content size " << m_ui64CurrentContentSize <<
+											" of master node - Changing status to FillingIdentifier...\n";
 								}
 							}
 							else
@@ -264,7 +256,8 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 								m_eStatus = FillingContent;
 								if (_Debug_)
 								{
-									std::cout << "Found content size " << m_ui64CurrentContentSize << " of *non* master node - Changing status to FillingContent...\n";
+									std::cout << "Found content size " << m_ui64CurrentContentSize <<
+											" of *non* master node - Changing status to FillingContent...\n";
 								}
 							}
 						}
@@ -298,7 +291,8 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 						l_ui64ProcessedBytes = m_pCurrentNode->m_ui64ContentSize;
 						if (_Debug_)
 						{
-							std::cout << "Optimized processing of " << m_pCurrentNode->m_ui64ContentSize << " byte(s) content - Changing status to FillingIdentifier...\n";
+							std::cout << "Optimized processing of " << m_pCurrentNode->m_ui64ContentSize <<
+									" byte(s) content - Changing status to FillingIdentifier...\n";
 						}
 						m_rReaderCallback.processChildData(tmpBuffer, m_pCurrentNode->m_ui64ContentSize);
 					}
@@ -312,13 +306,15 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 						}
 						else
 						{
-							memcpy(m_pCurrentNode->m_pBuffer + m_pCurrentNode->m_ui64ReadContentSize, tmpBuffer, size_t(m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize));
+							memcpy(m_pCurrentNode->m_pBuffer + m_pCurrentNode->m_ui64ReadContentSize, tmpBuffer,
+								   size_t(m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize));
 							l_ui64ProcessedBytes = m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize;
 
 							m_eStatus = FillingIdentifier;
 							if (_Debug_)
 							{
-								std::cout << "Finished with " << m_pCurrentNode->m_ui64ContentSize << " byte(s) content - Changing status to FillingIdentifier...\n";
+								std::cout << "Finished with " << m_pCurrentNode->m_ui64ContentSize <<
+										" byte(s) content - Changing status to FillingIdentifier...\n";
 							}
 							m_rReaderCallback.processChildData(m_pCurrentNode->m_pBuffer, m_pCurrentNode->m_ui64ContentSize);
 						}
@@ -367,7 +363,8 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 	// Updates pending data
 	if (m_ui64PendingCount + currentSize > m_ui64PendingSize)
 	{
-		unsigned char* l_pPending = new unsigned char[static_cast<unsigned int>(m_ui64PendingCount + currentSize + 1)]; // Ugly hack, reserve 1 more byte on pending data so we are sure we can insert this additional pending byte when only one byte is pending and two bytes are needed for decoding identifier and/or buffer size
+		unsigned char* l_pPending = new unsigned char[static_cast<unsigned int>(m_ui64PendingCount + currentSize + 1)
+		]; // Ugly hack, reserve 1 more byte on pending data so we are sure we can insert this additional pending byte when only one byte is pending and two bytes are needed for decoding identifier and/or buffer size
 		memcpy(l_pPending, m_pPending, size_t(m_ui64PendingCount));
 		delete [] m_pPending;
 		m_pPending        = l_pPending;

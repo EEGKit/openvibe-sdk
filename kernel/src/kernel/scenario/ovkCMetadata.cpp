@@ -32,7 +32,8 @@ CString CMetadata::getData() const { return m_Data; }
 bool CMetadata::setIdentifier(const CIdentifier& identifier)
 {
 	OV_ERROR_UNLESS_KRF(m_Identifier == OV_UndefinedIdentifier,
-						"Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "]  already has an identifier.",
+						"Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() <<
+						"]  already has an identifier.",
 						ErrorType::BadCall);
 
 	OV_ERROR_UNLESS_KRF(identifier != OV_UndefinedIdentifier,
@@ -46,7 +47,8 @@ bool CMetadata::setIdentifier(const CIdentifier& identifier)
 bool CMetadata::setType(const CIdentifier& typeID)
 {
 	OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
-						"Attempted to assign undefined typeID to Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
+						"Attempted to assign undefined typeID to Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().
+						toString() << "].",
 						ErrorType::BadArgument);
 
 	m_Type = typeID;

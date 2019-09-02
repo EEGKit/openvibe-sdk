@@ -19,14 +19,16 @@ namespace OpenViBE
 			virtual const Plugins::IAlgorithm& getAlgorithm() const;
 			virtual const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
 
-			virtual bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier);
+			virtual bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType,
+										   const CIdentifier& rSubTypeIdentifier);
 			CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const override;
 			IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier) override;
 			virtual EParameterType getInputParameterType(const CIdentifier& rInputParameterIdentifier) const;
 			CString getInputParameterName(const CIdentifier& rInputParameterIdentifier) const override;
 			virtual bool removeInputParameter(const CIdentifier& rInputParameterIdentifier);
 
-			virtual bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier);
+			virtual bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType,
+											const CIdentifier& rSubTypeIdentifier);
 			CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const override;
 			IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier) override;
 			virtual EParameterType getOutputParameterType(const CIdentifier& rOutputParameterIdentifier) const;

@@ -238,7 +238,13 @@ int main(int argc, char** argv)
 
 		while (sentSamples < expectedSamples && (samplesToSend == 0 || sentSamples < samplesToSend))
 		{
-			for (size_t channel = 0; channel < channelCount; channel++) { for (size_t sample = 0; sample < samplesPerBuffer; sample++) { matrix[channel * samplesPerBuffer + sample] = sin((sentSamples + sample) / double(samplingRate)); } }
+			for (size_t channel = 0; channel < channelCount; channel++)
+			{
+				for (size_t sample = 0; sample < samplesPerBuffer; sample++)
+				{
+					matrix[channel * samplesPerBuffer + sample] = sin((sentSamples + sample) / double(samplingRate));
+				}
+			}
 
 			writerCallback.clear();
 			writerHelper->openChild(OVTK_NodeId_Buffer);

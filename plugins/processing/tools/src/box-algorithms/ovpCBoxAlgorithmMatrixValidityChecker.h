@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamDecoder;
 			std::vector<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamEncoder;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
-			uint64_t m_ui64ValidityCheckerType = 0;
+			uint64_t m_ui64ValidityCheckerType      = 0;
 
 			std::vector<uint32_t> m_ui32TotalInterpolatedSampleCount;
 			std::vector<uint32_t> m_ui32TotalInterpolatedChunkCount;
@@ -105,8 +105,18 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Matrix validity checker"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Checks if a matrix contains \"not a number\" or \"infinity\" elements"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This box is for debugging purposes and allows an author to check the validity of a streamed matrix and derived stream. This box can log a message, stop the player or interpolate data."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Checks if a matrix contains \"not a number\" or \"infinity\" elements");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"This box is for debugging purposes and allows an author to check the validity of a streamed matrix and derived stream. This box can log a message, stop the player or interpolate data.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tools"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

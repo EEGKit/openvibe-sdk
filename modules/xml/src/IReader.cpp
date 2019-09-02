@@ -67,10 +67,7 @@ void CReader::openChild(const char* sName, const char** sAttributeName, const ch
 	m_sData = "";
 }
 
-void CReader::processChildData(const char* sData)
-{
-	m_sData += sData;
-}
+void CReader::processChildData(const char* sData) { m_sData += sData; }
 
 void CReader::closeChild()
 {
@@ -103,10 +100,7 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* pData, const char* pElement)
-{
-	static_cast<CReader*>(pData)->closeChild();
-}
+static void XMLCALL XML::expat_xml_end(void* pData, const char* pElement) { static_cast<CReader*>(pData)->closeChild(); }
 
 static void XMLCALL XML::expat_xml_data(void* pData, const char* pDataValue, int iDataLength)
 {

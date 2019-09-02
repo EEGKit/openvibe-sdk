@@ -31,10 +31,14 @@
 
 OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_EpochAverageMethod, "Epoch Average method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average", OVP_TypeId_EpochAverageMethod_MovingAverage.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average (Immediate)", OVP_TypeId_EpochAverageMethod_MovingAverageImmediate.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Epoch block average", OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Cumulative average", OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average",
+													  OVP_TypeId_EpochAverageMethod_MovingAverage.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average (Immediate)",
+													  OVP_TypeId_EpochAverageMethod_MovingAverageImmediate.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Epoch block average",
+													  OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Cumulative average",
+													  OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger());
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_CropMethod, "Crop method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Min", OVP_TypeId_CropMethod_Min.toUInteger());
@@ -83,8 +87,10 @@ OVP_Declare_Begin()
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average",OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample",OVP_TypeId_OnlineCovariance_UpdateMethod_Incremental.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average",
+													  OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(
+		OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample",OVP_TypeId_OnlineCovariance_UpdateMethod_Incremental.toUInteger());
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmRegularizedCSPTrainerDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovarianceDesc)
@@ -102,7 +108,8 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_ContinuousWaveletType, "Continuous Wavelet Type");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Morlet wavelet", OVP_TypeId_ContinuousWaveletType_Morlet.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Paul wavelet", OVP_TypeId_ContinuousWaveletType_Paul.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet", OVP_TypeId_ContinuousWaveletType_DOG.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet",
+													  OVP_TypeId_ContinuousWaveletType_DOG.toUInteger());
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmContinuousWaveletAnalysisDesc);
 

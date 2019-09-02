@@ -25,10 +25,7 @@ void CBoxAlgorithmSignalAverage::computeAverage()
 		double sum = 0;
 
 		//sum its samples
-		for (uint32_t i = 0; i < nSample; i++)
-		{
-			sum += input[(c * nSample) + i];
-		}
+		for (uint32_t i = 0; i < nSample; i++) { sum += input[(c * nSample) + i]; }
 
 		//computes and stores the average for a channel
 		output[c] = sum / nSample;
@@ -75,7 +72,7 @@ bool CBoxAlgorithmSignalAverage::process()
 		{
 			// Construct the properties of the output stream
 			const IMatrix* iMatrix = m_oSignalDecoder.getOutputMatrix();
-			IMatrix* oMatrix      = m_oSignalEncoder.getInputMatrix();
+			IMatrix* oMatrix       = m_oSignalEncoder.getInputMatrix();
 
 			// Sampling rate will be decimated in the output
 			const uint64_t inputSamplingRate = m_oSignalDecoder.getOutputSamplingRate();
@@ -89,10 +86,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			oMatrix->setDimensionSize(0, iMatrix->getDimensionSize(0));
 			oMatrix->setDimensionSize(1, 1);
 
-			for (uint32_t j = 0; j < oMatrix->getDimensionSize(0); j++)
-			{
-				oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j));
-			}
+			for (uint32_t j = 0; j < oMatrix->getDimensionSize(0); j++) { oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j)); }
 
 			m_oSignalEncoder.encodeHeader();
 

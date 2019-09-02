@@ -48,7 +48,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using CWT."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

@@ -73,10 +73,7 @@ namespace OpenViBEPlugins
 
 				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < box.getInputCount(); i++)
-					{
-						box.setInputType(i, typeID);
-					}
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
 
 					box.setOutputType(0, typeID);
 				}
@@ -96,10 +93,7 @@ namespace OpenViBEPlugins
 
 				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < box.getInputCount(); i++)
-					{
-						box.setInputType(i, typeID);
-					}
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
 				}
 				else
 				{

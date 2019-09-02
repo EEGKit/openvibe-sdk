@@ -29,10 +29,7 @@ bool CLogManager::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boo
 	return true;
 }
 
-bool CLogManager::activate(bool bActive)
-{
-	return activate(LogLevel_First, LogLevel_Last, bActive);
-}
+bool CLogManager::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
 
 void CLogManager::log(const time64 value) { logForEach<const time64>(value); }
 void CLogManager::log(const uint64_t value) { logForEach<const uint64_t>(value); }
@@ -77,10 +74,7 @@ void CLogManager::log(const ELogLevel eLogLevel)
 	logForEach<ELogLevel>(eLogLevel);
 }
 
-void CLogManager::log(const ELogColor eLogColor)
-{
-	logForEach<ELogColor>(eLogColor);
-}
+void CLogManager::log(const ELogColor eLogColor) { logForEach<ELogColor>(eLogColor); }
 
 bool CLogManager::addListener(ILogListener* pListener)
 {

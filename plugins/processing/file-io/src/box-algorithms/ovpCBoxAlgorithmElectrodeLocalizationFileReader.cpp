@@ -9,10 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency()
-{
-	return ((uint64_t)1LL) << 32;
-}
+uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { return ((uint64_t)1LL) << 32; }
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 {

@@ -24,10 +24,7 @@ namespace OpenViBEToolkit
 			{
 				bool isSeparator(uint8_t ui8Value, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
 				{
-					for (uint32_t i = 0; i < ui32SeparatorCount; i++)
-					{
-						if (ui8Value == pSeparator[i]) { return true; }
-					}
+					for (uint32_t i = 0; i < ui32SeparatorCount; i++) { if (ui8Value == pSeparator[i]) { return true; } }
 					return false;
 				}
 
@@ -74,7 +71,8 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 }
 
 
-bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces, const bool bRemoveEndSpaces)
+bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces,
+												   const bool bRemoveEndSpaces)
 {
 	const char* str1Start = rString1.toASCIIString();
 	const char* str1End   = str1Start + strlen(str1Start) - 1;

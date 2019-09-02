@@ -26,10 +26,7 @@ namespace OpenViBE
 		public:
 
 			CMetaboxManagerEntryEnumeratorCallBack(const IKernelContext& kernelContext, CMetaboxManager& metaboxManager)
-				: TKernelObject<IObject>(kernelContext), m_MetaboxManager(metaboxManager)
-			{
-				m_MetaBoxCount = 0;
-			}
+				: TKernelObject<IObject>(kernelContext), m_MetaboxManager(metaboxManager) { m_MetaBoxCount = 0; }
 
 			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 			{
@@ -38,7 +35,8 @@ namespace OpenViBE
 					const char* fullFileName = rEntry.getName();
 
 					CIdentifier scenarioID, metaboxId, metaboxHash;
-					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+					this->getKernelContext().getScenarioManager().
+						  importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
 					if (scenarioID != OV_UndefinedIdentifier)
 					{
 						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
@@ -48,7 +46,8 @@ namespace OpenViBE
 							bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
 							if (!hasHash)
 							{
-								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() << " has no Hash in the scenario " << fullFileName << "\n";
+								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() <<
+										" has no Hash in the scenario " << fullFileName << "\n";
 							}
 							m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(fullFileName));
 							m_MetaboxManager.setMetaboxHash(metaboxId, metaboxHash);
@@ -57,7 +56,8 @@ namespace OpenViBE
 						}
 						else
 						{
-							this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox file " << fullFileName << " is missing elements. Please check it.\n";
+							this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox file " << fullFileName <<
+									" is missing elements. Please check it.\n";
 						}
 					}
 					this->getKernelContext().getScenarioManager().releaseScenario(scenarioID);
@@ -86,16 +86,14 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
 	this->getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
-CMetaboxManager::~CMetaboxManager()
-{
-	for (auto desc : m_MetaboxObjectDesc) { delete desc.second; }
-}
+CMetaboxManager::~CMetaboxManager() { for (auto desc : m_MetaboxObjectDesc) { delete desc.second; } }
 
 bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 {
 	this->getLogManager() << LogLevel_Info << "Adding metaboxes from [" << fileNameWildCard << "]\n";
 
-	CMetaboxManagerEntryEnumeratorCallBack l_rCallback(this->getKernelContext(), *this); //, m_vPluginModule, m_vPluginObjectDesc, haveAllPluginsLoadedCorrectly);
+	CMetaboxManagerEntryEnumeratorCallBack
+			l_rCallback(this->getKernelContext(), *this); //, m_vPluginModule, m_vPluginObjectDesc, haveAllPluginsLoadedCorrectly);
 	FS::IEntryEnumerator* entryEnumerator = createEntryEnumerator(l_rCallback);
 	stringstream ss(fileNameWildCard.toASCIIString());
 	string path;
@@ -107,10 +105,7 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 		{
 			result |= entryEnumerator->enumerate((path + "*" + ext.toASCIIString()).c_str());
 		}
-		if (result)
-		{
-			this->getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << path.c_str() << "]\n";
-		}
+		if (result) { this->getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << path.c_str() << "]\n"; }
 	}
 	entryEnumerator->release();
 
@@ -144,10 +139,7 @@ CString CMetaboxManager::getMetaboxFilePath(const CIdentifier& metaboxIdentifier
 	return resultIt != m_MetaboxFilePath.end() ? resultIt->second : CString();
 }
 
-void CMetaboxManager::setMetaboxFilePath(const CIdentifier& metaboxIdentifier, const CString& filePath)
-{
-	m_MetaboxFilePath[metaboxIdentifier] = filePath;
-}
+void CMetaboxManager::setMetaboxFilePath(const CIdentifier& metaboxIdentifier, const CString& filePath) { m_MetaboxFilePath[metaboxIdentifier] = filePath; }
 
 CIdentifier CMetaboxManager::getMetaboxHash(const CIdentifier& metaboxIdentifier) const
 {
@@ -155,7 +147,4 @@ CIdentifier CMetaboxManager::getMetaboxHash(const CIdentifier& metaboxIdentifier
 	return resultIt != m_MetaboxHash.end() ? resultIt->second : OV_UndefinedIdentifier;
 }
 
-void CMetaboxManager::setMetaboxHash(const CIdentifier& metaboxIdentifier, const CIdentifier& hash)
-{
-	m_MetaboxHash[metaboxIdentifier] = hash;
-}
+void CMetaboxManager::setMetaboxHash(const CIdentifier& metaboxIdentifier, const CIdentifier& hash) { m_MetaboxHash[metaboxIdentifier] = hash; }

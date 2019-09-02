@@ -47,7 +47,8 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				System::Memory::copy(oBuffer->getDirectPointer(), iBuffer->getDirectPointer(), iBuffer->getSize());
 
 				OV_ERROR_UNLESS_KRF(tStart >= m_lastStartTime && tEnd >= m_lastEndTime,
-									"Invalid chunk times with start = [" << tStart << "] and end = [" << tEnd << "] while last chunk has start = [" << m_lastStartTime << "] and end = [" << m_lastEndTime << "]",
+									"Invalid chunk times with start = [" << tStart << "] and end = [" << tEnd << "] while last chunk has start = [" <<
+									m_lastStartTime << "] and end = [" << m_lastEndTime << "]",
 									OpenViBE::Kernel::ErrorType::BadInput);
 
 				m_lastStartTime = tStart;

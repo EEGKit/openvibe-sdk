@@ -29,19 +29,21 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 		SInput& input = m_vClassificationResults[i];
 		if (m_bMatrixBased)
 		{
-			OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
+			OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<
+				CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
-			input.m_pDecoder = decoder;
-			input.op_pMatrix = decoder->getOutputMatrix();
+			input.m_pDecoder       = decoder;
+			input.op_pMatrix       = decoder->getOutputMatrix();
 			input.m_bTwoValueInput = false;
 		}
 		else
 		{
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStimulationDecoder<
+				CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
-			input.m_pDecoder = decoder;
+			input.m_pDecoder         = decoder;
 			input.op_pStimulationSet = decoder->getOutputStimulationSet();
-			input.m_bTwoValueInput = false;
+			input.m_bTwoValueInput   = false;
 		}
 	}
 
@@ -84,7 +86,7 @@ bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t /*index*/)
 
 bool CBoxAlgorithmVotingClassifier::process()
 {
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxContext  = this->getDynamicBoxContext();
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
 	bool canChoose = true;
@@ -106,7 +108,8 @@ bool CBoxAlgorithmVotingClassifier::process()
 											"Invalid input matrix with [" << input.op_pMatrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
 											OpenViBE::Kernel::ErrorType::BadInput);
 
-						this->getLogManager() << LogLevel_Debug << "Input got two dimensions, the value use for the vote will be the difference between the two values\n";
+						this->getLogManager() << LogLevel_Debug <<
+								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";
 						input.m_bTwoValueInput = true;
 					}
 				}
@@ -127,7 +130,8 @@ bool CBoxAlgorithmVotingClassifier::process()
 						const uint64_t stimulationId = input.op_pStimulationSet->getStimulationIdentifier(k);
 						if (stimulationId == m_ui64TargetClassLabel || stimulationId == m_ui64NonTargetClassLabel || stimulationId == m_ui64RejectClassLabel)
 						{
-							input.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_ui64TargetClassLabel ? 1 : 0, input.op_pStimulationSet->getStimulationDate(k)));
+							input.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_ui64TargetClassLabel ? 1 : 0,
+																				 input.op_pStimulationSet->getStimulationDate(k)));
 						}
 					}
 				}
@@ -139,15 +143,12 @@ bool CBoxAlgorithmVotingClassifier::process()
 			}
 		}
 
-		if (input.m_vScore.size() < m_ui64NumberOfRepetitions)
-		{
-			canChoose = false;
-		}
+		if (input.m_vScore.size() < m_ui64NumberOfRepetitions) { canChoose = false; }
 	}
 
 	if (canChoose)
 	{
-		double resultScore         = -1E100;
+		double resultScore        = -1E100;
 		uint64_t resultClassLabel = m_ui64RejectClassLabel;
 		uint64_t time             = 0;
 
@@ -156,14 +157,11 @@ bool CBoxAlgorithmVotingClassifier::process()
 		{
 			SInput& input = m_vClassificationResults[i];
 			score[i]      = 0;
-			for (size_t j = 0; j < m_ui64NumberOfRepetitions; j++)
-			{
-				score[i] += input.m_vScore[j].first;
-			}
+			for (size_t j = 0; j < m_ui64NumberOfRepetitions; j++) { score[i] += input.m_vScore[j].first; }
 
 			if (score[i] > resultScore)
 			{
-				resultScore       = score[i];
+				resultScore      = score[i];
 				resultClassLabel = m_ui64ResultClassLabelBase + i;
 				time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
 			}
@@ -171,7 +169,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 			{
 				if (!m_bChooseOneIfExAequo)
 				{
-					resultScore       = score[i];
+					resultScore      = score[i];
 					resultClassLabel = m_ui64RejectClassLabel;
 					time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
 				}
@@ -184,11 +182,14 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 		if (resultClassLabel != m_ui64RejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel) << " with score " << resultScore << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen " << this
+																	->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel)
+					<< " with score " << resultScore << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel) << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(
+				OV_TypeId_Stimulation, resultClassLabel) << "\n";
 		}
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->clear();
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(resultClassLabel, time, 0);

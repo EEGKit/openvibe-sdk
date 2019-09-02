@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint32_t m_ui32Status              = 0;
+			uint32_t m_ui32Status        = 0;
 			uint32_t m_dimensionIdx      = 0;
 			uint32_t m_dimensionEntryIdx = 0;
 			//			uint32_t m_ui32DimensionEntryIndexUnit = 0;
@@ -71,7 +71,8 @@ namespace OpenViBEPlugins
 			{
 				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;
 			}

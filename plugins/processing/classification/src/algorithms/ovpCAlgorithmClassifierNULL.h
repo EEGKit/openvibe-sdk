@@ -24,7 +24,8 @@ namespace OpenViBEPlugins
 			CAlgorithmClassifierNULL();
 			bool initialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue, OpenViBEToolkit::IVector& rProbabilityValue) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue,
+						  OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;
@@ -53,9 +54,13 @@ namespace OpenViBEPlugins
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1, "Parameter 1", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2, "Parameter 2", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", OpenViBE::Kernel::ParameterType_Enumeration, OV_TypeId_Stimulation);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1, "Parameter 1", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2, "Parameter 2", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", OpenViBE::Kernel::ParameterType_Enumeration,
+					OV_TypeId_Stimulation);
 				return true;
 			}
 

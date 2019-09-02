@@ -13,7 +13,8 @@ namespace XML
 	{
 	public:
 		TReaderCallbackProxy1(COwnerClass& rOwnerObject,
-							  void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount),
+							  void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue,
+																uint64_t ui64AttributeCount),
 							  void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
@@ -35,7 +36,9 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount), void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)()>
+	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue,
+																   uint64_t ui64AttributeCount), void (COwnerClass::*mfpProcessChildData)(const char* sData),
+			  void (COwnerClass::*mfpCloseChild)()>
 	class TReaderCallbackProxy2 final : public IReaderCallback
 	{
 	public:

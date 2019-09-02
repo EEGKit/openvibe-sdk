@@ -21,7 +21,8 @@ namespace OpenViBEToolkit
 
 		virtual bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
+			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
 			m_pCodec->initialize();
 			m_pInputMemoryBuffer.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 			m_pOutputMatrix.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));

@@ -123,15 +123,9 @@ namespace OpenViBE
 				runCmd->playMode = ((playMode == "ff") ? PlayerPlayMode::Fastfoward : PlayerPlayMode::Standard);
 			}
 
-			if (m_OptionParser.hasOption("max-time"))
-			{
-				runCmd->maximumExecutionTime = m_OptionParser.getOptionValue<double>("max-time");
-			}
+			if (m_OptionParser.hasOption("max-time")) { runCmd->maximumExecutionTime = m_OptionParser.getOptionValue<double>("max-time"); }
 
-			if (m_OptionParser.hasOption("dg"))
-			{
-				runCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg");
-			}
+			if (m_OptionParser.hasOption("dg")) { runCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg"); }
 
 			m_CommandList.push_back(runCmd);
 		}

@@ -57,13 +57,7 @@ public:
 		}
 	}
 
-	void write(const void* buffer, const uint64_t size) override
-	{
-		if (m_File)
-		{
-			std::fwrite(buffer, size_t(size), 1, m_File);
-		}
-	}
+	void write(const void* buffer, const uint64_t size) override { if (m_File) { std::fwrite(buffer, size_t(size), 1, m_File); } }
 
 	// necessary thjor the test to close the stream and re-open it for inspection
 	void release()

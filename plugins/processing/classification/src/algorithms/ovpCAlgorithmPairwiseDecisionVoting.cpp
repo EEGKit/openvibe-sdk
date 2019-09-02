@@ -30,14 +30,16 @@ bool CAlgorithmPairwiseDecisionVoting::parameterize()
 	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = uint32_t(ip_pClassCount);
 
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
 
 bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
 {
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 #if VOTING_DEBUG
 	std::cout << pClassificationValueList.size() << std::endl;
@@ -55,14 +57,8 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	for (uint32_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
 		SClassificationInfo& l_rTemp = pClassificationValueList[i];
-		if (l_rTemp.m_f64ClassLabel == 0)
-		{
-			++(l_pWinCount[uint32_t(l_rTemp.m_f64FirstClass)]);
-		}
-		else
-		{
-			++(l_pWinCount[uint32_t(l_rTemp.m_f64SecondClass)]);
-		}
+		if (l_rTemp.m_f64ClassLabel == 0) { ++(l_pWinCount[uint32_t(l_rTemp.m_f64FirstClass)]); }
+		else { ++(l_pWinCount[uint32_t(l_rTemp.m_f64SecondClass)]); }
 	}
 
 #if VOTING_DEBUG
@@ -76,10 +72,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	pProbabilityVector->setDimensionCount(1);
 	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
 
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		pProbabilityVector->getBuffer()[i] = ((double)l_pWinCount[i]) / pClassificationValueList.size();
-	}
+	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = ((double)l_pWinCount[i]) / pClassificationValueList.size(); }
 
 	delete[] l_pWinCount;
 	return true;

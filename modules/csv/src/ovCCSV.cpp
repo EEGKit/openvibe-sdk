@@ -52,9 +52,9 @@ namespace
 {
 	//const uint32_t s_StimulationDateColumnNbr       = 1;
 	//const uint32_t s_StimulationIdentifierColumnNbr = 2;
-	const uint32_t s_SignalEpochColumnIndex         = 1;
-	const uint32_t s_TimeColumnIndex                = 0;
-	const uint32_t s_EndTimeColumnIndex             = 1;
+	const uint32_t s_SignalEpochColumnIndex = 1;
+	const uint32_t s_TimeColumnIndex        = 0;
+	const uint32_t s_EndTimeColumnIndex     = 1;
 	// Number of columns before data (Time/Epoch)
 	const uint32_t s_PreDataColumnCount = 2;
 	// Number of columns after data (Events)
@@ -117,10 +117,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 
 	outputString.clear();
 	outputString.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), size_t(0),
-										 [](size_t sumSize, const std::string& str)
-										 {
-											 return sumSize + str.size();
-										 }));
+										 [](size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
 
 	// Let's join the strings !
 	for_each(buffer.begin(), buffer.end(), [&outputString](const std::string& s) { outputString += s; });
@@ -232,7 +229,8 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, u
 	return true;
 }
 
-bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate)
+bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
+										 const uint32_t samplingRate)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -756,7 +754,10 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 		 || (!m_Chunks.empty() && sample.epoch != m_Chunks.back().epoch)))
 	{
 		m_Chunks.clear();
-		m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [&sample](const SStimulationChunk& chunk) { return chunk.stimulationDate < sample.startTime; }),
+		m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [&sample](const SStimulationChunk& chunk)
+							 {
+								 return chunk.stimulationDate < sample.startTime;
+							 }),
 							 m_Stimulations.end());
 	}
 
@@ -809,26 +810,26 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 		if (m_InputTypeIdentifier == EStreamType::Signal)
 		{
 			const uint64_t lastEpoch = samples.back().epoch;
-			const auto rangeStart    = std::find_if(samples.begin(), samples.end(), [&lastEpoch](const SMatrixChunk& s) -> bool { return s.epoch == lastEpoch; });
+			const auto rangeStart    = std::find_if(samples.begin(), samples.end(),
+													[&lastEpoch](const SMatrixChunk& s) -> bool { return s.epoch == lastEpoch; });
 
 			if (!m_Chunks.empty() && m_Chunks.front().epoch != lastEpoch) { m_Chunks.clear(); }
 
 			m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
 			const double curTime = m_Chunks.front().startTime;
-			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_Stimulations.end());
+			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(),
+												[curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_Stimulations.end());
 		}
 		else
 		{
 			m_Chunks.clear();
 			m_Chunks.push_back(samples.back());
 			const double curTime = m_Chunks.front().startTime;
-			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_Stimulations.end());
+			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(),
+												[curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_Stimulations.end());
 		}
 	}
-	else
-	{
-		m_Chunks.insert(m_Chunks.end(), samples.begin(), samples.end());
-	}
+	else { m_Chunks.insert(m_Chunks.end(), samples.begin(), samples.end()); }
 
 	return true;
 }
@@ -938,10 +939,7 @@ std::string CCSVHandler::createHeaderString()
 
 	auto addColumn = [&](const std::string& columnLabel)
 	{
-		if (m_ColumnCount != 0)
-		{
-			header += s_Separator;
-		}
+		if (m_ColumnCount != 0) { header += s_Separator; }
 
 		header += columnLabel;
 		m_ColumnCount++;
@@ -989,10 +987,7 @@ std::string CCSVHandler::createHeaderString()
 				{
 					timeColumn += std::to_string(m_DimensionSizes[index]);
 
-					if ((index + 1) < m_DimensionCount)
-					{
-						timeColumn += std::string(1, s_DimensionSeparator);
-					}
+					if ((index + 1) < m_DimensionCount) { timeColumn += std::string(1, s_DimensionSeparator); }
 				}
 
 				addColumn(timeColumn);
@@ -1055,10 +1050,7 @@ std::string CCSVHandler::createHeaderString()
 					header += m_DimensionLabels[previousDimensionsSize + position[index]];
 					previousDimensionsSize += m_DimensionSizes[index];
 
-					if ((index + 1) < position.size())
-					{
-						header += std::string(1, s_InternalDataSeparator);
-					}
+					if ((index + 1) < position.size()) { header += std::string(1, s_InternalDataSeparator); }
 				}
 			} while (this->increasePositionIndexes(position));
 		}
@@ -1097,8 +1089,8 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 	uint64_t linesWritten = 0;
 
 	while (!m_Chunks.empty() && (canWriteAll
-			   					|| (m_Stimulations.empty() && m_Chunks.front().endTime <= m_NoEventSince)
-			   					|| (!m_Stimulations.empty() && m_Chunks.front().startTime <= m_Stimulations.back().stimulationDate))
+								 || (m_Stimulations.empty() && m_Chunks.front().endTime <= m_NoEventSince)
+								 || (!m_Stimulations.empty() && m_Chunks.front().startTime <= m_Stimulations.back().stimulationDate))
 	)
 	{
 		// Signal data must be written as sampleCounterPerBuffer th lines;
@@ -1184,10 +1176,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 
 			csv += stimulationsToString(stimulationsToWrite);
 		}
-		else
-		{
-			csv += std::string(2, s_Separator);
-		}
+		else { csv += std::string(2, s_Separator); }
 
 		csv += "\n";
 		linesWritten++;
@@ -1307,10 +1296,7 @@ bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 	}
 
 	// get sampling rate
-	try
-	{
-		m_SamplingRate = std::stoul(header[s_TimeColumnIndex].substr(5, header[s_TimeColumnIndex].size() - 3));
-	}
+	try { m_SamplingRate = std::stoul(header[s_TimeColumnIndex].substr(5, header[s_TimeColumnIndex].size() - 3)); }
 	catch (const std::exception& ia)
 	{
 		m_LastStringError = "On entry \"" + header[0].substr(5, header[0].size() - 3) + "\", exception have been thrown: ";
@@ -1350,7 +1336,8 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 
 	if (buffer != "Time")
 	{
-		m_LastStringError = "First column (" + header[s_TimeColumnIndex] + ") is not well formed, must have \"Time\" written before the first inqternal data separator (\':\' as default)";
+		m_LastStringError = "First column (" + header[s_TimeColumnIndex] +
+							") is not well formed, must have \"Time\" written before the first inqternal data separator (\':\' as default)";
 		return false;
 	}
 
@@ -1358,15 +1345,9 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 	{
 		this->streamReader(iss, buffer, separator, bufferTemp);
 
-		if (buffer.empty())
-		{
-			m_LastStringError = "First column (" + header[s_TimeColumnIndex] + ") is not well formed, missing " + missingString;
-		}
+		if (buffer.empty()) { m_LastStringError = "First column (" + header[s_TimeColumnIndex] + ") is not well formed, missing " + missingString; }
 
-		try
-		{
-			resultvar = std::stoul(buffer);
-		}
+		try { resultvar = std::stoul(buffer); }
 		catch (std::exception& e)
 		{
 			m_LastStringError = "On entry \"" + buffer + "\", exception have been thrown: ";
@@ -1433,7 +1414,8 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			}
 			else if (channelLabel != dimensionData)
 			{
-				m_LastStringError = "Channel name must be the same during " + std::to_string(m_DimensionSizes[1]) + " columns (number of frequencies per channel)";
+				m_LastStringError = "Channel name must be the same during " + std::to_string(m_DimensionSizes[1]) +
+									" columns (number of frequencies per channel)";
 				return false;
 			}
 
@@ -1444,10 +1426,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			{
 				double frequency;
 
-				try
-				{
-					frequency = std::stod(dimensionData);
-				}
+				try { frequency = std::stod(dimensionData); }
 				catch (const std::exception& e)
 				{
 					m_LastStringError = "On entry \"" + dimensionData + "\", exception have been thrown: ";
@@ -1461,10 +1440,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			{
 				double frequency;
 
-				try
-				{
-					frequency = std::stod(dimensionData);
-				}
+				try { frequency = std::stod(dimensionData); }
 				catch (const std::exception& e)
 				{
 					m_LastStringError = "On entry \"" + dimensionData + "\", exception have been thrown: ";
@@ -1472,10 +1448,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 					return false;
 				}
 
-				if (labelSizeCounter == 0)
-				{
-					lastFrequency = frequency;
-				}
+				if (labelSizeCounter == 0) { lastFrequency = frequency; }
 				else if (frequency < lastFrequency)
 				{
 					m_LastStringError = "Frequencies must be in ascending order";
@@ -1526,10 +1499,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	{
 		uint32_t size = 0;
 
-		try
-		{
-			size = std::stoul(dimensionSize);
-		}
+		try { size = std::stoul(dimensionSize); }
 		catch (std::exception& e)
 		{
 			m_LastStringError = "Error on a dimension size, exception have been thrown: ";
@@ -1588,8 +1558,9 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 
 		if (columnLabels.size() != m_DimensionCount)
 		{
-			m_LastStringError = "On column " + std::to_string(columnIndex + s_PreDataColumnCount) + "(" + header[columnIndex + s_PreDataColumnCount] + "), there is " + std::to_string(columnLabels.size()) + " label instead of " + std::to_string(m_DimensionCount);
-			m_LogError        = LogErrorCodes_WrongHeader;
+			m_LastStringError = "On column " + std::to_string(columnIndex + s_PreDataColumnCount) + "(" + header[columnIndex + s_PreDataColumnCount] +
+								"), there is " + std::to_string(columnLabels.size()) + " label instead of " + std::to_string(m_DimensionCount);
+			m_LogError = LogErrorCodes_WrongHeader;
 			return false;
 		}
 
@@ -1601,10 +1572,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 			if (columnLabels[dimensionIndex].empty())
 			{
 				// if saved label is empty, mark it as saved (even if it is already)
-				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty())
-				{
-					filledLabel[dimensionIndex][positionInCurrentDimension] = true;
-				}
+				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty()) { filledLabel[dimensionIndex][positionInCurrentDimension] = true; }
 					// else,there is an error, it means that label is already set
 				else
 				{
@@ -1625,7 +1593,8 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 					&& filledLabel[dimensionIndex][positionInCurrentDimension])
 				{
 					m_LastStringError = "Error at column " + std::to_string(columnIndex + 1) + " for the label \"" + columnLabels[dimensionIndex]
-										+ "\" in dimension " + std::to_string(dimensionIndex + 1) + " is trying to reset label to \"" + columnLabels[dimensionIndex]
+										+ "\" in dimension " + std::to_string(dimensionIndex + 1) + " is trying to reset label to \"" + columnLabels[
+											dimensionIndex]
 										+ "\" that have been already set to \"" + labelsInDimensions[dimensionIndex][positionInCurrentDimension] + "\"";
 					m_LogError = LogErrorCodes_WrongHeader;
 					return false;
@@ -1766,8 +1735,9 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 
 	if (stimIdentifiers.size() != stimDates.size() || stimIdentifiers.size() != stimDurations.size())
 	{
-		m_LastStringError = "There is " + std::to_string(stimIdentifiers.size()) + " identifiers, " + std::to_string(stimDates.size()) + " dates, and " + std::to_string(stimDurations.size()) + " durations";
-		m_LogError        = LogErrorCodes_StimulationSize;
+		m_LastStringError = "There is " + std::to_string(stimIdentifiers.size()) + " identifiers, " + std::to_string(stimDates.size()) + " dates, and " + std::
+							to_string(stimDurations.size()) + " durations";
+		m_LogError = LogErrorCodes_StimulationSize;
 		return false;
 	}
 
@@ -1848,7 +1818,4 @@ bool CCSVHandler::hasDataToRead() const { return m_HasDataToRead; }
 
 CSV_API ICSVHandler* CSV::createCSVHandler() { return new CCSVHandler(); }
 
-CSV_API void CSV::releaseCSVHandler(ICSVHandler* object)
-{
-	delete dynamic_cast<CCSVHandler *>(object);
-}
+CSV_API void CSV::releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler *>(object); }

@@ -102,10 +102,7 @@ namespace Socket
 				if (l_bInProgress)
 				{
 					// Performs time out
-					if (ui32TimeOut == 0xffffffff)
-					{
-						ui32TimeOut = 125;
-					}
+					if (ui32TimeOut == 0xffffffff) { ui32TimeOut = 125; }
 
 					struct timeval l_oTimeVal;
 					l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);

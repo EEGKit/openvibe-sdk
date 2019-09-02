@@ -26,16 +26,19 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_AcquisitionStreamDecoder));
+			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_AcquisitionStreamDecoder));
 			m_pCodec->initialize();
 
 			m_pInputMemoryBuffer.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_InputParameterId_MemoryBufferToDecode));
 
 			op_ui64BufferDuration.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_BufferDuration));
-			op_pExperimentInformationStream.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ExperimentInformationStream));
+			op_pExperimentInformationStream.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ExperimentInformationStream));
 			op_pSignalStream.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_SignalStream));
 			op_pStimulationStream.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_StimulationStream));
-			op_pChannelLocalisationStream.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelLocalisationStream));
+			op_pChannelLocalisationStream.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelLocalisationStream));
 			op_pChannelUnitsStream.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelUnitsStream));
 
 			return true;

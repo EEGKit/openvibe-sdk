@@ -30,13 +30,13 @@ namespace Socket
 	class CConnectionSerial final : public IConnectionSerial
 	{
 	public:
-			
+
 #if defined TARGET_OS_Windows
 		CConnectionSerial() : m_pFile(nullptr) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		CConnectionSerial() : m_iFile(0) { }
 #endif
-		
+
 
 		bool open() override { return false; }	// Should never be used
 
@@ -274,7 +274,7 @@ namespace Socket
 
 		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
-			const char* p   = reinterpret_cast<const char*>(buffer);
+			const char* p            = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -288,7 +288,7 @@ namespace Socket
 
 		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
-			char* p         = reinterpret_cast<char*>(buffer);
+			char* p                  = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())

@@ -13,10 +13,7 @@ bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
-	{
-		m_vStreamDecoder.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i));
-	}
+	for (uint32_t i = 0; i < nInput; i++) { m_vStreamDecoder.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
 
 	m_pStreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
 
@@ -43,7 +40,7 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 bool CBoxAlgorithmSignalMerger::processInput(const uint32_t index)
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	const size_t nInput            = this->getStaticBoxContext().getInputCount();
 
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }
 
@@ -81,15 +78,12 @@ bool CBoxAlgorithmSignalMerger::processInput(const uint32_t index)
 
 bool CBoxAlgorithmSignalMerger::process()
 {
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxContext  = this->getDynamicBoxContext();
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
 	uint32_t nChunk = boxContext.getInputChunkCount(0);
 
-	for (uint32_t input = 1; input < nInput; input++)
-	{
-		if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); }
-	}
+	for (uint32_t input = 1; input < nInput; input++) { if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); } }
 
 	for (uint32_t c = 0; c < nChunk; c++)
 	{
@@ -179,7 +173,8 @@ bool CBoxAlgorithmSignalMerger::process()
 				IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
 				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
 				{
-					System::Memory::copy(ip_pMatrix->getBuffer() + k * nSamplePerBlock, op_pMatrix->getBuffer() + j * nSamplePerBlock, nSamplePerBlock * sizeof(double));
+					System::Memory::copy(ip_pMatrix->getBuffer() + k * nSamplePerBlock, op_pMatrix->getBuffer() + j * nSamplePerBlock,
+										 nSamplePerBlock * sizeof(double));
 				}
 			}
 			m_pStreamEncoder->encodeBuffer();

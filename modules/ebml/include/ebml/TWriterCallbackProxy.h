@@ -15,13 +15,7 @@ namespace EBML
 		TWriterCallbackProxy1(COwnerClass& rOwnerObject, void (COwnerClass::*mfpWrite)(const void* buffer, uint64_t size))
 			: m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
-		void write(const void* buffer, const uint64_t size) override
-		{
-			if (m_mfpWrite)
-			{
-				(m_rOwnerObject.*m_mfpWrite)(buffer, size);
-			}
-		}
+		void write(const void* buffer, const uint64_t size) override { if (m_mfpWrite) { (m_rOwnerObject.*m_mfpWrite)(buffer, size); } }
 
 	protected:
 		COwnerClass& m_rOwnerObject;
@@ -37,10 +31,7 @@ namespace EBML
 	public:
 		TWriterCallbackProxy2(COwnerClass& rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
-		void write(const void* buffer, const uint64_t size) override
-		{
-			if (m_mfpWrite) { (m_rOwnerObject.*m_mfpWrite)(buffer, size); }
-		}
+		void write(const void* buffer, const uint64_t size) override { if (m_mfpWrite) { (m_rOwnerObject.*m_mfpWrite)(buffer, size); } }
 
 	protected:
 		COwnerClass& m_rOwnerObject;

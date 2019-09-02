@@ -45,7 +45,12 @@ namespace
 	struct TTestEqSourceBoxOutput
 	{
 		TTestEqSourceBoxOutput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_OutputIndex(index) { }
-		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIndex; }
+
+		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const
+		{
+			return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIndex;
+		}
+
 		const CIdentifier& m_BoxId;
 		uint32_t m_OutputIndex;
 	};
@@ -60,7 +65,12 @@ namespace
 	struct TTestEqTargetBoxInput
 	{
 		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_InputIndex(index) { }
-		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIndex; }
+
+		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const
+		{
+			return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIndex;
+		}
+
 		const CIdentifier& m_BoxId;
 		uint32_t m_InputIndex;
 	};
@@ -70,10 +80,7 @@ namespace
 	{
 		typename map<CIdentifier, T>::const_iterator it;
 
-		if (previousID == OV_UndefinedIdentifier)
-		{
-			it = elementMap.begin();
-		}
+		if (previousID == OV_UndefinedIdentifier) { it = elementMap.begin(); }
 		else
 		{
 			it = elementMap.find(previousID);
@@ -169,30 +176,26 @@ bool CScenario::clear()
 
 bool CScenario::removeScenarioInput(const uint32_t index)
 {
-	OV_ERROR_UNLESS_KRF(index < this->getInputCount(), "Input index = [" << index << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(index < this->getInputCount(), "Input index = [" << index << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+						ErrorType::OutOfBound);
 
 	this->removeInput(index);
 
 	// Remove the link within the scenario to this input
-	if (index < m_ScenarioInputLinks.size())
-	{
-		m_ScenarioInputLinks.erase(m_ScenarioInputLinks.begin() + index);
-	}
+	if (index < m_ScenarioInputLinks.size()) { m_ScenarioInputLinks.erase(m_ScenarioInputLinks.begin() + index); }
 
 	return true;
 }
 
 bool CScenario::removeScenarioOutput(const uint32_t index)
 {
-	OV_ERROR_UNLESS_KRF(index < this->getOutputCount(), "Output index = [" << index << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(index < this->getOutputCount(),
+						"Output index = [" << index << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])", ErrorType::OutOfBound);
 
 	this->removeOutput(index);
 
 	// Remove the link within the scenario to this output
-	if (index < m_ScenarioOutputLinks.size())
-	{
-		m_ScenarioOutputLinks.erase(m_ScenarioOutputLinks.begin() + index);
-	}
+	if (index < m_ScenarioOutputLinks.size()) { m_ScenarioOutputLinks.erase(m_ScenarioOutputLinks.begin() + index); }
 
 	return true;
 }
@@ -204,21 +207,18 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 	// Copy boxes
 	{
 		CIdentifier* listID = nullptr;
-		size_t nbElems              = 0;
+		size_t nbElems      = 0;
 		scenario.getBoxIdentifierList(&listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			CIdentifier boxID = listID[i];
-			const IBox* box           = scenario.getBoxDetails(boxID);
+			const IBox* box   = scenario.getBoxDetails(boxID);
 			CIdentifier newID;
 			CIdentifier suggestedNewID = shouldPreserveIDs ? box->getIdentifier() : OV_UndefinedIdentifier;
 			this->addBox(newID, *box, suggestedNewID);
 			oldToNewIdMap[boxID] = newID;
 
-			if (scenarioMergeCallback)
-			{
-				scenarioMergeCallback->process(boxID, newID);
-			}
+			if (scenarioMergeCallback) { scenarioMergeCallback->process(boxID, newID); }
 		}
 		scenario.releaseIdentifierList(listID);
 	}
@@ -226,12 +226,12 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 	// Copy links
 	{
 		CIdentifier* listID = nullptr;
-		size_t nbElems              = 0;
+		size_t nbElems      = 0;
 		scenario.getLinkIdentifierList(&listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			CIdentifier linkID = listID[i];
-			const ILink* link          = scenario.getLinkDetails(linkID);
+			const ILink* link  = scenario.getLinkDetails(linkID);
 			CIdentifier newID;
 			this->connect(newID,
 						  oldToNewIdMap[link->getSourceBoxIdentifier()],
@@ -240,10 +240,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 						  link->getTargetBoxInputIndex(),
 						  OV_UndefinedIdentifier);
 
-			if (scenarioMergeCallback)
-			{
-				scenarioMergeCallback->process(linkID, newID);
-			}
+			if (scenarioMergeCallback) { scenarioMergeCallback->process(linkID, newID); }
 		}
 		scenario.releaseIdentifierList(listID);
 	}
@@ -252,12 +249,12 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 	// Copy metadata
 	{
 		CIdentifier* listID = nullptr;
-		size_t nbElems              = 0;
+		size_t nbElems      = 0;
 		scenario.getMetadataIdentifierList(&listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			CIdentifier metadataID = listID[i];
-			const IMetadata* metadata      = scenario.getMetadataDetails(metadataID);
+			CIdentifier metadataID    = listID[i];
+			const IMetadata* metadata = scenario.getMetadataDetails(metadataID);
 			CIdentifier newID;
 			CIdentifier suggestedNewID = shouldPreserveIDs ? metadataID : OV_UndefinedIdentifier;
 			this->addMetadata(newID, suggestedNewID);
@@ -324,10 +321,7 @@ const IBox* CScenario::getBoxDetails(const CIdentifier& boxID) const
 	return itBox->second;
 }
 
-bool CScenario::isBox(const CIdentifier& identifier) const
-{
-	return m_Boxes.count(identifier) == 1;
-}
+bool CScenario::isBox(const CIdentifier& identifier) const { return m_Boxes.count(identifier) == 1; }
 
 IBox* CScenario::getBoxDetails(const CIdentifier& boxID)
 {
@@ -342,8 +336,8 @@ IBox* CScenario::getBoxDetails(const CIdentifier& boxID)
 
 bool CScenario::addBox(CIdentifier& boxID, const CIdentifier& suggestedBoxID)
 {
-	boxID = getUnusedIdentifier(suggestedBoxID);
-	CBox* box     = new CBox(this->getKernelContext());
+	boxID     = getUnusedIdentifier(suggestedBoxID);
+	CBox* box = new CBox(this->getKernelContext());
 	box->setOwnerScenario(this);
 	box->setIdentifier(boxID);
 
@@ -480,7 +474,7 @@ IComment* CScenario::getCommentDetails(const CIdentifier& commentID)
 
 bool CScenario::addComment(CIdentifier& commentID, const CIdentifier& suggestedCommentID)
 {
-	commentID    = getUnusedIdentifier(suggestedCommentID);
+	commentID            = getUnusedIdentifier(suggestedCommentID);
 	CComment* newComment = new CComment(this->getKernelContext(), *this);
 	newComment->setIdentifier(commentID);
 
@@ -562,12 +556,12 @@ bool CScenario::isMetadata(const CIdentifier& identifier) const { return m_Metad
 
 bool CScenario::addMetadata(CIdentifier& metadataID, const CIdentifier& suggestedMetadataID)
 {
-	metadataID  = getUnusedIdentifier(suggestedMetadataID);
+	metadataID          = getUnusedIdentifier(suggestedMetadataID);
 	CMetadata* metadata = new CMetadata(this->getKernelContext(), *this);
 	metadata->setIdentifier(metadataID);
 
 	m_NextMetadataIdentifier[metadataID] = m_FirstMetadataIdentifier;
-	m_FirstMetadataIdentifier                    = metadataID;
+	m_FirstMetadataIdentifier            = metadataID;
 	m_Metadata[metadataID]               = metadata;
 	return true;
 }
@@ -594,12 +588,11 @@ bool CScenario::removeMetadata(const CIdentifier& metadataID)
 	}
 	else
 	{
-		auto previousID = std::find_if(m_NextMetadataIdentifier.begin(), m_NextMetadataIdentifier.end(), [metadataID](const std::pair<CIdentifier, CIdentifier>& v)
-		{
-			return v.second == metadataID;
-		});
+		auto previousID = std::find_if(m_NextMetadataIdentifier.begin(), m_NextMetadataIdentifier.end(),
+									   [metadataID](const std::pair<CIdentifier, CIdentifier>& v) { return v.second == metadataID; });
 
-		OV_FATAL_UNLESS_K(previousID != m_NextMetadataIdentifier.end(), "Removing metadata [" << metadataID << "] which is not in the cache ", ErrorType::Internal);
+		OV_FATAL_UNLESS_K(previousID != m_NextMetadataIdentifier.end(), "Removing metadata [" << metadataID << "] which is not in the cache ",
+						  ErrorType::Internal);
 
 		m_NextMetadataIdentifier[previousID->first] = m_NextMetadataIdentifier[metadataID];
 		m_NextMetadataIdentifier.erase(metadataID);
@@ -688,7 +681,7 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIdx, const CIde
 	for (auto& kv : m_Links)
 	{
 		CIdentifier linkID = kv.first;
-		const CLink* link          = kv.second;
+		const CLink* link  = kv.second;
 		if (link->getTargetBoxIdentifier() == boxID && link->getTargetBoxInputIndex() == boxInputIdx) { this->disconnect(linkID); }
 	}
 
@@ -776,7 +769,7 @@ bool CScenario::getScenarioInputLink(const uint32_t scenarioInputIdx, CIdentifie
 
 	if (scenarioInputIdx >= m_ScenarioInputLinks.size()) { m_ScenarioInputLinks.resize(this->getInputCount()); }
 
-	boxID = m_ScenarioInputLinks[scenarioInputIdx].first;
+	boxID       = m_ScenarioInputLinks[scenarioInputIdx].first;
 	boxInputIdx = m_ScenarioInputLinks[scenarioInputIdx].second;
 
 	return true;
@@ -791,10 +784,7 @@ bool CScenario::getScenarioInputLink(const uint32_t scenarioInputIdx, CIdentifie
 
 	if (boxID != OV_UndefinedIdentifier)
 	{
-		if (m_Boxes.find(boxID) != m_Boxes.end())
-		{
-			this->getBoxDetails(boxID)->getInterfacorIdentifier(Input, boxInputIdx, boxOutputID);
-		}
+		if (m_Boxes.find(boxID) != m_Boxes.end()) { this->getBoxDetails(boxID)->getInterfacorIdentifier(Input, boxInputIdx, boxOutputID); }
 	}
 
 	return true;
@@ -809,7 +799,7 @@ bool CScenario::getScenarioOutputLink(const uint32_t scenarioOutputIdx, CIdentif
 
 	if (scenarioOutputIdx >= m_ScenarioOutputLinks.size()) { m_ScenarioOutputLinks.resize(this->getOutputCount()); }
 
-	boxID  = m_ScenarioOutputLinks[scenarioOutputIdx].first;
+	boxID        = m_ScenarioOutputLinks[scenarioOutputIdx].first;
 	boxOutputIdx = m_ScenarioOutputLinks[scenarioOutputIdx].second;
 
 	return true;
@@ -824,10 +814,7 @@ bool CScenario::getScenarioOutputLink(const uint32_t scenarioOutputIdx, CIdentif
 
 	if (boxID != OV_UndefinedIdentifier)
 	{
-		if (m_Boxes.find(boxID) != m_Boxes.end())
-		{
-			this->getBoxDetails(boxID)->getInterfacorIdentifier(Output, boxOutputIdx, boxOutputID);
-		}
+		if (m_Boxes.find(boxID) != m_Boxes.end()) { this->getBoxDetails(boxID)->getInterfacorIdentifier(Output, boxOutputIdx, boxOutputID); }
 	}
 
 	return true;
@@ -915,7 +902,7 @@ ILink* CScenario::getLinkDetails(const CIdentifier& linkID)
 	return itLink->second;
 }
 
-bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const uint32_t srcBoxOutputIdx, 
+bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const uint32_t srcBoxOutputIdx,
 						const CIdentifier& dstBoxID, const uint32_t dstBoxInputIdx, const CIdentifier& suggestedLinkID)
 {
 	const auto itBox1 = m_Boxes.find(srcBoxID);
@@ -980,7 +967,7 @@ bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const 
 	return true;
 }
 
-bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, 
+bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID,
 						const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, const CIdentifier& suggestedLinkID)
 {
 	uint32_t srcBoxOutputIdx;
@@ -1073,7 +1060,8 @@ bool CScenario::applyLocalSettings()
 			if (box.second->hasAttribute(OVD_AttributeId_SettingOverrideFilename))
 			{
 				settingValue = box.second->getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
-				box.second->setAttributeValue(OVD_AttributeId_SettingOverrideFilename, this->getConfigurationManager().expandOnlyKeyword("var", settingValue, true));
+				box.second->setAttributeValue(
+					OVD_AttributeId_SettingOverrideFilename, this->getConfigurationManager().expandOnlyKeyword("var", settingValue, true));
 			}
 		}
 
@@ -1101,20 +1089,11 @@ bool CScenario::acceptVisitor(IObjectVisitor& objectVisitor)
 
 	if (!objectVisitor.processBegin(objectVisitorContext, *this)) { return false; }
 
-	for (auto& box : m_Boxes)
-	{
-		if (!box.second->acceptVisitor(objectVisitor)) { return false; }
-	}
+	for (auto& box : m_Boxes) { if (!box.second->acceptVisitor(objectVisitor)) { return false; } }
 
-	for (auto& comment : m_Comments)
-	{
-		if (!comment.second->acceptVisitor(objectVisitor)) { return false; }
-	}
+	for (auto& comment : m_Comments) { if (!comment.second->acceptVisitor(objectVisitor)) { return false; } }
 
-	for (auto& link : m_Links)
-	{
-		if (!link.second->acceptVisitor(objectVisitor)) { return false; }
-	}
+	for (auto& link : m_Links) { if (!link.second->acceptVisitor(objectVisitor)) { return false; } }
 
 	if (!objectVisitor.processEnd(objectVisitorContext, *this)) { return false; }
 
@@ -1127,10 +1106,7 @@ bool CScenario::acceptVisitor(IObjectVisitor& objectVisitor)
 CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedID) const
 {
 	uint64_t newID = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
-	if (suggestedID != OV_UndefinedIdentifier)
-	{
-		newID = suggestedID.toUInteger() - 1;
-	}
+	if (suggestedID != OV_UndefinedIdentifier) { newID = suggestedID.toUInteger() - 1; }
 
 	CIdentifier result;
 	map<CIdentifier, CBox*>::const_iterator itBox;
@@ -1170,20 +1146,15 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 				box.second->getSettingType(settingIndex, typeID);
 
 				CString settingValue = rawSettingValue;
-				if (configurationManager)
-				{
-					settingValue = configurationManager->expand(settingValue);
-				}
-				else
-				{
-					settingValue = this->getConfigurationManager().expandOnlyKeyword("var", settingValue);
-				}
+				if (configurationManager) { settingValue = configurationManager->expand(settingValue); }
+				else { settingValue = this->getConfigurationManager().expandOnlyKeyword("var", settingValue); }
 
 				auto settingTypeName = this->getTypeManager().getTypeName(typeID);
 
 				OV_ERROR_UNLESS_KRF(
 					::checkSettingValue(settingValue, typeID, this->getTypeManager()),
-					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not a valid [" << settingTypeName << "] value.",
+					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<
+					"] given as setting is not a valid [" << settingTypeName << "] value.",
 					ErrorType::BadValue);
 			}
 
@@ -1204,10 +1175,7 @@ CIdentifier CScenario::getNextOutdatedBoxIdentifier(const CIdentifier& previousI
 
 bool CScenario::hasOutdatedBox()
 {
-	for (auto& box : m_Boxes)
-	{
-		if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated)) return true;
-	}
+	for (auto& box : m_Boxes) { if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated)) return true; }
 	return false;
 }
 
@@ -1223,10 +1191,7 @@ bool CScenario::isBoxOutdated(const CIdentifier& boxId)
 		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 		boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
 	}
-	else
-	{
-		boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box->getAlgorithmClassIdentifier());
-	}
+	else { boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box->getAlgorithmClassIdentifier()); }
 
 	boxHashCode2.fromString(box->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
 
@@ -1248,7 +1213,10 @@ bool CScenario::checkOutdatedBoxes()
 		// Do not attempt to update boxes which do not have existing box algorithm identifiers
 		auto boxAlgorithmClassID = box.second->getAlgorithmClassIdentifier();
 		if (boxAlgorithmClassID != OVP_ClassId_BoxAlgorithm_Metabox
-			&& !dynamic_cast<const IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassID))) { continue; }
+			&& !dynamic_cast<const IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassID)))
+		{
+			continue;
+		}
 
 		// Do not attempt to update metaboxes which do not have an associated scenario
 		if (boxAlgorithmClassID == OVP_ClassId_BoxAlgorithm_Metabox)
@@ -1313,13 +1281,7 @@ void getIdentifierList(const map<CIdentifier, T>& elementMap, const TTest& testF
 	*listID = new CIdentifier[elementMap.size()];
 
 	size_t index = 0;
-	for (auto it = elementMap.begin(); it != elementMap.end(); ++it)
-	{
-		if (testFunctor(it))
-		{
-			(*listID)[index++] = it->first;
-		}
-	}
+	for (auto it = elementMap.begin(); it != elementMap.end(); ++it) { if (testFunctor(it)) { (*listID)[index++] = it->first; } }
 	*size = index;
 }
 
@@ -1485,14 +1447,8 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		{
 			CIdentifier* linkIdentifierList = nullptr;
 			size_t linkCount                = 0;
-			if (interfacorType == Input)
-			{
-				this->getLinkIdentifierToBoxInputList(boxID, index, &linkIdentifierList, &linkCount);
-			}
-			else if (interfacorType == Output)
-			{
-				this->getLinkIdentifierFromBoxOutputList(boxID, index, &linkIdentifierList, &linkCount);
-			}
+			if (interfacorType == Input) { this->getLinkIdentifierToBoxInputList(boxID, index, &linkIdentifierList, &linkCount); }
+			else if (interfacorType == Output) { this->getLinkIdentifierFromBoxOutputList(boxID, index, &linkIdentifierList, &linkCount); }
 
 			for (size_t i = 0; i < linkCount; ++i)
 			{
@@ -1536,21 +1492,15 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		auto index = m_UpdatedBoxIOCorrespondence.at(Input).at(boxID).at(link->getTargetBoxInputIndex());
 		this->connect(newLinkIdentifier, link->getSourceBoxIdentifier(), link->getSourceBoxOutputIndex(), boxID, index, link->getIdentifier());
 		isInterfacorConnected[Input].insert(index);
-		if (link->hasAttribute(OV_AttributeId_Link_Invalid))
-		{
-			this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, "");
-		}
+		if (link->hasAttribute(OV_AttributeId_Link_Invalid)) { this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, ""); }
 	}
 	for (const auto& link : links[Output])
 	{
 		CIdentifier newLinkIdentifier;
 		auto index = m_UpdatedBoxIOCorrespondence.at(Output).at(boxID).at(link->getSourceBoxOutputIndex());
-		this->connect(newLinkIdentifier, boxID, index, link->getTargetBoxIdentifier(), link->getTargetBoxInputIndex(), link->getIdentifier()); 
+		this->connect(newLinkIdentifier, boxID, index, link->getTargetBoxIdentifier(), link->getTargetBoxInputIndex(), link->getIdentifier());
 		isInterfacorConnected[Output].insert(index);
-		if (link->hasAttribute(OV_AttributeId_Link_Invalid))
-		{
-			this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, "");
-		}
+		if (link->hasAttribute(OV_AttributeId_Link_Invalid)) { this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, ""); }
 	}
 
 	// Cleanup the i/o that are redundant and disconnected
@@ -1562,10 +1512,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 			--i;
 			bool isDeprecated;
 			updatedBox->getInterfacorDeprecatedStatus(t, i, isDeprecated);
-			if (isDeprecated && isInterfacorConnected.at(t).find(i) == isInterfacorConnected.at(t).end())
-			{
-				updatedBox->removeInterfacor(t, i, true);
-			}
+			if (isDeprecated && isInterfacorConnected.at(t).find(i) == isInterfacorConnected.at(t).end()) { updatedBox->removeInterfacor(t, i, true); }
 		}
 	}
 
@@ -1580,10 +1527,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		updatedBox->getInterfacorDeprecatedStatus(Setting, settingIndex, isDeprecated);
 		updatedBox->getSettingValue(settingIndex, value);
 		updatedBox->getSettingDefaultValue(settingIndex, defaultValue);
-		if (isDeprecated && value == defaultValue)
-		{
-			updatedBox->removeInterfacor(Setting, settingIndex, true);
-		}
+		if (isDeprecated && value == defaultValue) { updatedBox->removeInterfacor(Setting, settingIndex, true); }
 	}
 
 
@@ -1625,10 +1569,7 @@ bool CScenario::removeDeprecatedInterfacorsFromBox(const CIdentifier& boxID)
 			index--;
 			bool isDeprecated = false;
 			box->getInterfacorDeprecatedStatus(interfacorType, index, isDeprecated);
-			if (isDeprecated)
-			{
-				box->removeInterfacor(interfacorType, index);
-			}
+			if (isDeprecated) { box->removeInterfacor(interfacorType, index); }
 		} while (index != 0);
 	}
 

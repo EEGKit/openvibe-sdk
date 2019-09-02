@@ -159,10 +159,7 @@ namespace Dsp
 		};
 
 		/*@Internal*/
-		Cascade::Storage getCascadeStorage()
-		{
-			return Cascade::Storage(MaxStages, m_stages);
-		}
+		Cascade::Storage getCascadeStorage() { return Cascade::Storage(MaxStages, m_stages); }
 
 	private:
 		Cascade::Stage m_stages[MaxStages];

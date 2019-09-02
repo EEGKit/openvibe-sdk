@@ -58,7 +58,8 @@ namespace OpenViBEPlugins
 			{
 				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
 
 				return true;
 			}

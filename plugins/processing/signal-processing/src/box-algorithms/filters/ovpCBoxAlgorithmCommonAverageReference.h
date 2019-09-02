@@ -45,7 +45,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Re-reference the signal to common average reference"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spatial Filtering"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

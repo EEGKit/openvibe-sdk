@@ -43,9 +43,6 @@ ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulation
 	return rLogManager;
 }
 
-CDecoderAlgorithmTest::CDecoderAlgorithmTest() {}
-
-CDecoderAlgorithmTest::~CDecoderAlgorithmTest() {}
 
 bool CDecoderAlgorithmTest::initialize()
 {
@@ -89,7 +86,7 @@ bool CDecoderAlgorithmTest::process()
 {
 	IBoxIO& boxContext    = getDynamicBoxContext();
 	const uint32_t nInput = getStaticBoxContext().getInputCount();
-	
+
 	for (uint32_t i = 0; i < nInput; i++)
 	{
 		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
@@ -100,17 +97,20 @@ bool CDecoderAlgorithmTest::process()
 			if (m_pStreamDecoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader))
 			{
 				{
-					TParameterHandler<IMatrix*> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
+					TParameterHandler<IMatrix*> l_oHandle(
+						m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 					if (l_oHandle.exists()) { OV_WARNING_K(*l_oHandle); }
 				}
 
 				{
-					TParameterHandler<IMatrix*> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+					TParameterHandler<IMatrix*> l_oHandle(
+						m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
 					if (l_oHandle.exists()) { OV_WARNING_K(*l_oHandle); }
 				}
 
 				{
-					TParameterHandler<uint64_t> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+					TParameterHandler<uint64_t>
+							l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 					if (l_oHandle.exists()) { OV_WARNING_K(l_oHandle); }
 				}
 			}
@@ -118,11 +118,9 @@ bool CDecoderAlgorithmTest::process()
 			if (m_pStreamDecoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer))
 			{
 				{
-					TParameterHandler<IStimulationSet*> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
-					if (l_oHandle.exists())
-					{
-						getLogManager() << LogLevel_Warning << *l_oHandle << "\n";
-					}
+					TParameterHandler<IStimulationSet*> l_oHandle(
+						m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
+					if (l_oHandle.exists()) { getLogManager() << LogLevel_Warning << *l_oHandle << "\n"; }
 				}
 			}
 

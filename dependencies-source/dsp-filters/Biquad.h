@@ -58,10 +58,7 @@ namespace Dsp
 		struct State : StateType, private DenormalPrevention
 		{
 			template <typename Sample>
-			Sample process(const Sample in, const BiquadBase& b)
-			{
-				return Sample(StateType::process1(in, b, ac()));
-			}
+			Sample process(const Sample in, const BiquadBase& b) { return Sample(StateType::process1(in, b, ac())); }
 		};
 
 		// Calculate filter response at the given normalized frequency.
@@ -100,14 +97,8 @@ namespace Dsp
 
 		void setPoleZeroPair(const PoleZeroPair& pair)
 		{
-			if (pair.isSinglePole())
-			{
-				setOnePole(pair.poles.first, pair.zeros.first);
-			}
-			else
-			{
-				setTwoPole(pair.poles.first, pair.zeros.first, pair.poles.second, pair.zeros.second);
-			}
+			if (pair.isSinglePole()) { setOnePole(pair.poles.first, pair.zeros.first); }
+			else { setTwoPole(pair.poles.first, pair.zeros.first, pair.poles.second, pair.zeros.second); }
 		}
 
 		void setPoleZeroForm(const BiquadPoleState& bps);
@@ -135,7 +126,7 @@ namespace Dsp
 
 		explicit BiquadPoleState(const BiquadBase& s);
 
-		double gain;
+		double gain = 0;
 	};
 
 	// More permissive interface for fooling around

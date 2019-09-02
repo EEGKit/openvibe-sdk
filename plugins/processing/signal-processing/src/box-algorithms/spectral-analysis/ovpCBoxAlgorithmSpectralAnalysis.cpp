@@ -22,7 +22,9 @@ namespace
 {
 	double amplitude(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
 	{
-		return sqrt(matrix(channelIndex, FFTIndex).real() * matrix(channelIndex, FFTIndex).real() + matrix(channelIndex, FFTIndex).imag() * matrix(channelIndex, FFTIndex).imag());
+		return sqrt(
+			matrix(channelIndex, FFTIndex).real() * matrix(channelIndex, FFTIndex).real() + matrix(channelIndex, FFTIndex).imag() * matrix(
+				channelIndex, FFTIndex).imag());
 	}
 
 	double phase(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
@@ -30,15 +32,9 @@ namespace
 		return atan2(matrix(channelIndex, FFTIndex).imag(), matrix(channelIndex, FFTIndex).real());
 	}
 
-	double realPart(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
-	{
-		return matrix(channelIndex, FFTIndex).real();
-	}
+	double realPart(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix) { return matrix(channelIndex, FFTIndex).real(); }
 
-	double imaginaryPart(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
-	{
-		return matrix(channelIndex, FFTIndex).imag();
-	}
+	double imaginaryPart(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix) { return matrix(channelIndex, FFTIndex).imag(); }
 } // namespace
 
 bool CBoxAlgorithmSpectralAnalysis::initialize()
@@ -117,11 +113,13 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_ChannelCount = matrix->getDimensionSize(0);
 			m_SampleCount  = matrix->getDimensionSize(1);
 
-			OV_ERROR_UNLESS_KRF(m_SampleCount > 1, "Input sample count lower or equal to 1 is not supported by the box.", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_SampleCount > 1, "Input sample count lower or equal to 1 is not supported by the box.",
+								OpenViBE::Kernel::ErrorType::BadInput);
 
 			m_SamplingRate = (unsigned int)m_Decoder.getOutputSamplingRate();
 
-			OV_ERROR_UNLESS_KRF(m_SamplingRate > 0, "Invalid sampling rate [" << m_SamplingRate << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_SamplingRate > 0, "Invalid sampling rate [" << m_SamplingRate << "] (expected value > 0)",
+								OpenViBE::Kernel::ErrorType::BadInput);
 
 			// size of the spectrum
 			m_FFTSize = m_SampleCount / 2 + 1;
@@ -149,10 +147,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					spectrum->setDimensionSize(1, m_FFTSize);
 
 					// Spectrum channel names
-					for (size_t j = 0; j < m_ChannelCount; j++)
-					{
-						spectrum->setDimensionLabel(0, uint32_t(j), matrix->getDimensionLabel(0, j));
-					}
+					for (size_t j = 0; j < m_ChannelCount; j++) { spectrum->setDimensionLabel(0, uint32_t(j), matrix->getDimensionLabel(0, j)); }
 
 					// We also name the spectrum bands "Abscissa"
 					for (unsigned int j = 0; j < m_FFTSize; j++)
@@ -181,10 +176,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			{
 				VectorXd samples = VectorXd::Zero(m_SampleCount);
 
-				for (unsigned int k = 0; k < m_SampleCount; k++)
-				{
-					samples(k) = matrix->getBuffer()[j * m_SampleCount + k];
-				}
+				for (unsigned int k = 0; k < m_SampleCount; k++) { samples(k) = matrix->getBuffer()[j * m_SampleCount + k]; }
 
 				VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
 
@@ -240,10 +232,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 
 					for (unsigned int j = 0; j < m_ChannelCount; j++)
 					{
-						for (unsigned int k = 0; k < m_FFTSize; k++)
-						{
-							spectrum->getBuffer()[j * m_FFTSize + k] = processResult(j, k, spectra);
-						}
+						for (unsigned int k = 0; k < m_FFTSize; k++) { spectrum->getBuffer()[j * m_FFTSize + k] = processResult(j, k, spectra); }
 					}
 
 					m_SpectrumEncoders[encoderIndex]->encodeBuffer();

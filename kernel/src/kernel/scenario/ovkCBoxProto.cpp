@@ -17,14 +17,8 @@ bool CBoxProto::addInput(const CString& sName, const CIdentifier& typeID, const 
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getInputCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount))
-	{
-		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, l_sBuffer);
-	}
-	else
-	{
-		m_rBox.addAttribute(OV_AttributeId_Box_InitialInputCount, l_sBuffer);
-	}
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, l_sBuffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialInputCount, l_sBuffer); }
 
 	return true;
 }
@@ -35,32 +29,21 @@ bool CBoxProto::addOutput(const CString& sName, const CIdentifier& typeID, const
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getOutputCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount))
-	{
-		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, l_sBuffer);
-	}
-	else
-	{
-		m_rBox.addAttribute(OV_AttributeId_Box_InitialOutputCount, l_sBuffer);
-	}
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, l_sBuffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialOutputCount, l_sBuffer); }
 
 	return true;
 }
 
-bool CBoxProto::addSetting(const CString& sName, const CIdentifier& typeID, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
+bool CBoxProto::addSetting(const CString& sName, const CIdentifier& typeID, const CString& sDefaultValue, const bool bModifiable,
+						   const CIdentifier& rIdentifier, const bool bNotify)
 {
 	if (!m_rBox.addSetting(sName, typeID, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getSettingCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount))
-	{
-		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, l_sBuffer);
-	}
-	else
-	{
-		m_rBox.addAttribute(OV_AttributeId_Box_InitialSettingCount, l_sBuffer);
-	}
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, l_sBuffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialSettingCount, l_sBuffer); }
 
 	return true;
 }

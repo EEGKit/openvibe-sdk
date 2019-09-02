@@ -48,10 +48,7 @@ namespace Dsp
 			if (n == 0) { return 1; }
 
 			double y = n;
-			for (double m = n; --m;)
-			{
-				y *= m;
-			}
+			for (double m = n; --m;) { y *= m; }
 
 			return y;
 		}
@@ -66,10 +63,7 @@ namespace Dsp
 		//------------------------------------------------------------------------------
 
 		AnalogLowPass::AnalogLowPass()
-			: m_numPoles(-1)
-		{
-			setNormal(0, 1);
-		}
+			: m_numPoles(-1) { setNormal(0, 1); }
 
 		void AnalogLowPass::design(int numPoles,
 								   WorkspaceBase* w)
@@ -81,10 +75,7 @@ namespace Dsp
 				reset();
 
 				RootFinderBase& solver(w->roots);
-				for (int i = 0; i < numPoles + 1; ++i)
-				{
-					solver.coef()[i] = reversebessel(i, numPoles);
-				}
+				for (int i = 0; i < numPoles + 1; ++i) { solver.coef()[i] = reversebessel(i, numPoles); }
 				solver.solve(numPoles);
 
 				const int pairs = numPoles / 2;
@@ -101,10 +92,7 @@ namespace Dsp
 		//------------------------------------------------------------------------------
 
 		AnalogLowShelf::AnalogLowShelf()
-			: m_numPoles(-1)
-		{
-			setNormal(doublePi, 1);
-		}
+			: m_numPoles(-1) { setNormal(doublePi, 1); }
 
 		void AnalogLowShelf::design(int numPoles,
 									double gainDb,
@@ -121,17 +109,11 @@ namespace Dsp
 				const double G = pow(10., gainDb / 20) - 1;
 
 				RootFinderBase& poles(w->roots);
-				for (int i = 0; i < numPoles + 1; ++i)
-				{
-					poles.coef()[i] = reversebessel(i, numPoles);
-				}
+				for (int i = 0; i < numPoles + 1; ++i) { poles.coef()[i] = reversebessel(i, numPoles); }
 				poles.solve(numPoles);
 
 				RootFinder<50> zeros;
-				for (int i = 0; i < numPoles + 1; ++i)
-				{
-					zeros.coef()[i] = reversebessel(i, numPoles);
-				}
+				for (int i = 0; i < numPoles + 1; ++i) { zeros.coef()[i] = reversebessel(i, numPoles); }
 				double a0 = reversebessel(0, numPoles);
 				zeros.coef()[0] += G * a0;
 				zeros.solve(numPoles);

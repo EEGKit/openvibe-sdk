@@ -60,10 +60,7 @@ bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel
 	return true;
 }
 
-bool CLogListenerFile::activate(bool bActive)
-{
-	return activate(LogLevel_First, LogLevel_Last, bActive);
-}
+bool CLogListenerFile::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
 
 void CLogListenerFile::log(const time64 value)
 {
@@ -76,10 +73,7 @@ void CLogListenerFile::log(const time64 value)
 		ss << l_f64Time;
 		ss << " sec";
 
-		if (m_bLogWithHexa)
-		{
-			ss << " (0x" << hex << value.m_ui64TimeValue << ")";
-		}
+		if (m_bLogWithHexa) { ss << " (0x" << hex << value.m_ui64TimeValue << ")"; }
 
 		m_fsFileStream << ss.str();
 	}

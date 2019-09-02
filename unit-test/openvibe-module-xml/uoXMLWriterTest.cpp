@@ -46,13 +46,7 @@ public:
 		}
 	}
 
-	void write(const char* outputData) override
-	{
-		if (m_File)
-		{
-			std::fputs(outputData, m_File);
-		}
-	}
+	void write(const char* outputData) override { if (m_File) { std::fputs(outputData, m_File); } }
 
 	// necessary thjor the test to close the stream and re-open it for inspection
 	void release()

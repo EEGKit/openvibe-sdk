@@ -16,7 +16,7 @@ CString::CString() { m_pStringImpl = new CStringImpl(); }
 
 CString::CString(const CString& rString)
 {
-	m_pStringImpl           = new CStringImpl();
+	m_pStringImpl          = new CStringImpl();
 	m_pStringImpl->m_Value = rString.m_pStringImpl->m_Value;
 }
 
@@ -53,20 +53,11 @@ namespace OpenViBE
 		return l_oResult.c_str();
 	}
 
-	bool operator==(const CString& rString1, const CString& rString2)
-	{
-		return (rString1.m_pStringImpl->m_Value) == (rString2.m_pStringImpl->m_Value);
-	}
+	bool operator==(const CString& rString1, const CString& rString2) { return (rString1.m_pStringImpl->m_Value) == (rString2.m_pStringImpl->m_Value); }
 
-	bool operator!=(const CString& rString1, const CString& rString2)
-	{
-		return (rString1.m_pStringImpl->m_Value) != (rString2.m_pStringImpl->m_Value);
-	}
+	bool operator!=(const CString& rString1, const CString& rString2) { return (rString1.m_pStringImpl->m_Value) != (rString2.m_pStringImpl->m_Value); }
 
-	bool operator<(const CString& rString1, const CString& rString2)
-	{
-		return (rString1.m_pStringImpl->m_Value) < (rString2.m_pStringImpl->m_Value);
-	}
+	bool operator<(const CString& rString1, const CString& rString2) { return (rString1.m_pStringImpl->m_Value) < (rString2.m_pStringImpl->m_Value); }
 } // namespace OpenViBE
 
 bool CString::set(const CString& rString)

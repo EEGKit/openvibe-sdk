@@ -291,7 +291,11 @@ namespace Dsp
 			template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
 			struct OrderBase : TypeClass<FilterClass<MaxOrder>>
 			{
-				ParamInfo getParamInfo_1() const { return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue, &ParamInfo::Int_toString); }
+				ParamInfo getParamInfo_1() const
+				{
+					return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue,
+									 &ParamInfo::Int_toString);
+				}
 			};
 
 			//------------------------------------------------------------------------------

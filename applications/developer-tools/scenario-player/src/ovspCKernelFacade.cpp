@@ -41,10 +41,7 @@ namespace OpenViBE
 	{
 		void setConfigurationTokenList(IConfigurationManager& configurationManager, const TokenList& tokenList)
 		{
-			for (auto& token : tokenList)
-			{
-				configurationManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str());
-			}
+			for (auto& token : tokenList) { configurationManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 		}
 	} // namespace
 
@@ -112,14 +109,8 @@ namespace OpenViBE
 
 		CString configurationFile;
 
-		if (command.configurationFile && !command.configurationFile.get().empty())
-		{
-			configurationFile = command.configurationFile.get().c_str();
-		}
-		else
-		{
-			configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
-		}
+		if (command.configurationFile && !command.configurationFile.get().empty()) { configurationFile = command.configurationFile.get().c_str(); }
+		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
 		IKernelContext* kernelContext = kernelDesc->createKernel("scenario-player", configurationFile);
@@ -219,7 +210,7 @@ namespace OpenViBE
 
 		// update boxes to be updated
 		CIdentifier* listID = nullptr;
-		size_t elemCount            = 0;
+		size_t elemCount    = 0;
 		scenario.getOutdatedBoxIdentifierList(&listID, &elemCount);
 		for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(listID[i]); }
 
@@ -257,10 +248,7 @@ namespace OpenViBE
 
 		// token list is just stored at this step for further use at runtime
 		// current token list overwrites the previous one
-		if (command.tokenList)
-		{
-			m_Pimpl->scenarioTokenMap[scenarioName] = command.tokenList.get();
-		}
+		if (command.tokenList) { m_Pimpl->scenarioTokenMap[scenarioName] = command.tokenList.get(); }
 
 		return PlayerReturnCode::Success;
 	}
@@ -282,10 +270,7 @@ namespace OpenViBE
 		PlayerReturnCode returnCode = PlayerReturnCode::Success;
 
 		// set up global token
-		if (command.tokenList)
-		{
-			setConfigurationTokenList(m_Pimpl->kernelContext->getConfigurationManager(), command.tokenList.get());
-		}
+		if (command.tokenList) { setConfigurationTokenList(m_Pimpl->kernelContext->getConfigurationManager(), command.tokenList.get()); }
 
 		auto& playerManager = m_Pimpl->kernelContext->getPlayerManager();
 
@@ -316,10 +301,7 @@ namespace OpenViBE
 			playerIdentifiersList.push_back(playerIdentifier);
 
 			CNameValuePairList configurationTokensMap;
-			for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName])
-			{
-				configurationTokensMap.setValue(token.first.c_str(), token.second.c_str());
-			}
+			for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName]) { configurationTokensMap.setValue(token.first.c_str(), token.second.c_str()); }
 
 			// Scenario attachment with setup of local token
 			if (!player->setScenario(scenarioPair.second, &configurationTokensMap))
@@ -361,10 +343,7 @@ namespace OpenViBE
 			{
 				maxExecutionTimeInFixedPoint = ITimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
 			}
-			else
-			{
-				maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max();
-			}
+			else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
 
 			bool allStopped{ false };
 			while (!allStopped) // negative condition here because it is easier to reason about it
@@ -375,10 +354,7 @@ namespace OpenViBE
 				{
 					if (p->getStatus() != PlayerStatus_Stop)
 					{
-						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint))
-						{
-							returnCode = PlayerReturnCode::KernelInternalFailure;
-						}
+						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = PlayerReturnCode::KernelInternalFailure; }
 					}
 
 					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }

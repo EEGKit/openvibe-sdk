@@ -31,10 +31,7 @@ CIdentifier& CIdentifier::operator++()
 	if (m_ui64Identifier != 0xffffffffffffffffll)
 	{
 		m_ui64Identifier++;
-		if (m_ui64Identifier == 0xffffffffffffffffll)
-		{
-			m_ui64Identifier = 0ll;
-		}
+		if (m_ui64Identifier == 0xffffffffffffffffll) { m_ui64Identifier = 0ll; }
 	}
 	return *this;
 }
@@ -44,27 +41,18 @@ CIdentifier& CIdentifier::operator--()
 	if (m_ui64Identifier != 0xffffffffffffffffll)
 	{
 		m_ui64Identifier--;
-		if (m_ui64Identifier == 0xffffffffffffffffll)
-		{
-			m_ui64Identifier = 0xfffffffffffffffell;
-		}
+		if (m_ui64Identifier == 0xffffffffffffffffll) { m_ui64Identifier = 0xfffffffffffffffell; }
 	}
 	return *this;
 }
 
 namespace OpenViBE
 {
-	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier;
-	}
+	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier; }
 
 	bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return !(rIdentifier1 == rIdentifier2); }
 
-	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier;
-	}
+	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier; }
 
 	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier; }
 } // namespace OpenViBE

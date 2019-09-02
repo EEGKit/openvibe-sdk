@@ -46,11 +46,15 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		context->getScenarioManager().createScenario(emptyScenarioIdentifier);
 
 		CMemoryBuffer memoryBuffer;
-		OVT_ASSERT(context->getScenarioManager().exportScenario(memoryBuffer, emptyScenarioIdentifier, OVP_GD_ClassId_Algorithm_XMLScenarioExporter), "Failed to export an empty scenario");
-		OVT_ASSERT(context->getScenarioManager().exportScenarioToFile((std::string(temporaryDirectory) + "/test-scenario-empty.mxs").c_str(), emptyScenarioIdentifier, OVP_GD_ClassId_Algorithm_XMLScenarioExporter), "Failed to export an empty scenario to a file");
+		OVT_ASSERT(context->getScenarioManager().exportScenario(memoryBuffer, emptyScenarioIdentifier, OVP_GD_ClassId_Algorithm_XMLScenarioExporter),
+				   "Failed to export an empty scenario");
+		OVT_ASSERT(
+			context->getScenarioManager().exportScenarioToFile((std::string(temporaryDirectory) + "/test-scenario-empty.mxs").c_str(), emptyScenarioIdentifier,
+				OVP_GD_ClassId_Algorithm_XMLScenarioExporter), "Failed to export an empty scenario to a file");
 
 		CIdentifier importedEmptyScenarioIdentifier;
-		OVT_ASSERT(context->getScenarioManager().importScenario(importedEmptyScenarioIdentifier, memoryBuffer, OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import an empty exported buffer");
+		OVT_ASSERT(context->getScenarioManager().importScenario(importedEmptyScenarioIdentifier, memoryBuffer, OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
+				   "Failed to import an empty exported buffer");
 
 		// Create a scenario to be imported by the importer test
 		CIdentifier simpleScenarioIdentifier;
@@ -59,10 +63,7 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		IScenario& scenario = context->getScenarioManager().getScenario(simpleScenarioIdentifier);
 
 		// Test scenario attributes
-		for (auto& attribute : simpleScenarioAttributes)
-		{
-			scenario.addAttribute(std::get<0>(attribute), std::get<1>(attribute).c_str());
-		}
+		for (auto& attribute : simpleScenarioAttributes) { scenario.addAttribute(std::get<0>(attribute), std::get<1>(attribute).c_str()); }
 
 		unsigned int settingIndex = 0;
 		for (auto& setting : simpleScenarioSettings)
@@ -104,7 +105,8 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		}
 
 		CIdentifier actualClockStimulatorToStimulationListenerLinkId;
-		scenario.connect(actualClockStimulatorToStimulationListenerLinkId, s_ClockStimulatorBoxId, 0, s_StimulationListenerBoxId, 1, s_ClockStimulatorToStimulationListenerLinkId);
+		scenario.connect(actualClockStimulatorToStimulationListenerLinkId, s_ClockStimulatorBoxId, 0, s_StimulationListenerBoxId, 1,
+						 s_ClockStimulatorToStimulationListenerLinkId);
 
 		CIdentifier actualSimpleCommentIdentifier;
 		scenario.addComment(actualSimpleCommentIdentifier, s_SimpleCommentId);
@@ -119,7 +121,9 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		unicodeComment->setText("This comment contains a newline\nand unicode characters 日本語");
 
 
-		OVT_ASSERT(context->getScenarioManager().exportScenarioToFile((std::string(temporaryDirectory) + "/" + s_SimpleScenarioFileName).c_str(), simpleScenarioIdentifier, OVP_GD_ClassId_Algorithm_XMLScenarioExporter), "Failed to export a simple scenario");
+		OVT_ASSERT(
+			context->getScenarioManager().exportScenarioToFile((std::string(temporaryDirectory) + "/" + s_SimpleScenarioFileName).c_str(),
+				simpleScenarioIdentifier, OVP_GD_ClassId_Algorithm_XMLScenarioExporter), "Failed to export a simple scenario");
 	}
 
 	return urImportScenarioFromFileTest(argc, argv);

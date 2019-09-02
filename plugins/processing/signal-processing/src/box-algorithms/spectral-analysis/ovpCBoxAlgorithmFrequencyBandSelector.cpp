@@ -24,14 +24,8 @@ namespace
 		while (i < sString.length())
 		{
 			j = i;
-			while (j < sString.length() && sString[j] != c)
-			{
-				j++;
-			}
-			if (i != j)
-			{
-				result.push_back(std::string(sString, i, j - i));
-			}
+			while (j < sString.length() && sString[j] != c) { j++; }
+			if (i != j) { result.push_back(std::string(sString, i, j - i)); }
 			i = j + 1;
 		}
 		return result;
@@ -56,10 +50,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 				double l_dValue = std::stod(l_vSettingRange[0].c_str());
 				m_vSelected.push_back(std::pair<double, double>(l_dValue, l_dValue));
 			}
-			catch (const std::exception&)
-			{
-				l_bGood = false;
-			}
+			catch (const std::exception&) { l_bGood = false; }
 		}
 		else if (l_vSettingRange.size() == 2)
 		{
@@ -69,10 +60,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 				double l_dHighValue = std::stod(l_vSettingRange[1].c_str());
 				m_vSelected.push_back(std::pair<double, double>(min(l_dLowValue, l_dHighValue), max(l_dLowValue, l_dHighValue)));
 			}
-			catch (const std::exception&)
-			{
-				l_bGood = false;
-			}
+			catch (const std::exception&) { l_bGood = false; }
 		}
 
 		if (!l_bGood)
@@ -97,7 +85,8 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	ip_pFrequencyAbscissa.setReferenceTarget(op_pBands);
-	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
+	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(
+		m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 
 	ip_pMatrix = &m_oMatrix;
 	op_pMatrix = &m_oMatrix;
@@ -173,7 +162,10 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd))
+		{
+			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd);
+		}
 
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		boxContext.markInputAsDeprecated(0, i);

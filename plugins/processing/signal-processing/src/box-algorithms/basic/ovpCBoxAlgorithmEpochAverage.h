@@ -60,8 +60,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Epoch average"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Averages matrices among time, this can be used to enhance ERPs"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This box can average matrices of different types including signal, spectrum or feature vectors"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Averages matrices among time, this can be used to enhance ERPs");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("This box can average matrices of different types including signal, spectrum or feature vectors");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Averaging"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

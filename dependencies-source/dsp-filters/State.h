@@ -238,10 +238,7 @@ namespace Dsp
 
 		int getNumChannels() const { return Channels; }
 
-		void reset()
-		{
-			for (int i = 0; i < Channels; ++i) { m_state[i].reset(); }
-		}
+		void reset() { for (int i = 0; i < Channels; ++i) { m_state[i].reset(); } }
 
 		StateType& operator[](int index)
 		{
@@ -269,7 +266,10 @@ namespace Dsp
 		void reset() { throw std::logic_error("attempt to reset empty ChannelState"); }
 
 		template <class FilterDesign, typename Sample>
-		void process(int /*numSamples*/, Sample* const* /*arrayOfChannels*/, FilterDesign& /*filter*/) { throw std::logic_error("attempt to process empty ChannelState"); }
+		void process(int /*numSamples*/, Sample* const* /*arrayOfChannels*/, FilterDesign& /*filter*/)
+		{
+			throw std::logic_error("attempt to process empty ChannelState");
+		}
 	};
 
 	//------------------------------------------------------------------------------

@@ -88,7 +88,8 @@ namespace OpenViBE
 			/** \name IBoxIO inputs handling */
 			//@{
 			uint32_t getInputChunkCount(const uint32_t index) const override;
-			bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const override;
+			bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize,
+							   const uint8_t*& rpChunkBuffer) const override;
 			const IMemoryBuffer* getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
 			uint64_t getInputChunkStartTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
 			uint64_t getInputChunkEndTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;

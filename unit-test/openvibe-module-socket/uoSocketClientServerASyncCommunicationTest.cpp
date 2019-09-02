@@ -63,10 +63,7 @@ namespace
 		// loop until all packet are received
 		while (g_ReceivedData.size() < expectedPacketCount)
 		{
-			if (server->isReadyToReceive())
-			{
-				clientConnection = server->accept();
-			}
+			if (server->isReadyToReceive()) { clientConnection = server->accept(); }
 
 			if (clientConnection && clientConnection->isReadyToReceive())
 			{
@@ -76,19 +73,13 @@ namespace
 				char dataBuffer[32];
 
 				// first receive data size
-				while (bytesReceived < bytesToReceive)
-				{
-					bytesReceived += clientConnection->receiveBuffer(&dataSize, bytesToReceive - bytesReceived);
-				}
+				while (bytesReceived < bytesToReceive) { bytesReceived += clientConnection->receiveBuffer(&dataSize, bytesToReceive - bytesReceived); }
 
 				// then receive data
 				bytesToReceive = dataSize;
 				bytesReceived  = 0;
 
-				while (bytesReceived < bytesToReceive)
-				{
-					bytesReceived += clientConnection->receiveBuffer(dataBuffer, bytesToReceive - bytesReceived);
-				}
+				while (bytesReceived < bytesToReceive) { bytesReceived += clientConnection->receiveBuffer(dataBuffer, bytesToReceive - bytesReceived); }
 
 				g_ReceivedData.push_back(std::string(dataBuffer, dataSize));
 			}
@@ -102,10 +93,7 @@ namespace
 		unsigned int bytesToSend = size;
 		unsigned int bytesSent   = 0;
 
-		while (bytesSent < bytesToSend)
-		{
-			bytesSent += client->sendBuffer(data, bytesToSend - bytesSent);
-		}
+		while (bytesSent < bytesToSend) { bytesSent += client->sendBuffer(data, bytesToSend - bytesSent); }
 	}
 }
 

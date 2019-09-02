@@ -35,6 +35,8 @@ namespace OpenViBEToolkit
 	extern OVTK_API ISignalTrial& selectTime(ISignalTrial& trial, uint64_t timeStart, uint64_t timeEnd, const ISignalTrial* srcTrial = nullptr);
 	extern OVTK_API ISignalTrial& removeSamples(ISignalTrial& trial, uint32_t sampleStart, uint32_t sampleEnd, const ISignalTrial* srcTrial = nullptr);
 	extern OVTK_API ISignalTrial& removeTime(ISignalTrial& trial, uint64_t timeStart, uint64_t timeEnd, const ISignalTrial* srcTrial = nullptr);
-	extern OVTK_API ISignalTrial& insertBufferSamples(ISignalTrial& trial, uint32_t sampleStart, uint32_t sampleCount, const double* buffer, const ISignalTrial* srcTrial = nullptr);
-	extern OVTK_API ISignalTrial& insertBufferTime(ISignalTrial& trial, uint64_t timeStart, uint32_t sampleCount, const double* buffer, const ISignalTrial* srcTrial = nullptr);
+	extern OVTK_API ISignalTrial& insertBufferSamples(ISignalTrial& trial, uint32_t sampleStart, uint32_t sampleCount, const double* buffer,
+													  const ISignalTrial* srcTrial = nullptr);
+	extern OVTK_API ISignalTrial& insertBufferTime(ISignalTrial& trial, uint64_t timeStart, uint32_t sampleCount, const double* buffer,
+												   const ISignalTrial* srcTrial = nullptr);
 } // namespace OpenViBEToolkit

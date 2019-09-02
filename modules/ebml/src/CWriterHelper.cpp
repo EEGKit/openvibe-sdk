@@ -2,9 +2,7 @@
 
 using namespace EBML;
 
-CWriterHelper::CWriterHelper(){
-	m_pWriterHelperImplementation = createWriterHelper();
-}
+CWriterHelper::CWriterHelper() { m_pWriterHelperImplementation = createWriterHelper(); }
 
 CWriterHelper::~CWriterHelper() { m_pWriterHelperImplementation->release(); }
 

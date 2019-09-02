@@ -59,10 +59,7 @@ namespace XML
 using namespace std;
 using namespace XML;
 
-IXMLNodeImpl::~IXMLNodeImpl()
-{
-	for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); }
-}
+IXMLNodeImpl::~IXMLNodeImpl() { for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); } }
 
 void IXMLNodeImpl::release() { delete this; }
 
@@ -78,10 +75,7 @@ bool IXMLNodeImpl::addAttribute(const char* sAttributeName, const char* sAttribu
 	return true;
 }
 
-bool IXMLNodeImpl::hasAttribute(const char* sAttributeName) const
-{
-	return m_mAttibuteMap.count(sAttributeName) != 0;
-}
+bool IXMLNodeImpl::hasAttribute(const char* sAttributeName) const { return m_mAttibuteMap.count(sAttributeName) != 0; }
 
 const char* IXMLNodeImpl::getAttribute(const char* sAttributeName) const
 {
@@ -117,8 +111,7 @@ IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
 	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode*>(*it);
-		if (strcmp(l_sTempNode->getName(), sName) == 0)
-			return l_sTempNode;
+		if (strcmp(l_sTempNode->getName(), sName) == 0) return l_sTempNode;
 	}
 	return nullptr;
 }
@@ -132,15 +125,11 @@ std::string IXMLNodeImpl::sanitize(const string& sString) const
 	if (l_sRes.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = l_sRes.find("&", 0); i != string::npos; i = l_sRes.find("&", i + 1))
-			l_sRes.replace(i, 1, "&amp;");
+		for (i = l_sRes.find("&", 0); i != string::npos; i = l_sRes.find("&", i + 1)) l_sRes.replace(i, 1, "&amp;");
 		// other escape sequences
-		for (i = l_sRes.find("\"", 0); i != string::npos; i = l_sRes.find("\"", i + 1))
-			l_sRes.replace(i, 1, "&quot;");
-		for (i = l_sRes.find("<", 0); i != string::npos; i = l_sRes.find("<", i + 1))
-			l_sRes.replace(i, 1, "&lt;");
-		for (i = l_sRes.find(">", 0); i != string::npos; i = l_sRes.find(">", i + 1))
-			l_sRes.replace(i, 1, "&gt;");
+		for (i = l_sRes.find("\"", 0); i != string::npos; i = l_sRes.find("\"", i + 1)) l_sRes.replace(i, 1, "&quot;");
+		for (i = l_sRes.find("<", 0); i != string::npos; i = l_sRes.find("<", i + 1)) l_sRes.replace(i, 1, "&lt;");
+		for (i = l_sRes.find(">", 0); i != string::npos; i = l_sRes.find(">", i + 1)) l_sRes.replace(i, 1, "&gt;");
 	}
 	return l_sRes;
 }

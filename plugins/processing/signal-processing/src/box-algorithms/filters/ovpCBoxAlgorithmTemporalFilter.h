@@ -51,8 +51,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Temporal Filter"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard & Laurent Bonnet"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Temporal filtering based on various one-way IIR filter designs"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Applies a temporal filter, based on various one-way IIR filter designs, to the input stream."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Temporal filtering based on various one-way IIR filter designs");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Applies a temporal filter, based on various one-way IIR filter designs, to the input stream.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

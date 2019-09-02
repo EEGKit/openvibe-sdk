@@ -55,7 +55,9 @@ namespace OpenViBEPlugins
 		public:
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
 
 				rAlgorithmPrototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader, "Received header");
 				rAlgorithmPrototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");

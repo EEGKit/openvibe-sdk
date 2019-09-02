@@ -394,10 +394,7 @@ namespace r8b
 
 		CDSPRealFFTKeeper(const int LenBits) { Object = acquire(LenBits); }
 
-		~CDSPRealFFTKeeper()
-		{
-			if (Object != nullptr) { release(Object); }
-		}
+		~CDSPRealFFTKeeper() { if (Object != nullptr) { release(Object); } }
 
 		/**
 		 * @return Pointer to the acquired FFT object.
@@ -555,17 +552,11 @@ namespace r8b
 
 		ip[0] = 0.0;
 
-		for (i = 1; i < Len2; i++)
-		{
-			ip[i] *= ffto->getInvMulConst();
-		}
+		for (i = 1; i < Len2; i++) { ip[i] *= ffto->getInvMulConst(); }
 
 		ip[Len2] = 0.0;
 
-		for (i = Len2 + 1; i < Len; i++)
-		{
-			ip[i] *= -ffto->getInvMulConst();
-		}
+		for (i = Len2 + 1; i < Len; i++) { ip[i] *= -ffto->getInvMulConst(); }
 
 		// Convert Hilbert-transformed cepstrum back to the "log |c|" spectrum and
 		// perform its exponentiation, multiplied by the power spectrum previously
@@ -585,17 +576,8 @@ namespace r8b
 
 		ffto->inverse(ip);
 
-		if (DoFinalMul)
-		{
-			for (i = 0; i < KernelLen; i++)
-			{
-				Kernel[i] = ip[i] * ffto->getInvMulConst();
-			}
-		}
-		else
-		{
-			memcpy(&Kernel[0], &ip[0], KernelLen * sizeof(double));
-		}
+		if (DoFinalMul) { for (i = 0; i < KernelLen; i++) { Kernel[i] = ip[i] * ffto->getInvMulConst(); } }
+		else { memcpy(&Kernel[0], &ip[0], KernelLen * sizeof(double)); }
 
 		if (DCGroupDelay != nullptr)
 		{

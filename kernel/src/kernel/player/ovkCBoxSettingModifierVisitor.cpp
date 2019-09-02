@@ -26,15 +26,9 @@ using namespace Kernel;
 using namespace Kernel;
 using namespace Plugins;
 
-void CBoxSettingModifierVisitor::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
+void CBoxSettingModifierVisitor::openChild(const char* sName, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, uint64_t /*ui64AttributeCount*/)
 {
-	if (!m_bIsParsingSettingOverride)
-	{
-		if (string(sName) == string("OpenViBE-SettingsOverride"))
-		{
-			m_bIsParsingSettingOverride = true;
-		}
-	}
+	if (!m_bIsParsingSettingOverride) { if (string(sName) == string("OpenViBE-SettingsOverride")) { m_bIsParsingSettingOverride = true; } }
 	else if (string(sName) == string("SettingValue")) { m_bIsParsingSettingValue = true; }
 	else { m_bIsParsingSettingValue = false; }
 }
@@ -69,13 +63,11 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 		{
 			l_sSettingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
 		}
-		else
-		{
-			l_sSettingOverrideFilenameFinal = m_pConfigurationManager->expand(l_sSettingOverrideFilename);
-		}
+		else { l_sSettingOverrideFilenameFinal = m_pConfigurationManager->expand(l_sSettingOverrideFilename); }
 
 		// message
-		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" << l_sSettingOverrideFilename << " which expands to " << l_sSettingOverrideFilenameFinal << "] !\n";
+		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
+				l_sSettingOverrideFilename << " which expands to " << l_sSettingOverrideFilenameFinal << "] !\n";
 
 		// creates XML reader
 		XML::IReader* l_pReader = createReader(*this);
@@ -143,16 +135,20 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 					{
 						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
 						cleanup();
-						OV_ERROR("<" << box.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue << "] given as setting is not a valid [" << settingTypeName << "] value.",
-								 ErrorType::BadArgument, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
+						OV_ERROR(
+							"<" << box.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue <<
+							"] given as setting is not a valid [" << settingTypeName << "] value.",
+							ErrorType::BadArgument, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 					}
 				}
 			}
 			else
 			{
 				cleanup();
-				OV_ERROR("Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << box.getSettingCount(),
-						 ErrorType::OutOfBound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
+				OV_ERROR(
+					"Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal <<
+					"]. That does not match the box setting count " << box.getSettingCount(),
+					ErrorType::OutOfBound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 			}
 		}
 		else
@@ -164,8 +160,10 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			else
 			{
 				cleanup();
-				OV_ERROR("Could not override [" << box.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened",
-						 ErrorType::ResourceNotFound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
+				OV_ERROR(
+					"Could not override [" << box.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal <<
+					"] could not be opened",
+					ErrorType::ResourceNotFound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 			}
 		}
 

@@ -45,7 +45,9 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 
 	vector<IObject*>::iterator i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 
-	OV_ERROR_UNLESS_KRF(i != m_oCreatedObjects.end(), "Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(i != m_oCreatedObjects.end(),
+						"Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory",
+						ErrorType::ResourceNotFound);
 
 	m_oCreatedObjects.erase(i);
 	delete pObject;

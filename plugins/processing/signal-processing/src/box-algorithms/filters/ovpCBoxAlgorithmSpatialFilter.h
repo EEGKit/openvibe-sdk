@@ -64,8 +64,18 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Spatial Filter"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard, Jussi T. Lindgren"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Maps M inputs to N outputs by multiplying the each input vector with a matrix"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("The applied coefficient matrix must be specified as a box parameter. The filter processes each sample independently of the past samples."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Maps M inputs to N outputs by multiplying the each input vector with a matrix");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"The applied coefficient matrix must be specified as a box parameter. The filter processes each sample independently of the past samples.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Filtering"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

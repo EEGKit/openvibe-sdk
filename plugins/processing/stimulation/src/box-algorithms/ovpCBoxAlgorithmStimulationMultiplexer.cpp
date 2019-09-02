@@ -72,19 +72,17 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 				for (uint32_t stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 				{
 					m_vStimulation.insert(std::make_pair(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-														 std::make_tuple(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
-																		 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-																		 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
+														 std::make_tuple(
+															 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
+															 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+															 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
 				}
 			}
 
 			m_StreamDecoderEndTimes[input] = dynamicBoxContext.getInputChunkEndTime(input, chunk);
 		}
 
-		if (earliestReceivedChunkEndTime > m_StreamDecoderEndTimes[input])
-		{
-			earliestReceivedChunkEndTime = m_StreamDecoderEndTimes[input];
-		}
+		if (earliestReceivedChunkEndTime > m_StreamDecoderEndTimes[input]) { earliestReceivedChunkEndTime = m_StreamDecoderEndTimes[input]; }
 	}
 
 	if (earliestReceivedChunkEndTime >= m_LastEndTime)
@@ -95,13 +93,11 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 		{
 			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				m_StimulationEncoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second), std::get<2>(stimulation->second));
+				m_StimulationEncoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
+																				 std::get<2>(stimulation->second));
 				stimulation = m_vStimulation.erase(stimulation);
 			}
-			else
-			{
-				++stimulation;
-			}
+			else { ++stimulation; }
 		}
 
 		m_StimulationEncoder.encodeBuffer();

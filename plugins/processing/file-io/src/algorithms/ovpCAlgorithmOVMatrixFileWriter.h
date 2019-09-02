@@ -48,8 +48,10 @@ namespace OpenViBEPlugins
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Filename, "Filename", OpenViBE::Kernel::ParameterType_String);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Filename, "Filename", OpenViBE::Kernel::ParameterType_String);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 				return true;
 			}
 

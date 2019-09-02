@@ -197,7 +197,8 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 		if (pError)
 		{
 			LPVOID l_pMessageBuffer = nullptr;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, // Default language
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(),
+						  0, // Default language
 						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
@@ -213,7 +214,8 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 		if (pError)
 		{
 			LPVOID l_pMessageBuffer = nullptr;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, // Default language
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(),
+						  0, // Default language
 						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
@@ -245,10 +247,7 @@ bool CKernelLoaderWindows::unload(CString* pError)
 	return true;
 }
 
-bool CKernelLoaderWindows::isOpen()
-{
-	return m_pFileHandle != nullptr;
-}
+bool CKernelLoaderWindows::isOpen() { return m_pFileHandle != nullptr; }
 
 #else
 
@@ -269,27 +268,12 @@ CKernelLoader::CKernelLoader()
 
 CKernelLoader::~CKernelLoader() { delete m_pKernelLoaderImpl; }
 
-bool CKernelLoader::load(const CString& sFileName, CString* pError)
-{
-	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->load(sFileName, pError) : false;
-}
+bool CKernelLoader::load(const CString& sFileName, CString* pError) { return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->load(sFileName, pError) : false; }
 
-bool CKernelLoader::unload(CString* pError)
-{
-	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->unload(pError) : false;
-}
+bool CKernelLoader::unload(CString* pError) { return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->unload(pError) : false; }
 
-bool CKernelLoader::initialize()
-{
-	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->initialize() : false;
-}
+bool CKernelLoader::initialize() { return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->initialize() : false; }
 
-bool CKernelLoader::getKernelDesc(IKernelDesc*& rpKernelDesc)
-{
-	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->getKernelDesc(rpKernelDesc) : false;
-}
+bool CKernelLoader::getKernelDesc(IKernelDesc*& rpKernelDesc) { return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->getKernelDesc(rpKernelDesc) : false; }
 
-bool CKernelLoader::uninitialize()
-{
-	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->uninitialize() : false;
-}
+bool CKernelLoader::uninitialize() { return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->uninitialize() : false; }

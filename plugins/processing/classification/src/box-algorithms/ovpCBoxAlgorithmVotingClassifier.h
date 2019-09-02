@@ -70,15 +70,9 @@ namespace OpenViBEPlugins
 				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
 					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
-					for (uint32_t i = 0; i < box.getInputCount(); i++)
-					{
-						box.setInputType(i, m_oInputTypeIdentifier);
-					}
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeIdentifier); }
 				}
-				else
-				{
-					box.setInputType(index, m_oInputTypeIdentifier);
-				}
+				else { box.setInputType(index, m_oInputTypeIdentifier); }
 				return true;
 			}
 
@@ -109,7 +103,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Majority voting classifier. Returns the chosen class."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Classification"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

@@ -15,10 +15,10 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix) : m_rMatrix(rMatrix
 
 	for (uint32_t i = 0; i < rMatrix.getDimensionSize(0); i++)
 	{
-		m_vFeatureVector[i].m_pMatrix                = &rMatrix;
-		m_vFeatureVector[i].m_dimensionIdx     = i;
-		m_vFeatureVector[i].m_size = rMatrix.getDimensionSize(1) - 1;
-		m_vFeatureVector[i].m_pBuffer                = rMatrix.getBuffer() + i * rMatrix.getDimensionSize(1);
+		m_vFeatureVector[i].m_pMatrix      = &rMatrix;
+		m_vFeatureVector[i].m_dimensionIdx = i;
+		m_vFeatureVector[i].m_size         = rMatrix.getDimensionSize(1) - 1;
+		m_vFeatureVector[i].m_pBuffer      = rMatrix.getBuffer() + i * rMatrix.getDimensionSize(1);
 	}
 }
 
@@ -37,9 +37,7 @@ const IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t index) 
 uint32_t CFeatureVectorSet::getLabelCount() const
 {
 	std::map<double, bool> labels;
-	for (std::map<uint32_t, CInternalFeatureVector>::const_iterator itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++itFeatureVector)
-	{
-		labels[itFeatureVector->second.getLabel()] = true;
-	}
+	for (std::map<uint32_t, CInternalFeatureVector>::const_iterator itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++
+		 itFeatureVector) { labels[itFeatureVector->second.getLabel()] = true; }
 	return uint32_t(labels.size());
 }

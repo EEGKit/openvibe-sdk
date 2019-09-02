@@ -97,8 +97,10 @@ namespace
 
 		void warning(const SAXParseException& exception) override
 		{
-			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << uint64_t(exception.getLineNumber()) << "]",
-					   m_rAlgorithmContext.getLogManager());
+			OV_WARNING(
+				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << uint64_t(exception.
+					getLineNumber()) << "]",
+				m_rAlgorithmContext.getLogManager());
 		}
 
 	private:
@@ -215,7 +217,8 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 	{
 		case Status_ParsingBox:
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier, _AutoBind_(sData));
-			if (l_sTop == "AlgorithmClassIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier, _AutoBind_(sData));
+			if (l_sTop == "AlgorithmClassIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier, _AutoBind_(sData));
 			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Name, _AutoBind_(sData));
 			break;
 		case Status_ParsingBoxInput:
@@ -263,12 +266,14 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 		case Status_ParsingLinkSource:
 			if (l_sTop == "BoxIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier, _AutoBind_(sData));
 			if (l_sTop == "BoxOutputIndex") m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, _AutoBind_(sData));
-			if (l_sTop == "BoxOutputIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "BoxOutputIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier, _AutoBind_(sData));
 			break;
 		case Status_ParsingLinkTarget:
 			if (l_sTop == "BoxIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier, _AutoBind_(sData));
 			if (l_sTop == "BoxInputIndex") m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex, _AutoBind_(sData));
-			if (l_sTop == "BoxInputIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "BoxInputIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, _AutoBind_(sData));
 			break;
 		case Status_ParsingLinkAttribute:
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Identifier, _AutoBind_(sData));
@@ -277,7 +282,8 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 
 		case Status_ParsingScenarioSetting:
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, _AutoBind_(sData));
+			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, _AutoBind_(sData));
 			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name, _AutoBind_(sData));
 			if (l_sTop == "DefaultValue") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue, _AutoBind_(sData));
 			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Value, _AutoBind_(sData));
@@ -285,20 +291,28 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 
 		case Status_ParsingScenarioInput:
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier, _AutoBind_(sData));
+			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier, _AutoBind_(sData));
 			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxInputIndex") m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxInputIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "LinkedBoxIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier, _AutoBind_(sData));
+			if (l_sTop == "LinkedBoxInputIndex") m_pContext->processUInteger(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex, _AutoBind_(sData));
+			if (l_sTop == "LinkedBoxInputIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier, _AutoBind_(sData));
 			break;
 
 		case Status_ParsingScenarioOutput:
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier, _AutoBind_(sData));
+			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier, _AutoBind_(sData));
 			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxOutputIndex") m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxOutputIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "LinkedBoxIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, _AutoBind_(sData));
+			if (l_sTop == "LinkedBoxOutputIndex") m_pContext->processUInteger(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, _AutoBind_(sData));
+			if (l_sTop == "LinkedBoxOutputIdentifier") m_pContext->processIdentifier(
+				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier, _AutoBind_(sData));
 			break;
 
 		case Status_ParsingScenarioAttribute:
@@ -424,7 +438,8 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 
 	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), xmlBuffer, xmlBufferSize))
 	{
-		this->getLogManager() << LogLevel_Trace << "Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
+		this->getLogManager() << LogLevel_Trace <<
+				"Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
 		return true;
 	}
 	if (this->getErrorManager().hasError())

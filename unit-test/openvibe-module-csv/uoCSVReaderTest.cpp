@@ -71,7 +71,7 @@ namespace
 
 TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 {
-	ICSVHandler* csv     = createCSVHandler();
+	ICSVHandler* csv           = createCSVHandler();
 	const std::string filepath = dataDirectory + "/testCSVSignalUNIXEndlines.csv";
 
 	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
@@ -97,7 +97,7 @@ TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 
 TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 {
-	ICSVHandler* csv     = createCSVHandler();
+	ICSVHandler* csv           = createCSVHandler();
 	const std::string filepath = dataDirectory + "/testCSVSignalWindowsEndlines.csv";
 
 	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
@@ -124,7 +124,7 @@ TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
-	const std::string filepath          = dataDirectory + "testCSVSignalReader01.csv";
+	const std::string filepath    = dataDirectory + "testCSVSignalReader01.csv";
 
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	signalReaderTest->setFormatType(EStreamType::Signal);
@@ -368,7 +368,8 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 	const std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 5 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
-	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations)) << matrixReaderTest->getLastLogError() << ".Details: " << matrixReaderTest->getLastErrorString();
+	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations)) << matrixReaderTest->getLastLogError() << ".Details: " <<
+ matrixReaderTest->getLastErrorString();
 	ASSERT_EQ(chunks.size(), 3);
 
 	ASSERT_EQ(dimensionSizes, goodDimensionsSizes);

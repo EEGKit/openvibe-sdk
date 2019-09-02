@@ -42,7 +42,8 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const CString& /*name*/, const CIdentifier& typeID, const CString& /*defaultValue*/, const bool /*modifiable*/, const CIdentifier& id, const bool /*notify*/) override
+		bool addSetting(const CString& /*name*/, const CIdentifier& typeID, const CString& /*defaultValue*/, const bool /*modifiable*/, const CIdentifier& id,
+						const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64SettingCountHash);

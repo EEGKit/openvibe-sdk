@@ -28,7 +28,8 @@ double factorial(int N)
 		20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000, 51090942171709440000.0, 1124000727777607680000.0,
 		25852016738884976640000.0, 620448401733239439360000.0, 15511210043330985984000000.0, 403291461126605635584000000.0, 10888869450418352160768000000.0,
 		304888344611713860501504000000.0, 8841761993739701954543616000000.0, 265252859812191058636308480000000.0, 8222838654177922817725562880000000.0,
-		263130836933693530167218012160000000.0, 8683317618811886495518194401280000000.0, 295232799039604140847618609643520000000.0, 10333147966386144929666651337523200000000.0,
+		263130836933693530167218012160000000.0, 8683317618811886495518194401280000000.0, 295232799039604140847618609643520000000.0,
+		10333147966386144929666651337523200000000.0,
 		371993326789901217467999448150835200000000.0, 13763753091226345046315979581580902400000000.0, 523022617466601111760007224100074291200000000.0,
 		20397882081197443358640281739902897356800000000.0, 815915283247897734345611269596115894272000000000.0
 	};
@@ -36,7 +37,8 @@ double factorial(int N)
 	return fact[N];
 }
 
-static void wave_function(int nk, double dt, int mother, double param, double scale1, double* kwave, double pi, double* period1, double* coi1, fft_data* daughter)
+static void wave_function(int nk, double dt, int mother, double param, double scale1, double* kwave, double pi, double* period1, double* coi1,
+						  fft_data* daughter)
 {
 	double norm, expnt, fourier_factor;
 	int k, m;
@@ -47,10 +49,7 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 	if (mother == 0)
 	{
 		//MORLET
-		if (param < 0.0)
-		{
-			param = 6.0;
-		}
+		if (param < 0.0) { param = 6.0; }
 		norm = sqrt(2.0 * pi * scale1 / dt) * pow(pi, -0.25);
 
 		for (k = 1; k <= nk / 2 + 1; ++k)
@@ -60,10 +59,7 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 			daughter[k - 1].re = norm * exp(expnt);
 			daughter[k - 1].im = 0.0;
 		}
-		for (k = nk / 2 + 2; k <= nk; ++k)
-		{
-			daughter[k - 1].re = daughter[k - 1].im = 0.0;
-		}
+		for (k = nk / 2 + 2; k <= nk; ++k) { daughter[k - 1].re = daughter[k - 1].im = 0.0; }
 		fourier_factor = (4.0 * pi) / (param + sqrt(2.0 + param * param));
 		*period1       = scale1 * fourier_factor;
 		*coi1          = fourier_factor / sqrt(2.0);
@@ -71,10 +67,7 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 	else if (mother == 1)
 	{
 		// PAUL
-		if (param < 0.0)
-		{
-			param = 4.0;
-		}
+		if (param < 0.0) { param = 4.0; }
 		m    = (int)param;
 		norm = sqrt(2.0 * pi * scale1 / dt) * (pow(2.0, (double)m) / sqrt(m * factorial(2 * m - 1)));
 		for (k = 1; k <= nk / 2 + 1; ++k)
@@ -84,39 +77,21 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 			daughter[k - 1].re = norm * pow(temp, (double)m) * exp(expnt);
 			daughter[k - 1].im = 0.0;
 		}
-		for (k = nk / 2 + 2; k <= nk; ++k)
-		{
-			daughter[k - 1].re = daughter[k - 1].im = 0.0;
-		}
+		for (k = nk / 2 + 2; k <= nk; ++k) { daughter[k - 1].re = daughter[k - 1].im = 0.0; }
 		fourier_factor = (4.0 * pi) / (2.0 * m + 1.0);
 		*period1       = scale1 * fourier_factor;
 		*coi1          = fourier_factor * sqrt(2.0);
 	}
 	else if (mother == 2)
 	{
-		if (param < 0.0)
-		{
-			param = 2.0;
-		}
+		if (param < 0.0) { param = 2.0; }
 		m = (int)param;
 
-		if (m % 2 == 0)
-		{
-			re = 1;
-		}
-		else
-		{
-			re = 0;
-		}
+		if (m % 2 == 0) { re = 1; }
+		else { re = 0; }
 
-		if (m % 4 == 0 || m % 4 == 1)
-		{
-			sign = -1;
-		}
-		else
-		{
-			sign = 1;
-		}
+		if (m % 4 == 0 || m % 4 == 1) { sign = -1; }
+		else { sign = 1; }
 
 
 		norm = sqrt(2.0 * pi * scale1 / dt) * sqrt(1.0 / gamma(m + 0.50));
@@ -146,7 +121,8 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 	}
 }
 
-int cwavelet(double* y, int N, double dt, int mother, double param, double s0, double dj, int jtot, int npad, double* wave, double* scale, double* period, double* coi)
+int cwavelet(double* y, int N, double dt, int mother, double param, double s0, double dj, int jtot, int npad, double* wave, double* scale, double* period,
+			 double* coi)
 {
 	double period1, coi1;
 
@@ -210,10 +186,10 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 		period[j - 1] = period1;
 		for (int k = 0; k < npad; ++k)
 		{
-			const double tmp1    = daughter[k].re * yfft[k].re - daughter[k].im * yfft[k].im;
-			const double tmp2    = daughter[k].re * yfft[k].im + daughter[k].im * yfft[k].re;
-			daughter[k].re = tmp1;
-			daughter[k].im = tmp2;
+			const double tmp1 = daughter[k].re * yfft[k].re - daughter[k].im * yfft[k].im;
+			const double tmp2 = daughter[k].re * yfft[k].im + daughter[k].im * yfft[k].re;
+			daughter[k].re    = tmp1;
+			daughter[k].im    = tmp2;
 		}
 		fft_exec(iobj, daughter, ypad);
 		const int iter = 2 * (j - 1) * N;
@@ -303,7 +279,7 @@ static int maxabs(double* array, int N)
 
 double cdelta(int mother, double param, double psi0)
 {
-	int N = 0;
+	int N     = 0;
 	double s0 = 0;
 
 	double subscale = 8.0;
@@ -345,10 +321,7 @@ double cdelta(int mother, double param, double psi0)
 
 	for (int i = 1; i < N; ++i) { delta[i] = 0; }
 
-	for (int i = 0; i < jtot; ++i)
-	{
-		scale[i] = s0 * pow(2.0, (double)(i) * dj);
-	}
+	for (int i = 0; i < jtot; ++i) { scale[i] = s0 * pow(2.0, (double)(i) * dj); }
 
 	cwavelet(delta, N, dt, mother, param, s0, dj, jtot, N, wave, scale, period, coi);
 
@@ -358,14 +331,11 @@ double cdelta(int mother, double param, double psi0)
 	{
 		const int iter   = 2 * j * N;
 		const double den = sqrt(scale[j]);
-		for (int i = 0; i < N; ++i)
-		{
-			mval[i] += wave[iter + 2 * i] / den;
-		}
+		for (int i = 0; i < N; ++i) { mval[i] += wave[iter + 2 * i] / den; }
 	}
 
 
-	const int maxarr = maxabs(mval, N);
+	const int maxarr  = maxabs(mval, N);
 	const double cdel = sqrt(dt) * dj * mval[maxarr] / psi0;
 
 	free(delta);
@@ -389,10 +359,7 @@ void icwavelet(double* wave, int N, double* scale, int jtot, double dt, double d
 	{
 		const int iter   = 2 * j * N;
 		const double den = sqrt(scale[j]);
-		for (int i = 0; i < N; ++i)
-		{
-			oup[i] += wave[iter + 2 * i] / den;
-		}
+		for (int i = 0; i < N; ++i) { oup[i] += wave[iter + 2 * i] / den; }
 	}
 
 	for (int i = 0; i < N; ++i) { oup[i] *= coeff; }

@@ -76,18 +76,15 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	{
 		if (l_rTop == OVTK_NodeId_Header_StreamedMatrix && m_ui32Status == Status_ParsingNothing)
 		{
-			m_ui32Status         = Status_ParsingHeader;
+			m_ui32Status   = Status_ParsingHeader;
 			m_dimensionIdx = 0;
 		}
 		else if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_ui32Status == Status_ParsingHeader)
 		{
-			m_ui32Status              = Status_ParsingDimension;
+			m_ui32Status        = Status_ParsingDimension;
 			m_dimensionEntryIdx = 0;
 		}
-		else if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingNothing)
-		{
-			m_ui32Status = Status_ParsingBuffer;
-		}
+		else if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingNothing) { m_ui32Status = Status_ParsingBuffer; }
 	}
 	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
@@ -107,11 +104,17 @@ void CStreamedMatrixDecoder::processChildData(const void* buffer, const uint64_t
 		switch (m_ui32Status)
 		{
 			case Status_ParsingHeader:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size))); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
+				{
+					op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size)));
+				}
 				break;
 
 			case Status_ParsingDimension:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { op_pMatrix->setDimensionSize(m_dimensionIdx, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size))); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)
+				{
+					op_pMatrix->setDimensionSize(m_dimensionIdx, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size)));
+				}
 				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char label[1024];
@@ -121,15 +124,15 @@ void CStreamedMatrixDecoder::processChildData(const void* buffer, const uint64_t
 				break;
 
 			case Status_ParsingBuffer:
-				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), buffer, m_ui64MatrixBufferSize * sizeof(double)); }
+				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer)
+				{
+					System::Memory::copy(op_pMatrix->getBuffer(), buffer, m_ui64MatrixBufferSize * sizeof(double));
+				}
 				break;
 			default: break;
 		}
 	}
-	else
-	{
-		CEBMLBaseDecoder::processChildData(buffer, size);
-	}
+	else { CEBMLBaseDecoder::processChildData(buffer, size); }
 }
 
 void CStreamedMatrixDecoder::closeChild()
@@ -144,10 +147,7 @@ void CStreamedMatrixDecoder::closeChild()
 		|| (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix)
 		|| (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer))
 	{
-		if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingBuffer)
-		{
-			m_ui32Status = Status_ParsingNothing;
-		}
+		if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingBuffer) { m_ui32Status = Status_ParsingNothing; }
 		else if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_ui32Status == Status_ParsingDimension)
 		{
 			m_ui32Status = Status_ParsingHeader;
@@ -161,10 +161,7 @@ void CStreamedMatrixDecoder::closeChild()
 			else
 			{
 				m_ui64MatrixBufferSize = 1;
-				for (uint32_t i = 0; i < op_pMatrix->getDimensionCount(); i++)
-				{
-					m_ui64MatrixBufferSize *= op_pMatrix->getDimensionSize(i);
-				}
+				for (uint32_t i = 0; i < op_pMatrix->getDimensionCount(); i++) { m_ui64MatrixBufferSize *= op_pMatrix->getDimensionSize(i); }
 			}
 		}
 	}

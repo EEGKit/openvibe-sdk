@@ -51,15 +51,15 @@ namespace OpenViBE
 			virtual IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier) = 0;
 			/**
 			 * \brief Gets next player identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousID [in] : The identifier
 			 *        for the preceeding player
 			 * \return The identifier of the next player in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first player
 			 *       identifier.
 			 */
-			virtual CIdentifier getNextPlayerIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextPlayerIdentifier(const CIdentifier& previousID) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_PlayerManager)
 		};

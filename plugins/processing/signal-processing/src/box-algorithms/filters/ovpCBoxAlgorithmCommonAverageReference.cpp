@@ -69,7 +69,10 @@ bool CBoxAlgorithmCommonAverageReference::process()
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 		m_pStreamDecoder->process();
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader); }
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
+		{
+			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
+		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			const uint32_t nChannel = m_oMatrix.getDimensionSize(0),
@@ -77,7 +80,7 @@ bool CBoxAlgorithmCommonAverageReference::process()
 			for (uint32_t j = 0; j < nSample; j++)
 			{
 				double* buffer = m_oMatrix.getBuffer() + j;
-				double sum       = 0;
+				double sum     = 0;
 				for (uint32_t c = nChannel; c != 0; c--)
 				{
 					sum += *buffer;
@@ -93,7 +96,10 @@ bool CBoxAlgorithmCommonAverageReference::process()
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd); }
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd))
+		{
+			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
+		}
 
 		boxContext.markInputAsDeprecated(0, i);
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));

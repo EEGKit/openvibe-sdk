@@ -52,15 +52,15 @@ namespace
 
 	const std::string NON_EXISTING_SYMBOL = "nonExistingSymbol";
 
-	const std::string EXISTING_ENVIRONMENT_PATH    = "PATH";
+	const std::string EXISTING_ENVIRONMENT_PATH = "PATH";
 
 	const std::string EXISTING_REGISTRY_MODULE_NAME = EXISTING_MODULE_NAME;
-	const std::string SYMBOL_NAME_NTDLL            = "toupper";
+	const std::string SYMBOL_NAME_NTDLL             = "toupper";
 
-	const HKEY EXISTING_REGISTRY_KEY    = HKEY_LOCAL_MACHINE; // 0x80000002
+	const HKEY EXISTING_REGISTRY_KEY     = HKEY_LOCAL_MACHINE; // 0x80000002
 	const HKEY NON_EXISTING_REGISTRY_KEY = (HKEY)(ULONG_PTR)((LONG)0x800000FF);
 
-	const std::string EXISTING_REGISTRY_PATH    = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
+	const std::string EXISTING_REGISTRY_PATH     = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
 	const std::string NON_EXISTING_REGISTRY_PATH = "SOFTWARE\\Random\\Random\\Random";
 
 	int (*toupperSymbol)(int c);
@@ -216,7 +216,9 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessNoSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_TRUE(dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, EXISTING_REGISTRY_MODULE_NAME.c_str()));
+	ASSERT_TRUE(
+		dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, EXISTING_REGISTRY_MODULE_NAME
+			.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = EXISTING_MODULE_NAME;
 	std::string moduleName         = dynamicModule.getFilename();
@@ -233,7 +235,9 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_TRUE(dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, EXISTING_REGISTRY_MODULE_NAME.c_str(), SYMBOL_NAME_NTDLL.c_str()));
+	ASSERT_TRUE(
+		dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, EXISTING_REGISTRY_MODULE_NAME
+			.c_str(), SYMBOL_NAME_NTDLL.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = EXISTING_MODULE_NAME;
 	std::string moduleName         = dynamicModule.getFilename();
@@ -250,13 +254,19 @@ TEST(DynamicModule_Test_Case, loadFromRegistryFailNoSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_FALSE(dynamicModule.loadFromRegistry(NON_EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY, EXISTING_REGISTRY_MODULE_NAME.c_str()));
+	ASSERT_FALSE(
+		dynamicModule.loadFromRegistry(NON_EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY,
+			EXISTING_REGISTRY_MODULE_NAME.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
 
-	ASSERT_FALSE(dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, NON_EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY, EXISTING_REGISTRY_MODULE_NAME.c_str()));
+	ASSERT_FALSE(
+		dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, NON_EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY,
+			EXISTING_REGISTRY_MODULE_NAME.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
 
-	ASSERT_FALSE(dynamicModule.loadFromRegistry(NON_EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY, EXISTING_REGISTRY_MODULE_NAME.c_str()));
+	ASSERT_FALSE(
+		dynamicModule.loadFromRegistry(NON_EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY,
+			EXISTING_REGISTRY_MODULE_NAME.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 #endif

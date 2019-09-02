@@ -66,8 +66,18 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Timeout"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legény"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

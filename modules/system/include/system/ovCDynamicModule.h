@@ -108,7 +108,8 @@ namespace System
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck = nullptr);
+		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath,
+							  const char* symbolNameCheck = nullptr);
 #endif
 
 #if defined TARGET_OS_Windows
@@ -210,7 +211,7 @@ namespace System
 #endif
 
 		unsigned int m_ErrorMode = 0;
-		bool m_ShouldFreeModule = true;
+		bool m_ShouldFreeModule  = true;
 		typedef void (*symbol_t)();
 
 		char m_ErrorDetails[1024];

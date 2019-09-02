@@ -59,9 +59,9 @@ int dividebyN(int N);
 
 int factors(int M, int* arr);
 
-void twiddle(fft_data* sig, int N, int radix);
+void twiddle(fft_data* vec, int N, int radix);
 
-void longvectorN(fft_data* sig, int N, int* array, int M);
+void longvectorN(fft_data* sig, int N, int* array, int tx);
 
 void free_fft(fft_object object);
 

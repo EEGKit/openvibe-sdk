@@ -85,7 +85,8 @@ namespace OpenViBE
 			bool connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID,
 						 const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, const CIdentifier& suggestedLinkID) override;
 			bool disconnect(const CIdentifier& srcBoxID, uint32_t srcBoxOutputIdx, const CIdentifier& dstBoxID, uint32_t dstBoxInputIndex) override;
-			bool disconnect(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID) override;
+			bool disconnect(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, const CIdentifier& dstBoxID,
+							const CIdentifier& dstBoxInputID) override;
 			bool disconnect(const CIdentifier& linkID) override;
 
 			bool getSourceBoxOutputIndex(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, uint32_t& srcBoxOutputIdx) override;

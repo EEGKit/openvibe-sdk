@@ -24,7 +24,8 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
+			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 			m_pCodec->initialize();
 			m_pOutputMatrix.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_Matrix));
 			m_pOutputFrequencyAbscissa.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));

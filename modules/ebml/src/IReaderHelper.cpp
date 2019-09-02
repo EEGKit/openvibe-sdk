@@ -90,10 +90,7 @@ double CReaderHelper::getFloatFromChildData(const void* buffer, const uint64_t s
 
 const char* CReaderHelper::getASCIIStringFromChildData(const void* buffer, const uint64_t size)
 {
-	if (size)
-	{
-		m_sASCIIString.assign((char*)buffer, size_t(size));
-	}
+	if (size) { m_sASCIIString.assign((char*)buffer, size_t(size)); }
 	else { m_sASCIIString = ""; }
 	return m_sASCIIString.c_str();
 }

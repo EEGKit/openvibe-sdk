@@ -47,7 +47,8 @@ namespace OpenViBE
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernel, const CString& rApplicationName, const CString& rConfigurationFilename) = 0;
+			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernel, const CString& rApplicationName,
+												 const CString& rConfigurationFilename) = 0;
 			/**
 			 * \brief Releases the kernel itself
 			 * \param pKernel [in] : the kernel to release

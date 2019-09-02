@@ -27,10 +27,7 @@ namespace Socket
 
 		virtual bool close() { return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData); }
 
-		virtual bool isReadyToSend(const uint32_t timeOut) const
-		{
-			return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.pUserData, timeOut);
-		}
+		virtual bool isReadyToSend(const uint32_t timeOut) const { return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.pUserData, timeOut); }
 
 		virtual bool isReadyToReceive(const uint32_t timeOut) const
 		{

@@ -27,7 +27,8 @@ namespace OpenViBE
 			bool initializeFromExistingComment(const IComment& rExisitingComment) override;
 			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >, OVK_ClassId_Kernel_Scenario_Comment)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >,
+									   OVK_ClassId_Kernel_Scenario_Comment)
 
 		protected:
 

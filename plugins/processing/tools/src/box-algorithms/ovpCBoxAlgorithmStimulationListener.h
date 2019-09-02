@@ -62,7 +62,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Prints stimulation codes in the log manager"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Prints each received stimulationto the log using the log level specified in the box config."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Prints each received stimulationto the log using the log level specified in the box config.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tools"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

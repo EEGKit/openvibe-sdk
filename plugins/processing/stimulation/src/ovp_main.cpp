@@ -29,8 +29,10 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_ClearVotes, "After output", OVP_TypeId_Voting_ClearVotes_AfterOutput.toUInteger());
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_Voting_OutputTime, "Output time");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_OutputTime, "Time of voting", OVP_TypeId_Voting_OutputTime_Vote.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_OutputTime, "Time of last winning stimulus", OVP_TypeId_Voting_OutputTime_Winner.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_OutputTime, "Time of last voting stimulus", OVP_TypeId_Voting_OutputTime_Last.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_OutputTime, "Time of last winning stimulus",
+													  OVP_TypeId_Voting_OutputTime_Winner.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_OutputTime, "Time of last voting stimulus",
+													  OVP_TypeId_Voting_OutputTime_Last.toUInteger());
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_Voting_RejectClass_CanWin, "Reject can win");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_RejectClass_CanWin, "Yes", OVP_TypeId_Voting_RejectClass_CanWin_Yes.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_RejectClass_CanWin, "No", OVP_TypeId_Voting_RejectClass_CanWin_No.toUInteger());

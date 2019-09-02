@@ -49,14 +49,14 @@ void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager
 	}
 }
 
-CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& rPreviousIdentifier) const
+CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& previousID) const
 {
 	map<CIdentifier, CScenario*>::const_iterator itScenario;
 
-	if (rPreviousIdentifier == OV_UndefinedIdentifier) { itScenario = m_vScenario.begin(); }
+	if (previousID == OV_UndefinedIdentifier) { itScenario = m_vScenario.begin(); }
 	else
 	{
-		itScenario = m_vScenario.find(rPreviousIdentifier);
+		itScenario = m_vScenario.find(previousID);
 		if (itScenario == m_vScenario.end()) { return OV_UndefinedIdentifier; }
 		++itScenario;
 	}
@@ -64,22 +64,20 @@ CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& rPrev
 	return itScenario != m_vScenario.end() ? itScenario->first : OV_UndefinedIdentifier;
 }
 
-bool CScenarioManager::isScenario(const CIdentifier& scenarioID) const
-{
-	return m_vScenario.find(scenarioID) != m_vScenario.end();
-}
+bool CScenarioManager::isScenario(const CIdentifier& scenarioID) const { return m_vScenario.find(scenarioID) != m_vScenario.end(); }
 
 bool CScenarioManager::createScenario(CIdentifier& scenarioID)
 {
 	//create scenario object
 	scenarioID              = getUnusedIdentifier();
-	CScenario* l_pScenario           = new CScenario(getKernelContext(), scenarioID);
+	CScenario* l_pScenario  = new CScenario(getKernelContext(), scenarioID);
 	m_vScenario[scenarioID] = l_pScenario;
 
 	return true;
 }
 
-bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmIdentifier)
+bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer,
+									  const CIdentifier& scenarioImporterAlgorithmIdentifier)
 {
 	newScenarioIdentifier = OV_UndefinedIdentifier;
 
@@ -89,7 +87,8 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 	{
 		// use a fatal here because a release failure while creation succeeded
 		// means we are in an unexpected state
-		OV_FATAL_UNLESS_K(this->releaseScenario(newScenarioIdentifier), "Releasing just created scenario failed for " << newScenarioIdentifier.toString(), ErrorType::Internal);
+		OV_FATAL_UNLESS_K(this->releaseScenario(newScenarioIdentifier), "Releasing just created scenario failed for " << newScenarioIdentifier.toString(),
+						  ErrorType::Internal);
 		newScenarioIdentifier = OV_UndefinedIdentifier;
 	};
 
@@ -143,12 +142,14 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
-			"The requested importer does not have a MemoryBuffer input parameter with identifier " << OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.toString(),
+			"The requested importer does not have a MemoryBuffer input parameter with identifier " <<
+			OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.toString(),
 			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
-			"The requested importer does not have a Scenario output parameter with identifier " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.toString(),
+			"The requested importer does not have a Scenario output parameter with identifier " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.
+			toString(),
 			ErrorType::BadOutput);
 	}
 
@@ -178,7 +179,8 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 	return true;
 }
 
-bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmIdentifier)
+bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CString& fileName,
+											  const CIdentifier& scenarioImporterAlgorithmIdentifier)
 {
 	newScenarioIdentifier = OV_UndefinedIdentifier;
 
@@ -219,12 +221,10 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 	return this->importScenarioFromFile(newScenarioIdentifier, fileName, m_ScenarioImporters[importContext][&fileNameExtension[0]]);
 }
 
-bool CScenarioManager::registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension, const CIdentifier& scenarioImporterAlgorithmIdentifier)
+bool CScenarioManager::registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension,
+												const CIdentifier& scenarioImporterAlgorithmIdentifier)
 {
-	if (!m_ScenarioImporters.count(importContext))
-	{
-		m_ScenarioImporters[importContext] = std::map<std::string, CIdentifier>();
-	}
+	if (!m_ScenarioImporters.count(importContext)) { m_ScenarioImporters[importContext] = std::map<std::string, CIdentifier>(); }
 
 	OV_ERROR_UNLESS_KRF(!m_ScenarioImporters[importContext].count(fileNameExtension.toASCIIString()),
 						"The file name extension [" << fileNameExtension << "] already has an importer registered for context " << importContext.toString(),
@@ -248,25 +248,13 @@ bool CScenarioManager::unregisterScenarioImporter(const CIdentifier& importConte
 
 	for (auto it = contextImporters.begin(); it != contextImporters.end();)
 	{
-		if (it->first == fileNameExtension.toASCIIString())
-		{
-			it = contextImporters.erase(it);
-		}
-		else
-		{
-			++it;
-		}
+		if (it->first == fileNameExtension.toASCIIString()) { it = contextImporters.erase(it); }
+		else { ++it; }
 	}
 	for (auto it = m_ScenarioImporters.begin(); it != m_ScenarioImporters.end();)
 	{
-		if (it->second.empty())
-		{
-			it = m_ScenarioImporters.erase(it);
-		}
-		else
-		{
-			++it;
-		}
+		if (it->second.empty()) { it = m_ScenarioImporters.erase(it); }
+		else { ++it; }
 	}
 	return true;
 }
@@ -300,14 +288,16 @@ CString CScenarioManager::getNextScenarioImporter(const CIdentifier& importConte
 CIdentifier CScenarioManager::getScenarioImporterAlgorithmIdentifier(const CIdentifier& importContext, const CString& fileNameExtension) const
 {
 	OV_ERROR_UNLESS_KRU(
-		!m_ScenarioImporters.empty() && m_ScenarioImporters.count(importContext) && m_ScenarioImporters.at(importContext).count(fileNameExtension.toASCIIString()),
+		!m_ScenarioImporters.empty() && m_ScenarioImporters.count(importContext) && m_ScenarioImporters.at(importContext).count(fileNameExtension.toASCIIString(
+		)),
 		"Scenario importer not found",
 		ErrorType::OutOfBound);
 
 	return m_ScenarioImporters.at(importContext).at(fileNameExtension.toASCIIString());
 }
 
-bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
+bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioID,
+									  const CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
 	OV_ERROR_UNLESS_KRF(
 		m_vScenario.find(scenarioID) != m_vScenario.end(),
@@ -368,10 +358,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 		{
 			scenario.setAttributeValue(OV_AttributeId_Scenario_MetaboxHash, l_oMetaboxProto.m_oHash.toString());
 		}
-		else
-		{
-			scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, l_oMetaboxProto.m_oHash.toString());
-		}
+		else { scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, l_oMetaboxProto.m_oHash.toString()); }
 	}
 
 	CIdentifier exporterInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioExporterAlgorithmIdentifier);
@@ -413,12 +400,14 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
-			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.toString(),
+			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.
+			toString(),
 			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
-			"The requested exporter does not have a MemoryBuffer output parameter with identifier " << OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.toString(),
+			"The requested exporter does not have a MemoryBuffer output parameter with identifier " <<
+			OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.toString(),
 			ErrorType::BadOutput);
 	}
 
@@ -444,7 +433,8 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	return true;
 }
 
-bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
+bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioID,
+											const CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
 	IScenario& scenario = this->getScenario(scenarioID);
 	if (scenario.containsBoxWithDeprecatedInterfacors())
@@ -486,12 +476,10 @@ bool CScenarioManager::exportScenarioToFile(const CIdentifier& exportContext, co
 	return this->exportScenarioToFile(fileName, scenarioID, m_ScenarioExporters[exportContext][&fileNameExtension[0]]);
 }
 
-bool CScenarioManager::registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension, const CIdentifier& scenarioExporterAlgorithmIdentifier)
+bool CScenarioManager::registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension,
+												const CIdentifier& scenarioExporterAlgorithmIdentifier)
 {
-	if (!m_ScenarioExporters.count(exportContext))
-	{
-		m_ScenarioExporters[exportContext] = std::map<std::string, CIdentifier>();
-	}
+	if (!m_ScenarioExporters.count(exportContext)) { m_ScenarioExporters[exportContext] = std::map<std::string, CIdentifier>(); }
 
 	OV_ERROR_UNLESS_KRF(!m_ScenarioExporters[exportContext].count(fileNameExtension.toASCIIString()),
 						"The file name extension [" << fileNameExtension << "] already has an exporter registered for context " << exportContext.toString(),
@@ -515,25 +503,13 @@ bool CScenarioManager::unregisterScenarioExporter(const CIdentifier& exportConte
 
 	for (auto it = contextExporters.begin(); it != contextExporters.end();)
 	{
-		if (it->first.c_str() == fileNameExtension.toASCIIString())
-		{
-			it = contextExporters.erase(it);
-		}
-		else
-		{
-			++it;
-		}
+		if (it->first.c_str() == fileNameExtension.toASCIIString()) { it = contextExporters.erase(it); }
+		else { ++it; }
 	}
 	for (auto it = m_ScenarioExporters.begin(); it != m_ScenarioExporters.end();)
 	{
-		if (it->second.empty())
-		{
-			it = m_ScenarioExporters.erase(it);
-		}
-		else
-		{
-			++it;
-		}
+		if (it->second.empty()) { it = m_ScenarioExporters.erase(it); }
+		else { ++it; }
 	}
 	return true;
 }
@@ -567,7 +543,8 @@ CString CScenarioManager::getNextScenarioExporter(const CIdentifier& exportConte
 CIdentifier CScenarioManager::getScenarioExporterAlgorithmIdentifier(const CIdentifier& exportContext, const CString& fileNameExtension) const
 {
 	OV_ERROR_UNLESS_KRU(
-		!m_ScenarioExporters.empty() && m_ScenarioExporters.count(exportContext) && m_ScenarioExporters.at(exportContext).count(fileNameExtension.toASCIIString()),
+		!m_ScenarioExporters.empty() && m_ScenarioExporters.count(exportContext) && m_ScenarioExporters.at(exportContext).count(fileNameExtension.toASCIIString(
+		)),
 		"Scenario importer not found",
 		ErrorType::OutOfBound);
 
@@ -601,10 +578,7 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID)
 	return *itScenario->second;
 }
 
-IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID) const
-{
-	return const_cast<CScenarioManager*>(this)->getScenario(scenarioID);
-}
+IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID) const { return const_cast<CScenarioManager*>(this)->getScenario(scenarioID); }
 
 CIdentifier CScenarioManager::getUnusedIdentifier() const
 {

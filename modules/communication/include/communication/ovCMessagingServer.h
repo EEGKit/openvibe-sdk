@@ -181,6 +181,6 @@ namespace Communication
 
 	private:
 		Socket::IConnectionServer* m_Server = nullptr; //< Server connection
-		Socket::IConnection* m_Client = nullptr;
+		Socket::IConnection* m_Client       = nullptr;
 	};
 }

@@ -22,7 +22,8 @@ void CFeatureVectorDecoder::processChildData(const void* buffer, const uint64_t 
 	{
 		const uint32_t l_ui32DimensionCount = uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 
-		OV_ERROR_UNLESS_KRV(l_ui32DimensionCount == 1, "Invalid feature vector: found " << l_ui32DimensionCount << " dimensions, 1 expected", OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRV(l_ui32DimensionCount == 1, "Invalid feature vector: found " << l_ui32DimensionCount << " dimensions, 1 expected",
+							OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	CStreamedMatrixDecoder::processChildData(buffer, size);

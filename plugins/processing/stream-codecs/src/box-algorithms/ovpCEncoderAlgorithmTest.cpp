@@ -99,7 +99,7 @@ bool CEncoderAlgorithmTest::processClock(IMessageClock& /*messageClock*/)
 
 bool CEncoderAlgorithmTest::process()
 {
-	IBoxIO& boxContext     = getDynamicBoxContext();
+	IBoxIO& boxContext               = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext  = getStaticBoxContext();
 	IPlayerContext& l_rPlayerContext = getPlayerContext();
 
@@ -123,10 +123,7 @@ bool CEncoderAlgorithmTest::process()
 		}
 	}
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
-	{
-		boxContext.markOutputAsReadyToSend(i, m_ui64StartTime, m_ui64EndTime);
-	}
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++) { boxContext.markOutputAsReadyToSend(i, m_ui64StartTime, m_ui64EndTime); }
 
 	m_ui64StartTime = m_ui64EndTime;
 	m_ui64EndTime   = l_rPlayerContext.getCurrentTime();

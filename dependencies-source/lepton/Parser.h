@@ -59,6 +59,7 @@ namespace Lepton
 		/**
 		 * Parse a mathematical expression and return a representation of it as an abstract syntax tree.
 		 *
+		 * @param expression
 		 * @param customFunctions   a map specifying user defined functions that may appear in the expression.
 		 *                          The key are function names, and the values are corresponding CustomFunction objects.
 		 */
@@ -67,7 +68,8 @@ namespace Lepton
 		static std::string trim(const std::string& expression);
 		static std::vector<ParseToken> tokenize(const std::string& expression);
 		static ParseToken getNextToken(const std::string& expression, int start);
-		static ExpressionTreeNode parsePrecedence(const std::vector<ParseToken>& tokens, int& pos, const std::map<std::string, CustomFunction*>& customFunctions,
+		static ExpressionTreeNode parsePrecedence(const std::vector<ParseToken>& tokens, int& pos,
+												  const std::map<std::string, CustomFunction*>& customFunctions,
 												  const std::map<std::string, ExpressionTreeNode>& subexpressionDefs, int precedence);
 		static Operation* getOperatorOperation(const std::string& name);
 		static Operation* getFunctionOperation(const std::string& name, const std::map<std::string, CustomFunction*>& customFunctions);

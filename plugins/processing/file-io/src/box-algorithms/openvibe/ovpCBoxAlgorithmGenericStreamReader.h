@@ -120,7 +120,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Reads OpenViBE streams saved in the .ov format"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/OpenViBE"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

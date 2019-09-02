@@ -61,7 +61,8 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorS
 
 	//We set the IMatrix fo the first classifier
 	const uint32_t featureVectorSize = featureVectorSet[0].getSize();
-	TParameterHandler<IMatrix*> featureVectorSetReference(m_oSubClassifierList[0]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	TParameterHandler<IMatrix*> featureVectorSetReference(
+		m_oSubClassifierList[0]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 	featureVectorSetReference->setDimensionCount(2);
 	featureVectorSetReference->setDimensionSize(0, featureVectorSet.getFeatureVectorCount());
 	featureVectorSetReference->setDimensionSize(1, featureVectorSize + 1);
@@ -77,7 +78,8 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorS
 	//And then we just change adapt the label for each feature vector but we don't copy them anymore
 	for (size_t classifierCounter = 0; classifierCounter < m_oSubClassifierList.size(); ++classifierCounter)
 	{
-		TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_oSubClassifierList[classifierCounter]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+		TParameterHandler<IMatrix*> ip_pFeatureVectorSet(
+			m_oSubClassifierList[classifierCounter]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 		ip_pFeatureVectorSet = static_cast<IMatrix*>(featureVectorSetReference);
 
 		featureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
@@ -106,7 +108,8 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 		IAlgorithmProxy* subClassifier = this->m_oSubClassifierList[i];
 		TParameterHandler<IMatrix*> ip_pFeatureVector(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 		TParameterHandler<double> op_f64ClassificationStateClass(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-		TParameterHandler<IMatrix*> op_pClassificationValues(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+		TParameterHandler<IMatrix*> op_pClassificationValues(
+			subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 		TParameterHandler<IMatrix*> op_pProbabilityValues(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 		ip_pFeatureVector->setDimensionCount(1);
 		ip_pFeatureVector->setDimensionSize(0, featureVectorSize);
@@ -117,20 +120,15 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 
 		IMatrix* probabilities = static_cast<IMatrix*>(op_pProbabilityValues);
 		//If the algorithm give a probability we take it, instead we take the first value
-		if (probabilities->getDimensionCount() != 0)
-		{
-			classification.push_back(CClassifierOutput(double(op_f64ClassificationStateClass), probabilities));
-		}
-		else
-		{
-			classification.push_back(CClassifierOutput(double(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues)));
-		}
-		this->getLogManager() << LogLevel_Debug << uint64_t(i) << " " << double(op_f64ClassificationStateClass) << " " << double((*op_pProbabilityValues)[0]) << " " << double((*op_pProbabilityValues)[1]) << "\n";
+		if (probabilities->getDimensionCount() != 0) { classification.push_back(CClassifierOutput(double(op_f64ClassificationStateClass), probabilities)); }
+		else { classification.push_back(CClassifierOutput(double(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues))); }
+		this->getLogManager() << LogLevel_Debug << uint64_t(i) << " " << double(op_f64ClassificationStateClass) << " " << double((*op_pProbabilityValues)[0]) <<
+				" " << double((*op_pProbabilityValues)[1]) << "\n";
 	}
 
 	//Now, we determine the best classification
 	CClassifierOutput best = CClassifierOutput(-1.0, static_cast<IMatrix*>(nullptr));
-	classId              = -1;
+	classId                = -1;
 
 	for (size_t i = 0; i < classification.size(); ++i)
 	{
@@ -139,14 +137,14 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 		{
 			if (best.second == nullptr)
 			{
-				best   = l_pTemp;
+				best    = l_pTemp;
 				classId = double(i);
 			}
 			else
 			{
 				if ((*m_fAlgorithmComparison)((*best.second), *(l_pTemp.second)) > 0)
 				{
-					best   = l_pTemp;
+					best    = l_pTemp;
 					classId = double(i);
 				}
 			}
@@ -162,7 +160,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 			CClassifierOutput& tmp = classification[l_iClassificationCount];
 			if (best.second == nullptr)
 			{
-				best   = tmp;
+				best    = tmp;
 				classId = (double(l_iClassificationCount));
 			}
 			else
@@ -170,7 +168,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 				//We take the one that is the least like the second class
 				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) < 0)
 				{
-					best   = tmp;
+					best    = tmp;
 					classId = l_iClassificationCount;
 				}
 			}
@@ -193,15 +191,13 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 	probabilityValue.setSize(uint32_t(m_oSubClassifierList.size()));
 	for (uint32_t i = 0; i < m_oSubClassifierList.size(); ++i)
 	{
-		TParameterHandler<IMatrix*> op_ProbabilityValues(m_oSubClassifierList[i]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+		TParameterHandler<IMatrix*> op_ProbabilityValues(
+			m_oSubClassifierList[i]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 		probabilityValue[i] = op_ProbabilityValues->getBuffer()[0];
 		subProbabilitySum += probabilityValue[i];
 	}
 
-	for (uint32_t i = 0; i < probabilityValue.getSize(); ++i)
-	{
-		probabilityValue[i] /= subProbabilitySum;
-	}
+	for (uint32_t i = 0; i < probabilityValue.getSize(); ++i) { probabilityValue[i] /= subProbabilitySum; }
 
 	return true;
 }
@@ -221,7 +217,8 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 	ip_pNumberOfClasses = 2;
 
 	//Set a references to the extra parameters input of the pairing strategy
-	TParameterHandler<std::map<CString, CString>*> ip_pExtraParameters(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+	TParameterHandler<std::map<CString, CString>*> ip_pExtraParameters(
+		subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 	ip_pExtraParameters.setReferenceTarget(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 
 	this->m_oSubClassifierList.push_back(subClassifier);
@@ -240,10 +237,7 @@ void CAlgorithmClassifierOneVsAll::removeClassifierAtBack()
 bool CAlgorithmClassifierOneVsAll::designArchitecture(const CIdentifier& id, uint32_t nClass)
 {
 	if (!this->setSubClassifierIdentifier(id)) { return false; }
-	for (size_t i = 0; i < nClass; ++i)
-	{
-		if (!this->addNewClassifierAtBack()) { return false; }
-	}
+	for (size_t i = 0; i < nClass; ++i) { if (!this->addNewClassifierAtBack()) { return false; } }
 	return true;
 }
 
@@ -264,7 +258,9 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration()
 
 	XML::IXMLNode* tempNode = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	tempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_oSubClassifierAlgorithmIdentifier.toString());
-	tempNode->setPCData(this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_oSubClassifierAlgorithmIdentifier.toUInteger()).toASCIIString());
+	tempNode->setPCData(
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_oSubClassifierAlgorithmIdentifier.toUInteger()).
+			  toASCIIString());
 	oneVsAllNode->addChild(tempNode);
 
 	tempNode = XML::createNode(SUB_CLASSIFIER_COUNT_NODE_NAME);
@@ -303,10 +299,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* configuratio
 	while (nClass != getClassCount())
 	{
 		if (nClass < getClassCount()) { this->removeClassifierAtBack(); }
-		else 
-		{
-			if (!this->addNewClassifierAtBack()) { return false; }
-		}
+		else { if (!this->addNewClassifierAtBack()) { return false; } }
 	}
 
 	return loadSubClassifierConfiguration(configurationNode->getChildByName(SUB_CLASSIFIERS_NODE_NAME));
@@ -316,7 +309,8 @@ uint32_t CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength() { retu
 
 uint32_t CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
 {
-	TParameterHandler<IMatrix*> op_pDistanceValues(m_oSubClassifierList[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	TParameterHandler<IMatrix*> op_pDistanceValues(
+		m_oSubClassifierList[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	return op_pDistanceValues->getDimensionSize(0);
 }
 
@@ -325,7 +319,8 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode*
 	for (uint32_t i = 0; i < subClassifiersNode->getChildCount(); ++i)
 	{
 		XML::IXMLNode* subClassifierNode = subClassifiersNode->getChild(i);
-		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(
+			m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 		ip_pConfiguration = subClassifierNode;
 
 		OV_ERROR_UNLESS_KRF(m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
@@ -342,7 +337,9 @@ bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier&
 	m_oSubClassifierAlgorithmIdentifier = id;
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(id);
 
-	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr, "No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr,
+						"No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]",
+						OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	return true;
 }

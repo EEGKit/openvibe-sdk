@@ -67,9 +67,11 @@ bool CBoxUpdater::initialize()
 		// Note that copy constructor for IScenario does not exist
 		CIdentifier metaboxScenarioTemplateIdentifier;
 
-		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport, metaboxScenarioPath);
+		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport,
+																			 metaboxScenarioPath);
 
-		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(metaboxScenarioTemplateIdentifier)));
+		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(
+			metaboxScenarioTemplateIdentifier)));
 		metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
 		m_KernelBox = metaboxScenarioInstance;
 	}
@@ -100,7 +102,10 @@ bool CBoxUpdater::initialize()
 	}
 
 	// initialize supported types to kernel ones
-	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox) { m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier()); }
+	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
+	{
+		m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier());
+	}
 	// should not be done before adding IO elements so the box listener is never called
 	// updatedBox->setAlgorithmClassIdentifier(kernelBox->getAlgorithmClassIdentifier());
 	m_Initialized = true;
@@ -133,24 +138,12 @@ bool CBoxUpdater::initialize()
 bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 {
 	//check for supported inputs diff
-	for (auto& type : m_SourceBox->getInputSupportTypes())
-	{
-		if (!m_KernelBox->hasInputSupport(type)) { return true; }
-	}
-	for (auto& type : m_KernelBox->getInputSupportTypes())
-	{
-		if (!m_SourceBox->hasInputSupport(type)) { return true; }
-	}
+	for (auto& type : m_SourceBox->getInputSupportTypes()) { if (!m_KernelBox->hasInputSupport(type)) { return true; } }
+	for (auto& type : m_KernelBox->getInputSupportTypes()) { if (!m_SourceBox->hasInputSupport(type)) { return true; } }
 
 	//check for supported outputs diff
-	for (auto& type : m_SourceBox->getOutputSupportTypes())
-	{
-		if (!m_KernelBox->hasOutputSupport(type)) { return true; }
-	}
-	for (auto& type : m_KernelBox->getOutputSupportTypes())
-	{
-		if (!m_SourceBox->hasOutputSupport(type)) { return true; }
-	}
+	for (auto& type : m_SourceBox->getOutputSupportTypes()) { if (!m_KernelBox->hasOutputSupport(type)) { return true; } }
+	for (auto& type : m_KernelBox->getOutputSupportTypes()) { if (!m_SourceBox->hasOutputSupport(type)) { return true; } }
 	return false;
 }
 
@@ -184,11 +177,11 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 
 		InterfacorRequest request;
-		request.index          = index;
-		request.identifier     = kIdentifier;
-		request.name           = kName;
-		request.typeID = kTypeIdentifier;
-		request.toBeRemoved    = false;
+		request.index       = index;
+		request.identifier  = kIdentifier;
+		request.name        = kName;
+		request.typeID      = kTypeIdentifier;
+		request.toBeRemoved = false;
 
 		if (interfacorType == Setting)
 		{
@@ -254,11 +247,11 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		m_SourceBox->getInterfacorName(interfacorType, index, sName);
 
 		InterfacorRequest request;
-		request.index          = index;
-		request.identifier     = sIdentifier;
-		request.name           = sName;
-		request.typeID = sTypeIdentifier;
-		request.toBeRemoved    = true;
+		request.index       = index;
+		request.identifier  = sIdentifier;
+		request.name        = sName;
+		request.typeID      = sTypeIdentifier;
+		request.toBeRemoved = true;
 
 		if (interfacorType == Setting)
 		{
@@ -301,17 +294,15 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 	return updated;
 }
 
-uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name)
+uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
+										 const CString& name)
 {
 	uint32_t index = OV_Value_UndefinedIndexUInt;
 	if (identifier != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(interfacorType, identifier))
 	{
 		box.getInterfacorIndex(interfacorType, identifier, index);
 	}
-	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeID))
-	{
-		box.getInterfacorIndex(interfacorType, name, index);
-	}
+	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeID)) { box.getInterfacorIndex(interfacorType, name, index); }
 
 	return index;
 }

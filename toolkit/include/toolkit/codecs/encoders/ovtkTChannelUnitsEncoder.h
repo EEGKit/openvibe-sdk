@@ -20,7 +20,8 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsStreamEncoder));
+			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsStreamEncoder));
 			m_pCodec->initialize();
 			m_pInputMatrix.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_Matrix));
 			m_bInputDynamic.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_Dynamic));

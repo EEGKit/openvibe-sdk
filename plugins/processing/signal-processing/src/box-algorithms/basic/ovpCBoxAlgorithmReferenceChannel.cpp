@@ -20,10 +20,7 @@ namespace
 		{
 			for (uint32_t i = uiStart; i < rMatrix.getDimensionSize(0); i++)
 			{
-				if (OpenViBEToolkit::Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false))
-				{
-					l_ui32Result = i;
-				}
+				if (OpenViBEToolkit::Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false)) { l_ui32Result = i; }
 			}
 		}
 		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Index)
@@ -33,10 +30,7 @@ namespace
 				unsigned int value = std::stoul(rChannel.toASCIIString());
 				value--; // => makes it 0-indexed !
 
-				if (uiStart <= uint32_t(value) && uint32_t(value) < rMatrix.getDimensionSize(0))
-				{
-					l_ui32Result = uint32_t(value);
-				}
+				if (uiStart <= uint32_t(value) && uint32_t(value) < rMatrix.getDimensionSize(0)) { l_ui32Result = uint32_t(value); }
 			}
 			catch (const std::exception&)
 			{
@@ -45,8 +39,14 @@ namespace
 		}
 		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
 		{
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) { l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart); }
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) { l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart); }
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max())
+			{
+				l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
+			}
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max())
+			{
+				l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+			}
 		}
 
 		return l_ui32Result;
@@ -102,20 +102,15 @@ bool CBoxAlgorithmReferenceChannel::process()
 			OV_ERROR_UNLESS_KRF(m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
 								"Invalid channel [" << l_sChannel << "]: channel not found", OpenViBE::Kernel::ErrorType::BadSetting);
 
-			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
-			{
-				OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]");
-			}
+			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::
+				max()) { OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]"); }
 
 			l_rOutputMatrix.setDimensionCount(2);
 			l_rOutputMatrix.setDimensionSize(0, l_rInputMatrix.getDimensionSize(0) - 1);
 			l_rOutputMatrix.setDimensionSize(1, l_rInputMatrix.getDimensionSize(1));
 			for (j = 0, k = 0; j < l_rInputMatrix.getDimensionSize(0); j++)
 			{
-				if (j != m_ui32ReferenceChannelIndex)
-				{
-					l_rOutputMatrix.setDimensionLabel(0, k++, l_rInputMatrix.getDimensionLabel(0, j));
-				}
+				if (j != m_ui32ReferenceChannelIndex) { l_rOutputMatrix.setDimensionLabel(0, k++, l_rInputMatrix.getDimensionLabel(0, j)); }
 			}
 
 			m_oEncoder.encodeHeader();
@@ -133,10 +128,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 			{
 				if (j != m_ui32ReferenceChannelIndex)
 				{
-					for (k = 0; k < l_ui32SampleCount; k++)
-					{
-						l_pOutputBuffer[k] = l_pInputBuffer[k] - l_pReferenceBuffer[k];
-					}
+					for (k = 0; k < l_ui32SampleCount; k++) { l_pOutputBuffer[k] = l_pInputBuffer[k] - l_pReferenceBuffer[k]; }
 					l_pOutputBuffer += l_ui32SampleCount;
 				}
 				l_pInputBuffer += l_ui32SampleCount;

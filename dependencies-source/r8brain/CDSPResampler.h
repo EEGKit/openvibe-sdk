@@ -242,7 +242,8 @@ namespace r8b
 				const double NormFreq = DstSampleRate * SrcSRDiv / SrcSampleRate;
 				const int downf       = (UsePower2 && NormFreq == 0.5 ? 2 : 1);
 
-				Convs[ConvCount] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand, ReqAtten, ReqPhase, 1.0), 1, downf, PrevLatencyFrac);
+				Convs[ConvCount] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand, ReqAtten, ReqPhase, 1.0), 1, downf,
+														  PrevLatencyFrac);
 
 				MaxOutLen       = Convs[ConvCount]->getMaxOutLen(MaxOutLen);
 				PrevLatencyFrac = Convs[ConvCount]->getLatencyFrac();
@@ -258,14 +259,8 @@ namespace r8b
 
 			MaxOutLen = Interp->getMaxOutLen(MaxOutLen);
 
-			if (MaxOutLen <= ConvBufCapacities[0])
-			{
-				InterpBuf = ConvBufs[0];
-			}
-			else if (MaxOutLen <= MaxInLen)
-			{
-				InterpBuf = nullptr;
-			}
+			if (MaxOutLen <= ConvBufCapacities[0]) { InterpBuf = ConvBufs[0]; }
+			else if (MaxOutLen <= MaxInLen) { InterpBuf = nullptr; }
 			else
 			{
 				TmpBuf.alloc(MaxOutLen);
@@ -281,10 +276,7 @@ namespace r8b
 		{
 			int l = (Interp == nullptr ? 0 : Interp->getInLenBeforeOutStart(NextInLen));
 
-			for (int i = ConvCount - 1; i >= 0; i--)
-			{
-				l = Convs[i]->getInLenBeforeOutStart(l);
-			}
+			for (int i = ConvCount - 1; i >= 0; i--) { l = Convs[i]->getInLenBeforeOutStart(l); }
 
 			return (l);
 		}

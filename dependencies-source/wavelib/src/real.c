@@ -10,14 +10,14 @@
 fft_real_object fft_real_init(int N, int sgn)
 {
 	fft_real_object obj = NULL;
-	obj = (fft_real_object)malloc(sizeof(struct fft_real_set) + sizeof(fft_data) * (N / 2));
-	obj->cobj = fft_init(N / 2, sgn);
+	obj                 = (fft_real_object)malloc(sizeof(struct fft_real_set) + sizeof(fft_data) * (N / 2));
+	obj->cobj           = fft_init(N / 2, sgn);
 
 	for (int k = 0; k < N / 2; ++k)
 	{
 		const fft_type theta = PI2 * k / N;
-		obj->twiddle2[k].re = cos(theta);
-		obj->twiddle2[k].im = sin(theta);
+		obj->twiddle2[k].re  = cos(theta);
+		obj->twiddle2[k].im  = sin(theta);
 	}
 	return obj;
 }

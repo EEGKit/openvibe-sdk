@@ -51,7 +51,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Frequency Band Selector"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString(
+					"Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select");
+			}
+
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }

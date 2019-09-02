@@ -46,7 +46,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Time based epoching"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval");
+			}
+
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Interval can be used to control the overlap of epochs"); }
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Epoching"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }

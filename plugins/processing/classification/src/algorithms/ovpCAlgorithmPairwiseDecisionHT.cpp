@@ -35,7 +35,8 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = uint32_t(ip_pClassCount);
 
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
@@ -43,16 +44,14 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 
 bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
 {
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	double* l_pProbabilityMatrix                         = new double[m_ui32ClassCount * m_ui32ClassCount];
 
 	//First we set the diagonal to 0
-	for (size_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		l_pProbabilityMatrix[i * m_ui32ClassCount + i] = 0.;
-	}
+	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pProbabilityMatrix[i * m_ui32ClassCount + i] = 0.; }
 
 #if HT_DEBUG
 	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
@@ -80,28 +79,16 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pMu[i] = new double[m_ui32ClassCount]; }
 
-	for (size_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		l_ui32AmountSample += uint32_t(ip_pRepartitionSetVector->getBuffer()[i]);
-	}
+	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_ui32AmountSample += uint32_t(ip_pRepartitionSetVector->getBuffer()[i]); }
 
-	for (size_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		l_pP[i] = ip_pRepartitionSetVector->getBuffer()[i] / l_ui32AmountSample;
-	}
+	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pP[i] = ip_pRepartitionSetVector->getBuffer()[i] / l_ui32AmountSample; }
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
 	{
 		for (size_t j = 0; j < m_ui32ClassCount; ++j)
 		{
-			if (i != j)
-			{
-				l_pMu[i][j] = l_pP[i] / (l_pP[i] + l_pP[j]);
-			}
-			else
-			{
-				l_pMu[i][i] = 0;
-			}
+			if (i != j) { l_pMu[i][j] = l_pP[i] / (l_pP[i] + l_pP[j]); }
+			else { l_pMu[i][i] = 0; }
 		}
 	}
 
@@ -141,14 +128,8 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 				l_f64SecondSum += l_ui32Temp * l_pMu[l_ui32Index][j];
 			}
 		}
-		if (l_f64SecondSum != 0)
-		{
-			l_f64Alpha = l_f64FirstSum / l_f64SecondSum;
-		}
-		else
-		{
-			l_f64Alpha = 1;
-		}
+		if (l_f64SecondSum != 0) { l_f64Alpha = l_f64FirstSum / l_f64SecondSum; }
+		else { l_f64Alpha = 1; }
 
 		for (size_t j = 0; j < m_ui32ClassCount; ++j)
 		{
@@ -161,14 +142,8 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 		}
 
 		l_pP[l_ui32Index] *= l_f64Alpha;
-		if (l_f64Alpha > 1 - ALPHA_DELTA && l_f64Alpha < 1 + ALPHA_DELTA)
-		{
-			++l_ui32ConsecutiveAlpha;
-		}
-		else
-		{
-			l_ui32ConsecutiveAlpha = 0;
-		}
+		if (l_f64Alpha > 1 - ALPHA_DELTA && l_f64Alpha < 1 + ALPHA_DELTA) { ++l_ui32ConsecutiveAlpha; }
+		else { l_ui32ConsecutiveAlpha = 0; }
 		l_ui32Index = (l_ui32Index + 1) % m_ui32ClassCount;
 
 #if HT_DEBUG
@@ -199,10 +174,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 	pProbabilityVector->setDimensionCount(1);
 	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		pProbabilityVector->getBuffer()[i] = l_pP[i];
-	}
+	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = l_pP[i]; }
 
 	delete[] l_pP;
 	for (size_t i = 0; i < m_ui32ClassCount; ++i) { delete[] l_pMu[i]; }
@@ -219,10 +191,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 	const uint32_t l_ui32ClassCount                      = ip_pRepartitionSetVector->getDimensionSize(0);
 
 	std::stringstream l_sRepartition;
-	for (size_t i = 0; i < l_ui32ClassCount; i++)
-	{
-		l_sRepartition << ip_pRepartitionSetVector->getBuffer()[i] << " ";
-	}
+	for (size_t i = 0; i < l_ui32ClassCount; i++) { l_sRepartition << ip_pRepartitionSetVector->getBuffer()[i] << " "; }
 	XML::IXMLNode* l_pRepartition = XML::createNode(REPARTITION_NODE_NAME);
 	l_pRepartition->setPCData(l_sRepartition.str().c_str());
 	l_pRootNode->addChild(l_pRepartition);
@@ -246,9 +215,6 @@ bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& rNode)
 
 	ip_pRepartitionSetVector->setDimensionCount(1);
 	ip_pRepartitionSetVector->setDimensionSize(0, l_vRepartition.size());
-	for (size_t i = 0; i < l_vRepartition.size(); i++)
-	{
-		ip_pRepartitionSetVector->getBuffer()[i] = l_vRepartition[i];
-	}
+	for (size_t i = 0; i < l_vRepartition.size(); i++) { ip_pRepartitionSetVector->getBuffer()[i] = l_vRepartition[i]; }
 	return true;
 }

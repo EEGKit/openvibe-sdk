@@ -70,7 +70,8 @@ bool CAlgorithmOnlineCovariance::process()
 
 		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_f64Shrinkage << " ...\n";
 		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_bTraceNormalization ? "[on]" : "[off]") << "\n";
-		this->getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(OVP_TypeId_OnlineCovariance_UpdateMethod, ip_ui64UpdateMethod) << "\n";
+		this->getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(
+			OVP_TypeId_OnlineCovariance_UpdateMethod, ip_ui64UpdateMethod) << "\n";
 
 		// Set the output buffers
 		op_pMean->setDimensionCount(2);
@@ -162,10 +163,7 @@ bool CAlgorithmOnlineCovariance::process()
 				m_ui64Count++;
 			}
 
-			if (ip_bTraceNormalization)
-			{
-				l_oChunkContribution = l_oChunkContribution / l_oChunkContribution.trace();
-			}
+			if (ip_bTraceNormalization) { l_oChunkContribution = l_oChunkContribution / l_oChunkContribution.trace(); }
 
 			m_oIncrementalCov += l_oChunkContribution;
 
@@ -236,10 +234,7 @@ bool CAlgorithmOnlineCovariance::process()
 			m_ui64Count = l_ui64CountAfter;
 		}
 #endif
-		else
-		{
-			OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_ui64UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting);
-		}
+		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_ui64UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
 	}
 
 	// Give output with regularization (mix prior + cov)?

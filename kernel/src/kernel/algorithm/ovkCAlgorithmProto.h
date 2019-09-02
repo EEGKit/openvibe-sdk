@@ -13,8 +13,10 @@ namespace OpenViBE
 		public:
 
 			CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy);
-			bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier) override;
-			bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier) override;
+			bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType,
+								   const CIdentifier& rSubTypeIdentifier) override;
+			bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType,
+									const CIdentifier& rSubTypeIdentifier) override;
 			bool addInputTrigger(const CIdentifier& rInputTriggerIdentifier, const CString& rInputTriggerName) override;
 			bool addOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const CString& rOutputTriggerName) override;
 

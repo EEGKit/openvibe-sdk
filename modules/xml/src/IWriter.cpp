@@ -24,8 +24,8 @@ namespace XML
 	protected:
 		IWriterCallback& m_rWriterCallback;
 		stack<string> m_vNodes;
-		bool m_bHasChild = false;
-		bool m_bHasData = false;
+		bool m_bHasChild             = false;
+		bool m_bHasData              = false;
 		bool m_bHasClosedOpeningNode = true;
 	};
 }
@@ -126,20 +126,15 @@ void CWriter::sanitize(string& sString, bool escapeQuotes)
 	if (sString.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = sString.find("&", 0); i != string::npos; i = sString.find("&", i + 1))
-			sString.replace(i, 1, "&amp;");
-		for (i = sString.find("<", 0); i != string::npos; i = sString.find("<", i + 1))
-			sString.replace(i, 1, "&lt;");
-		for (i = sString.find(">", 0); i != string::npos; i = sString.find(">", i + 1))
-			sString.replace(i, 1, "&gt;");
+		for (i = sString.find("&", 0); i != string::npos; i = sString.find("&", i + 1)) sString.replace(i, 1, "&amp;");
+		for (i = sString.find("<", 0); i != string::npos; i = sString.find("<", i + 1)) sString.replace(i, 1, "&lt;");
+		for (i = sString.find(">", 0); i != string::npos; i = sString.find(">", i + 1)) sString.replace(i, 1, "&gt;");
 
 		// Quotes need only be escaped in attributes
 		if (escapeQuotes)
 		{
-			for (i = sString.find("'", 0); i != string::npos; i = sString.find("'", i + 1))
-				sString.replace(i, 1, "&apos;");
-			for (i = sString.find("\"", 0); i != string::npos; i = sString.find("\"", i + 1))
-				sString.replace(i, 1, "&quot;");
+			for (i = sString.find("'", 0); i != string::npos; i = sString.find("'", i + 1)) sString.replace(i, 1, "&apos;");
+			for (i = sString.find("\"", 0); i != string::npos; i = sString.find("\"", i + 1)) sString.replace(i, 1, "&quot;");
 		}
 	}
 }

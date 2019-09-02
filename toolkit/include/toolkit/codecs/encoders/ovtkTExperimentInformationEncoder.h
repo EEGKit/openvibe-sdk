@@ -32,22 +32,32 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ExperimentInformationStreamEncoder));
+			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_pBoxAlgorithm->getAlgorithmManager().
+								 createAlgorithm(OVP_GD_ClassId_Algorithm_ExperimentInformationStreamEncoder));
 			m_pCodec->initialize();
-			m_ui64InputExperimentIdentifier.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentIdentifier));
-			m_pInputpExperimentDate.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentDate));
+			m_ui64InputExperimentIdentifier.initialize(
+				m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentIdentifier));
+			m_pInputpExperimentDate.
+					initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentDate));
 
-			m_ui64InputSubjectIdentifier.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectIdentifier));
+			m_ui64InputSubjectIdentifier.initialize(
+				m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectIdentifier));
 			m_pInputpSubjectName.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectName));
 			m_ui64InputSubjectAge.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectAge));
-			m_ui64InputSubjectGender.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectGender));
+			m_ui64InputSubjectGender.
+					initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectGender));
 
-			m_ui64InputLaboratoryIdentifier.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_LaboratoryIdentifier));
-			m_pInputpLaboratoryName.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_LaboratoryName));
-			m_ui64InputTechnicianIdentifier.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_TechnicianIdentifier));
+			m_ui64InputLaboratoryIdentifier.initialize(
+				m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_LaboratoryIdentifier));
+			m_pInputpLaboratoryName.
+					initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_LaboratoryName));
+			m_ui64InputTechnicianIdentifier.initialize(
+				m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_TechnicianIdentifier));
 			m_pInputTechnicianName.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_TechnicianName));
 
-			m_pOutputMemoryBuffer.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_pOutputMemoryBuffer.initialize(
+				m_pCodec->getOutputParameter(OVP_GD_Algorithm_ExperimentInformationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}

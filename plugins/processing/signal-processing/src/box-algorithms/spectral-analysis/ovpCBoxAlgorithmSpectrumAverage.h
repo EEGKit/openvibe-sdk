@@ -50,7 +50,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Spectrum Average"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes the average of all the frequency band powers for a spectrum"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Computes the average of all the frequency band powers for a spectrum");
+			}
+
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }

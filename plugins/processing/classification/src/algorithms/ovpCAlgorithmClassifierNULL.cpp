@@ -54,13 +54,13 @@ bool CAlgorithmClassifierNULL::classify(const IFeatureVector& /*featureVector*/,
 	rProbabilityValue.setSize(1);
 	if (classId == 1)
 	{
-		rDistanceValue[0] = -1;
-		rProbabilityValue[0]     = 1;
+		rDistanceValue[0]    = -1;
+		rProbabilityValue[0] = 1;
 	}
 	else
 	{
-		rDistanceValue[0] = 1;
-		rProbabilityValue[0]     = 0;
+		rDistanceValue[0]    = 1;
+		rProbabilityValue[0] = 0;
 	}
 	return true;
 }

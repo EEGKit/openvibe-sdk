@@ -61,9 +61,9 @@ bool CLink::setTarget(const CIdentifier& boxId, const uint32_t boxInputIdx, cons
 
 bool CLink::getSource(CIdentifier& boxId, uint32_t& boxOutputIdx, CIdentifier& boxOutputID) const
 {
-	boxId      = m_oSourceBoxIdentifier;
-	boxOutputIdx  = m_ui32SourceOutputIndex;
-	boxOutputID = m_oSourceBoxOutputIdentifier;
+	boxId        = m_oSourceBoxIdentifier;
+	boxOutputIdx = m_ui32SourceOutputIndex;
+	boxOutputID  = m_oSourceBoxOutputIdentifier;
 	return true;
 }
 

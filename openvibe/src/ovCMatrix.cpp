@@ -37,8 +37,8 @@ namespace OpenViBE
 
 		protected:
 
-			mutable double* m_pBuffer                 = nullptr;
-			mutable uint32_t m_size = 0;
+			mutable double* m_pBuffer = nullptr;
+			mutable uint32_t m_size   = 0;
 
 			std::vector<uint32_t> m_vDimensionSize;
 			std::vector<std::vector<std::string>> m_vDimensionLabel;
@@ -201,5 +201,10 @@ const double* CMatrix::getBuffer() const { return m_pMatrixImpl->getBuffer(); }
 uint32_t CMatrix::getBufferElementCount() const { return m_pMatrixImpl->getBufferElementCount(); }
 bool CMatrix::setDimensionCount(const uint32_t count) { return m_pMatrixImpl->setDimensionCount(count); }
 bool CMatrix::setDimensionSize(const uint32_t index, const uint32_t size) { return m_pMatrixImpl->setDimensionSize(index, size); }
-bool CMatrix::setDimensionLabel(const uint32_t index, const uint32_t entryIndex, const char* label) { return m_pMatrixImpl->setDimensionLabel(index, entryIndex, label); }
+
+bool CMatrix::setDimensionLabel(const uint32_t index, const uint32_t entryIndex, const char* label)
+{
+	return m_pMatrixImpl->setDimensionLabel(index, entryIndex, label);
+}
+
 double* CMatrix::getBuffer() { return m_pMatrixImpl->getBuffer(); }

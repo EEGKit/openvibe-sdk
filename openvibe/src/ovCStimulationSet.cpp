@@ -18,8 +18,8 @@ namespace OpenViBE
 			CStimulation(const uint64_t ui64Identifier, const uint64_t ui64Date, const uint64_t ui64Duration)
 				: m_Id(ui64Identifier), m_date(ui64Date), m_duration(ui64Duration) { }
 
-			uint64_t m_Id = 0;
-			uint64_t m_date = 0;
+			uint64_t m_Id       = 0;
+			uint64_t m_date     = 0;
 			uint64_t m_duration = 0;
 		};
 

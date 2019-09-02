@@ -120,7 +120,8 @@ IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32_t& uiSi
 	{
 		XML_Error l_oErrorCode = XML_GetErrorCode(m_pXMLParser);
 		// Although printf() is not too elegant, this component has no context to use e.g. LogManager -> printf() is better than a silent fail.
-		this->getErrorStringStream() << "processData(): expat error " << l_oErrorCode << " on the line " << XML_GetCurrentLineNumber(m_pXMLParser) << " of the input .xml\n";
+		this->getErrorStringStream() << "processData(): expat error " << l_oErrorCode << " on the line " << XML_GetCurrentLineNumber(m_pXMLParser) <<
+				" of the input .xml\n";
 		return nullptr;
 	}
 	return m_pRootNode;
@@ -145,10 +146,7 @@ bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) c
 void IXMLHandlerImpl::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
 	IXMLNode* l_pNode = createNode(sName);
-	for (uint32_t i = 0; i < ui64AttributeCount; ++i)
-	{
-		l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]);
-	}
+	for (uint32_t i = 0; i < ui64AttributeCount; ++i) { l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]); }
 	m_oNodeStack.push(l_pNode);
 }
 
@@ -203,10 +201,7 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* pData, const char* /*pElement*/)
-{
-	static_cast<IXMLHandlerImpl*>(pData)->closeChild();
-}
+static void XMLCALL XML::expat_xml_end(void* pData, const char* /*pElement*/) { static_cast<IXMLHandlerImpl*>(pData)->closeChild(); }
 
 static void XMLCALL XML::expat_xml_data(void* pData, const char* pDataValue, int iDataLength)
 {

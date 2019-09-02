@@ -65,7 +65,7 @@ namespace Common
 				for (size_t j = 0; j < m_vResampler.size(); j++) { delete m_vResampler[j]; }
 				m_vResampler.clear();
 
-				nChannel                  = 0;
+				nChannel                            = 0;
 				m_ui32InputSamplingRate             = 0;
 				m_ui32OutputSamplingRate            = 0;
 				m_iFractionalDelayFilterSampleCount = 6;
@@ -122,7 +122,8 @@ namespace Common
 			 */
 			bool setTransitionBand(double f64TransitionBandInPercent)
 			{
-				if (f64TransitionBandInPercent < r8b::CDSPFIRFilter::getLPMinTransBand() || r8b::CDSPFIRFilter::getLPMaxTransBand() < f64TransitionBandInPercent) { return false; }
+				if (f64TransitionBandInPercent < r8b::CDSPFIRFilter::getLPMinTransBand() || r8b::CDSPFIRFilter::getLPMaxTransBand() < f64TransitionBandInPercent
+				) { return false; }
 
 				m_f64TransitionBandInPercent = f64TransitionBandInPercent;
 
@@ -140,7 +141,10 @@ namespace Common
 			 */
 			bool setStopBandAttenuation(double f64StopBandAttenuation)
 			{
-				if (f64StopBandAttenuation < r8b::CDSPFIRFilter::getLPMinAtten() || r8b::CDSPFIRFilter::getLPMaxAtten() < f64StopBandAttenuation) { return false; }
+				if (f64StopBandAttenuation < r8b::CDSPFIRFilter::getLPMinAtten() || r8b::CDSPFIRFilter::getLPMaxAtten() < f64StopBandAttenuation)
+				{
+					return false;
+				}
 
 				m_f64StopBandAttenuation = f64StopBandAttenuation;
 
@@ -155,7 +159,7 @@ namespace Common
 				if (ui32ChannelCount == 0) { return false; }
 				if (iSampleRate == 0) { return false; }
 				if (oSampleRate == 0) { return false; }
-				nChannel       = ui32ChannelCount;
+				nChannel                 = ui32ChannelCount;
 				m_ui32InputSamplingRate  = iSampleRate;
 				m_ui32OutputSamplingRate = oSampleRate;
 
@@ -163,65 +167,93 @@ namespace Common
 				m_vResampler.clear();
 				m_vResampler.resize(ui32ChannelCount);
 
-				double l_f64StopBandAttenuation = m_f64StopBandAttenuation == 0 ? std::min(6.02 * m_iFractionalDelayFilterSampleCount + 40, r8b::CDSPFIRFilter::getLPMaxAtten()) : m_f64StopBandAttenuation;
+				double l_f64StopBandAttenuation = m_f64StopBandAttenuation == 0
+													  ? std::min(6.02 * m_iFractionalDelayFilterSampleCount + 40, r8b::CDSPFIRFilter::getLPMaxAtten())
+													  : m_f64StopBandAttenuation;
 
 				for (size_t j = 0; j < ui32ChannelCount; j++)
 				{
 					switch (m_iFractionalDelayFilterSampleCount) // it defines iFractionalDelayPositionCount 
 					{
 						case 6:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 8:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 10:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 12:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 14:
 							//l_f64StopBandAttenuation = 109.56;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 16:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 18:
 							//l_f64StopBandAttenuation = 136.45;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 20:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 22:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 24:
 							//l_f64StopBandAttenuation = 180.15;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 26:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 28:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 30:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(
+								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation,
+								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						default:
@@ -292,7 +324,7 @@ namespace Common
 			 */
 			size_t resample_channel_wise(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn)
 			{
-				int nI = 0;
+				int nI              = 0;
 				bool isFirstChannel = true;
 
 				std::vector<double> l_vInputBuffer(nSampleIn);
@@ -300,10 +332,7 @@ namespace Common
 
 				for (uint32_t j = 0; j < nChannel; j++)
 				{
-					for (uint32_t k = 0; k < nSampleIn; k++)
-					{
-						l_vInputBuffer[k] = double(pInputSample[k * nChannel + j]);
-					}
+					for (uint32_t k = 0; k < nSampleIn; k++) { l_vInputBuffer[k] = double(pInputSample[k * nChannel + j]); }
 
 					double* l_pResamplerOutputBuffer;
 					nI = m_vResampler[j]->process(&l_vInputBuffer[0], int(nSampleIn), l_pResamplerOutputBuffer);
@@ -314,16 +343,10 @@ namespace Common
 						isFirstChannel = false;
 					}
 
-					for (int k = 0; k < nI; k++)
-					{
-						l_vOutputBuffer[k * nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]);
-					}
+					for (int k = 0; k < nI; k++) { l_vOutputBuffer[k * nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]); }
 				}
 
-				for (int k = 0; k < nI; k++)
-				{
-					rCallback.processResampler(&l_vOutputBuffer[k * nChannel], nChannel);
-				}
+				for (int k = 0; k < nI; k++) { rCallback.processResampler(&l_vOutputBuffer[k * nChannel], nChannel); }
 
 				return nI;
 			}
@@ -339,7 +362,7 @@ namespace Common
 			 */
 			size_t resample_sample_wise(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn)
 			{
-				int nI = 0;
+				int nI              = 0;
 				bool isFirstChannel = true;
 
 				std::vector<double> l_vInputBuffer(nSampleIn);
@@ -403,10 +426,7 @@ namespace Common
 
 				void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const override
 				{
-					for (size_t i = 0; i < ui32ChannelCount; i++)
-					{
-						m_pOutputSample[i * m_ui32OutputSampleCount + m_ui32OutputSampleIndex] = pSample[i];
-					}
+					for (size_t i = 0; i < ui32ChannelCount; i++) { m_pOutputSample[i * m_ui32OutputSampleCount + m_ui32OutputSampleIndex] = pSample[i]; }
 					m_ui32OutputSampleIndex++;
 					m_ui32OutputSampleIndex %= m_ui32OutputSampleCount;
 				}
@@ -416,7 +436,7 @@ namespace Common
 				mutable size_t m_ui32OutputSampleIndex;
 			};
 
-			size_t resample_channel_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t /*ui32OutputSampleCount*/) 
+			size_t resample_channel_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t /*ui32OutputSampleCount*/)
 			{
 				return this->resample(CCallbackChannelWise(pOutputSample), pInputSample, nSampleIn);
 			}
@@ -440,7 +460,7 @@ namespace Common
 
 		protected:
 
-			size_t nChannel       = 0;
+			size_t nChannel                 = 0;
 			size_t m_ui32InputSamplingRate  = 0;
 			size_t m_ui32OutputSamplingRate = 0;
 
@@ -452,7 +472,8 @@ namespace Common
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 
 			size_t (TResampler<TFloat, eStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn);
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount);
+			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn,
+																		 size_t ui32OutputSampleCount);
 		};
 
 		typedef TResampler<float, ResamplerStoreMode_SampleWise> CResamplerSf;

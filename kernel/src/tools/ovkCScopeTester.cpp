@@ -10,7 +10,4 @@ CScopeTester::CScopeTester(const IKernelContext& rKernelContext, const CString& 
 	m_kernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] enter\n";
 }
 
-CScopeTester::~CScopeTester()
-{
-	m_kernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] leave\n";
-}
+CScopeTester::~CScopeTester() { m_kernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] leave\n"; }

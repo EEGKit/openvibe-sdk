@@ -13,23 +13,23 @@ namespace OpenViBE
 		class IMetadata;
 		class ILink;
 		class IScenario;
-	}
+	} // namespace kernel
 
 	class OV_API IObjectVisitor : public IObject
 	{
 	public:
 
-		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IBox& box) { return true; }
-		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IComment& rComment) { return true; }
-		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IMetadata& rMetadata) { return true; }
-		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::ILink& rLink) { return true; }
-		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IScenario& rScenario) { return true; }
+		virtual bool processBegin(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IBox& /*box*/) { return true; }
+		virtual bool processBegin(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IComment& /*rComment*/) { return true; }
+		virtual bool processBegin(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IMetadata& /*rMetadata*/) { return true; }
+		virtual bool processBegin(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::ILink& /*rLink*/) { return true; }
+		virtual bool processBegin(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IScenario& /*rScenario*/) { return true; }
 
-		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IBox& box) { return true; }
-		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IComment& rComment) { return true; }
-		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IMetadata& rMetadata) { return true; }
-		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::ILink& rLink) { return true; }
-		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IScenario& rScenario) { return true; }
+		virtual bool processEnd(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IBox& /*box*/) { return true; }
+		virtual bool processEnd(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IComment& /*rComment*/) { return true; }
+		virtual bool processEnd(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IMetadata& /*rMetadata*/) { return true; }
+		virtual bool processEnd(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::ILink& /*rLink*/) { return true; }
+		virtual bool processEnd(Kernel::IObjectVisitorContext& /*rObjectVisitorContext*/, Kernel::IScenario& /*rScenario*/) { return true; }
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_ObjectVisitor)
 	};

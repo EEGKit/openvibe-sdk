@@ -24,8 +24,8 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
 
 		const OpenViBE::IMatrix* m_pMatrix = nullptr;
-		uint32_t m_dimensionIdx      = 0;
-		uint32_t m_size  = 0;
+		uint32_t m_dimensionIdx            = 0;
+		uint32_t m_size                    = 0;
 		const double* m_pBuffer            = nullptr;
 	};
 

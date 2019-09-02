@@ -37,7 +37,8 @@ const IAlgorithm& CAlgorithmProxy::getAlgorithm() const { return m_rAlgorithm; }
 
 const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const { return m_rAlgorithmDesc; }
 
-bool CAlgorithmProxy::addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
+bool CAlgorithmProxy::addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, const EParameterType eParameterType,
+										const CIdentifier& rSubTypeIdentifier)
 {
 	OV_ERROR_UNLESS_KRF(m_pInputConfigurable->getParameter(rInputParameterIdentifier) == nullptr,
 						"For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << rInputParameterIdentifier.toString() << " already exists",
@@ -48,13 +49,18 @@ bool CAlgorithmProxy::addInputParameter(const CIdentifier& rInputParameterIdenti
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const { return m_pInputConfigurable->getNextParameterIdentifier(rPreviousInputParameterIdentifier); }
+CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const
+{
+	return m_pInputConfigurable->getNextParameterIdentifier(rPreviousInputParameterIdentifier);
+}
 
 IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& rInputParameterIdentifier)
 {
 	IParameter* parameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
 
-	OV_ERROR_UNLESS_KRN(parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(
+		parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier.toString(),
+		ErrorType::ResourceNotFound);
 
 	return parameter;
 }
@@ -80,10 +86,12 @@ bool CAlgorithmProxy::removeInputParameter(const CIdentifier& rInputParameterIde
 	return true;
 }
 
-bool CAlgorithmProxy::addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
+bool CAlgorithmProxy::addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, const EParameterType eParameterType,
+										 const CIdentifier& rSubTypeIdentifier)
 {
 	OV_ERROR_UNLESS_KRF(m_pOutputConfigurable->getParameter(rOutputParameterIdentifier) == nullptr,
-						"For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier.toString() << " already exists",
+						"For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier.toString() <<
+						" already exists",
 						ErrorType::BadResourceCreation);
 
 	m_pOutputConfigurable->createParameter(rOutputParameterIdentifier, eParameterType, rSubTypeIdentifier);
@@ -91,13 +99,18 @@ bool CAlgorithmProxy::addOutputParameter(const CIdentifier& rOutputParameterIden
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const { return m_pOutputConfigurable->getNextParameterIdentifier(rPreviousOutputParameterIdentifier); }
+CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const
+{
+	return m_pOutputConfigurable->getNextParameterIdentifier(rPreviousOutputParameterIdentifier);
+}
 
 IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& rOutputParameterIdentifier)
 {
 	IParameter* parameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
 
-	OV_ERROR_UNLESS_KRN(parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(
+		parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier.toString(),
+		ErrorType::ResourceNotFound);
 
 	return parameter;
 }
@@ -260,15 +273,9 @@ bool CAlgorithmProxy::process(const CIdentifier& rTriggerIdentifier)
 	return this->process();
 }
 
-void CAlgorithmProxy::setAllInputTriggers(const bool bTriggerStatus)
-{
-	for (auto& trigger : m_vInputTrigger) { trigger.second.second = bTriggerStatus; }
-}
+void CAlgorithmProxy::setAllInputTriggers(const bool bTriggerStatus) { for (auto& trigger : m_vInputTrigger) { trigger.second.second = bTriggerStatus; } }
 
-void CAlgorithmProxy::setAllOutputTriggers(const bool bTriggerStatus)
-{
-	for (auto& trigger : m_vOutputTrigger) { trigger.second.second = bTriggerStatus; }
-}
+void CAlgorithmProxy::setAllOutputTriggers(const bool bTriggerStatus) { for (auto& trigger : m_vOutputTrigger) { trigger.second.second = bTriggerStatus; } }
 
 bool CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier) { return m_rAlgorithm.isDerivedFromClass(rClassIdentifier); }
 

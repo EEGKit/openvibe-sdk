@@ -20,21 +20,21 @@ CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedB
 
 CPlayerContext::~CPlayerContext() {}
 
-bool CPlayerContext::sendSignal(const CMessageSignal& messageSignal)
+bool CPlayerContext::sendSignal(const CMessageSignal& /*messageSignal*/)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendSignal - Not yet implemented\n";
 	return false;
 }
 
-bool CPlayerContext::sendMessage(const CMessageEvent& messageEvent, const CIdentifier& rTargetIdentifier)
+bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CIdentifier& /*rTargetIdentifier*/)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
 	return false;
 }
 
-bool CPlayerContext::sendMessage(const CMessageEvent& messageEvent, const CIdentifier* pTargetIdentifier, const uint32_t ui32TargetIdentifierCount)
+bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CIdentifier* /*pTargetIdentifier*/, const uint32_t /*ui32TargetIdentifierCount*/)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
@@ -73,6 +73,9 @@ ITypeManager& CPlayerContext::getTypeManager() const { return m_rTypeManager; }
 
 bool CPlayerContext::canCreatePluginObject(const CIdentifier& pluginIdentifier) const { return m_rPluginManager.canCreatePluginObject(pluginIdentifier); }
 
-Plugins::IPluginObject* CPlayerContext::createPluginObject(const CIdentifier& pluginIdentifier) const { return m_rPluginManager.createPluginObject(pluginIdentifier); }
+Plugins::IPluginObject* CPlayerContext::createPluginObject(const CIdentifier& pluginIdentifier) const
+{
+	return m_rPluginManager.createPluginObject(pluginIdentifier);
+}
 
 bool CPlayerContext::releasePluginObject(Plugins::IPluginObject* pluginObject) const { return m_rPluginManager.releasePluginObject(pluginObject); }

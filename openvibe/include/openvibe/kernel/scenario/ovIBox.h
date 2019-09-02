@@ -30,7 +30,7 @@ namespace OpenViBE
 		{
 		public:
 			BoxEventMessageType m_eType;
-			int m_i32FirstIndex = 0;
+			int m_i32FirstIndex  = 0;
 			int m_i32SecondIndex = 0;
 		};
 
@@ -146,7 +146,8 @@ namespace OpenViBE
 			virtual bool initializeFromExistingBox(const IBox& existingBox) = 0;
 
 
-			virtual bool addInterfacor(BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier, bool shouldNotify = true) = 0;
+			virtual bool addInterfacor(BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier,
+									   bool shouldNotify = true) = 0;
 			virtual bool removeInterfacor(BoxInterfacorType interfacorType, const uint32_t index, const bool shouldNotify = true) = 0;
 
 			virtual uint32_t getInterfacorCount(BoxInterfacorType interfacorType) const = 0;
@@ -202,7 +203,8 @@ namespace OpenViBE
 			 * The input is always added after the last
 			 * already existing input.
 			 */
-			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
+								  const bool notify                                                             = true) = 0;
 
 			/**
 			 * \brief Removes an input for this box
@@ -279,7 +281,8 @@ namespace OpenViBE
 			 * The output is always added after the last
 			 * already existing output.
 			 */
-			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
+								   const bool notify                                                             = true) = 0;
 
 			/**
 			 * \brief Removes an output for this box
@@ -362,7 +365,8 @@ namespace OpenViBE
 			 * The default value -1 means that the setting
 			 * will be add to the end.
 			 */
-			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue, const uint32_t index = OV_Value_UndefinedIndexUInt,
+			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue,
+									const uint32_t index      = OV_Value_UndefinedIndexUInt,
 									const bool bModifiability = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**

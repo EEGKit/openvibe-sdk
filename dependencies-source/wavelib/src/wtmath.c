@@ -11,16 +11,13 @@ int upsamp(double* x, int lenx, int M, double* y)
 
 	if (M == 0)
 	{
-		for (i = 0; i < lenx; ++i)
-		{
-			y[i] = x[i];
-		}
+		for (i = 0; i < lenx; ++i) { y[i] = x[i]; }
 		return lenx;
 	}
 
 	const int N = M * (lenx - 1) + 1;
-	int j = 1;
-	int k = 0;
+	int j       = 1;
+	int k       = 0;
 
 	for (i = 0; i < N; ++i)
 	{
@@ -45,16 +42,13 @@ int upsamp2(double* x, int lenx, int M, double* y)
 
 	if (M == 0)
 	{
-		for (i = 0; i < lenx; ++i)
-		{
-			y[i] = x[i];
-		}
+		for (i = 0; i < lenx; ++i) { y[i] = x[i]; }
 		return lenx;
 	}
 
 	const int N = M * lenx;
-	int j = 1;
-	int k = 0;
+	int j       = 1;
+	int k       = 0;
 
 	for (i = 0; i < N; ++i)
 	{
@@ -78,10 +72,7 @@ int downsamp(double* x, int lenx, int M, double* y)
 	if (M < 0) { return -1; }
 	if (M == 0)
 	{
-		for (i = 0; i < lenx; ++i)
-		{
-			y[i] = x[i];
-		}
+		for (i = 0; i < lenx; ++i) { y[i] = x[i]; }
 		return lenx;
 	}
 
@@ -125,10 +116,10 @@ int per_ext(double* sig, int len, int a, double* oup)
 	}
 	for (i = 0; i < a; ++i)
 	{
-		const double temp1      = oup[a + i];
-		const double temp2      = oup[a + len2 - 1 - i];
-		oup[a - 1 - i]    = temp2;
-		oup[len2 + a + i] = temp1;
+		const double temp1 = oup[a + i];
+		const double temp2 = oup[a + len2 - 1 - i];
+		oup[a - 1 - i]     = temp2;
+		oup[len2 + a + i]  = temp1;
 	}
 	return len2;
 }
@@ -158,10 +149,10 @@ int symm_ext(double* sig, int len, int a, double* oup)
 	const int len2 = len;
 	for (i = 0; i < a; ++i)
 	{
-		const double temp1      = oup[a + i];
-		const double temp2      = oup[a + len2 - 1 - i];
-		oup[a - 1 - i]    = temp1;
-		oup[len2 + a + i] = temp2;
+		const double temp1 = oup[a + i];
+		const double temp2 = oup[a + len2 - 1 - i];
+		oup[a - 1 - i]     = temp1;
+		oup[len2 + a + i]  = temp2;
 	}
 
 	return len2;
@@ -246,10 +237,7 @@ static double entropy_t(double* x, int N, double t)
 	for (int i = 0; i < N; ++i)
 	{
 		const double x2 = fabs(x[i]);
-		if (x2 > t)
-		{
-			val += 1;
-		}
+		if (x2 > t) { val += 1; }
 	}
 
 	return val;

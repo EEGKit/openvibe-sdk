@@ -17,10 +17,8 @@ namespace OpenViBE
 				return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
 			}
 
-			IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename) override
-			{
-				return new CKernelContext(&rMasterKernelContext, rApplicationName, rConfigurationFilename);
-			}
+			IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename)
+			override { return new CKernelContext(&rMasterKernelContext, rApplicationName, rConfigurationFilename); }
 
 			void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
 			CString getName() const override { return CString("OpenViBE Kernel Implementation"); }

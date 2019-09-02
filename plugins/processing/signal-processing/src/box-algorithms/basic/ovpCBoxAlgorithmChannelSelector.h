@@ -50,7 +50,8 @@ namespace OpenViBEPlugins
 				box.getInputType(0, typeID);
 				box.setOutputType(0, typeID);
 
-				OV_ERROR_KRF("Invalid output type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadOutput);
+				OV_ERROR_KRF("Invalid output type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
+							 OpenViBE::Kernel::ErrorType::BadOutput);
 				return true;
 			}
 
@@ -67,7 +68,8 @@ namespace OpenViBEPlugins
 				box.getOutputType(0, typeID);
 				box.setInputType(0, typeID);
 
-				OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadInput);
+				OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
+							 OpenViBE::Kernel::ErrorType::BadInput);
 			}
 
 			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
@@ -83,12 +85,10 @@ namespace OpenViBEPlugins
 					box.getSettingValue(1, l_sSelectionMethod);
 					box.getSettingType(1, l_oSelectionEnumIdentifier);
 
-					const OpenViBE::CIdentifier l_oSelectionMethodIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(l_oSelectionEnumIdentifier, l_sSelectionMethod);
+					const OpenViBE::CIdentifier l_oSelectionMethodIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(
+						l_oSelectionEnumIdentifier, l_sSelectionMethod);
 
-					if (l_oSelectionMethodIdentifier == OVP_TypeId_SelectionMethod_Reject)
-					{
-						l_sChannels = OpenViBE::CString("!") + l_sChannels;
-					}
+					if (l_oSelectionMethodIdentifier == OVP_TypeId_SelectionMethod_Reject) { l_sChannels = OpenViBE::CString("!") + l_sChannels; }
 					box.setName(l_sChannels);
 				}
 				return true;
@@ -105,10 +105,7 @@ namespace OpenViBEPlugins
 						m_bHasUserSetName = false;
 					}
 				}
-				else
-				{
-					m_bHasUserSetName = true;
-				}
+				else { m_bHasUserSetName = true; }
 				return true;
 			}
 
@@ -132,7 +129,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Select a subset of signal channels"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Selection can be based on channel name (case-sensitive) or index starting from 0"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Selection can be based on channel name (case-sensitive) or index starting from 0");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Channels"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

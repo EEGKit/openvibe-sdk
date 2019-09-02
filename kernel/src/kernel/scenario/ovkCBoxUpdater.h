@@ -16,9 +16,9 @@ namespace OpenViBE
 	{
 		typedef struct _InterfacorRequest
 		{
-			uint32_t index             = OV_Value_UndefinedIndexUInt;
-			CIdentifier identifier     = OV_UndefinedIdentifier;
-			CIdentifier typeID = OV_UndefinedIdentifier;
+			uint32_t index         = OV_Value_UndefinedIndexUInt;
+			CIdentifier identifier = OV_UndefinedIdentifier;
+			CIdentifier typeID     = OV_UndefinedIdentifier;
 			CString name;
 			bool toBeRemoved;
 
@@ -37,7 +37,10 @@ namespace OpenViBE
 
 			bool initialize();
 
-			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(BoxInterfacorType interfacorType) const { return m_OriginalToUpdatedCorrespondence.at(interfacorType); }
+			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(BoxInterfacorType interfacorType) const
+			{
+				return m_OriginalToUpdatedCorrespondence.at(interfacorType);
+			}
 
 			IBox& getUpdatedBox() { return *m_UpdatedBox; }
 
@@ -62,7 +65,8 @@ namespace OpenViBE
 
 		private:
 
-			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name);
+			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
+											   const CString& name);
 			bool updateInterfacors(BoxInterfacorType interfacorType);
 
 			/**

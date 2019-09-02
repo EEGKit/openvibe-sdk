@@ -11,8 +11,10 @@ namespace OpenViBE
 		public:
 
 			CBoxProto(const IKernelContext& rKernelContext, IBox& box);
-			bool addInput(const CString& sName, const CIdentifier& typeID, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
-			bool addOutput(const CString& sName, const CIdentifier& typeID, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+			bool addInput(const CString& sName, const CIdentifier& typeID, const CIdentifier& oIdentifier = OV_UndefinedIdentifier,
+						  const bool bNotify                                                              = true) override;
+			bool addOutput(const CString& sName, const CIdentifier& typeID, const CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+						   const bool bNotify                                                              = true) override;
 
 			//virtual bool addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue); 
 			bool addSetting(const CString& sName, const CIdentifier& typeID, const CString& sDefaultValue,

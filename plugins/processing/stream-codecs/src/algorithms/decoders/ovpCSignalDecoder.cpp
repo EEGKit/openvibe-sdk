@@ -56,15 +56,9 @@ void CSignalDecoder::processChildData(const void* buffer, const uint64_t size)
 	if ((l_rTop == OVTK_NodeId_Header_Signal)
 		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate))
 	{
-		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)
-		{
-			op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size);
-		}
+		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate) { op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
 	}
-	else
-	{
-		CStreamedMatrixDecoder::processChildData(buffer, size);
-	}
+	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CSignalDecoder::closeChild()

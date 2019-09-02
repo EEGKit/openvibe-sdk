@@ -129,7 +129,7 @@ namespace Communication
 
 	private:
 		EMessageType m_Type;
-		uint64_t m_Id = 0;
+		uint64_t m_Id   = 0;
 		uint64_t m_Size = 0;
 
 		static const size_t s_TypeIndex   = 0;
@@ -171,7 +171,12 @@ namespace Communication
 	public:
 
 		CommunicationProtocolVersionMessage() { m_IsValid = false; }
-		CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion) : m_MinorVersion(minorVersion), m_MajorVersion(majorVersion) { m_IsValid = true; }
+
+		CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion) : m_MinorVersion(minorVersion), m_MajorVersion(majorVersion)
+		{
+			m_IsValid = true;
+		}
+
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 		EMessageType getMessageType() const override { return MessageType_ProtocolVersion; }
@@ -182,10 +187,10 @@ namespace Communication
 		uint8_t m_MinorVersion = 0;
 		uint8_t m_MajorVersion = 0;
 
-		static const size_t s_MajorIndex = 0;
-		static const size_t s_MajorSize  = sizeof(uint8_t);
-		static const size_t s_MinorIndex = s_MajorIndex + s_MajorSize;
-		static const size_t s_MinorSize  = sizeof(uint8_t);
+		static const size_t s_MajorIndex  = 0;
+		static const size_t s_MajorSize   = sizeof(uint8_t);
+		static const size_t s_MinorIndex  = s_MajorIndex + s_MajorSize;
+		static const size_t s_MinorSize   = sizeof(uint8_t);
 		static const size_t s_MinimumSize = s_MajorSize + s_MinorSize;
 	};
 
@@ -232,7 +237,7 @@ namespace Communication
 		std::string getValue() const { return m_Value; }
 
 	private:
-		uint32_t m_Id = 0;
+		uint32_t m_Id   = 0;
 		uint64_t m_Type = 0;
 		std::string m_Name;
 		std::string m_Value;
@@ -272,13 +277,13 @@ namespace Communication
 		std::vector<InputOutput> m_Outputs;
 		std::vector<Parameter> m_Parameters;
 
-		static const size_t s_InputCountIndex = 0;
-		static const size_t s_InputCountSize  = sizeof(uint32_t);
-		static const size_t s_OutputCountIndex = s_InputCountIndex + s_InputCountSize;
-		static const size_t s_OutputCountSize  = sizeof(uint32_t);
+		static const size_t s_InputCountIndex     = 0;
+		static const size_t s_InputCountSize      = sizeof(uint32_t);
+		static const size_t s_OutputCountIndex    = s_InputCountIndex + s_InputCountSize;
+		static const size_t s_OutputCountSize     = sizeof(uint32_t);
 		static const size_t s_ParameterCountIndex = s_OutputCountIndex + s_OutputCountSize;
 		static const size_t s_ParameterCountSize  = sizeof(uint32_t);
-		static const size_t s_MinimumSize = s_InputCountSize + s_OutputCountSize + s_ParameterCountSize;
+		static const size_t s_MinimumSize         = s_InputCountSize + s_OutputCountSize + s_ParameterCountSize;
 	};
 
 	/**
@@ -300,11 +305,11 @@ namespace Communication
 		ELogLevel m_Type;
 		std::string m_Message;
 
-		static const size_t s_TypeIndex = 0;
-		static const size_t s_TypeSize  = sizeof(ELogLevel);
-		static const size_t s_SizeIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_SizeSize  = sizeof(uint32_t);
-		static const size_t s_NameIndex = s_SizeIndex + s_SizeSize;
+		static const size_t s_TypeIndex   = 0;
+		static const size_t s_TypeSize    = sizeof(ELogLevel);
+		static const size_t s_SizeIndex   = s_TypeIndex + s_TypeSize;
+		static const size_t s_SizeSize    = sizeof(uint32_t);
+		static const size_t s_NameIndex   = s_SizeIndex + s_SizeSize;
 		static const size_t s_MinimumSize = s_TypeSize + s_SizeSize;
 	};
 
@@ -329,9 +334,9 @@ namespace Communication
 		std::shared_ptr<const std::vector<uint8_t>> getEBML() const { return m_EBML; }
 
 	private:
-		uint32_t m_IOIndex = 0;
+		uint32_t m_IOIndex   = 0;
 		uint64_t m_StartTime = 0;
-		uint64_t m_EndTime = 0;
+		uint64_t m_EndTime   = 0;
 
 		std::shared_ptr<const std::vector<uint8_t>> m_EBML;
 
@@ -363,7 +368,7 @@ namespace Communication
 
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
-	
+
 		EMessageType getMessageType() const override { return MessageType_Error; }
 		EError getType() const { return m_Type; }
 		uint64_t getGuiltyId() const { return m_GuiltyId; }
@@ -407,8 +412,8 @@ namespace Communication
 	private:
 		uint64_t m_Time = 0;
 
-		static const size_t s_TimeIndex = 0;
-		static const size_t s_TimeSize  = sizeof(uint64_t);
+		static const size_t s_TimeIndex   = 0;
+		static const size_t s_TimeSize    = sizeof(uint64_t);
 		static const size_t s_MinimumSize = s_TimeSize;
 	};
 

@@ -20,7 +20,7 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 	double* temp2 = (double*)malloc(sizeof(double) * L);
 
 	const double delta = (ub - lb) / N;
-	int j        = -N;
+	int j              = -N;
 	const double den   = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
@@ -89,7 +89,7 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 	fft_data* inpt = (fft_data*)malloc(sizeof(fft_data) * N);
 
 	const double delta = (ub - lb) / N;
-	int j        = -N;
+	int j              = -N;
 	const double den   = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
@@ -233,10 +233,7 @@ double gamma(double x)
 
 		if (oup != 0.0)
 		{
-			if (yi != fix(yi * .5) * 2.)
-			{
-				swi = 1;
-			}
+			if (yi != fix(yi * .5) * 2.) { swi = 1; }
 			fact = -pi / sin(pi * oup);
 			y += 1.;
 		}
@@ -245,10 +242,7 @@ double gamma(double x)
 
 	if (y < eps)
 	{
-		if (y >= xninf)
-		{
-			oup = 1.0 / y;
-		}
+		if (y >= xninf) { oup = 1.0 / y; }
 		else { return xinf; }
 	}
 	else if (y < 12.)
@@ -274,10 +268,7 @@ double gamma(double x)
 		}
 		oup = nsum / dsum + 1.;
 
-		if (yi < y)
-		{
-			oup /= yi;
-		}
+		if (yi < y) { oup /= yi; }
 		else if (yi > y)
 		{
 			for (i = 0; i < n; ++i)
@@ -291,12 +282,9 @@ double gamma(double x)
 	{
 		if (y <= xmax)
 		{
-			const double y2  = y * y;
-			double sum = c[6];
-			for (i = 0; i < 6; ++i)
-			{
-				sum = sum / y2 + c[i];
-			}
+			const double y2 = y * y;
+			double sum      = c[6];
+			for (i = 0; i < 6; ++i) { sum = sum / y2 + c[i]; }
 			sum = sum / y - y + spi;
 			sum += (y - .5) * log(y);
 			oup = exp(sum);

@@ -64,8 +64,10 @@ namespace OpenViBEPlugins
 			{
 				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa, "Frequency abscissa", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa, "Frequency abscissa", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
 
 				return true;
 			}

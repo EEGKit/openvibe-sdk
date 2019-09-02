@@ -82,35 +82,17 @@ bool __hostToLittleEndian(const T& value, uint8_t* buffer)
 // ________________________________________________________________________________________________________________
 //
 
-bool Memory::hostToLittleEndian(const uint16_t value, uint8_t* buffer)
-{
-	return __hostToLittleEndian<uint16_t>(value, buffer);
-}
+bool Memory::hostToLittleEndian(const uint16_t value, uint8_t* buffer) { return __hostToLittleEndian<uint16_t>(value, buffer); }
 
-bool Memory::hostToLittleEndian(const uint32_t value, uint8_t* buffer)
-{
-	return __hostToLittleEndian<uint32_t>(value, buffer);
-}
+bool Memory::hostToLittleEndian(const uint32_t value, uint8_t* buffer) { return __hostToLittleEndian<uint32_t>(value, buffer); }
 
-bool Memory::hostToLittleEndian(const uint64_t value, uint8_t* buffer)
-{
-	return __hostToLittleEndian<uint64_t>(value, buffer);
-}
+bool Memory::hostToLittleEndian(const uint64_t value, uint8_t* buffer) { return __hostToLittleEndian<uint64_t>(value, buffer); }
 
-bool Memory::hostToLittleEndian(const int16_t value, uint8_t* buffer)
-{
-	return __hostToLittleEndian<int16_t>(value, buffer);
-}
+bool Memory::hostToLittleEndian(const int16_t value, uint8_t* buffer) { return __hostToLittleEndian<int16_t>(value, buffer); }
 
-bool Memory::hostToLittleEndian(const int value, uint8_t* buffer)
-{
-	return __hostToLittleEndian<int>(value, buffer);
-}
+bool Memory::hostToLittleEndian(const int value, uint8_t* buffer) { return __hostToLittleEndian<int>(value, buffer); }
 
-bool Memory::hostToLittleEndian(const int64_t value, uint8_t* buffer)
-{
-	return __hostToLittleEndian<int64_t>(value, buffer);
-}
+bool Memory::hostToLittleEndian(const int64_t value, uint8_t* buffer) { return __hostToLittleEndian<int64_t>(value, buffer); }
 
 bool Memory::hostToLittleEndian(const float value, uint8_t* buffer)
 {
@@ -136,35 +118,17 @@ bool Memory::hostToLittleEndian(const long double value, uint8_t* buffer)
 // ________________________________________________________________________________________________________________
 //
 
-bool Memory::hostToBigEndian(const uint16_t value, uint8_t* buffer)
-{
-	return __hostToBigEndian<uint16_t>(value, buffer);
-}
+bool Memory::hostToBigEndian(const uint16_t value, uint8_t* buffer) { return __hostToBigEndian<uint16_t>(value, buffer); }
 
-bool Memory::hostToBigEndian(const uint32_t value, uint8_t* buffer)
-{
-	return __hostToBigEndian<uint32_t>(value, buffer);
-}
+bool Memory::hostToBigEndian(const uint32_t value, uint8_t* buffer) { return __hostToBigEndian<uint32_t>(value, buffer); }
 
-bool Memory::hostToBigEndian(const uint64_t value, uint8_t* buffer)
-{
-	return __hostToBigEndian<uint64_t>(value, buffer);
-}
+bool Memory::hostToBigEndian(const uint64_t value, uint8_t* buffer) { return __hostToBigEndian<uint64_t>(value, buffer); }
 
-bool Memory::hostToBigEndian(const int16_t value, uint8_t* buffer)
-{
-	return __hostToBigEndian<int16_t>(value, buffer);
-}
+bool Memory::hostToBigEndian(const int16_t value, uint8_t* buffer) { return __hostToBigEndian<int16_t>(value, buffer); }
 
-bool Memory::hostToBigEndian(const int value, uint8_t* buffer)
-{
-	return __hostToBigEndian<int>(value, buffer);
-}
+bool Memory::hostToBigEndian(const int value, uint8_t* buffer) { return __hostToBigEndian<int>(value, buffer); }
 
-bool Memory::hostToBigEndian(const int64_t value, uint8_t* buffer)
-{
-	return __hostToBigEndian<int64_t>(value, buffer);
-}
+bool Memory::hostToBigEndian(const int64_t value, uint8_t* buffer) { return __hostToBigEndian<int64_t>(value, buffer); }
 
 bool Memory::hostToBigEndian(const float value, uint8_t* buffer)
 {
@@ -189,35 +153,17 @@ bool Memory::hostToBigEndian(const long double /*value*/, uint8_t* /*buffer*/)
 // ________________________________________________________________________________________________________________
 //
 
-bool Memory::littleEndianToHost(const uint8_t* buffer, uint16_t* value)
-{
-	return __littleEndianToHost<uint16_t>(buffer, value);
-}
+bool Memory::littleEndianToHost(const uint8_t* buffer, uint16_t* value) { return __littleEndianToHost<uint16_t>(buffer, value); }
 
-bool Memory::littleEndianToHost(const uint8_t* buffer, uint32_t* value)
-{
-	return __littleEndianToHost<uint32_t>(buffer, value);
-}
+bool Memory::littleEndianToHost(const uint8_t* buffer, uint32_t* value) { return __littleEndianToHost<uint32_t>(buffer, value); }
 
-bool Memory::littleEndianToHost(const uint8_t* buffer, uint64_t* value)
-{
-	return __littleEndianToHost<uint64_t>(buffer, value);
-}
+bool Memory::littleEndianToHost(const uint8_t* buffer, uint64_t* value) { return __littleEndianToHost<uint64_t>(buffer, value); }
 
-bool Memory::littleEndianToHost(const uint8_t* buffer, int16_t* value)
-{
-	return __littleEndianToHost<int16_t>(buffer, value);
-}
+bool Memory::littleEndianToHost(const uint8_t* buffer, int16_t* value) { return __littleEndianToHost<int16_t>(buffer, value); }
 
-bool Memory::littleEndianToHost(const uint8_t* buffer, int* value)
-{
-	return __littleEndianToHost<int>(buffer, value);
-}
+bool Memory::littleEndianToHost(const uint8_t* buffer, int* value) { return __littleEndianToHost<int>(buffer, value); }
 
-bool Memory::littleEndianToHost(const uint8_t* buffer, int64_t* value)
-{
-	return __littleEndianToHost<int64_t>(buffer, value);
-}
+bool Memory::littleEndianToHost(const uint8_t* buffer, int64_t* value) { return __littleEndianToHost<int64_t>(buffer, value); }
 
 bool Memory::littleEndianToHost(const uint8_t* buffer, float* value)
 {
@@ -244,35 +190,17 @@ bool Memory::littleEndianToHost(const uint8_t* /*buffer*/, long double* /*value*
 // ________________________________________________________________________________________________________________
 //
 
-bool Memory::bigEndianToHost(const uint8_t* buffer, uint16_t* value)
-{
-	return __bigEndianToHost<uint16_t>(buffer, value);
-}
+bool Memory::bigEndianToHost(const uint8_t* buffer, uint16_t* value) { return __bigEndianToHost<uint16_t>(buffer, value); }
 
-bool Memory::bigEndianToHost(const uint8_t* buffer, uint32_t* value)
-{
-	return __bigEndianToHost<uint32_t>(buffer, value);
-}
+bool Memory::bigEndianToHost(const uint8_t* buffer, uint32_t* value) { return __bigEndianToHost<uint32_t>(buffer, value); }
 
-bool Memory::bigEndianToHost(const uint8_t* buffer, uint64_t* value)
-{
-	return __bigEndianToHost<uint64_t>(buffer, value);
-}
+bool Memory::bigEndianToHost(const uint8_t* buffer, uint64_t* value) { return __bigEndianToHost<uint64_t>(buffer, value); }
 
-bool Memory::bigEndianToHost(const uint8_t* buffer, int16_t* value)
-{
-	return __bigEndianToHost<int16_t>(buffer, value);
-}
+bool Memory::bigEndianToHost(const uint8_t* buffer, int16_t* value) { return __bigEndianToHost<int16_t>(buffer, value); }
 
-bool Memory::bigEndianToHost(const uint8_t* buffer, int* value)
-{
-	return __bigEndianToHost<int>(buffer, value);
-}
+bool Memory::bigEndianToHost(const uint8_t* buffer, int* value) { return __bigEndianToHost<int>(buffer, value); }
 
-bool Memory::bigEndianToHost(const uint8_t* buffer, int64_t* value)
-{
-	return __bigEndianToHost<int64_t>(buffer, value);
-}
+bool Memory::bigEndianToHost(const uint8_t* buffer, int64_t* value) { return __bigEndianToHost<int64_t>(buffer, value); }
 
 bool Memory::bigEndianToHost(const uint8_t* buffer, float* value)
 {

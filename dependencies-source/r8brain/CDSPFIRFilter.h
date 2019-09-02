@@ -126,41 +126,23 @@ namespace r8b
 		void unref();
 
 	private:
-		double ReqNormFreq  = 0; ///< Required normalized frequency, 0 to 1 inclusive.
-		///<
-		double ReqTransBand = 0; ///< Required transition band in percent, as passed
-		///< by the user.
-		///<
-		double ReqAtten     = 0; ///< Required stop-band attenuation in decibel, as passed
-		///< by the user (positive value).
-		///<
-		EDSPFilterPhaseResponse ReqPhase; ///< Required filter's phase response.
-		///<
-		double ReqGain      = 0; ///< Required overall filter's gain.
-		///<
-		CDSPFIRFilter* Next = nullptr; ///< Next FIR filter in cache's list.
-		///<
-		int RefCount        = 0; ///< The number of references made to *this FIR filter.
-		///<
-		bool IsZeroPhase; ///< "True" if kernel block of *this filter has
-		///< zero-phase response.
-		///<
-		int Latency        = 0; ///< Filter's latency in samples (integer part).
-		///<
-		double LatencyFrac = 0; ///< Filter's latency in samples (fractional part).
-		///<
-		int KernelLen      = 0; ///< Filter kernel length, in samples.
-		///<
-		int BlockLenBits   = 0; ///< Block length used to store *this FIR filter,
-		///< expressed as Nth power of 2. This value is used directly by the
-		///< convolver.
-		///<
-		CFixedBuffer<double> KernelBlock; ///< FIR filter buffer, capacity
-		///< equals to 1 << ( BlockLenBits + 1 ). Second part of the buffer
-		///< contains zero-padding to allow alias-free convolution.
-		///<
+		double ReqNormFreq               = 0; ///< Required normalized frequency, 0 to 1 inclusive.
+		double ReqTransBand              = 0; ///< Required transition band in percent, as passed by the user.
+		double ReqAtten                  = 0; ///< Required stop-band attenuation in decibel, as passed by the user (positive value).
+		EDSPFilterPhaseResponse ReqPhase = fprLinearPhase; ///< Required filter's phase response.
+		double ReqGain                   = 0; ///< Required overall filter's gain.
+		CDSPFIRFilter* Next              = nullptr; ///< Next FIR filter in cache's list.
+		int RefCount                     = 1; ///< The number of references made to *this FIR filter.
+		bool IsZeroPhase                 = false; ///< "True" if kernel block of *this filter has zero-phase response. 
+		int Latency                      = 0; ///< Filter's latency in samples (integer part). 
+		double LatencyFrac               = 0; ///< Filter's latency in samples (fractional part).
+		int KernelLen                    = 0; ///< Filter kernel length, in samples.
+		int BlockLenBits                 =
+				0; ///< Block length used to store *this FIR filter, expressed as Nth power of 2. This value is used directly by the convolver.
+		CFixedBuffer<double>
+		KernelBlock; ///< FIR filter buffer, capacity equals to 1 << ( BlockLenBits + 1 ). Second part of the buffer contains zero-padding to allow alias-free convolution.
 
-		CDSPFIRFilter() : RefCount(1) { }
+		CDSPFIRFilter() { }
 
 		/**
 		 * Function builds filter kernel based on the "Req" parameters.
@@ -287,8 +269,10 @@ namespace r8b
 				atten -= AttenCorrs[AttenCorr] / AttenCorrScale;
 			}
 
-			double pwr = 7.43932822146293e-8 * sqr(atten) + 0.000102747434588003 * cos(0.00785021930010397 * atten) * cos(0.633854318781239 + 0.103208573657699 * atten)
-						 - 0.00798132247867036 - 0.000903555213543865 * atten - 0.0969365532127236 * exp(0.0779275237937911 * atten) - 1.37304948662012e-5 * atten * cos(0.00785021930010397 * atten);
+			double pwr = 7.43932822146293e-8 * sqr(atten) + 0.000102747434588003 * cos(0.00785021930010397 * atten) * cos(
+							 0.633854318781239 + 0.103208573657699 * atten)
+						 - 0.00798132247867036 - 0.000903555213543865 * atten - 0.0969365532127236 * exp(0.0779275237937911 * atten) - 1.37304948662012e-5 *
+						 atten * cos(0.00785021930010397 * atten);
 
 			if (pwr <= 0.067665322581)
 			{
@@ -297,16 +281,23 @@ namespace r8b
 					hl  = 2.6778150875894 / tb + 300.547590563091 * atan(atan(2.68959772209918 * pwr)) / (5.5099277187035 * tb - tb * tanh(cos(asinh(atten))));
 					fo1 = 0.987205355829873 * tb + 1.00011788929851 * atan2(-0.321432067051302 - 6.19131357321578 * sqrt(pwr),
 																			hl + -1.14861472207245 / (hl - 14.1821147585957) + pow(0.9521145021664,
-																																   pow(atan2(1.12018764830637, tb), 2.10988901686912 * hl - 20.9691278378345)));
+																																   pow(
+																																	   atan2(
+																																		   1.12018764830637,
+																																		   tb),
+																																	   2.10988901686912 * hl -
+																																	   20.9691278378345)));
 				}
 				else if (tb >= 0.10)
 				{
-					hl  = (1.56688617018066 + 142.064321294568 * pwr + 0.00419441117131136 * cos(243.633511747297 * pwr) - 0.022953443903576 * atten - 0.026629568860284 * cos(127.715550622571 * pwr)) / tb;
+					hl = (1.56688617018066 + 142.064321294568 * pwr + 0.00419441117131136 * cos(243.633511747297 * pwr) - 0.022953443903576 * atten -
+						  0.026629568860284 * cos(127.715550622571 * pwr)) / tb;
 					fo1 = 0.982299356642411 * tb + 0.999441744774215 * asinh((-0.361783054039583 - 5.80540593623676 * sqrt(pwr)) / hl);
 				}
 				else
 				{
-					hl  = (2.45739657014937 + 269.183679500541 * pwr * cos(5.73225668178813 + atan2(cosh(0.988861169868941 - 17.2201556280744 * pwr), 1.08340138240431 * pwr))) / tb;
+					hl = (2.45739657014937 + 269.183679500541 * pwr * cos(
+							  5.73225668178813 + atan2(cosh(0.988861169868941 - 17.2201556280744 * pwr), 1.08340138240431 * pwr))) / tb;
 					fo1 = 2.291956939 * tb + 0.01942450693 * sqr(tb) * hl - 4.67538973161837 * pwr * tb - 1.668433124 * tb * pow(pwr, pwr);
 				}
 			}
@@ -324,8 +315,10 @@ namespace r8b
 				}
 				else
 				{
-					hl  = (1.15990238966306 * pwr - 5.02124037125213 * sqr(pwr) - 0.158676856669827 * atten * cos(1.1609073390614 * pwr - 6.33932586197475 * pwr * sqr(pwr))) / tb;
-					fo1 = 0.867344453126885 * tb + 0.052693817907757 * tb * log(pwr) + 0.0895511178735932 * tb * atan(59.7538527741309 * pwr) - 0.0745653568081453 * pwr * tb;
+					hl = (1.15990238966306 * pwr - 5.02124037125213 * sqr(pwr) - 0.158676856669827 * atten * cos(
+							  1.1609073390614 * pwr - 6.33932586197475 * pwr * sqr(pwr))) / tb;
+					fo1 = 0.867344453126885 * tb + 0.052693817907757 * tb * log(pwr) + 0.0895511178735932 * tb * atan(59.7538527741309 * pwr) -
+						  0.0745653568081453 * pwr * tb;
 				}
 			}
 
@@ -393,7 +386,8 @@ namespace r8b
 
 			ffto->forward(KernelBlock);
 
-			R8BCONSOLE("CDSPFIRFilter: flt_len=%i latency=%i nfreq=%.4f tb=%.1f att=%.1f gain=%.3f\n", KernelLen, Latency, ReqNormFreq, ReqTransBand, ReqAtten, ReqGain);
+			R8BCONSOLE("CDSPFIRFilter: flt_len=%i latency=%i nfreq=%.4f tb=%.1f att=%.1f gain=%.3f\n", KernelLen, Latency, ReqNormFreq, ReqTransBand, ReqAtten,
+					   ReqGain);
 		}
 	};
 

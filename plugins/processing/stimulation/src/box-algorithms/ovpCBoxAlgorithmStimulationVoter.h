@@ -71,7 +71,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs majority vote on the input stimuli"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Streaming"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

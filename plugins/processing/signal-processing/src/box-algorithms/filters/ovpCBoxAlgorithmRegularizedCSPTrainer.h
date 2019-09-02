@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 
 			virtual bool updateCov(uint32_t index);
 			virtual bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
-			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& vov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
+			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
 									std::vector<Eigen::VectorXd>& sortedEigenValues);
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_StimulationDecoder;
@@ -114,7 +114,8 @@ namespace OpenViBEPlugins
 				prototype.addSetting("Save filters as box config", OV_TypeId_Boolean, "false");
 
 				// Params of the cov algorithm; would be better to poll the params from the algorithm, however this is not straightforward to do
-				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod, OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
+				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod,
+									 OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
 				prototype.addSetting("Trace normalization", OV_TypeId_Boolean, "false");
 				prototype.addSetting("Shrinkage coefficient", OV_TypeId_Float, "0.0");
 				prototype.addSetting("Tikhonov coefficient", OV_TypeId_Float, "0.0");

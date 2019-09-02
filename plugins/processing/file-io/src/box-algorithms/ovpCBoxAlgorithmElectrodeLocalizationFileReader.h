@@ -20,11 +20,12 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >,
+									   OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader)
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pOVMatrixFileReader = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pOVMatrixFileReader                                                                        = nullptr;
 			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_pChannelLocalisationStreamEncoder = nullptr;
 
 			OpenViBE::CString m_sFilename;
@@ -39,7 +40,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Electrode localisation file reader"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Vincent Delannoy"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Loads files containing the normalized coordinates of an electrode set"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Loads files containing the normalized coordinates of an electrode set");
+			}
+
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/OpenViBE"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }

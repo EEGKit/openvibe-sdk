@@ -34,15 +34,9 @@ namespace OpenViBE
 		auto begin = str.find_first_not_of(" \t");
 		auto end   = str.find_last_not_of(" \t");
 
-		if (begin == std::string::npos)
-		{
-			begin = 0;
-		}
+		if (begin == std::string::npos) { begin = 0; }
 
-		if (end == std::string::npos)
-		{
-			end = str.size() - 1;
-		}
+		if (end == std::string::npos) { end = str.size() - 1; }
 
 		return str.substr(begin, end - begin + 1);
 	}
@@ -54,10 +48,7 @@ namespace OpenViBE
 		// split method is not used because only the first delimiter is of interest
 		auto split = str.find_first_of(":");
 
-		if (split == std::string::npos)
-		{
-			throw std::runtime_error("Impossible to convert " + str + " to token/value pair");
-		}
+		if (split == std::string::npos) { throw std::runtime_error("Impossible to convert " + str + " to token/value pair"); }
 
 		auto token = trim(str.substr(0, split));
 		auto val   = trim(str.substr(split + 1, str.size() - split - 1));
@@ -102,18 +93,9 @@ namespace OpenViBE
 		std::transform(str.begin(), str.end(), lowerStr.begin(), tolower);
 
 		bool result;
-		if (str == "false" || str == "0")
-		{
-			result = false;
-		}
-		else if (str == "true" || str == "1")
-		{
-			result = true;
-		}
-		else
-		{
-			throw std::runtime_error("Impossible to convert " + str + " to bool");
-		}
+		if (str == "false" || str == "0") { result = false; }
+		else if (str == "true" || str == "1") { result = true; }
+		else { throw std::runtime_error("Impossible to convert " + str + " to bool"); }
 
 		return result;
 	}
@@ -124,14 +106,8 @@ namespace OpenViBE
 	{
 		std::vector<std::string> vec;
 		// {token1, token2, token3 ...} pattern expected
-		if (str.size() >= 3 && str[0] == '{' && str[str.size() - 1] == '}')
-		{
-			vec = split(str.substr(1, str.length() - 2), ',');
-		}
-		else
-		{
-			throw std::runtime_error("Impossible to convert " + str + " to list");
-		}
+		if (str.size() >= 3 && str[0] == '{' && str[str.size() - 1] == '}') { vec = split(str.substr(1, str.length() - 2), ','); }
+		else { throw std::runtime_error("Impossible to convert " + str + " to list"); }
 
 		return vec;
 	}
@@ -152,10 +128,7 @@ namespace OpenViBE
 			// (a:b) pattern expected
 			// minimal regex std::regex("\\(.+:.+\\)")
 			if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') ||
-				split == std::string::npos)
-			{
-				throw std::runtime_error("Failed to parse token pair from value: " + rawToken);
-			}
+				split == std::string::npos) { throw std::runtime_error("Failed to parse token pair from value: " + rawToken); }
 
 			Token token;
 			token.first = trim(rawToken.substr(1, split - 1));
@@ -309,14 +282,8 @@ namespace OpenViBE
 			{
 				auto param = tokenize(line);
 
-				if (param.first == "ConfigurationFile")
-				{
-					command->configurationFile = param.second;
-				}
-				else
-				{
-					std::cout << "WARNING: Unknown parameter for LoadKernel command: " << param.first << std::endl;
-				}
+				if (param.first == "ConfigurationFile") { command->configurationFile = param.second; }
+				else { std::cout << "WARNING: Unknown parameter for LoadKernel command: " << param.first << std::endl; }
 			}
 		}
 
@@ -336,18 +303,9 @@ namespace OpenViBE
 			{
 				auto param = tokenize(line);
 
-				if (param.first == "ScenarioName")
-				{
-					command->scenarioName = param.second;
-				}
-				else if (param.first == "ScenarioFile")
-				{
-					command->scenarioFile = param.second;
-				}
-				else
-				{
-					std::cout << "WARNING: Unknown parameter for LoadScenario command: " << param.first << std::endl;
-				}
+				if (param.first == "ScenarioName") { command->scenarioName = param.second; }
+				else if (param.first == "ScenarioFile") { command->scenarioFile = param.second; }
+				else { std::cout << "WARNING: Unknown parameter for LoadScenario command: " << param.first << std::endl; }
 			}
 		}
 
@@ -367,18 +325,9 @@ namespace OpenViBE
 			{
 				auto param = tokenize(line);
 
-				if (param.first == "ScenarioName")
-				{
-					command->scenarioName = param.second;
-				}
-				else if (param.first == "TokenList")
-				{
-					command->tokenList = toTokenList(param.second);
-				}
-				else
-				{
-					std::cout << "WARNING: Unknown parameter for SetupScenario command: " << param.first << std::endl;
-				}
+				if (param.first == "ScenarioName") { command->scenarioName = param.second; }
+				else if (param.first == "TokenList") { command->tokenList = toTokenList(param.second); }
+				else { std::cout << "WARNING: Unknown parameter for SetupScenario command: " << param.first << std::endl; }
 			}
 		}
 
@@ -398,26 +347,11 @@ namespace OpenViBE
 			{
 				auto param = tokenize(line);
 
-				if (param.first == "ScenarioList")
-				{
-					command->scenarioList = toList(param.second);
-				}
-				else if (param.first == "PlayMode")
-				{
-					command->playMode = PlayerPlayMode(std::stoi(param.second));
-				}
-				else if (param.first == "MaximumExecutionTime")
-				{
-					command->maximumExecutionTime = std::stod(param.second);
-				}
-				else if (param.first == "TokenList")
-				{
-					command->tokenList = (toTokenList(param.second));
-				}
-				else
-				{
-					std::cout << "WARNING: Unknown parameter for RunScenario command: " << param.first << std::endl;
-				}
+				if (param.first == "ScenarioList") { command->scenarioList = toList(param.second); }
+				else if (param.first == "PlayMode") { command->playMode = PlayerPlayMode(std::stoi(param.second)); }
+				else if (param.first == "MaximumExecutionTime") { command->maximumExecutionTime = std::stod(param.second); }
+				else if (param.first == "TokenList") { command->tokenList = (toTokenList(param.second)); }
+				else { std::cout << "WARNING: Unknown parameter for RunScenario command: " << param.first << std::endl; }
 			}
 		}
 

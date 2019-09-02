@@ -18,10 +18,7 @@ namespace
 {
 	std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
 
-	std::string generateRstTitle(std::string title, int level)
-	{
-		return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
-	}
+	std::string generateRstTitle(std::string title, int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
@@ -47,7 +44,8 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 
 	if (!ofBoxIdx.good())
 	{
-		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/index-boxes.rst").c_str() << "]\n";
+		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/index-boxes.rst").c_str() <<
+				"]\n";
 		return false;
 	}
 
@@ -280,10 +278,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	{
 		m_DeprecatedBoxesCategories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString()));
 	}
-	else
-	{
-		m_Categories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString()));
-	}
+	else { m_Categories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString())); }
 
 	return true;
 }
@@ -325,16 +320,14 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 			}
 
 			for (itLastSplittedCategory = lastSplittedCategories.begin(), itSplittedCategory1 = splittedCategories.begin();
-				 itLastSplittedCategory != lastSplittedCategories.end() && itSplittedCategory1 != splittedCategories.end() && *itLastSplittedCategory == *itSplittedCategory1;
+				 itLastSplittedCategory != lastSplittedCategories.end() && itSplittedCategory1 != splittedCategories.end() && *itLastSplittedCategory == *
+				 itSplittedCategory1;
 				 ++itLastSplittedCategory, ++itSplittedCategory1) { }
 
 			for (; itSplittedCategory1 != splittedCategories.end(); ++itSplittedCategory1)
 			{
 				size_t level = 1;
-				for (itSplittedCategory2 = splittedCategories.begin(); itSplittedCategory2 != itSplittedCategory1; ++itSplittedCategory2)
-				{
-					level++;
-				}
+				for (itSplittedCategory2 = splittedCategories.begin(); itSplittedCategory2 != itSplittedCategory1; ++itSplittedCategory2) { level++; }
 				res += "\n\n"
 						+ generateRstTitle(*itSplittedCategory1, level)
 						+ "\n"

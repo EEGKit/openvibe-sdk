@@ -47,7 +47,8 @@ namespace OpenViBEPlugins
 			{
 				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
 
 				return true;
 			}

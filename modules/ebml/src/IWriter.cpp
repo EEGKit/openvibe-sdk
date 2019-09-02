@@ -37,7 +37,7 @@ inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* buffer, uint64
 	for (size_t i = 0; i < codeSizeLength; i++)
 	{
 		const size_t l_ulByteShift = codeSizeLength - i - 1;
-		size_t l_ulByte      = (l_ulByteShift >= 8 ? 0 : static_cast<unsigned char>((uiValue >> (l_ulByteShift * 8)) & 0xff));
+		size_t l_ulByte            = (l_ulByteShift >= 8 ? 0 : static_cast<unsigned char>((uiValue >> (l_ulByteShift * 8)) & 0xff));
 		l_ulByte |= (l_ulIthBit > 0 && l_ulIthBit <= 8 ? (1 << (8 - l_ulIthBit)) : 0);
 		l_ulIthBit -= 8;
 
@@ -76,8 +76,8 @@ namespace EBML
 			CIdentifier m_oIdentifier;
 			CWriterNode* m_pParentNode;
 			uint64_t m_ui64BufferLength = 0;
-			unsigned char* m_pBuffer = nullptr;
-			bool m_bBuffered = false;
+			unsigned char* m_pBuffer    = nullptr;
+			bool m_bBuffered            = false;
 			vector<CWriterNode*> m_vChildren;
 		};
 	} // namespace
@@ -106,7 +106,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	unsigned char pContentSize[10];
 	uint64_t contentSizeLength = sizeof(pContentSize);
 	uint64_t identifierLength  = sizeof(id);
-	const uint64_t contentSize       = getTotalContentSize(false);
+	const uint64_t contentSize = getTotalContentSize(false);
 
 	if (!getCodedBuffer(contentSize, pContentSize, &contentSizeLength))
 	{
@@ -122,23 +122,14 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	rWriterCallback.write(pContentSize, contentSizeLength);
 
 	if (m_vChildren.empty()) { rWriterCallback.write(m_pBuffer, m_ui64BufferLength); }
-	else
-	{
-		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); }
-	}
+	else { for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); } }
 }
 
 uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 {
 	uint64_t contentSize = 0;
 	if (m_vChildren.empty()) { contentSize = m_ui64BufferLength; }
-	else
-	{
-		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
-		{
-			contentSize += (*i)->getTotalContentSize(true);
-		}
-	}
+	else { for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
 
 	uint64_t l_ui64Result = contentSize;
 	if (bCountIdentifierAndSize)

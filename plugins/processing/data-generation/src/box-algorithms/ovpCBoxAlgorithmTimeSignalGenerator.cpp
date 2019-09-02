@@ -71,7 +71,8 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
-		uint64_t nextStepDate = ITimeArithmetics::timeToSampleCount(uint64_t(m_ui32SamplingFrequency), uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		uint64_t nextStepDate = ITimeArithmetics::timeToSampleCount(uint64_t(m_ui32SamplingFrequency),
+																	uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
 		while (m_ui32SentSampleCount + m_ui32GeneratedEpochSampleCount < nextStepDate)
 		{
 			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
@@ -94,7 +95,4 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 	return true;
 }
 
-uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency()
-{
-	return 128LL << 32;
-}
+uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency() { return 128LL << 32; }

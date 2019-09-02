@@ -49,40 +49,22 @@ namespace Dsp
 	{
 		const double minValue = toNativeValue(0);
 		const double maxValue = toNativeValue(1);
-		if (nativeValue < minValue)
-		{
-			nativeValue = minValue;
-		}
-		else if (nativeValue > maxValue)
-		{
-			nativeValue = maxValue;
-		}
+		if (nativeValue < minValue) { nativeValue = minValue; }
+		else if (nativeValue > maxValue) { nativeValue = maxValue; }
 		return nativeValue;
 	}
 
 	//------------------------------------------------------------------------------
 
-	double ParamInfo::Int_toControlValue(double nativeValue) const
-	{
-		return (nativeValue - m_arg1) / (m_arg2 - m_arg1);
-	}
+	double ParamInfo::Int_toControlValue(double nativeValue) const { return (nativeValue - m_arg1) / (m_arg2 - m_arg1); }
 
-	double ParamInfo::Int_toNativeValue(double controlValue) const
-	{
-		return std::floor(m_arg1 + controlValue * (m_arg2 - m_arg1) + 0.5);
-	}
+	double ParamInfo::Int_toNativeValue(double controlValue) const { return std::floor(m_arg1 + controlValue * (m_arg2 - m_arg1) + 0.5); }
 
 	//------------------------------------------------------------------------------
 
-	double ParamInfo::Real_toControlValue(double nativeValue) const
-	{
-		return (nativeValue - m_arg1) / (m_arg2 - m_arg1);
-	}
+	double ParamInfo::Real_toControlValue(double nativeValue) const { return (nativeValue - m_arg1) / (m_arg2 - m_arg1); }
 
-	double ParamInfo::Real_toNativeValue(double controlValue) const
-	{
-		return m_arg1 + controlValue * (m_arg2 - m_arg1);
-	}
+	double ParamInfo::Real_toNativeValue(double controlValue) const { return m_arg1 + controlValue * (m_arg2 - m_arg1); }
 
 	//------------------------------------------------------------------------------
 
@@ -104,15 +86,9 @@ namespace Dsp
 
 	//------------------------------------------------------------------------------
 
-	double ParamInfo::Pow2_toControlValue(double nativeValue) const
-	{
-		return ((log(nativeValue) / log(2.)) - m_arg1) / (m_arg2 - m_arg1);
-	}
+	double ParamInfo::Pow2_toControlValue(double nativeValue) const { return ((log(nativeValue) / log(2.)) - m_arg1) / (m_arg2 - m_arg1); }
 
-	double ParamInfo::Pow2_toNativeValue(double controlValue) const
-	{
-		return pow(2., (controlValue * (m_arg2 - m_arg1)) + m_arg1);
-	}
+	double ParamInfo::Pow2_toNativeValue(double controlValue) const { return pow(2., (controlValue * (m_arg2 - m_arg1)) + m_arg1); }
 
 	//------------------------------------------------------------------------------
 
@@ -141,18 +117,9 @@ namespace Dsp
 	{
 		const double af = fabs(nativeValue);
 		int prec;
-		if (af < 1)
-		{
-			prec = 3;
-		}
-		else if (af < 10)
-		{
-			prec = 2;
-		}
-		else
-		{
-			prec = 1;
-		}
+		if (af < 1) { prec = 3; }
+		else if (af < 10) { prec = 2; }
+		else { prec = 1; }
 		std::ostringstream os;
 		os << std::fixed << std::setprecision(prec) << nativeValue << " dB";
 		return os.str();
