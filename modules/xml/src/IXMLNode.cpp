@@ -14,10 +14,10 @@
 
 namespace XML
 {
-	class IXMLNodeImpl : public IXMLNode
+	class IXMLNodeImpl final : public IXMLNode
 	{
 	public:
-		explicit IXMLNodeImpl(const char* sName);
+		explicit IXMLNodeImpl(const char* name);
 		const char* getName() const override;
 		void release() override;
 
@@ -34,7 +34,7 @@ namespace XML
 		//Child
 		void addChild(IXMLNode* pChildNode) override;
 		IXMLNode* getChild(size_t iChildIndex) const override;
-		IXMLNode* getChildByName(const char* sName) const override;
+		IXMLNode* getChildByName(const char* name) const override;
 		size_t getChildCount() const override;
 
 		//XMl generation
@@ -59,14 +59,11 @@ namespace XML
 using namespace std;
 using namespace XML;
 
-IXMLNodeImpl::~IXMLNodeImpl()
-{
-	for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); }
-}
+IXMLNodeImpl::~IXMLNodeImpl() { for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); } }
 
 void IXMLNodeImpl::release() { delete this; }
 
-IXMLNodeImpl::IXMLNodeImpl(const char* sName): m_sNodeName(sName)
+IXMLNodeImpl::IXMLNodeImpl(const char* name): m_sNodeName(name)
 											   , m_sPCData("")
 											   , m_bHasPCData(false) {}
 
@@ -78,10 +75,7 @@ bool IXMLNodeImpl::addAttribute(const char* sAttributeName, const char* sAttribu
 	return true;
 }
 
-bool IXMLNodeImpl::hasAttribute(const char* sAttributeName) const
-{
-	return m_mAttibuteMap.count(sAttributeName) != 0;
-}
+bool IXMLNodeImpl::hasAttribute(const char* sAttributeName) const { return m_mAttibuteMap.count(sAttributeName) != 0; }
 
 const char* IXMLNodeImpl::getAttribute(const char* sAttributeName) const
 {
@@ -112,13 +106,12 @@ void IXMLNodeImpl::addChild(IXMLNode* pChildNode) { m_oNodeVector.push_back(pChi
 
 IXMLNode* IXMLNodeImpl::getChild(const size_t iChildIndex) const { return m_oNodeVector[iChildIndex]; }
 
-IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
+IXMLNode* IXMLNodeImpl::getChildByName(const char* name) const
 {
 	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode*>(*it);
-		if (strcmp(l_sTempNode->getName(), sName) == 0)
-			return l_sTempNode;
+		if (strcmp(l_sTempNode->getName(), name) == 0) return l_sTempNode;
 	}
 	return nullptr;
 }
@@ -132,15 +125,11 @@ std::string IXMLNodeImpl::sanitize(const string& sString) const
 	if (l_sRes.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = l_sRes.find("&", 0); i != string::npos; i = l_sRes.find("&", i + 1))
-			l_sRes.replace(i, 1, "&amp;");
+		for (i = l_sRes.find("&", 0); i != string::npos; i = l_sRes.find("&", i + 1)) l_sRes.replace(i, 1, "&amp;");
 		// other escape sequences
-		for (i = l_sRes.find("\"", 0); i != string::npos; i = l_sRes.find("\"", i + 1))
-			l_sRes.replace(i, 1, "&quot;");
-		for (i = l_sRes.find("<", 0); i != string::npos; i = l_sRes.find("<", i + 1))
-			l_sRes.replace(i, 1, "&lt;");
-		for (i = l_sRes.find(">", 0); i != string::npos; i = l_sRes.find(">", i + 1))
-			l_sRes.replace(i, 1, "&gt;");
+		for (i = l_sRes.find("\"", 0); i != string::npos; i = l_sRes.find("\"", i + 1)) l_sRes.replace(i, 1, "&quot;");
+		for (i = l_sRes.find("<", 0); i != string::npos; i = l_sRes.find("<", i + 1)) l_sRes.replace(i, 1, "&lt;");
+		for (i = l_sRes.find(">", 0); i != string::npos; i = l_sRes.find(">", i + 1)) l_sRes.replace(i, 1, "&gt;");
 	}
 	return l_sRes;
 }
@@ -194,4 +183,4 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 	return l_pRes;
 }
 
-OV_API IXMLNode* XML::createNode(const char* sName) { return new IXMLNodeImpl(sName); }
+OV_API IXMLNode* XML::createNode(const char* name) { return new IXMLNodeImpl(name); }

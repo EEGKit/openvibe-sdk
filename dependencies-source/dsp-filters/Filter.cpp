@@ -44,10 +44,7 @@ namespace Dsp
 
 		params.clear();
 
-		for (int i = 0; i < getNumParams(); ++i)
-		{
-			params[i] = getParamInfo(i).getDefaultValue();
-		}
+		for (int i = 0; i < getNumParams(); ++i) { params[i] = getParamInfo(i).getDefaultValue(); }
 
 		return params;
 	}

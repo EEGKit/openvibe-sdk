@@ -27,16 +27,16 @@
 
 namespace Socket
 {
-	class CConnectionSerial : public IConnectionSerial
+	class CConnectionSerial final : public IConnectionSerial
 	{
 	public:
-			
+
 #if defined TARGET_OS_Windows
 		CConnectionSerial() : m_pFile(nullptr) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		CConnectionSerial() : m_iFile(0) { }
 #endif
-		
+
 
 		bool open() override { return false; }	// Should never be used
 
@@ -69,20 +69,23 @@ namespace Socket
 			return true;
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut) const override
-		{
-			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
+		bool isReadyToSend(const uint32_t /*timeOut*/) const override
+		{
+			if (!this->isConnected()) { return false; }
 			return true;
-
+		}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
+		bool isReadyToSend(const uint32_t timeOut) const override
+		{
+			if (!this->isConnected()) { return false; }
 			fd_set  l_oOutputFileDescriptorSet;
 			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=ui32TimeOut/1000;
-			l_oTimeout.tv_usec=(ui32TimeOut%1000)*1000;
+			l_oTimeout.tv_sec=timeOut/1000;
+			l_oTimeout.tv_usec=(timeOut%1000)*1000;
 
 			FD_ZERO(&l_oOutputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oOutputFileDescriptorSet);
@@ -90,12 +93,12 @@ namespace Socket
 			if(!::select(m_iFile+1, nullptr, &l_oOutputFileDescriptorSet, nullptr, &l_oTimeout)) { return false; }
 
 			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
+			return false;
+	}
 
 #endif
-			return false;
-		}
 
-		bool isReadyToReceive(const uint32_t ui32TimeOut) const override
+		bool isReadyToReceive(const uint32_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -111,8 +114,8 @@ namespace Socket
 
 			fd_set  l_oInputFileDescriptorSet;
 			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=ui32TimeOut/1000;
-			l_oTimeout.tv_usec=(ui32TimeOut%1000)*1000;
+			l_oTimeout.tv_sec=timeOut/1000;
+			l_oTimeout.tv_usec=(timeOut%1000)*1000;
 
 			FD_ZERO(&l_oInputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oInputFileDescriptorSet);
@@ -187,7 +190,7 @@ namespace Socket
 			return false;
 		}
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -198,7 +201,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 			DWORD l_dwWritten = 0;
 
-			if (!WriteFile(m_pFile, pBuffer, ui32BufferSize, &l_dwWritten, nullptr))
+			if (!WriteFile(m_pFile, buffer, ui32BufferSize, &l_dwWritten, nullptr))
 			{
 				m_sLastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -216,7 +219,7 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::write(m_iFile, pBuffer, ui32BufferSize);
+			int l_iResult = ::write(m_iFile, buffer, ui32BufferSize);
 			if(l_iResult < 0)
 			{
 				m_sLastError = "Could not write on connection";
@@ -229,7 +232,7 @@ namespace Socket
 			return 0;
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -241,7 +244,7 @@ namespace Socket
 
 			DWORD l_dwRead = 0;
 
-			if (!ReadFile(m_pFile, pBuffer, ui32BufferSize, &l_dwRead, nullptr))
+			if (!ReadFile(m_pFile, buffer, ui32BufferSize, &l_dwRead, nullptr))
 			{
 				m_sLastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -259,7 +262,7 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::read(m_iFile, pBuffer, ui32BufferSize);
+			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
 			if (l_iResult < 0)
 			{
 				m_sLastError = "Could not read from connection";
@@ -272,9 +275,9 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
-			const char* p   = reinterpret_cast<const char*>(pBuffer);
+			const char* p            = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -286,9 +289,9 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
-			char* p         = reinterpret_cast<char*>(pBuffer);
+			char* p                  = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -388,7 +391,7 @@ namespace Socket
 			return true;
 		}
 
-		bool setTimeouts(unsigned long ui32DecisecondsTimeout) override
+		bool setTimeouts(const uint32_t decisecondsTimeout) override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -403,8 +406,8 @@ namespace Socket
 				return false;
 			}
 
-			l_Timeouts.ReadTotalTimeoutConstant  = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
-			l_Timeouts.WriteTotalTimeoutConstant = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
+			l_Timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
+			l_Timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
 
 			if (!SetCommTimeouts(m_pFile, &l_Timeouts))
 			{
@@ -423,7 +426,7 @@ namespace Socket
 				return false;
 			}
 
-			l_oTerminalAttributes.c_cc[VTIME] = ui32DecisecondsTimeout;
+			l_oTerminalAttributes.c_cc[VTIME] = decisecondsTimeout;
 
 			if (::tcsetattr(m_iFile, TCSAFLUSH, &l_oTerminalAttributes) != 0)
 			{
@@ -449,7 +452,7 @@ namespace Socket
 						  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
 						  error,
 						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-						  (LPTSTR)&l_sErrorText,                       // output
+						  LPTSTR(&l_sErrorText),                       // output
 						  0,                                           // minimum size for output buffer
 						  nullptr);                                       // arguments - see note
 			return l_sErrorText;

@@ -14,7 +14,8 @@ bool CBoxAlgorithmSpectrumAverage::initialize()
 	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 	m_pStreamDecoder->initialize();
 
-	m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
+	m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(
+		this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
 	m_pStreamEncoder->initialize();
 
 	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_InputParameterId_MemoryBufferToDecode));
@@ -47,7 +48,7 @@ bool CBoxAlgorithmSpectrumAverage::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSpectrumAverage::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmSpectrumAverage::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -56,12 +57,12 @@ bool CBoxAlgorithmSpectrumAverage::processInput(const uint32_t ui32InputIndex)
 bool CBoxAlgorithmSpectrumAverage::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
+		op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
@@ -93,10 +94,13 @@ bool CBoxAlgorithmSpectrumAverage::process()
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd))
+		{
+			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd);
+		}
 
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
+		boxContext.markInputAsDeprecated(0, i);
 	}
 
 	return true;

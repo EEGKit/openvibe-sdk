@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmEBMLStreamSpy : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, virtual public EBML::IReaderCallback
+		class CBoxAlgorithmEBMLStreamSpy final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, virtual public EBML::IReaderCallback
 		{
 		public:
 
@@ -25,11 +25,11 @@ namespace OpenViBEPlugins
 			void release() override;
 			bool initialize() override;
 			bool uninitialize() override;
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
+			void processChildData(const void* buffer, const uint64_t size) override;
 			void closeChild() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EBMLStreamSpy)
@@ -37,30 +37,30 @@ namespace OpenViBEPlugins
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* pBuffer, uint64_t ui64BufferSize);
+			void processBinaryBlock(const void* buffer, uint64_t size);
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
 			std::map<EBML::CIdentifier, std::string> m_vType;
-			uint64_t m_ui64ExpandValuesCount = 0;
-			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			EBML::IReader* m_pReader             = nullptr;
-			EBML::IReaderHelper* m_pReaderHelper = nullptr;
+			uint64_t m_ui64ExpandValuesCount        = 0;
+			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
+			EBML::IReader* m_pReader                = nullptr;
+			EBML::IReaderHelper* m_pReaderHelper    = nullptr;
 		};
 
-		class CBoxAlgorithmEBMLStreamSpyListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmEBMLStreamSpyListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& box)
 			{
 				char l_sName[1024];
 
-				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
 					sprintf(l_sName, "Spied EBML stream %u", i + 1);
-					rBox.setInputName(i, l_sName);
-					rBox.setInputType(i, OV_TypeId_EBMLStream);
+					box.setInputName(i, l_sName);
+					box.setInputType(i, OV_TypeId_EBMLStream);
 				}
 
 				return true;
@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmEBMLStreamSpyDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmEBMLStreamSpyDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -80,7 +80,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("EBML stream tree viewer"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This sample EBML stream analyzer prints the EBML tree structure to the console"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("This sample EBML stream analyzer prints the EBML tree structure to the console");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tools"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

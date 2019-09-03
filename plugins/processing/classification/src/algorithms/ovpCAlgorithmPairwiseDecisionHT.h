@@ -18,7 +18,7 @@ namespace OpenViBEPlugins
 		 *
 		 * Probability required
 		 */
-		class CAlgorithmPairwiseDecisionHT : virtual public CAlgorithmPairwiseDecision
+		class CAlgorithmPairwiseDecisionHT final : virtual public CAlgorithmPairwiseDecision
 		{
 		public:
 
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32ClassCount = 0;
 		};
 
-		class CAlgorithmPairwiseDecisionHTDesc : virtual public CAlgorithmPairwiseDecisionDesc
+		class CAlgorithmPairwiseDecisionHTDesc final : virtual public CAlgorithmPairwiseDecisionDesc
 		{
 		public:
 			void release() override { }

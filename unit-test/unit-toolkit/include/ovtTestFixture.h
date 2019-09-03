@@ -69,8 +69,7 @@ namespace OpenViBETest
 	struct ScopedTest
 	{
 		template <typename... Args>
-		ScopedTest(Args&&... args)
-			: fixture(new T(std::forward<Args>(args)...)) { fixture->setUp(); }
+		ScopedTest(Args&&... args) : fixture(new T(std::forward<Args>(args)...)) { fixture->setUp(); }
 
 		~ScopedTest() { fixture->tearDown(); }
 
@@ -80,4 +79,4 @@ namespace OpenViBETest
 
 		std::unique_ptr<T> fixture;
 	};
-}
+} // namespace OpenViBETest

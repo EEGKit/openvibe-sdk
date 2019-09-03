@@ -31,24 +31,24 @@ bool CChannelLocalisationDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }
-	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Header_ChannelLocalisation) { return true; }
+	if (identifier == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }
+	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
-void CChannelLocalisationDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CChannelLocalisationDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation) || (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) { }
-	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
+	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
-void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CChannelLocalisationDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -57,13 +57,10 @@ void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const ui
 	{
 		if (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)
 		{
-			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) ? true : false);
+			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false);
 		}
 	}
-	else
-	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, ui64BufferSize);
-	}
+	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CChannelLocalisationDecoder::closeChild()

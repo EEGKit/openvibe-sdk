@@ -13,17 +13,14 @@ bool CAlgorithmClassifierTrainer::process()
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train))
 	{
-		IMatrix* l_pFeatureVectorSet = ip_pFeatureVectorSet;
-		if (!l_pFeatureVectorSet)
+		IMatrix* featureVectorSet = ip_pFeatureVectorSet;
+		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
-		CFeatureVectorSet l_oFeatureVectorSetAdapter(*l_pFeatureVectorSet);
-		if (this->train(l_oFeatureVectorSetAdapter))
-		{
-			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true);
-		}
+		const CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
+		if (this->train(featureVectorSetAdapter)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
@@ -33,17 +30,14 @@ bool CAlgorithmClassifierTrainer::process()
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration))
 	{
-		IMemoryBuffer* l_pConfiguration = op_pConfiguration;
-		if (!l_pConfiguration)
+		IMemoryBuffer* configuration = op_pConfiguration;
+		if (!configuration)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Configuration memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 		}
-		l_pConfiguration->setSize(0, true);
-		if (this->saveConfiguration(*l_pConfiguration))
-		{
-			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true);
-		}
+		configuration->setSize(0, true);
+		if (this->saveConfiguration(*configuration)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);

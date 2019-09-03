@@ -12,11 +12,11 @@ using namespace OpenViBEToolkit;
 //                                                                                                                    *
 // ********************************************************************************************************************
 
-bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
+bool OpenViBEToolkit::initialize(const IKernelContext& ctx)
 {
-	ITypeManager& l_rTypeManager = rKernelContext.getTypeManager();
+	ITypeManager& l_rTypeManager = ctx.getTypeManager();
 
-	initializeStimulationList(rKernelContext);
+	initializeStimulationList(ctx);
 
 	// Register measurement units. See ovtk_defines.h for details.
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "?", OVTK_UNIT_Unspecified);
@@ -202,7 +202,8 @@ bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "cmH2O l-1s-1", OVTK_UNIT_Centimetre_Of_Water_Per_Litre_Per_Second);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "l2s-1", OVTK_UNIT_Litre_Squared_Per_Second);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "cmH2O %-1", OVTK_UNIT_Centimetre_Of_Water_Per_Percent);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "dyne s m-2 cm-5", OVTK_UNIT_Dyne_Seconds_Per_Square_Meter_Per_Centimetre_To_The_Power_Of_5);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "dyne s m-2 cm-5",
+											OVTK_UNIT_Dyne_Seconds_Per_Square_Meter_Per_Centimetre_To_The_Power_Of_5);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "mmHg %-1", OVTK_UNIT_Millimetres_Of_Mercury_Per_Percent);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "Pa %-1", OVTK_UNIT_Pascal_Per_Percent);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "B", OVTK_UNIT_Relative_Power_Decibel);
@@ -255,4 +256,4 @@ bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	return true;
 }
 
-bool OpenViBEToolkit::uninitialize(const IKernelContext& rKernelContext) { return true; }
+bool OpenViBEToolkit::uninitialize(const IKernelContext& /*ctx*/) { return true; }

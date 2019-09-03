@@ -52,10 +52,10 @@ namespace
 					  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
 					  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
 					  errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-					  (LPTSTR)&l_ErrorText,                        // output
+					  LPTSTR(&l_ErrorText),                        // output
 					  0,                                           // minimum size for output buffer
 					  nullptr
-					  );                                           // arguments - see note
+		);                                           // arguments - see note
 
 		return std::string(l_ErrorText);
 	}
@@ -102,7 +102,7 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 
 	if (symbolNameCheck != nullptr)
 	{
-		if (GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == nullptr)
+		if (GetProcAddress(HMODULE(m_Handle), symbolNameCheck) == nullptr)
 		{
 			this->unload();
 			this->setError(LogErrorCodes_InvalidSymbol, "Windows error: " + formatWindowsError(GetLastError()));
@@ -150,10 +150,11 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 
 	if (symbolNameCheck != nullptr)
 	{
-		if (GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == nullptr)
+		if (GetProcAddress(HMODULE(m_Handle), symbolNameCheck) == nullptr)
 		{
 			this->unload();
-			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error: " + formatWindowsError(GetLastError()));
+			this->setError(LogErrorCodes_InvalidSymbol,
+						   "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error: " + formatWindowsError(GetLastError()));
 			return false;
 		}
 	}
@@ -246,7 +247,8 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 #endif
 
 #if defined TARGET_OS_Windows
-bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck)
+bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath,
+									  const char* symbolNameCheck)
 {
 	char l_DLLPath[MAX_PATH];
 	DWORD l_Size = sizeof(l_DLLPath);
@@ -263,7 +265,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 		return false;
 	}
 
-	result = ::RegQueryValueEx(l_Key, registryKeyName, nullptr, nullptr, (unsigned char*)l_DLLPath, &l_Size);
+	result = ::RegQueryValueEx(l_Key, registryKeyName, nullptr, nullptr, reinterpret_cast<unsigned char*>(l_DLLPath), &l_Size);
 
 	if (result == ERROR_SUCCESS)
 	{
@@ -364,9 +366,9 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 }
 
 #ifdef TARGET_OS_Windows
-bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS& headers)
+bool CDynamicModule::getImageFileHeaders(const char* filename, IMAGE_NT_HEADERS& headers)
 {
-	HANDLE l_FileHandle = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	HANDLE l_FileHandle = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 	if (l_FileHandle == INVALID_HANDLE_VALUE) { return false; }
 

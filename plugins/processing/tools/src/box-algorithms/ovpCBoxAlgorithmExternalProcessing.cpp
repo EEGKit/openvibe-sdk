@@ -52,7 +52,8 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	m_Port = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	// Check that the port is not in the system range
-	OV_ERROR_UNLESS_KRF((m_Port >= 49152 && m_Port <= 65535) || (m_Port == 0), "Port [" << m_Port << "] is invalid. It must be either 0 or a number in the range 49152-65535.", ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF((m_Port >= 49152 && m_Port <= 65535) || (m_Port == 0),
+						"Port [" << m_Port << "] is invalid. It must be either 0 or a number in the range 49152-65535.", ErrorType::BadConfig);
 
 	// Settings
 	const IBox* staticBoxContext = this->getBoxAlgorithmContext()->getStaticBoxContext();
@@ -77,10 +78,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		CIdentifier type;
 		staticBoxContext->getInputType(i, type);
 
-		if (type == OV_TypeId_Stimulations)
-		{
-			m_StimulationDecoders[i].initialize(*this, i);
-		}
+		if (type == OV_TypeId_Stimulations) { m_StimulationDecoders[i].initialize(*this, i); }
 
 		CString name;
 		staticBoxContext->getInputName(i, name);
@@ -107,10 +105,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 	bool mustGenerateConnectionID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	if (mustGenerateConnectionID)
-	{
-		m_ConnectionID = generateConnectionID(32);
-	}
+	if (mustGenerateConnectionID) { m_ConnectionID = generateConnectionID(32); }
 	else
 	{
 		CString connectionIDSetting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
@@ -193,7 +188,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 	if (!m_HasReceivedEndMessage)
 	{
-		bool result = m_Messaging.close();
+		const bool result = m_Messaging.close();
 
 #ifdef TARGET_OS_Windows
 		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId > 0)
@@ -201,10 +196,10 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			DWORD exitCode;
 
 			// Wait for external process to stop by himself, terminate it if necessary
-			auto startTime = System::Time::zgetTime();
+			const auto startTime = System::Time::zgetTime();
 			while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
 			{
-				GetExitCodeProcess((HANDLE)m_ThirdPartyProgramProcessId, &exitCode);
+				GetExitCodeProcess(HANDLE(m_ThirdPartyProgramProcessId), &exitCode);
 
 				if (exitCode != STILL_ACTIVE) { break; }
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -213,7 +208,8 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 			if (exitCode == STILL_ACTIVE)
 			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess((HANDLE)m_ThirdPartyProgramProcessId, EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
+				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.",
+									ErrorType::Unknown);
 			}
 			else if (exitCode != 0)
 			{
@@ -260,9 +256,9 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
+bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*messageClock*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
-bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t index)
+bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -272,8 +268,9 @@ bool CBoxAlgorithmExternalProcessing::process()
 {
 	if (m_Messaging.isInErrorState())
 	{
-		std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
-		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.", ErrorType::BadNetworkConnection);
+		const std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
+		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.",
+					 ErrorType::BadNetworkConnection);
 	}
 
 	if (m_HasReceivedEndMessage == false && m_Messaging.isEndReceived() == true)
@@ -440,10 +437,7 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 					arg += c;
 #endif
 				}
-				else if (escape || c != ' ')
-				{
-					arg += c;
-				}
+				else if (escape || c != ' ') { arg += c; }
 				else
 				{
 					list.push_back(arg);
@@ -460,10 +454,7 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 					arg += c;
 #endif
 				}
-				else
-				{
-					arg += c;
-				}
+				else { arg += c; }
 				break;
 		}
 
@@ -486,7 +477,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 {
 	m_ThirdPartyProgramProcessId = 0;
 
-	std::vector<std::string> argumentsVector = splitCommandLine(arguments);
+	const std::vector<std::string> argumentsVector = splitCommandLine(arguments);
 
 	std::vector<std::string> programArguments = { programPath, "--connection-id", m_ConnectionID, "--port", std::to_string(m_Port) };
 	programArguments.insert(programArguments.begin() + 1, argumentsVector.cbegin(), argumentsVector.cend()); // Add the arguments after the program path.
@@ -504,10 +495,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 		status = -1;
 		_set_errno(ENOENT);
 	}
-	else
-	{
-		status = int(_spawnvp(_P_NOWAIT, programPath.c_str(), argv.data()));
-	}
+	else { status = int(_spawnvp(_P_NOWAIT, programPath.c_str(), argv.data())); }
 	m_ThirdPartyProgramProcessId = status;
 	//	_P_DETACH,
 #else

@@ -33,7 +33,7 @@ bool CAlgorithmClassifierNULL::initialize()
 	return CAlgorithmClassifier::initialize();
 }
 
-bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
+bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& /*featureVectorSet*/)
 {
 	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
 	TParameterHandler<double> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
@@ -46,21 +46,21 @@ bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
 	return true;
 }
 
-bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierNULL::classify(const IFeatureVector& /*featureVector*/, double& classId, IVector& rDistanceValue, IVector& rProbabilityValue)
 {
-	rf64Class = 1 + (rand() % 3);
+	classId = 1 + (rand() % 3);
 
-	rClassificationValues.setSize(1);
+	rDistanceValue.setSize(1);
 	rProbabilityValue.setSize(1);
-	if (rf64Class == 1)
+	if (classId == 1)
 	{
-		rClassificationValues[0] = -1;
-		rProbabilityValue[0]     = 1;
+		rDistanceValue[0]    = -1;
+		rProbabilityValue[0] = 1;
 	}
 	else
 	{
-		rClassificationValues[0] = 1;
-		rProbabilityValue[0]     = 0;
+		rDistanceValue[0]    = 1;
+		rProbabilityValue[0] = 0;
 	}
 	return true;
 }

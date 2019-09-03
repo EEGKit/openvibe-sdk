@@ -116,12 +116,12 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				* and start over again.
 				*/
 			case 'E':	/* "%E?" alternative conversion modifier. */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				alt_format |= ALT_E;
 				goto again;
 
 			case 'O':	/* "%O?" alternative conversion modifier. */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				alt_format |= ALT_O;
 				goto again;
 
@@ -129,37 +129,37 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				* "Complex" conversion rules, implemented through recursion.
 				*/
 			case 'c':	/* Date and time, using the locale's format. */
-				LEGAL_ALT(ALT_E);
+			LEGAL_ALT(ALT_E);
 				if (!(bp = windowsStrptime(bp, "%x %X", tmParsed))) return (nullptr);
 				break;
 
 			case 'D':	/* The date as "%m/%d/%y". */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed))) return (nullptr);
 				break;
 
 			case 'R':	/* The time as "%H:%M". */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%H:%M", tmParsed))) return (nullptr);
 				break;
 
 			case 'r':	/* The time in 12-hour clock representation. */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%I:%M:%S %p", tmParsed))) return (nullptr);
 				break;
 
 			case 'T':	/* The time as "%H:%M:%S". */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed))) return (nullptr);
 				break;
 
 			case 'X':	/* The time, using the locale's format. */
-				LEGAL_ALT(ALT_E);
+			LEGAL_ALT(ALT_E);
 				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed))) return (nullptr);
 				break;
 
 			case 'x':	/* The date, using the locale's format. */
-				LEGAL_ALT(ALT_E);
+			LEGAL_ALT(ALT_E);
 				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed))) return (nullptr);
 				break;
 
@@ -168,7 +168,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				*/
 			case 'A':	/* The day of week, using the locale's form. */
 			case 'a':
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				for (i = 0; i < 7; i++)
 				{
 					/* Full name. */
@@ -190,7 +190,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'B':	/* The month, using the locale's form. */
 			case 'b':
 			case 'h':
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				for (i = 0; i < 12; i++)
 				{
 					/* Full name. */
@@ -262,7 +262,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				break;
 
 			case 'p':	/* The locale's equivalent of AM/PM. */
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				/* AM? */
 				if (strcmp(am_pm[0], bp) == 0)
 				{
@@ -283,13 +283,13 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				return nullptr;
 
 			case 'S':	/* The seconds. */
-				LEGAL_ALT(ALT_O);
+			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_sec, 0, 61))) return (nullptr);
 				break;
 
 			case 'U':	/* The week of year, beginning on sunday. */
 			case 'W':	/* The week of year, beginning on monday. */
-				LEGAL_ALT(ALT_O);
+			LEGAL_ALT(ALT_O);
 				/*
 				* XXX This is bogus, as we can not assume any valid
 				* information present in the tm structure at this
@@ -300,19 +300,19 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				break;
 
 			case 'w':	/* The day of week, beginning on sunday. */
-				LEGAL_ALT(ALT_O);
+			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_wday, 0, 6))) return (nullptr);
 				break;
 
 			case 'Y':	/* The year. */
-				LEGAL_ALT(ALT_E);
+			LEGAL_ALT(ALT_E);
 				if (!(conv_num(&bp, &i, 0, 9999))) return (nullptr);
 
 				tmParsed->tm_year = i - TM_YEAR_BASE;
 				break;
 
 			case 'y':	/* The year within 100 years of the epoch. */
-				LEGAL_ALT(ALT_E | ALT_O);
+			LEGAL_ALT(ALT_E | ALT_O);
 				if (!(conv_num(&bp, &i, 0, 99))) return (nullptr);
 
 				if (split_year)
@@ -330,7 +330,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				*/
 			case 'n':	/* Any kind of white-space. */
 			case 't':
-				LEGAL_ALT(0);
+			LEGAL_ALT(0);
 				while (isspace(*bp)) bp++;
 				break;
 
@@ -340,7 +340,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 	}
 
 	/* LINTED functional specification */
-	return (char *)bp;
+	return const_cast<char *>(bp);
 }
 
 

@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 		 * Main plugin class of the feature aggregator plugins.
 		 * Aggregates the features received in a feature vector then outputs it.
 		 * */
-		class CBoxAlgorithmFeatureAggregator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmFeatureAggregator final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -30,7 +30,7 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 			bool m_bHeaderSent = false;
 		};
 
-		class CBoxAlgorithmFeatureAggregatorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmFeatureAggregatorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -93,14 +93,19 @@ namespace OpenViBEPlugins
 		/**
 		* Plugin's description
 		*/
-		class CBoxAlgorithmFeatureAggregatorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmFeatureAggregatorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Feature aggregator"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Bruno Renier"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Aggregates input to feature vectors"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Each chunk of input will be catenated into one feature vector."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Each chunk of input will be catenated into one feature vector.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Feature extraction"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

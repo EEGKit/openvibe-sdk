@@ -12,40 +12,42 @@ namespace OpenViBE
 		{
 		public:
 
-			CAlgorithmProxy(const IKernelContext& rKernelContext, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& rAlgorithmDesc);
+			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& rAlgorithmDesc);
 			~CAlgorithmProxy() override;
 
 			virtual Plugins::IAlgorithm& getAlgorithm();
 			virtual const Plugins::IAlgorithm& getAlgorithm() const;
 			virtual const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
 
-			virtual bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier);
+			virtual bool addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName, EParameterType eParameterType,
+										   const CIdentifier& subTypeID);
 			CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const override;
-			IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier) override;
-			virtual EParameterType getInputParameterType(const CIdentifier& rInputParameterIdentifier) const;
-			CString getInputParameterName(const CIdentifier& rInputParameterIdentifier) const override;
-			virtual bool removeInputParameter(const CIdentifier& rInputParameterIdentifier);
+			IParameter* getInputParameter(const CIdentifier& InputParameterID) override;
+			virtual EParameterType getInputParameterType(const CIdentifier& InputParameterID) const;
+			CString getInputParameterName(const CIdentifier& InputParameterID) const override;
+			virtual bool removeInputParameter(const CIdentifier& InputParameterID);
 
-			virtual bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier);
+			virtual bool addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName, EParameterType eParameterType,
+											const CIdentifier& subTypeID);
 			CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const override;
-			IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier) override;
-			virtual EParameterType getOutputParameterType(const CIdentifier& rOutputParameterIdentifier) const;
-			CString getOutputParameterName(const CIdentifier& rOutputParameterIdentifier) const override;
-			virtual bool removeOutputParameter(const CIdentifier& rOutputParameterIdentifier);
+			IParameter* getOutputParameter(const CIdentifier& outputParameterID) override;
+			virtual EParameterType getOutputParameterType(const CIdentifier& outputParameterID) const;
+			CString getOutputParameterName(const CIdentifier& outputParameterID) const override;
+			virtual bool removeOutputParameter(const CIdentifier& outputParameterID);
 
-			virtual bool addInputTrigger(const CIdentifier& rInputTriggerIdentifier, const CString& rInputTriggerName);
+			virtual bool addInputTrigger(const CIdentifier& inputTriggerID, const CString& rInputTriggerName);
 			CIdentifier getNextInputTriggerIdentifier(const CIdentifier& rPreviousInputTriggerIdentifier) const override;
-			CString getInputTriggerName(const CIdentifier& rInputTriggerIdentifier) const override;
-			virtual bool isInputTriggerActive(const CIdentifier& rInputTriggerIdentifier) const;
-			bool activateInputTrigger(const CIdentifier& rInputTriggerIdentifier, bool bTriggerState) override;
-			virtual bool removeInputTrigger(const CIdentifier& rInputTriggerIdentifier);
+			CString getInputTriggerName(const CIdentifier& inputTriggerID) const override;
+			virtual bool isInputTriggerActive(const CIdentifier& inputTriggerID) const;
+			bool activateInputTrigger(const CIdentifier& inputTriggerID, bool bTriggerState) override;
+			virtual bool removeInputTrigger(const CIdentifier& inputTriggerID);
 
-			virtual bool addOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const CString& rOutputTriggerName);
+			virtual bool addOutputTrigger(const CIdentifier& outputTriggerID, const CString& rOutputTriggerName);
 			CIdentifier getNextOutputTriggerIdentifier(const CIdentifier& rPreviousOutputTriggerIdentifier) const override;
-			CString getOutputTriggerName(const CIdentifier& rOutputTriggerIdentifier) const override;
-			bool isOutputTriggerActive(const CIdentifier& rOutputTriggerIdentifier) const override;
-			virtual bool activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, bool bTriggerState);
-			virtual bool removeOutputTrigger(const CIdentifier& rOutputTriggerIdentifier);
+			CString getOutputTriggerName(const CIdentifier& outputTriggerID) const override;
+			bool isOutputTriggerActive(const CIdentifier& outputTriggerID) const override;
+			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, bool bTriggerState);
+			virtual bool removeOutputTrigger(const CIdentifier& outputTriggerID);
 			bool initialize() override;
 			bool uninitialize() override;
 			bool process() override;

@@ -46,4 +46,4 @@ namespace OpenViBETest
 		std::string m_ConfigurationFile;
 		OpenViBE::CKernelLoader m_KernelLoader;
 	};
-}
+} // namespace OpenViBETest

@@ -204,7 +204,7 @@ namespace OpenViBE
 			 * \return \e true in case plugin has this functionality.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasFunctionality(Kernel::EPluginFunctionality ePF) const { return false; }
+			virtual bool hasFunctionality(Kernel::EPluginFunctionality /*ePF*/) const { return false; }
 
 			/**
 			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
@@ -212,7 +212,7 @@ namespace OpenViBE
 			 * \retval true If the plugin has the demanded functionality.
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
-			virtual bool hasFunctionality(const CIdentifier functionality) const { return false; }
+			virtual bool hasFunctionality(const CIdentifier /*functionality*/) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
 			 * \param eLT [in] : the licence type that this plugin may have
@@ -227,7 +227,7 @@ namespace OpenViBE
 			 *
 			 * A plugin may be used under different licences. For this reason, the OpenViBE kernel will loop on this function for each licence type to request.
 			 */
-			virtual bool hasLicenceType(Kernel::ELicenseType eLT) const { return false; }
+			virtual bool hasLicenceType(Kernel::ELicenseType /*eLT*/) const { return false; }
 
 			//@}
 

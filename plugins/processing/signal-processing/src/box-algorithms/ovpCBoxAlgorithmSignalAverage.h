@@ -14,7 +14,7 @@ namespace OpenViBEPlugins
 	{
 		/**
 		*/
-		class CBoxAlgorithmSignalAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSignalAverage final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			void release() override;
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SignalAverage)
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 		/**
 		* Description of the channel selection plugin
 		*/
-		class CSignalAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CSignalAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

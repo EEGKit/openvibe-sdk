@@ -20,10 +20,7 @@ bool CBoxAlgorithmWindowing::initialize()
 		&& m_WindowMethod != OVP_TypeId_WindowMethod_Hann
 		&& m_WindowMethod != OVP_TypeId_WindowMethod_Blackman
 		&& m_WindowMethod != OVP_TypeId_WindowMethod_Triangular
-		&& m_WindowMethod != OVP_TypeId_WindowMethod_SquareRoot)
-	{
-		OV_ERROR_KRF("No valid windowing method set.\n", OpenViBE::Kernel::ErrorType::BadSetting);
-	}
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_SquareRoot) { OV_ERROR_KRF("No valid windowing method set.\n", OpenViBE::Kernel::ErrorType::BadSetting); }
 
 	m_Decoder.initialize(*this, 0);
 	m_Encoder.initialize(*this, 0);
@@ -41,7 +38,7 @@ bool CBoxAlgorithmWindowing::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmWindowing::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmWindowing::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -67,21 +64,15 @@ bool CBoxAlgorithmWindowing::process()
 			 * To be applied on each channel.
 			 */
 			m_WindowCoefficients.resize(matrix->getDimensionSize(1));
-			size_t n = m_WindowCoefficients.size();
+			const size_t n = m_WindowCoefficients.size();
 
 			if (m_WindowMethod == OVP_TypeId_WindowMethod_Hamming)
 			{
-				for (size_t k = 0; k < n; k++)
-				{
-					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * double(k) / (double(n) - 1.));
-				}
+				for (size_t k = 0; k < n; k++) { m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * double(k) / (double(n) - 1.)); }
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hann || m_WindowMethod == OVP_TypeId_WindowMethod_Hanning)
 			{
-				for (size_t k = 0; k < n; k++)
-				{
-					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * double(k) / (double(n) - 1.)));
-				}
+				for (size_t k = 0; k < n; k++) { m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * double(k) / (double(n) - 1.))); }
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Blackman)
 			{
@@ -95,40 +86,22 @@ bool CBoxAlgorithmWindowing::process()
 				/* from MATLAB implementation, as ITPP documentation seems to be flawed */
 				for (size_t k = 1; k <= (n + 1) / 2; k++)
 				{
-					if (n % 2 == 1)
-					{
-						m_WindowCoefficients[k - 1] = double((2. * double(k)) / (double(n) + 1.));
-					}
-					else
-					{
-						m_WindowCoefficients[k - 1] = double((2. * double(k) - 1.) / double(n));
-					}
+					if (n % 2 == 1) { m_WindowCoefficients[k - 1] = double((2. * double(k)) / (double(n) + 1.)); }
+					else { m_WindowCoefficients[k - 1] = double((2. * double(k) - 1.) / double(n)); }
 				}
 
 				for (size_t k = n / 2 + 1; k <= n; k++)
 				{
-					if (n % 2 == 1)
-					{
-						m_WindowCoefficients[k - 1] = double(2. - (2. * double(k)) / (double(n) + 1.));
-					}
-					else
-					{
-						m_WindowCoefficients[k - 1] = double(2. - (2. * double(k) - 1.) / double(n));
-					}
+					if (n % 2 == 1) { m_WindowCoefficients[k - 1] = double(2. - (2. * double(k)) / (double(n) + 1.)); }
+					else { m_WindowCoefficients[k - 1] = double(2. - (2. * double(k) - 1.) / double(n)); }
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_SquareRoot)
 			{
 				for (size_t k = 1; k <= (n + 1) / 2; k++)
 				{
-					if (n % 2 == 1)
-					{
-						m_WindowCoefficients[k - 1] = sqrt(2. * double(k) / (double(n) + 1.));
-					}
-					else
-					{
-						m_WindowCoefficients[k - 1] = sqrt((2. * double(k) - 1.) / double(n));
-					}
+					if (n % 2 == 1) { m_WindowCoefficients[k - 1] = sqrt(2. * double(k) / (double(n) + 1.)); }
+					else { m_WindowCoefficients[k - 1] = sqrt((2. * double(k) - 1.) / double(n)); }
 				}
 
 				for (size_t k = n / 2 + 1; k <= n; k++)
@@ -137,10 +110,7 @@ bool CBoxAlgorithmWindowing::process()
 					else { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * double(k) - 1.) / double(n)); }
 				}
 			}
-			else if (m_WindowMethod == OVP_TypeId_WindowMethod_None)
-			{
-				for (size_t k = 0; k < n; k++) { m_WindowCoefficients[k] = 1; }
-			}
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_None) { for (size_t k = 0; k < n; k++) { m_WindowCoefficients[k] = 1; } }
 			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", OpenViBE::Kernel::ErrorType::BadSetting); }
 
 			m_Encoder.encodeHeader();

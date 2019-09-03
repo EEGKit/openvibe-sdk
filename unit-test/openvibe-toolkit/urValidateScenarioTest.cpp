@@ -20,14 +20,14 @@ std::string g_dataDirectory;
 
 bool importScenarioFromFile(const char* filename)
 {
-	std::string scenarioFilePath = std::string(g_dataDirectory) + "/" + filename;
+	const std::string scenarioFilePath = std::string(g_dataDirectory) + "/" + filename;
 
 	g_context->getErrorManager().releaseErrors();
 
-	CIdentifier scenarioIdentifier;
-	if (g_context->getScenarioManager().importScenarioFromFile(scenarioIdentifier, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
+	CIdentifier scenarioID;
+	if (g_context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 	{
-		g_context->getScenarioManager().releaseScenario(scenarioIdentifier);
+		g_context->getScenarioManager().releaseScenario(scenarioID);
 		return true;
 	}
 
@@ -38,13 +38,11 @@ bool importScenarioFromFile(const char* filename)
 bool checkForSchemaValidationError()
 {
 	auto& errorManager = g_context->getErrorManager();
-
-	auto error = errorManager.getLastError();
+	auto error         = errorManager.getLastError();
 
 	while (error)
 	{
 		if (error->getErrorType() == ErrorType::BadXMLSchemaValidation) { return true; }
-
 		error = error->getNestedError();
 	}
 

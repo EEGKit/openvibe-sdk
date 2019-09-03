@@ -9,7 +9,7 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual uint32_t getSize() const = 0;
-		virtual bool setSize(const uint32_t ui32Size) = 0;
+		virtual bool setSize(const uint32_t size) = 0;
 		virtual double* getBuffer() = 0;
 		virtual const double* getBuffer() const = 0;
 		virtual const char* getElementLabel(const uint32_t index) const = 0;

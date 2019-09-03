@@ -8,33 +8,28 @@ using namespace OpenViBE;
 
 void CAbstractTree::simplifyTree()
 {
-	bool l_bHasChanged = true;
+	bool change = true;
 
 	//while stability hasn't been reached
-	while (l_bHasChanged)
+	while (change)
 	{
-		CAbstractTreeNode* l_pSimplifiedNode = m_pRoot;
+		CAbstractTreeNode* node = m_pRoot;
 
 		//tries to simplify the tree.
-		l_bHasChanged = m_pRoot->simplify(l_pSimplifiedNode);
+		change = m_pRoot->simplify(node);
 
 		//if the root node has changed
-		if (l_pSimplifiedNode != m_pRoot)
+		if (node != m_pRoot)
 		{
 			//delete the old one
 			delete m_pRoot;
-			m_pRoot = l_pSimplifiedNode;
+			m_pRoot = node;
 		}
 	}
 }
 
-void CAbstractTree::levelOperators() { m_pRoot->levelOperators(); }
-
 // Dirty hack to avoid GCC 4.3 crash at compilation time
-static void clear_m_oChildren(std::vector<CAbstractTreeNode *>& m_oChildren)
-{
-	for (size_t i = 0; i < m_oChildren.size(); i++) { delete m_oChildren[i]; }
-}
+static void clear_m_oChildren(std::vector<CAbstractTreeNode *>& m_oChildren) { for (size_t i = 0; i < m_oChildren.size(); i++) { delete m_oChildren[i]; } }
 
 CAbstractTreeParentNode::~CAbstractTreeParentNode()
 {
@@ -44,12 +39,12 @@ CAbstractTreeParentNode::~CAbstractTreeParentNode()
 
 void CAbstractTreeParentNode::levelOperators()
 {
-	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t nChildren = m_oChildren.size();
 
 	vector<CAbstractTreeNode*> l_oNewChildren;
 
 	//for all the node's children
-	for (uint64_t i = 0; i < l_ui64NumberOfChildren; i++)
+	for (uint64_t i = 0; i < nChildren; i++)
 	{
 		CAbstractTreeNode* l_pChild = m_oChildren[(size_t)i];
 
@@ -117,7 +112,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 	bool l_bChildrenChanged = true;
 
 	//number of children of this node
-	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t nChildren = m_oChildren.size();
 
 	//while the children aren't stable
 	while (l_bChildrenChanged)
@@ -125,7 +120,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		l_bChildrenChanged = false;
 
 		//try to simplify all the children
-		for (size_t i = 0; i < l_ui64NumberOfChildren; i++)
+		for (size_t i = 0; i < nChildren; i++)
 		{
 			CAbstractTreeNode* l_pChild = m_oChildren[i];
 			l_bChildrenChanged          = l_pChild->simplify(l_pChild);
@@ -144,7 +139,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 	}
 
 	//unary operator
-	if (l_ui64NumberOfChildren == 1)
+	if (nChildren == 1)
 	{
 		//if we can already compute the result
 		if (m_oChildren[0]->isConstant())
@@ -152,28 +147,43 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			double value = reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue();
 			switch (m_ui64Identifier)
 			{
-				case OP_NEG:	node = new CAbstractTreeValueNode(-value);						break;
-				case OP_ABS:	node = new CAbstractTreeValueNode(abs(value));					break;
-				case OP_ACOS:	node = new CAbstractTreeValueNode(acos(value));					break;
-				case OP_ASIN:	node = new CAbstractTreeValueNode(asin(value));					break;
-				case OP_ATAN:	node = new CAbstractTreeValueNode(atan(value));					break;
-				case OP_CEIL:	node = new CAbstractTreeValueNode(ceil(value));					break;
-				case OP_COS:	node = new CAbstractTreeValueNode(cos(value));					break;
-				case OP_EXP:	node = new CAbstractTreeValueNode(exp(value));					break;
-				case OP_FLOOR:	node = new CAbstractTreeValueNode(floor(value));				break;
-				case OP_LOG:	node = new CAbstractTreeValueNode(log(value));					break;
-				case OP_LOG10:	node = new CAbstractTreeValueNode(log10(value));				break;
-				case OP_RAND:	node = new CAbstractTreeValueNode(rand() * value / RAND_MAX);	break;
-				case OP_SIN:	node = new CAbstractTreeValueNode(sin(value));					break;
-				case OP_SQRT:	node = new CAbstractTreeValueNode(sqrt(value));					break;
-				case OP_TAN:	node = new CAbstractTreeValueNode(tan(value));					break;
+				case OP_NEG: node = new CAbstractTreeValueNode(-value);
+					break;
+				case OP_ABS: node = new CAbstractTreeValueNode(abs(value));
+					break;
+				case OP_ACOS: node = new CAbstractTreeValueNode(acos(value));
+					break;
+				case OP_ASIN: node = new CAbstractTreeValueNode(asin(value));
+					break;
+				case OP_ATAN: node = new CAbstractTreeValueNode(atan(value));
+					break;
+				case OP_CEIL: node = new CAbstractTreeValueNode(ceil(value));
+					break;
+				case OP_COS: node = new CAbstractTreeValueNode(cos(value));
+					break;
+				case OP_EXP: node = new CAbstractTreeValueNode(exp(value));
+					break;
+				case OP_FLOOR: node = new CAbstractTreeValueNode(floor(value));
+					break;
+				case OP_LOG: node = new CAbstractTreeValueNode(log(value));
+					break;
+				case OP_LOG10: node = new CAbstractTreeValueNode(log10(value));
+					break;
+				case OP_RAND: node = new CAbstractTreeValueNode(rand() * value / RAND_MAX);
+					break;
+				case OP_SIN: node = new CAbstractTreeValueNode(sin(value));
+					break;
+				case OP_SQRT: node = new CAbstractTreeValueNode(sqrt(value));
+					break;
+				case OP_TAN: node = new CAbstractTreeValueNode(tan(value));
+					break;
 				default: break;
 			}
 			l_bHasChanged = true;
 		}
 	}
 		//binary operator not associative
-	else if (l_ui64NumberOfChildren == 2 && !isAssociative())
+	else if (nChildren == 2 && !isAssociative())
 	{
 		double l_f64TotalValue = 0;
 
@@ -183,7 +193,8 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			switch (m_ui64Identifier)
 			{
 				case OP_DIV:
-					l_f64TotalValue = reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue() / reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[1])->getValue();
+					l_f64TotalValue = reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue() / reinterpret_cast<CAbstractTreeValueNode*>(
+										  m_oChildren[1])->getValue();
 
 					//delete the old value nodes
 					delete m_oChildren[0];
@@ -191,14 +202,15 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 					delete m_oChildren[1];
 					m_oChildren[1] = nullptr;
 
-					node = new CAbstractTreeValueNode(l_f64TotalValue);
+					node          = new CAbstractTreeValueNode(l_f64TotalValue);
 					l_bHasChanged = true;
 
 					break;
 
 				case OP_POW:
 
-					l_f64TotalValue = pow(reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue(), reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[1])->getValue());
+					l_f64TotalValue = pow(reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue(),
+										  reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[1])->getValue());
 
 					//delete the old value nodes
 					delete m_oChildren[0];
@@ -206,7 +218,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 					delete m_oChildren[1];
 					m_oChildren[1] = nullptr;
 
-					node = new CAbstractTreeValueNode(l_f64TotalValue);
+					node          = new CAbstractTreeValueNode(l_f64TotalValue);
 					l_bHasChanged = true;
 					break;
 				default: break;
@@ -228,7 +240,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		}
 	}
 		//if the node is an associative operation node, there are at least two children and at least two are constants
-	else if (l_ui64NumberOfChildren >= 2 && isAssociative())
+	else if (nChildren >= 2 && isAssociative())
 	{
 		//For commutative nodes
 		//The order of the children may have changed due to previous child simplification
@@ -247,7 +259,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				l_f64TotalValue = 0;
 
 				//add the values of all the constant children
-				for (i = 0; i < l_ui64NumberOfChildren && m_oChildren[i]->isConstant(); i++)
+				for (i = 0; i < nChildren && m_oChildren[i]->isConstant(); i++)
 				{
 					l_f64TotalValue += reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[i])->getValue();
 
@@ -260,7 +272,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			case OP_MUL:
 				l_f64TotalValue = 1;
 				//multiply the values of all the constant children
-				for (i = 0; i < l_ui64NumberOfChildren && m_oChildren[i]->isConstant(); i++)
+				for (i = 0; i < nChildren && m_oChildren[i]->isConstant(); i++)
 				{
 					l_f64TotalValue *= reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[i])->getValue();
 
@@ -273,9 +285,9 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		}
 
 		//if there were only value nodes, we can replace the current parent node by a value node
-		if (i == l_ui64NumberOfChildren)
+		if (i == nChildren)
 		{
-			node = new CAbstractTreeValueNode(l_f64TotalValue);
+			node          = new CAbstractTreeValueNode(l_f64TotalValue);
 			l_bHasChanged = true;
 			// cout<<l_f64TotalValue<<endl;
 		}
@@ -286,7 +298,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			l_oNewChildren.push_back(new CAbstractTreeValueNode(l_f64TotalValue));
 
 			//adds the other remaining children
-			for (; i < l_ui64NumberOfChildren; i++) { l_oNewChildren.push_back(m_oChildren[i]); }
+			for (; i < nChildren; i++) { l_oNewChildren.push_back(m_oChildren[i]); }
 			//we keep this node, but modify its children
 			m_oChildren = l_oNewChildren;
 
@@ -298,7 +310,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			if ((l_f64TotalValue == 0 && m_ui64Identifier == OP_ADD) ||
 				(l_f64TotalValue == 1 && m_ui64Identifier == OP_MUL))
 			{
-				if (l_ui64NumberOfChildren - i == 1)
+				if (nChildren - i == 1)
 				{
 					node = m_oChildren[i];
 					m_oChildren.clear();
@@ -307,7 +319,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				{
 					//don't keep the valueNode
 					//adds the other remaining children
-					for (; i < l_ui64NumberOfChildren; i++) { l_oNewChildren.push_back(m_oChildren[i]); }
+					for (; i < nChildren; i++) { l_oNewChildren.push_back(m_oChildren[i]); }
 
 					//we keep this node, but modify its children
 					m_oChildren = l_oNewChildren;
@@ -317,7 +329,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			else if (l_f64TotalValue == 0 && m_ui64Identifier == OP_MUL)
 			{
 				//kill this node and replace it by a 0 node
-				node = new CAbstractTreeValueNode(0);
+				node          = new CAbstractTreeValueNode(0);
 				l_bHasChanged = true;
 			}
 			else
@@ -333,10 +345,10 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 
 void CAbstractTreeParentNode::useNegationOperator()
 {
-	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t nChildren = m_oChildren.size();
 
 	//try to use the negation operator in all the children
-	for (size_t i = 0; i < l_ui64NumberOfChildren; i++)
+	for (size_t i = 0; i < nChildren; i++)
 	{
 		CAbstractTreeNode* l_pChild = m_oChildren[i];
 		l_pChild->useNegationOperator();
@@ -365,7 +377,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 				m_bIsAssociative = false;
 
 				//if there were just two children : replace (* -1 Sth) by (NEG Sth)
-				if (l_ui64NumberOfChildren == 2)
+				if (nChildren == 2)
 				{
 					m_oChildren[0] = m_oChildren[1];
 					m_oChildren.pop_back();
@@ -375,7 +387,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 				{
 					CAbstractTreeParentNode* l_pNewOperatorNode = new CAbstractTreeParentNode(OP_MUL, true);
 
-					for (size_t i = 1; i < l_ui64NumberOfChildren; i++) { l_pNewOperatorNode->addChild(m_oChildren[i]); }
+					for (size_t i = 1; i < nChildren; i++) { l_pNewOperatorNode->addChild(m_oChildren[i]); }
 
 					m_oChildren.clear();
 					m_oChildren.push_back(l_pNewOperatorNode);
@@ -385,11 +397,11 @@ void CAbstractTreeParentNode::useNegationOperator()
 	}
 }
 
-void CAbstractTree::generateCode(CEquationParser& oParser) { m_pRoot->generateCode(oParser); }
+void CAbstractTree::generateCode(CEquationParser& parser) { m_pRoot->generateCode(parser); }
 
-void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
+void CAbstractTreeParentNode::generateCode(CEquationParser& parser)
 {
-	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
+	const uint64_t nChildren = m_oChildren.size();
 
 #if 0
 
@@ -398,85 +410,70 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
 	// and bugged to me. I simplified/corrected it
 
 	//if it is a unary operator/function
-	if(l_ui64NumberOfChildren==1) { oParser.push_op(m_ui64Identifier); }
+	if(nChildren==1) { parser.push_op(m_ui64Identifier); }
 	else
 	{
-		for(size_t i = 0 ; i<l_ui64NumberOfChildren-1 ; i++)
+		for(size_t i = 0 ; i<nChildren-1 ; i++)
 		{
-			oParser.push_op(m_ui64Identifier);
-			m_oChildren[i] -> generateCode(oParser);
+			parser.push_op(m_ui64Identifier);
+			m_oChildren[i] -> generateCode(parser);
 		}
 	}
-	m_oChildren[size_t(l_ui64NumberOfChildren-1)] -> generateCode(oParser);
+	m_oChildren[size_t(nChildren-1)] -> generateCode(parser);
 #else
-	oParser.push_op(m_ui64Identifier);
-	for (size_t i = 0; i < l_ui64NumberOfChildren; i++) { m_oChildren[i]->generateCode(oParser); }
+	parser.push_op(m_ui64Identifier);
+	for (size_t i = 0; i < nChildren; i++) { m_oChildren[i]->generateCode(parser); }
 #endif
 }
 
-void CAbstractTreeValueNode::generateCode(CEquationParser& oParser) { oParser.push_value(m_f64Value); }
+void CAbstractTreeValueNode::generateCode(CEquationParser& parser) { parser.push_value(m_f64Value); }
 
-void CAbstractTreeVariableNode::generateCode(CEquationParser& oParser) { oParser.push_var(m_ui32Index); }
+void CAbstractTreeVariableNode::generateCode(CEquationParser& parser) { parser.push_var(m_ui32Index); }
 
-void CAbstractTree::recognizeSpecialTree(uint64_t& ui64TreeIdentifier, double& f64Parameter)
+void CAbstractTree::recognizeSpecialTree(uint64_t& treeId, double& parameter)
 {
 	//default
-	ui64TreeIdentifier = OP_USERDEF;
-	f64Parameter       = 0;
+	treeId    = OP_USERDEF;
+	parameter = 0;
 
 	//the root node is a value node or variable node
 	if (m_pRoot->isTerminal())
 	{
 		//if it is a variable node
-		if (!m_pRoot->isConstant())
-		{
-			ui64TreeIdentifier = OP_NONE;
-		}
+		if (!m_pRoot->isConstant()) { treeId = OP_NONE; }
 		return;
 	}
 
 	CAbstractTreeParentNode* l_pParent = reinterpret_cast<CAbstractTreeParentNode *>(m_pRoot);
 
 	std::vector<CAbstractTreeNode *>& l_oChildren = l_pParent->getChildren();
-	uint64_t l_ui64NumberOfChildren               = l_oChildren.size();
-	uint64_t l_ui64NodeIdentifier                 = l_pParent->getOperatorIdentifier();
+	const uint64_t nChildren                      = l_oChildren.size();
+	const uint64_t nodeId                         = l_pParent->getOperatorIdentifier();
 
 	//unary operator/function
-	if (l_ui64NumberOfChildren == 1)
-	{
-		if (l_oChildren[0]->isTerminal() && !l_oChildren[0]->isConstant())
-		{
-			ui64TreeIdentifier = l_ui64NodeIdentifier;
-		}
-	}
+	if (nChildren == 1) { if (l_oChildren[0]->isTerminal() && !l_oChildren[0]->isConstant()) { treeId = nodeId; } }
 		//binary
-	else if (l_ui64NumberOfChildren == 2)
+	else if (nChildren == 2)
 	{
 		bool l_bIsVariable[2];
 		l_bIsVariable[0] = l_oChildren[0]->isTerminal() && !l_oChildren[0]->isConstant();
 		l_bIsVariable[1] = l_oChildren[1]->isTerminal() && !l_oChildren[1]->isConstant();
 
 		//(* X X)
-		if (l_ui64NodeIdentifier == OP_MUL && l_bIsVariable[0] && l_bIsVariable[1])
-		{
-			ui64TreeIdentifier = OP_X2;
-		}
+		if (nodeId == OP_MUL && l_bIsVariable[0] && l_bIsVariable[1]) { treeId = OP_X2; }
 			//pow(X,2)
-		else if (l_ui64NodeIdentifier == OP_POW && l_bIsVariable[0] && l_oChildren[1]->isConstant())
-		{
-			ui64TreeIdentifier = OP_X2;
-		}
+		else if (nodeId == OP_POW && l_bIsVariable[0] && l_oChildren[1]->isConstant()) { treeId = OP_X2; }
 			//(+ Cst X) or (* Cst X)
 		else if (l_pParent->isAssociative() && l_oChildren[0]->isConstant() && l_bIsVariable[1])
 		{
-			ui64TreeIdentifier = l_ui64NodeIdentifier;
-			f64Parameter       = reinterpret_cast<CAbstractTreeValueNode*>(l_oChildren[0])->getValue();
+			treeId    = nodeId;
+			parameter = reinterpret_cast<CAbstractTreeValueNode*>(l_oChildren[0])->getValue();
 		}
 			// (/ X Cst)
-		else if (l_ui64NodeIdentifier == OP_DIV && l_bIsVariable[0] && l_oChildren[1]->isConstant())
+		else if (nodeId == OP_DIV && l_bIsVariable[0] && l_oChildren[1]->isConstant())
 		{
-			ui64TreeIdentifier = OP_DIV;
-			f64Parameter       = reinterpret_cast<CAbstractTreeValueNode*>(l_oChildren[1])->getValue();
+			treeId    = OP_DIV;
+			parameter = reinterpret_cast<CAbstractTreeValueNode*>(l_oChildren[1])->getValue();
 		}
 	}
 	//else do nothing

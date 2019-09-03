@@ -10,8 +10,9 @@ using namespace SignalProcessing;
 bool CBoxAlgorithmChannelRename::initialize()
 {
 	std::vector<CString> tokens;
-	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint32_t tokenCount  = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
+	const CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const uint32_t tokenCount  = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
+									   OV_Value_EnumeratedStringSeparator);
 
 	m_ChannelNames.clear();
 	for (uint32_t i = 0; i < tokenCount; i++) { m_ChannelNames.push_back(tokens[i].toASCIIString()); }
@@ -33,10 +34,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 		m_StreamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmChannelRename>(*this, 0);
 		m_StreamEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmChannelRename>(*this, 0);
 	}
-	else
-	{
-		OV_ERROR_KRF("Incompatible stream type", ErrorType::BadConfig);
-	}
+	else { OV_ERROR_KRF("Incompatible stream type", ErrorType::BadConfig); }
 
 	ip_Matrix = m_StreamEncoder.getInputMatrix();
 	op_Matrix = m_StreamDecoder.getOutputMatrix();
@@ -62,7 +60,7 @@ bool CBoxAlgorithmChannelRename::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmChannelRename::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

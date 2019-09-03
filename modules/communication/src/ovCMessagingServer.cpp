@@ -134,30 +134,18 @@ bool MessagingServer::addParameter(const uint32_t id, const uint64_t type, const
 	return impl->m_BoxDescription.addParameter(id, type, name, value);
 }
 
-bool MessagingServer::addInput(const uint32_t id, const uint64_t type, const std::string& name)
-{
-	return impl->m_BoxDescription.addInput(id, type, name);
-}
+bool MessagingServer::addInput(const uint32_t id, const uint64_t type, const std::string& name) { return impl->m_BoxDescription.addInput(id, type, name); }
 
-bool MessagingServer::addOutput(const uint32_t id, const uint64_t type, const std::string& name)
-{
-	return impl->m_BoxDescription.addOutput(id, type, name);
-}
+bool MessagingServer::addOutput(const uint32_t id, const uint64_t type, const std::string& name) { return impl->m_BoxDescription.addOutput(id, type, name); }
 
-bool MessagingServer::popLog(uint64_t& packetId, ELogLevel& type, std::string& message)
-{
-	return CMessaging::popLog(packetId, type, message);
-}
+bool MessagingServer::popLog(uint64_t& packetId, ELogLevel& type, std::string& message) { return CMessaging::popLog(packetId, type, message); }
 
 bool MessagingServer::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {
 	return CMessaging::popEBML(packetId, index, startTime, endTime, ebml);
 }
 
-bool MessagingServer::pushError(const EError error, const uint64_t guiltyId)
-{
-	return this->pushMessage(ErrorMessage(error, guiltyId));
-}
+bool MessagingServer::pushError(const EError error, const uint64_t guiltyId) { return this->pushMessage(ErrorMessage(error, guiltyId)); }
 
 bool MessagingServer::pushEBML(const uint32_t index, const uint64_t startTime, const uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
 {

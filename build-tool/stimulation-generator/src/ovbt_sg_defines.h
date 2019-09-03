@@ -6,9 +6,9 @@
 
 struct SStimulation
 {
-	std::string m_sName;
-	std::string m_sId;
-	std::string m_sHexaCode;
+	std::string m_Name;
+	std::string m_Id;
+	std::string m_HexaCode;
 };
 
 #endif

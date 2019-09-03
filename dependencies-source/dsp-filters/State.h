@@ -162,7 +162,7 @@ namespace Dsp
 		}
 
 		template <typename Sample>
-		Sample process1(const Sample in, const BiquadBase& s, const double vsa)
+		Sample process1(const Sample in, const BiquadBase& s, const double /*vsa*/)
 		{
 
 			// can be: in += m_s1_1;
@@ -236,12 +236,9 @@ namespace Dsp
 	public:
 		ChannelsState() { }
 
-		const int getNumChannels() const { return Channels; }
+		int getNumChannels() const { return Channels; }
 
-		void reset()
-		{
-			for (int i = 0; i < Channels; ++i) { m_state[i].reset(); }
-		}
+		void reset() { for (int i = 0; i < Channels; ++i) { m_state[i].reset(); } }
 
 		StateType& operator[](int index)
 		{
@@ -264,12 +261,15 @@ namespace Dsp
 	class ChannelsState<0, StateType>
 	{
 	public:
-		const int getNumChannels() const { return 0; }
+		int getNumChannels() const { return 0; }
 
 		void reset() { throw std::logic_error("attempt to reset empty ChannelState"); }
 
 		template <class FilterDesign, typename Sample>
-		void process(int numSamples, Sample* const* arrayOfChannels, FilterDesign& filter) { throw std::logic_error("attempt to process empty ChannelState"); }
+		void process(int /*numSamples*/, Sample* const* /*arrayOfChannels*/, FilterDesign& /*filter*/)
+		{
+			throw std::logic_error("attempt to process empty ChannelState");
+		}
 	};
 
 	//------------------------------------------------------------------------------

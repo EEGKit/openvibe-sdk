@@ -10,7 +10,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CObjectVisitorContext(const IKernelContext& rKernelContext);
+			explicit CObjectVisitorContext(const IKernelContext& ctx);
 			~CObjectVisitorContext() override;
 			IAlgorithmManager& getAlgorithmManager() const override;
 			IConfigurationManager& getConfigurationManager() const override;

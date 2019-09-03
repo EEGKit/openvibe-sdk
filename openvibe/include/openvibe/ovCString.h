@@ -21,7 +21,7 @@ namespace OpenViBE
 	 *
 	 * \note The implementation uses std::string of course :)
 	 */
-	class OV_API CString
+	class OV_API CString final
 	{
 	public:
 

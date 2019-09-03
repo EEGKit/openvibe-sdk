@@ -114,10 +114,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	m_pConfigurationManager->createConfigurationToken("Application_Name", OV_PROJECT_NAME);
 	m_pConfigurationManager->createConfigurationToken("Application_Version", OV_VERSION_MAJOR "." OV_VERSION_MINOR "." OV_VERSION_PATCH);
 
-	for (auto& token : initializationTokens)
-	{
-		m_pConfigurationManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str());
-	}
+	for (auto& token : initializationTokens) { m_pConfigurationManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
 
@@ -213,11 +210,17 @@ bool CKernelContext::uninitialize()
 	// As releaseScenario() can call into Plugin Manager we have to clear the scenario manager
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
 	// before Plugin Manager destructor needs it.
-	CIdentifier scenarioIdentifier;
-	while ((scenarioIdentifier = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pScenarioManager->releaseScenario(scenarioIdentifier); }
+	CIdentifier scenarioID;
+	while ((scenarioID = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	{
+		m_pScenarioManager->releaseScenario(scenarioID);
+	}
 
 	CIdentifier algorithmIdentifier;
-	while ((algorithmIdentifier = m_pAlgorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pAlgorithmManager->releaseAlgorithm(algorithmIdentifier); }
+	while ((algorithmIdentifier = m_pAlgorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	{
+		m_pAlgorithmManager->releaseAlgorithm(algorithmIdentifier);
+	}
 
 	m_pPluginManager.reset();
 	m_pMetaboxManager.reset();

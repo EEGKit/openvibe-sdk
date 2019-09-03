@@ -15,7 +15,10 @@ CSignalTrial::CSignalTrial() {}
 
 CSignalTrial::~CSignalTrial()
 {
-	for (map<uint32_t, double*>::iterator itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel) { delete [] itChannel->second; }
+	for (map<uint32_t, double*>::iterator itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
+	{
+		delete [] itChannel->second;
+	}
 }
 
 // ________________________________________________________________________________________________________________
@@ -32,10 +35,7 @@ bool CSignalTrial::setChannelCount(const uint32_t ui32ChannelCount)
 	uint32_t i;
 	for (i = 0; i < ui32ChannelCount; i++)
 	{
-		if (m_vChannelSample.find(i) == m_vChannelSample.end())
-		{
-			m_vChannelSample[i] = new double[m_ui32SampleCountReserved];
-		}
+		if (m_vChannelSample.find(i) == m_vChannelSample.end()) { m_vChannelSample[i] = new double[m_ui32SampleCountReserved]; }
 	}
 	for (i = ui32ChannelCount; i < m_ui32ChannelCount; i++)
 	{
@@ -77,7 +77,8 @@ bool CSignalTrial::setSampleCount(const uint32_t ui32SampleCount, const bool bPr
 			double* l_pSample = new double[l_ui32SampleCountReserved];
 			if (bPreserve)
 			{
-				System::Memory::copy(l_pSample, itChannelSample->second, (ui32SampleCount < m_ui32SampleCount ? ui32SampleCount : m_ui32SampleCount) * sizeof(double));
+				System::Memory::copy(l_pSample, itChannelSample->second,
+									 (ui32SampleCount < m_ui32SampleCount ? ui32SampleCount : m_ui32SampleCount) * sizeof(double));
 			}
 			delete [] itChannelSample->second;
 			itChannelSample->second = l_pSample;
@@ -106,10 +107,7 @@ CIdentifier CSignalTrial::getLabelIdentifier() const { return m_oLabelIdentifier
 
 uint32_t CSignalTrial::getSampleCount() const { return m_ui32SampleCount; }
 
-uint64_t CSignalTrial::getDuration() const
-{
-	return (m_ui32SamplingRate ? ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_ui32SampleCount) : 0);
-}
+uint64_t CSignalTrial::getDuration() const { return (m_ui32SamplingRate ? ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_ui32SampleCount) : 0); }
 
 double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) const
 {

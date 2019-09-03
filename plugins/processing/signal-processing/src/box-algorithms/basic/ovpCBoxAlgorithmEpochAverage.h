@@ -10,13 +10,13 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmEpochAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmEpochAverage final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EpochAverage)
@@ -31,37 +31,46 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;
 		};
 
-		class CBoxAlgorithmEpochAverageListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmEpochAverageListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(index, l_oTypeIdentifier);
-				rBox.setOutputType(index, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getInputType(index, typeID);
+				box.setOutputType(index, typeID);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(index, l_oTypeIdentifier);
-				rBox.setInputType(index, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(index, typeID);
+				box.setInputType(index, typeID);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmEpochAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmEpochAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Epoch average"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Averages matrices among time, this can be used to enhance ERPs"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This box can average matrices of different types including signal, spectrum or feature vectors"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Averages matrices among time, this can be used to enhance ERPs");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("This box can average matrices of different types including signal, spectrum or feature vectors");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Averaging"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

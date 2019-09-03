@@ -32,19 +32,18 @@ const uint64_t g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1
 //___________________________________________________________________//
 //                                                                   //
 
-CPlayer::CPlayer(const IKernelContext& rKernelContext)
-	: TKernelObject<IPlayer>(rKernelContext), m_oKernelContextBridge(rKernelContext), m_oScheduler(m_oKernelContextBridge, *this)
+CPlayer::CPlayer(const IKernelContext& ctx)
+	: TKernelObject<IPlayer>(ctx), m_oKernelContextBridge(ctx), m_oScheduler(m_oKernelContextBridge, *this)
 {
 	uint64_t schedulerFrequency = this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
 	if (schedulerFrequency == 0)
 	{
-		OV_WARNING_K("Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" << this->getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " << g_ui64Scheduler_Default_Frequency_);
+		OV_WARNING_K(
+			"Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" << this->getConfigurationManager().expand("${Kernel_PlayerFrequency}"
+			) << " restored to default " << g_ui64Scheduler_Default_Frequency_);
 		schedulerFrequency = g_ui64Scheduler_Default_Frequency_;
 	}
-	else
-	{
-		getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n";
-	}
+	else { getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n"; }
 	m_oScheduler.setFrequency(schedulerFrequency);
 }
 
@@ -59,7 +58,7 @@ CPlayer::~CPlayer()
 //___________________________________________________________________//
 //                                                                   //
 
-bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens)
+bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairList* pLocalConfigurationTokens)
 {
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall);
 
@@ -71,7 +70,7 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 	delete m_pRuntimeConfigurationManager;
 	m_pRuntimeConfigurationManager = new CConfigurationManager(this->getKernelContext(), &this->getKernelContext().getConfigurationManager());
 	m_pRuntimeConfigurationManager->addConfigurationFromFile(this->getKernelContext().getConfigurationManager().expand("${Kernel_DelayedConfiguration}"));
-	IScenario& originalScenario = this->getScenarioManager().getScenario(rScenarioIdentifier);
+	IScenario& originalScenario = this->getScenarioManager().getScenario(scenarioID);
 
 	delete m_pRuntimeScenarioManager;
 	m_pRuntimeScenarioManager = new CScenarioManager(this->getKernelContext());
@@ -94,17 +93,20 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 		m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioDirectory", directoryName.c_str());
 		m_pRuntimeConfigurationManager->createConfigurationToken("__volatile_ScenarioDir", directoryName.c_str());
 		const std::string workspaceConfigurationFile = directoryName + "/" + std::string("openvibe-workspace.conf");
-		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << CString(workspaceConfigurationFile.c_str()) << "] to runtime configuration manager\n";
+		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << CString(workspaceConfigurationFile.c_str()) <<
+				"] to runtime configuration manager\n";
 		m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(workspaceConfigurationFile.c_str()));
 		std::string scenarioConfigurationFile = directoryName + "/" + std::string("scenario.conf");
-		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
+		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) <<
+				"] to runtime configuration manager\n";
 		m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 
 		const size_t ext = filename.rfind('.');
 		if (ext != std::string::npos)
 		{
 			scenarioConfigurationFile = filename.substr(0, ext) + std::string(".conf");
-			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
+			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) <<
+					"] to runtime configuration manager\n";
 			m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 		}
 	}
@@ -122,14 +124,8 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 			{
 				this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << l_sName << "] = [" << l_sValue << "].\n";
 				CIdentifier l_oTokenIdentifier = m_pRuntimeConfigurationManager->lookUpConfigurationTokenIdentifier(l_sName);
-				if (l_oTokenIdentifier == OV_UndefinedIdentifier)
-				{
-					m_pRuntimeConfigurationManager->createConfigurationToken(l_sName, l_sValue);
-				}
-				else
-				{
-					m_pRuntimeConfigurationManager->setConfigurationTokenValue(l_oTokenIdentifier, l_sValue);
-				}
+				if (l_oTokenIdentifier == OV_UndefinedIdentifier) { m_pRuntimeConfigurationManager->createConfigurationToken(l_sName, l_sValue); }
+				else { m_pRuntimeConfigurationManager->setConfigurationTokenValue(l_oTokenIdentifier, l_sValue); }
 			}
 				// This should not happen
 			else
@@ -139,7 +135,8 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager), "Checking settings failed for scenario duplicate instantiated for the current runtime session", ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager),
+						"Checking settings failed for scenario duplicate instantiated for the current runtime session", ErrorType::BadArgument);
 
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
@@ -161,10 +158,7 @@ EPlayerReturnCode CPlayer::initialize()
 
 	SchedulerInitializationCode code = m_oScheduler.initialize();
 
-	if (code == SchedulerInitialization_Failed)
-	{
-		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed);
-	}
+	if (code == SchedulerInitialization_Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed); }
 	if (code == SchedulerInitialization_BoxInitializationFailed)
 	{
 		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
@@ -313,7 +307,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 #endif // CPlayer_Debug_Time
 
 	uint64_t l_ui64SchedulerStepDuration = m_oScheduler.getStepDuration();
-	uint64_t l_ui64StartTime             = System::Time::zgetTime();
+	uint64_t tStart                      = System::Time::zgetTime();
 	bool l_bFinished                     = false;
 	while (!l_bFinished)
 	{
@@ -322,12 +316,10 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 #if defined CPlayer_Debug_Time
 ::printf("    Next time : %llx\n", l_ui64NextSchedulerTime);
 #endif // CPlayer_Debug_Time
-		if (m_eStatus == PlayerStatus_Stop)
-		{
-			l_bFinished = true;
-		}
+		if (m_eStatus == PlayerStatus_Stop) { l_bFinished = true; }
 
-		if ((l_bHasTimeToReach && (l_ui64NextSchedulerTime > m_ui64CurrentTimeToReach)) || ((m_eStatus == PlayerStatus_Forward || l_bHasTimeToReach) && (m_oScheduler.getCurrentTime() >= ui64MaximumTimeToReach)))
+		if ((l_bHasTimeToReach && (l_ui64NextSchedulerTime > m_ui64CurrentTimeToReach)) || (
+				(m_eStatus == PlayerStatus_Forward || l_bHasTimeToReach) && (m_oScheduler.getCurrentTime() >= ui64MaximumTimeToReach)))
 		{
 			l_bFinished = true;
 #if defined CPlayer_Debug_Time
@@ -336,7 +328,10 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 		}
 		else
 		{
-			if (l_bHasTimeToReach) { m_ui64InnerLateness = (m_ui64CurrentTimeToReach > l_ui64NextSchedulerTime ? m_ui64CurrentTimeToReach - l_ui64NextSchedulerTime : 0); }
+			if (l_bHasTimeToReach)
+			{
+				m_ui64InnerLateness = (m_ui64CurrentTimeToReach > l_ui64NextSchedulerTime ? m_ui64CurrentTimeToReach - l_ui64NextSchedulerTime : 0);
+			}
 			else { m_ui64InnerLateness = 0; }
 
 			if (!m_oScheduler.loop())
@@ -350,7 +345,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 ::printf("Iterates (%f / %f - %s)\n", (m_oScheduler.getCurrentTime()>>22)/1024., (ui64MaximumTimeToReach>>22)/1024., (m_eStatus==PlayerStatus_Forward?"true":"false"));
 #endif // CPlayer_Debug_Time
 		}
-		if (System::Time::zgetTime() > l_ui64StartTime + g_ui64Scheduler_Maximum_Loops_Duration_)
+		if (System::Time::zgetTime() > tStart + g_ui64Scheduler_Maximum_Loops_Duration_)
 		{
 			l_bFinished = true;
 #if defined CPlayer_Debug_Time
@@ -365,10 +360,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 	}
 
 	uint64_t l_ui64Lateness;
-	if (m_ui64CurrentTimeToReach > m_oScheduler.getCurrentTime())
-	{
-		l_ui64Lateness = m_ui64CurrentTimeToReach - m_oScheduler.getCurrentTime();
-	}
+	if (m_ui64CurrentTimeToReach > m_oScheduler.getCurrentTime()) { l_ui64Lateness = m_ui64CurrentTimeToReach - m_oScheduler.getCurrentTime(); }
 	else { l_ui64Lateness = 0; }
 
 #if defined CPlayer_Debug_Time

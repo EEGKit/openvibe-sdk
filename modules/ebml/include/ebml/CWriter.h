@@ -4,14 +4,14 @@
 
 namespace EBML
 {
-	class EBML_API CWriter : public IWriter
+	class EBML_API CWriter final : public IWriter
 	{
 	public:
 
 		explicit CWriter(IWriterCallback& rWriterCallback);
 		~CWriter() override;
-		bool openChild(const CIdentifier& rIdentifier) override;
-		bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+		bool openChild(const CIdentifier& identifier) override;
+		bool setChildData(const void* buffer, const uint64_t size) override;
 		bool closeChild() override;
 		void release() override;
 

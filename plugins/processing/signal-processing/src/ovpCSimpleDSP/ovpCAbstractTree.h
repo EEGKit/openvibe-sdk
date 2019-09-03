@@ -38,9 +38,7 @@ protected:
 
 public:
 
-	CAbstractTreeNode(const bool bTerminal, const bool bIsConstant)
-		: m_bIsTerminal(bTerminal)
-		  , m_bIsConstant(bIsConstant) { }
+	CAbstractTreeNode(const bool bTerminal, const bool bIsConstant) : m_bIsTerminal(bTerminal), m_bIsConstant(bIsConstant) { }
 
 	//! virtual destructor
 	virtual ~CAbstractTreeNode() { }
@@ -105,38 +103,38 @@ public:
 	bool m_bIsAssociative = false;
 
 	//Constructors
-	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative) { }
+	CAbstractTreeParentNode(const uint64_t nodeId, const bool isAssociative = false)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative) { }
 
-	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative) { m_oChildren.push_back(pChild); }
+	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* child, const bool isAssociative = false)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative) { m_oChildren.push_back(child); }
 
-	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
+	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* leftChild, CAbstractTreeNode* rightChild, const bool isAssociative = false)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative)
 	{
-		m_oChildren.push_back(pLeftChild);
-		m_oChildren.push_back(pRightChild);
+		m_oChildren.push_back(leftChild);
+		m_oChildren.push_back(rightChild);
 	}
 
-	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pTestChild, CAbstractTreeNode* pIfChild, CAbstractTreeNode* pThenChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
+	CAbstractTreeParentNode(uint64_t nodeId, CAbstractTreeNode* testChild, CAbstractTreeNode* ifChild, CAbstractTreeNode* thenChild, bool isAssociative = false)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative)
 	{
-		m_oChildren.push_back(pTestChild);
-		m_oChildren.push_back(pIfChild);
-		m_oChildren.push_back(pThenChild);
+		m_oChildren.push_back(testChild);
+		m_oChildren.push_back(ifChild);
+		m_oChildren.push_back(thenChild);
 	}
 
 	/**
 	 * Returns the node's operator identifier.
 	 * \return The operator identifier
 	 */
-	uint64_t getOperatorIdentifier() { return m_ui64Identifier; }
+	uint64_t getOperatorIdentifier() const { return m_ui64Identifier; }
 
 	/**
 	 * Used to know if the node is an associative node.
 	 * \return True if the node is an associative one.
 	 */
-	bool isAssociative() { return m_bIsAssociative; }
+	bool isAssociative() const { return m_bIsAssociative; }
 
 	/**
 	 * Returns the vector of children of the node.
@@ -146,15 +144,15 @@ public:
 
 	/**
 	 * Adds a child to this node.
-	 * \param pChild The child to add.
+	 * \param child The child to add.
 	 */
-	virtual void addChild(CAbstractTreeNode* pChild) { m_oChildren.push_back(pChild); }
+	virtual void addChild(CAbstractTreeNode* child) { m_oChildren.push_back(child); }
 
 	//! Destructor.
 	~CAbstractTreeParentNode() override;
 
 	//! Debug function, prints the node and its children (prefix notation)
-	void print(OpenViBE::Kernel::ILogManager& rLogManager) override
+	void print(OpenViBE::Kernel::ILogManager& logManager) override
 	{
 		std::string op;
 		switch (m_ui64Identifier)
@@ -237,20 +235,20 @@ public:
 				break;
 		}
 
-		rLogManager << "(" << op.c_str() << " ";
+		logManager << "(" << op.c_str() << " ";
 		for (size_t i = 0; i < m_oChildren.size(); i++)
 		{
 			if (m_oChildren[i] == nullptr) { }
-			else { m_oChildren[i]->print(rLogManager); }
-			rLogManager << " ";
+			else { m_oChildren[i]->print(logManager); }
+			logManager << " ";
 		}
-		rLogManager << ")";
+		logManager << ")";
 	}
 
 	bool simplify(CAbstractTreeNode*& node) override;
 	void levelOperators() override;
 	void useNegationOperator() override;
-	void generateCode(CEquationParser& oParser) override;
+	void generateCode(CEquationParser& parser) override;
 };
 
 /**
@@ -266,37 +264,34 @@ protected:
 
 public:
 
-	explicit CAbstractTreeValueNode(double f64Value) : CAbstractTreeNode(true, true), m_f64Value(f64Value) {}
+	explicit CAbstractTreeValueNode(const double value) : CAbstractTreeNode(true, true), m_f64Value(value) {}
 
 	//! Destructor
 	~CAbstractTreeValueNode() override { }
 
 	/**
 	* Used to set the value of the node.
-	* \param f64NewValue The node's new value.
+	* \param value The node's new value.
 	*/
-	void setValue(double f64NewValue) { m_f64Value = f64NewValue; }
+	void setValue(double value) { m_f64Value = value; }
 
 	/**
 	 * Used to know the value of the node.
 	 * \return The node's value.
 	 */
-	double getValue() { return m_f64Value; }
+	double getValue() const { return m_f64Value; }
 
-	void print(OpenViBE::Kernel::ILogManager& rLogManager) override
-	{
-		rLogManager << m_f64Value;
-	}
+	void print(OpenViBE::Kernel::ILogManager& logManager) override { logManager << m_f64Value; }
 
-	bool simplify(CAbstractTreeNode*& pModifiedNode) override
+	bool simplify(CAbstractTreeNode*& modifiedNode) override
 	{
-		pModifiedNode = this;
+		modifiedNode = this;
 		return false;
 	}
 
 	void levelOperators() override { }
 	void useNegationOperator() override { }
-	void generateCode(CEquationParser& oParser) override;
+	void generateCode(CEquationParser& parser) override;
 };
 
 /**
@@ -306,29 +301,27 @@ class CAbstractTreeVariableNode : public CAbstractTreeNode
 {
 public:
 
-	explicit CAbstractTreeVariableNode(uint32_t index)
-		: CAbstractTreeNode(true, false)
-		  , m_ui32Index(index) { }
+	explicit CAbstractTreeVariableNode(const uint32_t index) : CAbstractTreeNode(true, false), m_ui32Index(index) { }
 
 	~CAbstractTreeVariableNode() override { }
 
-	void print(OpenViBE::Kernel::ILogManager& rLogManager) override
+	void print(OpenViBE::Kernel::ILogManager& logManager) override
 	{
 		char l_sName[2];
 		l_sName[0] = 'a' + m_ui32Index;
 		l_sName[1] = 0;
-		rLogManager << l_sName;
+		logManager << l_sName;
 	}
 
-	bool simplify(CAbstractTreeNode*& pModifiedNode) override
+	bool simplify(CAbstractTreeNode*& modifiedNode) override
 	{
-		pModifiedNode = this;
+		modifiedNode = this;
 		return false;
 	}
 
 	void levelOperators() override { }
 	void useNegationOperator() override { }
-	void generateCode(CEquationParser& oParser) override;
+	void generateCode(CEquationParser& parser) override;
 
 protected:
 
@@ -349,13 +342,13 @@ protected:
 public:
 
 	//! Constructor
-	explicit CAbstractTree(CAbstractTreeNode* pRoot) : m_pRoot(pRoot) { }
+	explicit CAbstractTree(CAbstractTreeNode* root) : m_pRoot(root) { }
 
 	//! Destructor
 	~CAbstractTree() { delete m_pRoot; }
 
 	//! Prints the whole tree.
-	void printTree(OpenViBE::Kernel::ILogManager& rLogManager) { m_pRoot->print(rLogManager); }
+	void printTree(OpenViBE::Kernel::ILogManager& logManager) const { m_pRoot->print(logManager); }
 
 	/**
 	 * Used to simplify the tree.
@@ -366,26 +359,26 @@ public:
 	 * Part of the process of simplification.
 	 * Levels recursively the associative operators nodes.
 	 */
-	void levelOperators();
+	void levelOperators() const { m_pRoot->levelOperators(); }
 
 	/**
 	 * Changes the tree so it uses the NEG operator whenever it is possible.
 	 * (ie replaces (* -1 X) by (NEG X)
 	 */
-	void useNegationOperator() { m_pRoot->useNegationOperator(); }
+	void useNegationOperator() const { m_pRoot->useNegationOperator(); }
 
 	/**
 	 * Generates the set of function calls needed to do the desired computation.
-	 * \param oParser The parser containing the function pointers stack and function contexts stack.
+	 * \param parser The parser containing the function pointers stack and function contexts stack.
 	 */
-	void generateCode(CEquationParser& oParser);
+	void generateCode(CEquationParser& parser);
 
 	/**
 	* Tries to recognize simple tree structures (X*X, X*Cste, X+Cste,...)
-	* \param ui64TreeIdentifier The identifier of the tree (OP_USERDEF for non special tree).
-	* \param f64Parameter The optional parameter if it is a special tree.
+	* \param treeId The identifier of the tree (OP_USERDEF for non special tree).
+	* \param parameter The optional parameter if it is a special tree.
 	*/
-	void recognizeSpecialTree(uint64_t& ui64TreeIdentifier, double& f64Parameter);
+	void recognizeSpecialTree(uint64_t& treeId, double& parameter);
 };
 
 /**

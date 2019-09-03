@@ -18,23 +18,17 @@ namespace
 {
 	std::vector<std::string> split(const std::string& sString, const char c)
 	{
-		std::vector<std::string> l_vResult;
-		std::string::size_type i = 0;
-		std::string::size_type j = 0;
+		std::vector<std::string> result;
+		size_t i = 0;
+		size_t j = 0;
 		while (i < sString.length())
 		{
 			j = i;
-			while (j < sString.length() && sString[j] != c)
-			{
-				j++;
-			}
-			if (i != j)
-			{
-				l_vResult.push_back(std::string(sString, i, j - i));
-			}
+			while (j < sString.length() && sString[j] != c) { j++; }
+			if (i != j) { result.push_back(std::string(sString, i, j - i)); }
 			i = j + 1;
 		}
-		return l_vResult;
+		return result;
 	}
 } // namespace
 
@@ -56,10 +50,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 				double l_dValue = std::stod(l_vSettingRange[0].c_str());
 				m_vSelected.push_back(std::pair<double, double>(l_dValue, l_dValue));
 			}
-			catch (const std::exception&)
-			{
-				l_bGood = false;
-			}
+			catch (const std::exception&) { l_bGood = false; }
 		}
 		else if (l_vSettingRange.size() == 2)
 		{
@@ -69,10 +60,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 				double l_dHighValue = std::stod(l_vSettingRange[1].c_str());
 				m_vSelected.push_back(std::pair<double, double>(min(l_dLowValue, l_dHighValue), max(l_dLowValue, l_dHighValue)));
 			}
-			catch (const std::exception&)
-			{
-				l_bGood = false;
-			}
+			catch (const std::exception&) { l_bGood = false; }
 		}
 
 		if (!l_bGood)
@@ -97,7 +85,8 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	ip_pFrequencyAbscissa.setReferenceTarget(op_pBands);
-	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
+	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(
+		m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 
 	ip_pMatrix = &m_oMatrix;
 	op_pMatrix = &m_oMatrix;
@@ -128,7 +117,7 @@ bool CBoxAlgorithmFrequencyBandSelector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmFrequencyBandSelector::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmFrequencyBandSelector::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -136,12 +125,12 @@ bool CBoxAlgorithmFrequencyBandSelector::processInput(const uint32_t ui32InputIn
 
 bool CBoxAlgorithmFrequencyBandSelector::process()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
+		op_pMemoryBuffer = boxContext.getOutputChunk(0);
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
@@ -173,10 +162,13 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd))
+		{
+			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd);
+		}
 
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
+		boxContext.markInputAsDeprecated(0, i);
 	}
 
 	return true;

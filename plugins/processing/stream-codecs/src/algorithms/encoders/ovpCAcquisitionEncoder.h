@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CAcquisitionEncoder : public CEBMLBaseEncoder
+		class CAcquisitionEncoder final : public CEBMLBaseEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pChannelUnitsStream;
 		};
 
-		class CAcquisitionEncoderDesc : public CEBMLBaseEncoderDesc
+		class CAcquisitionEncoderDesc final : public CEBMLBaseEncoderDesc
 		{
 		public:
 			void release() override { }
@@ -57,12 +57,22 @@ namespace OpenViBEPlugins
 			{
 				CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ExperimentInformationStream, "Experiment information stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_SignalStream, "Signal stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_StimulationStream, "Stimulation stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelLocalisationStream, "Channel localisation stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelUnitsStream, "Channel units stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ExperimentInformationStream, "Experiment information stream",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_SignalStream, "Signal stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_StimulationStream, "Stimulation stream",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelLocalisationStream, "Channel localisation stream",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelUnitsStream, "Channel units stream",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
 
 				return true;
 			}

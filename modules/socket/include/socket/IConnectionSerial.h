@@ -9,7 +9,7 @@ namespace Socket
 	{
 	public:
 
-		virtual bool connect(const char* sURL, unsigned long ui32BaudRate) = 0;
+		virtual bool connect(const char* sURL, const unsigned long ui32BaudRate) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.
@@ -42,10 +42,10 @@ namespace Socket
 
 		/**
 		 * \brief Set tiemouts for read and write function.
-		 * \param ui32DecisecondsTimeout [in] Timeout in deciseconds.
+		 * \param decisecondsTimeout [in] Timeout in deciseconds.
 		 * \return True if succeed, else false.
 		 */
-		virtual bool setTimeouts(unsigned long ui32DecisecondsTimeout) = 0;
+		virtual bool setTimeouts(const uint32_t decisecondsTimeout) = 0;
 
 	protected:
 		void saveLastError();

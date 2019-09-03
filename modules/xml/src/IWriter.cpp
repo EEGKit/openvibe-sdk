@@ -8,11 +8,11 @@ using namespace std;
 
 namespace XML
 {
-	class CWriter : public IWriter
+	class CWriter final : public IWriter
 	{
 	public:
 		explicit CWriter(IWriterCallback& rWriterCallback);
-		bool openChild(const char* sName) override;
+		bool openChild(const char* name) override;
 		bool setChildData(const char* sData) override;
 		bool setAttribute(const char* sAttributeName, const char* sAttributeValue) override;
 		bool closeChild() override;
@@ -24,17 +24,17 @@ namespace XML
 	protected:
 		IWriterCallback& m_rWriterCallback;
 		stack<string> m_vNodes;
-		bool m_bHasChild = false;
-		bool m_bHasData = false;
+		bool m_bHasChild             = false;
+		bool m_bHasData              = false;
 		bool m_bHasClosedOpeningNode = true;
 	};
 }
 
 CWriter::CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
 
-bool CWriter::openChild(const char* sName)
+bool CWriter::openChild(const char* name)
 {
-	if (sName == nullptr) { return false; }
+	if (name == nullptr) { return false; }
 
 	if (m_bHasData) { return false; }
 
@@ -45,9 +45,9 @@ bool CWriter::openChild(const char* sName)
 	}
 
 	string l_sIndent(m_vNodes.size(), '\t');
-	string l_sResult = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(sName);
+	string l_sResult = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
 	m_rWriterCallback.write(l_sResult.c_str());
-	m_vNodes.push(sName);
+	m_vNodes.push(name);
 	m_bHasChild             = false;
 	m_bHasData              = false;
 	m_bHasClosedOpeningNode = false;
@@ -126,20 +126,15 @@ void CWriter::sanitize(string& sString, bool escapeQuotes)
 	if (sString.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = sString.find("&", 0); i != string::npos; i = sString.find("&", i + 1))
-			sString.replace(i, 1, "&amp;");
-		for (i = sString.find("<", 0); i != string::npos; i = sString.find("<", i + 1))
-			sString.replace(i, 1, "&lt;");
-		for (i = sString.find(">", 0); i != string::npos; i = sString.find(">", i + 1))
-			sString.replace(i, 1, "&gt;");
+		for (i = sString.find("&", 0); i != string::npos; i = sString.find("&", i + 1)) sString.replace(i, 1, "&amp;");
+		for (i = sString.find("<", 0); i != string::npos; i = sString.find("<", i + 1)) sString.replace(i, 1, "&lt;");
+		for (i = sString.find(">", 0); i != string::npos; i = sString.find(">", i + 1)) sString.replace(i, 1, "&gt;");
 
 		// Quotes need only be escaped in attributes
 		if (escapeQuotes)
 		{
-			for (i = sString.find("'", 0); i != string::npos; i = sString.find("'", i + 1))
-				sString.replace(i, 1, "&apos;");
-			for (i = sString.find("\"", 0); i != string::npos; i = sString.find("\"", i + 1))
-				sString.replace(i, 1, "&quot;");
+			for (i = sString.find("'", 0); i != string::npos; i = sString.find("'", i + 1)) sString.replace(i, 1, "&apos;");
+			for (i = sString.find("\"", 0); i != string::npos; i = sString.find("\"", i + 1)) sString.replace(i, 1, "&quot;");
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox);
+			CBoxAlgorithmContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox, const IBox* pBox);
 			~CBoxAlgorithmContext() override;
 			const IBox* getStaticBoxContext() override;
 			IBoxIO* getDynamicBoxContext() override;
@@ -27,7 +27,7 @@ namespace OpenViBE
 		protected:
 
 			const IBox* m_pStaticBoxContext = nullptr;
-			IBoxIO* m_pDynamicBoxContext = nullptr;
+			IBoxIO* m_pDynamicBoxContext    = nullptr;
 			// here we prefer value type over reference/pointer
 			// in order to improve performance at runtime (no heap allocation)
 			CPlayerContext m_oPlayerContext;

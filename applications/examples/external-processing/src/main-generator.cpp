@@ -19,12 +19,12 @@
 #include <openvibe/ovITimeArithmetics.h>
 
 
-static bool s_DidRequestForcedQuit = false;
+static bool didRequestForcedQuit = false;
 
 using namespace Communication;
 using namespace std;
 
-static void signalHandler(int /* signal */) { s_DidRequestForcedQuit = true; }
+static void signalHandler(int /* signal */) { didRequestForcedQuit = true; }
 
 
 class EBMLWriterCallback
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 	EBML::IWriterHelper* writerHelper = EBML::createWriterHelper();
 	writerHelper->connect(writer);
 
-	s_DidRequestForcedQuit = false;
+	didRequestForcedQuit = false;
 
 	MessagingClient client;
 
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (s_DidRequestForcedQuit) { exit(EXIT_SUCCESS); }
+		if (didRequestForcedQuit) { exit(EXIT_SUCCESS); }
 	}
 
 	std::cout << "Connected to server\n";
@@ -129,13 +129,13 @@ int main(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
-	const uint32_t channelCount     = uint32_t(std::stoul(parameters.at("Channel Count")));
+	const uint32_t nChannel     = uint32_t(std::stoul(parameters.at("Channel Count")));
 	const uint32_t samplingRate     = uint32_t(std::stoul(parameters.at("Sampling Rate")));
 	const uint32_t samplesPerBuffer = uint32_t(std::stoul(parameters.at("Samples Per Buffer")));
 	const uint32_t samplesToSend    = uint32_t(std::stoul(parameters.at("Amount of Samples to Generate")));
 
 	vector<double> matrix;
-	matrix.resize(channelCount * samplesPerBuffer);
+	matrix.resize(nChannel * samplesPerBuffer);
 
 	// Announce to server that the box has finished initializing and wait for acknowledgement
 	while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
@@ -182,7 +182,7 @@ int main(int argc, char** argv)
 			{
 				writerHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Size);
 				{
-					writerHelper->setUIntegerAsChildData(channelCount);
+					writerHelper->setUIntegerAsChildData(nChannel);
 					writerHelper->closeChild();
 				}
 				writerHelper->closeChild();
@@ -210,7 +210,7 @@ int main(int argc, char** argv)
 	client.pushSync();
 
 	uint32_t sentSamples = 0;
-	while (!s_DidRequestForcedQuit || (samplesToSend != 0 && sentSamples < samplesToSend))
+	while (!didRequestForcedQuit || (samplesToSend != 0 && sentSamples < samplesToSend))
 	{
 		if (client.isEndReceived())
 		{
@@ -238,7 +238,13 @@ int main(int argc, char** argv)
 
 		while (sentSamples < expectedSamples && (samplesToSend == 0 || sentSamples < samplesToSend))
 		{
-			for (size_t channel = 0; channel < channelCount; channel++) { for (size_t sample = 0; sample < samplesPerBuffer; sample++) { matrix[channel * samplesPerBuffer + sample] = sin((sentSamples + sample) / double(samplingRate)); } }
+			for (size_t channel = 0; channel < nChannel; channel++)
+			{
+				for (size_t sample = 0; sample < samplesPerBuffer; sample++)
+				{
+					matrix[channel * samplesPerBuffer + sample] = sin((sentSamples + sample) / double(samplingRate));
+				}
+			}
 
 			writerCallback.clear();
 			writerHelper->openChild(OVTK_NodeId_Buffer);

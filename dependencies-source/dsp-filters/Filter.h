@@ -177,8 +177,16 @@ namespace Dsp
 
 		int getNumChannels() override { return Channels; }
 		void reset() override { m_state.reset(); }
-		void process(int numSamples, float* const* arrayOfChannels) override { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
-		void process(int numSamples, double* const* arrayOfChannels) override { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
+
+		void process(int numSamples, float* const* arrayOfChannels) override
+		{
+			m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design);
+		}
+
+		void process(int numSamples, double* const* arrayOfChannels) override
+		{
+			m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design);
+		}
 
 	protected:
 		ChannelsState<Channels, typename DesignClass::template State<StateType>> m_state;
@@ -201,7 +209,7 @@ namespace Dsp
 		void reset() { m_state.reset(); }
 
 		template <typename Sample>
-		void process(int numSamples, Sample* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, *((FilterClass*)this)); }
+		void process(int numSamples, Sample* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, *static_cast<FilterClass*>(this)); }
 
 	protected:
 		ChannelsState<Channels, typename FilterClass::template State<StateType>> m_state;

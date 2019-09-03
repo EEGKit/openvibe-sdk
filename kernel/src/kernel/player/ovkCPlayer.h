@@ -20,9 +20,9 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPlayer(const IKernelContext& rKernelContext);
+			explicit CPlayer(const IKernelContext& ctx);
 			~CPlayer() override;
-			bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens) override;
+			bool setScenario(const CIdentifier& scenarioID, const CNameValuePairList* pLocalConfigurationTokens) override;
 			IConfigurationManager& getRuntimeConfigurationManager() const override;
 			IScenarioManager& getRuntimeScenarioManager() const override;
 			CIdentifier getRuntimeScenarioIdentifier() const override;

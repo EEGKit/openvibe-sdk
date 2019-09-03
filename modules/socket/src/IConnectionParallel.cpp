@@ -24,7 +24,7 @@
 
 namespace Socket
 {
-	class CConnectionParallel : public IConnectionParallel
+	class CConnectionParallel final : public IConnectionParallel
 	{
 	protected:
 		unsigned short m_ui16PortNumber;
@@ -44,10 +44,10 @@ namespace Socket
 
 			if (m_hmodTVicPort != nullptr)
 			{
-				m_lpfnTVicIsDriverOpened = (LPFNTVICPORTISDRIVEROPENED)GetProcAddress(m_hmodTVicPort, "IsDriverOpened");
-				m_lpfnTVicPortOpen       = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
-				m_lpfnTVicPortClose      = (LPFNTVICPORTCLOSE)GetProcAddress(m_hmodTVicPort, "CloseTVicPort");
-				m_lpfnTVicPortWrite      = (LPFNTVICPORTWRITE)GetProcAddress(m_hmodTVicPort, "WritePort");
+				m_lpfnTVicIsDriverOpened = LPFNTVICPORTISDRIVEROPENED(GetProcAddress(m_hmodTVicPort, "IsDriverOpened"));
+				m_lpfnTVicPortOpen       = LPFNTVICPORTOPEN(GetProcAddress(m_hmodTVicPort, "OpenTVicPort"));
+				m_lpfnTVicPortClose      = LPFNTVICPORTCLOSE(GetProcAddress(m_hmodTVicPort, "CloseTVicPort"));
+				m_lpfnTVicPortWrite      = LPFNTVICPORTWRITE(GetProcAddress(m_hmodTVicPort, "WritePort"));
 
 				if (!m_lpfnTVicIsDriverOpened || !m_lpfnTVicPortOpen || !m_lpfnTVicPortClose || !m_lpfnTVicPortWrite)
 				{
@@ -55,10 +55,7 @@ namespace Socket
 					this->release();
 				}
 			}
-			else
-			{
-				m_sLastError = "Cannot found or open TVicPort.dll: " + this->getLastErrorFormated();
-			}
+			else { m_sLastError = "Cannot found or open TVicPort.dll: " + this->getLastErrorFormated(); }
 #endif
 		}
 
@@ -105,12 +102,12 @@ namespace Socket
 
 		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
-			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(pBuffer));
+			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(buffer));
 
 			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
 			return ui32BufferSize;
@@ -124,7 +121,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize = 8) override
+		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -147,7 +144,7 @@ namespace Socket
 				return 0;
 			}
 
-			int l_iResult = ::read(m_iFile, pBuffer, ui32BufferSize);
+			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
 			if(l_iResult < 0)
 			{
 				this->close();
@@ -161,22 +158,19 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
-			const char* p   = reinterpret_cast<const char*>(pBuffer);
+			const char* p            = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
-			{
-				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-			}
+			while (l_ui32BytesLeft != 0 && this->isConnected()) { l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft); }
 
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
-			char* p         = reinterpret_cast<char*>(pBuffer);
+			char* p                  = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -244,7 +238,7 @@ namespace Socket
 #endif
 		}
 
-		std::string getLastError() override {return m_sLastError;}
+		std::string getLastError() override { return m_sLastError; }
 
 		std::string getLastErrorFormated()
 		{

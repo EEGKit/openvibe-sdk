@@ -138,20 +138,11 @@ void openStream(T& rStream, const char* sFile, std::ios_base::openmode oMode)
 	catch (const std::logic_error&) { rStream.open(sFile, oMode); }
 }
 
-void Files::openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode)
-{
-	openStream<std::ofstream>(rStream, sFile, oMode);
-}
+void Files::openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode) { openStream<std::ofstream>(rStream, sFile, oMode); }
 
-void Files::openIFStream(std::ifstream& rStream, const char* sFile, std::ios_base::openmode oMode)
-{
-	openStream<std::ifstream>(rStream, sFile, oMode);
-}
+void Files::openIFStream(std::ifstream& rStream, const char* sFile, std::ios_base::openmode oMode) { openStream<std::ifstream>(rStream, sFile, oMode); }
 
-void Files::openFStream(std::fstream& rStream, const char* sFile, std::ios_base::openmode oMode)
-{
-	openStream<std::fstream>(rStream, sFile, oMode);
-}
+void Files::openFStream(std::fstream& rStream, const char* sFile, std::ios_base::openmode oMode) { openStream<std::fstream>(rStream, sFile, oMode); }
 
 #endif
 
@@ -194,18 +185,17 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 	bool l_bResult = true;
 	if (pFile1 && pFile2)
 	{
-		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-		HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
+										 nullptr);
+		HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
+										 nullptr);
 		if (l_pHandle1 && l_pHandle2)
 		{
 			BY_HANDLE_FILE_INFORMATION l_oStat1;
 			BY_HANDLE_FILE_INFORMATION l_oStat2;
 			BOOL l_bStat1 = GetFileInformationByHandle(l_pHandle1, &l_oStat1);
 			BOOL l_bStat2 = GetFileInformationByHandle(l_pHandle2, &l_oStat2);
-			if (!l_bStat1 && !l_bStat2)
-			{
-				l_bResult = true;
-			}
+			if (!l_bStat1 && !l_bStat2) { l_bResult = true; }
 			else if (l_bStat1 && l_bStat2)
 			{
 				l_bResult =
@@ -217,10 +207,7 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 						(l_oStat1.ftLastWriteTime.dwHighDateTime == l_oStat2.ftLastWriteTime.dwHighDateTime) &&
 						(l_oStat1.ftLastWriteTime.dwLowDateTime == l_oStat2.ftLastWriteTime.dwLowDateTime);
 			}
-			else
-			{
-				l_bResult = false;
-			}
+			else { l_bResult = false; }
 			CloseHandle(l_pHandle1);
 			CloseHandle(l_pHandle2);
 		}
@@ -290,11 +277,11 @@ bool Files::createParentPath(const char* path)
 #endif
 }
 
-bool Files::getParentPath(const char* sPath, char* sParentPath)
+bool Files::getParentPath(const char* path, char* sParentPath)
 {
-	if (!sPath || !sParentPath) { return false; }
+	if (!path || !sParentPath) { return false; }
 
-	strcpy(sParentPath, boost::filesystem::path(sPath).parent_path().string().c_str());
+	strcpy(sParentPath, boost::filesystem::path(path).parent_path().string().c_str());
 
 	return true;
 }
@@ -308,11 +295,11 @@ bool Files::getParentPath(const char* path, char* parentPath, size_t size)
 	return true;
 }
 
-bool Files::getFilename(const char* sPath, char* sFilename)
+bool Files::getFilename(const char* path, char* filename)
 {
-	if (!sPath || !sFilename) { return false; }
+	if (!path || !filename) { return false; }
 
-	strcpy(sFilename, boost::filesystem::path(sPath).filename().string().c_str());
+	strcpy(filename, boost::filesystem::path(path).filename().string().c_str());
 
 	return true;
 }
@@ -326,11 +313,11 @@ bool Files::getFilename(const char* path, char* filename, size_t size)
 	return true;
 }
 
-bool Files::getFilenameWithoutExtension(const char* sPath, char* sFilename)
+bool Files::getFilenameWithoutExtension(const char* path, char* filename)
 {
-	if (!sPath || !sFilename) { return false; }
+	if (!path || !filename) { return false; }
 
-	strcpy(sFilename, boost::filesystem::path(sPath).filename().replace_extension("").string().c_str());
+	strcpy(filename, boost::filesystem::path(path).filename().replace_extension("").string().c_str());
 
 	return true;
 }
@@ -397,30 +384,30 @@ bool Files::removeAll(const char* path)
 
 #if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
 
-bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
+bool Files::copyFile(const char* srcFile, const char* dstPath)
 {
-	if (!sSourceFile || !sDestinationPath) { return false; }
+	if (!srcFile || !dstPath) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathSourceUTF16      = Common::Converter::utf8_to_utf16(sSourceFile);
-	wstring pathDestinationUTF16 = Common::Converter::utf8_to_utf16(sDestinationPath);
+	wstring pathSourceUTF16      = Common::Converter::utf8_to_utf16(srcFile);
+	wstring pathDestinationUTF16 = Common::Converter::utf8_to_utf16(dstPath);
 	boost::filesystem::copy_file(pathSourceUTF16, pathDestinationUTF16);
 #else
-	boost::filesystem::copy_file(sSourceFile, sDestinationPath);
+	boost::filesystem::copy_file(srcFile, dstPath);
 #endif
 	return true;
 }
 
-bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
+bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 {
-	if (!sourceDir || !targetDir) { return false; }
+	if (!srcDir || !dstDir) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathSourceUTF16        = Common::Converter::utf8_to_utf16(sourceDir);
-	wstring pathTargetUTF16        = Common::Converter::utf8_to_utf16(targetDir);
+	wstring pathSourceUTF16        = Common::Converter::utf8_to_utf16(srcDir);
+	wstring pathTargetUTF16        = Common::Converter::utf8_to_utf16(dstDir);
 	boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
 	boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());
 #else
-	boost::filesystem::path source = sourceDir;
-	boost::filesystem::path target = targetDir;
+	boost::filesystem::path source = srcDir;
+	boost::filesystem::path target = dstDir;
 #endif
 	return recursiveCopy(source, target);
 }
@@ -431,25 +418,25 @@ bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
 
 #else
 // ugly hack for old boost on linux ...
-bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
+bool Files::copyFile(const char* srcFile, const char* dstPath)
 {
-	if(!sSourceFile || !sDestinationPath) { return false; }
+	if(!srcFile || !dstPath) { return false; }
 	
-	if (FS::Files::fileExists(sDestinationPath)) { return false; }
+	if (FS::Files::fileExists(dstPath)) { return false; }
 	
-	std::string command = std::string("cp '") + sSourceFile + "' '" + sDestinationPath+"'";	
+	std::string command = std::string("cp '") + srcFile + "' '" + dstPath+"'";	
 	
 	return (std::system(command.c_str()) != -1);
 }
 
-bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
+bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 {
 
-	if(!sourceDir || !sourceDir) { return false; }
+	if(!srcDir || !srcDir) { return false; }
 	
-	if (FS::Files::directoryExists(targetDir)) { return false; }
+	if (FS::Files::directoryExists(dstDir)) { return false; }
 	
-	std::string command = std::string("cp -r '") + sourceDir + "' '" + targetDir+"'";		
+	std::string command = std::string("cp -r '") + srcDir + "' '" + dstDir+"'";		
 	return (std::system(command.c_str()) != -1);	
 }
 #endif

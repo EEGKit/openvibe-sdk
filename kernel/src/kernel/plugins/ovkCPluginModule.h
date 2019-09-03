@@ -12,9 +12,9 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPluginModule(const IKernelContext& rKernelContext);
+			explicit CPluginModule(const IKernelContext& ctx);
 			~CPluginModule() override;
-			bool load(const CString& sName, CString* pError) override;
+			bool load(const CString& filename, CString* pError) override;
 			bool unload(CString* pError) override;
 			bool getFileName(CString& rFileName) const override;
 			bool initialize() override;

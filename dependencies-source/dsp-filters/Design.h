@@ -32,9 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *******************************************************************************/
-
-#ifndef DSPFILTERS_DESIGN_H
-#define DSPFILTERS_DESIGN_H
+#pragma once
 
 #include "Common.h"
 #include "Params.h"
@@ -46,17 +44,15 @@ namespace Dsp
 #include "DesignSynthesisH.inl"
 
 		// Sampling rate is the first param for every Design filter
-		static const ParamInfo getParamInfo_0() { return ParamInfo::defaultSampleRateParam(); }
+		static ParamInfo getParamInfo_0() { return ParamInfo::defaultSampleRateParam(); }
 
 		// These should never get called
-		static const ParamInfo getParamInfo_1() { return ParamInfo(); }
-		static const ParamInfo getParamInfo_2() { return ParamInfo(); }
-		static const ParamInfo getParamInfo_3() { return ParamInfo(); }
-		static const ParamInfo getParamInfo_4() { return ParamInfo(); }
-		static const ParamInfo getParamInfo_5() { return ParamInfo(); }
-		static const ParamInfo getParamInfo_6() { return ParamInfo(); }
-		static const ParamInfo getParamInfo_7() { return ParamInfo(); }
+		static ParamInfo getParamInfo_1() { return ParamInfo(); }
+		static ParamInfo getParamInfo_2() { return ParamInfo(); }
+		static ParamInfo getParamInfo_3() { return ParamInfo(); }
+		static ParamInfo getParamInfo_4() { return ParamInfo(); }
+		static ParamInfo getParamInfo_5() { return ParamInfo(); }
+		static ParamInfo getParamInfo_6() { return ParamInfo(); }
+		static ParamInfo getParamInfo_7() { return ParamInfo(); }
 	};
 } // namespace Dsp
-
-#endif

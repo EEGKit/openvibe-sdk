@@ -726,10 +726,7 @@ namespace r8b
 			while ((m << 3) < l)
 			{
 				l >>= 1;
-				for (j = 0; j < m; j++)
-				{
-					ip[m + j] = ip[j] + l;
-				}
+				for (j = 0; j < m; j++) { ip[m + j] = ip[j] + l; }
 				m <<= 1;
 			}
 			int m2 = 2 * m;
@@ -834,10 +831,7 @@ namespace r8b
 			while ((m << 3) < l)
 			{
 				l >>= 1;
-				for (j = 0; j < m; j++)
-				{
-					ip[m + j] = ip[j] + l;
-				}
+				for (j = 0; j < m; j++) { ip[m + j] = ip[j] + l; }
 				m <<= 1;
 			}
 			int m2 = 2 * m;

@@ -16,36 +16,34 @@ using namespace Classification;
 
 bool CBoxAlgorithmVotingClassifier::initialize()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	const IBox& boxContext = this->getStaticBoxContext();
 
 	m_oClassificationChoiceEncoder.initialize(*this, 0);
 
-	CIdentifier l_oTypeIdentifier;
-	l_rStaticBoxContext.getInputType(0, l_oTypeIdentifier);
-	m_bMatrixBased = (l_oTypeIdentifier == OV_TypeId_StreamedMatrix);
+	CIdentifier typeID;
+	boxContext.getInputType(0, typeID);
+	m_bMatrixBased = (typeID == OV_TypeId_StreamedMatrix);
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
 	{
-		SInput& l_rInput = m_vClassificationResults[i];
+		SInput& input = m_vClassificationResults[i];
 		if (m_bMatrixBased)
 		{
-			OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>* l_pDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
-			l_pDecoder->initialize(*this, i);
-			l_rInput.m_pDecoder = l_pDecoder;
-
-			l_rInput.op_pMatrix = l_pDecoder->getOutputMatrix();
-
-			l_rInput.m_bTwoValueInput = false;
+			OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<
+				CBoxAlgorithmVotingClassifier>();
+			decoder->initialize(*this, i);
+			input.m_pDecoder       = decoder;
+			input.op_pMatrix       = decoder->getOutputMatrix();
+			input.m_bTwoValueInput = false;
 		}
 		else
 		{
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>* l_pDecoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
-			l_pDecoder->initialize(*this, i);
-			l_rInput.m_pDecoder = l_pDecoder;
-
-			l_rInput.op_pStimulationSet = l_pDecoder->getOutputStimulationSet();
-
-			l_rInput.m_bTwoValueInput = false;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStimulationDecoder<
+				CBoxAlgorithmVotingClassifier>();
+			decoder->initialize(*this, i);
+			input.m_pDecoder         = decoder;
+			input.op_pStimulationSet = decoder->getOutputStimulationSet();
+			input.m_bTwoValueInput   = false;
 		}
 	}
 
@@ -66,13 +64,13 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 
 bool CBoxAlgorithmVotingClassifier::uninitialize()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < nInput; i++)
 	{
-		SInput& l_rInput = m_vClassificationResults[i];
-		l_rInput.m_pDecoder->uninitialize();
-		delete l_rInput.m_pDecoder;
+		SInput& input = m_vClassificationResults[i];
+		input.m_pDecoder->uninitialize();
+		delete input.m_pDecoder;
 	}
 
 	m_oClassificationChoiceEncoder.uninitialize();
@@ -80,134 +78,125 @@ bool CBoxAlgorithmVotingClassifier::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t index)
+bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
 	return true;
 }
 
 bool CBoxAlgorithmVotingClassifier::process()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
-	uint32_t i, j;
+	IBoxIO& boxContext  = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	bool l_bCanChoose = true;
+	bool canChoose = true;
 
-	for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (size_t i = 0; i < nInput; i++)
 	{
-		SInput& l_rInput = m_vClassificationResults[i];
-		for (j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		SInput& input = m_vClassificationResults[i];
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
-			l_rInput.m_pDecoder->decode(j);
+			input.m_pDecoder->decode(j);
 
-			if (l_rInput.m_pDecoder->isHeaderReceived())
+			if (input.m_pDecoder->isHeaderReceived())
 			{
 				if (m_bMatrixBased)
 				{
-					if (l_rInput.op_pMatrix->getBufferElementCount() != 1)
+					if (input.op_pMatrix->getBufferElementCount() != 1)
 					{
-						OV_ERROR_UNLESS_KRF(l_rInput.op_pMatrix->getBufferElementCount() == 2,
-											"Invalid input matrix with [" << l_rInput.op_pMatrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
+						OV_ERROR_UNLESS_KRF(input.op_pMatrix->getBufferElementCount() == 2,
+											"Invalid input matrix with [" << input.op_pMatrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
 											OpenViBE::Kernel::ErrorType::BadInput);
 
-						this->getLogManager() << LogLevel_Debug << "Input got two dimensions, the value use for the vote will be the difference between the two values\n";
-						l_rInput.m_bTwoValueInput = true;
+						this->getLogManager() << LogLevel_Debug <<
+								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";
+						input.m_bTwoValueInput = true;
 					}
 				}
 			}
-			if (l_rInput.m_pDecoder->isBufferReceived())
+			if (input.m_pDecoder->isBufferReceived())
 			{
 				if (m_bMatrixBased)
 				{
-					double l_f64Value;
-					if (l_rInput.m_bTwoValueInput)
-					{
-						l_f64Value = l_rInput.op_pMatrix->getBuffer()[1] - l_rInput.op_pMatrix->getBuffer()[0];
-					}
-					else
-					{
-						l_f64Value = l_rInput.op_pMatrix->getBuffer()[0];
-					}
-					l_rInput.m_vScore.push_back(std::pair<double, uint64_t>(-l_f64Value, l_rDynamicBoxContext.getInputChunkEndTime(i, j)));
+					double value;
+					if (input.m_bTwoValueInput) { value = input.op_pMatrix->getBuffer()[1] - input.op_pMatrix->getBuffer()[0]; }
+					else { value = input.op_pMatrix->getBuffer()[0]; }
+					input.m_vScore.push_back(std::pair<double, uint64_t>(-value, boxContext.getInputChunkEndTime(i, j)));
 				}
 				else
 				{
-					for (uint32_t k = 0; k < l_rInput.op_pStimulationSet->getStimulationCount(); k++)
+					for (uint32_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); k++)
 					{
-						uint64_t l_ui64StimulationIdentifier = l_rInput.op_pStimulationSet->getStimulationIdentifier(k);
-						if (l_ui64StimulationIdentifier == m_ui64TargetClassLabel || l_ui64StimulationIdentifier == m_ui64NonTargetClassLabel || l_ui64StimulationIdentifier == m_ui64RejectClassLabel)
+						const uint64_t stimulationId = input.op_pStimulationSet->getStimulationIdentifier(k);
+						if (stimulationId == m_ui64TargetClassLabel || stimulationId == m_ui64NonTargetClassLabel || stimulationId == m_ui64RejectClassLabel)
 						{
-							l_rInput.m_vScore.push_back(std::pair<double, uint64_t>(l_ui64StimulationIdentifier == m_ui64TargetClassLabel ? 1 : 0, l_rInput.op_pStimulationSet->getStimulationDate(k)));
+							input.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_ui64TargetClassLabel ? 1 : 0,
+																				 input.op_pStimulationSet->getStimulationDate(k)));
 						}
 					}
 				}
 			}
-			if (l_rInput.m_pDecoder->isEndReceived())
+			if (input.m_pDecoder->isEndReceived())
 			{
 				m_oClassificationChoiceEncoder.encodeEnd();
-				l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
+				boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
 			}
 		}
 
-		if (l_rInput.m_vScore.size() < m_ui64NumberOfRepetitions)
-		{
-			l_bCanChoose = false;
-		}
+		if (input.m_vScore.size() < m_ui64NumberOfRepetitions) { canChoose = false; }
 	}
 
-	if (l_bCanChoose)
+	if (canChoose)
 	{
-		double l_f64ResultScore         = -1E100;
-		uint64_t l_ui64ResultClassLabel = m_ui64RejectClassLabel;
-		uint64_t l_ui64Time             = 0;
+		double resultScore        = -1E100;
+		uint64_t resultClassLabel = m_ui64RejectClassLabel;
+		uint64_t time             = 0;
 
-		std::map<uint32_t, double> l_vScore;
-		for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+		std::map<uint32_t, double> score;
+		for (size_t i = 0; i < nInput; i++)
 		{
-			SInput& l_rInput = m_vClassificationResults[i];
-			l_vScore[i]      = 0;
-			for (j = 0; j < m_ui64NumberOfRepetitions; j++)
-			{
-				l_vScore[i] += l_rInput.m_vScore[j].first;
-			}
+			SInput& input = m_vClassificationResults[i];
+			score[i]      = 0;
+			for (size_t j = 0; j < m_ui64NumberOfRepetitions; j++) { score[i] += input.m_vScore[j].first; }
 
-			if (l_vScore[i] > l_f64ResultScore)
+			if (score[i] > resultScore)
 			{
-				l_f64ResultScore       = l_vScore[i];
-				l_ui64ResultClassLabel = m_ui64ResultClassLabelBase + i;
-				l_ui64Time             = l_rInput.m_vScore[(unsigned int)(m_ui64NumberOfRepetitions - 1)].second;
+				resultScore      = score[i];
+				resultClassLabel = m_ui64ResultClassLabelBase + i;
+				time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
 			}
-			else if (l_vScore[i] == l_f64ResultScore)
+			else if (score[i] == resultScore)
 			{
 				if (!m_bChooseOneIfExAequo)
 				{
-					l_f64ResultScore       = l_vScore[i];
-					l_ui64ResultClassLabel = m_ui64RejectClassLabel;
-					l_ui64Time             = l_rInput.m_vScore[(unsigned int)(m_ui64NumberOfRepetitions - 1)].second;
+					resultScore      = score[i];
+					resultClassLabel = m_ui64RejectClassLabel;
+					time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
 				}
 			}
 
-			l_rInput.m_vScore.erase(l_rInput.m_vScore.begin(), l_rInput.m_vScore.begin() + (int)m_ui64NumberOfRepetitions);
+			input.m_vScore.erase(input.m_vScore.begin(), input.m_vScore.begin() + int(m_ui64NumberOfRepetitions));
 
-			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << l_vScore[i] << "\n";
+			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << score[i] << "\n";
 		}
 
-		if (l_ui64ResultClassLabel != m_ui64RejectClassLabel)
+		if (resultClassLabel != m_ui64RejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << " with score " << l_f64ResultScore << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen " << this
+																	->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel)
+					<< " with score " << resultScore << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(
+				OV_TypeId_Stimulation, resultClassLabel) << "\n";
 		}
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->clear();
-		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(l_ui64ResultClassLabel, l_ui64Time, 0);
+		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(resultClassLabel, time, 0);
 
 		m_oClassificationChoiceEncoder.encodeBuffer();
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, l_ui64Time);
-		m_ui64LastTime = l_ui64Time;
+		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, time);
+		m_ui64LastTime = time;
 	}
 
 	return true;

@@ -20,21 +20,21 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmRegularizedCSPTrainer : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmRegularizedCSPTrainer final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmRegularizedCSPTrainer();
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 		protected:
 
 			virtual bool updateCov(uint32_t index);
 			virtual bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
-			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& vov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
+			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
 									std::vector<Eigen::VectorXd>& sortedEigenValues);
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_StimulationDecoder;
@@ -66,16 +66,14 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
 		};
 
-		class CBoxAlgorithmRegularizedCSPTrainerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmRegularizedCSPTrainerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				std::stringstream l_sName;
-
-				l_sName << "Signal condition " << index;
-
-				rBox.setInputName(index, l_sName.str().c_str());
+				std::stringstream name;
+				name << "Signal condition " << index;
+				box.setInputName(index, name.str().c_str());
 
 				return true;
 			}
@@ -83,7 +81,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmRegularizedCSPTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmRegularizedCSPTrainerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -116,7 +114,8 @@ namespace OpenViBEPlugins
 				prototype.addSetting("Save filters as box config", OV_TypeId_Boolean, "false");
 
 				// Params of the cov algorithm; would be better to poll the params from the algorithm, however this is not straightforward to do
-				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod, OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
+				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod,
+									 OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
 				prototype.addSetting("Trace normalization", OV_TypeId_Boolean, "false");
 				prototype.addSetting("Shrinkage coefficient", OV_TypeId_Float, "0.0");
 				prototype.addSetting("Tikhonov coefficient", OV_TypeId_Float, "0.0");

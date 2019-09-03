@@ -39,7 +39,7 @@ bool CBoxAlgorithmTimeSignalGenerator::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock)
+bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& /*messageClock*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -71,7 +71,8 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
-		uint64_t nextStepDate = ITimeArithmetics::timeToSampleCount(uint64_t(m_ui32SamplingFrequency), uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		uint64_t nextStepDate = ITimeArithmetics::timeToSampleCount(uint64_t(m_ui32SamplingFrequency),
+																	uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
 		while (m_ui32SentSampleCount + m_ui32GeneratedEpochSampleCount < nextStepDate)
 		{
 			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
@@ -83,18 +84,15 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 			m_oSignalEncoder.encodeBuffer();
 
-			uint64_t l_ui64StartTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
+			uint64_t tStart = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
 			m_ui32SentSampleCount += m_ui32GeneratedEpochSampleCount;
-			uint64_t l_ui64EndTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
+			uint64_t tEnd = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
 
-			l_pDynamicBoxContext->markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+			l_pDynamicBoxContext->markOutputAsReadyToSend(0, tStart, tEnd);
 		}
 	}
 
 	return true;
 }
 
-uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency()
-{
-	return 128LL << 32;
-}
+uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency() { return 128LL << 32; }

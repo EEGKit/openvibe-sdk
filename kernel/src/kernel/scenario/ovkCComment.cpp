@@ -11,8 +11,8 @@ using namespace Plugins;
 //___________________________________________________________________//
 //                                                                   //
 
-CComment::CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
-	: TAttributable<TKernelObject<IComment>>(rKernelContext), m_rOwnerScenario(rOwnerScenario), m_sText("") {}
+CComment::CComment(const IKernelContext& ctx, CScenario& rOwnerScenario)
+	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_sText("") {}
 
 CComment::~CComment() {}
 
@@ -23,11 +23,11 @@ CIdentifier CComment::getIdentifier() const { return m_oIdentifier; }
 
 CString CComment::getText() const { return m_sText; }
 
-bool CComment::setIdentifier(const CIdentifier& rIdentifier)
+bool CComment::setIdentifier(const CIdentifier& identifier)
 {
 	if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
-	if (rIdentifier == OV_UndefinedIdentifier) { return false; }
-	m_oIdentifier = rIdentifier;
+	if (identifier == OV_UndefinedIdentifier) { return false; }
+	m_oIdentifier = identifier;
 
 	return true;
 }

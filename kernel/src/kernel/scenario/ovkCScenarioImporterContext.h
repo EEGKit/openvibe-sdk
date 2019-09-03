@@ -12,12 +12,13 @@ namespace OpenViBE
 		{
 		public:
 
-			CScenarioImporterContext(const IKernelContext& rKernelContext, const CString& sFileName, IScenario& rScenario);
+			CScenarioImporterContext(const IKernelContext& ctx, const CString& sFileName, IScenario& rScenario);
 
 			virtual CString getFileName() const;
 			virtual IScenario& getScenario() const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IScenarioImporterContext>, OVK_ClassId_Kernel_Scenario_ScenarioImporterContext)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IScenarioImporterContext>,
+									   OVK_ClassId_Kernel_Scenario_ScenarioImporterContext)
 
 		protected:
 

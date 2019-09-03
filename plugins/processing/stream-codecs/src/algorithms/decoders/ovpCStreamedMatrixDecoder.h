@@ -22,9 +22,9 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StreamedMatrixStreamDecoder)
 
 			// ebml callbacks
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -43,9 +43,9 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint32_t m_ui32Status              = 0;
-			uint32_t m_ui32DimensionIndex      = 0;
-			uint32_t m_ui32DimensionEntryIndex = 0;
+			uint32_t m_ui32Status        = 0;
+			uint32_t m_dimensionIdx      = 0;
+			uint32_t m_dimensionEntryIdx = 0;
 			//			uint32_t m_ui32DimensionEntryIndexUnit = 0;
 			uint64_t m_ui64MatrixBufferSize = 0;
 		};
@@ -71,7 +71,8 @@ namespace OpenViBEPlugins
 			{
 				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;
 			}

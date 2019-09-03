@@ -34,7 +34,8 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_ReaderLib->openFile(filename.toASCIIString(), EFileAccessMode::Read),
-						(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+						(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " +
+							m_ReaderLib->getLastErrorString())).c_str(),
 						ErrorType::Internal);
 
 	m_SampleCountPerBuffer = 1;
@@ -59,10 +60,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::Spectrum);
 	}
-	else
-	{
-		OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput);
-	}
+	else { OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput); }
 
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.initialize(*this, 1),
 						"Error during stimulation encoder initialize",
@@ -71,25 +69,29 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getSignalInformation(m_ChannelNames, m_SamplingRate, m_SampleCountPerBuffer),
-							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " +
+								m_ReaderLib->getLastErrorString())).c_str(),
 							ErrorType::Internal);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getStreamedMatrixInformation(m_DimensionSizes, m_ChannelNames),
-							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " +
+								m_ReaderLib->getLastErrorString())).c_str(),
 							ErrorType::Internal);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getFeatureVectorInformation(m_ChannelNames),
-							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " +
+								m_ReaderLib->getLastErrorString())).c_str(),
 							ErrorType::Internal);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getSpectrumInformation(m_ChannelNames, m_FrequencyAbscissa, m_SamplingRate),
-							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+							(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " +
+								m_ReaderLib->getLastErrorString())).c_str(),
 							ErrorType::Internal);
 	}
 
@@ -111,7 +113,7 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& /*messageClock*/)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(),
 						"Failed to mark clock algorithm as ready to process",
@@ -252,7 +254,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			std::vector<SStimulationChunk> stimulationChunk;
 
 			OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
-								(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+								(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " +
+									m_ReaderLib->getLastErrorString())).c_str(),
 								ErrorType::Internal);
 
 			m_SavedChunks.insert(m_SavedChunks.end(), matrixChunk.begin(), matrixChunk.end());
@@ -308,10 +311,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 								ErrorType::Internal);
 		}
 
-		if (chunksToRemove != 0)
-		{
-			m_SavedChunks.erase(m_SavedChunks.begin(), m_SavedChunks.begin() + chunksToRemove);
-		}
+		if (chunksToRemove != 0) { m_SavedChunks.erase(m_SavedChunks.begin(), m_SavedChunks.begin() + chunksToRemove); }
 	}
 
 	return true;
@@ -381,10 +381,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 			}
 		}
 
-		if (stimulationIt != m_SavedStimulations.begin())
-		{
-			m_SavedStimulations.erase(m_SavedStimulations.begin(), stimulationIt);
-		}
+		if (stimulationIt != m_SavedStimulations.begin()) { m_SavedStimulations.erase(m_SavedStimulations.begin(), stimulationIt); }
 
 
 		OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),

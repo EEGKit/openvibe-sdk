@@ -22,7 +22,7 @@ namespace OpenViBE
 		class CPluginModuleBase : public TKernelObject<IPluginModule>
 		{
 		public:
-			explicit CPluginModuleBase(const IKernelContext& rKernelContext);
+			explicit CPluginModuleBase(const IKernelContext& ctx);
 			~CPluginModuleBase() override;
 			bool initialize() override;
 			bool getPluginObjectDescription(uint32_t index, IPluginObjectDesc*& rpPluginObjectDescription) override;
@@ -56,11 +56,11 @@ namespace OpenViBE
 			{
 			public:
 
-				explicit CPluginModuleContext(const IKernelContext& rKernelContext)
-					: TKernelObject<IPluginModuleContext>(rKernelContext)
-					  , m_rLogManager(rKernelContext.getLogManager())
-					  , m_rTypeManager(rKernelContext.getTypeManager())
-					  , m_rScenarioManager(rKernelContext.getScenarioManager()) { }
+				explicit CPluginModuleContext(const IKernelContext& ctx)
+					: TKernelObject<IPluginModuleContext>(ctx)
+					  , m_rLogManager(ctx.getLogManager())
+					  , m_rTypeManager(ctx.getTypeManager())
+					  , m_rScenarioManager(ctx.getScenarioManager()) { }
 
 				ILogManager& getLogManager() const override { return m_rLogManager; }
 				ITypeManager& getTypeManager() const override { return m_rTypeManager; }
@@ -81,8 +81,8 @@ namespace OpenViBE
 //___________________________________________________________________//
 //                                                                   //
 
-CPluginModuleBase::CPluginModuleBase(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext)
+CPluginModuleBase::CPluginModuleBase(const IKernelContext& ctx)
+	: TKernelObject<IPluginModule>(ctx)
 	  , m_bGotDescriptions(false)
 	  , onInitializeCB(nullptr)
 	  , onGetPluginObjectDescriptionCB(nullptr)
@@ -152,7 +152,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginModuleLinux(const IKernelContext& rKernelContext);
+			CPluginModuleLinux(const IKernelContext& ctx);
 
 			virtual bool load(const CString& sFileName, CString* pError);
 			virtual bool unload(CString* pError);
@@ -175,7 +175,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPluginModuleWindows(const IKernelContext& rKernelContext);
+			explicit CPluginModuleWindows(const IKernelContext& ctx);
 			bool load(const CString& sFileName, CString* pError) override;
 			bool unload(CString* pError) override;
 
@@ -201,7 +201,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPluginModuleDummy(const IKernelContext& rKernelContext);
+			explicit CPluginModuleDummy(const IKernelContext& ctx);
 
 			virtual bool load(const CString& sFileName, CString* pError);
 			virtual bool unload(CString* pError);
@@ -220,8 +220,8 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& rKernelContext)
-	:CPluginModuleBase(rKernelContext)
+CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& ctx)
+	:CPluginModuleBase(ctx)
 	,m_pFileHandle(NULL)
 {
 }
@@ -289,8 +289,8 @@ bool CPluginModuleLinux::isOpen() const
 
 #elif defined TARGET_OS_Windows
 
-CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& rKernelContext)
-	: CPluginModuleBase(rKernelContext)
+CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& ctx)
+	: CPluginModuleBase(ctx)
 	  , m_pFileHandle(nullptr) {}
 
 bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
@@ -304,22 +304,17 @@ bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 	m_pFileHandle = LoadLibrary(sFileName);
 	if (!m_pFileHandle)
 	{
-		if (pError)
-		{
-			*pError = this->getLastErrorMessageString();
-		}
+		if (pError) { *pError = this->getLastErrorMessageString(); }
 		return false;
 	}
 
 	onInitializeCB                 = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
 	onUninitializeCB               = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
+	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&))GetProcAddress(
+		m_pFileHandle, "onGetPluginObjectDescription");
 	if (!onGetPluginObjectDescriptionCB)
 	{
-		if (pError)
-		{
-			*pError = this->getLastErrorMessageString();
-		}
+		if (pError) { *pError = this->getLastErrorMessageString(); }
 
 		FreeLibrary(m_pFileHandle);
 		m_pFileHandle                  = nullptr;
@@ -349,27 +344,19 @@ bool CPluginModuleWindows::unload(CString* pError)
 	return true;
 }
 
-bool CPluginModuleWindows::isOpen() const
-{
-	return m_pFileHandle != nullptr;
-}
+bool CPluginModuleWindows::isOpen() const { return m_pFileHandle != nullptr; }
 
 CString CPluginModuleWindows::getLastErrorMessageString()
 {
 	CString l_sResult;
 
 	char* l_pMessageBuffer = nullptr;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, (LPTSTR)&l_pMessageBuffer, 0, nullptr);
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0,
+				  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 	if (l_pMessageBuffer)
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);
-		for (size_t i = 0; i < l_iMessageLength; i++)
-		{
-			if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r')
-			{
-				l_pMessageBuffer[i] = ' ';
-			}
-		}
+		for (size_t i = 0; i < l_iMessageLength; i++) { if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r') { l_pMessageBuffer[i] = ' '; } }
 		l_sResult = l_pMessageBuffer;
 	}
 	LocalFree((LPVOID)l_pMessageBuffer);
@@ -384,8 +371,8 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 //___________________________________________________________________//
 //                                                                   //
 
-CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext)
+CPluginModule::CPluginModule(const IKernelContext& ctx)
+	: TKernelObject<IPluginModule>(ctx)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pImplementation=new CPluginModuleLinux(getKernelContext());
@@ -397,20 +384,11 @@ CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
 
 CPluginModule::~CPluginModule() { delete m_pImplementation; }
 
-bool CPluginModule::load(const CString& sFileName, CString* pError)
-{
-	return !m_pImplementation ? false : m_pImplementation->load(sFileName, pError);
-}
+bool CPluginModule::load(const CString& filename, CString* pError) { return !m_pImplementation ? false : m_pImplementation->load(filename, pError); }
 
-bool CPluginModule::unload(CString* pError)
-{
-	return !m_pImplementation ? false : m_pImplementation->unload(pError);
-}
+bool CPluginModule::unload(CString* pError) { return !m_pImplementation ? false : m_pImplementation->unload(pError); }
 
-bool CPluginModule::initialize()
-{
-	return !m_pImplementation ? false : m_pImplementation->initialize();
-}
+bool CPluginModule::initialize() { return !m_pImplementation ? false : m_pImplementation->initialize(); }
 
 bool CPluginModule::getPluginObjectDescription(uint32_t index,
 											   IPluginObjectDesc*& rpPluginObjectDescription)
@@ -418,12 +396,6 @@ bool CPluginModule::getPluginObjectDescription(uint32_t index,
 	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(index, rpPluginObjectDescription);
 }
 
-bool CPluginModule::uninitialize()
-{
-	return !m_pImplementation ? false : m_pImplementation->uninitialize();
-}
+bool CPluginModule::uninitialize() { return !m_pImplementation ? false : m_pImplementation->uninitialize(); }
 
-bool CPluginModule::getFileName(CString& rFileName) const
-{
-	return !m_pImplementation ? false : m_pImplementation->getFileName(rFileName);
-}
+bool CPluginModule::getFileName(CString& rFileName) const { return !m_pImplementation ? false : m_pImplementation->getFileName(rFileName); }

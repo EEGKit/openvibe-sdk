@@ -25,18 +25,16 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CPluginManagerEntryEnumeratorCallBack : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
+		class CPluginManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
 		{
 		public:
 
-			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& rKernelContext, vector<IPluginModule*>& rPluginModule, map<IPluginObjectDesc*, IPluginModule*>& rPluginObjectDesc, bool& haveAllPluginsLoadedCorrectly)
-				: TKernelObject<IObject>(rKernelContext)
-				  , m_rPluginManager(rKernelContext.getPluginManager())
-				  , m_rPluginModule(rPluginModule)
-				  , m_rPluginObjectDesc(rPluginObjectDesc)
-				  , m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
+			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& ctx, vector<IPluginModule*>& rPluginModule,
+												  map<IPluginObjectDesc*, IPluginModule*>& rPluginObjectDesc, bool& haveAllPluginsLoadedCorrectly)
+				: TKernelObject<IObject>(ctx), m_rPluginManager(ctx.getPluginManager()), m_rPluginModule(rPluginModule),
+				  m_rPluginObjectDesc(rPluginObjectDesc), m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
 
-			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
+			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& /*rAttributes*/) override
 			{
 				for (auto& pluginModule : m_rPluginModule)
 				{
@@ -82,7 +80,9 @@ namespace OpenViBE
 					{
 						if (pluginObjectDesc.first->getClassIdentifier() == l_pPluginObjectDesc->getClassIdentifier())
 						{
-							OV_WARNING_K("Duplicate plugin object descriptor class identifier [" << pluginObjectDesc.first->getName() << "] and [" << l_pPluginObjectDesc->getName() << "]... second one is ignored");
+							OV_WARNING_K(
+								"Duplicate plugin object descriptor class identifier [" << pluginObjectDesc.first->getName() << "] and [" << l_pPluginObjectDesc
+								->getName() << "]... second one is ignored");
 							l_bFound = true;
 							break;
 						}
@@ -102,9 +102,11 @@ namespace OpenViBE
 					l_pPluginObjectDesc = nullptr;
 				}
 
-				OV_WARNING_UNLESS_K(l_bPluginObjectDescAdded, "No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n");
+				OV_WARNING_UNLESS_K(l_bPluginObjectDescAdded,
+									"No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n");
 
-				this->getLogManager() << LogLevel_Info << "Added " << l_ui32Count << " plugin object descriptor(s) from [" << CString(rEntry.getName()) << "]\n";
+				this->getLogManager() << LogLevel_Info << "Added " << l_ui32Count << " plugin object descriptor(s) from [" << CString(rEntry.getName()) <<
+						"]\n";
 
 				return true;
 			}
@@ -121,8 +123,8 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginManager>(rKernelContext) {}
+CPluginManager::CPluginManager(const IKernelContext& ctx)
+	: TKernelObject<IPluginManager>(ctx) {}
 
 CPluginManager::~CPluginManager()
 {
@@ -132,7 +134,9 @@ CPluginManager::~CPluginManager()
 	{
 		for (auto& pluginObject : pluginObjectVector.second)
 		{
-			OV_WARNING_K("Trying to release plugin object with class id " << pluginObject->getClassIdentifier() << " and plugin object descriptor " << pluginObjectVector.first->getName() << " at plugin manager destruction time");
+			OV_WARNING_K(
+				"Trying to release plugin object with class id " << pluginObject->getClassIdentifier() << " and plugin object descriptor " << pluginObjectVector
+				.first->getName() << " at plugin manager destruction time");
 			pluginObject->release();
 		}
 	}
@@ -184,43 +188,28 @@ bool CPluginManager::registerPluginDesc(const IPluginObjectDesc& rPluginObjectDe
 	return true;
 }
 
-CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const
+CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& previousID) const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	bool l_bFoundPrevious = (rPreviousIdentifier == OV_UndefinedIdentifier);
+	bool l_bFoundPrevious = (previousID == OV_UndefinedIdentifier);
 	for (const auto& elem : m_vPluginObjectDesc)
 	{
-		if (!l_bFoundPrevious)
-		{
-			if (elem.first->getClassIdentifier() == rPreviousIdentifier)
-			{
-				l_bFoundPrevious = true;
-			}
-		}
+		if (!l_bFoundPrevious) { if (elem.first->getClassIdentifier() == previousID) { l_bFoundPrevious = true; } }
 		else { return elem.first->getClassIdentifier(); }
 	}
 	return OV_UndefinedIdentifier;
 }
 
-CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const
+CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& rBaseClassIdentifier) const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	bool l_bFoundPrevious = (rPreviousIdentifier == OV_UndefinedIdentifier);
+	bool l_bFoundPrevious = (previousID == OV_UndefinedIdentifier);
 	for (const auto& elem : m_vPluginObjectDesc)
 	{
-		if (!l_bFoundPrevious)
-		{
-			if (elem.first->getClassIdentifier() == rPreviousIdentifier)
-			{
-				l_bFoundPrevious = true;
-			}
-		}
-		else
-		{
-			if (elem.first->isDerivedFromClass(rBaseClassIdentifier)) { return elem.first->getClassIdentifier(); }
-		}
+		if (!l_bFoundPrevious) { if (elem.first->getClassIdentifier() == previousID) { l_bFoundPrevious = true; } }
+		else { if (elem.first->isDerivedFromClass(rBaseClassIdentifier)) { return elem.first->getClassIdentifier(); } }
 	}
 	return OV_UndefinedIdentifier;
 }
@@ -243,10 +232,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(const CIdentifier& 
 
 	//	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
-	for (auto& pluginObject : m_vPluginObjectDesc)
-	{
-		if (pluginObject.first->getClassIdentifier() == rClassIdentifier) { return pluginObject.first; }
-	}
+	for (auto& pluginObject : m_vPluginObjectDesc) { if (pluginObject.first->getClassIdentifier() == rClassIdentifier) { return pluginObject.first; } }
 
 	this->getLogManager() << LogLevel_Debug << "Plugin object descriptor class identifier " << rClassIdentifier << " not found\n";
 	return nullptr;
@@ -333,7 +319,8 @@ bool CPluginManager::releasePluginObject(IPluginObject* pPluginObject)
 		}
 	}
 
-	OV_ERROR_KRF("Plugin object has not been created by this plugin manager (class id was " << pPluginObject->getClassIdentifier().toString() << ")", ErrorType::ResourceNotFound);
+	OV_ERROR_KRF("Plugin object has not been created by this plugin manager (class id was " << pPluginObject->getClassIdentifier().toString() << ")",
+				 ErrorType::ResourceNotFound);
 }
 
 IAlgorithm* CPluginManager::createAlgorithm(const CIdentifier& rClassIdentifier, const IAlgorithmDesc** ppAlgorithmDesc)
@@ -382,15 +369,13 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	uint64_t l_ui64SourceClassIdentifier = rClassIdentifier.toUInteger();
 	uint64_t l_ui64TargetClassIdentifier = l_ui64SourceClassIdentifier;
 	sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
-	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) != OV_UndefinedIdentifier)
+	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) !=
+		OV_UndefinedIdentifier)
 	{
 		CString l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(l_oSubstitutionTokenIdentifier);
 		l_sSubstitutionTokenValue         = this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
 
-		try
-		{
-			l_ui64TargetClassIdentifier = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), nullptr, 16);
-		}
+		try { l_ui64TargetClassIdentifier = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), nullptr, 16); }
 		catch (const std::invalid_argument& exception)
 		{
 			OV_ERROR_KRN("Received exception while converting class identifier from string to number: " << exception.what(), ErrorType::BadArgument);
@@ -402,24 +387,24 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	}
 	if (l_ui64TargetClassIdentifier != l_ui64SourceClassIdentifier)
 	{
-		this->getLogManager() << LogLevel_Trace << "Substituting plugin class identifier " << CIdentifier(l_ui64SourceClassIdentifier) << " with new class identifier " << CIdentifier(l_ui64TargetClassIdentifier) << "\n";
+		this->getLogManager() << LogLevel_Trace << "Substituting plugin class identifier " << CIdentifier(l_ui64SourceClassIdentifier) <<
+				" with new class identifier " << CIdentifier(l_ui64TargetClassIdentifier) << "\n";
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Debug << "Not substitute plugin found for class identifier " << CIdentifier(l_ui64SourceClassIdentifier) << " (configuration token name was " << CString(l_sSubstitutionTokenName) << ")\n";
+		this->getLogManager() << LogLevel_Debug << "Not substitute plugin found for class identifier " << CIdentifier(l_ui64SourceClassIdentifier) <<
+				" (configuration token name was " << CString(l_sSubstitutionTokenName) << ")\n";
 	}
 
 	IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
 	for (map<IPluginObjectDesc*, IPluginModule*>::const_iterator i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
 	{
-		if (i->first->getCreatedClass() == CIdentifier(l_ui64TargetClassIdentifier))
-		{
-			l_pPluginObjectDesc = i->first;
-		}
+		if (i->first->getCreatedClass() == CIdentifier(l_ui64TargetClassIdentifier)) { l_pPluginObjectDesc = i->first; }
 	}
 
 	OV_ERROR_UNLESS_KRN(l_pPluginObjectDesc,
-						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(l_ui64SourceClassIdentifier).toString() << " in registered plugin object descriptors",
+						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(l_ui64SourceClassIdentifier).toString() <<
+						" in registered plugin object descriptors",
 						ErrorType::BadResourceCreation);
 
 	IPluginObject* l_pPluginObject = l_pPluginObjectDesc->create();
@@ -432,7 +417,8 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	IPluginObjectT* l_pPluginObjectT         = dynamic_cast<IPluginObjectT*>(l_pPluginObject);
 
 	OV_ERROR_UNLESS_KRN(l_pPluginObjectDescT && l_pPluginObjectT,
-						"Could not downcast plugin object and/or plugin object descriptor for " << l_pPluginObjectDesc->getName() << " plugin object descriptor",
+						"Could not downcast plugin object and/or plugin object descriptor for " << l_pPluginObjectDesc->getName() <<
+						" plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
 	if (ppPluginObjectDescT) { *ppPluginObjectDescT = l_pPluginObjectDescT; }

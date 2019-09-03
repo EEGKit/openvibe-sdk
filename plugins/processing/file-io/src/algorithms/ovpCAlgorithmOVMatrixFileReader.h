@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmOVMatrixFileReader : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmOVMatrixFileReader final : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
 		};
 
-		class CAlgorithmOVMatrixFileReaderDesc : public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmOVMatrixFileReaderDesc final : public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -54,8 +54,10 @@ namespace OpenViBEPlugins
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename, "Filename", OpenViBE::Kernel::ParameterType_String);
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename, "Filename", OpenViBE::Kernel::ParameterType_String);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 				return true;
 			}
 

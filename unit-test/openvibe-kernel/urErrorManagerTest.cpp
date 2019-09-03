@@ -9,8 +9,7 @@ using namespace OpenViBE;
 using namespace Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> variable here
-// because it causes a bug due to plugins global descriptors beeing destroyed before
-// the kernel context.
+// because it causes a bug due to plugins global descriptors beeing destroyed before the kernel context.
 IKernelContext* g_context = nullptr;
 
 TEST(error_manager_test_case, test_init)
@@ -116,10 +115,7 @@ TEST(error_manager_test_case, test_stress_push)
 
 	errorManager.releaseErrors();
 	unsigned int expectedErrorCount = 10;
-	for (unsigned int i = 0; i < expectedErrorCount; ++i)
-	{
-		errorManager.pushError(ErrorType::Unknown, "Error");
-	}
+	for (unsigned int i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
 
 	unsigned int errorCount = 0;
 	auto error              = errorManager.getLastError();

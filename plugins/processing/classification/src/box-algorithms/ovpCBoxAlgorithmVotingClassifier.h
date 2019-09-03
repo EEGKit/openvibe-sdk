@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmVotingClassifier : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmVotingClassifier final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -56,40 +56,34 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CBoxAlgorithmVotingClassifierListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmVotingClassifierListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
 			CBoxAlgorithmVotingClassifierListener()
 				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oInputTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(index, l_oInputTypeIdentifier);
+				box.getInputType(index, l_oInputTypeIdentifier);
 				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
 					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
-					for (uint32_t i = 0; i < rBox.getInputCount(); i++)
-					{
-						rBox.setInputType(i, m_oInputTypeIdentifier);
-					}
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeIdentifier); }
 				}
-				else
-				{
-					rBox.setInputType(index, m_oInputTypeIdentifier);
-				}
+				else { box.setInputType(index, m_oInputTypeIdentifier); }
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
 					char l_sBuffer[1024];
 					sprintf(l_sBuffer, "Classification result %i", i);
-					rBox.setInputType(i, m_oInputTypeIdentifier);
-					rBox.setInputName(i, l_sBuffer);
+					box.setInputType(i, m_oInputTypeIdentifier);
+					box.setInputName(i, l_sBuffer);
 				}
 				return true;
 			}
@@ -101,7 +95,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
 		};
 
-		class CBoxAlgorithmVotingClassifierDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmVotingClassifierDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -109,7 +103,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Majority voting classifier. Returns the chosen class."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Classification"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

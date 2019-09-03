@@ -29,7 +29,7 @@ namespace OpenViBETest
 	using namespace Kernel;
 	using namespace Plugins;
 
-	bool KernelContext::initialize()
+	bool ctx::initialize()
 	{
 		CString kernelFile;
 
@@ -62,22 +62,22 @@ namespace OpenViBETest
 
 		CString configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 
-		IKernelContext* kernelContext = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
 
-		if (!kernelContext)
+		if (!ctx)
 		{
 			std::cerr << "ERROR: impossible to create kernel context " << std::endl;
 			return false;
 		}
 
-		kernelContext->initialize();
+		ctx->initialize();
 
-		m_Context = kernelContext;
+		m_Context = ctx;
 
 		return true;
 	}
 
-	bool KernelContext::uninitialize()
+	bool ctx::uninitialize()
 	{
 		if (m_Context)
 		{

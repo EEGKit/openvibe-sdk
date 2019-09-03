@@ -37,12 +37,12 @@ namespace OpenViBE
 			virtual CString getText() const = 0;
 			/**
 			 * \brief Changes the identifier of this comment
-			 * \param rIdentifier [in] : The new identifier
+			 * \param identifier [in] : The new identifier
 			 *        this comment should take.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(const CIdentifier& rIdentifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
 			/**
 			 * \brief Changes the text of this comment
 			 * \param sText [in] : The text this comment should contain

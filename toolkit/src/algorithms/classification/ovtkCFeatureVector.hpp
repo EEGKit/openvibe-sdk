@@ -6,7 +6,7 @@
 namespace OpenViBEToolkit
 {
 	template <class CParent>
-	class TFeatureVector : public TVector<CParent>
+	class TFeatureVector final : public TVector<CParent>
 	{
 	public:
 
@@ -15,7 +15,7 @@ namespace OpenViBEToolkit
 
 		virtual double getLabel() const { return 0; }
 
-		virtual bool setLabel(const double f64Label) { return false; }
+		virtual bool setLabel(const double /*label*/) { return false; }
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < CParent >, OV_UndefinedIdentifier)
 	};

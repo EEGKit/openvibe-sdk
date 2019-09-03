@@ -86,10 +86,7 @@ namespace Dsp
 
 			if (n == 2) { return; }
 
-			for (i = 0; i <= n; i++)
-			{
-				m_aa[i] = m_bb[i] = 0.0;
-			}
+			for (i = 0; i <= n; i++) { m_aa[i] = m_bb[i] = 0.0; }
 			m_bb[1] = 1.0;
 
 			for (i = 3; i <= n; i++)
@@ -100,14 +97,8 @@ namespace Dsp
 					m_bb[j] = p[j];
 					p[j]    = 0.0;
 				}
-				for (j = i - 2; j >= 0; j -= 2)
-				{
-					p[j] -= (i - 1) * m_aa[j] / i;
-				}
-				for (j = i - 1; j >= 0; j -= 2)
-				{
-					p[j + 1] += (2 * i - 1) * m_bb[j] / i;
-				}
+				for (j = i - 2; j >= 0; j -= 2) { p[j] -= (i - 1) * m_aa[j] / i; }
+				for (j = i - 1; j >= 0; j -= 2) { p[j + 1] += (2 * i - 1) * m_bb[j] / i; }
 			}
 		}
 
@@ -140,31 +131,13 @@ namespace Dsp
 			//
 			if (n & 1)
 			{                // odd
-				for (i = 0; i <= k; i++)
-				{
-					m_a[i] = (2.0 * i + 1.0) / (m_sqrt2() * (k + 1.0));
-				}
+				for (i = 0; i <= k; i++) { m_a[i] = (2.0 * i + 1.0) / (m_sqrt2() * (k + 1.0)); }
 			}                           // even
 			else
 			{
-				for (i = 0; i < k + 1; i++)
-				{
-					m_a[i] = 0.0;
-				}
-				if (k & 1)
-				{
-					for (i = 1; i <= k; i += 2)
-					{
-						m_a[i] = (2 * i + 1) / sqrt(double((k + 1) * (k + 2)));
-					}
-				}
-				else
-				{
-					for (i = 0; i <= k; i += 2)
-					{
-						m_a[i] = (2 * i + 1) / sqrt(double((k + 1) * (k + 2)));
-					}
-				}
+				for (i = 0; i < k + 1; i++) { m_a[i] = 0.0; }
+				if (k & 1) { for (i = 1; i <= k; i += 2) { m_a[i] = (2 * i + 1) / sqrt(double((k + 1) * (k + 2))); } }
+				else { for (i = 0; i <= k; i += 2) { m_a[i] = (2 * i + 1) / sqrt(double((k + 1) * (k + 2))); } }
 			}
 			for (i = 0; i <= n; i++)
 			{
@@ -179,51 +152,27 @@ namespace Dsp
 			for (i = 2; i <= k; i++)
 			{
 				legendre(m_p, i);
-				for (j = 0; j <= i; j++)
-				{
-					m_s[j] += m_a[i] * m_p[j];
-				}
+				for (j = 0; j <= i; j++) { m_s[j] += m_a[i] * m_p[j]; }
 			}
 			//
 			//  form v[] = square of s[]
 			//
-			for (i = 0; i <= 2 * k + 2; i++)
-			{
-				m_v[i] = 0.0;
-			}
-			for (i = 0; i <= k; i++)
-			{
-				for (j = 0; j <= k; j++)
-				{
-					m_v[i + j] += m_s[i] * m_s[j];
-				}
-			}
+			for (i = 0; i <= 2 * k + 2; i++) { m_v[i] = 0.0; }
+			for (i = 0; i <= k; i++) { for (j = 0; j <= k; j++) { m_v[i + j] += m_s[i] * m_s[j]; } }
 			//
 			//  modify integrand for even 'n'
 			//
 			m_v[2 * k + 1] = 0.0;
-			if ((n & 1) == 0)
-			{
-				for (i = n; i >= 0; i--)
-				{
-					m_v[i + 1] += m_v[i];
-				}
-			}
+			if ((n & 1) == 0) { for (i = n; i >= 0; i--) { m_v[i + 1] += m_v[i]; } }
 			//
 			//  form integral of v[]
 			//
-			for (i = n + 1; i >= 0; i--)
-			{
-				m_v[i + 1] = m_v[i] / double(i + 1.0);
-			}
+			for (i = n + 1; i >= 0; i--) { m_v[i + 1] = m_v[i] / double(i + 1.0); }
 			m_v[0] = 0.0;
 			//
 			// clear s[] for use in computing definite integral
 			//
-			for (i = 0; i < (n + 2); i++)
-			{
-				m_s[i] = 0.0;
-			}
+			for (i = 0; i < (n + 2); i++) { m_s[i] = 0.0; }
 			m_s[0] = -1.0;
 			m_s[1] = 2.0;
 			//
@@ -244,10 +193,7 @@ namespace Dsp
 					m_s[i]     = c0;
 					m_s[i + 1] = c1;
 				}
-				for (j = i; j > 0; j--)
-				{
-					m_w[j] += (m_v[i] * m_s[j]);
-				}
+				for (j = i; j > 0; j--) { m_w[j] += (m_v[i] * m_s[j]); }
 			}
 			if ((n & 1) == 0) { m_w[1] = 0.0; }
 		}
@@ -255,10 +201,7 @@ namespace Dsp
 		//------------------------------------------------------------------------------
 
 		AnalogLowPass::AnalogLowPass()
-			: m_numPoles(-1)
-		{
-			setNormal(0, 1);
-		}
+			: m_numPoles(-1) { setNormal(0, 1); }
 
 		void AnalogLowPass::design(int numPoles,
 								   WorkspaceBase* w)
@@ -285,13 +228,7 @@ namespace Dsp
 				poles.solve(degree);
 
 				int j = 0;
-				for (int i = 0; i < degree; ++i)
-				{
-					if (poles.root()[i].real() <= 0)
-					{
-						poles.root()[j++] = poles.root()[i];
-					}
-				}
+				for (int i = 0; i < degree; ++i) { if (poles.root()[i].real() <= 0) { poles.root()[j++] = poles.root()[i]; } }
 				// sort descending imag() and cut degree in half
 				poles.sort(degree / 2);
 

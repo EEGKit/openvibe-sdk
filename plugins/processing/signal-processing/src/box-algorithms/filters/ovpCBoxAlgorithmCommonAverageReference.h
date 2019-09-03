@@ -11,13 +11,13 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmCommonAverageReference : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmCommonAverageReference final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CommonAverageReference)
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CMatrix m_oMatrix;
 		};
 
-		class CBoxAlgorithmCommonAverageReferenceDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmCommonAverageReferenceDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -45,7 +45,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Re-reference the signal to common average reference"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spatial Filtering"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

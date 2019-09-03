@@ -11,7 +11,7 @@ using namespace Kernel;
 
 #define to_cppstring(str) std::string(str.toASCIIString())
 
-int urImportScenarioFromFileTest(int argc, char* argv[])
+int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 {
 	const char* configurationFile = argv[1];
 	const char* dataDirectory     = argv[2];
@@ -36,11 +36,12 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 
 		std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 
-		CIdentifier scenarioIdentifier;
-		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioIdentifier, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
-		OVT_ASSERT(scenarioIdentifier != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
+		CIdentifier scenarioID;
+		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
+				   "Failed to import the scenario file");
+		OVT_ASSERT(scenarioID != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
 
-		auto& scenario = context->getScenarioManager().getScenario(scenarioIdentifier);
+		auto& scenario = context->getScenarioManager().getScenario(scenarioID);
 
 		// Test scenario attributes
 		for (auto& attribute : simpleScenarioAttributes)
@@ -93,55 +94,62 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 			OVT_ASSERT(scenario.getInputName(index, inputName), "Cannot get input name");
 			OVT_ASSERT_STREQ(to_cppstring(inputName), std::get<1>(simpleScenarioInputs[index]), "Input has wrong name");
 
-			CIdentifier targetBoxId;
-			uint32_t targetBoxInputIndex;
-			CIdentifier targetBoxInputIdentifier = OV_UndefinedIdentifier;
-			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxId, targetBoxInputIndex), "Cannot get scenario input details by index");
-			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxId, targetBoxInputIdentifier), "Cannot get scenario input details by identifier");
-			OVT_ASSERT(targetBoxId == std::get<2>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box");
-			OVT_ASSERT(targetBoxInputIndex == std::get<3>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box input");
+			CIdentifier dstBoxID;
+			uint32_t dstBoxInputIdx;
+			CIdentifier dstBoxInputID = OV_UndefinedIdentifier;
+			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputIdx), "Cannot get scenario input details by index");
+			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputID), "Cannot get scenario input details by identifier");
+			OVT_ASSERT(dstBoxID == std::get<2>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box");
+			OVT_ASSERT(dstBoxInputIdx == std::get<3>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box input");
 		}
 
 		// Test outputs
 		OVT_ASSERT(scenario.getOutputCount() == simpleScenarioOutputs.size(), "Imported scenario has wrong number of outputs");
 
-		for (uint32_t outputIndex = 0; outputIndex < uint32_t(simpleScenarioOutputs.size()); outputIndex += 1)
+		for (uint32_t idx = 0; idx < uint32_t(simpleScenarioOutputs.size()); idx += 1)
 		{
 			CIdentifier outputTypeId;
-			OVT_ASSERT(scenario.getOutputType(outputIndex, outputTypeId), "Cannot get output type");
-			OVT_ASSERT(outputTypeId == std::get<0>(simpleScenarioOutputs[outputIndex]), "Output has wrong type");
+			OVT_ASSERT(scenario.getOutputType(idx, outputTypeId), "Cannot get output type");
+			OVT_ASSERT(outputTypeId == std::get<0>(simpleScenarioOutputs[idx]), "Output has wrong type");
 
 			CString outputName;
-			OVT_ASSERT(scenario.getOutputName(outputIndex, outputName), "Cannot get output name");
-			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[outputIndex]), "Output has wrong name");
+			OVT_ASSERT(scenario.getOutputName(idx, outputName), "Cannot get output name");
+			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[idx]), "Output has wrong name");
 
-			CIdentifier targetBoxId;
-			uint32_t targetBoxOutputIndex;
-			CIdentifier targetBoxOutputIdentifier = OV_UndefinedIdentifier;
-			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxId, targetBoxOutputIndex), "Cannot get scenario output details by index");
-			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxId, targetBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
-			OVT_ASSERT(targetBoxId == std::get<2>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box");
-			OVT_ASSERT(targetBoxOutputIndex == std::get<3>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box output");
+			CIdentifier dstBoxID;
+			uint32_t dstBoxOutputIndex;
+			CIdentifier dstBoxOutputIdentifier = OV_UndefinedIdentifier;
+			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIndex), "Cannot get scenario output details by index");
+			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
+			OVT_ASSERT(dstBoxID == std::get<2>(simpleScenarioOutputs[idx]), "Scenario output is not connected to the correct box");
+			OVT_ASSERT(dstBoxOutputIndex == std::get<3>(simpleScenarioOutputs[idx]), "Scenario output is not connected to the correct box output");
 		}
 
 		// Test links
-		OVT_ASSERT(scenario.isLink(s_ClockStimulatorToStimulationListenerLinkId), "Imported scenario does not contain a link between the Clock Stimulator and Stimulation Listener boxes");
+		OVT_ASSERT(scenario.isLink(s_ClockStimulatorToStimulationListenerLinkId),
+				   "Imported scenario does not contain a link between the Clock Stimulator and Stimulation Listener boxes");
 
 		const ILink* clockStimulatorToStimulationListenerLink = scenario.getLinkDetails(s_ClockStimulatorToStimulationListenerLinkId);
 
 		CIdentifier linkSourceBoxId;
 		uint32_t linkSourceOutputIndex;
 		CIdentifier linkSourceOutputIdentifier;
-		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier), "Could not get link details");
-		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
-		OVT_ASSERT(linkSourceOutputIndex == 0, "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
+		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier),
+				   "Could not get link details");
+		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId,
+				   "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
+		OVT_ASSERT(linkSourceOutputIndex == 0,
+				   "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
 
 		CIdentifier linkTargetBoxId;
 		uint32_t linkTargetInputIndex;
 		CIdentifier linkTargetInputIdentifier;
-		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier), "Could not get link details");
-		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");
-		OVT_ASSERT(linkTargetInputIndex == 1, "The Clock Stimulator to Stimulation Listener link does not have the second input of Stimulation Listener as the input");
+		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier),
+				   "Could not get link details");
+		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId,
+				   "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");
+		OVT_ASSERT(linkTargetInputIndex == 1,
+				   "The Clock Stimulator to Stimulation Listener link does not have the second input of Stimulation Listener as the input");
 
 		// Test comments
 
@@ -156,7 +164,8 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 		const IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
 
 		CString unicodeCommentText = unicodeComment->getText();
-		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText), "The imported scenario comment contains a wrong text");
+		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText),
+						 "The imported scenario comment contains a wrong text");
 	}
 
 	return EXIT_SUCCESS;

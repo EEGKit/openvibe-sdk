@@ -13,8 +13,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CLogListenerConsole::CLogListenerConsole(const IKernelContext& rKernelContext, const CString& sApplicationName)
-	: TKernelObject<ILogListener>(rKernelContext)
+CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)
+	: TKernelObject<ILogListener>(ctx)
 	  , m_eLogColor(LogColor_Default)
 	  , m_sApplicationName(sApplicationName), m_bTimeInSeconds(true)
 	  , m_ui64TimePrecision(3)
@@ -53,10 +53,7 @@ bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLe
 	return true;
 }
 
-bool CLogListenerConsole::activate(bool bActive)
-{
-	return activate(LogLevel_First, LogLevel_Last, bActive);
-}
+bool CLogListenerConsole::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
 
 void CLogListenerConsole::log(const time64 value)
 {
@@ -73,20 +70,14 @@ void CLogListenerConsole::log(const time64 value)
 		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
-		if (m_bLogWithHexa)
-		{
-			ss << " (0x" << hex << value.m_ui64TimeValue << ")";
-		}
+		if (m_bLogWithHexa) { ss << " (0x" << hex << value.m_ui64TimeValue << ")"; }
 
 		cout << ss.str().c_str();
 	}
 	else
 	{
 		cout << dec << value.m_ui64TimeValue;
-		if (m_bLogWithHexa)
-		{
-			cout << " (0x" << hex << value.m_ui64TimeValue << ")";
-		}
+		if (m_bLogWithHexa) { cout << " (0x" << hex << value.m_ui64TimeValue << ")"; }
 	}
 
 	cout.flags(l_oFormat);
@@ -99,10 +90,7 @@ void CLogListenerConsole::log(const uint64_t value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
@@ -114,10 +102,7 @@ void CLogListenerConsole::log(const uint32_t value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -128,10 +113,7 @@ void CLogListenerConsole::log(const uint16_t value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -191,11 +173,11 @@ void CLogListenerConsole::log(const int8_t value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const double f64Value)
+void CLogListenerConsole::log(const double value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << f64Value;
+	cout << value;
 	this->log(LogColor_PopStateBit);
 }
 
@@ -544,20 +526,14 @@ void CLogListenerConsole::applyColor()
 			l_dwTextAttribute |= FOREGROUND_BLUE;
 		}
 
-		if (m_eLogColor & LogColor_ForegroundLightBit && m_eLogColor & LogColor_ForegroundLightStateBit)
-		{
-			l_dwTextAttribute |= FOREGROUND_INTENSITY;
-		}
+		if (m_eLogColor & LogColor_ForegroundLightBit && m_eLogColor & LogColor_ForegroundLightStateBit) { l_dwTextAttribute |= FOREGROUND_INTENSITY; }
 
 		if (m_eLogColor & LogColor_ForegroundBoldBit && m_eLogColor & LogColor_ForegroundBoldStateBit)
 		{
 			// No function to do that
 		}
 
-		if (m_eLogColor & LogColor_ForegroundUnderlineBit && m_eLogColor & LogColor_ForegroundUnderlineStateBit)
-		{
-			l_dwTextAttribute |= COMMON_LVB_UNDERSCORE;
-		}
+		if (m_eLogColor & LogColor_ForegroundUnderlineBit && m_eLogColor & LogColor_ForegroundUnderlineStateBit) { l_dwTextAttribute |= COMMON_LVB_UNDERSCORE; }
 
 		if (m_eLogColor & LogColor_ForegroundBlinkBit && m_eLogColor & LogColor_ForegroundBlinkStateBit)
 		{
@@ -580,10 +556,7 @@ void CLogListenerConsole::applyColor()
 			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorBlueBit) ? BACKGROUND_BLUE : 0);
 		}
 
-		if (m_eLogColor & LogColor_BackgroundLightBit && m_eLogColor & LogColor_BackgroundLightStateBit)
-		{
-			l_dwTextAttribute |= BACKGROUND_INTENSITY;
-		}
+		if (m_eLogColor & LogColor_BackgroundLightBit && m_eLogColor & LogColor_BackgroundLightStateBit) { l_dwTextAttribute |= BACKGROUND_INTENSITY; }
 
 		if (m_eLogColor & LogColor_BackgroundBlinkBit && m_eLogColor & LogColor_BackgroundBlinkStateBit)
 		{

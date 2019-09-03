@@ -33,26 +33,26 @@ bool CChannelUnitsDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }
-	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Header_ChannelUnits) { return true; }
+	if (identifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }
+	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
-void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	if ((l_rTop == OVTK_NodeId_Header_ChannelUnits)
 		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	) { }
-	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
+	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
-void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CChannelUnitsDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -60,18 +60,12 @@ void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t 
 		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	)
 	{
-		if (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
-		{
-			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) ? true : false);
-		}
+		if (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false); }
 
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
+		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
 	}
-	else
-	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, ui64BufferSize);
-	}
+	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CChannelUnitsDecoder::closeChild()

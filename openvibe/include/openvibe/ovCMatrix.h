@@ -17,7 +17,7 @@ namespace OpenViBE
 	 * Instances of this class use an internal implementation of the OpenViBE::IMatrix
 	 * interface and redirect their calls to this implementation.
 	 */
-	class OV_API CMatrix : public IMatrix
+	class OV_API CMatrix final : public IMatrix
 	{
 	public:
 
@@ -43,11 +43,11 @@ namespace OpenViBE
 		~CMatrix() override;
 
 		//@}
-		const uint32_t getDimensionCount() const override;
-		const uint32_t getDimensionSize(uint32_t index) const override;
+		uint32_t getDimensionCount() const override;
+		uint32_t getDimensionSize(uint32_t index) const override;
 		const char* getDimensionLabel(uint32_t index, uint32_t entryIndex) const override;
 		const double* getBuffer() const override;
-		const uint32_t getBufferElementCount() const override;
+		uint32_t getBufferElementCount() const override;
 		bool setDimensionCount(uint32_t count) override;
 		bool setDimensionSize(uint32_t index, uint32_t size) override;
 		bool setDimensionLabel(uint32_t index, uint32_t entryIndex, const char* label) override;

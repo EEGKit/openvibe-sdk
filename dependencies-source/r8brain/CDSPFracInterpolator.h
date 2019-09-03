@@ -213,7 +213,7 @@ namespace r8b
 	 */
 
 	template <int FilterLen, int FilterFracs>
-	class CDSPFracInterpolator : public CDSPProcessor
+	class CDSPFracInterpolator final : public CDSPProcessor
 	{
 	public:
 		/**
@@ -248,10 +248,7 @@ namespace r8b
 
 		double getLatencyFrac() const override { return (0.0); }
 
-		int getInLenBeforeOutStart(const int NextInLen) const override
-		{
-			return (FilterLenD2 + NextInLen);
-		}
+		int getInLenBeforeOutStart(const int NextInLen) const override { return (FilterLenD2 + NextInLen); }
 
 		int getMaxOutLen(const int MaxInLen) const override
 		{

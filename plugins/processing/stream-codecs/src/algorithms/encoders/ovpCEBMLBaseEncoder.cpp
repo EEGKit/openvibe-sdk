@@ -80,9 +80,9 @@ bool CEBMLBaseEncoder::process()
 // ________________________________________________________________________________________________________________
 //
 
-void CEBMLBaseEncoder::write(const void* pBuffer, const uint64_t ui64BufferSize)
+void CEBMLBaseEncoder::write(const void* buffer, const uint64_t size)
 {
 	uint64_t l_ui64CurrentBufferSize = op_pMemoryBuffer->getSize();
-	op_pMemoryBuffer->setSize(l_ui64CurrentBufferSize + ui64BufferSize, false);
-	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, pBuffer, ui64BufferSize);
+	op_pMemoryBuffer->setSize(l_ui64CurrentBufferSize + size, false);
+	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, buffer, size);
 }

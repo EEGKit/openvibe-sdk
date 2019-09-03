@@ -15,25 +15,25 @@ bool CChrono::reset(uint32_t ui32StepCount)
 {
 	if (!ui32StepCount) { return false; }
 
-	uint64_t* l_pStepInTime  = new uint64_t[ui32StepCount + 1];
-	uint64_t* l_pStepOutTime = new uint64_t[ui32StepCount + 1];
-	if (!l_pStepInTime || !l_pStepOutTime)
+	uint64_t* stepInTime  = new uint64_t[ui32StepCount + 1];
+	uint64_t* stepOutTime = new uint64_t[ui32StepCount + 1];
+	if (!stepInTime || !stepOutTime)
 	{
-		delete [] l_pStepInTime;
-		delete [] l_pStepOutTime;
+		delete [] stepInTime;
+		delete [] stepOutTime;
 		return false;
 	}
 
 	for (uint32_t i = 0; i <= ui32StepCount; i++)
 	{
-		l_pStepInTime[i]  = 0;
-		l_pStepOutTime[i] = 0;
+		stepInTime[i]  = 0;
+		stepOutTime[i] = 0;
 	}
 
 	delete [] m_pStepInTime;
 	delete [] m_pStepOutTime;
-	m_pStepInTime  = l_pStepInTime;
-	m_pStepOutTime = l_pStepOutTime;
+	m_pStepInTime  = stepInTime;
+	m_pStepOutTime = stepOutTime;
 
 	m_ui32StepCount     = ui32StepCount;
 	m_ui32StepIndex     = 0;
@@ -87,26 +87,20 @@ uint64_t CChrono::getTotalStepInDuration() const { return m_ui64TotalStepInTime;
 
 uint64_t CChrono::getTotalStepOutDuration() const { return m_ui64TotalStepOutTime; }
 
-uint64_t CChrono::getAverageStepInDuration() const
-{
-	return m_ui32StepCount ? this->getTotalStepInDuration() / m_ui32StepCount : 0;
-}
+uint64_t CChrono::getAverageStepInDuration() const { return m_ui32StepCount ? this->getTotalStepInDuration() / m_ui32StepCount : 0; }
 
-uint64_t CChrono::getAverageStepOutDuration() const
-{
-	return m_ui32StepCount ? this->getTotalStepOutDuration() / m_ui32StepCount : 0;
-}
+uint64_t CChrono::getAverageStepOutDuration() const { return m_ui32StepCount ? this->getTotalStepOutDuration() / m_ui32StepCount : 0; }
 
 double CChrono::getStepInPercentage() const
 {
-	uint64_t l_ui64TotalStepDuration = (this->getTotalStepInDuration() + this->getTotalStepOutDuration());
-	return l_ui64TotalStepDuration ? (this->getTotalStepInDuration() * 100.0) / l_ui64TotalStepDuration : 0;
+	const uint64_t totalStepDuration = (this->getTotalStepInDuration() + this->getTotalStepOutDuration());
+	return totalStepDuration ? (this->getTotalStepInDuration() * 100.0) / totalStepDuration : 0;
 }
 
 double CChrono::getStepOutPercentage() const
 {
-	uint64_t l_ui64TotalStepDuration = (this->getTotalStepOutDuration() + this->getTotalStepInDuration());
-	return l_ui64TotalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / l_ui64TotalStepDuration : 0;
+	const uint64_t totalStepDuration = (this->getTotalStepOutDuration() + this->getTotalStepInDuration());
+	return totalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / totalStepDuration : 0;
 }
 
 bool CChrono::hasNewEstimation() { return m_bHasNewEstimation; }

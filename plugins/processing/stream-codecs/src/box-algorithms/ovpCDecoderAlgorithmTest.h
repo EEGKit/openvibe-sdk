@@ -11,16 +11,16 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CDecoderAlgorithmTest : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CDecoderAlgorithmTest final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
-			CDecoderAlgorithmTest();
-			~CDecoderAlgorithmTest() override;
+			CDecoderAlgorithmTest() { }
+			~CDecoderAlgorithmTest() override { }
 			void release() override { delete this; }
 			bool initialize() override;
 			virtual bool uininitialize();
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest)
@@ -31,15 +31,24 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer[7];
 		};
 
-		class CDecoderAlgorithmTestDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CDecoderAlgorithmTestDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Decoder algorithm test"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Decodes various types of streams and outputs some of the content parameters the log"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Decodes various types of streams and outputs some of the content parameters the log");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tests/Algorithms"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest; }

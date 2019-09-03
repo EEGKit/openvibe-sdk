@@ -39,29 +39,29 @@ namespace OpenViBE
 
 			/**
 			 * \brief Initializes this algorithm
-			 * \param rAlgorithmContext [in] : the execution context for this algorithm
+			 * \param algorithmCtx [in] : the execution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool initialize(Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
+			virtual bool initialize(Kernel::IAlgorithmContext& algorithmCtx) { return true; }
 			/**
 			 * \brief Unitializes this algorithm
-			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
+			 * \param algorithmCtx [in] : the extecution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \exception this method must be noexcept
 			 */
-			virtual bool uninitialize(Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
+			virtual bool uninitialize(Kernel::IAlgorithmContext& algorithmCtx) { return true; }
 			/**
 			 * \brief Effectively executes this algorithm
-			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
+			 * \param algorithmCtx [in] : the extecution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
 			 * When called, this function should get its "input" parameters, do stuffs with them
 			 * and finally produce "output" parameters.
 			 */
-			virtual bool process(Kernel::IAlgorithmContext& rAlgorithmContext) = 0;
+			virtual bool process(Kernel::IAlgorithmContext& algorithmCtx) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};

@@ -14,14 +14,10 @@ namespace OpenViBE
 		 * \ingroup Group_Log
 		 * \ingroup Group_Kernel
 		 *
-		 * The log manager is responsible for keeping a trace of all the messages
-		 * the application could send as debug output. Such information is not
-		 * useful most of the cases but could become crucial in some cases.
-		 * Thus there are different levels of activation for the log manager
-		 * to work. The log manager forwards each log request to its registered
-		 * log listeners that effectively do the log the way they want
-		 * (be it a status window, a console, a file, whatever). See ILogListener
-		 * for more details.
+		 * The log manager is responsible for keeping a trace of all the messages the application could send as debug output. Such information is not
+		 * useful most of the cases but could become crucial in some cases. Thus there are different levels of activation for the log manager
+		 * to work. The log manager forwards each log request to its registered log listeners that effectively do the log the way they want
+		 * (be it a status window, a console, a file, whatever). See ILogListener for more details.
 		 */
 		class OV_API ILogManager : public ILogListener
 		{
@@ -30,15 +26,13 @@ namespace OpenViBE
 			/**
 			 * \brief Registers a new log listener
 			 * \param pListener [in] : the new listener to register
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \return \e true in case of success. \e false in case of error.
 			 */
 			virtual bool addListener(ILogListener* pListener) = 0;
 			/**
 			 * \brief Removes a registered listener
 			 * \param pListener [in] : the listener to unregister
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \return \e true in case of success. \e false in case of error.
 			 */
 			virtual bool removeListener(ILogListener* pListener) = 0;
 

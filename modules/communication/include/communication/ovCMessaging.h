@@ -127,9 +127,7 @@ namespace Communication
 		/**
 		 * \brief Provide the connection to the base class to communicate.
 		 *
-		 * \param libraryError The error
-		 *
-		 * \sa getLastError
+		 * \param connection The connection
 		 */
 		void setConnection(Socket::IConnection* connection);
 
@@ -138,8 +136,6 @@ namespace Communication
 		 * This sync will be stopped in cases:
 		 * - An error raised
 		 * - stopSyncing() function was called.
-		 *
-		 * \param libraryError The error
 		 *
 		 * \retval True if it succeeds.
 		 * \retval False if an error occured.

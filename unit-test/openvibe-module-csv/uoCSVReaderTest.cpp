@@ -65,17 +65,14 @@ namespace
 		ASSERT_EQ(expected.first.first, actual.startTime);
 		ASSERT_EQ(expected.first.second, actual.endTime);
 		ASSERT_EQ(expected.second.size(), actual.matrix.size());
-		for (size_t sample = 0; sample < expected.second.size(); sample++)
-		{
-			ASSERT_EQ(expected.second[sample], actual.matrix[sample]);
-		}
+		for (size_t sample = 0; sample < expected.second.size(); sample++) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
 	}
 }
 
 TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 {
-	ICSVHandler* csv     = createCSVHandler();
-	std::string filepath = dataDirectory + "/testCSVSignalUNIXEndlines.csv";
+	ICSVHandler* csv           = createCSVHandler();
+	const std::string filepath = dataDirectory + "/testCSVSignalUNIXEndlines.csv";
 
 	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
 	csv->setFormatType(EStreamType::Signal);
@@ -100,8 +97,8 @@ TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 
 TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 {
-	ICSVHandler* csv     = createCSVHandler();
-	std::string filepath = dataDirectory + "/testCSVSignalWindowsEndlines.csv";
+	ICSVHandler* csv           = createCSVHandler();
+	const std::string filepath = dataDirectory + "/testCSVSignalWindowsEndlines.csv";
 
 	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
 	csv->setFormatType(EStreamType::Signal);
@@ -127,14 +124,14 @@ TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVSignalReader01.csv";
+	const std::string filepath    = dataDirectory + "testCSVSignalReader01.csv";
 
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	signalReaderTest->setFormatType(EStreamType::Signal);
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
-	std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
+	const std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
 	unsigned int samplingFrequency;
 	unsigned int sampleCountPerBuffer;
 
@@ -154,22 +151,22 @@ TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVSignalReader01.csv";
+	const std::string filepath    = dataDirectory + "testCSVSignalReader01.csv";
 
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	signalReaderTest->setFormatType(EStreamType::Signal);
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
-	std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
+	const std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
 	unsigned int samplingFrequency;
 	unsigned int sampleCountPerBuffer;
 
 	ASSERT_TRUE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
 
 	ASSERT_TRUE(signalReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations));
-	ASSERT_EQ(chunks.size(), (size_t)3);
-	ASSERT_EQ(stimulations.size(), (size_t)3);
+	ASSERT_EQ(chunks.size(), size_t(3));
+	ASSERT_EQ(stimulations.size(), size_t(3));
 	ASSERT_EQ(channelNames, expectedChannels);
 	ASSERT_EQ(samplingFrequency, 8U);
 	ASSERT_EQ(sampleCountPerBuffer, 4);
@@ -180,7 +177,7 @@ TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVSignalEmptyFile.csv";
+	const std::string filepath    = dataDirectory + "testCSVSignalEmptyFile.csv";
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	releaseCSVHandler(signalReaderTest);
 }
@@ -188,7 +185,7 @@ TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
 TEST(CSV_Reader_Test_Case, SignalReaderWrongHeader)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVSignalWrongHeader.csv";
+	const std::string filepath    = dataDirectory + "testCSVSignalWrongHeader.csv";
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	signalReaderTest->setFormatType(EStreamType::Signal);
 	std::vector<std::string> channelNames;
@@ -241,13 +238,13 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
 TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
 {
 	ICSVHandler* spectrumReaderTest = createCSVHandler();
-	std::string filepath            = dataDirectory + "testCSVSpectrumReader01.csv";
+	const std::string filepath      = dataDirectory + "testCSVSpectrumReader01.csv";
 	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, EFileAccessMode::Read));
 	spectrumReaderTest->setFormatType(EStreamType::Spectrum);
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
-	std::vector<std::string> expectedChannels = { "O1", "O2" };
+	const std::vector<std::string> expectedChannels = { "O1", "O2" };
 	std::vector<double> frequencyAbscissa;
 	unsigned int originalSampleRate;
 
@@ -267,7 +264,7 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
 TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
 {
 	ICSVHandler* spectrumReaderTest = createCSVHandler();
-	std::string filepath            = dataDirectory + "testCSVSpectrumWrongHeader.csv";
+	const std::string filepath      = dataDirectory + "testCSVSpectrumWrongHeader.csv";
 	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, EFileAccessMode::Read));
 	spectrumReaderTest->setFormatType(EStreamType::Spectrum);
 	std::vector<std::string> channelNames;
@@ -282,7 +279,7 @@ TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
 TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVMatrixReader01.csv";
+	const std::string filepath    = dataDirectory + "testCSVMatrixReader01.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
@@ -290,8 +287,8 @@ TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<unsigned int> dimensionSizes;
 	std::vector<std::string> labels;
-	std::vector<std::string> expectedLabels       = { "", "", "", "", "", "" };
-	std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 2 };
+	const std::vector<std::string> expectedLabels       = { "", "", "", "", "", "" };
+	const std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 2 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(10, chunks, stimulations));
@@ -308,7 +305,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 TEST(CSV_Reader_Test_Case, matrixReaderWrongHeader)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVMatrixWrongHeader.csv";
+	const std::string filepath    = dataDirectory + "testCSVMatrixWrongHeader.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
@@ -323,7 +320,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongHeader)
 TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVMatrixTooManyLabels.csv";
+	const std::string filepath    = dataDirectory + "testCSVMatrixTooManyLabels.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
@@ -338,7 +335,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
 TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVMatrixWrongStimulation.csv";
+	const std::string filepath    = dataDirectory + "testCSVMatrixWrongStimulation.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
@@ -359,7 +356,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVCovarMatrixReader01.csv";
+	const std::string filepath    = dataDirectory + "testCSVCovarMatrixReader01.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
 
@@ -367,11 +364,12 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<unsigned int> dimensionSizes;
 	std::vector<std::string> labels;
-	std::vector<std::string> expectedLabels       = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
-	std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 5 };
+	const std::vector<std::string> expectedLabels       = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
+	const std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 5 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
-	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations)) << matrixReaderTest->getLastLogError() << ".Details: " << matrixReaderTest->getLastErrorString();
+	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations)) << matrixReaderTest->getLastLogError() << ".Details: " <<
+ matrixReaderTest->getLastErrorString();
 	ASSERT_EQ(chunks.size(), 3);
 
 	ASSERT_EQ(dimensionSizes, goodDimensionsSizes);
@@ -384,7 +382,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVCovarMatrixWrongHeader.csv";
+	const std::string filepath    = dataDirectory + "testCSVCovarMatrixWrongHeader.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 
 	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
@@ -400,7 +398,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 {
 	ICSVHandler* matrixReaderTest = createCSVHandler();
-	std::string filepath          = dataDirectory + "testCSVCovarMatrixTooManyLabels.csv";
+	const std::string filepath    = dataDirectory + "testCSVCovarMatrixTooManyLabels.csv";
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
 

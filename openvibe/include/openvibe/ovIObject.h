@@ -84,7 +84,7 @@ namespace OpenViBE
 
 namespace OpenViBE
 {
-	class CNullObject : public IObject
+	class CNullObject final : public IObject
 	{
 	public:
 

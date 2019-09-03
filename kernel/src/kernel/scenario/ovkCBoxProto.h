@@ -10,17 +10,19 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxProto(const IKernelContext& rKernelContext, IBox& rBox);
-			bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
-			bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+			CBoxProto(const IKernelContext& ctx, IBox& box);
+			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
+						  const bool bNotify                                                              = true) override;
+			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
+						   const bool bNotify                                                              = true) override;
 
-			//virtual bool addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue); 
-			bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue,
-							const bool bModifiable = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+			//virtual bool addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue); 
+			bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue,
+							const bool bModifiable = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
 			bool addFlag(const EBoxFlag eBoxFlag) override;
 			bool addFlag(const CIdentifier& cIdentifierFlag) override;
-			bool addInputSupport(const CIdentifier& rTypeIdentifier) override;
-			bool addOutputSupport(const CIdentifier& rTypeIdentifier) override;
+			bool addInputSupport(const CIdentifier& typeID) override;
+			bool addOutputSupport(const CIdentifier& typeID) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IBoxProto, OVK_ClassId_Kernel_Scenario_BoxProto)
 

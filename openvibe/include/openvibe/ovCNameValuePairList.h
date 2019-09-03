@@ -19,7 +19,7 @@ namespace OpenViBE
 	 *
 	 * \note Implementation based on std::map<std::string, std::string>
 	 */
-	class OV_API CNameValuePairList
+	class OV_API CNameValuePairList final
 	{
 	public:
 
@@ -110,6 +110,7 @@ namespace OpenViBE
 		 * \brief Retrieve a boolean value from the list
 		 * In the current implementation a value evaluates to true if its string
 		 * equals "1" and to false if it equals "0".
+		 * \param rName
 		 * \param rValue String to evaluate
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */

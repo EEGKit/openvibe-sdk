@@ -11,16 +11,16 @@ namespace OpenViBEPlugins
 {
 	namespace Stimulation
 	{
-		class CBoxAlgorithmStreamEndDetector : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmStreamEndDetector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			static const OpenViBE::CIdentifier id_InputEBML() { return OpenViBE::CIdentifier(0x0, 0x1); }
-			static const OpenViBE::CIdentifier id_OutputStimulations() { return OpenViBE::CIdentifier(0x1, 0x1); }
-			static const OpenViBE::CIdentifier id_SettingStimulationName() { return OpenViBE::CIdentifier(0x2, 0x1); }
+			static OpenViBE::CIdentifier id_InputEBML() { return OpenViBE::CIdentifier(0x0, 0x1); }
+			static OpenViBE::CIdentifier id_OutputStimulations() { return OpenViBE::CIdentifier(0x1, 0x1); }
+			static OpenViBE::CIdentifier id_SettingStimulationName() { return OpenViBE::CIdentifier(0x2, 0x1); }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StreamEndDetector)
@@ -48,10 +48,10 @@ namespace OpenViBEPlugins
 			uint32_t m_InputEBMLIndex          = 0;
 			uint32_t m_OutputStimulationsIndex = 0;
 			bool m_IsHeaderSent                = false;
-			EEndState m_EndState;
+			EEndState m_EndState               = EEndState::WaitingForEnd;
 		};
 
-		class CBoxAlgorithmStreamEndDetectorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmStreamEndDetectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -72,7 +72,8 @@ namespace OpenViBEPlugins
 			{
 				prototype.addInput("EBML Stream", OV_TypeId_EBMLStream, CBoxAlgorithmStreamEndDetector::id_InputEBML());
 				prototype.addOutput("Output Stimulations", OV_TypeId_Stimulations, CBoxAlgorithmStreamEndDetector::id_OutputStimulations());
-				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false, CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
+				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false,
+									 CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
 
 				return true;
 			}

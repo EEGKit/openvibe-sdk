@@ -52,13 +52,13 @@ namespace OpenViBE
 
 			/**
 			 * \brief Attaches a scenario to this player
-			 * \param rScenarioIdentifier [in] : the scenario identifier to attach to this player.
+			 * \param scenarioID [in] : the scenario identifier to attach to this player.
 			 *                                   The scenario itself is found from the scenario manager.
 			 * \param pLocalConfigurationTokens [in] : An optional map that contains configuration tokens to add.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens = nullptr) = 0;
+			virtual bool setScenario(const CIdentifier& scenarioID, const CNameValuePairList* pLocalConfigurationTokens = nullptr) = 0;
 
 			/**
 			 * \brief returns a reference to the runtime configuration manager

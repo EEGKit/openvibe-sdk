@@ -1,6 +1,3 @@
-#ifndef LEPTON_OPERATION_H_
-#define LEPTON_OPERATION_H_
-
 /* -------------------------------------------------------------------------- *
  *                                   Lepton                                   *
  * -------------------------------------------------------------------------- *
@@ -31,6 +28,7 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
  * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
  * -------------------------------------------------------------------------- */
+#pragma once
 
 #include "windowsIncludes.h"
 #include "CustomFunction.h"
@@ -99,7 +97,8 @@ namespace Lepton
 		 * @param childDerivs  the derivatives of the child nodes with respect to the variable
 		 * @param variable     the variable with respect to which the derivate should be taken
 		 */
-		virtual ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const = 0;
+		virtual ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+												 const std::string& variable) const = 0;
 		/**
 		 * Get whether this operation should be displayed with infix notation.
 		 */
@@ -110,15 +109,9 @@ namespace Lepton
 		 */
 		virtual bool isSymmetric() const { return false; }
 
-		virtual bool operator!=(const Operation& op) const
-		{
-			return op.getId() != getId();
-		}
+		virtual bool operator!=(const Operation& op) const { return op.getId() != getId(); }
 
-		virtual bool operator==(const Operation& op) const
-		{
-			return !(*this != op);
-		}
+		virtual bool operator==(const Operation& op) const { return !(*this != op); }
 
 		class Constant;
 		class Variable;
@@ -159,7 +152,7 @@ namespace Lepton
 		class Abs;
 	};
 
-	class LEPTON_EXPORT Operation::Constant : public Operation
+	class LEPTON_EXPORT Operation::Constant final : public Operation
 	{
 	public:
 		Constant(double value) : value(value) { }
@@ -177,9 +170,10 @@ namespace Lepton
 
 		Operation* clone() const override { return new Constant(value); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return value; }
+		double evaluate(double* /*args*/, const std::map<std::string, double>& /*variables*/) const override { return value; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		double getValue() const { return value; }
 
@@ -193,7 +187,7 @@ namespace Lepton
 		double value = 0;
 	};
 
-	class LEPTON_EXPORT Operation::Variable : public Operation
+	class LEPTON_EXPORT Operation::Variable final : public Operation
 	{
 	public:
 		Variable(const std::string& name) : name(name) { }
@@ -206,17 +200,15 @@ namespace Lepton
 
 		Operation* clone() const override { return new Variable(name); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
+		double evaluate(double* /*args*/, const std::map<std::string, double>& variables) const override
 		{
-			std::map<std::string, double>::const_iterator iter = variables.find(name);
-			if (iter == variables.end())
-			{
-				throw Exception("No value specified for variable " + name);
-			}
+			const std::map<std::string, double>::const_iterator iter = variables.find(name);
+			if (iter == variables.end()) { throw Exception("No value specified for variable " + name); }
 			return iter->second;
 		}
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		bool operator!=(const Operation& op) const override
 		{
@@ -228,10 +220,10 @@ namespace Lepton
 		std::string name;
 	};
 
-	class LEPTON_EXPORT Operation::Custom : public Operation
+	class LEPTON_EXPORT Operation::Custom final : public Operation
 	{
 	public:
-		Custom(const std::string& name, CustomFunction* function) : name(name), function(function), isDerivative(false), derivOrder(function->getNumArguments(), 0) { }
+		Custom(const std::string& name, CustomFunction* function) : name(name), function(function), derivOrder(function->getNumArguments(), 0) { }
 
 		Custom(const Custom& base, int derivIndex) : name(base.name), function(base.function->clone()), isDerivative(true), derivOrder(base.derivOrder)
 		{
@@ -254,16 +246,14 @@ namespace Lepton
 			return clone;
 		}
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override
 		{
-			if (isDerivative)
-			{
-				return function->evaluateDerivative(args, &derivOrder[0]);
-			}
+			if (isDerivative) { return function->evaluateDerivative(args, &derivOrder[0]); }
 			return function->evaluate(args);
 		}
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		const std::vector<int>& getDerivOrder() const { return derivOrder; }
 
@@ -276,19 +266,16 @@ namespace Lepton
 	private:
 		std::string name;
 		CustomFunction* function = nullptr;
-		bool isDerivative;
+		bool isDerivative        = false;
 		std::vector<int> derivOrder;
 	};
 
-	class LEPTON_EXPORT Operation::Add : public Operation
+	class LEPTON_EXPORT Operation::Add final : public Operation
 	{
 	public:
 		Add() { }
 
-		std::string getName() const override
-		{
-			return "+";
-		}
+		std::string getName() const override { return "+"; }
 
 		Id getId() const override { return ADD; }
 
@@ -296,19 +283,17 @@ namespace Lepton
 
 		Operation* clone() const override { return new Add(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] + args[1];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] + args[1]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		bool isInfixOperator() const override { return true; }
 
 		bool isSymmetric() const override { return true; }
 	};
 
-	class LEPTON_EXPORT Operation::Subtract : public Operation
+	class LEPTON_EXPORT Operation::Subtract final : public Operation
 	{
 	public:
 		Subtract() { }
@@ -321,14 +306,15 @@ namespace Lepton
 
 		Operation* clone() const override { return new Subtract(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] - args[1]; }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] - args[1]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		bool isInfixOperator() const override { return true; }
 	};
 
-	class LEPTON_EXPORT Operation::Multiply : public Operation
+	class LEPTON_EXPORT Operation::Multiply final : public Operation
 	{
 	public:
 		Multiply() { }
@@ -341,24 +327,22 @@ namespace Lepton
 
 		Operation* clone() const override { return new Multiply(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * args[1]; }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] * args[1]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		bool isInfixOperator() const override { return true; }
 
 		bool isSymmetric() const override { return true; }
 	};
 
-	class LEPTON_EXPORT Operation::Divide : public Operation
+	class LEPTON_EXPORT Operation::Divide final : public Operation
 	{
 	public:
 		Divide() { }
 
-		std::string getName() const override
-		{
-			return "/";
-		}
+		std::string getName() const override { return "/"; }
 
 		Id getId() const override { return DIVIDE; }
 
@@ -366,25 +350,20 @@ namespace Lepton
 
 		Operation* clone() const override { return new Divide(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] / args[1];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] / args[1]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		bool isInfixOperator() const override { return true; }
 	};
 
-	class LEPTON_EXPORT Operation::Power : public Operation
+	class LEPTON_EXPORT Operation::Power final : public Operation
 	{
 	public:
 		Power() { }
 
-		std::string getName() const override
-		{
-			return "^";
-		}
+		std::string getName() const override { return "^"; }
 
 		Id getId() const override { return POWER; }
 
@@ -392,14 +371,15 @@ namespace Lepton
 
 		Operation* clone() const override { return new Power(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::pow(args[0], args[1]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::pow(args[0], args[1]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		bool isInfixOperator() const override { return true; }
 	};
 
-	class LEPTON_EXPORT Operation::Negate : public Operation
+	class LEPTON_EXPORT Operation::Negate final : public Operation
 	{
 	public:
 		Negate() { }
@@ -412,12 +392,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Negate(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return -args[0]; }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return -args[0]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Sqrt : public Operation
+	class LEPTON_EXPORT Operation::Sqrt final : public Operation
 	{
 	public:
 		Sqrt() { }
@@ -430,12 +411,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Sqrt(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::sqrt(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::sqrt(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Exp : public Operation
+	class LEPTON_EXPORT Operation::Exp final : public Operation
 	{
 	public:
 		Exp() { }
@@ -448,12 +430,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Exp(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::exp(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::exp(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Log : public Operation
+	class LEPTON_EXPORT Operation::Log final : public Operation
 	{
 	public:
 		Log() { }
@@ -466,12 +449,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Log(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::log(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::log(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Sin : public Operation
+	class LEPTON_EXPORT Operation::Sin final : public Operation
 	{
 	public:
 		Sin() { }
@@ -484,12 +468,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Sin(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::sin(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::sin(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Cos : public Operation
+	class LEPTON_EXPORT Operation::Cos final : public Operation
 	{
 	public:
 		Cos() { }
@@ -502,12 +487,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Cos(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::cos(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::cos(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Sec : public Operation
+	class LEPTON_EXPORT Operation::Sec final : public Operation
 	{
 	public:
 		Sec() { }
@@ -520,15 +506,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Sec(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return 1.0 / std::cos(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return 1.0 / std::cos(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Csc : public Operation
+	class LEPTON_EXPORT Operation::Csc final : public Operation
 	{
 	public:
 		Csc() { }
@@ -541,15 +525,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Csc(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return 1.0 / std::sin(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return 1.0 / std::sin(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Tan : public Operation
+	class LEPTON_EXPORT Operation::Tan final : public Operation
 	{
 	public:
 		Tan() { }
@@ -562,12 +544,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Tan(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::tan(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::tan(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Cot : public Operation
+	class LEPTON_EXPORT Operation::Cot final : public Operation
 	{
 	public:
 		Cot() { }
@@ -580,15 +563,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Cot(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return 1.0 / std::tan(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return 1.0 / std::tan(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Asin : public Operation
+	class LEPTON_EXPORT Operation::Asin final : public Operation
 	{
 	public:
 		Asin() { }
@@ -601,12 +582,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Asin(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::asin(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::asin(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Acos : public Operation
+	class LEPTON_EXPORT Operation::Acos final : public Operation
 	{
 	public:
 		Acos() { }
@@ -619,12 +601,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Acos(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::acos(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::acos(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Atan : public Operation
+	class LEPTON_EXPORT Operation::Atan final : public Operation
 	{
 	public:
 		Atan() { }
@@ -637,12 +620,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Atan(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::atan(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::atan(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Sinh : public Operation
+	class LEPTON_EXPORT Operation::Sinh final : public Operation
 	{
 	public:
 		Sinh() { }
@@ -655,12 +639,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Sinh(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::sinh(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::sinh(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Cosh : public Operation
+	class LEPTON_EXPORT Operation::Cosh final : public Operation
 	{
 	public:
 		Cosh() { }
@@ -673,12 +658,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Cosh(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::cosh(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::cosh(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Tanh : public Operation
+	class LEPTON_EXPORT Operation::Tanh final : public Operation
 	{
 	public:
 		Tanh() { }
@@ -691,12 +677,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Tanh(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::tanh(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::tanh(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Erf : public Operation
+	class LEPTON_EXPORT Operation::Erf final : public Operation
 	{
 	public:
 		Erf() { }
@@ -710,10 +697,11 @@ namespace Lepton
 		Operation* clone() const override { return new Erf(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override;
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Erfc : public Operation
+	class LEPTON_EXPORT Operation::Erfc final : public Operation
 	{
 	public:
 		Erfc() { }
@@ -727,10 +715,11 @@ namespace Lepton
 		Operation* clone() const override { return new Erfc(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override;
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Step : public Operation
+	class LEPTON_EXPORT Operation::Step final : public Operation
 	{
 	public:
 		Step() { }
@@ -743,15 +732,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Step(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return (args[0] >= 0.0 ? 1.0 : 0.0);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return (args[0] >= 0.0 ? 1.0 : 0.0); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Delta : public Operation
+	class LEPTON_EXPORT Operation::Delta final : public Operation
 	{
 	public:
 		Delta() { }
@@ -764,15 +751,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Delta(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return (args[0] == 0.0 ? 1.0 : 0.0);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return (args[0] == 0.0 ? 1.0 : 0.0); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Square : public Operation
+	class LEPTON_EXPORT Operation::Square final : public Operation
 	{
 	public:
 		Square() { }
@@ -785,12 +770,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Square(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * args[0]; }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] * args[0]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Cube : public Operation
+	class LEPTON_EXPORT Operation::Cube final : public Operation
 	{
 	public:
 		Cube() { }
@@ -803,12 +789,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Cube(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * args[0] * args[0]; }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] * args[0] * args[0]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Reciprocal : public Operation
+	class LEPTON_EXPORT Operation::Reciprocal final : public Operation
 	{
 	public:
 		Reciprocal() { }
@@ -821,15 +808,13 @@ namespace Lepton
 
 		Operation* clone() const override { return new Reciprocal(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return 1.0 / args[0];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return 1.0 / args[0]; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::AddConstant : public Operation
+	class LEPTON_EXPORT Operation::AddConstant final : public Operation
 	{
 	public:
 		AddConstant(double value) : value(value) { }
@@ -847,12 +832,10 @@ namespace Lepton
 
 		Operation* clone() const override { return new AddConstant(value); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] + value;
-		}
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] + value; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		double getValue() const { return value; }
 
@@ -866,7 +849,7 @@ namespace Lepton
 		double value = 0;
 	};
 
-	class LEPTON_EXPORT Operation::MultiplyConstant : public Operation
+	class LEPTON_EXPORT Operation::MultiplyConstant final : public Operation
 	{
 	public:
 		MultiplyConstant(double value) : value(value) { }
@@ -884,9 +867,10 @@ namespace Lepton
 
 		Operation* clone() const override { return new MultiplyConstant(value); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * value; }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return args[0] * value; }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		double getValue() const { return value; }
 
@@ -900,12 +884,12 @@ namespace Lepton
 		double value = 0;
 	};
 
-	class LEPTON_EXPORT Operation::PowerConstant : public Operation
+	class LEPTON_EXPORT Operation::PowerConstant final : public Operation
 	{
 	public:
 		PowerConstant(double value) : value(value)
 		{
-			intValue   = (int)value;
+			intValue   = int(value);
 			isIntPower = (intValue == value);
 		}
 
@@ -922,7 +906,7 @@ namespace Lepton
 
 		Operation* clone() const override { return new PowerConstant(value); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override
 		{
 			if (isIntPower)
 			{
@@ -947,7 +931,8 @@ namespace Lepton
 			return std::pow(args[0], value);
 		}
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 
 		double getValue() const { return value; }
 
@@ -965,7 +950,7 @@ namespace Lepton
 		bool isIntPower;
 	};
 
-	class LEPTON_EXPORT Operation::Min : public Operation
+	class LEPTON_EXPORT Operation::Min final : public Operation
 	{
 	public:
 		Min() { }
@@ -978,16 +963,17 @@ namespace Lepton
 
 		Operation* clone() const override { return new Min(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override
 		{
 			// parens around (std::min) are workaround for horrible microsoft max/min macro trouble
 			return (std::min)(args[0], args[1]);
 		}
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Max : public Operation
+	class LEPTON_EXPORT Operation::Max final : public Operation
 	{
 	public:
 		Max() { }
@@ -1000,16 +986,17 @@ namespace Lepton
 
 		Operation* clone() const override { return new Max(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override
 		{
 			// parens around (std::min) are workaround for horrible microsoft max/min macro trouble
 			return (std::max)(args[0], args[1]);
 		}
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 
-	class LEPTON_EXPORT Operation::Abs : public Operation
+	class LEPTON_EXPORT Operation::Abs final : public Operation
 	{
 	public:
 		Abs() { }
@@ -1022,10 +1009,9 @@ namespace Lepton
 
 		Operation* clone() const override { return new Abs(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::abs(args[0]); }
+		double evaluate(double* args, const std::map<std::string, double>& /*variables*/) const override { return std::abs(args[0]); }
 
-		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
+		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
+										 const std::string& variable) const override;
 	};
 } // namespace Lepton
-
-#endif /*LEPTON_OPERATION_H_*/

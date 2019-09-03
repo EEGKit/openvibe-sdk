@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CChannelUnitsDecoder : public CStreamedMatrixDecoder
+		class CChannelUnitsDecoder final : public CStreamedMatrixDecoder
 		{
 		public:
 			void release() override { delete this; }
@@ -20,9 +20,9 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelUnitsStreamDecoder)
 
 			// ebml callbacks
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 			//			uint32_t m_ui32UnitIndex = 0;
 		};
 
-		class CChannelUnitsDecoderDesc : public CStreamedMatrixDecoderDesc
+		class CChannelUnitsDecoderDesc final : public CStreamedMatrixDecoderDesc
 		{
 		public:
 			void release() override { }
@@ -56,7 +56,8 @@ namespace OpenViBEPlugins
 			{
 				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 
 				return true;
 			}

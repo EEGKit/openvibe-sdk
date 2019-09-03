@@ -88,7 +88,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the clock frequency to call this algorithm
-			 * \param rBoxAlgorithmContext [in] : The current box state
+			 * \param boxAlgorithmContext [in] : The current box state
 			 * \return The clock frequency to call this algorithm
 			 * \note Default implementation returns 0
 			 *
@@ -105,7 +105,7 @@ namespace OpenViBE
 			 *
 			 * \sa processClock
 			 */
-			virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return 0; }
+			virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/) { return 0; }
 
 			//@}
 			/** \name Initialization / Uninitialization */
@@ -113,7 +113,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Prepares plugin object
-			 * \param rBoxAlgorithmContext [in] : the plugin object context
+			 * \param boxAlgorithmContext [in] : the plugin object context
 			 * \return \e true when this object successfully initialized
 			 *         or \e false if it didn't succeed to initialize.
 			 * \note Default implementation simply returns \e true.
@@ -124,10 +124,10 @@ namespace OpenViBE
 			 *
 			 * \sa uninitialize
 			 */
-			virtual bool initialize(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
+			virtual bool initialize(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/) { return true; }
 			/**
 			 * \brief Unprepares the object so it can be deleted
-			 * \param rBoxAlgorithmContext [in] : the plugin object context
+			 * \param boxAlgorithmContext [in] : the plugin object context
 			 * \return \e true when this object sucessfully uninitialized
 			 *         or \e false if didn't succeed to uninitialize.
 			 * \exception this method must be noexcept
@@ -142,7 +142,7 @@ namespace OpenViBE
 			 *
 			 * \sa initialize
 			 */
-			virtual bool uninitialize(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
+			virtual bool uninitialize(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/) { return true; }
 
 			//@}
 			/** \name Several event processing callbacks */
@@ -150,8 +150,8 @@ namespace OpenViBE
 
 			/**
 			 * \brief Reaction to an event launched by another box
-			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
-			 * \param rMessageEvent [in] : the message the box just received
+			 * \param boxAlgorithmContext [in] : the box algorithm context to use
+			 * \param messageEvent [in] : the message the box just received
 			 * \return \e true when the message is processed.
 			 * \return \e false when the message is not processed.
 			 * \note Default implementation returns \e false
@@ -159,16 +159,16 @@ namespace OpenViBE
 			 * This function is called by the OpenViBE kernel when
 			 * another box tries to send an event message to this
 			 * box. This event message is described in the
-			 * rMessageEvent parameter and can be interpreted by this
+			 * messageEvent parameter and can be interpreted by this
 			 * algorithm.
 			 *
 			 * \sa OpenViBE::IBoxAlgorithmContext
 			 */
-			virtual bool processEvent(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, Kernel::IMessageEvent& rMessageEvent) { return false; }
+			virtual bool processEvent(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/, Kernel::IMessageEvent& /*messageEvent*/) { return false; }
 			/**
 			 * \brief Reaction to a signal
-			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
-			 * \param rMessageSignal [in] : the signal the box just received
+			 * \param boxAlgorithmContext [in] : the box algorithm context to use
+			 * \param messageSignal [in] : the signal the box just received
 			 * \return \e true when the message is processed.
 			 * \return \e false when the message is not processed.
 			 * \note Default implementation returns \e false
@@ -182,11 +182,11 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processSignal(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, Kernel::IMessageSignal& rMessageSignal) { return false; }
+			virtual bool processSignal(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/, Kernel::IMessageSignal& /*messageSignal*/) { return false; }
 			/**
 			 * \brief Reaction to a clock tick
-			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
-			 * \param rMessageClock [in] : the clock message the box received
+			 * \param boxAlgorithmContext [in] : the box algorithm context to use
+			 * \param messageClock [in] : the clock message the box received
 			 * \return \e true when the message is processed.
 			 * \return \e false when the message is not processed.
 			 * \note Default implementation returns \e false
@@ -203,11 +203,11 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 * \sa getClockFrequency
 			 */
-			virtual bool processClock(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, Kernel::IMessageClock& rMessageClock) { return false; }
+			virtual bool processClock(Kernel::IBoxAlgorithmContext& boxAlgorithmContext, Kernel::IMessageClock& messageClock) { return false; }
 			/**
 			 * \brief Reaction to an input update
-			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
-			 * \param ui32InputIndex [in] : the index of the input which has ben updated
+			 * \param boxAlgorithmContext [in] : the box algorithm context to use
+			 * \param index [in] : the index of the input which has ben updated
 			 * \return \e true when the message is processed.
 			 * \return \e false when the message is not processed.
 			 * \note Default implementation returns \e false
@@ -219,7 +219,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processInput(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32InputIndex) { return false; }
+			virtual bool processInput(Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const uint32_t index) { return false; }
 
 			//@}
 			/** \name Algorithm processing */
@@ -227,7 +227,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Processing function
-			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
+			 * \param boxAlgorithmContext [in] : the box algorithm context to use
 			 * \return \e true on success, \e false when something went wrong.
 			 *
 			 * This function is used to process the arrived data and
@@ -244,7 +244,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool process(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) = 0;
+			virtual bool process(Kernel::IBoxAlgorithmContext& boxAlgorithmContext) = 0;
 
 			//@}
 
@@ -257,9 +257,9 @@ namespace OpenViBE
 			~IBoxListener() override { }
 			void release() override { }
 
-			virtual bool initialize(Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
+			virtual bool initialize(Kernel::IBoxListenerContext& /*rBoxListenerContext*/) { return true; }
 
-			virtual bool uninitialize(Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
+			virtual bool uninitialize(Kernel::IBoxListenerContext& /*rBoxListenerContext*/) { return true; }
 
 			/** \name Box modifications callbacks */
 			//@{

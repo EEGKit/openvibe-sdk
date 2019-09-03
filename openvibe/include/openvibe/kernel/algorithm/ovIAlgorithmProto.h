@@ -23,42 +23,44 @@ namespace OpenViBE
 
 			/**
 			 * \brief Adds an input parameter
-			 * \param rInputParameterIdentifier [in] : the identifier for this parameter
+			 * \param InputParameterID [in] : the identifier for this parameter
 			 * \param sInputName [in] : the name for this parameter
 			 * \param eParameterType [in] : the type for this parameter
-			 * \param rSubTypeIdentifier [in] : the optional sub type of this parameter (e.g. for enumerations)
+			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual bool addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName, EParameterType eParameterType,
+										   const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter
-			 * \param rOutputParameterIdentifier [in] : the identifier for this parameter
+			 * \param outputParameterID [in] : the identifier for this parameter
 			 * \param sOutputName [in] : the name for this parameter
 			 * \param eParameterType [in] : the type for this parameter
-			 * \param rSubTypeIdentifier [in] : the optional sub type of this parameter (e.g. for enumerations)
+			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual bool addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName, EParameterType eParameterType,
+											const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an input trigger
-			 * \param rInputTriggerIdentifier [in] : the identifier for this trigger
+			 * \param inputTriggerID [in] : the identifier for this trigger
 			 * \param rInputTriggerName [in] : the name for this trigger
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addInputTrigger(const CIdentifier& rInputTriggerIdentifier, const CString& rInputTriggerName) = 0;
+			virtual bool addInputTrigger(const CIdentifier& inputTriggerID, const CString& rInputTriggerName) = 0;
 			/**
 			 * \brief Adds an output trigger
-			 * \param rOutputTriggerIdentifier [in] : the identifier for this trigger
+			 * \param outputTriggerID [in] : the identifier for this trigger
 			 * \param rOutputTriggerName [in] : the name for this trigger
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const CString& rOutputTriggerName) = 0;
+			virtual bool addOutputTrigger(const CIdentifier& outputTriggerID, const CString& rOutputTriggerName) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProto)
 		};

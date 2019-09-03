@@ -18,7 +18,7 @@ namespace OpenViBEToolkit
 			};
 
 			template <class TContainer>
-			class TSplitCallback : public ISplitCallback
+			class TSplitCallback final : public ISplitCallback
 			{
 			public:
 
@@ -33,7 +33,9 @@ namespace OpenViBEToolkit
 
 			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator);
 			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount);
-			OVTK_API bool isAlmostEqual(const OpenViBE::CString& rString1, const OpenViBE::CString& rString2, bool bCaseSensitive = true, bool bRemoveStartSpaces = true, bool bRemoveEndSpaces = true);
+			OVTK_API bool isAlmostEqual(const OpenViBE::CString& rString1, const OpenViBE::CString& rString2, bool bCaseSensitive = true,
+										bool bRemoveStartSpaces                                                                   = true,
+										bool bRemoveEndSpaces                                                                     = true);
 		} // namespace String
 	} // namespace Tools
 } // namespace OpenViBEToolkit

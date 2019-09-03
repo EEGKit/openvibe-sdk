@@ -41,7 +41,7 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct InitCommand : ICommand
+	struct InitCommand final : ICommand
 	{
 		// List of properties
 		boost::optional<bool> benchmark;
@@ -67,7 +67,7 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct LoadKernelCommand : ICommand
+	struct LoadKernelCommand final : ICommand
 	{
 		// List of properties
 		boost::optional<std::string> configurationFile;
@@ -92,7 +92,7 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct LoadScenarioCommand : ICommand
+	struct LoadScenarioCommand final : ICommand
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
@@ -117,7 +117,7 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct UpdateScenarioCommand : ICommand
+	struct UpdateScenarioCommand final : ICommand
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
@@ -137,7 +137,7 @@ namespace OpenViBE
 	* \brief Command that drives tool reset to its initial state
 	* \ingroup ScenarioPlayer
 	*/
-	struct ResetCommand : ICommand
+	struct ResetCommand final : ICommand
 	{
 		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
@@ -161,7 +161,7 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct RunScenarioCommand : ICommand
+	struct RunScenarioCommand final : ICommand
 	{
 		using Token = std::pair<std::string, std::string>;
 
@@ -194,7 +194,7 @@ namespace OpenViBE
 	* called on the same scenario (note that an empty token list is allowed).
 	*
 	*/
-	struct SetupScenarioCommand : ICommand
+	struct SetupScenarioCommand final : ICommand
 	{
 		using Token = std::pair<std::string, std::string>;
 

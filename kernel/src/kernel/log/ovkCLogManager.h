@@ -17,7 +17,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CLogManager(const IKernelContext& rKernelContext);
+			explicit CLogManager(const IKernelContext& ctx);
 			bool isActive(ELogLevel eLogLevel) override;
 			bool activate(ELogLevel eLogLevel, bool bActive) override;
 			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;

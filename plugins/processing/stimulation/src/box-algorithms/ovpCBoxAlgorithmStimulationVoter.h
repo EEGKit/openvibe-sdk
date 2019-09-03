@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 {
 	namespace Stimulation
 	{
-		class CBoxAlgorithmStimulationVoter : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmStimulationVoter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -50,12 +50,11 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CBoxAlgorithmStimulationVoterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmStimulationVoterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			CBoxAlgorithmStimulationVoterListener()
-				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
+			CBoxAlgorithmStimulationVoterListener() : m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 
@@ -64,7 +63,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
 		};
 
-		class CBoxAlgorithmStimulationVoterDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmStimulationVoterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -72,7 +71,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs majority vote on the input stimuli"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Streaming"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

@@ -69,7 +69,7 @@ string Parser::trim(const string& expression)
 
 	int start, end;
 	for (start = 0; start < (int)expression.size() && isspace(expression[start]); start++) { }
-	for (end   = (int)expression.size() - 1; end > start && isspace(expression[end]); end--) { }
+	for (end = (int)expression.size() - 1; end > start && isspace(expression[end]); end--) { }
 	if (start == end && isspace(expression[end])) { return ""; }
 	return expression.substr(start, end - start + 1);
 }
@@ -110,10 +110,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 			if ((c == 'e' || c == 'E') && !foundExp)
 			{
 				foundExp = true;
-				if (pos < (int)expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+'))
-				{
-					pos++;
-				}
+				if (pos < (int)expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+')) { pos++; }
 				continue;
 			}
 			break;
@@ -127,7 +124,8 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 	{
 		c = expression[pos];
 		if (c == '(') return ParseToken(expression.substr(start, pos - start + 1), ParseToken::Function);
-		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c)) return ParseToken(expression.substr(start, pos - start), ParseToken::Variable);
+		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c)) return ParseToken(
+			expression.substr(start, pos - start), ParseToken::Variable);
 	}
 	return ParseToken(expression.substr(start, string::npos), ParseToken::Variable);
 }
@@ -145,10 +143,7 @@ vector<ParseToken> Parser::tokenize(const string& expression)
 	return tokens;
 }
 
-ParsedExpression Parser::parse(const string& expression)
-{
-	return parse(expression, map<string, CustomFunction*>());
-}
+ParsedExpression Parser::parse(const string& expression) { return parse(expression, map<string, CustomFunction*>()); }
 
 ParsedExpression Parser::parse(const string& expression, const map<string, CustomFunction*>& customFunctions)
 {
@@ -185,10 +180,7 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	vector<ParseToken> tokens = tokenize(primaryExpression);
 	int pos                   = 0;
 	ExpressionTreeNode result = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
-	if (pos != tokens.size())
-	{
-		throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText());
-	}
+	if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText()); }
 	return ParsedExpression(result);
 }
 
@@ -210,13 +202,13 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 	}
 	else if (token.getType() == ParseToken::Variable)
 	{
-		map<string, ExpressionTreeNode>::const_iterator subexp = subexpressionDefs.find(token.getText());
+		const auto subexp = subexpressionDefs.find(token.getText());
 		if (subexp == subexpressionDefs.end())
 		{
 			Operation* op = new Operation::Variable(token.getText());
 			result        = ExpressionTreeNode(op);
 		}
-		else result = subexp->second;
+		else { result = subexp->second; }
 		pos++;
 	}
 	else if (token.getType() == ParseToken::LeftParen)
@@ -234,16 +226,13 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		do
 		{
 			args.push_back(parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 0));
-			moreArgs = (pos < (int)tokens.size() && tokens[pos].getType() == ParseToken::Comma);
+			moreArgs = (pos < int(tokens.size()) && tokens[pos].getType() == ParseToken::Comma);
 			if (moreArgs) pos++;
 		} while (moreArgs);
 		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen) { throw Exception("Parse error: unbalanced parentheses"); }
 		pos++;
 		Operation* op = getFunctionOperation(token.getText(), customFunctions);
-		try
-		{
-			result = ExpressionTreeNode(op, args);
-		}
+		try { result = ExpressionTreeNode(op, args); }
 		catch (...)
 		{
 			delete op;
@@ -253,29 +242,23 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 	else if (token.getType() == ParseToken::Operator && token.getText() == "-")
 	{
 		pos++;
-		ExpressionTreeNode toNegate = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 2);
-		result                      = ExpressionTreeNode(new Operation::Negate(), toNegate);
+		const ExpressionTreeNode toNegate = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 2);
+		result                            = ExpressionTreeNode(new Operation::Negate(), toNegate);
 	}
-	else
-	{
-		throw Exception("Parse error: unexpected token: " + token.getText());
-	}
+	else { throw Exception("Parse error: unexpected token: " + token.getText()); }
 
 	// Now deal with the next binary operator.
 
-	while (pos < (int)tokens.size() && tokens[pos].getType() == ParseToken::Operator)
+	while (pos < int(tokens.size()) && tokens[pos].getType() == ParseToken::Operator)
 	{
 		token            = tokens[pos];
-		int opIndex      = (int)Operators.find(token.getText());
+		int opIndex      = int(Operators.find(token.getText()));
 		int opPrecedence = Precedence[opIndex];
 		if (opPrecedence < precedence) { return result; }
 		pos++;
 		ExpressionTreeNode arg = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, LeftAssociative[opIndex] ? opPrecedence + 1 : opPrecedence);
 		Operation* op          = getOperatorOperation(token.getText());
-		try
-		{
-			result = ExpressionTreeNode(op, result, arg);
-		}
+		try { result = ExpressionTreeNode(op, result, arg); }
 		catch (...)
 		{
 			delete op;
@@ -307,7 +290,7 @@ Operation* Parser::getOperatorOperation(const std::string& name)
 Operation* Parser::getFunctionOperation(const std::string& name, const map<string, CustomFunction*>& customFunctions)
 {
 	static map<string, Operation::Id> opMap;
-	if (opMap.size() == 0)
+	if (opMap.empty())
 	{
 		opMap["sqrt"]   = Operation::SQRT;
 		opMap["exp"]    = Operation::EXP;
@@ -335,20 +318,17 @@ Operation* Parser::getFunctionOperation(const std::string& name, const map<strin
 		opMap["max"]    = Operation::MAX;
 		opMap["abs"]    = Operation::ABS;
 	}
-	string trimmed = name.substr(0, name.size() - 1);
+	const string trimmed = name.substr(0, name.size() - 1);
 
 	// First check custom functions.
 
-	map<string, CustomFunction*>::const_iterator custom = customFunctions.find(trimmed);
+	const auto custom = customFunctions.find(trimmed);
 	if (custom != customFunctions.end()) return new Operation::Custom(trimmed, custom->second->clone());
 
 	// Now try standard functions.
 
-	map<string, Operation::Id>::const_iterator iter = opMap.find(trimmed);
-	if (iter == opMap.end())
-	{
-		throw Exception("Parse error: unknown function: " + trimmed);
-	}
+	const auto iter = opMap.find(trimmed);
+	if (iter == opMap.end()) { throw Exception("Parse error: unknown function: " + trimmed); }
 	switch (iter->second)
 	{
 		case Operation::SQRT:

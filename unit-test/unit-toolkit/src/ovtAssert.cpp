@@ -38,10 +38,7 @@ namespace OpenViBETest
 		std::cerr << "Error message: " << message << std::endl;
 	}
 
-	void printError(const char* expression, const std::string& message, const char* file, int line)
-	{
-		printError(expression, message.c_str(), file, line);
-	}
+	void printError(const char* expression, const std::string& message, const char* file, int line) { printError(expression, message.c_str(), file, line); }
 
 	void printError(const char* expression, const std::ostream& message, const char* file, int line)
 	{
@@ -63,4 +60,4 @@ namespace OpenViBETest
 
 		return expression;
 	}
-}
+} // namespace OpenViBETest

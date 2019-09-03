@@ -24,10 +24,7 @@ namespace OpenViBEToolkit
 			{
 				bool isSeparator(uint8_t ui8Value, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
 				{
-					for (uint32_t i = 0; i < ui32SeparatorCount; i++)
-					{
-						if (ui8Value == pSeparator[i]) { return true; }
-					}
+					for (uint32_t i = 0; i < ui32SeparatorCount; i++) { if (ui8Value == pSeparator[i]) { return true; } }
 					return false;
 				}
 
@@ -50,62 +47,59 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 {
 	if (ui32SeparatorCount == 0 || pSeparator == nullptr) { return 0; }
 
-	uint32_t l_ui32Count = 0;
-	std::string l_sString(rString.toASCIIString());
-	std::string::size_type i = 0;
-	std::string::size_type j = 0;
-	while (i < l_sString.length())
+	uint32_t n = 0;
+	std::string str(rString.toASCIIString());
+	size_t i = 0;
+	while (i < str.length())
 	{
-		j = i;
-		while (j < l_sString.length() && !isSeparator(l_sString[j], pSeparator, ui32SeparatorCount))
+		size_t j = i;
+		while (j < str.length() && !isSeparator(str[j], pSeparator, ui32SeparatorCount)) { j++; }
+		//if(i!=j)
 		{
-			j++;
-		}
-		//		if(i!=j)
-		{
-			rSplitCallback.setToken(std::string(l_sString, i, j - i).c_str());
-			l_ui32Count++;
+			rSplitCallback.setToken(std::string(str, i, j - i).c_str());
+			n++;
 		}
 		i = j + 1;
 	}
-	if (l_sString.length() != 0 && isSeparator(l_sString[l_sString.length() - 1], pSeparator, ui32SeparatorCount))
+	if (str.length() != 0 && isSeparator(str[str.length() - 1], pSeparator, ui32SeparatorCount))
 	{
 		rSplitCallback.setToken("");
-		l_ui32Count++;
+		n++;
 	}
 
-	return l_ui32Count;
+	return n;
 }
 
 
-bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces, const bool bRemoveEndSpaces)
+bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces,
+												   const bool bRemoveEndSpaces)
 {
-	const char* l_pString1_start = rString1.toASCIIString();
-	const char* l_pString1_end   = l_pString1_start + strlen(l_pString1_start) - 1;
+	const char* str1Start = rString1.toASCIIString();
+	const char* str1End   = str1Start + strlen(str1Start) - 1;
 
-	const char* l_pString2_start = rString2.toASCIIString();
-	const char* l_pString2_end   = l_pString2_start + strlen(l_pString2_start) - 1;
+	const char* str2Start = rString2.toASCIIString();
+	const char* str2End   = str2Start + strlen(str2Start) - 1;
 
 	if (bRemoveStartSpaces)
 	{
-		while (*l_pString1_start == ' ') { l_pString1_start++; }
-		while (*l_pString2_start == ' ') { l_pString2_start++; }
+		while (*str1Start == ' ') { str1Start++; }
+		while (*str2Start == ' ') { str2Start++; }
 	}
 
 	if (bRemoveEndSpaces)
 	{
-		while (l_pString1_start < l_pString1_end && *l_pString1_end == ' ') { l_pString1_end--; }
-		while (l_pString2_start < l_pString2_end && *l_pString2_end == ' ') { l_pString2_end--; }
+		while (str1Start < str1End && *str1End == ' ') { str1End--; }
+		while (str2Start < str2End && *str2End == ' ') { str2End--; }
 	}
 
-	std::string l_sString1(l_pString1_start, l_pString1_end - l_pString1_start + 1);
-	std::string l_sString2(l_pString2_start, l_pString2_end - l_pString2_start + 1);
+	std::string str1(str1Start, str1End - str1Start + 1);
+	std::string str2(str2Start, str2End - str2Start + 1);
 
 	if (!bCaseSensitive)
 	{
-		std::transform(l_sString1.begin(), l_sString1.end(), l_sString1.begin(), to_lower<std::string::value_type>);
-		std::transform(l_sString2.begin(), l_sString2.end(), l_sString2.begin(), to_lower<std::string::value_type>);
+		std::transform(str1.begin(), str1.end(), str1.begin(), to_lower<std::string::value_type>);
+		std::transform(str2.begin(), str2.end(), str2.begin(), to_lower<std::string::value_type>);
 	}
 
-	return l_sString1 == l_sString2;
+	return str1 == str2;
 }

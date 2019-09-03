@@ -76,7 +76,7 @@ namespace Socket
 			struct sockaddr_in l_oServerAddress;
 			memset(&l_oServerAddress, 0, sizeof(l_oServerAddress));
 			l_oServerAddress.sin_family = AF_INET;
-			l_oServerAddress.sin_port   = htons((unsigned short)ui32ServerPort);
+			l_oServerAddress.sin_port   = htons(static_cast<unsigned short>(ui32ServerPort));
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			l_oServerAddress.sin_addr=*((struct in_addr*)l_pServerHostEntry->h_addr);
 #elif defined TARGET_OS_Windows
@@ -84,7 +84,7 @@ namespace Socket
 			freeaddrinfo(addr);
 #endif
 			errno = 0;
-			if (::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in)) < 0)
+			if (::connect(m_i32Socket, reinterpret_cast<struct sockaddr*>(&l_oServerAddress), sizeof(struct sockaddr_in)) < 0)
 			{
 				bool l_bInProgress;
 
@@ -102,10 +102,7 @@ namespace Socket
 				if (l_bInProgress)
 				{
 					// Performs time out
-					if (ui32TimeOut == 0xffffffff)
-					{
-						ui32TimeOut = 125;
-					}
+					if (ui32TimeOut == 0xffffffff) { ui32TimeOut = 125; }
 
 					struct timeval l_oTimeVal;
 					l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);
@@ -133,7 +130,7 @@ namespace Socket
 					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (void*)(&l_iOption), &l_iOptionLength);
 #elif defined TARGET_OS_Windows
 					int l_iOptionLength = sizeof(l_iOption);
-					getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (char*)(&l_iOption), &l_iOptionLength);
+					getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&l_iOption), &l_iOptionLength);
 #endif
 					if (l_iOption != 0)
 					{

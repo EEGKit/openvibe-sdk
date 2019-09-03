@@ -9,7 +9,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CStreamStructureDecoder : public CEBMLBaseDecoder
+		class CStreamStructureDecoder final : public CEBMLBaseDecoder
 		{
 		public:
 
@@ -21,13 +21,13 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StreamStructureStreamDecoder)
 
 			// ebml callbacks
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 		};
 
-		class CStreamStructureDecoderDesc : public CEBMLBaseDecoderDesc
+		class CStreamStructureDecoderDesc final : public CEBMLBaseDecoderDesc
 		{
 		public:
 			void release() override { }

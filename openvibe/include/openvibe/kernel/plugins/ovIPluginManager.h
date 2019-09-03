@@ -56,27 +56,27 @@ namespace OpenViBE
 			virtual bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) = 0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousID [in] : The identifier
 			 *        for the preceeding plugin object descriptor
 			 * \return The identifier of the next plugin object descriptor in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first plugin object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID) const = 0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier given a base class identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousID [in] : The identifier
 			 *        for the preceeding plugin object descriptor
 			 * \param rBaseClassIdentifier [in] : the class the plugin object descriptor should derive from
 			 * \return The identifier of the next plugin object descriptor in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first plugin object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const = 0;
+			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& rBaseClassIdentifier) const = 0;
 			/**
 			 * \brief Checks if a plugin object can be created or not
 			 * \param rClassIdentifier [in] : the class identifier a descriptor should be able to create
@@ -86,11 +86,11 @@ namespace OpenViBE
 			virtual bool canCreatePluginObject(const CIdentifier& rClassIdentifier) = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor
-			 * \param rIdentifier [in] : the plugin object descriptor identifier which details should be returned
+			 * \param identifier [in] : the plugin object descriptor identifier which details should be returned
 			 * \return the corresponding plugin object descriptor pointer.
 			 * \sa getNextPluginObjectDescIdentifier
 			 */
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& rIdentifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& identifier) const = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor given the class identifier it should create
 			 * \param rClassIdentifier [in] : the plugin object class identifier of the descriptor which details should be returned

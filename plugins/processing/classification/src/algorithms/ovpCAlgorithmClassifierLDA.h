@@ -27,20 +27,18 @@ namespace OpenViBEPlugins
 	{
 		class CAlgorithmLDADiscriminantFunction;
 
-		int LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue);
+		int LDAClassificationCompare(OpenViBE::IMatrix& firstClassificationValue, OpenViBE::IMatrix& secondClassificationValue);
 
 		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
-		class CAlgorithmClassifierLDA : public OpenViBEToolkit::CAlgorithmClassifier
+		class CAlgorithmClassifierLDA final : public OpenViBEToolkit::CAlgorithmClassifier
 		{
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-						  , double& rf64Class
-						  , OpenViBEToolkit::IVector& rDistanceValue
-						  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue,
+						  OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;
@@ -72,7 +70,7 @@ namespace OpenViBEPlugins
 			uint32_t getClassCount();
 		};
 
-		class CAlgorithmClassifierLDADesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
+		class CAlgorithmClassifierLDADesc final : public OpenViBEToolkit::CAlgorithmClassifierDesc
 		{
 		public:
 			void release() override { }
@@ -91,9 +89,12 @@ namespace OpenViBEPlugins
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
 
 
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);

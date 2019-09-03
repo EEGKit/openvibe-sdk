@@ -10,7 +10,9 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxListenerContext(const IKernelContext& rKernelContext, IBox& rBox, uint32_t index) : TKernelObject<IBoxListenerContext>(rKernelContext), m_rBox(rBox), m_ui32Index(index) { }
+			CBoxListenerContext(const IKernelContext& ctx, IBox& box, uint32_t index) : TKernelObject<IBoxListenerContext>(ctx),
+																								   m_rBox(box), m_ui32Index(index) { }
+
 			IAlgorithmManager& getAlgorithmManager() const override { return this->getKernelContext().getAlgorithmManager(); }
 			IPlayerManager& getPlayerManager() const override { return this->getKernelContext().getPlayerManager(); }
 			IPluginManager& getPluginManager() const override { return this->getKernelContext().getPluginManager(); }
@@ -24,7 +26,8 @@ namespace OpenViBE
 
 			IScenario& getScenario() const override
 			{
-				OV_FATAL("Getting scenario from box listener context is not yet implemented", ErrorType::NotImplemented, this->getKernelContext().getLogManager());
+				OV_FATAL("Getting scenario from box listener context is not yet implemented", ErrorType::NotImplemented,
+						 this->getKernelContext().getLogManager());
 			}
 
 			uint32_t getIndex() const override { return m_ui32Index; }

@@ -49,10 +49,10 @@ namespace OpenViBE
 
 			/**
 			 * \brief Enumerates parameter identifiers for this configurable.
-			 * \param rPreviousIdentifier [in] : the identifier which next identifier has to be returned
+			 * \param previousID [in] : the identifier which next identifier has to be returned
 			 * \return the parameter identifier following the provided parameter identifier.
-			 * \note if \c rPreviousIdentifier is \e OV_UndefinedIdentifier , the first parameter identifier is returned
-			 * \note getting \e OV_UndefinedIdentifier has result means there are no more identifier after \c rPreviousIdentifier
+			 * \note if \c previousID is \e OV_UndefinedIdentifier , the first parameter identifier is returned
+			 * \note getting \e OV_UndefinedIdentifier has result means there are no more identifier after \c previousID
 			 *
 			 * Sample code to iterate on parameter identifiers :
 			 *
@@ -66,7 +66,7 @@ namespace OpenViBE
 			 * }
 			 * \endcode
 			 */
-			virtual CIdentifier getNextParameterIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextParameterIdentifier(const CIdentifier& previousID) const = 0;
 
 			/**
 			 * \brief Gets a specific parameter given its identifier
@@ -92,13 +92,14 @@ namespace OpenViBE
 			 * \brief Creates a new parameter of a specific type
 			 * \param rParameterIdentifier [in] : the parameter identifier which has to be created
 			 * \param eParameterType [in] : the type of this parameter
-			 * \param rSubTypeIdentifier [in] : the optional sub type of this parameter (e.g. for enumerations)
+			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \sa EParameterType
 			 * \sa IParameter
 			 *
 			 * This function creates a new parameter with its associated object.
 			 */
-			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType,
+												const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to remove

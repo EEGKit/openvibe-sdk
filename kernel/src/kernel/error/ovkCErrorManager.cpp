@@ -69,10 +69,7 @@ namespace OpenViBE
 
 		CErrorManager::~CErrorManager() { this->releaseErrors(); }
 
-		void CErrorManager::pushError(ErrorType type, const char* description)
-		{
-			this->pushErrorAtLocation(type, description, "NoLocationInfo", 0);
-		}
+		void CErrorManager::pushError(ErrorType type, const char* description) { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
 
 		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line)
 		{

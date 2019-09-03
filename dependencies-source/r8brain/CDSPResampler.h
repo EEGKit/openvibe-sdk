@@ -242,7 +242,8 @@ namespace r8b
 				const double NormFreq = DstSampleRate * SrcSRDiv / SrcSampleRate;
 				const int downf       = (UsePower2 && NormFreq == 0.5 ? 2 : 1);
 
-				Convs[ConvCount] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand, ReqAtten, ReqPhase, 1.0), 1, downf, PrevLatencyFrac);
+				Convs[ConvCount] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand, ReqAtten, ReqPhase, 1.0), 1, downf,
+														  PrevLatencyFrac);
 
 				MaxOutLen       = Convs[ConvCount]->getMaxOutLen(MaxOutLen);
 				PrevLatencyFrac = Convs[ConvCount]->getLatencyFrac();
@@ -258,14 +259,8 @@ namespace r8b
 
 			MaxOutLen = Interp->getMaxOutLen(MaxOutLen);
 
-			if (MaxOutLen <= ConvBufCapacities[0])
-			{
-				InterpBuf = ConvBufs[0];
-			}
-			else if (MaxOutLen <= MaxInLen)
-			{
-				InterpBuf = nullptr;
-			}
+			if (MaxOutLen <= ConvBufCapacities[0]) { InterpBuf = ConvBufs[0]; }
+			else if (MaxOutLen <= MaxInLen) { InterpBuf = nullptr; }
 			else
 			{
 				TmpBuf.alloc(MaxOutLen);
@@ -281,10 +276,7 @@ namespace r8b
 		{
 			int l = (Interp == nullptr ? 0 : Interp->getInLenBeforeOutStart(NextInLen));
 
-			for (int i = ConvCount - 1; i >= 0; i--)
-			{
-				l = Convs[i]->getInLenBeforeOutStart(l);
-			}
+			for (int i = ConvCount - 1; i >= 0; i--) { l = Convs[i]->getInLenBeforeOutStart(l); }
 
 			return (l);
 		}
@@ -384,7 +376,7 @@ namespace r8b
 		void oneshot(const int MaxInLen, const double* ip, int iplen,
 					 double* op, int oplen)
 		{
-			CFixedBuffer<double> ZeroBuf(MaxInLen);
+			const CFixedBuffer<double> ZeroBuf(MaxInLen);
 			memset(&ZeroBuf[0], 0, MaxInLen * sizeof(double));
 
 			while (oplen > 0)
@@ -395,12 +387,12 @@ namespace r8b
 				if (iplen == 0)
 				{
 					rc = MaxInLen;
-					p  = (double*)&ZeroBuf[0];
+					p  = static_cast<double*>(&ZeroBuf[0]);
 				}
 				else
 				{
 					rc = min(iplen, MaxInLen);
-					p  = (double*)ip;
+					p  = const_cast<double*>(ip);
 					ip += rc;
 					iplen -= rc;
 				}
@@ -454,8 +446,7 @@ namespace r8b
 	 * details.
 	 */
 
-	class CDSPResampler16 :
-			public CDSPResampler<CDSPFracInterpolator<18, 137>>
+	class CDSPResampler16 final : public CDSPResampler<CDSPFracInterpolator<18, 137>>
 	{
 	public:
 		/**
@@ -469,11 +460,8 @@ namespace r8b
 		 * @param ReqTransBand Required transition band, in percent.
 		 */
 
-		CDSPResampler16(const double SrcSampleRate, const double DstSampleRate,
-						const int MaxInLen, const double ReqTransBand = 2.0)
-			: CDSPResampler<CDSPFracInterpolator<18, 137>>(SrcSampleRate,
-														   DstSampleRate, MaxInLen, ReqTransBand, 136.45, fprLinearPhase,
-														   true) { }
+		CDSPResampler16(const double SrcSampleRate, const double DstSampleRate, const int MaxInLen, const double ReqTransBand = 2.0)
+			: CDSPResampler<CDSPFracInterpolator<18, 137>>(SrcSampleRate, DstSampleRate, MaxInLen, ReqTransBand, 136.45, fprLinearPhase, true) { }
 	};
 
 	/**
@@ -485,8 +473,7 @@ namespace r8b
 	 * with a less SNR. See the r8b::CDSPResampler class for details.
 	 */
 
-	class CDSPResampler16IR :
-			public CDSPResampler<CDSPFracInterpolator<14, 67>>
+	class CDSPResampler16IR final : public CDSPResampler<CDSPFracInterpolator<14, 67>>
 	{
 	public:
 		/**
@@ -500,11 +487,8 @@ namespace r8b
 		 * @param ReqTransBand Required transition band, in percent.
 		 */
 
-		CDSPResampler16IR(const double SrcSampleRate, const double DstSampleRate,
-						  const int MaxInLen, const double ReqTransBand = 2.0)
-			: CDSPResampler<CDSPFracInterpolator<14, 67>>(SrcSampleRate,
-														  DstSampleRate, MaxInLen, ReqTransBand, 109.56, fprLinearPhase,
-														  true) { }
+		CDSPResampler16IR(const double SrcSampleRate, const double DstSampleRate, const int MaxInLen, const double ReqTransBand = 2.0)
+			: CDSPResampler<CDSPFracInterpolator<14, 67>>(SrcSampleRate, DstSampleRate, MaxInLen, ReqTransBand, 109.56, fprLinearPhase, true) { }
 	};
 
 	/**
@@ -515,8 +499,7 @@ namespace r8b
 	 * filter. See the r8b::CDSPResampler class for details.
 	 */
 
-	class CDSPResampler24 :
-			public CDSPResampler<CDSPFracInterpolator<24, 673>>
+	class CDSPResampler24 final : public CDSPResampler<CDSPFracInterpolator<24, 673>>
 	{
 	public:
 		/**
@@ -530,11 +513,8 @@ namespace r8b
 		 * @param ReqTransBand Required transition band, in percent.
 		 */
 
-		CDSPResampler24(const double SrcSampleRate, const double DstSampleRate,
-						const int MaxInLen, const double ReqTransBand = 2.0)
-			: CDSPResampler<CDSPFracInterpolator<24, 673>>(SrcSampleRate,
-														   DstSampleRate, MaxInLen, ReqTransBand, 180.15, fprLinearPhase,
-														   true) { }
+		CDSPResampler24(const double SrcSampleRate, const double DstSampleRate, const int MaxInLen, const double ReqTransBand = 2.0)
+			: CDSPResampler<CDSPFracInterpolator<24, 673>>(SrcSampleRate, DstSampleRate, MaxInLen, ReqTransBand, 180.15, fprLinearPhase, true) { }
 	};
 } // namespace r8b
 

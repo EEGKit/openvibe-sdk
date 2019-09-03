@@ -159,10 +159,7 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 	return true;
 }
 
-bool MessagingClient::popError(uint64_t& packetId, EError& type, uint64_t& guiltyId)
-{
-	return CMessaging::popError(packetId, type, guiltyId);
-}
+bool MessagingClient::popError(uint64_t& packetId, EError& type, uint64_t& guiltyId) { return CMessaging::popError(packetId, type, guiltyId); }
 
 bool MessagingClient::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {
@@ -171,10 +168,7 @@ bool MessagingClient::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& sta
 
 bool MessagingClient::pushAuthentication(std::string connectionID) { return this->pushMessage(AuthenticationMessage(connectionID)); }
 
-bool MessagingClient::pushLog(ELogLevel logLevel, const std::string& log)
-{
-	return this->pushMessage(LogMessage(logLevel, log));
-}
+bool MessagingClient::pushLog(ELogLevel logLevel, const std::string& log) { return this->pushMessage(LogMessage(logLevel, log)); }
 
 bool MessagingClient::pushEBML(const uint32_t index, const uint64_t startTime, const uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
 {

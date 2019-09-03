@@ -76,11 +76,11 @@ namespace XML
 		virtual IXMLNode* getChild(size_t iChildIndex) const = 0;
 
 		/**
-		 * @brief Return the first child with the name sName.
-		 * @param sName [in]] : Name of th child
-		 * @return The first child of the node which name is sName.
+		 * @brief Return the first child with the name name.
+		 * @param name [in]] : Name of th child
+		 * @return The first child of the node which name is name.
 		 */
-		virtual IXMLNode* getChildByName(const char* sName) const = 0;
+		virtual IXMLNode* getChildByName(const char* name) const = 0;
 
 		/**
 		 * @brief Return the amount of child the node has.
@@ -102,9 +102,9 @@ namespace XML
 	};
 
 	/**
-	 * @brief Create a new node with the name sName. The node is created dynamically and requires to be free.
-	 * @param sName [in] : Name of the node
+	 * @brief Create a new node with the name name. The node is created dynamically and requires to be free.
+	 * @param name [in] : Name of the node
 	 * @return New node
 	 */
-	extern XML_API IXMLNode* createNode(const char* sName);
+	extern XML_API IXMLNode* createNode(const char* name);
 }

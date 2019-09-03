@@ -16,11 +16,11 @@ namespace OpenViBE
 		{
 		public:
 
-			TBaseParameter(const IKernelContext& rKernelContext, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier)
-				: IBase(rKernelContext), m_pValueRef(nullptr)
+			TBaseParameter(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = OV_UndefinedIdentifier)
+				: IBase(ctx), m_pValueRef(nullptr)
 				  , m_Value(0)
 				  , m_eParameterType(eParameterType)
-				  , m_oSubTypeIdentifier(rSubTypeIdentifier) { }
+				  , m_oSubTypeIdentifier(subTypeID) { }
 
 			virtual uint64_t getParameterSize() const { return sizeof(IType); }
 			virtual EParameterType getType() const { return m_eParameterType; }

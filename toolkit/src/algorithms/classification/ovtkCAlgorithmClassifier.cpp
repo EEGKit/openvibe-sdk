@@ -50,10 +50,7 @@ bool CAlgorithmClassifier::process()
 			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
 		CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
-		if (this->train(featureVectorSetAdapter))
-		{
-			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
-		}
+		if (this->train(featureVectorSetAdapter)) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
@@ -93,10 +90,7 @@ bool CAlgorithmClassifier::process()
 	{
 		XML::IXMLNode* rootNode = this->saveConfiguration();
 		op_Configuration        = rootNode;
-		if (rootNode)
-		{
-			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
-		}
+		if (rootNode) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);

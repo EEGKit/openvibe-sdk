@@ -18,14 +18,15 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmXMLScenarioImporter : public OpenViBEToolkit::CAlgorithmScenarioImporter, public XML::IReaderCallback
+		class CAlgorithmXMLScenarioImporter final : public OpenViBEToolkit::CAlgorithmScenarioImporter, public XML::IReaderCallback
 		{
 		public:
 
 			CAlgorithmXMLScenarioImporter();
 			~CAlgorithmXMLScenarioImporter() override;
 			bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
-			void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override; // XML::IReaderCallback
+			void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
+			override; // XML::IReaderCallback
 			void processChildData(const char* sData) override; // XML::IReaderCallback
 			void closeChild() override; // XML::IReaderCallback
 
@@ -42,7 +43,7 @@ namespace OpenViBEPlugins
 			std::stack<std::string> m_vNodes;
 		};
 
-		class CAlgorithmXMLScenarioImporterDesc : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc
+		class CAlgorithmXMLScenarioImporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc
 		{
 		public:
 			void release() override { }
@@ -50,7 +51,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("A sample XML scenario importer"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This scenario importer uses simple XML format to input the scenario"); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("This scenario importer uses simple XML format to input the scenario");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Samples"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			// virtual OpenViBE::CString getFileExtension() const       { return OpenViBE::CString("xml;XML"); }

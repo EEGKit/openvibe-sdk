@@ -61,29 +61,30 @@ bool CAlgorithmOnlineCovariance::process()
 							"Invalid feature vector with " << ip_pFeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
-		const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(l_ui32nRows >= 1 && l_ui32nCols >= 1,
-							"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "(minimum expected = 1x1)",
+		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1,
+							"Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
 		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_f64Shrinkage << " ...\n";
 		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_bTraceNormalization ? "[on]" : "[off]") << "\n";
-		this->getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(OVP_TypeId_OnlineCovariance_UpdateMethod, ip_ui64UpdateMethod) << "\n";
+		this->getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(
+			OVP_TypeId_OnlineCovariance_UpdateMethod, ip_ui64UpdateMethod) << "\n";
 
 		// Set the output buffers
 		op_pMean->setDimensionCount(2);
 		op_pMean->setDimensionSize(0, 1);
-		op_pMean->setDimensionSize(1, l_ui32nCols);
+		op_pMean->setDimensionSize(1, nCols);
 		op_pCovarianceMatrix->setDimensionCount(2);
-		op_pCovarianceMatrix->setDimensionSize(0, l_ui32nCols);
-		op_pCovarianceMatrix->setDimensionSize(1, l_ui32nCols);
+		op_pCovarianceMatrix->setDimensionSize(0, nCols);
+		op_pCovarianceMatrix->setDimensionSize(1, nCols);
 
 		// These keep track of the non-normalized incremental estimates
-		m_oIncrementalMean.resize(1, l_ui32nCols);
+		m_oIncrementalMean.resize(1, nCols);
 		m_oIncrementalMean.setZero();
-		m_oIncrementalCov.resize(l_ui32nCols, l_ui32nCols);
+		m_oIncrementalCov.resize(nCols, nCols);
 		m_oIncrementalCov.setZero();
 
 		m_ui64Count = 0;
@@ -91,15 +92,15 @@ bool CAlgorithmOnlineCovariance::process()
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Update))
 	{
-		const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		const double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
+		const double* buffer = ip_pFeatureVectorSet->getBuffer();
 
-		OV_ERROR_UNLESS_KRF(l_pBuffer, "Input buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(buffer, "Input buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 
 		// Cast our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
-		const Map<MatrixXdRowMajor> l_oSampleChunk(const_cast<double*>(l_pBuffer), l_ui32nRows, l_ui32nCols);
+		const Map<MatrixXdRowMajor> l_oSampleChunk(const_cast<double*>(buffer), nRows, nCols);
 
 		// Update the mean & cov estimates
 
@@ -111,7 +112,7 @@ bool CAlgorithmOnlineCovariance::process()
 			const MatrixXd l_oChunkMean     = l_oSampleChunk.colwise().mean();
 			const MatrixXd l_oChunkCentered = l_oSampleChunk.rowwise() - l_oChunkMean.row(0);
 
-			MatrixXd l_oChunkCov = (1.0 / double(l_ui32nRows)) * l_oChunkCentered.transpose() * l_oChunkCentered;
+			MatrixXd l_oChunkCov = (1.0 / double(nRows)) * l_oChunkCentered.transpose() * l_oChunkCentered;
 
 			if (ip_bTraceNormalization)
 			{
@@ -150,7 +151,7 @@ bool CAlgorithmOnlineCovariance::process()
 			l_oChunkContribution.resizeLike(m_oIncrementalCov);
 			l_oChunkContribution.setZero();
 
-			for (uint32_t i = l_ui32Start; i < l_ui32nRows; i++)
+			for (uint32_t i = l_ui32Start; i < nRows; i++)
 			{
 				m_oIncrementalMean += l_oSampleChunk.row(i);
 
@@ -162,10 +163,7 @@ bool CAlgorithmOnlineCovariance::process()
 				m_ui64Count++;
 			}
 
-			if (ip_bTraceNormalization)
-			{
-				l_oChunkContribution = l_oChunkContribution / l_oChunkContribution.trace();
-			}
+			if (ip_bTraceNormalization) { l_oChunkContribution = l_oChunkContribution / l_oChunkContribution.trace(); }
 
 			m_oIncrementalCov += l_oChunkContribution;
 
@@ -176,7 +174,7 @@ bool CAlgorithmOnlineCovariance::process()
 		{
 			// Increment sample counts
 			const uint64_t l_ui64CountBefore = m_ui64Count;
-			const uint64_t l_ui64CountChunk = l_ui32nRows;
+			const uint64_t l_ui64CountChunk = nRows;
 			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 			const MatrixXd l_oSampleSum = l_oSampleChunk.colwise().sum();
 
@@ -203,11 +201,11 @@ bool CAlgorithmOnlineCovariance::process()
 		{
 			// Increment sample counts
 			const uint64_t l_ui64CountBefore = m_ui64Count;
-			const uint64_t l_ui64CountChunk = l_ui32nRows;
+			const uint64_t l_ui64CountChunk = nRows;
 			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 
 			// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
-			const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(l_pBuffer),l_ui32nRows,l_ui32nCols);
+			const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(buffer),nRows,nCols);
 
 			// Estimate the current sample means
 			const MatrixXdRowMajor l_oSampleMean = l_oDataMatrix.colwise().mean();
@@ -216,14 +214,14 @@ bool CAlgorithmOnlineCovariance::process()
 			const MatrixXdRowMajor l_oSampleCentered = l_oDataMatrix.rowwise() - m_oIncrementalMean.row(0);
 
 			// Estimate the current covariance
-			const MatrixXd l_oSampleCov = (l_oSampleCentered.transpose() * l_oSampleCentered) * (1.0/(double)l_ui32nRows);
+			const MatrixXd l_oSampleCov = (l_oSampleCentered.transpose() * l_oSampleCentered) * (1.0/(double)nRows);
 
 			// fixme: recheck the weights ...
 
 			// Update the global mean and cov
 			if(l_ui64CountBefore>0)
 			{
-				m_oIncrementalMean = ( m_oIncrementalMean*l_ui64CountBefore + l_oSampleMean*l_ui32nRows) / (double)l_ui64CountAfter;
+				m_oIncrementalMean = ( m_oIncrementalMean*l_ui64CountBefore + l_oSampleMean*nRows) / (double)l_ui64CountAfter;
 				m_oIncrementalCov = ( m_oIncrementalCov*l_ui64CountBefore + l_oSampleCov*(l_ui64CountBefore/(double)l_ui64CountAfter) ) / (double)l_ui64CountAfter;
 			}
 			else
@@ -236,22 +234,19 @@ bool CAlgorithmOnlineCovariance::process()
 			m_ui64Count = l_ui64CountAfter;
 		}
 #endif
-		else
-		{
-			OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_ui64UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting);
-		}
+		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_ui64UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
 	}
 
 	// Give output with regularization (mix prior + cov)?
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_GetCov))
 	{
-		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(m_ui64Count > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
-		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, l_ui32nCols);
-		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), l_ui32nCols, l_ui32nCols);
+		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, nCols);
+		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// The shrinkage parameter pulls the covariance matrix towards diagonal covariance
 		MatrixXd l_oPriorCov;
@@ -272,13 +267,13 @@ bool CAlgorithmOnlineCovariance::process()
 	// Give just the output with no shrinkage?
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw))
 	{
-		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(m_ui64Count > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
-		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, l_ui32nCols);
-		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), l_ui32nCols, l_ui32nCols);
+		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, nCols);
+		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// We scale by 1/n to normalize
 		l_oOutputMean = m_oIncrementalMean / (double)m_ui64Count;

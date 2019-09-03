@@ -33,11 +33,11 @@ namespace OpenViBE
 			
 			/**
 			 * \brief Changes this link's identifier
-			 * \param rIdentifier [in] : The new identifier this link should have
+			 * \param identifier [in] : The new identifier this link should have
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(const CIdentifier& rIdentifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
 			/**
 			 * \brief Gets the identifier of this link
 			 * \return The identifier of this link.
@@ -50,31 +50,31 @@ namespace OpenViBE
 
 			/**
 			 * \brief Sets the source of this link
-			 * \param rBoxIdentifier [in] : The identifier of the source box
-			 * \param ui32BoxOutputIndex [in] : The index of the output to use on the source box
-			 * \param rBoxOutputIdentifier [in] : The identifier of the output to use on the source box
+			 * \param boxID [in] : The identifier of the source box
+			 * \param boxOutputIdx [in] : The index of the output to use on the source box
+			 * \param boxOutputID [in] : The identifier of the output to use on the source box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSource(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxOutputIndex, CIdentifier rBoxOutputIdentifier) = 0;
+			virtual bool setSource(const CIdentifier& boxID, uint32_t boxOutputIdx, CIdentifier boxOutputID) = 0;
 			/**
 			 * \brief Sets the target of this link
-			 * \param rBoxIdentifier [in] : The identifier of the target box
-			 * \param ui32BoxInputIndex [in] : The index of the input to use on the target box
-			 * \param rBoxInputIdentifier [in] : The identifier of the input to use on the target box
+			 * \param boxID [in] : The identifier of the target box
+			 * \param boxInputIdx [in] : The index of the input to use on the target box
+			 * \param boxInputID [in] : The identifier of the input to use on the target box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setTarget(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxInputIndex, CIdentifier rBoxInputIdentifier) = 0;
+			virtual bool setTarget(const CIdentifier& boxID, uint32_t boxInputIdx, CIdentifier boxInputID) = 0;
 			/**
 			 * \brief Gets the source information for this link
-			 * \param rBoxIdentifier [out] : The identifier of the source box
-			 * \param ui32BoxOutputIndex [out] : The output index of the source box
-			 * \param ui32BoxOutputIdentifier [out] : The output identifier of the target box
+			 * \param boxID [out] : The identifier of the source box
+			 * \param boxOutputIdx [out] : The output index of the source box
+			 * \param boxOutputID [out] : The output identifier of the target box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getSource(CIdentifier& rBoxIdentifier, uint32_t& ui32BoxOutputIndex, CIdentifier& rBoxOutputIdentifier) const = 0;
+			virtual bool getSource(CIdentifier& boxID, uint32_t& boxOutputIdx, CIdentifier& boxOutputID) const = 0;
 			/**
 			 * \brief Gets the source box identifier for this link
 			 * \return the source box identifier for thit link
@@ -93,12 +93,12 @@ namespace OpenViBE
 			/**
 			 * \brief Gets the target information for this link
 			 * \param rTargetBoxIdentifier [out] : The identifier of the target box
-			 * \param ui32BoxInputIndex [out] : The input index of the target box
-			 * \param ui32BoxInputIdentifier [out] : The input identifier of the target box
+			 * \param boxInputIdx [out] : The input index of the target box
+			 * \param boxInputID [out] : The input identifier of the target box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& ui32BoxInputIndex, CIdentifier& rBoxInputIdentifier) const = 0;
+			virtual bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& boxInputIdx, CIdentifier& boxInputID) const = 0;
 			/**
 			 * \brief Gets the target box identifier for this link
 			 * \return the target box identifier for this link

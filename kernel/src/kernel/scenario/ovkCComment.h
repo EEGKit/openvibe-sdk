@@ -18,16 +18,17 @@ namespace OpenViBE
 		{
 		public:
 
-			CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario);
+			CComment(const IKernelContext& ctx, CScenario& rOwnerScenario);
 			~CComment() override;
 			CIdentifier getIdentifier() const override;
 			CString getText() const override;
-			bool setIdentifier(const CIdentifier& rIdentifier) override;
+			bool setIdentifier(const CIdentifier& identifier) override;
 			bool setText(const CString& sText) override;
 			bool initializeFromExistingComment(const IComment& rExisitingComment) override;
 			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >, OVK_ClassId_Kernel_Scenario_Comment)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >,
+									   OVK_ClassId_Kernel_Scenario_Comment)
 
 		protected:
 

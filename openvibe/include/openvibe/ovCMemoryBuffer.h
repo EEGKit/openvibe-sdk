@@ -44,7 +44,7 @@ namespace OpenViBE
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const uint8_t* pMemoryBuffer, uint64_t ui64BufferSize);
+		CMemoryBuffer(const uint8_t* pMemoryBuffer, uint64_t size);
 		/**
 		 * \brief Destructor
 		 *
@@ -58,7 +58,7 @@ namespace OpenViBE
 		uint64_t getSize() const override;
 		uint8_t* getDirectPointer() override;
 		const uint8_t* getDirectPointer() const override;
-		bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize) override;
+		bool append(const uint8_t* buffer, const uint64_t size) override;
 		bool append(const IMemoryBuffer& rMemoryBuffer) override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)

@@ -21,11 +21,11 @@ namespace FS
 		static bool fileExists(const char* pathToCheck);
 		static bool directoryExists(const char* pathToCheck);
 		// Creates all components of a path to the filesystem
-		static bool createPath(const char* sPath);
+		static bool createPath(const char* path);
 		// Creates all components of a path to the filesystem except the last part (i.e. for paths including a filename in the end)
-		static bool createParentPath(const char* sPath);
+		static bool createParentPath(const char* path);
 		// Returns a path omitting the last part of it (essentially boost::filesystem::parent_path). Output sParentPath needs to be pre-allocated.
-		static bool getParentPath(const char* sPath, char* sParentPath);
+		static bool getParentPath(const char* path, char* sParentPath);
 		static bool getParentPath(const char* path, char* parentPath, size_t size);
 
 		/**
@@ -36,7 +36,7 @@ namespace FS
 		* (essentially boost::filesystem::filename)
 		* \return Success status
 		*/
-		static bool getFilename(const char* sPath, char* sFilename);
+		static bool getFilename(const char* path, char* filename);
 		static bool getFilename(const char* path, char* filename, size_t size);
 
 		/**
@@ -53,8 +53,8 @@ namespace FS
 		static bool getFilenameExtension(const char* path, char* fileNameExtension);
 		static bool getFilenameExtension(const char* path, char* fileNameExtension, size_t size);
 
-		static bool copyFile(const char* sSourceFile, const char* sDestination);
-		static bool copyDirectory(const char* sourceDir, const char* targetDir);
+		static bool copyFile(const char* srcFile, const char* dstPath);
+		static bool copyDirectory(const char* srcDir, const char* dstDir);
 
 		static bool remove(const char* path);
 		static bool removeAll(const char* path);

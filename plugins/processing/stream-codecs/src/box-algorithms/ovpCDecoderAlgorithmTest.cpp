@@ -43,9 +43,6 @@ ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulation
 	return rLogManager;
 }
 
-CDecoderAlgorithmTest::CDecoderAlgorithmTest() {}
-
-CDecoderAlgorithmTest::~CDecoderAlgorithmTest() {}
 
 bool CDecoderAlgorithmTest::initialize()
 {
@@ -79,7 +76,7 @@ bool CDecoderAlgorithmTest::uininitialize()
 	return true;
 }
 
-bool CDecoderAlgorithmTest::processInput(const uint32_t ui32InputIndex)
+bool CDecoderAlgorithmTest::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -87,30 +84,33 @@ bool CDecoderAlgorithmTest::processInput(const uint32_t ui32InputIndex)
 
 bool CDecoderAlgorithmTest::process()
 {
-	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
-	const IBox& l_rStaticBoxContext = getStaticBoxContext();
+	IBoxIO& boxContext    = getDynamicBoxContext();
+	const uint32_t nInput = getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < nInput; i++)
 	{
-		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
-			ip_pMemoryBuffer[i] = l_rDynamicBoxContext.getInputChunk(i, j);
+			ip_pMemoryBuffer[i] = boxContext.getInputChunk(i, j);
 			m_pStreamDecoder[i]->process();
 
 			if (m_pStreamDecoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader))
 			{
 				{
-					TParameterHandler<IMatrix*> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
+					TParameterHandler<IMatrix*> l_oHandle(
+						m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 					if (l_oHandle.exists()) { OV_WARNING_K(*l_oHandle); }
 				}
 
 				{
-					TParameterHandler<IMatrix*> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+					TParameterHandler<IMatrix*> l_oHandle(
+						m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
 					if (l_oHandle.exists()) { OV_WARNING_K(*l_oHandle); }
 				}
 
 				{
-					TParameterHandler<uint64_t> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+					TParameterHandler<uint64_t>
+							l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 					if (l_oHandle.exists()) { OV_WARNING_K(l_oHandle); }
 				}
 			}
@@ -118,15 +118,13 @@ bool CDecoderAlgorithmTest::process()
 			if (m_pStreamDecoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer))
 			{
 				{
-					TParameterHandler<IStimulationSet*> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
-					if (l_oHandle.exists())
-					{
-						getLogManager() << LogLevel_Warning << *l_oHandle << "\n";
-					}
+					TParameterHandler<IStimulationSet*> l_oHandle(
+						m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
+					if (l_oHandle.exists()) { getLogManager() << LogLevel_Warning << *l_oHandle << "\n"; }
 				}
 			}
 
-			l_rDynamicBoxContext.markInputAsDeprecated(i, j);
+			boxContext.markInputAsDeprecated(i, j);
 		}
 	}
 

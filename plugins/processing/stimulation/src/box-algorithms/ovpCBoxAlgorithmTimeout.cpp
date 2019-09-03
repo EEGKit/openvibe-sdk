@@ -15,7 +15,7 @@ bool CBoxAlgorithmTimeout::initialize()
 
 	m_StimulationEncoder.initialize(*this, 0);
 
-	double timeout = double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	const double timeout = double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 	OV_ERROR_UNLESS_KRF(timeout > 0,
 						"Timeout delay value must be positive and non-zero",
 						ErrorType::BadSetting);
@@ -43,7 +43,7 @@ bool CBoxAlgorithmTimeout::uninitialize()
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmTimeout::processClock(IMessageClock& /*messageClock*/)
 {
 	// if there was nothing received on the input for a period of time we raise the
 	// timeout flag and let the box send a stimulation
@@ -67,7 +67,7 @@ uint64_t CBoxAlgorithmTimeout::getClockFrequency()
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmTimeout::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
@@ -83,10 +83,7 @@ bool CBoxAlgorithmTimeout::process()
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// Discard input data
-	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
-	{
-		dynamicBoxContext.markInputAsDeprecated(0, i);
-	}
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++) { dynamicBoxContext.markInputAsDeprecated(0, i); }
 
 	// Encoding the header
 	if (!m_IsHeaderSent)

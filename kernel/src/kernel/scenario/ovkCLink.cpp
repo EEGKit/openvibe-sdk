@@ -9,22 +9,22 @@ using namespace Kernel;
 //___________________________________________________________________//
 //                                                                   //
 
-CLink::CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
-	: TAttributable<TKernelObject<ILink>>(rKernelContext)
+CLink::CLink(const IKernelContext& ctx, CScenario& rOwnerScenario)
+	: TAttributable<TKernelObject<ILink>>(ctx)
 	  , m_rOwnerScenario(rOwnerScenario)
 	  , m_oIdentifier(OV_UndefinedIdentifier)
 	  , m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
 	  , m_oTargetBoxIdentifier(OV_UndefinedIdentifier) {}
 
-bool CLink::InitializeFromExistingLink(const ILink& l)
+bool CLink::InitializeFromExistingLink(const ILink& link)
 {
-	m_oIdentifier                = l.getIdentifier();
-	m_oSourceBoxIdentifier       = l.getSourceBoxIdentifier();
-	m_oTargetBoxIdentifier       = l.getTargetBoxIdentifier();
-	m_oSourceBoxOutputIdentifier = l.getSourceBoxOutputIdentifier();
-	m_oTargetBoxInputIdentifier  = l.getTargetBoxInputIdentifier();
-	m_ui32SourceOutputIndex      = l.getSourceBoxOutputIndex();
-	m_ui32TargetInputIndex       = l.getTargetBoxInputIndex();
+	m_oIdentifier                = link.getIdentifier();
+	m_oSourceBoxIdentifier       = link.getSourceBoxIdentifier();
+	m_oTargetBoxIdentifier       = link.getTargetBoxIdentifier();
+	m_oSourceBoxOutputIdentifier = link.getSourceBoxOutputIdentifier();
+	m_oTargetBoxInputIdentifier  = link.getTargetBoxInputIdentifier();
+	m_ui32SourceOutputIndex      = link.getSourceBoxOutputIndex();
+	m_ui32TargetInputIndex       = link.getTargetBoxInputIndex();
 	return true;
 }
 
@@ -32,9 +32,9 @@ bool CLink::InitializeFromExistingLink(const ILink& l)
 //___________________________________________________________________//
 //                                                                   //
 
-bool CLink::setIdentifier(const CIdentifier& rIdentifier)
+bool CLink::setIdentifier(const CIdentifier& identifier)
 {
-	m_oIdentifier = rIdentifier;
+	m_oIdentifier = identifier;
 	return true;
 }
 
@@ -43,27 +43,27 @@ CIdentifier CLink::getIdentifier() const { return m_oIdentifier; }
 //___________________________________________________________________//
 //                                                                   //
 
-bool CLink::setSource(const CIdentifier& rBoxIdentifier, const uint32_t ui32BoxOutputIndex, const CIdentifier rBoxOutputIdentifier)
+bool CLink::setSource(const CIdentifier& boxId, const uint32_t boxOutputIdx, const CIdentifier boxOutputID)
 {
-	m_oSourceBoxIdentifier       = rBoxIdentifier;
-	m_ui32SourceOutputIndex      = ui32BoxOutputIndex;
-	m_oSourceBoxOutputIdentifier = rBoxOutputIdentifier;
+	m_oSourceBoxIdentifier       = boxId;
+	m_ui32SourceOutputIndex      = boxOutputIdx;
+	m_oSourceBoxOutputIdentifier = boxOutputID;
 	return true;
 }
 
-bool CLink::setTarget(const CIdentifier& rBoxIdentifier, const uint32_t ui32BoxInputIndex, const CIdentifier rBoxInputIdentifier)
+bool CLink::setTarget(const CIdentifier& boxId, const uint32_t boxInputIdx, const CIdentifier boxInputID)
 {
-	m_oTargetBoxIdentifier      = rBoxIdentifier;
-	m_ui32TargetInputIndex      = ui32BoxInputIndex;
-	m_oTargetBoxInputIdentifier = rBoxInputIdentifier;
+	m_oTargetBoxIdentifier      = boxId;
+	m_ui32TargetInputIndex      = boxInputIdx;
+	m_oTargetBoxInputIdentifier = boxInputID;
 	return true;
 }
 
-bool CLink::getSource(CIdentifier& rBoxIdentifier, uint32_t& ui32BoxOutputIndex, CIdentifier& rBoxOuputIdentifier) const
+bool CLink::getSource(CIdentifier& boxId, uint32_t& boxOutputIdx, CIdentifier& boxOutputID) const
 {
-	rBoxIdentifier      = m_oSourceBoxIdentifier;
-	ui32BoxOutputIndex  = m_ui32SourceOutputIndex;
-	rBoxOuputIdentifier = m_oSourceBoxOutputIdentifier;
+	boxId        = m_oSourceBoxIdentifier;
+	boxOutputIdx = m_ui32SourceOutputIndex;
+	boxOutputID  = m_oSourceBoxOutputIdentifier;
 	return true;
 }
 

@@ -9,10 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency()
-{
-	return ((uint64_t)1LL) << 32;
-}
+uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { return ((uint64_t)1LL) << 32; }
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 {
@@ -66,7 +63,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& rMessageClock)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& messageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -76,7 +73,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 {
 	if (m_bHeaderSent == true && m_bBufferSent == true) { return true; }
 
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Channel localisation stream encoder parameters
 	TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
@@ -91,7 +88,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	if (m_bHeaderSent == false)
 	{
 		// Connects parameters to memory buffer
-		//op_pChannelLocalisationMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+		//op_pChannelLocalisationMemoryBuffer = boxContext.getOutputChunk(0);
 
 		//open file and load matrix dimensions
 		// m_pOVMatrixFileReader->process(OVP_Algorithm_BrainampFileReader_InputTriggerId_Open);
@@ -103,7 +100,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		m_pChannelLocalisationStreamEncoder->encodeHeader();
 
 		// Sends header
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, 0, 0);
+		boxContext.markOutputAsReadyToSend(0, 0, 0);
 
 		m_bHeaderSent = true;
 	}
@@ -119,7 +116,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		m_pChannelLocalisationStreamEncoder->encodeBuffer();
 
 		// Sends buffer
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, 0/*op_ui64CurrentStartTime*/, 0/*op_ui64CurrentEndTime*/);
+		boxContext.markOutputAsReadyToSend(0, 0/*op_ui64CurrentStartTime*/, 0/*op_ui64CurrentEndTime*/);
 
 		m_bBufferSent = true;
 	}

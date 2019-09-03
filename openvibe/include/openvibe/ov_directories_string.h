@@ -36,15 +36,9 @@ namespace OpenViBE
 #endif
 		}
 
-		static std::string getBinDir()
-		{
-			return pathFromEnvOrExtendedRoot("OV_PATH_BIN", "/bin", OV_CMAKE_PATH_BIN);
-		}
+		static std::string getBinDir() { return pathFromEnvOrExtendedRoot("OV_PATH_BIN", "/bin", OV_CMAKE_PATH_BIN); }
 
-		static std::string getDataDir()
-		{
-			return pathFromEnvOrExtendedRoot("OV_PATH_DATA", "/share/openvibe", OV_CMAKE_PATH_DATA);
-		}
+		static std::string getDataDir() { return pathFromEnvOrExtendedRoot("OV_PATH_DATA", "/share/openvibe", OV_CMAKE_PATH_DATA); }
 
 		static std::string getLibDir()
 		{
@@ -84,10 +78,7 @@ namespace OpenViBE
 				l_sPath = pathFromEnv("ALLUSERSPROFILE", "");
 			}
 			// fallback
-			if (l_sPath == "")
-			{
-				l_sPath = "openvibe-user";
-			}
+			if (l_sPath == "") { l_sPath = "openvibe-user"; }
 
 			return l_sPath + "/" + OV_CONFIG_SUBDIR;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -96,10 +87,7 @@ namespace OpenViBE
 #endif
 		}
 
-		static std::string getLogDir()
-		{
-			return getUserDataDir() + "/log";
-		}
+		static std::string getLogDir() { return getUserDataDir() + "/log"; }
 
 	private:
 
@@ -108,13 +96,7 @@ namespace OpenViBE
 		{
 			std::string l_sOut(strIn);
 			size_t l_sLen = strIn.length();
-			for (size_t i = 0; i < l_sLen; i++)
-			{
-				if (strIn[i] == '\\')
-				{
-					l_sOut[i] = '/';
-				}
-			}
+			for (size_t i = 0; i < l_sLen; i++) { if (strIn[i] == '\\') { l_sOut[i] = '/'; } }
 			return l_sOut;
 		}
 
@@ -174,7 +156,10 @@ namespace OpenViBE
 			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
 			if (multiByteSize == 0) { return convertPath(sDefaultPath); }
 			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
-			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0) { return convertPath(sDefaultPath); }
+			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0)
+			{
+				return convertPath(sDefaultPath);
+			}
 
 			const char* l_sPathPtr = utf8Value.get();
 #else
@@ -187,10 +172,7 @@ namespace OpenViBE
 		// Returns ENV variable if it is defined, otherwise it extends the ROOT variable if it exists, finally returns a default path
 		static std::string pathFromEnvOrExtendedRoot(const char* envVar, const char* rootPostfix, const char* defaultPath)
 		{
-			if (std::getenv(envVar))
-			{
-				return pathFromEnv(envVar, defaultPath);
-			}
+			if (std::getenv(envVar)) { return pathFromEnv(envVar, defaultPath); }
 			if (std::getenv("OV_PATH_ROOT"))
 			{
 				// the default case for this one is wrong but it should never happen

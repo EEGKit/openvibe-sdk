@@ -28,10 +28,7 @@ namespace r8b
 	 * logarithmic scale.
 	 */
 
-	inline double convertResponseToLog(const double re, const double im)
-	{
-		return (4.34294481903251828 * log(re * re + im * im + 1e-100));
-	}
+	inline double convertResponseToLog(const double re, const double im) { return (4.34294481903251828 * log(re * re + im * im + 1e-100)); }
 
 	/**
 	 * An utility function that performs frequency response scanning step update
@@ -278,14 +275,8 @@ namespace r8b
 			calcFIRFilterResponse(flt, fltlen, M_PI * c, re, im);
 			const double curg = re * re + im * im;
 
-			if (curg > maxg)
-			{
-				l = c;
-			}
-			else
-			{
-				r = c;
-			}
+			if (curg > maxg) { l = c; }
+			else { r = c; }
 		}
 	}
 } // namespace r8b

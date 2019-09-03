@@ -25,11 +25,8 @@ const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
 	OV_AttributeId_Box_FlagCanModifySetting
 };
 
-CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* sourceBox)
-	: TKernelObject<IKernelObject>(scenario.getKernelContext())
-	  , m_Scenario(&scenario)
-	  , m_SourceBox(sourceBox)
-	  , m_KernelBox(nullptr)
+CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* box)
+	: TKernelObject<IKernelObject>(scenario.getKernelContext()), m_Scenario(&scenario), m_SourceBox(box)
 {
 	m_OriginalToUpdatedCorrespondence[Input]   = std::map<uint32_t, uint32_t>();
 	m_OriginalToUpdatedCorrespondence[Output]  = std::map<uint32_t, uint32_t>();
@@ -54,13 +51,11 @@ bool CBoxUpdater::initialize()
 	// initialize kernel box reference
 	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
-		CString metaboxIdentifier = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
-		OV_ERROR_UNLESS_KRF(metaboxIdentifier != CString(""),
-							"Failed to find metabox with id " << metaboxIdentifier,
-							ErrorType::BadCall);
+		const CString metaboxID = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+		OV_ERROR_UNLESS_KRF(metaboxID != CString(""), "Failed to find metabox with id " << metaboxID, ErrorType::BadCall);
 
 		CIdentifier metaboxId;
-		metaboxId.fromString(metaboxIdentifier);
+		metaboxId.fromString(metaboxID);
 		CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 		OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""),
@@ -72,9 +67,11 @@ bool CBoxUpdater::initialize()
 		// Note that copy constructor for IScenario does not exist
 		CIdentifier metaboxScenarioTemplateIdentifier;
 
-		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport, metaboxScenarioPath);
+		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport,
+																			 metaboxScenarioPath);
 
-		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(metaboxScenarioTemplateIdentifier)));
+		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(
+			metaboxScenarioTemplateIdentifier)));
 		metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
 		m_KernelBox = metaboxScenarioInstance;
 	}
@@ -105,7 +102,10 @@ bool CBoxUpdater::initialize()
 	}
 
 	// initialize supported types to kernel ones
-	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox) { m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier()); }
+	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
+	{
+		m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier());
+	}
 	// should not be done before adding IO elements so the box listener is never called
 	// updatedBox->setAlgorithmClassIdentifier(kernelBox->getAlgorithmClassIdentifier());
 	m_Initialized = true;
@@ -138,24 +138,12 @@ bool CBoxUpdater::initialize()
 bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 {
 	//check for supported inputs diff
-	for (auto& type : m_SourceBox->getInputSupportTypes())
-	{
-		if (!m_KernelBox->hasInputSupport(type)) { return true; }
-	}
-	for (auto& type : m_KernelBox->getInputSupportTypes())
-	{
-		if (!m_SourceBox->hasInputSupport(type)) { return true; }
-	}
+	for (auto& type : m_SourceBox->getInputSupportTypes()) { if (!m_KernelBox->hasInputSupport(type)) { return true; } }
+	for (auto& type : m_KernelBox->getInputSupportTypes()) { if (!m_SourceBox->hasInputSupport(type)) { return true; } }
 
 	//check for supported outputs diff
-	for (auto& type : m_SourceBox->getOutputSupportTypes())
-	{
-		if (!m_KernelBox->hasOutputSupport(type)) { return true; }
-	}
-	for (auto& type : m_KernelBox->getOutputSupportTypes())
-	{
-		if (!m_SourceBox->hasOutputSupport(type)) { return true; }
-	}
+	for (auto& type : m_SourceBox->getOutputSupportTypes()) { if (!m_KernelBox->hasOutputSupport(type)) { return true; } }
+	for (auto& type : m_KernelBox->getOutputSupportTypes()) { if (!m_SourceBox->hasOutputSupport(type)) { return true; } }
 	return false;
 }
 
@@ -189,11 +177,11 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 
 		InterfacorRequest request;
-		request.index          = index;
-		request.identifier     = kIdentifier;
-		request.name           = kName;
-		request.typeIdentifier = kTypeIdentifier;
-		request.toBeRemoved    = false;
+		request.index       = index;
+		request.identifier  = kIdentifier;
+		request.name        = kName;
+		request.typeID      = kTypeIdentifier;
+		request.toBeRemoved = false;
 
 		if (interfacorType == Setting)
 		{
@@ -253,17 +241,17 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 		CIdentifier sTypeIdentifier;
 		CIdentifier sIdentifier;
-		CString sName;
+		CString name;
 		m_SourceBox->getInterfacorType(interfacorType, index, sTypeIdentifier);
 		m_SourceBox->getInterfacorIdentifier(interfacorType, index, sIdentifier);
-		m_SourceBox->getInterfacorName(interfacorType, index, sName);
+		m_SourceBox->getInterfacorName(interfacorType, index, name);
 
 		InterfacorRequest request;
-		request.index          = index;
-		request.identifier     = sIdentifier;
-		request.name           = sName;
-		request.typeIdentifier = sTypeIdentifier;
-		request.toBeRemoved    = true;
+		request.index       = index;
+		request.identifier  = sIdentifier;
+		request.name        = name;
+		request.typeID      = sTypeIdentifier;
+		request.toBeRemoved = true;
 
 		if (interfacorType == Setting)
 		{
@@ -289,7 +277,7 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 	for (auto& i : interfacors)
 	{
-		m_UpdatedBox->addInterfacor(interfacorType, i.name, i.typeIdentifier, i.identifier);
+		m_UpdatedBox->addInterfacor(interfacorType, i.name, i.typeID, i.identifier);
 		if (interfacorType == Setting)
 		{
 			auto idx = m_UpdatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
@@ -306,17 +294,15 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 	return updated;
 }
 
-uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeIdentifier, const CIdentifier& identifier, const CString& name)
+uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
+										 const CString& name)
 {
 	uint32_t index = OV_Value_UndefinedIndexUInt;
 	if (identifier != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(interfacorType, identifier))
 	{
 		box.getInterfacorIndex(interfacorType, identifier, index);
 	}
-	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeIdentifier))
-	{
-		box.getInterfacorIndex(interfacorType, name, index);
-	}
+	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeID)) { box.getInterfacorIndex(interfacorType, name, index); }
 
 	return index;
 }

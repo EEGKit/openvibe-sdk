@@ -43,9 +43,9 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh = 2;
-			int l_i32VersionLow  = 0;
-			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
+			int l_i32VersionHigh   = 2;
+			int l_i32VersionLow    = 0;
+			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
@@ -56,9 +56,9 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh = 2;
-			int l_i32VersionLow  = 0;
-			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
+			int l_i32VersionHigh   = 2;
+			int l_i32VersionLow    = 0;
+			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
@@ -139,58 +139,55 @@ namespace Socket
 			return true;
 		}
 
-		virtual uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
+		virtual uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize)
 		{
 			if (!isConnected()) { return 0; }
 #if 0
 			int l_iTrue=1;
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			int l_iResult = send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
-			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
+			const int res = send(m_i32Socket, static_cast<const char*>(buffer), ui32BufferSize, Socket_SendFlags);
+			if (ui32BufferSize != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : uint32_t(res);
 		}
 
-		virtual uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
+		virtual uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize)
 		{
 			if (!isConnected() || !ui32BufferSize) { return 0; }
 #if 0
-			int l_iTrue=1;
+			int l_iTrue = 1;
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			int l_iResult = recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
-			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
+			const int res = recv(m_i32Socket, static_cast<char *>(buffer), ui32BufferSize, Socket_ReceiveFlags);
+			if (ui32BufferSize != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : uint32_t(res);
 		}
 
-		virtual bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize)
 		{
 			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			const char* l_pBuffer    = static_cast<const char*>(pBuffer);
+			const char* tmpBuffer    = static_cast<const char*>(buffer);
 			do
 			{
-				l_ui32LeftBytes -= sendBuffer(l_pBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
+				l_ui32LeftBytes -= sendBuffer(tmpBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
 				if (!isConnected()) { return false; }
 			} while (l_ui32LeftBytes != 0);
 			return true;
 		}
 
-		virtual bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
+		virtual bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize)
 		{
 			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			char* l_pBuffer          = static_cast<char*>(pBuffer);
+			char* tmpBuffer          = static_cast<char*>(buffer);
 			do
 			{
-				l_ui32LeftBytes -= receiveBuffer(l_pBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
+				l_ui32LeftBytes -= receiveBuffer(tmpBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
 				if (!isConnected()) { return false; }
 			} while (l_ui32LeftBytes != 0);
 			return true;
 		}
 
-		virtual bool isConnected() const
-		{
-			return m_i32Socket != -1;
-		}
+		virtual bool isConnected() const { return m_i32Socket != -1; }
 
 		virtual void release()
 		{

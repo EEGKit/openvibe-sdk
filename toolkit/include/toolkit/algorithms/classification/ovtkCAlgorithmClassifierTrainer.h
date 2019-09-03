@@ -30,8 +30,10 @@ namespace OpenViBEToolkit
 	public:
 		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 		{
-			rAlgorithmPrototype.addInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration, "Configuration", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+			rAlgorithmPrototype.addInputParameter(
+				OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);
+			rAlgorithmPrototype.addOutputParameter(
+				OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration, "Configuration", OpenViBE::Kernel::ParameterType_MemoryBuffer);
 			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train, "Train");
 			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration, "Save configuration");
 			rAlgorithmPrototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, "Success");

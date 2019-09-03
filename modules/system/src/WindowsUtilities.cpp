@@ -27,17 +27,16 @@ BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* sEnvVarN
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
 BOOL WindowsUtilities::utf16CompliantCreateProcess(char* sApplicationName, char* sCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
-												   LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, char* sCurrentDirectory,
-												   LPSTARTUPINFO l_pStartupInfo, LPPROCESS_INFORMATION lpProcessInformation)
+												   LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment,
+												   char* sCurrentDirectory, LPSTARTUPINFO pStartupInfo, LPPROCESS_INFORMATION lpProcessInformation)
 {
 	return CreateProcess(sApplicationName, const_cast<char*>(sCommandLine), lpProcessAttributes, lpThreadAttributes,
-						 bInheritHandles, dwCreationFlags, lpEnvironment, sCurrentDirectory, l_pStartupInfo, lpProcessInformation);
+						 bInheritHandles, dwCreationFlags, lpEnvironment, sCurrentDirectory, pStartupInfo, lpProcessInformation);
 }
 
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
-HINSTANCE WindowsUtilities::utf16CompliantShellExecute(HWND l_pHWND, LPCTSTR lpOperation, LPCTSTR lpFile,
-													   LPCTSTR lpParameters, LPCTSTR lpDirectory, INT nShowCmd)
+HINSTANCE WindowsUtilities::utf16CompliantShellExecute(HWND l_pHWND, LPCTSTR lpOperation, LPCTSTR lpFile, LPCTSTR lpParameters, LPCTSTR lpDirectory, INT nShowCmd)
 {
 	return ShellExecute(l_pHWND, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
 }

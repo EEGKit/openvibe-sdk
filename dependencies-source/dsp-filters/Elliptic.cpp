@@ -67,10 +67,7 @@ namespace Dsp
 		//------------------------------------------------------------------------------
 
 		AnalogLowPass::AnalogLowPass()
-			: m_numPoles(-1)
-		{
-			setNormal(0, 1);
-		}
+			: m_numPoles(-1) { setNormal(0, 1); }
 
 		void AnalogLowPass::design(int numPoles,
 								   double rippleDb,
@@ -126,10 +123,7 @@ namespace Dsp
 				calcfz();
 				calcqz();
 				if (m_m > m_em) m_c1[2 * m_m] = 0;
-				for (i = 0; i <= 2 * m_m; i += 2)
-				{
-					m_a1[m_m - i / 2] = m_c1[i] + m_d1[i];
-				}
+				for (i = 0; i <= 2 * m_m; i += 2) { m_a1[m_m - i / 2] = m_c1[i] + m_d1[i]; }
 				double a0 = findfact(m_m);
 				int r     = 0;
 				while (r < m_em / 2)
@@ -243,10 +237,7 @@ namespace Dsp
 					m_b1[1] = m_a1[1] - p0;
 					m_c1[1] = m_b1[1] - p0;
 					for (i = 2; i <= t; i++) m_b1[i] = m_a1[i] - p0 * m_b1[i - 1] - q0 * m_b1[i - 2];
-					for (i = 2; i < t; i++)
-					{
-						m_c1[i] = m_b1[i] - p0 * m_c1[i - 1] - q0 * m_c1[i - 2];
-					}
+					for (i = 2; i < t; i++) { m_c1[i] = m_b1[i] - p0 * m_c1[i - 1] - q0 * m_c1[i - 2]; }
 					int x1    = t - 1;
 					int x2    = t - 2;
 					int x3    = t - 3;

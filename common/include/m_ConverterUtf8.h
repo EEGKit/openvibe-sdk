@@ -56,10 +56,7 @@ namespace Common
 			for (i = 0; i < unicode.size(); ++i)
 			{
 				unsigned long uni = unicode[i];
-				if (uni <= 0xFFFF)
-				{
-					utf16 += wchar_t(uni);
-				}
+				if (uni <= 0xFFFF) { utf16 += wchar_t(uni); }
 				else
 				{
 					uni -= 0x10000;

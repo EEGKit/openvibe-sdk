@@ -65,13 +65,7 @@ namespace
 		g_ServerStartedCondVar.notify_one();
 
 		// connect clients
-		while (!clientConnection)
-		{
-			if (server->isReadyToReceive())
-			{
-				clientConnection = server->accept();
-			}
-		}
+		while (!clientConnection) { if (server->isReadyToReceive()) { clientConnection = server->accept(); } }
 
 		// keep the scope braces here, as it ensures mutex is released
 		{

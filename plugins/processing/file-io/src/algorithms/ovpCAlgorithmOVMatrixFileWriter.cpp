@@ -25,7 +25,8 @@ bool CAlgorithmOVMatrixFileWriter::uninitialize()
 
 bool CAlgorithmOVMatrixFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()), "Writing matrix file " << *ip_sFilename << " failed", OpenViBE::Kernel::ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
+						"Writing matrix file " << *ip_sFilename << " failed", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 	return true;
 }

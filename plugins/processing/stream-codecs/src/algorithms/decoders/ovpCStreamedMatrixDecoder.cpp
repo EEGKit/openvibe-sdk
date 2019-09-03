@@ -48,21 +48,21 @@ bool CStreamedMatrixDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { return false; }
-	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { return false; }
-	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label) { return false; }
-	if (rIdentifier == OVTK_NodeId_Buffer_StreamedMatrix) { return true; }
-	if (rIdentifier == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { return false; }
-	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Header_StreamedMatrix) { return true; }
+	if (identifier == OVTK_NodeId_Header_StreamedMatrix_Dimension) { return true; }
+	if (identifier == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { return false; }
+	if (identifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { return false; }
+	if (identifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label) { return false; }
+	if (identifier == OVTK_NodeId_Buffer_StreamedMatrix) { return true; }
+	if (identifier == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { return false; }
+	return CEBMLBaseDecoder::isMasterChild(identifier);
 }
 
-void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -76,23 +76,20 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	{
 		if (l_rTop == OVTK_NodeId_Header_StreamedMatrix && m_ui32Status == Status_ParsingNothing)
 		{
-			m_ui32Status         = Status_ParsingHeader;
-			m_ui32DimensionIndex = 0;
+			m_ui32Status   = Status_ParsingHeader;
+			m_dimensionIdx = 0;
 		}
 		else if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_ui32Status == Status_ParsingHeader)
 		{
-			m_ui32Status              = Status_ParsingDimension;
-			m_ui32DimensionEntryIndex = 0;
+			m_ui32Status        = Status_ParsingDimension;
+			m_dimensionEntryIdx = 0;
 		}
-		else if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingNothing)
-		{
-			m_ui32Status = Status_ParsingBuffer;
-		}
+		else if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingNothing) { m_ui32Status = Status_ParsingBuffer; }
 	}
-	else { CEBMLBaseDecoder::openChild(rIdentifier); }
+	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
-void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CStreamedMatrixDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -107,29 +104,35 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_
 		switch (m_ui32Status)
 		{
 			case Status_ParsingHeader:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize))); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
+				{
+					op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size)));
+				}
 				break;
 
 			case Status_ParsingDimension:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { op_pMatrix->setDimensionSize(m_ui32DimensionIndex, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize))); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)
+				{
+					op_pMatrix->setDimensionSize(m_dimensionIdx, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size)));
+				}
 				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char label[1024];
-					trim(label, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), nullptr);
-					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, label);
+					trim(label, m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size), nullptr);
+					op_pMatrix->setDimensionLabel(m_dimensionIdx, m_dimensionEntryIdx++, label);
 				}
 				break;
 
 			case Status_ParsingBuffer:
-				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize * sizeof(double)); }
+				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer)
+				{
+					System::Memory::copy(op_pMatrix->getBuffer(), buffer, m_ui64MatrixBufferSize * sizeof(double));
+				}
 				break;
 			default: break;
 		}
 	}
-	else
-	{
-		CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
-	}
+	else { CEBMLBaseDecoder::processChildData(buffer, size); }
 }
 
 void CStreamedMatrixDecoder::closeChild()
@@ -144,14 +147,11 @@ void CStreamedMatrixDecoder::closeChild()
 		|| (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix)
 		|| (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer))
 	{
-		if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingBuffer)
-		{
-			m_ui32Status = Status_ParsingNothing;
-		}
+		if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix && m_ui32Status == Status_ParsingBuffer) { m_ui32Status = Status_ParsingNothing; }
 		else if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_ui32Status == Status_ParsingDimension)
 		{
 			m_ui32Status = Status_ParsingHeader;
-			m_ui32DimensionIndex++;
+			m_dimensionIdx++;
 		}
 		else if (l_rTop == OVTK_NodeId_Header_StreamedMatrix && m_ui32Status == Status_ParsingHeader)
 		{
@@ -161,10 +161,7 @@ void CStreamedMatrixDecoder::closeChild()
 			else
 			{
 				m_ui64MatrixBufferSize = 1;
-				for (uint32_t i = 0; i < op_pMatrix->getDimensionCount(); i++)
-				{
-					m_ui64MatrixBufferSize *= op_pMatrix->getDimensionSize(i);
-				}
+				for (uint32_t i = 0; i < op_pMatrix->getDimensionCount(); i++) { m_ui64MatrixBufferSize *= op_pMatrix->getDimensionSize(i); }
 			}
 		}
 	}

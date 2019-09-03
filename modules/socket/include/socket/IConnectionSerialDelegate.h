@@ -8,7 +8,7 @@ namespace Socket
 	struct Socket_API SConnectionSerialDelegate
 	{
 		SConnectionDelegate oConnectionDelegate;
-		bool (*fpConnect)(void*, const char*, unsigned long);
+		bool (*fpConnect)(void*, const char*, const unsigned long);
 		unsigned int (*fpGetPendingByteCount)(void*);
 		bool (*fpFlush)(void*);
 		const char* (*fpGetLastError)(void*);
@@ -16,7 +16,7 @@ namespace Socket
 		// TODO for Android compatibility
 		//bool(*fpIsErrorRaised)(void*); 
 		//void(*fpClearError)(void*);
-		//bool(*fSetTimeouts)(void*, unsigned long ui32DecisecondsTimeout);
+		//bool(*fSetTimeouts)(void*, const uint32_t decisecondsTimeout);
 	};
 
 	class Socket_API IConnectionSerialDelegate : public TConnectionDelegate<IConnectionSerial>

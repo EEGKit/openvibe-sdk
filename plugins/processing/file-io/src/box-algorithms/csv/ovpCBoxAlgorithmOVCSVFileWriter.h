@@ -52,16 +52,16 @@ namespace OpenViBEPlugins
 			bool m_WriteHeader      = true;
 		};
 
-		class CBoxAlgorithmOVCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmOVCSVFileWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index) override
 			{
 				if (index == 1)
 				{
-					OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-					box.getInputType(1, l_oTypeIdentifier);
-					if (l_oTypeIdentifier != OV_TypeId_Stimulations)
+					OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getInputType(1, typeID);
+					if (typeID != OV_TypeId_Stimulations)
 					{
 						box.setInputType(1, OV_TypeId_Stimulations);
 						return true;
@@ -74,7 +74,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmOVCSVFileWriterDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmOVCSVFileWriterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

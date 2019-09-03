@@ -13,10 +13,10 @@ namespace OpenViBE
 		class CMetaboxManager : public TKernelObject<IMetaboxManager>
 		{
 		public:
-			explicit CMetaboxManager(const IKernelContext& kernelContext);
+			explicit CMetaboxManager(const IKernelContext& ctx);
 			~CMetaboxManager() override;
 			bool addMetaboxesFromFiles(const CString& fileNameWildCard) override;
-			CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const override;
+			CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousID) const override;
 			const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const CIdentifier& metaboxIdentifier) const override;
 			void setMetaboxObjectDesc(const CIdentifier& metaboxIdentifier, Plugins::IPluginObjectDesc* metaboxDescriptor) override;
 			CString getMetaboxFilePath(const CIdentifier& metaboxIdentifier) const override;

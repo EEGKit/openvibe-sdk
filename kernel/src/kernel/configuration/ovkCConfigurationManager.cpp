@@ -45,7 +45,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CConfigurationManagerEntryEnumeratorCallBack : public FS::IEntryEnumeratorCallBack
+		class CConfigurationManagerEntryEnumeratorCallBack final : public FS::IEntryEnumeratorCallBack
 		{
 		public:
 
@@ -58,8 +58,8 @@ namespace OpenViBE
 			{
 				if (sValue.length() == 0) { return ""; }
 
-				std::string::size_type i = 0;
-				std::string::size_type j = sValue.length() - 1;
+				size_t i = 0;
+				size_t j = sValue.length() - 1;
 
 				while (i < sValue.length() && (sValue[i] == '\t' || sValue[i] == ' ')) { i++; }
 				while (j >= i && (sValue[j] == '\t' || sValue[j] == ' ')) { j--; }
@@ -72,7 +72,8 @@ namespace OpenViBE
 				std::ifstream l_oFile;
 				FS::Files::openIFStream(l_oFile, rEntry.getName());
 
-				OV_ERROR_UNLESS(l_oFile.good(), "Could not open file " << CString(rEntry.getName()), ErrorType::ResourceNotFound, false, m_rErrorManager, m_rLogManager);
+				OV_ERROR_UNLESS(l_oFile.good(), "Could not open file " << CString(rEntry.getName()), ErrorType::ResourceNotFound, false, m_rErrorManager,
+								m_rLogManager);
 
 				m_rLogManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << "\n";
 
@@ -80,7 +81,7 @@ namespace OpenViBE
 				{
 					std::string l_sLine;
 					std::string l_sLinePart;
-					std::string::size_type eq;
+					size_t eq;
 
 					while (!l_oFile.eof() && (l_sLine.length() == 0 || l_sLine[l_sLine.length() - 1] == '\\'))
 					{
@@ -114,12 +115,14 @@ namespace OpenViBE
 							CIdentifier l_oTokenIdentifier = m_rConfigurationManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
 							if (l_oTokenIdentifier == OV_UndefinedIdentifier)
 							{
-								m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(l_sTokenValue.c_str()) << "\n";
+								m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(
+									l_sTokenValue.c_str()) << "\n";
 								m_rConfigurationManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
 							}
 							else
 							{
-								m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
+								m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(
+									l_sTokenValue.c_str()) << "\n";
 
 								// warning if base token are overwritten here
 								OV_WARNING_UNLESS(l_sTokenName != "Path_UserData" && l_sTokenName != "Path_Log" && l_sTokenName != "Path_Tmp"
@@ -146,8 +149,8 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager)
-	: TKernelObject<IConfigurationManager>(rKernelContext), m_pParentConfigurationManager(pParentConfigurationManager)
+CConfigurationManager::CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* pParentConfigurationManager)
+	: TKernelObject<IConfigurationManager>(ctx), m_pParentConfigurationManager(pParentConfigurationManager)
 {
 	m_ui32Index     = 0;
 	m_ui32StartTime = System::Time::getTime();
@@ -209,10 +212,7 @@ CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(const CId
 
 	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken;
 
-	if (rPreviousConfigurationTokenIdentifier == OV_UndefinedIdentifier)
-	{
-		itConfigurationToken = m_vConfigurationToken.begin();
-	}
+	if (rPreviousConfigurationTokenIdentifier == OV_UndefinedIdentifier) { itConfigurationToken = m_vConfigurationToken.begin(); }
 	else
 	{
 		itConfigurationToken = m_vConfigurationToken.find(rPreviousConfigurationTokenIdentifier);
@@ -419,7 +419,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 	std::string l_sValue;
 	std::string l_sExpandedValue;
 
-	for (std::string::size_type i = 0; i < sValue.length(); i++)
+	for (size_t i = 0; i < sValue.length(); i++)
 	{
 		bool l_bShouldExpand;
 
@@ -430,12 +430,14 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 				break;
 
 			case '{':
-				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePrefix, "Could not expand token with syntax error while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePrefix,
+									"Could not expand token with syntax error while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
 				l_vChildren.push(std::make_pair(NodeType_NamePostfix, std::string()));
 				break;
 
 			case '}':
-				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePostfix, "Could not expand token with syntax error while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePostfix,
+									"Could not expand token with syntax error while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
 				l_sPostfix = l_vChildren.top().second;
 				l_sLowerPostfix.resize(l_sPostfix.size());
 				std::transform(l_sPostfix.begin(), l_sPostfix.end(), l_sLowerPostfix.begin(), ::to_lower<std::string::value_type>);
@@ -487,8 +489,10 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 					}
 					else
 					{
-						OV_ERROR_KRF("Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix and " << CString(l_sPostfix.c_str()) << " postfix while expanding " << CString(sValue.c_str()),
-									 ErrorType::BadFileParsing);
+						OV_ERROR_KRF(
+							"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix and " << CString(l_sPostfix.c_str()) <<
+							" postfix while expanding " << CString(sValue.c_str()),
+							ErrorType::BadFileParsing);
 					}
 				}
 				else
@@ -506,7 +510,8 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 					else
 					{
 						OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager,
-											"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+											"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()
+											),
 											ErrorType::BadFileParsing);
 
 						std::string l_sKeyword = "$" + l_sLowerPrefix + "{" + l_sLowerPostfix + "}";
@@ -524,7 +529,9 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 
 				if (l_bShouldExpand)
 				{
-					OV_ERROR_UNLESS_KRF(this->internalExpand(l_sValue, l_sExpandedValue), "Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
+					OV_ERROR_UNLESS_KRF(this->internalExpand(l_sValue, l_sExpandedValue),
+										"Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()),
+										ErrorType::BadFileParsing);
 
 					l_vChildren.top().second += l_sExpandedValue;
 				}
@@ -559,14 +566,16 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 		l_vChildren.top().second += "$" + topVal;
 	}
 
-	OV_ERROR_UNLESS_KRF(l_vChildren.size() == 1, "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
+	OV_ERROR_UNLESS_KRF(l_vChildren.size() == 1, "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+						ErrorType::BadFileParsing);
 
 	sResult = l_vChildren.top().second;
 
 	return true;
 }
 
-bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes = false) const
+bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult,
+													  bool preserveBackslashes = false) const
 {
 	std::stack<std::pair<ENodeType, std::string>> l_vChildren;
 	l_vChildren.push(std::make_pair(NodeType_Value, std::string()));
@@ -578,7 +587,7 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 	std::string l_sValue;
 	std::string l_sExpandedValue;
 
-	for (std::string::size_type i = 0; i < sValue.length(); i++)
+	for (size_t i = 0; i < sValue.length(); i++)
 	{
 		bool l_bShouldExpand;
 
@@ -660,7 +669,8 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(l_vChildren.size() == 1, "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
+	OV_ERROR_UNLESS_KRF(l_vChildren.size() == 1, "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+						ErrorType::BadFileParsing);
 
 	sResult = l_vChildren.top().second;
 
@@ -673,24 +683,23 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 	if (l_oTokenIdentifier == OV_UndefinedIdentifier)
 	{
 		OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager,
-							"Could not expand token [" << CString(sTokenName.c_str()) << "]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() << " = \" to your configuration file",
+							"Could not expand token [" << CString(sTokenName.c_str()) <<
+							"]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() <<
+							" = \" to your configuration file",
 							ErrorType::ResourceNotFound);
 
 		std::string l_sNewString = std::string("${") + sTokenName + ("}");
 		sTokenValue              = m_pParentConfigurationManager->expand(l_sNewString.c_str());
 	}
-	else
-	{
-		sTokenValue = this->getConfigurationTokenValue(l_oTokenIdentifier);
-	}
+	else { sTokenValue = this->getConfigurationTokenValue(l_oTokenIdentifier); }
 	return true;
 }
 
-CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackshlashes) const
+CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
 	std::string l_sResult;
-	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackshlashes)) { return l_sResult.c_str(); }
+	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackslashes)) { return l_sResult.c_str(); }
 	return l_sValue.c_str();
 }
 
@@ -699,10 +708,7 @@ double CConfigurationManager::expandAsFloat(const CString& rExpression, const do
 	CString l_sResult = this->expand(rExpression);
 	double l_f64Result;
 
-	try
-	{
-		l_f64Result = std::stod(l_sResult.toASCIIString());
-	}
+	try { l_f64Result = std::stod(l_sResult.toASCIIString()); }
 	catch (const std::exception&) { l_f64Result = f64FallbackValue; }
 
 	return l_f64Result;
@@ -741,7 +747,8 @@ bool CConfigurationManager::expandAsBoolean(const CString& rExpression, const bo
 	return bFallbackValue;
 }
 
-uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier, const uint64_t ui64FallbackValue) const
+uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier,
+															  const uint64_t ui64FallbackValue) const
 {
 	CString l_sResult     = this->expand(rExpression);
 	uint64_t l_ui64Result = this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, l_sResult);

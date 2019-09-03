@@ -78,9 +78,7 @@ namespace OpenViBE
 			 */
 			bool initialize(IParameter* pParameter)
 			{
-				if (m_pParameter) { return false; }
-
-				if (!pParameter) { return false; }
+				if (m_pParameter || !pParameter) { return false; }
 
 				m_pParameter = pParameter;
 				return true;
@@ -96,7 +94,6 @@ namespace OpenViBE
 			bool uninitialize()
 			{
 				if (!m_pParameter) { return false; }
-
 				m_pParameter = nullptr;
 				return true;
 			}

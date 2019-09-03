@@ -56,30 +56,27 @@ namespace OpenViBEPlugins
 			std::vector<double> m_FrequencyAbscissa;
 		};
 
-		class CBoxAlgorithmOVCSVFileReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier typeIdentifier = OV_UndefinedIdentifier;
-				box.getOutputType(index, typeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(index, typeID);
 
-				if (index == 0 && typeIdentifier == OV_TypeId_Stimulations)
+				if (index == 0 && typeID == OV_TypeId_Stimulations)
 				{
 					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal),
 										"Failed to reset output type to signal",
 										OpenViBE::Kernel::ErrorType::Internal);
 				}
-				else if (index == 1 && typeIdentifier != OV_TypeId_Stimulations)
+				else if (index == 1 && typeID != OV_TypeId_Stimulations)
 				{
 					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations),
 										"Failed to reset output type to stimulations",
 										OpenViBE::Kernel::ErrorType::Internal);
 				}
-				else if (index > 1)
-				{
-					OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal);
-				}
+				else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal); }
 
 				return true;
 			}
@@ -87,7 +84,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmOVCSVFileReaderDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

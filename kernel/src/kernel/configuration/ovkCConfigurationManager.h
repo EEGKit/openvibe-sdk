@@ -22,7 +22,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager = nullptr);
+			CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* pParentConfigurationManager = nullptr);
 			void clear() override;
 			bool addConfigurationFromFile(const CString& rFileNameWildCard) override;
 			CIdentifier createConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue) override;
@@ -40,13 +40,15 @@ namespace OpenViBE
 			bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback) override;
 			CString expand(const CString& rExpression) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >, OVK_ClassId_Kernel_Configuration_ConfigurationManager)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >,
+									   OVK_ClassId_Kernel_Configuration_ConfigurationManager)
 			CString expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const override;
 			double expandAsFloat(const CString& rExpression, double f64FallbackValue) const override;
 			int64_t expandAsInteger(const CString& rExpression, int64_t i64FallbackValue) const override;
 			uint64_t expandAsUInteger(const CString& rExpression, uint64_t ui64FallbackValue) const override;
 			bool expandAsBoolean(const CString& rExpression, bool bFallbackValue) const override;
-			uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier, uint64_t ui64FallbackValue) const override;
+			uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier,
+												   uint64_t ui64FallbackValue) const override;
 
 		protected:
 

@@ -46,16 +46,9 @@ CompiledExpression::CompiledExpression(const ParsedExpression& expression)
 	compileExpression(expr.getRootNode(), temps);
 }
 
-CompiledExpression::~CompiledExpression()
-{
-	for (int i = 0; i < (int)operation.size(); i++)
-		if (operation[i] != nullptr) delete operation[i];
-}
+CompiledExpression::~CompiledExpression() { for (int i = 0; i < (int)operation.size(); i++) if (operation[i] != nullptr) delete operation[i]; }
 
-CompiledExpression::CompiledExpression(const CompiledExpression& expression)
-{
-	*this = expression;
-}
+CompiledExpression::CompiledExpression(const CompiledExpression& expression) { *this = expression; }
 
 CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expression)
 {
@@ -66,10 +59,7 @@ CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expr
 	workspace.resize(expression.workspace.size());
 	argValues.resize(expression.argValues.size());
 	operation.resize(expression.operation.size());
-	for (int i = 0; i < (int)operation.size(); i++)
-	{
-		operation[i] = expression.operation[i]->clone();
-	}
+	for (int i = 0; i < (int)operation.size(); i++) { operation[i] = expression.operation[i]->clone(); }
 	return *this;
 }
 
@@ -105,8 +95,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 			// If the arguments are sequential, we can just pass a pointer to the first one.
 
 			bool sequential = true;
-			for (unsigned int i = 1; i < args.size(); i++)
-				if (args[i] != args[i - 1] + 1) sequential = false;
+			for (unsigned int i = 1; i < args.size(); i++) if (args[i] != args[i - 1] + 1) sequential = false;
 			if (sequential) arguments[stepIndex].push_back(args[0]);
 			else
 			{
@@ -121,8 +110,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 
 int CompiledExpression::findTempIndex(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
 {
-	for (int i = 0; i < (int)temps.size(); i++)
-		if (temps[i].first == node) return i;
+	for (int i = 0; i < (int)temps.size(); i++) if (temps[i].first == node) return i;
 	return -1;
 }
 

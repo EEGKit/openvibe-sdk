@@ -78,7 +78,8 @@ namespace
 	{
 		if (src.size() < bufferIndex + size) { return false; }
 
-		string = std::string(src.begin() + static_cast<const long>(bufferIndex), src.begin() + static_cast<const long>(bufferIndex) + static_cast<const long>(size));
+		string = std::string(src.begin() + static_cast<const long>(bufferIndex),
+							 src.begin() + static_cast<const long>(bufferIndex) + static_cast<const long>(size));
 
 		return true;
 	}
@@ -206,16 +207,10 @@ bool CommunicationProtocolVersionMessage::fromBytes(const std::vector<uint8_t>& 
 *
 ******************************************************************************/
 
-InputOutput::InputOutput() 
- : m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string())
-{
-	m_IsValid = false;
-}
+InputOutput::InputOutput()
+	: m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string()) { m_IsValid = false; }
 
-InputOutput::InputOutput(const uint32_t id, const uint64_t type, const std::string& name) : m_Id(id), m_Type(type), m_Name(name)
-{
-	m_IsValid = true;
-}
+InputOutput::InputOutput(const uint32_t id, const uint64_t type, const std::string& name) : m_Id(id), m_Type(type), m_Name(name) { m_IsValid = true; }
 
 std::vector<uint8_t> InputOutput::toBytes() const
 {
@@ -256,17 +251,14 @@ bool InputOutput::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 *
 ******************************************************************************/
 
-Parameter::Parameter() 
+Parameter::Parameter()
 	: m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string()), m_Value(std::string())
 {
 	m_IsValid = false;
 }
 
 Parameter::Parameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value)
-	: m_Id(id), m_Type(type), m_Name(name), m_Value(value)
-{
-	m_IsValid = true;
-}
+	: m_Id(id), m_Type(type), m_Name(name), m_Value(value) { m_IsValid = true; }
 
 std::vector<uint8_t> Parameter::toBytes() const
 {
@@ -481,16 +473,11 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 ******************************************************************************/
 
 EBMLMessage::EBMLMessage()
-	: m_IOIndex(std::numeric_limits<decltype(m_IOIndex)>::max()), m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max()), m_EndTime(std::numeric_limits<decltype(m_EndTime)>::max())
-{
-	m_IsValid = false;
-}
+	: m_IOIndex(std::numeric_limits<decltype(m_IOIndex)>::max()), m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max()),
+	  m_EndTime(std::numeric_limits<decltype(m_EndTime)>::max()) { m_IsValid = false; }
 
 EBMLMessage::EBMLMessage(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
-	: m_IOIndex(index), m_StartTime(startTime), m_EndTime(endTime), m_EBML(ebml)
-{
-	m_IsValid = true;
-}
+	: m_IOIndex(index), m_StartTime(startTime), m_EndTime(endTime), m_EBML(ebml) { m_IsValid = true; }
 
 std::vector<uint8_t> EBMLMessage::toBytes() const
 {
@@ -524,7 +511,8 @@ bool EBMLMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 	if (buffer.size() < bufferIndex + s_EBMLIndex + EBMLsize) { return false; }
 
-	m_EBML.reset(new std::vector<uint8_t>(buffer.begin() + static_cast<const long>(bufferIndex) + s_EBMLIndex, buffer.begin() + static_cast<const long>(bufferIndex) + s_EBMLIndex + EBMLsize));
+	m_EBML.reset(new std::vector<uint8_t>(buffer.begin() + static_cast<const long>(bufferIndex) + s_EBMLIndex,
+										  buffer.begin() + static_cast<const long>(bufferIndex) + s_EBMLIndex + EBMLsize));
 
 	bufferIndex += s_MinimumSize + EBMLsize;
 

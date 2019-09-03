@@ -31,40 +31,34 @@ bool CSignalDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Header_Signal) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }
-	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Header_Signal) { return true; }
+	if (identifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }
+	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
-void CSignalDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CSignalDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	if ((l_rTop == OVTK_NodeId_Header_Signal)
 		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
-	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
+	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
-void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CSignalDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	if ((l_rTop == OVTK_NodeId_Header_Signal)
 		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate))
 	{
-		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)
-		{
-			op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize);
-		}
+		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate) { op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
 	}
-	else
-	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, ui64BufferSize);
-	}
+	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CSignalDecoder::closeChild()

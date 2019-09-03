@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmExternalProcessing : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmExternalProcessing final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmExternalProcessing();
@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			uint64_t getClockFrequency() override;
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool processInput(const uint32_t index) override;
 			bool process() override;
 
@@ -93,13 +93,13 @@ namespace OpenViBEPlugins
 			std::queue<Packet> m_PacketHistory;
 		};
 
-		class CBoxAlgorithmExternalProcessingListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmExternalProcessingListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmExternalProcessingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmExternalProcessingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override {}
@@ -107,7 +107,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Alexis Placet"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("This box can communicate via TCP with an other program."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Scripting"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

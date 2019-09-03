@@ -13,13 +13,13 @@ namespace OpenViBEPlugins
 {
 	namespace Streaming
 	{
-		class CBoxAlgorithmStreamedMatrixMultiplexer : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmStreamedMatrixMultiplexer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer)
@@ -31,83 +31,74 @@ namespace OpenViBEPlugins
 			bool m_bHeaderSent       = false;
 		};
 
-		class CBoxAlgorithmStreamedMatrixMultiplexerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmStreamedMatrixMultiplexerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& box)
 			{
 				char l_sName[1024];
 
-				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
 					sprintf(l_sName, "Input stream %u", i + 1);
-					rBox.setInputName(i, l_sName);
+					box.setInputName(i, l_sName);
 				}
 
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(0, l_oTypeIdentifier);
-				rBox.setInputType(index, l_oTypeIdentifier);
-				return this->check(rBox);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(0, typeID);
+				box.setInputType(index, typeID);
+				return this->check(box);
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(0, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(0, typeID);
 
-				while (rBox.getInputCount() < 2)
-				{
-					rBox.addInput("", l_oTypeIdentifier);
-				}
+				while (box.getInputCount() < 2) { box.addInput("", typeID); }
 
-				return this->check(rBox);
+				return this->check(box);
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(index, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getInputType(index, typeID);
 
-				if (this->getTypeManager().isDerivedFromStream(l_oTypeIdentifier, OV_TypeId_StreamedMatrix))
+				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < rBox.getInputCount(); i++)
-					{
-						rBox.setInputType(i, l_oTypeIdentifier);
-					}
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
 
-					rBox.setOutputType(0, l_oTypeIdentifier);
+					box.setOutputType(0, typeID);
 				}
 				else
 				{
-					rBox.getOutputType(0, l_oTypeIdentifier);
-					rBox.setInputType(index, l_oTypeIdentifier);
+					box.getOutputType(0, typeID);
+					box.setInputType(index, typeID);
 				}
 
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(0, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(0, typeID);
 
-				if (this->getTypeManager().isDerivedFromStream(l_oTypeIdentifier, OV_TypeId_StreamedMatrix))
+				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < rBox.getInputCount(); i++)
-					{
-						rBox.setInputType(i, l_oTypeIdentifier);
-					}
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
 				}
 				else
 				{
-					rBox.getInputType(0, l_oTypeIdentifier);
-					rBox.setOutputType(0, l_oTypeIdentifier);
+					box.getInputType(0, typeID);
+					box.setOutputType(0, typeID);
 				}
 
 				return true;
@@ -116,7 +107,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmStreamedMatrixMultiplexerDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmStreamedMatrixMultiplexerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

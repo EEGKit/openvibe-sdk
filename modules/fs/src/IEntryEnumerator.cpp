@@ -27,11 +27,11 @@ using namespace FS;
 
 namespace FS
 {
-	class CEntry : public IEntryEnumerator::IEntry
+	class CEntry final : public IEntryEnumerator::IEntry
 	{
 	public:
 
-		explicit CEntry(const string& sName) : m_sName(sName) {}
+		explicit CEntry(const string& name) : m_sName(name) {}
 		const char* getName() override { return m_sName.c_str(); }
 
 		string m_sName;
@@ -43,7 +43,7 @@ namespace FS
 
 namespace FS
 {
-	class CAttributes : public IEntryEnumerator::IAttributes
+	class CAttributes final : public IEntryEnumerator::IAttributes
 	{
 	public:
 
@@ -59,15 +59,15 @@ namespace FS
 		bool isExecutable() override { return m_bIsExecutable; }
 		uint64_t getSize() override { return m_ui64Size; }
 
-		bool m_bIsFile = false;
-		bool m_bIsDirectory = false;
+		bool m_bIsFile         = false;
+		bool m_bIsDirectory    = false;
 		bool m_bIsSymbolicLink = false;
-		bool m_bIsArchive = false;
-		bool m_bIsReadOnly = false;
-		bool m_bIsHidden = false;
-		bool m_bIsSystem = false;
-		bool m_bIsExecutable = false;
-		uint64_t m_ui64Size = 0;
+		bool m_bIsArchive      = false;
+		bool m_bIsReadOnly     = false;
+		bool m_bIsHidden       = false;
+		bool m_bIsSystem       = false;
+		bool m_bIsExecutable   = false;
+		uint64_t m_ui64Size    = 0;
 	};
 }  // namespace FS
 
@@ -93,7 +93,7 @@ namespace FS
 
 namespace FS
 {
-	class CEntryEnumeratorLinux : public CEntryEnumerator
+	class CEntryEnumeratorLinux final : public CEntryEnumerator
 	{
 	public:
 		CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) { }
@@ -105,7 +105,7 @@ namespace FS
 
 namespace FS
 {
-	class CEntryEnumeratorWindows : public CEntryEnumerator
+	class CEntryEnumeratorWindows final : public CEntryEnumerator
 	{
 	public:
 		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) {}
@@ -253,10 +253,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 						}
 					}
 
-					if (!FindNextFile(l_pFileHandle, &l_oFindData))
-					{
-						l_bFinished = true;
-					}
+					if (!FindNextFile(l_pFileHandle, &l_oFindData)) { l_bFinished = true; }
 				}
 				FindClose(l_pFileHandle);
 			}
@@ -296,15 +293,9 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 				l_oAttributes.m_ui64Size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
 
 				// Sends to callback
-				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
-				{
-					l_bFinished = true;
-				}
+				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes)) { l_bFinished = true; }
 
-				if (!FindNextFile(l_pFileHandle, &l_oFindData))
-				{
-					l_bFinished = true;
-				}
+				if (!FindNextFile(l_pFileHandle, &l_oFindData)) { l_bFinished = true; }
 			}
 			FindClose(l_pFileHandle);
 		}
@@ -315,14 +306,14 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 
 #endif
 
-FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
+FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	IEntryEnumerator* res = new CEntryEnumeratorLinux(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorLinux(rCallBack);
 #elif defined TARGET_OS_Windows
-	IEntryEnumerator* res = new CEntryEnumeratorWindows(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorWindows(rCallBack);
 #else
-	IEntryEnumerator* res = new CEntryEnumeratorDummy(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorDummy(rCallBack);
 #endif
 	return res;
 }

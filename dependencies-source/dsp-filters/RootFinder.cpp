@@ -52,10 +52,7 @@ namespace Dsp
 		int m = degree;
 
 		// copy coefficients
-		for (int j = 0; j <= m; ++j)
-		{
-			m_ad[j] = m_a[j];
-		}
+		for (int j = 0; j <= m; ++j) { m_ad[j] = m_a[j]; }
 
 		// for each root
 		for (int j = m - 1; j >= 0; --j)
@@ -64,10 +61,7 @@ namespace Dsp
 			complex_t x = 0.0;
 			laguerre(j + 1, m_ad, x, its);
 
-			if (fabs(std::imag(x)) <= 2.0 * EPS * fabs(std::real(x)))
-			{
-				x = complex_t(std::real(x), 0.0);
-			}
+			if (fabs(std::imag(x)) <= 2.0 * EPS * fabs(std::real(x))) { x = complex_t(std::real(x), 0.0); }
 
 			m_root[j] = x;
 
@@ -81,10 +75,7 @@ namespace Dsp
 			}
 		}
 
-		if (polish)
-		{
-			for (int j = 0; j < m; ++j) { laguerre(degree, m_a, m_root[j], its); }
-		}
+		if (polish) { for (int j = 0; j < m; ++j) { laguerre(degree, m_a, m_root[j], its); } }
 
 		if (doSort) { sort(degree); }
 	}
@@ -149,21 +140,12 @@ namespace Dsp
 
 			double abp = std::abs(gp);
 			double abm = std::abs(gm);
-			if (abp < abm)
-			{
-				gp = gm;
-			}
+			if (abp < abm) { gp = gm; }
 			complex_t dx = std::max(abp, abm) > 0.0 ? double(m) / gp : std::polar(1 + abx, double(iter));
 			complex_t x1 = x - dx;
 			if (x == x1) { return; }
-			if (iter % MT != 0)
-			{
-				x = x1;
-			}
-			else
-			{
-				x -= frac[iter / MT] * dx;
-			}
+			if (iter % MT != 0) { x = x1; }
+			else { x -= frac[iter / MT] * dx; }
 		}
 
 		throw std::logic_error("laguerre failed");
@@ -176,17 +158,8 @@ namespace Dsp
 	{
 		complex_t y;
 
-		if (x != 0.)
-		{
-			for (int i = 0; i <= degree; ++i)
-			{
-				y += m_a[i] * pow(x, double(i));
-			}
-		}
-		else
-		{
-			y = m_a[0];
-		}
+		if (x != 0.) { for (int i = 0; i <= degree; ++i) { y += m_a[i] * pow(x, double(i)); } }
+		else { y = m_a[0]; }
 
 		return y;
 	}

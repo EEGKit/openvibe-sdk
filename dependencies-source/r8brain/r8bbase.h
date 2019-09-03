@@ -925,7 +925,8 @@ namespace r8b
 	 * @param x3 Point at x+3 position.
 	 * @param x4 Point at x+4 position.
 	 */
-	inline void calcSpline3p8Coeffs(double* c, const double xm3, const double xm2, const double xm1, const double x0, const double x1, const double x2, const double x3, const double x4)
+	inline void calcSpline3p8Coeffs(double* c, const double xm3, const double xm2, const double xm1, const double x0, const double x1, const double x2,
+									const double x3, const double x4)
 	{
 		c[0] = x0;
 		c[1] = (61.0 * (x1 - xm1) + 16.0 * (xm2 - x2) + 3.0 * (x3 - xm3)) / 76.0;
@@ -952,7 +953,8 @@ namespace r8b
 	 * @param x4 Point at x+4 position.
 	 */
 
-	inline void calcSpline2p8Coeffs(double* c, const double xm3, const double xm2, const double xm1, const double x0, const double x1, const double x2, const double x3, const double x4)
+	inline void calcSpline2p8Coeffs(double* c, const double xm3, const double xm2, const double xm1, const double x0, const double x1, const double x2,
+									const double x3, const double x4)
 	{
 		c[0] = x0;
 		c[1] = (61.0 * (x1 - xm1) + 16.0 * (xm2 - x2) + 3.0 * (x3 - xm3)) / 76.0;
@@ -1112,6 +1114,10 @@ namespace r8b
 
 		y = 3.75 / ax;
 
-		return (exp(ax) / sqrt(ax) * (0.39894228 + y * (0.1328592e-1 + y * (0.225319e-2 + y * (-0.157565e-2 + y * (0.916281e-2 + y * (-0.2057706e-1 + y * (0.2635537e-1 + y * (-0.1647633e-1 + y * 0.392377e-2)))))))));
+		return (exp(ax) / sqrt(ax) * (0.39894228 + y * (0.1328592e-1 + y * (
+															0.225319e-2 + y * (
+																-0.157565e-2 + y * (
+																	0.916281e-2 + y * (
+																		-0.2057706e-1 + y * (0.2635537e-1 + y * (-0.1647633e-1 + y * 0.392377e-2)))))))));
 	}
 } // namespace r8b

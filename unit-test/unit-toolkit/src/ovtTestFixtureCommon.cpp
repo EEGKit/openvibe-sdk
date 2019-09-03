@@ -68,29 +68,23 @@ namespace OpenViBETest
 
 		CString configurationFile;
 
-		if (!m_ConfigurationFile.empty())
-		{
-			configurationFile = m_ConfigurationFile.c_str();
-		}
-		else
-		{
-			configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
-		}
+		if (!m_ConfigurationFile.empty()) { configurationFile = m_ConfigurationFile.c_str(); }
+		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-		IKernelContext* kernelContext = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
 
-		if (!kernelContext)
+		if (!ctx)
 		{
 			std::cerr << "ERROR: impossible to create kernel context " << std::endl;
 			return;
 		}
 
-		kernelContext->initialize();
+		ctx->initialize();
 
-		OpenViBEToolkit::initialize(*kernelContext);
+		OpenViBEToolkit::initialize(*ctx);
 
-		context = kernelContext;
+		context = ctx;
 	}
 
 	void KernelFixture::tearDown()
@@ -107,4 +101,4 @@ namespace OpenViBETest
 		m_KernelLoader.uninitialize();
 		m_KernelLoader.unload();
 	}
-}
+} // namespace OpenViBETest

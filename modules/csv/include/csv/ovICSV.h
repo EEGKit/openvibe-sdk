@@ -132,9 +132,9 @@ namespace OpenViBE
 			/**
 			 * \brief Set the format type that will be written or read.
 			 *
-			 * \param typeIdentifier Could be Streamed Matrix, Signal, Covariance Matrix, etc ...
+			 * \param typeID Could be Streamed Matrix, Signal, Covariance Matrix, etc ...
 			 */
-			virtual void setFormatType(EStreamType typeIdentifier) = 0;
+			virtual void setFormatType(EStreamType typeID) = 0;
 
 			/**
 			 * \brief Return the format type
@@ -175,7 +175,7 @@ namespace OpenViBE
 			 *
 			 * \param channelNames reference to fill with file channel names
 			 * \param samplingFrequency sampling frequency
-			 * \param sampleCountPeBuffer number of sample per buffer
+			 * \param sampleCountPerBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
@@ -192,7 +192,8 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, uint32_t samplingRate) = 0;
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
+												uint32_t samplingRate) = 0;
 
 			/**
 			 * \brief get spectrum information in file
@@ -240,6 +241,7 @@ namespace OpenViBE
 			/**
 			 * \brief Get streamed or covariance matrix information in file
 			 *
+			 * \param dimensionSizes
 			 * \param labels reference to fill with file channel names
 			 *
 			 * \retval true in case of success
@@ -287,11 +289,12 @@ namespace OpenViBE
 			 * \brief Open file specified on parameter
 			 *
 			 * \param filename is the filename of the file to open
+			 * \param mode
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of error while opening the file
 			 */
-			virtual bool openFile(const std::string& fileName, EFileAccessMode mode) = 0;
+			virtual bool openFile(const std::string& filename, EFileAccessMode mode) = 0;
 
 			/**
 			 * \brief close the opened file

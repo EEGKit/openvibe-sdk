@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CLogListenerFile(const IKernelContext& rKernelContext, const CString& sApplicationName, const CString& sLogFilename);
+			CLogListenerFile(const IKernelContext& ctx, const CString& sApplicationName, const CString& sLogFilename);
 			~CLogListenerFile() override;
 			bool isActive(ELogLevel eLogLevel) override;
 			bool activate(ELogLevel eLogLevel, bool bActive) override;

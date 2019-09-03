@@ -57,7 +57,8 @@ namespace OpenViBEToolkit
 		{
 			CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-			rAlgorithmPrototype.addInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", OpenViBE::Kernel::ParameterType_Identifier);
+			rAlgorithmPrototype.addInputParameter(
+				OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", OpenViBE::Kernel::ParameterType_Identifier);
 
 			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
 			return true;

@@ -17,7 +17,7 @@ namespace System
 {
 	class CDynamicModuleSymbolLoader; // forward declare to make function declaration possible
 
-	class System_API CDynamicModule
+	class System_API CDynamicModule final
 	{
 	public:
 		enum ELogErrorCodes : unsigned int
@@ -82,9 +82,9 @@ namespace System
 		/**
 		 * \brief Load module from Windows environment. Windows only.
 		 *
-		 * \param sEnvironmentPath Environment path.
-		 * \param sModulePath Module file path.
-		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param environmentPath Environment path.
+		 * \param modulePath Module file path.
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
@@ -108,7 +108,8 @@ namespace System
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck = nullptr);
+		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath,
+							  const char* symbolNameCheck = nullptr);
 #endif
 
 #if defined TARGET_OS_Windows
@@ -210,7 +211,7 @@ namespace System
 #endif
 
 		unsigned int m_ErrorMode = 0;
-		bool m_ShouldFreeModule = true;
+		bool m_ShouldFreeModule  = true;
 		typedef void (*symbol_t)();
 
 		char m_ErrorDetails[1024];
@@ -230,7 +231,7 @@ namespace System
 		/**
 		* \brief Get a symbol from the module.
 		*
-		* \param sSymbolName Symbol name.
+		* \param symbolName Symbol name.
 		*
 		* \return The symbol.
 		*/
@@ -240,13 +241,13 @@ namespace System
 		/**
 		 * \brief Get the image file headers. Windows only.
 		 * 
-		 * \param sFileName The file path.
+		 * \param filename The file path.
 		 * \param headers [out] The header.
 		 *
 		 * \retval true In case of success.
 		 * \retval false In case of failure.
 		 */
-		static bool getImageFileHeaders(const char* filePath, IMAGE_NT_HEADERS& headers);
+		static bool getImageFileHeaders(const char* filename, IMAGE_NT_HEADERS& headers);
 #endif
 	};
 
@@ -256,8 +257,9 @@ namespace System
 		/**
 		 * \brief Get a symbol from the module.
 		 *
-		 * \param sSymbolName The symbol name.
-		 * \param pSymbol [out] The symbol.
+		 * \param dynamicModule
+		 * \param symbolName The symbol name.
+		 * \param symbol [out] The symbol.
 		 *
 		 * \retval true If the symbol exists.
 		 * \retval false If the symbol does not exist.

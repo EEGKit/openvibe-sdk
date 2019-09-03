@@ -4,5 +4,5 @@
 
 namespace DateParser
 {
-	extern Date_API char* windowsStrptime(const char* sStringToParse, const char* sDateFormat, struct tm* tmParsed);
+	extern Date_API char* windowsStrptime(const char* buf, const char* fmt, struct tm* tmParsed);
 }

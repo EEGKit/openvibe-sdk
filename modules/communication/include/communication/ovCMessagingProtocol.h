@@ -115,21 +115,21 @@ namespace Communication
 	/**
 	 * \brief A header is associated to a message. It give information about the message, like the type and the size.
 	 */
-	class Header : PacketPart
+	class Header final : PacketPart
 	{
 	public:
 		Header();
 		Header(EMessageType type, uint64_t id, uint64_t size);
 		std::vector<uint8_t> toBytes() const override;
 		void setId(uint64_t id) { m_Id = id; }
-		uint64_t getId() { return m_Id; }
+		uint64_t getId() const { return m_Id; }
 		EMessageType getType() const { return m_Type; }
-		uint64_t getSize() const{ return m_Size; }
+		uint64_t getSize() const { return m_Size; }
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
 	private:
 		EMessageType m_Type;
-		uint64_t m_Id = 0;
+		uint64_t m_Id   = 0;
 		uint64_t m_Size = 0;
 
 		static const size_t s_TypeIndex   = 0;
@@ -144,7 +144,7 @@ namespace Communication
 	/**
 	 * \brief Represent an Authentication message.
 	 */
-	class AuthenticationMessage : public Message
+	class AuthenticationMessage final : public Message
 	{
 	public:
 		AuthenticationMessage() { m_IsValid = false; }
@@ -152,7 +152,7 @@ namespace Communication
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 		EMessageType getMessageType() const override { return MessageType_Authentication; }
-		std::string getConnectionID() { return m_ConnectionID; }
+		std::string getConnectionID() const { return m_ConnectionID; }
 
 	private:
 		static const size_t s_SizeIndex         = 0;
@@ -166,33 +166,38 @@ namespace Communication
 	/**
 	 * \brief This message is used to inform the server or the client about the current communication protocol version used.
 	 */
-	class CommunicationProtocolVersionMessage : public Message
+	class CommunicationProtocolVersionMessage final : public Message
 	{
 	public:
 
 		CommunicationProtocolVersionMessage() { m_IsValid = false; }
-		CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion)	: m_MinorVersion(minorVersion), m_MajorVersion(majorVersion) { m_IsValid = true; }
+
+		CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion) : m_MinorVersion(minorVersion), m_MajorVersion(majorVersion)
+		{
+			m_IsValid = true;
+		}
+
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 		EMessageType getMessageType() const override { return MessageType_ProtocolVersion; }
-		uint8_t getMajorVersion() { return m_MajorVersion; }
-		uint8_t getMinorVersion() { return m_MinorVersion; }
+		uint8_t getMajorVersion() const { return m_MajorVersion; }
+		uint8_t getMinorVersion() const { return m_MinorVersion; }
 
 	private:
 		uint8_t m_MinorVersion = 0;
 		uint8_t m_MajorVersion = 0;
 
-		static const size_t s_MajorIndex = 0;
-		static const size_t s_MajorSize  = sizeof(uint8_t);
-		static const size_t s_MinorIndex = s_MajorIndex + s_MajorSize;
-		static const size_t s_MinorSize  = sizeof(uint8_t);
+		static const size_t s_MajorIndex  = 0;
+		static const size_t s_MajorSize   = sizeof(uint8_t);
+		static const size_t s_MinorIndex  = s_MajorIndex + s_MajorSize;
+		static const size_t s_MinorSize   = sizeof(uint8_t);
 		static const size_t s_MinimumSize = s_MajorSize + s_MinorSize;
 	};
 
 	/**
 	 * \brief InputOutput class describes the input or output of a box.
 	 */
-	class InputOutput : public PacketPart
+	class InputOutput final : public PacketPart
 	{
 	public:
 		InputOutput();
@@ -218,7 +223,7 @@ namespace Communication
 		static const size_t s_MinimumSize   = s_IdSize + s_TypeSize + s_NameSizeSize;
 	};
 
-	class Parameter : public PacketPart
+	class Parameter final : public PacketPart
 	{
 	public:
 		Parameter();
@@ -229,10 +234,10 @@ namespace Communication
 		uint32_t getId() const { return m_Id; }
 		uint64_t getType() const { return m_Type; }
 		std::string getName() const { return m_Name; }
-		std::string getValue() const{ return m_Value; }
+		std::string getValue() const { return m_Value; }
 
 	private:
-		uint32_t m_Id = 0;
+		uint32_t m_Id   = 0;
 		uint64_t m_Type = 0;
 		std::string m_Name;
 		std::string m_Value;
@@ -265,20 +270,20 @@ namespace Communication
 
 		const std::vector<InputOutput>* getInputs() const { return &m_Inputs; }
 		const std::vector<InputOutput>* getOutputs() const { return &m_Outputs; }
-		const std::vector<Parameter>* getParameters() const{ return &m_Parameters; }
+		const std::vector<Parameter>* getParameters() const { return &m_Parameters; }
 
 	private:
 		std::vector<InputOutput> m_Inputs;
 		std::vector<InputOutput> m_Outputs;
 		std::vector<Parameter> m_Parameters;
 
-		static const size_t s_InputCountIndex = 0;
-		static const size_t s_InputCountSize  = sizeof(uint32_t);
-		static const size_t s_OutputCountIndex = s_InputCountIndex + s_InputCountSize;
-		static const size_t s_OutputCountSize  = sizeof(uint32_t);
+		static const size_t s_InputCountIndex     = 0;
+		static const size_t s_InputCountSize      = sizeof(uint32_t);
+		static const size_t s_OutputCountIndex    = s_InputCountIndex + s_InputCountSize;
+		static const size_t s_OutputCountSize     = sizeof(uint32_t);
 		static const size_t s_ParameterCountIndex = s_OutputCountIndex + s_OutputCountSize;
 		static const size_t s_ParameterCountSize  = sizeof(uint32_t);
-		static const size_t s_MinimumSize = s_InputCountSize + s_OutputCountSize + s_ParameterCountSize;
+		static const size_t s_MinimumSize         = s_InputCountSize + s_OutputCountSize + s_ParameterCountSize;
 	};
 
 	/**
@@ -300,11 +305,11 @@ namespace Communication
 		ELogLevel m_Type;
 		std::string m_Message;
 
-		static const size_t s_TypeIndex = 0;
-		static const size_t s_TypeSize  = sizeof(ELogLevel);
-		static const size_t s_SizeIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_SizeSize  = sizeof(uint32_t);
-		static const size_t s_NameIndex = s_SizeIndex + s_SizeSize;
+		static const size_t s_TypeIndex   = 0;
+		static const size_t s_TypeSize    = sizeof(ELogLevel);
+		static const size_t s_SizeIndex   = s_TypeIndex + s_TypeSize;
+		static const size_t s_SizeSize    = sizeof(uint32_t);
+		static const size_t s_NameIndex   = s_SizeIndex + s_SizeSize;
 		static const size_t s_MinimumSize = s_TypeSize + s_SizeSize;
 	};
 
@@ -323,15 +328,15 @@ namespace Communication
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
 		EMessageType getMessageType() const override { return MessageType_EBML; }
-		uint32_t getIndex() const{ return m_IOIndex; }
+		uint32_t getIndex() const { return m_IOIndex; }
 		uint64_t getStartTime() const { return m_StartTime; }
 		uint64_t getEndTime() const { return m_EndTime; }
 		std::shared_ptr<const std::vector<uint8_t>> getEBML() const { return m_EBML; }
 
 	private:
-		uint32_t m_IOIndex = 0;
+		uint32_t m_IOIndex   = 0;
 		uint64_t m_StartTime = 0;
-		uint64_t m_EndTime = 0;
+		uint64_t m_EndTime   = 0;
 
 		std::shared_ptr<const std::vector<uint8_t>> m_EBML;
 
@@ -363,7 +368,7 @@ namespace Communication
 
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
-	
+
 		EMessageType getMessageType() const override { return MessageType_Error; }
 		EError getType() const { return m_Type; }
 		uint64_t getGuiltyId() const { return m_GuiltyId; }
@@ -387,7 +392,7 @@ namespace Communication
 	public:
 		EndMessage() {}
 		std::vector<uint8_t> toBytes() const override { return std::vector<uint8_t>(); }
-		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override { return false; }
+		bool fromBytes(const std::vector<uint8_t>& /*buffer*/, size_t& /*index*/) override { return false; }
 		EMessageType getMessageType() const override { return MessageType_End; }
 	};
 
@@ -401,14 +406,14 @@ namespace Communication
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
-		EMessageType getMessageType() const override{ return MessageType_Time; }
+		EMessageType getMessageType() const override { return MessageType_Time; }
 		uint64_t getTime() const { return m_Time; }
 
 	private:
 		uint64_t m_Time = 0;
 
-		static const size_t s_TimeIndex = 0;
-		static const size_t s_TimeSize  = sizeof(uint64_t);
+		static const size_t s_TimeIndex   = 0;
+		static const size_t s_TimeSize    = sizeof(uint64_t);
 		static const size_t s_MinimumSize = s_TimeSize;
 	};
 
@@ -420,7 +425,7 @@ namespace Communication
 	public:
 		SyncMessage() {}
 		std::vector<uint8_t> toBytes() const override { return std::vector<uint8_t>(); }
-		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override { return false; }
+		bool fromBytes(const std::vector<uint8_t>& /*buffer*/, size_t& /*index*/) override { return false; }
 		EMessageType getMessageType() const override { return MessageType_Sync; }
 	};
 }

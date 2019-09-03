@@ -6,7 +6,7 @@
 
 namespace OpenViBEToolkit
 {
-	class CSignalTrialSet : public ISignalTrialSet
+	class CSignalTrialSet final : public ISignalTrialSet
 	{
 	public:
 		bool addSignalTrial(ISignalTrial& rSignalTrial) override;

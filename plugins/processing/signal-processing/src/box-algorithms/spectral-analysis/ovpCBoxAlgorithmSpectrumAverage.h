@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectrumAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpectrumAverage final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -19,10 +19,10 @@ namespace OpenViBEPlugins
 			// virtual uint64_t getClockFrequency();
 			bool initialize() override;
 			bool uninitialize() override;
-			// virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent);
-			// virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal);
-			// virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			bool processInput(const uint32_t ui32InputIndex) override;
+			// virtual bool processEvent(OpenViBE::CMessageEvent& messageEvent);
+			// virtual bool processSignal(OpenViBE::CMessageSignal& messageSignal);
+			// virtual bool processClock(OpenViBE::CMessageClock& messageClock);
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpectrumAverage)
@@ -43,14 +43,19 @@ namespace OpenViBEPlugins
 			std::vector<uint32_t> m_vSelectedIndices;
 		};
 
-		class CBoxAlgorithmSpectrumAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSpectrumAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Spectrum Average"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes the average of all the frequency band powers for a spectrum"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Computes the average of all the frequency band powers for a spectrum");
+			}
+
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }

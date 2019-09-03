@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace Streaming
 	{
-		class CBoxAlgorithmSignalMerger : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSignalMerger final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -29,22 +29,22 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_pStreamEncoder = nullptr;
 		};
 
-		class CBoxAlgorithmSignalMergerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmSignalMergerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
 				char l_sInputName[1024];
 				sprintf(l_sInputName, "Input %i", index + 1);
-				rBox.setInputName(index, l_sInputName);
-				rBox.setInputType(index, OV_TypeId_Signal);
+				box.setInputName(index, l_sInputName);
+				box.setInputType(index, OV_TypeId_Signal);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmSignalMergerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSignalMergerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

@@ -12,7 +12,7 @@ uint64_t CBoxAlgorithmClockStimulator::getClockFrequency() { return (1LL << 32) 
 
 bool CBoxAlgorithmClockStimulator::initialize()
 {
-	double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	const double minInterstimulationInterval = 0.0001;
 	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval),
@@ -38,7 +38,7 @@ bool CBoxAlgorithmClockStimulator::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& /*messageClock*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
@@ -47,9 +47,9 @@ bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmClockStimulator::process()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
+	const uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
 	CStimulationSet l_oStimulationSet;
 	l_oStimulationSet.setStimulationCount(0);
@@ -64,12 +64,12 @@ bool CBoxAlgorithmClockStimulator::process()
 	if (l_ui64CurrentTime == 0)
 	{
 		m_oStimulationEncoder.encodeHeader();
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
+		boxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
 	}
 	m_oStimulationEncoder.getInputStimulationSet() = &l_oStimulationSet;
 
 	m_oStimulationEncoder.encodeBuffer();
-	l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64CurrentTime);
+	boxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64CurrentTime);
 
 	m_ui64LastEndTime = l_ui64CurrentTime;
 

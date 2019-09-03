@@ -8,66 +8,49 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
 
-CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
-	: TKernelObject<IBoxProto>(rKernelContext), m_rBox(rBox) {}
+CBoxProto::CBoxProto(const IKernelContext& ctx, IBox& box)
+	: TKernelObject<IBoxProto>(ctx), m_rBox(box) {}
 
-bool CBoxProto::addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier, const bool bNotify)
+bool CBoxProto::addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier, const bool bNotify)
 {
-	if (!m_rBox.addInput(sName, rTypeIdentifier, oIdentifier, bNotify)) { return false; }
+	if (!m_rBox.addInput(name, typeID, identifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getInputCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount))
-	{
-		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, l_sBuffer);
-	}
-	else
-	{
-		m_rBox.addAttribute(OV_AttributeId_Box_InitialInputCount, l_sBuffer);
-	}
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, l_sBuffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialInputCount, l_sBuffer); }
 
 	return true;
 }
 
-bool CBoxProto::addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
+bool CBoxProto::addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier, const bool bNotify)
 {
-	if (!m_rBox.addOutput(sName, rTypeIdentifier, rIdentifier, bNotify)) { return false; }
+	if (!m_rBox.addOutput(name, typeID, identifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getOutputCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount))
-	{
-		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, l_sBuffer);
-	}
-	else
-	{
-		m_rBox.addAttribute(OV_AttributeId_Box_InitialOutputCount, l_sBuffer);
-	}
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, l_sBuffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialOutputCount, l_sBuffer); }
 
 	return true;
 }
 
-bool CBoxProto::addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
+bool CBoxProto::addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue, const bool bModifiable,
+						   const CIdentifier& identifier, const bool bNotify)
 {
-	if (!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify)) { return false; }
+	if (!m_rBox.addSetting(name, typeID, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, identifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getSettingCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount))
-	{
-		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, l_sBuffer);
-	}
-	else
-	{
-		m_rBox.addAttribute(OV_AttributeId_Box_InitialSettingCount, l_sBuffer);
-	}
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, l_sBuffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialSettingCount, l_sBuffer); }
 
 	return true;
 }
 /*
-uint32_t CBoxProto::addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue, const bool bModifiable)
+uint32_t CBoxProto::addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue, const bool bModifiable)
 {
-	addSetting(sName, rTypeIdentifier, sDefaultValue);
+	addSetting(name, typeID, sDefaultValue);
 	uint32_t l_ui32LastSetting = m_rBox.getSettingCount();
 	m_rBox.setSettingMod(l_ui32LastSetting, bModifiable);
 	return true;
@@ -108,6 +91,6 @@ bool CBoxProto::addFlag(const CIdentifier& cIdentifierFlag)
 	return true;
 }
 
-bool CBoxProto::addInputSupport(const CIdentifier& rTypeIdentifier) { return m_rBox.addInputSupport(rTypeIdentifier); }
+bool CBoxProto::addInputSupport(const CIdentifier& typeID) { return m_rBox.addInputSupport(typeID); }
 
-bool CBoxProto::addOutputSupport(const CIdentifier& rTypeIdentifier) { return m_rBox.addOutputSupport(rTypeIdentifier); }
+bool CBoxProto::addOutputSupport(const CIdentifier& typeID) { return m_rBox.addOutputSupport(typeID); }

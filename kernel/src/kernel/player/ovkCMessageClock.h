@@ -13,10 +13,11 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CMessageClock(const IKernelContext& rKernelContext)
-				: TMessage<TKernelObject<IMessageClock>>(rKernelContext) { }
+			explicit CMessageClock(const IKernelContext& ctx)
+				: TMessage<TKernelObject<IMessageClock>>(ctx) { }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >, OVK_ClassId_Kernel_Player_MessageClock)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >,
+									   OVK_ClassId_Kernel_Player_MessageClock)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

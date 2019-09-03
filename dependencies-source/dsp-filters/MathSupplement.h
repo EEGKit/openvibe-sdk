@@ -49,23 +49,14 @@ namespace Dsp
 	typedef std::pair<complex_t, complex_t> complex_pair_t;
 
 	template <typename Real>
-	std::complex<Real> solve_quadratic_1(Real a, Real b, Real c)
-	{
-		return (-b + sqrt(std::complex<Real>(b * b - 4 * a * c, 0))) / (2. * a);
-	}
+	std::complex<Real> solve_quadratic_1(Real a, Real b, Real c) { return (-b + sqrt(std::complex<Real>(b * b - 4 * a * c, 0))) / (2. * a); }
 
 	template <typename Real>
-	std::complex<Real> solve_quadratic_2(Real a, Real b, Real c)
-	{
-		return (-b - sqrt(std::complex<Real>(b * b - 4 * a * c, 0))) / (2. * a);
-	}
+	std::complex<Real> solve_quadratic_2(Real a, Real b, Real c) { return (-b - sqrt(std::complex<Real>(b * b - 4 * a * c, 0))) / (2. * a); }
 
-	inline const complex_t infinity()
-	{
-		return complex_t(std::numeric_limits<double>::infinity());
-	}
+	inline complex_t infinity() { return complex_t(std::numeric_limits<double>::infinity()); }
 
-	inline const complex_t adjust_imag(const complex_t& c)
+	inline complex_t adjust_imag(const complex_t& c)
 	{
 		if (fabs(c.imag()) < 1e-30) { return complex_t(c.real(), 0); }
 		return c;

@@ -36,10 +36,10 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamDecoder)
 
 			// ebml callbacks
-			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
-			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
-			virtual void closeChild();
+			virtual bool isMasterChild(const EBML::CIdentifier& identifier);
+			virtual void openChild(const EBML::CIdentifier& identifier);
+			virtual void processChildData(const void* /*buffer*/, const uint64_t /*size*/) { }
+			virtual void closeChild() { }
 
 		protected:
 
@@ -55,7 +55,9 @@ namespace OpenViBEPlugins
 		public:
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
+					OpenViBE::Kernel::ParameterType_MemoryBuffer);
 
 				rAlgorithmPrototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader, "Received header");
 				rAlgorithmPrototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");

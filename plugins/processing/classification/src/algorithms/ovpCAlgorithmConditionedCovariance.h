@@ -1,6 +1,6 @@
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #pragma once
+
+#if defined TARGET_HAS_ThirdPartyEIGEN
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CAlgorithmConditionedCovariance : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmConditionedCovariance final : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 		};
 
-		class CAlgorithmConditionedCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmConditionedCovarianceDesc final : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }
@@ -46,7 +46,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes covariance with shrinkage."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular."); }
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
@@ -57,12 +63,16 @@ namespace OpenViBEPlugins
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage, "Shrinkage (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet, "Feature vectors", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage, "Shrinkage (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(
+					OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet, "Feature vectors", OpenViBE::Kernel::ParameterType_Matrix);
 
 				// The algorithm returns these outputs
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;
 			}

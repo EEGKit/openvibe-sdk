@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 		 * Pairwise neural network classifiers with probabilistic outputs. In G. Tesauro, D. Touretzky, and T. Leen (eds.)
 		 * Advances in Neural Information Processing Systems 7 (NIPS-94), pp. 1109-1116. MIT Press, 1995.
 		 */
-		class CAlgorithmPairwiseStrategyPKPD : virtual public CAlgorithmPairwiseDecision
+		class CAlgorithmPairwiseStrategyPKPD final : virtual public CAlgorithmPairwiseDecision
 		{
 		public:
 
@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32ClassCount = 0;
 		};
 
-		class CAlgorithmPairwiseStrategyPKPDDesc : virtual public CAlgorithmPairwiseDecisionDesc
+		class CAlgorithmPairwiseStrategyPKPDDesc final : virtual public CAlgorithmPairwiseDecisionDesc
 		{
 		public:
 			void release() override { }

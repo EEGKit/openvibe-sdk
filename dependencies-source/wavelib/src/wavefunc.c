@@ -5,7 +5,7 @@ void meyer(int N, double lb, double ub, double* phi, double* psi, double* tgrid)
 	int i;
 	double theta, x, x2, x3, x4, v, cs;
 
-	int M = divideby(N, 2);
+	const int M = divideby(N, 2);
 
 	if (M == 0)
 	{
@@ -18,13 +18,13 @@ void meyer(int N, double lb, double ub, double* phi, double* psi, double* tgrid)
 		exit(1);
 	}
 
-	fft_object obj = fft_init(N, -1);
-	double* w      = (double*)malloc(sizeof(double) * N);
-	fft_data* phiw = (fft_data*)malloc(sizeof(fft_data) * N);
-	fft_data* psiw = (fft_data*)malloc(sizeof(fft_data) * N);
-	fft_data* oup  = (fft_data*)malloc(sizeof(fft_data) * N);
+	const fft_object obj = fft_init(N, -1);
+	double* w            = (double*)malloc(sizeof(double) * N);
+	fft_data* phiw       = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* psiw       = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* oup        = (fft_data*)malloc(sizeof(fft_data) * N);
 
-	double delta = 2 * (ub - lb) / PI2;
+	const double delta = 2 * (ub - lb) / PI2;
 
 	double j = (double)N;
 	j *= -1.0;
@@ -40,21 +40,18 @@ void meyer(int N, double lb, double ub, double* phi, double* psi, double* tgrid)
 
 	for (i = 0; i < N; ++i)
 	{
-		double wf = fabs(w[i]);
-		if (wf <= PI2 / 3.0)
-		{
-			phiw[i].re = 1.0;
-		}
+		const double wf = fabs(w[i]);
+		if (wf <= PI2 / 3.0) { phiw[i].re = 1.0; }
 		if (wf > PI2 / 3.0 && wf <= 2 * PI2 / 3.0)
 		{
-			x         = (3 * wf / PI2) - 1.0;
-			x2        = x * x;
-			x3        = x2 * x;
-			x4        = x3 * x;
-			v         = x4 * (35 - 84 * x + 70 * x2 - 20 * x3);
-			theta     = v * PI2 / 4.0;
-			cs        = cos(theta);
-			double sn = sin(theta);
+			x               = (3 * wf / PI2) - 1.0;
+			x2              = x * x;
+			x3              = x2 * x;
+			x4              = x3 * x;
+			v               = x4 * (35 - 84 * x + 70 * x2 - 20 * x3);
+			theta           = v * PI2 / 4.0;
+			cs              = cos(theta);
+			const double sn = sin(theta);
 
 			phiw[i].re = cs;
 			psiw[i].re = cos(w[i] / 2.0) * sn;
@@ -104,12 +101,12 @@ void gauss(int N, int p, double lb, double ub, double* psi, double* t)
 		exit(1);
 	}
 
-	t[0]         = lb;
-	t[N - 1]     = ub;
-	double delta = (ub - lb) / (N - 1);
+	t[0]               = lb;
+	t[N - 1]           = ub;
+	const double delta = (ub - lb) / (N - 1);
 	for (i = 1; i < N - 1; ++i) { t[i] = lb + delta * i; }
 
-	double den = sqrt(gamma(p + 0.5));
+	const double den = sqrt(gamma(p + 0.5));
 
 	if ((p + 1) % 2 == 0) { num = 1.0; }
 	else { num = -1.0; }
@@ -118,13 +115,7 @@ void gauss(int N, int p, double lb, double ub, double* psi, double* t)
 	
 	//printf("\n%g\n",num);
 
-	if (p == 1)
-	{
-		for (i = 0; i < N; ++i)
-		{
-			psi[i] = -t[i] * exp(- t[i] * t[i] / 2.0) * num;
-		}
-	}
+	if (p == 1) { for (i = 0; i < N; ++i) { psi[i] = -t[i] * exp(- t[i] * t[i] / 2.0) * num; } }
 	else if (p == 2)
 	{
 		for (i = 0; i < N; ++i)
@@ -207,10 +198,7 @@ void gauss(int N, int p, double lb, double ub, double* psi, double* t)
 	}
 }
 
-void mexhat(int N, double lb, double ub, double* psi, double* t)
-{
-	gauss(N, 2, lb, ub, psi, t);
-}
+void mexhat(int N, double lb, double ub, double* psi, double* t) { gauss(N, 2, lb, ub, psi, t); }
 
 void morlet(int N, double lb, double ub, double* psi, double* t)
 {
@@ -222,13 +210,10 @@ void morlet(int N, double lb, double ub, double* psi, double* t)
 		exit(1);
 	}
 
-	t[0]         = lb;
-	t[N - 1]     = ub;
-	double delta = (ub - lb) / (N - 1);
+	t[0]               = lb;
+	t[N - 1]           = ub;
+	const double delta = (ub - lb) / (N - 1);
 	for (i = 1; i < N - 1; ++i) { t[i] = lb + delta * i; }
 
-	for (i = 0; i < N; ++i)
-	{
-		psi[i] = exp(- t[i] * t[i] / 2.0) * cos(5 * t[i]);
-	}
+	for (i = 0; i < N; ++i) { psi[i] = exp(- t[i] * t[i] / 2.0) * cos(5 * t[i]); }
 }

@@ -2,18 +2,13 @@
 
 using namespace EBML;
 
-CWriter::CWriter(IWriterCallback& rWriterCallback){
-	m_pWriterImplementation = createWriter(rWriterCallback);
-}
+CWriter::CWriter(IWriterCallback& rWriterCallback) { m_pWriterImplementation = createWriter(rWriterCallback); }
 
 CWriter::~CWriter() { m_pWriterImplementation->release(); }
 
-bool CWriter::openChild(const CIdentifier& rIdentifier) { return m_pWriterImplementation->openChild(rIdentifier); }
+bool CWriter::openChild(const CIdentifier& identifier) { return m_pWriterImplementation->openChild(identifier); }
 
-bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
-{
-	return m_pWriterImplementation->setChildData(pBuffer, ui64BufferSize);
-}
+bool CWriter::setChildData(const void* buffer, const uint64_t size) { return m_pWriterImplementation->setChildData(buffer, size); }
 
 bool CWriter::closeChild() { return m_pWriterImplementation->closeChild(); }
 

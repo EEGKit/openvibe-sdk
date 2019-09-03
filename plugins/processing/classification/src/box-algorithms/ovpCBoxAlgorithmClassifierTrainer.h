@@ -18,12 +18,12 @@
 
 namespace
 {
-	const char* const c_sTrainTriggerSettingName       = "Train trigger";
-	const char* const c_sFilenameSettingName           = "Filename to save configuration to";
-	const char* const c_sMulticlassStrategySettingName = "Multiclass strategy to apply";
-	const char* const c_sAlgorithmSettingName          = "Algorithm to use";
-	const char* const c_sKFoldSettingName              = "Number of partitions for k-fold cross-validation test";
-	const char* const c_sBalanceSettingName            = "Balance classes";
+	const char* const TRAIN_TRIGGER_SETTING_NAME       = "Train trigger";
+	const char* const FILENAME_SETTING_NAME            = "Filename to save configuration to";
+	const char* const MULTICLASS_STRATEGY_SETTING_NAME = "Multiclass strategy to apply";
+	const char* const ALGORITHM_SETTING_NAME           = "Algorithm to use";
+	const char* const FOLD_SETTING_NAME                = "Number of partitions for k-fold cross-validation test";
+	const char* const BALANCE_SETTING_NAME             = "Balance classes";
 }
 
 
@@ -31,13 +31,13 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmClassifierTrainer : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClassifierTrainer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierTrainer)
@@ -52,8 +52,9 @@ namespace OpenViBEPlugins
 				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual bool train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t startIdx, size_t stopIndex); 
-			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t uiStartIndex, size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
+			virtual bool train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t startIdx, size_t stopIdx);
+			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t uiStartIndex,
+									   size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
 			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
 			virtual bool balanceDataset();
 
@@ -80,15 +81,24 @@ namespace OpenViBEPlugins
 			std::vector<SFeatureVector> m_vBalancedDataset;
 		};
 
-		class CBoxAlgorithmClassifierTrainerDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmClassifierTrainerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Classifier trainer"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Generic classifier trainer, relying on several box algorithms"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Performs classifier training with cross-validation -based error estimation"); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Generic classifier trainer, relying on several box algorithms");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Performs classifier training with cross-validation -based error estimation");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Classification"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
@@ -105,18 +115,18 @@ namespace OpenViBEPlugins
 
 				prototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
 
-				prototype.addSetting(c_sTrainTriggerSettingName, OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
-				prototype.addSetting(c_sFilenameSettingName, OV_TypeId_Filename, "${Path_UserData}/my-classifier.xml");
+				prototype.addSetting(TRAIN_TRIGGER_SETTING_NAME, OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
+				prototype.addSetting(FILENAME_SETTING_NAME, OV_TypeId_Filename, "${Path_UserData}/my-classifier.xml");
 
-				prototype.addSetting(c_sMulticlassStrategySettingName, OVTK_TypeId_ClassificationStrategy, "Native");
+				prototype.addSetting(MULTICLASS_STRATEGY_SETTING_NAME, OVTK_TypeId_ClassificationStrategy, "Native");
 				//Pairing startegy argument
 				//Class label
 
-				prototype.addSetting(c_sAlgorithmSettingName, OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)");
+				prototype.addSetting(ALGORITHM_SETTING_NAME, OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)");
 				//Argument of algorithm
 
-				prototype.addSetting(c_sKFoldSettingName, OV_TypeId_Integer, "10");
-				prototype.addSetting(c_sBalanceSettingName, OV_TypeId_Boolean, "false");
+				prototype.addSetting(FOLD_SETTING_NAME, OV_TypeId_Integer, "10");
+				prototype.addSetting(BALANCE_SETTING_NAME, OV_TypeId_Boolean, "false");
 
 				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
@@ -124,7 +134,11 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCommonClassifierListener(OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override
+			{
+				return new CBoxAlgorithmCommonClassifierListener(OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount);
+			}
+
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierTrainerDesc)

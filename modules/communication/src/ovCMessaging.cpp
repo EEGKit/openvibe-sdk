@@ -91,10 +91,7 @@ void CMessaging::reset()
 
 CMessaging::ELibraryError CMessaging::getLastError() const { return impl->m_LastLibraryError; }
 
-void CMessaging::setLastError(const ELibraryError libraryError)
-{
-	impl->m_LastLibraryError = libraryError;
-}
+void CMessaging::setLastError(const ELibraryError libraryError) { impl->m_LastLibraryError = libraryError; }
 
 bool CMessaging::push()
 {
@@ -125,7 +122,8 @@ bool CMessaging::pull()
 
 	while (impl->m_Connection->isReadyToReceive(1))
 	{
-		uint_fast32_t bytesReceived = impl->m_Connection->receiveBuffer(impl->m_TemporaryRcvBuffer.data(), static_cast<unsigned int>(impl->m_TemporaryRcvBuffer.size()));
+		uint_fast32_t bytesReceived = impl->m_Connection->receiveBuffer(impl->m_TemporaryRcvBuffer.data(),
+																		static_cast<unsigned int>(impl->m_TemporaryRcvBuffer.size()));
 
 		if (bytesReceived == 0)
 		{
@@ -153,10 +151,7 @@ bool CMessaging::processIncomingMessages()
 		}
 
 		// If the processing succeed, we erase the buffer part processed. 
-		if (byteRead != 0)
-		{
-			impl->m_RcvBuffer.erase(impl->m_RcvBuffer.begin(), impl->m_RcvBuffer.begin() + static_cast<const long>(byteRead));
-		}
+		if (byteRead != 0) { impl->m_RcvBuffer.erase(impl->m_RcvBuffer.begin(), impl->m_RcvBuffer.begin() + static_cast<const long>(byteRead)); }
 		else
 		{
 			// The processing succeed but the byte count read is 0 so more data is waited.
@@ -251,10 +246,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 				return false;
 			}
 
-			if (ebml.getIndex() >= impl->m_BoxDescription.getOutputs()->size())
-			{
-				this->pushMessage(ErrorMessage(Error_InvalidOutputIndex, header.getId()));
-			}
+			if (ebml.getIndex() >= impl->m_BoxDescription.getOutputs()->size()) { this->pushMessage(ErrorMessage(Error_InvalidOutputIndex, header.getId())); }
 
 			std::lock_guard<std::mutex> lock(impl->m_IncEBMLMutex);
 			impl->m_IncomingEBMLs.emplace(header.getId(), ebml);
@@ -277,10 +269,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case MessageType_End:
-		{
-			impl->m_IsEndMessageReceived = true;
-		}
+		case MessageType_End: { impl->m_IsEndMessageReceived = true; }
 		break;
 
 		case MessageType_Error:
@@ -314,10 +303,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case MessageType_Sync:
-		{
-			impl->m_WasSyncMessageReceived = true;
-		}
+		case MessageType_Sync: { impl->m_WasSyncMessageReceived = true; }
 		break;
 
 		case MessageType_Unknown:
@@ -392,10 +378,7 @@ void CMessaging::sync()
 	}
 }
 
-void CMessaging::setConnection(Socket::IConnection* connection)
-{
-	impl->m_Connection = connection;
-}
+void CMessaging::setConnection(Socket::IConnection* connection) { impl->m_Connection = connection; }
 
 bool CMessaging::startSyncing()
 {
@@ -505,10 +488,7 @@ bool CMessaging::popEnd(uint64_t& id)
 	return true;
 }
 
-void CMessaging::setConnectionID(const std::string& connectionID)
-{
-	impl->m_ConnectionID = connectionID;
-}
+void CMessaging::setConnectionID(const std::string& connectionID) { impl->m_ConnectionID = connectionID; }
 
 bool CMessaging::waitForSyncMessage()
 {

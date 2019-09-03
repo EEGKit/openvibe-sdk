@@ -29,8 +29,8 @@ bool CMatlabGenerator::openFile(const char* sFilename)
 
 bool CMatlabGenerator::appendStimulation(SStimulation& rStim)
 {
-	m_oFile << "\tglobal " << rStim.m_sId << ";" << endl;
-	m_oFile << "\t" << rStim.m_sId << " = uint64_t(hex2dec('" << getBrutHexaCode(rStim.m_sHexaCode) << "'));" << endl << endl;
+	m_oFile << "\tglobal " << rStim.m_Id << ";" << endl;
+	m_oFile << "\t" << rStim.m_Id << " = uint64_t(hex2dec('" << getBrutHexaCode(rStim.m_HexaCode) << "'));" << endl << endl;
 	return true;
 }
 

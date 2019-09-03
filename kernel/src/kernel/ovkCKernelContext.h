@@ -64,7 +64,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CKernelContextBridge(const IKernelContext& rKernelContext) : m_kernelContext(rKernelContext) { }
+			explicit CKernelContextBridge(const IKernelContext& ctx) : m_kernelContext(ctx) { }
 
 			virtual bool initialize() { return true; }
 			bool uninitialize() override { return true; }
@@ -79,9 +79,22 @@ namespace OpenViBE
 			void setTypeManager(ITypeManager* pTypeManager) { m_pTypeManager = pTypeManager; }
 			void setLogManager(ILogManager* pLogManager) { m_pLogManager = pLogManager; }
 			void setErrorManager(IErrorManager* pErrorManager) { m_pErrorManager = pErrorManager; }
-			IAlgorithmManager& getAlgorithmManager() const override { return m_pAlgorithmManager ? *m_pAlgorithmManager : m_kernelContext.getAlgorithmManager(); }
-			IConfigurationManager& getConfigurationManager() const override { return m_pConfigurationManager ? *m_pConfigurationManager : m_kernelContext.getConfigurationManager(); }
-			IKernelObjectFactory& getKernelObjectFactory() const override { return m_pKernelObjectFactory ? *m_pKernelObjectFactory : m_kernelContext.getKernelObjectFactory(); }
+
+			IAlgorithmManager& getAlgorithmManager() const override
+			{
+				return m_pAlgorithmManager ? *m_pAlgorithmManager : m_kernelContext.getAlgorithmManager();
+			}
+
+			IConfigurationManager& getConfigurationManager() const override
+			{
+				return m_pConfigurationManager ? *m_pConfigurationManager : m_kernelContext.getConfigurationManager();
+			}
+
+			IKernelObjectFactory& getKernelObjectFactory() const override
+			{
+				return m_pKernelObjectFactory ? *m_pKernelObjectFactory : m_kernelContext.getKernelObjectFactory();
+			}
+
 			IPlayerManager& getPlayerManager() const override { return m_pPlayerManager ? *m_pPlayerManager : m_kernelContext.getPlayerManager(); }
 			IPluginManager& getPluginManager() const override { return m_pPluginManager ? *m_pPluginManager : m_kernelContext.getPluginManager(); }
 			IMetaboxManager& getMetaboxManager() const override { return m_pMetaboxManager ? *m_pMetaboxManager : m_kernelContext.getMetaboxManager(); }

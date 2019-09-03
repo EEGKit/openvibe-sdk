@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-class CReaderCallBack : public XML::IReaderCallBack
+class CReaderCallBack final : public XML::IReaderCallBack
 {
 public:
 
@@ -62,21 +62,12 @@ protected:
 		currentNode       = node;
 		currentNode->name = name;
 
-		for (uint64_t i = 0; i < attributeCount; i++)
-		{
-			currentNode->attributes[attributeName[i]] = attributeValue[i];
-		}
+		for (uint64_t i = 0; i < attributeCount; i++) { currentNode->attributes[attributeName[i]] = attributeValue[i]; }
 	}
 
 	void processChildData(const char* data) override { currentNode->data = data; }
 
-	void closeChild() override
-	{
-		if (currentNode->parent)
-		{
-			currentNode = currentNode->parent;
-		}
-	}
+	void closeChild() override { if (currentNode->parent) { currentNode = currentNode->parent; } }
 };
 
 TEST(XML_Reader_Test_Case, validateReader)

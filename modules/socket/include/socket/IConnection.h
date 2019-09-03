@@ -17,11 +17,11 @@ namespace Socket
 		virtual bool isReadyToSend(const uint32_t ui32TimeOut = 0) const = 0;
 		virtual bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const = 0;
 
-		virtual uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) = 0;
-		virtual uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) = 0;
+		virtual uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) = 0;
+		virtual uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) = 0;
 
-		virtual bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) = 0;
-		virtual bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) = 0;
+		virtual bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) = 0;
+		virtual bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) = 0;
 
 		virtual bool isConnected() const = 0;
 

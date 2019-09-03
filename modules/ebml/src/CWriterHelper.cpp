@@ -2,9 +2,7 @@
 
 using namespace EBML;
 
-CWriterHelper::CWriterHelper(){
-	m_pWriterHelperImplementation = createWriterHelper();
-}
+CWriterHelper::CWriterHelper() { m_pWriterHelperImplementation = createWriterHelper(); }
 
 CWriterHelper::~CWriterHelper() { m_pWriterHelperImplementation->release(); }
 
@@ -12,7 +10,7 @@ bool CWriterHelper::connect(IWriter* pWriter) { return m_pWriterHelperImplementa
 
 bool CWriterHelper::disconnect() { return m_pWriterHelperImplementation->disconnect(); }
 
-bool CWriterHelper::openChild(const CIdentifier& rIdentifier) { return m_pWriterHelperImplementation->openChild(rIdentifier); }
+bool CWriterHelper::openChild(const CIdentifier& identifier) { return m_pWriterHelperImplementation->openChild(identifier); }
 
 bool CWriterHelper::closeChild() { return m_pWriterHelperImplementation->closeChild(); }
 
@@ -24,9 +22,9 @@ bool CWriterHelper::setFloat32AsChildData(const float fValue) { return m_pWriter
 
 bool CWriterHelper::setFloat64AsChildData(const double fValue) { return m_pWriterHelperImplementation->setFloat64AsChildData(fValue); }
 
-bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* buffer, const uint64_t ui64BufferLength)
 {
-	return m_pWriterHelperImplementation->setBinaryAsChildData(pBuffer, ui64BufferLength);
+	return m_pWriterHelperImplementation->setBinaryAsChildData(buffer, ui64BufferLength);
 }
 
 bool CWriterHelper::setASCIIStringAsChildData(const char* sValue) { return m_pWriterHelperImplementation->setASCIIStringAsChildData(sValue); }

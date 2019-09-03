@@ -19,14 +19,14 @@ namespace OpenViBEPlugins
 		 * \brief The class CBoxAlgorithmTimeout describes the box Timeout.
 		 *
 		 */
-		class CBoxAlgorithmTimeout : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeout final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processClock(OpenViBE::CMessageClock& messageClock) override;
+			bool processInput(const uint32_t index) override;
 			uint64_t getClockFrequency() override;
 			bool process() override;
 
@@ -59,15 +59,25 @@ namespace OpenViBEPlugins
 		 * \brief Descriptor of the box Timeout.
 		 *
 		 */
-		class CBoxAlgorithmTimeoutDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmTimeoutDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Timeout"); }
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legény"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
+
+			OpenViBE::CString getShortDescription() const override
+			{
+				return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal");
+			}
+
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString(
+					"Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection.");
+			}
+
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }

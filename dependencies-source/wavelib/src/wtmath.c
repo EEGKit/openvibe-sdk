@@ -11,16 +11,13 @@ int upsamp(double* x, int lenx, int M, double* y)
 
 	if (M == 0)
 	{
-		for (i = 0; i < lenx; ++i)
-		{
-			y[i] = x[i];
-		}
+		for (i = 0; i < lenx; ++i) { y[i] = x[i]; }
 		return lenx;
 	}
 
-	int N = M * (lenx - 1) + 1;
-	int j = 1;
-	int k = 0;
+	const int N = M * (lenx - 1) + 1;
+	int j       = 1;
+	int k       = 0;
 
 	for (i = 0; i < N; ++i)
 	{
@@ -45,16 +42,13 @@ int upsamp2(double* x, int lenx, int M, double* y)
 
 	if (M == 0)
 	{
-		for (i = 0; i < lenx; ++i)
-		{
-			y[i] = x[i];
-		}
+		for (i = 0; i < lenx; ++i) { y[i] = x[i]; }
 		return lenx;
 	}
 
-	int N = M * lenx;
-	int j = 1;
-	int k = 0;
+	const int N = M * lenx;
+	int j       = 1;
+	int k       = 0;
 
 	for (i = 0; i < N; ++i)
 	{
@@ -78,14 +72,11 @@ int downsamp(double* x, int lenx, int M, double* y)
 	if (M < 0) { return -1; }
 	if (M == 0)
 	{
-		for (i = 0; i < lenx; ++i)
-		{
-			y[i] = x[i];
-		}
+		for (i = 0; i < lenx; ++i) { y[i] = x[i]; }
 		return lenx;
 	}
 
-	int N = (lenx - 1) / M + 1;
+	const int N = (lenx - 1) / M + 1;
 
 	for (i = 0; i < N; ++i) { y[i] = x[i * M]; }
 
@@ -125,10 +116,10 @@ int per_ext(double* sig, int len, int a, double* oup)
 	}
 	for (i = 0; i < a; ++i)
 	{
-		double temp1      = oup[a + i];
-		double temp2      = oup[a + len2 - 1 - i];
-		oup[a - 1 - i]    = temp2;
-		oup[len2 + a + i] = temp1;
+		const double temp1 = oup[a + i];
+		const double temp2 = oup[a + len2 - 1 - i];
+		oup[a - 1 - i]     = temp2;
+		oup[len2 + a + i]  = temp1;
 	}
 	return len2;
 }
@@ -155,13 +146,13 @@ int symm_ext(double* sig, int len, int a, double* oup)
 	int i;
 	// oup is of length len + 2 * a
 	for (i = 0; i < len; ++i) { oup[a + i] = sig[i]; }
-	int len2 = len;
+	const int len2 = len;
 	for (i = 0; i < a; ++i)
 	{
-		double temp1      = oup[a + i];
-		double temp2      = oup[a + len2 - 1 - i];
-		oup[a - 1 - i]    = temp1;
-		oup[len2 + a + i] = temp2;
+		const double temp1 = oup[a + i];
+		const double temp2 = oup[a + len2 - 1 - i];
+		oup[a - 1 - i]     = temp1;
+		oup[len2 + a + i]  = temp2;
 	}
 
 	return len2;
@@ -213,8 +204,8 @@ int testSWTlength(int N, int J)
 
 int wmaxiter(int sig_len, int filt_len)
 {
-	double temp = log((double)sig_len / ((double)filt_len - 1.0)) / log(2.0);
-	int lev     = (int)temp;
+	const double temp = log((double)sig_len / ((double)filt_len - 1.0)) / log(2.0);
+	const int lev     = (int)temp;
 
 	return lev;
 }
@@ -227,7 +218,7 @@ static double entropy_s(double* x, int N)
 	{
 		if (x[i] != 0)
 		{
-			double x2 = x[i] * x[i];
+			const double x2 = x[i] * x[i];
 			val -= x2 * log(x2);
 		}
 	}
@@ -245,11 +236,8 @@ static double entropy_t(double* x, int N, double t)
 
 	for (int i = 0; i < N; ++i)
 	{
-		double x2 = fabs(x[i]);
-		if (x2 > t)
-		{
-			val += 1;
-		}
+		const double x2 = fabs(x[i]);
+		if (x2 > t) { val += 1; }
 	}
 
 	return val;
@@ -265,7 +253,7 @@ static double entropy_n(double* x, int N, double p)
 	double val = 0.0;
 	for (int i = 0; i < N; ++i)
 	{
-		double x2 = fabs(x[i]);
+		const double x2 = fabs(x[i]);
 		val += pow(x2, (double)p);
 	}
 
@@ -280,7 +268,7 @@ static double entropy_l(double* x, int N)
 	{
 		if (x[i] != 0)
 		{
-			double x2 = x[i] * x[i];
+			const double x2 = x[i] * x[i];
 			val += log(x2);
 		}
 	}

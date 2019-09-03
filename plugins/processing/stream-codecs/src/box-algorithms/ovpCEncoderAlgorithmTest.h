@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 			uint64_t getClockFrequency() override { return 1LL << 32; }
 			bool initialize() override;
 			virtual bool uininitialize();
-			bool processClock(OpenViBE::Kernel::IMessageClock& rMessageClock) override;
+			bool processClock(OpenViBE::Kernel::IMessageClock& messageClock) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest)

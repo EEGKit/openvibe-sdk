@@ -15,10 +15,10 @@ namespace OpenViBEToolkit
 
 		virtual uint32_t getSize() const { return m_rMatrix.getBufferElementCount(); }
 
-		virtual bool setSize(const uint32_t ui32Size)
+		virtual bool setSize(const uint32_t size)
 		{
 			m_rMatrix.setDimensionCount(1);
-			m_rMatrix.setDimensionSize(0, ui32Size);
+			m_rMatrix.setDimensionSize(0, size);
 			return true;
 		}
 
@@ -26,10 +26,7 @@ namespace OpenViBEToolkit
 
 		virtual const double* getBuffer() const { return m_rMatrix.getBuffer(); }
 
-		virtual const char* getElementLabel(const uint32_t index) const
-		{
-			return m_rMatrix.getDimensionLabel(0, index);
-		}
+		virtual const char* getElementLabel(const uint32_t index) const { return m_rMatrix.getDimensionLabel(0, index); }
 
 		virtual bool setElementLabel(const uint32_t index, const char* sElementLabel)
 		{

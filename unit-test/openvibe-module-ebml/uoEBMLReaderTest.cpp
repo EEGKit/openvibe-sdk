@@ -40,42 +40,55 @@ public:
 
 	~CReaderCallBack() override { }
 
-	bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
+	bool isMasterChild(const EBML::CIdentifier& identifier) override
 	{
-		if (rIdentifier == EBML_Identifier_Header) { return true; }
-		if (rIdentifier == EBML::CIdentifier(0xffff)) { return true; }
+		if (identifier == EBML_Identifier_Header) { return true; }
+		if (identifier == EBML::CIdentifier(0xffff)) { return true; }
 
 		return false;
 	}
 
-	void openChild(const EBML::CIdentifier& rIdentifier) override
+	void openChild(const EBML::CIdentifier& identifier) override
 	{
-		m_CurrentIdentifier = rIdentifier;
+		m_CurrentIdentifier = identifier;
 
 		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
 		g_OutputStream << "Opening child node [0x" << std::setw(16) << std::setfill('0') << std::hex << m_CurrentIdentifier << std::dec << "]\n";
 		m_Depth++;
 	}
 
-	void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override
+	void processChildData(const void* buffer, const uint64_t size) override
 	{
 		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
-		if (m_CurrentIdentifier == EBML_Identifier_DocType) g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(pBuffer, ui64BufferSize) << "]\n";
-		else if (m_CurrentIdentifier == EBML_Identifier_EBMLVersion) g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
+		if (m_CurrentIdentifier == EBML_Identifier_DocType) g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(buffer, size) <<
+															"]\n";
+		else if (m_CurrentIdentifier == EBML_Identifier_EBMLVersion
+		) g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size)
+		  << std::dec << "]\n";
 		else if (m_CurrentIdentifier == EBML_Identifier_EBMLIdLength)
 		{
-			g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
+			g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.
+					getUIntegerFromChildData(buffer, size) << std::dec << "]\n";
 		}
-		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeVersion) g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
+		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeVersion
+		) g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.
+		  getUIntegerFromChildData(buffer, size) << std::dec << "]\n";
 		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeReadVersion)
 		{
-			g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
+			g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.
+					getUIntegerFromChildData(buffer, size) << std::dec << "]\n";
 		}
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0x1234)) g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0xffffffffffffffffLL)) g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0x4321)) g_OutputStream << "Got double : [" << m_ReaderHelper.getFloatFromChildData(pBuffer, ui64BufferSize) << "]\n";
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0x8765)) g_OutputStream << "Got float : [" << m_ReaderHelper.getFloatFromChildData(pBuffer, ui64BufferSize) << "]\n";
-		else g_OutputStream << "Got " << ui64BufferSize << " data bytes, node id not known\n";
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0x1234)
+		) g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) <<
+		  std::dec << "]\n";
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0xffffffffffffffffLL)
+		) g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) <<
+		  std::dec << "]\n";
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0x4321)
+		) g_OutputStream << "Got double : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n";
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0x8765)
+		) g_OutputStream << "Got float : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n";
+		else g_OutputStream << "Got " << size << " data bytes, node id not known\n";
 	}
 
 	void closeChild() override

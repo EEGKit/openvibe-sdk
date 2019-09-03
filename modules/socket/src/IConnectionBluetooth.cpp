@@ -30,7 +30,7 @@
 
 namespace Socket
 {
-	class CConnectionBluetooth : public IConnectionBluetooth
+	class CConnectionBluetooth final : public IConnectionBluetooth
 	{
 	public:
 
@@ -39,7 +39,7 @@ namespace Socket
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		CConnectionBluetooth() : m_sLastError() { }
 #endif
-		
+
 #if defined TARGET_OS_Windows
 		bool initialize()
 		{
@@ -48,7 +48,8 @@ namespace Socket
 			// Ask for Winsock version.
 			if (_WINSOCK2API_::WSAStartup(MAKEWORD(m_ui8WinSocketMajorVersion, m_ui8WinSocketMinorVersion), &l_oWSAData) != 0)
 			{
-				m_sLastError = "Failed to start Winsock " + std::to_string(m_ui8WinSocketMajorVersion) + "." + std::to_string(m_ui8WinSocketMinorVersion) + ": " + this->getLastErrorFormated();
+				m_sLastError = "Failed to start Winsock " + std::to_string(m_ui8WinSocketMajorVersion) + "." + std::to_string(m_ui8WinSocketMinorVersion) + ": "
+							   + this->getLastErrorFormated();
 				return false;
 			}
 
@@ -158,7 +159,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -168,7 +169,7 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
+			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, (char *)buffer, ui32BufferSize, 0);
 
 			if (nBytesSent == SOCKET_ERROR)
 			{
@@ -184,7 +185,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -195,7 +196,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 
-			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
+			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, static_cast<char *>(buffer), ui32BufferSize, 0);
 
 			if (nBytesReceived == SOCKET_ERROR)
 			{
@@ -212,7 +213,7 @@ namespace Socket
 #endif
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -220,7 +221,7 @@ namespace Socket
 				return false;
 			}
 
-			const char* p   = reinterpret_cast<const char*>(pBuffer);
+			const char* p            = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -233,15 +234,15 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
 				m_sLastError = "Bluetooth device is not connected.";
-				return 0;
+				return false;
 			}
 
-			char* p         = reinterpret_cast<char*>(pBuffer);
+			char* p                  = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -296,9 +297,10 @@ namespace Socket
 			l_oSockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
 			l_oSockAddressBlutoothServer.port           = BT_PORT_ANY;
 
-			if (_WINSOCK2API_::connect(m_oSocket, (SOCKADDR*)&l_oSockAddressBlutoothServer, sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
+			if (_WINSOCK2API_::connect(m_oSocket, reinterpret_cast<SOCKADDR*>(&l_oSockAddressBlutoothServer), sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(l_oSockAddressBlutoothServer.btAddr) + "]: " + getLastErrorFormated();
+				m_sLastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(l_oSockAddressBlutoothServer.btAddr) + "]: " +
+							   getLastErrorFormated();
 
 				_WINSOCK2API_::closesocket(m_oSocket); // Returned code not checked.
 				_WINSOCK2API_::WSACleanup(); // Returned code not checked.
@@ -325,17 +327,17 @@ namespace Socket
 			LPTSTR l_sErrorText;
 			DWORD l_ui64Error = GetLastError();
 
-			size_t ui32Size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
-											FORMAT_MESSAGE_ALLOCATE_BUFFER |  // allocate buffer on local heap for error text
-											FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-											nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
-											l_ui64Error, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), 
-											(LPTSTR)&l_sErrorText, // output
-											0, // minimum size for output buffer
-											nullptr);
+			size_t size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
+										FORMAT_MESSAGE_ALLOCATE_BUFFER |  // allocate buffer on local heap for error text
+										FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+										nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
+										l_ui64Error, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
+										LPTSTR(&l_sErrorText), // output
+										0, // minimum size for output buffer
+										nullptr);
 
 			// Converts std::wstring to std::string and returns it. 
-			std::wstring l_sErrorMessage(l_sErrorText, ui32Size);
+			std::wstring l_sErrorMessage(l_sErrorText, size);
 			LocalFree(l_sErrorText);
 			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> l_oConverter;
 			return l_oConverter.to_bytes(l_sErrorMessage);
@@ -369,8 +371,8 @@ namespace Socket
 			}
 
 			char l_vBuffer[5000];
-			LPWSAQUERYSET l_sWSAQuerySet = (LPWSAQUERYSET)l_vBuffer;
-			DWORD l_ui32dwSize           = sizeof(l_vBuffer);
+			const LPWSAQUERYSET l_sWSAQuerySet = LPWSAQUERYSET(l_vBuffer);
+			DWORD l_ui32dwSize                 = sizeof(l_vBuffer);
 
 			memset((void *)l_sWSAQuerySet, 0, sizeof(WSAQUERYSET));
 			l_sWSAQuerySet->dwSize      = sizeof(WSAQUERYSET);
@@ -382,7 +384,7 @@ namespace Socket
 			while (l_bLookup)
 			{
 				// Check next bluetooth device
-				int l_i32Result = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
+				const int l_i32Result = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
 
 				if (l_i32Result == SOCKET_ERROR)
 				{
@@ -398,7 +400,7 @@ namespace Socket
 					break;
 				}
 				// Get bluetooth MAC address and name
-				bluetoothDevicesAddress.push_back(((SOCKADDR_BTH *)l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
+				bluetoothDevicesAddress.push_back(reinterpret_cast<SOCKADDR_BTH *>(l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
 
 				std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converterX;
 				bluetoothDevicesName.push_back(converterX.to_bytes(l_sWSAQuerySet->lpszServiceInstanceName));

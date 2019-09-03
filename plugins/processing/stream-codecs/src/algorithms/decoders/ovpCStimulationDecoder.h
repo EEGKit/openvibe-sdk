@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CStimulationDecoder : public CEBMLBaseDecoder
+		class CStimulationDecoder final : public CEBMLBaseDecoder
 		{
 		public:
 			void release() override { delete this; }
@@ -20,9 +20,9 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StimulationStreamDecoder)
 
 			// ebml callbacks
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CStimulationSet m_oStimulationSet;
 		};
 
-		class CStimulationDecoderDesc : public CEBMLBaseDecoderDesc
+		class CStimulationDecoderDesc final : public CEBMLBaseDecoderDesc
 		{
 		public:
 			void release() override { }
@@ -58,7 +58,8 @@ namespace OpenViBEPlugins
 			{
 				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
+				rAlgorithmPrototype.addOutputParameter(
+					OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
 
 				return true;
 			}

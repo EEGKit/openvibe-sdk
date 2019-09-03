@@ -38,15 +38,15 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next metabox object descriptor identifier
-			 * \param[in] previousIdentifier : The identifier
+			 * \param[in] previousID : The identifier
 			 *        for the preceeding metabox object descriptor
 			 * \return The identifier of the next metabox object descriptor in case of success.
 			 * \retval \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first metabox object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousID) const = 0;
 
 			/**
 			 * \brief Gets details on a specific metabox object descriptor

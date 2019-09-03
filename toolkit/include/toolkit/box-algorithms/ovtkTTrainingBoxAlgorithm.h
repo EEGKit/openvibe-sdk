@@ -27,10 +27,10 @@ namespace OpenViBEToolkit
 		virtual void setChannelName(uint32_t index, const char* name) { m_pPendingSignal->setChannelName(index, name); }
 		virtual void setSampleCountPerBuffer(uint32_t count) { m_ui32SampleCountPerBuffer = count; }
 		virtual void setSamplingRate(uint32_t samplingRate) { m_pPendingSignal->setSamplingRate(samplingRate); }
-		virtual void setSampleBuffer(const double* pBuffer);
+		virtual void setSampleBuffer(const double* buffer);
 
 		// Stimulation input reader callback
-		virtual void setStimulationCount(uint32_t count) {}
+		virtual void setStimulationCount(uint32_t /*count*/) {}
 		virtual void setStimulation(uint32_t index, uint64_t identifier, uint64_t date);
 
 		// What should be implemented by the derived class
@@ -77,7 +77,10 @@ namespace OpenViBEToolkit
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
 	{
 		releaseSignalTrial(m_pPendingSignal);
-		for (std::vector<ISignalTrial*>::iterator itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial) { releaseSignalTrial(*itSignalTrial); }
+		for (std::vector<ISignalTrial*>::iterator itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
+		{
+			releaseSignalTrial(*itSignalTrial);
+		}
 	}
 
 	// ________________________________________________________________________________________________________________
@@ -87,9 +90,9 @@ namespace OpenViBEToolkit
 	//
 
 	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* pBuffer)
+	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* buffer)
 	{
-		insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, pBuffer, m_pPendingSignal);
+		insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, buffer, m_pPendingSignal);
 
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 				<< OpenViBE::Kernel::LogLevel_Debug
@@ -118,7 +121,10 @@ namespace OpenViBEToolkit
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
 			ISignalTrialSet* l_pSignalTrialSet = createSignalTrialSet();
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial) { l_pSignalTrialSet->addSignalTrial(**itSignalTrial); }
+			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
+			{
+				l_pSignalTrialSet->addSignalTrial(**itSignalTrial);
+			}
 
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 					<< OpenViBE::Kernel::LogLevel_Info
@@ -178,7 +184,8 @@ namespace OpenViBEToolkit
 					<< OpenViBE::time64(m_ui64TrialEndTime)
 					<< "...\n";
 		}
-		else if (this->getStimulationIdentifierTrialLabelRangeStart() <= OpenViBE::CIdentifier(identifier) && OpenViBE::CIdentifier(identifier) <= this->getStimulationIdentifierTrialLabelRangeEnd())
+		else if (this->getStimulationIdentifierTrialLabelRangeStart() <= OpenViBE::CIdentifier(identifier) && OpenViBE::CIdentifier(identifier) <= this->
+				 getStimulationIdentifierTrialLabelRangeEnd())
 		{
 			m_oTrialLabel = identifier;
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()

@@ -32,9 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *******************************************************************************/
-
-#ifndef DSPFILTERS_LEGENDRE_H
-#define DSPFILTERS_LEGENDRE_H
+#pragma once
 
 #include "Common.h"
 #include "Cascade.h"
@@ -115,10 +113,7 @@ namespace Dsp
 
 		struct WorkspaceBase
 		{
-			WorkspaceBase(PolynomialFinderBase* polyBase,
-						  RootFinderBase* rootsBase)
-				: poly(*polyBase)
-				  , roots(*rootsBase) { }
+			WorkspaceBase(PolynomialFinderBase* polyBase, RootFinderBase* rootsBase) : poly(*polyBase), roots(*rootsBase) { }
 
 			PolynomialFinderBase& poly;
 			RootFinderBase& roots;
@@ -131,8 +126,7 @@ namespace Dsp
 		template <int MaxOrder>
 		struct Workspace : WorkspaceBase
 		{
-			Workspace()
-				: WorkspaceBase(&m_poly, &m_roots) { }
+			Workspace() : WorkspaceBase(&m_poly, &m_roots) { }
 
 		private:
 			PolynomialFinder<MaxOrder> m_poly;
@@ -160,36 +154,22 @@ namespace Dsp
 
 		struct LowPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   WorkspaceBase* w);
+			void setup(int order, double sampleRate, double cutoffFrequency, WorkspaceBase* w);
 		};
 
 		struct HighPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   WorkspaceBase* w);
+			void setup(int order, double sampleRate, double cutoffFrequency, WorkspaceBase* w);
 		};
 
 		struct BandPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency,
-					   WorkspaceBase* w);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, WorkspaceBase* w);
 		};
 
 		struct BandStopBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency,
-					   WorkspaceBase* w);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, WorkspaceBase* w);
 		};
 
 		//------------------------------------------------------------------------------
@@ -201,64 +181,40 @@ namespace Dsp
 		template <int MaxOrder>
 		struct LowPass : PoleFilter<LowPassBase, MaxOrder>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency)
+			void setup(int order, double sampleRate, double cutoffFrequency)
 			{
 				Workspace<MaxOrder> w;
-				LowPassBase::setup(order,
-								   sampleRate,
-								   cutoffFrequency,
-								   &w);
+				LowPassBase::setup(order, sampleRate, cutoffFrequency, &w);
 			}
 		};
 
 		template <int MaxOrder>
 		struct HighPass : PoleFilter<HighPassBase, MaxOrder>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency)
+			void setup(int order, double sampleRate, double cutoffFrequency)
 			{
 				Workspace<MaxOrder> w;
-				HighPassBase::setup(order,
-									sampleRate,
-									cutoffFrequency,
-									&w);
+				HighPassBase::setup(order, sampleRate, cutoffFrequency, &w);
 			}
 		};
 
 		template <int MaxOrder>
 		struct BandPass : PoleFilter<BandPassBase, MaxOrder, MaxOrder * 2>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency)
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency)
 			{
 				Workspace<MaxOrder> w;
-				BandPassBase::setup(order,
-									sampleRate,
-									centerFrequency,
-									widthFrequency,
-									&w);
+				BandPassBase::setup(order, sampleRate, centerFrequency, widthFrequency, &w);
 			}
 		};
 
 		template <int MaxOrder>
 		struct BandStop : PoleFilter<BandStopBase, MaxOrder, MaxOrder * 2>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency)
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency)
 			{
 				Workspace<MaxOrder> w;
-				BandStopBase::setup(order,
-									sampleRate,
-									centerFrequency,
-									widthFrequency,
-									&w);
+				BandStopBase::setup(order, sampleRate, centerFrequency, widthFrequency, &w);
 			}
 		};
 
@@ -278,17 +234,13 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 3; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeI : TypeIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2]); }
 			};
 
 			struct TypeIIBase : DesignBase
@@ -299,19 +251,14 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 4; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeII : TypeIIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
 			};
 
 			// Factored kind and name
@@ -341,17 +288,12 @@ namespace Dsp
 			};
 
 			// This glues on the Order parameter
-			template <int MaxOrder,
-					  template <class> class TypeClass,
-					  template <int> class FilterClass>
+			template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
 			struct OrderBase : TypeClass<FilterClass<MaxOrder>>
 			{
-				const ParamInfo getParamInfo_1() const
+				ParamInfo getParamInfo_1() const
 				{
-					return ParamInfo(idOrder, "Order", "Order",
-									 1, MaxOrder, 2,
-									 &ParamInfo::Int_toControlValue,
-									 &ParamInfo::Int_toNativeValue,
+					return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue,
 									 &ParamInfo::Int_toString);
 				}
 			};
@@ -363,22 +305,16 @@ namespace Dsp
 			//
 
 			template <int MaxOrder>
-			struct LowPass : OrderBase<MaxOrder, TypeI, Legendre::LowPass>,
-							 LowPassDescription {};
+			struct LowPass : OrderBase<MaxOrder, TypeI, Legendre::LowPass>, LowPassDescription {};
 
 			template <int MaxOrder>
-			struct HighPass : OrderBase<MaxOrder, TypeI, Legendre::HighPass>,
-							  HighPassDescription {};
+			struct HighPass : OrderBase<MaxOrder, TypeI, Legendre::HighPass>, HighPassDescription {};
 
 			template <int MaxOrder>
-			struct BandPass : OrderBase<MaxOrder, TypeII, Legendre::BandPass>,
-							  BandPassDescription {};
+			struct BandPass : OrderBase<MaxOrder, TypeII, Legendre::BandPass>, BandPassDescription {};
 
 			template <int MaxOrder>
-			struct BandStop : OrderBase<MaxOrder, TypeII, Legendre::BandStop>,
-							  BandStopDescription {};
+			struct BandStop : OrderBase<MaxOrder, TypeII, Legendre::BandStop>, BandStopDescription {};
 		} // namespace Design
 	} // namespace Legendre
 } // namespace Dsp
-
-#endif

@@ -12,8 +12,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const CString& sApplicationName, const CString& sLogFilename)
-	: TKernelObject<ILogListener>(rKernelContext)
+CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& sApplicationName, const CString& sLogFilename)
+	: TKernelObject<ILogListener>(ctx)
 	  , m_sApplicationName(sApplicationName)
 	  , m_sLogFilename(sLogFilename)
 	  , m_bTimeInSeconds(true), m_ui64TimePrecision(3)
@@ -60,30 +60,24 @@ bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel
 	return true;
 }
 
-bool CLogListenerFile::activate(bool bActive)
-{
-	return activate(LogLevel_First, LogLevel_Last, bActive);
-}
+bool CLogListenerFile::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
 
-void CLogListenerFile::log(const time64 time64Value)
+void CLogListenerFile::log(const time64 value)
 {
 	if (m_bTimeInSeconds)
 	{
-		double l_f64Time = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
+		double l_f64Time = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(m_ui64TimePrecision);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
 
-		if (m_bLogWithHexa)
-		{
-			ss << " (0x" << hex << time64Value.m_ui64TimeValue << ")";
-		}
+		if (m_bLogWithHexa) { ss << " (0x" << hex << value.m_ui64TimeValue << ")"; }
 
 		m_fsFileStream << ss.str();
 	}
-	else { logInteger(time64Value.m_ui64TimeValue); }
+	else { logInteger(value.m_ui64TimeValue); }
 }
 
 void CLogListenerFile::log(const uint64_t value) { logInteger(value); }

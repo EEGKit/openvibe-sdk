@@ -89,8 +89,8 @@
 
 namespace OpenViBEToolkit
 {
-	OVTK_API bool initialize(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-	OVTK_API bool uninitialize(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+	OVTK_API bool initialize(const OpenViBE::Kernel::IKernelContext& ctx);
+	OVTK_API bool uninitialize(const OpenViBE::Kernel::IKernelContext& ctx);
 
-	bool initializeStimulationList(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+	bool initializeStimulationList(const OpenViBE::Kernel::IKernelContext& ctx);
 } // namespace OpenViBEToolkit
