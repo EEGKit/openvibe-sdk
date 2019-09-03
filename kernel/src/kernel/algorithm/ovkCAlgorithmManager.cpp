@@ -8,7 +8,7 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace std;
 
-CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext) : TKernelObject<IAlgorithmManager>(rKernelContext) {}
+CAlgorithmManager::CAlgorithmManager(const IKernelContext& ctx) : TKernelObject<IAlgorithmManager>(ctx) {}
 
 CAlgorithmManager::~CAlgorithmManager()
 {
@@ -26,15 +26,15 @@ CAlgorithmManager::~CAlgorithmManager()
 	m_vAlgorithms.clear();
 }
 
-CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& rAlgorithmClassIdentifier)
+CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& algorithmClassID)
 {
 	const IAlgorithmDesc* algorithmDesc = nullptr;
-	IAlgorithm* algorithm               = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmClassIdentifier, &algorithmDesc);
+	IAlgorithm* algorithm               = getKernelContext().getPluginManager().createAlgorithm(algorithmClassID, &algorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(),
+	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << algorithmClassID.toString(),
 						ErrorType::BadResourceCreation);
 
-	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
+	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << algorithmClassID << "\n";
 
 	CIdentifier algorithmId         = getUnusedIdentifier();
 	CAlgorithmProxy* algorithmProxy = new CAlgorithmProxy(getKernelContext(), *algorithm, *algorithmDesc);

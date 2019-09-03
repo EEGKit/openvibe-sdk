@@ -17,7 +17,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TBaseConfigurable(const IKernelContext& rKernelContext) : IBase(rKernelContext) { }
+			explicit TBaseConfigurable(const IKernelContext& ctx) : IBase(ctx) { }
 
 			virtual ~TBaseConfigurable()
 			{
@@ -56,7 +56,7 @@ namespace OpenViBE
 			}
 
 			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType,
-												const CIdentifier& rSubTypeIdentifier)
+												const CIdentifier& subTypeID)
 			{
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter != m_vParameter.end()) { return nullptr; }
@@ -68,7 +68,7 @@ namespace OpenViBE
 						break;
 					case ParameterType_Integer: l_pParameter = new CIntegerParameter(this->getKernelContext(), eParameterType);
 						break;
-					case ParameterType_Enumeration: l_pParameter = new CEnumerationParameter(this->getKernelContext(), eParameterType, rSubTypeIdentifier);
+					case ParameterType_Enumeration: l_pParameter = new CEnumerationParameter(this->getKernelContext(), eParameterType, subTypeID);
 						break;
 					case ParameterType_Boolean: l_pParameter = new CBooleanParameter(this->getKernelContext(), eParameterType);
 						break;

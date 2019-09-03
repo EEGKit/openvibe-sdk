@@ -38,8 +38,8 @@ namespace
 	};
 } // namespace
 
-CTypeManager::CTypeManager(const IKernelContext& rKernelContext)
-	: TKernelObject<ITypeManager>(rKernelContext)
+CTypeManager::CTypeManager(const IKernelContext& ctx)
+	: TKernelObject<ITypeManager>(ctx)
 {
 	m_vName[OV_UndefinedIdentifier] = "undefined";
 	this->registerEnumerationType(OV_TypeId_BoxAlgorithmFlag, "BoxFlags");

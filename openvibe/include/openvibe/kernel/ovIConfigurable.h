@@ -92,14 +92,14 @@ namespace OpenViBE
 			 * \brief Creates a new parameter of a specific type
 			 * \param rParameterIdentifier [in] : the parameter identifier which has to be created
 			 * \param eParameterType [in] : the type of this parameter
-			 * \param rSubTypeIdentifier [in] : the optional sub type of this parameter (e.g. for enumerations)
+			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \sa EParameterType
 			 * \sa IParameter
 			 *
 			 * This function creates a new parameter with its associated object.
 			 */
 			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType,
-												const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+												const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to remove

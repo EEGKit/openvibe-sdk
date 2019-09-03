@@ -12,7 +12,7 @@ namespace XML
 	{
 	public:
 		explicit CWriter(IWriterCallback& rWriterCallback);
-		bool openChild(const char* sName) override;
+		bool openChild(const char* name) override;
 		bool setChildData(const char* sData) override;
 		bool setAttribute(const char* sAttributeName, const char* sAttributeValue) override;
 		bool closeChild() override;
@@ -32,9 +32,9 @@ namespace XML
 
 CWriter::CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
 
-bool CWriter::openChild(const char* sName)
+bool CWriter::openChild(const char* name)
 {
-	if (sName == nullptr) { return false; }
+	if (name == nullptr) { return false; }
 
 	if (m_bHasData) { return false; }
 
@@ -45,9 +45,9 @@ bool CWriter::openChild(const char* sName)
 	}
 
 	string l_sIndent(m_vNodes.size(), '\t');
-	string l_sResult = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(sName);
+	string l_sResult = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
 	m_rWriterCallback.write(l_sResult.c_str());
-	m_vNodes.push(sName);
+	m_vNodes.push(name);
 	m_bHasChild             = false;
 	m_bHasData              = false;
 	m_bHasClosedOpeningNode = false;

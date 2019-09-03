@@ -15,7 +15,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CTypeManager(const IKernelContext& rKernelContext);
+			explicit CTypeManager(const IKernelContext& ctx);
 			CIdentifier getNextTypeIdentifier(const CIdentifier& previousID) const override;
 			std::vector<std::pair<CIdentifier, CString>> getSortedTypes() const override;
 			bool registerType(const CIdentifier& typeID, const CString& sTypeName) override;

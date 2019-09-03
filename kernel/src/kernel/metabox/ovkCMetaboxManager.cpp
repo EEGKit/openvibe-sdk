@@ -25,8 +25,8 @@ namespace OpenViBE
 		{
 		public:
 
-			CMetaboxManagerEntryEnumeratorCallBack(const IKernelContext& kernelContext, CMetaboxManager& metaboxManager)
-				: TKernelObject<IObject>(kernelContext), m_MetaboxManager(metaboxManager) { m_MetaBoxCount = 0; }
+			CMetaboxManagerEntryEnumeratorCallBack(const IKernelContext& ctx, CMetaboxManager& metaboxManager)
+				: TKernelObject<IObject>(ctx), m_MetaboxManager(metaboxManager) { m_MetaBoxCount = 0; }
 
 			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 			{
@@ -80,8 +80,8 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
-	: TKernelObject<IMetaboxManager>(kernelContext)
+CMetaboxManager::CMetaboxManager(const IKernelContext& ctx)
+	: TKernelObject<IMetaboxManager>(ctx)
 {
 	this->getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }

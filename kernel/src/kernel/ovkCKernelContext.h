@@ -64,7 +64,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CKernelContextBridge(const IKernelContext& rKernelContext) : m_kernelContext(rKernelContext) { }
+			explicit CKernelContextBridge(const IKernelContext& ctx) : m_kernelContext(ctx) { }
 
 			virtual bool initialize() { return true; }
 			bool uninitialize() override { return true; }

@@ -4,8 +4,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
 
-CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& rKernelContext)
-	: TKernelObject<IObjectVisitorContext>(rKernelContext) {}
+CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& ctx)
+	: TKernelObject<IObjectVisitorContext>(ctx) {}
 
 CObjectVisitorContext::~CObjectVisitorContext() {}
 

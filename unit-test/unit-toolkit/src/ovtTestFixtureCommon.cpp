@@ -72,19 +72,19 @@ namespace OpenViBETest
 		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-		IKernelContext* kernelContext = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
 
-		if (!kernelContext)
+		if (!ctx)
 		{
 			std::cerr << "ERROR: impossible to create kernel context " << std::endl;
 			return;
 		}
 
-		kernelContext->initialize();
+		ctx->initialize();
 
-		OpenViBEToolkit::initialize(*kernelContext);
+		OpenViBEToolkit::initialize(*ctx);
 
-		context = kernelContext;
+		context = ctx;
 	}
 
 	void KernelFixture::tearDown()

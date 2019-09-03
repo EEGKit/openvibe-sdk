@@ -80,16 +80,16 @@
  *   {
  *     if(m_pReaderHelper) m_pReaderHelper->release();
  *   }
- *   virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier)
+ *   virtual bool isMasterChild(const EBML::CIdentifier& identifier)
  *   {
- *     if(rIdentifier==EBML_Identifier_Header) return true;
- *     if(rIdentifier==EBML_Identifier_DocType) return true;
- *     if(rIdentifier==EBML_Identifier_DocTypeVersion) return true;
+ *     if(identifier==EBML_Identifier_Header) return true;
+ *     if(identifier==EBML_Identifier_DocType) return true;
+ *     if(identifier==EBML_Identifier_DocTypeVersion) return true;
  *     return false;
  *   }
- *   virtual void openChild(const EBML::CIdentifier& rIdentifier)
+ *   virtual void openChild(const EBML::CIdentifier& identifier)
  *   {
- *     m_oCurrent=rIdentifier;
+ *     m_oCurrent=identifier;
  *   }
  *   virtual void processChildData(cosnt void* buffer, const uint64_t size)
  *   {

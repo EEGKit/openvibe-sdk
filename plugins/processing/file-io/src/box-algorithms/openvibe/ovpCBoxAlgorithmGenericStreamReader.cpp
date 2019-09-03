@@ -54,7 +54,7 @@ bool CBoxAlgorithmGenericStreamReader::initializeFile()
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& messageClock)
+bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& /*messageClock*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
@@ -119,23 +119,23 @@ bool CBoxAlgorithmGenericStreamReader::process()
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamReader::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CBoxAlgorithmGenericStreamReader::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == EBML_Identifier_Header) { return true; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header) { return true; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header_Compression) { return false; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header_StreamType) { return false; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer) { return true; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex) { return false; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { return false; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { return false; }
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_Content) { return false; }
+	if (identifier == EBML_Identifier_Header) { return true; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Header) { return true; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Header_Compression) { return false; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Header_StreamType) { return false; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Buffer) { return true; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex) { return false; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { return false; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { return false; }
+	if (identifier == OVP_NodeId_OpenViBEStream_Buffer_Content) { return false; }
 	return false;
 }
 
-void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& rIdentifier)
+void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

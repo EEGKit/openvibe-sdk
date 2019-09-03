@@ -62,13 +62,13 @@ namespace OpenViBE
 		CIdentifier(uint64_t ui64Identifier);
 		/**
 		 * \brief Copy constructor
-		 * \param rIdentifier [in] : the identifier to initialize
+		 * \param identifier [in] : the identifier to initialize
 		 *        this identifier from
 		 *
 		 * Builds up the 64 bits identifier exacly the same as
-		 * given rIdentifier parameter.
+		 * given identifier parameter.
 		 */
-		CIdentifier(const CIdentifier& rIdentifier);
+		CIdentifier(const CIdentifier& identifier);
 
 		//@}
 		/** \name Operators */
@@ -76,14 +76,14 @@ namespace OpenViBE
 
 		/**
 		 * \brief Affectation operator
-		 * \param rIdentifier [in] : the identifier to initialize
+		 * \param identifier [in] : the identifier to initialize
 		 *        this identifier from
 		 * \return this identifier
 		 *
 		 * Reinitializes the 64 bits identifier exactly the same as
-		 * given rIdentifier parameter.
+		 * given identifier parameter.
 		 */
-		CIdentifier& operator=(const CIdentifier& rIdentifier);
+		CIdentifier& operator=(const CIdentifier& identifier);
 		/**
 		 * \brief Increments this identifier by 1
 		 * \return this identifier

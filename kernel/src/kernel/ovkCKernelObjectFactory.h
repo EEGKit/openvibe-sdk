@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CKernelObjectFactory(const IKernelContext& rKernelContext);
+			explicit CKernelObjectFactory(const IKernelContext& ctx);
 			IObject* createObject(const CIdentifier& rClassIdentifier) override;
 			bool releaseObject(IObject* pObject) override;
 

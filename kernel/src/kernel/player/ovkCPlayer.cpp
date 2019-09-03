@@ -32,8 +32,8 @@ const uint64_t g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1
 //___________________________________________________________________//
 //                                                                   //
 
-CPlayer::CPlayer(const IKernelContext& rKernelContext)
-	: TKernelObject<IPlayer>(rKernelContext), m_oKernelContextBridge(rKernelContext), m_oScheduler(m_oKernelContextBridge, *this)
+CPlayer::CPlayer(const IKernelContext& ctx)
+	: TKernelObject<IPlayer>(ctx), m_oKernelContextBridge(ctx), m_oScheduler(m_oKernelContextBridge, *this)
 {
 	uint64_t schedulerFrequency = this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
 	if (schedulerFrequency == 0)

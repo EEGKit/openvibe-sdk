@@ -51,7 +51,7 @@ namespace
 
 		CIdentifier m_DecoderId;
 		CIdentifier m_EncoderId;
-		OpenViBETest::KernelContext m_KernelContext;
+		OpenViBETest::ctx m_KernelContext;
 	};
 
 	TEST_F(StreamedMatrixTest, test_init)

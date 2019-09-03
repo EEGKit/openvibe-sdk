@@ -40,17 +40,17 @@ public:
 
 	~CReaderCallBack() override { }
 
-	bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
+	bool isMasterChild(const EBML::CIdentifier& identifier) override
 	{
-		if (rIdentifier == EBML_Identifier_Header) { return true; }
-		if (rIdentifier == EBML::CIdentifier(0xffff)) { return true; }
+		if (identifier == EBML_Identifier_Header) { return true; }
+		if (identifier == EBML::CIdentifier(0xffff)) { return true; }
 
 		return false;
 	}
 
-	void openChild(const EBML::CIdentifier& rIdentifier) override
+	void openChild(const EBML::CIdentifier& identifier) override
 	{
-		m_CurrentIdentifier = rIdentifier;
+		m_CurrentIdentifier = identifier;
 
 		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
 		g_OutputStream << "Opening child node [0x" << std::setw(16) << std::setfill('0') << std::hex << m_CurrentIdentifier << std::dec << "]\n";

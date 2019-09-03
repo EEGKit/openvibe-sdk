@@ -8,11 +8,11 @@ using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
 
-void CFeatureVectorDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CFeatureVectorDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_oTop = rIdentifier;
+	m_oTop = identifier;
 
-	CStreamedMatrixDecoder::openChild(rIdentifier);
+	CStreamedMatrixDecoder::openChild(identifier);
 }
 
 void CFeatureVectorDecoder::processChildData(const void* buffer, const uint64_t size)

@@ -149,8 +149,8 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager)
-	: TKernelObject<IConfigurationManager>(rKernelContext), m_pParentConfigurationManager(pParentConfigurationManager)
+CConfigurationManager::CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* pParentConfigurationManager)
+	: TKernelObject<IConfigurationManager>(ctx), m_pParentConfigurationManager(pParentConfigurationManager)
 {
 	m_ui32Index     = 0;
 	m_ui32StartTime = System::Time::getTime();
@@ -695,11 +695,11 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 	return true;
 }
 
-CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackshlashes) const
+CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
 	std::string l_sResult;
-	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackshlashes)) { return l_sResult.c_str(); }
+	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackslashes)) { return l_sResult.c_str(); }
 	return l_sValue.c_str();
 }
 

@@ -48,7 +48,7 @@ namespace OpenViBE
 	struct KernelFacade::KernelFacadeImpl
 	{
 		CKernelLoader kernelLoader;
-		IKernelContext* kernelContext = nullptr;
+		IKernelContext* ctx = nullptr;
 		std::map<std::string, CIdentifier> scenarioMap;
 		std::map<std::string, TokenList> scenarioTokenMap;
 	};
@@ -71,7 +71,7 @@ namespace OpenViBE
 
 	PlayerReturnCode KernelFacade::loadKernel(const LoadKernelCommand& command)
 	{
-		if (m_Pimpl->kernelContext)
+		if (m_Pimpl->ctx)
 		{
 			std::cout << "WARNING: The kernel is already loaded" << std::endl;
 			return PlayerReturnCode::Success;
@@ -113,41 +113,41 @@ namespace OpenViBE
 		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-		IKernelContext* kernelContext = kernelDesc->createKernel("scenario-player", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("scenario-player", configurationFile);
 
-		if (!kernelContext)
+		if (!ctx)
 		{
 			std::cerr << "ERROR: impossible to create kernel context " << std::endl;
 			return PlayerReturnCode::KernelInvalidDesc;
 		}
 
-		kernelContext->initialize();
-		m_Pimpl->kernelContext = kernelContext;
-		OpenViBEToolkit::initialize(*kernelContext);
+		ctx->initialize();
+		m_Pimpl->ctx = ctx;
+		OpenViBEToolkit::initialize(*ctx);
 
-		IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
-		kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
-		kernelContext->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
+		IConfigurationManager& configurationManager = ctx->getConfigurationManager();
+		ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
+		ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 		return PlayerReturnCode::Success;
 	}
 
 	PlayerReturnCode KernelFacade::unloadKernel()
 	{
-		if (m_Pimpl->kernelContext)
+		if (m_Pimpl->ctx)
 		{
 			// not releasing the scenario before releasing the kernel
 			// causes a segfault on linux
-			auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
+			auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
 			for (auto& scenarioPair : m_Pimpl->scenarioMap) { scenarioManager.releaseScenario(scenarioPair.second); }
 
 
-			OpenViBEToolkit::uninitialize(*m_Pimpl->kernelContext);
-			// m_Pimpl->kernelContext->uninitialize();
+			OpenViBEToolkit::uninitialize(*m_Pimpl->ctx);
+			// m_Pimpl->ctx->uninitialize();
 			IKernelDesc* kernelDesc = nullptr;
 			m_Pimpl->kernelLoader.getKernelDesc(kernelDesc);
-			kernelDesc->releaseKernel(m_Pimpl->kernelContext);
-			m_Pimpl->kernelContext = nullptr;
+			kernelDesc->releaseKernel(m_Pimpl->ctx);
+			m_Pimpl->ctx = nullptr;
 		}
 
 		m_Pimpl->kernelLoader.uninitialize();
@@ -160,7 +160,7 @@ namespace OpenViBE
 	{
 		assert(command.scenarioFile && command.scenarioName);
 
-		if (!m_Pimpl->kernelContext)
+		if (!m_Pimpl->ctx)
 		{
 			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -170,7 +170,7 @@ namespace OpenViBE
 		std::string scenarioName = command.scenarioName.get();
 
 		CIdentifier scenarioID;
-		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
+		auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
 
 		if (!scenarioManager.importScenarioFromFile(scenarioID, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 		{
@@ -192,7 +192,7 @@ namespace OpenViBE
 	{
 		assert(command.scenarioFile && command.scenarioName);
 
-		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
+		auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
 
 		auto scenarioName = command.scenarioName.get();
 		auto scenarioFile = command.scenarioFile.get();
@@ -226,7 +226,7 @@ namespace OpenViBE
 
 	PlayerReturnCode KernelFacade::setupScenario(const SetupScenarioCommand& command)
 	{
-		if (!m_Pimpl->kernelContext)
+		if (!m_Pimpl->ctx)
 		{
 			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -257,7 +257,7 @@ namespace OpenViBE
 	{
 		assert(command.scenarioList);
 
-		if (!m_Pimpl->kernelContext)
+		if (!m_Pimpl->ctx)
 		{
 			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -270,9 +270,9 @@ namespace OpenViBE
 		PlayerReturnCode returnCode = PlayerReturnCode::Success;
 
 		// set up global token
-		if (command.tokenList) { setConfigurationTokenList(m_Pimpl->kernelContext->getConfigurationManager(), command.tokenList.get()); }
+		if (command.tokenList) { setConfigurationTokenList(m_Pimpl->ctx->getConfigurationManager(), command.tokenList.get()); }
 
-		auto& playerManager = m_Pimpl->kernelContext->getPlayerManager();
+		auto& playerManager = m_Pimpl->ctx->getPlayerManager();
 
 		// Keep 2 different containers because identifier information is
 		// not relevant during the performance sensitive loop task.

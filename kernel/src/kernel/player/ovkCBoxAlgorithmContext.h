@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox);
+			CBoxAlgorithmContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox, const IBox* pBox);
 			~CBoxAlgorithmContext() override;
 			const IBox* getStaticBoxContext() override;
 			IBoxIO* getDynamicBoxContext() override;

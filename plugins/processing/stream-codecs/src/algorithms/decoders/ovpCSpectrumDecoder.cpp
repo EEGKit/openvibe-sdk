@@ -33,20 +33,20 @@ bool CSpectrumDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Header_Spectrum) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
-	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated) { return false; }
-	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { return false; }
-	if (rIdentifier == OVTK_NodeId_Header_Spectrum_SamplingRate) { return false; }
-	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Header_Spectrum) { return true; }
+	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) { return true; }
+	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
+	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated) { return false; }
+	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { return false; }
+	if (identifier == OVTK_NodeId_Header_Spectrum_SamplingRate) { return false; }
+	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
-void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -57,7 +57,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		m_ui32FrequencyBandIndex = 0;
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { }
-	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
+	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
 void CSpectrumDecoder::processChildData(const void* buffer, const uint64_t size)

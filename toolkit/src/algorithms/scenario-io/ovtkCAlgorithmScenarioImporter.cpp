@@ -131,7 +131,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& rAlgorithmContext) : m_rAlgorithmContext(rAlgorithmContext) { }
+		explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& algorithmCtx) : m_rAlgorithmContext(algorithmCtx) { }
 
 		bool processStart(const CIdentifier& identifier) override;
 		bool processIdentifier(const CIdentifier& identifier, const CIdentifier& value) override;

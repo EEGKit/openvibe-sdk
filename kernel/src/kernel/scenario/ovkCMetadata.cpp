@@ -14,8 +14,8 @@ using namespace Plugins;
 //___________________________________________________________________//
 //                                                                   //
 
-CMetadata::CMetadata(const IKernelContext& kernelContext, CScenario& ownerScenario)
-	: TKernelObject<IMetadata>(kernelContext)
+CMetadata::CMetadata(const IKernelContext& ctx, CScenario& ownerScenario)
+	: TKernelObject<IMetadata>(ctx)
 	  , m_OwnerScenario(ownerScenario)
 	  , m_Identifier(OV_UndefinedIdentifier)
 	  , m_Type(OV_UndefinedIdentifier)

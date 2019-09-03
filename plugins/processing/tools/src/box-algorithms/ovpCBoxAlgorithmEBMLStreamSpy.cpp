@@ -98,27 +98,27 @@ bool CBoxAlgorithmEBMLStreamSpy::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	const auto n = m_vName.find(rIdentifier);
-	const auto t = m_vType.find(rIdentifier);
+	const auto n = m_vName.find(identifier);
+	const auto t = m_vType.find(identifier);
 	if (n != m_vName.end() && t != m_vType.end()) { return (t->second == "master"); }
 	return false;
 }
 
-void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
+void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& identifier)
 {
-	const auto n = m_vName.find(rIdentifier);
+	const auto n = m_vName.find(identifier);
 
 	getLogManager() << m_eLogLevel;
 
 	for (size_t i = 0; i <= m_vNodes.size(); i++) { getLogManager() << "  "; }
 
-	getLogManager() << "Opened EBML node [id:" << CIdentifier(rIdentifier) << "]-[name:" << CString(n != m_vName.end() ? n->second.c_str() : "unknown") << "]";
+	getLogManager() << "Opened EBML node [id:" << CIdentifier(identifier) << "]-[name:" << CString(n != m_vName.end() ? n->second.c_str() : "unknown") << "]";
 
-	if (isMasterChild(rIdentifier)) { getLogManager() << "\n"; }
+	if (isMasterChild(identifier)) { getLogManager() << "\n"; }
 
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 }
 
 template <class T>

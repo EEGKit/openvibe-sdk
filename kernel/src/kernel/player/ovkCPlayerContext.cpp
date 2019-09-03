@@ -6,19 +6,11 @@
 using namespace OpenViBE;
 using namespace Kernel;
 
-CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
-	: TKernelObject<IPlayerContext>(rKernelContext)
-	  , m_rSimulatedBox(*pSimulatedBox)
-	  , m_rPluginManager(rKernelContext.getPluginManager())
-	  , m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
-	  , m_rConfigurationManager(rKernelContext.getConfigurationManager())
-	  , m_rLogManager(rKernelContext.getLogManager())
-	  , m_rErrorManager(rKernelContext.getErrorManager())
-	  , m_rScenarioManager(rKernelContext.getScenarioManager())
-	  , m_rTypeManager(rKernelContext.getTypeManager())
-	  , m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox) {}
-
-CPlayerContext::~CPlayerContext() {}
+CPlayerContext::CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox)
+	: TKernelObject<IPlayerContext>(ctx), m_rSimulatedBox(*pSimulatedBox), m_rPluginManager(ctx.getPluginManager()),
+	  m_rAlgorithmManager(ctx.getAlgorithmManager()), m_rConfigurationManager(ctx.getConfigurationManager()),
+	  m_rLogManager(ctx.getLogManager()), m_rErrorManager(ctx.getErrorManager()), m_rScenarioManager(ctx.getScenarioManager()),
+	  m_rTypeManager(ctx.getTypeManager()), m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox) {}
 
 bool CPlayerContext::sendSignal(const CMessageSignal& /*messageSignal*/)
 {
@@ -27,14 +19,14 @@ bool CPlayerContext::sendSignal(const CMessageSignal& /*messageSignal*/)
 	return false;
 }
 
-bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CIdentifier& /*rTargetIdentifier*/)
+bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CIdentifier& /*dstID*/)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
 	return false;
 }
 
-bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CIdentifier* /*pTargetIdentifier*/, const uint32_t /*ui32TargetIdentifierCount*/)
+bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CIdentifier* /*dstID*/, const uint32_t /*nDstID*/)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
@@ -58,24 +50,3 @@ bool CPlayerContext::play() { return m_rSimulatedBox.getScheduler().getPlayer().
 bool CPlayerContext::forward() { return m_rSimulatedBox.getScheduler().getPlayer().forward(); }
 
 EPlayerStatus CPlayerContext::getStatus() const { return m_rSimulatedBox.getScheduler().getPlayer().getStatus(); }
-
-IAlgorithmManager& CPlayerContext::getAlgorithmManager() const { return m_rAlgorithmManager; }
-
-IConfigurationManager& CPlayerContext::getConfigurationManager() const { return m_rConfigurationManager; }
-
-ILogManager& CPlayerContext::getLogManager() const { return m_BoxLogManager; }
-
-IErrorManager& CPlayerContext::getErrorManager() const { return m_rErrorManager; }
-
-IScenarioManager& CPlayerContext::getScenarioManager() const { return m_rScenarioManager; }
-
-ITypeManager& CPlayerContext::getTypeManager() const { return m_rTypeManager; }
-
-bool CPlayerContext::canCreatePluginObject(const CIdentifier& pluginIdentifier) const { return m_rPluginManager.canCreatePluginObject(pluginIdentifier); }
-
-Plugins::IPluginObject* CPlayerContext::createPluginObject(const CIdentifier& pluginIdentifier) const
-{
-	return m_rPluginManager.createPluginObject(pluginIdentifier);
-}
-
-bool CPlayerContext::releasePluginObject(Plugins::IPluginObject* pluginObject) const { return m_rPluginManager.releasePluginObject(pluginObject); }

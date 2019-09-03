@@ -5,8 +5,8 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace std;
 
-CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& rKernelContext)
-	: m_KernelContext(rKernelContext) {}
+CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& ctx)
+	: m_KernelContext(ctx) {}
 
 CPluginObjectDescEnum::~CPluginObjectDescEnum() {}
 

@@ -16,8 +16,8 @@ namespace OpenViBE
 			class _CName_ : public _Base_##_CName_ \
 			{ \
 			public: \
-				_CName_(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& rSubTypeIdentifier=OV_UndefinedIdentifier) \
-					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(rKernelContext, eParameterType, rSubTypeIdentifier) \
+				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& subTypeID=OV_UndefinedIdentifier) \
+					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(ctx, eParameterType, subTypeID) \
 				{ \
 					m_oDefaultValue=0; \
 					memcpy(&m_Value, &m_oDefaultValue, sizeof(IType)); \
@@ -32,8 +32,8 @@ namespace OpenViBE
 			class _CName_ : public _Base_##_CName_ \
 			{ \
 			public: \
-				_CName_(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType) \
-					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(rKernelContext, eParameterType) \
+				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType) \
+					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(ctx, eParameterType) \
 				{ \
 					IType l_pDefaultValue=&m_oDefaultValue; \
 					memcpy(&m_Value, &l_pDefaultValue, sizeof(IType)); \
@@ -48,8 +48,8 @@ namespace OpenViBE
 			class _CName_ : public _Base_##_CName_ \
 			{ \
 			public: \
-				_CName_(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType) \
-					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(rKernelContext, eParameterType) \
+				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType) \
+					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(ctx, eParameterType) \
 				{ \
 					m_oDefaultValue = nullptr; \
 					IType l_pDefaultValue=&m_oDefaultValue; \

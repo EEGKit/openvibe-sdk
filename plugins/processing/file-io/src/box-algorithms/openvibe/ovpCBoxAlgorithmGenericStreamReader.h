@@ -61,8 +61,8 @@ namespace OpenViBEPlugins
 
 		private:
 			bool initializeFile();
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
 			void processChildData(const void* buffer, const uint64_t size) override;
 			void closeChild() override;
 		};

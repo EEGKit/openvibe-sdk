@@ -22,8 +22,8 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_SpectrumStreamDecoder)
 
 			// ebml callbacks
-			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
-			void openChild(const EBML::CIdentifier& rIdentifier) override;
+			bool isMasterChild(const EBML::CIdentifier& identifier) override;
+			void openChild(const EBML::CIdentifier& identifier) override;
 			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 

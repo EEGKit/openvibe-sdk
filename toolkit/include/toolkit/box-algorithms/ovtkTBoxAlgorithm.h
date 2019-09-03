@@ -92,29 +92,29 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager() { return getPlayerContext().getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager() { return getPlayerContext().getTypeManager(); }
 
-		virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) { return getPlayerContext().canCreatePluginObject(pluginIdentifier); }
+		virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginID) { return getPlayerContext().canCreatePluginObject(pluginID); }
 
-		virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier)
+		virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginID)
 		{
-			return getPlayerContext().createPluginObject(pluginIdentifier);
+			return getPlayerContext().createPluginObject(pluginID);
 		}
 
 		virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) { return getPlayerContext().releasePluginObject(pluginObject); }
 
 		// ====================================================================================================================================
 
-		virtual void appendOutputChunkData(const uint32_t ui32OutputIndex, const void* buffer, const uint64_t size)
+		virtual void appendOutputChunkData(const uint32_t outputIdx, const void* buffer, const uint64_t size)
 		{
 			OpenViBE::Kernel::IBoxAlgorithmContext* l_pBoxAlgorithmContext = this->getBoxAlgorithmContext();
 			if (l_pBoxAlgorithmContext)
 			{
 				OpenViBE::Kernel::IBoxIO* l_pDynamicBoxContext = l_pBoxAlgorithmContext->getDynamicBoxContext();
-				if (l_pDynamicBoxContext) { l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const uint8_t*>(buffer), size); }
+				if (l_pDynamicBoxContext) { l_pDynamicBoxContext->appendOutputChunkData(outputIdx, static_cast<const uint8_t*>(buffer), size); }
 			}
 		}
 
-		template <uint32_t ui32OutputIndex>
-		void appendOutputChunkData(const void* buffer, const uint64_t size) { appendOutputChunkData(ui32OutputIndex, buffer, size); }
+		template <uint32_t outputIdx>
+		void appendOutputChunkData(const void* buffer, const uint64_t size) { appendOutputChunkData(outputIdx, buffer, size); }
 
 		_IsDerivedFromClass_(CBoxAlgorithmParentClass, OVTK_ClassId_)
 
@@ -133,24 +133,24 @@ namespace OpenViBEToolkit
 				boxAlgorithmContext.getStaticBoxContext()->getSettingType(index, m_oSettingType);
 			}
 
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const OpenViBE::CString& rsName)
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const OpenViBE::CString& name)
 				: m_rLogManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
 				  m_rErrorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
 				  m_rTypeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
 				  m_rConfigurationManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(rsName, m_sSettingValue);
-				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rsName, m_oSettingType);
+				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(name, m_sSettingValue);
+				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, name, m_oSettingType);
 			}
 
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const OpenViBE::CIdentifier& rIdentifier)
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const OpenViBE::CIdentifier& identifier)
 				: m_rLogManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
 				  m_rErrorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
 				  m_rTypeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
 				  m_rConfigurationManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(rIdentifier, m_sSettingValue);
-				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rIdentifier, m_oSettingType);
+				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(identifier, m_sSettingValue);
+				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, identifier, m_oSettingType);
 			}
 
 			operator uint32_t()

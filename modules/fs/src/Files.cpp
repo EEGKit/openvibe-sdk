@@ -295,11 +295,11 @@ bool Files::getParentPath(const char* path, char* parentPath, size_t size)
 	return true;
 }
 
-bool Files::getFilename(const char* sPath, char* sFilename)
+bool Files::getFilename(const char* path, char* filename)
 {
-	if (!sPath || !sFilename) { return false; }
+	if (!path || !filename) { return false; }
 
-	strcpy(sFilename, boost::filesystem::path(sPath).filename().string().c_str());
+	strcpy(filename, boost::filesystem::path(path).filename().string().c_str());
 
 	return true;
 }
@@ -313,11 +313,11 @@ bool Files::getFilename(const char* path, char* filename, size_t size)
 	return true;
 }
 
-bool Files::getFilenameWithoutExtension(const char* path, char* sFilename)
+bool Files::getFilenameWithoutExtension(const char* path, char* filename)
 {
-	if (!path || !sFilename) { return false; }
+	if (!path || !filename) { return false; }
 
-	strcpy(sFilename, boost::filesystem::path(path).filename().replace_extension("").string().c_str());
+	strcpy(filename, boost::filesystem::path(path).filename().replace_extension("").string().c_str());
 
 	return true;
 }

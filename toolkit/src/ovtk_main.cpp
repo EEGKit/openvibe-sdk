@@ -12,11 +12,11 @@ using namespace OpenViBEToolkit;
 //                                                                                                                    *
 // ********************************************************************************************************************
 
-bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
+bool OpenViBEToolkit::initialize(const IKernelContext& ctx)
 {
-	ITypeManager& l_rTypeManager = rKernelContext.getTypeManager();
+	ITypeManager& l_rTypeManager = ctx.getTypeManager();
 
-	initializeStimulationList(rKernelContext);
+	initializeStimulationList(ctx);
 
 	// Register measurement units. See ovtk_defines.h for details.
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "?", OVTK_UNIT_Unspecified);
@@ -256,4 +256,4 @@ bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	return true;
 }
 
-bool OpenViBEToolkit::uninitialize(const IKernelContext& /*rKernelContext*/) { return true; }
+bool OpenViBEToolkit::uninitialize(const IKernelContext& /*ctx*/) { return true; }

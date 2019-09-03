@@ -19,26 +19,26 @@ namespace Socket
 
 		bool connect(const char* url, const unsigned long baudRate) override
 		{
-			return m_oConnectionSerialDelegate.fpConnect(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, url, baudRate);
+			return m_oConnectionSerialDelegate.fpConnect(m_oConnectionSerialDelegate.oConnectionDelegate.data, url, baudRate);
 		}
 
 		uint32_t getPendingByteCount() override
 		{
-			return m_oConnectionSerialDelegate.fpGetPendingByteCount(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
+			return m_oConnectionSerialDelegate.fpGetPendingByteCount(m_oConnectionSerialDelegate.oConnectionDelegate.data);
 		}
 
-		bool flush() override { return m_oConnectionSerialDelegate.fpFlush(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
+		bool flush() override { return m_oConnectionSerialDelegate.fpFlush(m_oConnectionSerialDelegate.oConnectionDelegate.data); }
 
-		const char* getLastError() override { return m_oConnectionSerialDelegate.fpGetLastError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
+		const char* getLastError() override { return m_oConnectionSerialDelegate.fpGetLastError(m_oConnectionSerialDelegate.oConnectionDelegate.data); }
 
 		bool isErrorRaised()
-		override { return false; }	// return m_oConnectionSerialDelegate.fpIsErrorRaised(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
-		void clearError() override { }					// return m_oConnectionSerialDelegate.fpClearError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
+		override { return false; }	// return m_oConnectionSerialDelegate.fpIsErrorRaised(m_oConnectionSerialDelegate.oConnectionDelegate.data);
+		void clearError() override { }					// return m_oConnectionSerialDelegate.fpClearError(m_oConnectionSerialDelegate.oConnectionDelegate.data);
 		bool setTimeouts(const uint32_t /*decisecondsTimeout*/)
 		override
 		{
 			return true;
-		}	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, decisecondsTimeout);
+		}	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.data, decisecondsTimeout);
 	};
 
 	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate)

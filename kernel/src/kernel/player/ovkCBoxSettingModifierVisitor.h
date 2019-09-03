@@ -18,7 +18,7 @@ public:
 																													m_pConfigurationManager(
 																														pConfigurationManager) {}
 
-	void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override;
+	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) override;
 	void processChildData(const char* sData) override;
 	void closeChild() override;
 	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& box) override;

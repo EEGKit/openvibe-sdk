@@ -23,8 +23,8 @@ using namespace Plugins;
 
 #define OV_IncorrectTime 0xffffffffffffffffULL
 
-CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
-	: TKernelObject<IBoxIO>(rKernelContext), m_rScheduler(rScheduler), m_ui64LastClockActivationDate(OV_IncorrectTime) {}
+CSimulatedBox::CSimulatedBox(const IKernelContext& ctx, CScheduler& rScheduler)
+	: TKernelObject<IBoxIO>(ctx), m_rScheduler(rScheduler), m_ui64LastClockActivationDate(OV_IncorrectTime) {}
 
 CSimulatedBox::~CSimulatedBox() {}
 

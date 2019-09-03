@@ -78,8 +78,8 @@ namespace
 	{
 	public:
 
-		explicit CErrorHandler(IAlgorithmContext& rAlgorithmContext)
-			: m_rAlgorithmContext(rAlgorithmContext) { }
+		explicit CErrorHandler(IAlgorithmContext& algorithmCtx)
+			: m_rAlgorithmContext(algorithmCtx) { }
 
 		void fatalError(const SAXParseException& exception) override { this->error(exception); }
 
@@ -112,9 +112,9 @@ CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter() { m_pReader = cre
 
 CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter() { m_pReader->release(); }
 
-void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
+void CAlgorithmXMLScenarioImporter::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
 {
-	m_vNodes.push(sName);
+	m_vNodes.push(name);
 
 	std::string& l_sTop = m_vNodes.top();
 

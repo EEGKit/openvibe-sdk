@@ -26,10 +26,10 @@ using namespace Kernel;
 using namespace Kernel;
 using namespace Plugins;
 
-void CBoxSettingModifierVisitor::openChild(const char* sName, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, uint64_t /*ui64AttributeCount*/)
+void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, uint64_t /*nAttribute*/)
 {
-	if (!m_bIsParsingSettingOverride) { if (string(sName) == string("OpenViBE-SettingsOverride")) { m_bIsParsingSettingOverride = true; } }
-	else if (string(sName) == string("SettingValue")) { m_bIsParsingSettingValue = true; }
+	if (!m_bIsParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_bIsParsingSettingOverride = true; } }
+	else if (string(name) == string("SettingValue")) { m_bIsParsingSettingValue = true; }
 	else { m_bIsParsingSettingValue = false; }
 }
 

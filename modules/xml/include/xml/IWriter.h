@@ -16,7 +16,7 @@ namespace XML
 	class XML_API IWriter
 	{
 	public:
-		virtual bool openChild(const char* sName) = 0;
+		virtual bool openChild(const char* name) = 0;
 		virtual bool setAttribute(const char* sAttributeName, const char* sAttributeValue) = 0;
 		virtual bool setChildData(const char* sData) = 0;
 		virtual bool closeChild() = 0;

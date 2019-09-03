@@ -25,8 +25,8 @@ const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
 	OV_AttributeId_Box_FlagCanModifySetting
 };
 
-CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* srcBox)
-	: TKernelObject<IKernelObject>(scenario.getKernelContext()), m_Scenario(&scenario), m_SourceBox(srcBox)
+CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* box)
+	: TKernelObject<IKernelObject>(scenario.getKernelContext()), m_Scenario(&scenario), m_SourceBox(box)
 {
 	m_OriginalToUpdatedCorrespondence[Input]   = std::map<uint32_t, uint32_t>();
 	m_OriginalToUpdatedCorrespondence[Output]  = std::map<uint32_t, uint32_t>();
@@ -241,15 +241,15 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 		CIdentifier sTypeIdentifier;
 		CIdentifier sIdentifier;
-		CString sName;
+		CString name;
 		m_SourceBox->getInterfacorType(interfacorType, index, sTypeIdentifier);
 		m_SourceBox->getInterfacorIdentifier(interfacorType, index, sIdentifier);
-		m_SourceBox->getInterfacorName(interfacorType, index, sName);
+		m_SourceBox->getInterfacorName(interfacorType, index, name);
 
 		InterfacorRequest request;
 		request.index       = index;
 		request.identifier  = sIdentifier;
-		request.name        = sName;
+		request.name        = name;
 		request.typeID      = sTypeIdentifier;
 		request.toBeRemoved = true;
 

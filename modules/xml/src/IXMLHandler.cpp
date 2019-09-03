@@ -27,7 +27,7 @@ namespace XML
 		std::string getLastErrorString() const override;
 
 		//Internal function for parsing
-		void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
+		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
 		void processChildData(const char* sData);
 		void closeChild();
 
@@ -143,10 +143,10 @@ bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) c
 	return false;
 }
 
-void IXMLHandlerImpl::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
+void IXMLHandlerImpl::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
 {
-	IXMLNode* l_pNode = createNode(sName);
-	for (uint32_t i = 0; i < ui64AttributeCount; ++i) { l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]); }
+	IXMLNode* l_pNode = createNode(name);
+	for (uint32_t i = 0; i < nAttribute; ++i) { l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]); }
 	m_oNodeStack.push(l_pNode);
 }
 

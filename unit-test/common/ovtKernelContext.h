@@ -27,11 +27,11 @@
 
 namespace OpenViBETest
 {
-	class KernelContext final
+	class ctx final
 	{
 	public:
-		KernelContext() = default;
-		~KernelContext() = default;
+		ctx() = default;
+		~ctx() = default;
 
 		bool initialize();
 		bool uninitialize();

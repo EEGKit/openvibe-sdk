@@ -521,7 +521,7 @@ bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 	return true;
 }
 
-bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
+bool CCSVHandler::readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
 {
 	if (!m_HasDataToRead) { return false; }
 
@@ -551,7 +551,7 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 
 	SMatrixChunk chunk(0, 0, std::vector<double>(matrixSize), 0);
 
-	while (chunks.size() < chunksToRead && m_HasDataToRead)
+	while (chunks.size() < linesToRead && m_HasDataToRead)
 	{
 		for (uint32_t lineIndex = 0; lineIndex < m_SampleCountPerBuffer; lineIndex++)
 		{
@@ -854,23 +854,23 @@ bool CCSVHandler::addEvent(uint64_t code, double date, double duration)
 	return true;
 }
 
-bool CCSVHandler::addEvent(const SStimulationChunk& stimulation)
+bool CCSVHandler::addEvent(const SStimulationChunk& event)
 {
-	if (std::signbit(stimulation.stimulationDate))
+	if (std::signbit(event.stimulationDate))
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DateError;
 		return false;
 	}
 
-	if (std::signbit(stimulation.stimulationDuration))
+	if (std::signbit(event.stimulationDuration))
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DurationError;
 		return false;
 	}
 
-	m_Stimulations.push_back(stimulation);
+	m_Stimulations.push_back(event);
 	return true;
 }
 
@@ -892,14 +892,14 @@ ELogErrorCodes CCSVHandler::getLastLogError() { return m_LogError; }
 
 std::string CCSVHandler::getLastErrorString() { return m_LastStringError; }
 
-std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChunk>& stimulationToPrint) const
+std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChunk>& stimulationsToPrint) const
 {
-	if (stimulationToPrint.empty()) { return std::string(2, s_Separator); } // Empty columns
+	if (stimulationsToPrint.empty()) { return std::string(2, s_Separator); } // Empty columns
 
 	std::array<std::string, 3> stimulations;
 
-	std::vector<SStimulationChunk>::const_iterator itBegin = stimulationToPrint.cbegin();
-	std::vector<SStimulationChunk>::const_iterator itEnd   = stimulationToPrint.cend();
+	std::vector<SStimulationChunk>::const_iterator itBegin = stimulationsToPrint.cbegin();
+	std::vector<SStimulationChunk>::const_iterator itEnd   = stimulationsToPrint.cend();
 
 	char buffer[s_MaximumFloatDecimal];
 

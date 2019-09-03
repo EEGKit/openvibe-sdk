@@ -21,10 +21,10 @@ namespace OpenViBEPlugins
 
 			CAlgorithmXMLScenarioExporter();
 			~CAlgorithmXMLScenarioExporter() override;
-			bool exportStart(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier) override;
-			bool exportIdentifier(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier,
+			bool exportStart(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& identifier) override;
+			bool exportIdentifier(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& identifier,
 								  const OpenViBE::CIdentifier& rValue) override;
-			bool exportString(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CString& rValue) override;
+			bool exportString(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& identifier, const OpenViBE::CString& rValue) override;
 			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& identifier, uint64_t value) override;
 			bool exportStop(OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
 

@@ -85,12 +85,12 @@ namespace OpenViBE
 			virtual bool setName(const CString& name) = 0;
 			/**
 			 * \brief Changes the algorithm identifier of this box
-			 * \param rAlgorithmClassIdentifier [in] : The new algorithm
+			 * \param algorithmClassID [in] : The new algorithm
 			 *        identifier this box should take.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setAlgorithmClassIdentifier(const CIdentifier& rAlgorithmClassIdentifier) = 0;
+			virtual bool setAlgorithmClassIdentifier(const CIdentifier& algorithmClassID) = 0;
 
 
 			/**
@@ -125,7 +125,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Initializes the box from box algorithm descriptor
-			 * \param rAlgorithmClassIdentifier [in] : The new algorithm
+			 * \param algorithmClassID [in] : The new algorithm
 			 *        identifier this box should take.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
@@ -133,7 +133,7 @@ namespace OpenViBE
 			 * Resets the box and initializes its input/output/settings
 			 * according to the box algorithm descriptor
 			 */
-			virtual bool initializeFromAlgorithmClassIdentifier(const CIdentifier& rAlgorithmClassIdentifier) = 0;
+			virtual bool initializeFromAlgorithmClassIdentifier(const CIdentifier& algorithmClassID) = 0;
 			/**
 			 * \brief Initializes the box from an already existing box
 			 * \param existingBox [in] : The existing box.

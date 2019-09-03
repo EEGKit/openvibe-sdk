@@ -12,8 +12,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const CString& sApplicationName, const CString& sLogFilename)
-	: TKernelObject<ILogListener>(rKernelContext)
+CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& sApplicationName, const CString& sLogFilename)
+	: TKernelObject<ILogListener>(ctx)
 	  , m_sApplicationName(sApplicationName)
 	  , m_sLogFilename(sLogFilename)
 	  , m_bTimeInSeconds(true), m_ui64TimePrecision(3)

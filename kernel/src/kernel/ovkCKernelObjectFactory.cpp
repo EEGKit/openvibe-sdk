@@ -17,8 +17,8 @@ using namespace OpenViBE;
 		if(sptr) { m_oCreatedObjects.push_back(sptr); } \
 	}
 
-Kernel::CKernelObjectFactory::CKernelObjectFactory(const IKernelContext& rKernelContext)
-	: TKernelObject<IKernelObjectFactory>(rKernelContext) {}
+Kernel::CKernelObjectFactory::CKernelObjectFactory(const IKernelContext& ctx)
+	: TKernelObject<IKernelObjectFactory>(ctx) {}
 
 IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIdentifier)
 {

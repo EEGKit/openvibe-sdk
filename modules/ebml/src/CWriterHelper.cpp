@@ -10,7 +10,7 @@ bool CWriterHelper::connect(IWriter* pWriter) { return m_pWriterHelperImplementa
 
 bool CWriterHelper::disconnect() { return m_pWriterHelperImplementation->disconnect(); }
 
-bool CWriterHelper::openChild(const CIdentifier& rIdentifier) { return m_pWriterHelperImplementation->openChild(rIdentifier); }
+bool CWriterHelper::openChild(const CIdentifier& identifier) { return m_pWriterHelperImplementation->openChild(identifier); }
 
 bool CWriterHelper::closeChild() { return m_pWriterHelperImplementation->closeChild(); }
 

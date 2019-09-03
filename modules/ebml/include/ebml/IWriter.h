@@ -65,7 +65,7 @@ namespace EBML
 
 		/**
 		 * \brief Starts a new child node
-		 * \param rIdentifier [in] : The identifier of the new child node
+		 * \param identifier [in] : The identifier of the new child node
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 *
@@ -74,7 +74,7 @@ namespace EBML
 		 *
 		 * Once the node has been opened, it should be closed calling \c closeChild.
 		 */
-		virtual bool openChild(const CIdentifier& rIdentifier) = 0;
+		virtual bool openChild(const CIdentifier& identifier) = 0;
 		/**
 		 * \brief Sets data for simple child node
 		 * \param buffer [in] : The buffer to set as child data

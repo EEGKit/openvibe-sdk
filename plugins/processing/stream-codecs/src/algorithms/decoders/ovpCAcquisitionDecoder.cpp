@@ -45,25 +45,25 @@ bool CAcquisitionDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CAcquisitionDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CAcquisitionDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Acquisition_Header_BufferDuration) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Header_ExperimentInformation) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Header_Signal) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Header_Stimulation) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Header_ChannelUnits) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_Signal) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_Stimulation) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { return false; }
-	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { return false; }
-	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Acquisition_Header_BufferDuration) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Header_ExperimentInformation) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Header_Signal) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Header_Stimulation) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Header_ChannelUnits) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Buffer_Signal) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Buffer_Stimulation) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { return false; }
+	if (identifier == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { return false; }
+	return CEBMLBaseDecoder::isMasterChild(identifier);
 }
 
-void CAcquisitionDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CAcquisitionDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -79,7 +79,7 @@ void CAcquisitionDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	) { }
-	else { CEBMLBaseDecoder::openChild(rIdentifier); }
+	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
 void CAcquisitionDecoder::processChildData(const void* buffer, const uint64_t size)

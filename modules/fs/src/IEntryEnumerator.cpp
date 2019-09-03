@@ -31,7 +31,7 @@ namespace FS
 	{
 	public:
 
-		explicit CEntry(const string& sName) : m_sName(sName) {}
+		explicit CEntry(const string& name) : m_sName(name) {}
 		const char* getName() override { return m_sName.c_str(); }
 
 		string m_sName;

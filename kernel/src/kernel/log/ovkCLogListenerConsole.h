@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CLogListenerConsole(const IKernelContext& rKernelContext, const CString& sApplicationName);
+			CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName);
 			bool isActive(ELogLevel eLogLevel) override;
 			bool activate(ELogLevel eLogLevel, bool bActive) override;
 			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;

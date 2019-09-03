@@ -22,7 +22,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager = nullptr);
+			CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* pParentConfigurationManager = nullptr);
 			void clear() override;
 			bool addConfigurationFromFile(const CString& rFileNameWildCard) override;
 			CIdentifier createConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue) override;

@@ -28,12 +28,12 @@ namespace OpenViBE
 
 			/**
 			 * \brief Creates a new algorithm
-			 * \param rAlgorithmClassIdentifier [out] : the class identifier of
+			 * \param algorithmClassID [out] : the class identifier of
 			 *        the newly created algorithm
 			 * \return \e true in case of success.
 			 * \return \e OV_UndefinedIdentifier in case of error.
 			 */
-			virtual CIdentifier createAlgorithm(const CIdentifier& rAlgorithmClassIdentifier) = 0;
+			virtual CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) = 0;
 			/**
 			  * \brief Creates a new algorithm
 			  * \param rAlgorithmDesc [in] : the algorithm descriptor of

@@ -1,6 +1,6 @@
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #pragma once
+
+#if defined TARGET_HAS_ThirdPartyEIGEN
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>

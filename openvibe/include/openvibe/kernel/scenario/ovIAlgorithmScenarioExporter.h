@@ -15,10 +15,10 @@ namespace OpenViBE
 		class OV_API IAlgorithmScenarioExporter : public IAlgorithm
 		{
 		public:
-			virtual bool exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier) = 0;
-			virtual bool exportIdentifier(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const CIdentifier& rValue) = 0;
-			virtual bool exportString(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const CString& rValue) = 0;
-			virtual bool exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, uint64_t ui64Value) = 0;
+			virtual bool exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& identifier) = 0;
+			virtual bool exportIdentifier(IMemoryBuffer& rMemoryBuffer, const CIdentifier& identifier, const CIdentifier& rValue) = 0;
+			virtual bool exportString(IMemoryBuffer& rMemoryBuffer, const CIdentifier& identifier, const CString& rValue) = 0;
+			virtual bool exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& identifier, uint64_t ui64Value) = 0;
 			virtual bool exportStop(IMemoryBuffer& rMemoryBuffer) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithm, OV_UndefinedIdentifier)

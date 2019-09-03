@@ -9,8 +9,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CPlayerManager::CPlayerManager(const IKernelContext& rKernelContext)
-	: TKernelObject<IPlayerManager>(rKernelContext) {}
+CPlayerManager::CPlayerManager(const IKernelContext& ctx)
+	: TKernelObject<IPlayerManager>(ctx) {}
 
 bool CPlayerManager::createPlayer(CIdentifier& rPlayerIdentifier)
 {

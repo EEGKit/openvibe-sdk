@@ -25,7 +25,7 @@
 
 #include "ovtAssert.h"
 
-int uoFilesTest(int argc, char* argv[])
+int uoFilesTest(int /*argc*/, char* argv[])
 {
 	std::string outputDirectory = argv[1];
 

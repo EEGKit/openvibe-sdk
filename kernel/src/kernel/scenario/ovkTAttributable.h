@@ -17,8 +17,8 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TAttributable(const IKernelContext& rKernelContext)
-				: T(rKernelContext) { }
+			explicit TAttributable(const IKernelContext& ctx)
+				: T(ctx) { }
 
 			virtual bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue)
 			{

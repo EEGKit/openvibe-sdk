@@ -45,20 +45,20 @@ namespace OpenViBE
 			/**
 			* \brief Sends a message to another box
 			* \param messageEvent [in] : the message to send to the other box
-			* \param rTargetIdentifier [in] : the identifier of the other box
+			* \param dstID [in] : the identifier of the other box
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier& rTargetIdentifier) = 0;
+			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier& dstID) = 0;
 			/**
 			* \brief Broadcasts a message to several other boxes
 			* \param messageEvent [in] : the message to send
-			* \param pTargetIdentifier [in] : a pointer containing all
+			* \param dstID [in] : a pointer containing all
 			*        the targets which should receive the sent message.
-			* \param ui32TargetIdentifierCount [in] : the number of
-			*        targets contained in the \c pTargetIdentifier array.
+			* \param nDstID [in] : the number of
+			*        targets contained in the \c dstID array.
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier* pTargetIdentifier, const uint32_t ui32TargetIdentifierCount) = 0;
+			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier* dstID, const uint32_t nDstID) = 0;
 
 			//}@
 
@@ -177,8 +177,8 @@ namespace OpenViBE
 			 */
 			virtual ITypeManager& getTypeManager() const = 0;
 
-			virtual bool canCreatePluginObject(const CIdentifier& pluginIdentifier) const = 0;
-			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginIdentifier) const = 0;
+			virtual bool canCreatePluginObject(const CIdentifier& pluginID) const = 0;
+			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginID) const = 0;
 			virtual bool releasePluginObject(Plugins::IPluginObject* pluginObject) const = 0;
 
 			//@}

@@ -2,7 +2,6 @@
 // Basic numeric types commonly used by OpenViBE kernel and modules
 //
 
-// #include <stdint.h>		// For C99
 #include <cstdint>
 // The following construction allows defining the same variables under different namespaces.
 // OV_APPEND_TO_NAMESPACE is a preprocessor define specified outside this file that names the desired namespace.

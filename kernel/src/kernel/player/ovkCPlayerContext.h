@@ -14,11 +14,11 @@ namespace OpenViBE
 		{
 		public:
 
-			CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox);
-			~CPlayerContext() override;
+			CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox);
+			~CPlayerContext() override { }
 			bool sendSignal(const CMessageSignal& messageSignal) override;
-			bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier& rTargetIdentifier) override;
-			bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier* pTargetIdentifier, const uint32_t ui32TargetIdentifierCount) override;
+			bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier& dstID) override;
+			bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier* dstID, const uint32_t nDstID) override;
 			uint64_t getCurrentTime() const override;
 			uint64_t getCurrentLateness() const override;
 			double getCurrentCPUUsage() const override;
@@ -30,15 +30,15 @@ namespace OpenViBE
 			EPlayerStatus getStatus() const override;
 
 			//@}
-			IAlgorithmManager& getAlgorithmManager() const override;
-			IConfigurationManager& getConfigurationManager() const override;
-			ILogManager& getLogManager() const override;
-			IErrorManager& getErrorManager() const override;
-			IScenarioManager& getScenarioManager() const override;
-			ITypeManager& getTypeManager() const override;
-			bool canCreatePluginObject(const CIdentifier& pluginIdentifier) const override;
-			Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginIdentifier) const override;
-			bool releasePluginObject(Plugins::IPluginObject* pluginObject) const override;
+			IAlgorithmManager& getAlgorithmManager() const override { return m_rAlgorithmManager; }
+			IConfigurationManager& getConfigurationManager() const override { return m_rConfigurationManager; }
+			ILogManager& getLogManager() const override { return m_BoxLogManager; }
+			IErrorManager& getErrorManager() const override { return m_rErrorManager; }
+			IScenarioManager& getScenarioManager() const override { return m_rScenarioManager; }
+			ITypeManager& getTypeManager() const override { return m_rTypeManager; }
+			bool canCreatePluginObject(const CIdentifier& pluginID) const override { return m_rPluginManager.canCreatePluginObject(pluginID); }
+			Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginID) const override { return m_rPluginManager.createPluginObject(pluginID); }
+			bool releasePluginObject(Plugins::IPluginObject* pluginObject) const override { return m_rPluginManager.releasePluginObject(pluginObject); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerContext>, OVK_ClassId_Kernel_Player_PlayerContext)
 

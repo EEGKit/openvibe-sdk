@@ -29,15 +29,12 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& rKernelContext, vector<IPluginModule*>& rPluginModule,
+			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& ctx, vector<IPluginModule*>& rPluginModule,
 												  map<IPluginObjectDesc*, IPluginModule*>& rPluginObjectDesc, bool& haveAllPluginsLoadedCorrectly)
-				: TKernelObject<IObject>(rKernelContext)
-				  , m_rPluginManager(rKernelContext.getPluginManager())
-				  , m_rPluginModule(rPluginModule)
-				  , m_rPluginObjectDesc(rPluginObjectDesc)
-				  , m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
+				: TKernelObject<IObject>(ctx), m_rPluginManager(ctx.getPluginManager()), m_rPluginModule(rPluginModule),
+				  m_rPluginObjectDesc(rPluginObjectDesc), m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
 
-			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
+			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& /*rAttributes*/) override
 			{
 				for (auto& pluginModule : m_rPluginModule)
 				{
@@ -126,8 +123,8 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginManager>(rKernelContext) {}
+CPluginManager::CPluginManager(const IKernelContext& ctx)
+	: TKernelObject<IPluginManager>(ctx) {}
 
 CPluginManager::~CPluginManager()
 {

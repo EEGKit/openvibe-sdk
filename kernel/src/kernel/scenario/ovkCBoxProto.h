@@ -10,15 +10,15 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxProto(const IKernelContext& rKernelContext, IBox& box);
-			bool addInput(const CString& sName, const CIdentifier& typeID, const CIdentifier& oIdentifier = OV_UndefinedIdentifier,
+			CBoxProto(const IKernelContext& ctx, IBox& box);
+			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
 						  const bool bNotify                                                              = true) override;
-			bool addOutput(const CString& sName, const CIdentifier& typeID, const CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
 						   const bool bNotify                                                              = true) override;
 
-			//virtual bool addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue); 
-			bool addSetting(const CString& sName, const CIdentifier& typeID, const CString& sDefaultValue,
-							const bool bModifiable = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+			//virtual bool addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue); 
+			bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue,
+							const bool bModifiable = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
 			bool addFlag(const EBoxFlag eBoxFlag) override;
 			bool addFlag(const CIdentifier& cIdentifierFlag) override;
 			bool addInputSupport(const CIdentifier& typeID) override;

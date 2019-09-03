@@ -30,12 +30,12 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tries to load a file as an OpenViBE module
-			 * \param sName [in] : the name of the file to try to load
+			 * \param name [in] : the name of the file to try to load
 			 * \param pError [out] : an optional output string containing the error on load failure
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool load(const CString& sName, CString* pError = nullptr) = 0;
+			virtual bool load(const CString& name, CString* pError = nullptr) = 0;
 			/**
 			 * \brief Tries to unload the loaded OpenViBE module
 			 * \param pError [out] : an optional output string containing the error on unload failure

@@ -31,20 +31,20 @@ bool CStimulationDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CStimulationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CStimulationDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation) { return true; }
-	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) { return false; }
-	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation) { return true; }
-	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier) { return false; }
-	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { return false; }
-	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { return false; }
-	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Buffer_Stimulation) { return true; }
+	if (identifier == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) { return false; }
+	if (identifier == OVTK_NodeId_Buffer_Stimulation_Stimulation) { return true; }
+	if (identifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier) { return false; }
+	if (identifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { return false; }
+	if (identifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { return false; }
+	return CEBMLBaseDecoder::isMasterChild(identifier);
 }
 
-void CStimulationDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CStimulationDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -54,7 +54,7 @@ void CStimulationDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) { }
-	else { CEBMLBaseDecoder::openChild(rIdentifier); }
+	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
 void CStimulationDecoder::processChildData(const void* buffer, const uint64_t size)

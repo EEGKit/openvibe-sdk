@@ -13,8 +13,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CScenarioManager::CScenarioManager(const IKernelContext& rKernelContext)
-	: TKernelObject<IScenarioManager>(rKernelContext) {}
+CScenarioManager::CScenarioManager(const IKernelContext& ctx)
+	: TKernelObject<IScenarioManager>(ctx) {}
 
 CScenarioManager::~CScenarioManager()
 {

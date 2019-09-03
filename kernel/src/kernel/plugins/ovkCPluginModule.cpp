@@ -22,7 +22,7 @@ namespace OpenViBE
 		class CPluginModuleBase : public TKernelObject<IPluginModule>
 		{
 		public:
-			explicit CPluginModuleBase(const IKernelContext& rKernelContext);
+			explicit CPluginModuleBase(const IKernelContext& ctx);
 			~CPluginModuleBase() override;
 			bool initialize() override;
 			bool getPluginObjectDescription(uint32_t index, IPluginObjectDesc*& rpPluginObjectDescription) override;
@@ -56,11 +56,11 @@ namespace OpenViBE
 			{
 			public:
 
-				explicit CPluginModuleContext(const IKernelContext& rKernelContext)
-					: TKernelObject<IPluginModuleContext>(rKernelContext)
-					  , m_rLogManager(rKernelContext.getLogManager())
-					  , m_rTypeManager(rKernelContext.getTypeManager())
-					  , m_rScenarioManager(rKernelContext.getScenarioManager()) { }
+				explicit CPluginModuleContext(const IKernelContext& ctx)
+					: TKernelObject<IPluginModuleContext>(ctx)
+					  , m_rLogManager(ctx.getLogManager())
+					  , m_rTypeManager(ctx.getTypeManager())
+					  , m_rScenarioManager(ctx.getScenarioManager()) { }
 
 				ILogManager& getLogManager() const override { return m_rLogManager; }
 				ITypeManager& getTypeManager() const override { return m_rTypeManager; }
@@ -81,8 +81,8 @@ namespace OpenViBE
 //___________________________________________________________________//
 //                                                                   //
 
-CPluginModuleBase::CPluginModuleBase(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext)
+CPluginModuleBase::CPluginModuleBase(const IKernelContext& ctx)
+	: TKernelObject<IPluginModule>(ctx)
 	  , m_bGotDescriptions(false)
 	  , onInitializeCB(nullptr)
 	  , onGetPluginObjectDescriptionCB(nullptr)
@@ -152,7 +152,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginModuleLinux(const IKernelContext& rKernelContext);
+			CPluginModuleLinux(const IKernelContext& ctx);
 
 			virtual bool load(const CString& sFileName, CString* pError);
 			virtual bool unload(CString* pError);
@@ -175,7 +175,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPluginModuleWindows(const IKernelContext& rKernelContext);
+			explicit CPluginModuleWindows(const IKernelContext& ctx);
 			bool load(const CString& sFileName, CString* pError) override;
 			bool unload(CString* pError) override;
 
@@ -201,7 +201,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPluginModuleDummy(const IKernelContext& rKernelContext);
+			explicit CPluginModuleDummy(const IKernelContext& ctx);
 
 			virtual bool load(const CString& sFileName, CString* pError);
 			virtual bool unload(CString* pError);
@@ -220,8 +220,8 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& rKernelContext)
-	:CPluginModuleBase(rKernelContext)
+CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& ctx)
+	:CPluginModuleBase(ctx)
 	,m_pFileHandle(NULL)
 {
 }
@@ -289,8 +289,8 @@ bool CPluginModuleLinux::isOpen() const
 
 #elif defined TARGET_OS_Windows
 
-CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& rKernelContext)
-	: CPluginModuleBase(rKernelContext)
+CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& ctx)
+	: CPluginModuleBase(ctx)
 	  , m_pFileHandle(nullptr) {}
 
 bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
@@ -371,8 +371,8 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 //___________________________________________________________________//
 //                                                                   //
 
-CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext)
+CPluginModule::CPluginModule(const IKernelContext& ctx)
+	: TKernelObject<IPluginModule>(ctx)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pImplementation=new CPluginModuleLinux(getKernelContext());

@@ -10,7 +10,7 @@ namespace EBML
 
 		explicit CWriter(IWriterCallback& rWriterCallback);
 		~CWriter() override;
-		bool openChild(const CIdentifier& rIdentifier) override;
+		bool openChild(const CIdentifier& identifier) override;
 		bool setChildData(const void* buffer, const uint64_t size) override;
 		bool closeChild() override;
 		void release() override;

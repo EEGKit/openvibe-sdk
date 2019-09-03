@@ -79,7 +79,7 @@ namespace EBML
 		class CReaderNode
 		{
 		public:
-			CReaderNode(const CIdentifier& rIdentifier, CReaderNode* pParentNode);
+			CReaderNode(const CIdentifier& identifier, CReaderNode* pParentNode);
 
 		private:
 			CReaderNode();
@@ -96,8 +96,8 @@ namespace EBML
 	} // namespace
 } // namespace EBML
 
-CReaderNode::CReaderNode(const CIdentifier& rIdentifier, CReaderNode* pParentNode)
-	: m_pParentNode(pParentNode), m_oIdentifier(rIdentifier) { }
+CReaderNode::CReaderNode(const CIdentifier& identifier, CReaderNode* pParentNode)
+	: m_pParentNode(pParentNode), m_oIdentifier(identifier) { }
 
 // ________________________________________________________________________________________________________________
 //

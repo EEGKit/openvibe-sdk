@@ -366,10 +366,10 @@ namespace OpenViBE
 	{
 		std::vector<std::string> args;
 #if defined TARGET_OS_Windows
-		int argCount;
-		LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &argCount);
+		int nArg;
+		LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &nArg);
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-		for (int i = 0; i < argCount; i++) { args.push_back(converter.to_bytes(argListUtf16[i])); }
+		for (int i = 0; i < nArg; i++) { args.push_back(converter.to_bytes(argListUtf16[i])); }
 #else
 		args = std::vector<std::string>(argv, argv + argc);
 #endif

@@ -12,12 +12,12 @@ CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Iden
 	m_ui64Identifier = (uint64_t(ui32Identifier1) << 32) + ui32Identifier2;
 }
 
-CIdentifier::CIdentifier(const CIdentifier& rIdentifier)
-	: m_ui64Identifier(rIdentifier.m_ui64Identifier) {}
+CIdentifier::CIdentifier(const CIdentifier& identifier)
+	: m_ui64Identifier(identifier.m_ui64Identifier) {}
 
-const CIdentifier& CIdentifier::operator=(const CIdentifier& rIdentifier)
+const CIdentifier& CIdentifier::operator=(const CIdentifier& identifier)
 {
-	m_ui64Identifier = rIdentifier.m_ui64Identifier;
+	m_ui64Identifier = identifier.m_ui64Identifier;
 	return *this;
 }
 

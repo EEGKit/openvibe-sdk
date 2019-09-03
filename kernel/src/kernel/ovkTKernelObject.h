@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TKernelObject(const IKernelContext& rKernelContext) : m_kernelContext(rKernelContext) { }
+			explicit TKernelObject(const IKernelContext& ctx) : m_kernelContext(ctx) { }
 
 			TKernelObject(const TKernelObject&)            = delete;
 			TKernelObject& operator=(const TKernelObject&) = delete;

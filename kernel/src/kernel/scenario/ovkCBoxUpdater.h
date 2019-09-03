@@ -32,7 +32,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxUpdater(CScenario& scenario, IBox* requestedBox);
+			CBoxUpdater(CScenario& scenario, IBox* box);
 			~CBoxUpdater() override;
 
 			bool initialize();

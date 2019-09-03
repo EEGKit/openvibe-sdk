@@ -6,8 +6,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CLogManager::CLogManager(const IKernelContext& rKernelContext)
-	: TKernelObject<ILogManager>(rKernelContext)
+CLogManager::CLogManager(const IKernelContext& ctx)
+	: TKernelObject<ILogManager>(ctx)
 	  , m_eCurrentLogLevel(LogLevel_Info) {}
 
 bool CLogManager::isActive(ELogLevel eLogLevel)

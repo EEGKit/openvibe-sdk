@@ -69,20 +69,23 @@ namespace Socket
 			return true;
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut) const override
-		{
-			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
+		bool isReadyToSend(const uint32_t /*timeOut*/) const override
+		{
+			if (!this->isConnected()) { return false; }
 			return true;
-
+		}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
+		bool isReadyToSend(const uint32_t timeOut) const override
+		{
+			if (!this->isConnected()) { return false; }
 			fd_set  l_oOutputFileDescriptorSet;
 			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=ui32TimeOut/1000;
-			l_oTimeout.tv_usec=(ui32TimeOut%1000)*1000;
+			l_oTimeout.tv_sec=timeOut/1000;
+			l_oTimeout.tv_usec=(timeOut%1000)*1000;
 
 			FD_ZERO(&l_oOutputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oOutputFileDescriptorSet);
@@ -90,12 +93,12 @@ namespace Socket
 			if(!::select(m_iFile+1, nullptr, &l_oOutputFileDescriptorSet, nullptr, &l_oTimeout)) { return false; }
 
 			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
+			return false;
+	}
 
 #endif
-			return false;
-		}
 
-		bool isReadyToReceive(const uint32_t ui32TimeOut) const override
+		bool isReadyToReceive(const uint32_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -111,8 +114,8 @@ namespace Socket
 
 			fd_set  l_oInputFileDescriptorSet;
 			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=ui32TimeOut/1000;
-			l_oTimeout.tv_usec=(ui32TimeOut%1000)*1000;
+			l_oTimeout.tv_sec=timeOut/1000;
+			l_oTimeout.tv_usec=(timeOut%1000)*1000;
 
 			FD_ZERO(&l_oInputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oInputFileDescriptorSet);

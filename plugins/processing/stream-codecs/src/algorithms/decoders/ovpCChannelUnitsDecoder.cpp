@@ -33,23 +33,23 @@ bool CChannelUnitsDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits) { return true; }
-	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }
-	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
+	if (identifier == OVTK_NodeId_Header_ChannelUnits) { return true; }
+	if (identifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }
+	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
-void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& rIdentifier)
+void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(rIdentifier);
+	m_vNodes.push(identifier);
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	if ((l_rTop == OVTK_NodeId_Header_ChannelUnits)
 		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	) { }
-	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
+	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
 void CChannelUnitsDecoder::processChildData(const void* buffer, const uint64_t size)

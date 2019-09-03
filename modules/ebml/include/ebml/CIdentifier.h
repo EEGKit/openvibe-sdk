@@ -48,12 +48,12 @@ namespace EBML
 		CIdentifier(uint32_t ui32Identifier1, uint32_t ui32Identifier2);
 		/**
 		 * \brief Copy constructor
-		 * \param rIdentifier [in] : The source identifier to use
+		 * \param identifier [in] : The source identifier to use
 		 *
 		 * Initializes this identifier to the same value as
 		 * the given source identifier.
 		 */
-		CIdentifier(const CIdentifier& rIdentifier);
+		CIdentifier(const CIdentifier& identifier);
 
 		//@}
 		/** \name Operators */
@@ -61,13 +61,13 @@ namespace EBML
 
 		/**
 		 * \brief Copy operator
-		 * \param rIdentifier [in] : The source identifier to copy from
+		 * \param identifier [in] : The source identifier to copy from
 		 * \return a const reference on this identifier
 		 *
 		 * Initializes this identifier to the same value as
 		 * the given source identifier.
 		 */
-		const CIdentifier& operator=(const CIdentifier& rIdentifier);
+		const CIdentifier& operator=(const CIdentifier& identifier);
 		/**
 		 * \brief Equality comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare

@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPlayerManager(const IKernelContext& rKernelContext);
+			explicit CPlayerManager(const IKernelContext& ctx);
 			bool createPlayer(CIdentifier& rPlayerIdentifier) override;
 			bool releasePlayer(const CIdentifier& rPlayerIdentifier) override;
 			IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier) override;

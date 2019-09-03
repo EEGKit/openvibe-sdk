@@ -25,8 +25,8 @@ namespace
 // ------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGenerator(const IKernelContext& kernelContext, const CString& docTemplateDirectory)
-	: CPluginObjectDescEnum(kernelContext), m_DocTemplateDirectory(docTemplateDirectory) {}
+CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGenerator(const IKernelContext& ctx, const CString& docTemplateDirectory)
+	: CPluginObjectDescEnum(ctx), m_DocTemplateDirectory(docTemplateDirectory) {}
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {

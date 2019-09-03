@@ -50,8 +50,8 @@ using namespace Plugins;
 //___________________________________________________________________//
 //                                                                   //
 
-CScheduler::CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer)
-	: TKernelObject<IKernelObject>(rKernelContext)
+CScheduler::CScheduler(const IKernelContext& ctx, CPlayer& rPlayer)
+	: TKernelObject<IKernelObject>(ctx)
 	  , m_rPlayer(rPlayer)
 	  , m_oScenarioIdentifier(OV_UndefinedIdentifier) {}
 

@@ -16,10 +16,10 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual bool processStart(const CIdentifier& rIdentifier) = 0;
-			virtual bool processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue) = 0;
-			virtual bool processString(const CIdentifier& rIdentifier, const CString& rValue) = 0;
-			virtual bool processUInteger(const CIdentifier& rIdentifier, uint64_t ui64Value) = 0;
+			virtual bool processStart(const CIdentifier& identifier) = 0;
+			virtual bool processIdentifier(const CIdentifier& identifier, const CIdentifier& rValue) = 0;
+			virtual bool processString(const CIdentifier& identifier, const CString& rValue) = 0;
+			virtual bool processUInteger(const CIdentifier& identifier, uint64_t ui64Value) = 0;
 			virtual bool processStop() = 0;
 
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_UndefinedIdentifier)

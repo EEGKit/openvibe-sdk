@@ -16,7 +16,7 @@ namespace XML
 		bool processData(const void* buffer, uint64_t size) override;
 		void release() override;
 
-		void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
+		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
 		void processChildData(const char* sData);
 		void closeChild();
 
@@ -61,9 +61,9 @@ void CReader::release()
 	delete this;
 }
 
-void CReader::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
+void CReader::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
 {
-	m_rReaderCallback.openChild(sName, sAttributeName, sAttributeValue, ui64AttributeCount);
+	m_rReaderCallback.openChild(name, sAttributeName, sAttributeValue, nAttribute);
 	m_sData = "";
 }
 

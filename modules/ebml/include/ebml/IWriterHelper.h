@@ -67,7 +67,7 @@ namespace EBML
 		//@{
 		/**
 		 * \brief Child opening binding
-		 * \param rIdentifier [in] : The identifier of the new child node
+		 * \param identifier [in] : The identifier of the new child node
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 *
@@ -75,7 +75,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::openChild for more details.
 		 */
-		virtual bool openChild(const CIdentifier& rIdentifier) = 0;
+		virtual bool openChild(const CIdentifier& identifier) = 0;
 		/**
 		 * \brief Child closing binding
 		 * \return \e true on success.

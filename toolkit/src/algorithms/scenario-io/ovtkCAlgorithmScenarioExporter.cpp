@@ -20,10 +20,10 @@ namespace OpenViBEToolkit
 			CAlgorithmScenarioExporterHelper(IAlgorithmContext& context, CAlgorithmScenarioExporter& parent);
 			bool exportBox(IMemoryBuffer& memoryBuffer, const IBox& box);
 			bool exportComment(IMemoryBuffer& memoryBuffer, const IComment& rComment);
-			bool exportMetadata(IMemoryBuffer& memoryBuffer, const IMetadata& rMetadata);
+			bool exportMetadata(IMemoryBuffer& memoryBuffer, const IMetadata& metadata);
 			bool exportSetting(IMemoryBuffer& memoryBuffer, const IScenario& rScenario, uint32_t ui32SettingIndex);
 			bool exportInput(IMemoryBuffer& memoryBuffer, const IScenario& rScenario, uint32_t index);
-			bool exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& rScenario, uint32_t ui32OutputIndex);
+			bool exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& rScenario, uint32_t outputIdx);
 			bool exportLink(IMemoryBuffer& memoryBuffer, const ILink& rLink);
 			void exportAttributes(const IAttributable& attributable, IMemoryBuffer& memoryBuffer, const CIdentifier& idAttributes,
 								  const CIdentifier& idAttribute, const CIdentifier& idAttributeIdentifier, const CIdentifier& idAttributeValue);
@@ -394,7 +394,7 @@ bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& memoryBuffer, 
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& rScenario, uint32_t ui32OutputIndex)
+bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& rScenario, uint32_t outputIdx)
 {
 	CIdentifier l_oOutputIdentifier;
 	CIdentifier l_oOutputTypeIdentifier;
@@ -403,11 +403,11 @@ bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& memoryBuffer,
 	uint32_t l_ui32LinkedBoxOutputIndex;
 	CIdentifier l_oLinkedBoxOutputIdentifier;
 
-	rScenario.getInterfacorIdentifier(Output, ui32OutputIndex, l_oOutputIdentifier);
-	rScenario.getOutputType(ui32OutputIndex, l_oOutputTypeIdentifier);
-	rScenario.getOutputName(ui32OutputIndex, l_sOutputName);
-	rScenario.getScenarioOutputLink(ui32OutputIndex, l_oLinkedBoxIdentifier, l_ui32LinkedBoxOutputIndex);
-	rScenario.getScenarioOutputLink(ui32OutputIndex, l_oLinkedBoxIdentifier, l_oLinkedBoxOutputIdentifier);
+	rScenario.getInterfacorIdentifier(Output, outputIdx, l_oOutputIdentifier);
+	rScenario.getOutputType(outputIdx, l_oOutputTypeIdentifier);
+	rScenario.getOutputName(outputIdx, l_sOutputName);
+	rScenario.getScenarioOutputLink(outputIdx, l_oLinkedBoxIdentifier, l_ui32LinkedBoxOutputIndex);
+	rScenario.getScenarioOutputLink(outputIdx, l_oLinkedBoxIdentifier, l_oLinkedBoxOutputIdentifier);
 
 	m_rParent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output);
 

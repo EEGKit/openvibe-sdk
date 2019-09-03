@@ -59,7 +59,7 @@ namespace EBML
 		{
 		public:
 
-			CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNode);
+			CWriterNode(const CIdentifier& identifier, CWriterNode* pParentNode);
 			~CWriterNode();
 			void process(IWriterCallback& rWriterCallback);
 
@@ -86,8 +86,8 @@ namespace EBML
 // ________________________________________________________________________________________________________________
 //
 
-CWriterNode::CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNode)
-	: m_oIdentifier(rIdentifier), m_pParentNode(pParentNode) {}
+CWriterNode::CWriterNode(const CIdentifier& identifier, CWriterNode* pParentNode)
+	: m_oIdentifier(identifier), m_pParentNode(pParentNode) {}
 
 CWriterNode::~CWriterNode()
 {
@@ -153,7 +153,7 @@ namespace EBML
 		public:
 
 			explicit CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
-			bool openChild(const CIdentifier& rIdentifier) override;
+			bool openChild(const CIdentifier& identifier) override;
 			bool setChildData(const void* buffer, const uint64_t size) override;
 			bool closeChild() override;
 			void release() override;
@@ -172,11 +172,11 @@ namespace EBML
 // ________________________________________________________________________________________________________________
 //
 
-bool CWriter::openChild(const CIdentifier& rIdentifier)
+bool CWriter::openChild(const CIdentifier& identifier)
 {
 	if (m_pCurrentNode) { if (m_pCurrentNode->m_bBuffered) { return false; } }
 
-	CWriterNode* pResult = new CWriterNode(rIdentifier, m_pCurrentNode);
+	CWriterNode* pResult = new CWriterNode(identifier, m_pCurrentNode);
 	if (m_pCurrentNode) { m_pCurrentNode->m_vChildren.push_back(pResult); }
 	m_pCurrentNode = pResult;
 	return true;

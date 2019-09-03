@@ -13,8 +13,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CLogListenerConsole::CLogListenerConsole(const IKernelContext& rKernelContext, const CString& sApplicationName)
-	: TKernelObject<ILogListener>(rKernelContext)
+CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)
+	: TKernelObject<ILogListener>(ctx)
 	  , m_eLogColor(LogColor_Default)
 	  , m_sApplicationName(sApplicationName), m_bTimeInSeconds(true)
 	  , m_ui64TimePrecision(3)

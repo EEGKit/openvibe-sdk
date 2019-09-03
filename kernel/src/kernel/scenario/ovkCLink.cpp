@@ -9,8 +9,8 @@ using namespace Kernel;
 //___________________________________________________________________//
 //                                                                   //
 
-CLink::CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
-	: TAttributable<TKernelObject<ILink>>(rKernelContext)
+CLink::CLink(const IKernelContext& ctx, CScenario& rOwnerScenario)
+	: TAttributable<TKernelObject<ILink>>(ctx)
 	  , m_rOwnerScenario(rOwnerScenario)
 	  , m_oIdentifier(OV_UndefinedIdentifier)
 	  , m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
@@ -32,9 +32,9 @@ bool CLink::InitializeFromExistingLink(const ILink& link)
 //___________________________________________________________________//
 //                                                                   //
 
-bool CLink::setIdentifier(const CIdentifier& rIdentifier)
+bool CLink::setIdentifier(const CIdentifier& identifier)
 {
-	m_oIdentifier = rIdentifier;
+	m_oIdentifier = identifier;
 	return true;
 }
 

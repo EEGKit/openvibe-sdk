@@ -17,7 +17,7 @@ namespace XML
 	class IXMLNodeImpl final : public IXMLNode
 	{
 	public:
-		explicit IXMLNodeImpl(const char* sName);
+		explicit IXMLNodeImpl(const char* name);
 		const char* getName() const override;
 		void release() override;
 
@@ -34,7 +34,7 @@ namespace XML
 		//Child
 		void addChild(IXMLNode* pChildNode) override;
 		IXMLNode* getChild(size_t iChildIndex) const override;
-		IXMLNode* getChildByName(const char* sName) const override;
+		IXMLNode* getChildByName(const char* name) const override;
 		size_t getChildCount() const override;
 
 		//XMl generation
@@ -63,7 +63,7 @@ IXMLNodeImpl::~IXMLNodeImpl() { for (size_t i = 0; i < getChildCount(); ++i) { g
 
 void IXMLNodeImpl::release() { delete this; }
 
-IXMLNodeImpl::IXMLNodeImpl(const char* sName): m_sNodeName(sName)
+IXMLNodeImpl::IXMLNodeImpl(const char* name): m_sNodeName(name)
 											   , m_sPCData("")
 											   , m_bHasPCData(false) {}
 
@@ -106,12 +106,12 @@ void IXMLNodeImpl::addChild(IXMLNode* pChildNode) { m_oNodeVector.push_back(pChi
 
 IXMLNode* IXMLNodeImpl::getChild(const size_t iChildIndex) const { return m_oNodeVector[iChildIndex]; }
 
-IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
+IXMLNode* IXMLNodeImpl::getChildByName(const char* name) const
 {
 	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode*>(*it);
-		if (strcmp(l_sTempNode->getName(), sName) == 0) return l_sTempNode;
+		if (strcmp(l_sTempNode->getName(), name) == 0) return l_sTempNode;
 	}
 	return nullptr;
 }
@@ -183,4 +183,4 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 	return l_pRes;
 }
 
-OV_API IXMLNode* XML::createNode(const char* sName) { return new IXMLNodeImpl(sName); }
+OV_API IXMLNode* XML::createNode(const char* name) { return new IXMLNodeImpl(name); }

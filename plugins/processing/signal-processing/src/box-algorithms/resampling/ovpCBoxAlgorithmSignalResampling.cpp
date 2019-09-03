@@ -112,7 +112,7 @@ bool CBoxAlgorithmSignalResampling::process()
 		IMatrix* iMatrix = m_oDecoder.getOutputMatrix();
 		IMatrix* oMatrix = m_oEncoder.getInputMatrix();
 
-		uint32_t channelCount = iMatrix->getDimensionSize(0);
+		uint32_t nChannel = iMatrix->getDimensionSize(0);
 		//uint32_t sampleCount  = iMatrix->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
@@ -143,7 +143,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			m_oResampler.setFractionalDelayFilterSampleCount(m_iFractionalDelayFilterSampleCount);
 			m_oResampler.setTransitionBand(m_f64TransitionBandInPercent);
 			m_oResampler.setStopBandAttenuation(m_f64StopBandAttenuation);
-			m_oResampler.reset(channelCount, m_inSamplingRate, m_outSamplingRate);
+			m_oResampler.reset(nChannel, m_inSamplingRate, m_outSamplingRate);
 
 			float l_f32BuiltInLatency = m_oResampler.getBuiltInLatency();
 			if (l_f32BuiltInLatency <= 0.15)

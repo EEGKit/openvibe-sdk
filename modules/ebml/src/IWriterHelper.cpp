@@ -20,7 +20,7 @@ namespace EBML
 			CWriterHelper();
 			bool connect(IWriter* pWriter) override;
 			bool disconnect() override;
-			bool openChild(const CIdentifier& rIdentifier) override;
+			bool openChild(const CIdentifier& identifier) override;
 			bool closeChild() override;
 			bool setSIntegerAsChildData(int64_t iValue) override;
 			bool setUIntegerAsChildData(uint64_t uiValue) override;
@@ -61,7 +61,7 @@ bool CWriterHelper::disconnect()
 // ________________________________________________________________________________________________________________
 //
 
-bool CWriterHelper::openChild(const CIdentifier& rIdentifier) { return m_pWriter ? m_pWriter->openChild(rIdentifier) : false; }
+bool CWriterHelper::openChild(const CIdentifier& identifier) { return m_pWriter ? m_pWriter->openChild(identifier) : false; }
 
 bool CWriterHelper::closeChild() { return m_pWriter ? m_pWriter->closeChild() : false; }
 

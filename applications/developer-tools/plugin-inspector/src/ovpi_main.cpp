@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	{
 		cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << endl;
 		IKernelDesc* kernelDesc       = nullptr;
-		IKernelContext* kernelContext = nullptr;
+		IKernelContext* ctx = nullptr;
 		kernelLoader.initialize();
 		kernelLoader.getKernelDesc(kernelDesc);
 		if (!kernelDesc) { cout << "[ FAILED ] No kernel descriptor" << endl; }
@@ -77,27 +77,27 @@ int main(int argc, char** argv)
 		{
 			cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
 
-			kernelContext = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
-			if (!kernelContext) { cout << "[ FAILED ] No kernel created by kernel descriptor" << endl; }
+			ctx = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
+			if (!ctx) { cout << "[ FAILED ] No kernel created by kernel descriptor" << endl; }
 			else
 			{
-				kernelContext->initialize();
-				OpenViBEToolkit::initialize(*kernelContext);
+				ctx->initialize();
+				OpenViBEToolkit::initialize(*ctx);
 
-				IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
+				IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 
-				if (pluginFilestoLoad.empty()) { kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}")); }
+				if (pluginFilestoLoad.empty()) { ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}")); }
 				else
 				{
 					for (string pluginFiletoLoad : pluginFilestoLoad)
 					{
-						kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str())));
+						ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str())));
 					}
 				}
 
-				kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
+				ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
 
-				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*kernelContext, boxAlgorithmDocTemplateDirectory);
+				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*ctx, boxAlgorithmDocTemplateDirectory);
 				if (!boxTemplateGenerator.initialize())
 				{
 					cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << endl;
@@ -107,21 +107,21 @@ int main(int argc, char** argv)
 
 				if (!ignoreMetaboxes)
 				{
-					kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << boxAlgorithmDocTemplateDirectory <<
+					ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << boxAlgorithmDocTemplateDirectory <<
 							"]\n";
 					// Do not load the binary metaboxes as they would only be duplicated
-					//kernelContext->getScenarioManager().unregisterScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mbb");
+					//ctx->getScenarioManager().unregisterScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mbb");
 					configurationManager.addOrReplaceConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/");
 
-					kernelContext->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
+					ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
 					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
 					CIdentifier metaboxDescIdentifier;
-					while ((metaboxDescIdentifier = kernelContext->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) !=
+					while ((metaboxDescIdentifier = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) !=
 						   OV_UndefinedIdentifier)
 					{
-						metaboxPluginObjectDescriptors.push_back(kernelContext->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier));
+						metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier));
 					}
 					boxTemplateGenerator.enumeratePluginObjectDesc(metaboxPluginObjectDescriptors);
 				}
@@ -131,11 +131,11 @@ int main(int argc, char** argv)
 					cout << "[ FAILED ] Could not uninitialize boxTemplateGenerator" << endl;
 					return 0;
 				}
-				kernelContext->getLogManager() << LogLevel_Info << "Application terminated, releasing allocated objects \n";
+				ctx->getLogManager() << LogLevel_Info << "Application terminated, releasing allocated objects \n";
 
-				OpenViBEToolkit::uninitialize(*kernelContext);
+				OpenViBEToolkit::uninitialize(*ctx);
 
-				kernelDesc->releaseKernel(kernelContext);
+				kernelDesc->releaseKernel(ctx);
 			}
 		}
 		kernelLoader.uninitialize();
