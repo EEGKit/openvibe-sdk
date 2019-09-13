@@ -102,7 +102,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 			if (!feof(m_pFile) && m_oReader.getCurrentNodeSize() != 0)
 			{
 				m_oSwap.setSize(m_oReader.getCurrentNodeSize(), true);
-				size_t s = (size_t)fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), (size_t)m_oSwap.getSize(), m_pFile);
+				size_t s = size_t(fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), size_t(m_oSwap.getSize()), m_pFile));
 
 				OV_ERROR_UNLESS_KRF(s == m_oSwap.getSize(), "Unexpected EOF in " << m_sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 
@@ -175,7 +175,7 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* buffer, cons
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex)
 	{
-		uint32_t l_ui32StreamIndex = (uint32_t)m_oReaderHelper.getUIntegerFromChildData(buffer, size);
+		uint32_t l_ui32StreamIndex = uint32_t(m_oReaderHelper.getUIntegerFromChildData(buffer, size));
 		if (m_vStreamIndexToTypeIdentifier.find(l_ui32StreamIndex) != m_vStreamIndexToTypeIdentifier.end())
 		{
 			m_ui32OutputIndex = m_vStreamIndexToOutputIndex[l_ui32StreamIndex];
@@ -204,7 +204,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		bool l_bLastOutputs = false;
 
 		// Go on each stream of the file
-		for (std::map<uint32_t, CIdentifier>::const_iterator it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
+		for (auto it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
 			CIdentifier l_oOutputTypeIdentifier;
 			uint32_t index = std::numeric_limits<uint32_t>::max();

@@ -136,7 +136,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	std::map<uint64_t, uint32_t> votes;				// Histogram of votes
 
 	// Make a histogram of the votes
-	for (std::deque<std::pair<uint64_t, uint64_t>>::const_iterator it = m_oStimulusDeque.begin(); it != m_oStimulusDeque.end(); ++it)
+	for (auto it = m_oStimulusDeque.begin(); it != m_oStimulusDeque.end(); ++it)
 	{
 		uint64_t stimulusType = (*it).first;
 		uint64_t stimulusDate = (*it).second;
@@ -150,7 +150,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	uint64_t resultClassLabel = m_ui64RejectClassLabel;
 	uint64_t maxVotes         = 0;
 
-	for (std::map<uint64_t, uint32_t>::const_iterator it = votes.begin(); it != votes.end(); ++it)
+	for (auto it = votes.begin(); it != votes.end(); ++it)
 	{
 		const uint64_t stimulusType  = (*it).first;
 		const uint64_t stimulusVotes = (*it).second; // can not be zero by construction above

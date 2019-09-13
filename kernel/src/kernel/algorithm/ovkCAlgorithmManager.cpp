@@ -134,7 +134,7 @@ CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(const CIdentifier& pre
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.begin();
+	auto itAlgorithm = m_vAlgorithms.begin();
 	if (previousID != OV_UndefinedIdentifier)
 	{
 		itAlgorithm = m_vAlgorithms.find(previousID);

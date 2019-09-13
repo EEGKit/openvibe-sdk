@@ -97,7 +97,7 @@ bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
 bool CNameValuePairList::getValue(const uint32_t rIndex, CString& rName, CString& rValue) const
 {
 	if (rIndex >= this->getSize()) { return false; }
-	std::map<CString, CString>::const_iterator it = m_pNameValuePairListImpl->m_Map.begin();
+	auto it = m_pNameValuePairListImpl->m_Map.begin();
 	std::advance(it, rIndex);
 	rName  = it->first;
 	rValue = it->second;

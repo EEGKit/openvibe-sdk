@@ -18,7 +18,7 @@ bool CAlgorithmPairwiseDecision::process()
 		TParameterHandler<std::vector<SClassificationInfo> *> ip_pClassificationValues = this->getInputParameter(
 			OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs);
 		TParameterHandler<IMatrix*> op_pProbabilityVector = this->getOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
-		return this->compute(*((std::vector<SClassificationInfo> *)ip_pClassificationValues), (IMatrix*)op_pProbabilityVector);
+		return this->compute(*static_cast<std::vector<SClassificationInfo> *>(ip_pClassificationValues), static_cast<IMatrix*>(op_pProbabilityVector));
 	}
 	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration))
 	{
@@ -33,7 +33,7 @@ bool CAlgorithmPairwiseDecision::process()
 	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfiguration))
 	{
 		TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration));
-		XML::IXMLNode* l_pTempNode = (XML::IXMLNode*)op_pConfiguration;
+		XML::IXMLNode* l_pTempNode = static_cast<XML::IXMLNode*>(op_pConfiguration);
 
 		OV_ERROR_UNLESS_KRF(l_pTempNode != nullptr, "Invalid NULL xml node to load configuration in", OpenViBE::Kernel::ErrorType::BadInput);
 

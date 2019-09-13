@@ -38,29 +38,59 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, co
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Value) l_sNodeName = "Value";
 
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Inputs) l_sNodeName = "Inputs";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input) l_sNodeName = "Input";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input)
+	{
+		l_sNodeName = "Input";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier) l_sNodeName = "TypeIdentifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name) l_sNodeName = "Name";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier) l_sNodeName = "LinkedBoxIdentifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex) l_sNodeName = "LinkedBoxInputIndex";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier) l_sNodeName = "LinkedBoxInputIdentifier";
-
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Outputs) l_sNodeName = "Outputs";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier)
+	{
+		l_sNodeName = "LinkedBoxInputIdentifier";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Outputs)
+	{
+		l_sNodeName = "Outputs";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output) l_sNodeName = "Output";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier) l_sNodeName = "Identifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier) l_sNodeName = "TypeIdentifier";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier)
+	{
+		l_sNodeName = "Identifier";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier)
+	{
+		l_sNodeName = "TypeIdentifier";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name) l_sNodeName = "Name";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier) l_sNodeName = "LinkedBoxIdentifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex) l_sNodeName = "LinkedBoxOutputIndex";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier) l_sNodeName = "LinkedBoxOutputIdentifier";
-
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion) l_sNodeName = "FormatVersion";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Creator) l_sNodeName = "Creator";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion) l_sNodeName = "CreatorVersion";
-
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Boxes) l_sNodeName = "Boxes";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box) l_sNodeName = "Box";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier)
+	{
+		l_sNodeName = "LinkedBoxOutputIdentifier";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion)
+	{
+		l_sNodeName = "FormatVersion";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Creator)
+	{
+		l_sNodeName = "Creator";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion)
+	{
+		l_sNodeName = "CreatorVersion";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Boxes)
+	{
+		l_sNodeName = "Boxes";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box)
+	{
+		l_sNodeName = "Box";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Name) l_sNodeName = "Name";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier) l_sNodeName = "AlgorithmClassIdentifier";
@@ -68,53 +98,114 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, co
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input) l_sNodeName = "Input";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier) l_sNodeName = "TypeIdentifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Name) l_sNodeName = "Name";
-
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Name)
+	{
+		l_sNodeName = "Name";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Outputs) l_sNodeName = "Outputs";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output) l_sNodeName = "Output";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier) l_sNodeName = "Identifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier) l_sNodeName = "TypeIdentifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Name) l_sNodeName = "Name";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings) l_sNodeName = "Settings";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output)
+	{
+		l_sNodeName = "Output";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier)
+	{
+		l_sNodeName = "Identifier";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier)
+	{
+		l_sNodeName = "TypeIdentifier";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Name)
+	{
+		l_sNodeName = "Name";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings)
+	{
+		l_sNodeName = "Settings";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting) l_sNodeName = "Setting";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier) l_sNodeName = "TypeIdentifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Name) l_sNodeName = "Name";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_DefaultValue) l_sNodeName = "DefaultValue";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Value) l_sNodeName = "Value";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Modifiability) l_sNodeName = "Modifiability";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Modifiability)
+	{
+		l_sNodeName = "Modifiability";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attributes) l_sNodeName = "Attributes";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute) l_sNodeName = "Attribute";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Identifier) l_sNodeName = "Identifier";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute)
+	{
+		l_sNodeName = "Attribute";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Identifier)
+	{
+		l_sNodeName = "Identifier";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Value) l_sNodeName = "Value";
 
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comments) l_sNodeName = "Comments";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment) l_sNodeName = "Comment";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment)
+	{
+		l_sNodeName = "Comment";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Text) l_sNodeName = "Text";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attributes) l_sNodeName = "Attributes";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute) l_sNodeName = "Attribute";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attributes)
+	{
+		l_sNodeName = "Attributes";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute)
+	{
+		l_sNodeName = "Attribute";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Value) l_sNodeName = "Value";
 
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Metadata) l_sNodeName = "Metadata";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry) l_sNodeName = "Entry";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Identifier) l_sNodeName = "Identifier";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Metadata)
+	{
+		l_sNodeName = "Metadata";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry)
+	{
+		l_sNodeName = "Entry";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Identifier)
+	{
+		l_sNodeName = "Identifier";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Type) l_sNodeName = "Type";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Data) l_sNodeName = "Data";
-
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Data)
+	{
+		l_sNodeName = "Data";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Links) l_sNodeName = "Links";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link) l_sNodeName = "Link";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Identifier) l_sNodeName = "Identifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source) l_sNodeName = "Source";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier) l_sNodeName = "BoxIdentifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex) l_sNodeName = "BoxOutputIndex";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier) l_sNodeName = "BoxOutputIdentifier";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source)
+	{
+		l_sNodeName = "Source";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier)
+	{
+		l_sNodeName = "BoxIdentifier";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex)
+	{
+		l_sNodeName = "BoxOutputIndex";
+	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier)
+	{
+		l_sNodeName = "BoxOutputIdentifier";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target) l_sNodeName = "Target";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier) l_sNodeName = "BoxIdentifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex) l_sNodeName = "BoxInputIndex";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier) l_sNodeName = "BoxInputIdentifier";
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attributes) l_sNodeName = "Attributes";
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attributes)
+	{
+		l_sNodeName = "Attributes";
+	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute) l_sNodeName = "Attribute";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Identifier) l_sNodeName = "Identifier";
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Value) l_sNodeName = "Value";

@@ -158,7 +158,7 @@ CString CAlgorithmProxy::getInputTriggerName(const CIdentifier& inputTriggerID) 
 
 bool CAlgorithmProxy::isInputTriggerActive(const CIdentifier& inputTriggerID) const
 {
-	map<CIdentifier, pair<CString, bool>>::const_iterator itTrigger = m_vInputTrigger.find(inputTriggerID);
+	auto itTrigger = m_vInputTrigger.find(inputTriggerID);
 	if (itTrigger == m_vInputTrigger.end()) { return false; }
 	return itTrigger->second.second;
 }

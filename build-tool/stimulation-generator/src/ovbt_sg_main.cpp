@@ -72,7 +72,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 
 int main(int argc, char** argv)
 {
-	if (argc < 3) return -1;
+	if (argc < 3) { return -1; }
 	generation_type l_eType = parse_argument(argv[1]);
 
 	vector<SStimulation> l_oStimulationList;
@@ -89,16 +89,16 @@ int main(int argc, char** argv)
 	if (generate_generator_list(l_oGeneratorList, l_eType, argc, argv)) { return -1; }
 
 	//Now we generate all files that needs to be done
-	for (vector<SStimulation>::iterator it = l_oStimulationList.begin(); it != l_oStimulationList.end(); ++it)
+	for (auto it = l_oStimulationList.begin(); it != l_oStimulationList.end(); ++it)
 	{
 		SStimulation& l_oTemp = *it;
-		for (vector<CFileGeneratorBase*>::iterator it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen)
+		for (auto it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen)
 		{
 			(*it_gen)->appendStimulation(l_oTemp);
 		}
 	}
 
-	for (vector<CFileGeneratorBase*>::iterator it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen) { (*it_gen)->closeFile(); }
+	for (auto it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen) { (*it_gen)->closeFile(); }
 
 	return 0;
 }

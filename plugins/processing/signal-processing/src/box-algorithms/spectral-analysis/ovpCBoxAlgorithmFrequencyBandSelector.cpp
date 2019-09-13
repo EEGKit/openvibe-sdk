@@ -39,7 +39,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	bool l_bHadError                    = false;
 	CString l_sErrorMessage;
 	m_vSelected.clear();
-	for (std::vector<std::string>::const_iterator it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
+	for (auto it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
 	{
 		bool l_bGood                             = true;
 		std::vector<std::string> l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);

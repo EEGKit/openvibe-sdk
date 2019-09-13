@@ -195,7 +195,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector,
 
 	TParameterHandler<IMatrix*> ip_pProbabilityMatrix = m_pDecisionStrategyAlgorithm->getInputParameter(
 		OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
-	IMatrix* l_pProbabilityMatrix = (IMatrix*)ip_pProbabilityMatrix;
+	IMatrix* l_pProbabilityMatrix = static_cast<IMatrix*>(ip_pProbabilityMatrix);
 
 	l_pProbabilityMatrix->setDimensionCount(2);
 	l_pProbabilityMatrix->setDimensionSize(0, m_ui32NumberOfClasses);
@@ -331,7 +331,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfiguration(double f
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(pSubClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
-	l_pRes->addChild((XML::IXMLNode*)op_pConfiguration);
+	l_pRes->addChild(static_cast<XML::IXMLNode*>(op_pConfiguration));
 
 	return l_pRes;
 }
@@ -345,7 +345,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration()
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(
 		m_pDecisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Configuration));
 	m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration);
-	l_pTempNode->addChild((XML::IXMLNode*)op_pConfiguration);
+	l_pTempNode->addChild(static_cast<XML::IXMLNode*>(op_pConfiguration));
 
 	l_pTempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_oPairwiseDecisionIdentifier.toString());
 

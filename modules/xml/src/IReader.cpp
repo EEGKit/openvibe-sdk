@@ -81,7 +81,7 @@ XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback) { return ne
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {
 	uint64_t l_ui64AttributeCount = 0;
-	while (ppAttribute[l_ui64AttributeCount++]);
+	while (ppAttribute[l_ui64AttributeCount++]) { ; }
 	l_ui64AttributeCount >>= 1;
 
 	// $$$ TODO take 64bits size into consideration

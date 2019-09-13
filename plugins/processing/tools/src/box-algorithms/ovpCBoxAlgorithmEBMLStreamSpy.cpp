@@ -205,7 +205,7 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* buffer, const uint
 			processBinaryBlock<uint64_t>(buffer, size);
 			getLogManager() << "]";
 		}
-		else getLogManager() << "-[type:" << CString("unknown") << "]-[bytes:" << size << "]";
+		else { getLogManager() << "-[type:" << CString("unknown") << "]-[bytes:" << size << "]"; }
 	}
 	getLogManager() << "\n";
 }

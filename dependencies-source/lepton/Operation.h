@@ -202,7 +202,7 @@ namespace Lepton
 
 		double evaluate(double* /*args*/, const std::map<std::string, double>& variables) const override
 		{
-			const std::map<std::string, double>::const_iterator iter = variables.find(name);
+			const auto iter = variables.find(name);
 			if (iter == variables.end()) { throw Exception("No value specified for variable " + name); }
 			return iter->second;
 		}

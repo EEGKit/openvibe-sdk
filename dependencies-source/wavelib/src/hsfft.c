@@ -1507,7 +1507,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	int M, ii, i;
 	fft_type temp;
 	obj->lt           = 0;
-	const int K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
+	const int K       = (int)pow(2.0, ceil(log10((double)N) / log10(2.0)));
 	const int def_lt  = 1;
 	const int def_sgn = obj->sgn;
 	const int def_N   = obj->N;

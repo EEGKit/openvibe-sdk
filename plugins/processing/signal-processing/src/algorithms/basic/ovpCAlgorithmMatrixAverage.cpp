@@ -27,7 +27,7 @@ bool CAlgorithmMatrixAverage::initialize()
 
 bool CAlgorithmMatrixAverage::uninitialize()
 {
-	for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
+	for (auto it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
 	m_vHistory.clear();
 
 	op_pAveragedMatrix.uninitialize();
@@ -50,7 +50,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset))
 	{
-		for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete*it; }
+		for (auto it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete*it; }
 
 		m_vHistory.clear();
 
@@ -97,7 +97,7 @@ bool CAlgorithmMatrixAverage::process()
 			OpenViBEToolkit::Tools::Matrix::copyContent(*l_pSwapMatrix, *l_pInputMatrix);
 
 			m_vHistory.push_back(l_pSwapMatrix);
-			l_bShouldPerformAverage = (m_vHistory.size() > 0);
+			l_bShouldPerformAverage = (!m_vHistory.empty());
 		}
 		else if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger())
 		{
@@ -105,7 +105,7 @@ bool CAlgorithmMatrixAverage::process()
 
 			if (m_vHistory.size() >= ip_ui64MatrixCount)
 			{
-				for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
+				for (auto it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
 				m_vHistory.clear();
 			}
 

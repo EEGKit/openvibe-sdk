@@ -325,7 +325,7 @@ IBox* CScenario::getBoxDetails(const CIdentifier& boxID)
 {
 	//	this->getLogManager() << LogLevel_Debug << "Getting box details from scenario\n";
 
-	map<CIdentifier, CBox*>::const_iterator itBox = m_Boxes.find(boxID);
+	auto itBox = m_Boxes.find(boxID);
 
 	OV_ERROR_UNLESS_KRN(itBox != m_Boxes.end(), "Box [" << boxID.toString() << "] is not part of the scenario", ErrorType::ResourceNotFound);
 

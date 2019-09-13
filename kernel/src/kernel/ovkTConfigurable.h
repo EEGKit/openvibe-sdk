@@ -21,7 +21,7 @@ namespace OpenViBE
 
 			virtual ~TBaseConfigurable()
 			{
-				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.begin();
+				auto itParameter = m_vParameter.begin();
 				while (itParameter != m_vParameter.end())
 				{
 					// @FIXME is this really as intended, test the first, delete the second?
@@ -41,7 +41,7 @@ namespace OpenViBE
 
 			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier)
 			{
-				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				auto itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter == m_vParameter.end()) { return nullptr; }
 				return itParameter->second.second;
 			}
@@ -58,7 +58,7 @@ namespace OpenViBE
 			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType,
 												const CIdentifier& subTypeID)
 			{
-				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				auto itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter != m_vParameter.end()) { return nullptr; }
 
 				IParameter* l_pParameter = nullptr;
@@ -98,7 +98,7 @@ namespace OpenViBE
 
 			virtual bool removeParameter(const CIdentifier& rParameterIdentifier)
 			{
-				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				auto itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter == m_vParameter.end()) { return false; }
 
 				if (itParameter->second.first) { delete itParameter->second.second; }

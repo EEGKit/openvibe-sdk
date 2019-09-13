@@ -298,11 +298,8 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 
 		if (lastCategoryName != categoryName)
 		{
-			vector<string>::iterator itLastSplittedCategory;
-			vector<string>::iterator itSplittedCategory1;
-			vector<string>::iterator itSplittedCategory2;
 			vector<string> splittedCategories;
-			size_t i        = (size_t)-1;
+			size_t i        = size_t(-1);
 			bool isFinished = false;
 			while (!isFinished)
 			{
@@ -319,17 +316,16 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 				}
 			}
 
-			for (itLastSplittedCategory = lastSplittedCategories.begin(), itSplittedCategory1 = splittedCategories.begin();
-				 itLastSplittedCategory != lastSplittedCategories.end() && itSplittedCategory1 != splittedCategories.end() && *itLastSplittedCategory == *
-				 itSplittedCategory1;
-				 ++itLastSplittedCategory, ++itSplittedCategory1) { }
+			auto itLast = lastSplittedCategories.begin();
+			auto it1 = splittedCategories.begin();
+			for (;itLast != lastSplittedCategories.end() && it1 != splittedCategories.end() && *itLast == *it1; ++itLast, ++it1) { }
 
-			for (; itSplittedCategory1 != splittedCategories.end(); ++itSplittedCategory1)
+			for (; it1 != splittedCategories.end(); ++it1)
 			{
 				size_t level = 1;
-				for (itSplittedCategory2 = splittedCategories.begin(); itSplittedCategory2 != itSplittedCategory1; ++itSplittedCategory2) { level++; }
+				for (auto it2 = splittedCategories.begin(); it2 != it1; ++it2) { level++; }
 				res += "\n\n"
-						+ generateRstTitle(*itSplittedCategory1, level)
+						+ generateRstTitle(*it1, level)
 						+ "\n"
 						+ ".. toctree::\n"
 						+ "   :maxdepth: 1\n"

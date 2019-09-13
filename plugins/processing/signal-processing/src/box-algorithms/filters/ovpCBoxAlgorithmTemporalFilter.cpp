@@ -260,7 +260,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 			double* buffer = m_oDecoder.getOutputMatrix()->getBuffer();
 
 			//"french cook" to reduce transient for bandpass and highpass filters
-			if (m_vFirstSample.size() == 0)
+			if (m_vFirstSample.empty())
 			{
 				m_vFirstSample.resize(l_ui32ChannelCount, 0); //initialization to 0
 				if (m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == OVP_TypeId_FilterType_HighPass)

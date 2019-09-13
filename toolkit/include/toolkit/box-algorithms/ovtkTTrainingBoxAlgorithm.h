@@ -77,7 +77,7 @@ namespace OpenViBEToolkit
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
 	{
 		releaseSignalTrial(m_pPendingSignal);
-		for (std::vector<ISignalTrial*>::iterator itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
+		for (auto itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 		{
 			releaseSignalTrial(*itSignalTrial);
 		}
@@ -114,21 +114,17 @@ namespace OpenViBEToolkit
 	{
 		if (identifier == this->getStimulationIdentifierTrain())
 		{
-			std::vector<ISignalTrial*>::iterator itSignalTrial;
-
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 					<< OpenViBE::Kernel::LogLevel_Trace
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
 			ISignalTrialSet* l_pSignalTrialSet = createSignalTrialSet();
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
+			for (auto itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 			{
 				l_pSignalTrialSet->addSignalTrial(**itSignalTrial);
 			}
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Info
-					<< "Calling train function...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "Calling train function...\n";
 
 #if 0
 		{

@@ -12,7 +12,7 @@ CLogManager::CLogManager(const IKernelContext& ctx)
 
 bool CLogManager::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	auto itLogLevel = m_vActiveLevel.find(eLogLevel);
 	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
@@ -82,7 +82,7 @@ bool CLogManager::addListener(ILogListener* pListener)
 
 	if (pListener == nullptr) { return false; }
 
-	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
+	auto itLogListener = m_vListener.begin();
 	while (itLogListener != m_vListener.end())
 	{
 		if ((*itLogListener) == pListener) { return false; }
@@ -97,7 +97,7 @@ bool CLogManager::removeListener(ILogListener* pListener)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
+	auto itLogListener = m_vListener.begin();
 	while (itLogListener != m_vListener.end())
 	{
 		if ((*itLogListener) == pListener)

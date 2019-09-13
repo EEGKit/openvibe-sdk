@@ -18,7 +18,7 @@ CScenarioManager::CScenarioManager(const IKernelContext& ctx)
 
 CScenarioManager::~CScenarioManager()
 {
-	for (map<CIdentifier, CScenario*>::iterator i = m_vScenario.begin(); i != m_vScenario.end(); ++i) { delete i->second; }
+	for (auto i = m_vScenario.begin(); i != m_vScenario.end(); ++i) { delete i->second; }
 }
 
 void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager)
@@ -553,7 +553,7 @@ CIdentifier CScenarioManager::getScenarioExporterAlgorithmIdentifier(const CIden
 
 bool CScenarioManager::releaseScenario(const CIdentifier& scenarioID)
 {
-	map<CIdentifier, CScenario*>::iterator itScenario = m_vScenario.find(scenarioID);
+	auto itScenario = m_vScenario.find(scenarioID);
 	if (itScenario == m_vScenario.end())
 	{
 		// error is handled on a higher level
@@ -569,7 +569,7 @@ bool CScenarioManager::releaseScenario(const CIdentifier& scenarioID)
 
 IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID)
 {
-	map<CIdentifier, CScenario*>::const_iterator itScenario = m_vScenario.find(scenarioID);
+	auto itScenario = m_vScenario.find(scenarioID);
 
 	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
 	// At least, here the abortion is handled!

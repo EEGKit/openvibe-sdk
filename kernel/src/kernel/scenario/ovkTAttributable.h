@@ -22,7 +22,7 @@ namespace OpenViBE
 
 			virtual bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue)
 			{
-				const std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(attributeID);
+				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute != m_vAttribute.end()) { return false; }
 				m_vAttribute[attributeID] = sAttributeValue;
 				return true;
@@ -30,7 +30,7 @@ namespace OpenViBE
 
 			virtual bool removeAttribute(const CIdentifier& attributeID)
 			{
-				const std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(attributeID);
+				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end()) { return false; }
 				m_vAttribute.erase(itAttribute);
 				return true;
@@ -44,14 +44,14 @@ namespace OpenViBE
 
 			virtual CString getAttributeValue(const CIdentifier& attributeID) const
 			{
-				const std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(attributeID);
+				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end()) { return CString(""); }
 				return itAttribute->second;
 			}
 
 			virtual bool setAttributeValue(const CIdentifier& attributeID, const CString& sAttributeValue)
 			{
-				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(attributeID);
+				auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end())
 				{
 					m_vAttribute[attributeID] = sAttributeValue;
@@ -63,7 +63,7 @@ namespace OpenViBE
 
 			virtual bool hasAttribute(const CIdentifier& attributeID) const
 			{
-				const std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(attributeID);
+				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end()) { return false; }
 				return true;
 			}

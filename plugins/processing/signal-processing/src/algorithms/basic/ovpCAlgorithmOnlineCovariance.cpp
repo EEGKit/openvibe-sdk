@@ -254,12 +254,12 @@ bool CAlgorithmOnlineCovariance::process()
 		l_oPriorCov.setIdentity();
 
 		// Mix the prior and the sample estimates according to the shrinkage parameter. We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / (double)m_ui64Count;
-		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / (double)m_ui64Count);
+		l_oOutputMean = m_oIncrementalMean / double(m_ui64Count);
+		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / double(m_ui64Count));
 
 		// Debug block
 		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");
-		dumpMatrix(this->getLogManager(), m_oIncrementalCov / (double)m_ui64Count, "Data cov");
+		dumpMatrix(this->getLogManager(), m_oIncrementalCov / double(m_ui64Count), "Data cov");
 		dumpMatrix(this->getLogManager(), ip_f64Shrinkage * l_oPriorCov, "Prior cov");
 		dumpMatrix(this->getLogManager(), l_oOutputCov, "Output cov");
 	}
@@ -276,8 +276,8 @@ bool CAlgorithmOnlineCovariance::process()
 		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / (double)m_ui64Count;
-		l_oOutputCov  = m_oIncrementalCov / (double)m_ui64Count;
+		l_oOutputMean = m_oIncrementalMean / double(m_ui64Count);
+		l_oOutputCov  = m_oIncrementalCov / double(m_ui64Count);
 
 		// Debug block
 		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");

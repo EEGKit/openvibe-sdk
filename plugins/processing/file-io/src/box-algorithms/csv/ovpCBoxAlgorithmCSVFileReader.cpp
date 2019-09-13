@@ -221,7 +221,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	//IBoxIO& boxContext=this->getDynamicBoxContext();
 
 	//if no line was read, read the first data line.
-	if (m_vLastLineSplit.size() == 0)
+	if (m_vLastLineSplit.empty())
 	{
 		//next line
 		uint32_t nSamples = 0;
@@ -244,12 +244,12 @@ bool CBoxAlgorithmCSVFileReader::process()
 		}
 	}
 
-	bool somethingToSend = (m_vLastLineSplit.size() != 0) && atof(m_vLastLineSplit[0].c_str()) < l_f64currentTime;
+	bool somethingToSend = (!m_vLastLineSplit.empty()) && atof(m_vLastLineSplit[0].c_str()) < l_f64currentTime;
 	somethingToSend |= (m_oTypeIdentifier == OV_TypeId_Stimulations); // we always send a stim chunk, even if empty
 
 	if (m_oTypeIdentifier == OV_TypeId_Stimulations || m_oTypeIdentifier == OV_TypeId_ChannelLocalisation || m_oTypeIdentifier == OV_TypeId_Spectrum)
 	{
-		while (m_vLastLineSplit.size() != 0 && atof(m_vLastLineSplit[0].c_str()) < l_f64currentTime)
+		while (!m_vLastLineSplit.empty() && atof(m_vLastLineSplit[0].c_str()) < l_f64currentTime)
 		{
 			m_vDataMatrix.push_back(m_vLastLineSplit);
 

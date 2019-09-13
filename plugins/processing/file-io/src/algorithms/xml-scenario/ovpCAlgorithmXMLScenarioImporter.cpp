@@ -216,108 +216,97 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 	switch (m_ui32Status)
 	{
 		case Status_ParsingBox:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier, _AutoBind_(sData));
-			if (l_sTop == "AlgorithmClassIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Name, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "AlgorithmClassIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Name, _AutoBind_(sData)); }
 			break;
 		case Status_ParsingBoxInput:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Name, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "TypeIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Name, _AutoBind_(sData)); }
 			break;
 		case Status_ParsingBoxOutput:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Name, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "TypeIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Name, _AutoBind_(sData)); }
 			break;
 		case Status_ParsingBoxSetting:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Name, _AutoBind_(sData));
-			if (l_sTop == "DefaultValue") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_DefaultValue, _AutoBind_(sData));
-			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Value, _AutoBind_(sData));
-			if (l_sTop == "Modifiability") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Modifiability, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "TypeIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Name, _AutoBind_(sData)); }
+			if (l_sTop == "DefaultValue") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_DefaultValue, _AutoBind_(sData)); }
+			if (l_sTop == "Value") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Value, _AutoBind_(sData)); }
+			if (l_sTop == "Modifiability") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Modifiability, _AutoBind_(sData)); }
 			break;
 		case Status_ParsingBoxAttribute:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Identifier, _AutoBind_(sData));
-			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Value, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "Value") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Value, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingComment:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Identifier, _AutoBind_(sData));
-			if (l_sTop == "Text") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Text, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "Text") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Text, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingMetadataEntry:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Identifier, _AutoBind_(sData));
-			if (l_sTop == "Type") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Type, _AutoBind_(sData));
-			if (l_sTop == "Data") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Data, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "Type") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Type, _AutoBind_(sData)); }
+			if (l_sTop == "Data") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Data, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingCommentAttribute:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Identifier, _AutoBind_(sData));
-			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Value, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "Value") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Value, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingLink:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Identifier, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Identifier, _AutoBind_(sData)); }
 			break;
 		case Status_ParsingLinkSource:
-			if (l_sTop == "BoxIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier, _AutoBind_(sData));
-			if (l_sTop == "BoxOutputIndex") m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, _AutoBind_(sData));
+			if (l_sTop == "BoxIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "BoxOutputIndex") { m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, _AutoBind_(sData)); }
 			if (l_sTop == "BoxOutputIdentifier") m_pContext->processIdentifier(
 				OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier, _AutoBind_(sData));
 			break;
 		case Status_ParsingLinkTarget:
-			if (l_sTop == "BoxIdentifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier, _AutoBind_(sData));
-			if (l_sTop == "BoxInputIndex") m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex, _AutoBind_(sData));
-			if (l_sTop == "BoxInputIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "BoxIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "BoxInputIndex") { m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex, _AutoBind_(sData)); }
+			if (l_sTop == "BoxInputIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, _AutoBind_(sData)); }
 			break;
 		case Status_ParsingLinkAttribute:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Identifier, _AutoBind_(sData));
-			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Value, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "Value") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Value, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingScenarioSetting:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name, _AutoBind_(sData));
-			if (l_sTop == "DefaultValue") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue, _AutoBind_(sData));
-			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Value, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "TypeIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name, _AutoBind_(sData)); }
+			if (l_sTop == "DefaultValue") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue, _AutoBind_(sData)); }
+			if (l_sTop == "Value") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Value, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingScenarioInput:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxInputIndex") m_pContext->processUInteger(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxInputIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "TypeIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name, _AutoBind_(sData)); }
+			if (l_sTop == "LinkedBoxIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "LinkedBoxInputIndex") { m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex, _AutoBind_(sData)); }
+			if (l_sTop == "LinkedBoxInputIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingScenarioOutput:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier, _AutoBind_(sData));
-			if (l_sTop == "TypeIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier, _AutoBind_(sData));
-			if (l_sTop == "Name") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxOutputIndex") m_pContext->processUInteger(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, _AutoBind_(sData));
-			if (l_sTop == "LinkedBoxOutputIdentifier") m_pContext->processIdentifier(
-				OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "TypeIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "Name") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, _AutoBind_(sData)); }
+			if (l_sTop == "LinkedBoxIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, _AutoBind_(sData)); }
+			if (l_sTop == "LinkedBoxOutputIndex") { m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, _AutoBind_(sData)); }
+			if (l_sTop == "LinkedBoxOutputIdentifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier, _AutoBind_(sData)); }
 			break;
 
 		case Status_ParsingScenarioAttribute:
-			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier, _AutoBind_(sData));
-			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value, _AutoBind_(sData));
+			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier, _AutoBind_(sData)); }
+			if (l_sTop == "Value") { m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value, _AutoBind_(sData)); }
 			break;
 		default: break;
 	}

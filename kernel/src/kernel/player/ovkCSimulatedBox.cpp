@@ -204,10 +204,10 @@ bool CSimulatedBox::process()
 	}
 
 	// perform input cleaning
-	vector<deque<CChunk>>::iterator socketIterator = m_vInput.begin();
+	auto socketIterator = m_vInput.begin();
 	while (socketIterator != m_vInput.end())
 	{
-		deque<CChunk>::iterator inputChunkIterator = socketIterator->begin();
+		auto inputChunkIterator = socketIterator->begin();
 		while (inputChunkIterator != socketIterator->end())
 		{
 			if (inputChunkIterator->isDeprecated()) { inputChunkIterator = socketIterator->erase(inputChunkIterator); }

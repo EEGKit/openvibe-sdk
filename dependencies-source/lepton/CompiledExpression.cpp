@@ -118,7 +118,7 @@ const set<string>& CompiledExpression::getVariables() const { return variableNam
 
 double& CompiledExpression::getVariableReference(const string& name)
 {
-	map<string, int>::iterator index = variableIndices.find(name);
+	auto index = variableIndices.find(name);
 	if (index == variableIndices.end()) throw Exception("getVariableReference: Unknown variable '" + name + "'");
 	return workspace[index->second];
 }

@@ -175,7 +175,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(uint32_t index)
 //
 bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, const std::vector<MatrixXd>& cov, MatrixXd& covAvg)
 {
-	if (cov.size() == 0 || skipIndex >= cov.size()) { return false; }
+	if (cov.empty() || skipIndex >= cov.size()) { return false; }
 
 	std::vector<double> classWeights;
 	uint64_t totalOutclassSamples = 0;

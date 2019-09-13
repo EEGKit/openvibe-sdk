@@ -85,7 +85,7 @@ bool CBoxAlgorithmCSVFileWriter::initializeFile()
 	OV_ERROR_UNLESS_KRF(m_oFileStream.is_open(), "Error opening file [" << l_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 	m_oFileStream << std::scientific;
-	m_oFileStream.precision(static_cast<std::streamsize>(l_ui64Precision));
+	m_oFileStream.precision(std::streamsize(l_ui64Precision));
 
 	return true;
 }
@@ -118,7 +118,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 			{
 				m_bHeaderReceived = true;
 
-				const IMatrix* l_pMatrix = ((OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputMatrix();
+				const IMatrix* l_pMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->getOutputMatrix();
 
 				OV_ERROR_UNLESS_KRF(l_pMatrix->getDimensionCount() == 1 || l_pMatrix->getDimensionCount() == 2,
 									"Invalid input matrix: must have 1 or 2 dimensions", ErrorType::BadInput);
@@ -161,7 +161,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 		}
 		if (m_pStreamDecoder->isBufferReceived())
 		{
-			const IMatrix* l_pMatrix = ((OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputMatrix();
+			const IMatrix* l_pMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->getOutputMatrix();
 
 			const uint32_t l_ui32NumChannels = m_oMatrix.getDimensionSize(0);
 			const uint32_t l_ui32NumSamples  = m_oMatrix.getDimensionSize(1);
@@ -177,7 +177,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 				}
 				else if (m_oTypeIdentifier == OV_TypeId_Signal)
 				{
-					const uint64_t l_ui64SamplingFrequency = ((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->
+					const uint64_t l_ui64SamplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
 							getOutputSamplingRate();
 					const uint64_t l_ui64TimeOfNthSample = ITimeArithmetics::sampleCountToTime(l_ui64SamplingFrequency, s); // assuming chunk start is 0
 					const uint64_t l_ui64SampleTime      = tStart + l_ui64TimeOfNthSample;
@@ -194,10 +194,10 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 				{
 					if (m_oTypeIdentifier == OV_TypeId_Signal)
 					{
-						const uint64_t l_ui64SamplingFrequency = ((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->
+						const uint64_t l_ui64SamplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
 								getOutputSamplingRate();
 
-						m_oFileStream << m_sSeparator.toASCIIString() << (uint64_t)l_ui64SamplingFrequency;
+						m_oFileStream << m_sSeparator.toASCIIString() << uint64_t(l_ui64SamplingFrequency);
 
 						m_bFirstBuffer = false;
 					}
@@ -205,7 +205,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 					{
 						// This should not be supported anymore
 						// This is not the correct formula
-						const IMatrix* l_pCenterFrequencyBand = ((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->
+						const IMatrix* l_pCenterFrequencyBand = static_cast<OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
 								getOutputFrequencyAbscissa();
 						double half = s > 0
 										  ? (l_pCenterFrequencyBand->getBuffer()[s] - l_pCenterFrequencyBand->getBuffer()[s - 1]) / 2.
@@ -253,7 +253,7 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 		}
 		if (m_pStreamDecoder->isBufferReceived())
 		{
-			const IStimulationSet* l_pStimulationSet = ((OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->
+			const IStimulationSet* l_pStimulationSet = static_cast<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
 					getOutputStimulationSet();
 			for (uint32_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
 			{

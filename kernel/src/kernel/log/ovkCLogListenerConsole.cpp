@@ -36,7 +36,7 @@ void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationM
 
 bool CLogListenerConsole::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	auto itLogLevel = m_vActiveLevel.find(eLogLevel);
 	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }

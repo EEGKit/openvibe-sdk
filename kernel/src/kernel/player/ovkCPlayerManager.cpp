@@ -21,7 +21,7 @@ bool CPlayerManager::createPlayer(CIdentifier& rPlayerIdentifier)
 
 bool CPlayerManager::releasePlayer(const CIdentifier& rPlayerIdentifier)
 {
-	map<CIdentifier, CPlayer*>::iterator itPlayer = m_vPlayer.find(rPlayerIdentifier);
+	auto itPlayer = m_vPlayer.find(rPlayerIdentifier);
 
 	OV_ERROR_UNLESS_KRF(itPlayer != m_vPlayer.end(), "Player release failed, identifier :" << rPlayerIdentifier.toString(), ErrorType::ResourceNotFound);
 
@@ -32,7 +32,7 @@ bool CPlayerManager::releasePlayer(const CIdentifier& rPlayerIdentifier)
 
 IPlayer& CPlayerManager::getPlayer(const CIdentifier& rPlayerIdentifier)
 {
-	map<CIdentifier, CPlayer*>::const_iterator itPlayer = m_vPlayer.find(rPlayerIdentifier);
+	auto itPlayer = m_vPlayer.find(rPlayerIdentifier);
 
 	// use fatal here because the signature does not allow
 	// proper checking

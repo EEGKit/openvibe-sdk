@@ -168,7 +168,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 		if (what[what.length() - 1] == CONSTANT_CARRIAGE_RETURN) { what.erase(what.length() - 1, 1); }
 
 		//start parsing current line
-		std::string::iterator it = what.begin();
+		auto it = what.begin();
 
 		//parse current line
 		while (it != what.end())
@@ -500,7 +500,7 @@ bool Matrix::toString(const IMatrix& rMatrix, CString& sString, uint32_t ui32Pre
 	std::stringstream buffer;
 
 	buffer << std::scientific;
-	buffer.precision(static_cast<std::streamsize>(ui32Precision));
+	buffer.precision(std::streamsize(ui32Precision));
 
 	// Dump header
 

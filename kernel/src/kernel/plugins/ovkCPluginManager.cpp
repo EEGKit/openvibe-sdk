@@ -145,7 +145,7 @@ CPluginManager::~CPluginManager()
 	for (auto& pluginObjectDesc : m_vPluginObjectDesc) { pluginObjectDesc.first->release(); }
 	m_vPluginObjectDesc.clear();
 
-	for (vector<IPluginModule*>::iterator k = m_vPluginModule.begin(); k != m_vPluginModule.end(); ++k)
+	for (auto k = m_vPluginModule.begin(); k != m_vPluginModule.end(); ++k)
 	{
 		this->getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
 		(*k)->uninitialize();
@@ -397,7 +397,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	}
 
 	IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
-	for (map<IPluginObjectDesc*, IPluginModule*>::const_iterator i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
+	for (auto i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
 	{
 		if (i->first->getCreatedClass() == CIdentifier(l_ui64TargetClassIdentifier)) { l_pPluginObjectDesc = i->first; }
 	}

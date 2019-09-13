@@ -119,7 +119,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 bool CBoxAlgorithmSimpleDSP::uninitialize()
 {
-	for (std::vector<IAlgorithmProxy*>::iterator it = m_vStreamDecoder.begin(); it != m_vStreamDecoder.end(); ++it)
+	for (auto it = m_vStreamDecoder.begin(); it != m_vStreamDecoder.end(); ++it)
 	{
 		(*it)->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(**it);

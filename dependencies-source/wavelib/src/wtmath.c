@@ -254,7 +254,7 @@ static double entropy_n(double* x, int N, double p)
 	for (int i = 0; i < N; ++i)
 	{
 		const double x2 = fabs(x[i]);
-		val += pow(x2, (double)p);
+		val += pow(x2, p);
 	}
 
 	return val;

@@ -116,7 +116,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			OV_ERROR_UNLESS_KRF(m_SampleCount > 1, "Input sample count lower or equal to 1 is not supported by the box.",
 								OpenViBE::Kernel::ErrorType::BadInput);
 
-			m_SamplingRate = (unsigned int)m_Decoder.getOutputSamplingRate();
+			m_SamplingRate = static_cast<unsigned int>(m_Decoder.getOutputSamplingRate());
 
 			OV_ERROR_UNLESS_KRF(m_SamplingRate > 0, "Invalid sampling rate [" << m_SamplingRate << "] (expected value > 0)",
 								OpenViBE::Kernel::ErrorType::BadInput);

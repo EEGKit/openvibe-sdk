@@ -86,8 +86,8 @@ ExpressionTreeNode ParsedExpression::preevaluateVariables(const ExpressionTreeNo
 {
 	if (node.getOperation().getId() == Operation::VARIABLE)
 	{
-		const Operation::Variable& var           = dynamic_cast<const Operation::Variable&>(node.getOperation());
-		map<string, double>::const_iterator iter = variables.find(var.getName());
+		const Operation::Variable& var = dynamic_cast<const Operation::Variable&>(node.getOperation());
+		auto iter                      = variables.find(var.getName());
 		if (iter == variables.end()) return node;
 		return ExpressionTreeNode(new Operation::Constant(iter->second));
 	}
@@ -406,7 +406,7 @@ ExpressionTreeNode ParsedExpression::renameNodeVariables(const ExpressionTreeNod
 {
 	if (node.getOperation().getId() == Operation::VARIABLE)
 	{
-		map<string, string>::const_iterator replace = replacements.find(node.getOperation().getName());
+		auto replace = replacements.find(node.getOperation().getName());
 		if (replace != replacements.end()) return ExpressionTreeNode(new Operation::Variable(replace->second));
 	}
 	vector<ExpressionTreeNode> children;

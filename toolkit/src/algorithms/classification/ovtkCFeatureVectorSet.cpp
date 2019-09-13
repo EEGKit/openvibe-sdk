@@ -24,7 +24,7 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix) : m_rMatrix(rMatrix
 
 IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t index)
 {
-	std::map<uint32_t, CInternalFeatureVector>::iterator itFeatureVector = m_vFeatureVector.find(index);
+	auto itFeatureVector = m_vFeatureVector.find(index);
 	return itFeatureVector->second;
 }
 
@@ -37,7 +37,7 @@ const IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t index) 
 uint32_t CFeatureVectorSet::getLabelCount() const
 {
 	std::map<double, bool> labels;
-	for (std::map<uint32_t, CInternalFeatureVector>::const_iterator itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++
+	for (auto itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++
 		 itFeatureVector) { labels[itFeatureVector->second.getLabel()] = true; }
 	return uint32_t(labels.size());
 }

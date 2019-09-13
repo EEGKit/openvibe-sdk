@@ -21,7 +21,7 @@ void CObservable::addObserver(IObserver* o) { m_pObserverList->m_Vector.push_bac
 
 void CObservable::deleteObserver(IObserver* o)
 {
-	for (std::vector<IObserver *>::iterator it = m_pObserverList->m_Vector.begin(); it != m_pObserverList->m_Vector.end(); ++it)
+	for (auto it = m_pObserverList->m_Vector.begin(); it != m_pObserverList->m_Vector.end(); ++it)
 	{
 		if ((*it) == o)
 		{
@@ -42,7 +42,7 @@ void CObservable::notifyObservers(void* data)
 {
 	if (m_bHasChanged)
 	{
-		for (std::vector<IObserver *>::iterator it = m_pObserverList->m_Vector.begin(); it != m_pObserverList->m_Vector.end(); ++it)
+		for (auto it = m_pObserverList->m_Vector.begin(); it != m_pObserverList->m_Vector.end(); ++it)
 		{
 			((IObserver *)*it)->update(*this, data);
 		}

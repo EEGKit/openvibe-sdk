@@ -64,7 +64,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 #if VOTING_DEBUG
 	for(size_t i = 0; i < m_ui32ClassCount ;  ++i)
 	{
-		std::cout << ((double)l_pWinCount[i])/pClassificationValueList.size() <<  " ";
+		std::cout << (double(l_pWinCount[i])/pClassificationValueList.size() <<  " ";
 	}
 	std::cout << std::endl;
 #endif
@@ -72,7 +72,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	pProbabilityVector->setDimensionCount(1);
 	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
 
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = ((double)l_pWinCount[i]) / pClassificationValueList.size(); }
+	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = double(l_pWinCount[i]) / pClassificationValueList.size(); }
 
 	delete[] l_pWinCount;
 	return true;

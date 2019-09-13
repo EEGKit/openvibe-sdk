@@ -82,7 +82,7 @@ const char* IXMLNodeImpl::getAttribute(const char* sAttributeName) const
 	const char* res = nullptr;
 	const std::string l_sAttributeName(sAttributeName);
 
-	std::map<std::string, std::string>::const_iterator it = m_mAttibuteMap.find(l_sAttributeName);
+	auto it = m_mAttibuteMap.find(l_sAttributeName);
 	if (it != m_mAttibuteMap.end()) { res = (*it).second.c_str(); }
 
 	return res;
@@ -108,10 +108,10 @@ IXMLNode* IXMLNodeImpl::getChild(const size_t iChildIndex) const { return m_oNod
 
 IXMLNode* IXMLNodeImpl::getChildByName(const char* name) const
 {
-	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
+	for (auto it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode*>(*it);
-		if (strcmp(l_sTempNode->getName(), name) == 0) return l_sTempNode;
+		if (strcmp(l_sTempNode->getName(), name) == 0) { return l_sTempNode; }
 	}
 	return nullptr;
 }
@@ -125,11 +125,11 @@ std::string IXMLNodeImpl::sanitize(const string& sString) const
 	if (l_sRes.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = l_sRes.find("&", 0); i != string::npos; i = l_sRes.find("&", i + 1)) l_sRes.replace(i, 1, "&amp;");
+		for (i = l_sRes.find("&", 0); i != string::npos; i = l_sRes.find("&", i + 1)) { l_sRes.replace(i, 1, "&amp;"); }
 		// other escape sequences
-		for (i = l_sRes.find("\"", 0); i != string::npos; i = l_sRes.find("\"", i + 1)) l_sRes.replace(i, 1, "&quot;");
-		for (i = l_sRes.find("<", 0); i != string::npos; i = l_sRes.find("<", i + 1)) l_sRes.replace(i, 1, "&lt;");
-		for (i = l_sRes.find(">", 0); i != string::npos; i = l_sRes.find(">", i + 1)) l_sRes.replace(i, 1, "&gt;");
+		for (i = l_sRes.find("\"", 0); i != string::npos; i = l_sRes.find("\"", i + 1)) { l_sRes.replace(i, 1, "&quot;"); }
+		for (i = l_sRes.find("<", 0); i != string::npos; i = l_sRes.find("<", i + 1)) { l_sRes.replace(i, 1, "&lt;"); }
+		for (i = l_sRes.find(">", 0); i != string::npos; i = l_sRes.find(">", i + 1)) { l_sRes.replace(i, 1, "&gt;"); }
 	}
 	return l_sRes;
 }
@@ -149,7 +149,7 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 	//Add attributes if we have some
 	if (!m_mAttibuteMap.empty())
 	{
-		for (map<string, string>::const_iterator it = m_mAttibuteMap.begin(); it != m_mAttibuteMap.end(); ++it)
+		for (auto it = m_mAttibuteMap.begin(); it != m_mAttibuteMap.end(); ++it)
 		{
 			l_sRes = l_sRes + string(" ") + it->first + string("=\"") + sanitize(it->second) + string("\"");
 		}
@@ -166,7 +166,7 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 
 	if (m_bHasPCData) { l_sRes = l_sRes + sanitize(m_sPCData); }
 
-	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
+	for (auto it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode *>(*it);
 		l_sRes                = l_sRes + string("\n") + l_sTempNode->getXML(depth + 1);

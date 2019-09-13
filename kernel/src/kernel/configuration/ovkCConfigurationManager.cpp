@@ -196,7 +196,7 @@ bool CConfigurationManager::releaseConfigurationToken(const CIdentifier& rConfig
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CIdentifier, SConfigurationToken>::iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
+	auto itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
 	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(),
 						"Configuration token not found " << rConfigurationTokenIdentifier.toString(),
@@ -229,7 +229,7 @@ CString CConfigurationManager::getConfigurationTokenName(const CIdentifier& rCon
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
+	auto itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 	if (itConfigurationToken != m_vConfigurationToken.end()) { return itConfigurationToken->second.m_sConfigurationName; }
 	return "";
 }
@@ -238,7 +238,7 @@ CString CConfigurationManager::getConfigurationTokenValue(const CIdentifier& rCo
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
+	auto itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 	if (itConfigurationToken != m_vConfigurationToken.end()) { return itConfigurationToken->second.m_sConfigurationValue; }
 	return "";
 }
@@ -252,7 +252,7 @@ bool CConfigurationManager::setConfigurationTokenName(const CIdentifier& rConfig
 	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
 						"Configuration token name " << rConfigurationTokenName << " already exists", ErrorType::BadResourceCreation);
 
-	std::map<CIdentifier, SConfigurationToken>::iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
+	auto itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
 	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(),
 						"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist", ErrorType::BadResourceCreation);
@@ -265,7 +265,7 @@ bool CConfigurationManager::setConfigurationTokenValue(const CIdentifier& rConfi
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CIdentifier, SConfigurationToken>::iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
+	auto itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
 	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(),
 						"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist",
@@ -291,7 +291,7 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(const CStr
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.begin();
+	auto itConfigurationToken = m_vConfigurationToken.begin();
 	while (itConfigurationToken != m_vConfigurationToken.end())
 	{
 		if (itConfigurationToken->second.m_sConfigurationName == rConfigurationTokenName) { return itConfigurationToken->first; }
@@ -308,7 +308,7 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(const CString& rCon
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.begin();
+	auto itConfigurationToken = m_vConfigurationToken.begin();
 	while (itConfigurationToken != m_vConfigurationToken.end())
 	{
 		if (itConfigurationToken->second.m_sConfigurationName == rConfigurationTokenName) { return itConfigurationToken->second.m_sConfigurationValue; }
@@ -348,7 +348,7 @@ bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordE
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<CString, const IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
+	auto l_itOverrideIterator = m_vKeywordOverride.begin();
 
 	bool l_bResult = false;
 	while (l_itOverrideIterator != m_vKeywordOverride.end())

@@ -94,7 +94,7 @@ bool CAlgorithmConditionedCovariance::process()
 	const MatrixXdRowMajor l_oDataCentered = l_oDataMatrix.rowwise() - l_oDataMean.row(0);
 
 	// Compute the sample cov matrix
-	const MatrixXd l_oSampleCov = (l_oDataCentered.transpose() * l_oDataCentered) * (1 / (double)l_ui32nRows);
+	const MatrixXd l_oSampleCov = (l_oDataCentered.transpose() * l_oDataCentered) * (1 / double(l_ui32nRows));
 
 	// Compute the prior cov matrix
 	MatrixXd l_oPriorCov = MatrixXd::Zero(l_ui32nCols, l_ui32nCols);
@@ -105,13 +105,13 @@ bool CAlgorithmConditionedCovariance::process()
 	{
 		const MatrixXd l_oDataSquared = l_oDataCentered.cwiseProduct(l_oDataCentered);
 
-		MatrixXd l_oPhiMat = (l_oDataSquared.transpose() * l_oDataSquared) / (double)l_ui32nRows - l_oSampleCov.cwiseAbs2();
+		MatrixXd l_oPhiMat = (l_oDataSquared.transpose() * l_oDataSquared) / double(l_ui32nRows) - l_oSampleCov.cwiseAbs2();
 
 		const double l_f64phi   = l_oPhiMat.sum();
 		const double l_f64gamma = (l_oSampleCov - l_oPriorCov).squaredNorm();	// Frobenius norm
 		const double l_f64kappa = l_f64phi / l_f64gamma;
 
-		l_f64Shrinkage = std::max<double>(0, std::min<double>(1, l_f64kappa / (double)l_ui32nRows));
+		l_f64Shrinkage = std::max<double>(0, std::min<double>(1, l_f64kappa / double(l_ui32nRows)));
 
 		this->getLogManager() << LogLevel_Debug << "Phi " << l_f64phi << " Gamma " << l_f64gamma << " kappa " << l_f64kappa << "\n";
 		this->getLogManager() << LogLevel_Debug << "Estimated shrinkage weight to be " << l_f64Shrinkage << "\n";

@@ -43,7 +43,7 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 
 	CIdentifier l_rClassIdentifier = pObject->getClassIdentifier();
 
-	vector<IObject*>::iterator i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
+	auto i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 
 	OV_ERROR_UNLESS_KRF(i != m_oCreatedObjects.end(),
 						"Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory",

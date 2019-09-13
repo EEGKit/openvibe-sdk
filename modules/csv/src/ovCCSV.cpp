@@ -898,8 +898,8 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 
 	std::array<std::string, 3> stimulations;
 
-	std::vector<SStimulationChunk>::const_iterator itBegin = stimulationsToPrint.cbegin();
-	std::vector<SStimulationChunk>::const_iterator itEnd   = stimulationsToPrint.cend();
+	auto itBegin = stimulationsToPrint.cbegin();
+	auto itEnd   = stimulationsToPrint.cend();
 
 	char buffer[s_MaximumFloatDecimal];
 
@@ -916,7 +916,7 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 		stimulations.at(2) = buffer;
 	}
 
-	for (std::vector<SStimulationChunk>::const_iterator it = itBegin + 1; it != itEnd; ++it)
+	for (auto it = itBegin + 1; it != itEnd; ++it)
 	{
 		stimulations.at(0) += std::string(1, s_InternalDataSeparator) + std::to_string(it->stimulationIdentifier);
 
@@ -1623,8 +1623,8 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 
 bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample, const uint64_t lineNb)
 {
-	std::string::const_iterator firstColumn  = std::find(line.cbegin(), line.cend(), s_Separator);
-	std::string::const_iterator secondColumn = std::find(firstColumn + 1, line.cend(), s_Separator);
+	auto firstColumn  = std::find(line.cbegin(), line.cend(), s_Separator);
+	auto secondColumn = std::find(firstColumn + 1, line.cend(), s_Separator);
 
 	if (lineNb % m_SampleCountPerBuffer == 0)
 	{

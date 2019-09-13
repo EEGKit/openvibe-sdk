@@ -463,7 +463,7 @@ SchedulerInitializationCode CScheduler::initialize()
 
 
 	bool l_bBoxInitialization = true;
-	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
+	for (auto itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
 		 itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
@@ -495,7 +495,7 @@ bool CScheduler::uninitialize()
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
 	bool l_bBoxUninitialization = true;
-	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
+	for (auto itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
 		 itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
@@ -510,7 +510,7 @@ bool CScheduler::uninitialize()
 		}
 	}
 
-	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
+	for (auto itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
 		 itSimulatedBox) { delete itSimulatedBox->second; }
 	m_vSimulatedBox.clear();
 
@@ -528,7 +528,7 @@ bool CScheduler::loop()
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
-	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
+	for (auto itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++
 		 itSimulatedBox)
 	{
 		CSimulatedBox* l_pSimulatedBox = itSimulatedBox->second;
@@ -597,16 +597,13 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 
 		//if the box is muted we still have to erase chunks that arrives at the input
 		map<uint32_t, list<CChunk>>& l_rSimulatedBoxInput = m_vSimulatedBoxInput[boxID];
-		for (map<uint32_t, list<CChunk>>::iterator itSimulatedBoxInput = l_rSimulatedBoxInput.begin(); itSimulatedBoxInput != l_rSimulatedBoxInput.end(); ++
-			 itSimulatedBoxInput)
+		for (auto it1 = l_rSimulatedBoxInput.begin(); it1 != l_rSimulatedBoxInput.end(); ++it1)
 		{
-			list<CChunk>& l_rSimulatedBoxInputChunkList = itSimulatedBoxInput->second;
-			list<CChunk>::iterator itSimulatedBoxInputChunkList;
-			for (itSimulatedBoxInputChunkList = l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList != l_rSimulatedBoxInputChunkList.end(); ++
-				 itSimulatedBoxInputChunkList)
+			list<CChunk>& l_rSimulatedBoxInputChunkList = it1->second;
+			for (auto it2 = l_rSimulatedBoxInputChunkList.begin(); it2 != l_rSimulatedBoxInputChunkList.end(); ++it2)
 			{
-				OV_ERROR_UNLESS_KRF(simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList),
-									"Process failed for box with id " << boxID.toString() << " on input " << itSimulatedBoxInput->first,
+				OV_ERROR_UNLESS_KRF(simulatedBox->processInput(it1->first, *it2),
+									"Process failed for box with id " << boxID.toString() << " on input " << it1->first,
 									ErrorType::Internal);
 
 				if (simulatedBox->isReadyToProcess())
@@ -634,7 +631,7 @@ bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& boxId, const
 						"Tried to send data chunk with invalid input index " << index << " for box identifier" << boxId.toString(),
 						ErrorType::OutOfBound);
 
-	map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
+	auto itSimulatedBox = m_vSimulatedBox.begin();
 	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != boxId) { ++itSimulatedBox; }
 
 	OV_ERROR_UNLESS_KRF(itSimulatedBox != m_vSimulatedBox.end(),

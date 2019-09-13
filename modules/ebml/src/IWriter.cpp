@@ -91,7 +91,7 @@ CWriterNode::CWriterNode(const CIdentifier& identifier, CWriterNode* pParentNode
 
 CWriterNode::~CWriterNode()
 {
-	for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { delete (*i); }
+	for (auto i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { delete (*i); }
 
 	if (m_pBuffer)
 	{
@@ -122,14 +122,14 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	rWriterCallback.write(pContentSize, contentSizeLength);
 
 	if (m_vChildren.empty()) { rWriterCallback.write(m_pBuffer, m_ui64BufferLength); }
-	else { for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); } }
+	else { for (auto i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); } }
 }
 
 uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 {
 	uint64_t contentSize = 0;
 	if (m_vChildren.empty()) { contentSize = m_ui64BufferLength; }
-	else { for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
+	else { for (auto i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
 
 	uint64_t l_ui64Result = contentSize;
 	if (bCountIdentifierAndSize)
