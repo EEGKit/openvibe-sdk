@@ -12,7 +12,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CScenarioImporterContext(const IKernelContext& ctx, const CString& sFileName, IScenario& rScenario);
+			CScenarioImporterContext(const IKernelContext& ctx, const CString& sFileName, IScenario& scenario);
 
 			virtual CString getFileName() const;
 			virtual IScenario& getScenario() const;

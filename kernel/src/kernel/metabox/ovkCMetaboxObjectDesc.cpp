@@ -19,28 +19,28 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 {
 	for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < metaboxScenario.getInputCount(); l_ui32ScenarioInputIndex++)
 	{
-		CString l_sInputName;
-		CIdentifier l_oInputTypeIdentifier;
-		CIdentifier l_oInputIdentifier;
+		CString inputName;
+		CIdentifier inputTypeID;
+		CIdentifier InputID;
 
-		metaboxScenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
-		metaboxScenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
-		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Input, l_ui32ScenarioInputIndex, l_oInputIdentifier);
+		metaboxScenario.getInputType(l_ui32ScenarioInputIndex, inputTypeID);
+		metaboxScenario.getInputName(l_ui32ScenarioInputIndex, inputName);
+		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Input, l_ui32ScenarioInputIndex, InputID);
 
-		m_Inputs.push_back(SIOStream(l_sInputName, l_oInputTypeIdentifier, l_oInputIdentifier));
+		m_Inputs.push_back(SIOStream(inputName, inputTypeID, InputID));
 	}
 
 	for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
 	{
-		CString l_sOutputName;
-		CIdentifier l_oOutputTypeIdentifier;
-		CIdentifier l_oOutputIdentifier;
+		CString outputName;
+		CIdentifier OutputTypeID;
+		CIdentifier OutputID;
 
-		metaboxScenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
-		metaboxScenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
-		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Output, l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
+		metaboxScenario.getOutputType(l_ui32ScenarioOutputIndex, OutputTypeID);
+		metaboxScenario.getOutputName(l_ui32ScenarioOutputIndex, outputName);
+		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Output, l_ui32ScenarioOutputIndex, OutputID);
 
-		m_Outputs.push_back(SIOStream(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier));
+		m_Outputs.push_back(SIOStream(outputName, OutputTypeID, OutputID));
 	}
 
 	for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIndex++)

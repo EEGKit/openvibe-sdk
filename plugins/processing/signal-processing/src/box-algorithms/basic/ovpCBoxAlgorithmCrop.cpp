@@ -10,25 +10,25 @@ using namespace SignalProcessing;
 
 bool CBoxAlgorithmCrop::initialize()
 {
-	CIdentifier l_oInputTypeIdentifier;
-	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
+	CIdentifier inputTypeID;
+	getStaticBoxContext().getInputType(0, inputTypeID);
 
-	if (l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
+	if (inputTypeID == OV_TypeId_StreamedMatrix)
 	{
 		m_pStreamDecoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
 		m_pStreamEncoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
 	}
-	else if (l_oInputTypeIdentifier == OV_TypeId_FeatureVector)
+	else if (inputTypeID == OV_TypeId_FeatureVector)
 	{
 		m_pStreamDecoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamDecoder));
 		m_pStreamEncoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamEncoder));
 	}
-	else if (l_oInputTypeIdentifier == OV_TypeId_Signal)
+	else if (inputTypeID == OV_TypeId_Signal)
 	{
 		m_pStreamDecoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
 		m_pStreamEncoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
 	}
-	else if (l_oInputTypeIdentifier == OV_TypeId_Spectrum)
+	else if (inputTypeID == OV_TypeId_Spectrum)
 	{
 		m_pStreamDecoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 		m_pStreamEncoder = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
@@ -37,14 +37,14 @@ bool CBoxAlgorithmCrop::initialize()
 	m_pStreamDecoder->initialize();
 	m_pStreamEncoder->initialize();
 
-	if (l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix) { }
-	else if (l_oInputTypeIdentifier == OV_TypeId_FeatureVector) { }
-	else if (l_oInputTypeIdentifier == OV_TypeId_Signal)
+	if (inputTypeID == OV_TypeId_StreamedMatrix) { }
+	else if (inputTypeID == OV_TypeId_FeatureVector) { }
+	else if (inputTypeID == OV_TypeId_Signal)
 	{
 		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(
 			m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 	}
-	else if (l_oInputTypeIdentifier == OV_TypeId_Spectrum)
+	else if (inputTypeID == OV_TypeId_Spectrum)
 	{
 		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setReferenceTarget(
 			m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));

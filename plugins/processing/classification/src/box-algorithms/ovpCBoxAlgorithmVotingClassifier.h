@@ -65,11 +65,11 @@ namespace OpenViBEPlugins
 
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oInputTypeIdentifier = OV_UndefinedIdentifier;
-				box.getInputType(index, l_oInputTypeIdentifier);
-				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
+				OpenViBE::CIdentifier inputTypeID = OV_UndefinedIdentifier;
+				box.getInputType(index, inputTypeID);
+				if (inputTypeID == OV_TypeId_Stimulations || inputTypeID == OV_TypeId_StreamedMatrix)
 				{
-					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
+					m_oInputTypeIdentifier = inputTypeID;
 					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeIdentifier); }
 				}
 				else { box.setInputType(index, m_oInputTypeIdentifier); }

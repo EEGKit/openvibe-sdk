@@ -316,27 +316,27 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 		for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < scenario.getInputCount(); l_ui32ScenarioInputIndex++)
 		{
 			CIdentifier l_oInputputIdentifier;
-			CString l_sInputName;
-			CIdentifier l_oInputTypeIdentifier;
+			CString inputName;
+			CIdentifier inputTypeID;
 
 			scenario.getInterfacorIdentifier(Input, l_ui32ScenarioInputIndex, l_oInputputIdentifier);
-			scenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
-			scenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
+			scenario.getInputType(l_ui32ScenarioInputIndex, inputTypeID);
+			scenario.getInputName(l_ui32ScenarioInputIndex, inputName);
 
-			l_oMetaboxProto.addInput(l_sInputName, l_oInputTypeIdentifier, l_oInputputIdentifier, true);
+			l_oMetaboxProto.addInput(inputName, inputTypeID, l_oInputputIdentifier, true);
 		}
 
 		for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < scenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
 		{
-			CIdentifier l_oOutputIdentifier;
-			CString l_sOutputName;
-			CIdentifier l_oOutputTypeIdentifier;
+			CIdentifier OutputID;
+			CString outputName;
+			CIdentifier OutputTypeID;
 
-			scenario.getInterfacorIdentifier(Output, l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
-			scenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
-			scenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
+			scenario.getInterfacorIdentifier(Output, l_ui32ScenarioOutputIndex, OutputID);
+			scenario.getOutputType(l_ui32ScenarioOutputIndex, OutputTypeID);
+			scenario.getOutputName(l_ui32ScenarioOutputIndex, outputName);
 
-			l_oMetaboxProto.addOutput(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier, true);
+			l_oMetaboxProto.addOutput(outputName, OutputTypeID, OutputID, true);
 		}
 
 		for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < scenario.getSettingCount(); l_ui32ScenarioSettingIndex++)

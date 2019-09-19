@@ -9,8 +9,8 @@ namespace OpenViBE
 		class CScenarioSettingKeywordParserCallback final : public IConfigurationKeywordExpandCallback
 		{
 		public:
-			explicit CScenarioSettingKeywordParserCallback(const IScenario& rScenario)
-				: m_rScenario(rScenario) {}
+			explicit CScenarioSettingKeywordParserCallback(const IScenario& scenario)
+				: m_rScenario(scenario) {}
 
 			~CScenarioSettingKeywordParserCallback() override {}
 			bool expand(const CString& rStringToExpand, CString& rExpandedString) const override;

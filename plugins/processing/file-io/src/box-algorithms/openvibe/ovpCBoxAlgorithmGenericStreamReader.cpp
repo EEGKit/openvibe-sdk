@@ -206,17 +206,17 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		// Go on each stream of the file
 		for (auto it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
-			CIdentifier l_oOutputTypeIdentifier;
+			CIdentifier OutputTypeID;
 			uint32_t index = std::numeric_limits<uint32_t>::max();
 
 			// Find the first box output with this type that has no file stream connected
 			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); i++)
 			{
-				if (l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
+				if (l_rStaticBoxContext.getOutputType(i, OutputTypeID))
 				{
 					if (l_vOutputIndexToStreamIndex.find(i) == l_vOutputIndexToStreamIndex.end())
 					{
-						if (l_oOutputTypeIdentifier == it->second)
+						if (OutputTypeID == it->second)
 						{
 							//const CString l_sTypeName = this->getTypeManager().getTypeName(it->second);
 							index               = i;
@@ -228,14 +228,14 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			// In case no suitable output was found, see if we can downcast some type
 			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); i++)
 			{
-				if (l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
+				if (l_rStaticBoxContext.getOutputType(i, OutputTypeID))
 				{
 					if (l_vOutputIndexToStreamIndex.find(i) == l_vOutputIndexToStreamIndex.end())
 					{
-						if (this->getTypeManager().isDerivedFromStream(it->second, l_oOutputTypeIdentifier))
+						if (this->getTypeManager().isDerivedFromStream(it->second, OutputTypeID))
 						{
 							const CString l_sSourceTypeName = this->getTypeManager().getTypeName(it->second);
-							const CString l_sOutputTypeName = this->getTypeManager().getTypeName(l_oOutputTypeIdentifier);
+							const CString l_sOutputTypeName = this->getTypeManager().getTypeName(OutputTypeID);
 							this->getLogManager() << LogLevel_Info << "Note: downcasting output " << i + 1 << " from "
 									<< l_sSourceTypeName << " to " << l_sOutputTypeName << ", as there is no exactly type-matching output connector.\n";
 							index = i;

@@ -75,10 +75,10 @@ bool CBoxAlgorithmEpochAverage::initialize()
 
 bool CBoxAlgorithmEpochAverage::uninitialize()
 {
-	CIdentifier l_oInputTypeIdentifier;
-	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
-	if (l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix || l_oInputTypeIdentifier == OV_TypeId_FeatureVector || l_oInputTypeIdentifier == OV_TypeId_Signal ||
-		l_oInputTypeIdentifier == OV_TypeId_Spectrum)
+	CIdentifier inputTypeID;
+	getStaticBoxContext().getInputType(0, inputTypeID);
+	if (inputTypeID == OV_TypeId_StreamedMatrix || inputTypeID == OV_TypeId_FeatureVector || inputTypeID == OV_TypeId_Signal ||
+		inputTypeID == OV_TypeId_Spectrum)
 	{
 		ip_ui64AveragingMethod.uninitialize();
 		ip_ui64MatrixCount.uninitialize();
