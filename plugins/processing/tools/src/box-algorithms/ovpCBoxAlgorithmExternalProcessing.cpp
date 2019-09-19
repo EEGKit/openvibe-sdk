@@ -58,7 +58,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	// Settings
 	const IBox* staticBoxContext = this->getBoxAlgorithmContext()->getStaticBoxContext();
 
-	for (unsigned int i = 8; i < staticBoxContext->getSettingCount(); ++i)
+	for (uint32_t i = 8; i < staticBoxContext->getSettingCount(); ++i)
 	{
 		CString name;
 		staticBoxContext->getSettingName(i, name);
@@ -73,7 +73,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	}
 
 	// Inputs
-	for (unsigned int i = 0; i < staticBoxContext->getInputCount(); ++i)
+	for (uint32_t i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
 		CIdentifier type;
 		staticBoxContext->getInputType(i, type);
@@ -88,7 +88,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	}
 
 	// Outputs
-	for (unsigned int i = 0; i < staticBoxContext->getOutputCount(); ++i)
+	for (uint32_t i = 0; i < staticBoxContext->getOutputCount(); ++i)
 	{
 		CIdentifier type;
 		staticBoxContext->getOutputType(i, type);
@@ -290,10 +290,10 @@ bool CBoxAlgorithmExternalProcessing::process()
 
 	bool hasSentDataToClient = false;
 
-	for (unsigned int i = 0; i < staticBoxContext->getInputCount(); ++i)
+	for (uint32_t i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
 		auto maybeStimulationDecoder = m_StimulationDecoders.find(i);
-		for (unsigned int j = 0; j < dynamicBoxContext->getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < dynamicBoxContext->getInputChunkCount(i); j++)
 		{
 			if (!m_HasReceivedEndMessage)
 			{

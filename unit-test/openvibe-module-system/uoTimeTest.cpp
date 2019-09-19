@@ -43,7 +43,7 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
+uint64_t calibrateSleep(uint32_t sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t maxTime = 0;
 	for (size_t i = 0; i < sampleCount; ++i)
@@ -75,11 +75,11 @@ std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*
 // \brief Return a warning count that is incremented when sleep function did not meet following requirements:
 //       - sleep enough time
 //       - sleep less than the expected time + delta
-unsigned int assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
+uint32_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
 								   const std::vector<uint64_t>& resultTimes,
 								   uint64_t delta, uint64_t epsilon)
 {
-	unsigned int warningCount = 0;
+	uint32_t warningCount = 0;
 	for (size_t i = 0; i < expectedTimes.size(); ++i)
 	{
 		if (resultTimes[i] + epsilon < expectedTimes[i]
@@ -196,7 +196,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
-	const unsigned int warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime,
+	const uint32_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime,
 															OpenViBE::ITimeArithmetics::secondsToTime(0.005));
 
 	// relax this threshold in case there is some recurrent problems

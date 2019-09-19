@@ -49,7 +49,7 @@ bool CBoxAlgorithmWindowing::process()
 	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
-	for (unsigned int i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
 	{
 		const uint64_t startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
 		const uint64_t endTime   = dynamicBoxContext->getInputChunkEndTime(0, i);
@@ -119,9 +119,9 @@ bool CBoxAlgorithmWindowing::process()
 		if (m_Decoder.isBufferReceived())
 		{
 			/* We filter each channel with the window function */
-			for (unsigned int j = 0; j < matrix->getDimensionSize(0); j++) // channels
+			for (uint32_t j = 0; j < matrix->getDimensionSize(0); j++) // channels
 			{
-				for (unsigned int k = 0; k < matrix->getDimensionSize(1); k++) // samples
+				for (uint32_t k = 0; k < matrix->getDimensionSize(1); k++) // samples
 				{
 					matrix->getBuffer()[j * matrix->getDimensionSize(1) + k] *= m_WindowCoefficients[k];
 				}

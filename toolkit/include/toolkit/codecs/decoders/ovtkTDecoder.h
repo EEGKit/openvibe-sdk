@@ -52,7 +52,7 @@ namespace OpenViBEToolkit
 		// in order to raise errors in plugins using the older API
 #ifndef TARGET_OS_MacOS // Current clang has a bug which fails to link these
 		virtual bool decode(int, int)                   = delete;
-		virtual bool decode(unsigned int, unsigned int) = delete;
+		virtual bool decode(uint32_t, uint32_t) = delete;
 #endif
 
 		// The functions that need to be specified by the decoders (specific Trigger ID)

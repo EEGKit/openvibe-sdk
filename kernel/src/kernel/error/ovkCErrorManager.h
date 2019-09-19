@@ -45,7 +45,7 @@ namespace OpenViBE
 
 			void pushError(ErrorType type, const char* description) override;
 
-			void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line) override;
+			void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, uint32_t line) override;
 
 			void releaseErrors() override;
 

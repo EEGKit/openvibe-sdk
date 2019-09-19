@@ -922,7 +922,7 @@ namespace Lepton
 				double result = 1.0;
 				while (exponent != 0)
 				{
-					if ((exponent & 1) == 1) result *= base;
+					if ((exponent & 1) == 1) { result *= base; }
 					base *= base;
 					exponent = exponent >> 1;
 				}

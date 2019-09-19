@@ -319,7 +319,7 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& typeI
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64_t l_ui64Value = std::stoull((const char*)rEntryName);
+		uint64_t l_ui64Value = std::stoull(static_cast<const char*>(rEntryName));
 
 		if ((itEnumeration->second.find(l_ui64Value) != itEnumeration->second.end()) ||
 			(typeID == OV_TypeId_Stimulation && this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers")))
@@ -392,7 +392,7 @@ uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, c
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64_t l_ui64Value = std::stoll((const char*)rEntryName);
+		uint64_t l_ui64Value = std::stoll(static_cast<const char*>(rEntryName));
 
 		if (itBitMask->second.find(l_ui64Value) != itBitMask->second.end()) { return l_ui64Value; }
 	}
@@ -415,7 +415,7 @@ CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier&
 		{
 			const auto itBitMaskEntry = itBitMask->second.find(ui64EntryCompositionValue & (1LL << i));
 			if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
-			if (l_sResult == "") { l_sResult = itBitMaskEntry->second.toASCIIString(); }
+			if (l_sResult.empty()) { l_sResult = itBitMaskEntry->second.toASCIIString(); }
 			else
 			{
 				l_sResult += std::string(1, OV_Value_EnumeratedStringSeparator);

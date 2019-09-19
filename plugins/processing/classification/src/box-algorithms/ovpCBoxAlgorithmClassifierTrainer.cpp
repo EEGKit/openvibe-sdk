@@ -315,7 +315,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		const std::vector<SFeatureVector>& actualDataset = (balancedDataset ? m_vBalancedDataset : m_vDataset);
 
-		vector<double> partitionAccuracies(static_cast<unsigned int>(m_ui64PartitionCount));
+		vector<double> partitionAccuracies(m_ui64PartitionCount);
 
 		const bool randomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
 

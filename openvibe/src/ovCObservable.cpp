@@ -44,7 +44,7 @@ void CObservable::notifyObservers(void* data)
 	{
 		for (auto it = m_pObserverList->m_Vector.begin(); it != m_pObserverList->m_Vector.end(); ++it)
 		{
-			((IObserver *)*it)->update(*this, data);
+			static_cast<IObserver *>(*it)->update(*this, data);
 		}
 		m_bHasChanged = false;
 	}

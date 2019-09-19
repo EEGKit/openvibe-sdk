@@ -192,7 +192,7 @@ bool CWriter::setChildData(const void* buffer, const uint64_t size)
 	if (size)
 	{
 		if (!buffer) { return false; }
-		bufferCopy = new unsigned char[static_cast<unsigned int>(size)];
+		bufferCopy = new unsigned char[uint32_t(size)];
 		if (!bufferCopy) { return false; }
 		memcpy(bufferCopy, buffer, size_t(size));
 	}
@@ -209,7 +209,7 @@ bool CWriter::closeChild()
 {
 	if (!m_pCurrentNode) { return false; }
 
-	if ((!m_pCurrentNode->m_bBuffered) && (!m_pCurrentNode->m_vChildren.size()))
+	if ((!m_pCurrentNode->m_bBuffered) && (m_pCurrentNode->m_vChildren.empty()))
 	{
 		m_pCurrentNode->m_ui64BufferLength = 0;
 		m_pCurrentNode->m_pBuffer          = nullptr;

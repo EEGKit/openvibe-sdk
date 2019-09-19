@@ -159,7 +159,7 @@ do { \
 			   << "}, {Error type} : {" \
 			   << convertErrorTypeToString(type) \
 			   << " (code " \
-			   << static_cast<unsigned int>((type)) \
+			   << uint32_t((type)) \
 			   << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
 } while(0)
 
@@ -363,7 +363,7 @@ do { \
 			   << "}, {Error type} : {" \
 			   << convertErrorTypeToString(type) \
 			   << " (code " \
-			   << static_cast<unsigned int>((type)) \
+			   << uint32_t((type)) \
 			   << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
 	std::abort(); \
 } while(0)

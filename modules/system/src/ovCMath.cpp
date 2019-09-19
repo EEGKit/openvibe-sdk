@@ -49,7 +49,7 @@ bool Math::initializeRandomMachine(const uint64_t ui64RandomSeed)
 	g_oRandomGenerator.setSeed(uint32_t(ui64RandomSeed));
 
 	// For safety, we install also the C++ basic random engine (it might be useg by dependencies, old code, etc)
-	srand(static_cast<unsigned int>(ui64RandomSeed));
+	srand(uint32_t(ui64RandomSeed));
 
 	return true;
 }

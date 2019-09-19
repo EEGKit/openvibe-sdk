@@ -300,7 +300,7 @@ bool CAlgorithmScenarioImporter::process()
 																 }))
 			{
 				CIdentifier linkedBoxInputIdentifier = symbolicScenarioInput.m_oLinkedBoxInputIdentifier;
-				unsigned int linkedBoxInputIndex     = symbolicScenarioInput.m_ui32LinkedBoxInputIndex;
+				uint32_t linkedBoxInputIndex     = symbolicScenarioInput.m_ui32LinkedBoxInputIndex;
 
 				if (linkedBoxInputIdentifier != OV_UndefinedIdentifier)
 				{
@@ -333,7 +333,7 @@ bool CAlgorithmScenarioImporter::process()
 			}))
 			{
 				CIdentifier linkedBoxOutputIdentifier = symbolicScenarioOutput.m_oLinkedBoxOutputIdentifier;
-				unsigned int linkedBoxOutputIndex     = symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex;
+				uint32_t linkedBoxOutputIndex     = symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex;
 
 				if (linkedBoxOutputIdentifier != OV_UndefinedIdentifier)
 				{

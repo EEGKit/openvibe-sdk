@@ -136,7 +136,7 @@ bool CAlgorithmMatrixAverage::process()
 			if (m_CumulativeAverageSampleCount == 1) // If it's the first matrix, the average is the first matrix
 			{
 				double* buffer          = l_Matrix->getBuffer();
-				unsigned int bufferSize = l_Matrix->getBufferElementCount();
+				uint32_t bufferSize = l_Matrix->getBufferElementCount();
 
 				m_CumulativeAverageMatrix.clear();
 				m_CumulativeAverageMatrix.insert(m_CumulativeAverageMatrix.begin(), buffer, buffer + bufferSize);

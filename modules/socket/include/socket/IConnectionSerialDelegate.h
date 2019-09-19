@@ -9,7 +9,7 @@ namespace Socket
 	{
 		SConnectionDelegate oConnectionDelegate;
 		bool (*fpConnect)(void*, const char*, const unsigned long);
-		unsigned int (*fpGetPendingByteCount)(void*);
+		uint32_t (*fpGetPendingByteCount)(void*);
 		bool (*fpFlush)(void*);
 		const char* (*fpGetLastError)(void*);
 		void (*fpSaveLastError)(void*);

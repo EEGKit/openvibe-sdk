@@ -9,12 +9,12 @@ namespace Socket
 		void* data;
 		bool (*fpOpen)(void*);
 		bool (*fpClose)(void*);
-		bool (*fpIsReadyToSend)(void*, unsigned int);
-		bool (*fpIsReadyToReceive)(void*, unsigned int);
-		unsigned int (*fpSendBuffer)(void*, const void*, unsigned int);
-		unsigned int (*fpReceiveBuffer)(void*, void*, unsigned int);
-		bool (*fpSendBufferBlocking)(void*, const void*, unsigned int);
-		bool (*fpReceiveBufferBlocking)(void*, void*, unsigned int);
+		bool (*fpIsReadyToSend)(void*, uint32_t);
+		bool (*fpIsReadyToReceive)(void*, uint32_t);
+		uint32_t (*fpSendBuffer)(void*, const void*, uint32_t);
+		uint32_t (*fpReceiveBuffer)(void*, void*, uint32_t);
+		bool (*fpSendBufferBlocking)(void*, const void*, uint32_t);
+		bool (*fpReceiveBufferBlocking)(void*, void*, uint32_t);
 		bool (*fpIsConnected)(void*);
 		bool (*fpRelease)(void*);
 	};

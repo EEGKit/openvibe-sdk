@@ -163,7 +163,7 @@ double* CMatrixImpl::getBuffer()
 
 bool CMatrixImpl::refreshInternalBuffer() const
 {
-	if (m_pBuffer || m_vDimensionSize.size() == 0) { return false; }
+	if (m_pBuffer || m_vDimensionSize.empty()) { return false; }
 
 	m_size = 1;
 	for (size_t i = 0; i < m_vDimensionSize.size(); i++) { m_size *= m_vDimensionSize[i]; }

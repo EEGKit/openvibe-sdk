@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * Errors already added to the manager will be nested in the
 			 * newly added error.
 			 */
-			virtual void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line) = 0;
+			virtual void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, uint32_t line) = 0;
 
 			/**
 			 * \brief Release manager errors

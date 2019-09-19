@@ -44,7 +44,7 @@ namespace Socket
 		 *
 		 * \return  If the function succeeds, the return value is true, else false.
 		 */
-		virtual bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** bluetoothNames, unsigned long long** bluetoothAddresses) = 0;
+		virtual bool listPairedBluetoothDevices(uint32_t* pairedBluetoothDevicesCount, char** bluetoothNames, unsigned long long** bluetoothAddresses) = 0;
 
 		/**
 		 * \brief Convert string MAC Bluetooth address to hexadecimal.
@@ -55,7 +55,7 @@ namespace Socket
 		 */
 		static bool string2BluetoothAddress(const char* straddr, unsigned long long* btaddr)
 		{
-			unsigned int aaddr[6];
+			uint32_t aaddr[6];
 
 			int value = sscanf(straddr, "%02x:%02x:%02x:%02x:%02x:%02x",
 							   &aaddr[0], &aaddr[1], &aaddr[2],

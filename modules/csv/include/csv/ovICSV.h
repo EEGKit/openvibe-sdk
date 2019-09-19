@@ -118,16 +118,16 @@ namespace OpenViBE
 			/**
 			 * \brief Return the number of digit of float numbers in output file.
 			 *
-			 * \return unsigned int number of digits
+			 * \return uint32_t number of digits
 			 */
-			virtual unsigned int getOutputFloatPrecision() = 0;
+			virtual uint32_t getOutputFloatPrecision() = 0;
 
 			/**
 			 * \brief Set the number of digits of float numbers in output file.
 			 *
 			 * \param precision number of digits
 			 */
-			virtual void setOutputFloatPrecision(unsigned int precision) = 0;
+			virtual void setOutputFloatPrecision(uint32_t precision) = 0;
 
 			/**
 			 * \brief Set the format type that will be written or read.
@@ -180,7 +180,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, uint32_t& sampleCountPerBuffer) = 0;
+			virtual bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write spectrum data

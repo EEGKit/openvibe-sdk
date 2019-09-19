@@ -48,7 +48,7 @@ bool __bigEndianToHost(const uint8_t* buffer, T* value)
 	if (!buffer) { return false; }
 	if (!value) { return false; }
 	memset(value, 0, sizeof(T));
-	for (unsigned int i = 0; i < sizeof(T); i++) { ((uint8_t*)value)[i] = buffer[sizeof(T) - 1 - i]; }
+	for (uint32_t i = 0; i < sizeof(T); i++) { ((uint8_t*)value)[i] = buffer[sizeof(T) - 1 - i]; }
 	return true;
 }
 
@@ -58,7 +58,7 @@ bool __littleEndianToHost(const uint8_t* buffer, T* value)
 	if (!buffer) { return false; }
 	if (!value) { return false; }
 	memset(value, 0, sizeof(T));
-	for (unsigned int i = 0; i < sizeof(T); i++) { ((uint8_t*)value)[i] = buffer[i]; }
+	for (uint32_t i = 0; i < sizeof(T); i++) { ((uint8_t*)value)[i] = buffer[i]; }
 	return true;
 }
 
@@ -67,7 +67,7 @@ bool __hostToBigEndian(const T& value, uint8_t* buffer)
 {
 	if (!buffer) { return false; }
 	memset(buffer, 0, sizeof(T));
-	for (unsigned int i = 0; i < sizeof(T); i++) { buffer[i] = ((uint8_t*)&value)[sizeof(T) - 1 - i]; }
+	for (uint32_t i = 0; i < sizeof(T); i++) { buffer[i] = ((uint8_t*)&value)[sizeof(T) - 1 - i]; }
 	return true;
 }
 
@@ -75,7 +75,7 @@ template <typename T>
 bool __hostToLittleEndian(const T& value, uint8_t* buffer)
 {
 	if (!buffer) { return false; }
-	for (unsigned int i = 0; i < sizeof(T); i++) { buffer[i] = uint8_t((value >> (i * 8)) & 0xff); }
+	for (uint32_t i = 0; i < sizeof(T); i++) { buffer[i] = uint8_t((value >> (i * 8)) & 0xff); }
 	return true;
 }
 

@@ -41,7 +41,7 @@ namespace OpenViBE
 					CString l_sPluginModuleName;
 					if (!pluginModule->getFileName(l_sPluginModuleName)) { return true; }
 
-					if (FS::Files::equals(rEntry.getName(), (const char*)l_sPluginModuleName))
+					if (FS::Files::equals(rEntry.getName(), static_cast<const char*>(l_sPluginModuleName)))
 					{
 						OV_WARNING_K("Module [" << CString(rEntry.getName()) << "] has already been loaded");
 						return true;

@@ -176,8 +176,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		if (m_LastSignalChunkEndTime >= currentEpochStartTime + m_EpochDuration)
 		{
 			auto* outputBuffer                            = m_SignalEncoder.getInputMatrix()->getBuffer();
-			unsigned int currentSampleIndexInOutputBuffer = 0;
-			unsigned int cachedChunkIndex                 = 0;
+			uint32_t currentSampleIndexInOutputBuffer = 0;
+			uint32_t cachedChunkIndex                 = 0;
 
 			auto chunkStartTime = m_CachedChunks[cachedChunkIndex].startTime;
 			auto chunkEndTime   = m_CachedChunks[cachedChunkIndex].endTime;

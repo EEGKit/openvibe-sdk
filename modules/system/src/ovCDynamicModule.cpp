@@ -62,7 +62,7 @@ namespace
 #endif
 } // namespace
 
-const char* CDynamicModule::getErrorString(unsigned int errorCode) const
+const char* CDynamicModule::getErrorString(uint32_t errorCode) const
 {
 	if (s_ErrorMap.count(ELogErrorCodes(errorCode)) == 0) { return "Invalid error code"; }
 	return s_ErrorMap.at(ELogErrorCodes(errorCode)).c_str();
@@ -70,7 +70,7 @@ const char* CDynamicModule::getErrorString(unsigned int errorCode) const
 
 const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0]; }
 
-unsigned int CDynamicModule::getLastError() const { return m_ErrorCode; }
+uint32_t CDynamicModule::getLastError() const { return m_ErrorCode; }
 
 CDynamicModule::CDynamicModule()
 	: m_ErrorMode(m_ErrorModeNull), m_ErrorCode(LogErrorCodes_NoError)
@@ -326,7 +326,7 @@ bool CDynamicModule::unload()
 
 bool CDynamicModule::isLoaded() const { return m_Handle != nullptr; }
 const char* CDynamicModule::getFilename() const { return m_Filename; }
-void CDynamicModule::setDynamicModuleErrorMode(unsigned int errorMode) { m_ErrorMode = errorMode; }
+void CDynamicModule::setDynamicModuleErrorMode(uint32_t errorMode) { m_ErrorMode = errorMode; }
 void CDynamicModule::setShouldFreeModule(bool shouldFreeModule) { m_ShouldFreeModule = shouldFreeModule; }
 
 CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const

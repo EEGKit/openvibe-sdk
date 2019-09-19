@@ -46,8 +46,8 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 	FS::Files::openIFStream(file, fileName);
 	while (file.good() && !file.eof())
 	{
-		unsigned int id1;
-		unsigned int id2;
+		uint32_t id1;
+		uint32_t id2;
 		string identifier1;
 		string identifier2;
 		string name;

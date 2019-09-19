@@ -197,7 +197,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 	memoryBuffer.setSize(size_t(ftell(inputFile)), true);
 	fseek(inputFile, 0, SEEK_SET);
 
-	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), (size_t)memoryBuffer.getSize(), 1, inputFile) != 1)
+	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), size_t(memoryBuffer.getSize()), 1, inputFile) != 1)
 	{
 		fclose(inputFile);
 		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);

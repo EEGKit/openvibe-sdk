@@ -42,14 +42,14 @@ namespace Common
 				else { throw std::logic_error("not a UTF-8 string"); }
 				for (size_t j = 0; j < todo; ++j)
 				{
-					if (i == utf8.size()) throw std::logic_error("not a UTF-8 string");
+					if (i == utf8.size()) { throw std::logic_error("not a UTF-8 string"); }
 					ch = utf8[i++];
-					if (ch < 0x80 || ch > 0xBF) throw std::logic_error("not a UTF-8 string");
+					if (ch < 0x80 || ch > 0xBF) { throw std::logic_error("not a UTF-8 string"); }
 					uni <<= 6;
 					uni += ch & 0x3F;
 				}
-				if (uni >= 0xD800 && uni <= 0xDFFF) throw std::logic_error("not a UTF-8 string");
-				if (uni > 0x10FFFF) throw std::logic_error("not a UTF-8 string");
+				if (uni >= 0xD800 && uni <= 0xDFFF) { throw std::logic_error("not a UTF-8 string"); }
+				if (uni > 0x10FFFF) { throw std::logic_error("not a UTF-8 string"); }
 				unicode.push_back(uni);
 			}
 			std::wstring utf16;

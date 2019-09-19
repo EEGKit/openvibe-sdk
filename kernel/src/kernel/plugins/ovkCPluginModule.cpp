@@ -308,10 +308,10 @@ bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 		return false;
 	}
 
-	onInitializeCB                 = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
-	onUninitializeCB               = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&))GetProcAddress(
-		m_pFileHandle, "onGetPluginObjectDescription");
+	onInitializeCB                 = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_pFileHandle, "onInitialize"));
+	onUninitializeCB               = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_pFileHandle, "onUninitialize"));
+	onGetPluginObjectDescriptionCB = reinterpret_cast<bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&)>(GetProcAddress(
+		m_pFileHandle, "onGetPluginObjectDescription"));
 	if (!onGetPluginObjectDescriptionCB)
 	{
 		if (pError) { *pError = this->getLastErrorMessageString(); }
@@ -352,14 +352,14 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 
 	char* l_pMessageBuffer = nullptr;
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0,
-				  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
+				  reinterpret_cast<LPTSTR>(&l_pMessageBuffer), 0, nullptr);
 	if (l_pMessageBuffer)
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);
 		for (size_t i = 0; i < l_iMessageLength; i++) { if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r') { l_pMessageBuffer[i] = ' '; } }
 		l_sResult = l_pMessageBuffer;
 	}
-	LocalFree((LPVOID)l_pMessageBuffer);
+	LocalFree(LPVOID(l_pMessageBuffer));
 
 	return l_sResult;
 }

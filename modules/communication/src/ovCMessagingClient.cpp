@@ -17,7 +17,7 @@ MessagingClient::~MessagingClient()
 	m_Client->release();
 }
 
-bool MessagingClient::connect(const std::string& URI, const unsigned int port)
+bool MessagingClient::connect(const std::string& URI, const uint32_t port)
 {
 	this->reset();
 

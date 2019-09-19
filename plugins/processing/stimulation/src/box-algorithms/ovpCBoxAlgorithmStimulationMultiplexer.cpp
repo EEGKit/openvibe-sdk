@@ -14,7 +14,7 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize()
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 
 	m_StimulationDecoders.resize(staticBoxContext.getInputCount());
-	unsigned int index = 0;
+	uint32_t index = 0;
 	for (auto& stimulationDecoder : m_StimulationDecoders)
 	{
 		stimulationDecoder.initialize(*this, index);

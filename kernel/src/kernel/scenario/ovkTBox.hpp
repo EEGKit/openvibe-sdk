@@ -368,10 +368,10 @@ namespace OpenViBE
 				{
 					case Input:
 					case Output:
-						m_Interfacors[interfacorType].push_back(std::shared_ptr<CInputOutput>(new CInputOutput(newName, typeID, identifier)));
+						m_Interfacors[interfacorType].push_back(std::make_shared<CInputOutput>(newName, typeID, identifier));
 						break;
 					case Setting:
-						m_Interfacors[interfacorType].push_back(std::shared_ptr<CSetting>(new CSetting(newName, typeID, identifier, "", false)));
+						m_Interfacors[interfacorType].push_back(std::make_shared<CSetting>(newName, typeID, identifier, "", false));
 						break;
 					default: break;
 				}
@@ -1106,7 +1106,7 @@ namespace OpenViBE
 
 				if (index == OV_Value_UndefinedIndexUInt || index == uint32_t(m_Interfacors[Setting].size()))
 				{
-					m_Interfacors[Setting].push_back(std::shared_ptr<CSetting>(new CSetting(s)));
+					m_Interfacors[Setting].push_back(std::make_shared<CSetting>(s));
 					l_ui32InsertLocation = (uint32_t(m_Interfacors[Setting].size())) - 1;
 				}
 				else
@@ -1118,7 +1118,7 @@ namespace OpenViBE
 
 					auto l_it = m_Interfacors[Setting].begin();
 					l_it += l_ui32Index;
-					m_Interfacors[Setting].insert(l_it, std::shared_ptr<CSetting>(new CSetting(s)));
+					m_Interfacors[Setting].insert(l_it, std::make_shared<CSetting>(s));
 					l_ui32InsertLocation = index;
 				}
 

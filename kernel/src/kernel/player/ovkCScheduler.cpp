@@ -485,7 +485,7 @@ SchedulerInitializationCode CScheduler::initialize()
 	m_ui64Steps       = 0;
 	m_ui64CurrentTime = 0;
 
-	m_oBenchmarkChrono.reset((uint32_t)m_ui64Frequency);
+	m_oBenchmarkChrono.reset(uint32_t(m_ui64Frequency));
 
 	return (l_bBoxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
 }

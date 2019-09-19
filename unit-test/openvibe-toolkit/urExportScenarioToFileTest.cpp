@@ -65,7 +65,7 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		// Test scenario attributes
 		for (auto& attribute : simpleScenarioAttributes) { scenario.addAttribute(std::get<0>(attribute), std::get<1>(attribute).c_str()); }
 
-		unsigned int settingIndex = 0;
+		uint32_t settingIndex = 0;
 		for (auto& setting : simpleScenarioSettings)
 		{
 			scenario.addSetting(std::get<1>(setting).c_str(), std::get<0>(setting), std::get<2>(setting).c_str());

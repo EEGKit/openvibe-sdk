@@ -349,7 +349,7 @@ namespace Socket
 
 		void clearError() override { m_sLastError.clear(); }
 
-		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses) override
+		bool listPairedBluetoothDevices(uint32_t* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses) override
 		{
 			std::vector<std::string> bluetoothDevicesName;
 			std::vector<unsigned long long> bluetoothDevicesAddress;
@@ -412,10 +412,10 @@ namespace Socket
 				return false;
 			}
 
-			*pairedBluetoothDevicesCount = static_cast<unsigned int>(bluetoothDevicesAddress.size());
+			*pairedBluetoothDevicesCount = uint32_t(bluetoothDevicesAddress.size());
 			strarray                     = new char*[*pairedBluetoothDevicesCount];
 
-			for (unsigned int i = 0; i < *pairedBluetoothDevicesCount; ++i)
+			for (uint32_t i = 0; i < *pairedBluetoothDevicesCount; ++i)
 			{
 				strarray[i] = new char[bluetoothDevicesName[i].size() + 1];
 				std::strcpy(strarray[i], bluetoothDevicesName[i].c_str());

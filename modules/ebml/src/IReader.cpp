@@ -343,7 +343,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 		{
 			m_pCurrentNode                    = new CReaderNode(m_oCurrentIdentifier, m_pCurrentNode);
 			m_pCurrentNode->m_ui64ContentSize = m_ui64CurrentContentSize;
-			m_pCurrentNode->m_pBuffer         = new unsigned char[static_cast<unsigned int>(m_ui64CurrentContentSize)];
+			m_pCurrentNode->m_pBuffer         = new unsigned char[uint32_t(m_ui64CurrentContentSize)];
 			m_rReaderCallback.openChild(m_pCurrentNode->m_oIdentifier);
 		}
 		else
@@ -363,7 +363,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 	// Updates pending data
 	if (m_ui64PendingCount + currentSize > m_ui64PendingSize)
 	{
-		unsigned char* l_pPending = new unsigned char[static_cast<unsigned int>(m_ui64PendingCount + currentSize + 1)
+		unsigned char* l_pPending = new unsigned char[uint32_t(m_ui64PendingCount + currentSize + 1)
 		]; // Ugly hack, reserve 1 more byte on pending data so we are sure we can insert this additional pending byte when only one byte is pending and two bytes are needed for decoding identifier and/or buffer size
 		memcpy(l_pPending, m_pPending, size_t(m_ui64PendingCount));
 		delete [] m_pPending;

@@ -134,7 +134,7 @@ namespace EBML
 		 */
 		operator uint64_t() const;
 		/**
-		 * \brief Conversion to 64 bits unsigned int (should be used instead of the cast)
+		 * \brief Conversion to 64 bits uint32_t (should be used instead of the cast)
 		 * \return \e the 64 bits value contained by this identifier.
 		 */
 		uint64_t toUInteger() const;

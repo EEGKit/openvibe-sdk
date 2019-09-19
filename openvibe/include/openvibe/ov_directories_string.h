@@ -72,13 +72,13 @@ namespace OpenViBE
 #if defined TARGET_OS_Windows
 			// first chance: Win7 and higher
 			std::string l_sPath = pathFromEnv("PROGRAMDATA", "");
-			if (l_sPath == "")
+			if (l_sPath.empty())
 			{
 				// second chance: WinXP
 				l_sPath = pathFromEnv("ALLUSERSPROFILE", "");
 			}
 			// fallback
-			if (l_sPath == "") { l_sPath = "openvibe-user"; }
+			if (l_sPath.empty()) { l_sPath = "openvibe-user"; }
 
 			return l_sPath + "/" + OV_CONFIG_SUBDIR;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS

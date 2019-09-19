@@ -1119,7 +1119,7 @@ CIdentifier CScenario::getNextOutdatedBoxIdentifier(const CIdentifier& previousI
 
 bool CScenario::hasOutdatedBox()
 {
-	for (auto& box : m_Boxes) { if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated)) return true; }
+	for (auto& box : m_Boxes) { if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated)) { return true; } }
 	return false;
 }
 
@@ -1189,7 +1189,7 @@ bool CScenario::checkOutdatedBoxes()
 		{
 			if (this->isBoxOutdated(box.second->getIdentifier()))
 			{
-				auto toBeUpdatedBox = std::shared_ptr<CBox>(new CBox(getKernelContext()));
+				auto toBeUpdatedBox = std::make_shared<CBox>(getKernelContext());
 				toBeUpdatedBox->initializeFromAlgorithmClassIdentifierNoInit(boxAlgorithmClassID);
 				m_OutdatedBoxes[box.second->getIdentifier()] = toBeUpdatedBox;
 				m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated, "");
@@ -1207,7 +1207,7 @@ bool CScenario::checkOutdatedBoxes()
 			// last so the box listener is never called
 			boxUpdater.getUpdatedBox().setAlgorithmClassIdentifier(boxAlgorithmClassID);
 			// copy requested box into a new instance managed in scenario
-			auto newBox = std::shared_ptr<CBox>(new CBox(this->getKernelContext()));
+			auto newBox = std::make_shared<CBox>(this->getKernelContext());
 			newBox->initializeFromExistingBox(boxUpdater.getUpdatedBox());
 			m_OutdatedBoxes[box.second->getIdentifier()] = newBox;
 			m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated, "");
@@ -1385,7 +1385,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 
 			for (size_t i = 0; i < linkCount; ++i)
 			{
-				auto link = shared_ptr<CLink>(new CLink(this->getKernelContext(), *this));
+				auto link = std::make_shared<CLink>(this->getKernelContext(), *this);
 				link->InitializeFromExistingLink(*this->getLinkDetails(linkIdentifierList[i]));
 				if (this->getLinkDetails(linkIdentifierList[i])->hasAttribute(OV_AttributeId_Link_Invalid))
 				{

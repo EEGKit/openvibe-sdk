@@ -45,7 +45,7 @@ namespace
 	bool g_ClientConnected = false;
 
 	// server callback run from a child thread
-	void onServerListening(int port, unsigned int packetCount)
+	void onServerListening(int port, uint32_t packetCount)
 	{
 		// only the server side modifies g_ReceivedData thus no need to handle race condition
 		g_ReceivedData.clear();
@@ -79,7 +79,7 @@ namespace
 		{
 			if (clientConnection->isReadyToReceive())
 			{
-				unsigned int dataSize = 0;
+				uint32_t dataSize = 0;
 				char dataBuffer[64];
 				clientConnection->receiveBufferBlocking(&dataSize, sizeof(dataSize));
 				clientConnection->receiveBufferBlocking(dataBuffer, dataSize);
@@ -97,7 +97,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 
 	std::string serverName   = argv[1];
 	int portNumber           = std::atoi(argv[2]);
-	unsigned int packetCount = static_cast<unsigned int>(std::atoi(argv[3]));
+	uint32_t packetCount = uint32_t(std::atoi(argv[3]));
 
 	// test synchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -127,7 +127,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	// transmission follows the protocol: data size transmission + data transmission
 	std::string baseData = "Data packet index: ";
 
-	for (unsigned int sendIndex = 0; sendIndex < packetCount; ++sendIndex)
+	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
 		uint32_t dataSize      = uint32_t(dataString.size());
@@ -145,7 +145,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	// do the assertion on the main thread
 	OVT_ASSERT(g_ReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (unsigned int receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
+	for (uint32_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
 	{
 		OVT_ASSERT_STREQ(g_ReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
 	}

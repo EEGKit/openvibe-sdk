@@ -154,7 +154,7 @@ namespace Common
 			/* 
 			 * This fonction initializes the vector of Resampler, using the number of channels, the input and the output sampling rates.
 			 */
-			bool reset(size_t ui32ChannelCount, unsigned int iSampleRate, unsigned int oSampleRate)
+			bool reset(size_t ui32ChannelCount, uint32_t iSampleRate, uint32_t oSampleRate)
 			{
 				if (ui32ChannelCount == 0) { return false; }
 				if (iSampleRate == 0) { return false; }

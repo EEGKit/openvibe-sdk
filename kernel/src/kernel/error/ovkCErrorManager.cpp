@@ -35,7 +35,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, unsigned int line)
+			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, uint32_t line)
 				: m_ErrorType(type), m_NestedError(nestedError), m_Description(description), m_Location(std::string(filename) + ":" + std::to_string(line)) { }
 
 			~CError() override { }
@@ -71,7 +71,7 @@ namespace OpenViBE
 
 		void CErrorManager::pushError(ErrorType type, const char* description) { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
 
-		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line)
+		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, uint32_t line)
 		{
 			std::lock_guard<std::mutex> lock(m_ManagerGuard);
 			auto lastTopError = m_TopError.release();

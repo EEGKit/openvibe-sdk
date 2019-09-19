@@ -34,7 +34,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 
 	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
-	m_FilterDimension = static_cast<unsigned int>(filterDimension);
+	m_FilterDimension = uint32_t(filterDimension);
 
 	m_SaveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
@@ -70,7 +70,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	bool train = false;
 
-	for (unsigned int i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_StimEncoder.getInputStimulationSet()->clear();
 		m_StimDecoder.decode(i);
@@ -100,23 +100,23 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	if (train)
 	{
-		std::vector<unsigned int> ERPSampleIndexes;
+		std::vector<uint32_t> ERPSampleIndexes;
 		Eigen::MatrixXd X[2]; // X[0] is session matrix, X[1] is averaged ERP
 		Eigen::MatrixXd C[2]; // Covariance matrices
-		unsigned int n[2];
-		unsigned int nChannel = 0;
-		unsigned int sampleCount  = 0;
-		unsigned int samplingRate = 0;
+		uint32_t n[2];
+		uint32_t nChannel = 0;
+		uint32_t sampleCount  = 0;
+		uint32_t samplingRate = 0;
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
 
 		// Decodes input signals
 
-		for (unsigned int j = 0; j < 2; j++)
+		for (uint32_t j = 0; j < 2; j++)
 		{
 			n[j] = 0;
 
-			for (unsigned int i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); i++)
+			for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); i++)
 			{
 				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& m_rSignalDecoder = m_SignalDecoder[j];
 				m_rSignalDecoder.decode(i);
@@ -163,7 +163,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 							// $$$ Assumes continuous session signal starting at date 0
 							{
-								unsigned int ERPSampleIndex = static_cast<unsigned int>(
+								uint32_t ERPSampleIndex = uint32_t(
 									((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16) * samplingRate) >> 16);
 								ERPSampleIndexes.push_back(ERPSampleIndex);
 							}
@@ -215,7 +215,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
 		Eigen::MatrixXd D  = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
-		for (unsigned int sampleIndex : ERPSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
+		for (uint32_t sampleIndex : ERPSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
 
 		// Computes covariance matrices
 
@@ -267,7 +267,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
 
-			for (unsigned int i = 0; i < eigenVectors.getBufferElementCount(); i++) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
+			for (uint32_t i = 0; i < eigenVectors.getBufferElementCount(); i++) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
 			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);

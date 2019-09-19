@@ -20,7 +20,7 @@ namespace System
 	class System_API CDynamicModule final
 	{
 	public:
-		enum ELogErrorCodes : unsigned int
+		enum ELogErrorCodes : uint32_t
 		{
 			LogErrorCodes_NoError = 0,
 			LogErrorCodes_ModuleAlreadyLoaded = 1,
@@ -167,7 +167,7 @@ namespace System
 		 *
 		 * \param errorMode
 		 */
-		void setDynamicModuleErrorMode(unsigned int errorMode);
+		void setDynamicModuleErrorMode(uint32_t errorMode);
 
 		/**
 		 * \brief Set if the module should, or not, be free. By default the module will be free.
@@ -183,7 +183,7 @@ namespace System
 		 *
 		 * \return The error code.
 		 */
-		unsigned int getLastError() const;
+		uint32_t getLastError() const;
 
 		/**
 		 * \brief Get the error message corresponding to the error code.
@@ -192,7 +192,7 @@ namespace System
 		 *
 		 * \return the message corresponding to the error code.
 		 */
-		const char* getErrorString(unsigned int errorCode) const;
+		const char* getErrorString(uint32_t errorCode) const;
 
 		/**
 		 * \brief Get the detailed error
@@ -210,14 +210,14 @@ namespace System
 		char m_Filename[PATH_MAX];
 #endif
 
-		unsigned int m_ErrorMode = 0;
+		uint32_t m_ErrorMode = 0;
 		bool m_ShouldFreeModule  = true;
 		typedef void (*symbol_t)();
 
 		char m_ErrorDetails[1024];
 		mutable ELogErrorCodes m_ErrorCode;
 
-		static const unsigned int m_ErrorModeNull = 0xffffffff;
+		static const uint32_t m_ErrorModeNull = 0xffffffff;
 
 		friend class CDynamicModuleSymbolLoader;
 		/**

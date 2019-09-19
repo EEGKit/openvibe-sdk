@@ -116,7 +116,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 	if (pLocalConfigurationTokens != nullptr)
 	{
 		this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
-		for (unsigned int i = 0; i < pLocalConfigurationTokens->getSize(); i++)
+		for (uint32_t i = 0; i < pLocalConfigurationTokens->getSize(); i++)
 		{
 			CString l_sName;
 			CString l_sValue;

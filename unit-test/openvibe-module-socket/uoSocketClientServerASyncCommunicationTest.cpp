@@ -41,7 +41,7 @@ namespace
 	bool g_ServerStarted = false;
 
 	// server callback run from a child thread
-	void onServerListening(int port, unsigned int expectedPacketCount)
+	void onServerListening(int port, uint32_t expectedPacketCount)
 	{
 		g_ReceivedData.clear();
 
@@ -67,9 +67,9 @@ namespace
 
 			if (clientConnection && clientConnection->isReadyToReceive())
 			{
-				unsigned int dataSize       = 0;
-				unsigned int bytesToReceive = sizeof(dataSize);
-				unsigned int bytesReceived  = 0;
+				uint32_t dataSize       = 0;
+				uint32_t bytesToReceive = sizeof(dataSize);
+				uint32_t bytesReceived  = 0;
 				char dataBuffer[32];
 
 				// first receive data size
@@ -88,10 +88,10 @@ namespace
 		server->release();
 	}
 
-	void sendData(Socket::IConnectionClient* client, void* data, unsigned int size)
+	void sendData(Socket::IConnectionClient* client, void* data, uint32_t size)
 	{
-		unsigned int bytesToSend = size;
-		unsigned int bytesSent   = 0;
+		uint32_t bytesToSend = size;
+		uint32_t bytesSent   = 0;
 
 		while (bytesSent < bytesToSend) { bytesSent += client->sendBuffer(data, bytesToSend - bytesSent); }
 	}
@@ -103,7 +103,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 
 	std::string serverName   = argv[1];
 	int portNumber           = std::atoi(argv[2]);
-	unsigned int packetCount = static_cast<unsigned int>(std::atoi(argv[3]));
+	uint32_t packetCount = uint32_t(std::atoi(argv[3]));
 
 	// test asynchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -129,7 +129,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	std::string baseData = "Data packet index: ";
 
 	char dataBuffer[32];
-	for (unsigned int sendIndex = 0; sendIndex < packetCount; ++sendIndex)
+	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
 		std::strcpy(dataBuffer, dataString.c_str());
@@ -148,7 +148,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	// do the assertion on the main thread
 	OVT_ASSERT(g_ReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (unsigned int receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
+	for (uint32_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
 	{
 		OVT_ASSERT_STREQ(g_ReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
 	}

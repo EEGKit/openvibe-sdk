@@ -30,9 +30,9 @@ using namespace OpenViBE;
 
 void fillMatrix(CMatrix& matrix)
 {
-	for (unsigned int i = 0; i < matrix.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < matrix.getDimensionCount(); i++)
 	{
-		for (unsigned int j = 0; j < matrix.getDimensionSize(i); j++)
+		for (uint32_t j = 0; j < matrix.getDimensionSize(i); j++)
 		{
 			std::stringstream dimensionLabel;
 
@@ -42,13 +42,13 @@ void fillMatrix(CMatrix& matrix)
 		}
 	}
 
-	for (unsigned int i = 0; i < matrix.getBufferElementCount(); i++)
+	for (uint32_t i = 0; i < matrix.getBufferElementCount(); i++)
 	{
 		matrix.getBuffer()[i] = System::Math::randomFloat32BetweenZeroAndOne() * System::Math::randomSInteger8();
 	}
 }
 
-bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, unsigned int precision = 6)
+bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, uint32_t precision = 6)
 {
 	const double threshold = 1.0 / std::pow(10.0, double(precision - 2));
 
@@ -74,7 +74,7 @@ bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, unsigned i
 		return false;
 	}
 
-	for (unsigned int i = 0; i < expectedMatrix.getBufferElementCount(); i++)
+	for (uint32_t i = 0; i < expectedMatrix.getBufferElementCount(); i++)
 	{
 		const double error = std::fabs(expectedMatrix.getBuffer()[i] - resultMatrix.getBuffer()[i]);
 

@@ -60,8 +60,8 @@ namespace OpenViBE
 CString CIdentifier::toString() const
 {
 	char l_sBuffer[1024];
-	unsigned int l_uiIdentifier1 = (unsigned int)(m_ui64Identifier >> 32);
-	unsigned int l_uiIdentifier2 = (unsigned int)(m_ui64Identifier);
+	uint32_t l_uiIdentifier1 = uint32_t(m_ui64Identifier >> 32);
+	uint32_t l_uiIdentifier2 = uint32_t(m_ui64Identifier);
 	sprintf(l_sBuffer, "(0x%08x, 0x%08x)", l_uiIdentifier1, l_uiIdentifier2);
 	return CString(l_sBuffer);
 }
@@ -69,10 +69,10 @@ CString CIdentifier::toString() const
 bool CIdentifier::fromString(const CString& rString)
 {
 	const char* l_sBuffer = rString;
-	unsigned int l_uiIdentifier1;
-	unsigned int l_uiIdentifier2;
+	uint32_t l_uiIdentifier1;
+	uint32_t l_uiIdentifier2;
 	if (sscanf(l_sBuffer, "(0x%x, 0x%x)", &l_uiIdentifier1, &l_uiIdentifier2) != 2) { return false; }
-	m_ui64Identifier = (((uint64_t)l_uiIdentifier1) << 32) + l_uiIdentifier2;
+	m_ui64Identifier = (uint64_t(l_uiIdentifier1) << 32) + l_uiIdentifier2;
 	return true;
 }
 

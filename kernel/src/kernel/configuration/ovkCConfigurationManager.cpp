@@ -95,7 +95,7 @@ namespace OpenViBE
 					}
 
 					// process everything except empty line or comment
-					if (l_sLine.size() > 0 && l_sLine[0] != '\0' && l_sLine[0] != '#')
+					if (!l_sLine.empty() && l_sLine[0] != '\0' && l_sLine[0] != '#')
 					{
 						OV_ERROR_UNLESS((eq=l_sLine.find("=")) != std::string::npos,
 										"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()),
@@ -790,9 +790,9 @@ uint32_t CConfigurationManager::getRealTime() const { return System::Time::getTi
 uint32_t CConfigurationManager::getProcessId() const
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	return (uint32_t)getpid();
+	return uint32_t(getpid());
 #elif defined TARGET_OS_Windows
-	return (uint32_t)GetCurrentProcessId();
+	return uint32_t(GetCurrentProcessId());
 #else
 	#error TODO
 #endif

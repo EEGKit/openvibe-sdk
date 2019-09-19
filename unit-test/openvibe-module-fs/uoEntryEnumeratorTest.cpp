@@ -88,7 +88,7 @@ int uoEntryEnumeratorTest(int /*argc*/, char* argv[])
 	// error case: no wildcard
 	enumerator->enumerate((dataDirectory + "t").c_str());
 
-	OVT_ASSERT(cb.files.size() == 0, "Failure to enumerate with no wildcard");
+	OVT_ASSERT(cb.files.empty(), "Failure to enumerate with no wildcard");
 
 	cb.release();
 

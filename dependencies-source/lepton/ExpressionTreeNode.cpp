@@ -67,14 +67,14 @@ ExpressionTreeNode::~ExpressionTreeNode() { delete operation; }
 
 bool ExpressionTreeNode::operator!=(const ExpressionTreeNode& node) const
 {
-	if (node.getOperation() != getOperation()) return true;
+	if (node.getOperation() != getOperation()) { return true; }
 	if (getOperation().isSymmetric() && getChildren().size() == 2)
 	{
-		if (getChildren()[0] == node.getChildren()[0] && getChildren()[1] == node.getChildren()[1]) return false;
-		if (getChildren()[0] == node.getChildren()[1] && getChildren()[1] == node.getChildren()[0]) return false;
+		if (getChildren()[0] == node.getChildren()[0] && getChildren()[1] == node.getChildren()[1]) { return false; }
+		if (getChildren()[0] == node.getChildren()[1] && getChildren()[1] == node.getChildren()[0]) { return false; }
 		return true;
 	}
-	for (size_t i = 0; i < getChildren().size(); i++) { if (getChildren()[i] != node.getChildren()[i]) return true; }
+	for (size_t i = 0; i < getChildren().size(); i++) { if (getChildren()[i] != node.getChildren()[i]) { return true; } }
 	return false;
 }
 

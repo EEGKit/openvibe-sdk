@@ -27,7 +27,7 @@ namespace
 		{
 			try
 			{
-				unsigned int value = std::stoul(rChannel.toASCIIString());
+				uint32_t value = std::stoul(rChannel.toASCIIString());
 				value--; // => makes it 0-indexed !
 
 				if (uiStart <= uint32_t(value) && uint32_t(value) < rMatrix.getDimensionSize(0)) { l_ui32Result = uint32_t(value); }

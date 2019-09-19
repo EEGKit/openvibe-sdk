@@ -42,16 +42,16 @@ ExpressionProgram::ExpressionProgram(const ParsedExpression& expression) : maxAr
 {
 	buildProgram(expression.getRootNode());
 	int currentStackSize = 0;
-	for (int i = 0; i < (int)operations.size(); i++)
+	for (size_t i = 0; i < operations.size(); i++)
 	{
 		int args = operations[i]->getNumArguments();
-		if (args > maxArgs) maxArgs = args;
+		if (args > maxArgs) { maxArgs = args; }
 		currentStackSize += 1 - args;
-		if (currentStackSize > stackSize) stackSize = currentStackSize;
+		if (currentStackSize > stackSize) { stackSize = currentStackSize; }
 	}
 }
 
-ExpressionProgram::~ExpressionProgram() { for (int i = 0; i < (int)operations.size(); i++) delete operations[i]; }
+ExpressionProgram::~ExpressionProgram() { for (size_t  i = 0; i < operations.size(); i++) { delete operations[i]; } }
 
 ExpressionProgram::ExpressionProgram(const ExpressionProgram& program) { *this = program; }
 
@@ -60,17 +60,23 @@ ExpressionProgram& ExpressionProgram::operator=(const ExpressionProgram& program
 	maxArgs   = program.maxArgs;
 	stackSize = program.stackSize;
 	operations.resize(program.operations.size());
-	for (int i = 0; i < (int)operations.size(); i++) operations[i] = program.operations[i]->clone();
+	for (size_t i = 0; i < operations.size(); i++)
+	{
+		operations[i] = program.operations[i]->clone();
+	}
 	return *this;
 }
 
 void ExpressionProgram::buildProgram(const ExpressionTreeNode& node)
 {
-	for (int i = (int)node.getChildren().size() - 1; i >= 0; i--) buildProgram(node.getChildren()[i]);
+	for (size_t i = node.getChildren().size() - 1; i >= 0; i--)
+	{
+		buildProgram(node.getChildren()[i]);
+	}
 	operations.push_back(node.getOperation().clone());
 }
 
-int ExpressionProgram::getNumOperations() const { return (int)operations.size(); }
+int ExpressionProgram::getNumOperations() const { return int(operations.size()); }
 
 const Operation& ExpressionProgram::getOperation(int index) const { return *operations[index]; }
 
@@ -82,7 +88,7 @@ double ExpressionProgram::evaluate(const std::map<std::string, double>& variable
 {
 	vector<double> stack(stackSize + 1);
 	int stackPointer = stackSize;
-	for (int i = 0; i < (int)operations.size(); i++)
+	for (size_t i = 0; i < operations.size(); i++)
 	{
 		int numArgs   = operations[i]->getNumArguments();
 		double result = operations[i]->evaluate(&stack[stackPointer], variables);

@@ -98,7 +98,7 @@ bool CMessaging::push()
 	if (!impl->m_SendBuffer.empty() && impl->m_Connection->isReadyToSend(1))
 	{
 		std::lock_guard<std::mutex> lock(impl->m_SendBufferMutex);
-		uint_fast32_t result = impl->m_Connection->sendBufferBlocking(impl->m_SendBuffer.data(), static_cast<unsigned int>(impl->m_SendBuffer.size()));
+		uint_fast32_t result = impl->m_Connection->sendBufferBlocking(impl->m_SendBuffer.data(), uint32_t(impl->m_SendBuffer.size()));
 
 		if (result == 0)
 		{
@@ -123,7 +123,7 @@ bool CMessaging::pull()
 	while (impl->m_Connection->isReadyToReceive(1))
 	{
 		uint_fast32_t bytesReceived = impl->m_Connection->receiveBuffer(impl->m_TemporaryRcvBuffer.data(),
-																		static_cast<unsigned int>(impl->m_TemporaryRcvBuffer.size()));
+																		uint32_t(impl->m_TemporaryRcvBuffer.size()));
 
 		if (bytesReceived == 0)
 		{

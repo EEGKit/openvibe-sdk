@@ -115,7 +115,7 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbcissa() { return m_pSpectrumDecoder->getOutputFrequencyAbscissa(); }
 
 		bool decode(int, int)                   = delete;
-		bool decode(unsigned int, unsigned int) = delete;
+		bool decode(uint32_t, uint32_t) = delete;
 
 		bool decode(uint32_t chunkIdx, bool bMarkInputAsDeprecated = true)
 		{
