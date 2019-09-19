@@ -39,7 +39,7 @@ namespace OpenViBEPlugins
 			uint32_t m_SampleCountPerInputBuffer = 0;
 
 			// Output matrix dimensions
-			uint32_t m_ChannelCount              = 0;
+			uint32_t m_nChannel              = 0;
 			uint32_t m_SampleCountPerOutputEpoch = 0;
 
 			uint64_t m_LastSignalChunkEndTime        = 0;

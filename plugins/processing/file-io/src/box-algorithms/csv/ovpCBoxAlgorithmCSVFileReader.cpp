@@ -115,7 +115,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	}
 
 	m_vHeaderFile     = split(string(line), m_sSeparator);
-	m_ui32ColumnCount = m_vHeaderFile.size();
+	m_nColumn = m_vHeaderFile.size();
 
 	if (m_oTypeIdentifier == OV_TypeId_ChannelLocalisation)
 	{
@@ -136,7 +136,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::process_spectrum;
 
 		//number of column without columns contains min max frequency bands parameters
-		m_ui32ColumnCount -= 2;
+		m_nColumn -= 2;
 	}
 	else if (m_oTypeIdentifier == OV_TypeId_Signal)
 	{
@@ -154,13 +154,13 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 
 		vector<string> l_vParsed = split(string(line), m_sSeparator);
 
-		if ((m_ui32ColumnCount - 1) >= l_vParsed.size())
+		if ((m_nColumn - 1) >= l_vParsed.size())
 		{
 			releaseResources();
 			OV_ERROR_KRF("Error reading columns (not enough columns found) from file", ErrorType::BadParsing);
 		}
 
-		const double l_f64SamplingRate = double(atof(l_vParsed[m_ui32ColumnCount - 1].c_str()));
+		const double l_f64SamplingRate = double(atof(l_vParsed[m_nColumn - 1].c_str()));
 		if (ceil(l_f64SamplingRate) != l_f64SamplingRate)
 		{
 			releaseResources();
@@ -185,7 +185,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		}
 
 		//number of column without the column contains the sampling rate parameters
-		m_ui32ColumnCount -= 1;
+		m_nColumn -= 1;
 	}
 	else if (m_oTypeIdentifier == OV_TypeId_StreamedMatrix)
 	{
@@ -287,10 +287,10 @@ bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
 	if (!m_bHeaderSent)
 	{
 		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_ui32ColumnCount - 1);
+		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_ui32SamplesPerBuffer);
 
-		for (uint32_t i = 1; i < m_ui32ColumnCount; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 		m_pAlgorithmEncoder->encodeHeader();
 		m_bHeaderSent = true;
 
@@ -371,10 +371,10 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 		if (!m_bDoNotUseFileTime) { m_ui64ChunkEndTime = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str())); }
 
 		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_ui32ColumnCount - 1);
+		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_ui32SamplesPerBuffer);
 
-		for (uint32_t i = 1; i < m_ui32ColumnCount; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputSamplingRate() = m_ui64SamplingRate;
 
@@ -416,10 +416,10 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 	if (!m_bHeaderSent)
 	{
 		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_ui32ColumnCount - 1);
+		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_ui32SamplesPerBuffer);
 
-		for (uint32_t i = 1; i < m_ui32ColumnCount; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		static_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputDynamic() =
 				false;	//atoi(m_vDataMatrix[0][m_ui32NbColumn].c_str());
@@ -473,9 +473,9 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 		IMatrix* iMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputMatrix();
 
 		iMatrix->setDimensionCount(1);
-		iMatrix->setDimensionSize(0, m_ui32ColumnCount - 1);
+		iMatrix->setDimensionSize(0, m_nColumn - 1);
 
-		for (uint32_t i = 1; i < m_ui32ColumnCount; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		m_pAlgorithmEncoder->encodeHeader();
 
@@ -487,11 +487,11 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 	// Each vector has to be sent separately
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
 	{
-		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_ui32ColumnCount,
-							"Unexpected number of elements" << "(got " << uint64_t(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")",
+		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_nColumn,
+							"Unexpected number of elements" << "(got " << uint64_t(m_vDataMatrix[i].size()) << ", expected " << m_nColumn << ")",
 							ErrorType::BadParsing);
 
-		for (uint32_t j = 0; j < m_ui32ColumnCount - 1; j++) { matrix->getBuffer()[j] = atof(m_vDataMatrix[i][j + 1].c_str()); }
+		for (uint32_t j = 0; j < m_nColumn - 1; j++) { matrix->getBuffer()[j] = atof(m_vDataMatrix[i][j + 1].c_str()); }
 
 		m_pAlgorithmEncoder->encodeBuffer();
 
@@ -513,20 +513,20 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 	if (!m_bHeaderSent)
 	{
 		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_ui32ColumnCount - 1);
+		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_vDataMatrix.size());
 
-		for (uint32_t i = 1; i < m_ui32ColumnCount; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 		iFrequencyAbscissa->setDimensionCount(1);
 		iFrequencyAbscissa->setDimensionSize(0, m_vDataMatrix.size());
 		if (m_vDataMatrix.size() > 1)
 		{
 			for (uint32_t frequencyBandIndex = 0; frequencyBandIndex < m_vDataMatrix.size(); frequencyBandIndex++)
 			{
-				const double curFrequencyAbscissa = std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount].c_str())
+				const double curFrequencyAbscissa = std::stod(m_vDataMatrix[frequencyBandIndex][m_nColumn].c_str())
 													+ double(frequencyBandIndex) / (m_vDataMatrix.size() - 1) * (
-														std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount + 1].c_str())
-														- std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount].c_str()));
+														std::stod(m_vDataMatrix[frequencyBandIndex][m_nColumn + 1].c_str())
+														- std::stod(m_vDataMatrix[frequencyBandIndex][m_nColumn].c_str()));
 				iFrequencyAbscissa->getBuffer()[frequencyBandIndex] = curFrequencyAbscissa;
 
 				stringstream l_sLabel;
@@ -537,7 +537,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 		else { iFrequencyAbscissa->getBuffer()[0] = 0; }
 
 		static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputSamplingRate() = uint64_t(
-			m_vDataMatrix.size() / (stod(m_vDataMatrix[m_vDataMatrix.size() - 1][m_ui32ColumnCount].c_str()) - stod(m_vDataMatrix[0][m_ui32ColumnCount].c_str())
+			m_vDataMatrix.size() / (stod(m_vDataMatrix[m_vDataMatrix.size() - 1][m_nColumn].c_str()) - stod(m_vDataMatrix[0][m_nColumn].c_str())
 			));
 		m_bHeaderSent = true;
 		m_pAlgorithmEncoder->encodeHeader();
@@ -578,15 +578,15 @@ bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
 	// note: Chunk size shouldn't change after encoding header, do not mess with it here, even if the input has different size
 
 	// We accept partial data, but not buffer overruns ...
-	OV_ERROR_UNLESS_KRF(matrix->getDimensionSize(1) >= m_vDataMatrix.size() && matrix->getDimensionSize(0) >= (m_ui32ColumnCount-1),
-						"Matrix size incompatibility, data suggests " << m_ui32ColumnCount-1 << "x" << uint64_t(m_vDataMatrix.size())
+	OV_ERROR_UNLESS_KRF(matrix->getDimensionSize(1) >= m_vDataMatrix.size() && matrix->getDimensionSize(0) >= (m_nColumn-1),
+						"Matrix size incompatibility, data suggests " << m_nColumn-1 << "x" << uint64_t(m_vDataMatrix.size())
 						<< ", expected at most " << matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0), ErrorType::Overflow);
 
 	stringstream l_sMatrix;
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
 	{
 		l_sMatrix << "at time (" << m_vDataMatrix[i][0].c_str() << "):";
-		for (uint32_t j = 0; j < m_ui32ColumnCount - 1; j++)
+		for (uint32_t j = 0; j < m_nColumn - 1; j++)
 		{
 			matrix->getBuffer()[j * matrix->getDimensionSize(1) + i] = std::stod(m_vDataMatrix[i][j + 1].c_str());
 			l_sMatrix << matrix->getBuffer()[j * matrix->getDimensionSize(1) + i] << ";";

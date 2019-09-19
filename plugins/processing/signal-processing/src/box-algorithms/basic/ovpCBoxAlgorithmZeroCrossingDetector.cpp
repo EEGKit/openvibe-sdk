@@ -122,7 +122,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 			m_vMemorySample.clear();
 			m_vMemorySample.resize(l_ui32ChannelCount);
 
-			m_ui64ChunkCount = 0;
+			m_nChunk = 0;
 
 			m_oEncoder0.encodeHeader();
 			m_oEncoder1.encodeHeader();
@@ -130,7 +130,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 		}
 		if (m_oDecoder.isBufferReceived())
 		{
-			if (m_ui64ChunkCount == 0)
+			if (m_nChunk == 0)
 			{
 				m_ui32SamplingRate = l_ui32SampleCount * uint32_t(
 										 (1LL << 32) / (boxContext.getInputChunkEndTime(0, i) - boxContext.getInputChunkStartTime(0, i)));
@@ -151,7 +151,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 				for (k = 0; k < l_ui32SampleCount; k++) { l_vSignal[k + 1] = l_pInputBuffer[k + j * l_ui32SampleCount]; }
 				m_vSignalHistory[j] = l_vSignal.back();
 
-				if (m_ui64ChunkCount == 0) { m_vStateHistory[j] = (l_vSignal[1] >= 0) ? 1 : -1; }
+				if (m_nChunk == 0) { m_vStateHistory[j] = (l_vSignal[1] >= 0) ? 1 : -1; }
 
 				for (k = 0; k < l_ui32SampleCount; k++)
 				{
@@ -182,7 +182,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 						m_vStateHistory[j] = 1;
 
 						// for the rythm estimation
-						m_vMemoryChunk[j].push_back(m_ui64ChunkCount);
+						m_vMemoryChunk[j].push_back(m_nChunk);
 						m_vMemorySample[j].push_back(k);
 					}
 					else { l_pOutputBuffer0[k + j * l_ui32SampleCount] = 0; }
@@ -198,7 +198,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 				for (size_t index = m_vMemoryChunk[j].size(); index >= 1; index--)
 				{
 					size_t kk = index - 1;
-					if (((m_ui64ChunkCount + 1) * l_ui32SampleCount - (m_vMemorySample[j][kk] + m_vMemoryChunk[j][kk] * l_ui32SampleCount)) < m_ui32WindowTime)
+					if (((m_nChunk + 1) * l_ui32SampleCount - (m_vMemorySample[j][kk] + m_vMemoryChunk[j][kk] * l_ui32SampleCount)) < m_ui32WindowTime)
 					{
 						compt += 1;
 					}
@@ -212,7 +212,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 				for (k = 0; k < l_ui32SampleCount; k++) { l_pOutputBuffer2[k + j * l_ui32SampleCount] = 60.0 * compt / m_f64WindowTime; }
 			}
 
-			m_ui64ChunkCount++;
+			m_nChunk++;
 
 			m_oEncoder0.encodeBuffer();
 			m_oEncoder1.encodeBuffer();

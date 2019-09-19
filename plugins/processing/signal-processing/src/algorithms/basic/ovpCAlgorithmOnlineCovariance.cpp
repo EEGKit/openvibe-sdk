@@ -34,7 +34,7 @@ void CAlgorithmOnlineCovariance::dumpMatrix(ILogManager& /* rMgr */, const Matri
 
 bool CAlgorithmOnlineCovariance::initialize()
 {
-	m_ui64Count = 0;
+	m_n = 0;
 
 	return true;
 }
@@ -87,7 +87,7 @@ bool CAlgorithmOnlineCovariance::process()
 		m_oIncrementalCov.resize(nCols, nCols);
 		m_oIncrementalCov.setZero();
 
-		m_ui64Count = 0;
+		m_n = 0;
 	}
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Update))
@@ -128,7 +128,7 @@ bool CAlgorithmOnlineCovariance::process()
 			m_oIncrementalMean += l_oChunkMean;
 			m_oIncrementalCov += l_oChunkCov;
 
-			m_ui64Count++;
+			m_n++;
 
 			// dumpMatrix(this->getLogManager(), l_oSampleChunk, "SampleChunk");
 			// dumpMatrix(this->getLogManager(), l_oSampleCenteredMean, "SampleCenteredMean");
@@ -140,11 +140,11 @@ bool CAlgorithmOnlineCovariance::process()
 			// Chan, Golub, Leveq, "Updating formulae and a pairwise algorithm...", 1979
 
 			uint32_t l_ui32Start = 0;
-			if (m_ui64Count == 0)
+			if (m_n == 0)
 			{
 				m_oIncrementalMean = l_oSampleChunk.row(0);
 				l_ui32Start        = 1;
-				m_ui64Count        = 1;
+				m_n        = 1;
 			}
 
 			MatrixXd l_oChunkContribution;
@@ -155,12 +155,12 @@ bool CAlgorithmOnlineCovariance::process()
 			{
 				m_oIncrementalMean += l_oSampleChunk.row(i);
 
-				const MatrixXd l_oDiff      = (m_ui64Count + 1.0) * l_oSampleChunk.row(i) - m_oIncrementalMean;
+				const MatrixXd l_oDiff      = (m_n + 1.0) * l_oSampleChunk.row(i) - m_oIncrementalMean;
 				const MatrixXd l_oOuterProd = l_oDiff.transpose() * l_oDiff;
 
-				l_oChunkContribution += 1.0 / (m_ui64Count * (m_ui64Count + 1.0)) * l_oOuterProd;
+				l_oChunkContribution += 1.0 / (m_n * (m_n + 1.0)) * l_oOuterProd;
 
-				m_ui64Count++;
+				m_n++;
 			}
 
 			if (ip_bTraceNormalization) { l_oChunkContribution = l_oChunkContribution / l_oChunkContribution.trace(); }
@@ -173,7 +173,7 @@ bool CAlgorithmOnlineCovariance::process()
 		else if(l_ui32Method == 2)
 		{
 			// Increment sample counts
-			const uint64_t l_ui64CountBefore = m_ui64Count;
+			const uint64_t l_ui64CountBefore = m_n;
 			const uint64_t l_ui64CountChunk = nRows;
 			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 			const MatrixXd l_oSampleSum = l_oSampleChunk.colwise().sum();
@@ -195,12 +195,12 @@ bool CAlgorithmOnlineCovariance::process()
 
 			m_oIncrementalMean = m_oIncrementalMean + l_oSampleSum;
 
-			m_ui64Count = l_ui64CountAfter;
+			m_n = l_ui64CountAfter;
 		}
 		else
 		{
 			// Increment sample counts
-			const uint64_t l_ui64CountBefore = m_ui64Count;
+			const uint64_t l_ui64CountBefore = m_n;
 			const uint64_t l_ui64CountChunk = nRows;
 			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 
@@ -231,7 +231,7 @@ bool CAlgorithmOnlineCovariance::process()
 			}
 
 
-			m_ui64Count = l_ui64CountAfter;
+			m_n = l_ui64CountAfter;
 		}
 #endif
 		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_ui64UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
@@ -242,7 +242,7 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(m_ui64Count > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
 		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, nCols);
@@ -254,12 +254,12 @@ bool CAlgorithmOnlineCovariance::process()
 		l_oPriorCov.setIdentity();
 
 		// Mix the prior and the sample estimates according to the shrinkage parameter. We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / double(m_ui64Count);
-		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / double(m_ui64Count));
+		l_oOutputMean = m_oIncrementalMean / double(m_n);
+		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / double(m_n));
 
 		// Debug block
 		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");
-		dumpMatrix(this->getLogManager(), m_oIncrementalCov / double(m_ui64Count), "Data cov");
+		dumpMatrix(this->getLogManager(), m_oIncrementalCov / double(m_n), "Data cov");
 		dumpMatrix(this->getLogManager(), ip_f64Shrinkage * l_oPriorCov, "Prior cov");
 		dumpMatrix(this->getLogManager(), l_oOutputCov, "Output cov");
 	}
@@ -269,15 +269,15 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(m_ui64Count > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
 		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, nCols);
 		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / double(m_ui64Count);
-		l_oOutputCov  = m_oIncrementalCov / double(m_ui64Count);
+		l_oOutputMean = m_oIncrementalMean / double(m_n);
+		l_oOutputCov  = m_oIncrementalCov / double(m_n);
 
 		// Debug block
 		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");

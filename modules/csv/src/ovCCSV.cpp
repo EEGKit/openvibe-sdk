@@ -1774,7 +1774,7 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 {
 	// get samples per buffer
 	std::vector<std::string> lineParts({ "", "0" });
-	uint32_t sampleCount = 0;
+	uint32_t nSample = 0;
 
 	std::string bufferTemp;
 
@@ -1784,8 +1784,8 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 
 		if (!this->streamReader(m_Fs, line, s_EndOfLineChar, bufferTemp))
 		{
-			// protect against sampleCount--, no need here
-			sampleCount++;
+			// protect against nSample--, no need here
+			nSample++;
 			break;
 		}
 
@@ -1798,19 +1798,19 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 			return false;
 		}
 
-		sampleCount++;
+		nSample++;
 	}
 
 	// assume that we might read too far
-	sampleCount--;
+	nSample--;
 
-	if (sampleCount == 0)
+	if (nSample == 0)
 	{
 		m_LastStringError = "File contain no data to get sample count per buffer, or is corrupted";
 		return false;
 	}
 
-	m_SampleCountPerBuffer = sampleCount;
+	m_SampleCountPerBuffer = nSample;
 	return true;
 }
 

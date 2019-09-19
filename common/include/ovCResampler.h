@@ -421,18 +421,18 @@ namespace Common
 			public:
 				CCallbackSampleWise(TFloat* pOutputSample, size_t ui32OutputSampleCount)
 					: m_pOutputSample(pOutputSample)
-					  , m_ui32OutputSampleCount(ui32OutputSampleCount)
+					  , m_nOutputSample(ui32OutputSampleCount)
 					  , m_ui32OutputSampleIndex(0) { }
 
 				void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const override
 				{
-					for (size_t i = 0; i < ui32ChannelCount; i++) { m_pOutputSample[i * m_ui32OutputSampleCount + m_ui32OutputSampleIndex] = pSample[i]; }
+					for (size_t i = 0; i < ui32ChannelCount; i++) { m_pOutputSample[i * m_nOutputSample + m_ui32OutputSampleIndex] = pSample[i]; }
 					m_ui32OutputSampleIndex++;
-					m_ui32OutputSampleIndex %= m_ui32OutputSampleCount;
+					m_ui32OutputSampleIndex %= m_nOutputSample;
 				}
 
 				TFloat* const m_pOutputSample;
-				size_t m_ui32OutputSampleCount;
+				size_t m_nOutputSample;
 				mutable size_t m_ui32OutputSampleIndex;
 			};
 

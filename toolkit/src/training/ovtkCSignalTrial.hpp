@@ -32,8 +32,8 @@ namespace OpenViBEToolkit
 
 		std::map<uint32_t, std::string> m_vChannelName;
 		std::map<uint32_t, double*> m_vChannelSample;
-		uint32_t m_ui32ChannelCount              = 0;
-		uint32_t m_ui32SampleCount               = 0;
+		uint32_t m_nChannel              = 0;
+		uint32_t m_nSample               = 0;
 		uint32_t m_ui32SampleCountReserved       = 0;
 		uint32_t m_ui32SamplingRate              = 0;
 		OpenViBE::CIdentifier m_oLabelIdentifier = OV_UndefinedIdentifier;

@@ -43,10 +43,10 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64_t calibrateSleep(uint32_t sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
+uint64_t calibrateSleep(uint32_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t maxTime = 0;
-	for (size_t i = 0; i < sampleCount; ++i)
+	for (size_t i = 0; i < nSample; ++i)
 	{
 		const uint64_t preTime = timeFunction();
 		sleepFunction(0);

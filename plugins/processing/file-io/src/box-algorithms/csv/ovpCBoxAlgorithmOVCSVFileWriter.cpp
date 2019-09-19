@@ -264,9 +264,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				const uint64_t samplingFrequency = m_StreamDecoder.getOutputSamplingRate();
 				const uint64_t chunkStartTime    = dynamicBoxContext.getInputChunkStartTime(0, index);
 				const uint32_t nChannel      = matrix->getDimensionSize(0);
-				const uint32_t sampleCount       = matrix->getDimensionSize(1);
+				const uint32_t nSample       = matrix->getDimensionSize(1);
 
-				for (uint32_t sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+				for (uint32_t sampleIndex = 0; sampleIndex < nSample; sampleIndex++)
 				{
 					std::vector<double> matrixValues;
 					// get starting and ending time
@@ -280,7 +280,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					// get matrix values
 					for (uint32_t channelIndex = 0; channelIndex < nChannel; channelIndex++)
 					{
-						matrixValues.push_back(imatrix->getBuffer()[channelIndex * sampleCount + sampleIndex]);
+						matrixValues.push_back(imatrix->getBuffer()[channelIndex * nSample + sampleIndex]);
 					}
 
 					// add sample to the library

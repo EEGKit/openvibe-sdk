@@ -35,7 +35,7 @@ bool CChrono::reset(uint32_t ui32StepCount)
 	m_pStepInTime  = stepInTime;
 	m_pStepOutTime = stepOutTime;
 
-	m_ui32StepCount     = ui32StepCount;
+	m_nStep     = ui32StepCount;
 	m_ui32StepIndex     = 0;
 	m_bIsInStep         = false;
 	m_bHasNewEstimation = false;
@@ -48,21 +48,21 @@ bool CChrono::reset(uint32_t ui32StepCount)
 
 bool CChrono::stepIn()
 {
-	if (m_bIsInStep || !m_ui32StepCount) { return false; }
+	if (m_bIsInStep || !m_nStep) { return false; }
 
 	m_bIsInStep = !m_bIsInStep;
 
 	m_pStepInTime[m_ui32StepIndex] = Time::zgetTime();
-	if (m_ui32StepIndex == m_ui32StepCount)
+	if (m_ui32StepIndex == m_nStep)
 	{
 		m_ui64TotalStepInTime  = 0;
 		m_ui64TotalStepOutTime = 0;
-		for (uint32_t i = 0; i < m_ui32StepCount; i++)
+		for (uint32_t i = 0; i < m_nStep; i++)
 		{
 			m_ui64TotalStepInTime += m_pStepOutTime[i] - m_pStepInTime[i];
 			m_ui64TotalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];
 		}
-		m_pStepInTime[0]    = m_pStepInTime[m_ui32StepCount];
+		m_pStepInTime[0]    = m_pStepInTime[m_nStep];
 		m_ui32StepIndex     = 0;
 		m_bHasNewEstimation = true;
 	}
@@ -73,7 +73,7 @@ bool CChrono::stepIn()
 
 bool CChrono::stepOut()
 {
-	if (!m_bIsInStep || !m_ui32StepCount) { return false; }
+	if (!m_bIsInStep || !m_nStep) { return false; }
 
 	m_bIsInStep = !m_bIsInStep;
 
@@ -87,9 +87,9 @@ uint64_t CChrono::getTotalStepInDuration() const { return m_ui64TotalStepInTime;
 
 uint64_t CChrono::getTotalStepOutDuration() const { return m_ui64TotalStepOutTime; }
 
-uint64_t CChrono::getAverageStepInDuration() const { return m_ui32StepCount ? this->getTotalStepInDuration() / m_ui32StepCount : 0; }
+uint64_t CChrono::getAverageStepInDuration() const { return m_nStep ? this->getTotalStepInDuration() / m_nStep : 0; }
 
-uint64_t CChrono::getAverageStepOutDuration() const { return m_ui32StepCount ? this->getTotalStepOutDuration() / m_ui32StepCount : 0; }
+uint64_t CChrono::getAverageStepOutDuration() const { return m_nStep ? this->getTotalStepOutDuration() / m_nStep : 0; }
 
 double CChrono::getStepInPercentage() const
 {

@@ -40,7 +40,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 	m_SignalEncoder.initialize(*this, 0);
 
 	m_SignalEncoder.getInputSamplingRate().setReferenceTarget(m_SignalDecoder.getOutputSamplingRate());
-	m_ChannelCount = 0;
+	m_nChannel = 0;
 	m_SamplingRate = 0;
 
 	m_CachedChunks.clear();
@@ -85,7 +85,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		{
 			IMatrix* outputMatrix = m_SignalEncoder.getInputMatrix();
 
-			m_ChannelCount              = inputMatrix->getDimensionSize(0);
+			m_nChannel              = inputMatrix->getDimensionSize(0);
 			m_SampleCountPerInputBuffer = inputMatrix->getDimensionSize(1);
 
 			m_SamplingRate = m_SignalDecoder.getOutputSamplingRate();
@@ -97,10 +97,10 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
 
 			outputMatrix->setDimensionCount(2);
-			outputMatrix->setDimensionSize(0, m_ChannelCount);
+			outputMatrix->setDimensionSize(0, m_nChannel);
 			outputMatrix->setDimensionSize(1, m_SampleCountPerOutputEpoch);
 
-			for (uint32_t channel = 0; channel < m_ChannelCount; ++channel)
+			for (uint32_t channel = 0; channel < m_nChannel; ++channel)
 			{
 				outputMatrix->setDimensionLabel(0, channel, inputMatrix->getDimensionLabel(0, channel));
 			}
@@ -224,7 +224,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 					else if (chunkStartTime <= currentOutputSampleTime + chunkTimeTolerance && currentOutputSampleTime <= chunkEndTime + chunkTimeTolerance)
 					{
 						const auto& inputBuffer = m_CachedChunks[cachedChunkIndex].matrix->getBuffer();
-						for (uint32_t channel = 0; channel < m_ChannelCount; ++channel)
+						for (uint32_t channel = 0; channel < m_nChannel; ++channel)
 						{
 							outputBuffer[channel * m_SampleCountPerOutputEpoch + currentSampleIndexInOutputBuffer] = inputBuffer[
 								channel * m_SampleCountPerInputBuffer + currentSampleIndexInInputBuffer];

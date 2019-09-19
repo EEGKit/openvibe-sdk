@@ -105,7 +105,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		Eigen::MatrixXd C[2]; // Covariance matrices
 		uint32_t n[2];
 		uint32_t nChannel = 0;
-		uint32_t sampleCount  = 0;
+		uint32_t nSample  = 0;
 		uint32_t samplingRate = 0;
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
@@ -123,7 +123,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 				IMatrix* matrix = m_rSignalDecoder.getOutputMatrix();
 				nChannel    = matrix->getDimensionSize(0);
-				sampleCount     = matrix->getDimensionSize(1);
+				nSample     = matrix->getDimensionSize(1);
 				samplingRate    = uint32_t(m_rSignalDecoder.getOutputSamplingRate());
 
 				if (m_rSignalDecoder.isHeaderReceived())
@@ -132,25 +132,25 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 										OpenViBE::Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n",
 										OpenViBE::Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(sampleCount > 0, "For condition " << j + 1 << " got no samples in signal stream.\n",
+					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n",
 										OpenViBE::Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(m_FilterDimension <= nChannel, "The filter dimension must not be superior than the channel count.\n",
 										OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
-						X[j].resize(nChannel, (dynamicBoxContext.getInputChunkCount(j + 1) - 1) * sampleCount);
+						X[j].resize(nChannel, (dynamicBoxContext.getInputChunkCount(j + 1) - 1) * nSample);
 					}
 					else // otherwise, only ERP averaging buffer (X[1]) is reset
 					{
-						X[j] = Eigen::MatrixXd::Zero(nChannel, sampleCount);
+						X[j] = Eigen::MatrixXd::Zero(nChannel, nSample);
 					}
 				}
 
 				if (m_rSignalDecoder.isBufferReceived())
 				{
 					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
-						matrix->getBuffer(), nChannel, sampleCount);
+						matrix->getBuffer(), nChannel, nSample);
 
 					switch (j)
 					{

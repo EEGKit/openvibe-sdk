@@ -32,12 +32,12 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 	if (boxContext.getSettingCount() > 2)
 	{
 		expand                  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-		m_ui64ExpandValuesCount = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+		m_nExpandValues = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
 	else
 	{
 		expand                  = false;
-		m_ui64ExpandValuesCount = 4;
+		m_nExpandValues = 4;
 	}
 
 	m_eLogLevel = ELogLevel(logLevel);
@@ -126,8 +126,8 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* buffer, const ui
 {
 	const uint64_t n = (size / sizeof(T));
 	const T* buf     = static_cast<const T*>(buffer);
-	for (uint64_t i = 0; i < std::min(m_ui64ExpandValuesCount, n); i++) { getLogManager() << (i == 0 ? "" : " ") << buf[i]; }
-	if (m_ui64ExpandValuesCount < n) { getLogManager() << " ..."; }
+	for (uint64_t i = 0; i < std::min(m_nExpandValues, n); i++) { getLogManager() << (i == 0 ? "" : " ") << buf[i]; }
+	if (m_nExpandValues < n) { getLogManager() << " ..."; }
 }
 
 void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* buffer, const uint64_t size)

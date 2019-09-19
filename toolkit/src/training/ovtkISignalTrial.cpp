@@ -100,7 +100,7 @@ ISignalTrial& OpenViBEToolkit::removeTime(ISignalTrial& trial, const uint64_t ti
 	return removeSamples(trial, sampleStart, sampleEnd, srcTrial);
 }
 
-ISignalTrial& OpenViBEToolkit::insertBufferSamples(ISignalTrial& trial, const uint32_t sampleStart, const uint32_t sampleCount, const double* buffer,
+ISignalTrial& OpenViBEToolkit::insertBufferSamples(ISignalTrial& trial, const uint32_t sampleStart, const uint32_t nSample, const double* buffer,
 												   const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
@@ -110,24 +110,24 @@ ISignalTrial& OpenViBEToolkit::insertBufferSamples(ISignalTrial& trial, const ui
 	const uint32_t srcNChannel = srcTrial->getChannelCount();
 	const uint32_t srcNSample  = srcTrial->getSampleCount();
 
-	trial.setSampleCount(srcNSample + sampleCount, true);
+	trial.setSampleCount(srcNSample + nSample, true);
 	for (uint32_t i = 0; i < srcNChannel; i++)
 	{
 		if (&trial != srcTrial) { System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double)); }
 
-		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart + sampleCount, srcTrial->getChannelSampleBuffer(i),
+		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart + nSample, srcTrial->getChannelSampleBuffer(i),
 							 (srcNSample - sampleStart) * sizeof(double));
-		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart, buffer + sampleCount * i, sampleCount * sizeof(double));
+		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart, buffer + nSample * i, nSample * sizeof(double));
 	}
 
 	return trial;
 }
 
-ISignalTrial& OpenViBEToolkit::insertBufferTime(ISignalTrial& trial, const uint64_t timeStart, const uint32_t sampleCount, const double* buffer,
+ISignalTrial& OpenViBEToolkit::insertBufferTime(ISignalTrial& trial, const uint64_t timeStart, const uint32_t nSample, const double* buffer,
 												const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 
 	const uint32_t sampleStart = uint32_t((timeStart * srcTrial->getSamplingRate()) >> 32);
-	return insertBufferSamples(trial, sampleStart, sampleCount, buffer, srcTrial);
+	return insertBufferSamples(trial, sampleStart, nSample, buffer, srcTrial);
 }

@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_SpectrumEncoders;
 			std::vector<bool> m_IsSpectrumEncoderActive;
 
-			uint32_t m_ChannelCount = 0;
+			uint32_t m_nChannel = 0;
 			uint32_t m_SampleCount  = 0;
 			uint32_t m_SamplingRate = 0;
 

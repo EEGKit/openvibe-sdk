@@ -38,10 +38,10 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 
 	m_vLastValidSample.clear();
 	m_vLastValidSample.resize(boxContext.getInputCount());
-	m_ui32TotalInterpolatedSampleCount.clear();
-	m_ui32TotalInterpolatedSampleCount.resize(boxContext.getInputCount());
-	m_ui32TotalInterpolatedChunkCount.clear();
-	m_ui32TotalInterpolatedChunkCount.resize(boxContext.getInputCount());
+	m_nTotalInterpolatedSample.clear();
+	m_nTotalInterpolatedSample.resize(boxContext.getInputCount());
+	m_nTotalInterpolatedChunk.clear();
+	m_nTotalInterpolatedChunk.resize(boxContext.getInputCount());
 
 	return true;
 }
@@ -85,8 +85,8 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 
 				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
-					m_ui32TotalInterpolatedSampleCount[i] = 0;
-					m_ui32TotalInterpolatedChunkCount[i]  = 0;
+					m_nTotalInterpolatedSample[i] = 0;
+					m_nTotalInterpolatedChunk[i]  = 0;
 					// for each channel, save of the last valid sample
 					m_vLastValidSample[i].resize(l_pMatrix->getDimensionSize(0));
 				}
@@ -139,25 +139,25 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 							}
 						}
 					}
-					m_ui32TotalInterpolatedSampleCount[i] += nInterpolatedSample;
+					m_nTotalInterpolatedSample[i] += nInterpolatedSample;
 
 					// log management
-					if (nInterpolatedSample > 0 && m_ui32TotalInterpolatedSampleCount[i] == nInterpolatedSample) // beginning of interpolation
+					if (nInterpolatedSample > 0 && m_nTotalInterpolatedSample[i] == nInterpolatedSample) // beginning of interpolation
 					{
 						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(
 							boxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
 					}
 					if (nInterpolatedSample > 0) // update of ChunkCount during interpolation
 					{
-						m_ui32TotalInterpolatedChunkCount[i]++;
+						m_nTotalInterpolatedChunk[i]++;
 					}
-					if (nInterpolatedSample == 0 && m_ui32TotalInterpolatedSampleCount[i] > 0) // end of interpolation
+					if (nInterpolatedSample == 0 && m_nTotalInterpolatedSample[i] > 0) // end of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_ui32TotalInterpolatedSampleCount[i] / (
-							m_ui32TotalInterpolatedChunkCount[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_nTotalInterpolatedSample[i] / (
+							m_nTotalInterpolatedChunk[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(
 							boxContext.getInputChunkStartTime(i, j)) << ".\n";
-						m_ui32TotalInterpolatedSampleCount[i] = 0; // reset
-						m_ui32TotalInterpolatedChunkCount[i]  = 0;
+						m_nTotalInterpolatedSample[i] = 0; // reset
+						m_nTotalInterpolatedChunk[i]  = 0;
 					}
 				}
 				else { OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]"); }

@@ -64,7 +64,7 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 };
 
 CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount)
-	: m_ppVariable(ppVariable), m_ui32VariableCount(ui32VariableCount), m_oParentPlugin(oPlugin) {}
+	: m_ppVariable(ppVariable), m_nVariable(ui32VariableCount), m_oParentPlugin(oPlugin) {}
 
 CEquationParser::~CEquationParser()
 {
@@ -212,7 +212,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') { l_ui32Index = l_sValue[0] - 'A'; }
 		}
 
-		if (l_ui32Index >= m_ui32VariableCount)
+		if (l_ui32Index >= m_nVariable)
 		{
 			OV_WARNING("Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
 					   m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());

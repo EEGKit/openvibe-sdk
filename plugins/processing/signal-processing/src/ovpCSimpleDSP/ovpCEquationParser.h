@@ -51,7 +51,7 @@ protected:
 	//! Pointer to the data referenced by X in the equation
 	double** m_ppVariable = nullptr;
 	//! Number of accessible variables
-	uint32_t m_ui32VariableCount = 0;
+	uint32_t m_nVariable = 0;
 
 	//! Size of the "function stack" (where the sucessive function pointers are stored)
 	const uint32_t m_ui32FunctionStackSize = 1024;

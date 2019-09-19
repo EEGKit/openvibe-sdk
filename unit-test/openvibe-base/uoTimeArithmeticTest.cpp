@@ -134,8 +134,8 @@ TEST(time_arithmetic_test_case, 1s_samples_to_samplig_rate)
 	// test time -> sample count for 1 second signal duration at given rates
 	for (auto testSamplingRate : samplingRatesToTest)
 	{
-		auto sampleCount = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::secondsToTime(1.0));
-		EXPECT_EQ(sampleCount, testSamplingRate);
+		auto nSample = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::secondsToTime(1.0));
+		EXPECT_EQ(nSample, testSamplingRate);
 	}
 }
 

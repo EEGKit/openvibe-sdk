@@ -110,7 +110,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 
 		if (m_Decoder.isHeaderReceived())
 		{
-			m_ChannelCount = matrix->getDimensionSize(0);
+			m_nChannel = matrix->getDimensionSize(0);
 			m_SampleCount  = matrix->getDimensionSize(1);
 
 			OV_ERROR_UNLESS_KRF(m_SampleCount > 1, "Input sample count lower or equal to 1 is not supported by the box.",
@@ -143,11 +143,11 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					// Spectrum matrix
 					IMatrix* spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
 					spectrum->setDimensionCount(2);
-					spectrum->setDimensionSize(0, m_ChannelCount);
+					spectrum->setDimensionSize(0, m_nChannel);
 					spectrum->setDimensionSize(1, m_FFTSize);
 
 					// Spectrum channel names
-					for (size_t j = 0; j < m_ChannelCount; j++) { spectrum->setDimensionLabel(0, uint32_t(j), matrix->getDimensionLabel(0, j)); }
+					for (size_t j = 0; j < m_nChannel; j++) { spectrum->setDimensionLabel(0, uint32_t(j), matrix->getDimensionLabel(0, j)); }
 
 					// We also name the spectrum bands "Abscissa"
 					for (uint32_t j = 0; j < m_FFTSize; j++)
@@ -170,9 +170,9 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			eigenFFT.SetFlag(eigenFFT.HalfSpectrum); // REAL signal => spectrum with conjugate symmetry
 
 			// This matrix will contain the channels spectra (COMPLEX values, RowMajor for copy into openvibe matrix)
-			MatrixXcd spectra = MatrixXcd::Zero(m_ChannelCount, m_FFTSize);
+			MatrixXcd spectra = MatrixXcd::Zero(m_nChannel, m_FFTSize);
 
-			for (uint32_t j = 0; j < m_ChannelCount; j++)
+			for (uint32_t j = 0; j < m_nChannel; j++)
 			{
 				VectorXd samples = VectorXd::Zero(m_SampleCount);
 
@@ -191,12 +191,12 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			if (m_SampleCount % 2 == 0)
 			{
 				// even case : DC and Nyquist bins are not concerned
-				spectra.block(0, 1, m_ChannelCount, m_FFTSize - 2) *= std::sqrt(2);
+				spectra.block(0, 1, m_nChannel, m_FFTSize - 2) *= std::sqrt(2);
 			}
 			else
 			{
 				// odd case : DC bin is not concerned
-				spectra.block(0, 1, m_ChannelCount, m_FFTSize - 1) *= std::sqrt(2);
+				spectra.block(0, 1, m_nChannel, m_FFTSize - 1) *= std::sqrt(2);
 			}
 
 			for (size_t encoderIndex = 0; encoderIndex < m_SpectrumEncoders.size(); encoderIndex++)
@@ -230,7 +230,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 
 					IMatrix* spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
 
-					for (uint32_t j = 0; j < m_ChannelCount; j++)
+					for (uint32_t j = 0; j < m_nChannel; j++)
 					{
 						for (uint32_t k = 0; k < m_FFTSize; k++) { spectrum->getBuffer()[j * m_FFTSize + k] = processResult(j, k, spectra); }
 					}

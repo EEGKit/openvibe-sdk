@@ -54,7 +54,7 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 	}
 	else { OV_ERROR_KRF("Invalid input type identifier " << this->getTypeManager().getTypeName(m_oTypeIdentifier), OpenViBE::Kernel::ErrorType::BadInput); }
 
-	m_ui64SampleCount = 0;
+	m_nSample = 0;
 
 	m_bFirstBuffer    = true;
 	m_bHeaderReceived = false;
@@ -224,7 +224,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 
 				m_oFileStream << "\n";
 			}
-			m_ui64SampleCount += l_ui32NumSamples;
+			m_nSample += l_ui32NumSamples;
 
 			m_bFirstBuffer = false;
 		}

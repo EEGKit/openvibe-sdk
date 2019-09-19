@@ -45,7 +45,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder = nullptr;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
-			uint64_t m_ui64SampleCount = 0;
+			uint64_t m_nSample = 0;
 
 			bool m_bHeaderReceived = false;
 		};

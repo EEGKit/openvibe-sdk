@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			int64_t m_i64DecimationFactor                = 0;
-			uint32_t m_ui32ChannelCount                  = 0;
+			uint32_t m_nChannel                  = 0;
 			uint32_t m_ui32InputSampleIndex              = 0;
 			uint32_t m_ui32InputSampleCountPerSentBlock  = 0;
 			uint64_t m_ui64InputSamplingFrequency        = 0;
@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
 			uint64_t m_ui64OutputSamplingFrequency       = 0;
 
-			uint64_t m_ui64TotalSampleCount = 0;
+			uint64_t m_nTotalSample = 0;
 			uint64_t m_ui64StartTimeBase    = 0;
 			uint64_t m_ui64LastStartTime    = 0;
 			uint64_t m_ui64LastEndTime      = 0;

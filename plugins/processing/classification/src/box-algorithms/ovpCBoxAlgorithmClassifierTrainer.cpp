@@ -88,7 +88,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	OV_ERROR_UNLESS_KRF(nPartition >= 0, "Invalid partition count [" << nPartition << "] (expected value >= 0)", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_ui64PartitionCount = uint64_t(nPartition);
+	m_nPartition = uint64_t(nPartition);
 
 	m_oStimulationDecoder.initialize(*this, 0);
 	for (uint32_t i = 1; i < boxContext.getInputCount(); i++)
@@ -297,8 +297,8 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	// On train stimulation reception, build up the labelled feature vector set matrix and go on training
 	if (startTrain)
 	{
-		OV_ERROR_UNLESS_KRF(m_vDataset.size() >= m_ui64PartitionCount,
-							"Received fewer examples (" << uint32_t(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
+		OV_ERROR_UNLESS_KRF(m_vDataset.size() >= m_nPartition,
+							"Received fewer examples (" << uint32_t(m_vDataset.size()) << ") than specified partition count (" << m_nPartition << ")",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!m_vDataset.empty(), "No training example received", OpenViBE::Kernel::ErrorType::BadInput);
@@ -315,7 +315,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		const std::vector<SFeatureVector>& actualDataset = (balancedDataset ? m_vBalancedDataset : m_vDataset);
 
-		vector<double> partitionAccuracies(m_ui64PartitionCount);
+		vector<double> partitionAccuracies(m_nPartition);
 
 		const bool randomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
 
@@ -336,7 +336,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		confusion.setDimensionSize(0, nClass);
 		confusion.setDimensionSize(1, nClass);
 
-		if (m_ui64PartitionCount >= 2)
+		if (m_nPartition >= 2)
 		{
 			double partitionAccuracy = 0;
 			double finalAccuracy     = 0;
@@ -344,10 +344,10 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			OpenViBEToolkit::Tools::Matrix::clearContent(confusion);
 
 			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
-			for (size_t i = 0; i < m_ui64PartitionCount; i++)
+			for (size_t i = 0; i < m_nPartition; i++)
 			{
-				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_ui64PartitionCount);
-				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_ui64PartitionCount);
+				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_nPartition);
+				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_nPartition);
 
 				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << uint32_t(startIdx) << " to " <<
 						uint32_t(stopIdx) - 1 << ")...\n";
@@ -359,19 +359,19 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				partitionAccuracies[i] = partitionAccuracy;
 				finalAccuracy += partitionAccuracy;
 
-				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_ui64PartitionCount << " (performance : " <<
+				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_nPartition << " (performance : " <<
 						partitionAccuracy << "%)\n";
 			}
 
-			const double mean = finalAccuracy / m_ui64PartitionCount;
+			const double mean = finalAccuracy / m_nPartition;
 			double deviation  = 0;
 
-			for (size_t i = 0; i < m_ui64PartitionCount; i++)
+			for (size_t i = 0; i < m_nPartition; i++)
 			{
 				const double diff = partitionAccuracies[i] - mean;
 				deviation += diff * diff;
 			}
-			deviation = sqrt(deviation / m_ui64PartitionCount);
+			deviation = sqrt(deviation / m_nPartition);
 
 			this->getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << mean << "% (sigma = " << deviation << "%)\n";
 
