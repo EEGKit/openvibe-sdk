@@ -10,7 +10,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMetaboxManager : public TKernelObject<IMetaboxManager>
+		class CMetaboxManager final : public TKernelObject<IMetaboxManager>
 		{
 		public:
 			explicit CMetaboxManager(const IKernelContext& ctx);

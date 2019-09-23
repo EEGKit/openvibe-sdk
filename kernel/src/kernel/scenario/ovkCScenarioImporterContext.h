@@ -8,7 +8,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CScenarioImporterContext : public TKernelObject<Kernel::IScenarioImporterContext>
+		class CScenarioImporterContext final : public TKernelObject<Kernel::IScenarioImporterContext>
 		{
 		public:
 

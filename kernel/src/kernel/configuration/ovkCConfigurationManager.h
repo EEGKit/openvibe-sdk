@@ -18,7 +18,7 @@ namespace OpenViBE
 			CString m_sConfigurationValue;
 		} SConfigurationToken;
 
-		class CConfigurationManager : public TKernelObject<IConfigurationManager>
+		class CConfigurationManager final : public TKernelObject<IConfigurationManager>
 		{
 		public:
 

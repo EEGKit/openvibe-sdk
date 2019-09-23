@@ -10,7 +10,7 @@ namespace OpenViBE
 	{
 		class CSimulatedBox;
 
-		class CPlayerContext : public TKernelObject<IPlayerContext>
+		class CPlayerContext final : public TKernelObject<IPlayerContext>
 		{
 		public:
 

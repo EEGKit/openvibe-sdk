@@ -8,7 +8,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithmProxy : public TKernelObject<IAlgorithmProxy>
+		class CAlgorithmProxy final : public TKernelObject<IAlgorithmProxy>
 		{
 		public:
 

@@ -1,6 +1,6 @@
 #include "cwtmath.h"
 
-static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, double ub, double* w)
+static void nsfft_fd(const fft_object obj, fft_data* inp, fft_data* oup, const double lb, const double ub, double* w)
 {
 	int i;
 

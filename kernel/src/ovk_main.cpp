@@ -9,7 +9,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CKernelDesc : public IKernelDesc
+		class CKernelDesc final : public IKernelDesc
 		{
 		public:
 			IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) override

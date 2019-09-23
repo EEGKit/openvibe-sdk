@@ -9,7 +9,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMessageEvent : public TMessage<TKernelObject<IMessageEvent>>
+		class CMessageEvent final : public TMessage<TKernelObject<IMessageEvent>>
 		{
 		public:
 

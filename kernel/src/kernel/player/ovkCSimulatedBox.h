@@ -61,7 +61,7 @@ namespace OpenViBE
 			bool m_bIsDeprecated     = false;
 		};
 
-		class CSimulatedBox : public TKernelObject<IBoxIO>
+		class CSimulatedBox final : public TKernelObject<IBoxIO>
 		{
 		public:
 

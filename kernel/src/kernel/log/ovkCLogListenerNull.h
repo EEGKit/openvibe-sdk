@@ -9,7 +9,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CLogListenerNull : public TKernelObject<ILogListener>
+		class CLogListenerNull final : public TKernelObject<ILogListener>
 		{
 		public:
 

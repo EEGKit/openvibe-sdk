@@ -9,7 +9,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMessageClock : public TMessage<TKernelObject<IMessageClock>>
+		class CMessageClock final : public TMessage<TKernelObject<IMessageClock>>
 		{
 		public:
 

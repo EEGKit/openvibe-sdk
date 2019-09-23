@@ -8,7 +8,7 @@ namespace
 	using namespace OpenViBE;
 	using namespace Kernel;
 
-	struct SBoxProto : IBoxProto
+	struct SBoxProto final : IBoxProto
 	{
 		SBoxProto(ITypeManager& typeManager) : m_TypeManager(typeManager) { }
 

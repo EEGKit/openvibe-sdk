@@ -10,7 +10,7 @@ namespace OpenViBE
 	{
 		class CPlayer;
 
-		class CPlayerManager : public TKernelObject<IPlayerManager>
+		class CPlayerManager final : public TKernelObject<IPlayerManager>
 		{
 		public:
 

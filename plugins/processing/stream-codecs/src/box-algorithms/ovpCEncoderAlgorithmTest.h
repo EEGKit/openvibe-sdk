@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CStimulationSet* m_pStimulationSet = nullptr;
 		};
 
-		class CEncoderAlgorithmTestDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CEncoderAlgorithmTestDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

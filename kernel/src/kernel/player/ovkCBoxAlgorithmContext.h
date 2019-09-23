@@ -9,7 +9,7 @@ namespace OpenViBE
 	{
 		class CSimulatedBox;
 
-		class CBoxAlgorithmContext : public TKernelObject<IBoxAlgorithmContext>
+		class CBoxAlgorithmContext final : public TKernelObject<IBoxAlgorithmContext>
 		{
 		public:
 

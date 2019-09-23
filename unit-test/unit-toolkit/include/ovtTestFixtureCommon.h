@@ -43,7 +43,7 @@ namespace OpenViBETest
 		OpenViBE::Kernel::IKernelContext* context{ nullptr };
 
 	private:
-		std::string m_ConfigurationFile;
-		OpenViBE::CKernelLoader m_KernelLoader;
+		std::string m_configurationFile;
+		OpenViBE::CKernelLoader m_kernelLoader;
 	};
 } // namespace OpenViBETest

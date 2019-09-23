@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId);
 		};
 
-		class CAlgorithmClassifierOneVsOneDesc : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
+		class CAlgorithmClassifierOneVsOneDesc final : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
 		{
 		public:
 			void release() override { }

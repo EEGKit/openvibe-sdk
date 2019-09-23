@@ -16,7 +16,7 @@ namespace OpenViBE
 	{
 		class CScenarioSettingKeywordParserCallback;
 
-		class CPlayer : public TKernelObject<IPlayer>
+		class CPlayer final : public TKernelObject<IPlayer>
 		{
 		public:
 

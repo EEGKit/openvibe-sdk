@@ -52,7 +52,7 @@ namespace OpenViBE
 	{
 		namespace
 		{
-			class CPluginModuleContext : public TKernelObject<IPluginModuleContext>
+			class CPluginModuleContext final : public TKernelObject<IPluginModuleContext>
 			{
 			public:
 
@@ -171,7 +171,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CPluginModuleWindows : public CPluginModuleBase
+		class CPluginModuleWindows final : public CPluginModuleBase
 		{
 		public:
 

@@ -11,7 +11,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CTypeManager : public TKernelObject<ITypeManager>
+		class CTypeManager final : public TKernelObject<ITypeManager>
 		{
 		public:
 

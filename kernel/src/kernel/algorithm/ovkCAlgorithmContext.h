@@ -7,7 +7,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithmContext : public TKernelObject<IAlgorithmContext>
+		class CAlgorithmContext final : public TKernelObject<IAlgorithmContext>
 		{
 		public:
 

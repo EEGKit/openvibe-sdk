@@ -11,7 +11,7 @@ namespace OpenViBE
 		class CLogListenerConsole;
 		class CLogListenerFile;
 
-		class CKernelContext : public IKernelContext
+		class CKernelContext final : public IKernelContext
 		{
 		public:
 
@@ -60,7 +60,7 @@ namespace OpenViBE
 			CKernelContext() = delete;
 		};
 
-		class CKernelContextBridge : public IKernelContext
+		class CKernelContextBridge final : public IKernelContext
 		{
 		public:
 

@@ -22,7 +22,6 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 namespace OpenViBETest
 {
@@ -68,8 +67,8 @@ namespace OpenViBETest
 	template <typename T>
 	struct ScopedTest
 	{
-		template <typename... Args>
-		ScopedTest(Args&&... args) : fixture(new T(std::forward<Args>(args)...)) { fixture->setUp(); }
+		template <typename... TArgs>
+		ScopedTest(TArgs&&... args) : fixture(new T(std::forward<TArgs>(args)...)) { fixture->setUp(); }
 
 		~ScopedTest() { fixture->tearDown(); }
 

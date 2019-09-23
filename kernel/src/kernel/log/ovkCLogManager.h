@@ -13,7 +13,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CLogManager : public TKernelObject<ILogManager>
+		class CLogManager final : public TKernelObject<ILogManager>
 		{
 		public:
 

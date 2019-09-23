@@ -8,7 +8,7 @@ namespace OpenViBE
 {
 	namespace Tools
 	{
-		class CScopeTester : public IObject
+		class CScopeTester final : public IObject
 		{
 		public:
 

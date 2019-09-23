@@ -19,7 +19,7 @@ namespace OpenViBE
 		 *
 		 * Variables such as name, author etc are pulled from scenario information.
 		 */
-		class CMetaboxObjectDesc : virtual public IMetaboxObjectDesc
+		class CMetaboxObjectDesc final : virtual public IMetaboxObjectDesc
 		{
 		public:
 			CMetaboxObjectDesc() { }

@@ -10,7 +10,7 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CLink : public TAttributable<TKernelObject<ILink>>
+		class CLink final : public TAttributable<TKernelObject<ILink>>
 		{
 		public:
 

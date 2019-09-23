@@ -22,7 +22,7 @@ namespace OpenViBE
 		class CChunk;
 		class CPlayer;
 
-		class CScheduler : public TKernelObject<IKernelObject>
+		class CScheduler final : public TKernelObject<IKernelObject>
 		{
 		public:
 

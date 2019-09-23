@@ -30,7 +30,7 @@ namespace
 	// decriptor that call functions describe in IBoxProto for intialize the CBox object.
 	// This implementation is derived from CBoxProto, to benefit from
 	// the implementation of the stream restriction mecanism but neutralizes all other initialization function.
-	class CBoxProtoRestriction : public OpenViBE::Kernel::CBoxProto
+	class CBoxProtoRestriction final : public OpenViBE::Kernel::CBoxProto
 	{
 	public:
 

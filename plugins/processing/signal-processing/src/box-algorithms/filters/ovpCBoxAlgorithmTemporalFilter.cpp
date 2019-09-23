@@ -19,14 +19,14 @@ namespace
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::HighPass<32>, 1, Dsp::DirectFormII> CButterworthHighPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::LowPass<32>, 1, Dsp::DirectFormII> CButterworthLowPass;
 
-	std::shared_ptr<Dsp::Filter> createButterworthFilter(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount)
+	std::shared_ptr<Dsp::Filter> createButterworthFilter(uint64_t filterType, uint64_t nSmoothingSample)
 	{
-		switch (ui64FilterType)
+		switch (filterType)
 		{
-			case FilterType_BandPass: return std::shared_ptr<Dsp::Filter>(new CButterworthBandPass(int(ui64SmoothingSampleCount)));
-			case FilterType_BandStop: return std::shared_ptr<Dsp::Filter>(new CButterworthBandStop(int(ui64SmoothingSampleCount)));
-			case FilterType_HighPass: return std::shared_ptr<Dsp::Filter>(new CButterworthHighPass(int(ui64SmoothingSampleCount)));
-			case FilterType_LowPass: return std::shared_ptr<Dsp::Filter>(new CButterworthLowPass(int(ui64SmoothingSampleCount)));
+			case FilterType_BandPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandPass>(int(nSmoothingSample)));
+			case FilterType_BandStop: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandStop>(int(nSmoothingSample)));
+			case FilterType_HighPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthHighPass>(int(nSmoothingSample)));
+			case FilterType_LowPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthLowPass>(int(nSmoothingSample)));
 			default:
 				break;
 		}

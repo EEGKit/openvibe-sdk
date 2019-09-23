@@ -14,7 +14,7 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CComment : public TAttributable<TKernelObject<IComment>>
+		class CComment final : public TAttributable<TKernelObject<IComment>>
 		{
 		public:
 

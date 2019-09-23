@@ -8,7 +8,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CBuffer : public CMemoryBuffer
+		class CBuffer final : public CMemoryBuffer
 		{
 		public:
 
