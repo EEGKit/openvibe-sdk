@@ -71,7 +71,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 	// Process the child nodes.
 
 	vector<int> args;
-	for (int i = 0; i < node.getChildren().size(); i++)
+	for (size_t i = 0; i < node.getChildren().size(); ++i)
 	{
 		compileExpression(node.getChildren()[i], temps);
 		args.push_back(findTempIndex(node.getChildren()[i], temps));
@@ -134,7 +134,7 @@ double CompiledExpression::evaluate() const
 		if (args.size() == 1) workspace[target[step]] = operation[step]->evaluate(&workspace[args[0]], dummyVariables);
 		else
 		{
-			for (int i = 0; i < args.size(); i++) argValues[i] = workspace[args[i]];
+			for (size_t i = 0; i < args.size(); i++) argValues[i] = workspace[args[i]];
 			workspace[target[step]] = operation[step]->evaluate(&argValues[0], dummyVariables);
 		}
 	}

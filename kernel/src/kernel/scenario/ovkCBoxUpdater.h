@@ -42,9 +42,9 @@ namespace OpenViBE
 				return m_OriginalToUpdatedCorrespondence.at(interfacorType);
 			}
 
-			IBox& getUpdatedBox() { return *m_UpdatedBox; }
+			IBox& getUpdatedBox() const { return *m_UpdatedBox; }
 
-			bool flaggedForManualUpdate()
+			bool flaggedForManualUpdate() const
 			{
 				OV_FATAL_UNLESS_K(m_Initialized, "Box Updater is not initialized", ErrorType::BadCall);
 
@@ -57,16 +57,15 @@ namespace OpenViBE
 					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
 			}
 
-			bool isUpdateRequired() { return m_IsUpdateRequired; }
+			bool isUpdateRequired() const { return m_IsUpdateRequired; }
 
 			static const std::array<CIdentifier, 10> updatableAttributes;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxUpdater)
+			_IsDerivedFromClass_Final_(TKernelObject<IKernelObject>, OV_ClassId_Kernel_Scenario_BoxUpdater)
 
 		private:
 
-			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
-											   const CString& name);
+			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name);
 			bool updateInterfacors(BoxInterfacorType interfacorType);
 
 			/**

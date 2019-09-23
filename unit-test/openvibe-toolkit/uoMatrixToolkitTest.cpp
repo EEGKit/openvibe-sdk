@@ -44,7 +44,7 @@ void fillMatrix(CMatrix& matrix)
 
 	for (uint32_t i = 0; i < matrix.getBufferElementCount(); i++)
 	{
-		matrix.getBuffer()[i] = System::Math::randomFloat32BetweenZeroAndOne() * System::Math::randomSInteger8();
+		matrix.getBuffer()[i] = System::Math::randomFloat32BetweenZeroAndOne() * double(System::Math::randomSInteger8());
 	}
 }
 

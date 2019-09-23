@@ -13,14 +13,14 @@ namespace OpenViBE
 		{
 		public:
 
-			CLogListenerFile(const IKernelContext& ctx, const CString& sApplicationName, const CString& sLogFilename);
-			~CLogListenerFile() override;
-			bool isActive(ELogLevel eLogLevel) override;
+			CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename);
+			~CLogListenerFile() override { m_fsFileStream.close(); }
+			bool isActive(ELogLevel logLevel) override;
 			bool activate(ELogLevel eLogLevel, bool bActive) override;
 			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
 			bool activate(bool bActive) override;
 
-			void configure(const IConfigurationManager& rConfigurationManager);
+			void configure(const IConfigurationManager& configurationManager);
 			void log(const time64 value) override;
 			void log(const uint64_t value) override;
 			void log(const uint32_t value) override;
@@ -49,9 +49,9 @@ namespace OpenViBE
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_bTimeInSeconds        = false;
+			bool m_bTimeInSeconds        = true;
 			bool m_bLogWithHexa          = false;
-			uint64_t m_ui64TimePrecision = 0;
+			uint64_t m_ui64TimePrecision = 3;
 
 		private:
 			template <typename T>

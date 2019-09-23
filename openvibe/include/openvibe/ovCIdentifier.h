@@ -48,27 +48,27 @@ namespace OpenViBE
 		CIdentifier();
 		/**
 		 * \brief 32 bits integer based constructor
-		 * \param ui32Identifier1 [in] : the first part of the identifier
-		 * \param ui32Identifier2 [in] : the second part of the identifier
+		 * \param id1 [in] : the first part of the identifier
+		 * \param id2 [in] : the second part of the identifier
 		 *
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(uint32_t ui32Identifier1, uint32_t ui32Identifier2);
+		CIdentifier(uint32_t id1, uint32_t id2);
 		/**
 		 * \brief 64 bits integer based constructor
-		 * \param ui64Identifier [in] : The identifier
+		 * \param id [in] : The identifier
 		 */
-		CIdentifier(uint64_t ui64Identifier);
+		CIdentifier(uint64_t id);
 		/**
 		 * \brief Copy constructor
-		 * \param identifier [in] : the identifier to initialize
+		 * \param id [in] : the identifier to initialize
 		 *        this identifier from
 		 *
 		 * Builds up the 64 bits identifier exacly the same as
 		 * given identifier parameter.
 		 */
-		CIdentifier(const CIdentifier& identifier);
+		CIdentifier(const CIdentifier& id);
 
 		//@}
 		/** \name Operators */
@@ -76,14 +76,14 @@ namespace OpenViBE
 
 		/**
 		 * \brief Affectation operator
-		 * \param identifier [in] : the identifier to initialize
+		 * \param id [in] : the identifier to initialize
 		 *        this identifier from
 		 * \return this identifier
 		 *
 		 * Reinitializes the 64 bits identifier exactly the same as
 		 * given identifier parameter.
 		 */
-		CIdentifier& operator=(const CIdentifier& identifier);
+		CIdentifier& operator=(const CIdentifier& id);
 		/**
 		 * \brief Increments this identifier by 1
 		 * \return this identifier
@@ -100,8 +100,8 @@ namespace OpenViBE
 		CIdentifier& operator--();
 		/**
 		 * \brief Equality test operator
-		 * \param rIdentifier1 [in] : the first identifier to compare
-		 * \param rIdentifier2 [in] : the second identifier to compare
+		 * \param id1 [in] : the first identifier to compare
+		 * \param id2 [in] : the second identifier to compare
 		 * \return \e true if the two identifiers are equal,
 		 * \return \e false if the two identifiers are different
 		 *
@@ -110,11 +110,11 @@ namespace OpenViBE
 		 *
 		 * \sa operator!=
 		 */
-		friend OV_API bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
+		friend OV_API bool operator==(const CIdentifier& id1, const CIdentifier& id2);
 		/**
 		 * \brief Difference test operator
-		 * \param rIdentifier1 [in] : the first identifier to compare
-		 * \param rIdentifier2 [in] : the second identifier to compare
+		 * \param id1 [in] : the first identifier to compare
+		 * \param id2 [in] : the second identifier to compare
 		 * \return \e true if the two identifiers are different,
 		 * \return \e false if the two identifiers are equal
 		 *
@@ -123,11 +123,11 @@ namespace OpenViBE
 		 *
 		 * \sa operator==
 		 */
-		friend OV_API bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
+		friend OV_API bool operator!=(const CIdentifier& id1, const CIdentifier& id2);
 		/**
 		 * \brief Order test operator
-		 * \param rIdentifier1 [in] : the first identifier to compare
-		 * \param rIdentifier2 [in] : the second identifier to compare
+		 * \param id1 [in] : the first identifier to compare
+		 * \param id2 [in] : the second identifier to compare
 		 * \return \e true if the first identifier is less than the second one
 		 * \return \e false if the first identifier is greater or equal to the second one
 		 *
@@ -136,11 +136,11 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
+		friend OV_API bool operator<(const CIdentifier& id1, const CIdentifier& id2);
 		/**
 		 * \brief Order test operator
-		 * \param rIdentifier1 [in] : the first identifier to compare
-		 * \param rIdentifier2 [in] : the second identifier to compare
+		 * \param id1 [in] : the first identifier to compare
+		 * \param id2 [in] : the second identifier to compare
 		 * \return \e true if the first identifier is greater than the second one
 		 * \return \e false if the first identifier is less or equal to the second one
 		 *
@@ -149,7 +149,7 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
+		friend OV_API bool operator>(const CIdentifier& id1, const CIdentifier& id2);
 		/**
 		 * \brief Order test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -186,11 +186,11 @@ namespace OpenViBE
 		CString toString() const;
 		/**
 		 * \brief Reads a an OpenViBE string to extract this identifier
-		 * \param rString [in] : the string to convert
+		 * \param str [in] : the string to convert
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		bool fromString(const CString& rString);
+		bool fromString(const CString& str);
 		/**
 		 * \brief Converts this identifier into an unsigned 64 bits integer
 		 * \return The unsigned integer converted identifier

@@ -29,7 +29,7 @@ namespace OpenViBE
 			bool uninitialize() override;
 			bool getFileName(CString& rFileName) const override;
 
-			_IsDerivedFromClass_Final_(IPluginModule, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OV_UndefinedIdentifier)
 
 		protected:
 

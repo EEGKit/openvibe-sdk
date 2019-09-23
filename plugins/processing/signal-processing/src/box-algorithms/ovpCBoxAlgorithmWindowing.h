@@ -30,7 +30,7 @@ namespace OpenViBEPlugins
 			bool processInput(const uint32_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_Windowing)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_Windowing)
 
 		protected:
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_Decoder;

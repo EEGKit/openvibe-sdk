@@ -73,7 +73,7 @@ bool CEncoderAlgorithmTest::initialize()
 	return true;
 }
 
-bool CEncoderAlgorithmTest::uininitialize()
+bool CEncoderAlgorithmTest::uninitialize()
 {
 	delete m_pStimulationSet;
 	delete m_pMatrix3;

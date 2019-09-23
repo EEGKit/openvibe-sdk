@@ -12,40 +12,35 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& sApplicationName, const CString& sLogFilename)
-	: TKernelObject<ILogListener>(ctx)
-	  , m_sApplicationName(sApplicationName)
-	  , m_sLogFilename(sLogFilename)
-	  , m_bTimeInSeconds(true), m_ui64TimePrecision(3)
+CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename)
+	: TKernelObject<ILogListener>(ctx), m_sApplicationName(applicationName), m_sLogFilename(logFilename)
 {
 
 	// Create the path to the log file
-	FS::Files::createParentPath(sLogFilename.toASCIIString());
+	FS::Files::createParentPath(logFilename.toASCIIString());
 
-	FS::Files::openFStream(m_fsFileStream, sLogFilename.toASCIIString(), ios_base::out);
+	FS::Files::openFStream(m_fsFileStream, logFilename.toASCIIString(), ios_base::out);
 
 	if (!m_fsFileStream.is_open())
 	{
-		std::cout << "[  ERR  ] Error while creating FileLogListener into '" << sLogFilename << "'" << std::endl;
+		std::cout << "[  ERR  ] Error while creating FileLogListener into '" << logFilename << "'" << std::endl;
 		return;
 	}
 	m_fsFileStream << flush;
 }
 
-CLogListenerFile::~CLogListenerFile() { m_fsFileStream.close(); }
-
-void CLogListenerFile::configure(const IConfigurationManager& rConfigurationManager)
+void CLogListenerFile::configure(const IConfigurationManager& configurationManager)
 {
-	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
-	m_bLogWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
-	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
+	m_bTimeInSeconds    = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
+	m_bLogWithHexa      = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
+	m_ui64TimePrecision = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
-bool CLogListenerFile::isActive(ELogLevel eLogLevel)
+bool CLogListenerFile::isActive(ELogLevel logLevel)
 {
-	auto itLogLevel = m_vActiveLevel.find(eLogLevel);
-	if (itLogLevel == m_vActiveLevel.end()) { return true; }
-	return itLogLevel->second;
+	const auto it = m_vActiveLevel.find(logLevel);
+	if (it == m_vActiveLevel.end()) { return true; }
+	return it->second;
 }
 
 bool CLogListenerFile::activate(ELogLevel eLogLevel, bool bActive)

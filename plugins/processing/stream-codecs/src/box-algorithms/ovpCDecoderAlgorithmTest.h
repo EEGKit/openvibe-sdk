@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 			~CDecoderAlgorithmTest() override { }
 			void release() override { delete this; }
 			bool initialize() override;
-			virtual bool uininitialize();
+			bool uninitialize() override;
 			bool processInput(const uint32_t index) override;
 			bool process() override;
 

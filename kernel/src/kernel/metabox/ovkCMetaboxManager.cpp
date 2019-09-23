@@ -122,29 +122,29 @@ CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifie
 	return std::next(result, 1)->first;
 }
 
-const Plugins::IPluginObjectDesc* CMetaboxManager::getMetaboxObjectDesc(const CIdentifier& metaboxIdentifier) const
+const Plugins::IPluginObjectDesc* CMetaboxManager::getMetaboxObjectDesc(const CIdentifier& metaboxID) const
 {
-	auto result = m_MetaboxObjectDesc.find(metaboxIdentifier);
+	auto result = m_MetaboxObjectDesc.find(metaboxID);
 	return result != m_MetaboxObjectDesc.end() ? result->second : nullptr;
 }
 
-void CMetaboxManager::setMetaboxObjectDesc(const CIdentifier& metaboxIdentifier, Plugins::IPluginObjectDesc* metaboxDescriptor)
+void CMetaboxManager::setMetaboxObjectDesc(const CIdentifier& metaboxID, Plugins::IPluginObjectDesc* metaboxDesc)
 {
-	m_MetaboxObjectDesc[metaboxIdentifier] = metaboxDescriptor;
+	m_MetaboxObjectDesc[metaboxID] = metaboxDesc;
 }
 
-CString CMetaboxManager::getMetaboxFilePath(const CIdentifier& metaboxIdentifier) const
+CString CMetaboxManager::getMetaboxFilePath(const CIdentifier& metaboxID) const
 {
-	auto resultIt = m_MetaboxFilePath.find(metaboxIdentifier);
+	auto resultIt = m_MetaboxFilePath.find(metaboxID);
 	return resultIt != m_MetaboxFilePath.end() ? resultIt->second : CString();
 }
 
-void CMetaboxManager::setMetaboxFilePath(const CIdentifier& metaboxIdentifier, const CString& filePath) { m_MetaboxFilePath[metaboxIdentifier] = filePath; }
+void CMetaboxManager::setMetaboxFilePath(const CIdentifier& metaboxID, const CString& filePath) { m_MetaboxFilePath[metaboxID] = filePath; }
 
-CIdentifier CMetaboxManager::getMetaboxHash(const CIdentifier& metaboxIdentifier) const
+CIdentifier CMetaboxManager::getMetaboxHash(const CIdentifier& metaboxID) const
 {
-	auto resultIt = m_MetaboxHash.find(metaboxIdentifier);
+	auto resultIt = m_MetaboxHash.find(metaboxID);
 	return resultIt != m_MetaboxHash.end() ? resultIt->second : OV_UndefinedIdentifier;
 }
 
-void CMetaboxManager::setMetaboxHash(const CIdentifier& metaboxIdentifier, const CIdentifier& hash) { m_MetaboxHash[metaboxIdentifier] = hash; }
+void CMetaboxManager::setMetaboxHash(const CIdentifier& metaboxID, const CIdentifier& hash) { m_MetaboxHash[metaboxID] = hash; }

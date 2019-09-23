@@ -125,7 +125,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 				}
 				else
 				{
-					for (uint32_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); k++)
+					for (size_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); k++)
 					{
 						const uint64_t stimulationId = input.op_pStimulationSet->getStimulationIdentifier(k);
 						if (stimulationId == m_ui64TargetClassLabel || stimulationId == m_ui64NonTargetClassLabel || stimulationId == m_ui64RejectClassLabel)

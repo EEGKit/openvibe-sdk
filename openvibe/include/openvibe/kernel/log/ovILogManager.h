@@ -36,7 +36,7 @@ namespace OpenViBE
 			 */
 			virtual bool removeListener(ILogListener* pListener) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogManager)
+			_IsDerivedFromClass_(ILogListener, OV_ClassId_Kernel_Log_LogManager)
 		};
 
 		/**

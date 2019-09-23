@@ -61,15 +61,15 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 
 	uint64_t earliestReceivedChunkEndTime = 0xffffffffffffffffULL;
 
-	for (uint32_t input = 0; input < staticBoxContext.getInputCount(); ++input)
+	for (size_t input = 0; input < staticBoxContext.getInputCount(); ++input)
 	{
-		for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
+		for (size_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
 		{
 			m_StimulationDecoders[input].decode(chunk);
 
 			if (m_StimulationDecoders[input].isBufferReceived())
 			{
-				for (uint32_t stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+				for (size_t stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 				{
 					m_vStimulation.insert(std::make_pair(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
 														 std::make_tuple(

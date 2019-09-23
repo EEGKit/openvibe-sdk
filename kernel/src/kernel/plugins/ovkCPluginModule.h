@@ -21,7 +21,7 @@ namespace OpenViBE
 			bool getPluginObjectDescription(uint32_t index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) override;
 			bool uninitialize() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginModule, OVK_ClassId_Kernel_Plugins_PluginModule)
+			_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OVK_ClassId_Kernel_Plugins_PluginModule)
 
 		protected:
 

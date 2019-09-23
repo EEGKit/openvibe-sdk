@@ -54,7 +54,7 @@ bool CBoxAlgorithmClockStimulator::process()
 	CStimulationSet l_oStimulationSet;
 	l_oStimulationSet.setStimulationCount(0);
 
-	while (ITimeArithmetics::secondsToTime((m_SentStimulationCount + 1) * m_StimulationInterval) < l_ui64CurrentTime)
+	while (ITimeArithmetics::secondsToTime(double(m_SentStimulationCount + 1) * m_StimulationInterval) < l_ui64CurrentTime)
 	{
 		m_SentStimulationCount += 1;
 		m_ui64LastStimulationDate = ITimeArithmetics::secondsToTime(m_SentStimulationCount * m_StimulationInterval);

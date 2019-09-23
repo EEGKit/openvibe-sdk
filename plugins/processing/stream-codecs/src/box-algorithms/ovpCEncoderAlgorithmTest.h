@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			uint64_t getClockFrequency() override { return 1LL << 32; }
 			bool initialize() override;
-			virtual bool uininitialize();
+			bool uninitialize() override;
 			bool processClock(OpenViBE::Kernel::IMessageClock& messageClock) override;
 			bool process() override;
 

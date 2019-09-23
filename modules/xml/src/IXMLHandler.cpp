@@ -146,7 +146,7 @@ bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) c
 void IXMLHandlerImpl::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
 {
 	IXMLNode* l_pNode = createNode(name);
-	for (uint32_t i = 0; i < nAttribute; ++i) { l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]); }
+	for (size_t i = 0; i < nAttribute; ++i) { l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]); }
 	m_oNodeStack.push(l_pNode);
 }
 

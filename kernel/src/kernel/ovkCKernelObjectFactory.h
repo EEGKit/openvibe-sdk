@@ -17,7 +17,7 @@ namespace OpenViBE
 			IObject* createObject(const CIdentifier& rClassIdentifier) override;
 			bool releaseObject(IObject* pObject) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObjectFactory, OVK_ClassId_Kernel_KernelObjectFactory)
+			_IsDerivedFromClass_Final_(TKernelObject<IKernelObjectFactory>, OVK_ClassId_Kernel_KernelObjectFactory)
 
 		protected:
 

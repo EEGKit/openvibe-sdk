@@ -239,7 +239,7 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_pStreamDecoder->decode(i);
 		if (m_pStreamDecoder->isHeaderReceived())
@@ -255,7 +255,7 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 		{
 			const IStimulationSet* l_pStimulationSet = static_cast<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
 					getOutputStimulationSet();
-			for (uint32_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
+			for (size_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
 			{
 				m_oFileStream << ITimeArithmetics::timeToSeconds(l_pStimulationSet->getStimulationDate(j))
 						<< m_sSeparator.toASCIIString()

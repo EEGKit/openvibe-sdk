@@ -44,7 +44,6 @@ bool CBoxAlgorithmTimeBasedEpoching::uninitialize()
 bool CBoxAlgorithmTimeBasedEpoching::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
 	return true;
 }
 
@@ -52,17 +51,15 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t l_ui32ChunkIndex = 0; l_ui32ChunkIndex < boxContext.getInputChunkCount(0); l_ui32ChunkIndex++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		OV_ERROR_UNLESS_KRF(m_SignalDecoder.decode(l_ui32ChunkIndex),
-							"Failed to decode chunk",
-							ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_SignalDecoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
 
-		IMatrix* l_pInputMatrix  = m_SignalDecoder.getOutputMatrix();
-		IMatrix* l_pOutputMatrix = m_SignalEncoder.getInputMatrix();
+		IMatrix* iMatrix = m_SignalDecoder.getOutputMatrix();
+		IMatrix* oMatrix = m_SignalEncoder.getInputMatrix();
 
-		uint32_t l_ui32ChannelCount     = l_pInputMatrix->getDimensionSize(0);
-		uint32_t l_ui32InputSampleCount = l_pInputMatrix->getDimensionSize(1);
+		const uint32_t nChannel = iMatrix->getDimensionSize(0);
+		const uint32_t nISample = iMatrix->getDimensionSize(1);
 
 		if (m_SignalDecoder.isHeaderReceived())
 		{
@@ -72,9 +69,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			m_ReferenceTime     = 0;
 
 			m_SamplingRate = m_SignalDecoder.getOutputSamplingRate();
-			OV_ERROR_UNLESS_KRZ(m_SamplingRate,
-								"Input sampling frequency is equal to 0. Plugin can not process.",
-								ErrorType::Internal);
+			OV_ERROR_UNLESS_KRZ(m_SamplingRate, "Input sampling frequency is equal to 0. Plugin can not process.", ErrorType::Internal);
 
 			m_OutputSampleCount             = uint32_t(m_EpochDuration * m_SamplingRate); // sample count per output epoch
 			m_OutputSampleCountBetweenEpoch = uint32_t(m_EpochInterval * m_SamplingRate);
@@ -84,12 +79,12 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 								<< "] seconds with an interval of [" << m_EpochInterval << "] seconds.",
 								ErrorType::Internal);
 
-			l_pOutputMatrix->setDimensionCount(2);
-			l_pOutputMatrix->setDimensionSize(0, l_ui32ChannelCount);
-			l_pOutputMatrix->setDimensionSize(1, m_OutputSampleCount);
-			for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
+			oMatrix->setDimensionCount(2);
+			oMatrix->setDimensionSize(0, nChannel);
+			oMatrix->setDimensionSize(1, m_OutputSampleCount);
+			for (uint32_t c = 0; c < nChannel; c++)
 			{
-				l_pOutputMatrix->setDimensionLabel(0, l_ui32ChannelIndex, l_pInputMatrix->getDimensionLabel(0, l_ui32ChannelIndex));
+				oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c));
 			}
 
 			m_SignalEncoder.encodeHeader();
@@ -97,18 +92,18 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 		}
 		if (m_SignalDecoder.isBufferReceived())
 		{
-			uint64_t l_ui64InputChunkStartTime = boxContext.getInputChunkStartTime(0, l_ui32ChunkIndex);
-			uint64_t l_ui64InputChunkEndTime   = boxContext.getInputChunkEndTime(0, l_ui32ChunkIndex);
+			const uint64_t iTStart = boxContext.getInputChunkStartTime(0, i);
+			const uint64_t iTEnd   = boxContext.getInputChunkEndTime(0, i);
 
-			if (m_LastInputEndTime != l_ui64InputChunkStartTime)
+			if (m_LastInputEndTime != iTStart)
 			{
 				// reset
-				m_ReferenceTime     = l_ui64InputChunkStartTime; // reference time = start time of the first chunk of the continuous stream of chunks
+				m_ReferenceTime     = iTStart; // reference time = start time of the first chunk of the continuous stream of chunks
 				m_OutputSampleIndex = 0;
 				m_OutputChunkIndex  = 0;
 			}
 
-			m_LastInputEndTime = l_ui64InputChunkEndTime;
+			m_LastInputEndTime = iTEnd;
 
 			// **********************************
 			//
@@ -116,64 +111,60 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			//
 			// **********************************
 
-			double* l_pInputBuffer  = l_pInputMatrix->getBuffer();
-			double* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
+			double* iBuffer = iMatrix->getBuffer();
+			double* oBuffer = oMatrix->getBuffer();
 
-			uint32_t l_ui32SampleProcessed = 0;
+			uint32_t sampleProcessed = 0;
 
 			// Iterates on bytes to process
-			while (l_ui32SampleProcessed != l_ui32InputSampleCount)
+			while (sampleProcessed != nISample)
 			{
 				if (m_OutputSampleIndex < m_OutputSampleCount) // Some samples should be filled
 				{
 					// Copies samples to buffer
-					uint32_t l_ui32SampleToFill = std::min(m_OutputSampleCount - m_OutputSampleIndex, l_ui32InputSampleCount - l_ui32SampleProcessed);
-					for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
+					const uint32_t sampleToFill = std::min(m_OutputSampleCount - m_OutputSampleIndex, nISample - sampleProcessed);
+					for (uint32_t c = 0; c < nChannel; c++)
 					{
-						System::Memory::copy(l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleIndex,
-											 l_pInputBuffer + l_ui32ChannelIndex * l_ui32InputSampleCount + l_ui32SampleProcessed,
-											 l_ui32SampleToFill * sizeof(double));
+						System::Memory::copy(oBuffer + c * m_OutputSampleCount + m_OutputSampleIndex,
+											 iBuffer + c * nISample + sampleProcessed,
+											 sampleToFill * sizeof(double));
 					}
-					m_OutputSampleIndex += l_ui32SampleToFill;
-					l_ui32SampleProcessed += l_ui32SampleToFill;
+					m_OutputSampleIndex += sampleToFill;
+					sampleProcessed += sampleToFill;
 
 					if (m_OutputSampleIndex == m_OutputSampleCount) // An epoch has been totally filled !
 					{
 						// Calculates start and end time of output
-						uint64_t l_ui64OutputChunkStartTime = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(
-																  m_SamplingRate, uint64_t(m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch));
-						uint64_t l_ui64OutputChunkEndTime = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(
-																m_SamplingRate, uint64_t(
-																	m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch + m_OutputSampleCount));
+						const uint64_t oTStart = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch);
+						const uint64_t oTEnd = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch + m_OutputSampleCount);
 						m_OutputChunkIndex++;
 
 						// Writes epoch
 						m_SignalEncoder.encodeBuffer();
-						boxContext.markOutputAsReadyToSend(0, l_ui64OutputChunkStartTime, l_ui64OutputChunkEndTime);
+						boxContext.markOutputAsReadyToSend(0, oTStart, oTEnd);
 
 						if (m_OutputSampleCountBetweenEpoch < m_OutputSampleCount)
 						{
 							// Shifts samples for next epoch when overlap
-							uint32_t l_ui32SamplesToSave = m_OutputSampleCount - m_OutputSampleCountBetweenEpoch;
-							for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
+							const uint32_t samplesToSave = m_OutputSampleCount - m_OutputSampleCountBetweenEpoch;
+							for (uint32_t c = 0; c < nChannel; c++)
 							{
-								System::Memory::move(l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount,
-													 l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleCount - l_ui32SamplesToSave,
-													 l_ui32SamplesToSave * sizeof(double));
+								System::Memory::move(oBuffer + c * m_OutputSampleCount,
+													 oBuffer + c * m_OutputSampleCount + m_OutputSampleCount - samplesToSave,
+													 samplesToSave * sizeof(double));
 							}
 
 							// The counter can be reset
-							m_OutputSampleIndex = l_ui32SamplesToSave;
+							m_OutputSampleIndex = samplesToSave;
 						}
 					}
 				}
 				else
 				{
 					// The next few samples are useless: the stream of chunks is not continuous, we can remove the samples before the discontinuity
-					uint32_t l_ui32SampleToSkip = std::min(m_OutputSampleCountBetweenEpoch - m_OutputSampleIndex,
-														   l_ui32InputSampleCount - l_ui32SampleProcessed);
-					m_OutputSampleIndex += l_ui32SampleToSkip;
-					l_ui32SampleProcessed += l_ui32SampleToSkip;
+					const uint32_t sampleToSkip = std::min(m_OutputSampleCountBetweenEpoch - m_OutputSampleIndex, nISample - sampleProcessed);
+					m_OutputSampleIndex += sampleToSkip;
+					sampleProcessed += sampleToSkip;
 
 					if (m_OutputSampleIndex == m_OutputSampleCountBetweenEpoch)
 					{
@@ -186,7 +177,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 		if (m_SignalDecoder.isEndReceived())
 		{
 			m_SignalEncoder.encodeEnd();
-			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, l_ui32ChunkIndex), boxContext.getInputChunkEndTime(0, l_ui32ChunkIndex));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 	}
 

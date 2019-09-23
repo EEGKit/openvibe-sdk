@@ -12,10 +12,8 @@ namespace OpenViBE
 
 			CBoxProto(const IKernelContext& ctx, IBox& box);
 			~CBoxProto() override = default;
-			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
-						  const bool bNotify                                                              = true) override;
-			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
-						   const bool bNotify                                                              = true) override;
+			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
 
 			//virtual bool addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue); 
 			bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue,
@@ -25,7 +23,7 @@ namespace OpenViBE
 			bool addInputSupport(const CIdentifier& typeID) override;
 			bool addOutputSupport(const CIdentifier& typeID) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IBoxProto, OVK_ClassId_Kernel_Scenario_BoxProto)
+			_IsDerivedFromClass_Final_(TKernelObject<IBoxProto>, OVK_ClassId_Kernel_Scenario_BoxProto)
 
 		protected:
 

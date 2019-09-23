@@ -307,10 +307,10 @@ public:
 
 	void print(OpenViBE::Kernel::ILogManager& logManager) override
 	{
-		char l_sName[2];
-		l_sName[0] = 'a' + m_ui32Index;
-		l_sName[1] = 0;
-		logManager << l_sName;
+		char name[2];
+		name[0] = 'a' + m_ui32Index;
+		name[1] = 0;
+		logManager << name;
 	}
 
 	bool simplify(CAbstractTreeNode*& modifiedNode) override

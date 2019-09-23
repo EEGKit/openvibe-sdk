@@ -3102,15 +3102,14 @@ static const double hm6_68[18] = {
 
 int filtlength(const char* name)
 {
-	int len       = strlen(name);
-	int i         = 0;
-	char* new_str = NULL;
-	int N         = 0;
+	const size_t len = strlen(name);
+	char* new_str    = NULL;
+	int N            = 0;
 	if (!strcmp(name, "haar") || !strcmp(name, "db1")) { return 2; }
 	if (len > 2 && strstr(name, "db") != NULL)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 2 + 1));
-		for (i = 2; i < len + 1; i++) { new_str[i - 2] = name[i]; }
+		for (size_t i = 2; i < len + 1; i++) { new_str[i - 2] = name[i]; }
 
 		N = atoi(new_str);
 		free(new_str);
@@ -3155,7 +3154,7 @@ int filtlength(const char* name)
 	if (len > 4 && strstr(name, "coif") != NULL)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 4 + 1));
-		for (i = 4; i < len + 1; i++) { new_str[i - 4] = name[i]; }
+		for (size_t i = 4; i < len + 1; i++) { new_str[i - 4] = name[i]; }
 
 		N = atoi(new_str);
 		free(new_str);
@@ -3170,7 +3169,7 @@ int filtlength(const char* name)
 	if (len > 3 && strstr(name, "sym") != NULL)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 3 + 1));
-		for (i = 3; i < len + 1; i++) { new_str[i - 3] = name[i]; }
+		for (size_t i = 3; i < len + 1; i++) { new_str[i - 3] = name[i]; }
 
 		N = atoi(new_str);
 		free(new_str);
@@ -3186,13 +3185,13 @@ int filtlength(const char* name)
 	return -1;
 }
 
-void copy_reverse(const double* in, int N, double* out)
+void copy_reverse(const double* in, const int N, double* out)
 {
 	int count = 0;
 	for (count = 0; count < N; count++) { out[count] = in[N - count - 1]; }
 }
 
-void qmf_wrev(const double* in, int N, double* out)
+void qmf_wrev(const double* in, const int N, double* out)
 {
 	double* sigOutTemp = (double*)malloc(N * sizeof(double));
 
@@ -3201,7 +3200,7 @@ void qmf_wrev(const double* in, int N, double* out)
 	free(sigOutTemp);
 }
 
-void qmf_even(const double* in, int N, double* out)
+void qmf_even(const double* in, const int N, double* out)
 {
 	int count = 0;
 	for (count = 0; count < N; count++)
@@ -3211,7 +3210,7 @@ void qmf_even(const double* in, int N, double* out)
 	}
 }
 
-void copy(const double* in, int N, double* out)
+void copy(const double* in, const int N, double* out)
 {
 	int count = 0;
 	for (count = 0; count < N; count++) { out[count] = in[count]; }
@@ -3220,7 +3219,7 @@ void copy(const double* in, int N, double* out)
 int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp2)
 {
 	int i = 0;
-	int N = filtlength(name);
+	const int N = filtlength(name);
 	if (!strcmp(name, "haar") || !strcmp(name, "db1"))
 	{
 		copy_reverse(db1, N, lp1);

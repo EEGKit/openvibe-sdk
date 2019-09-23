@@ -375,7 +375,7 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<uint32_t>& dime
 		return false;
 	}
 
-	const size_t size = std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), 0);
+	const size_t size = size_t(std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), 0));
 
 	if (size != labels.size())
 	{

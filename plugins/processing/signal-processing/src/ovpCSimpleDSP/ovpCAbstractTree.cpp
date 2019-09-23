@@ -345,7 +345,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 
 void CAbstractTreeParentNode::useNegationOperator()
 {
-	uint64_t nChildren = m_oChildren.size();
+	const size_t nChildren = m_oChildren.size();
 
 	//try to use the negation operator in all the children
 	for (size_t i = 0; i < nChildren; i++)

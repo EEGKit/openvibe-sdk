@@ -63,7 +63,7 @@ bool CDecoderAlgorithmTest::initialize()
 	return true;
 }
 
-bool CDecoderAlgorithmTest::uininitialize()
+bool CDecoderAlgorithmTest::uninitialize()
 {
 	for (uint32_t i = 0; i < 7; i++)
 	{

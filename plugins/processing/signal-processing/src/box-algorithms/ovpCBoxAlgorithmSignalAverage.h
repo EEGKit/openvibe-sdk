@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			bool processInput(const uint32_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SignalAverage)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
 			virtual void computeAverage();
 

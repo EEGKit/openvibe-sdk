@@ -32,7 +32,7 @@ namespace OpenViBE
 			Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) override;
 			Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginManager, OVK_ClassId_Kernel_Plugins_PluginManager)
+			_IsDerivedFromClass_Final_(TKernelObject<IPluginManager>, OVK_ClassId_Kernel_Plugins_PluginManager)
 
 		protected:
 

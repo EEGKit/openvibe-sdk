@@ -267,7 +267,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 	uint64_t trainDate = 0, trainChunkStartTime = 0, trainChunkEndTime = 0;
 
 	// Handle input stimulations
-	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_StimulationDecoder.decode(i);
 		if (m_StimulationDecoder.isHeaderReceived())
@@ -278,7 +278,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		if (m_StimulationDecoder.isBufferReceived())
 		{
 			const TParameterHandler<IStimulationSet*> stimulationSet(m_StimulationDecoder.getOutputStimulationSet());
-			for (uint32_t j = 0; j < stimulationSet->getStimulationCount(); j++)
+			for (size_t j = 0; j < stimulationSet->getStimulationCount(); j++)
 			{
 				if (stimulationSet->getStimulationIdentifier(j) == m_StimulationIdentifier)
 				{
@@ -294,21 +294,21 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 	}
 
 	// Update all covs with the current data chunks (if any)
-	for (uint32_t i = 0; i < m_NumClasses; i++) { if (!updateCov(i)) { return false; } }
+	for (size_t i = 0; i < m_NumClasses; i++) { if (!updateCov(i)) { return false; } }
 
 	if (shouldTrain)
 	{
 		this->getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";
 
-		const IMatrix* input     = m_SignalDecoders[0].getOutputMatrix();
-		const uint32_t nChannels = input->getDimensionSize(0);
+		const IMatrix* input   = m_SignalDecoders[0].getOutputMatrix();
+		const size_t nChannels = input->getDimensionSize(0);
 
 		this->getLogManager() << LogLevel_Debug << "Computing eigen vector decomposition...\n";
 
 		// Get out the covariances
 		std::vector<MatrixXd> cov(m_NumClasses);
 
-		for (uint32_t i = 0; i < m_NumClasses; i++)
+		for (size_t i = 0; i < m_NumClasses; i++)
 		{
 			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2,
 								"Invalid sample count of [" <<m_IncCovarianceProxies[i].numSamples << "] for condition number " << i << " (expected value > 2)",
@@ -332,7 +332,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 
 		// Sanity check
-		for (uint32_t i = 1; i < m_NumClasses; i++)
+		for (size_t i = 1; i < m_NumClasses; i++)
 		{
 			OV_ERROR_UNLESS_KRF(cov[i-1].rows() == cov[i].rows() && cov[i-1].cols() == cov[i].cols(),
 								"Mismatch between the number of channel in both input streams", OpenViBE::Kernel::ErrorType::BadValue);
@@ -340,7 +340,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << uint32_t(cov[0].rows()) << "x" << uint32_t(cov[0].cols())
 				<< "]. Number of samples per condition : \n";
-		for (uint32_t i = 0; i < m_NumClasses; i++)
+		for (size_t i = 0; i < m_NumClasses; i++)
 		{
 			this->getLogManager() << LogLevel_Info << "  cond " << i + 1 << " = "
 					<< m_IncCovarianceProxies[i].numBuffers << " chunks, sized " << input->getDimensionSize(1) << " -> " << m_IncCovarianceProxies[i].numSamples
@@ -362,7 +362,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		Map<MatrixXdRowMajor> selectedVectorsMapper(selectedVectors.getBuffer(), m_FiltersPerClass * m_NumClasses, nChannels);
 
-		for (uint32_t c = 0; c < m_NumClasses; c++)
+		for (size_t c = 0; c < m_NumClasses; c++)
 		{
 			selectedVectorsMapper.block(c * m_FiltersPerClass, 0, m_FiltersPerClass, nChannels) =
 					l_vSortedEigenVectors[c].block(0, 0, nChannels, m_FiltersPerClass).transpose();
@@ -380,8 +380,8 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
 
-			const uint32_t numCoefficients = m_FiltersPerClass * m_NumClasses * nChannels;
-			for (uint32_t i = 0; i < numCoefficients; i++) { fprintf(file, "%e ", selectedVectors.getBuffer()[i]); }
+			const size_t numCoefficients = m_FiltersPerClass * m_NumClasses * nChannels;
+			for (size_t i = 0; i < numCoefficients; i++) { fprintf(file, "%e ", selectedVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
 			fprintf(file, "\t<SettingValue>%d</SettingValue>\n", m_FiltersPerClass * m_NumClasses);

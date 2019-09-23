@@ -64,16 +64,10 @@ namespace OpenViBE
 			typedef struct _SSetting
 			{
 				_SSetting()
-					: m_sName(""),
-					  m_oTypeIdentifier(OV_UndefinedIdentifier),
-					  m_sDefaultValue(""),
-					  m_oIdentifier(OV_UndefinedIdentifier) {}
+					: m_sName(""), m_oTypeIdentifier(OV_UndefinedIdentifier), m_sDefaultValue(""), m_oIdentifier(OV_UndefinedIdentifier) {}
 
-				_SSetting(const CString& rName, const CIdentifier& typeID, const CString& rDefaultValue, const CIdentifier& identifier)
-					: m_sName(rName),
-					  m_oTypeIdentifier(typeID),
-					  m_sDefaultValue(rDefaultValue),
-					  m_oIdentifier(identifier) {}
+				_SSetting(const CString& name, const CIdentifier& typeID, const CString& value, const CIdentifier& id)
+					: m_sName(name), m_oTypeIdentifier(typeID), m_sDefaultValue(value), m_oIdentifier(id) { }
 
 				CString m_sName;
 				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
@@ -83,7 +77,7 @@ namespace OpenViBE
 
 			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
+			_IsDerivedFromClass_Final_(IMetaboxObjectDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 
 		private:
 			CString m_MetaboxDescriptor;

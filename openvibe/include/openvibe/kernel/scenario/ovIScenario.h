@@ -533,7 +533,7 @@ namespace OpenViBE
 			virtual void getOutdatedBoxIdentifierList(CIdentifier** listID, size_t* size) const = 0;
 			virtual void releaseIdentifierList(CIdentifier* listID) const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Scenario)
+			_IsDerivedFromClass_(IBox, OV_ClassId_Kernel_Scenario_Scenario)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

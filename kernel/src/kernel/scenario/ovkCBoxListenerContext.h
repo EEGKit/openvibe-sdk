@@ -32,7 +32,7 @@ namespace OpenViBE
 
 			uint32_t getIndex() const override { return m_ui32Index; }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObject, OVK_ClassId_Kernel_Scenario_BoxListenerContext)
+			_IsDerivedFromClass_Final_(TKernelObject<IBoxListenerContext>, OVK_ClassId_Kernel_Scenario_BoxListenerContext)
 
 		private:
 

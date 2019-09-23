@@ -164,16 +164,16 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
-		IMatrix* iMatrix  = m_oDecoder.getOutputMatrix();
-		uint32_t nChannel = iMatrix->getDimensionSize(0);
-		int nSample       = iMatrix->getDimensionSize(1);
+		IMatrix* iMatrix = m_oDecoder.getOutputMatrix();
+		size_t nChannel  = iMatrix->getDimensionSize(0);
+		int nSample      = iMatrix->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
 		{
-			uint64_t samplingRate = m_oDecoder.getOutputSamplingRate();
+			size_t samplingRate = m_oDecoder.getOutputSamplingRate();
 			this->getLogManager() << LogLevel_Trace << "Input signal is [" << nChannel << " x " << nSample << "] @ " << samplingRate << "Hz.\n";
 			if (samplingRate == 0)
 			{
@@ -212,20 +212,20 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			}
 			//cwt_summary(m_oWaveletTransform); // FOR DEBUG
 
-			for (uint32_t encoderIdx = 0; encoderIdx < 4; ++encoderIdx)
+			for (size_t j = 0; j < 4; ++j)
 			{
-				IMatrix* oMatrix = m_vEncoder[encoderIdx].getInputMatrix();
+				IMatrix* oMatrix = m_vEncoder[j].getInputMatrix();
 				oMatrix->setDimensionCount(3);
 				oMatrix->setDimensionSize(0, nChannel);
 				oMatrix->setDimensionSize(1, uint32_t(m_iScaleCount_J));
 				oMatrix->setDimensionSize(2, uint32_t(nSample));
 
-				for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < nChannel; ++l_ui32ChannelIndex)
+				for (size_t c = 0; c < nChannel; ++c)
 				{
-					oMatrix->setDimensionLabel(0, l_ui32ChannelIndex, iMatrix->getDimensionLabel(0, l_ui32ChannelIndex));
+					oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c));
 				}
 				double frequencyValue = -1;
-				for (int scaleIndex = 0; scaleIndex < m_iScaleCount_J; ++scaleIndex)
+				for (size_t scaleIndex = 0; scaleIndex < m_iScaleCount_J; ++scaleIndex)
 				{
 					const double scaleValue = m_oWaveletTransform->scale[scaleIndex];
 					frequencyValue          = SigProSTD::wavelet_scale2freq(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, scaleValue);
@@ -233,12 +233,12 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 					std::string frequencyString = std::to_string(frequencyValue);
 					oMatrix->setDimensionLabel(1, scaleIndex, frequencyString.c_str());
 				}
-				for (int sampleIdx = 0; sampleIdx < nSample; ++sampleIdx)
+				for (size_t sampleIdx = 0; sampleIdx < nSample; ++sampleIdx)
 				{
 					std::string sampleString = std::to_string(sampleIdx * m_dSamplingPeriod_dt);
 					oMatrix->setDimensionLabel(2, sampleIdx, sampleString.c_str());
 				}
-				m_vEncoder[encoderIdx].encodeHeader();
+				m_vEncoder[j].encodeHeader();
 			}
 		}
 		if (m_oDecoder.isBufferReceived())
@@ -249,7 +249,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			double* oRealPartBuffer  = m_vEncoder[2].getInputMatrix()->getBuffer();
 			double* oImagPartBuffer  = m_vEncoder[3].getInputMatrix()->getBuffer();
 
-			for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < nChannel; l_ui32ChannelIndex++)
+			for (size_t c = 0; c < nChannel; c++)
 			{
 				// compute CWT
 				if (cwt(m_oWaveletTransform, ibuffer) != 0)
@@ -259,15 +259,13 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				}
 
 				// format of m_oWaveletTransform->output: dimensions = m_iScaleCount_J * l_iSampleCount, stored in row major format
-				for (int scaleIdx = 0; scaleIdx < m_iScaleCount_J; scaleIdx++)
+				for (size_t scaleIdx = 0; scaleIdx < m_iScaleCount_J; scaleIdx++)
 				{
-					for (int sampleIdx = 0; sampleIdx < nSample; sampleIdx++)
+					for (size_t sampleIdx = 0; sampleIdx < nSample; sampleIdx++)
 					{
 						const double real = m_oWaveletTransform->output[sampleIdx + scaleIdx * nSample].re;
 						const double imag = m_oWaveletTransform->output[sampleIdx + scaleIdx * nSample].im;
-
-						const int outputIdx = sampleIdx + (m_iScaleCount_J - scaleIdx - 1) * nSample + l_ui32ChannelIndex * nSample *
-											  m_iScaleCount_J; // t+f*T+c*T*F
+						const size_t outputIdx = sampleIdx + (m_iScaleCount_J - scaleIdx - 1) * nSample + c * nSample * m_iScaleCount_J; // t+f*T+c*T*F
 
 						oAmplitudeBuffer[outputIdx] = std::sqrt(real * real + imag * imag);
 						oPhaseBuffer[outputIdx]     = std::atan2(imag, real);

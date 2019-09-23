@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			bool process() override;
 			virtual void evaluate();
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SimpleDSP)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
 			std::vector<OpenViBE::IMatrix*> m_vMatrix;
 			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_vStreamDecoder;
