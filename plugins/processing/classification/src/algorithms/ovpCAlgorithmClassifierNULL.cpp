@@ -14,9 +14,6 @@ using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
-CAlgorithmClassifierNULL::CAlgorithmClassifierNULL() {}
-
-
 bool CAlgorithmClassifierNULL::initialize()
 {
 	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
@@ -46,29 +43,21 @@ bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& /*featureVectorSet
 	return true;
 }
 
-bool CAlgorithmClassifierNULL::classify(const IFeatureVector& /*featureVector*/, double& classId, IVector& rDistanceValue, IVector& rProbabilityValue)
+bool CAlgorithmClassifierNULL::classify(const IFeatureVector& /*featureVector*/, double& classId, IVector& distance, IVector& probability)
 {
 	classId = 1 + (rand() % 3);
 
-	rDistanceValue.setSize(1);
-	rProbabilityValue.setSize(1);
+	distance.setSize(1);
+	probability.setSize(1);
 	if (classId == 1)
 	{
-		rDistanceValue[0]    = -1;
-		rProbabilityValue[0] = 1;
+		distance[0]    = -1;
+		probability[0] = 1;
 	}
 	else
 	{
-		rDistanceValue[0]    = 1;
-		rProbabilityValue[0] = 0;
+		distance[0]    = 1;
+		probability[0] = 0;
 	}
 	return true;
 }
-
-XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration() { return nullptr; }
-
-bool CAlgorithmClassifierNULL::loadConfiguration(XML::IXMLNode* pConfigurationNode) { return true; }
-
-uint32_t CAlgorithmClassifierNULL::getOutputProbabilityVectorLength() { return 1; }
-
-uint32_t CAlgorithmClassifierNULL::getOutputDistanceVectorLength() { return 1; }

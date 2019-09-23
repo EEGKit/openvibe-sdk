@@ -82,7 +82,7 @@ namespace EBML
 			CReaderNode(const CIdentifier& identifier, CReaderNode* pParentNode);
 
 		private:
-			CReaderNode();
+			CReaderNode() = delete;
 
 		public:
 

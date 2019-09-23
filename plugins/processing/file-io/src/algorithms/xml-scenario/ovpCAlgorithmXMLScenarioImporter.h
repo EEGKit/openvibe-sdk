@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			CAlgorithmXMLScenarioImporter();
 			~CAlgorithmXMLScenarioImporter() override;
 			bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
-			void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
+			void openChild(const char* name, const char** attributeName, const char** sAttributeValue, uint64_t nAttribute)
 			override; // XML::IReaderCallback
 			void processChildData(const char* sData) override; // XML::IReaderCallback
 			void closeChild() override; // XML::IReaderCallback

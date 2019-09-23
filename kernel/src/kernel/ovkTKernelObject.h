@@ -12,6 +12,7 @@ namespace OpenViBE
 		class TKernelObject : public T
 		{
 		public:
+			virtual ~TKernelObject() = default;
 
 			explicit TKernelObject(const IKernelContext& ctx) : m_kernelContext(ctx) { }
 

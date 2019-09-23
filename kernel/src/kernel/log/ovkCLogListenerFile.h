@@ -36,8 +36,8 @@ namespace OpenViBE
 			void log(const CIdentifier& value) override;
 			void log(const CString& value) override;
 			void log(const char* value) override;
-			void log(const ELogLevel eLogLevel) override;
-			void log(const ELogColor eLogColor) override;
+			void log(const ELogLevel level) override;
+			void log(const ELogColor /*color*/) override { }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerFile)
 

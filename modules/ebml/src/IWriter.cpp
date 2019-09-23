@@ -69,12 +69,12 @@ namespace EBML
 
 		private:
 
-			CWriterNode();
+			CWriterNode() = delete;
 
 		public:
 
 			CIdentifier m_oIdentifier;
-			CWriterNode* m_pParentNode;
+			CWriterNode* m_pParentNode  = nullptr;
 			uint64_t m_ui64BufferLength = 0;
 			unsigned char* m_pBuffer    = nullptr;
 			bool m_bBuffered            = false;

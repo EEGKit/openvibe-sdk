@@ -45,8 +45,8 @@ namespace XML
 
 	//Callback for expat
 	static void XMLCALL expat_xml_start(void* pData, const char* pElement, const char** ppAttribute);
-	static void XMLCALL expat_xml_end(void* pData, const char* pElement);
-	static void XMLCALL expat_xml_data(void* pData, const char* pDataValue, int iDataLength);
+	static void XMLCALL expat_xml_end(void* data, const char* element);
+	static void XMLCALL expat_xml_data(void* data, const char* value, int length);
 }
 
 using namespace std;

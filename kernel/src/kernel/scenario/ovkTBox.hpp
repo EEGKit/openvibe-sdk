@@ -48,10 +48,10 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const OpenViBE::CString& /*name*/, const OpenViBE::CIdentifier& /*typeID*/, const OpenViBE::CString& sDefaultValue,
-						const bool bModifiable = false, const OpenViBE::CIdentifier& /*identifier*/ = OV_UndefinedIdentifier, const bool /*notify*/ = true) override { return true; }
+		bool addSetting(const OpenViBE::CString& /*name*/, const OpenViBE::CIdentifier& /*typeID*/, const OpenViBE::CString& /*defaultValue*/,
+						const bool /*modifiable*/ = false, const OpenViBE::CIdentifier& /*identifier*/ = OV_UndefinedIdentifier, const bool /*notify*/ = true) override { return true; }
 
-		bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag) override { return true; }
+		bool addFlag(const OpenViBE::Kernel::EBoxFlag /*boxFlag*/) override { return true; }
 		bool addFlag(const OpenViBE::CIdentifier& /*identifier*/) override { return true; }
 	};
 

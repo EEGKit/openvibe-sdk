@@ -21,15 +21,15 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CAlgorithmClassifierNULL();
+			CAlgorithmClassifierNULL() { }
 			bool initialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue,
-						  OpenViBEToolkit::IVector& rProbabilityValue) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
-			uint32_t getOutputProbabilityVectorLength() override;
-			uint32_t getOutputDistanceVectorLength() override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance,
+						  OpenViBEToolkit::IVector& probability) override;
+			XML::IXMLNode* saveConfiguration() override { return nullptr; }
+			bool loadConfiguration(XML::IXMLNode* /*configurationNode*/) override { return true; }
+			uint32_t getOutputProbabilityVectorLength() override { return 1; }
+			uint32_t getOutputDistanceVectorLength() override { return 1; }
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL)
 		};

@@ -96,13 +96,13 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
+		bool isReadyToSend(const uint32_t /*timeOut*/ = 0) const override { return this->isConnected(); }
 
-		bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
+		bool isReadyToReceive(const uint32_t /*timeOut*/ = 0) const override { return this->isConnected(); }
 
-		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
+		uint32_t getPendingByteCount() const { return (this->isConnected() ? 0 : 1); }
 
-		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize = 8) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t size = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -110,18 +110,18 @@ namespace Socket
 			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(buffer));
 
 			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
-			return ui32BufferSize;
+			return size;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			return 0;
 
-			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) { return ui32BufferSize; }*/
+			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) { return size; }*/
 
 #endif
 		}
 
-		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize = 8) override
+		uint32_t receiveBuffer(void* /*buffer*/, const uint32_t /*size*/ = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -134,17 +134,10 @@ namespace Socket
 			int dirin=1;
 			int dirout=0;
 
-			if (ioctl (fd, PPDATADIR, &dirin)  < 0) 
-			{
-				
-				return 0;
-			}
+			if (ioctl (fd, PPDATADIR, &dirin)  < 0) { return 0; }
+			if (ioctl(fd, PPRDATA, &valin) < 0) { return 0; }
 
-			if (ioctl(fd, PPRDATA, &valin) < 0) {
-				return 0;
-			}
-
-			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
+			int l_iResult = ::read(m_iFile, buffer, size);
 			if(l_iResult < 0)
 			{
 				this->close();
@@ -158,24 +151,24 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t size) override
 		{
 			const char* p            = reinterpret_cast<const char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			uint32_t l_ui32BytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected()) { l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft); }
+			while (l_ui32BytesLeft != 0 && this->isConnected()) { l_ui32BytesLeft -= this->sendBuffer(p + size - l_ui32BytesLeft, l_ui32BytesLeft); }
 
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t size) override
 		{
 			char* p                  = reinterpret_cast<char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			uint32_t l_ui32BytesLeft = size;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				l_ui32BytesLeft -= this->receiveBuffer(p + size - l_ui32BytesLeft, l_ui32BytesLeft);
 			}
 
 			return this->isConnected();

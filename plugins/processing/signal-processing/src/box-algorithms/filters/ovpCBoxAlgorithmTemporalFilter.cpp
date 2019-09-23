@@ -33,23 +33,22 @@ namespace
 		return NULL;
 	}
 
-	bool getButterworthParameters(Dsp::Params& rParameters, uint64_t ui64SamplingRate, uint64_t ui64FilterType, uint64_t ui64Order, double f64LowCutFrequency,
-								  double f64HighCutFrequency, double f64BandPassRipple)
+	bool getButterworthParameters(Dsp::Params& parameters, uint64_t samplingRate, uint64_t filterType, uint64_t order, double lowCutFrequency, double highCutFrequency, double /*bandPassRipple*/)
 	{
-		rParameters[0] = double(ui64SamplingRate);
-		rParameters[1] = double(ui64Order);
-		switch (ui64FilterType)
+		parameters[0] = double(samplingRate);
+		parameters[1] = double(order);
+		switch (filterType)
 		{
 			case FilterType_BandPass:
 			case FilterType_BandStop:
-				rParameters[2] = .5 * (f64HighCutFrequency + f64LowCutFrequency);
-				rParameters[3] = 1. * (f64HighCutFrequency - f64LowCutFrequency);
+				parameters[2] = .5 * (highCutFrequency + lowCutFrequency);
+				parameters[3] = 1. * (highCutFrequency - lowCutFrequency);
 				break;
 			case FilterType_HighPass:
-				rParameters[2] = f64LowCutFrequency;
+				parameters[2] = lowCutFrequency;
 				break;
 			case FilterType_LowPass:
-				rParameters[2] = f64HighCutFrequency;
+				parameters[2] = highCutFrequency;
 				break;
 			default:
 				return false;

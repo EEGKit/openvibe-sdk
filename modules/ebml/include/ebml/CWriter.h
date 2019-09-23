@@ -8,7 +8,7 @@ namespace EBML
 	{
 	public:
 
-		explicit CWriter(IWriterCallback& rWriterCallback);
+		explicit CWriter(IWriterCallback& callback);
 		~CWriter() override;
 		bool openChild(const CIdentifier& identifier) override;
 		bool setChildData(const void* buffer, const uint64_t size) override;
@@ -21,6 +21,6 @@ namespace EBML
 
 	private:
 
-		CWriter();
+		CWriter() = delete;
 	};
 } // namespace EBML

@@ -67,7 +67,7 @@ namespace OpenViBE
 				return sValue.substr(i, j - i + 1);
 			}
 
-			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
+			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& /*attributes*/) override
 			{
 				std::ifstream l_oFile;
 				FS::Files::openIFStream(l_oFile, rEntry.getName());

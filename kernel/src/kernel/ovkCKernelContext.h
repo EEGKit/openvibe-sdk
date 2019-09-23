@@ -57,7 +57,7 @@ namespace OpenViBE
 			std::unique_ptr<CLogListenerConsole> m_pLogListenerConsole;
 			std::unique_ptr<CLogListenerFile> m_pLogListenerFile;
 
-			CKernelContext();
+			CKernelContext() = delete;
 		};
 
 		class CKernelContextBridge : public IKernelContext

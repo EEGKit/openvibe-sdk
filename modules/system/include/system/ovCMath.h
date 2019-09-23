@@ -46,6 +46,6 @@ namespace System
 		static bool isnormal(double f64Value);
 	private:
 
-		Math();
+		Math() = delete;
 	};
 } // namespace System

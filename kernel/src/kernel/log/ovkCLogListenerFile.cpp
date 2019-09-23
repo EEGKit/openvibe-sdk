@@ -106,9 +106,9 @@ void CLogListenerFile::log(const char* value)
 	m_fsFileStream << flush;
 }
 
-void CLogListenerFile::log(const ELogLevel eLogLevel)
+void CLogListenerFile::log(const ELogLevel level)
 {
-	switch (eLogLevel)
+	switch (level)
 	{
 		case LogLevel_Debug:
 			m_fsFileStream << "[ DEBUG ] ";
@@ -147,5 +147,3 @@ void CLogListenerFile::log(const ELogLevel eLogLevel)
 			break;
 	}
 }
-
-void CLogListenerFile::log(const ELogColor eLogColor) {}

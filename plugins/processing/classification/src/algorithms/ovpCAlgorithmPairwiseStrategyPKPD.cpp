@@ -99,8 +99,6 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 
 XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfiguration()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
-	return l_pRootNode;
+	XML::IXMLNode* rootNode = XML::createNode(TYPE_NODE_NAME);
+	return rootNode;
 }
-
-bool CAlgorithmPairwiseStrategyPKPD::loadConfiguration(XML::IXMLNode& rNode) { return true; }

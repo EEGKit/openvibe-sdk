@@ -621,9 +621,9 @@ bool CScenario::isLink(const CIdentifier& boxID) const
 	return itLink != m_Links.end();
 }
 
-bool CScenario::setHasIO(const bool bHasIO)
+bool CScenario::setHasIO(const bool hasIO)
 {
-	m_HasIO = bHasIO;
+	m_HasIO = hasIO;
 	return true;
 }
 

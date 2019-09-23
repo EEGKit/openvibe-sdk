@@ -63,7 +63,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& messageClock)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& /*messageClock*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

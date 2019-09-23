@@ -61,11 +61,11 @@ namespace OpenViBEPlugins
 			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
 			uint32_t m_outSamplingRate = 0;
-			uint32_t m_outSampleCount  = 0;
+			uint32_t m_nOutSample  = 0;
 
-			int m_iFractionalDelayFilterSampleCount = 0;
-			double m_f64TransitionBandInPercent     = 0;
-			double m_f64StopBandAttenuation         = 0;
+			int m_nFractionalDelayFilterSample = 0;
+			double m_transitionBandPercent     = 0;
+			double m_stopBandAttenuation         = 0;
 
 			uint32_t m_inSamplingRate = 0;
 			mutable uint64_t m_totalOutSampleCount;

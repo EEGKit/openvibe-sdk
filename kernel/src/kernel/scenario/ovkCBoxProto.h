@@ -11,6 +11,7 @@ namespace OpenViBE
 		public:
 
 			CBoxProto(const IKernelContext& ctx, IBox& box);
+			~CBoxProto() override = default;
 			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
 						  const bool bNotify                                                              = true) override;
 			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
@@ -32,7 +33,7 @@ namespace OpenViBE
 
 		private:
 
-			CBoxProto();
+			CBoxProto() = delete;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

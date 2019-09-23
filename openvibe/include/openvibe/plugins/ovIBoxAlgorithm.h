@@ -128,8 +128,7 @@ namespace OpenViBE
 			/**
 			 * \brief Unprepares the object so it can be deleted
 			 * \param boxAlgorithmContext [in] : the plugin object context
-			 * \return \e true when this object sucessfully uninitialized
-			 *         or \e false if didn't succeed to uninitialize.
+			 * \return \e true when this object sucessfully uninitialized or \e false if didn't succeed to uninitialize.
 			 * \exception this method must be noexcept
 			 * \note Default implementation simply returns \e true.
 			 *
@@ -203,7 +202,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 * \sa getClockFrequency
 			 */
-			virtual bool processClock(Kernel::IBoxAlgorithmContext& boxAlgorithmContext, Kernel::IMessageClock& messageClock) { return false; }
+			virtual bool processClock(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/, Kernel::IMessageClock& /*messageClock*/) { return false; }
 			/**
 			 * \brief Reaction to an input update
 			 * \param boxAlgorithmContext [in] : the box algorithm context to use
@@ -219,7 +218,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processInput(Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const uint32_t index) { return false; }
+			virtual bool processInput(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/, const uint32_t /*index*/) { return false; }
 
 			//@}
 			/** \name Algorithm processing */

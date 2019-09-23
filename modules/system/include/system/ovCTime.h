@@ -69,6 +69,6 @@ namespace System
 
 	private:
 
-		Time();
+		Time() = delete;
 	};
 } // namespace System

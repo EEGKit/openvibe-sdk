@@ -28,8 +28,8 @@ namespace XML
 	};
 
 	static void XMLCALL expat_xml_start(void* pData, const char* pElement, const char** ppAttribute);
-	static void XMLCALL expat_xml_end(void* pData, const char* pElement);
-	static void XMLCALL expat_xml_data(void* pData, const char* pDataValue, int iDataLength);
+	static void XMLCALL expat_xml_end(void* data, const char* element);
+	static void XMLCALL expat_xml_data(void* data, const char* value, int length);
 }
 
 CReader::CReader(IReaderCallback& rReaderCallback)
@@ -100,10 +100,10 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* pData, const char* pElement) { static_cast<CReader*>(pData)->closeChild(); }
+static void XMLCALL XML::expat_xml_end(void* data, const char* /*element*/) { static_cast<CReader*>(data)->closeChild(); }
 
-static void XMLCALL XML::expat_xml_data(void* pData, const char* pDataValue, int iDataLength)
+static void XMLCALL XML::expat_xml_data(void* data, const char* value, const int length)
 {
-	string sData(pDataValue, iDataLength);
-	static_cast<CReader*>(pData)->processChildData(sData.c_str());
+	const string str(value, length);
+	static_cast<CReader*>(data)->processChildData(str.c_str());
 }

@@ -27,7 +27,7 @@ namespace System
 		static HINSTANCE utf16CompliantShellExecute(HWND l_pHWND, LPCTSTR lpOperation, LPCTSTR lpFile,
 													LPCTSTR lpParameters, LPCTSTR lpDirectory, INT nShowCmd);
 	private:
-		WindowsUtilities();
+		WindowsUtilities() = delete;
 	};
 } // namespace System
 

@@ -53,6 +53,6 @@ namespace System
 
 	private:
 
-		Memory();
+		Memory() = delete;
 	};
 } // namespace System

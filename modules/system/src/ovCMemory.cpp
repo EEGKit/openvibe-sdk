@@ -108,7 +108,7 @@ bool Memory::hostToLittleEndian(const double value, uint8_t* buffer)
 	return hostToLittleEndian(tmp, buffer);
 }
 
-bool Memory::hostToLittleEndian(const long double value, uint8_t* buffer)
+bool Memory::hostToLittleEndian(const long double /*value*/, uint8_t* /*buffer*/)
 {
 	// $$$ TODO
 	return false;

@@ -21,10 +21,6 @@ using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
-bool CAlgorithmPairwiseDecisionVoting::initialize() { return true; }
-
-bool CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
-
 bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
 	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
@@ -84,4 +80,3 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfiguration()
 	return l_pRootNode;
 }
 
-bool CAlgorithmPairwiseDecisionVoting::loadConfiguration(XML::IXMLNode& rNode) { return true; }

@@ -21,6 +21,6 @@ namespace EBML
 
 	private:
 
-		CReader();
+		CReader() = delete;
 	};
 } // namespace EBML

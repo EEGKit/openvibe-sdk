@@ -112,7 +112,7 @@ CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter() { m_pReader = cre
 
 CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter() { m_pReader->release(); }
 
-void CAlgorithmXMLScenarioImporter::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
+void CAlgorithmXMLScenarioImporter::openChild(const char* name, const char** /*attributeName*/, const char** /*attributeValue*/, uint64_t /*nAttribute*/)
 {
 	m_vNodes.push(name);
 

@@ -86,7 +86,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(0, typeID);

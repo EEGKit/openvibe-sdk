@@ -76,14 +76,14 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
 			{
 				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
-					char l_sBuffer[1024];
-					sprintf(l_sBuffer, "Classification result %i", i);
+					char buffer[1024];
+					sprintf(buffer, "Classification result %i", i);
 					box.setInputType(i, m_oInputTypeIdentifier);
-					box.setInputName(i, l_sBuffer);
+					box.setInputName(i, buffer);
 				}
 				return true;
 			}
