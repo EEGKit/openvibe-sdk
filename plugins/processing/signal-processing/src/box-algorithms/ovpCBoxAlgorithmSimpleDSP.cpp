@@ -149,8 +149,8 @@ bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t /*index*/)
 
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }
 
-	uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
-	uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
+	const uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
+	const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
 	for (uint32_t i = 1; i < nInput; i++)
 	{
 		if (boxContext.getInputChunkCount(i) == 0) { return true; }
@@ -169,25 +169,22 @@ bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t /*index*/)
 
 bool CBoxAlgorithmSimpleDSP::process()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IDynamicBoxContext& boxContext  = this->getDynamicBoxContext();
 	const uint32_t nInput           = this->getStaticBoxContext().getInputCount();
 
-	uint32_t l_ui32HeaderCount = 0;
-	uint32_t l_ui32BufferCount = 0;
-	uint32_t l_ui32EndCount    = 0;
+	uint32_t nHeader = 0;
+	uint32_t nBuffer = 0;
+	uint32_t nEnd    = 0;
 
 	TParameterHandler<IMatrix*> ip_pMatrix(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(
-		m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_vMatrix.clear();
 
 	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 	for (uint32_t i = 0; i < nInput; i++)
 	{
-		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(
-			m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<IMatrix*> op_pMatrix(m_vStreamDecoder[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 		ip_pMemoryBuffer = boxContext.getInputChunk(i, 0);
 		m_vStreamDecoder[i]->process();
@@ -200,32 +197,32 @@ bool CBoxAlgorithmSimpleDSP::process()
 									getBufferElementCount() <<")",
 									OpenViBE::Kernel::ErrorType::BadValue);
 			}
-			l_ui32HeaderCount++;
+			nHeader++;
 		}
-		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer)) { l_ui32BufferCount++; }
-		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd)) { l_ui32EndCount++; }
+		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer)) { nBuffer++; }
+		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd)) { nEnd++; }
 		m_vMatrix.push_back(op_pMatrix);
 		boxContext.markInputAsDeprecated(i, 0);
 	}
 
-	OV_ERROR_UNLESS_KRF((!l_ui32HeaderCount || l_ui32HeaderCount == nInput) &&
-						(!l_ui32BufferCount || l_ui32BufferCount == nInput) &&
-						(!l_ui32EndCount || l_ui32EndCount == nInput),
+	OV_ERROR_UNLESS_KRF((!nHeader || nHeader == nInput) &&
+						(!nBuffer || nBuffer == nInput) &&
+						(!nEnd || nEnd == nInput),
 						"Invalid stream structure", OpenViBE::Kernel::ErrorType::BadValue);
 
-	if (l_ui32HeaderCount)
+	if (nHeader)
 	{
 		OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *m_vMatrix[0]);
 		m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader);
 	}
-	if (l_ui32BufferCount)
+	if (nBuffer)
 	{
 		this->evaluate();
 		m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
 	}
-	if (l_ui32EndCount) { m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
+	if (nEnd) { m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
 
-	if (l_ui32HeaderCount || l_ui32BufferCount || l_ui32EndCount)
+	if (nHeader || nBuffer || nEnd)
 	{
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, 0), boxContext.getInputChunkEndTime(0, 0));
 	}

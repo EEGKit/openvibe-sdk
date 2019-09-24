@@ -1,3 +1,4 @@
+#pragma once
 #include "ovkTMessage.h"
 
 namespace OpenViBE

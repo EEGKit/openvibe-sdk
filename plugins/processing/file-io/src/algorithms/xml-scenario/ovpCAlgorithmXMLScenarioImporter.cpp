@@ -455,8 +455,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validat
 {
 	this->getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
 
-	size_t errorCount = 0;
-
+	size_t errorCount;
 	XMLPlatformUtils::Initialize();
 
 	{ // scope the content here to ensure unique_ptr contents are destroyed before the call to XMLPlatformUtils::Terminate();

@@ -129,25 +129,25 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool set(const CString& rString);
+		bool set(const CString& rString);
 		/**
 		 * \brief Initializes this string from an ANSI/ASCII string
 		 * \param pString [in] : the ANSI/ASCII string to initialize this string from
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool set(const char* pString);
+		bool set(const char* pString);
 		/**
 		 * \brief Converts this string to an ANSI/ASCII string
 		 * \return the ANSI/ASCII converted string.
 		 */
-		virtual const char* toASCIIString() const;
+		const char* toASCIIString() const;
 
 		/**
 		 * \brief Returns length of the string
 		 * \return Length of the string
 		 */
-		virtual std::size_t length() const;
+		std::size_t length() const;
 
 	protected:
 

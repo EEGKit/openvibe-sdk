@@ -35,15 +35,14 @@ const uint64_t g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1
 CPlayer::CPlayer(const IKernelContext& ctx)
 	: TKernelObject<IPlayer>(ctx), m_oKernelContextBridge(ctx), m_oScheduler(m_oKernelContextBridge, *this)
 {
-	uint64_t schedulerFrequency = this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
+	uint64_t schedulerFrequency = this->TKernelObject<IPlayer>::getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
 	if (schedulerFrequency == 0)
 	{
-		OV_WARNING_K(
-			"Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" << this->getConfigurationManager().expand("${Kernel_PlayerFrequency}"
-			) << " restored to default " << g_ui64Scheduler_Default_Frequency_);
+		OV_WARNING_K("Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" 
+			<< this->TKernelObject<IPlayer>::getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " << g_ui64Scheduler_Default_Frequency_);
 		schedulerFrequency = g_ui64Scheduler_Default_Frequency_;
 	}
-	else { getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n"; }
+	else { TKernelObject<IPlayer>::getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n"; }
 	m_oScheduler.setFrequency(schedulerFrequency);
 }
 

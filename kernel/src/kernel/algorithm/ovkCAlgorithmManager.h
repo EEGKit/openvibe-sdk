@@ -28,7 +28,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier() const;
+			CIdentifier getUnusedIdentifier() const;
 
 			using AlgorithmMap = std::map<CIdentifier, CAlgorithmProxy*>;
 			AlgorithmMap m_vAlgorithms;

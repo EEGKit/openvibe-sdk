@@ -68,7 +68,7 @@ namespace OpenViBEPlugins
 			double m_stopBandAttenuation         = 0;
 
 			uint32_t m_inSamplingRate = 0;
-			mutable uint64_t m_totalOutSampleCount;
+			mutable uint64_t m_totalOutSampleCount = 0;
 			CResampler m_oResampler;
 			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext = nullptr;
 		};

@@ -34,7 +34,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual ELogLevel earlyGetLogLevel(const CString& rLogLevelName);
+			ELogLevel earlyGetLogLevel(const CString& rLogLevelName);
 
 		private:
 
@@ -66,7 +66,7 @@ namespace OpenViBE
 
 			explicit CKernelContextBridge(const IKernelContext& ctx) : m_kernelContext(ctx) { }
 
-			virtual bool initialize() { return true; }
+			bool initialize() { return true; }
 			bool uninitialize() override { return true; }
 
 			void setAlgorithmManager(IAlgorithmManager* pAlgorithmManager) { m_pAlgorithmManager = pAlgorithmManager; }

@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 				ETimeout_Sent
 			};
 
-			ETimeoutState m_TimeoutState;
+			ETimeoutState m_TimeoutState = ETimeout_No;
 			bool m_IsHeaderSent = false;
 
 			uint64_t m_Timeout           = 0;

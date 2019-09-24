@@ -31,7 +31,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool listen(uint32_t port) { return m_Server->listen(port); }
+		bool listen(const uint32_t port) const { return m_Server->listen(port); }
 
 		/**
 		 * \brief Close the connection
@@ -54,7 +54,7 @@ namespace Communication
 		* This is useful if you set the port to '0'.
 		* \param port [out]: port on the one the server is listening
 		*/
-		bool getSocketPort(uint32_t& port) { return m_Server->getSocketPort(port); }
+		bool getSocketPort(uint32_t& port) const { return m_Server->getSocketPort(port); }
 
 
 		/**
@@ -177,7 +177,7 @@ namespace Communication
 		 * \retval True if a sync message is received.
 		 * \retval False if no sync message was received.
 		 */
-		bool waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }
+		bool waitForSyncMessage() override { return CMessaging::waitForSyncMessage(); }
 
 	private:
 		Socket::IConnectionServer* m_Server = nullptr; //< Server connection

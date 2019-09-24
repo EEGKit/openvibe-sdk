@@ -20,10 +20,9 @@ namespace
 	{
 		std::vector<std::string> result;
 		size_t i = 0;
-		size_t j = 0;
 		while (i < sString.length())
 		{
-			j = i;
+			size_t j = i;
 			while (j < sString.length() && sString[j] != c) { j++; }
 			if (i != j) { result.push_back(std::string(sString, i, j - i)); }
 			i = j + 1;

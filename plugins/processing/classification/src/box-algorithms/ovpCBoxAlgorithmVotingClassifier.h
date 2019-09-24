@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			uint64_t m_ui64NonTargetClassLabel  = 0;
 			uint64_t m_ui64RejectClassLabel     = 0;
 			uint64_t m_ui64ResultClassLabelBase = 0;
-			bool m_bChooseOneIfExAequo;
+			bool m_bChooseOneIfExAequo = false;
 
 		private:
 
@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_pClassificationChoiceStimulationSet;
 
 			uint64_t m_ui64LastTime = 0;
-			bool m_bMatrixBased;
+			bool m_bMatrixBased = false;
 		};
 
 

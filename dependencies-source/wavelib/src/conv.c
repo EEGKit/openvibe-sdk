@@ -40,10 +40,8 @@ int findnexte(int M)
 
 conv_object conv_init(int N, int L)
 {
-	conv_object obj    = NULL;
 	const int conv_len = N + L - 1;
-
-	obj = (conv_object)malloc(sizeof(struct conv_set));
+	const conv_object obj = (conv_object)malloc(sizeof(struct conv_set));
 	 
 	//obj->clen = npow2(conv_len);
 	//obj->clen = conv_len;

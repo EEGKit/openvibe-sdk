@@ -11,7 +11,6 @@
 #include <map>
 
 #include <cstdio>
-#include <cstdlib>
 
 // TODO:
 // - please move the identifier definitions in ovp_defines.h

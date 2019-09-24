@@ -186,7 +186,6 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		if (interfacorType == Setting)
 		{
 			CString defaultValue;
-			CString value;
 			bool modifiable;
 			m_KernelBox->getSettingDefaultValue(index, defaultValue);
 			m_KernelBox->getSettingMod(index, modifiable);

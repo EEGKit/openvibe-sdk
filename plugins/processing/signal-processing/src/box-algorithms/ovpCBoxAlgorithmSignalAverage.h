@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
-			virtual void computeAverage();
+			void computeAverage();
 
 			// Needed to read the input and write the output
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_oSignalDecoder;

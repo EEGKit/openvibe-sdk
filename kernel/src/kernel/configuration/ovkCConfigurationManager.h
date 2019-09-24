@@ -52,7 +52,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier() const;
+			CIdentifier getUnusedIdentifier() const;
 
 			bool internalExpand(const std::string& sValue, std::string& sResult) const;
 			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes) const;

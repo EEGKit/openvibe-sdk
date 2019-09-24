@@ -22,7 +22,7 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
 
-			virtual bool isAlgorithmReadyToProcess();
+			bool isAlgorithmReadyToProcess();
 
 		protected:
 

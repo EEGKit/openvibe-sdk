@@ -899,7 +899,7 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 	std::array<std::string, 3> stimulations;
 
 	auto itBegin = stimulationsToPrint.cbegin();
-	auto itEnd   = stimulationsToPrint.cend();
+	const auto itEnd   = stimulationsToPrint.cend();
 
 	char buffer[s_MaximumFloatDecimal];
 
@@ -937,7 +937,7 @@ std::string CCSVHandler::createHeaderString()
 	const std::string invalidHeader = "";
 	std::string header;
 
-	auto addColumn = [&](const std::string& columnLabel)
+	const auto addColumn = [&](const std::string& columnLabel)
 	{
 		if (m_ColumnCount != 0) { header += s_Separator; }
 
@@ -1341,7 +1341,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 		return false;
 	}
 
-	auto getNextElem = [&](uint32_t& resultvar, const char separator, const char* missingString)
+	const auto getNextElem = [&](uint32_t& resultvar, const char separator, const char* missingString)
 	{
 		this->streamReader(iss, buffer, separator, bufferTemp);
 
@@ -1524,7 +1524,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	}
 
 	// check columnLabels number according to dimension sizes
-	uint32_t matrixColumnCount = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<uint32_t>());
+	const uint32_t matrixColumnCount = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<uint32_t>());
 
 	if ((matrixColumnCount + s_PreDataColumnCount + s_PostDataColumnCount) != header.size())
 	{
@@ -1567,7 +1567,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 		// check column labels one per one
 		for (size_t dimensionIndex = 0; dimensionIndex < columnLabels.size(); dimensionIndex++)
 		{
-			size_t positionInCurrentDimension = positionsInDimensions[dimensionIndex];
+			const size_t positionInCurrentDimension = positionsInDimensions[dimensionIndex];
 
 			if (columnLabels[dimensionIndex].empty())
 			{
@@ -1623,8 +1623,8 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 
 bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample, const uint64_t lineNb)
 {
-	auto firstColumn  = std::find(line.cbegin(), line.cend(), s_Separator);
-	auto secondColumn = std::find(firstColumn + 1, line.cend(), s_Separator);
+	const auto firstColumn  = std::find(line.cbegin(), line.cend(), s_Separator);
+	const auto secondColumn = std::find(firstColumn + 1, line.cend(), s_Separator);
 
 	if (lineNb % m_SampleCountPerBuffer == 0)
 	{
@@ -1706,11 +1706,11 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 	return true;
 }
 
-bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const uint64_t lineNb)
+bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const uint64_t /*lineNb*/)
 {
-	size_t eventDurationColumn = line.find_last_of(s_Separator);
-	size_t eventDateColumn     = line.find_last_of(s_Separator, eventDurationColumn - 1);
-	size_t eventIdColumn       = line.find_last_of(s_Separator, eventDateColumn - 1);
+	const size_t eventDurationColumn = line.find_last_of(s_Separator);
+	const size_t eventDateColumn     = line.find_last_of(s_Separator, eventDurationColumn - 1);
+	const size_t eventIdColumn       = line.find_last_of(s_Separator, eventDateColumn - 1);
 
 	std::vector<uint64_t> stimIdentifiers;
 	// pick all time identifiers for the current time

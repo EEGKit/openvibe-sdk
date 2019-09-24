@@ -147,7 +147,7 @@ CPluginManager::~CPluginManager()
 
 	for (auto k = m_vPluginModule.begin(); k != m_vPluginModule.end(); ++k)
 	{
-		this->getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
+		this->TKernelObject<IPluginManager>::getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
 		(*k)->uninitialize();
 		delete (*k);
 	}

@@ -35,8 +35,7 @@ std::ofstream g_OutputStream;
 class CReaderCallBack : public EBML::IReaderCallBack
 {
 public:
-	CReaderCallBack()
-		: m_Depth(0) { }
+	CReaderCallBack() { }
 
 	~CReaderCallBack() override { }
 
@@ -60,35 +59,16 @@ public:
 	void processChildData(const void* buffer, const uint64_t size) override
 	{
 		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
-		if (m_CurrentIdentifier == EBML_Identifier_DocType) g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(buffer, size) <<
-															"]\n";
-		else if (m_CurrentIdentifier == EBML_Identifier_EBMLVersion
-		) g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size)
-		  << std::dec << "]\n";
-		else if (m_CurrentIdentifier == EBML_Identifier_EBMLIdLength)
-		{
-			g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.
-					getUIntegerFromChildData(buffer, size) << std::dec << "]\n";
-		}
-		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeVersion
-		) g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.
-		  getUIntegerFromChildData(buffer, size) << std::dec << "]\n";
-		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeReadVersion)
-		{
-			g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.
-					getUIntegerFromChildData(buffer, size) << std::dec << "]\n";
-		}
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0x1234)
-		) g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) <<
-		  std::dec << "]\n";
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0xffffffffffffffffLL)
-		) g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) <<
-		  std::dec << "]\n";
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0x4321)
-		) g_OutputStream << "Got double : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n";
-		else if (m_CurrentIdentifier == EBML::CIdentifier(0x8765)
-		) g_OutputStream << "Got float : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n";
-		else g_OutputStream << "Got " << size << " data bytes, node id not known\n";
+		if (m_CurrentIdentifier == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(buffer, size) << "]\n"; }
+		else if (m_CurrentIdentifier == EBML_Identifier_EBMLVersion) { g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentIdentifier == EBML_Identifier_EBMLIdLength) { g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeVersion) { g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentIdentifier == EBML_Identifier_DocTypeReadVersion) { g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0x1234)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0xffffffffffffffffLL)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0x4321)) { g_OutputStream << "Got double : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n"; }
+		else if (m_CurrentIdentifier == EBML::CIdentifier(0x8765)) { g_OutputStream << "Got float : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n"; }
+		else { g_OutputStream << "Got " << size << " data bytes, node id not known\n"; }
 	}
 
 	void closeChild() override
@@ -100,7 +80,7 @@ public:
 
 private:
 
-	int m_Depth;
+	int m_Depth = 0;
 
 	EBML::CReaderHelper m_ReaderHelper;
 	EBML::CIdentifier m_CurrentIdentifier;
@@ -124,7 +104,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	OVT_ASSERT(g_OutputStream.is_open(), "Failure to open output file for writing");
 
 	// parsing
-	for (unsigned long n = 17; n >= 1; n--)
+	for (uint32_t n = 17; n >= 1; n--)
 	{
 		CReaderCallBack callback;
 		EBML::CReader reader(callback);

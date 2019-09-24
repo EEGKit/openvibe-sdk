@@ -29,12 +29,12 @@ namespace Socket
 		typedef bool (CALLBACK * LPFNTVICPORTISDRIVEROPENED)();
 		typedef bool (CALLBACK * LPFNTVICPORTWRITE)(unsigned short, unsigned char);
 
-		HMODULE m_hmodTVicPort;
+		HMODULE m_hmodTVicPort = nullptr;
 
-		LPFNTVICPORTOPEN m_lpfnTVicPortOpen;
-		LPFNTVICPORTCLOSE m_lpfnTVicPortClose;
-		LPFNTVICPORTISDRIVEROPENED m_lpfnTVicIsDriverOpened;
-		LPFNTVICPORTWRITE m_lpfnTVicPortWrite;
+		LPFNTVICPORTOPEN m_lpfnTVicPortOpen = nullptr;
+		LPFNTVICPORTCLOSE m_lpfnTVicPortClose = nullptr;
+		LPFNTVICPORTISDRIVEROPENED m_lpfnTVicIsDriverOpened = nullptr;
+		LPFNTVICPORTWRITE m_lpfnTVicPortWrite = nullptr;
 #endif
 	};
 

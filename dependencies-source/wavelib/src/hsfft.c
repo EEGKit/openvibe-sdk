@@ -10,12 +10,11 @@
 
 fft_object fft_init(int N, int sgn)
 {
-	fft_object obj = NULL;
 	// Change N/2 to N-1 for longvector case
-
 	int twi_len;
 	const int out = dividebyN(N);
 
+	fft_object obj;
 	if (out == 1)
 	{
 		obj     = (fft_object)malloc(sizeof(struct fft_set) + sizeof(fft_data) * (N - 1));

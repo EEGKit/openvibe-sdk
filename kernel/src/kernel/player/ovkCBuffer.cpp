@@ -5,15 +5,15 @@
 using namespace OpenViBE;
 using namespace Kernel;
 
-CBuffer::CBuffer(const CBuffer& rBuffer)
+CBuffer::CBuffer(const CBuffer& buffer)
 {
-	this->setSize(rBuffer.getSize(), true);
-	System::Memory::copy(this->getDirectPointer(), rBuffer.getDirectPointer(), rBuffer.getSize());
+	this->CMemoryBuffer::setSize(buffer.getSize(), true);
+	System::Memory::copy(this->CMemoryBuffer::getDirectPointer(), buffer.getDirectPointer(), buffer.getSize());
 }
 
-CBuffer& CBuffer::operator=(const CBuffer& rBuffer)
+CBuffer& CBuffer::operator=(const CBuffer& buffer)
 {
-	this->setSize(rBuffer.getSize(), true);
-	System::Memory::copy(this->getDirectPointer(), rBuffer.getDirectPointer(), rBuffer.getSize());
+	this->CMemoryBuffer::setSize(buffer.getSize(), true);
+	System::Memory::copy(this->CMemoryBuffer::getDirectPointer(), buffer.getDirectPointer(), buffer.getSize());
 	return *this;
 }

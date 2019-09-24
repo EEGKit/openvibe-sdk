@@ -49,7 +49,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier() const;
+			CIdentifier getUnusedIdentifier() const;
 
 			std::map<CIdentifier, CScenario*> m_vScenario;
 		private:
@@ -58,7 +58,7 @@ namespace OpenViBE
 			/// Scenario Export Context -> File Name Extension -> Scenario Exporter Identifier
 			std::map<CIdentifier, std::map<std::string, CIdentifier>> m_ScenarioExporters;
 
-			virtual IScenario& getScenario(const CIdentifier& scenarioID) const;
+			IScenario& getScenario(const CIdentifier& scenarioID) const;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

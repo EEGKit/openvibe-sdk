@@ -42,7 +42,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 }
 
 
-bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* probabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadConfig);
@@ -110,45 +110,43 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 #endif
 
 
-	uint32_t l_ui32ConsecutiveAlpha = 0;
-	uint32_t l_ui32Index            = 0;
-	while (l_ui32ConsecutiveAlpha != m_nClass)
+	uint32_t consecutiveAlpha = 0;
+	uint32_t index            = 0;
+	while (consecutiveAlpha != m_nClass)
 	{
-		double l_f64FirstSum  = 0.0;
-		double l_f64SecondSum = 0.0;
-		double l_f64Alpha     = 0.0;
+		double firstSum  = 0.0;
+		double secondSum = 0.0;
 
 		for (size_t j = 0; j < m_nClass; ++j)
 		{
-			if (j != l_ui32Index)
+			if (j != index)
 			{
-				const uint32_t l_ui32Temp = uint32_t(l_pProbabilityMatrix[l_ui32Index] + ip_pRepartitionSetVector->getBuffer()[j]);
+				const uint32_t l_ui32Temp = uint32_t(l_pProbabilityMatrix[index] + ip_pRepartitionSetVector->getBuffer()[j]);
 
-				l_f64FirstSum += l_ui32Temp * l_pProbabilityMatrix[l_ui32Index * m_nClass + j];
-				l_f64SecondSum += l_ui32Temp * l_pMu[l_ui32Index][j];
+				firstSum += l_ui32Temp * l_pProbabilityMatrix[index * m_nClass + j];
+				secondSum += l_ui32Temp * l_pMu[index][j];
 			}
 		}
-		if (l_f64SecondSum != 0) { l_f64Alpha = l_f64FirstSum / l_f64SecondSum; }
-		else { l_f64Alpha = 1; }
+		
+		const double alpha = (secondSum != 0) ?  firstSum / secondSum : 1;
 
 		for (size_t j = 0; j < m_nClass; ++j)
 		{
-			if (j != l_ui32Index)
+			if (j != index)
 			{
-				l_pMu[l_ui32Index][j] = (l_f64Alpha * l_pMu[l_ui32Index][j]) /
-										(l_f64Alpha * l_pMu[l_ui32Index][j] + l_pMu[j][l_ui32Index]);
-				l_pMu[j][l_ui32Index] = 1 - l_pMu[l_ui32Index][j];
+				l_pMu[index][j] = (alpha * l_pMu[index][j]) / (alpha * l_pMu[index][j] + l_pMu[j][index]);
+				l_pMu[j][index] = 1 - l_pMu[index][j];
 			}
 		}
 
-		l_pP[l_ui32Index] *= l_f64Alpha;
-		if (l_f64Alpha > 1 - ALPHA_DELTA && l_f64Alpha < 1 + ALPHA_DELTA) { ++l_ui32ConsecutiveAlpha; }
-		else { l_ui32ConsecutiveAlpha = 0; }
-		l_ui32Index = (l_ui32Index + 1) % m_nClass;
+		l_pP[index] *= alpha;
+		if (alpha > 1 - ALPHA_DELTA && alpha < 1 + ALPHA_DELTA) { ++consecutiveAlpha; }
+		else { consecutiveAlpha = 0; }
+		index = (index + 1) % m_nClass;
 
 #if HT_DEBUG
 	std::cout << "Intermediate probability, MU and alpha" << std::endl;
-	std::cout << l_f64Alpha << std::endl;
+	std::cout << alpha << std::endl;
 	for(uint32_t i = 0 ; i< m_nClass ; ++i){
 			std::cout << l_pP[i] << " ";
 	}
@@ -172,9 +170,9 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	std::cout << std::endl << std::endl;
 #endif
 
-	pProbabilityVector->setDimensionCount(1);
-	pProbabilityVector->setDimensionSize(0, m_nClass);
-	for (uint32_t i = 0; i < m_nClass; ++i) { pProbabilityVector->getBuffer()[i] = l_pP[i]; }
+	probabilityVector->setDimensionCount(1);
+	probabilityVector->setDimensionSize(0, m_nClass);
+	for (uint32_t i = 0; i < m_nClass; ++i) { probabilityVector->getBuffer()[i] = l_pP[i]; }
 
 	delete[] l_pP;
 	for (size_t i = 0; i < m_nClass; ++i) { delete[] l_pMu[i]; }
@@ -185,36 +183,36 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
+	XML::IXMLNode* rootNode = XML::createNode(TYPE_NODE_NAME);
 
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	const uint32_t l_ui32ClassCount                      = ip_pRepartitionSetVector->getDimensionSize(0);
+	const uint32_t nClass                                = ip_pRepartitionSetVector->getDimensionSize(0);
 
-	std::stringstream l_sRepartition;
-	for (size_t i = 0; i < l_ui32ClassCount; i++) { l_sRepartition << ip_pRepartitionSetVector->getBuffer()[i] << " "; }
-	XML::IXMLNode* l_pRepartition = XML::createNode(REPARTITION_NODE_NAME);
-	l_pRepartition->setPCData(l_sRepartition.str().c_str());
-	l_pRootNode->addChild(l_pRepartition);
+	std::stringstream ss;
+	for (size_t i = 0; i < nClass; i++) { ss << ip_pRepartitionSetVector->getBuffer()[i] << " "; }
+	XML::IXMLNode* repartition = XML::createNode(REPARTITION_NODE_NAME);
+	repartition->setPCData(ss.str().c_str());
+	rootNode->addChild(repartition);
 
-	return l_pRootNode;
+	return rootNode;
 }
 
-bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& rNode)
+bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& node)
 {
-	std::stringstream l_sData(rNode.getChildByName(REPARTITION_NODE_NAME)->getPCData());
+	std::stringstream ss(node.getChildByName(REPARTITION_NODE_NAME)->getPCData());
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 
 
-	std::vector<double> l_vRepartition;
-	while (!l_sData.eof())
+	std::vector<double> repartition;
+	while (!ss.eof())
 	{
-		uint32_t l_ui32Value;
-		l_sData >> l_ui32Value;
-		l_vRepartition.push_back(l_ui32Value);
+		uint32_t value;
+		ss >> value;
+		repartition.push_back(value);
 	}
 
 	ip_pRepartitionSetVector->setDimensionCount(1);
-	ip_pRepartitionSetVector->setDimensionSize(0, l_vRepartition.size());
-	for (size_t i = 0; i < l_vRepartition.size(); i++) { ip_pRepartitionSetVector->getBuffer()[i] = l_vRepartition[i]; }
+	ip_pRepartitionSetVector->setDimensionSize(0, repartition.size());
+	for (size_t i = 0; i < repartition.size(); i++) { ip_pRepartitionSetVector->getBuffer()[i] = repartition[i]; }
 	return true;
 }

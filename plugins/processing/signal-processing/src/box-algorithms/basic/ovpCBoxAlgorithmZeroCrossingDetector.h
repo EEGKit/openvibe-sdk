@@ -85,7 +85,7 @@ namespace OpenViBEPlugins
 				return this->onConnectorTypeChanged(box, index, typeID, true);
 			}
 
-			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index, const OpenViBE::CIdentifier& typeID, bool bOutputChanged)
+			static bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index, const OpenViBE::CIdentifier& typeID, bool bOutputChanged)
 			{
 				if (index == 0)
 				{

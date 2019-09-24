@@ -402,12 +402,12 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, const size_t startIdx, const size_t stopIdx)
+bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation, const size_t startIdx, const size_t stopIdx)
 {
 	OV_ERROR_UNLESS_KRF(stopIdx - startIdx != 1, "Invalid indexes: stopIdx - trainIndex = 1", OpenViBE::Kernel::ErrorType::BadArgument);
 
-	const uint32_t nFeatureVector    = rDataset.size() - (stopIdx - startIdx);
-	const uint32_t featureVectorSize = rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
+	const uint32_t nFeatureVector    = dataset.size() - (stopIdx - startIdx);
+	const uint32_t featureVectorSize = dataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
@@ -416,11 +416,11 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 	ip_pFeatureVectorSet->setDimensionSize(1, featureVectorSize + 1);
 
 	double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
-	for (size_t j = 0; j < rDataset.size() - (stopIdx - startIdx); j++)
+	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); j++)
 	{
-		const size_t k       = rPermutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
-		const double classId = double(rDataset[k].m_ui32InputIndex);
-		System::Memory::copy(l_pFeatureVectorSetBuffer, rDataset[k].m_pFeatureVectorMatrix->getBuffer(), featureVectorSize * sizeof(double));
+		const size_t k       = permutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
+		const double classId = double(dataset[k].m_ui32InputIndex);
+		System::Memory::copy(l_pFeatureVectorSetBuffer, dataset[k].m_pFeatureVectorMatrix->getBuffer(), featureVectorSize * sizeof(double));
 
 		l_pFeatureVectorSetBuffer[featureVectorSize] = classId;
 		l_pFeatureVectorSetBuffer += (featureVectorSize + 1);
@@ -437,13 +437,13 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 	return m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
 }
 
-// Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation,
-												   const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
+// Note that this function is incremental for confusionMatrix and can be called many times; so we don't clear the matrix
+double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation,
+												   const size_t startIdx, const size_t stopIdx, CMatrix& confusionMatrix)
 {
-	OV_ERROR_UNLESS_KRF(uiStopIndex != uiStartIndex, "Invalid indexes: start index equals stop index", OpenViBE::Kernel::ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(stopIdx != startIdx, "Invalid indexes: start index equals stop index", OpenViBE::Kernel::ErrorType::BadArgument);
 
-	const uint32_t l_ui32FeatureVectorSize = rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
+	const uint32_t l_ui32FeatureVectorSize = dataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	XML::IXMLNode* l_pNode = op_pConfiguration;//Requested for affectation
@@ -459,16 +459,16 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 	size_t l_iSuccessCount = 0;
 
-	for (size_t j = uiStartIndex; j < uiStopIndex; j++)
+	for (size_t j = startIdx; j < stopIdx; j++)
 	{
-		const size_t k = rPermutation[j];
+		const size_t k = permutation[j];
 
 		double* featureVectorBuffer = ip_pFeatureVector->getBuffer();
-		const double correctValue   = double(rDataset[k].m_ui32InputIndex);
+		const double correctValue   = double(dataset[k].m_ui32InputIndex);
 
 		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
-		System::Memory::copy(featureVectorBuffer, rDataset[k].m_pFeatureVectorMatrix->getBuffer(), l_ui32FeatureVectorSize * sizeof(double));
+		System::Memory::copy(featureVectorBuffer, dataset[k].m_pFeatureVectorMatrix->getBuffer(), l_ui32FeatureVectorSize * sizeof(double));
 
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
@@ -478,15 +478,15 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 		if (predictedValue == correctValue) { l_iSuccessCount++; }
 
-		if (predictedValue < oConfusionMatrix.getDimensionSize(0) && correctValue < oConfusionMatrix.getDimensionSize(0))
+		if (predictedValue < confusionMatrix.getDimensionSize(0) && correctValue < confusionMatrix.getDimensionSize(0))
 		{
-			double* buf = oConfusionMatrix.getBuffer();
-			buf[uint32_t(correctValue) * oConfusionMatrix.getDimensionSize(1) + uint32_t(predictedValue)] += 1.0;
+			double* buf = confusionMatrix.getBuffer();
+			buf[uint32_t(correctValue) * confusionMatrix.getDimensionSize(1) + uint32_t(predictedValue)] += 1.0;
 		}
 		else { std::cout << "errorn\n"; }
 	}
 
-	return double((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
+	return double((l_iSuccessCount * 100.0) / (stopIdx - startIdx));
 }
 
 bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)

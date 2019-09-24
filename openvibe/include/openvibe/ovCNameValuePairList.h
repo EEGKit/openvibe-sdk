@@ -44,7 +44,7 @@ namespace OpenViBE
 		 *
 		 * The destructor releases the std::map implementation !
 		 */
-		virtual ~CNameValuePairList();
+		~CNameValuePairList();
 
 		//@}
 		/** \name Operators */

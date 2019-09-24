@@ -32,10 +32,9 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			virtual bool updateCov(uint32_t index);
-			virtual bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
-			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
-									std::vector<Eigen::VectorXd>& sortedEigenValues);
+			bool updateCov(uint32_t index);
+			bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
+			bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors, std::vector<Eigen::VectorXd>& sortedEigenValues);
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_StimulationDecoder;
 

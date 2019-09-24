@@ -1,3 +1,4 @@
+#pragma once
 #include "ovbt_sg_defines.h"
 
 #include <fstream>

@@ -20,6 +20,7 @@ namespace OpenViBE
 	class IObserver
 	{
 	public:
+		virtual ~IObserver() = default;
 
 		/**
 		 * \brief Function called by the observed object when a notification is done.

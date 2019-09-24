@@ -201,12 +201,12 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* pData, const char* /*pElement*/) { static_cast<IXMLHandlerImpl*>(pData)->closeChild(); }
+static void XMLCALL XML::expat_xml_end(void* data, const char* /*pElement*/) { static_cast<IXMLHandlerImpl*>(data)->closeChild(); }
 
-static void XMLCALL XML::expat_xml_data(void* pData, const char* pDataValue, int iDataLength)
+static void XMLCALL XML::expat_xml_data(void* data, const char* value, const int length)
 {
-	string sData(pDataValue, iDataLength);
-	static_cast<IXMLHandlerImpl*>(pData)->processChildData(sData.c_str());
+	const string str(value, length);
+	static_cast<IXMLHandlerImpl*>(data)->processChildData(str.c_str());
 }
 
 OV_API IXMLHandler* XML::createXMLHandler() { return new IXMLHandlerImpl(); }

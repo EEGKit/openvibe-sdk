@@ -547,7 +547,7 @@ namespace OpenViBE
 				return m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier) != m_InterfacorIdentifierToIndex.at(interfacorType).end();
 			}
 
-			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) const
+			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& /*typeID*/) const
 			{
 				return m_InterfacorNameToIndex.at(interfacorType).find(name) != m_InterfacorNameToIndex.at(interfacorType).end();
 			}
@@ -1049,17 +1049,17 @@ namespace OpenViBE
 
 		public:
 
-			CIdentifier getUnusedSettingIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedSettingIdentifier(const CIdentifier& /*suggestedID*/ = OV_UndefinedIdentifier) const
 			{
 				return this->getUnusedInterfacorIdentifier(Setting);
 			}
 
-			CIdentifier getUnusedInputIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedInputIdentifier(const CIdentifier& /*suggestedID*/ = OV_UndefinedIdentifier) const
 			{
 				return this->getUnusedInterfacorIdentifier(Input);
 			}
 
-			CIdentifier getUnusedOutputIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedOutputIdentifier(const CIdentifier& /*suggestedID*/ = OV_UndefinedIdentifier) const
 			{
 				return this->getUnusedInterfacorIdentifier(Output);
 			}

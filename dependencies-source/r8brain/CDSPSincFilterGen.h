@@ -543,22 +543,15 @@ namespace r8b
 		{
 			struct
 			{
-				double KaiserBeta; ///< Kaiser window function's "Beta"
-				///< coefficient.
-				///<
-				double KaiserDiv; ///< Kaiser window function's divisor.
-				///<
-				double KaiserLen2Frac; ///< Equals FracDelay / Len2.
-				///<
+				double KaiserBeta;		// Kaiser window function's "Beta" coefficient.
+				double KaiserDiv;		// Kaiser window function's divisor.
+				double KaiserLen2Frac;	// Equals FracDelay / Len2.
 			};
 
 			struct
 			{
-				double GaussianSigma; ///< Gaussian window function's "Sigma"
-				///< coefficient.
-				///<
-				double GaussianSigmaFrac; ///< Equals FracDelay / GaussianSigma.
-				///<
+				double GaussianSigma;		// Gaussian window function's "Sigma" coefficient.
+				double GaussianSigmaFrac;	// Equals FracDelay / GaussianSigma.
 			};
 		};
 

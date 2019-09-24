@@ -196,7 +196,7 @@ namespace Communication
 		 * \retval True if a sync message is received.
 		 * \retval False if no sync message was received.
 		 */
-		bool waitForSyncMessage();
+		bool waitForSyncMessage() override;
 
 	private:
 

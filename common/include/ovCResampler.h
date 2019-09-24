@@ -33,7 +33,7 @@ namespace Common
 
 		private:
 
-			TResampler(const TResampler<TFloat, eStoreMode>&);
+			TResampler(const TResampler<TFloat, eStoreMode>&) = default;
 
 		public:
 
@@ -58,7 +58,7 @@ namespace Common
 				}
 			}
 
-			~TResampler() { this->clear(); }
+			virtual ~TResampler() { this->clear(); }
 
 			void clear()
 			{
@@ -144,7 +144,6 @@ namespace Common
 				if (nChannel == 0) { return false; }
 				if (iSampleRate == 0) { return false; }
 				if (oSampleRate == 0) { return false; }
-				nChannel                 = nChannel;
 				m_iSamplingRate  = iSampleRate;
 				m_oSamplingRate = oSampleRate;
 

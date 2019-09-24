@@ -5,10 +5,8 @@
 
 #include "../ovpCSimpleDSP/ovpCEquationParser.h"
 
-#include <string>
 #include <vector>
 #include <cstdio>
-#include <cstdlib>
 
 #define OVP_ClassId_BoxAlgorithm_SimpleDSP                                             OpenViBE::CIdentifier(0x00E26FA1, 0x1DBAB1B2)
 #define OVP_ClassId_BoxAlgorithm_SimpleDSPDesc                                         OpenViBE::CIdentifier(0x00C44BFE, 0x76C9269E)
@@ -27,7 +25,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool processInput(const uint32_t index) override;
 			bool process() override;
-			virtual void evaluate();
+			void evaluate();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 

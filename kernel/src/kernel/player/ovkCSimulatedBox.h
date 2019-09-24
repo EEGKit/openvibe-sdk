@@ -20,10 +20,7 @@ namespace OpenViBE
 
 			CChunk() { }
 
-			explicit CChunk(const CChunk& rChunk)
-				: m_oBuffer(rChunk.m_oBuffer)
-				  , m_ui64StartTime(rChunk.m_ui64StartTime)
-				  , m_ui64EndTime(rChunk.m_ui64EndTime) { }
+			explicit CChunk(const CChunk& rChunk) : m_oBuffer(rChunk.m_oBuffer), m_ui64StartTime(rChunk.m_ui64StartTime), m_ui64EndTime(rChunk.m_ui64EndTime) { }
 
 			const CBuffer& getBuffer() const { return m_oBuffer; }
 
@@ -35,21 +32,21 @@ namespace OpenViBE
 
 			CBuffer& getBuffer() { return m_oBuffer; }
 
-			bool setStartTime(uint64_t ui64StartTime)
+			bool setStartTime(uint64_t startTime)
 			{
-				m_ui64StartTime = ui64StartTime;
+				m_ui64StartTime = startTime;
 				return true;
 			}
 
-			bool setEndTime(uint64_t ui64EndTime)
+			bool setEndTime(uint64_t endTime)
 			{
-				m_ui64EndTime = ui64EndTime;
+				m_ui64EndTime = endTime;
 				return true;
 			}
 
-			bool markAsDeprecated(bool bIsDeprecated)
+			bool markAsDeprecated(bool isDeprecated)
 			{
-				m_bIsDeprecated = bIsDeprecated;
+				m_bIsDeprecated = isDeprecated;
 				return true;
 			}
 
@@ -68,28 +65,25 @@ namespace OpenViBE
 			CSimulatedBox(const IKernelContext& ctx, CScheduler& rScheduler);
 			~CSimulatedBox() override;
 
-			virtual bool setScenarioIdentifier(const CIdentifier& scenarioID);
+			bool setScenarioIdentifier(const CIdentifier& scenarioID);
+			bool getBoxIdentifier(CIdentifier& boxId) const;
+			bool setBoxIdentifier(const CIdentifier& boxId);
 
-			virtual bool getBoxIdentifier(CIdentifier& boxId) const;
+			bool initialize();
+			bool uninitialize();
 
-			virtual bool setBoxIdentifier(const CIdentifier& boxId);
+			bool processClock();
+			bool processInput(const uint32_t index, const CChunk& rChunk);
+			bool process();
+			bool isReadyToProcess() const;
 
-			virtual bool initialize();
-			virtual bool uninitialize();
-
-			virtual bool processClock();
-			virtual bool processInput(const uint32_t index, const CChunk& rChunk);
-			virtual bool process();
-			virtual bool isReadyToProcess() const;
-
-			virtual CString getName() const;
-			virtual const IScenario& getScenario() const;
+			CString getName() const;
+			const IScenario& getScenario() const;
 
 			/** \name IBoxIO inputs handling */
 			//@{
 			uint32_t getInputChunkCount(const uint32_t index) const override;
-			bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize,
-							   const uint8_t*& rpChunkBuffer) const override;
+			bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& startTime, uint64_t& endTime, uint64_t& size, const uint8_t*& buffer) const override;
 			const IMemoryBuffer* getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
 			uint64_t getInputChunkStartTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
 			uint64_t getInputChunkEndTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
@@ -99,16 +93,16 @@ namespace OpenViBE
 			/** \name IBoxIO outputs handling */
 			//@{
 			uint64_t getOutputChunkSize(const uint32_t outputIdx) const override;
-			bool setOutputChunkSize(const uint32_t outputIdx, const uint64_t size, const bool bDiscard = true) override;
+			bool setOutputChunkSize(const uint32_t outputIdx, const uint64_t size, const bool discard = true) override;
 			uint8_t* getOutputChunkBuffer(const uint32_t outputIdx) override;
 			bool appendOutputChunkData(const uint32_t outputIdx, const uint8_t* buffer, const uint64_t size) override;
 			IMemoryBuffer* getOutputChunk(const uint32_t outputIdx) override;
-			bool markOutputAsReadyToSend(const uint32_t outputIdx, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
+			bool markOutputAsReadyToSend(const uint32_t outputIdx, const uint64_t startTime, const uint64_t endTime) override;
 			//@}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox)
 
-			CScheduler& getScheduler() { return m_rScheduler; }
+			CScheduler& getScheduler() const { return m_rScheduler; }
 
 		protected:
 

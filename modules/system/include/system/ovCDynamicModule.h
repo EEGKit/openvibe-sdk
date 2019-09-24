@@ -36,7 +36,7 @@ namespace System
 		};
 
 		CDynamicModule();
-		virtual ~CDynamicModule();
+		~CDynamicModule();
 
 #if defined TARGET_OS_Windows
 		/**

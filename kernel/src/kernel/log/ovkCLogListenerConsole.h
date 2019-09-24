@@ -42,7 +42,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual void applyColor();
+			void applyColor();
 
 			std::map<ELogLevel, bool> m_vActiveLevel;
 			std::stack<ELogColor> m_vLogColor;

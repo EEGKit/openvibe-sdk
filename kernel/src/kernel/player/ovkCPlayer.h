@@ -28,7 +28,7 @@ namespace OpenViBE
 			CIdentifier getRuntimeScenarioIdentifier() const override;
 
 
-			virtual bool isHoldingResources() const;
+			bool isHoldingResources() const;
 			EPlayerReturnCode initialize() override;
 			bool uninitialize() override;
 			bool stop() override;
@@ -42,7 +42,7 @@ namespace OpenViBE
 			double getCPUUsage() const override;
 			bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach) override;
 			uint64_t getCurrentSimulatedTime() const override;
-			virtual uint64_t getCurrentSimulatedLateness() const;
+			uint64_t getCurrentSimulatedLateness() const;
 
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IPlayer >, OVK_ClassId_Kernel_Player_Player)

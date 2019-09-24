@@ -56,7 +56,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32NumberOfSubClassifiers = 0;
 
 			std::map<std::pair<uint32_t, uint32_t>, OpenViBE::Kernel::IAlgorithmProxy*> m_oSubClassifiers;
-			fClassifierComparison m_fAlgorithmComparison;
+			fClassifierComparison m_fAlgorithmComparison = nullptr;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm = nullptr;
 			OpenViBE::CIdentifier m_oPairwiseDecisionIdentifier             = OV_UndefinedIdentifier;

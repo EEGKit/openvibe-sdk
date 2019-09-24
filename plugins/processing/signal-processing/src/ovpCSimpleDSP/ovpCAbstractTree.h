@@ -8,8 +8,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <boost/spirit/include/classic_core.hpp>
-#include <boost/spirit/include/classic_symbols.hpp>
 #include <boost/spirit/include/classic_ast.hpp>
 
 #include <cstdlib>

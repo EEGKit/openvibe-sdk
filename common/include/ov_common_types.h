@@ -17,7 +17,7 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	//typedef bool boolean;                   ///< Boolean
+	//typedef bool boolean;					///< Boolean
 
 	//___________________________________________________________________//
 	//                                                                   //
@@ -25,15 +25,15 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	//typedef std::uint64_t uint64;          ///< 64 bits unsigned integer
-	//typedef std::uint32_t uint32;          ///< 32 bits unsigned integer
-	//typedef std::uint16_t uint16;          ///< 16 bits unsigned integer
-	//typedef std::uint8_t uint8;            ///< 8 bits unsigned integer
+	//typedef std::uint64_t uint64;			///< 64 bits unsigned integer
+	//typedef std::uint32_t uint32;			///< 32 bits unsigned integer
+	//typedef std::uint16_t uint16;			///< 16 bits unsigned integer
+	//typedef std::uint8_t uint8;  			///< 8 bits unsigned integer
 
-	//typedef std::int64_t int64;            ///< 64 bits signed integer
-	//typedef std::int int32;            ///< 32 bits signed integer
-	//typedef std::int16_t int16;            ///< 16 bits signed integer
-	//typedef std::int8_t int8;              ///< 8 bits signed integer
+	//typedef std::int64_t int64;  			///< 64 bits signed integer
+	//typedef std::int int32;      			///< 32 bits signed integer
+	//typedef std::int16_t int16;  			///< 16 bits signed integer
+	//typedef std::int8_t int8;    			///< 8 bits signed integer
 
 	//___________________________________________________________________//
 	//                                                                   //
@@ -41,8 +41,8 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	typedef void* pointer;                  ///< untyped pointer
-	typedef unsigned long int pointer_size; ///< addressing range
+	//typedef void* pointer;					///< untyped pointer
+	//typedef unsigned long int pointer_size;	///< addressing range
 
 	//___________________________________________________________________//
 	//                                                                   //
@@ -50,9 +50,9 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	//typedef float float;                  ///< 32 bits floating point
-	//typedef double double;                 ///< 64 bits floating point
-	//typedef long double float80;            ///< 80 bits floating point
+	//typedef float float32;					///< 32 bits floating point
+	//typedef double float64;				///< 64 bits floating point
+	//typedef long double float80;			///< 80 bits floating point
 
 	//___________________________________________________________________//
 	//                                                                   //

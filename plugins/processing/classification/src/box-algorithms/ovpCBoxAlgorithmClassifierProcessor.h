@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
 
 		protected:
-			virtual bool loadClassifier(const char* sFilename);
+			bool loadClassifier(const char* sFilename);
 
 		private:
 

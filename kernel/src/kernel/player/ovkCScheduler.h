@@ -26,29 +26,29 @@ namespace OpenViBE
 		{
 		public:
 
-			CScheduler(const IKernelContext& ctx, CPlayer& rPlayer);
+			CScheduler(const IKernelContext& ctx, CPlayer& player);
 			~CScheduler() override;
 
-			virtual bool setScenario(const CIdentifier& scenarioID);
-			virtual bool setFrequency(uint64_t ui64Frequency);
+			bool setScenario(const CIdentifier& scenarioID);
+			bool setFrequency(uint64_t frequency);
 
-			virtual bool isHoldingResources() const;
+			bool isHoldingResources() const;
 
-			virtual SchedulerInitializationCode initialize();
-			virtual bool uninitialize();
-			virtual bool loop();
+			SchedulerInitializationCode initialize();
+			bool uninitialize();
+			bool loop();
 
-			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& boxId, uint32_t index);
-			virtual uint64_t getCurrentTime() const;
-			virtual uint64_t getCurrentLateness() const;
-			virtual uint64_t getFrequency() const;
-			virtual uint64_t getStepDuration() const;
-			virtual double getCPUUsage() const;
-			virtual double getFastForwardMaximumFactor() const;
+			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, uint32_t index);
+			uint64_t getCurrentTime() const { return m_ui64CurrentTime; }
+			uint64_t getCurrentLateness() const;
+			uint64_t getFrequency() const { return m_ui64Frequency; }
+			uint64_t getStepDuration() const { return m_ui64StepDuration; }
+			double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
+			double getFastForwardMaximumFactor() const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler)
 
-			CPlayer& getPlayer() { return m_rPlayer; }
+			CPlayer& getPlayer() const { return m_rPlayer; }
 
 		protected:
 

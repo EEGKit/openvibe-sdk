@@ -50,9 +50,9 @@ using namespace Plugins;
 //___________________________________________________________________//
 //                                                                   //
 
-CScheduler::CScheduler(const IKernelContext& ctx, CPlayer& rPlayer)
+CScheduler::CScheduler(const IKernelContext& ctx, CPlayer& player)
 	: TKernelObject<IKernelObject>(ctx)
-	  , m_rPlayer(rPlayer)
+	  , m_rPlayer(player)
 	  , m_oScenarioIdentifier(OV_UndefinedIdentifier) {}
 
 CScheduler::~CScheduler() { this->uninitialize(); }
@@ -84,14 +84,14 @@ bool CScheduler::setScenario(const CIdentifier& scenarioID)
 	return true;
 }
 
-bool CScheduler::setFrequency(const uint64_t ui64Frequency)
+bool CScheduler::setFrequency(const uint64_t frequency)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
 
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
-	m_ui64Frequency    = ui64Frequency;
-	m_ui64StepDuration = (1LL << 32) / ui64Frequency;
+	m_ui64Frequency    = frequency;
+	m_ui64StepDuration = (1LL << 32) / frequency;
 	return true;
 }
 
@@ -220,7 +220,7 @@ bool CScheduler::flattenScenario()
 			std::string l_sMetaboxDirectoryPath = ".";
 			l_rMetaboxScenarioInstance.addSetting("Player_MetaboxScenarioFilename", OV_TypeId_Filename, l_sMetaboxScenarioPath);
 
-			size_t l_uiLastSlashPosition = l_sMetaboxFilename.rfind("/");
+			const size_t l_uiLastSlashPosition = l_sMetaboxFilename.rfind("/");
 			if (l_uiLastSlashPosition != std::string::npos) { l_sMetaboxDirectoryPath = l_sMetaboxFilename.substr(0, l_uiLastSlashPosition).c_str(); }
 
 			l_rMetaboxScenarioInstance.addSetting("Player_MetaboxScenarioDirectory", OV_TypeId_Foldername, l_sMetaboxDirectoryPath.c_str());
@@ -435,7 +435,7 @@ SchedulerInitializationCode CScheduler::initialize()
 				{
 					if (l_pBox->hasAttribute(OV_AttributeId_Box_Priority))
 					{
-						int p = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+						const int p = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
 
 						if (p < 0) { l_iPriority = -int((ypositions.size() << 15) + xpositions.size()) + p; }
 						else { l_iPriority = p; }
@@ -445,8 +445,8 @@ SchedulerInitializationCode CScheduler::initialize()
 						int x = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString());
 						int y = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString());
 
-						int xindex  = int(std::distance(xpositions.begin(), xpositions.find(x)));
-						int yindex  = int(std::distance(ypositions.begin(), ypositions.find(y)));
+						const int xindex  = int(std::distance(xpositions.begin(), xpositions.find(x)));
+						const int yindex  = int(std::distance(ypositions.begin(), ypositions.find(y)));
 						l_iPriority = - ((yindex << 15) + xindex);
 					}
 				}
@@ -621,7 +621,7 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& boxId, const uint32_t index)
+bool CScheduler::sendInput(const CChunk& chunk, const CIdentifier& boxId, const uint32_t index)
 {
 	IBox* l_pBox = m_pScenario->getBoxDetails(boxId);
 	if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
@@ -645,21 +645,12 @@ bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& boxId, const
 
 	// TODO: check if index does not overflow
 
-	m_vSimulatedBoxInput[boxId][index].push_back(rChunk);
+	m_vSimulatedBoxInput[boxId][index].push_back(chunk);
 
 	return true;
 }
 
-uint64_t CScheduler::getCurrentTime() const { return m_ui64CurrentTime; }
-
 uint64_t CScheduler::getCurrentLateness() const { return m_rPlayer.getCurrentSimulatedLateness(); }
-
-uint64_t CScheduler::getFrequency() const { return m_ui64Frequency; }
-
-uint64_t CScheduler::getStepDuration() const { return m_ui64StepDuration; }
-
-double CScheduler::getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
-
 double CScheduler::getFastForwardMaximumFactor() const { return m_rPlayer.getFastForwardMaximumFactor(); }
 
 void CScheduler::handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception)

@@ -6,7 +6,6 @@
 
 #include <ebml/CWriter.h>
 #include <ebml/CWriterHelper.h>
-#include <ebml/CReader.h>
 
 #include <cstdio>
 

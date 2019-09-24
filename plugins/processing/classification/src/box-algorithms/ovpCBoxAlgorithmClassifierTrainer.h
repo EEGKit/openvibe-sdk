@@ -52,11 +52,10 @@ namespace OpenViBEPlugins
 				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual bool train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t startIdx, size_t stopIdx);
-			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t uiStartIndex,
-									   size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
-			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
-			virtual bool balanceDataset();
+			bool train(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx);
+			double getAccuracy(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx, OpenViBE::CMatrix& confusionMatrix);
+			bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
+			bool balanceDataset();
 
 		private:
 			bool saveConfiguration();
@@ -67,7 +66,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
 			uint64_t m_ui64TrainStimulation                  = 0;
-			uint64_t m_nPartition                    = 0;
+			uint64_t m_nPartition                            = 0;
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_oStimulationDecoder;
 			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_vFeatureVectorDecoder;

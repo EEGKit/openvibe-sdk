@@ -95,25 +95,24 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 		// 2. Loop until end of file, reading it
 		//    and sending what is read to the XML parser
 		// 3. Close the settings file
-		ifstream l_oFile;
-		FS::Files::openIFStream(l_oFile, l_sSettingOverrideFilenameFinal.toASCIIString(), ios::binary);
-		if (l_oFile.is_open())
+		ifstream file;
+		FS::Files::openIFStream(file, l_sSettingOverrideFilenameFinal.toASCIIString(), ios::binary);
+		if (file.is_open())
 		{
-			char l_sBuffer[1024];
-			std::streamoff l_iBufferLen = 0;
-			bool l_bStatusOk            = true;
-			l_oFile.seekg(0, ios::end);
-			std::streamoff l_iFileLen = l_oFile.tellg();
-			l_oFile.seekg(0, ios::beg);
-			while (l_iFileLen && l_bStatusOk)
+			char buffer[1024];
+			bool statusOk = true;
+			file.seekg(0, ios::end);
+			std::streamoff fileLen = file.tellg();
+			file.seekg(0, ios::beg);
+			while (fileLen && statusOk)
 			{
 				// File length is always positive so this is safe
-				l_iBufferLen = (unsigned(l_iFileLen) > sizeof(l_sBuffer) ? sizeof(l_sBuffer) : l_iFileLen);
-				l_oFile.read(l_sBuffer, l_iBufferLen);
-				l_iFileLen -= l_iBufferLen;
-				l_bStatusOk = l_pReader->processData(l_sBuffer, l_iBufferLen);
+				const std::streamoff bufferLen = (unsigned(fileLen) > sizeof(buffer) ? sizeof(buffer) : fileLen);
+				file.read(buffer, bufferLen);
+				fileLen -= bufferLen;
+				statusOk = l_pReader->processData(buffer, bufferLen);
 			}
-			l_oFile.close();
+			file.close();
 
 			// message
 			if (m_ui32SettingIndex == box.getSettingCount())
@@ -122,21 +121,21 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 
 				for (uint32_t i = 0; i < m_ui32SettingIndex; i++)
 				{
-					CString l_sSettingName     = "";
-					CString l_sRawSettingValue = "";
+					CString settingName     = "";
+					CString rawSettingvalue = "";
 
-					box.getSettingName(i, l_sSettingName);
-					box.getSettingValue(i, l_sRawSettingValue);
-					CString l_sSettingValue = l_sRawSettingValue;
+					box.getSettingName(i, settingName);
+					box.getSettingValue(i, rawSettingvalue);
+					CString l_sSettingValue = rawSettingvalue;
 					l_sSettingValue         = m_pConfigurationManager->expand(l_sSettingValue);
 					CIdentifier settingType;
 					box.getSettingType(i, settingType);
 					if (!checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))
 					{
-						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
+						const auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
 						cleanup();
 						OV_ERROR(
-							"<" << box.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue <<
+							"<" << box.getName() << "> The following value: [" << rawSettingvalue << "] expanded as [" << l_sSettingValue <<
 							"] given as setting is not a valid [" << settingTypeName << "] value.",
 							ErrorType::BadArgument, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 					}

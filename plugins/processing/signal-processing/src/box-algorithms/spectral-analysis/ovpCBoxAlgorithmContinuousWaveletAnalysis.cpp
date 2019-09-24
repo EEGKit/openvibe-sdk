@@ -224,11 +224,10 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				{
 					oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c));
 				}
-				double frequencyValue = -1;
 				for (size_t scaleIndex = 0; scaleIndex < m_iScaleCount_J; ++scaleIndex)
 				{
-					const double scaleValue = m_oWaveletTransform->scale[scaleIndex];
-					frequencyValue          = SigProSTD::wavelet_scale2freq(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, scaleValue);
+					const double scaleValue     = m_oWaveletTransform->scale[scaleIndex];
+					const double frequencyValue = SigProSTD::wavelet_scale2freq(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, scaleValue);
 
 					std::string frequencyString = std::to_string(frequencyValue);
 					oMatrix->setDimensionLabel(1, scaleIndex, frequencyString.c_str());

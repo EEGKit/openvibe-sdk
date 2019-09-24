@@ -253,7 +253,7 @@ uint32_t CSimulatedBox::getInputChunkCount(const uint32_t index) const
 	return uint32_t(m_vInput[index].size());
 }
 
-bool CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize,
+bool CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& startTime, uint64_t& rEndTime, uint64_t& rChunkSize,
 								  const uint8_t*& rpChunkBuffer) const
 {
 	OV_ERROR_UNLESS_KRF(inputIdx < m_vInput.size(),
@@ -264,7 +264,7 @@ bool CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkI
 						ErrorType::OutOfBound);
 
 	const CChunk& l_rChunk = m_vInput[inputIdx][chunkIdx];
-	rStartTime             = l_rChunk.getStartTime();
+	startTime             = l_rChunk.getStartTime();
 	rEndTime               = l_rChunk.getEndTime();
 	rChunkSize             = l_rChunk.getBuffer().getSize();
 	rpChunkBuffer          = l_rChunk.getBuffer().getDirectPointer();

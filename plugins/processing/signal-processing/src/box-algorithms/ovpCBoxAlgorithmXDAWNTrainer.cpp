@@ -30,7 +30,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 		fclose(file);
 	}
 
-	int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	const int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
@@ -80,7 +80,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		{
 			for (uint64_t j = 0; j < m_StimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
 			{
-				uint64_t stimulationId = m_StimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
+				const uint64_t stimulationId = m_StimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
 
 				if (stimulationId == m_TrainStimulationId)
 				{
@@ -105,8 +105,6 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		Eigen::MatrixXd C[2]; // Covariance matrices
 		uint32_t n[2];
 		uint32_t nChannel = 0;
-		uint32_t nSample  = 0;
-		uint32_t samplingRate = 0;
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
 
@@ -123,8 +121,8 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 				IMatrix* matrix = m_rSignalDecoder.getOutputMatrix();
 				nChannel    = matrix->getDimensionSize(0);
-				nSample     = matrix->getDimensionSize(1);
-				samplingRate    = uint32_t(m_rSignalDecoder.getOutputSamplingRate());
+				const uint32_t nSample = matrix->getDimensionSize(1);
+				const uint32_t samplingRate = uint32_t(m_rSignalDecoder.getOutputSamplingRate());
 
 				if (m_rSignalDecoder.isHeaderReceived())
 				{
@@ -207,12 +205,12 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		// Grabs usefull values
 
-		size_t sampleCountSession = X[0].cols();
-		size_t sampleCountERP     = X[1].cols();
+		const size_t sampleCountSession = X[0].cols();
+		const size_t sampleCountERP     = X[1].cols();
 
 		// Now we compute matrix D
 
-		Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
+		const Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
 		Eigen::MatrixXd D  = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
 		for (uint32_t sampleIndex : ERPSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
@@ -224,11 +222,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		// Solves generalized eigen decomposition
 
-		Eigen::GeneralizedSelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(C[0].selfadjointView<Eigen::Lower>(), C[1].selfadjointView<Eigen::Lower>());
+		const Eigen::GeneralizedSelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(C[0].selfadjointView<Eigen::Lower>(), C[1].selfadjointView<Eigen::Lower>());
 
 		if (eigenSolver.info() != Eigen::Success)
 		{
-			enum Eigen::ComputationInfo error = eigenSolver.info();
+			const enum Eigen::ComputationInfo error = eigenSolver.info();
 			const char* errorMessage          = "unknown";
 
 			switch (error)

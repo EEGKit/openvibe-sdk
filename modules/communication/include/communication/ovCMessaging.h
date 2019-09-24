@@ -95,12 +95,12 @@ namespace Communication
 		 * \retval True if the end message from the client is received.
 		 * \retval False if the end message from the client is not received.
 		 */
-		bool isEndReceived();
+		virtual bool isEndReceived();
 
 		/**
 		 * \brief Get the time.
 		 */
-		uint64_t getTime();
+		virtual uint64_t getTime();
 
 	protected:
 
@@ -238,7 +238,7 @@ namespace Communication
 		 * \retval True if a sync message is received.
 		 * \retval False if no sync message was received.
 		 */
-		bool waitForSyncMessage();
+		virtual bool waitForSyncMessage();
 
 	private:
 
