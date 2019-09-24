@@ -2,7 +2,7 @@
 
 #include <system/ovCMemory.h>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -171,9 +171,9 @@ bool CBoxAlgorithmSignalDecimation::process()
 						oBuffer                 = ip_pMatrix->getBuffer();
 						m_ui32OutputSampleIndex = 0;
 						m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-						const uint64_t tStartSample = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(
+						const uint64_t tStartSample = m_ui64StartTimeBase + TimeArithmetics::sampleCountToTime(
 														  m_ui64OutputSamplingFrequency, m_nTotalSample);
-						const uint64_t tEndSample = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(
+						const uint64_t tEndSample = m_ui64StartTimeBase + TimeArithmetics::sampleCountToTime(
 														m_ui64OutputSamplingFrequency, m_nTotalSample + m_ui32OutputSampleCountPerSentBlock);
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_ui32OutputSampleCountPerSentBlock;

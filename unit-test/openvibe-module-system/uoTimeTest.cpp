@@ -29,7 +29,7 @@
 #include <chrono>
 
 #include "system/ovCTime.h"
-#include "openvibe/ovITimeArithmetics.h"
+#include "openvibe/ovTimeArithmetics.h"
 
 #include "ovtAssert.h"
 
@@ -86,8 +86,8 @@ uint32_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
 			|| resultTimes[i] > (expectedTimes[i] + delta + epsilon))
 		{
 			std::cerr << "WARNING: Failure to sleep the right amount of time: [expected|result] = "
-					<< OpenViBE::ITimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
-					<< OpenViBE::ITimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
+					<< OpenViBE::TimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
+					<< OpenViBE::TimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
 			warningCount++;
 		}
 	}
@@ -190,14 +190,14 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	// calibrate sleep function
 	const auto deltaTime = calibrateSleep(1000, Time::zsleep, Time::zgetTime);
 
-	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::ITimeArithmetics::timeToSeconds(deltaTime) << std::endl;
+	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::TimeArithmetics::timeToSeconds(deltaTime) << std::endl;
 
 	const auto resultSleepData = testSleep(expectedSleepData, Time::zsleep, Time::zgetTime);
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
 	const uint32_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime,
-															OpenViBE::ITimeArithmetics::secondsToTime(0.005));
+															OpenViBE::TimeArithmetics::secondsToTime(0.005));
 
 	// relax this threshold in case there is some recurrent problems
 	// according to the runtime environment
@@ -208,7 +208,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	//
 
 	// the sample count guess was found in an empiric way
-	auto resultGetTimeData = testClock(OpenViBE::ITimeArithmetics::secondsToTime(0.5), 500000, Time::zgetTime);
+	auto resultGetTimeData = testClock(OpenViBE::TimeArithmetics::secondsToTime(0.5), 500000, Time::zgetTime);
 
 	OVT_ASSERT(std::get<0>(resultGetTimeData), "Failure in zgetTime() test: the clock is not monotonic");
 

@@ -1,4 +1,4 @@
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 #include "ovkCPlayer.h"
 #include "ovkCSimulatedBox.h"
@@ -272,7 +272,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 	{
 			// Calls a single controller loop and goes back to pause state
 		case PlayerStatus_Step:
-			m_ui64CurrentTimeToReach += ITimeArithmetics::sampleCountToTime(m_oScheduler.getFrequency(), 1LL);
+			m_ui64CurrentTimeToReach += TimeArithmetics::sampleCountToTime(m_oScheduler.getFrequency(), 1LL);
 			l_bHasTimeToReach = true;
 			m_eStatus         = PlayerStatus_Pause;
 			break;

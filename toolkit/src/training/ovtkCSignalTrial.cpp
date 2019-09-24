@@ -2,7 +2,7 @@
 
 #include <system/ovCMemory.h>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace OpenViBEToolkit;
@@ -107,7 +107,7 @@ CIdentifier CSignalTrial::getLabelIdentifier() const { return m_oLabelIdentifier
 
 uint32_t CSignalTrial::getSampleCount() const { return m_nSample; }
 
-uint64_t CSignalTrial::getDuration() const { return (m_ui32SamplingRate ? ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_nSample) : 0); }
+uint64_t CSignalTrial::getDuration() const { return (m_ui32SamplingRate ? TimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_nSample) : 0); }
 
 double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) const
 {

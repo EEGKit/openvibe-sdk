@@ -27,7 +27,7 @@
 
 #include "ovCIdentifier.h"
 #include "ov_common_types.h"
-#include "ovITimeArithmetics.h"
+#include "ovTimeArithmetics.h"
 
 namespace OpenViBE
 {
@@ -66,7 +66,7 @@ namespace OpenViBE
 		std::stringstream ss;
 		ss.precision(3);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
+		ss << TimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
 		ss << " sec";
 
 		os << ss.str();

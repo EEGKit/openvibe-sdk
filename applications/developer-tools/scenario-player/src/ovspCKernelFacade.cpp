@@ -25,7 +25,7 @@
 #include <cassert>
 
 #include <system/ovCTime.h>
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 #include "ovspCCommand.h"
 #include "ovsp_base.h"
@@ -334,14 +334,14 @@ namespace OpenViBE
 
 			// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 			// because it could overflow
-			double boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
+			double boundedMaxExecutionTimeInS = TimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
 
 			uint64_t maxExecutionTimeInFixedPoint;
 			if (command.maximumExecutionTime &&
 				command.maximumExecutionTime.get() > 0 &&
 				command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
 			{
-				maxExecutionTimeInFixedPoint = ITimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
+				maxExecutionTimeInFixedPoint = TimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
 			}
 			else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "ov_directories_string.h"
 #include "ovCString.h"
 

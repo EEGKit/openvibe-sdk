@@ -7,16 +7,9 @@
 
 #include <toolkit/ovtk_all.h>
 
-#include <boost/spirit/include/classic_core.hpp>
-#include <boost/spirit/include/classic_symbols.hpp>
 #include <boost/spirit/include/classic_ast.hpp>
 
-#include <cstdlib>
-#include <cstring>
-#include <cstdio>
 #include <vector>
-
-using namespace boost::spirit;
 
 typedef char const* iterator_t;
 typedef tree_match<iterator_t> parse_tree_match_t;
@@ -36,7 +29,7 @@ union functionContext
 };
 
 //! Type of the functions in the function stack generated from the equation.
-typedef void (*functionPointer)(double*& pStack, functionContext& oContext);
+typedef void (*functionPointer)(double*& stack, functionContext& oContext);
 
 class CEquationParser
 {
@@ -89,11 +82,12 @@ public:
 
 	/**
 	* Constructor.
-	* \param oPlugin
-	* \param ppVariable Pointer to the data known as X in the equation.
-	* \param ui32VariableCount
+	* \param plugin
+	* \param variable Pointer to the data known as X in the equation.
+	* \param nVariable
 	*/
-	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount);
+	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, uint32_t nVariable)
+		: m_ppVariable(variable), m_nVariable(nVariable), m_oParentPlugin(plugin) {}
 
 	//! Destructor.
 	~CEquationParser();
@@ -106,9 +100,9 @@ public:
 	/**
 	* Compiles the given equation, and generates the successive function calls to achieve the
 	* same result if needed (depends on m_ui64TreeCategory).
-	* \param pEquation The equation to use.
+	* \param equation The equation to use.
 	*/
-	bool compileEquation(const char* pEquation);
+	bool compileEquation(const char* equation);
 
 	void push_op(uint64_t ui64Operator);
 	void push_value(double f64Value);
@@ -160,43 +154,43 @@ private:
 
 public:
 
-	static void op_neg(double*& pStack, functionContext& pContext);
-	static void op_add(double*& pStack, functionContext& pContext);
-	static void op_div(double*& pStack, functionContext& pContext);
-	static void op_sub(double*& pStack, functionContext& pContext);
-	static void op_mul(double*& pStack, functionContext& pContext);
+	static void op_neg(double*& stack, functionContext& ctx);
+	static void op_add(double*& stack, functionContext& ctx);
+	static void op_div(double*& stack, functionContext& ctx);
+	static void op_sub(double*& stack, functionContext& ctx);
+	static void op_mul(double*& stack, functionContext& ctx);
 
-	static void op_power(double*& pStack, functionContext& pContext);
+	static void op_power(double*& stack, functionContext& ctx);
 
-	static void op_abs(double*& pStack, functionContext& pContext);
-	static void op_acos(double*& pStack, functionContext& pContext);
-	static void op_asin(double*& pStack, functionContext& pContext);
-	static void op_atan(double*& pStack, functionContext& pContext);
-	static void op_ceil(double*& pStack, functionContext& pContext);
-	static void op_cos(double*& pStack, functionContext& pContext);
-	static void op_exp(double*& pStack, functionContext& pContext);
-	static void op_floor(double*& pStack, functionContext& pContext);
-	static void op_log(double*& pStack, functionContext& pContext);
-	static void op_log10(double*& pStack, functionContext& pContext);
-	static void op_rand(double*& pStack, functionContext& pContext);
-	static void op_sin(double*& pStack, functionContext& pContext);
-	static void op_sqrt(double*& pStack, functionContext& pContext);
-	static void op_tan(double*& pStack, functionContext& pContext);
+	static void op_abs(double*& stack, functionContext& ctx);
+	static void op_acos(double*& stack, functionContext& ctx);
+	static void op_asin(double*& stack, functionContext& ctx);
+	static void op_atan(double*& stack, functionContext& ctx);
+	static void op_ceil(double*& stack, functionContext& ctx);
+	static void op_cos(double*& stack, functionContext& ctx);
+	static void op_exp(double*& stack, functionContext& ctx);
+	static void op_floor(double*& stack, functionContext& ctx);
+	static void op_log(double*& stack, functionContext& ctx);
+	static void op_log10(double*& stack, functionContext& ctx);
+	static void op_rand(double*& stack, functionContext& ctx);
+	static void op_sin(double*& stack, functionContext& ctx);
+	static void op_sqrt(double*& stack, functionContext& ctx);
+	static void op_tan(double*& stack, functionContext& ctx);
 
-	static void op_if_then_else(double*& pStack, functionContext& pContext);
+	static void op_if_then_else(double*& stack, functionContext& ctx);
 
-	static void op_cmp_lower(double*& pStack, functionContext& pContext);
-	static void op_cmp_greater(double*& pStack, functionContext& pContext);
-	static void op_cmp_lower_equal(double*& pStack, functionContext& pContext);
-	static void op_cmp_greater_equal(double*& pStack, functionContext& pContext);
-	static void op_cmp_equal(double*& pStack, functionContext& pContext);
-	static void op_cmp_not_equal(double*& pStack, functionContext& pContext);
+	static void op_cmp_lower(double*& stack, functionContext& ctx);
+	static void op_cmp_greater(double*& stack, functionContext& ctx);
+	static void op_cmp_lower_equal(double*& stack, functionContext& ctx);
+	static void op_cmp_greater_equal(double*& stack, functionContext& ctx);
+	static void op_cmp_equal(double*& stack, functionContext& ctx);
+	static void op_cmp_not_equal(double*& stack, functionContext& ctx);
 
-	static void op_bool_and(double*& pStack, functionContext& pContext);
-	static void op_bool_or(double*& pStack, functionContext& pContext);
-	static void op_bool_not(double*& pStack, functionContext& pContext);
-	static void op_bool_xor(double*& pStack, functionContext& pContext);
+	static void op_bool_and(double*& stack, functionContext& ctx);
+	static void op_bool_or(double*& stack, functionContext& ctx);
+	static void op_bool_not(double*& stack, functionContext& ctx);
+	static void op_bool_xor(double*& stack, functionContext& ctx);
 
-	static void op_loadVal(double*& pStack, functionContext& pContext);
-	static void op_loadVar(double*& pStack, functionContext& pContext);
+	static void op_loadVal(double*& stack, functionContext& ctx);
+	static void op_loadVar(double*& stack, functionContext& ctx);
 };

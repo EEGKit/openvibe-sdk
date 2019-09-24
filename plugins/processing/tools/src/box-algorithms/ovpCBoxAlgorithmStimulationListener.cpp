@@ -1,5 +1,5 @@
 #include "ovpCBoxAlgorithmStimulationListener.h"
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -76,7 +76,7 @@ bool CBoxAlgorithmStimulationListener::process()
 							.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "])");
 				}
 				/*
-				if(ITimeArithmetics::timeToSeconds(boxContext.getInputChunkStartTime(i, j)) > 234 && op_pStimulationSet->getStimulationCount()==0)
+				if(TimeArithmetics::timeToSeconds(boxContext.getInputChunkStartTime(i, j)) > 234 && op_pStimulationSet->getStimulationCount()==0)
 				{
 					this->getLogManager() << LogLevel_Info << "Chunk is empty at [" << time64(boxContext.getInputChunkStartTime(i, j)) << ", " 
 										  << time64(boxContext.getInputChunkEndTime(i, j)) << "]\n";

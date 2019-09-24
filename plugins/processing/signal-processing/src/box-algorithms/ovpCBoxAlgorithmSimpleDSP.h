@@ -1,6 +1,5 @@
 #pragma once
 
-#include <system/ovCTime.h>
 #include <toolkit/ovtk_all.h>
 
 #include "../ovpCSimpleDSP/ovpCEquationParser.h"

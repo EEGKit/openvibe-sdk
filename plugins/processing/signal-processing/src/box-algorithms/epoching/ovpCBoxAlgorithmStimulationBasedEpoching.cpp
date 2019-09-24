@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <limits>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 #include "ovpCBoxAlgorithmStimulationBasedEpoching.h"
 
 using namespace OpenViBE;
@@ -25,10 +25,10 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 	const double epochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_StimulationId          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	m_EpochDuration = ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds);
+	m_EpochDuration = TimeArithmetics::secondsToTime(m_EpochDurationInSeconds);
 
 	const int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
-	m_EpochOffset             = epochOffsetSign * int64_t(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
+	m_EpochOffset             = epochOffsetSign * int64_t(TimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
 	m_LastReceivedStimulationDate   = 0;
 	m_LastStimulationChunkStartTime = 0;
@@ -94,7 +94,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								ErrorType::Internal);
 
 			m_SampleCountPerOutputEpoch = uint32_t(
-				ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
+				TimeArithmetics::timeToSampleCount(m_SamplingRate, TimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
 
 			outputMatrix->setDimensionCount(2);
 			outputMatrix->setDimensionSize(0, m_nChannel);
@@ -194,18 +194,18 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 			// If we have found a chunk that contains samples in the current epoch
 			if (cachedChunkIndex != m_CachedChunks.size())
 			{
-				uint64_t currentSampleIndexInInputBuffer = ITimeArithmetics::timeToSampleCount(m_SamplingRate, currentEpochStartTime - chunkStartTime);
+				uint64_t currentSampleIndexInInputBuffer = TimeArithmetics::timeToSampleCount(m_SamplingRate, currentEpochStartTime - chunkStartTime);
 
 				while (currentSampleIndexInOutputBuffer < m_SampleCountPerOutputEpoch)
 				{
-					const auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(
+					const auto currentOutputSampleTime = currentEpochStartTime + TimeArithmetics::sampleCountToTime(
 															 m_SamplingRate, currentSampleIndexInOutputBuffer);
 
 					// If we handle non-dyadic sampling rates then we do not have a guarantee that all chunks will be
 					// dated with exact values. We add a bit of wiggle room around the incoming chunks to consider
 					// whether a sample is in them or not. This wiggle room will be of half of the sample duration
 					// on each side.
-					const uint64_t chunkTimeTolerance = ITimeArithmetics::sampleCountToTime(m_SamplingRate, 1) / 2;
+					const uint64_t chunkTimeTolerance = TimeArithmetics::sampleCountToTime(m_SamplingRate, 1) / 2;
 					if (currentSampleIndexInInputBuffer == m_SampleCountPerInputBuffer)
 					{
 						// advance to beginning of the next cached chunk

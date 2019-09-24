@@ -117,10 +117,10 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet)
 
-		// @deprecated please use OpenViBE::ITimeArithmetics::sampleCountToTime()
+		// @deprecated please use OpenViBE::TimeArithmetics::sampleCountToTime()
 		static uint64_t sampleIndexToTime(const uint32_t samplingRate, const uint64_t index) { return ((index << 32) + (samplingRate - 1)) / samplingRate; }
 
-		// @deprecated please use OpenViBE::ITimeArithmetics::timeToSampleCount()
+		// @deprecated please use OpenViBE::TimeArithmetics::timeToSampleCount()
 		static uint64_t timeToSampleIndex(const uint32_t samplingRate, const uint64_t time) { return (time * samplingRate) >> 32; }
 	};
 } // namespace OpenViBE

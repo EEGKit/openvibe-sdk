@@ -143,7 +143,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	bool clientConnected    = false;
 	m_HasReceivedEndMessage = false;
 
-	m_AcceptTimeout = ITimeArithmetics::secondsToTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
+	m_AcceptTimeout = TimeArithmetics::secondsToTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
 	m_IsGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
 	while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
@@ -177,7 +177,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		if (!m_Messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	}
 
-	m_SyncTimeout  = ITimeArithmetics::secondsToTime(0.0625);
+	m_SyncTimeout  = TimeArithmetics::secondsToTime(0.0625);
 	m_LastSyncTime = System::Time::zgetTime();
 	return true;
 }

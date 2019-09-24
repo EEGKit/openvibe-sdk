@@ -8,7 +8,7 @@ namespace System
 	 * \class Time
 	 * \brief Static functions to handle time within the framework
 	 *
-	 * \note Please see openvibe/ovITimeArithmetics.h for conversion routines to/from OpenViBE fixed point time
+	 * \note Please see openvibe/ovTimeArithmetics.h for conversion routines to/from OpenViBE fixed point time
 	 *
 	 */
 	class System_API Time

@@ -1,4 +1,4 @@
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 #include <openvibe/ovExceptionHandler.h>
 
 #include "ovkCScheduler.h"
@@ -580,7 +580,7 @@ bool CScheduler::loop()
 
 	m_ui64Steps++;
 
-	m_ui64CurrentTime = m_ui64Steps * ITimeArithmetics::sampleCountToTime(m_ui64Frequency, 1LL);
+	m_ui64CurrentTime = m_ui64Steps * TimeArithmetics::sampleCountToTime(m_ui64Frequency, 1LL);
 
 	return l_bBoxProcessing;
 }

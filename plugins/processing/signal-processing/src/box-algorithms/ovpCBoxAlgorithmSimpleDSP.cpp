@@ -1,6 +1,6 @@
 #include "ovpCBoxAlgorithmSimpleDSP.h"
 
-#include <system/ovCMemory.h>
+#include <system/ovCTime.h>
 
 #include <iostream>
 #include <sstream>

@@ -2,7 +2,7 @@
 
 #include <system/ovCMemory.h>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 #include <cstdio>
 #include <iostream>
 #include <algorithm>
@@ -135,8 +135,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					if (m_OutputSampleIndex == m_OutputSampleCount) // An epoch has been totally filled !
 					{
 						// Calculates start and end time of output
-						const uint64_t oTStart = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch);
-						const uint64_t oTEnd = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch + m_OutputSampleCount);
+						const uint64_t oTStart = m_ReferenceTime + TimeArithmetics::sampleCountToTime(m_SamplingRate, m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch);
+						const uint64_t oTEnd = m_ReferenceTime + TimeArithmetics::sampleCountToTime(m_SamplingRate, m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch + m_OutputSampleCount);
 						m_OutputChunkIndex++;
 
 						// Writes epoch

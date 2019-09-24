@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-#include "openvibe/ovITimeArithmetics.h"
+#include "openvibe/ovTimeArithmetics.h"
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -173,18 +173,18 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 			{
 				if (m_oTypeIdentifier == OV_TypeId_StreamedMatrix || m_oTypeIdentifier == OV_TypeId_FeatureVector)
 				{
-					m_oFileStream << ITimeArithmetics::timeToSeconds(tStart);
+					m_oFileStream << TimeArithmetics::timeToSeconds(tStart);
 				}
 				else if (m_oTypeIdentifier == OV_TypeId_Signal)
 				{
 					const uint64_t l_ui64SamplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
 							getOutputSamplingRate();
-					const uint64_t l_ui64TimeOfNthSample = ITimeArithmetics::sampleCountToTime(l_ui64SamplingFrequency, s); // assuming chunk start is 0
+					const uint64_t l_ui64TimeOfNthSample = TimeArithmetics::sampleCountToTime(l_ui64SamplingFrequency, s); // assuming chunk start is 0
 					const uint64_t l_ui64SampleTime      = tStart + l_ui64TimeOfNthSample;
 
-					m_oFileStream << ITimeArithmetics::timeToSeconds(l_ui64SampleTime);
+					m_oFileStream << TimeArithmetics::timeToSeconds(l_ui64SampleTime);
 				}
-				else if (m_oTypeIdentifier == OV_TypeId_Spectrum) { m_oFileStream << ITimeArithmetics::timeToSeconds(tEnd); }
+				else if (m_oTypeIdentifier == OV_TypeId_Spectrum) { m_oFileStream << TimeArithmetics::timeToSeconds(tEnd); }
 				for (uint32_t c = 0; c < l_ui32NumChannels; c++)
 				{
 					m_oFileStream << m_sSeparator.toASCIIString() << l_pMatrix->getBuffer()[c * l_ui32NumSamples + s];
@@ -257,11 +257,11 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 					getOutputStimulationSet();
 			for (size_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
 			{
-				m_oFileStream << ITimeArithmetics::timeToSeconds(l_pStimulationSet->getStimulationDate(j))
+				m_oFileStream << TimeArithmetics::timeToSeconds(l_pStimulationSet->getStimulationDate(j))
 						<< m_sSeparator.toASCIIString()
 						<< l_pStimulationSet->getStimulationIdentifier(j)
 						<< m_sSeparator.toASCIIString()
-						<< ITimeArithmetics::timeToSeconds(l_pStimulationSet->getStimulationDuration(j))
+						<< TimeArithmetics::timeToSeconds(l_pStimulationSet->getStimulationDuration(j))
 						<< "\n";
 			}
 		}

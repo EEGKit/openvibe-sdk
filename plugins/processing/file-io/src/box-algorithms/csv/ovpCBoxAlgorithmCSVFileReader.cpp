@@ -5,7 +5,7 @@
 #include <vector>
 #include <cmath>  // std::ceil() on Linux
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -217,7 +217,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	if (m_pFile == nullptr) { OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_sFilename, ErrorType::Internal); }
 	//line buffer
 	char l_pLine[m_ui32bufferLen];
-	const double l_f64currentTime = ITimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
+	const double l_f64currentTime = TimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
 	//IBoxIO& boxContext=this->getDynamicBoxContext();
 
 	//if no line was read, read the first data line.
@@ -308,8 +308,8 @@ bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
 	}
 	else
 	{
-		m_ui64ChunkStartTime = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
-		m_ui64ChunkEndTime   = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
+		m_ui64ChunkStartTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
+		m_ui64ChunkEndTime   = TimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
 	}
 
 	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64ChunkStartTime, m_ui64ChunkEndTime);
@@ -337,13 +337,13 @@ bool CBoxAlgorithmCSVFileReader::process_stimulation()
 		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == 3, "Invalid data row length: must be 3 for stimulation date, index and duration", ErrorType::BadParsing);
 
 		//stimulation date
-		const uint64_t l_ui64StimulationDate = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
+		const uint64_t l_ui64StimulationDate = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
 
 		//stimulation indices
 		const uint64_t l_ui64Stimulation = uint64_t(atof(m_vDataMatrix[i][1].c_str()));
 
 		//stimulation duration
-		const uint64_t l_ui64StimulationDuration = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][2].c_str()));
+		const uint64_t l_ui64StimulationDuration = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][2].c_str()));
 
 		ip_pStimulationSet->appendStimulation(l_ui64Stimulation, l_ui64StimulationDate, l_ui64StimulationDuration);
 	}
@@ -368,7 +368,7 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 	{
 		// This is the first chunk, find out the start time from the file
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
-		if (!m_bDoNotUseFileTime) { m_ui64ChunkEndTime = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str())); }
+		if (!m_bDoNotUseFileTime) { m_ui64ChunkEndTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str())); }
 
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
@@ -395,13 +395,13 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 	{
 		// We use time dictated by the sampling rate
 		m_ui64ChunkStartTime = m_ui64ChunkEndTime; // previous time end is current time start
-		m_ui64ChunkEndTime   = m_ui64ChunkStartTime + ITimeArithmetics::sampleCountToTime(m_ui64SamplingRate, m_ui32SamplesPerBuffer);
+		m_ui64ChunkEndTime   = m_ui64ChunkStartTime + TimeArithmetics::sampleCountToTime(m_ui64SamplingRate, m_ui32SamplesPerBuffer);
 	}
 	else
 	{
 		// We use time suggested by the last sample of the chunk
-		m_ui64ChunkStartTime = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
-		m_ui64ChunkEndTime   = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
+		m_ui64ChunkStartTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
+		m_ui64ChunkEndTime   = TimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
 	}
 
 	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64ChunkStartTime, m_ui64ChunkEndTime);
@@ -447,7 +447,7 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 			OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(iMatrix), "Error converting vector data to channel localisation", ErrorType::Internal);
 
 			m_pAlgorithmEncoder->encodeBuffer();
-			const uint64_t date = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
+			const uint64_t date = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
 			this->getDynamicBoxContext().markOutputAsReadyToSend(0, date, date);
 
 			//clear matrix
@@ -495,7 +495,7 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 
 		m_pAlgorithmEncoder->encodeBuffer();
 
-		const uint64_t date = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
+		const uint64_t date = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
 		boxContext.markOutputAsReadyToSend(0, date, date);
 	}
 
@@ -560,7 +560,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 			OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(iMatrix), "Error converting vector data to spectrum", ErrorType::Internal);
 
 			m_pAlgorithmEncoder->encodeBuffer();
-			const uint64_t l_ui64Date = ITimeArithmetics::secondsToTime(std::stod(m_vDataMatrix[0][0].c_str()));
+			const uint64_t l_ui64Date = TimeArithmetics::secondsToTime(std::stod(m_vDataMatrix[0][0].c_str()));
 			this->getDynamicBoxContext().markOutputAsReadyToSend(0, l_ui64Date - 1, l_ui64Date);
 
 			//clear matrix

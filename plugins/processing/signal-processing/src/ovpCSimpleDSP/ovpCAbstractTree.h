@@ -10,14 +10,8 @@
 
 #include <boost/spirit/include/classic_ast.hpp>
 
-#include <cstdlib>
-#include <cstring>
-#include <cstdio>
-
-#include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 class CEquationParser;
 

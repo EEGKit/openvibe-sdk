@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 #include <fs/Files.h>
 
@@ -61,7 +61,7 @@ void CLogListenerFile::log(const time64 value)
 {
 	if (m_bTimeInSeconds)
 	{
-		double l_f64Time = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
+		double l_f64Time = TimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(m_ui64TimePrecision);
 		ss.setf(std::ios::fixed, std::ios::floatfield);

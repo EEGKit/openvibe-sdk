@@ -27,7 +27,7 @@
 #include <cmath>
 #include <gtest/gtest.h>
 
-#include "openvibe/ovITimeArithmetics.h"
+#include "openvibe/ovTimeArithmetics.h"
 
 using namespace OpenViBE;
 
@@ -77,7 +77,7 @@ TEST(time_arithmetic_test_case, seconds_to_fixed_to_seconds)
 	// test conversion second -> fixed point -> second
 	for (auto testTimeInSecond : timesToTestInSecond)
 	{
-		auto computedTimeInSecond = ITimeArithmetics::timeToSeconds(ITimeArithmetics::secondsToTime(testTimeInSecond));
+		auto computedTimeInSecond = TimeArithmetics::timeToSeconds(TimeArithmetics::secondsToTime(testTimeInSecond));
 
 		EXPECT_LT(std::abs(computedTimeInSecond - testTimeInSecond), timeTolerance);
 	}
@@ -89,7 +89,7 @@ TEST(time_arithmetic_test_case, fixed_to_seconds_to_fixed)
 	// test conversion fixed point -> second -> fixed point
 	for (auto testTimeInFixedPoint : timesToTestInFixedPoint)
 	{
-		auto computedTimeInFixedPoint = ITimeArithmetics::secondsToTime(ITimeArithmetics::timeToSeconds(testTimeInFixedPoint));
+		auto computedTimeInFixedPoint = TimeArithmetics::secondsToTime(TimeArithmetics::timeToSeconds(testTimeInFixedPoint));
 		EXPECT_EQ(computedTimeInFixedPoint, testTimeInFixedPoint);
 	}
 }
@@ -101,14 +101,14 @@ TEST(time_arithmetic_test_case, time_to_fixed_to_samples_to_fixed)
 	{
 		for (auto testTimeInSecond : timesToTestInSecond)
 		{
-			auto testTimeInFixedPoint = ITimeArithmetics::secondsToTime(testTimeInSecond);
+			auto testTimeInFixedPoint = TimeArithmetics::secondsToTime(testTimeInSecond);
 			// If the sample count would overflow an uint64_t we skip the test
 			if (std::log2(testSamplingRate) + std::log2(testTimeInFixedPoint) >= 64) { continue; }
-			auto computedTimeInFixedPoint = ITimeArithmetics::sampleCountToTime(testSamplingRate,
-																				ITimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint));
+			auto computedTimeInFixedPoint = TimeArithmetics::sampleCountToTime(testSamplingRate,
+																				TimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint));
 
 			uint64_t timeDifference = uint64_t(std::abs(int64_t(computedTimeInFixedPoint) - int64_t(testTimeInFixedPoint)));
-			EXPECT_LT(ITimeArithmetics::timeToSeconds(timeDifference), (1.0 / double(testSamplingRate)))
+			EXPECT_LT(TimeArithmetics::timeToSeconds(timeDifference), (1.0 / double(testSamplingRate)))
 			        << "Time difference too large between OV(" << testTimeInSecond << ") and "
 			        << "SCtoOV(" << testSamplingRate << ", OVtoSC(" << testSamplingRate << "," << testTimeInFixedPoint << "))";
 		}
@@ -122,7 +122,7 @@ TEST(time_arithmetic_test_case, samples_to_time_to_samples)
 	{
 		for (auto testSample : samplesToTest)
 		{
-			auto computedSampleCount = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::sampleCountToTime(testSamplingRate, testSample));
+			auto computedSampleCount = TimeArithmetics::timeToSampleCount(testSamplingRate, TimeArithmetics::sampleCountToTime(testSamplingRate, testSample));
 			EXPECT_EQ(testSample, computedSampleCount);
 		}
 	}
@@ -134,7 +134,7 @@ TEST(time_arithmetic_test_case, 1s_samples_to_samplig_rate)
 	// test time -> sample count for 1 second signal duration at given rates
 	for (auto testSamplingRate : samplingRatesToTest)
 	{
-		auto nSample = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::secondsToTime(1.0));
+		auto nSample = TimeArithmetics::timeToSampleCount(testSamplingRate, TimeArithmetics::secondsToTime(1.0));
 		EXPECT_EQ(nSample, testSamplingRate);
 	}
 }
@@ -145,7 +145,7 @@ TEST(time_arithmetic_test_case, legacy_epoching)
 	for (auto testEpochDuration : epochDurationsToTest)
 	{
 		auto legacyTime               = static_cast<unsigned long long>(testEpochDuration * (1LL << 32)); // Legacy code from stimulationBasedEpoching
-		auto computedTimeInFixedPoint = ITimeArithmetics::secondsToTime(testEpochDuration);
+		auto computedTimeInFixedPoint = TimeArithmetics::secondsToTime(testEpochDuration);
 
 		EXPECT_EQ(computedTimeInFixedPoint, legacyTime);
 	}

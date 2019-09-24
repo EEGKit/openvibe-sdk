@@ -5,7 +5,7 @@
 #include <cmath>  // std::ceil() on Linux
 #include <algorithm>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace CSV;
@@ -188,7 +188,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send", ErrorType::Internal);
 	}
 
-	const double currentTime = ITimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime());
+	const double currentTime = TimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime());
 
 	if (!m_ReaderLib->hasDataToRead() && m_SavedChunks.empty()) { return true; }
 
@@ -229,8 +229,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", ErrorType::Internal);
 
 				OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
-										ITimeArithmetics::secondsToTime(chunk.startTime),
-										ITimeArithmetics::secondsToTime(chunk.endTime)),
+										TimeArithmetics::secondsToTime(chunk.startTime),
+										TimeArithmetics::secondsToTime(chunk.endTime)),
 									"Failed to mark signal output as ready to send",
 									ErrorType::Internal);
 
@@ -245,8 +245,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder.encodeEnd(), "Failed to encode end.", ErrorType::Internal);
 
 			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
-									ITimeArithmetics::secondsToTime(m_SavedChunks.back().startTime),
-									ITimeArithmetics::secondsToTime(m_SavedChunks.back().endTime)),
+									TimeArithmetics::secondsToTime(m_SavedChunks.back().startTime),
+									TimeArithmetics::secondsToTime(m_SavedChunks.back().endTime)),
 								"Failed to mark signal output as ready to send",
 								ErrorType::Internal);
 		}
@@ -297,8 +297,8 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
-				stimulationSet->appendStimulation(it->stimulationIdentifier, ITimeArithmetics::secondsToTime(it->stimulationDate), ITimeArithmetics::secondsToTime(it->stimulationDuration));
-				m_LastStimulationDate = ITimeArithmetics::secondsToTime(it->stimulationDate);
+				stimulationSet->appendStimulation(it->stimulationIdentifier, TimeArithmetics::secondsToTime(it->stimulationDate), TimeArithmetics::secondsToTime(it->stimulationDuration));
+				m_LastStimulationDate = TimeArithmetics::secondsToTime(it->stimulationDate);
 			}
 			else
 			{
