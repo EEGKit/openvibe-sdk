@@ -1,12 +1,10 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>
 #include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_SignalMerger     OpenViBE::CIdentifier(0x4BF9326F, 0x75603102)
-#define OVP_ClassId_BoxAlgorithm_SignalMergerDesc OpenViBE::CIdentifier(0x7A684C44, 0x23BA70A5)
 
 namespace OpenViBEPlugins
 {

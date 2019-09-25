@@ -1,11 +1,9 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_SpectrumAverage     OpenViBE::CIdentifier(0x0C092665, 0x61B82641)
-#define OVP_ClassId_BoxAlgorithm_SpectrumAverageDesc OpenViBE::CIdentifier(0x24663D96, 0x71EA7295)
 
 namespace OpenViBEPlugins
 {

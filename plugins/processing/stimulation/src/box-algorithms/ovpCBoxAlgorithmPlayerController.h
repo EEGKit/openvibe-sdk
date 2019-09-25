@@ -4,9 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_PlayerController     OpenViBE::CIdentifier(0x5F426DCE, 0x08456E13)
-#define OVP_ClassId_BoxAlgorithm_PlayerControllerDesc OpenViBE::CIdentifier(0x2E4142D7, 0x3F957E25)
-
 namespace OpenViBEPlugins
 {
 	namespace Stimulation

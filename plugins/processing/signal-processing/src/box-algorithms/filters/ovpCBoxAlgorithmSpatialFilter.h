@@ -1,12 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-#include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_SpatialFilter     OpenViBE::CIdentifier(0xDD332C6C, 0x195B4FD4)
-#define OVP_ClassId_BoxAlgorithm_SpatialFilterDesc OpenViBE::CIdentifier(0x72A01C92, 0xF8C1FA24)
 
 namespace OpenViBEPlugins
 {

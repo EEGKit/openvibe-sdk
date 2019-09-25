@@ -12,13 +12,6 @@
 
 #include <cstdio>
 
-// TODO:
-// - please move the identifier definitions in ovp_defines.h
-// - please include your desciptor in ovp_main.cpp
-
-#define OVP_ClassId_BoxAlgorithm_GenericStreamReader     OpenViBE::CIdentifier(0x6468099F, 0x0370095A)
-#define OVP_ClassId_BoxAlgorithm_GenericStreamReaderDesc OpenViBE::CIdentifier(0x1F1E3A53, 0x6CA07237)
-
 namespace OpenViBEPlugins
 {
 	namespace FileIO

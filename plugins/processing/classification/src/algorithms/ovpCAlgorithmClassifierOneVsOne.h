@@ -9,10 +9,6 @@
 #include <vector>
 #include <map>
 
-#define OVP_ClassId_Algorithm_ClassifierOneVsOne								OpenViBE::CIdentifier(0x638C2F90, 0xEAE10226)
-#define OVP_ClassId_Algorithm_ClassifierOneVsOneDesc							OpenViBE::CIdentifier(0xE78E7CDB, 0x369AA9EF)
-
-#define OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType			OpenViBE::CIdentifier(0x0C347BBA, 0x180577F9)
 
 namespace OpenViBEPlugins
 {
@@ -31,14 +27,13 @@ namespace OpenViBEPlugins
 		} SClassificationInfo;
 
 
-		class CAlgorithmClassifierOneVsOne : public OpenViBEToolkit::CAlgorithmPairingStrategy
+		class CAlgorithmClassifierOneVsOne final : public OpenViBEToolkit::CAlgorithmPairingStrategy
 		{
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue,
-						  OpenViBEToolkit::IVector& rProbabilityValue) override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVector) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance, OpenViBEToolkit::IVector& probability) override;
 			bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
@@ -49,7 +44,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			virtual bool createSubClassifiers();
+			bool createSubClassifiers();
 
 		private:
 			uint32_t m_ui32NumberOfClasses        = 0;

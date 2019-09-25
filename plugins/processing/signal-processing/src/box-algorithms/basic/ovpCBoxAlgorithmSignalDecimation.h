@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-#define OVP_ClassId_BoxAlgorithm_SignalDecimation     OpenViBE::CIdentifier(0x012F4BEA, 0x3BE37C66)
-#define OVP_ClassId_BoxAlgorithm_SignalDecimationDesc OpenViBE::CIdentifier(0x1C5F1356, 0x1E685777)
 
 namespace OpenViBEPlugins
 {

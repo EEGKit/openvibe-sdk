@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include "ovpCStreamedMatrixDecoder.h"
-
-#define OVP_ClassId_Algorithm_SignalStreamDecoder                                                          OpenViBE::CIdentifier(0x7237C149, 0x0CA66DA7)
-#define OVP_ClassId_Algorithm_SignalStreamDecoderDesc                                                      OpenViBE::CIdentifier(0xF1547D89, 0x49FFD0C2)
-#define OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate                                   OpenViBE::CIdentifier(0x363D8D79, 0xEEFB912C)
+#include <stack>
 
 namespace OpenViBEPlugins
 {

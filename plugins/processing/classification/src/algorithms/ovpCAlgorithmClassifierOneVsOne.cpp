@@ -183,7 +183,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector, double& classId, IVector& rDistanceValue, IVector& rProbabilityValue)
+bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector, double& classId, IVector& distance, IVector& probability)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_pDecisionStrategyAlgorithm,
@@ -250,8 +250,8 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector,
 	double l_f64MaxProb         = -1;
 	int l_i32IndexSelectedClass = -1;
 
-	rDistanceValue.setSize(0);
-	rProbabilityValue.setSize(m_ui32NumberOfClasses);
+	distance.setSize(0);
+	probability.setSize(m_ui32NumberOfClasses);
 
 	//We just have to take the most relevant now.
 	for (uint32_t i = 0; i < m_ui32NumberOfClasses; ++i)
@@ -262,7 +262,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector,
 			l_i32IndexSelectedClass = i;
 			l_f64MaxProb            = l_f64TempProb;
 		}
-		rProbabilityValue[i] = l_f64TempProb;
+		probability[i] = l_f64TempProb;
 	}
 
 	classId = double(l_i32IndexSelectedClass);

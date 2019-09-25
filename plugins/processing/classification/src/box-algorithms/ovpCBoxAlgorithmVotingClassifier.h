@@ -8,9 +8,6 @@
 #include <map>
 #include <cstdio>
 
-#define OVP_ClassId_BoxAlgorithm_VotingClassifier     OpenViBE::CIdentifier(0xFAF62C2B, 0x0B75D1B3)
-#define OVP_ClassId_BoxAlgorithm_VotingClassifierDesc OpenViBE::CIdentifier(0x97E3CCC5, 0xAC353ED2)
-
 namespace OpenViBEPlugins
 {
 	namespace Classification

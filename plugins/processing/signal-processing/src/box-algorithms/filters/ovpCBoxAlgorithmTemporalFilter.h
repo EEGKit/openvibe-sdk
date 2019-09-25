@@ -7,9 +7,6 @@
 #include <memory>
 #include <dsp-filters/Dsp.h>
 
-#define OVP_ClassId_BoxAlgorithm_TemporalFilter     OpenViBE::CIdentifier(0xB4F9D042, 0x9D79F2E5)
-#define OVP_ClassId_BoxAlgorithm_TemporalFilterDesc OpenViBE::CIdentifier(0x7BF6BA62, 0xAF829A37)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

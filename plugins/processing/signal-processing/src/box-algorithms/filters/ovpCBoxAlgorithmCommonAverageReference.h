@@ -1,11 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-#define OVP_ClassId_BoxAlgorithm_CommonAverageReference     OpenViBE::CIdentifier(0x009C0CE3, 0x6BDF71C3)
-#define OVP_ClassId_BoxAlgorithm_CommonAverageReferenceDesc OpenViBE::CIdentifier(0x0033EAF8, 0x09C65E4E)
-
 
 namespace OpenViBEPlugins
 {

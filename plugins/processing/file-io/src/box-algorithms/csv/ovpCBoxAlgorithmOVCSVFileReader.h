@@ -1,17 +1,14 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <iostream>
 #include <cstdio>
-#include <cstdlib>
 #include <memory>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include "csv/ovICSV.h"
-
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileReaderDesc 							   OpenViBE::CIdentifier(0x584E1948, 0x65E91650)
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileReader     							   OpenViBE::CIdentifier(0x336A3D9A, 0x753F1BA4)
 
 namespace OpenViBEPlugins
 {

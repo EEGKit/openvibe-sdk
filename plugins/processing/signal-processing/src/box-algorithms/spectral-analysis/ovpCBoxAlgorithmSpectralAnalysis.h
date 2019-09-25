@@ -1,10 +1,7 @@
 #pragma once
 
-#include <map>
+#include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
-
-#define OVP_ClassId_SpectralAnalysis         OpenViBE::CIdentifier(0x84218FF8, 0xA87E7995)
-#define OVP_ClassId_SpectralAnalysisDesc     OpenViBE::CIdentifier(0x0051E63C, 0x68E83AD1)
 
 namespace OpenViBEPlugins
 {

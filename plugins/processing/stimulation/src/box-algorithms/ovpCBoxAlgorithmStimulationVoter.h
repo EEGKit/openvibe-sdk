@@ -4,13 +4,8 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <vector>
 #include <map>
 #include <deque>
-#include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_StimulationVoter                      OpenViBE::CIdentifier(0x2BBD61FC, 0x041A4EDB)
-#define OVP_ClassId_BoxAlgorithm_StimulationVoterDesc                  OpenViBE::CIdentifier(0x1C36287C, 0x6F143FBF)
 
 namespace OpenViBEPlugins
 {

@@ -3,9 +3,6 @@
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_EpochAverage                                          OpenViBE::CIdentifier(0x21283D9F, 0xE76FF640)
-#define OVP_ClassId_BoxAlgorithm_EpochAverageDesc                                      OpenViBE::CIdentifier(0x95F5F43E, 0xBE629D82)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

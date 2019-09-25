@@ -11,26 +11,17 @@
 #include <iostream>
 
 
-#define OVP_ClassId_BoxAlgorithm_ClassifierTrainer       OpenViBE::CIdentifier(0xF3DAE8A8, 0x3B444154)
-#define OVP_ClassId_BoxAlgorithm_ClassifierTrainerDesc   OpenViBE::CIdentifier(0xFE277C91, 0x1593B824)
-
-#define OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount 6
-
-namespace
-{
-	const char* const TRAIN_TRIGGER_SETTING_NAME       = "Train trigger";
-	const char* const FILENAME_SETTING_NAME            = "Filename to save configuration to";
-	const char* const MULTICLASS_STRATEGY_SETTING_NAME = "Multiclass strategy to apply";
-	const char* const ALGORITHM_SETTING_NAME           = "Algorithm to use";
-	const char* const FOLD_SETTING_NAME                = "Number of partitions for k-fold cross-validation test";
-	const char* const BALANCE_SETTING_NAME             = "Balance classes";
-}
-
-
 namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
+		const char* const TRAIN_TRIGGER_SETTING_NAME = "Train trigger";
+		const char* const FILENAME_SETTING_NAME = "Filename to save configuration to";
+		const char* const MULTICLASS_STRATEGY_SETTING_NAME = "Multiclass strategy to apply";
+		const char* const ALGORITHM_SETTING_NAME = "Algorithm to use";
+		const char* const FOLD_SETTING_NAME = "Number of partitions for k-fold cross-validation test";
+		const char* const BALANCE_SETTING_NAME = "Balance classes";
+		
 		class CBoxAlgorithmClassifierTrainer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
@@ -135,7 +126,8 @@ namespace OpenViBEPlugins
 
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override
 			{
-				return new CBoxAlgorithmCommonClassifierListener(OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount);
+				const size_t nCommonSetting = 6;
+				return new CBoxAlgorithmCommonClassifierListener(nCommonSetting);
 			}
 
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }

@@ -13,22 +13,6 @@
 
 #include <Eigen/Dense>
 
-#define OVP_ClassId_Algorithm_OnlineCovariance                                            OpenViBE::CIdentifier(0x5ADD4F8E, 0x005D29C1)
-#define OVP_ClassId_Algorithm_OnlineCovarianceDesc                                        OpenViBE::CIdentifier(0x00CD2DEA, 0x4C000CEB)
-
-#define OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage                         OpenViBE::CIdentifier(0x16577C7B, 0x4E056BF7)
-#define OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors                      OpenViBE::CIdentifier(0x47E55F81, 0x27A519C4)
-#define OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod                      OpenViBE::CIdentifier(0x1C4F444F, 0x3CA213E2)
-#define OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization                OpenViBE::CIdentifier(0x269D5E63, 0x3B6D486E)
-
-#define OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean                             OpenViBE::CIdentifier(0x3F1F50A3, 0x05504D0E)
-#define OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix                 OpenViBE::CIdentifier(0x203A5472, 0x67C5324C)
-
-#define OVP_Algorithm_OnlineCovariance_Process_Reset                                      OpenViBE::CIdentifier(0x4C1C510C, 0x3CF56E7C) // to reset estimates to 0
-#define OVP_Algorithm_OnlineCovariance_Process_Update                                     OpenViBE::CIdentifier(0x72BF2277, 0x2974747B) // update estimates with a new chunk of data
-#define OVP_Algorithm_OnlineCovariance_Process_GetCov                                     OpenViBE::CIdentifier(0x2BBC4A91, 0x27050CFD) // also returns the mean estimate
-#define OVP_Algorithm_OnlineCovariance_Process_GetCovRaw                                  OpenViBE::CIdentifier(0x0915148C, 0x5F792B2A) // also returns the mean estimate
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

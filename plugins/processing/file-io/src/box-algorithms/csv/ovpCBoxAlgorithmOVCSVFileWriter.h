@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <cstdio>
 #include <fstream>
 #include <memory>
@@ -8,9 +9,6 @@
 #include <toolkit/ovtk_all.h>
 
 #include "csv/ovICSV.h"
-
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileWriter     							   OpenViBE::CIdentifier(0x428375E8, 0x325F2DB9)
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileWriterDesc 							   OpenViBE::CIdentifier(0x4B5C1D8F, 0x570E45FD)
 
 namespace OpenViBEPlugins
 {

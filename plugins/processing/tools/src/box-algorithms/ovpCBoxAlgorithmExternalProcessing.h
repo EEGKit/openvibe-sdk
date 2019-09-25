@@ -11,10 +11,6 @@
 #include <vector>
 #include <cstdint>
 
-
-#define OVP_ClassId_BoxAlgorithm_ExternalProcessing     OpenViBE::CIdentifier(0x15422959, 0x16304449)
-#define OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc OpenViBE::CIdentifier(0x63386942, 0x61D42502)
-
 namespace OpenViBEPlugins
 {
 	namespace Tools

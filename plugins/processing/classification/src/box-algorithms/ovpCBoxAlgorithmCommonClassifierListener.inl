@@ -26,11 +26,11 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			explicit CBoxAlgorithmCommonClassifierListener(const uint32_t ui32CustomSettingBase)
+			explicit CBoxAlgorithmCommonClassifierListener(const uint32_t customSettingBase)
 				: m_oClassifierClassIdentifier(OV_UndefinedIdentifier),
 				  m_oStrategyClassIdentifier(
 					  0x0),//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
-				  m_ui32CustomSettingBase(ui32CustomSettingBase) { }
+				  m_ui32CustomSettingBase(customSettingBase) { }
 
 			bool initialize() override
 			{

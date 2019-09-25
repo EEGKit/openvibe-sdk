@@ -7,27 +7,6 @@
 #include <xml/IXMLNode.h>
 #include "ovpCAlgorithmClassifierOneVsOne.h"
 
-#define OVP_ClassId_Algorithm_PairwiseDecision                                              OpenViBE::CIdentifier(0x26EF6DDA, 0xF137053C)
-#define OVP_ClassId_Algorithm_PairwiseDecisionDesc                                          OpenViBE::CIdentifier(0x191EB02A, 0x6866214A)
-
-#define OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix                           OpenViBE::CIdentifier(0xF48D35AD, 0xB8EFF834)
-#define OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration                    OpenViBE::CIdentifier(0x10EBAC09, 0x80926A63)
-#define OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier              OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E017)
-#define OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition                   OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E018)
-#define OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs              OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E019)
-#define OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount                         OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E01A)
-
-
-#define OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector                          OpenViBE::CIdentifier(0x883599FE, 0x2FDB32FF)
-#define OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Configuration                   OpenViBE::CIdentifier(0x69F05A61, 0x25C94515)
-
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Train                              OpenViBE::CIdentifier(0x32219D21, 0xD3BE6105)
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize                       OpenViBE::CIdentifier(0x32219D21, 0xD3BE6106)
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute                            OpenViBE::CIdentifier(0x3637344B, 0x05D03D7E)
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration                  OpenViBE::CIdentifier(0xF19574AD, 0x024045A7)
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfiguration                  OpenViBE::CIdentifier(0x97AF6C6C, 0x670A12E6)
-
-
 namespace OpenViBEPlugins
 {
 	namespace Classification

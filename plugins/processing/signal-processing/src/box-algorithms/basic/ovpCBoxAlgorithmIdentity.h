@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 #include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_Identity                                              OpenViBE::CIdentifier(0x5DFFE431, 0x35215C50)
-#define OVP_ClassId_BoxAlgorithm_IdentityDesc                                          OpenViBE::CIdentifier(0x54743810, 0x6A1A88CC)
 
 namespace OpenViBEPlugins
 {

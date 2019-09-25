@@ -1,11 +1,7 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
-#include <vector>
-#include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_TimeBasedEpoching                                     OpenViBE::CIdentifier(0x00777FA0, 0x5DC3F560)
-#define OVP_ClassId_BoxAlgorithm_TimeBasedEpochingDesc                                 OpenViBE::CIdentifier(0x00ABDABE, 0x41381683)
 
 namespace OpenViBEPlugins
 {

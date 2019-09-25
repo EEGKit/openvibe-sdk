@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include "ovpCEBMLBaseDecoder.h"
-
-#define OVP_ClassId_Algorithm_StimulationStreamDecoder                                                     OpenViBE::CIdentifier(0xC8807F2B, 0x0813C5B1)
-#define OVP_ClassId_Algorithm_StimulationStreamDecoderDesc                                                 OpenViBE::CIdentifier(0x391A615B, 0x71CD888A)
-#define OVP_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet                            OpenViBE::CIdentifier(0xF46D0C19, 0x47306BEA)
+#include <stack>
 
 namespace OpenViBEPlugins
 {

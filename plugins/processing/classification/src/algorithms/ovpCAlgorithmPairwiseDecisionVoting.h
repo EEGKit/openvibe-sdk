@@ -6,9 +6,6 @@
 
 #include "ovpCAlgorithmPairwiseDecision.h"
 
-#define OVP_ClassId_Algorithm_PairwiseDecision_Voting												OpenViBE::CIdentifier(0xA111B830, 0x4679BAFD)
-#define OVP_ClassId_Algorithm_PairwiseDecision_VotingDesc											OpenViBE::CIdentifier(0xAC5A39E8, 0x3A57822A)
-
 namespace OpenViBEPlugins
 {
 	namespace Classification

@@ -1,21 +1,9 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 
 #include <vector>
-
-#define OVP_ClassId_Windowing         OpenViBE::CIdentifier(0x002034AE, 0x6509FD8F)
-#define OVP_ClassId_WindowingDesc     OpenViBE::CIdentifier(0x602CF89F, 0x65BA6DA0)
-
-// Windowing: ID names and values taken from the signal-processing-gpl project
-#define OVP_TypeId_WindowMethod               OpenViBE::CIdentifier(0x0A430FE4, 0x4F318280)
-#define OVP_TypeId_WindowMethod_None          OpenViBE::CIdentifier(0x01DD2ACC, 0x347E581E)
-#define OVP_TypeId_WindowMethod_Hamming       OpenViBE::CIdentifier(0x3A9FF7F1, 0x54E79D67)
-#define OVP_TypeId_WindowMethod_Hanning       OpenViBE::CIdentifier(0x660DA3E7, 0x7BD87719)
-#define OVP_TypeId_WindowMethod_Hann          OpenViBE::CIdentifier(0x9BBBDC65, 0xFDFEF7A4)
-#define OVP_TypeId_WindowMethod_Blackman      OpenViBE::CIdentifier(0x9D5937A4, 0xE43A9E3D)
-#define OVP_TypeId_WindowMethod_Triangular    OpenViBE::CIdentifier(0xE652A852, 0xFE3CBC46)
-#define OVP_TypeId_WindowMethod_SquareRoot    OpenViBE::CIdentifier(0xFE80BE5C, 0xAE59A27A)
 
 namespace OpenViBEPlugins
 {

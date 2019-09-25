@@ -6,12 +6,6 @@
 
 #include <xml/IXMLNode.h>
 
-#define OVP_ClassId_Algorithm_ClassifierNULL                                        OpenViBE::CIdentifier(0x043D09AB, 0xCB5E4859)
-#define OVP_ClassId_Algorithm_ClassifierNULLDesc                                    OpenViBE::CIdentifier(0x3B365233, 0x812C47DD)
-
-#define OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1                    OpenViBE::CIdentifier(0x6DA99952, 0x7E72C143)
-#define OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2                    OpenViBE::CIdentifier(0xEAC5694A, 0x56CFEF02)
-#define OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3                    OpenViBE::CIdentifier(0x72F6222D, 0x375BAE2C)
 
 namespace OpenViBEPlugins
 {

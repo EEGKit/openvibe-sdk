@@ -13,14 +13,6 @@
 
 #include <Eigen/Dense>
 
-#define OVP_ClassId_Algorithm_ClassifierLDA                                        OpenViBE::CIdentifier(0x2BA17A3C, 0x1BD46D84)
-#define OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable                      OpenViBE::CIdentifier(0x79146976, 0xD7F01A25)
-#define OVP_ClassId_Algorithm_ClassifierLDADesc                                    OpenViBE::CIdentifier(0x78FE2929, 0x644945B4)
-
-#define OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage                  OpenViBE::CIdentifier(0x01357534, 0x028312A0)
-#define OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage                     OpenViBE::CIdentifier(0x01357534, 0x028312A1)
-#define OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov                   OpenViBE::CIdentifier(0x067E45C5, 0x15285CC7)
-
 namespace OpenViBEPlugins
 {
 	namespace Classification

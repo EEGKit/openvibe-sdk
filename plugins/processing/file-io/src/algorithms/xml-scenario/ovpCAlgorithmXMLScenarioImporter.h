@@ -1,18 +1,12 @@
 #pragma once
 
 #include "../../ovp_defines.h"
-
 #include <openvibe/ov_all.h>
-
 #include <toolkit/ovtk_all.h>
-
 #include <xml/IReader.h>
-
 #include <stack>
 #include <string>
 
-#define OVP_ClassId_Algorithm_XMLScenarioImporter                                        OpenViBE::CIdentifier(0xE80C3EA2, 0x149C4A05)
-#define OVP_ClassId_Algorithm_XMLScenarioImporterDesc                                    OpenViBE::CIdentifier(0xFF25D456, 0x721FCC57)
 
 namespace OpenViBEPlugins
 {

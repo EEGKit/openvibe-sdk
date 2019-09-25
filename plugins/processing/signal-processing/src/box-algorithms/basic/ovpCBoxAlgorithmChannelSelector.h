@@ -6,9 +6,6 @@
 
 #include <string>
 
-#define OVP_ClassId_BoxAlgorithm_ChannelSelector     OpenViBE::CIdentifier(0x361722E8, 0x311574E8)
-#define OVP_ClassId_BoxAlgorithm_ChannelSelectorDesc OpenViBE::CIdentifier(0x67633C1C, 0x0D610CD8)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

@@ -21,19 +21,12 @@
 
 #pragma once
 
-#include "ovCResampler.h"
-
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
+#include "ovCResampler.h"
 
 #include <Eigen/Eigen>
-
-#define OVP_ClassId_BoxAlgorithm_SignalResampling     OpenViBE::CIdentifier(0x0E923A5E, 0xDA474058)
-#define OVP_ClassId_BoxAlgorithm_SignalResamplingDesc OpenViBE::CIdentifier(0xA675A433, 0xC6690920)
-
-#define OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency	OpenViBE::CIdentifier(0x158A8EFD, 0xAA894F86)
-#define OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer	OpenViBE::CIdentifier(0x588783F3, 0x8E8DCF86)
-#define OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag	OpenViBE::CIdentifier(0xAFDD8EFD, 0x23EF94F6)
 
 namespace OpenViBEPlugins
 {

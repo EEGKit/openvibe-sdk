@@ -8,13 +8,9 @@
 
 #include "../../algorithms/basic/ovpCAlgorithmOnlineCovariance.h"
 
-#define OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer      OpenViBE::CIdentifier(0x2EC14CC0, 0x428C48BD)
-#define OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainerDesc  OpenViBE::CIdentifier(0x02205F54, 0x733C51EE)
-
 #include <Eigen/Eigenvalues>
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
-
 
 namespace OpenViBEPlugins
 {

@@ -4,9 +4,6 @@
 #include <toolkit/ovtk_all.h>
 #include <wavelib/header/wavelib.h>
 
-#define OVP_ClassId_ContinuousWaveletAnalysis         OpenViBE::CIdentifier(0x0A43133D, 0x6EAF25A7)
-#define OVP_ClassId_ContinuousWaveletAnalysisDesc     OpenViBE::CIdentifier(0x5B397A82, 0x76AE6F81)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

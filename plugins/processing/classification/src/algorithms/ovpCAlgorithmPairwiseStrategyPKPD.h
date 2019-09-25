@@ -6,8 +6,6 @@
 
 #include "ovpCAlgorithmPairwiseDecision.h"
 
-#define OVP_ClassId_Algorithm_PairwiseStrategy_PKPD												OpenViBE::CIdentifier(0x26EF6DDA, 0xF137053C)
-#define OVP_ClassId_Algorithm_PairwiseStrategy_PKPDDesc											OpenViBE::CIdentifier(0x191EB02A, 0x6866214A)
 
 namespace OpenViBEPlugins
 {

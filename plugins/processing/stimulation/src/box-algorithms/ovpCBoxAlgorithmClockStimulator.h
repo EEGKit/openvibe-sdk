@@ -4,9 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_ClockStimulator     OpenViBE::CIdentifier(0x4F756D3F, 0x29FF0B96)
-#define OVP_ClassId_BoxAlgorithm_ClockStimulatorDesc OpenViBE::CIdentifier(0x4FD067E9, 0x740D2AF0)
-
 namespace OpenViBEPlugins
 {
 	namespace Stimulation

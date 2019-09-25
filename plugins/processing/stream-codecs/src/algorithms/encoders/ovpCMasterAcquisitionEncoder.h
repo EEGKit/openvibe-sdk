@@ -1,21 +1,7 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include "ovpCEBMLBaseEncoder.h"
-
-#define OVP_ClassId_Algorithm_MasterAcquisitionStreamEncoder                                               OpenViBE::CIdentifier(0x2D15E00B, 0x51414EB6)
-#define OVP_ClassId_Algorithm_MasterAcquisitionStreamEncoderDesc                                           OpenViBE::CIdentifier(0xE6EC841D, 0x9E75A8FB)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectIdentifier                    OpenViBE::CIdentifier(0xD5BB5231, 0x59389B72)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectAge                           OpenViBE::CIdentifier(0x9EF355E4, 0xC8531112)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectGender                        OpenViBE::CIdentifier(0xA9056AE3, 0x57FE6AF0)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalMatrix                         OpenViBE::CIdentifier(0xE9AC8077, 0xE369A51D)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSamplingRate                   OpenViBE::CIdentifier(0xB84AD0CA, 0x4F316DD3)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_StimulationSet                       OpenViBE::CIdentifier(0x5B728D37, 0xFD088887)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_BufferDuration                       OpenViBE::CIdentifier(0xE1FC7385, 0x586A4F3F)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_ChannelLocalisation                  OpenViBE::CIdentifier(0x227E13F0, 0x206B44F9)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_ChannelUnits                         OpenViBE::CIdentifier(0x740060C2, 0x7D2B4F57)
-
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelLocalisationData          OpenViBE::CIdentifier(0x26EE1F81, 0x3DB00D5D)
-#define OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelUnitData                  OpenViBE::CIdentifier(0x19DC533C, 0x56301D0B)
 
 namespace OpenViBEPlugins
 {

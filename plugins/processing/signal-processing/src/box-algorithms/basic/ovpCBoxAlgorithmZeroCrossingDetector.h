@@ -24,12 +24,7 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <string>
 #include <vector>
-#include <map>
-
-#define OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector     OpenViBE::CIdentifier(0x0016663F, 0x096A46A6)
-#define OVP_ClassId_BoxAlgorithm_ZeroCrossingDetectorDesc OpenViBE::CIdentifier(0x63AA73A7, 0x1F0419A2)
 
 namespace OpenViBEPlugins
 {

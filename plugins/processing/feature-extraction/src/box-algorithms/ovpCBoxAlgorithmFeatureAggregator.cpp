@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 
 		bool CBoxAlgorithmFeatureAggregator::processInput(const uint32_t index)
 		{
-			IBoxIO* l_pBoxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
+			IBoxIO* boxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 			uint64_t lastBufferChunkSize;
 			const uint8_t* lastBuffer;
@@ -75,7 +75,7 @@ namespace OpenViBEPlugins
 			const uint8_t* buffer;
 
 			//gets the first buffer from the concerned input
-			l_pBoxIO->getInputChunk(index, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, lastBufferChunkSize, lastBuffer);
+			boxIO->getInputChunk(index, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, lastBufferChunkSize, lastBuffer);
 
 			uint64_t tStart = 0, tEnd = 0;
 
@@ -84,9 +84,9 @@ namespace OpenViBEPlugins
 			//checks every input's first chunk's dates
 			for (uint32_t i = 0; i < m_ui32NumberOfInput && readyToProcess; i++)
 			{
-				if (l_pBoxIO->getInputChunkCount(i) != 0)
+				if (boxIO->getInputChunkCount(i) != 0)
 				{
-					l_pBoxIO->getInputChunk(i, 0, tStart, tEnd, bufferChunkSize, buffer);
+					boxIO->getInputChunk(i, 0, tStart, tEnd, bufferChunkSize, buffer);
 					//if the first buffers don't have the same starting/ending dates, stop
 					if (tStart != m_ui64LastChunkStartTime || tEnd != m_ui64LastChunkEndTime) { readyToProcess = false; }
 
@@ -96,7 +96,7 @@ namespace OpenViBEPlugins
 						//marks everything as deprecated and sends a warning
 						for (uint32_t input = 0; input < m_ui32NumberOfInput; input++)
 						{
-							for (uint32_t chunk = 0; chunk < l_pBoxIO->getInputChunkCount(input); chunk++) { l_pBoxIO->markInputAsDeprecated(input, chunk); }
+							for (uint32_t chunk = 0; chunk < boxIO->getInputChunkCount(input); chunk++) { boxIO->markInputAsDeprecated(input, chunk); }
 						}
 
 						readyToProcess = false;

@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-#define OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader               OpenViBE::CIdentifier(0x40704155, 0x19C50E8F)
-#define OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReaderDesc           OpenViBE::CIdentifier(0x4796613F, 0x653A48D5)
 
 namespace OpenViBEPlugins
 {
@@ -20,8 +18,7 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >,
-									   OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader)
 
 		protected:
 

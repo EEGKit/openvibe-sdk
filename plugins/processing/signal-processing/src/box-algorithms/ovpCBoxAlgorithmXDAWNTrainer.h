@@ -1,12 +1,10 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <Eigen/Eigen>
-
-#define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer                                        OpenViBE::CIdentifier(0x27542F6E, 0x14AA3548)
-#define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainerDesc                                    OpenViBE::CIdentifier(0x128A6013, 0x370B5C2C)
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 

@@ -1,13 +1,11 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <string>
 #include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_ChannelRename     OpenViBE::CIdentifier(0x1FE50479, 0x39040F40)
-#define OVP_ClassId_BoxAlgorithm_ChannelRenameDesc OpenViBE::CIdentifier(0x20EA1F00, 0x7AED5645)
 
 namespace OpenViBEPlugins
 {

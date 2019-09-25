@@ -11,13 +11,6 @@
 
 #include <fstream>
 
-// TODO:
-// - please move the identifier definitions in ovp_defines.h
-// - please include your desciptor in ovp_main.cpp
-
-#define OVP_ClassId_BoxAlgorithm_GenericStreamWriter     OpenViBE::CIdentifier(0x09C92218, 0x7C1216F8)
-#define OVP_ClassId_BoxAlgorithm_GenericStreamWriterDesc OpenViBE::CIdentifier(0x50AB506A, 0x54804437)
-
 namespace OpenViBEPlugins
 {
 	namespace FileIO

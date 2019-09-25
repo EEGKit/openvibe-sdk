@@ -1,14 +1,11 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
-
 #include "../ovpCSimpleDSP/ovpCEquationParser.h"
 
 #include <vector>
 #include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_SimpleDSP                                             OpenViBE::CIdentifier(0x00E26FA1, 0x1DBAB1B2)
-#define OVP_ClassId_BoxAlgorithm_SimpleDSPDesc                                         OpenViBE::CIdentifier(0x00C44BFE, 0x76C9269E)
 
 namespace OpenViBEPlugins
 {

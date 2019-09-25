@@ -1,13 +1,9 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-#include <vector>
 #include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer     OpenViBE::CIdentifier(0x7A12298B, 0x785F4D42)
-#define OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexerDesc OpenViBE::CIdentifier(0x0B420425, 0x3F602DE7)
-
 
 namespace OpenViBEPlugins
 {
