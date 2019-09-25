@@ -5,9 +5,6 @@
 #include "../training/ovtkISignalTrial.h"
 #include "../training/ovtkISignalTrialSet.h"
 
-#include "../deprecated/reader/ovtkIBoxAlgorithmSignalInputReaderCallback.h"
-#include "../deprecated/reader/ovtkIBoxAlgorithmStimulationInputReaderCallback.h"
-
 #include <ebml/CReader.h>
 
 #include <vector>
@@ -94,13 +91,8 @@ namespace OpenViBEToolkit
 	{
 		insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, buffer, m_pPendingSignal);
 
-		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-				<< OpenViBE::Kernel::LogLevel_Debug
-				<< "Appended "
-				<< m_ui32SampleCountPerBuffer
-				<< " bytes resulting in "
-				<< (m_pPendingSignal->getDuration() >> 32)
-				<< " seconds of signal\n";
+		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Debug
+				<< "Appended " << m_ui32SampleCountPerBuffer << " bytes resulting in " << (m_pPendingSignal->getDuration() >> 32) << " seconds of signal\n";
 	}
 
 	// ________________________________________________________________________________________________________________
@@ -118,109 +110,60 @@ namespace OpenViBEToolkit
 					<< OpenViBE::Kernel::LogLevel_Trace
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
-			ISignalTrialSet* l_pSignalTrialSet = createSignalTrialSet();
-			for (auto itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
-			{
-				l_pSignalTrialSet->addSignalTrial(**itSignalTrial);
-			}
+			ISignalTrialSet* signalTrialSet = createSignalTrialSet();
+			for (auto it = m_vSignalTrial.begin(); it != m_vSignalTrial.end(); ++it) { signalTrialSet->addSignalTrial(**it); }
 
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "Calling train function...\n";
 
-#if 0
-		{
-			ISignalTrialSet& trialSet=*l_pSignalTrialSet;
-			FILE* l_pDump = FS::Files::open("dump.txt", "wt");
-			fprintf(l_pDump, "# dump\n");
-			for(uint32_t i=0; i<trialSet.getSignalTrialCount(); i++)
-			{
-				ISignalTrial& l_rTrial=trialSet.getSignalTrial(i);
-				for(uint32_t j=0; j<l_rTrial.getSampleCount(); j++)
-				{
-					for(uint32_t k=0; k<l_rTrial.getChannelCount(); k++)
-					{
-						fprintf(l_pDump, "%f ", l_rTrial.getChannelSampleBuffer(k)[j]);
-					}
-					fprintf(l_pDump, "\n");
-				}
-			}
-			fclose(l_pDump);
-			l_pDump=NULL;
-		}
-#endif
+			this->train(*signalTrialSet);
 
-			this->train(*l_pSignalTrialSet);
-
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Trace
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
 					<< "Training done... will clear signal trials and signal trial set now...\n";
 
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial) { releaseSignalTrial(*itSignalTrial); }
-			releaseSignalTrialSet(l_pSignalTrialSet);
+			for (auto it = m_vSignalTrial.begin(); it != m_vSignalTrial.end(); ++it) { releaseSignalTrial(*it); }
+			releaseSignalTrialSet(signalTrialSet);
 			m_vSignalTrial.clear();
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Info
-					<< "Training phase finished !\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "Training phase finished !\n";
 		}
 		else if (identifier == this->getStimulationIdentifierTrialStart())
 		{
 			m_ui64TrialStartTime = date;
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Trace
-					<< "Saved trial start time "
-					<< OpenViBE::time64(m_ui64TrialStartTime)
-					<< "...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
+					<< "Saved trial start time " << OpenViBE::time64(m_ui64TrialStartTime) << "...\n";
 		}
 		else if (identifier == this->getStimulationIdentifierTrialEnd())
 		{
 			m_ui64TrialEndTime = date;
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Trace
-					<< "Saved trial end time "
-					<< OpenViBE::time64(m_ui64TrialEndTime)
-					<< "...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
+					<< "Saved trial end time " << OpenViBE::time64(m_ui64TrialEndTime) << "...\n";
 		}
 		else if (this->getStimulationIdentifierTrialLabelRangeStart() <= OpenViBE::CIdentifier(identifier) && OpenViBE::CIdentifier(identifier) <= this->
 				 getStimulationIdentifierTrialLabelRangeEnd())
 		{
 			m_oTrialLabel = identifier;
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Trace
-					<< "Labeled trial "
-					<< m_oTrialLabel
-					<< "...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
+					<< "Labeled trial " << m_oTrialLabel << "...\n";
 		}
 		else
 		{
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Debug
-					<< "Unhandled stimulation "
-					<< OpenViBE::CIdentifier(identifier)
-					<< " at time "
-					<< OpenViBE::time64(date)
-					<< "\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Debug
+					<< "Unhandled stimulation " << OpenViBE::CIdentifier(identifier) << " at time " << OpenViBE::time64(date) << "\n";
 		}
 
 		if (m_ui64TrialEndTime != _no_time_ && m_ui64TrialStartTime != _no_time_ && m_ui64TrialEndTime > m_ui64TrialStartTime)
 		{
-			uint32_t l_ui32SampleCount = uint32_t(((m_ui64TrialEndTime - m_ui64TrialStartTime) * m_pPendingSignal->getSamplingRate()) >> 32);
+			uint32_t nSample = uint32_t(((m_ui64TrialEndTime - m_ui64TrialStartTime) * m_pPendingSignal->getSamplingRate()) >> 32);
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Trace
-					<< "Created trial "
-					<< OpenViBE::time64(m_ui64TrialStartTime)
-					<< "-"
-					<< OpenViBE::time64(m_ui64TrialEndTime)
-					<< " with "
-					<< l_ui32SampleCount
-					<< " samples\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
+					<< "Created trial " << OpenViBE::time64(m_ui64TrialStartTime) << "-" << OpenViBE::time64(m_ui64TrialEndTime) << " with " << nSample << " samples\n";
 
-			ISignalTrial* l_pSignalTrial = createSignalTrial();
-			copyHeader(*l_pSignalTrial, m_pPendingSignal);
-			selectTime(*l_pSignalTrial, m_ui64TrialStartTime, m_ui64TrialEndTime, m_pPendingSignal);
-			l_pSignalTrial->setLabelIdentifier(m_oTrialLabel);
+			ISignalTrial* signalTrial = createSignalTrial();
+			copyHeader(*signalTrial, m_pPendingSignal);
+			selectTime(*signalTrial, m_ui64TrialStartTime, m_ui64TrialEndTime, m_pPendingSignal);
+			signalTrial->setLabelIdentifier(m_oTrialLabel);
 
-			m_vSignalTrial.push_back(l_pSignalTrial);
+			m_vSignalTrial.push_back(signalTrial);
 
 			m_ui64TrialStartTime = _no_time_;
 			m_ui64TrialEndTime   = _no_time_;

@@ -38,32 +38,32 @@ namespace OpenViBE
 			/**
 			 * \brief Set lib value to default
 			 */
-			CCSVHandler();
+			CCSVHandler() : m_inputTypeID(EStreamType::StreamedMatrix), m_dimSizes({}) {}
 
 			/**
 			 * \brief Close the file if it is open.
 			 */
-			~CCSVHandler() override;
+			~CCSVHandler() override { this->closeFile(); }
 
 			/**
 			 * \brief Get the floating point precision used to write float values.
 			 *
 			 * \return the Floating point precision.
 			 */
-			uint32_t getOutputFloatPrecision() override { return m_OutputFloatPrecision; }
+			uint32_t getOutputFloatPrecision() override { return m_outputFloatPrecision; }
 
 			/**
 			 * \brief Set the floating point precision used to write float values.
 			 *
 			 * \param precision the floating point precision.
 			 */
-			void setOutputFloatPrecision(uint32_t precision) override { m_OutputFloatPrecision = precision; }
+			void setOutputFloatPrecision(uint32_t precision) override { m_outputFloatPrecision = precision; }
 
 			void setFormatType(EStreamType typeID) override;
-			EStreamType getFormatType() override;
+			EStreamType getFormatType() override { return m_inputTypeID; }
 
-			void setLastMatrixOnlyMode(bool isActivated) override { m_LastMatrixOnly = isActivated; }
-			bool getLastMatrixOnlyMode() override { return m_LastMatrixOnly; }
+			void setLastMatrixOnlyMode(bool isActivated) override { m_lastMatrixOnly = isActivated; }
+			bool getLastMatrixOnlyMode() override { return m_lastMatrixOnly; }
 
 			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) override;
 			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) override;
@@ -175,9 +175,9 @@ namespace OpenViBE
 			 */
 			bool noEventsUntilDate(double date) override;
 
-			ELogErrorCodes getLastLogError() override;
+			ELogErrorCodes getLastLogError() override { return m_logError; }
 
-			std::string getLastErrorString() override;
+			std::string getLastErrorString() override { return m_lastStringError; }
 
 			/**
 			 * \brief Check if there is still data to read in the file.
@@ -315,43 +315,43 @@ namespace OpenViBE
 			 */
 			bool streamReader(std::istream& inputStream, std::string& outputString, char delimiter, std::string& bufferHistory) const;
 
-			std::fstream m_Fs;
-			std::string m_Filename;
-			std::deque<SMatrixChunk> m_Chunks;
-			std::deque<SStimulationChunk> m_Stimulations;
-			ELogErrorCodes m_LogError     = LogErrorCodes_NoError;
-			std::string m_LastStringError = "";
+			std::fstream m_fs;
+			std::string m_filename;
+			std::deque<SMatrixChunk> m_chunks;
+			std::deque<SStimulationChunk> m_stimulations;
+			ELogErrorCodes m_logError     = LogErrorCodes_NoError;
+			std::string m_lastStringError = "";
 
-			EStreamType m_InputTypeIdentifier;
+			EStreamType m_inputTypeID;
 
 			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
-			uint32_t m_DimensionCount = 0;
-			std::vector<uint32_t> m_DimensionSizes;
-			std::vector<std::string> m_DimensionLabels;
-			uint32_t m_SampleCountPerBuffer = 0;
-			double m_NoEventSince           = 0;
+			uint32_t m_nDim = 0;
+			std::vector<uint32_t> m_dimSizes;
+			std::vector<std::string> m_dimLabels;
+			uint32_t m_nSamplePerBuffer = 0;
+			double m_noEventSince       = 0;
 
-			std::vector<double> m_FrequencyAbscissa;
+			std::vector<double> m_frequencyAbscissa;
 
-			uint32_t m_SamplingRate = 0;
-			size_t m_ColumnCount    = 0;
+			uint32_t m_samplingRate = 0;
+			size_t m_nCol           = 0;
 
-			bool m_HasInputType       = false;
-			bool m_IsFirstLineWritten = false;
-			bool m_IsHeaderRead       = false;
-			bool m_IsSetInfoCalled    = false;
-			bool m_HasEpoch           = false;
+			bool m_hasInputType       = false;
+			bool m_isFirstLineWritten = false;
+			bool m_isHeaderRead       = false;
+			bool m_isSetInfoCalled    = false;
+			bool m_hasEpoch           = false;
 
-			uint32_t m_OriginalSampleNumber = 0;
-			uint32_t m_OutputFloatPrecision = 10;
+			uint32_t m_originalSampleNumber = 0;
+			uint32_t m_outputFloatPrecision = 10;
 
-			bool m_LastMatrixOnly = false;
+			bool m_lastMatrixOnly = false;
 
-			std::string m_BufferReadFileLine; // Buffer used to store unused read chars.
+			std::string m_bufferReadFileLine; // Buffer used to store unused read chars.
 
-			bool m_HasDataToRead = true;
+			bool m_hasDataToRead = true;
 
-			bool m_IsCRLFEOL = false; // Is a CRLF end of line
+			bool m_isCRLFEOL = false; // Is a CRLF end of line
 		};
 	} // namespace CSV
 } // namespace OpenViBE

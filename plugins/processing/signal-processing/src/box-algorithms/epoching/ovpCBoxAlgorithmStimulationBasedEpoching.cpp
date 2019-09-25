@@ -1,6 +1,5 @@
 #include <cmath>
 #include <algorithm>
-#include <limits>
 
 #include <openvibe/ovTimeArithmetics.h>
 #include "ovpCBoxAlgorithmStimulationBasedEpoching.h"
@@ -93,8 +92,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.",
 								ErrorType::Internal);
 
-			m_SampleCountPerOutputEpoch = uint32_t(
-				TimeArithmetics::timeToSampleCount(m_SamplingRate, TimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
+			m_SampleCountPerOutputEpoch = uint32_t(TimeArithmetics::timeToSampleCount(m_SamplingRate, TimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
 
 			outputMatrix->setDimensionCount(2);
 			outputMatrix->setDimensionSize(0, m_nChannel);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ovIKernelObject.h"
+#include "../log/ovILogManager.h"
 
 namespace OpenViBE
 {
@@ -24,7 +25,7 @@ namespace OpenViBE
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual Kernel::ILogManager& getLogManager() = 0;
+			virtual ILogManager& getLogManager() = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

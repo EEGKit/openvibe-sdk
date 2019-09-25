@@ -54,12 +54,12 @@ CIdentifier CTypeManager::getNextTypeIdentifier(const CIdentifier& previousID) c
 
 std::vector<std::pair<CIdentifier, CString>> CTypeManager::getSortedTypes() const
 {
-	std::vector<std::pair<CIdentifier, CString>> l_oSorted;
+	std::vector<std::pair<CIdentifier, CString>> sorted;
 
-	for (auto element : m_vName) { l_oSorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second)); }
-	std::sort(l_oSorted.begin(), l_oSorted.end(), a_inf_b());
+	for (auto element : m_vName) { sorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second)); }
+	std::sort(sorted.begin(), sorted.end(), a_inf_b());
 
-	return l_oSorted;
+	return sorted;
 }
 
 bool CTypeManager::registerType(const CIdentifier& typeID, const CString& sTypeName)
