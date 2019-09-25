@@ -477,7 +477,7 @@ bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 		std::string stringBuffer, stringHistory;
 
 		m_isCRLFEOL = false;
-		if(m_Fs.peek() == std::ifstream::traits_type::eof()) { m_isCRLFEOL = true; }
+		if(m_fs.peek() == std::ifstream::traits_type::eof()) { m_isCRLFEOL = true; }
 		else 
 		{
 			if (!this->streamReader(m_fs, stringBuffer, '\n', stringHistory))
