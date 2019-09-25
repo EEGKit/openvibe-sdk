@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CPluginManager(const IKernelContext& ctx);
+			explicit CPluginManager(const IKernelContext& ctx) : TKernelObject<IPluginManager>(ctx) {}
 			~CPluginManager() override;
 			bool addPluginsFromFiles(const CString& rFileNameWildCard) override;
 			bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) override;

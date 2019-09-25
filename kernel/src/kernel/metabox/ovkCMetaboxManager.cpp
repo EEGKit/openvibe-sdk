@@ -86,7 +86,7 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& ctx)
 	this->TKernelObject<IMetaboxManager>::getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
-CMetaboxManager::~CMetaboxManager() { for (auto desc : m_MetaboxObjectDesc) { delete desc.second; } }
+CMetaboxManager::~CMetaboxManager() { for (auto& desc : m_MetaboxObjectDesc) { delete desc.second; } }
 
 bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 {

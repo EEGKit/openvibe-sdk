@@ -30,17 +30,17 @@ using namespace OpenViBE::CSV;
 
 struct SignalFile
 {
-	std::vector<std::string> channelNames;
-	uint32_t samplingRate;
-	uint32_t sampleCountPerBuffer;
-	std::vector<std::pair<std::pair<double, double>, std::vector<double>>> data;
+	std::vector<std::string> m_ChannelNames;
+	uint32_t m_SamplingRate;
+	uint32_t m_SampleCountPerBuffer;
+	std::vector<std::pair<std::pair<double, double>, std::vector<double>>> m_data;
 };
 
 namespace
 {
 	std::string dataDirectory = "";
 
-	const struct SignalFile simpleSignalFile = {
+	const struct SignalFile SIMPLE_SIGNAL_FILE = {
 		{ "Time Signal" },
 		32,
 		8,
@@ -60,14 +60,14 @@ namespace
 		}
 	};
 
-	void compareChunks(std::pair<std::pair<double, double>, std::vector<double>> expected, SMatrixChunk actual)
+	void compareChunks(const std::pair<std::pair<double, double>, std::vector<double>>& expected, const SMatrixChunk& actual)
 	{
 		ASSERT_EQ(expected.first.first, actual.startTime);
 		ASSERT_EQ(expected.first.second, actual.endTime);
 		ASSERT_EQ(expected.second.size(), actual.matrix.size());
 		for (size_t sample = 0; sample < expected.second.size(); sample++) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
 	}
-}
+} // namespace
 
 TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 {
@@ -85,11 +85,11 @@ TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 	ASSERT_TRUE(csv->getSignalInformation(channelNames, samplingRate, sampleCountPerBuffer));
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(1, chunks, stimulations));
 	ASSERT_EQ(1, chunks.size());
-	compareChunks(simpleSignalFile.data[0], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[0], chunks[0]);
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(2, chunks, stimulations));
 	ASSERT_EQ(2, chunks.size());
-	compareChunks(simpleSignalFile.data[1], chunks[0]);
-	compareChunks(simpleSignalFile.data[2], chunks[1]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[1], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[2], chunks[1]);
 
 	ASSERT_TRUE(csv->closeFile());
 	releaseCSVHandler(csv);
@@ -111,11 +111,11 @@ TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 	ASSERT_TRUE(csv->getSignalInformation(channelNames, samplingRate, sampleCountPerBuffer));
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(1, chunks, stimulations));
 	ASSERT_EQ(1, chunks.size());
-	compareChunks(simpleSignalFile.data[0], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[0], chunks[0]);
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(2, chunks, stimulations));
 	ASSERT_EQ(2, chunks.size());
-	compareChunks(simpleSignalFile.data[1], chunks[0]);
-	compareChunks(simpleSignalFile.data[2], chunks[1]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[1], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[2], chunks[1]);
 
 	ASSERT_TRUE(csv->closeFile());
 	releaseCSVHandler(csv);

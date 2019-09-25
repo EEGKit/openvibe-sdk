@@ -199,8 +199,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, 
 	return true;
 }
 
-bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>& cov, std::vector<MatrixXd>& sortedEigenVectors,
-													std::vector<VectorXd>& sortedEigenValues)
+bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>& cov, std::vector<MatrixXd>& sortedEigenVectors, std::vector<VectorXd>& sortedEigenValues)
 {
 	// We wouldn't need to store all this -- they are kept for debugging purposes
 	std::vector<VectorXd> eigenValues(m_NumClasses);
@@ -244,6 +243,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 
 		// Sort the vectors -_-
 		std::vector<std::pair<double, int>> indexes;
+		indexes.reserve(eigenValues[classIndex].size());
 		for (int i = 0; i < eigenValues[classIndex].size(); i++) { indexes.emplace_back(std::make_pair((eigenValues[classIndex])[i], i)); }
 		std::sort(indexes.begin(), indexes.end(), std::greater<std::pair<double, int>>());
 
@@ -349,9 +349,9 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 
 		// Compute the actual CSP using the obtained covariance matrices
-		std::vector<MatrixXd> l_vSortedEigenVectors;
-		std::vector<VectorXd> l_vSortedEigenValues;
-		OV_ERROR_UNLESS_KRF(computeCSP(cov, l_vSortedEigenVectors, l_vSortedEigenValues), "Failure when computing CSP",
+		std::vector<MatrixXd> sortedEigenVectors;
+		std::vector<VectorXd> sortedEigenValues;
+		OV_ERROR_UNLESS_KRF(computeCSP(cov, sortedEigenVectors, sortedEigenValues), "Failure when computing CSP",
 							OpenViBE::Kernel::ErrorType::BadProcessing);
 
 		// Create a CMatrix mapper that can spool the filters to a file
@@ -365,10 +365,10 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		for (size_t c = 0; c < m_NumClasses; c++)
 		{
 			selectedVectorsMapper.block(c * m_FiltersPerClass, 0, m_FiltersPerClass, nChannels) =
-					l_vSortedEigenVectors[c].block(0, 0, nChannels, m_FiltersPerClass).transpose();
+					sortedEigenVectors[c].block(0, 0, nChannels, m_FiltersPerClass).transpose();
 
 			this->getLogManager() << LogLevel_Info << "The " << m_FiltersPerClass << " filter(s) for cond " << c + 1 << " cover " << 100.0 *
-					l_vSortedEigenValues[c].head(m_FiltersPerClass).sum() / l_vSortedEigenValues[c].sum() << "% of corresp. eigenvalues\n";
+					sortedEigenValues[c].head(m_FiltersPerClass).sum() / sortedEigenValues[c].sum() << "% of corresp. eigenvalues\n";
 		}
 
 		if (m_SaveAsBoxConf)
@@ -396,9 +396,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			for (uint32_t i = 0; i < selectedVectors.getDimensionSize(0); i++)
 			{
 				std::stringstream label;
-				label << "Cond " << i / m_FiltersPerClass + 1
-						<< " filter " << i % m_FiltersPerClass + 1;
-
+				label << "Cond " << i / m_FiltersPerClass + 1 << " filter " << i % m_FiltersPerClass + 1;
 				selectedVectors.setDimensionLabel(0, i, label.str().c_str());
 			}
 

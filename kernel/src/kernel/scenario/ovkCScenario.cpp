@@ -989,7 +989,7 @@ bool CScenario::disconnect(const CIdentifier& linkID)
 
 bool CScenario::applyLocalSettings()
 {
-	for (auto box : m_Boxes)
+	for (auto& box : m_Boxes)
 	{
 		// Expand all the variables inside the newly created scenario by replacing only the $var variables
 		CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
@@ -1069,7 +1069,7 @@ CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedID) const
 
 bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 {
-	for (auto box : m_Boxes)
+	for (auto& box : m_Boxes)
 	{
 		if (!box.second->hasAttribute(OV_AttributeId_Box_Disabled))
 		{
@@ -1093,7 +1093,7 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 				if (configurationManager) { settingValue = configurationManager->expand(settingValue); }
 				else { settingValue = this->getConfigurationManager().expandOnlyKeyword("var", settingValue); }
 
-				auto settingTypeName = this->getTypeManager().getTypeName(typeID);
+				const auto settingTypeName = this->getTypeManager().getTypeName(typeID);
 
 				OV_ERROR_UNLESS_KRF(
 					::checkSettingValue(settingValue, typeID, this->getTypeManager()),
@@ -1152,7 +1152,7 @@ bool CScenario::checkOutdatedBoxes()
 	m_UpdatedBoxIOCorrespondence[Input]  = std::map<CIdentifier, std::map<uint32_t, uint32_t>>();
 	m_UpdatedBoxIOCorrespondence[Output] = std::map<CIdentifier, std::map<uint32_t, uint32_t>>();
 
-	for (auto box : m_Boxes)
+	for (auto& box : m_Boxes)
 	{
 		// Do not attempt to update boxes which do not have existing box algorithm identifiers
 		auto boxAlgorithmClassID = box.second->getAlgorithmClassIdentifier();
@@ -1515,7 +1515,7 @@ bool CScenario::removeDeprecatedInterfacorsFromBox(const CIdentifier& boxID)
 
 bool CScenario::containsBoxWithDeprecatedInterfacors() const
 {
-	for (auto box : m_Boxes)
+	for (auto& box : m_Boxes)
 	{
 		for (const auto interfacorType : { Input, Output, Setting })
 		{

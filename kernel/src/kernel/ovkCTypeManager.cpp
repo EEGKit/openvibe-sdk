@@ -56,7 +56,7 @@ std::vector<std::pair<CIdentifier, CString>> CTypeManager::getSortedTypes() cons
 {
 	std::vector<std::pair<CIdentifier, CString>> sorted;
 
-	for (auto element : m_vName) { sorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second)); }
+	for (const auto& element : m_vName) { sorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second)); }
 	std::sort(sorted.begin(), sorted.end(), a_inf_b());
 
 	return sorted;
