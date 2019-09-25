@@ -20,7 +20,7 @@ namespace OpenViBE
 			explicit TAttributable(const IKernelContext& ctx)
 				: T(ctx) { }
 
-			virtual bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue)
+			bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue) override
 			{
 				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute != m_vAttribute.end()) { return false; }
@@ -28,7 +28,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool removeAttribute(const CIdentifier& attributeID)
+			bool removeAttribute(const CIdentifier& attributeID) override
 			{
 				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end()) { return false; }
@@ -36,44 +36,41 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool removeAllAttributes()
+			bool removeAllAttributes() override
 			{
 				m_vAttribute.clear();
 				return true;
 			}
 
-			virtual CString getAttributeValue(const CIdentifier& attributeID) const
+			CString getAttributeValue(const CIdentifier& attributeID) const override
 			{
 				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end()) { return CString(""); }
 				return itAttribute->second;
 			}
 
-			virtual bool setAttributeValue(const CIdentifier& attributeID, const CString& sAttributeValue)
+			bool setAttributeValue(const CIdentifier& attributeID, const CString& value) override
 			{
 				auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end())
 				{
-					m_vAttribute[attributeID] = sAttributeValue;
+					m_vAttribute[attributeID] = value;
 					return true;
 				}
-				itAttribute->second = sAttributeValue;
+				itAttribute->second = value;
 				return true;
 			}
 
-			virtual bool hasAttribute(const CIdentifier& attributeID) const
+			bool hasAttribute(const CIdentifier& attributeID) const override
 			{
 				const auto itAttribute = m_vAttribute.find(attributeID);
 				if (itAttribute == m_vAttribute.end()) { return false; }
 				return true;
 			}
 
-			virtual bool hasAttributes() const { return !m_vAttribute.empty(); }
+			bool hasAttributes() const override { return !m_vAttribute.empty(); }
 
-			virtual CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const
-			{
-				return getNextIdentifier<CString>(m_vAttribute, previousID);
-			}
+			CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const override { return getNextIdentifier<CString>(m_vAttribute, previousID); }
 
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT)
 

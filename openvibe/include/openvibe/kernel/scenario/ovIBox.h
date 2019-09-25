@@ -146,46 +146,45 @@ namespace OpenViBE
 			virtual bool initializeFromExistingBox(const IBox& existingBox) = 0;
 
 
-			virtual bool addInterfacor(BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier,
-									   bool shouldNotify = true) = 0;
-			virtual bool removeInterfacor(BoxInterfacorType interfacorType, const uint32_t index, const bool shouldNotify = true) = 0;
+			virtual bool addInterfacor(const BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier, bool shouldNotify = true) = 0;
+			virtual bool removeInterfacor(const BoxInterfacorType interfacorType, const uint32_t index, const bool shouldNotify = true) = 0;
 
-			virtual uint32_t getInterfacorCount(BoxInterfacorType interfacorType) const = 0;
-			virtual uint32_t getInterfacorCountIncludingDeprecated(BoxInterfacorType interfacorType) const = 0;
+			virtual uint32_t getInterfacorCount(const BoxInterfacorType interfacorType) const = 0;
+			virtual uint32_t getInterfacorCountIncludingDeprecated(const BoxInterfacorType interfacorType) const = 0;
 
-			virtual bool getInterfacorIdentifier(BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& identifier) const = 0;
+			virtual bool getInterfacorIdentifier(const BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& identifier) const = 0;
 
-			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const CIdentifier& identifier, uint32_t& index) const = 0;
-			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const CString& name, uint32_t& index) const = 0;
+			virtual bool getInterfacorIndex(const BoxInterfacorType interfacorType, const CIdentifier& identifier, uint32_t& index) const = 0;
+			virtual bool getInterfacorIndex(const BoxInterfacorType interfacorType, const CString& name, uint32_t& index) const = 0;
 
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeID) const = 0;
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeID) const = 0;
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CString& name, CIdentifier& typeID) const = 0;
+			virtual bool getInterfacorType(const BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeID) const = 0;
+			virtual bool getInterfacorType(const BoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeID) const = 0;
+			virtual bool getInterfacorType(const BoxInterfacorType interfacorType, const CString& name, CIdentifier& typeID) const = 0;
 
-			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const uint32_t index, CString& name) const = 0;
-			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const = 0;
+			virtual bool getInterfacorName(const BoxInterfacorType interfacorType, const uint32_t index, CString& name) const = 0;
+			virtual bool getInterfacorName(const BoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const = 0;
 
-			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const uint32_t index, bool& value) const = 0;
-			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const = 0;
+			virtual bool getInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const uint32_t index, bool& value) const = 0;
+			virtual bool getInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const = 0;
 
-			virtual bool hasInterfacorWithIdentifier(BoxInterfacorType interfacorType, const CIdentifier& identifier) const = 0;
-			virtual bool hasInterfacorWithType(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) const = 0;
-			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) const = 0;
+			virtual bool hasInterfacorWithIdentifier(const BoxInterfacorType interfacorType, const CIdentifier& identifier) const = 0;
+			virtual bool hasInterfacorWithType(const BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) const = 0;
+			virtual bool hasInterfacorWithNameAndType(const BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) const = 0;
 
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) = 0;
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeID) = 0;
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) = 0;
+			virtual bool setInterfacorType(const BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) = 0;
+			virtual bool setInterfacorType(const BoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeID) = 0;
+			virtual bool setInterfacorType(const BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) = 0;
 
-			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const uint32_t index, const CString& name) = 0;
-			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& name) = 0;
+			virtual bool setInterfacorName(const BoxInterfacorType interfacorType, const uint32_t index, const CString& name) = 0;
+			virtual bool setInterfacorName(const BoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& name) = 0;
 
-			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const uint32_t index, bool value) = 0;
-			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool value) = 0;
+			virtual bool setInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const uint32_t index, const bool value) = 0;
+			virtual bool setInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const CIdentifier& identifier, const bool value) = 0;
 
-			virtual bool updateInterfacorIdentifier(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newID) = 0;
+			virtual bool updateInterfacorIdentifier(const BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newID) = 0;
 
-			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeID) = 0;
-			virtual bool hasInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeID) const = 0;
+			virtual bool addInterfacorTypeSupport(const BoxInterfacorType interfacorType, const CIdentifier& typeID) = 0;
+			virtual bool hasInterfacorTypeSupport(const BoxInterfacorType interfacorType, const CIdentifier& typeID) const = 0;
 			//@}
 			/** \name Input management */
 			//@{
@@ -203,8 +202,7 @@ namespace OpenViBE
 			 * The input is always added after the last
 			 * already existing input.
 			 */
-			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
-								  const bool notify                                                             = true) = 0;
+			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**
 			 * \brief Removes an input for this box
@@ -281,8 +279,7 @@ namespace OpenViBE
 			 * The output is always added after the last
 			 * already existing output.
 			 */
-			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
-								   const bool notify                                                             = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**
 			 * \brief Removes an output for this box
@@ -365,8 +362,7 @@ namespace OpenViBE
 			 * The default value -1 means that the setting
 			 * will be add to the end.
 			 */
-			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue,
-									const uint32_t index      = OV_Value_UndefinedIndexUInt,
+			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue, const uint32_t index = OV_Value_UndefinedIndexUInt,
 									const bool bModifiability = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**

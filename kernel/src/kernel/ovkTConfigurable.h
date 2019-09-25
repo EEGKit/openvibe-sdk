@@ -19,7 +19,7 @@ namespace OpenViBE
 
 			explicit TBaseConfigurable(const IKernelContext& ctx) : IBase(ctx) { }
 
-			virtual ~TBaseConfigurable()
+			~TBaseConfigurable() override
 			{
 				auto itParameter = m_vParameter.begin();
 				while (itParameter != m_vParameter.end())
@@ -34,69 +34,68 @@ namespace OpenViBE
 				}
 			}
 
-			virtual CIdentifier getNextParameterIdentifier(const CIdentifier& previousID) const
+			CIdentifier getNextParameterIdentifier(const CIdentifier& previousID) const override
 			{
 				return getNextIdentifier<std::pair<bool, IParameter*>>(m_vParameter, previousID);
 			}
 
-			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier)
+			IParameter* getParameter(const CIdentifier& parameterID) override
 			{
-				auto itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter == m_vParameter.end()) { return nullptr; }
-				return itParameter->second.second;
+				const auto it = m_vParameter.find(parameterID);
+				if (it == m_vParameter.end()) { return nullptr; }
+				return it->second.second;
 			}
 
-			virtual bool setParameter(const CIdentifier& rParameterIdentifier, IParameter& rpParameter)
+			bool setParameter(const CIdentifier& parameterID, IParameter& parameter) override
 			{
-				this->removeParameter(rParameterIdentifier);
+				this->removeParameter(parameterID);
 
-				m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(false, &rpParameter);
+				m_vParameter[parameterID] = std::pair<bool, IParameter*>(false, &parameter);
 
 				return true;
 			}
 
-			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType,
-												const CIdentifier& subTypeID)
+			IParameter* createParameter(const CIdentifier& parameterID, const EParameterType parameterType, const CIdentifier& subTypeID) override
 			{
-				auto itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter != m_vParameter.end()) { return nullptr; }
+				const auto it = m_vParameter.find(parameterID);
+				if (it != m_vParameter.end()) { return nullptr; }
 
-				IParameter* l_pParameter = nullptr;
-				switch (eParameterType)
+				IParameter* parameter = nullptr;
+				switch (parameterType)
 				{
-					case ParameterType_UInteger: l_pParameter = new CUIntegerParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_UInteger: parameter = new CUIntegerParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_Integer: l_pParameter = new CIntegerParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Integer: parameter = new CIntegerParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_Enumeration: l_pParameter = new CEnumerationParameter(this->getKernelContext(), eParameterType, subTypeID);
+					case ParameterType_Enumeration: parameter = new CEnumerationParameter(this->getKernelContext(), parameterType, subTypeID);
 						break;
-					case ParameterType_Boolean: l_pParameter = new CBooleanParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Boolean: parameter = new CBooleanParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_Float: l_pParameter = new CFloatParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Float: parameter = new CFloatParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_String: l_pParameter = new CStringParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_String: parameter = new CStringParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_Identifier: l_pParameter = new CIdentifierParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Identifier: parameter = new CIdentifierParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_Matrix: l_pParameter = new CMatrixParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Matrix: parameter = new CMatrixParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_StimulationSet: l_pParameter = new CStimulationSetParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_StimulationSet: parameter = new CStimulationSetParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_MemoryBuffer: l_pParameter = new CMemoryBufferParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_MemoryBuffer: parameter = new CMemoryBufferParameter(this->getKernelContext(), parameterType);
 						break;
-					case ParameterType_Object: l_pParameter = new CObjectParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Object: parameter = new CObjectParameter(this->getKernelContext(), parameterType);
 						break;
 					case ParameterType_None:
-					case ParameterType_Pointer: l_pParameter = new CPointerParameter(this->getKernelContext(), eParameterType);
+					case ParameterType_Pointer: parameter = new CPointerParameter(this->getKernelContext(), parameterType);
 						break;
 				}
 
-				if (l_pParameter != nullptr) { m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(true, l_pParameter); }
+				if (parameter != nullptr) { m_vParameter[parameterID] = std::pair<bool, IParameter*>(true, parameter); }
 
-				return l_pParameter;
+				return parameter;
 			}
 
-			virtual bool removeParameter(const CIdentifier& rParameterIdentifier)
+			bool removeParameter(const CIdentifier& rParameterIdentifier) override
 			{
 				auto itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter == m_vParameter.end()) { return false; }

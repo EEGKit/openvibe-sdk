@@ -11,19 +11,19 @@ namespace OpenViBEToolkit
 
 		TAlgorithm() { }
 
-		virtual bool initialize(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx)
+		bool initialize(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx) override
 		{
 			CScopedAlgorithm scopedAlgorithm(m_pAlgorithmContext, &algorithmCtx);
 			return initialize();
 		}
 
-		virtual bool uninitialize(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx)
+		bool uninitialize(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx) override
 		{
 			CScopedAlgorithm scopedAlgorithm(m_pAlgorithmContext, &algorithmCtx);
 			return uninitialize();
 		}
 
-		virtual bool process(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx)
+		bool process(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx) override
 		{
 			CScopedAlgorithm scopedAlgorithm(m_pAlgorithmContext, &algorithmCtx);
 			return process();

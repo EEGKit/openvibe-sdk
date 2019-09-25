@@ -17,49 +17,46 @@ namespace OpenViBE
 		public:
 
 			TBaseParameter(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = OV_UndefinedIdentifier)
-				: IBase(ctx), m_pValueRef(nullptr)
-				  , m_Value(0)
-				  , m_eParameterType(eParameterType)
-				  , m_oSubTypeIdentifier(subTypeID) { }
+				: IBase(ctx), m_pValueRef(nullptr), m_Value(0), m_eParameterType(eParameterType), m_oSubTypeIdentifier(subTypeID) { }
 
-			virtual uint64_t getParameterSize() const { return sizeof(IType); }
-			virtual EParameterType getType() const { return m_eParameterType; }
-			virtual CIdentifier getSubTypeIdentifier() const { return m_oSubTypeIdentifier; }
+			uint64_t getParameterSize() const override { return sizeof(IType); }
+			EParameterType getType() const override { return m_eParameterType; }
+			CIdentifier getSubTypeIdentifier() const override { return m_oSubTypeIdentifier; }
 
-			virtual bool clearReferenceTarget()
+			bool clearReferenceTarget() override
 			{
 				m_pValueRef     = NULL;
 				m_pParameterRef = nullptr;
 				return true;
 			}
 
-			virtual bool getReferenceTarget(IParameter*& pParameterRef) const
+			bool getReferenceTarget(IParameter*& pParameterRef) const override
 			{
 				pParameterRef = m_pParameterRef;
 				return true;
 			}
 
-			virtual bool setReferenceTarget(IParameter* pParameterRef)
+			bool setReferenceTarget(IParameter* pParameterRef) override
 			{
 				if (m_pValueRef) { m_pValueRef = NULL; }
 				m_pParameterRef = pParameterRef;
 				return true;
 			}
 
-			virtual bool getReferenceTarget(void* pValue) const
+			bool getReferenceTarget(void* pValue) const override
 			{
 				memcpy(&pValue, &m_pValueRef, sizeof(IType*));
 				return true;
 			}
 
-			virtual bool setReferenceTarget(const void* pValue)
+			bool setReferenceTarget(const void* pValue) override
 			{
 				if (m_pParameterRef) { m_pParameterRef = nullptr; }
 				memcpy(&m_pValueRef, &pValue, sizeof(IType*));
 				return true;
 			}
 
-			virtual bool getValue(void* pValue) const
+			bool getValue(void* pValue) const override
 			{
 				if (m_pParameterRef) { return m_pParameterRef->getValue(pValue); }
 				if (m_pValueRef) { memcpy(pValue, m_pValueRef, sizeof(IType)); }
@@ -67,7 +64,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setValue(const void* pValue)
+			bool setValue(const void* pValue) override
 			{
 				if (m_pParameterRef) { return m_pParameterRef->setValue(pValue); }
 				if (m_pValueRef) { memcpy(m_pValueRef, pValue, sizeof(IType)); }

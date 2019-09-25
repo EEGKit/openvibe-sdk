@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 		public:
 			void release() override { delete this; }
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, uint64_t size) override;
+			void processChildData(const void* buffer, const uint64_t size) override;
 
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_FeatureVectorStreamDecoder)
 

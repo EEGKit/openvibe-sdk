@@ -15,11 +15,11 @@ namespace OpenViBE
 
 			explicit TMessage(const IKernelContext& ctx);
 
-			virtual CIdentifier getIdentifier() const;
-			virtual uint64_t getTime() const;
+			CIdentifier getIdentifier() const override;
+			uint64_t getTime() const override;
 
-			virtual bool setIdentifier(const CIdentifier& identifier);
-			virtual bool setTime(uint64_t ui64Time);
+			bool setIdentifier(const CIdentifier& identifier) override;
+			bool setTime(uint64_t ui64Time) override;
 
 			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
 

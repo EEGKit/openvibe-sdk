@@ -322,8 +322,8 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].incrementalCov->process(), "Failed to retrieve regularized covariance",
 								OpenViBE::Kernel::ErrorType::Internal);
 
-			Map<MatrixXdRowMajor> l_oCovMapper(op_pCovarianceMatrix->getBuffer(), nChannels, nChannels);
-			cov[i] = l_oCovMapper;
+			const Map<MatrixXdRowMajor> covMapper(op_pCovarianceMatrix->getBuffer(), nChannels, nChannels);
+			cov[i] = covMapper;
 
 			// Get vanilla cov
 			m_IncCovarianceProxies[i].incrementalCov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, true);

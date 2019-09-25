@@ -13,9 +13,9 @@ namespace OpenViBEToolkit
 		explicit TFeatureVector(OpenViBE::IMatrix& rMatrix)
 			: TVector<CParent>(rMatrix) { }
 
-		virtual double getLabel() const { return 0; }
+		double getLabel() const override { return 0; }
 
-		virtual bool setLabel(const double /*label*/) { return false; }
+		bool setLabel(const double /*label*/) override { return false; }
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < CParent >, OV_UndefinedIdentifier)
 	};

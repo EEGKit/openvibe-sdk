@@ -135,7 +135,7 @@ CScenario::CScenario(const IKernelContext& ctx, const CIdentifier& identifier)
 	// Some operations on boxes manipulate the owner scenario, for example removing inputs
 	// by default we set the scenario as owning itself to avoid segfaults
 	this->TBox<IScenario>::setOwnerScenario(this);
-	this->m_oIdentifier = identifier;
+	this->m_identifier = identifier;
 }
 
 CScenario::~CScenario() { this->clear(); }
