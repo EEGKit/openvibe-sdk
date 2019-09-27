@@ -69,39 +69,39 @@ namespace OpenViBE
 			bool initialize() { return true; }
 			bool uninitialize() override { return true; }
 
-			void setAlgorithmManager(IAlgorithmManager* pAlgorithmManager) { m_pAlgorithmManager = pAlgorithmManager; }
-			void setConfigurationManager(IConfigurationManager* pConfigurationManager) { m_pConfigurationManager = pConfigurationManager; }
-			void setKernelObjectFactory(IKernelObjectFactory* pKernelObjectFactory) { m_pKernelObjectFactory = pKernelObjectFactory; }
-			void setPlayerManager(IPlayerManager* pPlayerManager) { m_pPlayerManager = pPlayerManager; }
-			void setPluginManager(IPluginManager* pPluginManager) { m_pPluginManager = pPluginManager; }
-			void setMetaboxManager(IMetaboxManager* pMetaboxManager) { m_pMetaboxManager = pMetaboxManager; }
-			void setScenarioManager(IScenarioManager* pScenarioManager) { m_pScenarioManager = pScenarioManager; }
-			void setTypeManager(ITypeManager* pTypeManager) { m_pTypeManager = pTypeManager; }
-			void setLogManager(ILogManager* pLogManager) { m_pLogManager = pLogManager; }
-			void setErrorManager(IErrorManager* pErrorManager) { m_pErrorManager = pErrorManager; }
+			void setAlgorithmManager(IAlgorithmManager* manager) { m_algorithmManager = manager; }
+			void setConfigurationManager(IConfigurationManager* manager) { m_configurationManager = manager; }
+			void setKernelObjectFactory(IKernelObjectFactory* kernelObjectFactory) { m_kernelObjectFactory = kernelObjectFactory; }
+			void setPlayerManager(IPlayerManager* manager) { m_playerManager = manager; }
+			void setPluginManager(IPluginManager* manager) { m_pluginManager = manager; }
+			void setMetaboxManager(IMetaboxManager* manager) { m_metaboxManager = manager; }
+			void setScenarioManager(IScenarioManager* manager) { m_scenarioManager = manager; }
+			void setTypeManager(ITypeManager* manager) { m_typeManager = manager; }
+			void setLogManager(ILogManager* manager) { m_logManager = manager; }
+			void setErrorManager(IErrorManager* manager) { m_errorManager = manager; }
 
 			IAlgorithmManager& getAlgorithmManager() const override
 			{
-				return m_pAlgorithmManager ? *m_pAlgorithmManager : m_kernelContext.getAlgorithmManager();
+				return m_algorithmManager ? *m_algorithmManager : m_kernelContext.getAlgorithmManager();
 			}
 
 			IConfigurationManager& getConfigurationManager() const override
 			{
-				return m_pConfigurationManager ? *m_pConfigurationManager : m_kernelContext.getConfigurationManager();
+				return m_configurationManager ? *m_configurationManager : m_kernelContext.getConfigurationManager();
 			}
 
 			IKernelObjectFactory& getKernelObjectFactory() const override
 			{
-				return m_pKernelObjectFactory ? *m_pKernelObjectFactory : m_kernelContext.getKernelObjectFactory();
+				return m_kernelObjectFactory ? *m_kernelObjectFactory : m_kernelContext.getKernelObjectFactory();
 			}
 
-			IPlayerManager& getPlayerManager() const override { return m_pPlayerManager ? *m_pPlayerManager : m_kernelContext.getPlayerManager(); }
-			IPluginManager& getPluginManager() const override { return m_pPluginManager ? *m_pPluginManager : m_kernelContext.getPluginManager(); }
-			IMetaboxManager& getMetaboxManager() const override { return m_pMetaboxManager ? *m_pMetaboxManager : m_kernelContext.getMetaboxManager(); }
-			IScenarioManager& getScenarioManager() const override { return m_pScenarioManager ? *m_pScenarioManager : m_kernelContext.getScenarioManager(); }
-			ITypeManager& getTypeManager() const override { return m_pTypeManager ? *m_pTypeManager : m_kernelContext.getTypeManager(); }
-			ILogManager& getLogManager() const override { return m_pLogManager ? *m_pLogManager : m_kernelContext.getLogManager(); }
-			IErrorManager& getErrorManager() const override { return m_pErrorManager ? *m_pErrorManager : m_kernelContext.getErrorManager(); }
+			IPlayerManager& getPlayerManager() const override { return m_playerManager ? *m_playerManager : m_kernelContext.getPlayerManager(); }
+			IPluginManager& getPluginManager() const override { return m_pluginManager ? *m_pluginManager : m_kernelContext.getPluginManager(); }
+			IMetaboxManager& getMetaboxManager() const override { return m_metaboxManager ? *m_metaboxManager : m_kernelContext.getMetaboxManager(); }
+			IScenarioManager& getScenarioManager() const override { return m_scenarioManager ? *m_scenarioManager : m_kernelContext.getScenarioManager(); }
+			ITypeManager& getTypeManager() const override { return m_typeManager ? *m_typeManager : m_kernelContext.getTypeManager(); }
+			ILogManager& getLogManager() const override { return m_logManager ? *m_logManager : m_kernelContext.getLogManager(); }
+			IErrorManager& getErrorManager() const override { return m_errorManager ? *m_errorManager : m_kernelContext.getErrorManager(); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
@@ -109,16 +109,16 @@ namespace OpenViBE
 
 			const IKernelContext& m_kernelContext;
 
-			mutable IAlgorithmManager* m_pAlgorithmManager         = nullptr;
-			mutable IConfigurationManager* m_pConfigurationManager = nullptr;
-			mutable IKernelObjectFactory* m_pKernelObjectFactory   = nullptr;
-			mutable IPlayerManager* m_pPlayerManager               = nullptr;
-			mutable IPluginManager* m_pPluginManager               = nullptr;
-			mutable IMetaboxManager* m_pMetaboxManager             = nullptr;
-			mutable IScenarioManager* m_pScenarioManager           = nullptr;
-			mutable ITypeManager* m_pTypeManager                   = nullptr;
-			mutable ILogManager* m_pLogManager                     = nullptr;
-			mutable IErrorManager* m_pErrorManager                 = nullptr;
+			mutable IAlgorithmManager* m_algorithmManager         = nullptr;
+			mutable IConfigurationManager* m_configurationManager = nullptr;
+			mutable IKernelObjectFactory* m_kernelObjectFactory   = nullptr;
+			mutable IPlayerManager* m_playerManager               = nullptr;
+			mutable IPluginManager* m_pluginManager               = nullptr;
+			mutable IMetaboxManager* m_metaboxManager             = nullptr;
+			mutable IScenarioManager* m_scenarioManager           = nullptr;
+			mutable ITypeManager* m_typeManager                   = nullptr;
+			mutable ILogManager* m_logManager                     = nullptr;
+			mutable IErrorManager* m_errorManager                 = nullptr;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

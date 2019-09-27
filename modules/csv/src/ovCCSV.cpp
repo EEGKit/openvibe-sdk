@@ -1766,7 +1766,6 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 	return true;
 }
 
-bool CCSVHandler::hasDataToRead() const { return m_hasDataToRead; }
 
 CSV_API ICSVHandler* CSV::createCSVHandler() { return new CCSVHandler(); }
 

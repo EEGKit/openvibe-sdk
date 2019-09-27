@@ -185,7 +185,7 @@ namespace OpenViBE
 			 * \retval True if there is still data to read in the file.
 			 * \retval False if there is no more data to read in the file.
 			 */
-			bool hasDataToRead() const override;
+			bool hasDataToRead() const override { return m_hasDataToRead; }
 
 		private:
 			/**

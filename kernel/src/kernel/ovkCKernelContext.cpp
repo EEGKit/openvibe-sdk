@@ -91,11 +91,11 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");
 #elif defined TARGET_OS_Linux
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Linux");
+	m_configurationManager->createConfigurationToken("OperatingSystem", "Linux");
 #elif defined TARGET_OS_MacOS
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "MacOS");
+	m_configurationManager->createConfigurationToken("OperatingSystem", "MacOS");
 #else
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Unknown");
+	m_configurationManager->createConfigurationToken("OperatingSystem", "Unknown");
 #endif
 
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS", "libopenvibe-plugins-*.dylib");

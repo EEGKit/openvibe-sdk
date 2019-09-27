@@ -24,17 +24,17 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_oDecoder;
 			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis> m_vEncoder[4];
 
-			const char* m_pWaveletType = nullptr;
-			double m_dWaveletParameter = 0;
-			int m_iScaleCount_J        = 0;
-			double m_dHighestFrequency = 0;
-			double m_dSmallestScale_s0 = 0;
-			double m_dScaleSpacing_dj  = 0;
+			const char* m_waveletType = nullptr;
+			double m_waveletParam     = 0;
+			size_t m_nScaleJ          = 0;
+			double m_highestFreq      = 0;
+			double m_smallestScaleS0  = 0;
+			double m_scaleSpacingDj   = 0;
 
-			const char* m_pScaleType = nullptr;
-			int m_iScalePowerBase_a0       = 0;
-			double m_dSamplingPeriod_dt    = 0;
-			cwt_object m_oWaveletTransform = nullptr;
+			const char* m_scaleType       = nullptr;
+			int m_scalePowerBaseA0        = 0;
+			double m_samplingPeriodDt     = 0;
+			cwt_object m_waveletTransform = nullptr;
 		};
 
 		class CBoxAlgorithmContinuousWaveletAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -46,10 +46,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using CWT."); }
 
-			OpenViBE::CString getDetailedDescription() const override
-			{
-				return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform.");
-			}
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
 
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }

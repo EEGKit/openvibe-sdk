@@ -386,9 +386,8 @@ namespace OpenViBE
 			// first check if the key exists
 			auto keyMatch = std::find_if(m_DescMap.begin(), m_DescMap.end(), [&](const std::pair<std::string, FullOptionDesc>& p)
 										 {
-											 auto desc = p.second.second;
-											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (
-														("--" + desc.m_ShortName) == key);
+											 const auto& desc = p.second.second;
+											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (("--" + desc.m_ShortName) == key);
 										 }
 			);
 
@@ -399,9 +398,7 @@ namespace OpenViBE
 				continue;
 			}
 
-			auto desc = keyMatch->second;
-
-			if (!desc.first) // value option
+			if (!keyMatch->second.first) // value option
 			{
 				if (key == arg)
 				{
@@ -437,7 +434,7 @@ namespace OpenViBE
 		for (auto& option : m_DescMap)
 		{
 			std::cout << "Option: --" << option.first << std::endl;
-			auto desc = option.second.second;
+			const auto& desc = option.second.second;
 			if (!desc.m_ShortName.empty()) { std::cout << "Shortname: --" << desc.m_ShortName << std::endl; }
 			std::cout << "Description: " << std::endl;
 			std::cout << desc.m_Desc << std::endl << std::endl;

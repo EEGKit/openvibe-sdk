@@ -48,7 +48,7 @@ namespace OpenViBE
 			uint64_t expandAsUInteger(const CString& rExpression, uint64_t ui64FallbackValue) const override;
 			bool expandAsBoolean(const CString& rExpression, bool bFallbackValue) const override;
 			uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier,
-												   uint64_t ui64FallbackValue) const override;
+												   uint64_t fallbackValue) const override;
 
 		protected:
 

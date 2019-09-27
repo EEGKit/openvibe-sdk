@@ -11,14 +11,12 @@
 #include <stack>
 #include <string>
 #include <fstream>
-
 #include <string>
 #include <algorithm>
 #include <functional>
 #include <cctype>
-
 #include <ctime>
-
+#include <climits>
 #include <cstdlib>
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -748,13 +746,13 @@ bool CConfigurationManager::expandAsBoolean(const CString& rExpression, const bo
 }
 
 uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier,
-															  const uint64_t ui64FallbackValue) const
+															  const uint64_t fallbackValue) const
 {
-	CString l_sResult     = this->expand(rExpression);
-	uint64_t l_ui64Result = this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, l_sResult);
-	if (l_ui64Result != 0xffffffffffffffffLL) { return l_ui64Result; }
+	const CString str     = this->expand(rExpression);
+	const uint64_t result = this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, str);
+	if (result != ULLONG_MAX) { return result; }
 
-	return ui64FallbackValue;
+	return fallbackValue;
 }
 
 uint32_t CConfigurationManager::getRandom() const { return System::Math::randomUInteger32(); }

@@ -86,7 +86,7 @@ public:
 	* \param variable Pointer to the data known as X in the equation.
 	* \param nVariable
 	*/
-	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, uint32_t nVariable)
+	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, const uint32_t nVariable)
 		: m_ppVariable(variable), m_nVariable(nVariable), m_oParentPlugin(plugin) {}
 
 	//! Destructor.

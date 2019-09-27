@@ -54,12 +54,12 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(uint32_t id1, uint32_t id2);
+		CIdentifier(const uint32_t id1, const uint32_t id2);
 		/**
 		 * \brief 64 bits integer based constructor
 		 * \param id [in] : The identifier
 		 */
-		CIdentifier(uint64_t id);
+		CIdentifier(const uint64_t id);
 		/**
 		 * \brief Copy constructor
 		 * \param id [in] : the identifier to initialize
@@ -110,7 +110,7 @@ namespace OpenViBE
 		 *
 		 * \sa operator!=
 		 */
-		friend OV_API bool operator==(const CIdentifier& id1, const CIdentifier& id2);
+		friend OV_API bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id == id2.m_id; }
 		/**
 		 * \brief Difference test operator
 		 * \param id1 [in] : the first identifier to compare
@@ -123,7 +123,7 @@ namespace OpenViBE
 		 *
 		 * \sa operator==
 		 */
-		friend OV_API bool operator!=(const CIdentifier& id1, const CIdentifier& id2);
+		friend OV_API bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 == id2); }
 		/**
 		 * \brief Order test operator
 		 * \param id1 [in] : the first identifier to compare
@@ -136,7 +136,7 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API bool operator<(const CIdentifier& id1, const CIdentifier& id2);
+		friend OV_API bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
 		/**
 		 * \brief Order test operator
 		 * \param id1 [in] : the first identifier to compare
@@ -149,7 +149,7 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API bool operator>(const CIdentifier& id1, const CIdentifier& id2);
+		friend OV_API bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
 		/**
 		 * \brief Order test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -198,7 +198,7 @@ namespace OpenViBE
 		 *          as integers. Actually, the internal 64 bits representation may
 		 *          change, resulting in code port needs if you use this function
 		 */
-		uint64_t toUInteger() const;
+		uint64_t toUInteger() const { return m_id; }
 		/**
 		 * \brief Creates a random identifier
 		 * \return a random identifier
@@ -208,6 +208,6 @@ namespace OpenViBE
 
 	protected:
 
-		uint64_t m_ui64Identifier = 0; ///< the 64 bit identifier value
+		uint64_t m_id = 0; ///< the 64 bit identifier value
 	};
 } // namespace OpenViBE

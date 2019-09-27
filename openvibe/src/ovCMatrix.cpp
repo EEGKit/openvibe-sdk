@@ -189,7 +189,7 @@ CMatrix::~CMatrix() { delete m_pMatrixImpl; }
 
 CMatrix& CMatrix::operator=(const CMatrix& other)
 {
-	if (m_pMatrixImpl) { delete m_pMatrixImpl; }
+	delete m_pMatrixImpl;
 	m_pMatrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_pMatrixImpl));
 	return *this;
 }

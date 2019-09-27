@@ -25,10 +25,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	XML::IXMLHandler* l_pHandler = XML::createXMLHandler();
 	XML::IXMLNode* l_pRootNode   = l_pHandler->parseFile(sFilename);
 
-	OV_ERROR_UNLESS_KRF(
-		l_pRootNode,
-		"Unable to get xml root node from file at " << sFilename,
-		OpenViBE::Kernel::ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(l_pRootNode, "Unable to get xml root node from file at " << sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 
 	m_vStimulation.clear();
 
@@ -38,20 +35,20 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		"Configuration file [" << sFilename << "] has no version information",
 		OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
-	string l_sVersion = l_pRootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME);
+	const string l_sVersion = l_pRootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME);
 	std::stringstream l_sData(l_sVersion);
-	uint32_t l_ui32Version;
-	l_sData >> l_ui32Version;
+	uint32_t version;
+	l_sData >> version;
 
 	OV_WARNING_UNLESS_K(
-		l_ui32Version <= OVP_Classification_BoxTrainerFormatVersion,
-		"Classifier configuration in [" << sFilename << "] saved using a newer version: saved version = [" << l_ui32Version
+		version <= OVP_Classification_BoxTrainerFormatVersion,
+		"Classifier configuration in [" << sFilename << "] saved using a newer version: saved version = [" << version
 		<< "] vs current version = [" << OVP_Classification_BoxTrainerFormatVersion << "]"
 	);
 
 	OV_ERROR_UNLESS_KRF(
-		l_ui32Version >= OVP_Classification_BoxTrainerFormatVersionRequired,
-		"Classifier configuration in [" << sFilename << "] saved using an obsolete version [" << l_ui32Version
+		version >= OVP_Classification_BoxTrainerFormatVersionRequired,
+		"Classifier configuration in [" << sFilename << "] saved using an obsolete version [" << version
 		<< "] (minimum expected version = " << OVP_Classification_BoxTrainerFormatVersionRequired << ")",
 		OpenViBE::Kernel::ErrorType::BadVersion);
 
@@ -71,10 +68,9 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	{
 		l_pTempNode = l_pRootNode->getChildByName(ALGORITHM_NODE_NAME);
 
-		OV_ERROR_UNLESS_KRF(
-			l_pTempNode,
-			"Configuration file [" << sFilename << "] has no node " << ALGORITHM_NODE_NAME,
-			OpenViBE::Kernel::ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(l_pTempNode,
+							"Configuration file [" << sFilename << "] has no node " << ALGORITHM_NODE_NAME,
+							OpenViBE::Kernel::ErrorType::BadParsing);
 
 		l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
@@ -98,34 +94,31 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	{
 		l_pTempNode = l_pStimulationsNode->getChild(i);
 
-		OV_ERROR_UNLESS_KRF(
-			l_pTempNode,
-			"Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]",
-			OpenViBE::Kernel::ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(l_pTempNode,
+							"Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]",
+							OpenViBE::Kernel::ErrorType::BadParsing);
 
 		CString l_sStimulationName(l_pTempNode->getPCData());
 
-		double l_f64ClassId;
+		double classID;
 		const char* l_sAttributeData = l_pTempNode->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
 
-		OV_ERROR_UNLESS_KRF(
-			l_sAttributeData,
-			"Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute [" << IDENTIFIER_ATTRIBUTE_NAME << "] not found",
-			OpenViBE::Kernel::ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(l_sAttributeData,
+							"Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute [" << IDENTIFIER_ATTRIBUTE_NAME << "] not found",
+							OpenViBE::Kernel::ErrorType::BadParsing);
 
-		std::stringstream l_sIdentifierData(l_sAttributeData);
-		l_sIdentifierData >> l_f64ClassId;
-		m_vStimulation[l_f64ClassId] = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, l_sStimulationName);
+		std::stringstream identifierData(l_sAttributeData);
+		identifierData >> classID;
+		m_vStimulation[classID] = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, l_sStimulationName);
 	}
 
-	const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oAlgorithmClassIdentifier);
+	const CIdentifier classifierAlgorithmID = this->getAlgorithmManager().createAlgorithm(l_oAlgorithmClassIdentifier);
 
-	OV_ERROR_UNLESS_KRF(
-		l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
-		"Invalid classifier algorithm with id [" << l_oAlgorithmClassIdentifier.toString() << "] in configuration file [" << sFilename << "]",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(classifierAlgorithmID != OV_UndefinedIdentifier,
+						"Invalid classifier algorithm with id [" << l_oAlgorithmClassIdentifier.toString() << "] in configuration file [" << sFilename << "]",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_pClassifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
+	m_pClassifier = &this->getAlgorithmManager().getAlgorithm(classifierAlgorithmID);
 	m_pClassifier->initialize();
 
 	// Connect the params to the new classifier
@@ -145,7 +138,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	OV_ERROR_UNLESS_KRF(
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
-		"Loading configuration failed for subclassifier [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
+		"Loading configuration failed for subclassifier [" << classifierAlgorithmID.toString() << "]",
 		OpenViBE::Kernel::ErrorType::Internal);
 
 	l_pRootNode->release();
@@ -159,7 +152,7 @@ bool CBoxAlgorithmClassifierProcessor::initialize()
 	m_pClassifier = nullptr;
 
 	//First of all, let's get the XML file for configuration
-	CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	OV_ERROR_UNLESS_KRF(
 		l_sConfigurationFilename != CString(""),
@@ -253,12 +246,12 @@ bool CBoxAlgorithmClassifierProcessor::process()
 
 			TParameterHandler<double> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
-			IStimulationSet* l_pSet = m_oLabelsEncoder.getInputStimulationSet();
+			IStimulationSet* set = m_oLabelsEncoder.getInputStimulationSet();
 
-			l_pSet->setStimulationCount(1);
-			l_pSet->setStimulationIdentifier(0, m_vStimulation[op_f64ClassificationStateClass]);
-			l_pSet->setStimulationDate(0, tEnd);
-			l_pSet->setStimulationDuration(0, 0);
+			set->setStimulationCount(1);
+			set->setStimulationIdentifier(0, m_vStimulation[op_f64ClassificationStateClass]);
+			set->setStimulationDate(0, tEnd);
+			set->setStimulationDuration(0, 0);
 
 			m_oLabelsEncoder.encodeBuffer();
 			m_oHyperplaneValuesEncoder.encodeBuffer();
