@@ -30,13 +30,11 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	m_vStimulation.clear();
 
 	// Check the version of the file
-	OV_ERROR_UNLESS_KRF(
-		rootNode->hasAttribute(FORMAT_VERSION_ATTRIBUTE_NAME),
-		"Configuration file [" << sFilename << "] has no version information",
-		OpenViBE::Kernel::ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(rootNode->hasAttribute(FORMAT_VERSION_ATTRIBUTE_NAME),
+						"Configuration file [" << sFilename << "] has no version information",
+						OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
-	const string str = rootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME);
-	std::stringstream data(str);
+	std::stringstream data(rootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME));
 	uint32_t version;
 	data >> version;
 

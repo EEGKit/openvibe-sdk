@@ -31,11 +31,11 @@ namespace OpenViBETest
 	using namespace Kernel;
 	using namespace Plugins;
 
-	KernelFixture::KernelFixture(const std::string& configFile) : m_configurationFile(configFile) { }
+	SKernelFixture::SKernelFixture(const std::string& configFile) : m_configurationFile(configFile) { }
 
-	void KernelFixture::setConfigurationFile(const std::string& configFile) { m_configurationFile = configFile; }
+	void SKernelFixture::setConfigurationFile(const std::string& configFile) { m_configurationFile = configFile; }
 
-	void KernelFixture::setUp()
+	void SKernelFixture::setUp()
 	{
 #if defined TARGET_OS_Windows
 		const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
@@ -83,7 +83,7 @@ namespace OpenViBETest
 		context = ctx;
 	}
 
-	void KernelFixture::tearDown()
+	void SKernelFixture::tearDown()
 	{
 		if (context)
 		{

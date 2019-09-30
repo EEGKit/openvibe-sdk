@@ -28,9 +28,9 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pAveragedMatrix;
 
-			std::deque<OpenViBE::IMatrix*> m_vHistory;
-			std::vector<double> m_CumulativeAverageMatrix;
-			size_t m_CumulativeAverageSampleCount = 0;
+			std::deque<OpenViBE::IMatrix*> m_history;
+			std::vector<double> m_averageMatrices;
+			size_t m_nAverageSamples = 0;
 		};
 
 		class CAlgorithmMatrixAverageDesc final : public OpenViBE::Plugins::IAlgorithmDesc
@@ -53,13 +53,10 @@ namespace OpenViBEPlugins
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmProto) const override
 			{
 				rAlgorithmProto.addInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmProto.addInputParameter(
-					OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount, "Matrix count", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmProto.addInputParameter(
-					OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod, "Averaging Method", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmProto.addInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount, "Matrix count", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmProto.addInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod, "Averaging Method", OpenViBE::Kernel::ParameterType_UInteger);
 
-				rAlgorithmProto.addOutputParameter(
-					OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix, "Averaged matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmProto.addOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix, "Averaged matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				rAlgorithmProto.addInputTrigger(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset, "Reset");
 				rAlgorithmProto.addInputTrigger(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix, "Feed matrix");

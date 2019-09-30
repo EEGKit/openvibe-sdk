@@ -24,7 +24,7 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 	const char* temporaryDirectory = argv[2];
 
 	{
-		OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture(configurationFile);
+		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configurationFile);
 
 		auto& context = fixture->context;
 

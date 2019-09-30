@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 			double m_SpecialEquationParam = 0;
 			double** m_Variable           = nullptr;
 
-			bool m_bCheckChunkDates = false;
+			bool m_CheckChunkDates = false;
 		};
 
 		class CBoxAlgorithmSimpleDSPListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

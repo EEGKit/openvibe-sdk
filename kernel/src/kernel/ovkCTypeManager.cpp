@@ -402,22 +402,22 @@ CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier&
 	const auto itBitMask = m_vBitMask.find(typeID);
 	if (itBitMask == m_vBitMask.end()) { return ""; }
 
-	std::string l_sResult;
+	std::string res;
 	for (uint32_t i = 0; i < 64; i++)
 	{
 		if (ui64EntryCompositionValue & (1LL << i))
 		{
 			const auto itBitMaskEntry = itBitMask->second.find(ui64EntryCompositionValue & (1LL << i));
 			if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
-			if (l_sResult.empty()) { l_sResult = itBitMaskEntry->second.toASCIIString(); }
+			if (res.empty()) { res = itBitMaskEntry->second.toASCIIString(); }
 			else
 			{
-				l_sResult += std::string(1, OV_Value_EnumeratedStringSeparator);
-				l_sResult += itBitMaskEntry->second.toASCIIString();
+				res += std::string(1, OV_Value_EnumeratedStringSeparator);
+				res += itBitMaskEntry->second.toASCIIString();
 			}
 		}
 	}
-	return CString(l_sResult.c_str());
+	return CString(res.c_str());
 }
 
 uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& rEntryCompositionName) const
@@ -427,7 +427,7 @@ uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier
 	const auto itBitMask = m_vBitMask.find(typeID);
 	if (itBitMask == m_vBitMask.end()) { return 0; }
 
-	uint64_t l_ui64Result               = 0;
+	uint64_t res               = 0;
 	std::string l_sEntryCompositionName = rEntryCompositionName.toASCIIString();
 	size_t i                            = 0;
 	size_t j                            = 0;
@@ -446,7 +446,7 @@ uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier
 			{
 				if (mask.second == CString(l_sEntryName.c_str()))
 				{
-					l_ui64Result |= mask.first;
+					res |= mask.first;
 					l_bFound = true;
 				}
 			}
@@ -458,7 +458,7 @@ uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier
 		j = i;
 	} while (i < l_sEntryCompositionName.length());
 
-	return l_ui64Result;
+	return res;
 }
 
 bool CTypeManager::evaluateSettingValue(const CString settingValue, double& numericResult) const

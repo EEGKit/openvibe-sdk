@@ -48,9 +48,9 @@ namespace OpenViBE
 {
 	const CString operator+(const CString& rString1, const CString& rString2)
 	{
-		std::string l_oResult;
-		l_oResult = rString1.m_pStringImpl->m_Value + rString2.m_pStringImpl->m_Value;
-		return l_oResult.c_str();
+		std::string res;
+		res = rString1.m_pStringImpl->m_Value + rString2.m_pStringImpl->m_Value;
+		return res.c_str();
 	}
 
 	bool operator==(const CString& rString1, const CString& rString2) { return (rString1.m_pStringImpl->m_Value) == (rString2.m_pStringImpl->m_Value); }

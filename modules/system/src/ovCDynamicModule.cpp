@@ -331,38 +331,38 @@ void CDynamicModule::setShouldFreeModule(bool shouldFreeModule) { m_ShouldFreeMo
 
 CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
 {
-	symbol_t l_Result = nullptr;
+	symbol_t res = nullptr;
 
 	if (!m_Handle)
 	{
 		m_ErrorCode = LogErrorCodes_NoModuleLoaded;
-		return l_Result;
+		return res;
 	}
 
 	if (m_Handle)
 	{
 #if defined TARGET_OS_Windows
-		l_Result = symbol_t(GetProcAddress(reinterpret_cast<HMODULE>(m_Handle), symbolName));
+		res = symbol_t(GetProcAddress(reinterpret_cast<HMODULE>(m_Handle), symbolName));
 
-		if (!l_Result)
+		if (!res)
 		{
 			m_ErrorCode = LogErrorCodes_InvalidSymbol;
-			return l_Result;
+			return res;
 		}
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		l_Result = (CDynamicModule::symbol_t)::dlsym(m_Handle, symbolName);
+		res = (CDynamicModule::symbol_t)::dlsym(m_Handle, symbolName);
 
-		if (!l_Result)
+		if (!res)
 		{
 			m_ErrorCode = LogErrorCodes_InvalidSymbol;
-			return l_Result;
+			return res;
 		}
 #else
 #endif
 	}
 
-	return l_Result;
+	return res;
 }
 
 #ifdef TARGET_OS_Windows

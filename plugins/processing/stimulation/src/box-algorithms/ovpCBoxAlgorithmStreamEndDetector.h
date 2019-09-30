@@ -24,11 +24,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_StructureDecoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_StimulationEncoder;
+			OpenViBEToolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_decoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_encoder;
 
-			uint64_t m_StimulationIdentifier = 0;
-			uint64_t m_ActionIdentifier      = 0;
+			uint64_t m_stimulationID = 0;
+			uint64_t m_actionID      = 0;
 
 		private:
 			enum class EEndState
@@ -39,13 +39,13 @@ namespace OpenViBEPlugins
 				Finished
 			};
 
-			uint64_t m_EndDate                 = 0;
-			uint64_t m_CurrentChunkEndDate     = 0;
-			uint64_t m_PreviousTime            = 0;
-			uint32_t m_InputEBMLIndex          = 0;
-			uint32_t m_OutputStimulationsIndex = 0;
-			bool m_IsHeaderSent                = false;
-			EEndState m_EndState               = EEndState::WaitingForEnd;
+			uint64_t m_endDate               = 0;
+			uint64_t m_currentChunkEndDate   = 0;
+			uint64_t m_previousTime          = 0;
+			uint32_t m_inputEBMLIdx          = 0;
+			uint32_t m_outputStimulationsIdx = 0;
+			bool m_isHeaderSent              = false;
+			EEndState m_endState             = EEndState::WaitingForEnd;
 		};
 
 		class CBoxAlgorithmStreamEndDetectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

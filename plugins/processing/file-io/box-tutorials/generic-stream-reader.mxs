@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
-	<FormatVersion>1</FormatVersion>
-	<Creator>OpenVIBE</Creator>
-	<CreatorVersion>0.2.99</CreatorVersion>
+	<FormatVersion>2</FormatVersion>
+	<Creator>OpenViBE Designer</Creator>
+	<CreatorVersion>2.2.0</CreatorVersion>
 	<Settings></Settings>
 	<Inputs></Inputs>
 	<Outputs></Outputs>
@@ -364,10 +364,4 @@ stream of the NeuroRT platform.</Text>
 			<Data>[{"boxIdentifier":"(0x00004a40, 0x0000585c)","childCount":0,"identifier":"(0x00005da3, 0x00007534)","parentIdentifier":"(0xffffffff, 0xffffffff)","type":3},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"height":1,"identifier":"(0x0509f2db, 0x6d6aaba8)","name":"Default window","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":1},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x748521de, 0x4b35cf59)","index":0,"name":"Default tab","parentIdentifier":"(0x0509f2db, 0x6d6aaba8)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":0,"identifier":"(0x06d9aa6d, 0x7f11c5f6)","index":0,"name":"Empty","parentIdentifier":"(0x748521de, 0x4b35cf59)","type":0}]</Data>
 		</Entry>
 	</Metadata>
-	<Attributes>
-		<Attribute>
-			<Identifier>(0x4c536d0a, 0xb23dc545)</Identifier>
-			<Value>generic-stream-reader.mxs</Value>
-		</Attribute>
-	</Attributes>
 </OpenViBE-Scenario>

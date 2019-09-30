@@ -54,13 +54,13 @@ CIdentifier CPlayerManager::getNextPlayerIdentifier(const CIdentifier& previousI
 CIdentifier CPlayerManager::getUnusedIdentifier() const
 {
 	uint64_t l_ui64Identifier = System::Math::randomUInteger64();
-	CIdentifier l_oResult;
+	CIdentifier res;
 	map<CIdentifier, CPlayer*>::const_iterator i;
 	do
 	{
 		l_ui64Identifier++;
-		l_oResult = CIdentifier(l_ui64Identifier);
-		i         = m_vPlayer.find(l_oResult);
-	} while (i != m_vPlayer.end() || l_oResult == OV_UndefinedIdentifier);
-	return l_oResult;
+		res = CIdentifier(l_ui64Identifier);
+		i         = m_vPlayer.find(res);
+	} while (i != m_vPlayer.end() || res == OV_UndefinedIdentifier);
+	return res;
 }

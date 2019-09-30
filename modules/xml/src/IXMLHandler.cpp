@@ -89,14 +89,14 @@ IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 		l_oFile.seekg(0, ios::beg);
 
 		//Read the file
-		char* l_sBuffer = new char[l_iFileLen];
-		l_oFile.read(l_sBuffer, l_iFileLen);
+		char* buffer = new char[l_iFileLen];
+		l_oFile.read(buffer, l_iFileLen);
 		l_oFile.close();
 
 		//Start the parsing with the other function
-		IXMLNode* l_pRes = parseString(l_sBuffer, l_iFileLen);
+		IXMLNode* l_pRes = parseString(buffer, l_iFileLen);
 
-		delete[] l_sBuffer;
+		delete[] buffer;
 		return l_pRes;
 	}
 	this->getErrorStringStream() << "Error : unable to open the file" << sPath << "." << std::endl;

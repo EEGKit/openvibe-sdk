@@ -57,48 +57,48 @@ namespace OpenViBE
 		* \brief Initialize session parameters
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode initialize(const InitCommand& command);
+		OpenViBE::EPlayerReturnCode initialize(const InitCommand& command);
 
 
 		/**
 		* \brief Reset session parameters
 		*/
-		PlayerReturnCode uninitialize();
+		OpenViBE::EPlayerReturnCode uninitialize();
 
 		/**
 		* \brief Load kernel
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode loadKernel(const LoadKernelCommand& command);
+		OpenViBE::EPlayerReturnCode loadKernel(const LoadKernelCommand& command);
 
 		/**
 		* \brief Unload kernel
 		*/
-		PlayerReturnCode unloadKernel();
+		OpenViBE::EPlayerReturnCode unloadKernel();
 
 		/**
 		* \brief Load scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode loadScenario(const LoadScenarioCommand& command);
+		OpenViBE::EPlayerReturnCode loadScenario(const LoadScenarioCommand& command);
 		
 		/**
 		* \brief Update scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode updateScenario(const UpdateScenarioCommand& command);
+		OpenViBE::EPlayerReturnCode updateScenario(const UpdateScenarioCommand& command);
 
 		/**
 		* \brief Configure scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode setupScenario(const SetupScenarioCommand& command);
+		OpenViBE::EPlayerReturnCode setupScenario(const SetupScenarioCommand& command);
 
 		/**
 		* \brief Run one or multiple scenarios
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode runScenarioList(const RunScenarioCommand& command);
+		OpenViBE::EPlayerReturnCode runScenarioList(const RunScenarioCommand& command);
 
 	private:
 

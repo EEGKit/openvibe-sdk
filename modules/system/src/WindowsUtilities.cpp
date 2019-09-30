@@ -11,34 +11,34 @@ using namespace System;
 
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
-void* WindowsUtilities::utf16CompliantLoadLibrary(const char* sLibraryPath, HANDLE hFile, DWORD dwFlags)
+void* WindowsUtilities::utf16CompliantLoadLibrary(const char* path, HANDLE file, DWORD flags)
 {
-	//const HMODULE hModule = ::LoadLibraryEx(sLibraryPath, hFile, dwFlags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
-	return ::LoadLibraryEx(sLibraryPath, hFile, dwFlags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
+	//const HMODULE hModule = ::LoadLibraryEx(path, file, flags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
+	return ::LoadLibraryEx(path, file, flags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
 }
 
-BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* sEnvVarName, const char* sEnvVarValue)
+BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* name, const char* value)
 {
-	/*std::wstring l_sUtf16EnvVarName = castToWString(sEnvVarName);
-	std::wstring l_sUtf16EnvVarValue = castToWString(sEnvVarValue);*/
-	return SetEnvironmentVariable(sEnvVarName, sEnvVarValue);
+	/*std::wstring l_sUtf16EnvVarName = castToWString(name);
+	std::wstring l_sUtf16EnvVarValue = castToWString(value);*/
+	return SetEnvironmentVariable(name, value);
 }
 		
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
-BOOL WindowsUtilities::utf16CompliantCreateProcess(char* sApplicationName, char* sCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
-												   LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment,
-												   char* sCurrentDirectory, LPSTARTUPINFO pStartupInfo, LPPROCESS_INFORMATION lpProcessInformation)
+BOOL WindowsUtilities::utf16CompliantCreateProcess(char* applicationName, char* commandLine, LPSECURITY_ATTRIBUTES processAttributes,
+												   LPSECURITY_ATTRIBUTES threadAttributes, BOOL inheritHandles, DWORD creationFlags, LPVOID environment,
+												   char* currentDirectory, LPSTARTUPINFO startupInfo, LPPROCESS_INFORMATION processInformation)
 {
-	return CreateProcess(sApplicationName, const_cast<char*>(sCommandLine), lpProcessAttributes, lpThreadAttributes,
-						 bInheritHandles, dwCreationFlags, lpEnvironment, sCurrentDirectory, pStartupInfo, lpProcessInformation);
+	return CreateProcess(applicationName, const_cast<char*>(commandLine), processAttributes, threadAttributes,
+						 inheritHandles, creationFlags, environment, currentDirectory, startupInfo, processInformation);
 }
 
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
-HINSTANCE WindowsUtilities::utf16CompliantShellExecute(HWND l_pHWND, LPCTSTR lpOperation, LPCTSTR lpFile, LPCTSTR lpParameters, LPCTSTR lpDirectory, INT nShowCmd)
+HINSTANCE WindowsUtilities::utf16CompliantShellExecute(HWND hwnd, LPCTSTR operation, LPCTSTR file, LPCTSTR parameters, LPCTSTR directory, INT nShowCmd)
 {
-	return ShellExecute(l_pHWND, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
+	return ShellExecute(hwnd, operation, file, parameters, directory, nShowCmd);
 }
 
 #endif // TARGET_OS_Windows

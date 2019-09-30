@@ -24,7 +24,7 @@
 
 namespace OpenViBE
 {
-	PlayerReturnCode InitCommand::execute(KernelFacade& kernelFacade) const
+	EPlayerReturnCode InitCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
@@ -38,7 +38,7 @@ namespace OpenViBE
 		os << "Benchmark: " << (this->benchmark ? std::to_string(this->benchmark.get()) : "not set") << std::endl;
 	}
 
-	PlayerReturnCode LoadKernelCommand::execute(KernelFacade& kernelFacade) const
+	EPlayerReturnCode LoadKernelCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
@@ -53,7 +53,7 @@ namespace OpenViBE
 		os << "ConfigurationFile: " << (this->configurationFile ? this->configurationFile.get() : "not set") << std::endl;
 	}
 
-	PlayerReturnCode LoadScenarioCommand::execute(KernelFacade& kernelFacade) const
+	EPlayerReturnCode LoadScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
@@ -61,7 +61,7 @@ namespace OpenViBE
 		if (!this->scenarioName || !this->scenarioFile)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArgument;
+			return EPlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.loadScenario(*this);
@@ -74,7 +74,7 @@ namespace OpenViBE
 		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
 	}
 
-	PlayerReturnCode UpdateScenarioCommand::execute(KernelFacade& kernelFacade) const
+	EPlayerReturnCode UpdateScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
@@ -82,7 +82,7 @@ namespace OpenViBE
 		if (!this->scenarioName || !this->scenarioFile)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArgument;
+			return EPlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.updateScenario(*this);
@@ -95,7 +95,7 @@ namespace OpenViBE
 		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
 	}
 
-	PlayerReturnCode ResetCommand::execute(KernelFacade& /*kernelFacade*/) const
+	EPlayerReturnCode ResetCommand::execute(KernelFacade& /*kernelFacade*/) const
 	{
 		// to be implemented
 
@@ -104,12 +104,12 @@ namespace OpenViBE
 
 		std::cout << "Not implemented yet" << std::endl;
 
-		return PlayerReturnCode::Success;
+		return EPlayerReturnCode::Success;
 	}
 
 	void ResetCommand::doPrint(std::ostream& os) const { os << "command name: ResetCommand" << std::endl; }
 
-	PlayerReturnCode RunScenarioCommand::execute(KernelFacade& kernelFacade) const
+	EPlayerReturnCode RunScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
@@ -117,7 +117,7 @@ namespace OpenViBE
 		if (!this->scenarioList)
 		{
 			std::cerr << "Missing required arguments for command: ScenarioList" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArgument;
+			return EPlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.runScenarioList(*this);
@@ -149,7 +149,7 @@ namespace OpenViBE
 		os << std::endl;
 	}
 
-	PlayerReturnCode SetupScenarioCommand::execute(KernelFacade& kernelFacade) const
+	EPlayerReturnCode SetupScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
@@ -157,7 +157,7 @@ namespace OpenViBE
 		if (!this->scenarioName)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArgument;
+			return EPlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.setupScenario(*this);

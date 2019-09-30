@@ -36,7 +36,7 @@ namespace OpenViBE
 	* \brief Scenario player list of potential return code
 	* \ingroup ScenarioPlayer
 	*/
-	enum class PlayerReturnCode
+	enum class EPlayerReturnCode
 	{
 		Success = 0, /*!< No error during execution */
 		InvalidArg, /*!< Invalid command-line options */

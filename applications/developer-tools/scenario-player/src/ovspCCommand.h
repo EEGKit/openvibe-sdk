@@ -41,13 +41,13 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct InitCommand final : ICommand
+	struct InitCommand final : SCommand
 	{
 		// List of properties
 		boost::optional<bool> benchmark;
 
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -67,12 +67,12 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct LoadKernelCommand final : ICommand
+	struct LoadKernelCommand final : SCommand
 	{
 		// List of properties
 		boost::optional<std::string> configurationFile;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -92,13 +92,13 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct LoadScenarioCommand final : ICommand
+	struct LoadScenarioCommand final : SCommand
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -117,13 +117,13 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct UpdateScenarioCommand final : ICommand
+	struct UpdateScenarioCommand final : SCommand
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -137,9 +137,9 @@ namespace OpenViBE
 	* \brief Command that drives tool reset to its initial state
 	* \ingroup ScenarioPlayer
 	*/
-	struct ResetCommand final : ICommand
+	struct ResetCommand final : SCommand
 	{
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -161,7 +161,7 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct RunScenarioCommand final : ICommand
+	struct RunScenarioCommand final : SCommand
 	{
 		using Token = std::pair<std::string, std::string>;
 
@@ -171,7 +171,7 @@ namespace OpenViBE
 		boost::optional<double> maximumExecutionTime;
 		boost::optional<std::vector<Token>> tokenList;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -194,7 +194,7 @@ namespace OpenViBE
 	* called on the same scenario (note that an empty token list is allowed).
 	*
 	*/
-	struct SetupScenarioCommand final : ICommand
+	struct SetupScenarioCommand final : SCommand
 	{
 		using Token = std::pair<std::string, std::string>;
 
@@ -203,7 +203,7 @@ namespace OpenViBE
 		boost::optional<std::vector<Token>> tokenList;
 
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 

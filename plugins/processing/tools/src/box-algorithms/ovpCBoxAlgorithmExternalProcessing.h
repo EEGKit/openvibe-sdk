@@ -31,18 +31,15 @@ namespace OpenViBEPlugins
 
 		private:
 
-			struct Packet
+			struct SPacket
 			{
 				uint64_t startTime;
 				uint64_t endTime;
 				uint32_t index;
 				std::shared_ptr<std::vector<uint8_t>> EBML;
 
-				Packet(uint64_t startTime, uint64_t endTime, uint32_t index, std::shared_ptr<std::vector<uint8_t>> EBML)
-					: startTime(startTime)
-					  , endTime(endTime)
-					  , index(index)
-					  , EBML(EBML) { }
+				SPacket(const uint64_t startTime, const uint64_t endTime, const uint32_t index, const std::shared_ptr<std::vector<uint8_t>> ebml)
+					: startTime(startTime), endTime(endTime), index(index), EBML(ebml) { }
 			};
 
 			/**
@@ -86,7 +83,7 @@ namespace OpenViBEPlugins
 			uint64_t m_LastSyncTime = 0;
 
 			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;
-			std::queue<Packet> m_PacketHistory;
+			std::queue<SPacket> m_PacketHistory;
 		};
 
 		class CBoxAlgorithmExternalProcessingListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

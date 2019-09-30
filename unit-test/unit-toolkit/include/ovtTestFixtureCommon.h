@@ -30,10 +30,10 @@
 // \note: This file contains fixture implementation shared by many unit tests
 namespace OpenViBETest
 {
-	struct KernelFixture final : TestFixture
+	struct SKernelFixture final : TestFixture
 	{
-		KernelFixture() = default;
-		explicit KernelFixture(const std::string& configFile);
+		SKernelFixture() = default;
+		explicit SKernelFixture(const std::string& configFile);
 
 		void setConfigurationFile(const std::string& configFile);
 

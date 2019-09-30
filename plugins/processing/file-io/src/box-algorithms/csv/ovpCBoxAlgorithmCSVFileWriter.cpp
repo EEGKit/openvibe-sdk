@@ -138,7 +138,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 					// As-is
 					OpenViBEToolkit::Tools::Matrix::copyDescription(m_oMatrix, *l_pMatrix);
 				}
-				//			std::cout<<&m_pMatrix<<" "<<&op_pMatrix<<"\n";
+				//			std::cout<<&m_Matrix<<" "<<&op_pMatrix<<"\n";
 				m_oFileStream << "Time (s)";
 				for (uint32_t c = 0; c < m_oMatrix.getDimensionSize(0); c++)
 				{

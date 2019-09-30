@@ -44,11 +44,11 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh   = 2;
-			int l_i32VersionLow    = 0;
-			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
-			WSADATA l_oWSAData;
-			WSAStartup(l_oWinsockVersion, &l_oWSAData);
+			const int versionHigh     = 2;
+			const int versionLow      = 0;
+			const WORD winsockVersion = MAKEWORD(versionHigh, versionLow);
+			WSADATA wsaData;
+			WSAStartup(winsockVersion, &wsaData);
 #else
 #endif
 		}
@@ -57,11 +57,11 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh   = 2;
-			int l_i32VersionLow    = 0;
-			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
-			WSADATA l_oWSAData;
-			WSAStartup(l_oWinsockVersion, &l_oWSAData);
+			const int versionHigh     = 2;
+			const int versionLow      = 0;
+			const WORD winsockVersion = MAKEWORD(versionHigh, versionLow);
+			WSADATA wsaData;
+			WSAStartup(winsockVersion, &wsaData);
 #else
 #endif
 		}
@@ -123,20 +123,20 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToReceive(const uint32_t timeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
-			struct timeval l_oTimeVal;
-			l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);
-			l_oTimeVal.tv_usec = ((ui32TimeOut - l_oTimeVal.tv_sec * 1000) * 1000);
+			struct timeval timeVal;
+			timeVal.tv_sec  = (timeOut / 1000);
+			timeVal.tv_usec = ((timeOut - timeVal.tv_sec * 1000) * 1000);
 
-			fd_set l_oReadFileDescriptors;
-			FD_ZERO(&l_oReadFileDescriptors);
-			FD_SET(m_i32Socket, &l_oReadFileDescriptors);
+			fd_set readFileDesc;
+			FD_ZERO(&readFileDesc);
+			FD_SET(m_i32Socket, &readFileDesc);
 
-			if (select(m_i32Socket + 1, &l_oReadFileDescriptors, nullptr, nullptr, &l_oTimeVal) < 0) { return false; }
-			if (!(FD_ISSET_PROXY(m_i32Socket, &l_oReadFileDescriptors))) { return false; }
+			if (select(m_i32Socket + 1, &readFileDesc, nullptr, nullptr, &timeVal) < 0) { return false; }
+			if (!(FD_ISSET_PROXY(m_i32Socket, &readFileDesc))) { return false; }
 			return true;
 		}
 
@@ -178,13 +178,13 @@ namespace Socket
 
 		virtual bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize)
 		{
-			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			char* tmpBuffer          = static_cast<char*>(buffer);
+			uint32_t leftBytes = ui32BufferSize;
+			char* tmpBuffer    = static_cast<char*>(buffer);
 			do
 			{
-				l_ui32LeftBytes -= receiveBuffer(tmpBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
+				leftBytes -= receiveBuffer(tmpBuffer + ui32BufferSize - leftBytes, leftBytes);
 				if (!isConnected()) { return false; }
-			} while (l_ui32LeftBytes != 0);
+			} while (leftBytes != 0);
 			return true;
 		}
 

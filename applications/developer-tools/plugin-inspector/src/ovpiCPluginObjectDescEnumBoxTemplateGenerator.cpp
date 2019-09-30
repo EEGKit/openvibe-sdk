@@ -26,25 +26,25 @@ namespace
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGenerator(const IKernelContext& ctx, const CString& docTemplateDirectory)
-	: CPluginObjectDescEnum(ctx), m_DocTemplateDirectory(docTemplateDirectory) {}
+	: CPluginObjectDescEnum(ctx), m_docTemplateDirectory(docTemplateDirectory) {}
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {
-	if (!m_kernelCtx.getScenarioManager().createScenario(m_ScenarioIdentifier)) { return false; }
-	m_Scenario = &m_kernelCtx.getScenarioManager().getScenario(m_ScenarioIdentifier);
+	if (!m_kernelCtx.getScenarioManager().createScenario(m_scenarioID)) { return false; }
+	m_scenario = &m_kernelCtx.getScenarioManager().getScenario(m_scenarioID);
 	return true;
 }
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 {
-	if (!m_kernelCtx.getScenarioManager().releaseScenario(m_ScenarioIdentifier)) { return false; }
+	if (!m_kernelCtx.getScenarioManager().releaseScenario(m_scenarioID)) { return false; }
 
 	std::ofstream ofBoxIdx;
-	FS::Files::openOFStream(ofBoxIdx, (m_DocTemplateDirectory + "/index-boxes.rst").c_str());
+	FS::Files::openOFStream(ofBoxIdx, (m_docTemplateDirectory + "/index-boxes.rst").c_str());
 
 	if (!ofBoxIdx.good())
 	{
-		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/index-boxes.rst").c_str() <<
+		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDirectory + "/index-boxes.rst").c_str() <<
 				"]\n";
 		return false;
 	}
@@ -57,17 +57,17 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 			<< "Available box algorithms are :\n"
 			<< "\n";
 
-	ofBoxIdx << generateRstIndex(m_Categories);
+	ofBoxIdx << generateRstIndex(m_categories);
 	ofBoxIdx << " \n";
 
-	if (!m_DeprecatedBoxesCategories.empty())
+	if (!m_deprecatedBoxesCategories.empty())
 	{
 		ofBoxIdx << "\n\n"
 				<< generateRstTitle("Deprecated boxes list", 0)
 				<< "\n"
 				<< "The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n";
 
-		ofBoxIdx << generateRstIndex(m_DeprecatedBoxesCategories);
+		ofBoxIdx << generateRstIndex(m_deprecatedBoxesCategories);
 		ofBoxIdx << " \n";
 	}
 
@@ -84,31 +84,31 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	if (pluginObjectDesc.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_Scenario->addBox(boxID, static_cast<const IBoxAlgorithmDesc&>(pluginObjectDesc), OV_UndefinedIdentifier))
+		if (!m_scenario->addBox(boxID, static_cast<const IBoxAlgorithmDesc&>(pluginObjectDesc), OV_UndefinedIdentifier))
 		{
 			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
-	else if (!m_Scenario->addBox(boxID, pluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
+	else if (!m_scenario->addBox(boxID, pluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
 	{
 		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 		return true;
 	}
 
 
-	IBox& box = *m_Scenario->getBoxDetails(boxID);
+	IBox& box = *m_scenario->getBoxDetails(boxID);
 
 	m_kernelCtx.getLogManager() << LogLevel_Trace << "Working on [" << CString(fileName.c_str()) << "]\n";
 
 	// --------------------------------------------------------------------------------------------------------------------
 	std::ofstream ofBoxTemplate;
-	FS::Files::openOFStream(ofBoxTemplate, (m_DocTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str());
+	FS::Files::openOFStream(ofBoxTemplate, (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str());
 
 	if (!ofBoxTemplate.good())
 	{
 		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file ["
-				<< (m_DocTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str()
+				<< (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str()
 				<< "]\n";
 		return false;
 	}
@@ -272,13 +272,13 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 	ofBoxTemplate.close();
 
-	// m_Categories is used to generate the list of boxes. Documentation for deprecated boxes
+	// m_categories is used to generate the list of boxes. Documentation for deprecated boxes
 	// should remain available if needed but not be listed
 	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier()))
 	{
-		m_DeprecatedBoxesCategories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString()));
+		m_deprecatedBoxesCategories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString()));
 	}
-	else { m_Categories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString())); }
+	else { m_categories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString())); }
 
 	return true;
 }

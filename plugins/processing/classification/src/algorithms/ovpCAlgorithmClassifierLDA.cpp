@@ -29,17 +29,15 @@ extern const char* const CLASSIFIER_ROOT;
 int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix& firstClassificationValue, OpenViBE::IMatrix& secondClassificationValue)
 {
 	//We first need to find the best classification of each.
-	double* l_pClassificationValueBuffer = firstClassificationValue.getBuffer();
-	const double l_f64MaxFirst           = *(std::max_element(l_pClassificationValueBuffer,
-															  l_pClassificationValueBuffer + firstClassificationValue.getBufferElementCount()));
+	double* valueBuffer   = firstClassificationValue.getBuffer();
+	const double maxFirst = *(std::max_element(valueBuffer, valueBuffer + firstClassificationValue.getBufferElementCount()));
 
-	l_pClassificationValueBuffer = secondClassificationValue.getBuffer();
-	const double l_f64MaxSecond  = *(std::max_element(l_pClassificationValueBuffer,
-													  l_pClassificationValueBuffer + secondClassificationValue.getBufferElementCount()));
+	valueBuffer            = secondClassificationValue.getBuffer();
+	const double maxSecond = *(std::max_element(valueBuffer, valueBuffer + secondClassificationValue.getBufferElementCount()));
 
 	//Then we just compared them
-	if (ov_float_equal(l_f64MaxFirst, l_f64MaxSecond)) { return 0; }
-	if (l_f64MaxFirst > l_f64MaxSecond) { return -1; }
+	if (ov_float_equal(maxFirst, maxSecond)) { return 0; }
+	if (maxFirst > maxSecond) { return -1; }
 	return 1;
 }
 
@@ -70,16 +68,10 @@ void CAlgorithmClassifierLDA::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr, co
 void CAlgorithmClassifierLDA::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
-uint32_t CAlgorithmClassifierLDA::getOutputProbabilityVectorLength() { return m_vDiscriminantFunctions.size(); }
-
-uint32_t CAlgorithmClassifierLDA::getOutputDistanceVectorLength() { return m_vDiscriminantFunctions.size(); }
-
-
 bool CAlgorithmClassifierLDA::initialize()
 {
 	// Initialize the Conditioned Covariance Matrix algorithm
-	m_pCovarianceAlgorithm = &this->getAlgorithmManager().
-									getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
+	m_pCovarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
 
 	OV_ERROR_UNLESS_KRF(m_pCovarianceAlgorithm->initialize(), "Failed to initialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
@@ -113,13 +105,13 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	m_vLabelList.clear();
 	m_vDiscriminantFunctions.clear();
 
-	const bool l_bUseShrinkage = this->getBooleanParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage);
+	const bool useShrinkage = this->getBooleanParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage);
 
-	bool l_pDiagonalCov;
-	if (l_bUseShrinkage)
+	bool diagonalCov;
+	if (useShrinkage)
 	{
 		this->getFloat64Parameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage);
-		l_pDiagonalCov = this->getBooleanParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov);
+		diagonalCov = this->getBooleanParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov);
 	}
 	else
 	{
@@ -129,17 +121,15 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 
 		TParameterHandler<bool> ip_bDiagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 		ip_bDiagonalCov = false;
-		l_pDiagonalCov  = false;
+		diagonalCov  = false;
 	}
 
 	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
 	// IO to the covariance alg
 	TParameterHandler<IMatrix*> op_pMean(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_pCovarianceMatrix(
-		m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
-	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(
-		m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
 	const uint32_t nRows = featureVectorSet.getFeatureVectorCount();
 	const uint32_t nCols = (nRows > 0 ? featureVectorSet[0].getSize() : 0);
@@ -243,7 +233,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	//dumpMatrix(this->getLogManager(), l_aMean[l_ui32classIdx], "Mean");
 	//dumpMatrix(this->getLogManager(), l_oGlobalCov, "Shrinked cov");
 
-	if (l_pDiagonalCov)
+	if (diagonalCov)
 	{
 		for (uint32_t i = 0; i < nCols; i++)
 		{

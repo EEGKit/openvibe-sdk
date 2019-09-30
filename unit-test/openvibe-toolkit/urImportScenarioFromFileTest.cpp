@@ -17,7 +17,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 	const char* dataDirectory     = argv[2];
 
 	{
-		OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture(configurationFile);
+		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configurationFile);
 		auto& context = fixture->context;
 
 #if defined TARGET_OS_Windows

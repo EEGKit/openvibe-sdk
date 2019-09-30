@@ -30,23 +30,23 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
 		protected:
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_StimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
 
 		private:
 			enum ETimeoutState
 			{
-				ETimeout_No,
-				ETimeout_Occurred,
-				ETimeout_Sent
+				Timeout_No,
+				Timeout_Occurred,
+				Timeout_Sent
 			};
 
-			ETimeoutState m_TimeoutState = ETimeout_No;
-			bool m_IsHeaderSent = false;
+			ETimeoutState m_timeoutState = Timeout_No;
+			bool m_isHeaderSent = false;
 
-			uint64_t m_Timeout           = 0;
-			uint64_t m_LastTimePolled    = 0;
-			uint64_t m_PreviousTime      = 0;
-			uint64_t m_StimulationToSend = 0;
+			uint64_t m_timeout           = 0;
+			uint64_t m_lastTimePolled    = 0;
+			uint64_t m_previousTime      = 0;
+			uint64_t m_stimulationToSend = 0;
 		};
 
 		/**

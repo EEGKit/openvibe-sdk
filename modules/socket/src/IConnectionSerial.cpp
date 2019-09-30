@@ -219,15 +219,15 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::write(m_iFile, buffer, size);
-			if(l_iResult < 0)
+			int res = ::write(m_iFile, buffer, size);
+			if(res < 0)
 			{
 				m_sLastError = "Could not write on connection";
 				this->close();
 				return 0;
 			}
 
-			return l_iResult;
+			return res;
 #endif
 			return 0;
 		}
@@ -262,15 +262,15 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::read(m_iFile, buffer, size);
-			if (l_iResult < 0)
+			int res = ::read(m_iFile, buffer, size);
+			if (res < 0)
 			{
 				m_sLastError = "Could not read from connection";
 				this->close();
 				return 0;
 			}
 
-			return l_iResult;
+			return res;
 #endif
 			return 0;
 		}

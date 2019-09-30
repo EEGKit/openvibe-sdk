@@ -45,8 +45,8 @@ bool CWriter::openChild(const char* name)
 	}
 
 	string l_sIndent(m_vNodes.size(), '\t');
-	string l_sResult = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
-	m_rWriterCallback.write(l_sResult.c_str());
+	string res = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
+	m_rWriterCallback.write(res.c_str());
 	m_vNodes.push(name);
 	m_bHasChild             = false;
 	m_bHasData              = false;
@@ -90,8 +90,8 @@ bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeVal
 	string l_sAttributeValue(sAttributeValue);
 	this->sanitize(l_sAttributeValue);
 
-	string l_sResult = string(" ") + string(sAttributeName) + string("=\"") + string(l_sAttributeValue) + string("\"");
-	m_rWriterCallback.write(l_sResult.c_str());
+	string res = string(" ") + string(sAttributeName) + string("=\"") + string(l_sAttributeValue) + string("\"");
+	m_rWriterCallback.write(res.c_str());
 	return true;
 }
 
@@ -106,8 +106,8 @@ bool CWriter::closeChild()
 	}
 
 	string l_sIndent(m_vNodes.size() - 1, '\t');
-	string l_sResult = ((m_bHasData || !m_bHasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
-	m_rWriterCallback.write(l_sResult.c_str());
+	string res = ((m_bHasData || !m_bHasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
+	m_rWriterCallback.write(res.c_str());
 	m_vNodes.pop();
 	m_bHasChild = true;
 	m_bHasData  = false;

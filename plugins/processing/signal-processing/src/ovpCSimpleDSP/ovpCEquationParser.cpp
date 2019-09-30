@@ -156,7 +156,7 @@ void CEquationParser::createAbstractTree(tree_parse_info<> oInfo) { m_pTree = ne
 
 CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 {
-	if (i->value.id() == CEquationGrammar::expressionID)
+	if (i->value.id() == SEquationGrammar::expressionID)
 	{
 		if (*i->value.begin() == '+')
 		{
@@ -170,7 +170,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 											   true);
 		}
 	}
-	else if (i->value.id() == CEquationGrammar::termID)
+	else if (i->value.id() == SEquationGrammar::termID)
 	{
 		if (*i->value.begin() == '*')
 		{
@@ -178,7 +178,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		}
 		if (*i->value.begin() == '/') { return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1)); }
 	}
-	else if (i->value.id() == CEquationGrammar::factorID)
+	else if (i->value.id() == SEquationGrammar::factorID)
 	{
 		if (*i->value.begin() == '-')
 		{
@@ -187,12 +187,12 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		}
 		if (*i->value.begin() == '+') { return createNode(i->children.begin()); }
 	}
-	else if (i->value.id() == CEquationGrammar::realID)
+	else if (i->value.id() == SEquationGrammar::realID)
 	{
 		const std::string value(i->value.begin(), i->value.end());
 		return new CAbstractTreeValueNode(strtod(value.c_str(), nullptr));
 	}
-	else if (i->value.id() == CEquationGrammar::variableID)
+	else if (i->value.id() == SEquationGrammar::variableID)
 	{
 		uint32_t l_ui32Index = 0;
 		std::string l_sValue(i->value.begin(), i->value.end());
@@ -210,7 +210,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		}
 		return new CAbstractTreeVariableNode(l_ui32Index);
 	}
-	else if (i->value.id() == CEquationGrammar::constantID)
+	else if (i->value.id() == SEquationGrammar::constantID)
 	{
 		std::string value(i->value.begin(), i->value.end());
 
@@ -220,7 +220,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		//creates a new value node from the value looked up in the constant's symbols table
 		return new CAbstractTreeValueNode(*find(mathConstant_p, value.c_str()));
 	}
-	else if (i->value.id() == CEquationGrammar::functionID)
+	else if (i->value.id() == SEquationGrammar::functionID)
 	{
 		std::string value(i->value.begin(), i->value.end());
 		uint64_t* functionID;
@@ -239,12 +239,12 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 	}
-	else if (i->value.id() == CEquationGrammar::ifthenID)
+	else if (i->value.id() == SEquationGrammar::ifthenID)
 	{
 		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1),
 										   createNode(i->children.begin() + 2), false);
 	}
-	else if (i->value.id() == CEquationGrammar::comparisonID)
+	else if (i->value.id() == SEquationGrammar::comparisonID)
 	{
 		std::string value(i->value.begin(), i->value.end());
 		uint64_t* functionID;
@@ -263,7 +263,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 	}
-	else if (i->value.id() == CEquationGrammar::booleanID)
+	else if (i->value.id() == SEquationGrammar::booleanID)
 	{
 		std::string value(i->value.begin(), i->value.end());
 		uint64_t* functionID;

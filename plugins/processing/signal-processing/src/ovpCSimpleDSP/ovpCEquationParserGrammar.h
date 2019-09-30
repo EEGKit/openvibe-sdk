@@ -85,9 +85,9 @@ enum EVariables
 * Symbols table for unary functions.
 *
 */
-struct CUnaryFunctionSymbols : symbols<uint64_t>
+struct SUnaryFunctionSymbols : symbols<uint64_t>
 {
-	CUnaryFunctionSymbols()
+	SUnaryFunctionSymbols()
 	{
 		add
 				("abs", OP_ABS)
@@ -111,9 +111,9 @@ struct CUnaryFunctionSymbols : symbols<uint64_t>
 * Symbols table for binary functions.
 *
 */
-struct CBinaryFunctionSymbols : symbols<uint64_t>
+struct SBinaryFunctionSymbols : symbols<uint64_t>
 {
-	CBinaryFunctionSymbols()
+	SBinaryFunctionSymbols()
 	{
 		add
 				("pow", OP_POW);
@@ -124,9 +124,9 @@ struct CBinaryFunctionSymbols : symbols<uint64_t>
 * Symbol tables for unary boolean operators
 *
 */
-struct CUnaryBooleanFunctionSymbols : symbols<uint64_t>
+struct SUnaryBooleanFunctionSymbols : symbols<uint64_t>
 {
-	CUnaryBooleanFunctionSymbols()
+	SUnaryBooleanFunctionSymbols()
 	{
 		add
 				("!", OP_BOOL_NOT);
@@ -137,9 +137,9 @@ struct CUnaryBooleanFunctionSymbols : symbols<uint64_t>
 * Symbol tables for binary boolean operators
 *
 */
-struct CBinaryBoolean1FunctionSymbols : symbols<uint64_t>
+struct SBinaryBoolean1FunctionSymbols : symbols<uint64_t>
 {
-	CBinaryBoolean1FunctionSymbols()
+	SBinaryBoolean1FunctionSymbols()
 	{
 		add
 				("&&", OP_BOOL_AND)
@@ -151,9 +151,9 @@ struct CBinaryBoolean1FunctionSymbols : symbols<uint64_t>
 * Symbol tables for binary boolean operators
 *
 */
-struct CBinaryBoolean2FunctionSymbols : symbols<uint64_t>
+struct SBinaryBoolean2FunctionSymbols : symbols<uint64_t>
 {
-	CBinaryBoolean2FunctionSymbols()
+	SBinaryBoolean2FunctionSymbols()
 	{
 		add
 				("~", OP_BOOL_XOR)
@@ -165,9 +165,9 @@ struct CBinaryBoolean2FunctionSymbols : symbols<uint64_t>
 * Symbol tables for binary boolean operators
 *
 */
-struct CBinaryBoolean3FunctionSymbols : symbols<uint64_t>
+struct SBinaryBoolean3FunctionSymbols : symbols<uint64_t>
 {
-	CBinaryBoolean3FunctionSymbols()
+	SBinaryBoolean3FunctionSymbols()
 	{
 		add
 				("||", OP_BOOL_OR)
@@ -179,9 +179,9 @@ struct CBinaryBoolean3FunctionSymbols : symbols<uint64_t>
 * Symbols table for comparison 1 functions.
 *
 */
-struct CComparison1FunctionSymbols : symbols<uint64_t>
+struct SComparison1FunctionSymbols : symbols<uint64_t>
 {
-	CComparison1FunctionSymbols()
+	SComparison1FunctionSymbols()
 	{
 		add
 				("<", OP_CMP_L)
@@ -195,9 +195,9 @@ struct CComparison1FunctionSymbols : symbols<uint64_t>
 * Symbols table for comparison 2 functions.
 *
 */
-struct CComparison2FunctionSymbols : symbols<uint64_t>
+struct SComparison2FunctionSymbols : symbols<uint64_t>
 {
-	CComparison2FunctionSymbols()
+	SComparison2FunctionSymbols()
 	{
 		add
 				("==", OP_CMP_E)
@@ -210,9 +210,9 @@ struct CComparison2FunctionSymbols : symbols<uint64_t>
 * Symbols table for mathematical constants.
 *
 */
-struct CMathConstantSymbols : symbols<double>
+struct SMathConstantSymbols : symbols<double>
 {
-	CMathConstantSymbols()
+	SMathConstantSymbols()
 	{
 		add
 				("m_pi", 3.14159265358979323846)
@@ -235,9 +235,9 @@ struct CMathConstantSymbols : symbols<double>
 * Symbols table for variables.
 *
 */
-struct CVariableSymbols : symbols<uint64_t>
+struct SVariableSymbols : symbols<uint64_t>
 {
-	CVariableSymbols()
+	SVariableSymbols()
 	{
 		add
 				("x", OP_VAR_X)
@@ -260,21 +260,21 @@ struct CVariableSymbols : symbols<uint64_t>
 	}
 };
 
-static CUnaryFunctionSymbols unaryFunction_p;
-static CBinaryFunctionSymbols binaryFunction_p;
-static CUnaryBooleanFunctionSymbols unaryBooleanFunction_p;
-static CBinaryBoolean1FunctionSymbols binaryBoolean1Function_p;
-static CBinaryBoolean2FunctionSymbols binaryBoolean2Function_p;
-static CBinaryBoolean3FunctionSymbols binaryBoolean3Function_p;
-static CComparison1FunctionSymbols comparison1Function_p;
-static CComparison2FunctionSymbols comparison2Function_p;
-static CMathConstantSymbols mathConstant_p;
-static CVariableSymbols variable_p;
+static SUnaryFunctionSymbols unaryFunction_p;
+static SBinaryFunctionSymbols binaryFunction_p;
+static SUnaryBooleanFunctionSymbols unaryBooleanFunction_p;
+static SBinaryBoolean1FunctionSymbols binaryBoolean1Function_p;
+static SBinaryBoolean2FunctionSymbols binaryBoolean2Function_p;
+static SBinaryBoolean3FunctionSymbols binaryBoolean3Function_p;
+static SComparison1FunctionSymbols comparison1Function_p;
+static SComparison2FunctionSymbols comparison2Function_p;
+static SMathConstantSymbols mathConstant_p;
+static SVariableSymbols variable_p;
 
 /**
 * The parser's grammar.
 */
-struct CEquationGrammar : grammar<CEquationGrammar>
+struct SEquationGrammar : grammar<SEquationGrammar>
 {
 	static const int realID       = 1;
 	static const int variableID   = 2;
@@ -290,7 +290,7 @@ struct CEquationGrammar : grammar<CEquationGrammar>
 	template <typename ScannerT>
 	struct definition
 	{
-		explicit definition(CEquationGrammar const&)
+		explicit definition(SEquationGrammar const&)
 		{
 			real = leaf_node_d[real_p];
 

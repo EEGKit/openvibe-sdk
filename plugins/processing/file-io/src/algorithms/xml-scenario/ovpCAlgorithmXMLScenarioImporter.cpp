@@ -58,9 +58,9 @@ namespace
 
 		operator CIdentifier()
 		{
-			CIdentifier l_oResult;
-			l_oResult.fromString(m_sValue.c_str());
-			return l_oResult;
+			CIdentifier res;
+			res.fromString(m_sValue.c_str());
+			return res;
 		}
 
 		operator uint32_t() { return atoi(m_sValue.c_str()); }

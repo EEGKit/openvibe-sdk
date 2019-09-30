@@ -131,14 +131,14 @@ uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 	if (m_vChildren.empty()) { contentSize = m_ui64BufferLength; }
 	else { for (auto i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
 
-	uint64_t l_ui64Result = contentSize;
+	uint64_t res = contentSize;
 	if (bCountIdentifierAndSize)
 	{
-		l_ui64Result += getCodedSizeLength(m_oIdentifier);
-		l_ui64Result += getCodedSizeLength(contentSize);
+		res += getCodedSizeLength(m_oIdentifier);
+		res += getCodedSizeLength(contentSize);
 	}
 
-	return l_ui64Result;
+	return res;
 }
 
 // ________________________________________________________________________________________________________________

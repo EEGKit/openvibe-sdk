@@ -23,7 +23,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Adds an input parameter
-			 * \param InputParameterID [in] : the identifier for this parameter
+			 * \param inputParameterID [in] : the identifier for this parameter
 			 * \param sInputName [in] : the name for this parameter
 			 * \param eParameterType [in] : the type for this parameter
 			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
@@ -31,7 +31,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName, EParameterType eParameterType,
+			virtual bool addInputParameter(const CIdentifier& inputParameterID, const CString& sInputName, EParameterType eParameterType,
 										   const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter

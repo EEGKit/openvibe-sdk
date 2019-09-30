@@ -28,11 +28,11 @@
 
 using namespace OpenViBE::CSV;
 
-struct SignalFile
+struct SSignalFile
 {
 	std::vector<std::string> m_ChannelNames;
 	uint32_t m_SamplingRate;
-	uint32_t m_SampleCountPerBuffer;
+	uint32_t m_nSamplePerBuffer;
 	std::vector<std::pair<std::pair<double, double>, std::vector<double>>> m_data;
 };
 
@@ -40,7 +40,7 @@ namespace
 {
 	std::string dataDirectory = "";
 
-	const struct SignalFile SIMPLE_SIGNAL_FILE = {
+	const struct SSignalFile SIMPLE_SIGNAL_FILE = {
 		{ "Time Signal" },
 		32,
 		8,

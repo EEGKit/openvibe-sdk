@@ -169,9 +169,9 @@ bool CConfigurationManager::addConfigurationFromFile(const CString& rFileNameWil
 
 	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);
 	FS::IEntryEnumerator* l_pEntryEnumerator = createEntryEnumerator(l_rCB);
-	const bool l_bResult                     = l_pEntryEnumerator->enumerate(rFileNameWildCard);
+	const bool res                     = l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
-	return l_bResult;
+	return res;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -348,21 +348,21 @@ bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordE
 
 	auto l_itOverrideIterator = m_vKeywordOverride.begin();
 
-	bool l_bResult = false;
+	bool res = false;
 	while (l_itOverrideIterator != m_vKeywordOverride.end())
 	{
 		if (l_itOverrideIterator->second == &rCallback)
 		{
 			m_vKeywordOverride.erase(l_itOverrideIterator);
-			l_bResult = true;
+			res = true;
 			break;
 		}
 		++l_itOverrideIterator;
 	}
 
-	OV_ERROR_UNLESS_KRF(l_bResult, "Override for the callback was not found", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(res, "Override for the callback was not found", ErrorType::ResourceNotFound);
 
-	return l_bResult;
+	return res;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -370,8 +370,8 @@ bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordE
 CString CConfigurationManager::expand(const CString& rExpression) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
-	std::string l_sResult;
-	if (this->internalExpand(l_sValue, l_sResult)) { return l_sResult.c_str(); }
+	std::string res;
+	if (this->internalExpand(l_sValue, res)) { return res.c_str(); }
 	return l_sValue.c_str();
 }
 
@@ -382,15 +382,15 @@ CIdentifier CConfigurationManager::getUnusedIdentifier() const
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	uint64_t l_ui64Identifier = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
-	CIdentifier l_oResult;
+	CIdentifier res;
 	std::map<CIdentifier, SConfigurationToken>::const_iterator i;
 	do
 	{
 		l_ui64Identifier++;
-		l_oResult = CIdentifier(l_ui64Identifier);
-		i         = m_vConfigurationToken.find(l_oResult);
-	} while (i != m_vConfigurationToken.end() || l_oResult == OV_UndefinedIdentifier);
-	return l_oResult;
+		res = CIdentifier(l_ui64Identifier);
+		i         = m_vConfigurationToken.find(res);
+	} while (i != m_vConfigurationToken.end() || res == OV_UndefinedIdentifier);
+	return res;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -696,51 +696,51 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
-	std::string l_sResult;
-	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackslashes)) { return l_sResult.c_str(); }
+	std::string res;
+	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, res, preserveBackslashes)) { return res.c_str(); }
 	return l_sValue.c_str();
 }
 
 double CConfigurationManager::expandAsFloat(const CString& rExpression, const double f64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
-	double l_f64Result;
+	double res;
 
-	try { l_f64Result = std::stod(l_sResult.toASCIIString()); }
-	catch (const std::exception&) { l_f64Result = f64FallbackValue; }
+	try { res = std::stod(l_sResult.toASCIIString()); }
+	catch (const std::exception&) { res = f64FallbackValue; }
 
-	return l_f64Result;
+	return res;
 }
 
 int64_t CConfigurationManager::expandAsInteger(const CString& rExpression, const int64_t i64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
-	int64_t l_i64Result;
+	int64_t res;
 
-	try { l_i64Result = std::stoll(l_sResult.toASCIIString()); }
-	catch (const std::exception&) { l_i64Result = i64FallbackValue; }
+	try { res = std::stoll(l_sResult.toASCIIString()); }
+	catch (const std::exception&) { res = i64FallbackValue; }
 
-	return l_i64Result;
+	return res;
 }
 
 uint64_t CConfigurationManager::expandAsUInteger(const CString& rExpression, const uint64_t ui64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
-	uint64_t l_ui64Result;
+	uint64_t res;
 
-	try { l_ui64Result = std::stoull(l_sResult.toASCIIString()); }
-	catch (const std::exception&) { l_ui64Result = ui64FallbackValue; }
+	try { res = std::stoull(l_sResult.toASCIIString()); }
+	catch (const std::exception&) { res = ui64FallbackValue; }
 
-	return l_ui64Result;
+	return res;
 }
 
 bool CConfigurationManager::expandAsBoolean(const CString& rExpression, const bool bFallbackValue) const
 {
-	std::string l_sResult = this->expand(rExpression).toASCIIString();
-	std::transform(l_sResult.begin(), l_sResult.end(), l_sResult.begin(), ::to_lower<std::string::value_type>);
+	std::string res = this->expand(rExpression).toASCIIString();
+	std::transform(res.begin(), res.end(), res.begin(), ::to_lower<std::string::value_type>);
 
-	if (l_sResult == "true" || l_sResult == "on" || l_sResult == "1") { return true; }
-	if (l_sResult == "false" || l_sResult == "off" || l_sResult == "0") { return false; }
+	if (res == "true" || res == "on" || res == "1") { return true; }
+	if (res == "false" || res == "off" || res == "0") { return false; }
 
 	return bFallbackValue;
 }
@@ -761,26 +761,26 @@ uint32_t CConfigurationManager::getIndex() const { return m_ui32Index++; }
 
 CString CConfigurationManager::getTime() const
 {
-	char l_sResult[1024];
+	char res[1024];
 	time_t l_oRawTime;
 
 	time(&l_oRawTime);
 	struct tm* l_pTimeInfo = localtime(&l_oRawTime);
 
-	sprintf(l_sResult, "%02i.%02i.%02i", l_pTimeInfo->tm_hour, l_pTimeInfo->tm_min, l_pTimeInfo->tm_sec);
-	return l_sResult;
+	sprintf(res, "%02i.%02i.%02i", l_pTimeInfo->tm_hour, l_pTimeInfo->tm_min, l_pTimeInfo->tm_sec);
+	return res;
 }
 
 CString CConfigurationManager::getDate() const
 {
-	char l_sResult[1024];
+	char res[1024];
 	time_t l_oRawTime;
 
 	time(&l_oRawTime);
 	struct tm* l_pTimeInfo = localtime(&l_oRawTime);
 
-	sprintf(l_sResult, "%04i.%02i.%02i", l_pTimeInfo->tm_year + 1900, l_pTimeInfo->tm_mon + 1, l_pTimeInfo->tm_mday);
-	return l_sResult;
+	sprintf(res, "%04i.%02i.%02i", l_pTimeInfo->tm_year + 1900, l_pTimeInfo->tm_mon + 1, l_pTimeInfo->tm_mday);
+	return res;
 }
 
 uint32_t CConfigurationManager::getRealTime() const { return System::Time::getTime() - m_ui32StartTime; }

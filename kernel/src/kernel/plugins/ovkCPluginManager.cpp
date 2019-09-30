@@ -155,7 +155,7 @@ bool CPluginManager::addPluginsFromFiles(const CString& rFileNameWildCard)
 
 	this->getLogManager() << LogLevel_Info << "Adding plugins from [" << rFileNameWildCard << "]\n";
 
-	bool l_bResult                     = true;
+	bool res                     = true;
 	bool haveAllPluginsLoadedCorrectly = true;
 	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc, haveAllPluginsLoadedCorrectly);
 	FS::IEntryEnumerator* l_pEntryEnumerator = createEntryEnumerator(l_rCB);
@@ -165,14 +165,14 @@ bool CPluginManager::addPluginsFromFiles(const CString& rFileNameWildCard)
 
 	while (getline(ss, path, ';'))
 	{
-		l_bResult &= l_pEntryEnumerator->enumerate(path.c_str());
-		if (!l_bResult) { break; }
+		res &= l_pEntryEnumerator->enumerate(path.c_str());
+		if (!res) { break; }
 	}
 
 	l_pEntryEnumerator->release();
 
-	// Just return l_bResult. Error handling is performed within CPluginManagerEntryEnumeratorCallBack.
-	return l_bResult && haveAllPluginsLoadedCorrectly;
+	// Just return res. Error handling is performed within CPluginManagerEntryEnumeratorCallBack.
+	return res && haveAllPluginsLoadedCorrectly;
 }
 
 bool CPluginManager::registerPluginDesc(const IPluginObjectDesc& rPluginObjectDesc)

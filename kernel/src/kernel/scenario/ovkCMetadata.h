@@ -31,11 +31,11 @@ namespace OpenViBE
 
 		private:
 
-			CScenario& m_OwnerScenario;
+			CScenario& m_ownerScenario;
 
 			CIdentifier m_id = OV_UndefinedIdentifier;
-			CIdentifier m_Type       = OV_UndefinedIdentifier;
-			CString m_Data;
+			CIdentifier m_type = OV_UndefinedIdentifier;
+			CString m_data;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

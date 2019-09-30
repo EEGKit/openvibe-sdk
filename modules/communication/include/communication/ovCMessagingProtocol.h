@@ -55,7 +55,7 @@ namespace Communication
 		MessageType_Error = 6,
 		MessageType_Time = 7,
 		MessageType_Sync = 8,
-		MessageType_MAX = 9,
+		MessageType_Max = 9,
 
 		MessageType_Unknown = 0xFF,
 	};

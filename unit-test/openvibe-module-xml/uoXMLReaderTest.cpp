@@ -36,22 +36,22 @@ class CReaderCallBack final : public XML::IReaderCallBack
 {
 public:
 
-	struct Node
+	struct SNode
 	{
 		std::string name;
 		std::string data;
 		std::map<std::string, std::string> attributes;
-		std::vector<std::shared_ptr<Node>> children;
-		std::shared_ptr<Node> parent{ nullptr };
+		std::vector<std::shared_ptr<SNode>> children;
+		std::shared_ptr<SNode> parent{ nullptr };
 	};
 
-	std::shared_ptr<Node> currentNode{ nullptr };
+	std::shared_ptr<SNode> currentNode{ nullptr };
 
 protected:
 
 	void openChild(const char* name, const char** attributeName, const char** attributeValue, uint64_t attributeCount) override
 	{
-		auto node = std::make_shared<Node>();
+		auto node = std::make_shared<SNode>();
 
 		if (currentNode)
 		{

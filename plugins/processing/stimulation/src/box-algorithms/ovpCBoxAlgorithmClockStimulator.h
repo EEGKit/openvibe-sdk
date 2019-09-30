@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 			void release() override { delete this; }
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return (1LL << 32) * 32; }
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
@@ -22,13 +22,13 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_oStimulationEncoder;
-			uint64_t m_ui64StimulationId       = 0;
-			uint64_t m_ui64LastStimulationDate = 0;
-			uint64_t m_ui64LastEndTime         = 0;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_encoder;
+			uint64_t m_stimulationID       = 0;
+			uint64_t m_lastStimulationDate = 0;
+			uint64_t m_lastEndTime         = 0;
 
-			uint64_t m_SentStimulationCount = 0;
-			double m_StimulationInterval    = 0;
+			uint64_t m_nSentStimulation  = 0;
+			double m_stimulationInterval = 0;
 		};
 
 		class CBoxAlgorithmClockStimulatorDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

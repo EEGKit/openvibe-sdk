@@ -348,7 +348,7 @@ bool CPluginModuleWindows::isOpen() const { return m_pFileHandle != nullptr; }
 
 CString CPluginModuleWindows::getLastErrorMessageString()
 {
-	CString l_sResult;
+	CString res;
 
 	char* l_pMessageBuffer = nullptr;
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0,
@@ -357,11 +357,11 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);
 		for (size_t i = 0; i < l_iMessageLength; i++) { if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r') { l_pMessageBuffer[i] = ' '; } }
-		l_sResult = l_pMessageBuffer;
+		res = l_pMessageBuffer;
 	}
 	LocalFree(LPVOID(l_pMessageBuffer));
 
-	return l_sResult;
+	return res;
 }
 
 #else

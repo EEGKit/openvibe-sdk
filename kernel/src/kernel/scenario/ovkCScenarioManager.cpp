@@ -583,13 +583,13 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID) const { 
 CIdentifier CScenarioManager::getUnusedIdentifier() const
 {
 	uint64_t l_ui64Identifier = (uint64_t(rand()) << 32) + uint64_t(rand());
-	CIdentifier l_oResult;
+	CIdentifier res;
 	map<CIdentifier, CScenario*>::const_iterator i;
 	do
 	{
 		l_ui64Identifier++;
-		l_oResult = CIdentifier(l_ui64Identifier);
-		i         = m_vScenario.find(l_oResult);
-	} while (i != m_vScenario.end() || l_oResult == OV_UndefinedIdentifier);
-	return l_oResult;
+		res = CIdentifier(l_ui64Identifier);
+		i         = m_vScenario.find(res);
+	} while (i != m_vScenario.end() || res == OV_UndefinedIdentifier);
+	return res;
 }

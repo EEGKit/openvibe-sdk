@@ -43,10 +43,10 @@ namespace Socket
 #if defined TARGET_OS_Windows
 		bool initialize()
 		{
-			WSADATA l_oWSAData;
+			WSADATA wsaData;
 
 			// Ask for Winsock version.
-			if (_WINSOCK2API_::WSAStartup(MAKEWORD(m_ui8WinSocketMajorVersion, m_ui8WinSocketMinorVersion), &l_oWSAData) != 0)
+			if (_WINSOCK2API_::WSAStartup(MAKEWORD(m_ui8WinSocketMajorVersion, m_ui8WinSocketMinorVersion), &wsaData) != 0)
 			{
 				m_sLastError = "Failed to start Winsock " + std::to_string(m_ui8WinSocketMajorVersion) + "." + std::to_string(m_ui8WinSocketMinorVersion) + ": "
 							   + this->getLastErrorFormated();
@@ -55,7 +55,7 @@ namespace Socket
 
 			// Confirm that the WinSock DLL supports version requested.
 			// Note that if the DLL supports versions greater than the version requested, in addition to the version requested, it will still return the version requested in wVersion.
-			if (LOBYTE(l_oWSAData.wVersion) != m_ui8WinSocketMajorVersion || HIBYTE(l_oWSAData.wVersion) != m_ui8WinSocketMinorVersion)
+			if (LOBYTE(wsaData.wVersion) != m_ui8WinSocketMajorVersion || HIBYTE(wsaData.wVersion) != m_ui8WinSocketMinorVersion)
 			{
 				m_sLastError = "Could not find a usable version of Winsock.dll.";
 				_WINSOCK2API_::WSACleanup();
@@ -384,9 +384,9 @@ namespace Socket
 			while (l_bLookup)
 			{
 				// Check next bluetooth device
-				const int l_i32Result = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
+				const int res = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
 
-				if (l_i32Result == SOCKET_ERROR)
+				if (res == SOCKET_ERROR)
 				{
 					// If it is a "real" error, we trace it and return false.
 					if (_WINSOCK2API_::WSAGetLastError() != WSA_E_NO_MORE)

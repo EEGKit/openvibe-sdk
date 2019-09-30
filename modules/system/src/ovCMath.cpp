@@ -10,7 +10,7 @@
  * Other notes
  *
  * - The randomFloat32() and randomFloat64() functions might not be working as expected (verify)
- * - Due to generative process, values generated above l_ui32RandMax may not be dense (verify) 
+ * - Due to generative process, values generated above L_RAND_MAX may not be dense (verify) 
  * - randomUInteger32WithCeiling() may not be dense either
  *
  */
@@ -25,14 +25,14 @@ class RandomGenerator
 	uint32_t m_nextValue = 0;
 
 public:
-	static const uint32_t l_ui32RandMax = 0x7FFFFFFF; // (2^32)/2-1 == 2147483647
+	static const uint32_t L_RAND_MAX = 0x7FFFFFFF; // (2^32)/2-1 == 2147483647
 
 	explicit RandomGenerator(const uint32_t seed = 1) : m_nextValue(seed) {}
 
 	int rand()
 	{
 		// Pretty much C99 convention and parameters for a Linear Congruential Generator
-		m_nextValue = (m_nextValue * 1103515245 + 12345) & l_ui32RandMax;
+		m_nextValue = (m_nextValue * 1103515245 + 12345) & L_RAND_MAX;
 		return int(m_nextValue);
 	}
 
@@ -42,11 +42,11 @@ public:
 };
 
 // Should be only accessed via Math:: calls defined below
-static RandomGenerator g_oRandomGenerator;
+static RandomGenerator randomGenerator;
 
 bool Math::initializeRandomMachine(const uint64_t randomSeed)
 {
-	g_oRandomGenerator.setSeed(uint32_t(randomSeed));
+	randomGenerator.setSeed(uint32_t(randomSeed));
 
 	// For safety, we install also the C++ basic random engine (it might be useg by dependencies, old code, etc)
 	srand(uint32_t(randomSeed));
@@ -62,22 +62,22 @@ uint32_t Math::randomUInteger32() { return uint32_t(randomUInteger64()); }
 
 uint64_t Math::randomUInteger64()
 {
-	const uint64_t r1 = g_oRandomGenerator.rand();
-	const uint64_t r2 = g_oRandomGenerator.rand();
-	const uint64_t r3 = g_oRandomGenerator.rand();
-	const uint64_t r4 = g_oRandomGenerator.rand();
+	const uint64_t r1 = randomGenerator.rand();
+	const uint64_t r2 = randomGenerator.rand();
+	const uint64_t r3 = randomGenerator.rand();
+	const uint64_t r4 = randomGenerator.rand();
 	return (r1 << 24) ^ (r2 << 16) ^ (r3 << 8) ^ (r4);
 }
 
 uint32_t Math::randomUInteger32WithCeiling(uint32_t upperLimit)
 {
 	// float in range [0,1]
-	const double l_f64Temp = g_oRandomGenerator.rand() / double(g_oRandomGenerator.l_ui32RandMax);
+	const double temp = randomGenerator.rand() / double(RandomGenerator::L_RAND_MAX);
 
 	// static_cast is effectively floor(), so below we get output range [0,upperLimit-1], without explicit subtraction of 1
-	const uint32_t l_ui32ReturnValue = uint32_t(upperLimit * l_f64Temp);
+	const uint32_t returnValue = uint32_t(upperLimit * temp);
 
-	return l_ui32ReturnValue;
+	return returnValue;
 }
 
 int8_t Math::randomSInteger8() { return int8_t(randomUInteger64()); }
@@ -98,7 +98,7 @@ float Math::randomFloat32()
 
 float Math::randomFloat32BetweenZeroAndOne()
 {
-	const float fr = float(g_oRandomGenerator.rand()) / float(g_oRandomGenerator.l_ui32RandMax);
+	const float fr = float(randomGenerator.rand()) / float(RandomGenerator::L_RAND_MAX);
 	return fr;
 }
 
@@ -124,8 +124,8 @@ bool Math::isfinite(double value)
 bool Math::isinf(double value)
 {
 #ifdef TARGET_OS_Windows
-	int l_i32Class = _fpclass(value);
-	return (l_i32Class == _FPCLASS_NINF || l_i32Class == _FPCLASS_PINF);
+	const int class_ = _fpclass(value);
+	return (class_ == _FPCLASS_NINF || class_ == _FPCLASS_PINF);
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	return std::isinf(value);
 #else
@@ -133,7 +133,7 @@ bool Math::isinf(double value)
 #endif
 }
 
-bool Math::isnan(double value)
+bool Math::isnan(const double value)
 {
 #ifdef TARGET_OS_Windows
 	return (_isnan(value) != 0);
@@ -144,11 +144,11 @@ bool Math::isnan(double value)
 #endif
 }
 
-bool Math::isnormal(double value)
+bool Math::isnormal(const double value)
 {
 #ifdef TARGET_OS_Windows
-	int l_i32Class = _fpclass(value);
-	return (l_i32Class == _FPCLASS_NN || l_i32Class == _FPCLASS_PN);
+	const int class_ = _fpclass(value);
+	return (class_ == _FPCLASS_NN || class_ == _FPCLASS_PN);
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	return std::isnormal(value);
 #else

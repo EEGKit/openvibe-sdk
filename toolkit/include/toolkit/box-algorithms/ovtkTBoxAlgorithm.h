@@ -192,38 +192,38 @@ namespace OpenViBEToolkit
 
 			operator int()
 			{
-				double l_dResult;
+				double res;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, l_dResult),
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, res),
 								"Could not expand numeric expression [" << m_settingValue << "] to integer 32bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int>::max(), m_errorManager, m_logManager);
 
-				return int(l_dResult);
+				return int(res);
 			}
 
 			operator int64_t()
 			{
-				double l_dResult;
+				double res;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, l_dResult),
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, res),
 								"Could not expand numeric expression [" << m_settingValue << "] to integer 64bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_errorManager, m_logManager);
 
-				return int64_t(l_dResult);
+				return int64_t(res);
 			}
 
 			operator double()
 			{
-				double l_dResult;
+				double res;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, l_dResult),
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, res),
 								"Could not expand numeric expression [" << m_settingValue << "] to float.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_errorManager, m_logManager);
 
-				return double(l_dResult);
+				return double(res);
 			}
 
 			operator bool() { return m_configManager.expandAsBoolean(m_settingValue); }

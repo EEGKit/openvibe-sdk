@@ -150,7 +150,7 @@ void Files::openFStream(std::fstream& rStream, const char* sFile, std::ios_base:
 
 bool Files::equals(const char* pFile1, const char* pFile2)
 {
-	bool l_bResult=true;
+	bool res=true;
 	if(pFile1 && pFile2)
 	{
 		struct stat l_oStat1;
@@ -160,11 +160,11 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 
 		if(!l_bStat1 && !l_bStat2)
 		{
-			l_bResult=true;
+			res=true;
 		}
 		else if(l_bStat1 && l_bStat2)
 		{
-			l_bResult=
+			res=
 				(l_oStat1.st_dev==l_oStat2.st_dev)&&
 				(l_oStat1.st_ino==l_oStat2.st_ino)&&
 				(l_oStat1.st_size==l_oStat2.st_size)&&
@@ -172,17 +172,17 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 		}
 		else
 		{
-			l_bResult=false;
+			res=false;
 		}
 	}
-	return l_bResult;
+	return res;
 }
 
 #elif defined TARGET_OS_Windows
 
 bool Files::equals(const char* pFile1, const char* pFile2)
 {
-	bool l_bResult = true;
+	bool res = true;
 	if (pFile1 && pFile2)
 	{
 		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
@@ -195,10 +195,10 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 			BY_HANDLE_FILE_INFORMATION l_oStat2;
 			BOOL l_bStat1 = GetFileInformationByHandle(l_pHandle1, &l_oStat1);
 			BOOL l_bStat2 = GetFileInformationByHandle(l_pHandle2, &l_oStat2);
-			if (!l_bStat1 && !l_bStat2) { l_bResult = true; }
+			if (!l_bStat1 && !l_bStat2) { res = true; }
 			else if (l_bStat1 && l_bStat2)
 			{
-				l_bResult =
+				res =
 						(l_oStat1.dwVolumeSerialNumber == l_oStat2.dwVolumeSerialNumber) &&
 						(l_oStat1.nFileIndexHigh == l_oStat2.nFileIndexHigh) &&
 						(l_oStat1.nFileIndexLow == l_oStat2.nFileIndexLow) &&
@@ -207,7 +207,7 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 						(l_oStat1.ftLastWriteTime.dwHighDateTime == l_oStat2.ftLastWriteTime.dwHighDateTime) &&
 						(l_oStat1.ftLastWriteTime.dwLowDateTime == l_oStat2.ftLastWriteTime.dwLowDateTime);
 			}
-			else { l_bResult = false; }
+			else { res = false; }
 			CloseHandle(l_pHandle1);
 			CloseHandle(l_pHandle2);
 		}
@@ -217,7 +217,7 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 			if (l_pHandle2) { CloseHandle(l_pHandle2); }
 		}
 	}
-	return l_bResult;
+	return res;
 }
 
 #else

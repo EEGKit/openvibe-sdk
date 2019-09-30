@@ -39,7 +39,7 @@ protected:
 	CAbstractTree* m_pTree = nullptr;
 
 	//! Grammar to use
-	CEquationGrammar m_oGrammar;
+	SEquationGrammar m_oGrammar;
 
 	//! Pointer to the data referenced by X in the equation
 	double** m_ppVariable = nullptr;

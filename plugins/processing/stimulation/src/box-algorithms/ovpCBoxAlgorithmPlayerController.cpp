@@ -65,13 +65,13 @@ bool CBoxAlgorithmPlayerController::process()
 							"] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
 
-					bool l_bResult = false;
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play) { l_bResult = this->getPlayerContext().play(); }
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Stop) { l_bResult = this->getPlayerContext().stop(); }
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Pause) { l_bResult = this->getPlayerContext().pause(); }
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward) { l_bResult = this->getPlayerContext().forward(); }
+					bool res = false;
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play) { res = this->getPlayerContext().play(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Stop) { res = this->getPlayerContext().stop(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Pause) { res = this->getPlayerContext().pause(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward) { res = this->getPlayerContext().forward(); }
 
-					OV_ERROR_UNLESS_KRF(l_bResult,
+					OV_ERROR_UNLESS_KRF(res,
 										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
 											m_ui64ActionIdentifier) << "]",
 										OpenViBE::Kernel::ErrorType::BadConfig);

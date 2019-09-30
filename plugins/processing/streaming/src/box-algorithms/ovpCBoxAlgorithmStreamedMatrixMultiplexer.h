@@ -33,12 +33,12 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
+				char name[1024];
 
 				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Input stream %u", i + 1);
-					box.setInputName(i, l_sName);
+					sprintf(name, "Input stream %u", i + 1);
+					box.setInputName(i, name);
 				}
 
 				return true;

@@ -111,8 +111,8 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 					 OpenViBE::Kernel::ErrorType::NotImplemented);
 	}
 
-	m_bCheckChunkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
-	this->getLogManager() << LogLevel_Trace << (m_bCheckChunkDates ? "Checking chunk dates..." : "Not checking chunk dates !") << "\n";
+	m_CheckChunkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
+	this->getLogManager() << LogLevel_Trace << (m_CheckChunkDates ? "Checking chunk dates..." : "Not checking chunk dates !") << "\n";
 
 	return true;
 }
@@ -154,7 +154,7 @@ bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t /*index*/)
 	for (uint32_t i = 1; i < nInput; i++)
 	{
 		if (boxContext.getInputChunkCount(i) == 0) { return true; }
-		if (m_bCheckChunkDates)
+		if (m_CheckChunkDates)
 		{
 			OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0) || tEnd == boxContext.getInputChunkEndTime(i, 0),
 								"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",

@@ -33,8 +33,8 @@ namespace OpenViBEPlugins
 						  OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
-			uint32_t getOutputProbabilityVectorLength() override;
-			uint32_t getOutputDistanceVectorLength() override;
+			uint32_t getOutputProbabilityVectorLength() override { return m_vDiscriminantFunctions.size(); }
+			uint32_t getOutputDistanceVectorLength() override { return m_vDiscriminantFunctions.size(); }
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA)
 

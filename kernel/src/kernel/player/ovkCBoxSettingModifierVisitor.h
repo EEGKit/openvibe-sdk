@@ -14,9 +14,7 @@ class CBoxSettingModifierVisitor final : public OpenViBE::IObjectVisitor, public
 {
 public:
 
-	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : OpenViBE::IObjectVisitor(),
-																													m_configManager(
-																														pConfigurationManager) {}
+	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : OpenViBE::IObjectVisitor(),m_configManager(pConfigurationManager) {}
 
 	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) override;
 	void processChildData(const char* sData) override;

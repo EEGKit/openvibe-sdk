@@ -137,14 +137,14 @@ namespace Socket
 			if (ioctl (fd, PPDATADIR, &dirin)  < 0) { return 0; }
 			if (ioctl(fd, PPRDATA, &valin) < 0) { return 0; }
 
-			int l_iResult = ::read(m_iFile, buffer, size);
-			if(l_iResult < 0)
+			int res = ::read(m_iFile, buffer, size);
+			if(res < 0)
 			{
 				this->close();
 				return 0;
 			}
 
-			return l_iResult;*/
+			return res;*/
 
 #endif
 

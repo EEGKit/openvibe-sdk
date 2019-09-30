@@ -24,24 +24,24 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			uint64_t m_ui64MinimumVotes                 = 0;
-			double m_f64TimeWindow                      = 0;
-			uint64_t m_ui64RejectClassLabel             = 0;
-			OpenViBE::CIdentifier m_oClearVotes         = OV_UndefinedIdentifier;
-			OpenViBE::CIdentifier m_oOutputDateMode     = OV_UndefinedIdentifier;
-			OpenViBE::CIdentifier m_oRejectClass_CanWin = OV_UndefinedIdentifier;
+			uint64_t m_minimumVotes                   = 0;
+			double m_timeWindow                       = 0;
+			uint64_t m_rejectClassLabel               = 0;
+			OpenViBE::CIdentifier m_clearVotes        = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_outputDateMode    = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_rejectClassCanWin = OV_UndefinedIdentifier;
 
 		private:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pDecoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
 
 			std::deque<std::pair<uint64_t, uint64_t>> m_oStimulusDeque; // <label,time>
 
-			uint64_t m_ui64LatestStimulusDate = 0;
-			uint64_t m_ui64LastTime           = 0;
+			uint64_t m_latestStimulusDate = 0;
+			uint64_t m_lastTime           = 0;
 		};
 
 
@@ -49,13 +49,13 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmStimulationVoterListener() : m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
+			CBoxAlgorithmStimulationVoterListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 
 		protected:
 
-			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_inputTypeID = OV_UndefinedIdentifier;
 		};
 
 		class CBoxAlgorithmStimulationVoterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

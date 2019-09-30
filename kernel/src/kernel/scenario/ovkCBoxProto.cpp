@@ -27,10 +27,10 @@ bool CBoxProto::addOutput(const CString& name, const CIdentifier& typeID, const 
 {
 	if (!m_rBox.addOutput(name, typeID, identifier, bNotify)) { return false; }
 
-	char l_sBuffer[1024];
-	sprintf(l_sBuffer, "%d", m_rBox.getOutputCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, l_sBuffer); }
-	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialOutputCount, l_sBuffer); }
+	char buffer[1024];
+	sprintf(buffer, "%d", m_rBox.getOutputCount());
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, buffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialOutputCount, buffer); }
 
 	return true;
 }
@@ -40,10 +40,10 @@ bool CBoxProto::addSetting(const CString& name, const CIdentifier& typeID, const
 {
 	if (!m_rBox.addSetting(name, typeID, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, identifier, bNotify)) { return false; }
 
-	char l_sBuffer[1024];
-	sprintf(l_sBuffer, "%d", m_rBox.getSettingCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, l_sBuffer); }
-	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialSettingCount, l_sBuffer); }
+	char buffer[1024];
+	sprintf(buffer, "%d", m_rBox.getSettingCount());
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, buffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialSettingCount, buffer); }
 
 	return true;
 }

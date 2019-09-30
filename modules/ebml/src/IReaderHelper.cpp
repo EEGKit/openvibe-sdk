@@ -57,7 +57,7 @@ double CReaderHelper::getFloatFromChildData(const void* buffer, const uint64_t s
 	float l_f32Result;
 	double l_f64Result;
 	int l_ui32Result;
-	int64_t l_ui64Result;
+	int64_t res;
 
 	switch (size)
 	{
@@ -72,8 +72,8 @@ double CReaderHelper::getFloatFromChildData(const void* buffer, const uint64_t s
 			break;
 
 		case 8:
-			l_ui64Result = uint64_t(getUIntegerFromChildData(buffer, size));
-			memcpy(&l_f64Result, &l_ui64Result, sizeof(l_f64Result));
+			res = uint64_t(getUIntegerFromChildData(buffer, size));
+			memcpy(&l_f64Result, &res, sizeof(l_f64Result));
 			break;
 
 		case 10:

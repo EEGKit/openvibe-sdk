@@ -53,13 +53,13 @@ namespace OpenViBE
 
 		void uninitialize() override;
 
-		std::vector<std::shared_ptr<ICommand>> getCommandList() const override;
+		std::vector<std::shared_ptr<SCommand>> getCommandList() const override;
 
-		PlayerReturnCode parse() override;
+		EPlayerReturnCode parse() override;
 
 	private:
 
 		ProgramOptionParser& m_OptionParser;
-		std::vector<std::shared_ptr<ICommand>> m_CommandList;
+		std::vector<std::shared_ptr<SCommand>> m_CommandList;
 	};
 }

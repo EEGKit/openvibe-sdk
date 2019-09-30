@@ -307,7 +307,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		break;
 
 		case MessageType_Unknown:
-		case MessageType_MAX:
+		case MessageType_Max:
 			this->pushMessage(ErrorMessage(Error_InvalidMessageType, header.getId()));
 			this->setLastError(Deserialize_MessageTypeNotSupported);
 			return false;

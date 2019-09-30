@@ -31,25 +31,25 @@ namespace OpenViBEPlugins
 		private:
 			bool processStimulation(double startTime, double endTime);
 
-			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_ReaderLib;
+			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_readerLib;
 
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_AlgorithmEncoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_StimulationEncoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_algorithmEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimulationEncoder;
 
-			std::deque<OpenViBE::CSV::SMatrixChunk> m_SavedChunks;
-			std::deque<OpenViBE::CSV::SStimulationChunk> m_SavedStimulations;
+			std::deque<OpenViBE::CSV::SMatrixChunk> m_savedChunks;
+			std::deque<OpenViBE::CSV::SStimulationChunk> m_savedStimulations;
 
-			uint64_t m_LastStimulationDate = 0;
+			uint64_t m_lastStimulationDate = 0;
 
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
-			std::vector<std::string> m_ChannelNames;
-			std::vector<uint32_t> m_DimensionSizes;
-			uint32_t m_SamplingRate         = 0;
-			uint32_t m_SampleCountPerBuffer = 0;
+			std::vector<std::string> m_channelNames;
+			std::vector<uint32_t> m_dimSizes;
+			uint32_t m_samplingRate         = 0;
+			uint32_t m_nSamplePerBuffer = 0;
 
-			bool m_IsHeaderSent;
-			bool m_IsStimulationHeaderSent;
-			std::vector<double> m_FrequencyAbscissa;
+			bool m_isHeaderSent;
+			bool m_isStimulationHeaderSent;
+			std::vector<double> m_frequencyAbscissa;
 		};
 
 		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -62,15 +62,11 @@ namespace OpenViBEPlugins
 
 				if (index == 0 && typeID == OV_TypeId_Stimulations)
 				{
-					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal),
-										"Failed to reset output type to signal",
-										OpenViBE::Kernel::ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal), "Failed to reset output type to signal", OpenViBE::Kernel::ErrorType::Internal);
 				}
 				else if (index == 1 && typeID != OV_TypeId_Stimulations)
 				{
-					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations),
-										"Failed to reset output type to stimulations",
-										OpenViBE::Kernel::ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations), "Failed to reset output type to stimulations", OpenViBE::Kernel::ErrorType::Internal);
 				}
 				else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal); }
 

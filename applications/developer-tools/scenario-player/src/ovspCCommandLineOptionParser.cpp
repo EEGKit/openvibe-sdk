@@ -34,9 +34,9 @@ namespace OpenViBE
 
 	void CommandLineOptionParser::uninitialize() { m_CommandList.clear(); }
 
-	std::vector<std::shared_ptr<ICommand>> CommandLineOptionParser::getCommandList() const { return m_CommandList; }
+	std::vector<std::shared_ptr<SCommand>> CommandLineOptionParser::getCommandList() const { return m_CommandList; }
 
-	PlayerReturnCode CommandLineOptionParser::parse()
+	EPlayerReturnCode CommandLineOptionParser::parse()
 	{
 		// parsing consists of building a straightfoward command workflow according to command-line
 		// options.
@@ -73,7 +73,7 @@ namespace OpenViBE
 		else
 		{
 			std::cerr << "ERROR: mandatory option 'scenario-file' not set" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArgument;
+			return EPlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		m_CommandList.push_back(scenarioCmd);
@@ -115,7 +115,7 @@ namespace OpenViBE
 				if (playMode != "ff" && playMode != "std")
 				{
 					std::cerr << "ERROR: option 'play-mode' must be ff or std" << std::endl;
-					return PlayerReturnCode::BadArg;
+					return EPlayerReturnCode::BadArg;
 				}
 				
 				// permissive code here
@@ -130,6 +130,6 @@ namespace OpenViBE
 			m_CommandList.push_back(runCmd);
 		}
 
-		return PlayerReturnCode::Success;
+		return EPlayerReturnCode::Success;
 	}
 }

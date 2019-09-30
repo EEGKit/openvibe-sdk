@@ -74,18 +74,18 @@ int main(int argc, char** argv)
 	if (!optionParser.parse(argc, argv))
 	{
 		std::cerr << "ERROR: Failed to parse arguments" << std::endl;
-		return int(PlayerReturnCode::InvalidArg);
+		return int(EPlayerReturnCode::InvalidArg);
 	}
 	if (optionParser.hasOption("help"))
 	{
 		optionParser.printOptionsDesc();
-		return int(PlayerReturnCode::Success);
+		return int(EPlayerReturnCode::Success);
 	}
 	if (optionParser.hasOption("version"))
 	{
 		// PROJECT_VERSION is added to definition from cmake
 		std::cout << "version: " << PROJECT_VERSION << std::endl;
-		return int(PlayerReturnCode::Success);
+		return int(EPlayerReturnCode::Success);
 	}
 	if (optionParser.hasOption("mode") || optionParser.hasOption("updated-scenario-file"))
 	{
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
 			else
 			{
 				std::cerr << "ERROR: mandatory option 'command-file' not set" << std::endl;
-				return int(PlayerReturnCode::MissingMandatoryArgument);
+				return int(EPlayerReturnCode::MissingMandatoryArgument);
 			}
 		}
 		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file")) { commandParser.reset(new CommandLineOptionParser(optionParser)); }
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 		{
 			std::cerr << "ERROR: unknown mode set" << std::endl;
 			std::cerr << "Mode must be 'x' or 'c'" << std::endl;
-			return int(PlayerReturnCode::InvalidArg);
+			return int(EPlayerReturnCode::InvalidArg);
 		}
 
 		commandParser->initialize();
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 		{
 			auto returnCode = commandParser->parse();
 
-			if (returnCode == PlayerReturnCode::Success)
+			if (returnCode == EPlayerReturnCode::Success)
 			{
 				KernelFacade kernel;
 
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 				{
 					returnCode = cmd->execute(kernel);
 
-					if (returnCode != PlayerReturnCode::Success) { return int(returnCode); }
+					if (returnCode != EPlayerReturnCode::Success) { return int(returnCode); }
 				}
 			}
 			else { return int(returnCode); }
@@ -136,14 +136,14 @@ int main(int argc, char** argv)
 		catch (const std::exception& e)
 		{
 			std::cerr << "ERROR: received unexpected exception: " << e.what() << std::endl;
-			return int(PlayerReturnCode::UnkownFailure);
+			return int(EPlayerReturnCode::UnkownFailure);
 		}
 	}
 	else
 	{
 		std::cerr << "ERROR: mandatory option 'mode' not set" << std::endl;
-		return int(PlayerReturnCode::MissingMandatoryArgument);
+		return int(EPlayerReturnCode::MissingMandatoryArgument);
 	}
 
-	return int(PlayerReturnCode::Success);
+	return int(EPlayerReturnCode::Success);
 }

@@ -117,7 +117,7 @@ bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 
 	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) { return false; }
 
-	if (typeInt >= MessageType_MAX) { return false; }
+	if (typeInt >= MessageType_Max) { return false; }
 
 	m_Type = EMessageType(typeInt);
 

@@ -11,21 +11,19 @@ namespace System
 	public:
 		// Load a library in a matter compliant with non-ascii path
 		// returns the eventual error code
-		static void* utf16CompliantLoadLibrary(const char* sLibraryPath, HANDLE hFile = nullptr, DWORD dwFlags = LOAD_WITH_ALTERED_SEARCH_PATH);
+		static void* utf16CompliantLoadLibrary(const char* path, HANDLE file = nullptr, DWORD flags = LOAD_WITH_ALTERED_SEARCH_PATH);
 
-		static BOOL utf16CompliantSetEnvironmentVariable(const char* sEnvVarName, const char* sEnvVarValue);
+		static BOOL utf16CompliantSetEnvironmentVariable(const char* name, const char* value);
 		
 		// Load a library in a matter compliant with non-ascii path
 		// returns the eventual error code
-		static BOOL utf16CompliantCreateProcess(char* sApplicationName, char* sCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
-												LPSECURITY_ATTRIBUTES lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment,
-												char* sCurrentDirectory,
-												LPSTARTUPINFO pStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
+		static BOOL utf16CompliantCreateProcess(char* applicationName, char* commandLine, LPSECURITY_ATTRIBUTES processAttributes,
+												LPSECURITY_ATTRIBUTES threadAttributes, BOOL inheritHandles, DWORD creationFlags, LPVOID environment,
+												char* currentDirectory, LPSTARTUPINFO startupInfo, LPPROCESS_INFORMATION processInformation);
 				
 		// Load a library in a matter compliant with non-ascii path
 		// returns the eventual error code
-		static HINSTANCE utf16CompliantShellExecute(HWND l_pHWND, LPCTSTR lpOperation, LPCTSTR lpFile,
-													LPCTSTR lpParameters, LPCTSTR lpDirectory, INT nShowCmd);
+		static HINSTANCE utf16CompliantShellExecute(HWND hwnd, LPCTSTR operation, LPCTSTR file, LPCTSTR parameters, LPCTSTR directory, INT nShowCmd);
 	private:
 		WindowsUtilities() = delete;
 	};

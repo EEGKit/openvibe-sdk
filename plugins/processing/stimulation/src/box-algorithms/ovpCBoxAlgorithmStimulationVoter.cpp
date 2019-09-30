@@ -26,27 +26,27 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.toString() << "] (expected OV_TypeId_Stimulations type)",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
-	m_pEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
-	m_pEncoder->initialize();
+	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
+	m_encoder->initialize();
 
-	m_pDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
-	m_pDecoder->initialize();
+	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
+	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_pDecoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pStimulationSet.initialize(m_pDecoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
+	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
+	op_pStimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
 
-	m_ui64MinimumVotes     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_f64TimeWindow        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_oClearVotes          = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
-	m_oOutputDateMode      = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
-	m_ui64RejectClassLabel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
-	m_oRejectClass_CanWin  = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
+	m_minimumVotes     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_timeWindow        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_clearVotes          = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
+	m_outputDateMode      = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
+	m_rejectClassLabel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_rejectClassCanWin  = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
 
-	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_oClearVotes << ", timestamp at " << m_oOutputDateMode << ", reject mode " <<
-			m_oRejectClass_CanWin << "\n";
+	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_clearVotes << ", timestamp at " << m_outputDateMode << ", reject mode " <<
+			m_rejectClassCanWin << "\n";
 
-	m_ui64LatestStimulusDate = 0;
-	m_ui64LastTime           = 0;
+	m_latestStimulusDate = 0;
+	m_lastTime           = 0;
 
 	m_oStimulusDeque.clear();
 
@@ -55,11 +55,11 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 
 bool CBoxAlgorithmStimulationVoter::uninitialize()
 {
-	m_pDecoder->uninitialize();
-	this->getAlgorithmManager().releaseAlgorithm(*m_pDecoder);
+	m_decoder->uninitialize();
+	this->getAlgorithmManager().releaseAlgorithm(*m_decoder);
 
-	m_pEncoder->uninitialize();
-	this->getAlgorithmManager().releaseAlgorithm(*m_pEncoder);
+	m_encoder->uninitialize();
+	this->getAlgorithmManager().releaseAlgorithm(*m_encoder);
 
 	return true;
 }
@@ -75,9 +75,9 @@ bool CBoxAlgorithmStimulationVoter::process()
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	TParameterHandler<IStimulationSet*> ip_pStimulationSet(
-		m_pEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
+		m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(
-		m_pEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+		m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
@@ -85,16 +85,16 @@ bool CBoxAlgorithmStimulationVoter::process()
 	for (size_t j = 0; j < boxContext.getInputChunkCount(0); j++)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, j);
-		m_pDecoder->process();
-		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
-		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		m_decoder->process();
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
 			{
 				uint64_t stimulationId   = op_pStimulationSet->getStimulationIdentifier(k);
 				uint64_t stimulationDate = op_pStimulationSet->getStimulationDate(k);
-				m_ui64LatestStimulusDate = std::max(m_ui64LatestStimulusDate, stimulationDate);
-				if (TimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - stimulationDate) <= m_f64TimeWindow)
+				m_latestStimulusDate = std::max(m_latestStimulusDate, stimulationDate);
+				if (TimeArithmetics::timeToSeconds(m_latestStimulusDate - stimulationDate) <= m_timeWindow)
 				{
 					// Stimulus is fresh, append
 					m_oStimulusDeque.push_back(std::pair<uint64_t, uint64_t>(stimulationId, stimulationDate));
@@ -102,7 +102,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 				}
 			}
 		}
-		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd)) { }
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd)) { }
 		boxContext.markInputAsDeprecated(0, j);
 	}
 
@@ -112,7 +112,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	while (!m_oStimulusDeque.empty())
 	{
 		const uint64_t frontDate = m_oStimulusDeque.front().second;
-		if (TimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - frontDate) > m_f64TimeWindow)
+		if (TimeArithmetics::timeToSeconds(m_latestStimulusDate - frontDate) > m_timeWindow)
 		{
 			// Drop it
 			m_oStimulusDeque.pop_front();
@@ -126,7 +126,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	this->getLogManager() << LogLevel_Debug << "Queue size is " << uint64_t(m_oStimulusDeque.size()) << "\n";
 
-	if (m_oStimulusDeque.size() < m_ui64MinimumVotes)
+	if (m_oStimulusDeque.size() < m_minimumVotes)
 	{
 		// Not enough stimuli to vote
 		return true;
@@ -147,7 +147,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	}
 
 	// Find the winner
-	uint64_t resultClassLabel = m_ui64RejectClassLabel;
+	uint64_t resultClassLabel = m_rejectClassLabel;
 	uint64_t maxVotes         = 0;
 
 	for (auto it = votes.begin(); it != votes.end(); ++it)
@@ -155,7 +155,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		const uint64_t stimulusType  = (*it).first;
 		const uint64_t stimulusVotes = (*it).second; // can not be zero by construction above
 
-		if (m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && stimulusType == m_ui64RejectClassLabel)
+		if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && stimulusType == m_rejectClassLabel)
 		{
 			// Reject class never wins
 			continue;
@@ -177,13 +177,13 @@ bool CBoxAlgorithmStimulationVoter::process()
 		}
 	}
 
-	if (m_ui64LastTime == 0)
+	if (m_lastTime == 0)
 	{
-		m_pEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
-		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, m_ui64LastTime);
+		m_encoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
+		boxContext.markOutputAsReadyToSend(0, m_lastTime, m_lastTime);
 	}
 
-	if (m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && resultClassLabel == m_ui64RejectClassLabel)
+	if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && resultClassLabel == m_rejectClassLabel)
 	{
 		this->getLogManager() << LogLevel_Debug << "Winning class " << resultClassLabel << " was 'rejected' with " << maxVotes << "votes. Dropped.\n";
 	}
@@ -192,19 +192,19 @@ bool CBoxAlgorithmStimulationVoter::process()
 		const uint64_t currentTime = getPlayerContext().getCurrentTime();
 
 		uint64_t timeStamp;
-		if (m_oOutputDateMode == OVP_TypeId_Voting_OutputTime_Vote) { timeStamp = currentTime; }
-		else if (m_oOutputDateMode == OVP_TypeId_Voting_OutputTime_Winner) { timeStamp = lastSeen[resultClassLabel]; }
-		else { timeStamp = m_ui64LatestStimulusDate; }
+		if (m_outputDateMode == OVP_TypeId_Voting_OutputTime_Vote) { timeStamp = currentTime; }
+		else if (m_outputDateMode == OVP_TypeId_Voting_OutputTime_Winner) { timeStamp = lastSeen[resultClassLabel]; }
+		else { timeStamp = m_latestStimulusDate; }
 
 		this->getLogManager() << LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
 
 		ip_pStimulationSet->setStimulationCount(0);
 		ip_pStimulationSet->appendStimulation(resultClassLabel, timeStamp, 0);
-		m_pEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer);
-		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, currentTime);
-		m_ui64LastTime = currentTime;
+		m_encoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer);
+		boxContext.markOutputAsReadyToSend(0, m_lastTime, currentTime);
+		m_lastTime = currentTime;
 
-		if (m_oClearVotes == OVP_TypeId_Voting_ClearVotes_AfterOutput) { m_oStimulusDeque.clear(); }
+		if (m_clearVotes == OVP_TypeId_Voting_ClearVotes_AfterOutput) { m_oStimulusDeque.clear(); }
 	}
 
 	return true;

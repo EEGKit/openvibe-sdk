@@ -16,14 +16,14 @@ CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() {}
 
 bool CBoxAlgorithmXDAWNTrainer::initialize()
 {
-	m_TrainStimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_FilterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_trainStimulationID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_filterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(m_FilterFilename.length() != 0, "The filter filename is empty.\n", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_filterFilename.length() != 0, "The filter filename is empty.\n", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	if (FS::Files::fileExists(m_FilterFilename))
+	if (FS::Files::fileExists(m_filterFilename))
 	{
-		FILE* file = FS::Files::open(m_FilterFilename, "wt");
+		FILE* file = FS::Files::open(m_filterFilename, "wt");
 
 		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", OpenViBE::Kernel::ErrorType::BadFileRead);
 
@@ -34,25 +34,25 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 
 	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
-	m_FilterDimension = uint32_t(filterDimension);
+	m_filterDimension = uint32_t(filterDimension);
 
-	m_SaveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_saveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 
-	m_StimDecoder.initialize(*this, 0);
-	m_SignalDecoder[0].initialize(*this, 1);
-	m_SignalDecoder[1].initialize(*this, 2);
-	m_StimEncoder.initialize(*this, 0);
+	m_stimDecoder.initialize(*this, 0);
+	m_signalDecoder[0].initialize(*this, 1);
+	m_signalDecoder[1].initialize(*this, 2);
+	m_stimEncoder.initialize(*this, 0);
 
 	return true;
 }
 
 bool CBoxAlgorithmXDAWNTrainer::uninitialize()
 {
-	m_StimDecoder.uninitialize();
-	m_SignalDecoder[0].uninitialize();
-	m_SignalDecoder[1].uninitialize();
-	m_StimEncoder.uninitialize();
+	m_stimDecoder.uninitialize();
+	m_signalDecoder[0].uninitialize();
+	m_signalDecoder[1].uninitialize();
+	m_stimEncoder.uninitialize();
 
 	return true;
 }
@@ -72,28 +72,28 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{
-		m_StimEncoder.getInputStimulationSet()->clear();
-		m_StimDecoder.decode(i);
+		m_stimEncoder.getInputStimulationSet()->clear();
+		m_stimDecoder.decode(i);
 
-		if (m_StimDecoder.isHeaderReceived()) { m_StimEncoder.encodeHeader(); }
-		if (m_StimDecoder.isBufferReceived())
+		if (m_stimDecoder.isHeaderReceived()) { m_stimEncoder.encodeHeader(); }
+		if (m_stimDecoder.isBufferReceived())
 		{
-			for (uint64_t j = 0; j < m_StimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (uint64_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
 			{
-				const uint64_t stimulationId = m_StimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
+				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
 
-				if (stimulationId == m_TrainStimulationId)
+				if (stimulationId == m_trainStimulationID)
 				{
 					train = true;
 
-					m_StimEncoder.getInputStimulationSet()->appendStimulation(
-						OVTK_StimulationId_TrainCompleted, m_StimDecoder.getOutputStimulationSet()->getStimulationDate(j), 0);
+					m_stimEncoder.getInputStimulationSet()->appendStimulation(
+						OVTK_StimulationId_TrainCompleted, m_stimDecoder.getOutputStimulationSet()->getStimulationDate(j), 0);
 				}
 			}
 
-			m_StimEncoder.encodeBuffer();
+			m_stimEncoder.encodeBuffer();
 		}
-		if (m_StimDecoder.isEndReceived()) { m_StimEncoder.encodeEnd(); }
+		if (m_stimDecoder.isEndReceived()) { m_stimEncoder.encodeEnd(); }
 
 		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, i), dynamicBoxContext.getInputChunkEndTime(0, i));
 	}
@@ -116,7 +116,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 			for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); i++)
 			{
-				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& m_rSignalDecoder = m_SignalDecoder[j];
+				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& m_rSignalDecoder = m_signalDecoder[j];
 				m_rSignalDecoder.decode(i);
 
 				IMatrix* matrix = m_rSignalDecoder.getOutputMatrix();
@@ -132,7 +132,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 										OpenViBE::Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n",
 										OpenViBE::Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(m_FilterDimension <= nChannel, "The filter dimension must not be superior than the channel count.\n",
+					OV_ERROR_UNLESS_KRF(m_filterDimension <= nChannel, "The filter dimension must not be superior than the channel count.\n",
 										OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
@@ -247,20 +247,20 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		CMatrix eigenVectors;
 		eigenVectors.setDimensionCount(2);
-		eigenVectors.setDimensionSize(0, m_FilterDimension);
+		eigenVectors.setDimensionSize(0, m_filterDimension);
 		eigenVectors.setDimensionSize(1, nChannel);
 
-		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_FilterDimension, nChannel);
+		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDimension, nChannel);
 
-		vectorsMapper.block(0, 0, m_FilterDimension, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_FilterDimension).transpose();			
+		vectorsMapper.block(0, 0, m_filterDimension, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_filterDimension).transpose();			
 					
 		// Saves filters
 
-		FILE* file = FS::Files::open(m_FilterFilename.toASCIIString(), "wt");
+		FILE* file = FS::Files::open(m_filterFilename.toASCIIString(), "wt");
 
-		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_FilterFilename << "] for writing.\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_filterFilename << "] for writing.\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
-		if (m_SaveAsBoxConfig)
+		if (m_saveAsBoxConfig)
 		{
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
@@ -268,20 +268,20 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			for (uint32_t i = 0; i < eigenVectors.getBufferElementCount(); i++) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
-			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
+			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_filterDimension);
 			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", nChannel);
 			fprintf(file, "\t<SettingValue></SettingValue>\n");
 			fprintf(file, "</OpenViBE-SettingsOverride>");
 		}
 		else
 		{
-			OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename),
-								"Unable to save to [" << m_FilterFilename << "]\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
+			OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
+								"Unable to save to [" << m_filterFilename << "]\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}
 
-		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_FilterFilename << "].\n");
+		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
 
-		this->getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_FilterFilename << "]!\n";
+		this->getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_filterFilename << "]!\n";
 	}
 
 	return true;
