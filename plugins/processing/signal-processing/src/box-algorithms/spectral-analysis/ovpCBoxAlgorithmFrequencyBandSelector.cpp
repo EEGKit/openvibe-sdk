@@ -33,39 +33,39 @@ namespace
 
 bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {
-	CString l_sSettingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	std::vector<std::string> l_vSetting = split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
-	bool l_bHadError                    = false;
-	CString l_sErrorMessage;
+	const CString settingValue       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	std::vector<std::string> setting = split(settingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
+	bool hadError                    = false;
+	CString errorMsg;
 	m_vSelected.clear();
-	for (auto it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
+	for (auto it = setting.begin(); it != setting.end(); ++it)
 	{
-		bool l_bGood                             = true;
-		std::vector<std::string> l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);
-		if (l_vSettingRange.size() == 1)
+		bool good                             = true;
+		std::vector<std::string> settingRange = split(*it, OV_Value_RangeStringSeparator);
+		if (settingRange.size() == 1)
 		{
 			try
 			{
-				double l_dValue = std::stod(l_vSettingRange[0].c_str());
+				double l_dValue = std::stod(settingRange[0].c_str());
 				m_vSelected.push_back(std::pair<double, double>(l_dValue, l_dValue));
 			}
-			catch (const std::exception&) { l_bGood = false; }
+			catch (const std::exception&) { good = false; }
 		}
-		else if (l_vSettingRange.size() == 2)
+		else if (settingRange.size() == 2)
 		{
 			try
 			{
-				double l_dLowValue  = std::stod(l_vSettingRange[0].c_str());
-				double l_dHighValue = std::stod(l_vSettingRange[1].c_str());
-				m_vSelected.push_back(std::pair<double, double>(min(l_dLowValue, l_dHighValue), max(l_dLowValue, l_dHighValue)));
+				double low  = std::stod(settingRange[0].c_str());
+				double high = std::stod(settingRange[1].c_str());
+				m_vSelected.push_back(std::pair<double, double>(min(low, high), max(low, high)));
 			}
-			catch (const std::exception&) { l_bGood = false; }
+			catch (const std::exception&) { good = false; }
 		}
 
-		if (!l_bGood)
+		if (!good)
 		{
-			l_sErrorMessage = CString("Invalid frequency band [") + it->c_str() + "]";
-			l_bHadError     = true;
+			errorMsg = CString("Invalid frequency band [") + it->c_str() + "]";
+			hadError = true;
 		}
 	}
 
@@ -90,7 +90,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	ip_pMatrix = &m_oMatrix;
 	op_pMatrix = &m_oMatrix;
 
-	OV_ERROR_UNLESS_KRF(!l_bHadError || !m_vSelected.empty(), l_sErrorMessage, OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(!hadError || !m_vSelected.empty(), errorMsg, OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }
@@ -134,37 +134,33 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			m_vSelectionFactor.clear();
-			for (uint32_t frequencyAbscissaIndex = 0; frequencyAbscissaIndex < ip_pFrequencyAbscissa->getDimensionSize(0); frequencyAbscissaIndex++)
+			for (uint32_t j = 0; j < ip_pFrequencyAbscissa->getDimensionSize(0); j++)
 			{
-				double f64FrequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[frequencyAbscissaIndex];
-				bool bSelected              = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64FrequencyAbscissa](const BandRange& currentBandRange)
+				double frequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[j];
+				const bool selected      = std::any_of(m_vSelected.begin(), m_vSelected.end(), [frequencyAbscissa](const BandRange& currentBandRange)
 				{
-					return currentBandRange.first <= f64FrequencyAbscissa
-						   && f64FrequencyAbscissa <= currentBandRange.second;
+					return currentBandRange.first <= frequencyAbscissa && frequencyAbscissa <= currentBandRange.second;
 				});
-				m_vSelectionFactor.push_back(bSelected ? 1. : 0.);
+				m_vSelectionFactor.push_back(selected ? 1. : 0.);
 			}
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			uint32_t l_ui32Offset = 0;
+			uint32_t offset = 0;
 			for (uint32_t j = 0; j < m_oMatrix.getDimensionSize(0); j++)
 			{
 				for (uint32_t k = 0; k < m_oMatrix.getDimensionSize(1); k++)
 				{
-					m_oMatrix.getBuffer()[l_ui32Offset] = m_vSelectionFactor[k] * m_oMatrix.getBuffer()[l_ui32Offset];
-					l_ui32Offset++;
+					m_oMatrix.getBuffer()[offset] = m_vSelectionFactor[k] * m_oMatrix.getBuffer()[offset];
+					offset++;
 				}
 			}
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd))
-		{
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
 
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		boxContext.markInputAsDeprecated(0, i);

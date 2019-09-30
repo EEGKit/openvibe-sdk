@@ -13,11 +13,11 @@ using namespace std;
 
 void CBoxAlgorithmSignalAverage::computeAverage()
 {
-	const double* input = m_oSignalDecoder.getOutputMatrix()->getBuffer();
-	double* output      = m_oSignalEncoder.getInputMatrix()->getBuffer();
+	const double* input = m_Decoder.getOutputMatrix()->getBuffer();
+	double* output      = m_Encoder.getInputMatrix()->getBuffer();
 
-	const uint32_t nChannel = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(0);
-	const uint32_t nSample  = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(1);
+	const uint32_t nChannel = m_Decoder.getOutputMatrix()->getDimensionSize(0);
+	const uint32_t nSample  = m_Decoder.getOutputMatrix()->getDimensionSize(1);
 
 	//for each channel
 	for (uint32_t c = 0; c < nChannel; c++)
@@ -39,16 +39,16 @@ void CBoxAlgorithmSignalAverage::release() {}
 
 bool CBoxAlgorithmSignalAverage::initialize()
 {
-	m_oSignalDecoder.initialize(*this, 0);
-	m_oSignalEncoder.initialize(*this, 0);
+	m_Decoder.initialize(*this, 0);
+	m_Encoder.initialize(*this, 0);
 
 	return true;
 }
 
 bool CBoxAlgorithmSignalAverage::uninitialize()
 {
-	m_oSignalEncoder.uninitialize();
-	m_oSignalDecoder.uninitialize();
+	m_Encoder.uninitialize();
+	m_Decoder.uninitialize();
 
 	return true;
 }
@@ -66,20 +66,20 @@ bool CBoxAlgorithmSignalAverage::process()
 	// Process input data
 	for (uint32_t i = 0; i < boxContext->getInputChunkCount(0); i++)
 	{
-		m_oSignalDecoder.decode(i);
+		m_Decoder.decode(i);
 
-		if (m_oSignalDecoder.isHeaderReceived())
+		if (m_Decoder.isHeaderReceived())
 		{
 			// Construct the properties of the output stream
-			const IMatrix* iMatrix = m_oSignalDecoder.getOutputMatrix();
-			IMatrix* oMatrix       = m_oSignalEncoder.getInputMatrix();
+			const IMatrix* iMatrix = m_Decoder.getOutputMatrix();
+			IMatrix* oMatrix       = m_Encoder.getInputMatrix();
 
 			// Sampling rate will be decimated in the output
-			const uint64_t inputSamplingRate = m_oSignalDecoder.getOutputSamplingRate();
+			const uint64_t inputSamplingRate = m_Decoder.getOutputSamplingRate();
 			const uint32_t inputSampleCount  = iMatrix->getDimensionSize(1);
 			const uint64_t newSamplingRate   = uint64_t(ceil(double(inputSamplingRate) / double(inputSampleCount)));
 
-			m_oSignalEncoder.getInputSamplingRate() = newSamplingRate;
+			m_Encoder.getInputSamplingRate() = newSamplingRate;
 
 			// We keep the number of channels, but the output chunk size will be 1
 			oMatrix->setDimensionCount(2);
@@ -88,24 +88,24 @@ bool CBoxAlgorithmSignalAverage::process()
 
 			for (uint32_t j = 0; j < oMatrix->getDimensionSize(0); j++) { oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j)); }
 
-			m_oSignalEncoder.encodeHeader();
+			m_Encoder.encodeHeader();
 
 			getBoxAlgorithmContext()->getDynamicBoxContext()->markOutputAsReadyToSend(0, 0, 0);
 		}
 
-		if (m_oSignalDecoder.isBufferReceived())
+		if (m_Decoder.isBufferReceived())
 		{
 			const uint64_t tStart = boxContext->getInputChunkStartTime(0, i);
 			const uint64_t tEnd   = boxContext->getInputChunkEndTime(0, i);
 
 			computeAverage();
 
-			m_oSignalEncoder.encodeBuffer();
+			m_Encoder.encodeBuffer();
 
 			getBoxAlgorithmContext()->getDynamicBoxContext()->markOutputAsReadyToSend(0, tStart, tEnd);
 		}
 
-		if (m_oSignalDecoder.isEndReceived())
+		if (m_Decoder.isEndReceived())
 		{
 			// NOP
 		}

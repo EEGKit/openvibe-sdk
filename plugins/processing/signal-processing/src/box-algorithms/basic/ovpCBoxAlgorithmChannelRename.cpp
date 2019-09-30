@@ -14,39 +14,39 @@ bool CBoxAlgorithmChannelRename::initialize()
 	const uint32_t tokenCount  = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
 									   OV_Value_EnumeratedStringSeparator);
 
-	m_ChannelNames.clear();
-	for (uint32_t i = 0; i < tokenCount; i++) { m_ChannelNames.push_back(tokens[i].toASCIIString()); }
+	m_names.clear();
+	for (uint32_t i = 0; i < tokenCount; i++) { m_names.push_back(tokens[i].toASCIIString()); }
 
-	this->getStaticBoxContext().getOutputType(0, m_TypeIdentifier);
+	this->getStaticBoxContext().getOutputType(0, m_typeID);
 
-	if (m_TypeIdentifier == OV_TypeId_Signal)
+	if (m_typeID == OV_TypeId_Signal)
 	{
-		m_StreamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmChannelRename>(*this, 0);
-		m_StreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_decoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_encoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmChannelRename>(*this, 0);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix || m_TypeIdentifier == OV_TypeId_TimeFrequency)
+	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix || m_typeID == OV_TypeId_TimeFrequency)
 	{
-		m_StreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmChannelRename>(*this, 0);
-		m_StreamEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_encoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmChannelRename>(*this, 0);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	else if (m_typeID == OV_TypeId_Spectrum)
 	{
-		m_StreamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmChannelRename>(*this, 0);
-		m_StreamEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_decoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_encoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmChannelRename>(*this, 0);
 	}
 	else { OV_ERROR_KRF("Incompatible stream type", ErrorType::BadConfig); }
 
-	ip_Matrix = m_StreamEncoder.getInputMatrix();
-	op_Matrix = m_StreamDecoder.getOutputMatrix();
+	ip_Matrix = m_encoder.getInputMatrix();
+	op_Matrix = m_decoder.getOutputMatrix();
 
-	m_StreamEncoder.getInputMatrix().setReferenceTarget(m_StreamDecoder.getOutputMatrix());
+	m_encoder.getInputMatrix().setReferenceTarget(m_decoder.getOutputMatrix());
 
-	if (m_TypeIdentifier == OV_TypeId_Signal) { m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate()); }
+	if (m_typeID == OV_TypeId_Signal) { m_encoder.getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate()); }
 
-	if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	if (m_typeID == OV_TypeId_Spectrum)
 	{
-		m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate());
-		m_StreamEncoder.getInputFrequencyAbcissa().setReferenceTarget(m_StreamDecoder.getOutputFrequencyAbcissa());
+		m_encoder.getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate());
+		m_encoder.getInputFrequencyAbcissa().setReferenceTarget(m_decoder.getOutputFrequencyAbcissa());
 	}
 
 	return true;
@@ -54,8 +54,8 @@ bool CBoxAlgorithmChannelRename::initialize()
 
 bool CBoxAlgorithmChannelRename::uninitialize()
 {
-	m_StreamDecoder.uninitialize();
-	m_StreamEncoder.uninitialize();
+	m_decoder.uninitialize();
+	m_encoder.uninitialize();
 
 	return true;
 }
@@ -72,18 +72,18 @@ bool CBoxAlgorithmChannelRename::process()
 
 	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
 	{
-		m_StreamDecoder.decode(chunk);
-		if (m_StreamDecoder.isHeaderReceived())
+		m_decoder.decode(chunk);
+		if (m_decoder.isHeaderReceived())
 		{
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
-			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_ChannelNames.size(); channel++)
+			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); channel++)
 			{
-				ip_Matrix->setDimensionLabel(0, channel, m_ChannelNames[channel].c_str());
+				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());
 			}
-			m_StreamEncoder.encodeHeader();
+			m_encoder.encodeHeader();
 		}
-		if (m_StreamDecoder.isBufferReceived()) { m_StreamEncoder.encodeBuffer(); }
-		if (m_StreamDecoder.isEndReceived()) { m_StreamEncoder.encodeEnd(); }
+		if (m_decoder.isBufferReceived()) { m_encoder.encodeBuffer(); }
+		if (m_decoder.isEndReceived()) { m_encoder.encodeEnd(); }
 
 		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, chunk), dynamicBoxContext.getInputChunkEndTime(0, chunk));
 		dynamicBoxContext.markInputAsDeprecated(0, chunk);

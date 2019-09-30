@@ -44,9 +44,9 @@ namespace XML
 	};
 
 	//Callback for expat
-	static void XMLCALL expat_xml_start(void* pData, const char* pElement, const char** ppAttribute);
-	static void XMLCALL expat_xml_end(void* data, const char* element);
-	static void XMLCALL expat_xml_data(void* data, const char* value, int length);
+	static void XMLCALL ExpatXMLStart(void* pData, const char* pElement, const char** ppAttribute);
+	static void XMLCALL ExpatXMLEnd(void* data, const char* element);
+	static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
 }
 
 using namespace std;
@@ -71,8 +71,8 @@ IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(nullptr),
 									m_pRootNode(nullptr)
 {
 	m_pXMLParser = XML_ParserCreate(nullptr);
-	XML_SetElementHandler(m_pXMLParser, expat_xml_start, expat_xml_end);
-	XML_SetCharacterDataHandler(m_pXMLParser, expat_xml_data);
+	XML_SetElementHandler(m_pXMLParser, ExpatXMLStart, ExpatXMLEnd);
+	XML_SetCharacterDataHandler(m_pXMLParser, ExpatXMLData);
 	XML_SetUserData(m_pXMLParser, this);
 }
 
@@ -179,7 +179,7 @@ std::stringstream& IXMLHandlerImpl::getErrorStringStream() const
 
 std::string IXMLHandlerImpl::getLastErrorString() const { return m_ssErrorStringStream.str(); }
 
-static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
+static void XMLCALL XML::ExpatXMLStart(void* pData, const char* pElement, const char** ppAttribute)
 {
 	uint64_t l_ui64AttributeCount = 0;
 	while (ppAttribute[l_ui64AttributeCount++]) { ; }
@@ -201,9 +201,9 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* data, const char* /*pElement*/) { static_cast<IXMLHandlerImpl*>(data)->closeChild(); }
+static void XMLCALL XML::ExpatXMLEnd(void* data, const char* /*pElement*/) { static_cast<IXMLHandlerImpl*>(data)->closeChild(); }
 
-static void XMLCALL XML::expat_xml_data(void* data, const char* value, const int length)
+static void XMLCALL XML::ExpatXMLData(void* data, const char* value, const int length)
 {
 	const string str(value, length);
 	static_cast<IXMLHandlerImpl*>(data)->processChildData(str.c_str());

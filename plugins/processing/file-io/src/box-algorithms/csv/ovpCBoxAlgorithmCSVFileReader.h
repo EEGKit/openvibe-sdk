@@ -24,12 +24,12 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
-			bool process_streamedMatrix();
-			bool process_stimulation();
-			bool process_signal();
-			bool process_channelLocalisation();
-			bool process_featureVector();
-			bool process_spectrum();
+			bool processStreamedMatrix();
+			bool processStimulation();
+			bool processSignal();
+			bool processChannelLocalisation();
+			bool processFeatureVector();
+			bool processSpectrum();
 			bool convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader)
@@ -58,10 +58,10 @@ namespace OpenViBEPlugins
 			std::vector<std::string> m_vHeaderFile;
 			std::vector<std::vector<std::string>> m_vDataMatrix;
 
-			double m_f64NextTime = 0;
+			double m_nextTime = 0;
 
-			uint64_t m_ui64ChunkStartTime = 0;
-			uint64_t m_ui64ChunkEndTime   = 0;
+			uint64_t m_chunkStartTime = 0;
+			uint64_t m_chunkEndTime   = 0;
 
 			static const uint32_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};

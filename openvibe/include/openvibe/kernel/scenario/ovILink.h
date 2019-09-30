@@ -29,7 +29,7 @@ namespace OpenViBE
 			 * \param link  the existing link
 			 * @return true
 			 */
-			virtual bool InitializeFromExistingLink(const ILink& link) = 0;
+			virtual bool initializeFromExistingLink(const ILink& link) = 0;
 			
 			/**
 			 * \brief Changes this link's identifier

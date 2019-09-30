@@ -16,15 +16,15 @@ namespace System
 	{
 	public:
 
-		static bool initializeRandomMachine(uint64_t ui64RandomSeed);
+		static bool initializeRandomMachine(uint64_t randomSeed);
 
 		static uint8_t randomUInteger8();
 		static uint16_t randomUInteger16();
 		static uint32_t randomUInteger32();
 		static uint64_t randomUInteger64();
 
-		// returns a value in [0,ui32upperLimit( -- i.e. ui32upperLimit not included in range
-		static uint32_t randomUInteger32WithCeiling(uint32_t ui32upperLimit);
+		// returns a value in [0,upperLimit( -- i.e. upperLimit not included in range
+		static uint32_t randomUInteger32WithCeiling(uint32_t upperLimit);
 
 		static int8_t randomSInteger8();
 		static int16_t randomSInteger16();
@@ -37,13 +37,13 @@ namespace System
 
 		// Numerical check
 		// Checks if the value is normal, subnormal or zero, but not infinite or NAN.
-		static bool isfinite(double f64Value);
+		static bool isfinite(double value);
 		// Checks if the value is positive or negative infinity.
-		static bool isinf(double f64Value);
+		static bool isinf(double value);
 		// Checks if the value is Not a Number
-		static bool isnan(double f64Value);
+		static bool isnan(double value);
 		// Checks if the value is normal, i.e. is neither zero, subnormal, infinite, nor NaN.
-		static bool isnormal(double f64Value);
+		static bool isnormal(double value);
 	private:
 
 		Math() = delete;

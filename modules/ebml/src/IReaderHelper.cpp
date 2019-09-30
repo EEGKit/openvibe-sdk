@@ -21,7 +21,7 @@ namespace EBML
 			const char* getASCIIStringFromChildData(const void* buffer, uint64_t size) override;
 			void release() override;
 
-			std::string m_sASCIIString;
+			std::string m_ASCIIString;
 		};
 	} // namespace
 } // namespace EBML
@@ -90,9 +90,9 @@ double CReaderHelper::getFloatFromChildData(const void* buffer, const uint64_t s
 
 const char* CReaderHelper::getASCIIStringFromChildData(const void* buffer, const uint64_t size)
 {
-	if (size) { m_sASCIIString.assign((char*)buffer, size_t(size)); }
-	else { m_sASCIIString = ""; }
-	return m_sASCIIString.c_str();
+	if (size) { m_ASCIIString.assign((char*)buffer, size_t(size)); }
+	else { m_ASCIIString = ""; }
+	return m_ASCIIString.c_str();
 }
 
 void CReaderHelper::release() { delete this; }

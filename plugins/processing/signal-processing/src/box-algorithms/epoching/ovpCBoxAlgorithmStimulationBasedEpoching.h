@@ -23,35 +23,33 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching)
 
 		private:
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_SignalDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_StimulationDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_SignalEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_signalDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimulationDecoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_signalEncoder;
 
-			uint64_t m_StimulationId        = 0;
-			double m_EpochDurationInSeconds = 0;
-			uint64_t m_EpochDuration        = 0;
-			int64_t m_EpochOffset           = 0;
+			uint64_t m_stimulationID        = 0;
+			double m_epochDurationInSeconds = 0;
+			uint64_t m_epochDuration        = 0;
+			int64_t m_epochOffset           = 0;
 
 			// Input matrix parameters
-			uint64_t m_SamplingRate              = 0;
-			uint32_t m_SampleCountPerInputBuffer = 0;
+			uint64_t m_samplingRate              = 0;
+			uint32_t m_nSamplePerInputBuffer = 0;
 
 			// Output matrix dimensions
 			uint32_t m_nChannel              = 0;
-			uint32_t m_SampleCountPerOutputEpoch = 0;
+			uint32_t m_nSampleCountOutputEpoch = 0;
 
-			uint64_t m_LastSignalChunkEndTime        = 0;
-			uint64_t m_LastStimulationChunkStartTime = 0;
-			uint64_t m_LastReceivedStimulationDate   = 0;
+			uint64_t m_lastSignalChunkEndTime        = 0;
+			uint64_t m_lastStimulationChunkStartTime = 0;
+			uint64_t m_lastReceivedStimulationDate   = 0;
 
-			std::deque<uint64_t> m_ReceivedStimulations;
+			std::deque<uint64_t> m_receivedStimulations;
 
 			struct CachedChunk
 			{
-				CachedChunk(uint64_t startTime, uint64_t endTime, OpenViBE::IMatrix* matrix)
-					: startTime(startTime)
-					  , endTime(endTime)
-					  , matrix(matrix) {}
+				CachedChunk(const uint64_t startTime, const uint64_t endTime, OpenViBE::IMatrix* matrix)
+					: startTime(startTime), endTime(endTime), matrix(matrix) {}
 
 				CachedChunk& operator=(CachedChunk&& other)
 				{
@@ -66,7 +64,7 @@ namespace OpenViBEPlugins
 				std::unique_ptr<OpenViBE::IMatrix> matrix;
 			};
 
-			std::deque<CachedChunk> m_CachedChunks;
+			std::deque<CachedChunk> m_cachedChunks;
 		};
 
 		class CBoxAlgorithmStimulationBasedEpochingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

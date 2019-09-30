@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 
 			uint64_t m_LastStimulationDate = 0;
 
-			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 			std::vector<std::string> m_ChannelNames;
 			std::vector<uint32_t> m_DimensionSizes;
 			uint32_t m_SamplingRate         = 0;

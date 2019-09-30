@@ -24,13 +24,13 @@ class CAbstractTreeNode
 protected:
 
 	//! True if this is a terminal node
-	bool m_bIsTerminal = false;
+	bool m_isTerminal = false;
 	//! True if this node contains a constant value
-	bool m_bIsConstant = false;
+	bool m_isConstant = false;
 
 public:
 
-	CAbstractTreeNode(const bool bTerminal, const bool bIsConstant) : m_bIsTerminal(bTerminal), m_bIsConstant(bIsConstant) { }
+	CAbstractTreeNode(const bool bTerminal, const bool bIsConstant) : m_isTerminal(bTerminal), m_isConstant(bIsConstant) { }
 
 	//! virtual destructor
 	virtual ~CAbstractTreeNode() { }
@@ -39,13 +39,13 @@ public:
 	* Used to know if this node is a leaf.
 	* \return True if the node is a leaf.
 	*/
-	virtual bool isTerminal() const { return m_bIsTerminal; }
+	virtual bool isTerminal() const { return m_isTerminal; }
 
 	/**
 	 * Used to know if this node is a constant value node.
 	 * \return True if the node is a constant value node.
 	 */
-	virtual bool isConstant() const { return m_bIsConstant; }
+	virtual bool isConstant() const { return m_isConstant; }
 
 	//! Prints the node to stdout.
 	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager) = 0;
@@ -86,59 +86,59 @@ class CAbstractTreeParentNode : public CAbstractTreeNode
 public:
 
 	//! Children of this node
-	std::vector<CAbstractTreeNode *> m_oChildren;
+	std::vector<CAbstractTreeNode *> m_Children;
 
 	//! The node operator's identifier
-	uint64_t m_id = 0;
+	uint64_t m_ID = 0;
 
 	//! True if the node is "associative"
-	bool m_bIsAssociative = false;
+	bool m_IsAssociative = false;
 
 	//Constructors
 	CAbstractTreeParentNode(const uint64_t nodeId, const bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative) { }
+		: CAbstractTreeNode(false, false), m_ID(nodeId), m_IsAssociative(isAssociative) { }
 
 	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* child, const bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative) { m_oChildren.push_back(child); }
+		: CAbstractTreeNode(false, false), m_ID(nodeId), m_IsAssociative(isAssociative) { m_Children.push_back(child); }
 
 	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* leftChild, CAbstractTreeNode* rightChild, const bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative)
+		: CAbstractTreeNode(false, false), m_ID(nodeId), m_IsAssociative(isAssociative)
 	{
-		m_oChildren.push_back(leftChild);
-		m_oChildren.push_back(rightChild);
+		m_Children.push_back(leftChild);
+		m_Children.push_back(rightChild);
 	}
 
-	CAbstractTreeParentNode(uint64_t nodeId, CAbstractTreeNode* testChild, CAbstractTreeNode* ifChild, CAbstractTreeNode* thenChild, bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative)
+	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* testChild, CAbstractTreeNode* ifChild, CAbstractTreeNode* thenChild, const bool isAssociative = false)
+		: CAbstractTreeNode(false, false), m_ID(nodeId), m_IsAssociative(isAssociative)
 	{
-		m_oChildren.push_back(testChild);
-		m_oChildren.push_back(ifChild);
-		m_oChildren.push_back(thenChild);
+		m_Children.push_back(testChild);
+		m_Children.push_back(ifChild);
+		m_Children.push_back(thenChild);
 	}
 
 	/**
 	 * Returns the node's operator identifier.
 	 * \return The operator identifier
 	 */
-	uint64_t getOperatorIdentifier() const { return m_id; }
+	uint64_t getOperatorIdentifier() const { return m_ID; }
 
 	/**
 	 * Used to know if the node is an associative node.
 	 * \return True if the node is an associative one.
 	 */
-	bool isAssociative() const { return m_bIsAssociative; }
+	bool isAssociative() const { return m_IsAssociative; }
 
 	/**
 	 * Returns the vector of children of the node.
 	 * \return A reference to the vector of children.
 	 */
-	virtual std::vector<CAbstractTreeNode *>& getChildren() { return m_oChildren; }
+	virtual std::vector<CAbstractTreeNode *>& getChildren() { return m_Children; }
 
 	/**
 	 * Adds a child to this node.
 	 * \param child The child to add.
 	 */
-	virtual void addChild(CAbstractTreeNode* child) { m_oChildren.push_back(child); }
+	virtual void addChild(CAbstractTreeNode* child) { m_Children.push_back(child); }
 
 	//! Destructor.
 	~CAbstractTreeParentNode() override;
@@ -147,91 +147,56 @@ public:
 	void print(OpenViBE::Kernel::ILogManager& logManager) override
 	{
 		std::string op;
-		switch (m_id)
+		switch (m_ID)
 		{
-			case OP_NEG: op = "-";
-				break;
-			case OP_ADD: op = "+";
-				break;
-			case OP_SUB: op = "-";
-				break;
-			case OP_MUL: op = "*";
-				break;
-			case OP_DIV: op = "/";
-				break;
+			case OP_NEG: op = "-";	break;
+			case OP_ADD: op = "+";	break;
+			case OP_SUB: op = "-";	break;
+			case OP_MUL: op = "*";	break;
+			case OP_DIV: op = "/";	break;
 
-			case OP_ABS: op = "abs";
-				break;
-			case OP_ACOS: op = "cos";
-				break;
-			case OP_ASIN: op = "sin";
-				break;
-			case OP_ATAN: op = "atan";
-				break;
-			case OP_CEIL: op = "ceil";
-				break;
-			case OP_COS: op = "cos";
-				break;
-			case OP_EXP: op = "exp";
-				break;
-			case OP_FLOOR: op = "floor";
-				break;
-			case OP_LOG: op = "log";
-				break;
-			case OP_LOG10: op = "log10";
-				break;
-			case OP_POW: op = "pow";
-				break;
-			case OP_RAND: op = "rand";
-				break;
-			case OP_SIN: op = "sin";
-				break;
-			case OP_SQRT: op = "sqrt";
-				break;
-			case OP_TAN: op = "tan";
-				break;
+			case OP_ABS:	op = "abs";		break;
+			case OP_ACOS:	op = "cos";		break;
+			case OP_ASIN:	op = "sin";		break;
+			case OP_ATAN:	op = "atan";	break;
+			case OP_CEIL:	op = "ceil";	break;
+			case OP_COS:	op = "cos";		break;
+			case OP_EXP:	op = "exp";		break;
+			case OP_FLOOR:	op = "floor";	break;
+			case OP_LOG:	op = "log";		break;
+			case OP_LOG10:	op = "log10";	break;
+			case OP_POW:	op = "pow";		break;
+			case OP_RAND:	op = "rand";	break;
+			case OP_SIN:	op = "sin";		break;
+			case OP_SQRT:	op = "sqrt";	break;
+			case OP_TAN:	op = "tan";		break;
 
-			case OP_IF_THEN_ELSE: op = "?:";
-				break;
+			case OP_IF_THEN_ELSE: op = "?:";	break;
 
-			case OP_CMP_L: op = "<";
-				break;
-			case OP_CMP_G: op = ">";
-				break;
-			case OP_CMP_LE: op = "<=";
-				break;
-			case OP_CMP_GE: op = ">=";
-				break;
-			case OP_CMP_E: op = "==";
-				break;
-			case OP_CMP_NE: op = "!=";
-				break;
+			case OP_CMP_L:	op = "<";	break;
+			case OP_CMP_G:	op = ">";	break;
+			case OP_CMP_LE:	op = "<=";	break;
+			case OP_CMP_GE:	op = ">=";	break;
+			case OP_CMP_E:	op = "==";	break;
+			case OP_CMP_NE:	op = "!=";	break;
 
-			case OP_BOOL_AND: op = "&";
-				break;
-			case OP_BOOL_OR: op = "|";
-				break;
-			case OP_BOOL_NOT: op = "!";
-				break;
-			case OP_BOOL_XOR: op = "^";
-				break;
+			case OP_BOOL_AND:	op = "&";	break;
+			case OP_BOOL_OR:	op = "|";	break;
+			case OP_BOOL_NOT:	op = "!";	break;
+			case OP_BOOL_XOR:	op = "^";	break;
 
-			case OP_USERDEF: op = "UserDefined";
-				break;
-			case OP_NONE: op = "None";
-				break;
-			case OP_X2: op = "X^2";
-				break;
+			case OP_USERDEF:	op = "UserDefined";	break;
+			case OP_NONE:		op = "None";		break;
+			case OP_X2:			op = "X^2";			break;
 
-			default: op = "UnknownOp";
-				break;
+			default:	op = "UnknownOp";	break;
 		}
 
 		logManager << "(" << op.c_str() << " ";
-		for (size_t i = 0; i < m_oChildren.size(); i++)
+		for (size_t i = 0; i < m_Children.size(); i++)
 		{
-			if (m_oChildren[i] == nullptr) { }
-			else { m_oChildren[i]->print(logManager); }
+			if (m_Children[i] == nullptr) { }
+			else { m_Children[i]->print(logManager); }
 			logManager << " ";
 		}
 		logManager << ")";
@@ -329,18 +294,18 @@ class CAbstractTree
 protected:
 
 	//! the root of the AST tree.
-	CAbstractTreeNode* m_pRoot = nullptr;
+	CAbstractTreeNode* m_root = nullptr;
 
 public:
 
 	//! Constructor
-	explicit CAbstractTree(CAbstractTreeNode* root) : m_pRoot(root) { }
+	explicit CAbstractTree(CAbstractTreeNode* root) : m_root(root) { }
 
 	//! Destructor
-	~CAbstractTree() { delete m_pRoot; }
+	~CAbstractTree() { delete m_root; }
 
 	//! Prints the whole tree.
-	void printTree(OpenViBE::Kernel::ILogManager& logManager) const { m_pRoot->print(logManager); }
+	void printTree(OpenViBE::Kernel::ILogManager& logManager) const { m_root->print(logManager); }
 
 	/**
 	 * Used to simplify the tree.
@@ -351,13 +316,13 @@ public:
 	 * Part of the process of simplification.
 	 * Levels recursively the associative operators nodes.
 	 */
-	void levelOperators() const { m_pRoot->levelOperators(); }
+	void levelOperators() const { m_root->levelOperators(); }
 
 	/**
 	 * Changes the tree so it uses the NEG operator whenever it is possible.
 	 * (ie replaces (* -1 X) by (NEG X)
 	 */
-	void useNegationOperator() const { m_pRoot->useNegationOperator(); }
+	void useNegationOperator() const { m_root->useNegationOperator(); }
 
 	/**
 	 * Generates the set of function calls needed to do the desired computation.

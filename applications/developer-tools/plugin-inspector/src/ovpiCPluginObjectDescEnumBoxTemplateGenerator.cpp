@@ -30,21 +30,21 @@ CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGener
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {
-	if (!m_KernelContext.getScenarioManager().createScenario(m_ScenarioIdentifier)) { return false; }
-	m_Scenario = &m_KernelContext.getScenarioManager().getScenario(m_ScenarioIdentifier);
+	if (!m_kernelCtx.getScenarioManager().createScenario(m_ScenarioIdentifier)) { return false; }
+	m_Scenario = &m_kernelCtx.getScenarioManager().getScenario(m_ScenarioIdentifier);
 	return true;
 }
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 {
-	if (!m_KernelContext.getScenarioManager().releaseScenario(m_ScenarioIdentifier)) { return false; }
+	if (!m_kernelCtx.getScenarioManager().releaseScenario(m_ScenarioIdentifier)) { return false; }
 
 	std::ofstream ofBoxIdx;
 	FS::Files::openOFStream(ofBoxIdx, (m_DocTemplateDirectory + "/index-boxes.rst").c_str());
 
 	if (!ofBoxIdx.good())
 	{
-		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/index-boxes.rst").c_str() <<
+		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/index-boxes.rst").c_str() <<
 				"]\n";
 		return false;
 	}
@@ -86,20 +86,20 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
 		if (!m_Scenario->addBox(boxID, static_cast<const IBoxAlgorithmDesc&>(pluginObjectDesc), OV_UndefinedIdentifier))
 		{
-			m_KernelContext.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
+			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
 	else if (!m_Scenario->addBox(boxID, pluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
 	{
-		m_KernelContext.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
+		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 		return true;
 	}
 
 
 	IBox& box = *m_Scenario->getBoxDetails(boxID);
 
-	m_KernelContext.getLogManager() << LogLevel_Trace << "Working on [" << CString(fileName.c_str()) << "]\n";
+	m_kernelCtx.getLogManager() << LogLevel_Trace << "Working on [" << CString(fileName.c_str()) << "]\n";
 
 	// --------------------------------------------------------------------------------------------------------------------
 	std::ofstream ofBoxTemplate;
@@ -107,7 +107,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 	if (!ofBoxTemplate.good())
 	{
-		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file ["
+		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file ["
 				<< (m_DocTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str()
 				<< "]\n";
 		return false;
@@ -149,7 +149,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CIdentifier typeID;
 			box.getInputName(i, inputNames[i]);
 			box.getInputType(i, typeID);
-			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeID);
+			CString typeName = m_kernelCtx.getTypeManager().getTypeName(typeID);
 
 			ofBoxTemplate
 					<< "   \"" << inputNames[i] << "\", \"" << typeName << "\"\n";
@@ -189,7 +189,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CIdentifier typeID;
 			box.getOutputName(i, outputNames[i]);
 			box.getOutputType(i, typeID);
-			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeID);
+			CString typeName = m_kernelCtx.getTypeManager().getTypeName(typeID);
 
 			ofBoxTemplate
 					<< "   \"" << outputNames[i] << "\", \"" << typeName << "\"\n";
@@ -231,7 +231,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			box.getSettingName(i, settingsNames[i]);
 			box.getSettingType(i, typeID);
 			box.getSettingDefaultValue(i, defaultValue);
-			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeID);
+			CString typeName = m_kernelCtx.getTypeManager().getTypeName(typeID);
 
 			ofBoxTemplate
 					<< "   \"" << settingsNames[i] << "\", \"" << typeName << "\", \"" << defaultValue << "\"\n";
@@ -274,7 +274,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 	// m_Categories is used to generate the list of boxes. Documentation for deprecated boxes
 	// should remain available if needed but not be listed
-	if (m_KernelContext.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier()))
+	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier()))
 	{
 		m_DeprecatedBoxesCategories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString()));
 	}

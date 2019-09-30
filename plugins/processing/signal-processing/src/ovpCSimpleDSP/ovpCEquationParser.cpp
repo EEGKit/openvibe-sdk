@@ -23,13 +23,13 @@ namespace
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class TChar>
-	TChar to_lower(TChar c) { return std::tolower(c); }
+	TChar ToLower(TChar c) { return std::tolower(c); }
 
 	// BOOST::Ast should be able to remove spaces / tabs etc but
 	// unfortunately, it seems it does not work correcly in some
 	// cases so I add this sanitizer function to clear the Simple DSP
 	// equation before sending it to BOOST::Ast
-	std::string find_and_replace(std::string s, const std::string& f, const std::string& r)
+	std::string FindAndReplace(std::string s, const std::string& f, const std::string& r)
 	{
 		size_t i;
 		while ((i = s.find(f)) != std::string::npos) { s.replace(i, f.length(), r); }
@@ -72,9 +72,9 @@ bool CEquationParser::compileEquation(const char* equation)
 	// cases so I add this sanitizer function to clear the Simple DSP
 	// equation before sending it to BOOST::Ast
 	std::string str(equation);
-	str = find_and_replace(str, " ", "");
-	str = find_and_replace(str, "\t", "");
-	str = find_and_replace(str, "\n", "");
+	str = FindAndReplace(str, " ", "");
+	str = FindAndReplace(str, "\t", "");
+	str = FindAndReplace(str, "\n", "");
 
 	//parses the equation
 	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << CString(str.c_str()) << "]...");
@@ -215,7 +215,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::string value(i->value.begin(), i->value.end());
 
 		//converts the string to lowercase
-		std::transform(value.begin(), value.end(), value.begin(), ::to_lower<std::string::value_type>);
+		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//creates a new value node from the value looked up in the constant's symbols table
 		return new CAbstractTreeValueNode(*find(mathConstant_p, value.c_str()));
@@ -226,7 +226,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		uint64_t* functionID;
 
 		//converts the string to lowercase
-		std::transform(value.begin(), value.end(), value.begin(), ::to_lower<std::string::value_type>);
+		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the unary function's symbols table
 		if ((functionID = find(unaryFunction_p, value.c_str())) != nullptr)
@@ -250,7 +250,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		uint64_t* functionID;
 
 		//converts the string to lowercase
-		std::transform(value.begin(), value.end(), value.begin(), ::to_lower<std::string::value_type>);
+		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the comparison function's symbols table
 		if ((functionID = find(comparison1Function_p, value.c_str())) != nullptr)
@@ -269,7 +269,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		uint64_t* functionID;
 
 		//converts the string to lowercase
-		std::transform(value.begin(), value.end(), value.begin(), ::to_lower<std::string::value_type>);
+		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the binary boolean function's symbols table
 		if ((functionID = find(binaryBoolean1Function_p, value.c_str())) != nullptr)

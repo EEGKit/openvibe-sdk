@@ -65,10 +65,10 @@ bool CBoxAlgorithmCSVFileReader::initialize()
 		m_ui32SamplesPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
 
-	m_f64NextTime = 0.;
+	m_nextTime = 0.;
 
-	m_ui64ChunkStartTime = 0;
-	m_ui64ChunkEndTime   = 0;
+	m_chunkStartTime = 0;
+	m_chunkEndTime   = 0;
 
 	return true;
 }
@@ -122,18 +122,18 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		m_pAlgorithmEncoder = new OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
 		//number of column without the column contains the dynamic parameter
 		//m_ui32NbColumn-=1;
-		m_fpRealProcess = &CBoxAlgorithmCSVFileReader::process_channelLocalisation;
+		m_fpRealProcess = &CBoxAlgorithmCSVFileReader::processChannelLocalisation;
 	}
 	else if (m_oTypeIdentifier == OV_TypeId_FeatureVector)
 	{
 		m_pAlgorithmEncoder    = new OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
-		m_fpRealProcess        = &CBoxAlgorithmCSVFileReader::process_featureVector;
+		m_fpRealProcess        = &CBoxAlgorithmCSVFileReader::processFeatureVector;
 		m_ui32SamplesPerBuffer = 1;
 	}
 	else if (m_oTypeIdentifier == OV_TypeId_Spectrum)
 	{
 		m_pAlgorithmEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
-		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::process_spectrum;
+		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::processSpectrum;
 
 		//number of column without columns contains min max frequency bands parameters
 		m_nColumn -= 2;
@@ -141,7 +141,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	else if (m_oTypeIdentifier == OV_TypeId_Signal)
 	{
 		m_pAlgorithmEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
-		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::process_signal;
+		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::processSignal;
 
 		//find the sampling rate
 		result = fgets(line, m_ui32bufferLen, m_pFile);
@@ -190,12 +190,12 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	else if (m_oTypeIdentifier == OV_TypeId_StreamedMatrix)
 	{
 		m_pAlgorithmEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
-		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::process_streamedMatrix;
+		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::processStreamedMatrix;
 	}
 	else if (m_oTypeIdentifier == OV_TypeId_Stimulations)
 	{
 		m_pAlgorithmEncoder = new OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
-		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::process_stimulation;
+		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::processStimulation;
 	}
 	else
 	{
@@ -279,7 +279,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
+bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 {
 	IMatrix* iMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -303,21 +303,21 @@ bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
 
 	if (m_bDoNotUseFileTime)
 	{
-		m_ui64ChunkStartTime = m_ui64ChunkEndTime;
-		m_ui64ChunkEndTime   = this->getPlayerContext().getCurrentTime();
+		m_chunkStartTime = m_chunkEndTime;
+		m_chunkEndTime   = this->getPlayerContext().getCurrentTime();
 	}
 	else
 	{
-		m_ui64ChunkStartTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
-		m_ui64ChunkEndTime   = TimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
+		m_chunkStartTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
+		m_chunkEndTime   = TimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
 	}
 
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64ChunkStartTime, m_ui64ChunkEndTime);
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_chunkStartTime, m_chunkEndTime);
 
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_stimulation()
+bool CBoxAlgorithmCSVFileReader::processStimulation()
 {
 	//Header
 	if (!m_bHeaderSent)
@@ -351,15 +351,15 @@ bool CBoxAlgorithmCSVFileReader::process_stimulation()
 	m_pAlgorithmEncoder->encodeBuffer();
 
 	// Never use file time
-	m_ui64ChunkStartTime = m_ui64ChunkEndTime;
-	m_ui64ChunkEndTime   = this->getPlayerContext().getCurrentTime();
+	m_chunkStartTime = m_chunkEndTime;
+	m_chunkEndTime   = this->getPlayerContext().getCurrentTime();
 
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64ChunkStartTime, m_ui64ChunkEndTime);
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_chunkStartTime, m_chunkEndTime);
 
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_signal()
+bool CBoxAlgorithmCSVFileReader::processSignal()
 {
 	IMatrix* iMatrix = static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -368,7 +368,7 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 	{
 		// This is the first chunk, find out the start time from the file
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
-		if (!m_bDoNotUseFileTime) { m_ui64ChunkEndTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str())); }
+		if (!m_bDoNotUseFileTime) { m_chunkEndTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str())); }
 
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
@@ -394,22 +394,22 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 	if (m_bDoNotUseFileTime)
 	{
 		// We use time dictated by the sampling rate
-		m_ui64ChunkStartTime = m_ui64ChunkEndTime; // previous time end is current time start
-		m_ui64ChunkEndTime   = m_ui64ChunkStartTime + TimeArithmetics::sampleCountToTime(m_ui64SamplingRate, m_ui32SamplesPerBuffer);
+		m_chunkStartTime = m_chunkEndTime; // previous time end is current time start
+		m_chunkEndTime   = m_chunkStartTime + TimeArithmetics::sampleCountToTime(m_ui64SamplingRate, m_ui32SamplesPerBuffer);
 	}
 	else
 	{
 		// We use time suggested by the last sample of the chunk
-		m_ui64ChunkStartTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
-		m_ui64ChunkEndTime   = TimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
+		m_chunkStartTime = TimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
+		m_chunkEndTime   = TimeArithmetics::secondsToTime(atof(m_vDataMatrix.back()[0].c_str()));
 	}
 
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64ChunkStartTime, m_ui64ChunkEndTime);
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_chunkStartTime, m_chunkEndTime);
 
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
+bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 {
 	IMatrix* iMatrix = static_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -461,7 +461,7 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_featureVector()
+bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 	IMatrix* matrix    = static_cast<OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputMatrix();
@@ -504,7 +504,7 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_spectrum()
+bool CBoxAlgorithmCSVFileReader::processSpectrum()
 {
 	IMatrix* iMatrix            = static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputMatrix();
 	IMatrix* iFrequencyAbscissa = static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_pAlgorithmEncoder)->getInputFrequencyAbscissa();

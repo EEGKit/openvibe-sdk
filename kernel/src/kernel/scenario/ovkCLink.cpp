@@ -16,7 +16,7 @@ CLink::CLink(const IKernelContext& ctx, CScenario& rOwnerScenario)
 	  , m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
 	  , m_oTargetBoxIdentifier(OV_UndefinedIdentifier) {}
 
-bool CLink::InitializeFromExistingLink(const ILink& link)
+bool CLink::initializeFromExistingLink(const ILink& link)
 {
 	m_oIdentifier                = link.getIdentifier();
 	m_oSourceBoxIdentifier       = link.getSourceBoxIdentifier();

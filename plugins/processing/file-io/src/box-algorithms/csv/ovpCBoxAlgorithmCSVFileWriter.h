@@ -24,8 +24,8 @@ namespace OpenViBEPlugins
 			bool processInput(const uint32_t index) override;
 			bool process() override;
 
-			bool process_streamedMatrix();
-			bool process_stimulation();
+			bool processStreamedMatrix();
+			bool processStimulation();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileWriter)
 

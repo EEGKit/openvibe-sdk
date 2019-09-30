@@ -60,7 +60,7 @@ enum EByteCodes
 	OP_X2
 };
 
-enum Variables
+enum EVariables
 {
 	OP_VAR_X=0,
 	OP_VAR_A,

@@ -27,37 +27,37 @@ namespace
 
 		void SetUp() override
 		{
-			m_KernelContext.initialize();
-			m_KernelContext->getPluginManager().addPluginsFromFiles(
-				m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
+			m_kernelCtx.initialize();
+			m_kernelCtx->getPluginManager().addPluginsFromFiles(
+				m_kernelCtx->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
 			m_DecoderId = OV_UndefinedIdentifier;
-			m_DecoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);
+			m_DecoderId = m_kernelCtx->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);
 			ASSERT_NE(OV_UndefinedIdentifier, m_DecoderId);
 
 			m_EncoderId = OV_UndefinedIdentifier;
-			m_EncoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder);
+			m_EncoderId = m_kernelCtx->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder);
 			ASSERT_NE(OV_UndefinedIdentifier, m_EncoderId);
 		}
 
 		void TearDown() override
 		{
-			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_DecoderId));
+			ASSERT_TRUE(m_kernelCtx->getAlgorithmManager().releaseAlgorithm(m_DecoderId));
 			m_DecoderId = OV_UndefinedIdentifier;
-			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_EncoderId));
+			ASSERT_TRUE(m_kernelCtx->getAlgorithmManager().releaseAlgorithm(m_EncoderId));
 			m_EncoderId = OV_UndefinedIdentifier;
-			m_KernelContext.uninitialize();
+			m_kernelCtx.uninitialize();
 		}
 
 		CIdentifier m_DecoderId;
 		CIdentifier m_EncoderId;
-		OpenViBETest::ctx m_KernelContext;
+		OpenViBETest::ctx m_kernelCtx;
 	};
 
 	TEST_F(StreamedMatrixTest, test_init)
 	{
-		auto& decoder = m_KernelContext->getAlgorithmManager().getAlgorithm(m_DecoderId);
-		auto& encoder = m_KernelContext->getAlgorithmManager().getAlgorithm(m_EncoderId);
+		auto& decoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_DecoderId);
+		auto& encoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_EncoderId);
 		EXPECT_TRUE(decoder.initialize());
 		EXPECT_TRUE(encoder.initialize());
 		EXPECT_TRUE(decoder.uninitialize());
@@ -66,8 +66,8 @@ namespace
 
 	TEST_F(StreamedMatrixTest, matrix_decoder_does_not_crash_when_given_an_empty_matrix)
 	{
-		auto& encoder = m_KernelContext->getAlgorithmManager().getAlgorithm(m_EncoderId);
-		auto& decoder = m_KernelContext->getAlgorithmManager().getAlgorithm(m_DecoderId);
+		auto& encoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_EncoderId);
+		auto& decoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_DecoderId);
 		EXPECT_TRUE(encoder.initialize());
 		EXPECT_TRUE(decoder.initialize());
 		CMatrix mat;
@@ -97,8 +97,8 @@ namespace
 
 	TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_original)
 	{
-		auto& encoder = m_KernelContext->getAlgorithmManager().getAlgorithm(m_EncoderId);
-		auto& decoder = m_KernelContext->getAlgorithmManager().getAlgorithm(m_DecoderId);
+		auto& encoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_EncoderId);
+		auto& decoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_DecoderId);
 		EXPECT_TRUE(encoder.initialize());
 		EXPECT_TRUE(decoder.initialize());
 		CMatrix mat;

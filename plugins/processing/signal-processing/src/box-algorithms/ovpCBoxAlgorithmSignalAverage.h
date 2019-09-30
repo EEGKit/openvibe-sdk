@@ -27,8 +27,8 @@ namespace OpenViBEPlugins
 			void computeAverage();
 
 			// Needed to read the input and write the output
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_oSignalDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_oSignalEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_Decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_Encoder;
 		};
 
 		/**

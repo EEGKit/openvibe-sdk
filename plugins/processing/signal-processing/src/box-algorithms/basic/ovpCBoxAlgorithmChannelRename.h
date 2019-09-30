@@ -24,15 +24,15 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_StreamDecoder;
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_StreamEncoder;
+			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_decoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_encoder;
 
-			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_Matrix;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_Matrix;
 
-			std::vector<std::string> m_ChannelNames;
+			std::vector<std::string> m_names;
 		};
 
 		class CBoxAlgorithmChannelRenameListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

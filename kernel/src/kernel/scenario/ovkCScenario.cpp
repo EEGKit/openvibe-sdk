@@ -1386,7 +1386,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 			for (size_t i = 0; i < linkCount; ++i)
 			{
 				auto link = std::make_shared<CLink>(this->getKernelContext(), *this);
-				link->InitializeFromExistingLink(*this->getLinkDetails(linkIdentifierList[i]));
+				link->initializeFromExistingLink(*this->getLinkDetails(linkIdentifierList[i]));
 				if (this->getLinkDetails(linkIdentifierList[i])->hasAttribute(OV_AttributeId_Link_Invalid))
 				{
 					link->addAttribute(OV_AttributeId_Link_Invalid, "");

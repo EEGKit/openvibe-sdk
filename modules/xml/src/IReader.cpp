@@ -27,32 +27,32 @@ namespace XML
 		std::string m_sData;
 	};
 
-	static void XMLCALL expat_xml_start(void* pData, const char* pElement, const char** ppAttribute);
-	static void XMLCALL expat_xml_end(void* data, const char* element);
-	static void XMLCALL expat_xml_data(void* data, const char* value, int length);
+	static void XMLCALL ExpatXMLStart(void* pData, const char* pElement, const char** ppAttribute);
+	static void XMLCALL ExpatXMLEnd(void* data, const char* element);
+	static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
 }
 
 CReader::CReader(IReaderCallback& rReaderCallback)
 	: m_rReaderCallback(rReaderCallback), m_pXMLParser(nullptr)
 {
 	m_pXMLParser = XML_ParserCreate(nullptr);
-	XML_SetElementHandler(m_pXMLParser, expat_xml_start, expat_xml_end);
-	XML_SetCharacterDataHandler(m_pXMLParser, expat_xml_data);
+	XML_SetElementHandler(m_pXMLParser, ExpatXMLStart, ExpatXMLEnd);
+	XML_SetCharacterDataHandler(m_pXMLParser, ExpatXMLData);
 	XML_SetUserData(m_pXMLParser, this);
 }
 
 bool CReader::processData(const void* buffer, const uint64_t size)
 {
 	// $$$ TODO take 64bits size into consideration
-	XML_Status l_eStatus = XML_Parse(m_pXMLParser, static_cast<const char*>(buffer), static_cast<const int>(size), false);
-	if (l_eStatus != XML_STATUS_OK)
+	const XML_Status status = XML_Parse(m_pXMLParser, static_cast<const char*>(buffer), static_cast<const int>(size), false);
+	if (status != XML_STATUS_OK)
 	{
-		XML_Error l_oErrorCode = XML_GetErrorCode(m_pXMLParser);
+		const XML_Error error = XML_GetErrorCode(m_pXMLParser);
 		// Although printf() is not too elegant, this component has no context to use e.g. LogManager -> printf() is better than a silent fail.
-		std::cout << "processData(): expat error " << l_oErrorCode << " on the line " << XML_GetCurrentLineNumber(m_pXMLParser) << " of the input .xml\n";
+		std::cout << "processData(): expat error " << error << " on the line " << XML_GetCurrentLineNumber(m_pXMLParser) << " of the input .xml\n";
 	}
 
-	return (l_eStatus == XML_STATUS_OK);
+	return (status == XML_STATUS_OK);
 }
 
 void CReader::release()
@@ -78,7 +78,7 @@ void CReader::closeChild()
 
 XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback) { return new CReader(rReaderCallback); }
 
-static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
+static void XMLCALL XML::ExpatXMLStart(void* pData, const char* pElement, const char** ppAttribute)
 {
 	uint64_t l_ui64AttributeCount = 0;
 	while (ppAttribute[l_ui64AttributeCount++]) { ; }
@@ -100,9 +100,9 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* data, const char* /*element*/) { static_cast<CReader*>(data)->closeChild(); }
+static void XMLCALL XML::ExpatXMLEnd(void* data, const char* /*element*/) { static_cast<CReader*>(data)->closeChild(); }
 
-static void XMLCALL XML::expat_xml_data(void* data, const char* value, const int length)
+static void XMLCALL XML::ExpatXMLData(void* data, const char* value, const int length)
 {
 	const string str(value, length);
 	static_cast<CReader*>(data)->processChildData(str.c_str());

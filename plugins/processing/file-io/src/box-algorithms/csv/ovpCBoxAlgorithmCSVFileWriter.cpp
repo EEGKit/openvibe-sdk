@@ -44,13 +44,13 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 			m_pStreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>();
 			m_pStreamDecoder->initialize(*this, 0);
 		}
-		m_fpRealProcess = &CBoxAlgorithmCSVFileWriter::process_streamedMatrix;
+		m_fpRealProcess = &CBoxAlgorithmCSVFileWriter::processStreamedMatrix;
 	}
 	else if (m_oTypeIdentifier == OV_TypeId_Stimulations)
 	{
 		m_pStreamDecoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>();
 		m_pStreamDecoder->initialize(*this, 0);
-		m_fpRealProcess = &CBoxAlgorithmCSVFileWriter::process_stimulation;
+		m_fpRealProcess = &CBoxAlgorithmCSVFileWriter::processStimulation;
 	}
 	else { OV_ERROR_KRF("Invalid input type identifier " << this->getTypeManager().getTypeName(m_oTypeIdentifier), OpenViBE::Kernel::ErrorType::BadInput); }
 
@@ -102,7 +102,7 @@ bool CBoxAlgorithmCSVFileWriter::process()
 	return (this->*m_fpRealProcess)();
 }
 
-bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
+bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
@@ -235,7 +235,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileWriter::process_stimulation()
+bool CBoxAlgorithmCSVFileWriter::processStimulation()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 

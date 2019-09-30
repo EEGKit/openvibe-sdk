@@ -6,7 +6,7 @@ using namespace Plugins;
 using namespace std;
 
 CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& ctx)
-	: m_KernelContext(ctx) {}
+	: m_kernelCtx(ctx) {}
 
 CPluginObjectDescEnum::~CPluginObjectDescEnum() {}
 
@@ -20,9 +20,9 @@ bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginO
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(const CIdentifier& parentClassIdentifier)
 {
 	CIdentifier identifier;
-	while ((identifier = m_KernelContext.getPluginManager().getNextPluginObjectDescIdentifier(identifier, parentClassIdentifier)) != OV_UndefinedIdentifier)
+	while ((identifier = m_kernelCtx.getPluginManager().getNextPluginObjectDescIdentifier(identifier, parentClassIdentifier)) != OV_UndefinedIdentifier)
 	{
-		this->callback(*m_KernelContext.getPluginManager().getPluginObjectDesc(identifier));
+		this->callback(*m_kernelCtx.getPluginManager().getPluginObjectDesc(identifier));
 	}
 	return true;
 }

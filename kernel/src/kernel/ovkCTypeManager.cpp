@@ -9,17 +9,11 @@
 #include <cstdio>
 #include <algorithm>
 
-#define OV_TRACE_K(message) \
-this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
+#define OV_TRACE_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
 
-#define OV_DEBUG_K(message) \
-this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
+#define OV_DEBUG_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
 
-#define OV_DEBUG_UNLESS_K(expression, message) \
-if (!(expression)) \
-{ \
-	 OV_DEBUG_K(message); \
-}
+#define OV_DEBUG_UNLESS_K(expression, message) if (!(expression)) { OV_DEBUG_K(message); }
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -29,8 +23,8 @@ namespace
 	// because std::tolower has multiple signatures,
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class charT>
-	charT to_lower(charT c) { return std::tolower(c); }
+	template <class TCharT>
+	TCharT ToLower(TCharT c) { return std::tolower(c); }
 
 	struct a_inf_b
 	{
@@ -308,11 +302,11 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& typeI
 
 	// then looks at the caseless std::string match
 	std::string l_sEntryNameLower = rEntryName.toASCIIString();
-	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
+	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::ToLower<std::string::value_type>);
 	for (const auto& entry : itEnumeration->second)
 	{
 		std::string l_sItEntryNameLower = entry.second.toASCIIString();
-		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
+		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::ToLower<std::string::value_type>);
 		if (l_sItEntryNameLower == l_sEntryNameLower) { return entry.first; }
 	}
 
@@ -381,11 +375,11 @@ uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, c
 
 	// then looks at the caseless std::string match
 	std::string l_sEntryNameLower = rEntryName.toASCIIString();
-	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
+	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::ToLower<std::string::value_type>);
 	for (const auto& mask : itBitMask->second)
 	{
 		std::string l_sItEntryNameLower = mask.second.toASCIIString();
-		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
+		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::ToLower<std::string::value_type>);
 		if (l_sItEntryNameLower == l_sEntryNameLower) { return mask.first; }
 	}
 

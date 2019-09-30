@@ -19,18 +19,18 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_SpectralAnalysis)
 
 		protected:
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_Decoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_decoder;
 
-			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_SpectrumEncoders;
-			std::vector<bool> m_IsSpectrumEncoderActive;
+			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
+			std::vector<bool> m_isSpectrumEncoderActive;
 
 			uint32_t m_nChannel = 0;
-			uint32_t m_SampleCount  = 0;
-			uint32_t m_SamplingRate = 0;
+			uint32_t m_nSample  = 0;
+			uint32_t m_samplingRate = 0;
 
-			uint32_t m_FFTSize = 0;
+			uint32_t m_sizeFFT = 0;
 
-			OpenViBE::IMatrix* m_FrequencyAbscissa = nullptr;
+			OpenViBE::IMatrix* m_frequencyAbscissa = nullptr;
 		};
 
 		class CBoxAlgorithmSpectralAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

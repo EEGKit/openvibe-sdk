@@ -25,17 +25,17 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpWrite)(const char* sString)>
+	template <class TOwnerClass, void (TOwnerClass::*mfpWrite)(const char* sString)>
 	class TWriterCallbackProxy2 final : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy2(COwnerClass rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy2(TOwnerClass rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
 		void write(const char* sString) override { if (mfpWrite) { m_rOwnerObject.mfpWrite(sString); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpWrite)(const char* sString);
+		TOwnerClass& m_rOwnerObject;
+		void (TOwnerClass::*m_mfpWrite)(const char* sString);
 	};
 
 	// ________________________________________________________________________________________________________________

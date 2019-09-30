@@ -25,15 +25,15 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
-			std::vector<OpenViBE::IMatrix*> m_vMatrix;
-			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_vStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
+			std::vector<OpenViBE::IMatrix*> m_Matrix;
+			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_Decoder;
+			OpenViBE::Kernel::IAlgorithmProxy* m_Encoder = nullptr;
 
-			CEquationParser* m_pEquationParser = nullptr;
+			CEquationParser* m_Parser = nullptr;
 
-			uint64_t m_ui64EquationType          = OP_USERDEF;
-			double m_f64SpecialEquationParameter = 0;
-			double** m_ppVariable                = nullptr;
+			uint64_t m_EquationType       = OP_USERDEF;
+			double m_SpecialEquationParam = 0;
+			double** m_Variable           = nullptr;
 
 			bool m_bCheckChunkDates = false;
 		};
@@ -43,12 +43,12 @@ namespace OpenViBEPlugins
 		public:
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				char l_sName[1024];
-				sprintf(l_sName, "Input - %c", 'A' + index);
+				char name[1024];
+				sprintf(name, "Input - %c", 'A' + index);
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(0, typeID);
 				box.setInputType(index, typeID);
-				box.setInputName(index, l_sName);
+				box.setInputName(index, name);
 				return true;
 			}
 

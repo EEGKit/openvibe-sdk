@@ -26,14 +26,14 @@ namespace OpenViBEPlugins
 
 		private:
 
-			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationMultiplexer>> m_StimulationDecoders;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStimulationMultiplexer> m_StimulationEncoder;
+			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationMultiplexer>> m_decoders;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStimulationMultiplexer> m_encoder;
 
-			std::vector<uint64_t> m_StreamDecoderEndTimes;
+			std::vector<uint64_t> m_decoderEndTimes;
 
-			uint64_t m_LastStartTime = 0;
-			uint64_t m_LastEndTime   = 0;
-			bool m_WasHeaderSent     = false;
+			uint64_t m_lastStartTime = 0;
+			uint64_t m_lastEndTime   = 0;
+			bool m_wasHeaderSent     = false;
 
 			std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_vStimulation;
 		};

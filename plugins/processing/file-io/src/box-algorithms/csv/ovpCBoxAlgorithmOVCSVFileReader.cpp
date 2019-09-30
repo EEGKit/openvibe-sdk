@@ -30,7 +30,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	m_IsHeaderSent            = false;
 	m_IsStimulationHeaderSent = false;
 
-	this->getStaticBoxContext().getOutputType(0, m_TypeIdentifier);
+	this->getStaticBoxContext().getOutputType(0, m_typeID);
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_ReaderLib->openFile(filename.toASCIIString(), EFileAccessMode::Read),
@@ -40,22 +40,22 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 
 	m_SampleCountPerBuffer = 1;
 
-	if (m_TypeIdentifier == OV_TypeId_Signal)
+	if (m_typeID == OV_TypeId_Signal)
 	{
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::Signal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
+	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 	{
 		m_AlgorithmEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::StreamedMatrix);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+	else if (m_typeID == OV_TypeId_FeatureVector)
 	{
 		m_AlgorithmEncoder = new OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::FeatureVector);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	else if (m_typeID == OV_TypeId_Spectrum)
 	{
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::Spectrum);
@@ -65,19 +65,19 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.initialize(*this, 1), "Error during stimulation encoder initialize", ErrorType::Internal);
 
 	const char *msg = (ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str();
-	if (m_TypeIdentifier == OV_TypeId_Signal)
+	if (m_typeID == OV_TypeId_Signal)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getSignalInformation(m_ChannelNames, m_SamplingRate, m_SampleCountPerBuffer), msg, ErrorType::Internal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
+	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getStreamedMatrixInformation(m_DimensionSizes, m_ChannelNames), msg, ErrorType::Internal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+	else if (m_typeID == OV_TypeId_FeatureVector)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getFeatureVectorInformation(m_ChannelNames), msg, ErrorType::Internal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	else if (m_typeID == OV_TypeId_Spectrum)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getSpectrumInformation(m_ChannelNames, m_FrequencyAbscissa, m_SamplingRate), msg, ErrorType::Internal);
 	}
@@ -111,7 +111,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
 	{
-		if (m_TypeIdentifier == OV_TypeId_Signal)
+		if (m_typeID == OV_TypeId_Signal)
 		{
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2), "Failed to set dimension count", ErrorType::Internal);
 			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, uint32_t(m_ChannelNames.size())), "Failed to set first dimension size", ErrorType::Internal);
@@ -126,7 +126,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 			m_AlgorithmEncoder.getInputSamplingRate() = m_SamplingRate;
 		}
-		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
+		else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 		{
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(uint32_t(m_DimensionSizes.size())), "Failed to set dimension count", ErrorType::Internal);
 			uint32_t previousDimensionSize = 0;
@@ -144,7 +144,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				previousDimensionSize += m_DimensionSizes[index];
 			}
 		}
-		else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+		else if (m_typeID == OV_TypeId_FeatureVector)
 		{
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(1), "Failed to set dimension count", ErrorType::Internal);
 			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, uint32_t(m_ChannelNames.size())), "Failed to set first dimension size", ErrorType::Internal);
@@ -155,7 +155,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", ErrorType::Internal);
 			}
 		}
-		else if (m_TypeIdentifier == OV_TypeId_Spectrum)
+		else if (m_typeID == OV_TypeId_Spectrum)
 		{
 			IMatrix* frequencyAbscissaMatrix = m_AlgorithmEncoder.getInputFrequencyAbcissa();
 

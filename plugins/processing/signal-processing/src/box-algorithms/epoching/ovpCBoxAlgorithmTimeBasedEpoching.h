@@ -20,19 +20,19 @@ namespace OpenViBEPlugins
 
 		private:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_SignalDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_SignalEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_encoder;
 
-			double m_EpochDuration = 0;
-			double m_EpochInterval = 0;
+			double m_duration = 0;
+			double m_interval = 0;
 
-			uint64_t m_SamplingRate                  = 0;
-			uint32_t m_OutputSampleCount             = 0;
-			uint32_t m_OutputSampleCountBetweenEpoch = 0;
-			uint64_t m_LastInputEndTime              = 0;
-			uint32_t m_OutputSampleIndex             = 0;
-			uint32_t m_OutputChunkIndex              = 0;
-			uint64_t m_ReferenceTime                 = 0;
+			uint64_t m_samplingRate              = 0;
+			uint32_t m_nOutputSample             = 0;
+			uint32_t m_nOutputSampleBetweenEpoch = 0;
+			uint64_t m_lastInputEndTime          = 0;
+			uint32_t m_outputSampleIdx           = 0;
+			uint32_t m_outputChunkIdx            = 0;
+			uint64_t m_referenceTime             = 0;
 		};
 
 		class CBoxAlgorithmTimeBasedEpochingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -43,10 +43,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
 
-			OpenViBE::CString getShortDescription() const override
-			{
-				return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval");
-			}
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
 
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Interval can be used to control the overlap of epochs"); }
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Epoching"); }

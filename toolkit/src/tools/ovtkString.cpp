@@ -31,8 +31,8 @@ namespace OpenViBEToolkit
 				// because std::tolower has multiple signatures,
 				// it can not be easily used in std::transform
 				// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-				template <class charT>
-				charT to_lower(charT c) { return std::tolower(c); }
+				template <class TCharT>
+				TCharT ToLower(TCharT c) { return std::tolower(c); }
 			} // namespace
 		} // namespace String
 	} // namespace Tools
@@ -97,8 +97,8 @@ bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, cons
 
 	if (!bCaseSensitive)
 	{
-		std::transform(str1.begin(), str1.end(), str1.begin(), to_lower<std::string::value_type>);
-		std::transform(str2.begin(), str2.end(), str2.begin(), to_lower<std::string::value_type>);
+		std::transform(str1.begin(), str1.end(), str1.begin(), ToLower<std::string::value_type>);
+		std::transform(str2.begin(), str2.end(), str2.begin(), ToLower<std::string::value_type>);
 	}
 
 	return str1 == str2;

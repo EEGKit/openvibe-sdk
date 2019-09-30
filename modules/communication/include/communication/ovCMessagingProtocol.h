@@ -37,7 +37,7 @@ namespace Communication
 		Error_InvalidLogLevel = 6,
 		Error_InvalidMessageType = 7,
 		Error_BadMessage = 8,
-		Error_MAX = 9,
+		Error_Max = 9,
 		Error_Unknown = 0xFF
 	};
 

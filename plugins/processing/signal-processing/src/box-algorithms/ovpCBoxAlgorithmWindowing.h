@@ -21,11 +21,11 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_Windowing)
 
 		protected:
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_Decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_Encoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_encoder;
 
-			uint64_t m_WindowMethod = 0;
-			std::vector<double> m_WindowCoefficients;
+			uint64_t m_windowMethod = 0;
+			std::vector<double> m_windowCoefficients;
 		};
 
 		class CBoxAlgorithmWindowingDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -49,11 +49,8 @@ namespace OpenViBEPlugins
 			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
 				rPrototype.addInput("Input signal", OV_TypeId_Signal);
-
 				rPrototype.addOutput("Output signal", OV_TypeId_Signal);
-
 				rPrototype.addSetting("Window method", OVP_TypeId_WindowMethod, "Hamming");
-
 				return true;
 			}
 

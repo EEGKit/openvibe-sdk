@@ -22,5 +22,5 @@ public:
 
 protected:
 
-	const OpenViBE::Kernel::IKernelContext& m_KernelContext;
+	const OpenViBE::Kernel::IKernelContext& m_kernelCtx;
 };
