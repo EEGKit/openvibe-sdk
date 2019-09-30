@@ -89,27 +89,27 @@ public:
 	std::vector<CAbstractTreeNode *> m_oChildren;
 
 	//! The node operator's identifier
-	uint64_t m_ui64Identifier = 0;
+	uint64_t m_id = 0;
 
 	//! True if the node is "associative"
 	bool m_bIsAssociative = false;
 
 	//Constructors
 	CAbstractTreeParentNode(const uint64_t nodeId, const bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative) { }
+		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative) { }
 
 	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* child, const bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative) { m_oChildren.push_back(child); }
+		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative) { m_oChildren.push_back(child); }
 
 	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* leftChild, CAbstractTreeNode* rightChild, const bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative)
+		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative)
 	{
 		m_oChildren.push_back(leftChild);
 		m_oChildren.push_back(rightChild);
 	}
 
 	CAbstractTreeParentNode(uint64_t nodeId, CAbstractTreeNode* testChild, CAbstractTreeNode* ifChild, CAbstractTreeNode* thenChild, bool isAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(nodeId), m_bIsAssociative(isAssociative)
+		: CAbstractTreeNode(false, false), m_id(nodeId), m_bIsAssociative(isAssociative)
 	{
 		m_oChildren.push_back(testChild);
 		m_oChildren.push_back(ifChild);
@@ -120,7 +120,7 @@ public:
 	 * Returns the node's operator identifier.
 	 * \return The operator identifier
 	 */
-	uint64_t getOperatorIdentifier() const { return m_ui64Identifier; }
+	uint64_t getOperatorIdentifier() const { return m_id; }
 
 	/**
 	 * Used to know if the node is an associative node.
@@ -147,7 +147,7 @@ public:
 	void print(OpenViBE::Kernel::ILogManager& logManager) override
 	{
 		std::string op;
-		switch (m_ui64Identifier)
+		switch (m_id)
 		{
 			case OP_NEG: op = "-";
 				break;

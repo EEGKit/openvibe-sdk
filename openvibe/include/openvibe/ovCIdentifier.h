@@ -2,6 +2,7 @@
 
 #include "ov_base.h"
 #include "ovCString.h"
+#include <climits>
 
 #define OV_UndefinedIdentifier OpenViBE::CIdentifier(0xffffffff, 0xffffffff)
 
@@ -14,21 +15,14 @@ namespace OpenViBE
 	 * \brief Globally used identification class
 	 * \ingroup Group_Base
 	 *
-	 * This class is the basic class to use in order to identify
-	 * objects in the OpenViBE platform. It can be used for class
-	 * identification, for object identification and any user needed
-	 * identification process.
+	 * This class is the basic class to use in order to identify objects in the OpenViBE platform.
+	 * It can be used for class identification, for object identification and any user needed identification process.
 	 *
-	 * The identification of the OpenViBE platform is based on
-	 * 64 bits integers. This allows more than
-	 * 1 800 000 000 000 000 000 identifiers to exist... I won't
-	 * write that this should be enough ;) (this is (c) Bill Gates)
-	 * but at least... it may fit our today needs !
+	 * The identification of the OpenViBE platform is based on 64 bits integers.
 	 *
-	 * This class is heavily used in the OpenViBE::IObject class. Also,
-	 * the OpenViBE specification gives serveral already defined
-	 * class identifiers the developer should know of. For this,
-	 * let you have a look to the documentation of ov_defines.h !
+	 * This class is heavily used in the OpenViBE::IObject class.
+	 * Also, the OpenViBE specification gives serveral already defined class identifiers the developer should know of.
+	 * For this, let you have a look to the documentation of ov_defines.h !
 	 *
 	 * \sa ov_defines.h
 	 */
@@ -45,7 +39,7 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier initialized to
 		 * \c OV_UndefinedIdentifier.
 		 */
-		CIdentifier();
+		CIdentifier() : m_id(ULLONG_MAX) {}
 		/**
 		 * \brief 32 bits integer based constructor
 		 * \param id1 [in] : the first part of the identifier
@@ -54,12 +48,12 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(uint32_t id1, uint32_t id2);
+		CIdentifier(const uint32_t id1, const uint32_t id2) : m_id((uint64_t(id1) << 32) + id2) {}
 		/**
 		 * \brief 64 bits integer based constructor
 		 * \param id [in] : The identifier
 		 */
-		CIdentifier(uint64_t id);
+		CIdentifier(const uint64_t id) : m_id(id) {}
 		/**
 		 * \brief Copy constructor
 		 * \param id [in] : the identifier to initialize
@@ -68,7 +62,7 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier exacly the same as
 		 * given identifier parameter.
 		 */
-		CIdentifier(const CIdentifier& id);
+		CIdentifier(const CIdentifier& id) : m_id(id.m_id) {}
 
 		//@}
 		/** \name Operators */
@@ -152,8 +146,8 @@ namespace OpenViBE
 		friend OV_API bool operator>(const CIdentifier& id1, const CIdentifier& id2);
 		/**
 		 * \brief Order test operator
-		 * \param rIdentifier1 [in] : the first identifier to compare
-		 * \param rIdentifier2 [in] : the second identifier to compare
+		 * \param id1 [in] : the first identifier to compare
+		 * \param id2 [in] : the second identifier to compare
 		 * \return \e true if the first identifier is less or equal than the second one
 		 * \return \e false if the first identifier is greater to the second one
 		 *
@@ -162,11 +156,11 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return !(rIdentifier1 > rIdentifier2); }
+		friend OV_API bool operator<=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 > id2); }
 		/**
 		 * \brief Order test operator
-		 * \param rIdentifier1 [in] : the first identifier to compare
-		 * \param rIdentifier2 [in] : the second identifier to compare
+		 * \param id1 [in] : the first identifier to compare
+		 * \param id2 [in] : the second identifier to compare
 		 * \return \e true if the first identifier is greater or equal than the second one
 		 * \return \e false if the first identifier is less to the second one
 		 *
@@ -175,10 +169,10 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return !(rIdentifier1 < rIdentifier2); }
+		friend OV_API bool operator>=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 < id2); }
 
 		//@}
-
+		
 		/**
 		 * \brief Converts this identifier into an OpenViBE string
 		 * \return This identifier represented as an OpenViBE string
@@ -198,7 +192,7 @@ namespace OpenViBE
 		 *          as integers. Actually, the internal 64 bits representation may
 		 *          change, resulting in code port needs if you use this function
 		 */
-		uint64_t toUInteger() const;
+		uint64_t toUInteger() const { return m_id; }
 		/**
 		 * \brief Creates a random identifier
 		 * \return a random identifier
@@ -208,6 +202,6 @@ namespace OpenViBE
 
 	protected:
 
-		uint64_t m_ui64Identifier = 0; ///< the 64 bit identifier value
+		uint64_t m_id = 0; ///< the 64 bit identifier value
 	};
 } // namespace OpenViBE

@@ -45,19 +45,11 @@ namespace OpenViBEPlugins
 			std::vector<uint64_t> m_oInputBufferSizes;
 
 			//start time and end time of the last arrived chunk
-			uint64_t m_ui64LastChunkStartTime = 0;
-			uint64_t m_ui64LastChunkEndTime   = 0;
+			uint64_t m_lastChunkStartTime = 0;
+			uint64_t m_lastChunkEndTime   = 0;
 
 			// number of inputs
-			uint32_t m_ui32NumberOfInput = 0;
-
-			// current input (usesful in the EBML callbacks)
-			uint32_t m_ui32CurrentInput = 0;
-
-			// the feature vector
-			double* m_pVectorBuffer = nullptr;
-			// the feature vector size
-			uint32_t m_ui32VectorSize = 0;
+			uint32_t m_nInput = 0;
 
 			bool m_bHeaderSent = false;
 		};

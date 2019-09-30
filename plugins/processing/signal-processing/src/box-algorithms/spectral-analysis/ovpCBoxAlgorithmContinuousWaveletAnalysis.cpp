@@ -184,13 +184,12 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 
 			if (m_highestFreq > 0.5 * samplingRate)
 			{
-				this->getLogManager() << LogLevel_Error << "Highest frequency (" << m_highestFreq << " Hz) is above Nyquist criterion (sampling rate is "
-						<< samplingRate << " Hz), can not proceed!\n";
+				this->getLogManager() << LogLevel_Error << "Highest frequency (" << m_highestFreq << " Hz) is above Nyquist criterion (sampling rate is " << samplingRate << " Hz), can not proceed!\n";
 				return false;
 			}
 
 			const int nScaleLimit = int(std::log2(nSample * m_samplingPeriodDt / m_smallestScaleS0) / m_scaleSpacingDj); // Eq.(10)
-			if (m_nScaleJ > nScaleLimit)
+			if (int(m_nScaleJ) > nScaleLimit)
 			{
 				this->getLogManager() << LogLevel_Error << "Frequency count [" << m_nScaleJ << "] is superior to the limit [" << nScaleLimit << "].\n";
 				return false;

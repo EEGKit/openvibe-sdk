@@ -385,7 +385,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 			fprintf(file, "</SettingValue>\n");
 			fprintf(file, "\t<SettingValue>%d</SettingValue>\n", m_FiltersPerClass * m_NumClasses);
-			fprintf(file, "\t<SettingValue>%llu</SettingValue>\n", nChannels);
+			fprintf(file, "\t<SettingValue>%zu</SettingValue>\n", nChannels);
 			fprintf(file, "\t<SettingValue></SettingValue>\n");
 			fprintf(file, "</OpenViBE-SettingsOverride>\n");
 

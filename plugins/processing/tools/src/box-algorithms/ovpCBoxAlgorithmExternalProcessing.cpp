@@ -208,8 +208,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 			if (exitCode == STILL_ACTIVE)
 			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.",
-									ErrorType::Unknown);
+				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
 			}
 			else if (exitCode != 0)
 			{

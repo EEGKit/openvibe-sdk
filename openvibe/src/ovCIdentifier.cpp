@@ -8,62 +8,50 @@
 
 using namespace OpenViBE;
 
-CIdentifier::CIdentifier()
-	: m_ui64Identifier(0xffffffffffffffffLL) {}
-
-CIdentifier::CIdentifier(const uint32_t id1, const uint32_t id2)
-	: m_ui64Identifier((uint64_t(id1) << 32) + id2) {}
-
-CIdentifier::CIdentifier(const uint64_t id)
-	: m_ui64Identifier(id) {}
-
-CIdentifier::CIdentifier(const CIdentifier& id)
-	: m_ui64Identifier(id.m_ui64Identifier) {}
-
 CIdentifier& CIdentifier::operator=(const CIdentifier& id)
 {
-	m_ui64Identifier = id.m_ui64Identifier;
+	m_id = id.m_id;
 	return *this;
 }
 
 CIdentifier& CIdentifier::operator++()
 {
-	if (m_ui64Identifier != 0xffffffffffffffffLL)
+	if (m_id != ULLONG_MAX)
 	{
-		m_ui64Identifier++;
-		if (m_ui64Identifier == 0xffffffffffffffffLL) { m_ui64Identifier = 0LL; }
+		m_id++;
+		if (m_id == ULLONG_MAX) { m_id = 0; }
 	}
 	return *this;
 }
 
 CIdentifier& CIdentifier::operator--()
 {
-	if (m_ui64Identifier != 0xffffffffffffffffLL)
+	if (m_id != ULLONG_MAX)
 	{
-		m_ui64Identifier--;
-		if (m_ui64Identifier == 0xffffffffffffffffLL) { m_ui64Identifier = 0xfffffffffffffffeLL; }
+		m_id--;
+		if (m_id == ULLONG_MAX) { m_id = ULLONG_MAX - 1; }
 	}
 	return *this;
 }
 
 namespace OpenViBE
 {
-	bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_ui64Identifier == id2.m_ui64Identifier; }
+	bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id == id2.m_id; }
 
 	bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 == id2); }
 
-	bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_ui64Identifier < id2.m_ui64Identifier; }
+	bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
 
-	bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_ui64Identifier > id2.m_ui64Identifier; }
+	bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
 } // namespace OpenViBE
 
 CString CIdentifier::toString() const
 {
-	char l_sBuffer[1024];
-	uint32_t l_uiIdentifier1 = uint32_t(m_ui64Identifier >> 32);
-	uint32_t l_uiIdentifier2 = uint32_t(m_ui64Identifier);
-	sprintf(l_sBuffer, "(0x%08x, 0x%08x)", l_uiIdentifier1, l_uiIdentifier2);
-	return CString(l_sBuffer);
+	char buffer[1024];
+	const uint32_t id1 = uint32_t(m_id >> 32);
+	const uint32_t id2 = uint32_t(m_id);
+	sprintf(buffer, "(0x%08x, 0x%08x)", id1, id2);
+	return CString(buffer);
 }
 
 bool CIdentifier::fromString(const CString& str)
@@ -72,11 +60,9 @@ bool CIdentifier::fromString(const CString& str)
 	uint32_t id1;
 	uint32_t id2;
 	if (sscanf(buffer, "(0x%x, 0x%x)", &id1, &id2) != 2) { return false; }
-	m_ui64Identifier = (uint64_t(id1) << 32) + id2;
+	m_id = (uint64_t(id1) << 32) + id2;
 	return true;
 }
-
-uint64_t CIdentifier::toUInteger() const { return m_ui64Identifier; }
 
 CIdentifier CIdentifier::random()
 {

@@ -67,9 +67,9 @@ void CAbstractTreeParentNode::levelOperators()
 			CAbstractTreeParentNode* childParentNode = reinterpret_cast<CAbstractTreeParentNode*>(child);
 
 			//if the child and the current node have the same id
-			if (m_ui64Identifier == childParentNode->getOperatorIdentifier())
+			if (m_id == childParentNode->getOperatorIdentifier())
 			{
-				switch (m_ui64Identifier)
+				switch (m_id)
 				{
 						//check if it is the ID of the + or * operators
 					case OP_ADD:
@@ -149,7 +149,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		if (m_oChildren[0]->isConstant())
 		{
 			const double value = reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue();
-			switch (m_ui64Identifier)
+			switch (m_id)
 			{
 				case OP_NEG: node = new CAbstractTreeValueNode(-value);
 					break;
@@ -193,7 +193,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		//if we can already compute the result
 		if (m_oChildren[0]->isConstant() && m_oChildren[1]->isConstant())
 		{
-			switch (m_ui64Identifier)
+			switch (m_id)
 			{
 				case OP_DIV:
 				{
@@ -229,7 +229,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		}
 
 			//test special cases (X/1), ..., simplify
-		else if (m_ui64Identifier == OP_DIV)
+		else if (m_id == OP_DIV)
 		{
 			if (!m_oChildren[0]->isConstant() && m_oChildren[1]->isConstant())
 			{
@@ -256,7 +256,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		size_t i               = 0;
 		double total = 0;
 
-		switch (m_ui64Identifier)
+		switch (m_id)
 		{
 			case OP_ADD:
 				total = 0;
@@ -310,8 +310,8 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		else if (i == 1)
 		{
 			//nothing changed
-			if ((total == 0 && m_ui64Identifier == OP_ADD) ||
-				(total == 1 && m_ui64Identifier == OP_MUL))
+			if ((total == 0 && m_id == OP_ADD) ||
+				(total == 1 && m_id == OP_MUL))
 			{
 				if (nChildren - i == 1)
 				{
@@ -329,7 +329,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				}
 				hasChanged = true;
 			}
-			else if (total == 0 && m_ui64Identifier == OP_MUL)
+			else if (total == 0 && m_id == OP_MUL)
 			{
 				//kill this node and replace it by a 0 node
 				node          = new CAbstractTreeValueNode(0);
@@ -358,25 +358,25 @@ void CAbstractTreeParentNode::useNegationOperator()
 	}
 
 	//replace (/ Something -1) by (NEG Something)
-	if (m_ui64Identifier == OP_DIV)
+	if (m_id == OP_DIV)
 	{
 		if (m_oChildren[1]->isConstant())
 		{
 			if (reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[1])->getValue() == -1)
 			{
-				m_ui64Identifier = OP_NEG;
+				m_id = OP_NEG;
 				m_oChildren.pop_back();
 			}
 		}
 	}
 		//replace (* -1 ...) by (NEG (* ...))
-	else if (m_ui64Identifier == OP_MUL)
+	else if (m_id == OP_MUL)
 	{
 		if (m_oChildren[0]->isConstant())
 		{
 			if (reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue() == -1)
 			{
-				m_ui64Identifier = OP_NEG;
+				m_id = OP_NEG;
 				m_bIsAssociative = false;
 
 				//if there were just two children : replace (* -1 Sth) by (NEG Sth)
@@ -405,7 +405,7 @@ void CAbstractTree::generateCode(CEquationParser& parser) { m_pRoot->generateCod
 void CAbstractTreeParentNode::generateCode(CEquationParser& parser)
 {
 	const size_t nChildren = m_oChildren.size();
-	parser.push_op(m_ui64Identifier);
+	parser.push_op(m_id);
 	for (size_t i = 0; i < nChildren; i++) { m_oChildren[i]->generateCode(parser); }
 }
 

@@ -281,7 +281,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* configuratio
 	XML::IXMLNode* tempNode = configurationNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	CIdentifier id;
 	id.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
-	if (m_oSubClassifierAlgorithmIdentifier.toUInteger() != id)
+	if (m_oSubClassifierAlgorithmIdentifier != id)
 	{
 		while (!m_oSubClassifierList.empty()) { this->removeClassifierAtBack(); }
 		if (!this->setSubClassifierIdentifier(id))
