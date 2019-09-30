@@ -59,11 +59,11 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 	{
 		CString l_sSettingOverrideFilename = box.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
 		CString l_sSettingOverrideFilenameFinal;
-		if (m_pConfigurationManager == nullptr)
+		if (m_configurationManager == nullptr)
 		{
 			l_sSettingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
 		}
-		else { l_sSettingOverrideFilenameFinal = m_pConfigurationManager->expand(l_sSettingOverrideFilename); }
+		else { l_sSettingOverrideFilenameFinal = m_configurationManager->expand(l_sSettingOverrideFilename); }
 
 		// message
 		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
@@ -127,7 +127,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 					box.getSettingName(i, settingName);
 					box.getSettingValue(i, rawSettingvalue);
 					CString l_sSettingValue = rawSettingvalue;
-					l_sSettingValue         = m_pConfigurationManager->expand(l_sSettingValue);
+					l_sSettingValue         = m_configurationManager->expand(l_sSettingValue);
 					CIdentifier settingType;
 					box.getSettingType(i, settingType);
 					if (!checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))

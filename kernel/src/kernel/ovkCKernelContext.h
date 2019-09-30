@@ -40,22 +40,22 @@ namespace OpenViBE
 
 			const IKernelContext& m_rMasterKernelContext;
 
-			std::unique_ptr<IAlgorithmManager> m_pAlgorithmManager;
-			std::unique_ptr<IConfigurationManager> m_pConfigurationManager;
-			std::unique_ptr<IKernelObjectFactory> m_pKernelObjectFactory;
-			std::unique_ptr<IPlayerManager> m_pPlayerManager;
-			std::unique_ptr<IPluginManager> m_pPluginManager;
-			std::unique_ptr<IMetaboxManager> m_pMetaboxManager;
-			std::unique_ptr<IScenarioManager> m_pScenarioManager;
-			std::unique_ptr<ITypeManager> m_pTypeManager;
-			std::unique_ptr<ILogManager> m_pLogManager;
-			std::unique_ptr<IErrorManager> m_pErrorManager;
+			std::unique_ptr<IAlgorithmManager> m_algorithmManager;
+			std::unique_ptr<IConfigurationManager> m_configurationManager;
+			std::unique_ptr<IKernelObjectFactory> m_kernelObjectFactory;
+			std::unique_ptr<IPlayerManager> m_playerManager;
+			std::unique_ptr<IPluginManager> m_pluginManager;
+			std::unique_ptr<IMetaboxManager> m_metaboxManager;
+			std::unique_ptr<IScenarioManager> m_scenarioManager;
+			std::unique_ptr<ITypeManager> m_typeManager;
+			std::unique_ptr<ILogManager> m_logManager;
+			std::unique_ptr<IErrorManager> m_errorManager;
 
 			CString m_sApplicationName;
 			CString m_sConfigurationFile;
 
-			std::unique_ptr<CLogListenerConsole> m_pLogListenerConsole;
-			std::unique_ptr<CLogListenerFile> m_pLogListenerFile;
+			std::unique_ptr<CLogListenerConsole> m_logListenerConsole;
+			std::unique_ptr<CLogListenerFile> m_logListenerFile;
 
 			CKernelContext() = delete;
 		};
