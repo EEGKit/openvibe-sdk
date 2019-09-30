@@ -37,7 +37,7 @@ namespace OpenViBE
 
 			bool initialize();
 
-			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(BoxInterfacorType interfacorType) const
+			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(EBoxInterfacorType interfacorType) const
 			{
 				return m_OriginalToUpdatedCorrespondence.at(interfacorType);
 			}
@@ -65,8 +65,8 @@ namespace OpenViBE
 
 		private:
 
-			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name);
-			bool updateInterfacors(BoxInterfacorType interfacorType);
+			static uint32_t getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name);
+			bool updateInterfacors(EBoxInterfacorType interfacorType);
 
 			/**
 			 * \brief Check if supported type have to be updated between the box to be updated and the kernel
@@ -91,7 +91,7 @@ namespace OpenViBE
 			// true when updater has been initialized
 			bool m_Initialized = false;
 
-			std::map<BoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
+			std::map<EBoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
 			bool m_IsUpdateRequired = false;
 		};
 	} // namespace Kernel

@@ -7,10 +7,10 @@ using namespace Kernel;
 CAlgorithmProto::CAlgorithmProto(const IKernelContext& ctx, CAlgorithmProxy& rAlgorithmProxy)
 	: TKernelObject<IAlgorithmProto>(ctx), m_rAlgorithmProxy(rAlgorithmProxy) {}
 
-bool CAlgorithmProto::addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName,
+bool CAlgorithmProto::addInputParameter(const CIdentifier& inputParameterID, const CString& sInputName,
 										const EParameterType eParameterType, const CIdentifier& subTypeID)
 {
-	return m_rAlgorithmProxy.addInputParameter(InputParameterID, sInputName, eParameterType, subTypeID);
+	return m_rAlgorithmProxy.addInputParameter(inputParameterID, sInputName, eParameterType, subTypeID);
 }
 
 bool CAlgorithmProto::addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName,

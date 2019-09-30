@@ -12,12 +12,12 @@ namespace OpenViBE
 	{
 		class IParameter;
 
-		template <class IBase>
-		class TBaseConfigurable : public IBase
+		template <class TBase>
+		class TBaseConfigurable : public TBase
 		{
 		public:
 
-			explicit TBaseConfigurable(const IKernelContext& ctx) : IBase(ctx) { }
+			explicit TBaseConfigurable(const IKernelContext& ctx) : TBase(ctx) { }
 
 			~TBaseConfigurable() override
 			{
@@ -106,7 +106,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(IBase, OVK_ClassId_Kernel_ConfigurableT)
+			_IsDerivedFromClass_Final_(TBase, OVK_ClassId_Kernel_ConfigurableT)
 
 		private:
 

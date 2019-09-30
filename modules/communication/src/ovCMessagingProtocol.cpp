@@ -450,7 +450,7 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 
 	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) { return false; }
 
-	if (typeInt >= LogLevel_MAX) { return false; }
+	if (typeInt >= LogLevel_Max) { return false; }
 
 	m_Type = ELogLevel(typeInt);
 

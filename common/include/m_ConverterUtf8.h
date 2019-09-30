@@ -8,7 +8,7 @@ namespace Common
 	{
 #if defined TARGET_OS_Windows
 		// Returns the wstring (ie the utf16 formatted string) version of an utf8 string
-		static std::wstring utf8_to_utf16(const std::string& utf8)
+		static std::wstring Utf8ToUtf16(const std::string& utf8)
 		{
 			std::vector<unsigned long> unicode;
 			size_t i = 0;

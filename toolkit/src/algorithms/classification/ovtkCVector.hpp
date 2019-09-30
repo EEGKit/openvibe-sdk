@@ -5,8 +5,8 @@
 
 namespace OpenViBEToolkit
 {
-	template <class CParent>
-	class TVector : public CParent
+	template <class TParent>
+	class TVector : public TParent
 	{
 	public:
 
@@ -31,7 +31,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		_IsDerivedFromClass_Final_(CParent, OV_UndefinedIdentifier)
+		_IsDerivedFromClass_Final_(TParent, OV_UndefinedIdentifier)
 
 	protected:
 

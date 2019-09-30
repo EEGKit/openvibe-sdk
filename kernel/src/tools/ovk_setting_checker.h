@@ -15,8 +15,8 @@ namespace
 	// because std::tolower has multiple signatures,
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class charT>
-	charT to_lower(charT c) { return std::tolower(c); }
+	template <class TCharT>
+	TCharT ToLower(TCharT c) { return std::tolower(c); }
 
 	/**
 	* \brief Check the setting value (if the setting is numeric),
@@ -49,7 +49,7 @@ namespace
 		else if (typeID == OV_TypeId_Boolean)
 		{
 			std::string val = value.toASCIIString();
-			std::transform(val.begin(), val.end(), val.begin(), ::to_lower<std::string::value_type>);
+			std::transform(val.begin(), val.end(), val.begin(), ::ToLower<std::string::value_type>);
 
 			if (!(val == "true" || val == "on" || val == "1" || val == "false" || val == "off" || val == "0")) { return false; }
 		}

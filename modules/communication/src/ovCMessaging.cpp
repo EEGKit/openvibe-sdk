@@ -51,7 +51,7 @@ namespace
 
 CMessaging::CMessaging()
 {
-	impl                         = new MessagingImplementation();
+	impl                         = new SMessagingImpl();
 	impl->m_MessageCount         = 0;
 	impl->m_Connection           = nullptr;
 	impl->m_LastLibraryError     = NoError;

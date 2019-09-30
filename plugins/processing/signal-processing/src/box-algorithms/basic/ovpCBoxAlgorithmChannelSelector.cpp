@@ -16,7 +16,7 @@ using namespace OpenViBEToolkit;
 
 namespace
 {
-	uint32_t _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
+	uint32_t FindChannel(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
 	{
 		uint32_t result         = std::numeric_limits<uint32_t>::max();
 		const uint32_t nChannel = rMatrix.getDimensionSize(0);
@@ -56,8 +56,8 @@ namespace
 		}
 		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
 		{
-			if (result == std::numeric_limits<uint32_t>::max()) { result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart); }
-			if (result == std::numeric_limits<uint32_t>::max()) { result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart); }
+			if (result == std::numeric_limits<uint32_t>::max()) { result = FindChannel(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart); }
+			if (result == std::numeric_limits<uint32_t>::max()) { result = FindChannel(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart); }
 		}
 
 		return result;
@@ -195,8 +195,8 @@ bool CBoxAlgorithmChannelSelector::process()
 							  OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)
-						uint32_t rangeStartIdx = _find_channel_(*m_pInputMatrix, l_sSubToken[0], OVP_TypeId_MatchMethod_Index);
-						uint32_t rangeEndIdx   = _find_channel_(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
+						uint32_t rangeStartIdx = FindChannel(*m_pInputMatrix, l_sSubToken[0], OVP_TypeId_MatchMethod_Index);
+						uint32_t rangeEndIdx   = FindChannel(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
 
 						// When first or second part is not found but associated token is empty, don't consider this as an error
 						if (rangeStartIdx == std::numeric_limits<uint32_t>::max() && l_sSubToken[0] == CString("")) { rangeStartIdx = 0; }
@@ -227,7 +227,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						uint32_t index = std::numeric_limits<uint32_t>::max();
 
 						// Looks for all the channels with this name
-						while ((index = _find_channel_(*m_pInputMatrix, l_sToken[j], matchMethodID, index + 1)) != std::numeric_limits<uint32_t>::max())
+						while ((index = FindChannel(*m_pInputMatrix, l_sToken[j], matchMethodID, index + 1)) != std::numeric_limits<uint32_t>::max())
 						{
 							found = true;
 							m_vLookup.push_back(index);

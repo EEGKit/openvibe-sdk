@@ -12,7 +12,7 @@ using namespace boost::spirit::classic;
 /**
 * Enum of parent nodes identifiers.
 */
-enum ByteCodes
+enum EByteCodes
 {
 	OP_NEG,
 	OP_ADD,

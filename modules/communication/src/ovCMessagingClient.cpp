@@ -17,11 +17,11 @@ MessagingClient::~MessagingClient()
 	m_Client->release();
 }
 
-bool MessagingClient::connect(const std::string& URI, const uint32_t port)
+bool MessagingClient::connect(const std::string& uri, const uint32_t port)
 {
 	this->reset();
 
-	if (!m_Client->connect(URI.c_str(), port))
+	if (!m_Client->connect(uri.c_str(), port))
 	{
 		this->setLastError(Socket_FailedToConnect);
 		return false;

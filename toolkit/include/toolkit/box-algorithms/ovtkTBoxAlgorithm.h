@@ -18,49 +18,49 @@ namespace OpenViBEToolkit
 
 		virtual uint64_t getClockFrequency(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return getClockFrequency();
 		}
 
 		virtual bool initialize(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return initialize();
 		}
 
 		virtual bool uninitialize(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return uninitialize();
 		}
 
 		virtual bool processEvent(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, OpenViBE::CMessageEvent& messageEvent)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return processEvent(messageEvent);
 		}
 
 		virtual bool processSignal(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, OpenViBE::CMessageSignal& messageSignal)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return processSignal(messageSignal);
 		}
 
 		virtual bool processClock(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, OpenViBE::CMessageClock& messageClock)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return processClock(messageClock);
 		}
 
 		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const uint32_t index)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return processInput(index);
 		}
 
 		virtual bool process(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext)
 		{
-			CScopedBoxAlgorithm oScopedBoxAlgorithm(m_pBoxAlgorithmContext, &boxAlgorithmContext);
+			CScopedBoxAlgorithm oScopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return process();
 		}
 
@@ -79,11 +79,11 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		virtual OpenViBE::Kernel::IBoxAlgorithmContext* getBoxAlgorithmContext() { return m_pBoxAlgorithmContext; }
-		// virtual OpenViBE::Kernel::IBoxAlgorithmContext& getBoxAlgorithmContext() { return *m_pBoxAlgorithmContext; } this one should replace !
-		virtual const OpenViBE::Kernel::IBox& getStaticBoxContext() { return *m_pBoxAlgorithmContext->getStaticBoxContext(); }
-		virtual OpenViBE::Kernel::IBoxIO& getDynamicBoxContext() { return *m_pBoxAlgorithmContext->getDynamicBoxContext(); }
-		virtual OpenViBE::Kernel::IPlayerContext& getPlayerContext() { return *m_pBoxAlgorithmContext->getPlayerContext(); }
+		virtual OpenViBE::Kernel::IBoxAlgorithmContext* getBoxAlgorithmContext() { return m_boxAlgorithmContext; }
+		// virtual OpenViBE::Kernel::IBoxAlgorithmContext& getBoxAlgorithmContext() { return *m_boxAlgorithmContext; } this one should replace !
+		virtual const OpenViBE::Kernel::IBox& getStaticBoxContext() { return *m_boxAlgorithmContext->getStaticBoxContext(); }
+		virtual OpenViBE::Kernel::IBoxIO& getDynamicBoxContext() { return *m_boxAlgorithmContext->getDynamicBoxContext(); }
+		virtual OpenViBE::Kernel::IPlayerContext& getPlayerContext() { return *m_boxAlgorithmContext->getPlayerContext(); }
 
 		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager() { return getPlayerContext().getAlgorithmManager(); }
 		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager() { return getPlayerContext().getConfigurationManager(); }
@@ -124,43 +124,43 @@ namespace OpenViBEToolkit
 		{
 		public:
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const uint32_t index)
-				: m_rLogManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
-				  m_rErrorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
-				  m_rTypeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
-				  m_rConfigurationManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+				: m_logManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
+				  m_errorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
+				  m_typeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
+				  m_configManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(index, m_sSettingValue);
-				boxAlgorithmContext.getStaticBoxContext()->getSettingType(index, m_oSettingType);
+				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(index, m_settingValue);
+				boxAlgorithmContext.getStaticBoxContext()->getSettingType(index, m_settingType);
 			}
 
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const OpenViBE::CString& name)
-				: m_rLogManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
-				  m_rErrorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
-				  m_rTypeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
-				  m_rConfigurationManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+				: m_logManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
+				  m_errorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
+				  m_typeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
+				  m_configManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(name, m_sSettingValue);
-				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, name, m_oSettingType);
+				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(name, m_settingValue);
+				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, name, m_settingType);
 			}
 
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const OpenViBE::CIdentifier& identifier)
-				: m_rLogManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
-				  m_rErrorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
-				  m_rTypeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
-				  m_rConfigurationManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+				: m_logManager(boxAlgorithmContext.getPlayerContext()->getLogManager()),
+				  m_errorManager(boxAlgorithmContext.getPlayerContext()->getErrorManager()),
+				  m_typeManager(boxAlgorithmContext.getPlayerContext()->getTypeManager()),
+				  m_configManager(boxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(identifier, m_sSettingValue);
-				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, identifier, m_oSettingType);
+				boxAlgorithmContext.getStaticBoxContext()->getSettingValue(identifier, m_settingValue);
+				boxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, identifier, m_settingType);
 			}
 
 			operator uint32_t()
 			{
 				double result;
-				OpenViBE::CString value = m_rConfigurationManager.expand(m_sSettingValue);
+				OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(value, result),
-								"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint32_t>::max(), m_rErrorManager, m_rLogManager);
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, result),
+								"Could not expand numeric expression [" << m_settingValue << "] to unsigned integer 32bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint32_t>::max(), m_errorManager, m_logManager);
 
 				return uint32_t(result);
 			}
@@ -168,24 +168,24 @@ namespace OpenViBEToolkit
 			operator uint64_t()
 			{
 				uint64_t stimId               = std::numeric_limits<uint64_t>::max();
-				const OpenViBE::CString value = m_rConfigurationManager.expand(m_sSettingValue);
+				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 				double result;
-				if (m_rTypeManager.isEnumeration(m_oSettingType))
+				if (m_typeManager.isEnumeration(m_settingType))
 				{
-					stimId = m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, value);
+					stimId = m_typeManager.getEnumerationEntryValueFromName(m_settingType, value);
 
 					OV_ERROR_UNLESS(stimId != std::numeric_limits<uint64_t>::max(),
-									"Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]",
-									OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_rErrorManager, m_rLogManager);
+									"Did not find an enumeration value for [" << m_typeManager.getTypeName(m_settingType) << "] = [" << m_settingValue << "]",
+									OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
 				}
-				else if (m_rTypeManager.evaluateSettingValue(value, result)) { return uint64_t(result); }
+				else if (m_typeManager.evaluateSettingValue(value, result)) { return uint64_t(result); }
 
 				// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
 				// In this case, to avoid to pollute the console with useless messages, throw a message only if the
 				// setting should be an integer.
-				OV_ERROR_UNLESS(stimId != std::numeric_limits<uint64_t>::max() || m_oSettingType != OV_TypeId_Integer,
-								"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_rErrorManager, m_rLogManager);
+				OV_ERROR_UNLESS(stimId != std::numeric_limits<uint64_t>::max() || m_settingType != OV_TypeId_Integer,
+								"Could not expand numeric expression [" << m_settingValue << "] to unsigned integer 64bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
 
 				return stimId;
 			}
@@ -193,11 +193,11 @@ namespace OpenViBEToolkit
 			operator int()
 			{
 				double l_dResult;
-				const OpenViBE::CString value = m_rConfigurationManager.expand(m_sSettingValue);
+				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(value, l_dResult),
-								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int>::max(), m_rErrorManager, m_rLogManager);
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, l_dResult),
+								"Could not expand numeric expression [" << m_settingValue << "] to integer 32bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int>::max(), m_errorManager, m_logManager);
 
 				return int(l_dResult);
 			}
@@ -205,11 +205,11 @@ namespace OpenViBEToolkit
 			operator int64_t()
 			{
 				double l_dResult;
-				const OpenViBE::CString value = m_rConfigurationManager.expand(m_sSettingValue);
+				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(value, l_dResult),
-								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_rErrorManager, m_rLogManager);
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, l_dResult),
+								"Could not expand numeric expression [" << m_settingValue << "] to integer 64bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_errorManager, m_logManager);
 
 				return int64_t(l_dResult);
 			}
@@ -217,26 +217,26 @@ namespace OpenViBEToolkit
 			operator double()
 			{
 				double l_dResult;
-				const OpenViBE::CString value = m_rConfigurationManager.expand(m_sSettingValue);
+				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(value, l_dResult),
-								"Could not expand numeric expression [" << m_sSettingValue << "] to float.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_rErrorManager, m_rLogManager);
+				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, l_dResult),
+								"Could not expand numeric expression [" << m_settingValue << "] to float.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_errorManager, m_logManager);
 
 				return double(l_dResult);
 			}
 
-			operator bool() { return m_rConfigurationManager.expandAsBoolean(m_sSettingValue); }
+			operator bool() { return m_configManager.expandAsBoolean(m_settingValue); }
 
-			operator OpenViBE::CString() { return m_rConfigurationManager.expand(m_sSettingValue); }
+			operator OpenViBE::CString() { return m_configManager.expand(m_settingValue); }
 
 		private:
-			OpenViBE::Kernel::ILogManager& m_rLogManager;
-			OpenViBE::Kernel::IErrorManager& m_rErrorManager;
-			OpenViBE::Kernel::ITypeManager& m_rTypeManager;
-			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;
-			OpenViBE::CString m_sSettingValue;
-			OpenViBE::CIdentifier m_oSettingType = OV_UndefinedIdentifier;
+			OpenViBE::Kernel::ILogManager& m_logManager;
+			OpenViBE::Kernel::IErrorManager& m_errorManager;
+			OpenViBE::Kernel::ITypeManager& m_typeManager;
+			OpenViBE::Kernel::IConfigurationManager& m_configManager;
+			OpenViBE::CString m_settingValue;
+			OpenViBE::CIdentifier m_settingType = OV_UndefinedIdentifier;
 		};
 
 	private:
@@ -253,7 +253,7 @@ namespace OpenViBEToolkit
 			OpenViBE::Kernel::IBoxAlgorithmContext*& m_rpBoxAlgorithmContext;
 		};
 
-		OpenViBE::Kernel::IBoxAlgorithmContext* m_pBoxAlgorithmContext = nullptr;
+		OpenViBE::Kernel::IBoxAlgorithmContext* m_boxAlgorithmContext = nullptr;
 	};
 
 	template <class CBoxListenerParentClass>

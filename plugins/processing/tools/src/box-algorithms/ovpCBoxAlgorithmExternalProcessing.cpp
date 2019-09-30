@@ -629,7 +629,7 @@ void CBoxAlgorithmExternalProcessing::log()
 				break;
 
 			case Communication::LogLevel_Unknown:
-			case Communication::LogLevel_MAX:
+			case Communication::LogLevel_Max:
 				break;
 		}
 

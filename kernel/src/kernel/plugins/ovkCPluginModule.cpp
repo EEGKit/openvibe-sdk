@@ -58,20 +58,20 @@ namespace OpenViBE
 
 				explicit CPluginModuleContext(const IKernelContext& ctx)
 					: TKernelObject<IPluginModuleContext>(ctx)
-					  , m_rLogManager(ctx.getLogManager())
-					  , m_rTypeManager(ctx.getTypeManager())
+					  , m_logManager(ctx.getLogManager())
+					  , m_typeManager(ctx.getTypeManager())
 					  , m_rScenarioManager(ctx.getScenarioManager()) { }
 
-				ILogManager& getLogManager() const override { return m_rLogManager; }
-				ITypeManager& getTypeManager() const override { return m_rTypeManager; }
+				ILogManager& getLogManager() const override { return m_logManager; }
+				ITypeManager& getTypeManager() const override { return m_typeManager; }
 				IScenarioManager& getScenarioManager() const override { return m_rScenarioManager; }
 
 				_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext)
 
 			protected:
 
-				ILogManager& m_rLogManager;
-				ITypeManager& m_rTypeManager;
+				ILogManager& m_logManager;
+				ITypeManager& m_typeManager;
 				IScenarioManager& m_rScenarioManager;
 			};
 		} // namespace

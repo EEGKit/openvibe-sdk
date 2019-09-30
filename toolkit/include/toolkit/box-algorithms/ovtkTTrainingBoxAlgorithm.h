@@ -12,8 +12,8 @@
 
 namespace OpenViBEToolkit
 {
-	template <class CBoxAlgorithmParentClass>
-	class TTrainingBoxAlgorithm : public TBoxAlgorithm<CBoxAlgorithmParentClass>
+	template <class TBoxAlgorithmParentClass>
+	class TTrainingBoxAlgorithm : public TBoxAlgorithm<TBoxAlgorithmParentClass>
 	{
 	public:
 
@@ -39,7 +39,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain() = 0;
 		virtual bool train(ISignalTrialSet& trialSet) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>, OVTK_ClassId_)
+		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<TBoxAlgorithmParentClass>, OVTK_ClassId_)
 
 	private:
 

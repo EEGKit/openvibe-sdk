@@ -9,7 +9,7 @@ namespace Socket
 	{
 	public:
 
-		virtual bool connect(const char* sURL, const unsigned long ui32BaudRate) = 0;
+		virtual bool connect(const char* url, const unsigned long baudRate) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.

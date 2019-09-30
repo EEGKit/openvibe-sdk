@@ -20,7 +20,7 @@ namespace Communication
 		LogLevel_Warning = 2,
 		LogLevel_Error = 3,
 		LogLevel_Fatal = 4,
-		LogLevel_MAX = 5,
+		LogLevel_Max = 5,
 		LogLevel_Unknown = 0xFF
 	};
 

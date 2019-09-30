@@ -24,7 +24,7 @@ namespace Communication
 		/**
 		 * \brief	Connect to a server.
 		 *
-		 * \param	URI		URI of the server.
+		 * \param	uri		URI of the server.
 		 * \param	port	The port.
 		 *
 		 * \retval True if it succeeds.
@@ -36,7 +36,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool connect(const std::string& URI, uint32_t port);
+		bool connect(const std::string& uri, uint32_t port);
 
 		/**
 		 * \brief Closes the connection to the server.

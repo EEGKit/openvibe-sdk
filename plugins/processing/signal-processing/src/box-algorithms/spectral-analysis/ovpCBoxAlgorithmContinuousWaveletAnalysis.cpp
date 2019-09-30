@@ -18,7 +18,7 @@ using namespace OpenViBEToolkit;
 
 namespace SigProSTD
 {
-	double wavelet_FourierFactor(char* waveletType, const double waveletParameter)
+	double WaveletFourierFactor(char* waveletType, const double waveletParameter)
 	{
 		double factor = -1;
 		if (strcmp(waveletType, "morlet") == 0) { factor = 4.0 * M_PI / (waveletParameter + std::sqrt(2 + waveletParameter * waveletParameter)); }
@@ -27,23 +27,23 @@ namespace SigProSTD
 		return factor;
 	}
 
-	double wavelet_scale2period(char* waveletType, const double waveletParameter, const double scale)
+	double WaveletScale2Period(char* waveletType, const double waveletParameter, const double scale)
 	{
-		const double fourierFactor = wavelet_FourierFactor(waveletType, waveletParameter);
+		const double fourierFactor = WaveletFourierFactor(waveletType, waveletParameter);
 
 		return fourierFactor * scale;
 	}
 
-	double wavelet_scale2freq(char* waveletType, const double waveletParameter, const double scale)
+	double WaveletScale2Freq(char* waveletType, const double waveletParameter, const double scale)
 	{
-		const double fourierFactor = wavelet_FourierFactor(waveletType, waveletParameter);
+		const double fourierFactor = WaveletFourierFactor(waveletType, waveletParameter);
 
 		return 1.0 / (fourierFactor * scale);
 	}
 
-	double wavelet_freq2scale(char* waveletType, const double waveletParameter, const double frequency)
+	double WaveletFreq2Scale(char* waveletType, const double waveletParameter, const double frequency)
 	{
-		const double fourierFactor = wavelet_FourierFactor(waveletType, waveletParameter);
+		const double fourierFactor = WaveletFourierFactor(waveletType, waveletParameter);
 
 		return 1.0 / (fourierFactor * frequency);
 	}
@@ -125,8 +125,8 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 		return false;
 	}
 
-	m_smallestScaleS0 = SigProSTD::wavelet_freq2scale(const_cast<char *>(m_waveletType), m_waveletParam, m_highestFreq);
-	m_scaleSpacingDj  = SigProSTD::wavelet_freq2scale(const_cast<char *>(m_waveletType), m_waveletParam, frequencySpacing);
+	m_smallestScaleS0 = SigProSTD::WaveletFreq2Scale(const_cast<char *>(m_waveletType), m_waveletParam, m_highestFreq);
+	m_scaleSpacingDj  = SigProSTD::WaveletFreq2Scale(const_cast<char *>(m_waveletType), m_waveletParam, frequencySpacing);
 
 	m_scaleType         = "pow";
 	m_scalePowerBaseA0 = 2; // base of power if ScaleType = "pow"
@@ -226,7 +226,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				for (size_t scaleIndex = 0; scaleIndex < m_nScaleJ; ++scaleIndex)
 				{
 					const double scaleValue     = m_waveletTransform->scale[scaleIndex];
-					const double frequencyValue = SigProSTD::wavelet_scale2freq(const_cast<char *>(m_waveletType), m_waveletParam, scaleValue);
+					const double frequencyValue = SigProSTD::WaveletScale2Freq(const_cast<char *>(m_waveletType), m_waveletParam, scaleValue);
 
 					std::string frequencyString = std::to_string(frequencyValue);
 					oMatrix->setDimensionLabel(1, scaleIndex, frequencyString.c_str());

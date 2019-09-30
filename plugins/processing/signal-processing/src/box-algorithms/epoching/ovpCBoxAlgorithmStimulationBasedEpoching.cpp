@@ -13,9 +13,9 @@ using namespace SignalProcessing;
 
 namespace
 {
-	const int inputSignalIndex       = 0;
-	const int inputStimulationsIndex = 1;
-	const int outputSignalIndex      = 0;
+	const int INPUT_SIGNAL_IDX       = 0;
+	const int INPUT_STIMULATIONS_IDX = 1;
+	const int OUTPUT_SIGNAL_IDX      = 0;
 }
 
 bool CBoxAlgorithmStimulationBasedEpoching::initialize()
@@ -71,14 +71,14 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(inputSignalIndex); ++chunk)
+	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(INPUT_SIGNAL_IDX); ++chunk)
 	{
 		OV_ERROR_UNLESS_KRF(m_SignalDecoder.decode(chunk),
 							"Failed to decode chunk",
 							ErrorType::Internal);
 		IMatrix* inputMatrix         = m_SignalDecoder.getOutputMatrix();
-		uint64_t inputChunkStartTime = dynamicBoxContext.getInputChunkStartTime(inputSignalIndex, chunk);
-		uint64_t inputChunkEndTime   = dynamicBoxContext.getInputChunkEndTime(inputSignalIndex, chunk);
+		uint64_t inputChunkStartTime = dynamicBoxContext.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
+		uint64_t inputChunkEndTime   = dynamicBoxContext.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
 
 		if (m_SignalDecoder.isHeaderReceived())
 		{
@@ -103,7 +103,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				outputMatrix->setDimensionLabel(0, channel, inputMatrix->getDimensionLabel(0, channel));
 			}
 			m_SignalEncoder.encodeHeader();
-			dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, 0, 0);
+			dynamicBoxContext.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, 0, 0);
 		}
 
 		if (m_SignalDecoder.isBufferReceived())
@@ -121,11 +121,11 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		if (m_SignalDecoder.isEndReceived())
 		{
 			m_SignalEncoder.encodeEnd();
-			dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, inputChunkStartTime, inputChunkEndTime);
+			dynamicBoxContext.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, inputChunkStartTime, inputChunkEndTime);
 		}
 	}
 
-	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(inputStimulationsIndex); ++chunk)
+	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(INPUT_STIMULATIONS_IDX); ++chunk)
 	{
 		m_StimulationDecoder.decode(chunk);
 		// We only handle buffers and ignore stimulation headers and ends
@@ -149,7 +149,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 						m_LastReceivedStimulationDate = stimulationDate;
 					}
 				}
-				m_LastStimulationChunkStartTime = dynamicBoxContext.getInputChunkEndTime(inputStimulationsIndex, chunk);
+				m_LastStimulationChunkStartTime = dynamicBoxContext.getInputChunkEndTime(INPUT_STIMULATIONS_IDX, chunk);
 			}
 		}
 	}
@@ -238,7 +238,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 			if (currentSampleIndexInOutputBuffer == m_SampleCountPerOutputEpoch)
 			{
 				m_SignalEncoder.encodeBuffer();
-				dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, currentEpochStartTime, currentEpochStartTime + m_EpochDuration);
+				dynamicBoxContext.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, currentEpochStartTime, currentEpochStartTime + m_EpochDuration);
 			}
 			else { OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks."); }
 

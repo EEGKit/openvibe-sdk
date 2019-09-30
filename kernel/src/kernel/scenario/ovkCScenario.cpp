@@ -1372,7 +1372,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 	}
 
 	// gather links coming to and from the box
-	std::map<BoxInterfacorType, std::vector<shared_ptr<CLink>>> links;
+	std::map<EBoxInterfacorType, std::vector<shared_ptr<CLink>>> links;
 	for (auto interfacorType : { Input, Output })
 	{
 		links[interfacorType] = std::vector<shared_ptr<CLink>>();
@@ -1416,7 +1416,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 	}
 
 	// Reconnect links
-	std::map<BoxInterfacorType, std::set<uint32_t>> isInterfacorConnected;
+	std::map<EBoxInterfacorType, std::set<uint32_t>> isInterfacorConnected;
 	isInterfacorConnected[Input]  = std::set<uint32_t>();
 	isInterfacorConnected[Output] = std::set<uint32_t>();
 	for (auto& link : links[Input])

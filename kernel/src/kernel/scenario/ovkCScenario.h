@@ -138,7 +138,7 @@ namespace OpenViBE
 			std::map<CIdentifier, CMetadata*> m_Metadata;
 			std::map<CIdentifier, CLink*> m_Links;
 			std::map<CIdentifier, std::shared_ptr<CBox>> m_OutdatedBoxes;
-			std::map<BoxInterfacorType, std::map<CIdentifier, std::map<uint32_t, uint32_t>>> m_UpdatedBoxIOCorrespondence;
+			std::map<EBoxInterfacorType, std::map<CIdentifier, std::map<uint32_t, uint32_t>>> m_UpdatedBoxIOCorrespondence;
 
 
 			bool m_HasIO = false;

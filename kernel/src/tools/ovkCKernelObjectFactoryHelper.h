@@ -18,10 +18,10 @@ namespace OpenViBE
 			template <class T>
 			T createObject(const CIdentifier& rClassIdentifier)
 			{
-				IObject* l_pObject = m_rKernelObjectFactory.createObject(rClassIdentifier);
-				T l_tResult        = dynamic_cast<T>(l_pObject);
-				if (l_pObject && !l_tResult) { m_rKernelObjectFactory.releaseObject(l_pObject); }
-				return l_tResult;
+				IObject* obj = m_rKernelObjectFactory.createObject(rClassIdentifier);
+				T res        = dynamic_cast<T>(obj);
+				if (obj && !res) { m_rKernelObjectFactory.releaseObject(obj); }
+				return res;
 			}
 
 			template <class T>

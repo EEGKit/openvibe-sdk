@@ -15,12 +15,12 @@ namespace OpenViBE
 
 			CStimulation() { }
 
-			CStimulation(const uint64_t ui64Identifier, const uint64_t ui64Date, const uint64_t ui64Duration)
-				: m_Id(ui64Identifier), m_date(ui64Date), m_duration(ui64Duration) { }
+			CStimulation(const uint64_t identifier, const uint64_t date, const uint64_t duration)
+				: m_Id(identifier), m_Date(date), m_Duration(duration) { }
 
 			uint64_t m_Id       = 0;
-			uint64_t m_date     = 0;
-			uint64_t m_duration = 0;
+			uint64_t m_Date     = 0;
+			uint64_t m_Duration = 0;
 		};
 
 		class CStimulationSetImpl final : public IStimulationSet
@@ -29,8 +29,8 @@ namespace OpenViBE
 			void clear() override { m_stimulations.clear(); }
 			uint64_t getStimulationCount() const override { return m_stimulations.size(); }
 			uint64_t getStimulationIdentifier(const uint64_t index) const override { return m_stimulations[size_t(index)].m_Id; }
-			uint64_t getStimulationDate(const uint64_t index) const override { return m_stimulations[size_t(index)].m_date; }
-			uint64_t getStimulationDuration(const uint64_t index) const override { return m_stimulations[size_t(index)].m_duration; }
+			uint64_t getStimulationDate(const uint64_t index) const override { return m_stimulations[size_t(index)].m_Date; }
+			uint64_t getStimulationDuration(const uint64_t index) const override { return m_stimulations[size_t(index)].m_Duration; }
 			bool setStimulationCount(const uint64_t n) override;
 			bool setStimulationIdentifier(const uint64_t index, const uint64_t identifier) override;
 			bool setStimulationDate(const uint64_t index, const uint64_t date) override;
@@ -65,13 +65,13 @@ bool CStimulationSetImpl::setStimulationIdentifier(const uint64_t index, const u
 
 bool CStimulationSetImpl::setStimulationDate(const uint64_t index, const uint64_t date)
 {
-	m_stimulations[size_t(index)].m_date = date;
+	m_stimulations[size_t(index)].m_Date = date;
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationDuration(const uint64_t index, const uint64_t duration)
 {
-	m_stimulations[size_t(index)].m_duration = duration;
+	m_stimulations[size_t(index)].m_Duration = duration;
 	return true;
 }
 

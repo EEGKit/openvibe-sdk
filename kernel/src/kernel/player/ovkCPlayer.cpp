@@ -155,7 +155,7 @@ EPlayerReturnCode CPlayer::initialize()
 	// 'global' one. Now lets change the config manager in the bridge to point to the local manager in order to load configurations into the local manager.
 	m_oKernelContextBridge.setConfigurationManager(m_pRuntimeConfigurationManager);
 
-	SchedulerInitializationCode code = m_oScheduler.initialize();
+	ESchedulerInitializationCode code = m_oScheduler.initialize();
 
 	if (code == SchedulerInitialization_Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed); }
 	if (code == SchedulerInitialization_BoxInitializationFailed)

@@ -90,8 +90,8 @@ namespace
 
 	void sendData(Socket::IConnectionClient* client, void* data, uint32_t size)
 	{
-		uint32_t bytesToSend = size;
-		uint32_t bytesSent   = 0;
+		const uint32_t bytesToSend = size;
+		uint32_t bytesSent         = 0;
 
 		while (bytesSent < bytesToSend) { bytesSent += client->sendBuffer(data, bytesToSend - bytesSent); }
 	}
@@ -101,9 +101,9 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
-	std::string serverName   = argv[1];
-	int portNumber           = std::atoi(argv[2]);
-	uint32_t packetCount = uint32_t(std::atoi(argv[3]));
+	const std::string serverName = argv[1];
+	int portNumber               = std::atoi(argv[2]);
+	uint32_t packetCount         = uint32_t(std::atoi(argv[3]));
 
 	// test asynchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -126,7 +126,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 
 	// transmit data
 	// transmission follows the protocol: data size transmission + data transmission
-	std::string baseData = "Data packet index: ";
+	const std::string baseData = "Data packet index: ";
 
 	char dataBuffer[32];
 	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
@@ -148,10 +148,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	// do the assertion on the main thread
 	OVT_ASSERT(g_ReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (uint32_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
-	{
-		OVT_ASSERT_STREQ(g_ReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
-	}
+	for (uint32_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex) { OVT_ASSERT_STREQ(g_ReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet"); }
 
 	return EXIT_SUCCESS;
 }

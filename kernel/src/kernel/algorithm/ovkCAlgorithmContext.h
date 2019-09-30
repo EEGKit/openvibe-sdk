@@ -12,12 +12,12 @@ namespace OpenViBE
 		public:
 
 			CAlgorithmContext(const IKernelContext& ctx, CAlgorithmProxy& algorithmProxy, const Plugins::IPluginObjectDesc& /*pluginObjectDesc*/)
-				: TKernelObject<IAlgorithmContext>(ctx), m_rLogManager(ctx.getLogManager()), m_rAlgorithmProxy(algorithmProxy) {}
+				: TKernelObject<IAlgorithmContext>(ctx), m_logManager(ctx.getLogManager()), m_rAlgorithmProxy(algorithmProxy) {}
 
 			~CAlgorithmContext() override { }
 			IConfigurationManager& getConfigurationManager() const override { return getKernelContext().getConfigurationManager(); }
 			IAlgorithmManager& getAlgorithmManager() const override { return getKernelContext().getAlgorithmManager(); }
-			ILogManager& getLogManager() const override { return m_rLogManager; }
+			ILogManager& getLogManager() const override { return m_logManager; }
 			IErrorManager& getErrorManager() const override { return getKernelContext().getErrorManager(); }
 			ITypeManager& getTypeManager() const override { return getKernelContext().getTypeManager(); }
 
@@ -45,7 +45,7 @@ namespace OpenViBE
 
 		protected:
 
-			ILogManager& m_rLogManager;
+			ILogManager& m_logManager;
 			CAlgorithmProxy& m_rAlgorithmProxy;
 		};
 	} // namespace Kernel

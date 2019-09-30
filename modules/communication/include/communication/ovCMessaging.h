@@ -318,7 +318,7 @@ namespace Communication
 		static const uint8_t s_CommunicationProtocol_MinorVersion = 1;
 
 	protected:
-		struct MessagingImplementation;
-		MessagingImplementation* impl = nullptr;
+		struct SMessagingImpl;
+		SMessagingImpl* impl = nullptr;
 	};
 }

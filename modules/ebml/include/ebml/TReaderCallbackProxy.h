@@ -8,13 +8,13 @@ namespace EBML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass>
+	template <class TOwnerClass>
 	class TReaderCallbackProxy1 final : public IReaderCallback
 	{
 	public:
-		TReaderCallbackProxy1(COwnerClass& rOwnerObject, bool (COwnerClass::*mfpIsMasterChild)(const CIdentifier& identifier),
-							  void (COwnerClass::*mfpOpenChild)(const CIdentifier& identifier),
-							  void (COwnerClass::*mfpProcessChildData)(const void* buffer, uint64_t size), void (COwnerClass::*mfpCloseChild)())
+		TReaderCallbackProxy1(TOwnerClass& rOwnerObject, bool (TOwnerClass::*mfpIsMasterChild)(const CIdentifier& identifier),
+							  void (TOwnerClass::*mfpOpenChild)(const CIdentifier& identifier),
+							  void (TOwnerClass::*mfpProcessChildData)(const void* buffer, uint64_t size), void (TOwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject), m_mfpIsMasterChild(mfpIsMasterChild), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData),
 			  m_mfpCloseChild(mfpCloseChild) { }
 
@@ -34,11 +34,11 @@ namespace EBML
 		void closeChild() override { if (m_mfpCloseChild) { (m_rOwnerObject.*m_mfpCloseChild)(); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		bool (COwnerClass::*m_mfpIsMasterChild)(const CIdentifier& identifier);
-		void (COwnerClass::*m_mfpOpenChild)(const CIdentifier& identifier);
-		void (COwnerClass::*m_mfpProcessChildData)(const void* buffer, uint64_t size);
-		void (COwnerClass::*m_mfpCloseChild)();
+		TOwnerClass& m_rOwnerObject;
+		bool (TOwnerClass::*m_mfpIsMasterChild)(const CIdentifier& identifier);
+		void (TOwnerClass::*m_mfpOpenChild)(const CIdentifier& identifier);
+		void (TOwnerClass::*m_mfpProcessChildData)(const void* buffer, uint64_t size);
+		void (TOwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________

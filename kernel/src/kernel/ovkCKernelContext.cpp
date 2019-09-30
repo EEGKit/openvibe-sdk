@@ -29,7 +29,7 @@ using namespace Kernel;
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
 	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this)
 	  , m_algorithmManager(nullptr)
-	  , m_configurationManager(nullptr)
+	  , m_configManager(nullptr)
 	  , m_kernelObjectFactory(nullptr)
 	  , m_playerManager(nullptr)
 	  , m_pluginManager(nullptr)
@@ -64,14 +64,14 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	m_logManager.reset(new CLogManager(m_rMasterKernelContext));
 	m_logManager->activate(true);
 
-	m_configurationManager.reset(new CConfigurationManager(m_rMasterKernelContext));
+	m_configManager.reset(new CConfigurationManager(m_rMasterKernelContext));
 	// We create the configuration manager very soon to be able to deactivate the console log listener
 	if (initializationTokens.count("Kernel_SilentConsole"))
 	{
-		m_configurationManager->createConfigurationToken("Kernel_SilentConsole", initializationTokens.at("Kernel_SilentConsole").c_str());
+		m_configManager->createConfigurationToken("Kernel_SilentConsole", initializationTokens.at("Kernel_SilentConsole").c_str());
 	}
 
-	if (!m_configurationManager->expandAsBoolean("${Kernel_SilentConsole}", false))
+	if (!m_configManager->expandAsBoolean("${Kernel_SilentConsole}", false))
 	{
 		m_logListenerConsole.reset(new CLogListenerConsole(m_rMasterKernelContext, m_sApplicationName));
 		m_logListenerConsole->activate(false);
@@ -80,52 +80,52 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	}
 
 
-	m_configurationManager->createConfigurationToken("ApplicationName", m_sApplicationName);
-	m_configurationManager->createConfigurationToken("Path_UserData", Directories::getUserDataDir());
-	m_configurationManager->createConfigurationToken("Path_Log", Directories::getLogDir());
-	m_configurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
-	m_configurationManager->createConfigurationToken("Path_Lib", Directories::getLibDir());
-	m_configurationManager->createConfigurationToken("Path_Bin", Directories::getBinDir());
-	m_configurationManager->createConfigurationToken("Path_Data", Directories::getDataDir());
+	m_configManager->createConfigurationToken("ApplicationName", m_sApplicationName);
+	m_configManager->createConfigurationToken("Path_UserData", Directories::getUserDataDir());
+	m_configManager->createConfigurationToken("Path_Log", Directories::getLogDir());
+	m_configManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
+	m_configManager->createConfigurationToken("Path_Lib", Directories::getLibDir());
+	m_configManager->createConfigurationToken("Path_Bin", Directories::getBinDir());
+	m_configManager->createConfigurationToken("Path_Data", Directories::getDataDir());
 
 #if defined TARGET_OS_Windows
-	m_configurationManager->createConfigurationToken("OperatingSystem", "Windows");
+	m_configManager->createConfigurationToken("OperatingSystem", "Windows");
 #elif defined TARGET_OS_Linux
-	m_configurationManager->createConfigurationToken("OperatingSystem", "Linux");
+	m_configManager->createConfigurationToken("OperatingSystem", "Linux");
 #elif defined TARGET_OS_MacOS
-	m_configurationManager->createConfigurationToken("OperatingSystem", "MacOS");
+	m_configManager->createConfigurationToken("OperatingSystem", "MacOS");
 #else
-	m_configurationManager->createConfigurationToken("OperatingSystem", "Unknown");
+	m_configManager->createConfigurationToken("OperatingSystem", "Unknown");
 #endif
 
-	m_configurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS", "libopenvibe-plugins-*.dylib");
-	m_configurationManager->createConfigurationToken("Kernel_PluginsPatternLinux", "libopenvibe-plugins-*.so");
-	m_configurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
-	m_configurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
+	m_configManager->createConfigurationToken("Kernel_PluginsPatternMacOS", "libopenvibe-plugins-*.dylib");
+	m_configManager->createConfigurationToken("Kernel_PluginsPatternLinux", "libopenvibe-plugins-*.so");
+	m_configManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
+	m_configManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
 
-	m_configurationManager->createConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/;${Path_UserData}/metaboxes/");
+	m_configManager->createConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/;${Path_UserData}/metaboxes/");
 
-	m_configurationManager->createConfigurationToken("Kernel_MainLogLevel", "Debug");
-	m_configurationManager->createConfigurationToken("Kernel_ConsoleLogLevel", "Information");
-	m_configurationManager->createConfigurationToken("Kernel_FileLogLevel", "Debug");
-	m_configurationManager->createConfigurationToken("Kernel_PlayerFrequency", "128");
+	m_configManager->createConfigurationToken("Kernel_MainLogLevel", "Debug");
+	m_configManager->createConfigurationToken("Kernel_ConsoleLogLevel", "Information");
+	m_configManager->createConfigurationToken("Kernel_FileLogLevel", "Debug");
+	m_configManager->createConfigurationToken("Kernel_PlayerFrequency", "128");
 	// Add this two tokens to be used to know what documentation should be loaded
-	m_configurationManager->createConfigurationToken("Brand_Name", BRAND_NAME);
-	m_configurationManager->createConfigurationToken("Application_Name", OV_PROJECT_NAME);
-	m_configurationManager->createConfigurationToken("Application_Version", OV_VERSION_MAJOR "." OV_VERSION_MINOR "." OV_VERSION_PATCH);
+	m_configManager->createConfigurationToken("Brand_Name", BRAND_NAME);
+	m_configManager->createConfigurationToken("Application_Name", OV_PROJECT_NAME);
+	m_configManager->createConfigurationToken("Application_Version", OV_VERSION_MAJOR "." OV_VERSION_MINOR "." OV_VERSION_PATCH);
 
-	for (auto& token : initializationTokens) { m_configurationManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
+	for (auto& token : initializationTokens) { m_configManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
 
-	OV_ERROR_UNLESS_KRF(m_configurationManager->addConfigurationFromFile(m_sConfigurationFile),
+	OV_ERROR_UNLESS_KRF(m_configManager->addConfigurationFromFile(m_sConfigurationFile),
 						"Problem parsing config file [" << m_sConfigurationFile << "]", ErrorType::Internal);
 
-	CString l_sPathTmp = m_configurationManager->expand("${Path_UserData}");
+	CString l_sPathTmp = m_configManager->expand("${Path_UserData}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
-	l_sPathTmp = m_configurationManager->expand("${Path_Tmp}");
+	l_sPathTmp = m_configManager->expand("${Path_Tmp}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
-	l_sPathTmp = m_configurationManager->expand("${Path_Log}");
+	l_sPathTmp = m_configManager->expand("${Path_Log}");
 	FS::Files::createPath(l_sPathTmp);
 	CString l_sLogFile = l_sPathTmp + "/openvibe-" + m_sApplicationName + ".log";
 
@@ -134,22 +134,22 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	m_logListenerFile->activate(true);
 	this->getLogManager().addListener(m_logListenerFile.get());
 
-	const ELogLevel mainLogLevel    = this->earlyGetLogLevel(m_configurationManager->expand("${Kernel_MainLogLevel}"));
-	const ELogLevel consoleLogLevel = this->earlyGetLogLevel(m_configurationManager->expand("${Kernel_ConsoleLogLevel}"));
-	const ELogLevel fileLogLevel    = this->earlyGetLogLevel(m_configurationManager->expand("${Kernel_FileLogLevel}"));
+	const ELogLevel mainLogLevel    = this->earlyGetLogLevel(m_configManager->expand("${Kernel_MainLogLevel}"));
+	const ELogLevel consoleLogLevel = this->earlyGetLogLevel(m_configManager->expand("${Kernel_ConsoleLogLevel}"));
+	const ELogLevel fileLogLevel    = this->earlyGetLogLevel(m_configManager->expand("${Kernel_FileLogLevel}"));
 
 	m_logManager->activate(false);
 	m_logManager->activate(mainLogLevel, LogLevel_Last, true);
 	m_logListenerFile->activate(false);
 	m_logListenerFile->activate(fileLogLevel, LogLevel_Last, true);
-	m_logListenerFile->configure(*m_configurationManager);
-	m_logListenerFile->configure(*m_configurationManager);
+	m_logListenerFile->configure(*m_configManager);
+	m_logListenerFile->configure(*m_configManager);
 
 	if (m_logListenerConsole.get())
 	{
 		m_logListenerConsole->activate(false);
 		m_logListenerConsole->activate(consoleLogLevel, LogLevel_Last, true);
-		m_logListenerConsole->configure(*m_configurationManager);
+		m_logListenerConsole->configure(*m_configManager);
 	}
 
 	m_algorithmManager.reset(new CAlgorithmManager(m_rMasterKernelContext));
@@ -228,7 +228,7 @@ bool CKernelContext::uninitialize()
 	m_typeManager.reset();
 	m_playerManager.reset();
 	m_algorithmManager.reset();
-	m_configurationManager.reset();
+	m_configManager.reset();
 
 	this->getLogManager().removeListener(m_logListenerConsole.get());
 	this->getLogManager().removeListener(m_logListenerFile.get());
@@ -252,8 +252,8 @@ IAlgorithmManager& CKernelContext::getAlgorithmManager() const
 
 IConfigurationManager& CKernelContext::getConfigurationManager() const
 {
-	assert(m_configurationManager);
-	return *m_configurationManager;
+	assert(m_configManager);
+	return *m_configManager;
 }
 
 IKernelObjectFactory& CKernelContext::getKernelObjectFactory() const

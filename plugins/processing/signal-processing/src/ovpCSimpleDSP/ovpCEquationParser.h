@@ -22,14 +22,14 @@ class CAbstractTreeNode;
 * Used to store the optional parameter of the function used by the pseudo-VM.
 *
 */
-union functionContext
+union UFunctionContext
 {
-	double m_f64DirectValue = 0;	//if the parameter if a value (push_val)
-	double** m_ppIndirectValue;		//if it is a pointer to a value (push_var)
+	double direct_value = 0;	//if the parameter if a value (push_val)
+	double** indirect_value;		//if it is a pointer to a value (push_var)
 };
 
 //! Type of the functions in the function stack generated from the equation.
-typedef void (*functionPointer)(double*& stack, functionContext& oContext);
+typedef void (*functionPointer)(double*& stack, UFunctionContext& oContext);
 
 class CEquationParser
 {
@@ -56,9 +56,9 @@ protected:
 	//! Size of the "function context stack" (where the sucessive function context are stored)
 	const uint64_t m_ui64FunctionContextStackSize = 1024;
 	//! Pointer to the top of the function context stack
-	functionContext* m_pFunctionContextList = nullptr;
+	UFunctionContext* m_pFunctionContextList = nullptr;
 	//! Pointer to the base of the function context stack
-	functionContext* m_pFunctionContextListBase = nullptr;
+	UFunctionContext* m_pFunctionContextListBase = nullptr;
 
 	//! Size of the "local" stack
 	const uint64_t m_ui64StackSize = 1024;
@@ -130,7 +130,7 @@ public:
 		functionPointer* l_pCurrentFunction     = m_pFunctionList - 1;
 		functionPointer* l_pLastFunctionPointer = l_pCurrentFunction - m_ui64NumberOfOperations;
 
-		functionContext* l_pCurrentFunctionContext = m_pFunctionContextList - 1;
+		UFunctionContext* l_pCurrentFunctionContext = m_pFunctionContextList - 1;
 
 		//while there are function pointers
 		while (l_pCurrentFunction != l_pLastFunctionPointer)
@@ -154,43 +154,43 @@ private:
 
 public:
 
-	static void op_neg(double*& stack, functionContext& ctx);
-	static void op_add(double*& stack, functionContext& ctx);
-	static void op_div(double*& stack, functionContext& ctx);
-	static void op_sub(double*& stack, functionContext& ctx);
-	static void op_mul(double*& stack, functionContext& ctx);
+	static void op_neg(double*& stack, UFunctionContext& ctx);
+	static void op_add(double*& stack, UFunctionContext& ctx);
+	static void op_div(double*& stack, UFunctionContext& ctx);
+	static void op_sub(double*& stack, UFunctionContext& ctx);
+	static void op_mul(double*& stack, UFunctionContext& ctx);
 
-	static void op_power(double*& stack, functionContext& ctx);
+	static void op_power(double*& stack, UFunctionContext& ctx);
 
-	static void op_abs(double*& stack, functionContext& ctx);
-	static void op_acos(double*& stack, functionContext& ctx);
-	static void op_asin(double*& stack, functionContext& ctx);
-	static void op_atan(double*& stack, functionContext& ctx);
-	static void op_ceil(double*& stack, functionContext& ctx);
-	static void op_cos(double*& stack, functionContext& ctx);
-	static void op_exp(double*& stack, functionContext& ctx);
-	static void op_floor(double*& stack, functionContext& ctx);
-	static void op_log(double*& stack, functionContext& ctx);
-	static void op_log10(double*& stack, functionContext& ctx);
-	static void op_rand(double*& stack, functionContext& ctx);
-	static void op_sin(double*& stack, functionContext& ctx);
-	static void op_sqrt(double*& stack, functionContext& ctx);
-	static void op_tan(double*& stack, functionContext& ctx);
+	static void op_abs(double*& stack, UFunctionContext& ctx);
+	static void op_acos(double*& stack, UFunctionContext& ctx);
+	static void op_asin(double*& stack, UFunctionContext& ctx);
+	static void op_atan(double*& stack, UFunctionContext& ctx);
+	static void op_ceil(double*& stack, UFunctionContext& ctx);
+	static void op_cos(double*& stack, UFunctionContext& ctx);
+	static void op_exp(double*& stack, UFunctionContext& ctx);
+	static void op_floor(double*& stack, UFunctionContext& ctx);
+	static void op_log(double*& stack, UFunctionContext& ctx);
+	static void op_log10(double*& stack, UFunctionContext& ctx);
+	static void op_rand(double*& stack, UFunctionContext& ctx);
+	static void op_sin(double*& stack, UFunctionContext& ctx);
+	static void op_sqrt(double*& stack, UFunctionContext& ctx);
+	static void op_tan(double*& stack, UFunctionContext& ctx);
 
-	static void op_if_then_else(double*& stack, functionContext& ctx);
+	static void op_if_then_else(double*& stack, UFunctionContext& ctx);
 
-	static void op_cmp_lower(double*& stack, functionContext& ctx);
-	static void op_cmp_greater(double*& stack, functionContext& ctx);
-	static void op_cmp_lower_equal(double*& stack, functionContext& ctx);
-	static void op_cmp_greater_equal(double*& stack, functionContext& ctx);
-	static void op_cmp_equal(double*& stack, functionContext& ctx);
-	static void op_cmp_not_equal(double*& stack, functionContext& ctx);
+	static void op_cmp_lower(double*& stack, UFunctionContext& ctx);
+	static void op_cmp_greater(double*& stack, UFunctionContext& ctx);
+	static void op_cmp_lower_equal(double*& stack, UFunctionContext& ctx);
+	static void op_cmp_greater_equal(double*& stack, UFunctionContext& ctx);
+	static void op_cmp_equal(double*& stack, UFunctionContext& ctx);
+	static void op_cmp_not_equal(double*& stack, UFunctionContext& ctx);
 
-	static void op_bool_and(double*& stack, functionContext& ctx);
-	static void op_bool_or(double*& stack, functionContext& ctx);
-	static void op_bool_not(double*& stack, functionContext& ctx);
-	static void op_bool_xor(double*& stack, functionContext& ctx);
+	static void op_bool_and(double*& stack, UFunctionContext& ctx);
+	static void op_bool_or(double*& stack, UFunctionContext& ctx);
+	static void op_bool_not(double*& stack, UFunctionContext& ctx);
+	static void op_bool_xor(double*& stack, UFunctionContext& ctx);
 
-	static void op_loadVal(double*& stack, functionContext& ctx);
-	static void op_loadVar(double*& stack, functionContext& ctx);
+	static void op_loadVal(double*& stack, UFunctionContext& ctx);
+	static void op_loadVar(double*& stack, UFunctionContext& ctx);
 };

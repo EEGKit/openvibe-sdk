@@ -11,7 +11,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		enum SchedulerInitializationCode
+		enum ESchedulerInitializationCode
 		{
 			SchedulerInitialization_Success,
 			SchedulerInitialization_BoxInitializationFailed,
@@ -34,7 +34,7 @@ namespace OpenViBE
 
 			bool isHoldingResources() const;
 
-			SchedulerInitializationCode initialize();
+			ESchedulerInitializationCode initialize();
 			bool uninitialize();
 			bool loop();
 

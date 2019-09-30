@@ -146,12 +146,12 @@ namespace OpenViBE
 		static std::string pathFromEnv(const char* sEnvVar, const char* sDefaultPath)
 		{
 #if defined TARGET_OS_Windows
-			// Using std::getenv on Windows yields UTF7 strings which do not work with the utf8_to_utf16 function
+			// Using std::getenv on Windows yields UTF7 strings which do not work with the Utf8ToUtf16 function
 			// as this seems to be the only place where we actually get UTF7, let's get it as UTF16 by default
-			DWORD wideBufferSize = GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), nullptr, 0);
+			DWORD wideBufferSize = GetEnvironmentVariableW(Common::Converter::Utf8ToUtf16(sEnvVar).c_str(), nullptr, 0);
 			if (wideBufferSize == 0) { return convertPath(sDefaultPath); }
 			std::unique_ptr<wchar_t> utf16value(new wchar_t[wideBufferSize]);
-			GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), utf16value.get(), wideBufferSize);
+			GetEnvironmentVariableW(Common::Converter::Utf8ToUtf16(sEnvVar).c_str(), utf16value.get(), wideBufferSize);
 
 			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
 			if (multiByteSize == 0) { return convertPath(sDefaultPath); }

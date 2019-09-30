@@ -8,14 +8,14 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass>
+	template <class TOwnerClass>
 	class TReaderCallbackProxy1 final : public IReaderCallback
 	{
 	public:
-		TReaderCallbackProxy1(COwnerClass& rOwnerObject,
-							  void (COwnerClass::*mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue,
+		TReaderCallbackProxy1(TOwnerClass& rOwnerObject,
+							  void (TOwnerClass::*mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue,
 																uint64_t nAttribute),
-							  void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)())
+							  void (TOwnerClass::*mfpProcessChildData)(const char* sData), void (TOwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
 		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) override
@@ -27,10 +27,10 @@ namespace XML
 		void closeChild() override { if (m_mfpCloseChild) { m_rOwnerObject.m_mfpCloseChild(); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
-		void (COwnerClass::*m_mfpProcessChildData)(const char* sData);
-		void (COwnerClass::*m_mfpCloseChild)();
+		TOwnerClass& m_rOwnerObject;
+		void (TOwnerClass::*m_mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
+		void (TOwnerClass::*m_mfpProcessChildData)(const char* sData);
+		void (TOwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________

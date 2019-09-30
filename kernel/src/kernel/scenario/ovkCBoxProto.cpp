@@ -15,10 +15,10 @@ bool CBoxProto::addInput(const CString& name, const CIdentifier& typeID, const C
 {
 	if (!m_rBox.addInput(name, typeID, identifier, bNotify)) { return false; }
 
-	char l_sBuffer[1024];
-	sprintf(l_sBuffer, "%d", m_rBox.getInputCount());
-	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, l_sBuffer); }
-	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialInputCount, l_sBuffer); }
+	char buffer[1024];
+	sprintf(buffer, "%d", m_rBox.getInputCount());
+	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount)) { m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, buffer); }
+	else { m_rBox.addAttribute(OV_AttributeId_Box_InitialInputCount, buffer); }
 
 	return true;
 }

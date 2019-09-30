@@ -31,11 +31,11 @@ namespace OpenViBE
 
 			//@}
 			IAlgorithmManager& getAlgorithmManager() const override { return m_rAlgorithmManager; }
-			IConfigurationManager& getConfigurationManager() const override { return m_rConfigurationManager; }
+			IConfigurationManager& getConfigurationManager() const override { return m_configManager; }
 			ILogManager& getLogManager() const override { return m_BoxLogManager; }
-			IErrorManager& getErrorManager() const override { return m_rErrorManager; }
+			IErrorManager& getErrorManager() const override { return m_errorManager; }
 			IScenarioManager& getScenarioManager() const override { return m_rScenarioManager; }
-			ITypeManager& getTypeManager() const override { return m_rTypeManager; }
+			ITypeManager& getTypeManager() const override { return m_typeManager; }
 			bool canCreatePluginObject(const CIdentifier& pluginID) const override { return m_rPluginManager.canCreatePluginObject(pluginID); }
 			Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginID) const override { return m_rPluginManager.createPluginObject(pluginID); }
 			bool releasePluginObject(Plugins::IPluginObject* pluginObject) const override { return m_rPluginManager.releasePluginObject(pluginObject); }
@@ -47,11 +47,11 @@ namespace OpenViBE
 			CSimulatedBox& m_rSimulatedBox;
 			IPluginManager& m_rPluginManager;
 			IAlgorithmManager& m_rAlgorithmManager;
-			IConfigurationManager& m_rConfigurationManager;
-			ILogManager& m_rLogManager;
-			IErrorManager& m_rErrorManager;
+			IConfigurationManager& m_configManager;
+			ILogManager& m_logManager;
+			IErrorManager& m_errorManager;
 			IScenarioManager& m_rScenarioManager;
-			ITypeManager& m_rTypeManager;
+			ITypeManager& m_typeManager;
 			mutable CBoxAlgorithmLogManager m_BoxLogManager;
 		};
 	} // namespace Kernel

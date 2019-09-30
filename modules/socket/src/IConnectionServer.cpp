@@ -24,11 +24,11 @@ namespace Socket
 		{
 			if (!open()) { return false; }
 
-			int l_iReuseAddress = 1;
+			int reuseAddress = 1;
 #if defined TARGET_OS_Windows
-			setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&l_iReuseAddress), sizeof(l_iReuseAddress));
+			setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&reuseAddress), sizeof(reuseAddress));
 #else
-			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, &l_iReuseAddress, sizeof(l_iReuseAddress));
+			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, &reuseAddress, sizeof(reuseAddress));
 #endif
 
 			struct sockaddr_in l_oLocalHostAddress;

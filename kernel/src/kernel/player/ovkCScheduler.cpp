@@ -330,7 +330,7 @@ bool CScheduler::flattenScenario()
 	return true;
 }
 
-SchedulerInitializationCode CScheduler::initialize()
+ESchedulerInitializationCode CScheduler::initialize()
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 

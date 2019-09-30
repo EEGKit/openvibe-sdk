@@ -41,7 +41,7 @@ namespace OpenViBE
 			const IKernelContext& m_rMasterKernelContext;
 
 			std::unique_ptr<IAlgorithmManager> m_algorithmManager;
-			std::unique_ptr<IConfigurationManager> m_configurationManager;
+			std::unique_ptr<IConfigurationManager> m_configManager;
 			std::unique_ptr<IKernelObjectFactory> m_kernelObjectFactory;
 			std::unique_ptr<IPlayerManager> m_playerManager;
 			std::unique_ptr<IPluginManager> m_pluginManager;
@@ -70,7 +70,7 @@ namespace OpenViBE
 			bool uninitialize() override { return true; }
 
 			void setAlgorithmManager(IAlgorithmManager* manager) { m_algorithmManager = manager; }
-			void setConfigurationManager(IConfigurationManager* manager) { m_configurationManager = manager; }
+			void setConfigurationManager(IConfigurationManager* manager) { m_configManager = manager; }
 			void setKernelObjectFactory(IKernelObjectFactory* kernelObjectFactory) { m_kernelObjectFactory = kernelObjectFactory; }
 			void setPlayerManager(IPlayerManager* manager) { m_playerManager = manager; }
 			void setPluginManager(IPluginManager* manager) { m_pluginManager = manager; }
@@ -87,7 +87,7 @@ namespace OpenViBE
 
 			IConfigurationManager& getConfigurationManager() const override
 			{
-				return m_configurationManager ? *m_configurationManager : m_kernelContext.getConfigurationManager();
+				return m_configManager ? *m_configManager : m_kernelContext.getConfigurationManager();
 			}
 
 			IKernelObjectFactory& getKernelObjectFactory() const override
@@ -110,7 +110,7 @@ namespace OpenViBE
 			const IKernelContext& m_kernelContext;
 
 			mutable IAlgorithmManager* m_algorithmManager         = nullptr;
-			mutable IConfigurationManager* m_configurationManager = nullptr;
+			mutable IConfigurationManager* m_configManager = nullptr;
 			mutable IKernelObjectFactory* m_kernelObjectFactory   = nullptr;
 			mutable IPlayerManager* m_playerManager               = nullptr;
 			mutable IPluginManager* m_pluginManager               = nullptr;

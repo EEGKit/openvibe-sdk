@@ -18,7 +18,7 @@ namespace Common
 			ResamplerStoreMode_SampleWise,
 		} EResamplerStoreMode;
 
-		template <class TFloat, EResamplerStoreMode eStoreMode>
+		template <class TFloat, EResamplerStoreMode TStoreMode>
 		class TResampler
 		{
 		public:
@@ -33,7 +33,7 @@ namespace Common
 
 		private:
 
-			TResampler(const TResampler<TFloat, eStoreMode>&) = default;
+			TResampler(const TResampler<TFloat, TStoreMode>&) = default;
 
 		public:
 
@@ -43,15 +43,15 @@ namespace Common
 			TResampler()
 			{
 				this->clear();
-				switch (eStoreMode)
+				switch (TStoreMode)
 				{
 					case ResamplerStoreMode_ChannelWise:
-						m_fpResample = &TResampler<TFloat, eStoreMode>::resample_channel_wise;
-						m_fpResampleDirect = &TResampler<TFloat, eStoreMode>::resample_channel_wise;
+						m_fpResample = &TResampler<TFloat, TStoreMode>::resample_channel_wise;
+						m_fpResampleDirect = &TResampler<TFloat, TStoreMode>::resample_channel_wise;
 						break;
 					case ResamplerStoreMode_SampleWise:
-						m_fpResample = &TResampler<TFloat, eStoreMode>::resample_sample_wise;
-						m_fpResampleDirect = &TResampler<TFloat, eStoreMode>::resample_sample_wise;
+						m_fpResample = &TResampler<TFloat, TStoreMode>::resample_sample_wise;
+						m_fpResampleDirect = &TResampler<TFloat, TStoreMode>::resample_sample_wise;
 						break;
 					default:
 						assert(false);
@@ -455,8 +455,8 @@ namespace Common
 
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn);
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn,
+			size_t (TResampler<TFloat, TStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn);
+			size_t (TResampler<TFloat, TStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn,
 																		 size_t ui32OutputSampleCount);
 		};
 

@@ -8,9 +8,9 @@ using namespace Kernel;
 
 CPlayerContext::CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox)
 	: TKernelObject<IPlayerContext>(ctx), m_rSimulatedBox(*pSimulatedBox), m_rPluginManager(ctx.getPluginManager()),
-	  m_rAlgorithmManager(ctx.getAlgorithmManager()), m_rConfigurationManager(ctx.getConfigurationManager()),
-	  m_rLogManager(ctx.getLogManager()), m_rErrorManager(ctx.getErrorManager()), m_rScenarioManager(ctx.getScenarioManager()),
-	  m_rTypeManager(ctx.getTypeManager()), m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox) {}
+	  m_rAlgorithmManager(ctx.getAlgorithmManager()), m_configManager(ctx.getConfigurationManager()),
+	  m_logManager(ctx.getLogManager()), m_errorManager(ctx.getErrorManager()), m_rScenarioManager(ctx.getScenarioManager()),
+	  m_typeManager(ctx.getTypeManager()), m_BoxLogManager(*this, m_logManager, m_rSimulatedBox) {}
 
 bool CPlayerContext::sendSignal(const CMessageSignal& /*messageSignal*/)
 {

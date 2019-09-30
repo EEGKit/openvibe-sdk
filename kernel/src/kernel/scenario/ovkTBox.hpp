@@ -21,10 +21,10 @@
 
 namespace
 {
-	std::map<OpenViBE::Kernel::BoxInterfacorType, OpenViBE::CString> g_InterfacorTypeToName = {
-		{ OpenViBE::Kernel::BoxInterfacorType::Setting, "Setting" },
-		{ OpenViBE::Kernel::BoxInterfacorType::Input, "Input" },
-		{ OpenViBE::Kernel::BoxInterfacorType::Output, "Output" }
+	std::map<OpenViBE::Kernel::EBoxInterfacorType, OpenViBE::CString> g_InterfacorTypeToName = {
+		{ OpenViBE::Kernel::EBoxInterfacorType::Setting, "Setting" },
+		{ OpenViBE::Kernel::EBoxInterfacorType::Input, "Input" },
+		{ OpenViBE::Kernel::EBoxInterfacorType::Output, "Output" }
 	};
 	//This class is used to set up the restriction of a stream type for input and output. Each box comes with a
 	// decriptor that call functions describe in IBoxProto for intialize the CBox object.
@@ -324,7 +324,7 @@ namespace OpenViBE
 			//                                                                   //
 
 
-			bool addInterfacor(const BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier, bool shouldNotify) override
+			bool addInterfacor(const EBoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier, bool shouldNotify) override
 			{
 				switch (interfacorType)
 				{
@@ -382,7 +382,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool removeInterfacor(const BoxInterfacorType interfacorType, const uint32_t index, const bool shouldNotify = true) override
+			bool removeInterfacor(const EBoxInterfacorType interfacorType, const uint32_t index, const bool shouldNotify = true) override
 			{
 				switch (interfacorType)
 				{
@@ -397,15 +397,15 @@ namespace OpenViBE
 				return false;
 			}
 
-			uint32_t getInterfacorCount(const BoxInterfacorType interfacorType) const override
+			uint32_t getInterfacorCount(const EBoxInterfacorType interfacorType) const override
 			{
 				auto interfacors = m_interfacors.at(interfacorType);
 				return uint32_t(std::count_if(interfacors.begin(), interfacors.end(), [](const std::shared_ptr<CInterfacor>& i) { return !i->m_bDeprecated; }));
 			}
 
-			uint32_t getInterfacorCountIncludingDeprecated(const BoxInterfacorType interfacorType) const override { return uint32_t(m_interfacors.at(interfacorType).size()); }
+			uint32_t getInterfacorCountIncludingDeprecated(const EBoxInterfacorType interfacorType) const override { return uint32_t(m_interfacors.at(interfacorType).size()); }
 
-			bool getInterfacorIdentifier(const BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& identifier) const override
+			bool getInterfacorIdentifier(const EBoxInterfacorType interfacorType, const uint32_t index, CIdentifier& identifier) const override
 			{
 				identifier = OV_UndefinedIdentifier;
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
@@ -417,7 +417,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool getInterfacorIndex(const BoxInterfacorType interfacorType, const CIdentifier& identifier, uint32_t& index) const override
+			bool getInterfacorIndex(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, uint32_t& index) const override
 			{
 				index         = OV_Value_UndefinedIndexUInt;
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
@@ -429,7 +429,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool getInterfacorIndex(const BoxInterfacorType interfacorType, const CString& name, uint32_t& index) const override
+			bool getInterfacorIndex(const EBoxInterfacorType interfacorType, const CString& name, uint32_t& index) const override
 			{
 				index         = OV_Value_UndefinedIndexUInt;
 				const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
@@ -440,7 +440,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool getInterfacorType(const BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeID) const override
+			bool getInterfacorType(const EBoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeID) const override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
@@ -450,7 +450,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool getInterfacorType(const BoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeID) const override
+			bool getInterfacorType(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeID) const override
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
@@ -460,7 +460,7 @@ namespace OpenViBE
 				return this->getInterfacorType(interfacorType, it->second, typeID);
 			}
 
-			bool getInterfacorType(const BoxInterfacorType interfacorType, const CString& name, CIdentifier& typeID) const override
+			bool getInterfacorType(const EBoxInterfacorType interfacorType, const CString& name, CIdentifier& typeID) const override
 			{
 				const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
@@ -470,7 +470,7 @@ namespace OpenViBE
 			}
 
 
-			bool getInterfacorName(const BoxInterfacorType interfacorType, const uint32_t index, CString& name) const override
+			bool getInterfacorName(const EBoxInterfacorType interfacorType, const uint32_t index, CString& name) const override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
@@ -481,7 +481,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool getInterfacorName(const BoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const override
+			bool getInterfacorName(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const override
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
@@ -491,7 +491,7 @@ namespace OpenViBE
 				return this->getInputName(it->second, name);
 			}
 
-			bool getInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const uint32_t index, bool& value) const override
+			bool getInterfacorDeprecatedStatus(const EBoxInterfacorType interfacorType, const uint32_t index, bool& value) const override
 			{
 				if (index >= m_interfacors.at(interfacorType).size()) { OV_WARNING_K("DUH"); }
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
@@ -503,7 +503,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool getInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const override
+			bool getInterfacorDeprecatedStatus(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const override
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
@@ -513,11 +513,11 @@ namespace OpenViBE
 				return this->getInterfacorDeprecatedStatus(interfacorType, it->second, value);
 			}
 
-			bool hasInterfacorWithIdentifier(const BoxInterfacorType interfacorType, const CIdentifier& identifier) const override { return m_interfacorIDToIdx.at(interfacorType).find(identifier) != m_interfacorIDToIdx.at(interfacorType).end(); }
+			bool hasInterfacorWithIdentifier(const EBoxInterfacorType interfacorType, const CIdentifier& identifier) const override { return m_interfacorIDToIdx.at(interfacorType).find(identifier) != m_interfacorIDToIdx.at(interfacorType).end(); }
 
-			bool hasInterfacorWithNameAndType(const BoxInterfacorType interfacorType, const CString& name, const CIdentifier& /*typeID*/) const override { return m_interfacorNameToIdx.at(interfacorType).find(name) != m_interfacorNameToIdx.at(interfacorType).end(); }
+			bool hasInterfacorWithNameAndType(const EBoxInterfacorType interfacorType, const CString& name, const CIdentifier& /*typeID*/) const override { return m_interfacorNameToIdx.at(interfacorType).find(name) != m_interfacorNameToIdx.at(interfacorType).end(); }
 
-			bool hasInterfacorWithType(const BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) const override
+			bool hasInterfacorWithType(const EBoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) const override
 			{
 				if (index < this->getInterfacorCount(interfacorType))
 				{
@@ -529,7 +529,7 @@ namespace OpenViBE
 			}
 
 
-			bool setInterfacorType(const BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) override
+			bool setInterfacorType(const EBoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeID) override
 			{
 				switch (interfacorType)
 				{
@@ -570,7 +570,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool setInterfacorType(const BoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeID) override
+			bool setInterfacorType(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeID) override
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
@@ -580,7 +580,7 @@ namespace OpenViBE
 				return this->setInterfacorType(interfacorType, it->second, typeID);
 			}
 
-			bool setInterfacorType(const BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) override
+			bool setInterfacorType(const EBoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeID) override
 			{
 				const auto it = m_interfacorNameToIdx[interfacorType].find(name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx[interfacorType].end(),
@@ -590,7 +590,7 @@ namespace OpenViBE
 			}
 
 
-			bool setInterfacorName(const BoxInterfacorType interfacorType, const uint32_t index, const CString& newName) override
+			bool setInterfacorName(const EBoxInterfacorType interfacorType, const uint32_t index, const CString& newName) override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors[interfacorType].size(),
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
@@ -635,7 +635,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool setInterfacorName(const BoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& newName) override
+			bool setInterfacorName(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& newName) override
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
@@ -645,7 +645,7 @@ namespace OpenViBE
 				return this->setInterfacorName(interfacorType, it->second, newName);
 			}
 
-			bool setInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const uint32_t index, const bool newValue) override
+			bool setInterfacorDeprecatedStatus(const EBoxInterfacorType interfacorType, const uint32_t index, const bool newValue) override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors[interfacorType].size(),
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
@@ -657,7 +657,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool setInterfacorDeprecatedStatus(const BoxInterfacorType interfacorType, const CIdentifier& identifier, const bool newValue) override
+			bool setInterfacorDeprecatedStatus(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, const bool newValue) override
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
@@ -885,7 +885,7 @@ namespace OpenViBE
 			bool setOutputType(const uint32_t index, const CIdentifier& typeID) override { return this->setInterfacorType(Output, index, typeID); }
 			bool setOutputName(const uint32_t index, const CString& rName) override { return this->setInterfacorName(Output, index, rName); }
 
-			bool addInterfacorTypeSupport(const BoxInterfacorType interfacorType, const CIdentifier& typeID) override
+			bool addInterfacorTypeSupport(const EBoxInterfacorType interfacorType, const CIdentifier& typeID) override
 			{
 				if (interfacorType == Input) { m_supportInputTypes.push_back(typeID); }
 				else if (interfacorType == Output) { m_supportOutputTypes.push_back(typeID); }
@@ -893,7 +893,7 @@ namespace OpenViBE
 				return false;
 			}
 
-			bool hasInterfacorTypeSupport(const BoxInterfacorType interfacorType, const CIdentifier& typeID) const override
+			bool hasInterfacorTypeSupport(const EBoxInterfacorType interfacorType, const CIdentifier& typeID) const override
 			{
 				if (interfacorType == Input)
 				{
@@ -941,7 +941,7 @@ namespace OpenViBE
 			void clearInputSupportTypes() override { m_supportInputTypes.clear(); }
 
 		private:
-			CIdentifier getUnusedInterfacorIdentifier(const BoxInterfacorType interfacorType, const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedInterfacorIdentifier(const EBoxInterfacorType interfacorType, const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
 				uint64_t identifier = System::Math::randomUInteger64();
 				if (suggestedIdentifier != OV_UndefinedIdentifier) { identifier = suggestedIdentifier.toUInteger(); }
@@ -1298,7 +1298,7 @@ namespace OpenViBE
 				return this->setSettingMod(it->second, rValue);
 			}
 
-			bool swapInterfacors(const BoxInterfacorType interfacorType, const uint32_t indexA, const uint32_t indexB)
+			bool swapInterfacors(const EBoxInterfacorType interfacorType, const uint32_t indexA, const uint32_t indexB)
 			{
 				OV_ERROR_UNLESS_KRF(indexA < m_interfacors.at(interfacorType).size(),
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << uint32_t(
@@ -1336,14 +1336,14 @@ namespace OpenViBE
 			bool swapInputs(const uint32_t indexA, const uint32_t indexB) override { return this->swapInterfacors(Input, indexA, indexB); }
 			bool swapOutputs(const uint32_t indexA, const uint32_t indexB) override { return this->swapInterfacors(Output, indexA, indexB); }
 
-			void notifySettingChange(const BoxEventMessageType eType, const int firstIdx = -1, const int secondIdx = -1)
+			void notifySettingChange(const EBoxEventMessageType eType, const int firstIdx = -1, const int secondIdx = -1)
 			{
 				if (m_isObserverNotificationActive)
 				{
 					BoxEventMessage l_oEvent;
-					l_oEvent.m_eType          = eType;
-					l_oEvent.m_i32FirstIndex  = firstIdx;
-					l_oEvent.m_i32SecondIndex = secondIdx;
+					l_oEvent.m_Type          = eType;
+					l_oEvent.m_FirstIndex  = firstIdx;
+					l_oEvent.m_SecondIndex = secondIdx;
 
 					this->setChanged();
 					this->notifyObservers(&l_oEvent);
@@ -1364,7 +1364,7 @@ namespace OpenViBE
 				return l_pReturn;
 			}
 
-			bool updateInterfacorIdentifier(const BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newID) override
+			bool updateInterfacorIdentifier(const EBoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newID) override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
@@ -1469,8 +1469,8 @@ namespace OpenViBE
 			CIdentifier m_algorithmClassID = OV_UndefinedIdentifier;
 			CString m_name                 = "unnamed";
 
-			std::map<BoxInterfacorType, std::map<CIdentifier, uint32_t>> m_interfacorIDToIdx;
-			std::map<BoxInterfacorType, std::map<CString, uint32_t>> m_interfacorNameToIdx;
+			std::map<EBoxInterfacorType, std::map<CIdentifier, uint32_t>> m_interfacorIDToIdx;
+			std::map<EBoxInterfacorType, std::map<CString, uint32_t>> m_interfacorNameToIdx;
 
 			//to avoid having to recheck every setting every time
 			//careful to update at each setting modification
@@ -1479,7 +1479,7 @@ namespace OpenViBE
 			std::vector<CIdentifier> m_supportInputTypes;
 			std::vector<CIdentifier> m_supportOutputTypes;
 		private:
-			std::map<BoxInterfacorType, std::vector<std::shared_ptr<CInterfacor>>> m_interfacors;
+			std::map<EBoxInterfacorType, std::vector<std::shared_ptr<CInterfacor>>> m_interfacors;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

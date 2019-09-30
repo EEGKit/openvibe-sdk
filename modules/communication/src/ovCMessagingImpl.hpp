@@ -17,7 +17,7 @@
 
 namespace Communication
 {
-	struct CMessaging::MessagingImplementation
+	struct CMessaging::SMessagingImpl
 	{
 		std::string m_ConnectionID;
 		BoxDescriptionMessage m_BoxDescription;

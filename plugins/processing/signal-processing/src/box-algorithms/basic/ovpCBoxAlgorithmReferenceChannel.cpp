@@ -12,44 +12,44 @@ using namespace SignalProcessing;
 
 namespace
 {
-	uint32_t _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
+	uint32_t FindChannel(const IMatrix& matrix, const CString& channel, const CIdentifier& matchMethodID, const uint32_t start = 0)
 	{
-		uint32_t l_ui32Result = std::numeric_limits<uint32_t>::max();
+		uint32_t res = std::numeric_limits<uint32_t>::max();
 
-		if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Name)
+		if (matchMethodID == OVP_TypeId_MatchMethod_Name)
 		{
-			for (uint32_t i = uiStart; i < rMatrix.getDimensionSize(0); i++)
+			for (uint32_t i = start; i < matrix.getDimensionSize(0); i++)
 			{
-				if (OpenViBEToolkit::Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false)) { l_ui32Result = i; }
+				if (OpenViBEToolkit::Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
 			}
 		}
-		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Index)
+		else if (matchMethodID == OVP_TypeId_MatchMethod_Index)
 		{
 			try
 			{
-				uint32_t value = std::stoul(rChannel.toASCIIString());
+				uint32_t value = std::stoul(channel.toASCIIString());
 				value--; // => makes it 0-indexed !
 
-				if (uiStart <= uint32_t(value) && uint32_t(value) < rMatrix.getDimensionSize(0)) { l_ui32Result = uint32_t(value); }
+				if (start <= uint32_t(value) && uint32_t(value) < matrix.getDimensionSize(0)) { res = uint32_t(value); }
 			}
 			catch (const std::exception&)
 			{
 				// catch block intentionnaly left blank
 			}
 		}
-		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
+		else if (matchMethodID == OVP_TypeId_MatchMethod_Smart)
 		{
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max())
+			if (res == std::numeric_limits<uint32_t>::max())
 			{
-				l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
+				res = FindChannel(matrix, channel, OVP_TypeId_MatchMethod_Name, start);
 			}
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max())
+			if (res == std::numeric_limits<uint32_t>::max())
 			{
-				l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+				res = FindChannel(matrix, channel, OVP_TypeId_MatchMethod_Index, start);
 			}
 		}
 
-		return l_ui32Result;
+		return res;
 	}
 } // namespace
 
@@ -97,12 +97,12 @@ bool CBoxAlgorithmReferenceChannel::process()
 			CString l_sChannel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			uint64_t l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-			m_ui32ReferenceChannelIndex = _find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
+			m_ui32ReferenceChannelIndex = FindChannel(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
 
 			OV_ERROR_UNLESS_KRF(m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
 								"Invalid channel [" << l_sChannel << "]: channel not found", OpenViBE::Kernel::ErrorType::BadSetting);
 
-			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::
+			if (FindChannel(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::
 				max()) { OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]"); }
 
 			l_rOutputMatrix.setDimensionCount(2);

@@ -48,9 +48,9 @@ namespace OpenViBE
 		public:
 
 			CConfigurationManagerEntryEnumeratorCallBack(ILogManager& rLogManager, IErrorManager& rErrorManager, IConfigurationManager& rConfigurationManger)
-				: m_rLogManager(rLogManager),
-				  m_rErrorManager(rErrorManager),
-				  m_rConfigurationManager(rConfigurationManger) { }
+				: m_logManager(rLogManager),
+				  m_errorManager(rErrorManager),
+				  m_configManager(rConfigurationManger) { }
 
 			static std::string reduce(const std::string& sValue)
 			{
@@ -70,10 +70,10 @@ namespace OpenViBE
 				std::ifstream l_oFile;
 				FS::Files::openIFStream(l_oFile, rEntry.getName());
 
-				OV_ERROR_UNLESS(l_oFile.good(), "Could not open file " << CString(rEntry.getName()), ErrorType::ResourceNotFound, false, m_rErrorManager,
-								m_rLogManager);
+				OV_ERROR_UNLESS(l_oFile.good(), "Could not open file " << CString(rEntry.getName()), ErrorType::ResourceNotFound, false, m_errorManager,
+								m_logManager);
 
-				m_rLogManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << "\n";
+				m_logManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << "\n";
 
 				do
 				{
@@ -97,52 +97,52 @@ namespace OpenViBE
 					{
 						OV_ERROR_UNLESS((eq=l_sLine.find("=")) != std::string::npos,
 										"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()),
-										ErrorType::BadFileParsing, false, m_rErrorManager, m_rLogManager);
+										ErrorType::BadFileParsing, false, m_errorManager, m_logManager);
 
 						std::string l_sTokenName(reduce(l_sLine.substr(0, eq)));
 						std::string l_sTokenValue(reduce(l_sLine.substr(eq + 1, l_sLine.length() - eq)));
 						if (l_sTokenName == "Include")
 						{
-							CString l_sWildcard = m_rConfigurationManager.expand(l_sTokenValue.c_str());
-							m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << "...\n";
-							m_rConfigurationManager.addConfigurationFromFile(l_sWildcard);
-							m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << " done...\n";
+							CString l_sWildcard = m_configManager.expand(l_sTokenValue.c_str());
+							m_logManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << "...\n";
+							m_configManager.addConfigurationFromFile(l_sWildcard);
+							m_logManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << " done...\n";
 						}
 						else
 						{
-							CIdentifier l_oTokenIdentifier = m_rConfigurationManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
+							CIdentifier l_oTokenIdentifier = m_configManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
 							if (l_oTokenIdentifier == OV_UndefinedIdentifier)
 							{
-								m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(
+								m_logManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(
 									l_sTokenValue.c_str()) << "\n";
-								m_rConfigurationManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
+								m_configManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
 							}
 							else
 							{
-								m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(
+								m_logManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(
 									l_sTokenValue.c_str()) << "\n";
 
 								// warning if base token are overwritten here
 								OV_WARNING_UNLESS(l_sTokenName != "Path_UserData" && l_sTokenName != "Path_Log" && l_sTokenName != "Path_Tmp"
 												  && l_sTokenName != "Path_Lib" && l_sTokenName != "Path_Bin" && l_sTokenName != "OperatingSystem",
-												  "Overwriting critical token " << l_sTokenName.c_str(), m_rLogManager);
+												  "Overwriting critical token " << l_sTokenName.c_str(), m_logManager);
 
-								m_rConfigurationManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
+								m_configManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
 							}
 						}
 					}
 				} while (!l_oFile.eof());
 
-				m_rLogManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << " finished\n";
+				m_logManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << " finished\n";
 
 				return true;
 			}
 
 		protected:
 
-			ILogManager& m_rLogManager;
-			IErrorManager& m_rErrorManager;
-			IConfigurationManager& m_rConfigurationManager;
+			ILogManager& m_logManager;
+			IErrorManager& m_errorManager;
+			IConfigurationManager& m_configManager;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

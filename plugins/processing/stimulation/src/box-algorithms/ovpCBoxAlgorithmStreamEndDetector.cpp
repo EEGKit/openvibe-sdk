@@ -9,13 +9,13 @@ using namespace Stimulation;
 
 bool CBoxAlgorithmStreamEndDetector::initialize()
 {
-	m_StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), id_SettingStimulationName());
+	m_StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), settingStimulationNameID());
 
-	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(BoxInterfacorType::Input, id_InputEBML(), m_InputEBMLIndex),
-					  "Box does not have input with identifier " << id_InputEBML(),
+	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(EBoxInterfacorType::Input, inputEBMLId(), m_InputEBMLIndex),
+					  "Box does not have input with identifier " << inputEBMLId(),
 					  ErrorType::Internal);
-	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(BoxInterfacorType::Output, id_OutputStimulations(), m_OutputStimulationsIndex),
-					  "Box does not have output with identifier " << id_OutputStimulations(),
+	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(EBoxInterfacorType::Output, outputStimulationsID(), m_OutputStimulationsIndex),
+					  "Box does not have output with identifier " << outputStimulationsID(),
 					  ErrorType::Internal);
 
 	m_StructureDecoder.initialize(*this, m_InputEBMLIndex);

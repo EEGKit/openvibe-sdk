@@ -8,18 +8,18 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass>
+	template <class TOwnerClass>
 	class TWriterCallbackProxy1 final : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy1(COwnerClass& rOwnerObject, void (COwnerClass::*mfpWrite)(const char* sString)) : m_rOwnerObject(rOwnerObject),
+		TWriterCallbackProxy1(TOwnerClass& rOwnerObject, void (TOwnerClass::*mfpWrite)(const char* sString)) : m_rOwnerObject(rOwnerObject),
 																											   m_mfpWrite(mfpWrite) { }
 
 		void write(const char* sString) override { if (m_mfpWrite) { m_rOwnerObject.m_mfpWrite(sString); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpWrite)(const char* sString);
+		TOwnerClass& m_rOwnerObject;
+		void (TOwnerClass::*m_mfpWrite)(const char* sString);
 	};
 
 	// ________________________________________________________________________________________________________________
