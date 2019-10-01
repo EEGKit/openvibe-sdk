@@ -5,6 +5,7 @@
 #include <toolkit/ovtk_all.h>
 
 #include <Eigen/Eigen>
+#include <array>
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -27,7 +28,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmXDAWNTrainer> m_stimDecoder;
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer> m_signalDecoder[2];
+			std::array<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>, 2> m_signalDecoder;
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_stimEncoder;
 
 			uint64_t m_trainStimulationID = 0;

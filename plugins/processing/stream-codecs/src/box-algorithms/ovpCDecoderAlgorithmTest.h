@@ -2,6 +2,7 @@
 
 #include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
+#include <array>
 
 namespace OpenViBEPlugins
 {
@@ -23,8 +24,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder[7];
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer[7];
+			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_pStreamDecoder;
+			std::array<OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>, 7> ip_pMemoryBuffer;
 		};
 
 		class CDecoderAlgorithmTestDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

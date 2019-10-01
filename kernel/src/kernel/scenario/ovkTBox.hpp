@@ -55,13 +55,13 @@ namespace
 		CInterfacor() { }
 
 		CInterfacor(const CInterfacor& other)
-			: m_name(other.m_name), m_oTypeIdentifier(other.m_oTypeIdentifier), m_oIdentifier(other.m_oIdentifier), m_bDeprecated(other.m_bDeprecated) { }
+			: m_name(other.m_name), m_typeID(other.m_typeID), m_oIdentifier(other.m_oIdentifier), m_bDeprecated(other.m_bDeprecated) { }
 
 		CInterfacor(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id)
-			: m_name(name), m_oTypeIdentifier(idType), m_oIdentifier(id) {}
+			: m_name(name), m_typeID(idType), m_oIdentifier(id) {}
 
 		OpenViBE::CString m_name;
-		OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+		OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 		OpenViBE::CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
 		bool m_bDeprecated                      = false;
 	};
@@ -446,7 +446,7 @@ namespace OpenViBE
 									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])", ErrorType::OutOfBound);
 
-				typeID = m_interfacors.at(interfacorType)[index]->m_oTypeIdentifier;
+				typeID = m_interfacors.at(interfacorType)[index]->m_typeID;
 				return true;
 			}
 
@@ -549,9 +549,9 @@ namespace OpenViBE
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				if (m_interfacors[interfacorType][index]->m_oTypeIdentifier == typeID) { return true; }
+				if (m_interfacors[interfacorType][index]->m_typeID == typeID) { return true; }
 
-				m_interfacors[interfacorType][index]->m_oTypeIdentifier = typeID;
+				m_interfacors[interfacorType][index]->m_typeID = typeID;
 
 				switch (interfacorType)
 				{
@@ -994,7 +994,7 @@ namespace OpenViBE
 
 				CSetting s;
 				s.m_name            = name;
-				s.m_oTypeIdentifier = typeID;
+				s.m_typeID = typeID;
 				s.m_sDefaultValue   = l_sValue;
 				s.m_sValue          = l_sValue;
 				s.m_bMod            = bModifiability;

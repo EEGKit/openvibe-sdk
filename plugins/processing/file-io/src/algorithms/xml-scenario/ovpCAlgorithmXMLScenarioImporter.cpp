@@ -53,19 +53,19 @@ namespace
 	class _AutoBind_
 	{
 	public:
-		explicit _AutoBind_(const std::string& sValue) : m_sValue(sValue) { }
-		operator CString() { return CString(m_sValue.c_str()); }
+		explicit _AutoBind_(const std::string& sValue) : m_value(sValue) { }
+		operator CString() { return CString(m_value.c_str()); }
 
 		operator CIdentifier()
 		{
 			CIdentifier res;
-			res.fromString(m_sValue.c_str());
+			res.fromString(m_value.c_str());
 			return res;
 		}
 
-		operator uint32_t() { return atoi(m_sValue.c_str()); }
+		operator uint32_t() { return atoi(m_value.c_str()); }
 	protected:
-		const std::string& m_sValue;
+		const std::string& m_value;
 	};
 
 	std::string xercesToString(const XMLCh* xercesString)

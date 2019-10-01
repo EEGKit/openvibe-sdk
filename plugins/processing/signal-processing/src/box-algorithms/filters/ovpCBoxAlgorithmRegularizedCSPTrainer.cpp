@@ -277,12 +277,12 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 		if (m_StimulationDecoder.isBufferReceived())
 		{
-			const TParameterHandler<IStimulationSet*> stimulationSet(m_StimulationDecoder.getOutputStimulationSet());
-			for (size_t j = 0; j < stimulationSet->getStimulationCount(); j++)
+			const TParameterHandler<IStimulationSet*> stimSet(m_StimulationDecoder.getOutputStimulationSet());
+			for (size_t j = 0; j < stimSet->getStimulationCount(); j++)
 			{
-				if (stimulationSet->getStimulationIdentifier(j) == m_StimulationIdentifier)
+				if (stimSet->getStimulationIdentifier(j) == m_StimulationIdentifier)
 				{
-					trainDate           = stimulationSet->getStimulationDate(stimulationSet->getStimulationCount() - 1);
+					trainDate           = stimSet->getStimulationDate(stimSet->getStimulationCount() - 1);
 					trainChunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, i);
 					trainChunkEndTime   = dynamicBoxContext.getInputChunkEndTime(0, i);
 					shouldTrain         = true;

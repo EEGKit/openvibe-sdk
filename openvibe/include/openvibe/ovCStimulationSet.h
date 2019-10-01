@@ -39,7 +39,7 @@ namespace OpenViBE
 
 		//@}
 		void clear() override { m_stimulationSet->clear(); }
-		uint64_t getStimulationCount() const override { return m_stimulationSet->getStimulationCount(); }
+		size_t getStimulationCount() const override { return m_stimulationSet->getStimulationCount(); }
 		uint64_t getStimulationIdentifier(const uint64_t index) const override { return m_stimulationSet->getStimulationIdentifier(index); }
 		uint64_t getStimulationDate(const uint64_t index) const override { return m_stimulationSet->getStimulationDate(index); }
 		uint64_t getStimulationDuration(const uint64_t index) const override { return m_stimulationSet->getStimulationDuration(index); }

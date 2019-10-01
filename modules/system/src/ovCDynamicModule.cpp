@@ -14,7 +14,7 @@ using namespace System;
 
 namespace
 {
-	const std::map<CDynamicModule::ELogErrorCodes, std::string> s_ErrorMap =
+	const std::map<CDynamicModule::ELogErrorCodes, std::string> ERROR_MAP =
 	{
 		{ CDynamicModule::LogErrorCodes_ModuleAlreadyLoaded, "A module is already loaded." },
 		{ CDynamicModule::LogErrorCodes_NoModuleLoaded, "No module loaded." },
@@ -64,8 +64,8 @@ namespace
 
 const char* CDynamicModule::getErrorString(uint32_t errorCode) const
 {
-	if (s_ErrorMap.count(ELogErrorCodes(errorCode)) == 0) { return "Invalid error code"; }
-	return s_ErrorMap.at(ELogErrorCodes(errorCode)).c_str();
+	if (ERROR_MAP.count(ELogErrorCodes(errorCode)) == 0) { return "Invalid error code"; }
+	return ERROR_MAP.at(ELogErrorCodes(errorCode)).c_str();
 }
 
 const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0]; }
@@ -200,7 +200,7 @@ bool CDynamicModule::loadFromKnownPath(int standardPath, const char* modulePath,
 
 	char l_DLLPath[MAX_PATH];
 
-	HRESULT result = ::SHGetFolderPath(nullptr, standardPath, nullptr, SHGFP_TYPE_CURRENT, l_DLLPath);
+	const HRESULT result = ::SHGetFolderPath(nullptr, standardPath, nullptr, SHGFP_TYPE_CURRENT, l_DLLPath);
 
 	if (result != S_OK)
 	{
@@ -235,10 +235,7 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 
 	for (const std::string& path : paths)
 	{
-		char l_DLLPath[MAX_PATH];
-		sprintf(l_DLLPath, "%s\\%s", path.c_str(), modulePath);
-
-		if (loadFromPath(l_DLLPath, symbolNameCheck)) { return true; }
+		if (loadFromPath((path + "\\" + modulePath).c_str(), symbolNameCheck)) { return true; }
 	}
 
 	this->setError(LogErrorCodes_ModuleNotFound);
@@ -247,8 +244,7 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 #endif
 
 #if defined TARGET_OS_Windows
-bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath,
-									  const char* symbolNameCheck)
+bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck)
 {
 	char l_DLLPath[MAX_PATH];
 	DWORD l_Size = sizeof(l_DLLPath);

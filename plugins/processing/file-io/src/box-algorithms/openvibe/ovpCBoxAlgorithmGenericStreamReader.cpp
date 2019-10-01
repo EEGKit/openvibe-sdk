@@ -72,14 +72,14 @@ bool CBoxAlgorithmGenericStreamReader::process()
 	{
 		if (m_bPending)
 		{
-			if (m_ui64EndTime <= time)
+			if (m_endTime <= time)
 			{
 				OV_ERROR_UNLESS_KRF(m_ui32OutputIndex < nInput,
 									"Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs",
 									OpenViBE::Kernel::ErrorType::BadOutput);
 
 				boxContext.getOutputChunk(m_ui32OutputIndex)->append(m_oPendingChunk);
-				boxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_ui64StartTime, m_ui64EndTime);
+				boxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_startTime, m_endTime);
 				m_bPending = false;
 			}
 			else { finished = true; }
@@ -105,8 +105,8 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				OV_ERROR_UNLESS_KRF(s == m_oSwap.getSize(), "Unexpected EOF in " << m_sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 
 				m_oPendingChunk.setSize(0, true);
-				m_ui64StartTime   = std::numeric_limits<uint64_t>::max();
-				m_ui64EndTime     = std::numeric_limits<uint64_t>::max();
+				m_startTime   = std::numeric_limits<uint64_t>::max();
+				m_endTime     = std::numeric_limits<uint64_t>::max();
 				m_ui32OutputIndex = std::numeric_limits<uint32_t>::max();
 
 				m_oReader.processData(m_oSwap.getDirectPointer(), m_oSwap.getSize());
@@ -179,8 +179,8 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* buffer, cons
 			m_ui32OutputIndex = m_vStreamIndexToOutputIndex[streamIdx];
 		}
 	}
-	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_ui64StartTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
-	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { m_ui64EndTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
+	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_startTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
+	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { m_endTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_Content)
 	{
 		m_oPendingChunk.setSize(0, true);
@@ -277,8 +277,8 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer)
 	{
 		m_bPending = ((m_ui32OutputIndex != std::numeric_limits<uint32_t>::max()) &&
-					  (m_ui64StartTime != std::numeric_limits<uint64_t>::max()) &&
-					  (m_ui64EndTime != std::numeric_limits<uint64_t>::max()));
+					  (m_startTime != std::numeric_limits<uint64_t>::max()) &&
+					  (m_endTime != std::numeric_limits<uint64_t>::max()));
 	}
 
 	m_vNodes.pop();

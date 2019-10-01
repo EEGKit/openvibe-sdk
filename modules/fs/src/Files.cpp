@@ -100,8 +100,8 @@ FILE* Files::open(const char* sFile, const char* sMode)
 
 	try
 	{
-		wstring l_sUTF16FileName = Common::Converter::Utf8ToUtf16(sFile);
-		wstring l_sUTF16Mode     = Common::Converter::Utf8ToUtf16(sMode);
+		const wstring l_sUTF16FileName = Common::Converter::Utf8ToUtf16(sFile);
+		const wstring l_sUTF16Mode     = Common::Converter::Utf8ToUtf16(sMode);
 
 		fHandle = _wfopen(l_sUTF16FileName.c_str(), l_sUTF16Mode.c_str());
 	}
@@ -116,8 +116,8 @@ FILE* Files::popen(const char* sFile, const char* sMode)
 
 	try
 	{
-		wstring l_sUTF16FileName = Common::Converter::Utf8ToUtf16(sFile);
-		wstring l_sUTF16Mode     = Common::Converter::Utf8ToUtf16(sMode);
+		const wstring l_sUTF16FileName = Common::Converter::Utf8ToUtf16(sFile);
+		const wstring l_sUTF16Mode     = Common::Converter::Utf8ToUtf16(sMode);
 
 		fHandle = _wpopen(l_sUTF16FileName.c_str(), l_sUTF16Mode.c_str());
 	}
@@ -131,7 +131,7 @@ void openStream(T& rStream, const char* sFile, std::ios_base::openmode oMode)
 {
 	try
 	{
-		wstring l_sUTF16FileName = Common::Converter::Utf8ToUtf16(sFile);
+		const wstring l_sUTF16FileName = Common::Converter::Utf8ToUtf16(sFile);
 
 		rStream.open(l_sUTF16FileName.c_str(), oMode);
 	}
@@ -185,16 +185,14 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 	bool res = true;
 	if (pFile1 && pFile2)
 	{
-		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
-										 nullptr);
-		HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS,
-										 nullptr);
-		if (l_pHandle1 && l_pHandle2)
+		const HANDLE handle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+		const HANDLE handle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+		if (handle1 && handle2)
 		{
 			BY_HANDLE_FILE_INFORMATION l_oStat1;
 			BY_HANDLE_FILE_INFORMATION l_oStat2;
-			BOOL l_bStat1 = GetFileInformationByHandle(l_pHandle1, &l_oStat1);
-			BOOL l_bStat2 = GetFileInformationByHandle(l_pHandle2, &l_oStat2);
+			const BOOL l_bStat1 = GetFileInformationByHandle(handle1, &l_oStat1);
+			const BOOL l_bStat2 = GetFileInformationByHandle(handle2, &l_oStat2);
 			if (!l_bStat1 && !l_bStat2) { res = true; }
 			else if (l_bStat1 && l_bStat2)
 			{
@@ -208,13 +206,13 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 						(l_oStat1.ftLastWriteTime.dwLowDateTime == l_oStat2.ftLastWriteTime.dwLowDateTime);
 			}
 			else { res = false; }
-			CloseHandle(l_pHandle1);
-			CloseHandle(l_pHandle2);
+			CloseHandle(handle1);
+			CloseHandle(handle2);
 		}
 		else
 		{
-			if (l_pHandle1) { CloseHandle(l_pHandle1); }
-			if (l_pHandle2) { CloseHandle(l_pHandle2); }
+			if (handle1) { CloseHandle(handle1); }
+			if (handle2) { CloseHandle(handle2); }
 		}
 	}
 	return res;
@@ -237,8 +235,8 @@ bool Files::directoryExists(const char* pathToCheck)
 {
 	if (!pathToCheck) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathUTF16 = Common::Converter::Utf8ToUtf16(pathToCheck);
-	DWORD ftyp        = GetFileAttributesW(pathUTF16.c_str());
+	const wstring pathUTF16 = Common::Converter::Utf8ToUtf16(pathToCheck);
+	const DWORD ftyp        = GetFileAttributesW(pathUTF16.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES) { return false; }
 	if (ftyp & FILE_ATTRIBUTE_DIRECTORY) { return true; }
 #endif
@@ -280,27 +278,23 @@ bool Files::createParentPath(const char* path)
 bool Files::getParentPath(const char* path, char* sParentPath)
 {
 	if (!path || !sParentPath) { return false; }
-
-	strcpy(sParentPath, boost::filesystem::path(path).parent_path().string().c_str());
-
+	const string str = boost::filesystem::path(path).parent_path().string();
+	std::copy(str.begin(), str.end(), sParentPath);
 	return true;
 }
 
 bool Files::getParentPath(const char* path, char* parentPath, size_t size)
 {
 	if (!path || !parentPath) { return false; }
-
 	strncpy(parentPath, boost::filesystem::path(path).parent_path().string().c_str(), size);
-
 	return true;
 }
 
 bool Files::getFilename(const char* path, char* filename)
 {
 	if (!path || !filename) { return false; }
-
-	strcpy(filename, boost::filesystem::path(path).filename().string().c_str());
-
+	const string str = boost::filesystem::path(path).filename().string();
+	std::copy(str.begin(), str.end(), filename);
 	return true;
 }
 
@@ -316,9 +310,8 @@ bool Files::getFilename(const char* path, char* filename, size_t size)
 bool Files::getFilenameWithoutExtension(const char* path, char* filename)
 {
 	if (!path || !filename) { return false; }
-
-	strcpy(filename, boost::filesystem::path(path).filename().replace_extension("").string().c_str());
-
+	const string str = boost::filesystem::path(path).filename().replace_extension("").string();
+	std::copy(str.begin(), str.end(), filename);
 	return true;
 }
 
@@ -334,9 +327,8 @@ bool Files::getFilenameWithoutExtension(const char* path, char* filename, size_t
 bool Files::getFilenameExtension(const char* path, char* fileNameExtension)
 {
 	if (!path || !fileNameExtension) { return false; }
-
-	strcpy(fileNameExtension, boost::filesystem::path(path).extension().string().c_str());
-
+	const string str = boost::filesystem::path(path).extension().string();
+	std::copy(str.begin(), str.end(), fileNameExtension);
 	return true;
 }
 
@@ -354,7 +346,7 @@ bool Files::remove(const char* path)
 	if (fileExists(path) || directoryExists(path))
 	{
 #if defined TARGET_OS_Windows
-		std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
+		const std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
 		return boost::filesystem::remove(boost::filesystem::wpath(pathUTF16.c_str()));
 #else
 		return boost::filesystem::remove(boost::filesystem::path(path));
@@ -368,7 +360,7 @@ bool Files::removeAll(const char* path)
 	if (fileExists(path) || directoryExists(path))
 	{
 #if defined TARGET_OS_Windows
-		std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
+		const std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
 		return (remove_all(boost::filesystem::wpath(pathUTF16.c_str())) != 0);
 #else
 		return (boost::filesystem::remove_all(boost::filesystem::path(path)) != 0);
@@ -401,10 +393,10 @@ bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 {
 	if (!srcDir || !dstDir) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathSourceUTF16        = Common::Converter::Utf8ToUtf16(srcDir);
-	wstring pathTargetUTF16        = Common::Converter::Utf8ToUtf16(dstDir);
-	boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
-	boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());
+	const wstring pathSourceUTF16        = Common::Converter::Utf8ToUtf16(srcDir);
+	const wstring pathTargetUTF16        = Common::Converter::Utf8ToUtf16(dstDir);
+	const boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
+	const boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());
 #else
 	boost::filesystem::path source = srcDir;
 	boost::filesystem::path target = dstDir;

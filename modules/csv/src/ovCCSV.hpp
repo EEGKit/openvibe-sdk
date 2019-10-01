@@ -351,7 +351,9 @@ namespace OpenViBE
 
 			bool m_hasDataToRead = true;
 
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			bool m_isCRLFEOL = false; // Is a CRLF end of line
+#endif
 		};
 	} // namespace CSV
 } // namespace OpenViBE

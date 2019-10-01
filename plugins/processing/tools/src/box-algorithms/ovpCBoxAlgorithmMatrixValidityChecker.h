@@ -38,19 +38,14 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
-				uint32_t i;
-
-				for (i = 0; i < box.getInputCount(); i++)
+				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Stream %u", i + 1);
-					box.setInputName(i, l_sName);
+					box.setInputName(i, ("Stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_StreamedMatrix);
 				}
-				for (i = 0; i < box.getOutputCount(); i++)
+				for (uint32_t i = 0; i < box.getOutputCount(); i++)
 				{
-					sprintf(l_sName, "Output stream %u", i + 1);
-					box.setOutputName(i, l_sName);
+					box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_StreamedMatrix);
 				}
 

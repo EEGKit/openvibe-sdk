@@ -32,9 +32,7 @@ namespace OpenViBEPlugins
 		public:
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				char inputName[1024];
-				sprintf(inputName, "Input %i", index + 1);
-				box.setInputName(index, inputName);
+				box.setInputName(index, ("Input " + std::to_string(index + 1)).c_str());
 				box.setInputType(index, OV_TypeId_Signal);
 				return true;
 			}

@@ -131,7 +131,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		// We only handle buffers and ignore stimulation headers and ends
 		if (m_stimulationDecoder.isBufferReceived())
 		{
-			for (uint64_t stimulation = 0; stimulation < m_stimulationDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+			for (size_t stimulation = 0; stimulation < m_stimulationDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 			{
 				if (m_stimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation) == m_stimulationID)
 				{

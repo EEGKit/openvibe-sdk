@@ -145,15 +145,10 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					spectrum->setDimensionSize(1, m_sizeFFT);
 
 					// Spectrum channel names
-					for (size_t j = 0; j < m_nChannel; j++) { spectrum->setDimensionLabel(0, uint32_t(j), matrix->getDimensionLabel(0, j)); }
+					for (uint32_t j = 0; j < m_nChannel; j++) { spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
 
 					// We also name the spectrum bands "Abscissa"
-					for (uint32_t j = 0; j < m_sizeFFT; j++)
-					{
-						char frequencyBandName[1024];
-						sprintf(frequencyBandName, "%lg", m_frequencyAbscissa->getBuffer()[j]);
-						spectrum->setDimensionLabel(1, uint32_t(j), frequencyBandName);
-					}
+					for (uint32_t j = 0; j < m_sizeFFT; j++) { spectrum->setDimensionLabel(1, j, std::to_string(m_frequencyAbscissa->getBuffer()[j]).c_str()); }
 
 					m_spectrumEncoders[encoderIndex]->encodeHeader();
 					dynamicBoxContext->markOutputAsReadyToSend(uint32_t(encoderIndex), startTime, endTime);

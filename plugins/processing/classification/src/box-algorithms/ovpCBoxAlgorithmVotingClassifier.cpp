@@ -47,11 +47,11 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 		}
 	}
 
-	m_ui64NumberOfRepetitions  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64TargetClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_ui64NonTargetClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_ui64RejectClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	m_ui64ResultClassLabelBase = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_nRepetitions  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_targetClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_nonTargetClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_rejectClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_resultClassLabelBase = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 	m_bChooseOneIfExAequo      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
 
 	m_ui64LastTime = 0;
@@ -128,9 +128,9 @@ bool CBoxAlgorithmVotingClassifier::process()
 					for (size_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); k++)
 					{
 						const uint64_t stimulationId = input.op_pStimulationSet->getStimulationIdentifier(k);
-						if (stimulationId == m_ui64TargetClassLabel || stimulationId == m_ui64NonTargetClassLabel || stimulationId == m_ui64RejectClassLabel)
+						if (stimulationId == m_targetClassLabel || stimulationId == m_nonTargetClassLabel || stimulationId == m_rejectClassLabel)
 						{
-							input.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_ui64TargetClassLabel ? 1 : 0,
+							input.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_targetClassLabel ? 1 : 0,
 																				 input.op_pStimulationSet->getStimulationDate(k)));
 						}
 					}
@@ -143,13 +143,13 @@ bool CBoxAlgorithmVotingClassifier::process()
 			}
 		}
 
-		if (input.m_vScore.size() < m_ui64NumberOfRepetitions) { canChoose = false; }
+		if (input.m_vScore.size() < m_nRepetitions) { canChoose = false; }
 	}
 
 	if (canChoose)
 	{
 		double resultScore        = -1E100;
-		uint64_t resultClassLabel = m_ui64RejectClassLabel;
+		uint64_t resultClassLabel = m_rejectClassLabel;
 		uint64_t time             = 0;
 
 		std::map<uint32_t, double> score;
@@ -157,30 +157,30 @@ bool CBoxAlgorithmVotingClassifier::process()
 		{
 			SInput& input = m_vClassificationResults[i];
 			score[i]      = 0;
-			for (size_t j = 0; j < m_ui64NumberOfRepetitions; j++) { score[i] += input.m_vScore[j].first; }
+			for (size_t j = 0; j < m_nRepetitions; j++) { score[i] += input.m_vScore[j].first; }
 
 			if (score[i] > resultScore)
 			{
 				resultScore      = score[i];
-				resultClassLabel = m_ui64ResultClassLabelBase + i;
-				time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
+				resultClassLabel = m_resultClassLabelBase + i;
+				time             = input.m_vScore[size_t(m_nRepetitions - 1)].second;
 			}
 			else if (score[i] == resultScore)
 			{
 				if (!m_bChooseOneIfExAequo)
 				{
 					resultScore      = score[i];
-					resultClassLabel = m_ui64RejectClassLabel;
-					time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
+					resultClassLabel = m_rejectClassLabel;
+					time             = input.m_vScore[size_t(m_nRepetitions - 1)].second;
 				}
 			}
 
-			input.m_vScore.erase(input.m_vScore.begin(), input.m_vScore.begin() + int(m_ui64NumberOfRepetitions));
+			input.m_vScore.erase(input.m_vScore.begin(), input.m_vScore.begin() + int(m_nRepetitions));
 
 			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << score[i] << "\n";
 		}
 
-		if (resultClassLabel != m_ui64RejectClassLabel)
+		if (resultClassLabel != m_rejectClassLabel)
 		{
 			this->getLogManager() << LogLevel_Debug << "Chosen " << this
 																	->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel)

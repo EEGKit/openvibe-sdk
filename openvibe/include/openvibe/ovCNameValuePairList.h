@@ -69,26 +69,26 @@ namespace OpenViBE
 		/**
 		 * \brief Insert a name/value pair
 		 * \param [in] name Name to add to the list
-		 * \param [in] pValue Value to associate with the name
+		 * \param [in] value Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& name, const char* pValue);
+		bool setValue(const CString& name, const char* value);
 
 		/**
 		 * \brief Insert a name/value pair where value is a double
 		 * \param [in] name Name to add to the list
-		 * \param [in] rValue Float64 value to associate with the name
+		 * \param [in] value Float64 value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& name, const double& rValue);
+		bool setValue(const CString& name, const double& value);
 
 		/**
 		 * \brief Insert a name/value pair where value is a boolean
 		 * \param [in] name Name to add to the list
-		 * \param [in] bValue Boolean value to associate with the name
+		 * \param [in] value Boolean value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& name, bool bValue);
+		bool setValue(const CString& name, bool value);
 
 		/**
 		 * \brief Retrieve a value from the list
@@ -111,19 +111,19 @@ namespace OpenViBE
 		 * In the current implementation a value evaluates to true if its string
 		 * equals "1" and to false if it equals "0".
 		 * \param name
-		 * \param rValue String to evaluate
+		 * \param value String to evaluate
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */
-		bool getValue(const CString& name, bool& rValue) const;
+		bool getValue(const CString& name, bool& value) const;
 
 		/**
 		 * \brief Retrieve a value from the list
 		 * \param [in] rIndex Index whose value is to be retrieved
 		 * \param [out] name Name of the value stored in rIndex
-		 * \param [out] rValue Value stored in rIndex
+		 * \param [out] value Value stored in rIndex
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(uint32_t rIndex, CString& name, CString& rValue) const;
+		bool getValue(uint32_t rIndex, CString& name, CString& value) const;
 
 		
 		/**

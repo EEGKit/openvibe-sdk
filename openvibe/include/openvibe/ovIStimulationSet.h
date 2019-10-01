@@ -29,7 +29,7 @@ namespace OpenViBE
 		 * \brief Gets the number of stimulations contained in this stimulation set
 		 * \return the number of stimulations contained in this stimulation set.
 		 */
-		virtual uint64_t getStimulationCount() const = 0;
+		virtual size_t getStimulationCount() const = 0;
 		/**
 		 * \brief Gets the identifier of a specific stimulation in this stimulation set
 		 * \param index [in] : the index of the stimulation which identifier has to be returned

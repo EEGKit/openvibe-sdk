@@ -33,7 +33,7 @@ ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulation
 {
 	rLogManager << "Stimulation set :\n";
 	rLogManager << " | Number of elements : " << rStimulationSet.getStimulationCount() << "\n";
-	for (uint64_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
+	for (size_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
 	{
 		rLogManager << " |   Stimulation " << i << " : "
 				<< "id=" << rStimulationSet.getStimulationIdentifier(i) << " "

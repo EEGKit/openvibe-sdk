@@ -20,13 +20,13 @@ namespace OpenViBE
 
 			CChunk() { }
 
-			explicit CChunk(const CChunk& rChunk) : m_oBuffer(rChunk.m_oBuffer), m_ui64StartTime(rChunk.m_ui64StartTime), m_ui64EndTime(rChunk.m_ui64EndTime) { }
+			explicit CChunk(const CChunk& rChunk) : m_oBuffer(rChunk.m_oBuffer), m_startTime(rChunk.m_startTime), m_endTime(rChunk.m_endTime) { }
 
 			const CBuffer& getBuffer() const { return m_oBuffer; }
 
-			uint64_t getStartTime() const { return m_ui64StartTime; }
+			uint64_t getStartTime() const { return m_startTime; }
 
-			uint64_t getEndTime() const { return m_ui64EndTime; }
+			uint64_t getEndTime() const { return m_endTime; }
 
 			bool isDeprecated() const { return m_bIsDeprecated; }
 
@@ -34,13 +34,13 @@ namespace OpenViBE
 
 			bool setStartTime(uint64_t startTime)
 			{
-				m_ui64StartTime = startTime;
+				m_startTime = startTime;
 				return true;
 			}
 
 			bool setEndTime(uint64_t endTime)
 			{
-				m_ui64EndTime = endTime;
+				m_endTime = endTime;
 				return true;
 			}
 
@@ -53,8 +53,8 @@ namespace OpenViBE
 		protected:
 
 			CBuffer m_oBuffer;
-			uint64_t m_ui64StartTime = 0;
-			uint64_t m_ui64EndTime   = 0;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
 			bool m_bIsDeprecated     = false;
 		};
 

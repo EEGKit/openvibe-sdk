@@ -51,12 +51,9 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
-
 				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Spied EBML stream %u", i + 1);
-					box.setInputName(i, l_sName);
+					box.setInputName(i, ("Spied EBML stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_EBMLStream);
 				}
 

@@ -37,7 +37,7 @@ namespace OpenViBE
 
 		protected:
 
-			mutable double* m_pBuffer = nullptr;
+			mutable double* m_buffer = nullptr;
 			mutable uint32_t m_size   = 0;
 
 			std::vector<uint32_t> m_vDimensionSize;
@@ -63,10 +63,10 @@ CMatrixImpl& CMatrixImpl::operator=(const CMatrixImpl& other)
 {
 	if (this != &other)
 	{
-		if (m_pBuffer)
+		if (m_buffer)
 		{
-			delete[] m_pBuffer;
-			m_pBuffer = nullptr;
+			delete[] m_buffer;
+			m_buffer = nullptr;
 		}
 		this->m_vDimensionSize  = other.m_vDimensionSize;
 		this->m_vDimensionLabel = other.m_vDimensionLabel;
@@ -78,10 +78,10 @@ CMatrixImpl& CMatrixImpl::operator=(const CMatrixImpl& other)
 
 CMatrixImpl::~CMatrixImpl()
 {
-	if (m_pBuffer)
+	if (m_buffer)
 	{
-		delete [] m_pBuffer;
-		m_pBuffer = nullptr;
+		delete [] m_buffer;
+		m_buffer = nullptr;
 	}
 }
 
@@ -102,13 +102,13 @@ const char* CMatrixImpl::getDimensionLabel(const uint32_t index, const uint32_t 
 
 const double* CMatrixImpl::getBuffer() const
 {
-	if (!m_pBuffer) { this->refreshInternalBuffer(); }
-	return m_pBuffer;
+	if (!m_buffer) { this->refreshInternalBuffer(); }
+	return m_buffer;
 }
 
 uint32_t CMatrixImpl::getBufferElementCount() const
 {
-	if (!m_pBuffer || !m_size) { this->refreshInternalBuffer(); }
+	if (!m_buffer || !m_size) { this->refreshInternalBuffer(); }
 	return m_size;
 }
 
@@ -116,10 +116,10 @@ bool CMatrixImpl::setDimensionCount(const uint32_t count)
 {
 	if (count == 0) { return false; }
 
-	if (m_pBuffer)
+	if (m_buffer)
 	{
-		delete [] m_pBuffer;
-		m_pBuffer = nullptr;
+		delete [] m_buffer;
+		m_buffer = nullptr;
 	}
 
 	m_vDimensionSize.clear();
@@ -135,10 +135,10 @@ bool CMatrixImpl::setDimensionSize(const uint32_t index, const uint32_t size)
 {
 	if (index >= m_vDimensionSize.size()) { return false; }
 
-	if (m_pBuffer)
+	if (m_buffer)
 	{
-		delete [] m_pBuffer;
-		m_pBuffer = nullptr;
+		delete [] m_buffer;
+		m_buffer = nullptr;
 	}
 
 	m_vDimensionSize[index] = size;
@@ -157,21 +157,21 @@ bool CMatrixImpl::setDimensionLabel(const uint32_t index, const uint32_t entryIn
 
 double* CMatrixImpl::getBuffer()
 {
-	if (!m_pBuffer) { this->refreshInternalBuffer(); }
-	return m_pBuffer;
+	if (!m_buffer) { this->refreshInternalBuffer(); }
+	return m_buffer;
 }
 
 bool CMatrixImpl::refreshInternalBuffer() const
 {
-	if (m_pBuffer || m_vDimensionSize.empty()) { return false; }
+	if (m_buffer || m_vDimensionSize.empty()) { return false; }
 
 	m_size = 1;
 	for (size_t i = 0; i < m_vDimensionSize.size(); i++) { m_size *= m_vDimensionSize[i]; }
 
 	if (m_size == 0) { return false; }
 
-	m_pBuffer = new double[m_size];
-	if (!m_pBuffer)
+	m_buffer = new double[m_size];
+	if (!m_buffer)
 	{
 		m_size = 0;
 		return false;

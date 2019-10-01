@@ -37,24 +37,22 @@ bool CNameValuePairList::setValue(const CString& name, const CString& rValue)
 	return true;
 }
 
-bool CNameValuePairList::setValue(const CString& name, const char* pValue)
+bool CNameValuePairList::setValue(const CString& name, const char* value)
 {
-	if (pValue == nullptr) { return false; }
-	m_pNameValuePairListImpl->m_Map[name] = pValue;
+	if (value == nullptr) { return false; }
+	m_pNameValuePairListImpl->m_Map[name] = value;
 	return true;
 }
 
-bool CNameValuePairList::setValue(const CString& name, const double& rValue)
+bool CNameValuePairList::setValue(const CString& name, const double& value)
 {
-	char buffer[1024];
-	sprintf(buffer, "%lf", rValue);
-	m_pNameValuePairListImpl->m_Map[name] = buffer;
+	m_pNameValuePairListImpl->m_Map[name] = std::to_string(value).c_str();
 	return true;
 }
 
-bool CNameValuePairList::setValue(const CString& name, bool bValue)
+bool CNameValuePairList::setValue(const CString& name, const bool value)
 {
-	m_pNameValuePairListImpl->m_Map[name] = bValue ? "1" : "0";
+	m_pNameValuePairListImpl->m_Map[name] = value ? "1" : "0";
 	return true;
 }
 
@@ -77,30 +75,30 @@ bool CNameValuePairList::getValue(const CString& name, double& rValue) const
 	return true;
 }
 
-bool CNameValuePairList::getValue(const CString& name, bool& rValue) const
+bool CNameValuePairList::getValue(const CString& name, bool& value) const
 {
 	if (m_pNameValuePairListImpl->m_Map.find(name) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
-	const CString value = m_pNameValuePairListImpl->m_Map[name];
-	if (value == CString("0") || value == CString("FALSE") || value == CString("false"))
+	const CString str = m_pNameValuePairListImpl->m_Map[name];
+	if (str == CString("0") || str == CString("FALSE") || str == CString("false"))
 	{
-		rValue = false;
+		value = false;
 		return true;
 	}
-	if (value == CString("1") || value == CString("TRUE") || value == CString("true"))
+	if (str == CString("1") || str == CString("TRUE") || str == CString("true"))
 	{
-		rValue = true;
+		value = true;
 		return true;
 	}
 	return false;
 }
 
-bool CNameValuePairList::getValue(const uint32_t rIndex, CString& name, CString& rValue) const
+bool CNameValuePairList::getValue(const uint32_t rIndex, CString& name, CString& value) const
 {
 	if (rIndex >= this->getSize()) { return false; }
 	auto it = m_pNameValuePairListImpl->m_Map.begin();
 	std::advance(it, rIndex);
 	name  = it->first;
-	rValue = it->second;
+	value = it->second;
 	return true;
 }
 

@@ -89,15 +89,16 @@ namespace
 
 		server->release();
 	}
-}
+} // namespace
 
 int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
 	const std::string serverName   = argv[1];
-	int portNumber           = std::atoi(argv[2]);
-	uint32_t packetCount = uint32_t(std::atoi(argv[3]));
+	char* end;
+	const uint32_t port = strtol(argv[2], &end, 10);
+	uint32_t packetCount = strtol(argv[3], &end, 10);;
 
 	// test synchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -110,14 +111,14 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	Socket::IConnectionClient* client = Socket::createConnectionClient();
 
 	// launch server on background thread
-	std::thread serverThread(onServerListening, portNumber, packetCount);
+	std::thread serverThread(onServerListening, port, packetCount);
 
 	// wait until the server is started to connect client
 	std::unique_lock<std::mutex> lockOnServerStart(g_ServerStartedMutex);
 	g_ServerStartedCondVar.wait(lockOnServerStart, []() { return g_ServerStarted; });
 
 
-	client->connect(serverName.c_str(), portNumber);
+	client->connect(serverName.c_str(), port);
 
 	// wait until the connection is made to transmit data
 	std::unique_lock<std::mutex> lockOnClientConnected(g_ClientConnectedMutex);

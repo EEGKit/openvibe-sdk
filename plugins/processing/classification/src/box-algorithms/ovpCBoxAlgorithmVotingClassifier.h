@@ -25,11 +25,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			uint64_t m_ui64NumberOfRepetitions  = 0;
-			uint64_t m_ui64TargetClassLabel     = 0;
-			uint64_t m_ui64NonTargetClassLabel  = 0;
-			uint64_t m_ui64RejectClassLabel     = 0;
-			uint64_t m_ui64ResultClassLabelBase = 0;
+			size_t m_nRepetitions  = 0;
+			size_t m_targetClassLabel     = 0;
+			size_t m_nonTargetClassLabel  = 0;
+			size_t m_rejectClassLabel     = 0;
+			size_t m_resultClassLabelBase = 0;
 			bool m_bChooseOneIfExAequo = false;
 
 		private:
@@ -77,10 +77,8 @@ namespace OpenViBEPlugins
 			{
 				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
-					char buffer[1024];
-					sprintf(buffer, "Classification result %i", i);
 					box.setInputType(i, m_oInputTypeIdentifier);
-					box.setInputName(i, buffer);
+					box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());
 				}
 				return true;
 			}

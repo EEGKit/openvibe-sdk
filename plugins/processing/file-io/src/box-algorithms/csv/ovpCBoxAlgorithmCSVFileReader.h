@@ -16,9 +16,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmCSVFileReader();
+			CBoxAlgorithmCSVFileReader() {}
 			void release() override { delete this; }
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return 128LL << 32; } // the box clock frequency
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
@@ -43,15 +43,15 @@ namespace OpenViBEPlugins
 			bool m_bDoNotUseFileTime = false;
 			OpenViBE::CString m_sFilename;
 
-			OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 			uint32_t m_nColumn              = 0;
-			uint64_t m_ui64SamplingRate             = 0;
-			uint32_t m_ui32SamplesPerBuffer         = 0;
-			uint32_t m_ui32ChannelNumberPerBuffer   = 0;
+			uint64_t m_samplingRate             = 0;
+			uint32_t m_samplesPerBuffer         = 0;
+			uint32_t m_channelsPerBuffer   = 0;
 
-			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)();
+			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)() = nullptr;
 
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_pAlgorithmEncoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
 			bool m_bHeaderSent = false;
 			std::vector<std::string> m_vLastLineSplit;

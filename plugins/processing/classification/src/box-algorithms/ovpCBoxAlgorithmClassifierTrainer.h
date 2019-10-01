@@ -38,8 +38,8 @@ namespace OpenViBEPlugins
 			typedef struct
 			{
 				OpenViBE::CMatrix* m_pFeatureVectorMatrix;
-				uint64_t m_ui64StartTime;
-				uint64_t m_ui64EndTime;
+				uint64_t m_startTime;
+				uint64_t m_endTime;
 				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
@@ -53,22 +53,22 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			std::map<uint32_t, uint32_t> m_vFeatureCount;
+			std::map<uint32_t, uint32_t> m_nFeatures;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
-			uint64_t m_ui64TrainStimulation                  = 0;
-			uint64_t m_nPartition                            = 0;
+			OpenViBE::Kernel::IAlgorithmProxy* m_classifier = nullptr;
+			uint64_t m_trainStimulation                  = 0;
+			size_t m_nPartition                            = 0;
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_oStimulationDecoder;
-			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_vFeatureVectorDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimulationDecoder;
+			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_featureVectorDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_oStimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_stimulationEncoder;
 
-			std::map<OpenViBE::CString, OpenViBE::CString>* m_pParameter = nullptr;
+			std::map<OpenViBE::CString, OpenViBE::CString>* m_parameter = nullptr;
 
-			std::vector<SFeatureVector> m_vDataset;
+			std::vector<SFeatureVector> m_datasets;
 
-			std::vector<SFeatureVector> m_vBalancedDataset;
+			std::vector<SFeatureVector> m_balancedDatasets;
 		};
 
 		class CBoxAlgorithmClassifierTrainerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

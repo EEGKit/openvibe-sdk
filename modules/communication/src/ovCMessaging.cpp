@@ -17,7 +17,7 @@ using namespace Communication;
 
 namespace
 {
-	const std::map<CMessaging::ELibraryError, std::string> m_ErrorsString =
+	const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
 	{
 		{ CMessaging::NoError, "No error" },
 		{ CMessaging::Socket_NotConnected, "Not connected" },
@@ -337,7 +337,7 @@ bool CMessaging::pushMessage(const Message& message)
 	return true;
 }
 
-std::string CMessaging::getErrorString(ELibraryError error) { return m_ErrorsString.at(error); }
+std::string CMessaging::getErrorString(ELibraryError error) { return ERRORS_STRING.at(error); }
 
 bool CMessaging::isConnected()
 {

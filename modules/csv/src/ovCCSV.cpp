@@ -67,7 +67,7 @@ namespace
 	const std::string EVENT_DURATION_COL = "Event Duration";
 
 	const uint32_t CHAR_TO_READ          = 1000;
-	const uint32_t MAXIMUM_FLOAT_DECIMAL = 32;
+	//const uint32_t MAXIMUM_FLOAT_DECIMAL = 32;
 
 	const char END_OF_LINE_CHAR('\n');
 }
@@ -119,11 +119,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	// Check if we are looking for an end of line char and handle the CR/LF Windows/Linux cases.
-	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !outputString.empty())
-	{
-		// Remove the carriage return char.
-		outputString.pop_back();
-	}
+	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !outputString.empty()) { outputString.pop_back(); }	// Remove the carriage return char.
 #endif
 
 	return true;
@@ -363,7 +359,7 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<uint32_t>& dime
 		return false;
 	}
 
-	const size_t size = size_t(std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), 0));
+	const size_t size = std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), size_t(0));
 
 	if (size != labels.size())
 	{

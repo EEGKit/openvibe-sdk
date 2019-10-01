@@ -20,7 +20,7 @@ namespace OpenViBEToolkit
 		typedef struct _SScenarioInput
 		{
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			CIdentifier m_oTypeIdentifier;
+			CIdentifier m_typeID;
 			CString m_sName;
 			CIdentifier m_oLinkedBoxIdentifier;
 			uint32_t m_ui32LinkedBoxInputIndex      = OV_Value_UndefinedIndexUInt;
@@ -30,7 +30,7 @@ namespace OpenViBEToolkit
 		typedef struct _SScenarioOutput
 		{
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			CIdentifier m_oTypeIdentifier;
+			CIdentifier m_typeID;
 			CString m_sName;
 			CIdentifier m_oLinkedBoxIdentifier;
 			uint32_t m_ui32LinkedBoxOutputIndex      = OV_Value_UndefinedIndexUInt;
@@ -40,20 +40,20 @@ namespace OpenViBEToolkit
 		typedef struct _SInput
 		{
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			CIdentifier m_oTypeIdentifier;
+			CIdentifier m_typeID;
 			CString m_sName;
 		} SInput;
 
 		typedef struct _SOutput
 		{
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			CIdentifier m_oTypeIdentifier;
+			CIdentifier m_typeID;
 			CString m_sName;
 		} SOutput;
 
 		typedef struct _SSetting
 		{
-			CIdentifier m_oTypeIdentifier;
+			CIdentifier m_typeID;
 			CString m_sName;
 			CString m_sDefaultValue;
 			CString m_sValue;
@@ -173,7 +173,7 @@ bool CAlgorithmScenarioImporter::process()
 		CIdentifier l_oSettingIdentifier = s->m_oIdentifier;
 		// compute identifier only if it does not exists
 		if (l_oSettingIdentifier == OV_UndefinedIdentifier) { l_oSettingIdentifier = l_pScenario->getUnusedSettingIdentifier(); }
-		l_pScenario->addSetting(s->m_sName, s->m_oTypeIdentifier, s->m_sDefaultValue, OV_Value_UndefinedIndexUInt, false, l_oSettingIdentifier);
+		l_pScenario->addSetting(s->m_sName, s->m_typeID, s->m_sDefaultValue, OV_Value_UndefinedIndexUInt, false, l_oSettingIdentifier);
 		l_pScenario->setSettingValue(l_pScenario->getSettingCount() - 1, s->m_sValue);
 	}
 
@@ -189,12 +189,12 @@ bool CAlgorithmScenarioImporter::process()
 		{
 			l_pBox->setName(b->m_sName);
 
-			for (auto i = b->m_vInput.begin(); i != b->m_vInput.end(); ++i) { l_pBox->addInput(i->m_sName, i->m_oTypeIdentifier, i->m_oIdentifier); }
+			for (auto i = b->m_vInput.begin(); i != b->m_vInput.end(); ++i) { l_pBox->addInput(i->m_sName, i->m_typeID, i->m_oIdentifier); }
 
-			for (auto o = b->m_vOutput.begin(); o != b->m_vOutput.end(); ++o) { l_pBox->addOutput(o->m_sName, o->m_oTypeIdentifier, o->m_oIdentifier); }
+			for (auto o = b->m_vOutput.begin(); o != b->m_vOutput.end(); ++o) { l_pBox->addOutput(o->m_sName, o->m_typeID, o->m_oIdentifier); }
 			for (auto s = b->m_vSetting.begin(); s != b->m_vSetting.end(); ++s)
 			{
-				const CIdentifier& l_oType = s->m_oTypeIdentifier;
+				const CIdentifier& l_oType = s->m_typeID;
 				if (!this->getTypeManager().isRegistered(l_oType) && !(this->getTypeManager().isEnumeration(l_oType)) && (!this
 																														   ->getTypeManager().isBitMask(l_oType)
 					))
@@ -209,7 +209,7 @@ bool CAlgorithmScenarioImporter::process()
 						"The type of the setting " << s->m_sName <<" (" << l_oType.toString() << ") from box " << b->m_sName << " cannot be recognized.");
 				}
 
-				l_pBox->addSetting(s->m_sName, s->m_oTypeIdentifier, s->m_sDefaultValue, OV_Value_UndefinedIndexUInt, s->m_bModifiability, s->m_oIdentifier);
+				l_pBox->addSetting(s->m_sName, s->m_typeID, s->m_sDefaultValue, OV_Value_UndefinedIndexUInt, s->m_bModifiability, s->m_oIdentifier);
 				l_pBox->setSettingValue(l_pBox->getSettingCount() - 1, s->m_sValue);
 			}
 			for (auto a = b->m_vAttribute.begin(); a != b->m_vAttribute.end(); ++a) { l_pBox->addAttribute(a->m_oIdentifier, a->m_sValue); }
@@ -288,7 +288,7 @@ bool CAlgorithmScenarioImporter::process()
 		CIdentifier l_oScenarioInputIdentifier = symbolicScenarioInput.m_oIdentifier;
 		// compute identifier only if it does not exists
 		if (l_oScenarioInputIdentifier == OV_UndefinedIdentifier) { l_oScenarioInputIdentifier = l_pScenario->getUnusedInputIdentifier(); }
-		l_pScenario->addInput(symbolicScenarioInput.m_sName, symbolicScenarioInput.m_oTypeIdentifier, l_oScenarioInputIdentifier);
+		l_pScenario->addInput(symbolicScenarioInput.m_sName, symbolicScenarioInput.m_typeID, l_oScenarioInputIdentifier);
 		if (symbolicScenarioInput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
 		{
 			// Only try to set scenario output links from boxes that actually exist
@@ -322,7 +322,7 @@ bool CAlgorithmScenarioImporter::process()
 		CIdentifier l_oScenarioOutputIdentifier = symbolicScenarioOutput.m_oIdentifier;
 		// compute identifier only if it does not exists
 		if (l_oScenarioOutputIdentifier == OV_UndefinedIdentifier) { l_oScenarioOutputIdentifier = l_pScenario->getUnusedOutputIdentifier(); }
-		l_pScenario->addOutput(symbolicScenarioOutput.m_sName, symbolicScenarioOutput.m_oTypeIdentifier, l_oScenarioOutputIdentifier);
+		l_pScenario->addOutput(symbolicScenarioOutput.m_sName, symbolicScenarioOutput.m_typeID, l_oScenarioOutputIdentifier);
 		if (symbolicScenarioOutput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
 		{
 			// Only try to set scenario output links from boxes that actually exist
@@ -421,7 +421,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier) { m_oSymbolicScenario.m_vSetting.back().m_oIdentifier = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier)
 	{
-		m_oSymbolicScenario.m_vSetting.back().m_oTypeIdentifier = value;
+		m_oSymbolicScenario.m_vSetting.back().m_typeID = value;
 	}
 
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier)
@@ -430,7 +430,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier)
 	{
-		m_oSymbolicScenario.m_vScenarioInput.back().m_oTypeIdentifier = value;
+		m_oSymbolicScenario.m_vScenarioInput.back().m_typeID = value;
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier)
 	{
@@ -446,7 +446,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier)
 	{
-		m_oSymbolicScenario.m_vScenarioOutput.back().m_oTypeIdentifier = value;
+		m_oSymbolicScenario.m_vScenarioOutput.back().m_typeID = value;
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier)
 	{
@@ -472,7 +472,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier)
 	{
-		m_oSymbolicScenario.m_vBox.back().m_vInput.back().m_oTypeIdentifier = value;
+		m_oSymbolicScenario.m_vBox.back().m_vInput.back().m_typeID = value;
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier)
 	{
@@ -480,7 +480,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier)
 	{
-		m_oSymbolicScenario.m_vBox.back().m_vOutput.back().m_oTypeIdentifier = value;
+		m_oSymbolicScenario.m_vBox.back().m_vOutput.back().m_typeID = value;
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier)
 	{
@@ -488,7 +488,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier)
 	{
-		m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_oTypeIdentifier = value;
+		m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_typeID = value;
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Identifier) { m_oSymbolicScenario.m_vComment.back().m_oIdentifier = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Identifier)

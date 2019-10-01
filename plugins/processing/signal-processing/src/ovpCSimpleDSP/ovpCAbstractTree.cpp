@@ -438,7 +438,7 @@ void CAbstractTree::recognizeSpecialTree(uint64_t& treeId, double& parameter)
 		//binary
 	else if (nChildren == 2)
 	{
-		bool isVariable[2];
+		std::array<bool, 2> isVariable;
 		isVariable[0] = children[0]->isTerminal() && !children[0]->isConstant();
 		isVariable[1] = children[1]->isTerminal() && !children[1]->isConstant();
 

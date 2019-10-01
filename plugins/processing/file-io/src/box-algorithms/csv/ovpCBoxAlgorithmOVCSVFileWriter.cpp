@@ -347,7 +347,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 			const IStimulationSet* stimulationSet = m_stimulationDecoder.getOutputStimulationSet();
 			// for each stimulation, get its informations
 
-			for (uint64_t stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); stimulationIndex++)
+			for (size_t stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); stimulationIndex++)
 			{
 				OV_ERROR_UNLESS_KRF(m_writerLib->addEvent({ stimulationSet->getStimulationIdentifier(stimulationIndex),
 										TimeArithmetics::timeToSeconds(stimulationSet->getStimulationDate(stimulationIndex)),

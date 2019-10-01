@@ -40,8 +40,8 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			OpenViBE::CMemoryBuffer m_oPendingChunk;
-			uint64_t m_ui64StartTime   = 0;
-			uint64_t m_ui64EndTime     = 0;
+			uint64_t m_startTime   = 0;
+			uint64_t m_endTime     = 0;
 			uint32_t m_ui32OutputIndex = 0;
 			bool m_bPending            = false;
 			bool m_bHasEBMLHeader      = false;
@@ -65,11 +65,9 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
 				for (uint32_t i = 0; i < box.getOutputCount(); i++)
 				{
-					sprintf(l_sName, "Output stream %u", i + 1);
-					box.setOutputName(i, l_sName);
+					box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str());
 				}
 				return true;
 			}

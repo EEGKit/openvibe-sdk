@@ -458,8 +458,8 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 
 char* strToChar(const std::string& s)
 {
-	char* pc = new char[s.size() + 1];
-	std::strcpy(pc, s.c_str());
+	char* pc;
+	std::copy(s.begin(), s.end(), pc);
 	return pc;
 }
 

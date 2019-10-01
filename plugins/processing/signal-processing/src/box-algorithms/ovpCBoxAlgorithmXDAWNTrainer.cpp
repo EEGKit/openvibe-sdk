@@ -78,7 +78,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		if (m_stimDecoder.isHeaderReceived()) { m_stimEncoder.encodeHeader(); }
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (uint64_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
 			{
 				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
 
@@ -101,9 +101,9 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 	if (train)
 	{
 		std::vector<uint32_t> ERPSampleIndexes;
-		Eigen::MatrixXd X[2]; // X[0] is session matrix, X[1] is averaged ERP
-		Eigen::MatrixXd C[2]; // Covariance matrices
-		uint32_t n[2];
+		std::array<Eigen::MatrixXd, 2> X; // X[0] is session matrix, X[1] is averaged ERP
+		std::array<Eigen::MatrixXd, 2> C; // Covariance matrices
+		std::array<uint32_t, 2> n;
 		uint32_t nChannel = 0;
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";

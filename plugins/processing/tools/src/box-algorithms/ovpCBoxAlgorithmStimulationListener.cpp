@@ -58,7 +58,7 @@ bool CBoxAlgorithmStimulationListener::process()
 
 				CString inputName;
 				staticBoxContext.getInputName(i, inputName);
-				for (uint64_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
+				for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
 				{
 					this->getLogManager() << m_eLogLevel
 							<< "For input " << i << " with name " << inputName

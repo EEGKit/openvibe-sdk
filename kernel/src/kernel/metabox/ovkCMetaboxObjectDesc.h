@@ -48,29 +48,29 @@ namespace OpenViBE
 			{
 				_SIOStream()
 					: m_sName(""),
-					  m_oTypeIdentifier(OV_UndefinedIdentifier),
+					  m_typeID(OV_UndefinedIdentifier),
 					  m_oIdentifier(OV_UndefinedIdentifier) {}
 
 				_SIOStream(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier)
 					: m_sName(name),
-					  m_oTypeIdentifier(typeID),
+					  m_typeID(typeID),
 					  m_oIdentifier(identifier) {}
 
 				CString m_sName;
-				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+				CIdentifier m_typeID = OV_UndefinedIdentifier;
 				CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
 			} SIOStream;
 
 			typedef struct _SSetting
 			{
 				_SSetting()
-					: m_sName(""), m_oTypeIdentifier(OV_UndefinedIdentifier), m_sDefaultValue(""), m_oIdentifier(OV_UndefinedIdentifier) {}
+					: m_sName(""), m_typeID(OV_UndefinedIdentifier), m_sDefaultValue(""), m_oIdentifier(OV_UndefinedIdentifier) {}
 
 				_SSetting(const CString& name, const CIdentifier& typeID, const CString& value, const CIdentifier& id)
-					: m_sName(name), m_oTypeIdentifier(typeID), m_sDefaultValue(value), m_oIdentifier(id) { }
+					: m_sName(name), m_typeID(typeID), m_sDefaultValue(value), m_oIdentifier(id) { }
 
 				CString m_sName;
-				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+				CIdentifier m_typeID = OV_UndefinedIdentifier;
 				CString m_sDefaultValue;
 				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SSetting;

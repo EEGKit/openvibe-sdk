@@ -12,7 +12,7 @@ using namespace OpenViBE;
 using namespace Kernel;
 
 
-const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
+const std::array<CIdentifier, 10> CBoxUpdater::UPDATABLE_ATTRIBUTES = {
 	OV_AttributeId_Box_InitialPrototypeHashValue,
 	OV_AttributeId_Box_InitialInputCount,
 	OV_AttributeId_Box_InitialOutputCount,
@@ -150,7 +150,7 @@ bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 bool CBoxUpdater::checkForSupportedIOSAttributesToBeUpdated()
 {
 	// check for attributes
-	for (auto& attr : updatableAttributes)
+	for (auto& attr : UPDATABLE_ATTRIBUTES)
 	{
 		if ((m_SourceBox->hasAttribute(attr) && !m_KernelBox->hasAttribute(attr))
 			|| (!m_SourceBox->hasAttribute(attr) && m_KernelBox->hasAttribute(attr))) { return true; }

@@ -14,8 +14,8 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace OpenViBEToolkit;
 
-#define _EQ_PARSER_DEBUG_LOG_(level, message) m_oParentPlugin.getLogManager() << level << message << "\n";
-#define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_oParentPlugin.getLogManager() << level; m_pTree->printTree(m_oParentPlugin.getLogManager()); m_oParentPlugin.getLogManager() << "\n"; }
+#define _EQ_PARSER_DEBUG_LOG_(level, message) m_parentPlugin.getLogManager() << level << message << "\n";
+#define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_parentPlugin.getLogManager() << level; m_tree->printTree(m_parentPlugin.getLogManager()); m_parentPlugin.getLogManager() << "\n"; }
 
 namespace
 {
@@ -37,7 +37,7 @@ namespace
 	}
 } // namespace
 
-functionPointer CEquationParser::m_pFunctionTable[] =
+std::array<functionPointer, 32> CEquationParser::m_functionTable =
 {
 	&op_neg, &op_add, &op_sub, &op_mul, &op_div,
 	&op_abs, &op_acos, &op_asin, &op_atan,
@@ -59,10 +59,10 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 
 CEquationParser::~CEquationParser()
 {
-	delete[] m_pFunctionListBase;
-	delete[] m_pFunctionContextListBase;
-	delete[] m_pStack;
-	delete m_pTree;
+	delete[] m_functionListBase;
+	delete[] m_functionContextListBase;
+	delete[] m_stack;
+	delete m_tree;
 }
 
 bool CEquationParser::compileEquation(const char* equation)
@@ -78,7 +78,7 @@ bool CEquationParser::compileEquation(const char* equation)
 
 	//parses the equation
 	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << CString(str.c_str()) << "]...");
-	const tree_parse_info<> info = ast_parse(str.c_str(), m_oGrammar >> end_p, space_p);
+	const tree_parse_info<> info = ast_parse(str.c_str(), m_grammar >> end_p, space_p);
 
 	//If the parsing was successful
 	if (info.full)
@@ -92,49 +92,49 @@ bool CEquationParser::compileEquation(const char* equation)
 		//CONSTANT FOLDING
 		//levels the associative/commutative operators (+ and *)
 		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Leveling tree...");
-		m_pTree->levelOperators();
+		m_tree->levelOperators();
 		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
 
 		//simplifies the AST
 		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Simplifying tree...");
-		m_pTree->simplifyTree();
+		m_tree->simplifyTree();
 		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
 
 		//tries to replace nodes to use the NEG operator and reduce complexity
 		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Generating bytecode...");
-		m_pTree->useNegationOperator();
+		m_tree->useNegationOperator();
 		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
 #endif
 
 #if 0
-		//Detects if it is a special tree (updates m_ui64TreeCategory and m_f64TreeParameter)
+		//Detects if it is a special tree (updates m_treeCategory and m_treeParameter)
 		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Recognizing special tree...");
-		m_pTree->recognizeSpecialTree(m_ui64TreeCategory, m_f64TreeParameter);
+		m_tree->recognizeSpecialTree(m_treeCategory, m_treeParameter);
 		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
 
 		//Unrecognize special tree
 		_EQ_PARSER_DEBUG_LOG_("Unrecognizing special tree...");
-		m_ui64TreeCategory = OP_USERDEF;
+		m_treeCategory = OP_USERDEF;
 		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
 #endif
 
 		//If it is not a special tree, we need to generate some code to reach the result
-		if (m_ui64TreeCategory == OP_USERDEF)
+		if (m_treeCategory == OP_USERDEF)
 		{
 			//allocates the function stack
-			m_pFunctionList     = new functionPointer[m_ui32FunctionStackSize];
-			m_pFunctionListBase = m_pFunctionList;
+			m_functionList     = new functionPointer[m_functionStackSize];
+			m_functionListBase = m_functionList;
 
 			//Allocates the function context stack
-			m_pFunctionContextList     = new UFunctionContext[m_ui64FunctionContextStackSize];
-			m_pFunctionContextListBase = m_pFunctionContextList;
-			m_pStack                   = new double[m_ui64StackSize];
+			m_functionContextList     = new UFunctionContext[m_functionContextStackSize];
+			m_functionContextListBase = m_functionContextList;
+			m_stack                   = new double[m_stackSize];
 
 			//generates the code
-			m_pTree->generateCode(*this);
+			m_tree->generateCode(*this);
 
 			//computes the number of steps to get to the result
-			m_ui64NumberOfOperations = m_pFunctionList - m_pFunctionListBase;
+			m_nOperations = m_functionList - m_functionListBase;
 		}
 
 		return true;
@@ -148,11 +148,11 @@ bool CEquationParser::compileEquation(const char* equation)
 	}
 
 	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error.c_str(), OpenViBE::Kernel::ErrorType::BadParsing, false,
-			 m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
-			 m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
+			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
+			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 }
 
-void CEquationParser::createAbstractTree(tree_parse_info<> oInfo) { m_pTree = new CAbstractTree(createNode(oInfo.trees.begin())); }
+void CEquationParser::createAbstractTree(tree_parse_info<> oInfo) { m_tree = new CAbstractTree(createNode(oInfo.trees.begin())); }
 
 CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 {
@@ -199,7 +199,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		if (l_ui32Index >= m_nVariable)
 		{
 			OV_WARNING("Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
-					   m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
+					   m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 			return new CAbstractTreeValueNode(0);
 		}
 		return new CAbstractTreeVariableNode(l_ui32Index);
@@ -268,20 +268,20 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 
 void CEquationParser::push_value(const double value)
 {
-	*(m_pFunctionList++)                       = op_loadVal;
-	(*(m_pFunctionContextList++)).direct_value = value;
+	*(m_functionList++)                       = op_loadVal;
+	(*(m_functionContextList++)).direct_value = value;
 }
 
 void CEquationParser::push_var(const uint32_t index)
 {
-	*(m_pFunctionList++)                         = op_loadVar;
-	(*(m_pFunctionContextList++)).indirect_value = &m_ppVariable[index];
+	*(m_functionList++)                         = op_loadVar;
+	(*(m_functionContextList++)).indirect_value = &m_variable[index];
 }
 
 void CEquationParser::push_op(const uint64_t op)
 {
-	*(m_pFunctionList++)                         = m_pFunctionTable[op];
-	(*(m_pFunctionContextList++)).indirect_value = nullptr;
+	*(m_functionList++)                         = m_functionTable[op];
+	(*(m_functionContextList++)).indirect_value = nullptr;
 }
 
 // Functions called by our "pseudo - VM"

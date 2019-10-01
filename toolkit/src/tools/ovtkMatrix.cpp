@@ -409,7 +409,8 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 
 						//retrieve value
 						errno              = 0;
-						const double value = atof(curString.c_str());
+						char* end;
+						const double value = strtod(curString.c_str(), &end);
 #if defined TARGET_OS_Windows
 						if (errno == ERANGE)
 						{

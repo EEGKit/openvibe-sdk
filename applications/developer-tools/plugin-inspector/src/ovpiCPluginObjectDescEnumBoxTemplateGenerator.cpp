@@ -18,7 +18,7 @@ namespace
 {
 	std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
 
-	std::string generateRstTitle(std::string title, int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
+	std::string generateRstTitle(const std::string title, const int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------

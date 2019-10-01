@@ -28,7 +28,7 @@ namespace OpenViBE
 
 		protected:
 
-			uint8_t* m_pBuffer           = nullptr;
+			uint8_t* m_buffer           = nullptr;
 			uint64_t m_size              = 0;
 			uint64_t m_ui64AllocatedSize = 0;
 		};
@@ -42,46 +42,46 @@ CMemoryBufferImpl::CMemoryBufferImpl() {}
 
 CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
 {
-	m_pBuffer = new uint8_t[size_t(rMemoryBuffer.getSize() + 1)]; // $$$
-	if (m_pBuffer)
+	m_buffer = new uint8_t[size_t(rMemoryBuffer.getSize() + 1)]; // $$$
+	if (m_buffer)
 	{
 		m_size              = rMemoryBuffer.getSize();
 		m_ui64AllocatedSize = rMemoryBuffer.getSize();
 		if (rMemoryBuffer.getDirectPointer())
 		{
-			memcpy(m_pBuffer, rMemoryBuffer.getDirectPointer(), size_t(m_size)); // $$$
+			memcpy(m_buffer, rMemoryBuffer.getDirectPointer(), size_t(m_size)); // $$$
 		}
-		m_pBuffer[m_ui64AllocatedSize] = 0;
+		m_buffer[m_ui64AllocatedSize] = 0;
 	}
 }
 
 CMemoryBufferImpl::CMemoryBufferImpl(const uint8_t* pMemoryBuffer, const uint64_t size)
 {
-	m_pBuffer = new uint8_t[size_t(size + 1)]; // $$$
-	if (m_pBuffer)
+	m_buffer = new uint8_t[size_t(size + 1)]; // $$$
+	if (m_buffer)
 	{
 		m_size              = size;
 		m_ui64AllocatedSize = size;
 		if (pMemoryBuffer)
 		{
-			memcpy(m_pBuffer, pMemoryBuffer, size_t(m_size)); // $$$
+			memcpy(m_buffer, pMemoryBuffer, size_t(m_size)); // $$$
 		}
-		m_pBuffer[m_ui64AllocatedSize] = 0;
+		m_buffer[m_ui64AllocatedSize] = 0;
 	}
 }
 
 CMemoryBufferImpl::~CMemoryBufferImpl()
 {
-	if (m_pBuffer)
+	if (m_buffer)
 	{
-		delete [] m_pBuffer;
-		m_pBuffer = nullptr;
+		delete [] m_buffer;
+		m_buffer = nullptr;
 	}
 }
 
-uint8_t* CMemoryBufferImpl::getDirectPointer() { return m_pBuffer; }
+uint8_t* CMemoryBufferImpl::getDirectPointer() { return m_buffer; }
 
-const uint8_t* CMemoryBufferImpl::getDirectPointer() const { return m_pBuffer; }
+const uint8_t* CMemoryBufferImpl::getDirectPointer() const { return m_buffer; }
 
 uint64_t CMemoryBufferImpl::getSize() const { return m_size; }
 
@@ -89,14 +89,14 @@ bool CMemoryBufferImpl::reserve(const uint64_t ui64Size)
 {
 	if (ui64Size > m_ui64AllocatedSize)
 	{
-		uint8_t* l_pSavedBuffer = m_pBuffer;
-		m_pBuffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
-		if (!m_pBuffer) { return false; }
-		memcpy(m_pBuffer, l_pSavedBuffer, size_t(m_size)); // $$$
+		uint8_t* l_pSavedBuffer = m_buffer;
+		m_buffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
+		if (!m_buffer) { return false; }
+		memcpy(m_buffer, l_pSavedBuffer, size_t(m_size)); // $$$
 
 		delete [] l_pSavedBuffer;
 		m_ui64AllocatedSize            = ui64Size;
-		m_pBuffer[m_ui64AllocatedSize] = 0;
+		m_buffer[m_ui64AllocatedSize] = 0;
 	}
 	return true;
 }
@@ -105,13 +105,13 @@ bool CMemoryBufferImpl::setSize(const uint64_t ui64Size, const bool bDiscard)
 {
 	if (ui64Size > m_ui64AllocatedSize)
 	{
-		uint8_t* l_pSavedBuffer = m_pBuffer;
-		m_pBuffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
-		if (!m_pBuffer) { return false; }
-		if (!bDiscard) { memcpy(m_pBuffer, l_pSavedBuffer, size_t(m_size)); }	// $$$
+		uint8_t* l_pSavedBuffer = m_buffer;
+		m_buffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
+		if (!m_buffer) { return false; }
+		if (!bDiscard) { memcpy(m_buffer, l_pSavedBuffer, size_t(m_size)); }	// $$$
 		delete [] l_pSavedBuffer;
 		m_ui64AllocatedSize            = ui64Size;
-		m_pBuffer[m_ui64AllocatedSize] = 0;
+		m_buffer[m_ui64AllocatedSize] = 0;
 	}
 	m_size = ui64Size;
 	return true;
@@ -123,7 +123,7 @@ bool CMemoryBufferImpl::append(const uint8_t* buffer, const uint64_t size)
 	{
 		const uint64_t bufferSizeBackup = m_size;
 		if (!this->setSize(m_size + size, false)) { return false; }
-		memcpy(m_pBuffer + bufferSizeBackup, buffer, size_t(size));
+		memcpy(m_buffer + bufferSizeBackup, buffer, size_t(size));
 	}
 	return true;
 }
@@ -134,7 +134,7 @@ bool CMemoryBufferImpl::append(const IMemoryBuffer& memoryBuffer)
 	{
 		const uint64_t bufferSizeBackup = m_size;
 		if (!this->setSize(m_size + memoryBuffer.getSize(), false)) { return false; }
-		memcpy(m_pBuffer + bufferSizeBackup, memoryBuffer.getDirectPointer(), size_t(memoryBuffer.getSize()));
+		memcpy(m_buffer + bufferSizeBackup, memoryBuffer.getDirectPointer(), size_t(memoryBuffer.getSize()));
 	}
 	return true;
 }

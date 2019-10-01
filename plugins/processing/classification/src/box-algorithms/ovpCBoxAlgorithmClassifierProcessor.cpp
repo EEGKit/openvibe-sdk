@@ -201,7 +201,7 @@ bool CBoxAlgorithmClassifierProcessor::process()
 		if (m_oStimulationDecoder.isHeaderReceived()) { }
 		if (m_oStimulationDecoder.isBufferReceived())
 		{
-			for (uint64_t j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (size_t j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
 			{
 				if (m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
 				{

@@ -3,6 +3,7 @@
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 #include <wavelib/header/wavelib.h>
+#include <array>
 
 namespace OpenViBEPlugins
 {
@@ -22,7 +23,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_oDecoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis> m_vEncoder[4];
+			std::array<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis>, 4> m_vEncoder;
 
 			const char* m_waveletType = nullptr;
 			double m_waveletParam     = 0;

@@ -10,7 +10,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxProto(const IKernelContext& ctx, IBox& box);
+			CBoxProto(const IKernelContext& ctx, IBox& box) : TKernelObject<IBoxProto>(ctx), m_box(box) {}
 			~CBoxProto() override = default;
 			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
 			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
@@ -20,14 +20,14 @@ namespace OpenViBE
 							const bool bModifiable = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
 			bool addFlag(const EBoxFlag eBoxFlag) override;
 			bool addFlag(const CIdentifier& cIdentifierFlag) override;
-			bool addInputSupport(const CIdentifier& typeID) override;
-			bool addOutputSupport(const CIdentifier& typeID) override;
+			bool addInputSupport(const CIdentifier& typeID) override { return m_box.addInputSupport(typeID); }
+			bool addOutputSupport(const CIdentifier& typeID) override { return m_box.addOutputSupport(typeID); }
 
 			_IsDerivedFromClass_Final_(TKernelObject<IBoxProto>, OVK_ClassId_Kernel_Scenario_BoxProto)
 
 		protected:
 
-			IBox& m_rBox;
+			IBox& m_box;
 
 		private:
 

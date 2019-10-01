@@ -1363,7 +1363,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		CIdentifier attributeId = OV_UndefinedIdentifier;
 		while ((attributeId = itSourceBox->second->getNextAttributeIdentifier(attributeId)) != OV_UndefinedIdentifier)
 		{
-			const auto& updatableAttrs = CBoxUpdater::updatableAttributes;
+			const auto& updatableAttrs = CBoxUpdater::UPDATABLE_ATTRIBUTES;
 			if (std::find(updatableAttrs.cbegin(), updatableAttrs.cend(), attributeId) == updatableAttrs.cend())
 			{
 				nonUpdatableAttributes[attributeId] = itSourceBox->second->getAttributeValue(attributeId);

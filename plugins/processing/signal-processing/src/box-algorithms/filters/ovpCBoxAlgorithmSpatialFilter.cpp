@@ -4,7 +4,6 @@
 
 #include <sstream>
 #include <string>
-#include <cstdio>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -35,8 +34,7 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficien
 		while (*ptr != c1 && *ptr != c2 && *ptr != 0) { ptr++; }
 	}
 
-	OV_ERROR_UNLESS_KRZ(count == nRows*nCols, "Invalid computed coefficients count [" << count << "] (expected " << nRows * nCols << " coefficients)",
-						OpenViBE::Kernel::ErrorType::BadProcessing);
+	OV_ERROR_UNLESS_KRZ(count == nRows*nCols, "Invalid computed coefficients count [" << count << "] (expected " << nRows * nCols << " coefficients)", OpenViBE::Kernel::ErrorType::BadProcessing);
 
 	// Resize in one step for efficiency.
 	m_oFilterBank.setDimensionCount(2);
@@ -65,8 +63,7 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficien
 		}
 		buffer[i] = 0;
 
-		OV_ERROR_UNLESS_KRZ(idx < count, "Invalid parsed coefficient number [" << idx << "] (expected maximium " << count << " coefficients)",
-							OpenViBE::Kernel::ErrorType::BadProcessing);
+		OV_ERROR_UNLESS_KRZ(idx < count, "Invalid parsed coefficient number [" << idx << "] (expected maximium " << count << " coefficients)", OpenViBE::Kernel::ErrorType::BadProcessing);
 
 		// Finally, convert
 		try { filter[idx] = std::stod(buffer); }
@@ -75,8 +72,7 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficien
 			const uint32_t row = idx / nRows + 1;
 			const uint32_t col = idx % nRows + 1;
 
-			OV_ERROR_KRZ("Failed to parse coefficient number [" << idx << "] at matrix positions [" << row << "," << col << "]",
-						 OpenViBE::Kernel::ErrorType::BadProcessing);
+			OV_ERROR_KRZ("Failed to parse coefficient number [" << idx << "] at matrix positions [" << row << "," << col << "]", OpenViBE::Kernel::ErrorType::BadProcessing);
 		}
 
 		idx++;
@@ -105,21 +101,18 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		m_pStreamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 		m_pStreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 
-		((OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
-			((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*)
-				m_pStreamDecoder)->getOutputSamplingRate());
+		static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
+			static_cast<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamDecoder)->getOutputSamplingRate());
 	}
 	else if (l_oIdentifier == OV_TypeId_Spectrum)
 	{
 		m_pStreamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 		m_pStreamEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 
-		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputFrequencyAbscissa().setReferenceTarget(
-			((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*
-			)m_pStreamDecoder)->getOutputFrequencyAbscissa());
-		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
-			((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*
-			)m_pStreamDecoder)->getOutputSamplingRate());
+		static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputFrequencyAbscissa().setReferenceTarget(
+			static_cast<OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamDecoder)->getOutputFrequencyAbscissa());
+		static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
+			static_cast<OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamDecoder)->getOutputSamplingRate());
 	}
 	else { OV_ERROR_KRF("Invalid input stream type [" << l_oIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
@@ -146,8 +139,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		// The double cast is needed until FSettingValueAutoCast supports uint32_t.
 		const uint32_t nOutputChannelSetting = uint32_t(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
 		const uint32_t nInputChannelSetting  = uint32_t(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2)));
-		const uint32_t nCoefficients         = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, nOutputChannelSetting,
-																nInputChannelSetting);
+		const uint32_t nCoefficients         = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, nOutputChannelSetting, nInputChannelSetting);
 
 		OV_ERROR_UNLESS_KRF(nCoefficients == nOutputChannelSetting * nInputChannelSetting,
 							"Invalid number of coefficients [" << nCoefficients << "] (expected "<< nOutputChannelSetting * nInputChannelSetting <<
@@ -214,7 +206,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 								"Invalid input channel count  [" << nChannelIn << "] (expected " << nChannelFilterIn << " channel count)",
 								OpenViBE::Kernel::ErrorType::BadConfig);
 
-			IMatrix* oMatrix = ((OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputMatrix();
+			IMatrix* oMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputMatrix();
 			oMatrix->setDimensionCount(2);
 			oMatrix->setDimensionSize(0, nChannelFilterOut);
 			oMatrix->setDimensionSize(1, nSampleIn);
@@ -222,17 +214,15 @@ bool CBoxAlgorithmSpatialFilter::process()
 			// Name channels
 			for (uint32_t j = 0; j < oMatrix->getDimensionSize(0); ++j)
 			{
-				char buffer[64];
-				sprintf(buffer, "sFiltered %d", j);
-				oMatrix->setDimensionLabel(0, j, buffer);
+				oMatrix->setDimensionLabel(0, j, ("sFiltered " + std::to_string(j)).c_str());
 			}
 
 			m_pStreamEncoder->encodeHeader();
 		}
 		if (m_pStreamDecoder->isBufferReceived())
 		{
-			const IMatrix* iMatrix = ((OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputMatrix();
-			IMatrix* oMatrix       = ((OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputMatrix();
+			const IMatrix* iMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamDecoder)->getOutputMatrix();
+			IMatrix* oMatrix       = static_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputMatrix();
 
 			const double* in           = iMatrix->getBuffer();
 			double* out                = oMatrix->getBuffer();
@@ -243,8 +233,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 #if defined TARGET_HAS_ThirdPartyEIGEN
 			//@TODO check this part we only create matrix ?
 			const Eigen::Map<MatrixXdRowMajor> inMapper(const_cast<double*>(in), nChannelIn, nSample);
-			const Eigen::Map<MatrixXdRowMajor> filterMapper(const_cast<double*>(m_oFilterBank.getBuffer()), m_oFilterBank.getDimensionSize(0),
-															m_oFilterBank.getDimensionSize(1));
+			const Eigen::Map<MatrixXdRowMajor> filterMapper(const_cast<double*>(m_oFilterBank.getBuffer()), m_oFilterBank.getDimensionSize(0), m_oFilterBank.getDimensionSize(1));
 			Eigen::Map<MatrixXdRowMajor> outMapper(out, nChannelOut, nSample);
 			outMapper = filterMapper * inMapper;
 #else

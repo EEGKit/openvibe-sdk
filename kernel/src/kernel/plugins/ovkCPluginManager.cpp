@@ -359,18 +359,18 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 
 	if (ppPluginObjectDescT) { *ppPluginObjectDescT = nullptr; }
 
-	CIdentifier l_oSubstitutionTokenIdentifier;
-	char l_sSubstitutionTokenName[1024];
-	uint64_t l_ui64SourceClassIdentifier = classID.toUInteger();
-	uint64_t l_ui64TargetClassIdentifier = l_ui64SourceClassIdentifier;
-	sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
-	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) !=
+	CIdentifier substitutionTokenID;
+	char substitutionTokenName[1024];
+	const uint64_t srcClassID = classID.toUInteger();
+	uint64_t dstClassID = srcClassID;
+	sprintf(substitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, srcClassID);
+	if ((substitutionTokenID = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(substitutionTokenName)) !=
 		OV_UndefinedIdentifier)
 	{
-		CString l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(l_oSubstitutionTokenIdentifier);
+		CString l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(substitutionTokenID);
 		l_sSubstitutionTokenValue         = this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
 
-		try { l_ui64TargetClassIdentifier = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), nullptr, 16); }
+		try { dstClassID = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), nullptr, 16); }
 		catch (const std::invalid_argument& exception)
 		{
 			OV_ERROR_KRN("Received exception while converting class identifier from string to number: " << exception.what(), ErrorType::BadArgument);
@@ -380,25 +380,25 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 			OV_ERROR_KRN("Received exception while converting class identifier from string to number: " << exception.what(), ErrorType::OutOfBound);
 		}
 	}
-	if (l_ui64TargetClassIdentifier != l_ui64SourceClassIdentifier)
+	if (dstClassID != srcClassID)
 	{
-		this->getLogManager() << LogLevel_Trace << "Substituting plugin class identifier " << CIdentifier(l_ui64SourceClassIdentifier) <<
-				" with new class identifier " << CIdentifier(l_ui64TargetClassIdentifier) << "\n";
+		this->getLogManager() << LogLevel_Trace << "Substituting plugin class identifier " << CIdentifier(srcClassID) <<
+				" with new class identifier " << CIdentifier(dstClassID) << "\n";
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Debug << "Not substitute plugin found for class identifier " << CIdentifier(l_ui64SourceClassIdentifier) <<
-				" (configuration token name was " << CString(l_sSubstitutionTokenName) << ")\n";
+		this->getLogManager() << LogLevel_Debug << "Not substitute plugin found for class identifier " << CIdentifier(srcClassID) <<
+				" (configuration token name was " << CString(substitutionTokenName) << ")\n";
 	}
 
 	IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
 	for (auto i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
 	{
-		if (i->first->getCreatedClass() == CIdentifier(l_ui64TargetClassIdentifier)) { l_pPluginObjectDesc = i->first; }
+		if (i->first->getCreatedClass() == CIdentifier(dstClassID)) { l_pPluginObjectDesc = i->first; }
 	}
 
 	OV_ERROR_UNLESS_KRN(l_pPluginObjectDesc,
-						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(l_ui64SourceClassIdentifier).toString() <<
+						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(srcClassID).toString() <<
 						" in registered plugin object descriptors",
 						ErrorType::BadResourceCreation);
 

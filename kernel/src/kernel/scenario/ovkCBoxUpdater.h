@@ -59,7 +59,7 @@ namespace OpenViBE
 
 			bool isUpdateRequired() const { return m_IsUpdateRequired; }
 
-			static const std::array<CIdentifier, 10> updatableAttributes;
+			static const std::array<CIdentifier, 10> UPDATABLE_ATTRIBUTES;
 
 			_IsDerivedFromClass_Final_(TKernelObject<IKernelObject>, OV_ClassId_Kernel_Scenario_BoxUpdater)
 

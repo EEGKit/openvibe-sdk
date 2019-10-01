@@ -2,6 +2,7 @@
 
 #include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
+#include <array>
 
 namespace OpenViBEPlugins
 {
@@ -21,12 +22,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder[7];
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer[7];
+			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_pStreamEncoder;
+			std::array<OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>, 7> op_pMemoryBuffer;
 
 			bool m_bHasSentHeader    = false;
-			uint64_t m_ui64StartTime = 0;
-			uint64_t m_ui64EndTime   = 0;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
 
 			OpenViBE::CMatrix* m_pMatrix1                = nullptr;
 			OpenViBE::CMatrix* m_pMatrix2                = nullptr;

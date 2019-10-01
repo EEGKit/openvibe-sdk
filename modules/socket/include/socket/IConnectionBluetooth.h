@@ -4,6 +4,7 @@
 
 #include <map>
 #include <string>
+#include <array>
 
 namespace Socket
 {
@@ -55,11 +56,9 @@ namespace Socket
 		 */
 		static bool string2BluetoothAddress(const char* straddr, unsigned long long* btaddr)
 		{
-			uint32_t aaddr[6];
+			std::array<uint32_t, 6> aaddr;
 
-			int value = sscanf(straddr, "%02x:%02x:%02x:%02x:%02x:%02x",
-							   &aaddr[0], &aaddr[1], &aaddr[2],
-							   &aaddr[3], &aaddr[4], &aaddr[5]);
+			const int value = sscanf(straddr, "%02x:%02x:%02x:%02x:%02x:%02x", &aaddr[0], &aaddr[1], &aaddr[2], &aaddr[3], &aaddr[4], &aaddr[5]);
 
 			if (value != 6) { return false; }
 
@@ -67,7 +66,7 @@ namespace Socket
 
 			for (size_t i = 0; i < 6; i++)
 			{
-				unsigned long long tmpaddr = static_cast<unsigned long long>(aaddr[i] & 0xff);
+				const unsigned long long tmpaddr = static_cast<unsigned long long>(aaddr[i] & 0xff);
 				*btaddr                    = (*btaddr << 8) + tmpaddr;
 			}
 

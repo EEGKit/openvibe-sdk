@@ -10,6 +10,7 @@
 #include <boost/spirit/include/classic_ast.hpp>
 
 #include <vector>
+#include <array>
 
 typedef char const* iterator_t;
 typedef tree_match<iterator_t> parse_tree_match_t;
@@ -36,47 +37,47 @@ class CEquationParser
 protected:
 
 	//! The AST produced by the parsing of the equation
-	CAbstractTree* m_pTree = nullptr;
+	CAbstractTree* m_tree = nullptr;
 
 	//! Grammar to use
-	SEquationGrammar m_oGrammar;
+	SEquationGrammar m_grammar;
 
 	//! Pointer to the data referenced by X in the equation
-	double** m_ppVariable = nullptr;
+	double** m_variable = nullptr;
 	//! Number of accessible variables
 	uint32_t m_nVariable = 0;
 
 	//! Size of the "function stack" (where the sucessive function pointers are stored)
-	const uint32_t m_ui32FunctionStackSize = 1024;
+	const uint32_t m_functionStackSize = 1024;
 	//! Pointer to the top of the function stack
-	functionPointer* m_pFunctionList = nullptr;
+	functionPointer* m_functionList = nullptr;
 	//! Pointer to the base of the function stack
-	functionPointer* m_pFunctionListBase = nullptr;
+	functionPointer* m_functionListBase = nullptr;
 
 	//! Size of the "function context stack" (where the sucessive function context are stored)
-	const uint64_t m_ui64FunctionContextStackSize = 1024;
+	const uint64_t m_functionContextStackSize = 1024;
 	//! Pointer to the top of the function context stack
-	UFunctionContext* m_pFunctionContextList = nullptr;
+	UFunctionContext* m_functionContextList = nullptr;
 	//! Pointer to the base of the function context stack
-	UFunctionContext* m_pFunctionContextListBase = nullptr;
+	UFunctionContext* m_functionContextListBase = nullptr;
 
 	//! Size of the "local" stack
-	const uint64_t m_ui64StackSize = 1024;
+	const uint64_t m_stackSize = 1024;
 	//! Pointer to the top of the "local" stack
-	double* m_pStack = nullptr;
+	double* m_stack = nullptr;
 
 	//! Number of pointers/contexts in the function/context stacks (same for both)
-	uint64_t m_ui64NumberOfOperations = 0;
+	uint64_t m_nOperations = 0;
 
 	//! Table of function pointers
-	static functionPointer m_pFunctionTable[32];
+	static std::array<functionPointer, 32> m_functionTable;
 
 	//! Category of the tree (OP_USERDEF or Special tree)
-	uint64_t m_ui64TreeCategory = OP_USERDEF;
+	uint64_t m_treeCategory = OP_USERDEF;
 	//! Optional parameter in case of a special tree
-	double m_f64TreeParameter = 0;
+	double m_treeParameter = 0;
 
-	OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& m_oParentPlugin;
+	OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& m_parentPlugin;
 
 public:
 
@@ -87,19 +88,18 @@ public:
 	* \param nVariable
 	*/
 	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, const uint32_t nVariable)
-		: m_ppVariable(variable), m_nVariable(nVariable), m_oParentPlugin(plugin) {}
+		: m_variable(variable), m_nVariable(nVariable), m_parentPlugin(plugin) {}
 
 	//! Destructor.
 	~CEquationParser();
 
 #if 0
-	//
 	void setVariable(double * pVariable){ m_pVariable=pVariable; }
 #endif
 
 	/**
 	* Compiles the given equation, and generates the successive function calls to achieve the
-	* same result if needed (depends on m_ui64TreeCategory).
+	* same result if needed (depends on m_treeCategory).
 	* \param equation The equation to use.
 	*/
 	bool compileEquation(const char* equation);
@@ -112,13 +112,13 @@ public:
 	* Returns the tree's category.
 	* \return The tree's category.
 	*/
-	uint64_t getTreeCategory() const { return m_ui64TreeCategory; }
+	uint64_t getTreeCategory() const { return m_treeCategory; }
 
 	/**
 	 * Returns the optional parameter.
 	 * \return The optional parameter.
 	 */
-	double getTreeParameter() const { return m_f64TreeParameter; }
+	double getTreeParameter() const { return m_treeParameter; }
 
 	/**
 	* Executes the successive function calls from the function stack and returns
@@ -127,24 +127,24 @@ public:
 	*/
 	double executeEquation()
 	{
-		functionPointer* l_pCurrentFunction     = m_pFunctionList - 1;
-		functionPointer* l_pLastFunctionPointer = l_pCurrentFunction - m_ui64NumberOfOperations;
+		functionPointer* currentFunction     = m_functionList - 1;
+		functionPointer* lastFunctionPointer = currentFunction - m_nOperations;
 
-		UFunctionContext* l_pCurrentFunctionContext = m_pFunctionContextList - 1;
+		UFunctionContext* currentFunctionContext = m_functionContextList - 1;
 
 		//while there are function pointers
-		while (l_pCurrentFunction != l_pLastFunctionPointer)
+		while (currentFunction != lastFunctionPointer)
 		{
 			//calls the function with the current function context
-			(*l_pCurrentFunction)(m_pStack, *l_pCurrentFunctionContext);
+			(*currentFunction)(m_stack, *currentFunctionContext);
 
 			//updates the stack pointers
-			l_pCurrentFunction--;
-			l_pCurrentFunctionContext--;
+			currentFunction--;
+			currentFunctionContext--;
 		}
 
 		//pop and return the result
-		return *(m_pStack--);
+		return *(m_stack--);
 	}
 
 private:

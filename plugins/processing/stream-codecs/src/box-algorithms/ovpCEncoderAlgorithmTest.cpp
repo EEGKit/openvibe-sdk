@@ -55,11 +55,11 @@ bool CEncoderAlgorithmTest::initialize()
 
 	m_pStimulationSet = new CStimulationSet();
 
-	uint64_t m_ui64SamplingRate = 16;
+	uint64_t m_samplingRate = 16;
 
 	m_pStreamEncoder[1]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
 	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
-	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setValue(&m_ui64SamplingRate);
+	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setValue(&m_samplingRate);
 	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
 	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setValue(&m_pMatrix2);
 	m_pStreamEncoder[4]->getInputParameter(OVP_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet)->setValue(&m_pStimulationSet);
@@ -67,8 +67,8 @@ bool CEncoderAlgorithmTest::initialize()
 	m_pStreamEncoder[6]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix3);
 
 	m_bHasSentHeader = false;
-	m_ui64StartTime  = 0;
-	m_ui64EndTime    = 0;
+	m_startTime  = 0;
+	m_endTime    = 0;
 
 	return true;
 }
@@ -105,8 +105,8 @@ bool CEncoderAlgorithmTest::process()
 
 	if (!m_bHasSentHeader)
 	{
-		m_ui64StartTime = 0;
-		m_ui64EndTime   = 0;
+		m_startTime = 0;
+		m_endTime   = 0;
 		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
 		{
 			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
@@ -123,10 +123,10 @@ bool CEncoderAlgorithmTest::process()
 		}
 	}
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++) { boxContext.markOutputAsReadyToSend(i, m_ui64StartTime, m_ui64EndTime); }
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++) { boxContext.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
 
-	m_ui64StartTime = m_ui64EndTime;
-	m_ui64EndTime   = l_rPlayerContext.getCurrentTime();
+	m_startTime = m_endTime;
+	m_endTime   = l_rPlayerContext.getCurrentTime();
 
 	return true;
 }

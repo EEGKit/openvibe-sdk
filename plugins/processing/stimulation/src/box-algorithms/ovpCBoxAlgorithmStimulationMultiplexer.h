@@ -44,12 +44,9 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char inputName[1024];
-
 				for (uint32_t input = 0; input < box.getInputCount(); ++input)
 				{
-					sprintf(inputName, "Input stimulations %u", input + 1);
-					box.setInputName(input, inputName);
+					box.setInputName(input, ("Input stimulations " + std::to_string(input + 1)).c_str());
 					box.setInputType(input, OV_TypeId_Stimulations);
 				}
 
@@ -75,8 +72,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CString getDetailedDescription() const override
 			{
-				return OpenViBE::CString(
-					"The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs.");
+				return OpenViBE::CString("The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs.");
 			}
 
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Streaming"); }

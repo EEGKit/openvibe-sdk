@@ -7,6 +7,7 @@
 #include "ovtTestFixtureCommon.h"
 
 #include <ovp_global_defines.h>
+#include <array>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -52,11 +53,7 @@ bool checkForSchemaValidationError()
 
 TEST(validate_scenario_test_case, test_no_false_positive)
 {
-	const char* files[3] = {
-		"test-scenario-false-positive1.mxs",
-		"test-scenario-false-positive2.mxs",
-		"test-scenario-false-positive3.mxs"
-	};
+	const std::array<char*, 3> files = { "test-scenario-false-positive1.mxs", "test-scenario-false-positive2.mxs", "test-scenario-false-positive3.mxs" };
 
 	// here we use assert because we want to fail directly
 	// in order to avoid a segfault
@@ -67,7 +64,7 @@ TEST(validate_scenario_test_case, test_no_false_positive)
 
 TEST(validate_scenario_test_case, test_root)
 {
-	const char* files[9] = {
+	const std::array<char*, 9> files = {
 		"test-root-dup-attributes.mxs",
 		"test-root-dup-boxes.mxs",
 		"test-root-dup-comments.mxs",
@@ -92,7 +89,7 @@ TEST(validate_scenario_test_case, test_root)
 
 TEST(validate_scenario_test_case, test_attribute)
 {
-	const char* files[4] = {
+	const std::array<char*, 4> files = {
 		"test-attribute-dup-id.mxs",
 		"test-attribute-dup-value.mxs",
 		"test-attribute-missing-id.mxs",
@@ -112,7 +109,7 @@ TEST(validate_scenario_test_case, test_attribute)
 
 TEST(validate_scenario_test_case, test_box)
 {
-	const char* files[10] = {
+	const std::array<char*, 10> files = {
 		"test-box-dup-algo.mxs",
 		"test-box-dup-attributes.mxs",
 		"test-box-dup-id.mxs",
@@ -138,7 +135,7 @@ TEST(validate_scenario_test_case, test_box)
 
 TEST(validate_scenario_test_case, test_comment)
 {
-	const char* files[5] = {
+	const std::array<char*, 5> files = {
 		"test-comment-dup-attributes.mxs",
 		"test-comment-dup-id.mxs",
 		"test-comment-dup-text.mxs",
@@ -159,7 +156,7 @@ TEST(validate_scenario_test_case, test_comment)
 
 TEST(validate_scenario_test_case, test_input)
 {
-	const char* files[4] = {
+	const std::array<char*, 4> files = {
 		"test-input-dup-id.mxs",
 		"test-input-dup-name.mxs",
 		"test-input-missing-id.mxs",
@@ -179,7 +176,7 @@ TEST(validate_scenario_test_case, test_input)
 
 TEST(validate_scenario_test_case, test_link)
 {
-	const char* files[7] = {
+	const std::array<char*, 7> files = {
 		"test-link-dup-attributes.mxs",
 		"test-link-dup-id.mxs",
 		"test-link-dup-source.mxs",
@@ -202,7 +199,7 @@ TEST(validate_scenario_test_case, test_link)
 
 TEST(validate_scenario_test_case, test_output)
 {
-	const char* files[4] = {
+	const std::array<char*, 4> files = {
 		"test-output-dup-id.mxs",
 		"test-output-dup-name.mxs",
 		"test-output-missing-id.mxs",
@@ -222,7 +219,7 @@ TEST(validate_scenario_test_case, test_output)
 
 TEST(validate_scenario_test_case, test_setting)
 {
-	const char* files[9] = {
+	const std::array<char*, 9> files = {
 		"test-setting-bad-modif.mxs",
 		"test-setting-dup-default.mxs",
 		"test-setting-dup-id.mxs",
@@ -247,7 +244,7 @@ TEST(validate_scenario_test_case, test_setting)
 
 TEST(validate_scenario_test_case, test_source)
 {
-	const char* files[5] = {
+	const std::array<char*, 5> files = {
 		"test-source-bad-index.mxs",
 		"test-source-dup-id.mxs",
 		"test-source-dup-index.mxs",
@@ -268,7 +265,7 @@ TEST(validate_scenario_test_case, test_source)
 
 TEST(validate_scenario_test_case, test_target)
 {
-	const char* files[5] = {
+	const std::array<char*, 5> files = {
 		"test-target-bad-index.mxs",
 		"test-target-dup-id.mxs",
 		"test-target-dup-index.mxs",

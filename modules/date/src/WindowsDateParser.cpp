@@ -35,6 +35,7 @@
 * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 */
+#include <array>
 #if defined TARGET_OS_Windows
 #include <stdio.h>
 #include <string>
@@ -56,26 +57,13 @@ using namespace DateParser;
 #define	SECSPERDAY		86400
 #define	TM_YEAR_BASE	1900
 
-static int conv_num(const char**, int*, int, int);
+static int conv_num(const char** buf, int* dest, int llim, int ulim);
 
-static const char* day[7] = {
-	"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-	"Friday", "Saturday"
-};
-static const char* abday[7] = {
-	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-};
-static const char* mon[12] = {
-	"January", "February", "March", "April", "May", "June", "July",
-	"August", "September", "October", "November", "December"
-};
-static const char* abmon[12] = {
-	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
-static const char* am_pm[2] = {
-	"AM", "PM"
-};
+static const std::array<char*, 7> DAY = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+static const std::array<char*, 7> AB_DAY = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static const std::array<char*, 12> MON = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+static const std::array<char*, 12> AB_MON = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+static const std::array<char*, 2> AM_PM = { "AM", "PM" };
 
 
 Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, struct tm* tmParsed)
@@ -171,12 +159,12 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				for (i = 0; i < 7; i++)
 				{
 					/* Full name. */
-					len = strlen(day[i]);
-					if (strncmp(day[i], bp, len) == 0) { break; }
+					len = strlen(DAY[i]);
+					if (strncmp(DAY[i], bp, len) == 0) { break; }
 
 					/* Abbreviated name. */
-					len = strlen(abday[i]);
-					if (strncmp(abday[i], bp, len) == 0) { break; }
+					len = strlen(AB_DAY[i]);
+					if (strncmp(AB_DAY[i], bp, len) == 0) { break; }
 				}
 
 				/* Nothing matched. */
@@ -193,12 +181,12 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				for (i = 0; i < 12; i++)
 				{
 					/* Full name. */
-					len = strlen(mon[i]);
-					if (strncmp(mon[i], bp, len) == 0) { break; }
+					len = strlen(MON[i]);
+					if (strncmp(MON[i], bp, len) == 0) { break; }
 
 					/* Abbreviated name. */
-					len = strlen(abmon[i]);
-					if (strncmp(abmon[i], bp, len) == 0) { break; }
+					len = strlen(AB_MON[i]);
+					if (strncmp(AB_MON[i], bp, len) == 0) { break; }
 				}
 
 				/* Nothing matched. */
@@ -263,18 +251,18 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'p':	/* The locale's equivalent of AM/PM. */
 			LEGAL_ALT(0);
 				/* AM? */
-				if (strcmp(am_pm[0], bp) == 0)
+				if (strcmp(AM_PM[0], bp) == 0)
 				{
 					if (tmParsed->tm_hour > 11) { return (nullptr); }
-					bp += strlen(am_pm[0]);
+					bp += strlen(AM_PM[0]);
 					break;
 				}
 				/* PM? */
-				if (strcmp(am_pm[1], bp) == 0)
+				if (strcmp(AM_PM[1], bp) == 0)
 				{
 					if (tmParsed->tm_hour > 11) { return (nullptr); }
 					tmParsed->tm_hour += 12;
-					bp += strlen(am_pm[1]);
+					bp += strlen(AM_PM[1]);
 					break;
 				}
 
@@ -343,7 +331,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 }
 
 
-static int conv_num(const char** buf, int* dest, int llim, int ulim)
+static int conv_num(const char** buf, int* dest, const int llim, const int ulim)
 {
 	int result = 0;
 

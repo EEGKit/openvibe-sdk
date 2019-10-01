@@ -93,14 +93,13 @@ namespace OpenViBEPlugins
 					//checks for problems, buffer lengths differents...
 					if (tEnd - tStart != m_lastChunkEndTime - m_lastChunkStartTime)
 					{
-						//marks everything as deprecated and sends a warning
+						//marks everything as deprecated and sends a error
 						for (uint32_t input = 0; input < m_nInput; input++)
 						{
 							for (uint32_t chunk = 0; chunk < boxIO->getInputChunkCount(input); chunk++) { boxIO->markInputAsDeprecated(input, chunk); }
 						}
 
-						readyToProcess = false;
-
+						//readyToProcess = false;
 						OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
@@ -139,9 +138,7 @@ namespace OpenViBEPlugins
 
 						for (uint32_t i = 0; i < uint32_t(totalBufferSize); i++)
 						{
-							char buffer[64];
-							sprintf(buffer, "Feature %d", (i + 1));
-							oMatrix->setDimensionLabel(0, i, buffer);
+							oMatrix->setDimensionLabel(0, i, ("Feature " + std::to_string(i + 1)).c_str());
 						}
 
 						m_pFeatureVectorEncoder->encodeHeader();
