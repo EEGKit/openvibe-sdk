@@ -41,7 +41,7 @@ namespace
 	bool g_ServerStarted = false;
 
 	// server callback run from a child thread
-	void onServerListening(int port, uint32_t expectedPacketCount)
+	void onServerListening(const int port, const uint32_t expectedPacketCount)
 	{
 		g_ReceivedData.clear();
 
@@ -88,7 +88,7 @@ namespace
 		server->release();
 	}
 
-	void sendData(Socket::IConnectionClient* client, void* data, uint32_t size)
+	void sendData(Socket::IConnectionClient* client, void* data, const uint32_t size)
 	{
 		const uint32_t bytesToSend = size;
 		uint32_t bytesSent         = 0;

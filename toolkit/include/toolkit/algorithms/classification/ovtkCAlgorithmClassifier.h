@@ -59,16 +59,16 @@ namespace OpenViBEToolkit
 		bool initializeExtraParameterMechanism();
 		bool uninitializeExtraParameterMechanism();
 
-		uint64_t getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		int64_t getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		double getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		bool getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		uint64_t getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
+		uint64_t getUInt64Parameter(const OpenViBE::CIdentifier& parameterID);
+		int64_t getInt64Parameter(const OpenViBE::CIdentifier& parameterID);
+		double getFloat64Parameter(const OpenViBE::CIdentifier& parameterID);
+		bool getBooleanParameter(const OpenViBE::CIdentifier& parameterID);
+		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& parameterID);
+		uint64_t getEnumerationParameter(const OpenViBE::CIdentifier& parameterID, const OpenViBE::CIdentifier& enumerationIdentifier);
 
 	private:
-		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& parameterIdentifier);
-		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, uint32_t length);
+		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& parameterID) const;
+		static void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, uint32_t length);
 
 		OpenViBE::Kernel::IAlgorithmProxy* m_AlgorithmProxy = nullptr;
 		void* m_ExtraParametersMap                          = nullptr;

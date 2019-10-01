@@ -88,4 +88,4 @@ extern const char* const PAIRWISE_STRATEGY_ENUMERATION_NAME;
 extern const char* const MLP_EVALUATION_FUNCTION_NAME;
 extern const char* const MLP_TRANSFERT_FUNCTION_NAME;
 
-bool ov_float_equal(double first, double second);
+bool OVFloatEqual(double first, double second);

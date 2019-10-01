@@ -135,7 +135,7 @@ namespace OpenViBE
 		os << "PlayMode: ";
 		if (this->playMode)
 		{
-			std::string modeAsString = (this->playMode == PlayerPlayMode::Fastfoward) ? "fastforward" : "standard";
+			const std::string modeAsString = (this->playMode == PlayerPlayMode::Fastfoward) ? "fastforward" : "standard";
 			os << modeAsString;
 		}
 		else { os << "not set"; }

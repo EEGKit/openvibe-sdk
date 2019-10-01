@@ -64,20 +64,20 @@ void CLogListenerConsole::log(const time64 value)
 	if (m_bTimeInSeconds)
 	{
 		uint64_t l_ui64Precision = m_ui64TimePrecision;
-		double l_f64Time         = TimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
+		double l_f64Time         = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));
 		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
-		if (m_bLogWithHexa) { ss << " (0x" << hex << value.m_ui64TimeValue << ")"; }
+		if (m_bLogWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
 
 		cout << ss.str().c_str();
 	}
 	else
 	{
-		cout << dec << value.m_ui64TimeValue;
-		if (m_bLogWithHexa) { cout << " (0x" << hex << value.m_ui64TimeValue << ")"; }
+		cout << dec << value.timeValue;
+		if (m_bLogWithHexa) { cout << " (0x" << hex << value.timeValue << ")"; }
 	}
 
 	cout.flags(l_oFormat);

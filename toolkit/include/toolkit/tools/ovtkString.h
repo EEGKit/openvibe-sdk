@@ -31,8 +31,8 @@ namespace OpenViBEToolkit
 				TContainer* m_pTokenContainer = nullptr;
 			};
 
-			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator);
-			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount);
+			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t separator);
+			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t* separator, uint32_t nSeparator);
 			OVTK_API bool isAlmostEqual(const OpenViBE::CString& rString1, const OpenViBE::CString& rString2, bool bCaseSensitive = true,
 										bool bRemoveStartSpaces                                                                   = true,
 										bool bRemoveEndSpaces                                                                     = true);

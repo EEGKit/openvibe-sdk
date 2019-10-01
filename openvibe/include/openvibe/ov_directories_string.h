@@ -71,16 +71,16 @@ namespace OpenViBE
 		{
 #if defined TARGET_OS_Windows
 			// first chance: Win7 and higher
-			std::string l_sPath = pathFromEnv("PROGRAMDATA", "");
-			if (l_sPath.empty())
+			std::string path = pathFromEnv("PROGRAMDATA", "");
+			if (path.empty())
 			{
 				// second chance: WinXP
-				l_sPath = pathFromEnv("ALLUSERSPROFILE", "");
+				path = pathFromEnv("ALLUSERSPROFILE", "");
 			}
 			// fallback
-			if (l_sPath.empty()) { l_sPath = "openvibe-user"; }
+			if (path.empty()) { path = "openvibe-user"; }
 
-			return l_sPath + "/" + OV_CONFIG_SUBDIR;
+			return path + "/" + OV_CONFIG_SUBDIR;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			// On Linux, we redirect to current user data folder
 			return getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR;
@@ -94,10 +94,10 @@ namespace OpenViBE
 		// Used to convert \ in paths to /, we need this because \ is a special character for .conf token parsing
 		static std::string convertPath(const std::string& strIn)
 		{
-			std::string l_sOut(strIn);
-			size_t l_sLen = strIn.length();
-			for (size_t i = 0; i < l_sLen; i++) { if (strIn[i] == '\\') { l_sOut[i] = '/'; } }
-			return l_sOut;
+			std::string out(strIn);
+			const size_t len = strIn.length();
+			for (size_t i = 0; i < len; i++) { if (strIn[i] == '\\') { out[i] = '/'; } }
+			return out;
 		}
 
 		/// Try to guess the root directory by assuming that any program that uses the kernel is in the bin
@@ -110,16 +110,16 @@ namespace OpenViBE
 			std::string fullpath;
 #if defined TARGET_OS_Windows
 			// Unlike GetEnvironmentVariableW, this function can not return the length of the actual path
-			std::unique_ptr<wchar_t> utf16value(new wchar_t[1024]);
+			const std::unique_ptr<wchar_t> utf16value(new wchar_t[1024]);
 			GetModuleFileNameW(nullptr, utf16value.get(), 1024);
-			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
+			const int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
 			if (multiByteSize == 0)
 			{
 				// There are no sensible values to return if the above call fails and the program will not be
 				// able to run in any case.
 				std::abort();
 			}
-			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
+			const std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
 			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0) { std::abort(); }
 
 			fullpath = convertPath(utf8Value.get());
@@ -137,8 +137,8 @@ namespace OpenViBE
 
 			fullpath = std::string(path.get());
 #endif
-			auto slash_before_last = fullpath.find_last_of('/', fullpath.find_last_of('/') - 1);
-			rootDir                = fullpath.substr(0, slash_before_last);
+			const auto slashBeforeLast = fullpath.find_last_of('/', fullpath.find_last_of('/') - 1);
+			rootDir                = fullpath.substr(0, slashBeforeLast);
 			return rootDir;
 		}
 
@@ -148,25 +148,25 @@ namespace OpenViBE
 #if defined TARGET_OS_Windows
 			// Using std::getenv on Windows yields UTF7 strings which do not work with the Utf8ToUtf16 function
 			// as this seems to be the only place where we actually get UTF7, let's get it as UTF16 by default
-			DWORD wideBufferSize = GetEnvironmentVariableW(Common::Converter::Utf8ToUtf16(sEnvVar).c_str(), nullptr, 0);
+			const DWORD wideBufferSize = GetEnvironmentVariableW(Common::Converter::Utf8ToUtf16(sEnvVar).c_str(), nullptr, 0);
 			if (wideBufferSize == 0) { return convertPath(sDefaultPath); }
-			std::unique_ptr<wchar_t> utf16value(new wchar_t[wideBufferSize]);
+			const std::unique_ptr<wchar_t> utf16value(new wchar_t[wideBufferSize]);
 			GetEnvironmentVariableW(Common::Converter::Utf8ToUtf16(sEnvVar).c_str(), utf16value.get(), wideBufferSize);
 
-			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
+			const int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
 			if (multiByteSize == 0) { return convertPath(sDefaultPath); }
-			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
+			const std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
 			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0)
 			{
 				return convertPath(sDefaultPath);
 			}
 
-			const char* l_sPathPtr = utf8Value.get();
+			const char* pathPtr = utf8Value.get();
 #else
-			const char *l_sPathPtr = std::getenv(sEnvVar);
+			const char * pathPtr = std::getenv(sEnvVar);
 #endif
-			std::string l_sPath = (l_sPathPtr ? l_sPathPtr : sDefaultPath);
-			return convertPath(l_sPath);
+			const std::string path = (pathPtr ? pathPtr : sDefaultPath);
+			return convertPath(path);
 		}
 
 		// Returns ENV variable if it is defined, otherwise it extends the ROOT variable if it exists, finally returns a default path

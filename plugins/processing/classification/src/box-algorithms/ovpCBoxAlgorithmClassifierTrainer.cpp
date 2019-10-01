@@ -57,17 +57,15 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	OV_ERROR_UNLESS_KRF(configurationFilename != CString(""), "Invalid empty configuration filename", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	CIdentifier l_oClassifierAlgorithmClassIdentifier;
+	CIdentifier classifierAlgorithmClassID;
 
-	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(
-		OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
-	l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(
-		OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[ALGORITHM_SETTING_NAME]);
+	const CIdentifier strategyClassID = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
+	classifierAlgorithmClassID = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[ALGORITHM_SETTING_NAME]);
 
-	if (l_oStrategyClassIdentifier == OV_UndefinedIdentifier)
+	if (strategyClassID == OV_UndefinedIdentifier)
 	{
 		//That means that we want to use a classical algorithm so just let's create it
-		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oClassifierAlgorithmClassIdentifier);
+		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(classifierAlgorithmClassID);
 
 		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
 							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
@@ -79,12 +77,12 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	else
 	{
 		isPairing     = true;
-		m_pClassifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(l_oStrategyClassIdentifier));
+		m_pClassifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(strategyClassID));
 		m_pClassifier->initialize();
 	}
 	m_ui64TrainStimulation = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, (*m_pParameter)[TRAIN_TRIGGER_SETTING_NAME]);
 
-	int64_t nPartition = this->getConfigurationManager().expandAsInteger((*m_pParameter)[FOLD_SETTING_NAME]);
+	const int64_t nPartition = this->getConfigurationManager().expandAsInteger((*m_pParameter)[FOLD_SETTING_NAME]);
 
 	OV_ERROR_UNLESS_KRF(nPartition >= 0, "Invalid partition count [" << nPartition << "] (expected value >= 0)", OpenViBE::Kernel::ErrorType::BadSetting);
 
@@ -117,7 +115,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	if (isPairing)
 	{
 		TParameterHandler<CIdentifier*> ip_oClassId(m_pClassifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
-		ip_oClassId = &l_oClassifierAlgorithmClassIdentifier;
+		ip_oClassId = &classifierAlgorithmClassID;
 
 		OV_ERROR_UNLESS_KRF(m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture), "Failed to design architecture",
 							OpenViBE::Kernel::ErrorType::Internal);
@@ -443,21 +441,21 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 {
 	OV_ERROR_UNLESS_KRF(stopIdx != startIdx, "Invalid indexes: start index equals stop index", OpenViBE::Kernel::ErrorType::BadArgument);
 
-	const uint32_t l_ui32FeatureVectorSize = dataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
+	const uint32_t featureVectorSize = dataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	XML::IXMLNode* l_pNode = op_pConfiguration;//Requested for affectation
+	XML::IXMLNode* node = op_pConfiguration;//Requested for affectation
 	TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
-	ip_pConfiguration = l_pNode;
+	ip_pConfiguration = node;
 
 	m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration);
 
 	TParameterHandler<IMatrix*> ip_pFeatureVector(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler<double> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	ip_pFeatureVector->setDimensionCount(1);
-	ip_pFeatureVector->setDimensionSize(0, l_ui32FeatureVectorSize);
+	ip_pFeatureVector->setDimensionSize(0, featureVectorSize);
 
-	size_t l_iSuccessCount = 0;
+	size_t nSuccess = 0;
 
 	for (size_t j = startIdx; j < stopIdx; j++)
 	{
@@ -468,7 +466,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
-		System::Memory::copy(featureVectorBuffer, dataset[k].m_pFeatureVectorMatrix->getBuffer(), l_ui32FeatureVectorSize * sizeof(double));
+		System::Memory::copy(featureVectorBuffer, dataset[k].m_pFeatureVectorMatrix->getBuffer(), featureVectorSize * sizeof(double));
 
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
@@ -476,7 +474,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 		this->getLogManager() << LogLevel_Debug << "Recognize " << predictedValue << "\n";
 
-		if (predictedValue == correctValue) { l_iSuccessCount++; }
+		if (predictedValue == correctValue) { nSuccess++; }
 
 		if (predictedValue < confusionMatrix.getDimensionSize(0) && correctValue < confusionMatrix.getDimensionSize(0))
 		{
@@ -486,7 +484,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 		else { std::cout << "errorn\n"; }
 	}
 
-	return double((l_iSuccessCount * 100.0) / (stopIdx - startIdx));
+	return double((nSuccess * 100.0) / (stopIdx - startIdx));
 }
 
 bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)

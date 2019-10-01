@@ -32,9 +32,9 @@ bool CAlgorithmClassifier::uninitialize()
 
 bool CAlgorithmClassifier::process()
 {
-	TParameterHandler<IMatrix*> ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-	TParameterHandler<IMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-	TParameterHandler<XML::IXMLNode*> ip_Configuration(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+	const TParameterHandler<IMatrix*> ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+	const TParameterHandler<IMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	const TParameterHandler<XML::IXMLNode*> ip_Configuration(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 
 	TParameterHandler<double> op_EstimatedClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	TParameterHandler<IMatrix*> op_ClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
@@ -49,7 +49,7 @@ bool CAlgorithmClassifier::process()
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
-		CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
+		const CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
 		if (this->train(featureVectorSetAdapter)) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{
@@ -70,7 +70,7 @@ bool CAlgorithmClassifier::process()
 			OV_ERROR_KRF("Classifying failed", (!featureVector) ? OpenViBE::Kernel::ErrorType::BadInput : OpenViBE::Kernel::ErrorType::BadOutput);
 		}
 		double estimatedClass = 0;
-		CFeatureVector featureVectorAdapter(*featureVector);
+		const CFeatureVector featureVectorAdapter(*featureVector);
 		CVector classificationValuesAdapter(*classificationValues);
 		CVector probabilityValuesAdapter(*probabilityValues);
 
@@ -125,7 +125,7 @@ bool CAlgorithmClassifier::process()
 
 bool CAlgorithmClassifier::initializeExtraParameterMechanism()
 {
-	TParameterHandler<std::map<CString, CString>*> ip_ExtraParameter(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+	const TParameterHandler<std::map<CString, CString>*> ip_ExtraParameter(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 	m_ExtraParametersMap = static_cast<std::map<CString, CString>*>(ip_ExtraParameter);
 
 	m_AlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
@@ -146,56 +146,56 @@ bool CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 	return true;
 }
 
-CString& CAlgorithmClassifier::getParameterValue(const CIdentifier& parameterIdentifier)
+CString& CAlgorithmClassifier::getParameterValue(const CIdentifier& parameterID) const
 {
-	CString parameterName = m_AlgorithmProxy->getInputParameterName(parameterIdentifier);
+	const CString parameterName = m_AlgorithmProxy->getInputParameterName(parameterID);
 	return (*static_cast<std::map<CString, CString>*>(m_ExtraParametersMap))[parameterName];
 }
 
-void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, uint32_t length)
+void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, const uint32_t length)
 {
 	matrix->setDimensionCount(1);
 	matrix->setDimensionSize(0, length);
 }
 
-uint64_t CAlgorithmClassifier::getUInt64Parameter(const CIdentifier& parameterIdentifier)
+uint64_t CAlgorithmClassifier::getUInt64Parameter(const CIdentifier& parameterID)
 {
-	TParameterHandler<uint64_t> temp(getInputParameter(parameterIdentifier));
-	temp = this->getAlgorithmContext().getConfigurationManager().expandAsUInteger(getParameterValue(parameterIdentifier));
+	TParameterHandler<uint64_t> temp(getInputParameter(parameterID));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsUInteger(getParameterValue(parameterID));
 	return uint64_t(temp);
 }
 
-int64_t CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterIdentifier)
+int64_t CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterID)
 {
-	TParameterHandler<int64_t> temp(getInputParameter(parameterIdentifier));
-	temp = this->getAlgorithmContext().getConfigurationManager().expandAsInteger(getParameterValue(parameterIdentifier));
+	TParameterHandler<int64_t> temp(getInputParameter(parameterID));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsInteger(getParameterValue(parameterID));
 	return int64_t(temp);
 }
 
-double CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterIdentifier)
+double CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterID)
 {
-	TParameterHandler<double> temp(getInputParameter(parameterIdentifier));
-	temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(parameterIdentifier));
+	TParameterHandler<double> temp(getInputParameter(parameterID));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(parameterID));
 	return double(temp);
 }
 
-bool CAlgorithmClassifier::getBooleanParameter(const CIdentifier& parameterIdentifier)
+bool CAlgorithmClassifier::getBooleanParameter(const CIdentifier& parameterID)
 {
-	TParameterHandler<bool> temp(getInputParameter(parameterIdentifier));
-	temp = this->getAlgorithmContext().getConfigurationManager().expandAsBoolean(getParameterValue(parameterIdentifier));
+	TParameterHandler<bool> temp(getInputParameter(parameterID));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsBoolean(getParameterValue(parameterID));
 	return bool(temp);
 }
 
-CString* CAlgorithmClassifier::getCStringParameter(const CIdentifier& parameterIdentifier)
+CString* CAlgorithmClassifier::getCStringParameter(const CIdentifier& parameterID)
 {
-	TParameterHandler<CString*> temp(getInputParameter(parameterIdentifier));
-	temp = &getParameterValue(parameterIdentifier);
+	TParameterHandler<CString*> temp(getInputParameter(parameterID));
+	temp = &getParameterValue(parameterID);
 	return static_cast<CString*>(temp);
 }
 
-uint64_t CAlgorithmClassifier::getEnumerationParameter(const CIdentifier& parameterIdentifier, const CIdentifier& enumerationIdentifier)
+uint64_t CAlgorithmClassifier::getEnumerationParameter(const CIdentifier& parameterID, const CIdentifier& enumerationIdentifier)
 {
-	TParameterHandler<uint64_t> temp(getInputParameter(parameterIdentifier));
-	temp = this->getTypeManager().getEnumerationEntryValueFromName(enumerationIdentifier, getParameterValue(parameterIdentifier));
+	TParameterHandler<uint64_t> temp(getInputParameter(parameterID));
+	temp = this->getTypeManager().getEnumerationEntryValueFromName(enumerationIdentifier, getParameterValue(parameterID));
 	return uint64_t(temp);
 }

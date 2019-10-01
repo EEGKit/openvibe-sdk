@@ -2,8 +2,6 @@
 
 #include <system/ovCMemory.h>
 
-#include <openvibe/ovTimeArithmetics.h>
-
 using namespace OpenViBE;
 using namespace OpenViBEToolkit;
 using namespace std;
@@ -15,7 +13,7 @@ CSignalTrial::CSignalTrial() {}
 
 CSignalTrial::~CSignalTrial()
 {
-	for (auto itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
+	for (auto itChannel = m_channelSamples.begin(); itChannel != m_channelSamples.end(); ++itChannel)
 	{
 		delete [] itChannel->second;
 	}
@@ -24,95 +22,84 @@ CSignalTrial::~CSignalTrial()
 // ________________________________________________________________________________________________________________
 //
 
-bool CSignalTrial::setSamplingRate(const uint32_t ui32SamplingFrequency)
+bool CSignalTrial::setSamplingRate(const uint32_t samplingFrequency)
 {
-	m_ui32SamplingRate = ui32SamplingFrequency;
-	return m_ui32SamplingRate != 0;
+	m_samplingRate = samplingFrequency;
+	return m_samplingRate != 0;
 }
 
-bool CSignalTrial::setChannelCount(const uint32_t ui32ChannelCount)
+bool CSignalTrial::setChannelCount(const uint32_t count)
 {
 	uint32_t i;
-	for (i = 0; i < ui32ChannelCount; i++)
+	for (i = 0; i < count; i++)
 	{
-		if (m_vChannelSample.find(i) == m_vChannelSample.end()) { m_vChannelSample[i] = new double[m_ui32SampleCountReserved]; }
+		if (m_channelSamples.find(i) == m_channelSamples.end()) { m_channelSamples[i] = new double[m_nSampleReserved]; }
 	}
-	for (i = ui32ChannelCount; i < m_nChannel; i++)
+	for (i = count; i < m_nChannel; i++)
 	{
-		delete [] m_vChannelSample[i];
-		m_vChannelSample.erase(m_vChannelSample.find(i));
+		delete [] m_channelSamples[i];
+		m_channelSamples.erase(m_channelSamples.find(i));
 	}
 
-	m_nChannel = ui32ChannelCount;
+	m_nChannel = count;
 	m_nSample  = 0;
-	m_vChannelName.clear();
+	m_channelNames.clear();
 	return m_nChannel != 0;
 }
 
-bool CSignalTrial::setChannelName(const uint32_t ui32ChannelIndex, const char* sChannelName)
+bool CSignalTrial::setChannelName(const uint32_t index, const char* name)
 {
-	if (ui32ChannelIndex < m_nChannel)
+	if (index < m_nChannel)
 	{
-		m_vChannelName[ui32ChannelIndex] = sChannelName;
+		m_channelNames[index] = name;
 		return true;
 	}
 	return false;
 }
 
-bool CSignalTrial::setLabelIdentifier(const CIdentifier& rLabelIdentifier)
+bool CSignalTrial::setLabelIdentifier(const CIdentifier& labelID)
 {
-	m_oLabelIdentifier = rLabelIdentifier;
+	m_labelID = labelID;
 	return true;
 }
 
-bool CSignalTrial::setSampleCount(const uint32_t ui32SampleCount, const bool bPreserve)
+bool CSignalTrial::setSampleCount(const uint32_t count, const bool preserve)
 {
-	const uint32_t l_ui32SampleCountRounding = 0x00000fff;
+	const uint32_t nSampleRounding = 0x00000fff;
 
-	if (ui32SampleCount > m_ui32SampleCountReserved)
+	if (count > m_nSampleReserved)
 	{
-		uint32_t l_ui32SampleCountReserved = (ui32SampleCount + l_ui32SampleCountRounding + 1) & (~l_ui32SampleCountRounding);
-		for (auto itChannelSample = m_vChannelSample.begin(); itChannelSample != m_vChannelSample.end(); ++itChannelSample)
+		const uint32_t nSampleReserved = (count + nSampleRounding + 1) & (~nSampleRounding);
+		for (auto itChannelSample = m_channelSamples.begin(); itChannelSample != m_channelSamples.end(); ++itChannelSample)
 		{
-			double* l_pSample = new double[l_ui32SampleCountReserved];
-			if (bPreserve)
+			double* sample = new double[nSampleReserved];
+			if (preserve)
 			{
-				System::Memory::copy(l_pSample, itChannelSample->second,
-									 (ui32SampleCount < m_nSample ? ui32SampleCount : m_nSample) * sizeof(double));
+				System::Memory::copy(sample, itChannelSample->second, (count < m_nSample ? count : m_nSample) * sizeof(double));
 			}
 			delete [] itChannelSample->second;
-			itChannelSample->second = l_pSample;
+			itChannelSample->second = sample;
 		}
-		m_ui32SampleCountReserved = l_ui32SampleCountReserved;
+		m_nSampleReserved = nSampleReserved;
 	}
-	m_nSample = ui32SampleCount;
+	m_nSample = count;
 	return true;
 }
 
 // ________________________________________________________________________________________________________________
 //
 
-uint32_t CSignalTrial::getSamplingRate() const { return m_ui32SamplingRate; }
-
-uint32_t CSignalTrial::getChannelCount() const { return m_nChannel; }
-
-const char* CSignalTrial::getChannelName(const uint32_t ui32ChannelIndex) const
+const char* CSignalTrial::getChannelName(const uint32_t index) const
 {
-	auto itChannelName = m_vChannelName.find(ui32ChannelIndex);
-	if (itChannelName != m_vChannelName.end()) { return itChannelName->second.c_str(); }
+	const auto itChannelName = m_channelNames.find(index);
+	if (itChannelName != m_channelNames.end()) { return itChannelName->second.c_str(); }
 	return "";
 }
 
-CIdentifier CSignalTrial::getLabelIdentifier() const { return m_oLabelIdentifier; }
-
-uint32_t CSignalTrial::getSampleCount() const { return m_nSample; }
-
-uint64_t CSignalTrial::getDuration() const { return (m_ui32SamplingRate ? TimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_nSample) : 0); }
-
-double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) const
+double* CSignalTrial::getChannelSampleBuffer(const uint32_t index) const
 {
-	auto itChannelSample = m_vChannelSample.find(ui32ChannelIndex);
-	if (itChannelSample != m_vChannelSample.end()) { return itChannelSample->second; }
+	const auto itChannelSample = m_channelSamples.find(index);
+	if (itChannelSample != m_channelSamples.end()) { return itChannelSample->second; }
 	return nullptr;
 }
 

@@ -42,7 +42,7 @@ CString& CString::operator+=(const CString& rString)
 	return *this;
 }
 
-char& CString::operator[](size_t idx) { return m_pStringImpl->m_Value[idx]; }
+char& CString::operator[](const size_t idx) { return m_pStringImpl->m_Value[idx]; }
 
 namespace OpenViBE
 {

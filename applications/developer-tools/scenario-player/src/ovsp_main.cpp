@@ -33,7 +33,7 @@ using namespace OpenViBE;
 
 void initializeParser(ProgramOptionParser& optionParser)
 {
-	std::string desc =
+	const std::string desc =
 			R"d(Usage: program options
 
 Program can be run in express mode to directly execute a scenario
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 	{
 		// command parser type is selected from mode
 		std::unique_ptr<ICommandParser> commandParser{ nullptr };
-		auto mode = optionParser.getOptionValue<ProgramOptionsTraits::String>("mode");
+		const auto mode = optionParser.getOptionValue<ProgramOptionsTraits::String>("mode");
 
 		if (mode == "c")
 		{

@@ -173,7 +173,7 @@ namespace OpenViBE
 			virtual bool process(const CIdentifier& rTriggerIdentifier) = 0;
 
 
-			virtual bool isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier) = 0;
+			virtual bool isAlgorithmDerivedFrom(const CIdentifier& classID) = 0;
 
 			//@}
 

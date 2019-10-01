@@ -9,8 +9,6 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CEBMLBaseEncoder::CEBMLBaseEncoder(): m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
-
 // ________________________________________________________________________________________________________________
 //
 
@@ -82,7 +80,7 @@ bool CEBMLBaseEncoder::process()
 
 void CEBMLBaseEncoder::write(const void* buffer, const uint64_t size)
 {
-	uint64_t l_ui64CurrentBufferSize = op_pMemoryBuffer->getSize();
-	op_pMemoryBuffer->setSize(l_ui64CurrentBufferSize + size, false);
-	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, buffer, size);
+	const uint64_t currentBufferSize = op_pMemoryBuffer->getSize();
+	op_pMemoryBuffer->setSize(currentBufferSize + size, false);
+	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
 }

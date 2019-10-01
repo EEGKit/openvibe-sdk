@@ -158,10 +158,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 {
 	if (i->value.id() == SEquationGrammar::expressionID)
 	{
-		if (*i->value.begin() == '+')
-		{
-			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
-		}
+		if (*i->value.begin() == '+') { return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true); }
 		//replaces (- X Y) by (+ X (-Y)) (in fact (+ X (* -1 Y)) )
 		if (*i->value.begin() == '-')
 		{
@@ -172,10 +169,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == SEquationGrammar::termID)
 	{
-		if (*i->value.begin() == '*')
-		{
-			return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
-		}
+		if (*i->value.begin() == '*') { return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true); }
 		if (*i->value.begin() == '/') { return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1)); }
 	}
 	else if (i->value.id() == SEquationGrammar::factorID)
@@ -229,15 +223,9 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the unary function's symbols table
-		if ((functionID = find(unaryFunction_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false);
-		}
+		if ((functionID = find(unaryFunction_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false); }
 		//gets the function's Id from the binary function's symbols table
-		if ((functionID = find(binaryFunction_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
-		}
+		if ((functionID = find(binaryFunction_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
 	}
 	else if (i->value.id() == SEquationGrammar::ifthenID)
 	{
@@ -253,15 +241,9 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the comparison function's symbols table
-		if ((functionID = find(comparison1Function_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
-		}
+		if ((functionID = find(comparison1Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
 		//gets the function's Id from the comparison function's symbols table
-		if ((functionID = find(comparison2Function_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
-		}
+		if ((functionID = find(comparison2Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
 	}
 	else if (i->value.id() == SEquationGrammar::booleanID)
 	{
@@ -272,45 +254,33 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(binaryBoolean1Function_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
-		}
+		if ((functionID = find(binaryBoolean1Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(binaryBoolean2Function_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
-		}
+		if ((functionID = find(binaryBoolean2Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(binaryBoolean3Function_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
-		}
+		if ((functionID = find(binaryBoolean3Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(unaryBooleanFunction_p, value.c_str())) != nullptr)
-		{
-			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false);
-		}
+		if ((functionID = find(unaryBooleanFunction_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false); }
 	}
 
 	return nullptr;
 }
 
-void CEquationParser::push_value(double f64Value)
+void CEquationParser::push_value(const double value)
 {
-	*(m_pFunctionList++)                           = op_loadVal;
-	(*(m_pFunctionContextList++)).direct_value = f64Value;
+	*(m_pFunctionList++)                       = op_loadVal;
+	(*(m_pFunctionContextList++)).direct_value = value;
 }
 
-void CEquationParser::push_var(uint32_t index)
+void CEquationParser::push_var(const uint32_t index)
 {
-	*(m_pFunctionList++)                            = op_loadVar;
+	*(m_pFunctionList++)                         = op_loadVar;
 	(*(m_pFunctionContextList++)).indirect_value = &m_ppVariable[index];
 }
 
-void CEquationParser::push_op(uint64_t ui64Operator)
+void CEquationParser::push_op(const uint64_t op)
 {
-	*(m_pFunctionList++)                            = m_pFunctionTable[ui64Operator];
+	*(m_pFunctionList++)                         = m_pFunctionTable[op];
 	(*(m_pFunctionContextList++)).indirect_value = nullptr;
 }
 

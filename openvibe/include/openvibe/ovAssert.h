@@ -66,7 +66,7 @@ namespace OpenViBE
 		std::stringstream ss;
 		ss.precision(3);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << TimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
+		ss << TimeArithmetics::timeToSeconds(time.timeValue);
 		ss << " sec";
 
 		os << ss.str();

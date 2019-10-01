@@ -53,18 +53,10 @@ namespace OpenViBEPlugins
 			//the check is unnecessary when removing/changing inputs and on already named inputs
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
-				uint32_t i = box.getInputCount() - 1;
+				const uint32_t i = box.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
-				sprintf(l_sName, "Input stream %u", i + 1);
-				box.setInputName(i, l_sName);
-				/*
-				for(i=0; i<box.getInputCount(); i++)
-				{
-					sprintf(l_sName, "Input stream %u", i+1);
-					box.setInputName(i, l_sName);
-				}
-				//*/
+				box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
+				//for(i=0; i<box.getInputCount(); i++) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 

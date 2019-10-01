@@ -156,7 +156,7 @@ namespace OpenViBEToolkit
 			operator uint32_t()
 			{
 				double result;
-				OpenViBE::CString value = m_configManager.expand(m_settingValue);
+				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
 
 				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, result),
 								"Could not expand numeric expression [" << m_settingValue << "] to unsigned integer 32bits.",

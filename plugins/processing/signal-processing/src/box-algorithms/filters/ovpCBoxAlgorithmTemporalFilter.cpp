@@ -19,7 +19,7 @@ namespace
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::HighPass<32>, 1, Dsp::DirectFormII> CButterworthHighPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::LowPass<32>, 1, Dsp::DirectFormII> CButterworthLowPass;
 
-	std::shared_ptr<Dsp::Filter> createButterworthFilter(uint64_t filterType, uint64_t nSmoothingSample)
+	std::shared_ptr<Dsp::Filter> createButterworthFilter(const uint64_t filterType, const uint64_t nSmoothingSample)
 	{
 		switch (filterType)
 		{
@@ -30,10 +30,10 @@ namespace
 			default:
 				break;
 		}
-		return NULL;
+		return nullptr;
 	}
 
-	bool getButterworthParameters(Dsp::Params& parameters, uint64_t samplingRate, uint64_t filterType, uint64_t order, double lowCutFrequency, double highCutFrequency, double /*bandPassRipple*/)
+	bool getButterworthParameters(Dsp::Params& parameters, const uint64_t samplingRate, const uint64_t filterType, const uint64_t order, const double lowCutFrequency, const double highCutFrequency, const double /*bandPassRipple*/)
 	{
 		parameters[0] = double(samplingRate);
 		parameters[1] = double(order);
@@ -109,39 +109,39 @@ namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
 {
-	m_ui64FilterMethod         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64FilterType           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_filterMethod         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_filterType           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	const int64_t fildterOrder = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_f64LowCutFrequency       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	m_f64HighCutFrequency      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_lowCutFrequency       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_highCutFrequency      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
 	OV_ERROR_UNLESS_KRF(fildterOrder >= 1, "Invalid filter order [" << fildterOrder << "] (expected value >= 1)", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_ui64FilterOrder = uint64_t(fildterOrder);
+	m_filterOrder = uint64_t(fildterOrder);
 
-	if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass)
+	if (m_filterType == OVP_TypeId_FilterType_LowPass)
 	{
-		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > 0, "Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
+		OV_ERROR_UNLESS_KRF(m_highCutFrequency > 0, "Invalid high cut-off frequency [" << m_highCutFrequency << "] (expected value > 0)",
 							OpenViBE::Kernel::ErrorType::BadSetting);
 	}
-	else if (m_ui64FilterType == OVP_TypeId_FilterType_HighPass)
+	else if (m_filterType == OVP_TypeId_FilterType_HighPass)
 	{
-		OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency > 0, "Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value > 0)",
+		OV_ERROR_UNLESS_KRF(m_lowCutFrequency > 0, "Invalid low cut-off frequency [" << m_lowCutFrequency << "] (expected value > 0)",
 							OpenViBE::Kernel::ErrorType::BadSetting);
 	}
-	else if (m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == FilterType_BandStop)
+	else if (m_filterType == OVP_TypeId_FilterType_BandPass || m_filterType == FilterType_BandStop)
 	{
-		OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency >= 0, "Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value >= 0)",
+		OV_ERROR_UNLESS_KRF(m_lowCutFrequency >= 0, "Invalid low cut-off frequency [" << m_lowCutFrequency << "] (expected value >= 0)",
 							OpenViBE::Kernel::ErrorType::BadSetting);
 
-		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > 0, "Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
+		OV_ERROR_UNLESS_KRF(m_highCutFrequency > 0, "Invalid high cut-off frequency [" << m_highCutFrequency << "] (expected value > 0)",
 							OpenViBE::Kernel::ErrorType::BadSetting);
 
-		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > m_f64LowCutFrequency,
-							"Invalid cut-off frequencies [" << m_f64LowCutFrequency << "," << m_f64HighCutFrequency <<
+		OV_ERROR_UNLESS_KRF(m_highCutFrequency > m_lowCutFrequency,
+							"Invalid cut-off frequencies [" << m_lowCutFrequency << "," << m_highCutFrequency <<
 							"] (expected low frequency < high frequency)", OpenViBE::Kernel::ErrorType::BadSetting);
 	}
-	else { OV_ERROR_KRF("Invalid filter type [" << m_ui64FilterType << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
+	else { OV_ERROR_KRF("Invalid filter type [" << m_filterType << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
 
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
@@ -176,37 +176,37 @@ bool CBoxAlgorithmTemporalFilter::process()
 	{
 		m_oDecoder.decode(i);
 
-		uint32_t l_ui32ChannelCount = m_oDecoder.getOutputMatrix()->getDimensionSize(0);
-		uint32_t l_ui32SampleCount  = m_oDecoder.getOutputMatrix()->getDimensionSize(1);
+		const uint32_t nChannel = m_oDecoder.getOutputMatrix()->getDimensionSize(0);
+		const uint32_t nSample  = m_oDecoder.getOutputMatrix()->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
 		{
-			if (m_ui64FilterType != OVP_TypeId_FilterType_LowPass) // verification for high-pass, band-pass and band-stop filters
+			if (m_filterType != OVP_TypeId_FilterType_LowPass) // verification for high-pass, band-pass and band-stop filters
 			{
-				OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
-									"Invalid low cut-off frequency [" << m_f64LowCutFrequency <<
+				OV_ERROR_UNLESS_KRF(m_lowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
+									"Invalid low cut-off frequency [" << m_lowCutFrequency <<
 									"] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
 									OpenViBE::Kernel::ErrorType::BadConfig);
 			}
-			if (m_ui64FilterType != OVP_TypeId_FilterType_HighPass) // verification for low-pass, band-pass and band-stop filters
+			if (m_filterType != OVP_TypeId_FilterType_HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
-				OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
-									"Invalid high cut-off frequency [" << m_f64HighCutFrequency <<
+				OV_ERROR_UNLESS_KRF(m_highCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
+									"Invalid high cut-off frequency [" << m_highCutFrequency <<
 									"] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
 									OpenViBE::Kernel::ErrorType::BadConfig);
 			}
 
-			m_vFilter.clear();
+			m_filters.clear();
 			//m_vFilter2.clear();
 
 			fpGetParameters_t fpGetParameters = NULL;
 			fpCreateFilter_t fpCreateFilter   = NULL;
-			if (m_ui64FilterMethod == OVP_TypeId_FilterMethod_Butterworth.toUInteger()) // Butterworth
+			if (m_filterMethod == OVP_TypeId_FilterMethod_Butterworth.toUInteger()) // Butterworth
 			{
 				fpGetParameters = getButterworthParameters;
 				fpCreateFilter  = createButterworthFilter;
 			}
-			else if (m_ui64FilterMethod == OVP_TypeId_FilterMethod_Chebyshev.toUInteger()) // Chebyshev
+			else if (m_filterMethod == OVP_TypeId_FilterMethod_Chebyshev.toUInteger()) // Chebyshev
 			{
 #if 1
 				OV_ERROR_KRF("Chebyshev method not implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
@@ -215,7 +215,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 				fpCreateFilter = createChebishevFilter;
 #endif
 			}
-			else if (m_ui64FilterMethod == OVP_TypeId_FilterMethod_YuleWalker.toUInteger()) // YuleWalker
+			else if (m_filterMethod == OVP_TypeId_FilterMethod_YuleWalker.toUInteger()) // YuleWalker
 			{
 #if 1
 				OV_ERROR_KRF("YuleWalker method not implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
@@ -225,29 +225,28 @@ bool CBoxAlgorithmTemporalFilter::process()
 				fpCreateFilter = createYuleWalkerFilter;
 #endif
 			}
-			else { OV_ERROR_KRF("Invalid filter method [" << m_ui64FilterMethod << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("Invalid filter method [" << m_filterMethod << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
 
-			if (m_ui64FilterType == OVP_TypeId_FilterType_HighPass.toUInteger())
+			if (m_filterType == OVP_TypeId_FilterType_HighPass.toUInteger())
 			{
-				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_f64LowCutFrequency << "Hz\n";
+				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCutFrequency << "Hz\n";
 			}
-			if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass.toUInteger())
+			if (m_filterType == OVP_TypeId_FilterType_LowPass.toUInteger())
 			{
-				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_f64HighCutFrequency << "Hz\n";
+				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCutFrequency << "Hz\n";
 			}
 
-			uint64_t l_ui64SamplingRate         = m_oDecoder.getOutputSamplingRate();
-			uint64_t l_ui64SmoothingSampleCount = 100 * l_ui64SamplingRate;
-			Dsp::Params l_oFilterParameters;
-			(*fpGetParameters)(l_oFilterParameters, l_ui64SamplingRate, m_ui64FilterType, m_ui64FilterOrder, m_f64LowCutFrequency, m_f64HighCutFrequency,
-							   m_f64BandPassRipple);
+			const uint64_t samplingRate         = m_oDecoder.getOutputSamplingRate();
+			const uint64_t nSmoothingSample = 100 * samplingRate;
+			Dsp::Params params;
+			(*fpGetParameters)(params, samplingRate, m_filterType, m_filterOrder, m_lowCutFrequency, m_highCutFrequency, m_bandPassRipple);
 
-			for (j = 0; j < l_ui32ChannelCount; j++)
+			for (j = 0; j < nChannel; j++)
 			{
-				std::shared_ptr<Dsp::Filter> l_pFilter = (*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
-				l_pFilter->setParams(l_oFilterParameters);
-				m_vFilter.push_back(l_pFilter);
-				/*std::shared_ptr < Dsp::Filter > l_pFilter2=(*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
+				std::shared_ptr<Dsp::Filter> l_pFilter = (*fpCreateFilter)(m_filterType, nSmoothingSample);
+				l_pFilter->setParams(params);
+				m_filters.push_back(l_pFilter);
+				/*std::shared_ptr < Dsp::Filter > l_pFilter2=(*fpCreateFilter)(m_filterType, l_ui64SmoothingSampleCount);
 				l_pFilter2->setParams(l_oFilterParameters);
 				m_vFilter2.push_back(l_pFilter2);*/
 			}
@@ -259,26 +258,26 @@ bool CBoxAlgorithmTemporalFilter::process()
 			double* buffer = m_oDecoder.getOutputMatrix()->getBuffer();
 
 			//"french cook" to reduce transient for bandpass and highpass filters
-			if (m_vFirstSample.empty())
+			if (m_firstSamples.empty())
 			{
-				m_vFirstSample.resize(l_ui32ChannelCount, 0); //initialization to 0
-				if (m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == OVP_TypeId_FilterType_HighPass)
+				m_firstSamples.resize(nChannel, 0); //initialization to 0
+				if (m_filterType == OVP_TypeId_FilterType_BandPass || m_filterType == OVP_TypeId_FilterType_HighPass)
 				{
-					for (j = 0; j < l_ui32ChannelCount; j++)
+					for (j = 0; j < nChannel; j++)
 					{
-						m_vFirstSample[j] = buffer[j * l_ui32SampleCount]; //first value of the signal = DC offset
+						m_firstSamples[j] = buffer[j * nSample]; //first value of the signal = DC offset
 					}
 				}
 			}
 
-			for (j = 0; j < l_ui32ChannelCount; j++)
+			for (j = 0; j < nChannel; j++)
 			{
-				//for bandpass and highpass filters, suppression of the value m_vFirstSample = DC offset
-				//otherwise, no treatment, since m_vFirstSample = 0
-				for (uint32_t k = 0; k < l_ui32SampleCount; k++) { buffer[k] -= m_vFirstSample[j]; }
+				//for bandpass and highpass filters, suppression of the value m_firstSamples = DC offset
+				//otherwise, no treatment, since m_firstSamples = 0
+				for (uint32_t k = 0; k < nSample; k++) { buffer[k] -= m_firstSamples[j]; }
 
-				if (m_vFilter[j]) { m_vFilter[j]->process(l_ui32SampleCount, &buffer); }
-				buffer += l_ui32SampleCount;
+				if (m_filters[j]) { m_filters[j]->process(nSample, &buffer); }
+				buffer += nSample;
 			}
 			m_oEncoder.encodeBuffer();
 		}

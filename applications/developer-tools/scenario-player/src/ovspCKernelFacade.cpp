@@ -163,8 +163,8 @@ OpenViBE::EPlayerReturnCode KernelFacade::loadScenario(const LoadScenarioCommand
 		return OpenViBE::EPlayerReturnCode::KernelInternalFailure;
 	}
 
-	std::string scenarioFile = command.scenarioFile.get();
-	std::string scenarioName = command.scenarioName.get();
+	const std::string scenarioFile = command.scenarioFile.get();
+	const std::string scenarioName = command.scenarioName.get();
 
 	CIdentifier scenarioID;
 	auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
@@ -177,7 +177,7 @@ OpenViBE::EPlayerReturnCode KernelFacade::loadScenario(const LoadScenarioCommand
 
 	scenarioManager.getScenario(scenarioID).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
 
-	auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
+	const auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
 	if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end()) { scenarioManager.releaseScenario(scenarioToReleaseIt->second); }
 
 	m_Pimpl->scenarioMap[scenarioName] = scenarioID;
@@ -191,8 +191,8 @@ OpenViBE::EPlayerReturnCode KernelFacade::updateScenario(const UpdateScenarioCom
 
 	auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
 
-	auto scenarioName = command.scenarioName.get();
-	auto scenarioFile = command.scenarioFile.get();
+	const auto scenarioName = command.scenarioName.get();
+	const auto scenarioFile = command.scenarioFile.get();
 
 	if (m_Pimpl->scenarioMap.find(scenarioName) == m_Pimpl->scenarioMap.end())
 	{
@@ -235,7 +235,7 @@ OpenViBE::EPlayerReturnCode KernelFacade::setupScenario(const SetupScenarioComma
 		return OpenViBE::EPlayerReturnCode::KernelInternalFailure;
 	}
 
-	auto scenarioName = command.scenarioName.get();
+	const auto scenarioName = command.scenarioName.get();
 
 	if (m_Pimpl->scenarioMap.find(scenarioName) == m_Pimpl->scenarioMap.end())
 	{
@@ -326,12 +326,12 @@ OpenViBE::EPlayerReturnCode KernelFacade::runScenarioList(const RunScenarioComma
 	if (returnCode == OpenViBE::EPlayerReturnCode::Success)
 	{
 		// loop until timeout
-		uint64_t startTime    = System::Time::zgetTime();
+		const uint64_t startTime    = System::Time::zgetTime();
 		uint64_t lastLoopTime = startTime;
 
 		// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 		// because it could overflow
-		double boundedMaxExecutionTimeInS = TimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
+		const double boundedMaxExecutionTimeInS = TimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
 
 		uint64_t maxExecutionTimeInFixedPoint;
 		if (command.maximumExecutionTime &&
@@ -342,7 +342,7 @@ OpenViBE::EPlayerReturnCode KernelFacade::runScenarioList(const RunScenarioComma
 		bool allStopped{ false };
 		while (!allStopped) // negative condition here because it is easier to reason about it
 		{
-			uint64_t currentTime = System::Time::zgetTime();
+			const uint64_t currentTime = System::Time::zgetTime();
 			allStopped           = true;
 			for (auto p : playerList)
 			{

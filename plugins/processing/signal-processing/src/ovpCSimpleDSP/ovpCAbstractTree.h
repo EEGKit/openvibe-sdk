@@ -217,11 +217,11 @@ class CAbstractTreeValueNode : public CAbstractTreeNode
 protected:
 
 	//! Value associated with the node.
-	double m_f64Value = 0;
+	double m_value = 0;
 
 public:
 
-	explicit CAbstractTreeValueNode(const double value) : CAbstractTreeNode(true, true), m_f64Value(value) {}
+	explicit CAbstractTreeValueNode(const double value) : CAbstractTreeNode(true, true), m_value(value) {}
 
 	//! Destructor
 	~CAbstractTreeValueNode() override { }
@@ -230,15 +230,15 @@ public:
 	* Used to set the value of the node.
 	* \param value The node's new value.
 	*/
-	void setValue(double value) { m_f64Value = value; }
+	void setValue(const double value) { m_value = value; }
 
 	/**
 	 * Used to know the value of the node.
 	 * \return The node's value.
 	 */
-	double getValue() const { return m_f64Value; }
+	double getValue() const { return m_value; }
 
-	void print(OpenViBE::Kernel::ILogManager& logManager) override { logManager << m_f64Value; }
+	void print(OpenViBE::Kernel::ILogManager& logManager) override { logManager << m_value; }
 
 	bool simplify(CAbstractTreeNode*& modifiedNode) override
 	{

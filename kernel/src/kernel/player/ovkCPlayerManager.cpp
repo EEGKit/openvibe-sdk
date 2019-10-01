@@ -9,58 +9,49 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace std;
 
-CPlayerManager::CPlayerManager(const IKernelContext& ctx)
-	: TKernelObject<IPlayerManager>(ctx) {}
-
-bool CPlayerManager::createPlayer(CIdentifier& rPlayerIdentifier)
+bool CPlayerManager::createPlayer(CIdentifier& playerID)
 {
-	rPlayerIdentifier            = getUnusedIdentifier();
-	m_vPlayer[rPlayerIdentifier] = new CPlayer(getKernelContext());
+	playerID            = getUnusedIdentifier();
+	m_vPlayer[playerID] = new CPlayer(getKernelContext());
 	return true;
 }
 
-bool CPlayerManager::releasePlayer(const CIdentifier& rPlayerIdentifier)
+bool CPlayerManager::releasePlayer(const CIdentifier& playerID)
 {
-	auto itPlayer = m_vPlayer.find(rPlayerIdentifier);
+	auto itPlayer = m_vPlayer.find(playerID);
 
-	OV_ERROR_UNLESS_KRF(itPlayer != m_vPlayer.end(), "Player release failed, identifier :" << rPlayerIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itPlayer != m_vPlayer.end(), "Player release failed, identifier :" << playerID.toString(), ErrorType::ResourceNotFound);
 
 	delete itPlayer->second;
 	m_vPlayer.erase(itPlayer);
 	return true;
 }
 
-IPlayer& CPlayerManager::getPlayer(const CIdentifier& rPlayerIdentifier)
+IPlayer& CPlayerManager::getPlayer(const CIdentifier& playerID)
 {
-	auto itPlayer = m_vPlayer.find(rPlayerIdentifier);
+	const auto it = m_vPlayer.find(playerID);
 
 	// use fatal here because the signature does not allow
 	// proper checking
-	OV_FATAL_UNLESS_K(itPlayer != m_vPlayer.end(), "Trying to retrieve non existing player with id " << rPlayerIdentifier.toString(),
-					  ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(it != m_vPlayer.end(), "Trying to retrieve non existing player with id " << playerID.toString(), ErrorType::ResourceNotFound);
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the manager implementation
-	OV_FATAL_UNLESS_K(itPlayer->second, "Null player found for id " << rPlayerIdentifier.toString(), ErrorType::BadValue);
+	OV_FATAL_UNLESS_K(it->second, "Null player found for id " << playerID.toString(), ErrorType::BadValue);
 
-	return *itPlayer->second;
-}
-
-CIdentifier CPlayerManager::getNextPlayerIdentifier(const CIdentifier& previousID) const
-{
-	return getNextIdentifier<CPlayer*>(m_vPlayer, previousID);
+	return *it->second;
 }
 
 CIdentifier CPlayerManager::getUnusedIdentifier() const
 {
-	uint64_t l_ui64Identifier = System::Math::randomUInteger64();
+	uint64_t id = System::Math::randomUInteger64();
 	CIdentifier res;
 	map<CIdentifier, CPlayer*>::const_iterator i;
 	do
 	{
-		l_ui64Identifier++;
-		res = CIdentifier(l_ui64Identifier);
-		i         = m_vPlayer.find(res);
+		id++;
+		res = CIdentifier(id);
+		i   = m_vPlayer.find(res);
 	} while (i != m_vPlayer.end() || res == OV_UndefinedIdentifier);
 	return res;
 }

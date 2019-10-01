@@ -110,7 +110,7 @@ namespace OpenViBE
 
 			if (m_OptionParser.hasOption("play-mode"))
 			{
-				auto playMode = m_OptionParser.getOptionValue<std::string>("play-mode");
+				const auto playMode = m_OptionParser.getOptionValue<std::string>("play-mode");
 
 				if (playMode != "ff" && playMode != "std")
 				{

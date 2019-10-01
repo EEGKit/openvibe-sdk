@@ -51,8 +51,8 @@ namespace OpenViBE
 					  m_oTypeIdentifier(OV_UndefinedIdentifier),
 					  m_oIdentifier(OV_UndefinedIdentifier) {}
 
-				_SIOStream(const CString& rName, const CIdentifier& typeID, const CIdentifier& identifier)
-					: m_sName(rName),
+				_SIOStream(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier)
+					: m_sName(name),
 					  m_oTypeIdentifier(typeID),
 					  m_oIdentifier(identifier) {}
 

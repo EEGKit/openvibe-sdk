@@ -12,7 +12,7 @@ namespace OpenViBE
 		public:
 
 			CAlgorithmContext(const IKernelContext& ctx, CAlgorithmProxy& algorithmProxy, const Plugins::IPluginObjectDesc& /*pluginObjectDesc*/)
-				: TKernelObject<IAlgorithmContext>(ctx), m_logManager(ctx.getLogManager()), m_rAlgorithmProxy(algorithmProxy) {}
+				: TKernelObject<IAlgorithmContext>(ctx), m_logManager(ctx.getLogManager()), m_algorithmProxy(algorithmProxy) {}
 
 			~CAlgorithmContext() override { }
 			IConfigurationManager& getConfigurationManager() const override { return getKernelContext().getConfigurationManager(); }
@@ -23,30 +23,27 @@ namespace OpenViBE
 
 			CIdentifier getNextInputParameterIdentifier(const CIdentifier& previous) const override
 			{
-				return m_rAlgorithmProxy.getNextInputParameterIdentifier(previous);
+				return m_algorithmProxy.getNextInputParameterIdentifier(previous);
 			}
 
-			IParameter* getInputParameter(const CIdentifier& identifier) override { return m_rAlgorithmProxy.getInputParameter(identifier); }
+			IParameter* getInputParameter(const CIdentifier& identifier) override { return m_algorithmProxy.getInputParameter(identifier); }
 
 			CIdentifier getNextOutputParameterIdentifier(const CIdentifier& previous) const override
 			{
-				return m_rAlgorithmProxy.getNextOutputParameterIdentifier(previous);
+				return m_algorithmProxy.getNextOutputParameterIdentifier(previous);
 			}
 
-			IParameter* getOutputParameter(const CIdentifier& identifier) override { return m_rAlgorithmProxy.getOutputParameter(identifier); }
-			bool isInputTriggerActive(const CIdentifier& identifier) const override { return m_rAlgorithmProxy.isInputTriggerActive(identifier); }
+			IParameter* getOutputParameter(const CIdentifier& identifier) override { return m_algorithmProxy.getOutputParameter(identifier); }
+			bool isInputTriggerActive(const CIdentifier& identifier) const override { return m_algorithmProxy.isInputTriggerActive(identifier); }
 
-			bool activateOutputTrigger(const CIdentifier& identifier, bool state) override
-			{
-				return m_rAlgorithmProxy.activateOutputTrigger(identifier, state);
-			}
+			bool activateOutputTrigger(const CIdentifier& identifier, const bool state) override { return m_algorithmProxy.activateOutputTrigger(identifier, state); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
 
 		protected:
 
 			ILogManager& m_logManager;
-			CAlgorithmProxy& m_rAlgorithmProxy;
+			CAlgorithmProxy& m_algorithmProxy;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

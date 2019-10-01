@@ -139,8 +139,8 @@ void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* pMemoryBuffer, const
 {
 	if (pMemoryBuffer)
 	{
-		uint64_t l_ui64CurrentBufferSize = pMemoryBuffer->getSize();
-		pMemoryBuffer->setSize(l_ui64CurrentBufferSize + size, false);
-		System::Memory::copy(pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, buffer, size);
+		const uint64_t currentBufferSize = pMemoryBuffer->getSize();
+		pMemoryBuffer->setSize(currentBufferSize + size, false);
+		System::Memory::copy(pMemoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
 	}
 }

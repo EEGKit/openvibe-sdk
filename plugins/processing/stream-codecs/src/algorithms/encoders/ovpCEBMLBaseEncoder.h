@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CEBMLBaseEncoder();
+			CEBMLBaseEncoder() : m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;

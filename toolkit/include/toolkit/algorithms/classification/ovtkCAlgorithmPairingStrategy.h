@@ -21,8 +21,8 @@ typedef int (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
 
 namespace OpenViBEToolkit
 {
-	extern OVTK_API void registerClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision);
-	extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier);
+	extern OVTK_API void registerClassificationComparisonFunction(const OpenViBE::CIdentifier& classID, fClassifierComparison comparision);
+	extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const OpenViBE::CIdentifier& classID);
 
 
 	class OVTK_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
@@ -47,7 +47,7 @@ namespace OpenViBEToolkit
 	protected:
 		//  std::vector <double> m_fClasses;
 		//The vector will be use when the user will be able to specify class label
-		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier = OV_UndefinedIdentifier;
+		OpenViBE::CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
 	};
 
 	class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc

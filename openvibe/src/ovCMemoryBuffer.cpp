@@ -22,7 +22,7 @@ namespace OpenViBE
 			uint8_t* getDirectPointer() override;
 			const uint8_t* getDirectPointer() const override;
 			bool append(const uint8_t* buffer, const uint64_t size) override;
-			bool append(const IMemoryBuffer& rMemoryBuffer) override;
+			bool append(const IMemoryBuffer& memoryBuffer) override;
 
 			_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl)
 
@@ -109,7 +109,7 @@ bool CMemoryBufferImpl::setSize(const uint64_t ui64Size, const bool bDiscard)
 		m_pBuffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
 		if (!m_pBuffer) { return false; }
 		if (!bDiscard) { memcpy(m_pBuffer, l_pSavedBuffer, size_t(m_size)); }	// $$$
-		if (l_pSavedBuffer) { delete [] l_pSavedBuffer; }
+		delete [] l_pSavedBuffer;
 		m_ui64AllocatedSize            = ui64Size;
 		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
@@ -121,20 +121,20 @@ bool CMemoryBufferImpl::append(const uint8_t* buffer, const uint64_t size)
 {
 	if (size != 0)
 	{
-		uint64_t l_ui64BufferSizeBackup = m_size;
+		const uint64_t bufferSizeBackup = m_size;
 		if (!this->setSize(m_size + size, false)) { return false; }
-		memcpy(m_pBuffer + l_ui64BufferSizeBackup, buffer, size_t(size));
+		memcpy(m_pBuffer + bufferSizeBackup, buffer, size_t(size));
 	}
 	return true;
 }
 
-bool CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
+bool CMemoryBufferImpl::append(const IMemoryBuffer& memoryBuffer)
 {
-	if (rMemoryBuffer.getSize() != 0)
+	if (memoryBuffer.getSize() != 0)
 	{
-		uint64_t l_ui64BufferSizeBackup = m_size;
-		if (!this->setSize(m_size + rMemoryBuffer.getSize(), false)) { return false; }
-		memcpy(m_pBuffer + l_ui64BufferSizeBackup, rMemoryBuffer.getDirectPointer(), size_t(rMemoryBuffer.getSize()));
+		const uint64_t bufferSizeBackup = m_size;
+		if (!this->setSize(m_size + memoryBuffer.getSize(), false)) { return false; }
+		memcpy(m_pBuffer + bufferSizeBackup, memoryBuffer.getDirectPointer(), size_t(memoryBuffer.getSize()));
 	}
 	return true;
 }

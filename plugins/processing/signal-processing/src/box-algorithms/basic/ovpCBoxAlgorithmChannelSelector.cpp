@@ -16,7 +16,7 @@ using namespace OpenViBEToolkit;
 
 namespace
 {
-	uint32_t FindChannel(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
+	uint32_t FindChannel(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, const uint32_t uiStart = 0)
 	{
 		uint32_t result         = std::numeric_limits<uint32_t>::max();
 		const uint32_t nChannel = rMatrix.getDimensionSize(0);

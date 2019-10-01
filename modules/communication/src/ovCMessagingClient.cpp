@@ -33,7 +33,7 @@ bool MessagingClient::connect(const std::string& uri, const uint32_t port)
 	if (!this->pushAuthentication(impl->m_ConnectionID))
 	{
 		// Error set in the function
-		ELibraryError error = this->getLastError();
+		const ELibraryError error = this->getLastError();
 		this->close();
 		this->setLastError(error);
 		return false;

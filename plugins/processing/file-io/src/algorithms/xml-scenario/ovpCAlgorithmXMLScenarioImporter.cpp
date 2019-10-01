@@ -70,7 +70,7 @@ namespace
 
 	std::string xercesToString(const XMLCh* xercesString)
 	{
-		std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
+		const std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
 		return std::string(charArray.get());
 	}
 
@@ -411,7 +411,7 @@ void CAlgorithmXMLScenarioImporter::closeChild()
 	m_vNodes.pop();
 }
 
-bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, unsigned long xmlBufferSize)
+bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, const unsigned long xmlBufferSize)
 {
 	// implementation of the fallback mechanism
 
@@ -451,7 +451,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation);
 }
 
-bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize)
+bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* xmlBuffer, const unsigned long xmlBufferSize)
 {
 	this->getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
 
@@ -459,7 +459,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validat
 	XMLPlatformUtils::Initialize();
 
 	{ // scope the content here to ensure unique_ptr contents are destroyed before the call to XMLPlatformUtils::Terminate();
-		std::unique_ptr<MemBufInputSource> xercesBuffer(new MemBufInputSource(xmlBuffer, xmlBufferSize, "xml memory buffer"));
+		const std::unique_ptr<MemBufInputSource> xercesBuffer(new MemBufInputSource(xmlBuffer, xmlBufferSize, "xml memory buffer"));
 
 		std::unique_ptr<XercesDOMParser> parser(new XercesDOMParser());
 		parser->setValidationScheme(XercesDOMParser::Val_Always);
@@ -469,7 +469,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validat
 		parser->setValidationSchemaFullChecking(true);
 		parser->setExternalNoNamespaceSchemaLocation(validationSchema);
 
-		std::unique_ptr<ErrorHandler> errorHandler(new CErrorHandler(this->getAlgorithmContext()));
+		const std::unique_ptr<ErrorHandler> errorHandler(new CErrorHandler(this->getAlgorithmContext()));
 		parser->setErrorHandler(errorHandler.get());
 
 		parser->parse(*xercesBuffer);

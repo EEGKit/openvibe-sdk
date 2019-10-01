@@ -20,21 +20,21 @@ using namespace OpenViBEToolkit;
 
 namespace
 {
-	double amplitude(uint32_t channelIndex, uint32_t FFTIndex, const MatrixXcd& matrix)
+	double amplitude(const uint32_t channelIdx, const uint32_t FFTIdx, const MatrixXcd& matrix)
 	{
 		return sqrt(
-			matrix(channelIndex, FFTIndex).real() * matrix(channelIndex, FFTIndex).real() + matrix(channelIndex, FFTIndex).imag() * matrix(
-				channelIndex, FFTIndex).imag());
+			matrix(channelIdx, FFTIdx).real() * matrix(channelIdx, FFTIdx).real() + matrix(channelIdx, FFTIdx).imag() * matrix(
+				channelIdx, FFTIdx).imag());
 	}
 
-	double phase(uint32_t channelIndex, uint32_t FFTIndex, const MatrixXcd& matrix)
+	double phase(const uint32_t channelIdx, const uint32_t FFTIdx, const MatrixXcd& matrix)
 	{
-		return atan2(matrix(channelIndex, FFTIndex).imag(), matrix(channelIndex, FFTIndex).real());
+		return atan2(matrix(channelIdx, FFTIdx).imag(), matrix(channelIdx, FFTIdx).real());
 	}
 
-	double realPart(uint32_t channelIndex, uint32_t FFTIndex, const MatrixXcd& matrix) { return matrix(channelIndex, FFTIndex).real(); }
+	double realPart(const uint32_t channelIdx, const uint32_t FFTIdx, const MatrixXcd& matrix) { return matrix(channelIdx, FFTIdx).real(); }
 
-	double imaginaryPart(uint32_t channelIndex, uint32_t FFTIndex, const MatrixXcd& matrix) { return matrix(channelIndex, FFTIndex).imag(); }
+	double imaginaryPart(const uint32_t channelIdx, const uint32_t FFTIdx, const MatrixXcd& matrix) { return matrix(channelIdx, FFTIdx).imag(); }
 } // namespace
 
 bool CBoxAlgorithmSpectralAnalysis::initialize()
@@ -113,13 +113,11 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_nChannel = matrix->getDimensionSize(0);
 			m_nSample  = matrix->getDimensionSize(1);
 
-			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.",
-								OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", OpenViBE::Kernel::ErrorType::BadInput);
 
 			m_samplingRate = uint32_t(m_decoder.getOutputSamplingRate());
 
-			OV_ERROR_UNLESS_KRF(m_samplingRate > 0, "Invalid sampling rate [" << m_samplingRate << "] (expected value > 0)",
-								OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_samplingRate > 0, "Invalid sampling rate [" << m_samplingRate << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadInput);
 
 			// size of the spectrum
 			m_sizeFFT = m_nSample / 2 + 1;

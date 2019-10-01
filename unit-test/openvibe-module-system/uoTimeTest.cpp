@@ -43,7 +43,7 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64_t calibrateSleep(uint32_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
+uint64_t calibrateSleep(const uint32_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t maxTime = 0;
 	for (size_t i = 0; i < nSample; ++i)
@@ -75,9 +75,7 @@ std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*
 // \brief Return a warning count that is incremented when sleep function did not meet following requirements:
 //       - sleep enough time
 //       - sleep less than the expected time + delta
-uint32_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
-								   const std::vector<uint64_t>& resultTimes,
-								   uint64_t delta, uint64_t epsilon)
+uint32_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes, const std::vector<uint64_t>& resultTimes, const uint64_t delta, const uint64_t epsilon)
 {
 	uint32_t warningCount = 0;
 	for (size_t i = 0; i < expectedTimes.size(); ++i)
@@ -98,7 +96,7 @@ uint32_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
 // \brief Record clock function data (spin test taken from OpenViBE). Return a tuple with:
 //       - bool = monotonic state
 //       - std::vector<uint64_t> = all the cumulative steps
-std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigned sampleCountGuess, uint64_t (*timeFunction)())
+std::tuple<bool, std::vector<uint64_t>> testClock(const uint64_t samplePeriod, const unsigned sampleCountGuess, uint64_t (*timeFunction)())
 {
 	std::vector<uint64_t> cumulativeSteps;
 	cumulativeSteps.reserve(sampleCountGuess);
@@ -196,8 +194,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
-	const uint32_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime,
-															OpenViBE::TimeArithmetics::secondsToTime(0.005));
+	const uint32_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime, OpenViBE::TimeArithmetics::secondsToTime(0.005));
 
 	// relax this threshold in case there is some recurrent problems
 	// according to the runtime environment

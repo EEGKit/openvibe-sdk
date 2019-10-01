@@ -205,13 +205,10 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 					{
 						// This should not be supported anymore
 						// This is not the correct formula
-						const IMatrix* l_pCenterFrequencyBand = static_cast<OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->
-								getOutputFrequencyAbscissa();
-						double half = s > 0
-										  ? (l_pCenterFrequencyBand->getBuffer()[s] - l_pCenterFrequencyBand->getBuffer()[s - 1]) / 2.
-										  : (l_pCenterFrequencyBand->getBuffer()[s + 1] - l_pCenterFrequencyBand->getBuffer()[s]) / 2.;
-						m_oFileStream << m_sSeparator.toASCIIString() << (l_pCenterFrequencyBand->getBuffer()[s] - half);
-						m_oFileStream << m_sSeparator.toASCIIString() << (l_pCenterFrequencyBand->getBuffer()[s] + half);
+						const IMatrix* freq = static_cast<OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->getOutputFrequencyAbscissa();
+						const double half = s > 0 ? (freq->getBuffer()[s] - freq->getBuffer()[s - 1]) / 2. : (freq->getBuffer()[s + 1] - freq->getBuffer()[s]) / 2.;
+						m_oFileStream << m_sSeparator.toASCIIString() << (freq->getBuffer()[s] - half);
+						m_oFileStream << m_sSeparator.toASCIIString() << (freq->getBuffer()[s] + half);
 					}
 					else { }
 				}

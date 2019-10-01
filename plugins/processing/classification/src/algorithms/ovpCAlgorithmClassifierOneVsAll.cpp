@@ -204,10 +204,10 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 
 bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 {
-	const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
+	const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != OV_UndefinedIdentifier,
-						"Invalid classifier identifier [" << this->m_oSubClassifierAlgorithmIdentifier.toString() << "]",
+						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.toString() << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
@@ -257,9 +257,9 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration()
 	XML::IXMLNode* oneVsAllNode = XML::createNode(TYPE_NODE_NAME);
 
 	XML::IXMLNode* tempNode = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
-	tempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_oSubClassifierAlgorithmIdentifier.toString());
+	tempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.toString());
 	tempNode->setPCData(
-		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_oSubClassifierAlgorithmIdentifier.toUInteger()).
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.toUInteger()).
 			  toASCIIString());
 	oneVsAllNode->addChild(tempNode);
 
@@ -281,7 +281,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* configuratio
 	XML::IXMLNode* tempNode = configurationNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	CIdentifier id;
 	id.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
-	if (m_oSubClassifierAlgorithmIdentifier != id)
+	if (m_subClassifierAlgorithmID != id)
 	{
 		while (!m_oSubClassifierList.empty()) { this->removeClassifierAtBack(); }
 		if (!this->setSubClassifierIdentifier(id))
@@ -334,11 +334,11 @@ uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const { return uint32_t(m
 
 bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier& id)
 {
-	m_oSubClassifierAlgorithmIdentifier = id;
+	m_subClassifierAlgorithmID = id;
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(id);
 
 	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr,
-						"No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]",
+						"No comparison function found for classifier [" << m_subClassifierAlgorithmID.toString() << "]",
 						OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	return true;

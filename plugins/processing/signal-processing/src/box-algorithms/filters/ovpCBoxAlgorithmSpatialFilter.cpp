@@ -18,7 +18,7 @@ using namespace SignalProcessing;
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 #endif
 
-uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficients, const char c1, const char c2, uint32_t nRows, uint32_t nCols)
+uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficients, const char c1, const char c2, const uint32_t nRows, const uint32_t nCols)
 {
 	// Count the number of entries
 	// @Note To avoid doing a ton of subsequent memory allocations (very slow on Windows debug builds), we first count the number of entries in the vector. If the file format had specified the vector dimension, we wouldn't have to do this step.

@@ -76,7 +76,7 @@ OVP_Declare_End()
 
 #include<cmath>
 
-bool ov_float_equal(double first, double second)
+bool OVFloatEqual(const double first, const double second)
 {
 	const double epsilon = 0.000001;
 	return epsilon > fabs(first - second);

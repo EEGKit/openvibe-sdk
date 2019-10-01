@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 			bool exportBox(IMemoryBuffer& memoryBuffer, const IBox& box) const;
 			bool exportComment(IMemoryBuffer& memoryBuffer, const IComment& rComment) const;
 			bool exportMetadata(IMemoryBuffer& memoryBuffer, const IMetadata& metadata) const;
-			bool exportSetting(IMemoryBuffer& memoryBuffer, const IScenario& scenario, uint32_t ui32SettingIndex) const;
+			bool exportSetting(IMemoryBuffer& memoryBuffer, const IScenario& scenario, const uint32_t index) const;
 			bool exportInput(IMemoryBuffer& memoryBuffer, const IScenario& scenario, uint32_t index) const;
 			bool exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& scenario, uint32_t outputIdx) const;
 			bool exportLink(IMemoryBuffer& memoryBuffer, const ILink& rLink) const;
@@ -72,7 +72,7 @@ void CAlgorithmScenarioExporterHelper::exportAttributes(const IAttributable& att
 
 bool CAlgorithmScenarioExporter::process()
 {
-	CAlgorithmScenarioExporterHelper helper(this->getAlgorithmContext(), *this);
+	const CAlgorithmScenarioExporterHelper helper(this->getAlgorithmContext(), *this);
 	CMemoryBuffer tmpBuffer;
 
 	// preallocates 1 Mbytes
@@ -335,7 +335,7 @@ bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& memoryBuffer, c
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& memoryBuffer, const IScenario& scenario, uint32_t ui32SettingIndex) const
+bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& memoryBuffer, const IScenario& scenario, const uint32_t index) const
 {
 	CIdentifier l_oSettingIdentifier;
 	CIdentifier l_oSettingTypeIdentifier;
@@ -344,11 +344,11 @@ bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& memoryBuffer
 	CString l_sValue;
 
 
-	scenario.getSettingName(ui32SettingIndex, l_sSettingName);
-	scenario.getInterfacorIdentifier(Setting, ui32SettingIndex, l_oSettingIdentifier);
-	scenario.getSettingType(ui32SettingIndex, l_oSettingTypeIdentifier);
-	scenario.getSettingValue(ui32SettingIndex, l_sValue);
-	scenario.getSettingDefaultValue(ui32SettingIndex, l_sDefaultValue);
+	scenario.getSettingName(index, l_sSettingName);
+	scenario.getInterfacorIdentifier(Setting, index, l_oSettingIdentifier);
+	scenario.getSettingType(index, l_oSettingTypeIdentifier);
+	scenario.getSettingValue(index, l_sValue);
+	scenario.getSettingDefaultValue(index, l_sDefaultValue);
 
 	m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting);
 	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier, l_oSettingIdentifier);
@@ -361,7 +361,7 @@ bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& memoryBuffer
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& memoryBuffer, const IScenario& scenario, uint32_t index) const
+bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& memoryBuffer, const IScenario& scenario, const uint32_t index) const
 {
 	CIdentifier inputID;
 	CIdentifier inputTypeID;
@@ -396,7 +396,7 @@ bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& memoryBuffer, 
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& scenario, uint32_t outputIdx) const
+bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& memoryBuffer, const IScenario& scenario, const uint32_t outputIdx) const
 {
 	CIdentifier outputID;
 	CIdentifier outputTypeID;

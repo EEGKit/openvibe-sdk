@@ -109,7 +109,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::processInput(const uint32_t /*index*/)
 	return true;
 }
 
-bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(uint32_t index)
+bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const uint32_t index)
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 	IncrementalCovarianceProxy& curCovProxy(m_IncCovarianceProxies[index]);
@@ -173,7 +173,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(uint32_t index)
 // @note This will recompute the weights on every call, but given how small amount of
 // computations we're speaking of, there's not much point in optimizing.
 //
-bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, const std::vector<MatrixXd>& cov, MatrixXd& covAvg)
+bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(const uint32_t skipIndex, const std::vector<MatrixXd>& cov, MatrixXd& covAvg)
 {
 	if (cov.empty() || skipIndex >= cov.size()) { return false; }
 

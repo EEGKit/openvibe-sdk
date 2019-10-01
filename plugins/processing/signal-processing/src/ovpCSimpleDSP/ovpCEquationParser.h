@@ -104,9 +104,9 @@ public:
 	*/
 	bool compileEquation(const char* equation);
 
-	void push_op(uint64_t ui64Operator);
-	void push_value(double f64Value);
+	void push_value(double value);
 	void push_var(uint32_t index);
+	void push_op(uint64_t op);
 
 	/**
 	* Returns the tree's category.

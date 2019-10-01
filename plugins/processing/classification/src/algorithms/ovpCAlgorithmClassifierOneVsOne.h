@@ -34,9 +34,9 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVector) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance, OpenViBEToolkit::IVector& probability) override;
-			bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) override;
+			bool designArchitecture(const OpenViBE::CIdentifier& id, uint32_t classCount) override;
 			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
+			bool loadConfiguration(XML::IXMLNode* configNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;
 			uint32_t getOutputDistanceVectorLength() override;
 
@@ -47,24 +47,24 @@ namespace OpenViBEPlugins
 			bool createSubClassifiers();
 
 		private:
-			uint32_t m_ui32NumberOfClasses        = 0;
-			uint32_t m_ui32NumberOfSubClassifiers = 0;
+			uint32_t m_nClasses        = 0;
+			uint32_t m_nSubClassifiers = 0;
 
-			std::map<std::pair<uint32_t, uint32_t>, OpenViBE::Kernel::IAlgorithmProxy*> m_oSubClassifiers;
-			fClassifierComparison m_fAlgorithmComparison = nullptr;
+			std::map<std::pair<uint32_t, uint32_t>, OpenViBE::Kernel::IAlgorithmProxy*> m_subClassifiers;
+			fClassifierComparison m_algorithmComparison = nullptr;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm = nullptr;
 			OpenViBE::CIdentifier m_oPairwiseDecisionIdentifier             = OV_UndefinedIdentifier;
 
-			XML::IXMLNode* getClassifierConfiguration(double f64FirstClass, double f64SecondClass, OpenViBE::Kernel::IAlgorithmProxy* pSubClassifier);
-			XML::IXMLNode* getPairwiseDecisionConfiguration();
+			static XML::IXMLNode* getClassifierConfiguration(double firstClass, double secondClass, OpenViBE::Kernel::IAlgorithmProxy* subClassifier);
+			XML::IXMLNode* getPairwiseDecisionConfiguration() const;
 
 			// uint32_t getClassCount() const;
 
-			bool loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode);
+			bool loadSubClassifierConfiguration(XML::IXMLNode* subClassifiersNode);
 
 			// SSubClassifierDescriptor& getSubClassifierDescriptor(const uint32_t f64FirstClass, const uint32_t f64SecondClass);
-			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId);
+			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& id);
 		};
 
 		class CAlgorithmClassifierOneVsOneDesc final : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc

@@ -285,7 +285,7 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
-	char lowerCase = 'r';
+	const char lowerCase = 'r';
 	char upperCase = char(toupperSymbol(lowerCase));
 
 	ASSERT_EQ(upperCase, 'R');

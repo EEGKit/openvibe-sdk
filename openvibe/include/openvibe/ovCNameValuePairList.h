@@ -60,70 +60,70 @@ namespace OpenViBE
 
 		/**
 		 * \brief Insert a name/value pair
-		 * \param [in] rName Name to add to the list
+		 * \param [in] name Name to add to the list
 		 * \param [in] rValue Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, const CString& rValue);
+		bool setValue(const CString& name, const CString& rValue);
 
 		/**
 		 * \brief Insert a name/value pair
-		 * \param [in] rName Name to add to the list
+		 * \param [in] name Name to add to the list
 		 * \param [in] pValue Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, const char* pValue);
+		bool setValue(const CString& name, const char* pValue);
 
 		/**
 		 * \brief Insert a name/value pair where value is a double
-		 * \param [in] rName Name to add to the list
+		 * \param [in] name Name to add to the list
 		 * \param [in] rValue Float64 value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, const double& rValue);
+		bool setValue(const CString& name, const double& rValue);
 
 		/**
 		 * \brief Insert a name/value pair where value is a boolean
-		 * \param [in] rName Name to add to the list
+		 * \param [in] name Name to add to the list
 		 * \param [in] bValue Boolean value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, bool bValue);
+		bool setValue(const CString& name, bool bValue);
 
 		/**
 		 * \brief Retrieve a value from the list
-		 * \param [in] rName Name whose value is to be retrieved
+		 * \param [in] name Name whose value is to be retrieved
 		 * \param [out] rValue Value to be retrieved from the list
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(const CString& rName, CString& rValue) const;
+		bool getValue(const CString& name, CString& rValue) const;
 
 		/**
 		 * \brief Retrieve a double value from the list
-		 * \param [in] rName Name whose value is to be retrieved
+		 * \param [in] name Name whose value is to be retrieved
 		 * \param [out] rValue Float64 value to be retrieved
 		 * \return True if a double value could be retrieved, false otherwise
 		 */
-		bool getValue(const CString& rName, double& rValue) const;
+		bool getValue(const CString& name, double& rValue) const;
 
 		/**
 		 * \brief Retrieve a boolean value from the list
 		 * In the current implementation a value evaluates to true if its string
 		 * equals "1" and to false if it equals "0".
-		 * \param rName
+		 * \param name
 		 * \param rValue String to evaluate
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */
-		bool getValue(const CString& rName, bool& rValue) const;
+		bool getValue(const CString& name, bool& rValue) const;
 
 		/**
 		 * \brief Retrieve a value from the list
 		 * \param [in] rIndex Index whose value is to be retrieved
-		 * \param [out] rName Name of the value stored in rIndex
+		 * \param [out] name Name of the value stored in rIndex
 		 * \param [out] rValue Value stored in rIndex
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(uint32_t rIndex, CString& rName, CString& rValue) const;
+		bool getValue(uint32_t rIndex, CString& name, CString& rValue) const;
 
 		
 		/**

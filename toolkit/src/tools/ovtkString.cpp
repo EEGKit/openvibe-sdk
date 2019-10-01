@@ -22,9 +22,9 @@ namespace OpenViBEToolkit
 		{
 			namespace
 			{
-				bool isSeparator(uint8_t ui8Value, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
+				bool isSeparator(const uint8_t value, uint8_t* separator, const uint32_t nSeparator)
 				{
-					for (uint32_t i = 0; i < ui32SeparatorCount; i++) { if (ui8Value == pSeparator[i]) { return true; } }
+					for (uint32_t i = 0; i < nSeparator; i++) { if (value == separator[i]) { return true; } }
 					return false;
 				}
 
@@ -38,14 +38,14 @@ namespace OpenViBEToolkit
 	} // namespace Tools
 } // namespace OpenViBEToolkit
 
-uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator)
+uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
 {
-	return split(rString, rSplitCallback, &ui8Separator, 1);
+	return split(rString, splitCB, &separator, 1);
 }
 
-uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
+uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const uint32_t nSeparator)
 {
-	if (ui32SeparatorCount == 0 || pSeparator == nullptr) { return 0; }
+	if (nSeparator == 0 || separator == nullptr) { return 0; }
 
 	uint32_t n = 0;
 	std::string str(rString.toASCIIString());
@@ -53,17 +53,17 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 	while (i < str.length())
 	{
 		size_t j = i;
-		while (j < str.length() && !isSeparator(str[j], pSeparator, ui32SeparatorCount)) { j++; }
+		while (j < str.length() && !isSeparator(str[j], separator, nSeparator)) { j++; }
 		//if(i!=j)
 		{
-			rSplitCallback.setToken(std::string(str, i, j - i).c_str());
+			splitCB.setToken(std::string(str, i, j - i).c_str());
 			n++;
 		}
 		i = j + 1;
 	}
-	if (str.length() != 0 && isSeparator(str[str.length() - 1], pSeparator, ui32SeparatorCount))
+	if (str.length() != 0 && isSeparator(str[str.length() - 1], separator, nSeparator))
 	{
-		rSplitCallback.setToken("");
+		splitCB.setToken("");
 		n++;
 	}
 

@@ -27,18 +27,18 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_oDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_oEncoder;
 
-			uint64_t m_ui64FilterMethod = 0;
-			uint64_t m_ui64FilterType   = 0;
-			uint64_t m_ui64FilterOrder  = 0;
+			uint64_t m_filterMethod = 0;
+			uint64_t m_filterType   = 0;
+			uint64_t m_filterOrder  = 0;
 
-			double m_f64LowCutFrequency  = 0;
-			double m_f64HighCutFrequency = 0;
-			double m_f64BandPassRipple   = 0; // for Chebyshev
+			double m_lowCutFrequency  = 0;
+			double m_highCutFrequency = 0;
+			double m_bandPassRipple   = 0; // for Chebyshev
 
-			std::vector<std::shared_ptr<Dsp::Filter>> m_vFilter;
+			std::vector<std::shared_ptr<Dsp::Filter>> m_filters;
 			//std::vector < std::shared_ptr < Dsp::Filter > > m_vFilter2;
 
-			std::vector<double> m_vFirstSample;
+			std::vector<double> m_firstSamples;
 		};
 
 		class CBoxAlgorithmTemporalFilterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

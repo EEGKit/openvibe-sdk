@@ -103,13 +103,13 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		}
 	}
 
-	bool mustGenerateConnectionID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	const bool mustGenerateConnectionID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
 	if (mustGenerateConnectionID) { m_ConnectionID = generateConnectionID(32); }
 	else
 	{
-		CString connectionIDSetting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
-		m_ConnectionID              = connectionIDSetting.toASCIIString();
+		const CString connectionIDSetting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
+		m_ConnectionID                    = connectionIDSetting.toASCIIString();
 	}
 
 	OV_ERROR_UNLESS_KRF(m_Messaging.listen(m_Port),
@@ -126,8 +126,8 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 	if (m_ShouldLaunchProgram)
 	{
-		CString programPath = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-		CString arguments   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+		const CString programPath = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+		const CString arguments   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 		if (!launchThirdPartyProgram(programPath.toASCIIString(), arguments.toASCIIString()))
 		{
@@ -138,7 +138,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		this->getLogManager() << LogLevel_Info << "Third party program [" << programPath.toASCIIString() << "] started.\n";
 	}
 
-	auto startTime = System::Time::zgetTime();
+	const auto startTime = System::Time::zgetTime();
 
 	bool clientConnected    = false;
 	m_HasReceivedEndMessage = false;
@@ -154,8 +154,8 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 			this->getLogManager() << LogLevel_Info << "Client connected to the server.\n";
 			break;
 		}
-		Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
-
+		
+		const Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
 		if (error == Communication::MessagingServer::ELibraryError::BadAuthenticationReceived)
 		{
 			OV_WARNING_K("A client sent a bad authentication.");
@@ -172,10 +172,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	m_Messaging.pushSync();
 
 
-	while (m_Messaging.isConnected() && !m_Messaging.waitForSyncMessage())
-	{
-		if (!m_Messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
-	}
+	while (m_Messaging.isConnected() && !m_Messaging.waitForSyncMessage()) { if (!m_Messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); } }
 
 	m_SyncTimeout  = TimeArithmetics::secondsToTime(0.0625);
 	m_LastSyncTime = System::Time::zgetTime();
@@ -206,14 +203,8 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			}
 
 
-			if (exitCode == STILL_ACTIVE)
-			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
-			}
-			else if (exitCode != 0)
-			{
-				OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << int(exitCode) << "]");
-			}
+			if (exitCode == STILL_ACTIVE) { OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown); }
+			else if (exitCode != 0) { OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << int(exitCode) << "]"); }
 		}
 #else
 		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId != 0)
@@ -380,16 +371,16 @@ bool CBoxAlgorithmExternalProcessing::process()
 	return true;
 }
 
-std::string CBoxAlgorithmExternalProcessing::generateConnectionID(size_t size)
+std::string CBoxAlgorithmExternalProcessing::generateConnectionID(const size_t size)
 {
 	std::default_random_engine generator{ std::random_device()() };
-	std::uniform_int_distribution<int> character(0, 34);
+	const std::uniform_int_distribution<int> character(0, 34);
 
 	std::string connectionID;
 
 	for (size_t i = 0; i < size; ++i)
 	{
-		char c = char(character(generator));
+		const char c = char(character(generator));
 		connectionID.push_back((c < 26) ? ('A' + c) : '1' + (c - 26));
 	}
 

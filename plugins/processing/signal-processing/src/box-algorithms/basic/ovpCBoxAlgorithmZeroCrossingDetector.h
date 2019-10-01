@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 			double m_f64HysteresisThreshold = 0;
 			uint64_t m_nChunk       = 0;
 
-			uint32_t m_ui32SamplingRate = 0;
+			uint32_t m_samplingRate = 0;
 			double m_f64WindowTime      = 0;
 			uint32_t m_ui32WindowTime   = 0;
 			std::vector<std::vector<uint64_t>> m_vMemoryChunk;
@@ -80,7 +80,7 @@ namespace OpenViBEPlugins
 				return this->onConnectorTypeChanged(box, index, typeID, true);
 			}
 
-			static bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index, const OpenViBE::CIdentifier& typeID, bool bOutputChanged)
+			static bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index, const OpenViBE::CIdentifier& typeID, const bool outputChanged)
 			{
 				if (index == 0)
 				{
@@ -98,7 +98,7 @@ namespace OpenViBEPlugins
 					{
 						// Invalid i/o type identifier
 						OpenViBE::CIdentifier l_oOriginalTypeIdentifier = OV_UndefinedIdentifier;
-						if (bOutputChanged)
+						if (outputChanged)
 						{
 							// Restores output
 							box.getInputType(0, l_oOriginalTypeIdentifier);

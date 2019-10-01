@@ -80,58 +80,57 @@ bool CBoxAlgorithmReferenceChannel::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	uint32_t j, k;
 
 	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		if (m_oDecoder.isHeaderReceived())
 		{
-			IMatrix& l_rInputMatrix  = *m_oDecoder.getOutputMatrix();
-			IMatrix& l_rOutputMatrix = *m_oEncoder.getInputMatrix();
+			IMatrix& iMatrix  = *m_oDecoder.getOutputMatrix();
+			IMatrix& oMatrix = *m_oEncoder.getInputMatrix();
 
-			OV_ERROR_UNLESS_KRF(l_rInputMatrix.getDimensionSize(0) >= 2,
-								"Invalid input matrix with [" << l_rInputMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
+			OV_ERROR_UNLESS_KRF(iMatrix.getDimensionSize(0) >= 2,
+								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
 								OpenViBE::Kernel::ErrorType::BadInput);
 
-			CString l_sChannel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-			uint64_t l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+			CString channel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+			const uint64_t matchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-			m_ui32ReferenceChannelIndex = FindChannel(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
+			m_referenceChannelIdx = FindChannel(iMatrix, channel, matchMethod, 0);
 
-			OV_ERROR_UNLESS_KRF(m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
-								"Invalid channel [" << l_sChannel << "]: channel not found", OpenViBE::Kernel::ErrorType::BadSetting);
+			OV_ERROR_UNLESS_KRF(m_referenceChannelIdx != std::numeric_limits<uint32_t>::max(),
+								"Invalid channel [" << channel << "]: channel not found", OpenViBE::Kernel::ErrorType::BadSetting);
 
-			if (FindChannel(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::
-				max()) { OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]"); }
+			if (FindChannel(*m_oDecoder.getOutputMatrix(), channel, matchMethod, m_referenceChannelIdx + 1) != std::numeric_limits<uint32_t>::
+				max()) { OV_WARNING_K("Multiple channels match for setting [" << channel << "]. Selecting [" << m_referenceChannelIdx << "]"); }
 
-			l_rOutputMatrix.setDimensionCount(2);
-			l_rOutputMatrix.setDimensionSize(0, l_rInputMatrix.getDimensionSize(0) - 1);
-			l_rOutputMatrix.setDimensionSize(1, l_rInputMatrix.getDimensionSize(1));
-			for (j = 0, k = 0; j < l_rInputMatrix.getDimensionSize(0); j++)
+			oMatrix.setDimensionCount(2);
+			oMatrix.setDimensionSize(0, iMatrix.getDimensionSize(0) - 1);
+			oMatrix.setDimensionSize(1, iMatrix.getDimensionSize(1));
+			for (uint32_t j = 0, k = 0; j < iMatrix.getDimensionSize(0); j++)
 			{
-				if (j != m_ui32ReferenceChannelIndex) { l_rOutputMatrix.setDimensionLabel(0, k++, l_rInputMatrix.getDimensionLabel(0, j)); }
+				if (j != m_referenceChannelIdx) { oMatrix.setDimensionLabel(0, k++, iMatrix.getDimensionLabel(0, j)); }
 			}
 
 			m_oEncoder.encodeHeader();
 		}
 		if (m_oDecoder.isBufferReceived())
 		{
-			IMatrix& l_rInputMatrix     = *m_oDecoder.getOutputMatrix();
-			IMatrix& l_rOutputMatrix    = *m_oEncoder.getInputMatrix();
-			double* l_pInputBuffer      = l_rInputMatrix.getBuffer();
-			double* l_pOutputBuffer     = l_rOutputMatrix.getBuffer();
-			double* l_pReferenceBuffer  = l_rInputMatrix.getBuffer() + m_ui32ReferenceChannelIndex * l_rInputMatrix.getDimensionSize(1);
-			uint32_t l_ui32ChannelCount = l_rInputMatrix.getDimensionSize(0);
-			uint32_t l_ui32SampleCount  = l_rInputMatrix.getDimensionSize(1);
-			for (j = 0; j < l_ui32ChannelCount; j++)
+			IMatrix& iMatrix     = *m_oDecoder.getOutputMatrix();
+			IMatrix& oMatrix    = *m_oEncoder.getInputMatrix();
+			double* iBuffer      = iMatrix.getBuffer();
+			double* oBuffer     = oMatrix.getBuffer();
+			double* refBuffer  = iMatrix.getBuffer() + m_referenceChannelIdx * iMatrix.getDimensionSize(1);
+			const uint32_t nChannel = iMatrix.getDimensionSize(0);
+			const uint32_t nSample  = iMatrix.getDimensionSize(1);
+			for (uint32_t j = 0; j < nChannel; j++)
 			{
-				if (j != m_ui32ReferenceChannelIndex)
+				if (j != m_referenceChannelIdx)
 				{
-					for (k = 0; k < l_ui32SampleCount; k++) { l_pOutputBuffer[k] = l_pInputBuffer[k] - l_pReferenceBuffer[k]; }
-					l_pOutputBuffer += l_ui32SampleCount;
+					for (uint32_t k = 0; k < nSample; k++) { oBuffer[k] = iBuffer[k] - refBuffer[k]; }
+					oBuffer += nSample;
 				}
-				l_pInputBuffer += l_ui32SampleCount;
+				iBuffer += nSample;
 			}
 
 			m_oEncoder.encodeBuffer();

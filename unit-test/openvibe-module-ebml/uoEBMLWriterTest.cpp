@@ -75,8 +75,8 @@ int uoEBMLWriterTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: data_dir output_dir");
 
-	std::string expectedFile = std::string(argv[1]) + "ref_data.ebml";
-	std::string outputFile   = std::string(argv[2]) + "uoEBMLWriterTest.ebml";
+	const std::string expectedFile = std::string(argv[1]) + "ref_data.ebml";
+	const std::string outputFile   = std::string(argv[2]) + "uoEBMLWriterTest.ebml";
 
 	// The test serializes a known ebml sequence and compares the output
 	// to a reference.

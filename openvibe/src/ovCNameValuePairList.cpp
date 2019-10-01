@@ -31,56 +31,56 @@ CNameValuePairList& CNameValuePairList::operator=(const CNameValuePairList& rNam
 	return *this;
 }
 
-bool CNameValuePairList::setValue(const CString& rName, const CString& rValue)
+bool CNameValuePairList::setValue(const CString& name, const CString& rValue)
 {
-	m_pNameValuePairListImpl->m_Map[rName] = rValue;
+	m_pNameValuePairListImpl->m_Map[name] = rValue;
 	return true;
 }
 
-bool CNameValuePairList::setValue(const CString& rName, const char* pValue)
+bool CNameValuePairList::setValue(const CString& name, const char* pValue)
 {
 	if (pValue == nullptr) { return false; }
-	m_pNameValuePairListImpl->m_Map[rName] = pValue;
+	m_pNameValuePairListImpl->m_Map[name] = pValue;
 	return true;
 }
 
-bool CNameValuePairList::setValue(const CString& rName, const double& rValue)
+bool CNameValuePairList::setValue(const CString& name, const double& rValue)
 {
-	char s_pBuffer[1024];
-	sprintf(s_pBuffer, "%lf", rValue);
-	m_pNameValuePairListImpl->m_Map[rName] = s_pBuffer;
+	char buffer[1024];
+	sprintf(buffer, "%lf", rValue);
+	m_pNameValuePairListImpl->m_Map[name] = buffer;
 	return true;
 }
 
-bool CNameValuePairList::setValue(const CString& rName, bool bValue)
+bool CNameValuePairList::setValue(const CString& name, bool bValue)
 {
-	m_pNameValuePairListImpl->m_Map[rName] = bValue ? "1" : "0";
+	m_pNameValuePairListImpl->m_Map[name] = bValue ? "1" : "0";
 	return true;
 }
 
-bool CNameValuePairList::getValue(const CString& rName, CString& rValue) const
+bool CNameValuePairList::getValue(const CString& name, CString& rValue) const
 {
-	if (m_pNameValuePairListImpl->m_Map.find(rName) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
-	rValue = m_pNameValuePairListImpl->m_Map[rName];
+	if (m_pNameValuePairListImpl->m_Map.find(name) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
+	rValue = m_pNameValuePairListImpl->m_Map[name];
 	return true;
 }
 
-bool CNameValuePairList::getValue(const CString& rName, double& rValue) const
+bool CNameValuePairList::getValue(const CString& name, double& rValue) const
 {
-	if (m_pNameValuePairListImpl->m_Map.find(rName) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
+	if (m_pNameValuePairListImpl->m_Map.find(name) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
 	double temp;
 
-	try { temp = std::stod(m_pNameValuePairListImpl->m_Map[rName].toASCIIString()); }
+	try { temp = std::stod(m_pNameValuePairListImpl->m_Map[name].toASCIIString()); }
 	catch (const std::exception&) { return false; }
 
 	rValue = temp;
 	return true;
 }
 
-bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
+bool CNameValuePairList::getValue(const CString& name, bool& rValue) const
 {
-	if (m_pNameValuePairListImpl->m_Map.find(rName) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
-	const CString value = m_pNameValuePairListImpl->m_Map[rName];
+	if (m_pNameValuePairListImpl->m_Map.find(name) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
+	const CString value = m_pNameValuePairListImpl->m_Map[name];
 	if (value == CString("0") || value == CString("FALSE") || value == CString("false"))
 	{
 		rValue = false;
@@ -94,12 +94,12 @@ bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
 	return false;
 }
 
-bool CNameValuePairList::getValue(const uint32_t rIndex, CString& rName, CString& rValue) const
+bool CNameValuePairList::getValue(const uint32_t rIndex, CString& name, CString& rValue) const
 {
 	if (rIndex >= this->getSize()) { return false; }
 	auto it = m_pNameValuePairListImpl->m_Map.begin();
 	std::advance(it, rIndex);
-	rName  = it->first;
+	name  = it->first;
 	rValue = it->second;
 	return true;
 }

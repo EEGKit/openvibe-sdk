@@ -23,11 +23,11 @@ namespace OpenViBE
 
 			/**
 			 * \brief Creates a new kernel object givent its class identifier
-			 * \param rClassIdentifier [in] : the class identifier of the object to create
+			 * \param classID [in] : the class identifier of the object to create
 			 * \return a pointer on the created object in case of success.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IObject* createObject(const CIdentifier& rClassIdentifier) = 0;
+			virtual IObject* createObject(const CIdentifier& classID) = 0;
 			/**
 			 * \brief Releases an object created by this factory
 			 * \param pObject [in] : the object to release

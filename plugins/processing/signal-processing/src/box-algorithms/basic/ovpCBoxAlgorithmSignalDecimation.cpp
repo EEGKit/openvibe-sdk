@@ -92,8 +92,8 @@ bool CBoxAlgorithmSignalDecimation::process()
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
-		uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
-		uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
+		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
+		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
 
 		if (tStart != m_ui64LastEndTime)
 		{

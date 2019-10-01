@@ -114,7 +114,7 @@ TEST(error_manager_test_case, test_stress_push)
 	auto& errorManager = context->getErrorManager();
 
 	errorManager.releaseErrors();
-	uint32_t expectedErrorCount = 10;
+	const uint32_t expectedErrorCount = 10;
 	for (uint32_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
 
 	uint32_t errorCount = 0;

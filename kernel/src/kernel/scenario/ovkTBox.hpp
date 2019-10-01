@@ -770,12 +770,12 @@ namespace OpenViBE
 
 			uint32_t getInputCount() const override { return this->getInterfacorCount(Input); }
 			bool getInputType(const uint32_t index, CIdentifier& typeID) const override { return this->getInterfacorType(Input, index, typeID); }
-			bool getInputName(const uint32_t index, CString& rName) const override { return this->getInterfacorName(Input, index, rName); }
+			bool getInputName(const uint32_t index, CString& name) const override { return this->getInterfacorName(Input, index, name); }
 
-			bool getInputName(const CIdentifier& rInputIdentifier, CString& rName) const { return this->getInterfacorName(Input, rInputIdentifier, rName); }
+			bool getInputName(const CIdentifier& rInputIdentifier, CString& name) const { return this->getInterfacorName(Input, rInputIdentifier, name); }
 
 			bool setInputType(const uint32_t index, const CIdentifier& typeID) override { return this->setInterfacorType(Input, index, typeID); }
-			bool setInputName(const uint32_t index, const CString& rName) override { return this->setInterfacorName(Input, index, rName); }
+			bool setInputName(const uint32_t index, const CString& name) override { return this->setInterfacorName(Input, index, name); }
 
 			//___________________________________________________________________//
 			//                                                                   //
@@ -881,9 +881,9 @@ namespace OpenViBE
 
 			uint32_t getOutputCount() const override { return this->getInterfacorCount(Output); }
 			bool getOutputType(const uint32_t index, CIdentifier& typeID) const override { return this->getInterfacorType(Output, index, typeID); }
-			bool getOutputName(const uint32_t index, CString& rName) const override { return this->getInterfacorName(Output, index, rName); }
+			bool getOutputName(const uint32_t index, CString& name) const override { return this->getInterfacorName(Output, index, name); }
 			bool setOutputType(const uint32_t index, const CIdentifier& typeID) override { return this->setInterfacorType(Output, index, typeID); }
-			bool setOutputName(const uint32_t index, const CString& rName) override { return this->setInterfacorName(Output, index, rName); }
+			bool setOutputName(const uint32_t index, const CString& name) override { return this->setInterfacorName(Output, index, name); }
 
 			bool addInterfacorTypeSupport(const EBoxInterfacorType interfacorType, const CIdentifier& typeID) override
 			{
@@ -1099,11 +1099,11 @@ namespace OpenViBE
 
 			uint32_t getSettingCount() const override { return this->getInterfacorCount(Setting); }
 
-			bool hasSettingWithName(const CString& rName) const override { return m_interfacorNameToIdx.at(Setting).find(rName) != m_interfacorNameToIdx.at(Setting).end(); }
+			bool hasSettingWithName(const CString& name) const override { return m_interfacorNameToIdx.at(Setting).find(name) != m_interfacorNameToIdx.at(Setting).end(); }
 
 			bool getSettingType(const uint32_t index, CIdentifier& typeID) const override { return this->getInterfacorType(Setting, index, typeID); }
 
-			bool getSettingName(const uint32_t index, CString& rName) const override { return this->getInterfacorName(Setting, index, rName); }
+			bool getSettingName(const uint32_t index, CString& name) const override { return this->getInterfacorName(Setting, index, name); }
 
 			bool getSettingDefaultValue(const uint32_t index, CString& rDefaultValue) const override
 			{
@@ -1194,7 +1194,7 @@ namespace OpenViBE
 
 			bool setSettingType(const uint32_t index, const CIdentifier& typeID) override { return this->setInterfacorType(Setting, index, typeID); }
 
-			bool setSettingName(const uint32_t index, const CString& rName) override { return this->setInterfacorName(Setting, index, rName); }
+			bool setSettingName(const uint32_t index, const CString& name) override { return this->setInterfacorName(Setting, index, name); }
 
 			bool setSettingDefaultValue(const uint32_t index, const CString& rDefaultValue) override
 			{

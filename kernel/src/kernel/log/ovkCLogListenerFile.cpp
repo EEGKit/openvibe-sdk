@@ -61,18 +61,18 @@ void CLogListenerFile::log(const time64 value)
 {
 	if (m_bTimeInSeconds)
 	{
-		double l_f64Time = TimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
+		double l_f64Time = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;
 		ss.precision(m_ui64TimePrecision);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
 
-		if (m_bLogWithHexa) { ss << " (0x" << hex << value.m_ui64TimeValue << ")"; }
+		if (m_bLogWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
 
 		m_fsFileStream << ss.str();
 	}
-	else { logInteger(value.m_ui64TimeValue); }
+	else { logInteger(value.timeValue); }
 }
 
 void CLogListenerFile::log(const uint64_t value) { logInteger(value); }

@@ -36,7 +36,7 @@ int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix&
 	const double maxSecond = *(std::max_element(valueBuffer, valueBuffer + secondClassificationValue.getBufferElementCount()));
 
 	//Then we just compared them
-	if (ov_float_equal(maxFirst, maxSecond)) { return 0; }
+	if (OVFloatEqual(maxFirst, maxSecond)) { return 0; }
 	if (maxFirst > maxSecond) { return -1; }
 	return 1;
 }
@@ -71,13 +71,13 @@ void CAlgorithmClassifierLDA::dumpMatrix(ILogManager& /* rMgr */, const MatrixXd
 bool CAlgorithmClassifierLDA::initialize()
 {
 	// Initialize the Conditioned Covariance Matrix algorithm
-	m_pCovarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
+	m_covarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
 
-	OV_ERROR_UNLESS_KRF(m_pCovarianceAlgorithm->initialize(), "Failed to initialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_covarianceAlgorithm->initialize(), "Failed to initialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
 	// This is the weight parameter local to this module and automatically exposed to the GUI. Its redirected to the corresponding parameter of the cov alg.
 	TParameterHandler<double> ip_f64Shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));
-	ip_f64Shrinkage.setReferenceTarget(m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
+	ip_f64Shrinkage.setReferenceTarget(m_covarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
 
 	TParameterHandler<bool> ip_bDiagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 	ip_bDiagonalCov = false;
@@ -90,9 +90,9 @@ bool CAlgorithmClassifierLDA::initialize()
 
 bool CAlgorithmClassifierLDA::uninitialize()
 {
-	OV_ERROR_UNLESS_KRF(m_pCovarianceAlgorithm->uninitialize(), "Failed to uninitialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_covarianceAlgorithm->uninitialize(), "Failed to uninitialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
-	this->getAlgorithmManager().releaseAlgorithm(*m_pCovarianceAlgorithm);
+	this->getAlgorithmManager().releaseAlgorithm(*m_covarianceAlgorithm);
 
 	return CAlgorithmClassifier::uninitialize();
 }
@@ -102,8 +102,8 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to unitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
 	//We need to clear list because a instance of this class should support more that one training.
-	m_vLabelList.clear();
-	m_vDiscriminantFunctions.clear();
+	m_labels.clear();
+	m_discriminantFunctions.clear();
 
 	const bool useShrinkage = this->getBooleanParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage);
 
@@ -121,15 +121,15 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 
 		TParameterHandler<bool> ip_bDiagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 		ip_bDiagonalCov = false;
-		diagonalCov  = false;
+		diagonalCov     = false;
 	}
 
 	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
 	// IO to the covariance alg
-	TParameterHandler<IMatrix*> op_pMean(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
-	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	TParameterHandler<IMatrix*> op_pMean(m_covarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
+	TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_covarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_covarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
 	const uint32_t nRows = featureVectorSet.getFeatureVectorCount();
 	const uint32_t nCols = (nRows > 0 ? featureVectorSet[0].getSize() : 0);
@@ -141,11 +141,11 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 
 	// The max amount of classes to be expected
 	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
-	m_ui32NumClasses = uint32_t(ip_pNumberOfClasses);
+	m_nClasses = uint32_t(ip_pNumberOfClasses);
 
 	// Count the classes actually present
 	std::vector<uint32_t> l_vClassCounts;
-	l_vClassCounts.resize(m_ui32NumClasses);
+	l_vClassCounts.resize(m_nClasses);
 
 	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); i++)
 	{
@@ -154,22 +154,22 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	}
 
 	// Get class labels
-	for (uint32_t i = 0; i < m_ui32NumClasses; i++)
+	for (uint32_t i = 0; i < m_nClasses; i++)
 	{
-		m_vLabelList.push_back(i);
-		m_vDiscriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
+		m_labels.push_back(i);
+		m_discriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
 	}
 
 	// Per-class means and a global covariance are used to form the LDA model
-	MatrixXd* l_oPerClassMeans = new MatrixXd[m_ui32NumClasses];
+	MatrixXd* l_oPerClassMeans = new MatrixXd[m_nClasses];
 	MatrixXd l_oGlobalCov      = MatrixXd::Zero(nCols, nCols);
 
 	// We need the means per class
-	for (uint32_t l_ui32classIdx = 0; l_ui32classIdx < m_ui32NumClasses; l_ui32classIdx++)
+	for (uint32_t l_ui32classIdx = 0; l_ui32classIdx < m_nClasses; l_ui32classIdx++)
 	{
 		if (l_vClassCounts[l_ui32classIdx] > 0)
 		{
-			// const double l_f64Label = m_vLabelList[l_ui32classIdx];
+			// const double l_f64Label = m_labels[l_ui32classIdx];
 			const uint32_t l_ui32nExamplesInClass = l_vClassCounts[l_ui32classIdx];
 
 			// Copy all the data of the class to a matrix
@@ -216,7 +216,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 		}
 
 		// Compute cov
-		if (!m_pCovarianceAlgorithm->process())
+		if (!m_covarianceAlgorithm->process())
 		{
 
 			//Free memory before leaving
@@ -273,8 +273,8 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 					<< "\n";
 			// dumpMatrix(this->getLogManager(), l_oPerClassMeans[i], "Means");
 
-			m_vDiscriminantFunctions[i].setWeight(l_oWeight);
-			m_vDiscriminantFunctions[i].setBias(l_f64Bias);
+			m_discriminantFunctions[i].setWeight(l_oWeight);
+			m_discriminantFunctions[i].setBias(l_f64Bias);
 		}
 		else { this->getLogManager() << LogLevel_Debug << "Class " << static_cast<const uint64_t>(i) << " has no examples\n"; }
 	}
@@ -293,40 +293,40 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	{
 		if (l_vClassCounts[i] == 0)
 		{
-			m_vDiscriminantFunctions[i].setWeight(m_vDiscriminantFunctions[l_ui32NonZeroClassIdx].getWeight());
-			m_vDiscriminantFunctions[i].setBias(m_vDiscriminantFunctions[l_ui32NonZeroClassIdx].getBias() - 1.0); // Will always lose to the orig
+			m_discriminantFunctions[i].setWeight(m_discriminantFunctions[l_ui32NonZeroClassIdx].getWeight());
+			m_discriminantFunctions[i].setBias(m_discriminantFunctions[l_ui32NonZeroClassIdx].getBias() - 1.0); // Will always lose to the orig
 		}
 	}
 
-	m_ui32NumCols = nCols;
+	m_nCols = nCols;
 
 	// Debug output
 	//dumpMatrix(this->getLogManager(), l_oGlobalCov, "Global cov");
 	//dumpMatrix(this->getLogManager(), l_oEigenValues, "Eigenvalues");
 	//dumpMatrix(this->getLogManager(), l_oEigenSolver.eigenvectors(), "Eigenvectors");
 	//dumpMatrix(this->getLogManager(), l_oGlobalCovInv, "Global cov inverse");
-	//dumpMatrix(this->getLogManager(), m_oCoefficients, "Hyperplane weights");
+	//dumpMatrix(this->getLogManager(), m_coefficients, "Hyperplane weights");
 
 	delete[] l_oPerClassMeans;
 	return true;
 }
 
-bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, double& classId, IVector& rDistanceValue, IVector& rProbabilityValue)
+bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, double& classId, IVector& distance, IVector& probability)
 {
-	OV_ERROR_UNLESS_KRF(!m_vDiscriminantFunctions.empty(), "LDA discriminant function list is empty", OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(!m_discriminantFunctions.empty(), "LDA discriminant function list is empty", OpenViBE::Kernel::ErrorType::BadConfig);
 
-	OV_ERROR_UNLESS_KRF(featureVector.getSize() == m_vDiscriminantFunctions[0].getWeightVectorSize(),
-						"Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << featureVector.getSize(),
+	OV_ERROR_UNLESS_KRF(featureVector.getSize() == m_discriminantFunctions[0].getWeightVectorSize(),
+						"Classifier expected " << m_discriminantFunctions[0].getWeightVectorSize() << " features, got " << featureVector.getSize(),
 						OpenViBE::Kernel::ErrorType::BadInput);
 
-	const Map<VectorXd> l_oFeatureVec(const_cast<double*>(featureVector.getBuffer()), featureVector.getSize());
-	const VectorXd l_oWeights       = l_oFeatureVec;
-	const uint32_t l_ui32ClassCount = getClassCount();
+	const Map<VectorXd> featureVec(const_cast<double*>(featureVector.getBuffer()), featureVector.getSize());
+	const VectorXd weights = featureVec;
+	const uint32_t nClass  = getClassCount();
 
-	double* l_pValueArray       = new double[l_ui32ClassCount];
-	double* l_pProbabilityValue = new double[l_ui32ClassCount];
+	double* valueArray       = new double[nClass];
+	double* probabilityValue = new double[nClass];
 	//We ask for all computation helper to give the corresponding class value
-	for (size_t i = 0; i < l_ui32ClassCount; ++i) { l_pValueArray[i] = m_vDiscriminantFunctions[i].getValue(l_oWeights); }
+	for (size_t i = 0; i < nClass; ++i) { valueArray[i] = m_discriminantFunctions[i].getValue(weights); }
 
 	//p(Ck | x) = exp(ak) / sum[j](exp (aj))
 	// with aj = (Weight for class j).transpose() * x + (Bias for class j)
@@ -336,35 +336,35 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, doub
 
 	//All ak are given by computation helper
 	errno = 0;
-	for (size_t i = 0; i < l_ui32ClassCount; ++i)
+	for (size_t i = 0; i < nClass; ++i)
 	{
-		double l_f64ExpSum = 0.;
-		for (size_t j = 0; j < l_ui32ClassCount; ++j) { l_f64ExpSum += exp(l_pValueArray[j] - l_pValueArray[i]); }
-		l_pProbabilityValue[i] = 1 / l_f64ExpSum;
+		double expSum = 0.;
+		for (size_t j = 0; j < nClass; ++j) { expSum += exp(valueArray[j] - valueArray[i]); }
+		probabilityValue[i] = 1 / expSum;
 		// std::cout << "p " << i << " = " << l_pProbabilityValue[i] << ", v=" << l_pValueArray[i] << ", " << errno << "\n";
 	}
 
 	//Then we just find the highest probability and take it as a result
-	size_t l_ui32ClassIndex = size_t(std::distance(l_pValueArray, std::max_element(l_pValueArray, l_pValueArray + l_ui32ClassCount)));
+	const size_t classIdx = size_t(std::distance(valueArray, std::max_element(valueArray, valueArray + nClass)));
 
-	rDistanceValue.setSize(l_ui32ClassCount);
-	rProbabilityValue.setSize(l_ui32ClassCount);
+	distance.setSize(nClass);
+	probability.setSize(nClass);
 
-	for (size_t i = 0; i < l_ui32ClassCount; ++i)
+	for (size_t i = 0; i < nClass; ++i)
 	{
-		rDistanceValue[i]    = l_pValueArray[i];
-		rProbabilityValue[i] = l_pProbabilityValue[i];
+		distance[i]    = valueArray[i];
+		probability[i] = probabilityValue[i];
 	}
 
-	classId = m_vLabelList[l_ui32ClassIndex];
+	classId = m_labels[classIdx];
 
-	delete[] l_pValueArray;
-	delete[] l_pProbabilityValue;
+	delete[] valueArray;
+	delete[] probabilityValue;
 
 	return true;
 }
 
-uint32_t CAlgorithmClassifierLDA::getClassCount() { return m_ui32NumClasses; }
+uint32_t CAlgorithmClassifierLDA::getClassCount() { return m_nClasses; }
 
 XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 {
@@ -374,11 +374,11 @@ XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 	// Write the classifier to an .xml
 	std::stringstream l_sClasses;
 
-	for (size_t i = 0; i < getClassCount(); ++i) { l_sClasses << m_vLabelList[i] << " "; }
+	for (size_t i = 0; i < getClassCount(); ++i) { l_sClasses << m_labels[i] << " "; }
 
 	//Only new version should be recorded so we don't need to test
 	XML::IXMLNode* l_pHelpersConfiguration = XML::createNode(COMPUTATION_HELPERS_CONFIGURATION_NODE);
-	for (size_t i = 0; i < m_vDiscriminantFunctions.size(); ++i) { l_pHelpersConfiguration->addChild(m_vDiscriminantFunctions[i].getConfiguration()); }
+	for (size_t i = 0; i < m_discriminantFunctions.size(); ++i) { l_pHelpersConfiguration->addChild(m_discriminantFunctions[i].getConfiguration()); }
 
 	XML::IXMLNode* l_pTempNode = XML::createNode(CLASSES_NODE_NAME);
 	l_pTempNode->setPCData(l_sClasses.str().c_str());
@@ -405,8 +405,8 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNod
 						"Invalid model: model trained with an obsolete version of LDA",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_vLabelList.clear();
-	m_vDiscriminantFunctions.clear();
+	m_labels.clear();
+	m_discriminantFunctions.clear();
 
 	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(CLASSES_NODE_NAME);
 
@@ -420,8 +420,8 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNod
 
 	for (size_t i = 0; i < l_pConfigsNode->getChildCount(); ++i)
 	{
-		m_vDiscriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
-		m_vDiscriminantFunctions[i].loadConfiguration(l_pConfigsNode->getChild(i));
+		m_discriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
+		m_discriminantFunctions[i].loadConfiguration(l_pConfigsNode->getChild(i));
 	}
 
 	return true;
@@ -431,8 +431,8 @@ void CAlgorithmClassifierLDA::loadClassesFromNode(XML::IXMLNode* pNode)
 {
 	std::stringstream l_sData(pNode->getPCData());
 	double l_f64Temp;
-	while (l_sData >> l_f64Temp) { m_vLabelList.push_back(l_f64Temp); }
-	m_ui32NumClasses = uint32_t(m_vLabelList.size());
+	while (l_sData >> l_f64Temp) { m_labels.push_back(l_f64Temp); }
+	m_nClasses = uint32_t(m_labels.size());
 }
 
 //Load the weight vector
@@ -444,9 +444,9 @@ void CAlgorithmClassifierLDA::loadCoefficientsFromNode(XML::IXMLNode* pNode)
 	double l_f64Value;
 	while (l_sData >> l_f64Value) { l_vCoefficients.push_back(l_f64Value); }
 
-	m_oWeights.resize(1, l_vCoefficients.size());
-	m_ui32NumCols = uint32_t(l_vCoefficients.size());
-	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_oWeights(0, i) = l_vCoefficients[i]; }
+	m_weights.resize(1, l_vCoefficients.size());
+	m_nCols = uint32_t(l_vCoefficients.size());
+	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_weights(0, i) = l_vCoefficients[i]; }
 }
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

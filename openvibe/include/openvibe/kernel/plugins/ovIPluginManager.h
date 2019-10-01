@@ -79,11 +79,11 @@ namespace OpenViBE
 			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& rBaseClassIdentifier) const = 0;
 			/**
 			 * \brief Checks if a plugin object can be created or not
-			 * \param rClassIdentifier [in] : the class identifier a descriptor should be able to create
+			 * \param classID [in] : the class identifier a descriptor should be able to create
 			 * \return \e true in case this manager is able to create a plugin object with the provided class identifier.
 			 * \return \e false in other case.
 			 */
-			virtual bool canCreatePluginObject(const CIdentifier& rClassIdentifier) = 0;
+			virtual bool canCreatePluginObject(const CIdentifier& classID) = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor
 			 * \param identifier [in] : the plugin object descriptor identifier which details should be returned
@@ -93,11 +93,11 @@ namespace OpenViBE
 			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& identifier) const = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor given the class identifier it should create
-			 * \param rClassIdentifier [in] : the plugin object class identifier of the descriptor which details should be returned
+			 * \param classID [in] : the plugin object class identifier of the descriptor which details should be returned
 			 * \return the corresponding plugin object descriptor pointer.
 			 * \sa canCreatePluginObject
 			 */
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& classID) const = 0;
 
 			//@}
 			/** \name Plugin lifetime management */
@@ -105,7 +105,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets a hash value for a given plugin
-			 * \param rClassIdentifier [in] : the class identifier of the plugin which hash value
+			 * \param classID [in] : the class identifier of the plugin which hash value
 			 *        has to be returned
 			 * \return a hash code for the corresponding plugin object
 			 *
@@ -118,12 +118,12 @@ namespace OpenViBE
 			 *       hash code is based on what OpenViBE::Kernel::IBoxProto receives at
 			 *       description stage)
 			 */
-			virtual CIdentifier getPluginObjectHashValue(const CIdentifier& rClassIdentifier) const = 0;
+			virtual CIdentifier getPluginObjectHashValue(const CIdentifier& classID) const = 0;
 
 			virtual CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const = 0;
 			/**
 			 * \brief Gets a hint whether a plugin is deprecated or not
-			 * \param rClassIdentifier [in] : the class identifier of the plugin which deprecation should be returned
+			 * \param classID [in] : the class identifier of the plugin which deprecation should be returned
 			 * \return \e true in case the plugin is deprecated
 			 * \return \e false in case the plugin is not deprecated
 			 *
@@ -132,7 +132,7 @@ namespace OpenViBE
 			 * be removed soon or later. Code relying on this plugin
 			 * should consider any alternative available to avoid future problems.
 			 */
-			virtual bool isPluginObjectFlaggedAsDeprecated(const CIdentifier& rClassIdentifier) const = 0;
+			virtual bool isPluginObjectFlaggedAsDeprecated(const CIdentifier& classID) const = 0;
 				
 			//@}
 			/** \name Plugin creation and destruction */
@@ -140,12 +140,12 @@ namespace OpenViBE
 
 			/**
 			 * \brief Creates a new plugin object given its class identifier
-			 * \param rClassIdentifier [in] : the class identifier of the plugin object to create
+			 * \param classID [in] : the class identifier of the plugin object to create
 			 * \return a pointer on the newly created plugin object.
 			 * \return \c NULL in case of error.
 			 * \sa releasePluginObject
 			 */
-			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& rClassIdentifier) = 0;
+			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& classID) = 0;
 			/**
 			 * \brief Tells the plugin manager a plugin object won't be ever used
 			 * \param pPluginObject [in] : the plugin object to release
@@ -164,14 +164,14 @@ namespace OpenViBE
 
 			/**
 			 * \brief Creates a new algorithm given its class identifier and eventually returns the associated descriptor
-			 * \param rClassIdentifier [in] : the class identifier of the algorithm to create
+			 * \param classID [in] : the class identifier of the algorithm to create
 			 * \param ppAlgorithmDesc [out] : a pointer where to store the descriptor information
 			 * \return The newly created algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IAlgorithmDesc** ppAlgorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& classID, const Plugins::IAlgorithmDesc** ppAlgorithmDesc) = 0;
 			/**
 			 * \brief Creates a new algorithm given a descriptor
 			 * \param rAlgorithmDesc [in] : the class descriptor of the algorithm to create
@@ -183,14 +183,14 @@ namespace OpenViBE
 			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
 			/**
 			 * \brief Creates a new box algorithm given its class identifier and eventually returns the associated descriptor
-			 * \param rClassIdentifier [in] : the class identifier of the box algorithm to create
+			 * \param classID [in] : the class identifier of the box algorithm to create
 			 * \param ppBoxAlgorithmDesc [out] : a pointer where to store the descriptor information
 			 * \return The newly created box algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) = 0;
+			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& classID, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) = 0;
 
 			//@}
 

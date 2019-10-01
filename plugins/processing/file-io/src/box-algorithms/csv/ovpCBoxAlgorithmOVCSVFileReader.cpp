@@ -211,8 +211,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 	if (!m_savedChunks.empty())
 	{
-		double chunkStartTime = m_savedChunks.cbegin()->startTime;
-		double chunkEndTime   = m_savedChunks.back().endTime;
+		const double chunkStartTime = m_savedChunks.cbegin()->startTime;
+		const double chunkEndTime   = m_savedChunks.back().endTime;
 
 		// send stimulations chunk even if there is no stimulations, chunks have to be continued
 		OV_ERROR_UNLESS_KRF(this->processStimulation(chunkStartTime, chunkEndTime), "Error during stimulation process", ErrorType::Internal);
@@ -257,7 +257,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double endTime)
+bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, const double endTime)
 {
 	if (!m_isStimulationHeaderSent)
 	{

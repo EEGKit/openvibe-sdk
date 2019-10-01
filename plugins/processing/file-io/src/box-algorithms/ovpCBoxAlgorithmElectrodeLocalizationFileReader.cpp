@@ -94,8 +94,8 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		// m_pOVMatrixFileReader->process(OVP_Algorithm_BrainampFileReader_InputTriggerId_Open);
 
 		// Produces header
-		IMatrix* l_pInputMatrix = m_pChannelLocalisationStreamEncoder->getInputMatrix();
-		OpenViBEToolkit::Tools::Matrix::copy(*l_pInputMatrix, *op_pMatrix);
+		IMatrix* iMatrix = m_pChannelLocalisationStreamEncoder->getInputMatrix();
+		OpenViBEToolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		m_pChannelLocalisationStreamEncoder->encodeHeader();
 
@@ -109,8 +109,8 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		m_pOVMatrixFileReader->isOutputTriggerActive(OVP_Algorithm_OVMatrixFileReader_OutputTriggerId_DataProduced)*/)
 	{
 		// Connects parameters to memory buffer
-		IMatrix* l_pInputMatrix = m_pChannelLocalisationStreamEncoder->getInputMatrix();
-		OpenViBEToolkit::Tools::Matrix::copy(*l_pInputMatrix, *op_pMatrix);
+		IMatrix* iMatrix = m_pChannelLocalisationStreamEncoder->getInputMatrix();
+		OpenViBEToolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer
 		m_pChannelLocalisationStreamEncoder->encodeBuffer();

@@ -46,7 +46,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNormalGoodSignal)
 
 	for (double index = 0.0; index < 1.2; index += 0.125)
 	{
-		double epoch = index / 0.5;
+		const double epoch = index / 0.5;
 		ASSERT_TRUE(signalWriterTest->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, uint32_t(epoch) }));
 
 		if (index == 0.25 || index == 0.75) { ASSERT_TRUE(signalWriterTest->addEvent(35000, index, 0.0)); }
@@ -71,7 +71,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNoStimulations)
 	ASSERT_TRUE(signalWriterTest->noEventsUntilDate(2.0));
 	for (double index = 0; index < 1.2; index += 0.125)
 	{
-		double epoch = index / 0.5;
+		const double epoch = index / 0.5;
 		ASSERT_TRUE(signalWriterTest->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, uint32_t(epoch) }));
 	}
 
@@ -90,7 +90,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNoFileOpen)
 
 	for (double index = 0; index < 1.2; index += 0.125)
 	{
-		double epoch = index / 0.5;
+		const double epoch = index / 0.5;
 		ASSERT_TRUE(signalWriterTest->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, uint32_t(epoch) }));
 	}
 
@@ -175,7 +175,7 @@ TEST(CSV_Writer_Test_Case, signalWriterOnlyLastMatrix)
 
 	for (double index = 0.0; index < 1.2; index += 0.125)
 	{
-		double epoch = index / 0.5;
+		const double epoch = index / 0.5;
 		ASSERT_TRUE(signalWriterTest->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, uint32_t(epoch) }));
 
 		if (index == 0.25 || index == 0.75 || index == 1.0) { ASSERT_TRUE(signalWriterTest->addEvent(35000, index, 0.0)); }
@@ -188,7 +188,7 @@ TEST(CSV_Writer_Test_Case, signalWriterOnlyLastMatrix)
 	releaseCSVHandler(signalWriterTest);
 
 	std::ifstream t(filename);
-	std::string csv_out((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+	const std::string csv_out((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
 	ASSERT_STREQ(csv_out.c_str(), expectedFileContent.c_str());
 }
@@ -207,7 +207,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 	double time = 0;
 	for (uint32_t i = 0; i < 10; i++)
 	{
-		uint32_t epoch = i / 4;
+		const uint32_t epoch = i / 4;
 		std::vector<double> sample;
 		for (double index = -64.0; index < 64.0; sample.push_back(index++)) { }
 
@@ -268,7 +268,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7) { ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0)); }
@@ -292,7 +292,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7) { ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0)); }
@@ -316,7 +316,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -10.10, 10.10, 20.20 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7) { ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0)); }
@@ -360,7 +360,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, values, epoch }));
 
 		if (i == 5 || i == 3 || i == 7) { ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0)); }
@@ -387,7 +387,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, values, epoch }));
 
 		if (i == 5 || i == 3 || i == 7) { ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0)); }
@@ -435,7 +435,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i) + 1.0, { double(i), 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 }, epoch }));
 
 		if (i == 3 || i == 5 || i == 7) { ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i) + 3.5, 1.0)); }
@@ -446,7 +446,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 	releaseCSVHandler(matrixWriterTest);
 
 	std::ifstream t(filename);
-	std::string csv_out((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+	const std::string csv_out((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 
 	ASSERT_STREQ(csv_out.c_str(), expectedFileContent.c_str());
 }
@@ -464,7 +464,7 @@ TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(featureVectorWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7) { ASSERT_TRUE(featureVectorWriterTest->addEvent(35001, double(i)+3.5, 1.0)); }
@@ -489,7 +489,7 @@ TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(featureVectorWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
 	}
 
@@ -531,7 +531,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 	}
 	matrixWriterTest->noEventsUntilDate(20.0);
@@ -554,7 +554,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 
 	for (uint32_t i = 0; i < 50; i++)
 	{
-		uint32_t epoch = i / 10;
+		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 	}
 

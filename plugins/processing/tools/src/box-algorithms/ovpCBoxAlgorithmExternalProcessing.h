@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			 *
 			 * \return A string composed of size characters in the A-Z,0-9 range
 			 */
-			static std::string generateConnectionID(size_t size);
+			static std::string generateConnectionID(const size_t size);
 
 			/**
 			 * \brief Launch a third party program

@@ -62,7 +62,7 @@ OV_APPEND_TO_NAMESPACE
 
 	typedef struct _time64
 	{
-		_time64(uint64_t ui64TimeValue) : m_ui64TimeValue(ui64TimeValue) {}
-		uint64_t m_ui64TimeValue = 0;
+		_time64(const uint64_t timeValue) : timeValue(timeValue) {}
+		uint64_t timeValue = 0;
 	} time64;                                ///< Time on uint64
 } // namespace OpenViBETypeTest

@@ -48,7 +48,7 @@ void fillMatrix(CMatrix& matrix)
 	}
 }
 
-bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, uint32_t precision = 6)
+bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, const uint32_t precision = 6)
 {
 	const double threshold = 1.0 / std::pow(10.0, double(precision - 2));
 
@@ -92,7 +92,7 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 2, "Failure to retrieve tests arguments. Expecting: output_dir");
 
-	std::string outputMatrixFile = std::string(argv[1]) + "uoMatrixToolkitTest.txt";
+	const std::string oMatrixFile = std::string(argv[1]) + "uoMatrixToolkitTest.txt";
 
 	System::Math::initializeRandomMachine(777);
 	CMatrix source;
@@ -100,63 +100,63 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 	source.setDimensionCount(1);
 	source.setDimensionSize(0, 1);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [1; {0,1}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [1; {0,1}]");
 
 	source.setDimensionCount(1);
 	source.setDimensionSize(0, 5);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [1; {0,5}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [1; {0,5}]");
 
 	source.setDimensionCount(2);
 	source.setDimensionSize(0, 1);
 	source.setDimensionSize(1, 1);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,1},{1,1}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,1},{1,1}]");
 
 	source.setDimensionCount(2);
 	source.setDimensionSize(0, 1);
 	source.setDimensionSize(1, 7);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,1},{1,7}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,1},{1,7}]");
 
 	source.setDimensionCount(2);
 	source.setDimensionSize(0, 9);
 	source.setDimensionSize(1, 1);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,9},{1,1}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,9},{1,1}]");
 
 	source.setDimensionCount(2);
 	source.setDimensionSize(0, 2);
 	source.setDimensionSize(1, 4);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,2},{1,4}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,2},{1,4}]");
 
 	source.setDimensionCount(2);
 	source.setDimensionSize(0, 3);
 	source.setDimensionSize(1, 15);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,3},{1,15}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,3},{1,15}]");
 
 	source.setDimensionCount(3);
 	source.setDimensionSize(0, 1);
 	source.setDimensionSize(1, 1);
 	source.setDimensionSize(2, 1);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [3; {0,1},{1,1},{2,1}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [3; {0,1},{1,1},{2,1}]");
 
 	source.setDimensionCount(3);
 	source.setDimensionSize(0, 1);
 	source.setDimensionSize(1, 1);
 	source.setDimensionSize(2, 5);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [3; {0,1},{1,1},{2,5}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [3; {0,1},{1,1},{2,5}]");
 
 	source.setDimensionCount(3);
 	source.setDimensionSize(0, 2);
 	source.setDimensionSize(1, 3);
 	source.setDimensionSize(2, 6);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [3; {0,2},{1,3},{2,6}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [3; {0,2},{1,3},{2,6}]");
 
 	source.setDimensionCount(4);
 	source.setDimensionSize(0, 9);
@@ -164,17 +164,17 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 	source.setDimensionSize(2, 2);
 	source.setDimensionSize(3, 3);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [4; {0,9},{1,5},{2,2},{3,3}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [4; {0,9},{1,5},{2,2},{3,3}]");
 
 	// special cases at boundaries
 	source.setDimensionCount(2);
 	source.setDimensionSize(0, 0);
 	source.setDimensionSize(1, 0);
 
-	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,0},{1,0}]");
+	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,0},{1,0}]");
 
 	CMatrix emptySource;
-	OVT_ASSERT(!testMatrix(emptySource, outputMatrixFile), "Failed to test matrix with no parameter");
+	OVT_ASSERT(!testMatrix(emptySource, oMatrixFile), "Failed to test matrix with no parameter");
 
 	return EXIT_SUCCESS;
 }

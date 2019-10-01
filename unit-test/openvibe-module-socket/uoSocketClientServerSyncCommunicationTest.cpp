@@ -45,7 +45,7 @@ namespace
 	bool g_ClientConnected = false;
 
 	// server callback run from a child thread
-	void onServerListening(int port, uint32_t packetCount)
+	void onServerListening(const int port, const uint32_t packetCount)
 	{
 		// only the server side modifies g_ReceivedData thus no need to handle race condition
 		g_ReceivedData.clear();
@@ -95,7 +95,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
-	std::string serverName   = argv[1];
+	const std::string serverName   = argv[1];
 	int portNumber           = std::atoi(argv[2]);
 	uint32_t packetCount = uint32_t(std::atoi(argv[3]));
 
@@ -125,7 +125,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 
 	// transmit data
 	// transmission follows the protocol: data size transmission + data transmission
-	std::string baseData = "Data packet index: ";
+	const std::string baseData = "Data packet index: ";
 
 	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{

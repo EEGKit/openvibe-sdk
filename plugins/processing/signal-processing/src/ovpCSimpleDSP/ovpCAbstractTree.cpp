@@ -409,7 +409,7 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& parser)
 	for (size_t i = 0; i < nChildren; i++) { m_Children[i]->generateCode(parser); }
 }
 
-void CAbstractTreeValueNode::generateCode(CEquationParser& parser) { parser.push_value(m_f64Value); }
+void CAbstractTreeValueNode::generateCode(CEquationParser& parser) { parser.push_value(m_value); }
 
 void CAbstractTreeVariableNode::generateCode(CEquationParser& parser) { parser.push_var(m_ui32Index); }
 

@@ -71,8 +71,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
-		uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_ui32SamplingFrequency),
-																	uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		const uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_ui32SamplingFrequency), uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
 		while (m_nSentSample + m_nGeneratedEpochSample < nextStepDate)
 		{
 			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
@@ -84,9 +83,9 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 			m_oSignalEncoder.encodeBuffer();
 
-			uint64_t tStart = TimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_nSentSample);
+			const uint64_t tStart = TimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_nSentSample);
 			m_nSentSample += m_nGeneratedEpochSample;
-			uint64_t tEnd = TimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_nSentSample);
+			const uint64_t tEnd = TimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_nSentSample);
 
 			l_pDynamicBoxContext->markOutputAsReadyToSend(0, tStart, tEnd);
 		}
