@@ -66,8 +66,7 @@ namespace OpenViBE
 		std::stringstream ss;
 		ss.precision(3);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << TimeArithmetics::timeToSeconds(time.timeValue);
-		ss << " sec";
+		ss << TimeArithmetics::timeToSeconds(time.timeValue) << " sec";
 
 		os << ss.str();
 
@@ -79,7 +78,6 @@ namespace OpenViBE
 	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	{
 		os << id.toString();
-
 		return os;
 	}
 } // namespace OpenViBE
@@ -90,10 +88,7 @@ namespace OpenViBE
  * Log a warning \a message using the provided \a logManager.
  * Should not be used directly (use OV_WARNING* instead)
  */
-#define OV_WARNING_LOG(message, logManager) \
-do { \
-	logManager << OpenViBE::Kernel::LogLevel_Warning << message << "\n"; \
-} while(0)
+#define OV_WARNING_LOG(message, logManager) do { logManager << OpenViBE::Kernel::LogLevel_Warning << message << "\n"; } while(0)
 
 /**
  * \def OV_WARNING(message, logManager)
@@ -110,13 +105,7 @@ do { \
  * Use this macro to trigger a warning unless the condition expressed by
  * \a expression is true.
  */
-#define OV_WARNING_UNLESS(expression, message, logManager) \
-do { \
-	if (!(expression)) \
-	{ \
-		OV_WARNING(message, logManager); \
-	} \
-} while(0)
+#define OV_WARNING_UNLESS(expression, message, logManager) do { if (!(expression)) { OV_WARNING(message, logManager); } } while(0)
 
 /**
  * \def OV_WARNING_K(message)
@@ -153,14 +142,9 @@ do { \
  */
 #define OV_ERROR_LOG(description, type, file, line, logManager) \
 do { \
-	logManager << OpenViBE::Kernel::LogLevel_Error \
-			   << "{Error description} : {" \
-			   << description \
-			   << "}, {Error type} : {" \
-			   << convertErrorTypeToString(type) \
-			   << " (code " \
-			   << uint32_t((type)) \
-			   << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
+	logManager << OpenViBE::Kernel::LogLevel_Error << "{Error description} : {" << description \
+			   << "}, {Error type} : {" << convertErrorTypeToString(type) << " (code " \
+			   << uint32_t((type)) << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
 } while(0)
 
 /**
