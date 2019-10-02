@@ -111,7 +111,7 @@ namespace OpenViBE
 			ELogLevel m_eChunkConsistencyCheckingLogLevel = LogLevel_Warning;
 
 			Plugins::IBoxAlgorithm* m_pBoxAlgorithm = nullptr;
-			const IScenario* m_pScenario            = nullptr;
+			const IScenario* m_scenario            = nullptr;
 			const IBox* m_pBox                      = nullptr;
 			CScheduler& m_rScheduler;
 

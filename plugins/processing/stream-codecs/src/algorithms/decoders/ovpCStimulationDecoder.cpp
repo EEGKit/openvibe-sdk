@@ -71,19 +71,19 @@ void CStimulationDecoder::processChildData(const void* buffer, const uint64_t si
 		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
 		{
 			op_pStimulationSet->setStimulationCount(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
-			m_ui64StimulationIndex = 0;
+			m_stimulationIdx = 0;
 		}
 		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
 		{
-			op_pStimulationSet->setStimulationIdentifier(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
+			op_pStimulationSet->setStimulationIdentifier(m_stimulationIdx, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 		}
 		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		{
-			op_pStimulationSet->setStimulationDate(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
+			op_pStimulationSet->setStimulationDate(m_stimulationIdx, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 		}
 		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
 		{
-			op_pStimulationSet->setStimulationDuration(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
+			op_pStimulationSet->setStimulationDuration(m_stimulationIdx, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 		}
 	}
 	else { CEBMLBaseDecoder::processChildData(buffer, size); }
@@ -100,7 +100,7 @@ void CStimulationDecoder::closeChild()
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
 	{
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_ui64StimulationIndex++; }
+		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_stimulationIdx++; }
 	}
 	else { CEBMLBaseDecoder::closeChild(); }
 

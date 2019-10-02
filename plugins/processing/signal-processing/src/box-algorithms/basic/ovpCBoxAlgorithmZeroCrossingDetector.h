@@ -97,18 +97,18 @@ namespace OpenViBEPlugins
 					else
 					{
 						// Invalid i/o type identifier
-						OpenViBE::CIdentifier l_oOriginalTypeIdentifier = OV_UndefinedIdentifier;
+						OpenViBE::CIdentifier l_oOriginalTypeID = OV_UndefinedIdentifier;
 						if (outputChanged)
 						{
 							// Restores output
-							box.getInputType(0, l_oOriginalTypeIdentifier);
-							box.setOutputType(0, l_oOriginalTypeIdentifier);
+							box.getInputType(0, l_oOriginalTypeID);
+							box.setOutputType(0, l_oOriginalTypeID);
 						}
 						else
 						{
 							// Restores input
-							box.getOutputType(0, l_oOriginalTypeIdentifier);
-							box.setInputType(0, l_oOriginalTypeIdentifier);
+							box.getOutputType(0, l_oOriginalTypeID);
+							box.setInputType(0, l_oOriginalTypeID);
 						}
 					}
 				}

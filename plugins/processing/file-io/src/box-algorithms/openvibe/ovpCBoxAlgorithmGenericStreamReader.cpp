@@ -196,7 +196,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 	{
 		const IBox& boxContext = this->getStaticBoxContext();
 
-		std::map<uint32_t, uint32_t> l_vOutputIndexToStreamIndex;
+		std::map<uint32_t, uint32_t> l_vOutputIndexToStreamIdx;
 
 		bool lostStreams = false;
 		bool lastOutputs = false;
@@ -212,7 +212,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			{
 				if (boxContext.getOutputType(i, OutputTypeID))
 				{
-					if (l_vOutputIndexToStreamIndex.find(i) == l_vOutputIndexToStreamIndex.end())
+					if (l_vOutputIndexToStreamIdx.find(i) == l_vOutputIndexToStreamIdx.end())
 					{
 						if (OutputTypeID == it->second)
 						{
@@ -228,7 +228,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			{
 				if (boxContext.getOutputType(i, OutputTypeID))
 				{
-					if (l_vOutputIndexToStreamIndex.find(i) == l_vOutputIndexToStreamIndex.end())
+					if (l_vOutputIndexToStreamIdx.find(i) == l_vOutputIndexToStreamIdx.end())
 					{
 						if (this->getTypeManager().isDerivedFromStream(it->second, OutputTypeID))
 						{
@@ -255,14 +255,14 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			else
 			{
 				m_vStreamIndexToOutputIndex[it->first]   = index;
-				l_vOutputIndexToStreamIndex[index] = it->first;
+				l_vOutputIndexToStreamIdx[index] = it->first;
 			}
 		}
 
 		// Warns for output with no stream connected to them
 		for (uint32_t i = 0; i < boxContext.getOutputCount(); i++)
 		{
-			if (l_vOutputIndexToStreamIndex.find(i) == l_vOutputIndexToStreamIndex.end())
+			if (l_vOutputIndexToStreamIdx.find(i) == l_vOutputIndexToStreamIdx.end())
 			{
 				OV_WARNING_K("No stream candidate in file for output " << i+1);
 				lastOutputs = true;

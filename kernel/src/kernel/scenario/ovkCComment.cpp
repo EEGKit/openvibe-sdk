@@ -45,11 +45,11 @@ bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
 	m_sText = rExisitingComment.getText();
 
-	CIdentifier l_oIdentifier = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-	while (l_oIdentifier != OV_UndefinedIdentifier)
+	CIdentifier l_oID = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
+	while (l_oID != OV_UndefinedIdentifier)
 	{
-		addAttribute(l_oIdentifier, rExisitingComment.getAttributeValue(l_oIdentifier));
-		l_oIdentifier = rExisitingComment.getNextAttributeIdentifier(l_oIdentifier);
+		addAttribute(l_oID, rExisitingComment.getAttributeValue(l_oID));
+		l_oID = rExisitingComment.getNextAttributeIdentifier(l_oID);
 	}
 
 	return true;

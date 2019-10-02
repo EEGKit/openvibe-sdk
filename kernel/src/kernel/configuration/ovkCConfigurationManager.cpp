@@ -110,8 +110,8 @@ namespace OpenViBE
 						}
 						else
 						{
-							CIdentifier l_oTokenIdentifier = m_configManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
-							if (l_oTokenIdentifier == OV_UndefinedIdentifier)
+							CIdentifier l_oTokenID = m_configManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
+							if (l_oTokenID == OV_UndefinedIdentifier)
 							{
 								m_logManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(
 									l_sTokenValue.c_str()) << "\n";
@@ -127,7 +127,7 @@ namespace OpenViBE
 												  && l_sTokenName != "Path_Lib" && l_sTokenName != "Path_Bin" && l_sTokenName != "OperatingSystem",
 												  "Overwriting critical token " << l_sTokenName.c_str(), m_logManager);
 
-								m_configManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
+								m_configManager.setConfigurationTokenValue(l_oTokenID, l_sTokenValue.c_str());
 							}
 						}
 					}
@@ -184,10 +184,10 @@ CIdentifier CConfigurationManager::createConfigurationToken(const CString& rConf
 	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
 						"Configuration token name " << rConfigurationTokenName << " already exists", ErrorType::BadResourceCreation);
 
-	CIdentifier l_oIdentifier                                  = this->getUnusedIdentifier();
-	m_vConfigurationToken[l_oIdentifier].m_sConfigurationName  = rConfigurationTokenName;
-	m_vConfigurationToken[l_oIdentifier].m_sConfigurationValue = rConfigurationTokenValue;
-	return l_oIdentifier;
+	CIdentifier l_oID                                  = this->getUnusedIdentifier();
+	m_vConfigurationToken[l_oID].m_sConfigurationName  = rConfigurationTokenName;
+	m_vConfigurationToken[l_oID].m_sConfigurationValue = rConfigurationTokenValue;
+	return l_oID;
 }
 
 bool CConfigurationManager::releaseConfigurationToken(const CIdentifier& rConfigurationTokenIdentifier)
@@ -275,12 +275,12 @@ bool CConfigurationManager::setConfigurationTokenValue(const CIdentifier& rConfi
 
 bool CConfigurationManager::addOrReplaceConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue)
 {
-	const CIdentifier l_oOldIdentifier = this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false);
-	if (l_oOldIdentifier == OV_UndefinedIdentifier)
+	const CIdentifier l_oOldID = this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false);
+	if (l_oOldID == OV_UndefinedIdentifier)
 	{
 		return OV_UndefinedIdentifier != this->createConfigurationToken(rConfigurationTokenName, rConfigurationTokenValue);
 	}
-	return this->setConfigurationTokenValue(l_oOldIdentifier, rConfigurationTokenValue);
+	return this->setConfigurationTokenValue(l_oOldID, rConfigurationTokenValue);
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -381,13 +381,13 @@ CIdentifier CConfigurationManager::getUnusedIdentifier() const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	uint64_t l_ui64Identifier = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
+	uint64_t l_ui64ID = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
 	CIdentifier res;
 	std::map<CIdentifier, SConfigurationToken>::const_iterator i;
 	do
 	{
-		l_ui64Identifier++;
-		res = CIdentifier(l_ui64Identifier);
+		l_ui64ID++;
+		res = CIdentifier(l_ui64ID);
 		i         = m_vConfigurationToken.find(res);
 	} while (i != m_vConfigurationToken.end() || res == OV_UndefinedIdentifier);
 	return res;
@@ -677,8 +677,8 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 
 bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const
 {
-	CIdentifier l_oTokenIdentifier = this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
-	if (l_oTokenIdentifier == OV_UndefinedIdentifier)
+	CIdentifier l_oTokenID = this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
+	if (l_oTokenID == OV_UndefinedIdentifier)
 	{
 		OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager,
 							"Could not expand token [" << CString(sTokenName.c_str()) <<
@@ -689,7 +689,7 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 		std::string l_sNewString = std::string("${") + sTokenName + ("}");
 		sTokenValue              = m_pParentConfigurationManager->expand(l_sNewString.c_str());
 	}
-	else { sTokenValue = this->getConfigurationTokenValue(l_oTokenIdentifier); }
+	else { sTokenValue = this->getConfigurationTokenValue(l_oTokenID); }
 	return true;
 }
 

@@ -104,12 +104,12 @@ bool CPluginModuleBase::getPluginObjectDescription(uint32_t index, IPluginObject
 		if (!isOpen()) { return false; }
 		if (!onGetPluginObjectDescriptionCB) { return false; }
 
-		uint32_t l_ui32Index                         = 0;
+		uint32_t l_ui32Idx                         = 0;
 		IPluginObjectDesc* l_pPluginObjectDescriptor = nullptr;
-		while (onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), l_ui32Index, l_pPluginObjectDescriptor))
+		while (onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), l_ui32Idx, l_pPluginObjectDescriptor))
 		{
 			if (l_pPluginObjectDescriptor) { m_vPluginObjectDescriptor.push_back(l_pPluginObjectDescriptor); }
-			l_ui32Index++;
+			l_ui32Idx++;
 		}
 
 		m_bGotDescriptions = true;

@@ -313,45 +313,45 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	{
 		SBoxProto l_oMetaboxProto(getKernelContext().getTypeManager());
 
-		for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < scenario.getInputCount(); l_ui32ScenarioInputIndex++)
+		for (uint32_t l_ui32ScenarioInputIdx = 0; l_ui32ScenarioInputIdx < scenario.getInputCount(); l_ui32ScenarioInputIdx++)
 		{
-			CIdentifier l_oInputputIdentifier;
+			CIdentifier l_oInputputID;
 			CString inputName;
 			CIdentifier inputTypeID;
 
-			scenario.getInterfacorIdentifier(Input, l_ui32ScenarioInputIndex, l_oInputputIdentifier);
-			scenario.getInputType(l_ui32ScenarioInputIndex, inputTypeID);
-			scenario.getInputName(l_ui32ScenarioInputIndex, inputName);
+			scenario.getInterfacorIdentifier(Input, l_ui32ScenarioInputIdx, l_oInputputID);
+			scenario.getInputType(l_ui32ScenarioInputIdx, inputTypeID);
+			scenario.getInputName(l_ui32ScenarioInputIdx, inputName);
 
-			l_oMetaboxProto.addInput(inputName, inputTypeID, l_oInputputIdentifier, true);
+			l_oMetaboxProto.addInput(inputName, inputTypeID, l_oInputputID, true);
 		}
 
-		for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < scenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
+		for (uint32_t l_ui32ScenarioOutputIdx = 0; l_ui32ScenarioOutputIdx < scenario.getOutputCount(); l_ui32ScenarioOutputIdx++)
 		{
 			CIdentifier OutputID;
 			CString outputName;
 			CIdentifier OutputTypeID;
 
-			scenario.getInterfacorIdentifier(Output, l_ui32ScenarioOutputIndex, OutputID);
-			scenario.getOutputType(l_ui32ScenarioOutputIndex, OutputTypeID);
-			scenario.getOutputName(l_ui32ScenarioOutputIndex, outputName);
+			scenario.getInterfacorIdentifier(Output, l_ui32ScenarioOutputIdx, OutputID);
+			scenario.getOutputType(l_ui32ScenarioOutputIdx, OutputTypeID);
+			scenario.getOutputName(l_ui32ScenarioOutputIdx, outputName);
 
 			l_oMetaboxProto.addOutput(outputName, OutputTypeID, OutputID, true);
 		}
 
-		for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < scenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
+		for (uint32_t l_ui32ScenarioSettingIdx = 0; l_ui32ScenarioSettingIdx < scenario.getSettingCount(); l_ui32ScenarioSettingIdx++)
 		{
 			CString l_sSettingName;
-			CIdentifier l_oSettingTypeIdentifier;
+			CIdentifier l_oSettingTypeID;
 			CString l_sSettingDefaultValue;
-			CIdentifier l_oSettingIdentifier;
+			CIdentifier settingID;
 
-			scenario.getSettingName(l_ui32ScenarioSettingIndex, l_sSettingName);
-			scenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
-			scenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
-			scenario.getInterfacorIdentifier(Setting, l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
+			scenario.getSettingName(l_ui32ScenarioSettingIdx, l_sSettingName);
+			scenario.getSettingType(l_ui32ScenarioSettingIdx, l_oSettingTypeID);
+			scenario.getSettingDefaultValue(l_ui32ScenarioSettingIdx, l_sSettingDefaultValue);
+			scenario.getInterfacorIdentifier(Setting, l_ui32ScenarioSettingIdx, settingID);
 
-			l_oMetaboxProto.addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue, false, l_oSettingIdentifier, true);
+			l_oMetaboxProto.addSetting(l_sSettingName, l_oSettingTypeID, l_sSettingDefaultValue, false, settingID, true);
 		}
 
 		if (scenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
@@ -582,13 +582,13 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID) const { 
 
 CIdentifier CScenarioManager::getUnusedIdentifier() const
 {
-	uint64_t l_ui64Identifier = (uint64_t(rand()) << 32) + uint64_t(rand());
+	uint64_t l_ui64ID = (uint64_t(rand()) << 32) + uint64_t(rand());
 	CIdentifier res;
 	map<CIdentifier, CScenario*>::const_iterator i;
 	do
 	{
-		l_ui64Identifier++;
-		res = CIdentifier(l_ui64Identifier);
+		l_ui64ID++;
+		res = CIdentifier(l_ui64ID);
 		i         = m_vScenario.find(res);
 	} while (i != m_vScenario.end() || res == OV_UndefinedIdentifier);
 	return res;

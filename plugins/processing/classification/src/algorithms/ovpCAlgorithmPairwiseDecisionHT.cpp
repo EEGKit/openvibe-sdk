@@ -66,11 +66,11 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	for (size_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
 		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
-		const uint32_t l_f64FirstIndex                                              = uint32_t(l_rTemp.m_f64FirstClass);
-		const uint32_t l_f64SecondIndex                                             = uint32_t(l_rTemp.m_f64SecondClass);
+		const uint32_t l_f64FirstIdx                                              = uint32_t(l_rTemp.m_f64FirstClass);
+		const uint32_t l_f64SecondIdx                                             = uint32_t(l_rTemp.m_f64SecondClass);
 		const double* l_pValues                                                     = l_rTemp.m_pClassificationValue->getBuffer();
-		l_pProbabilityMatrix[l_f64FirstIndex * m_nClass + l_f64SecondIndex] = l_pValues[0];
-		l_pProbabilityMatrix[l_f64SecondIndex * m_nClass + l_f64FirstIndex] = 1 - l_pValues[0];
+		l_pProbabilityMatrix[l_f64FirstIdx * m_nClass + l_f64SecondIdx] = l_pValues[0];
+		l_pProbabilityMatrix[l_f64SecondIdx * m_nClass + l_f64FirstIdx] = 1 - l_pValues[0];
 	}
 
 	double* l_pP                = new double[m_nClass];

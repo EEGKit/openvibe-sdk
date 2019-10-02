@@ -275,15 +275,15 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CString defaultValue;
 			CString value;
 			bool isModifiable;
-			CIdentifier l_oIdentifier;
+			CIdentifier l_oID;
 			scenario.getSettingType(settingIndex, settingTypeIdentifier);
 			scenario.getSettingName(settingIndex, settingName);
 			scenario.getSettingDefaultValue(settingIndex, defaultValue);
 			scenario.getSettingValue(settingIndex, value);
 			scenario.getSettingMod(settingIndex, isModifiable);
-			scenario.getInterfacorIdentifier(Setting, settingIndex, l_oIdentifier);
+			scenario.getInterfacorIdentifier(Setting, settingIndex, l_oID);
 
-			this->addSetting(settingName, settingTypeIdentifier, defaultValue, OV_Value_UndefinedIndexUInt, isModifiable, l_oIdentifier, true);
+			this->addSetting(settingName, settingTypeIdentifier, defaultValue, OV_Value_UndefinedIndexUInt, isModifiable, l_oID, true);
 			this->setSettingValue(previousSettingCount + settingIndex, value);
 		}
 

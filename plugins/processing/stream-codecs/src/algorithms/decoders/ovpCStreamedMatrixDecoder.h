@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			uint32_t m_status        = 0;
 			uint32_t m_dimensionIdx      = 0;
 			uint32_t m_dimensionEntryIdx = 0;
-			//			uint32_t m_ui32DimensionEntryIndexUnit = 0;
+			//			uint32_t mdimensionEntryIdxUnit = 0;
 			uint64_t m_matrixBufferSize = 0;
 		};
 

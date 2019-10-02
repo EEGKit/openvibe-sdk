@@ -31,8 +31,8 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint64_t m_ui64StimulationIndex = 0;
-			OpenViBE::CStimulationSet m_oStimulationSet;
+			uint64_t m_stimulationIdx = 0;
+			OpenViBE::CStimulationSet m_stimSet;
 		};
 
 		class CStimulationDecoderDesc final : public CEBMLBaseDecoderDesc

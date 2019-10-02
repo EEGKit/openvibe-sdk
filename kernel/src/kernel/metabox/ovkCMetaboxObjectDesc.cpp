@@ -17,46 +17,46 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 	  , m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
 	  , m_MetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
 {
-	for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < metaboxScenario.getInputCount(); l_ui32ScenarioInputIndex++)
+	for (uint32_t l_ui32ScenarioInputIdx = 0; l_ui32ScenarioInputIdx < metaboxScenario.getInputCount(); l_ui32ScenarioInputIdx++)
 	{
 		CString inputName;
 		CIdentifier inputTypeID;
 		CIdentifier InputID;
 
-		metaboxScenario.getInputType(l_ui32ScenarioInputIndex, inputTypeID);
-		metaboxScenario.getInputName(l_ui32ScenarioInputIndex, inputName);
-		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Input, l_ui32ScenarioInputIndex, InputID);
+		metaboxScenario.getInputType(l_ui32ScenarioInputIdx, inputTypeID);
+		metaboxScenario.getInputName(l_ui32ScenarioInputIdx, inputName);
+		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Input, l_ui32ScenarioInputIdx, InputID);
 
 		m_Inputs.push_back(SIOStream(inputName, inputTypeID, InputID));
 	}
 
-	for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
+	for (uint32_t l_ui32ScenarioOutputIdx = 0; l_ui32ScenarioOutputIdx < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIdx++)
 	{
 		CString outputName;
 		CIdentifier OutputTypeID;
 		CIdentifier OutputID;
 
-		metaboxScenario.getOutputType(l_ui32ScenarioOutputIndex, OutputTypeID);
-		metaboxScenario.getOutputName(l_ui32ScenarioOutputIndex, outputName);
-		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Output, l_ui32ScenarioOutputIndex, OutputID);
+		metaboxScenario.getOutputType(l_ui32ScenarioOutputIdx, OutputTypeID);
+		metaboxScenario.getOutputName(l_ui32ScenarioOutputIdx, outputName);
+		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Output, l_ui32ScenarioOutputIdx, OutputID);
 
 		m_Outputs.push_back(SIOStream(outputName, OutputTypeID, OutputID));
 	}
 
-	for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
+	for (uint32_t l_ui32ScenarioSettingIdx = 0; l_ui32ScenarioSettingIdx < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIdx++)
 	{
 		CString l_sSettingName;
-		CIdentifier l_oSettingTypeIdentifier;
+		CIdentifier l_oSettingTypeID;
 		CString l_sSettingDefaultValue;
-		CIdentifier l_oSettingIdentifier;
+		CIdentifier settingID;
 
-		metaboxScenario.getSettingName(l_ui32ScenarioSettingIndex, l_sSettingName);
-		metaboxScenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
-		metaboxScenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
-		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Setting, l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
+		metaboxScenario.getSettingName(l_ui32ScenarioSettingIdx, l_sSettingName);
+		metaboxScenario.getSettingType(l_ui32ScenarioSettingIdx, l_oSettingTypeID);
+		metaboxScenario.getSettingDefaultValue(l_ui32ScenarioSettingIdx, l_sSettingDefaultValue);
+		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Setting, l_ui32ScenarioSettingIdx, settingID);
 
 
-		m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue, l_oSettingIdentifier));
+		m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeID, l_sSettingDefaultValue, settingID));
 	}
 }
 

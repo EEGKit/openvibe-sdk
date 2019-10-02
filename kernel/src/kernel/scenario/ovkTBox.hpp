@@ -294,22 +294,22 @@ namespace OpenViBE
 					}
 				}
 
-				CIdentifier l_oIdentifier = rExistingBox.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-				while (l_oIdentifier != OV_UndefinedIdentifier)
+				CIdentifier l_oID = rExistingBox.getNextAttributeIdentifier(OV_UndefinedIdentifier);
+				while (l_oID != OV_UndefinedIdentifier)
 				{
-					this->addAttribute(l_oIdentifier, rExistingBox.getAttributeValue(l_oIdentifier));
-					l_oIdentifier = rExistingBox.getNextAttributeIdentifier(l_oIdentifier);
+					this->addAttribute(l_oID, rExistingBox.getAttributeValue(l_oID));
+					l_oID = rExistingBox.getNextAttributeIdentifier(l_oID);
 				}
 
-				CIdentifier l_oStreamTypeIdentifier = OV_UndefinedIdentifier;
-				while ((l_oStreamTypeIdentifier = this->getKernelContext().getTypeManager().getNextTypeIdentifier(l_oStreamTypeIdentifier)) !=
+				CIdentifier l_oStreamTypeID = OV_UndefinedIdentifier;
+				while ((l_oStreamTypeID = this->getKernelContext().getTypeManager().getNextTypeIdentifier(l_oStreamTypeID)) !=
 					   OV_UndefinedIdentifier)
 				{
-					if (this->getKernelContext().getTypeManager().isStream(l_oStreamTypeIdentifier))
+					if (this->getKernelContext().getTypeManager().isStream(l_oStreamTypeID))
 					{
 						//First check if it is a stream
-						if (rExistingBox.hasInputSupport(l_oStreamTypeIdentifier)) { this->addInputSupport(l_oStreamTypeIdentifier); }
-						if (rExistingBox.hasOutputSupport(l_oStreamTypeIdentifier)) { this->addOutputSupport(l_oStreamTypeIdentifier); }
+						if (rExistingBox.hasInputSupport(l_oStreamTypeID)) { this->addInputSupport(l_oStreamTypeID); }
+						if (rExistingBox.hasOutputSupport(l_oStreamTypeID)) { this->addOutputSupport(l_oStreamTypeID); }
 					}
 				}
 
@@ -981,12 +981,12 @@ namespace OpenViBE
 							this->getTypeManager().getEnumerationEntry(typeID, 0, l_sValue, l_ui64Value);
 
 							// Find if the default value string actually is an identifier, otherwise just keep the zero index name as default.
-							CIdentifier l_oDefaultValueIdentifier = OV_UndefinedIdentifier;
-							l_oDefaultValueIdentifier.fromString(sDefaultValue);
+							CIdentifier l_oDefaultValueID = OV_UndefinedIdentifier;
+							l_oDefaultValueID.fromString(sDefaultValue);
 
 							// Finally, if it is an identifier, then a name should be found
 							// from the type manager ! Otherwise l_sValue is left to the default.
-							const CString l_sCandidateValue = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, l_oDefaultValueIdentifier.toUInteger());
+							const CString l_sCandidateValue = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, l_oDefaultValueID.toUInteger());
 							if (l_sCandidateValue != CString("")) { l_sValue = l_sCandidateValue; }
 						}
 					}
@@ -1000,7 +1000,7 @@ namespace OpenViBE
 				s.m_bMod            = bModifiability;
 				s.m_oIdentifier     = identifier;
 
-				const uint32_t l_ui32Index = index;
+				const uint32_t l_ui32Idx = index;
 
 
 				uint32_t l_ui32InsertLocation;
@@ -1017,7 +1017,7 @@ namespace OpenViBE
 										ErrorType::OutOfBound);
 
 					auto l_it = m_interfacors[Setting].begin();
-					l_it += l_ui32Index;
+					l_it += l_ui32Idx;
 					m_interfacors[Setting].insert(l_it, std::make_shared<CSetting>(s));
 					l_ui32InsertLocation = index;
 				}
@@ -1036,7 +1036,7 @@ namespace OpenViBE
 									"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
 
 				//if this setting is modifiable, keep its index
-				if (bModifiability) { m_modifiableSettingIndexes.push_back(l_ui32Index); }
+				if (bModifiability) { m_modifiableSettingIndexes.push_back(l_ui32Idx); }
 
 				this->getLogManager() << LogLevel_Debug
 						<< "Pushed '" << m_interfacors.at(Setting)[l_ui32InsertLocation]->m_name << "' : '"

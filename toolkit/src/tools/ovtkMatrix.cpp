@@ -292,7 +292,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						// We can only attach the label later after we know the size
 						labels.push_back(curString);
 
-						// std::cout << " lab " << l_ui32CurDimensionIndex << " " << l_vDimensionSize[l_ui32CurDimensionIndex]-1 <<  " : " << l_sCurString << "\n";
+						// std::cout << " lab " << l_ui32CurDimensionIdx << " " << l_vDimensionSize[l_ui32CurDimensionIdx]-1 <<  " : " << l_sCurString << "\n";
 
 						//clear current string
 						curString.erase();
@@ -328,7 +328,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						//ensure values count remains in allocated range
 						if (nValue[curDimIdx] == matrix.getDimensionSize(curDimIdx))
 						{
-							//	getLogManager() << LogLevel_Trace << "Exceeded expected number of values for dimension " << l_ui32CurDimensionIndex << ", parsing aborted\n";
+							//	getLogManager() << LogLevel_Trace << "Exceeded expected number of values for dimension " << l_ui32CurDimensionIdx << ", parsing aborted\n";
 							return false;
 						}
 
@@ -345,8 +345,8 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 							if (nValue[curDimIdx + 1] != matrix.getDimensionSize(curDimIdx + 1))
 							{
 								//	getLogManager() << LogLevel_Trace
-								//		<< "Found " << l_vValuesCount[l_ui32CurDimensionIndex+1] << " values in dimension "
-								//		<< l_ui32CurDimensionIndex+1 << ", expected " << op_pMatrix->getDimensionSize(l_ui32CurDimensionIndex+1) << ", parsing aborted\n";
+								//		<< "Found " << l_vValuesCount[l_ui32CurDimensionIdx+1] << " values in dimension "
+								//		<< l_ui32CurDimensionIdx+1 << ", expected " << op_pMatrix->getDimensionSize(l_ui32CurDimensionIdx+1) << ", parsing aborted\n";
 								return false;
 							}
 							//reset values count of lower dimension to 0
@@ -372,8 +372,8 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 							if (nValue.back() == matrix.getDimensionSize(curDimIdx))
 							{
 								//	getLogManager() << LogLevel_Trace
-								//		<< "Found " << l_vValuesCount.back() << " values in dimension " << l_ui32CurDimensionIndex
-								//		<< ", expected " << RDestinationMatrix.getDimensionSize(l_ui32CurDimensionIndex) << ", parsing aborted\n";
+								//		<< "Found " << l_vValuesCount.back() << " values in dimension " << l_ui32CurDimensionIdx
+								//		<< ", expected " << RDestinationMatrix.getDimensionSize(l_ui32CurDimensionIdx) << ", parsing aborted\n";
 								return false;
 							}
 

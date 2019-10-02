@@ -58,10 +58,10 @@ namespace OpenViBE
 			 *
 			 * \code
 			 * IConfigurable* l_pConfigurable= // ...
-			 * CIdentifier l_oCurrentIdentifier=OV_UndefinedIdentifier;
-			 * while((l_oCurrentIdentifier=l_pConfigurable->getNextParameterIdentifier(l_oCurrentIdentifier))!=OV_UndefinedIdentifier)
+			 * CIdentifier l_oCurrentID=OV_UndefinedIdentifier;
+			 * while((l_oCurrentID=l_pConfigurable->getNextParameterIdentifier(l_oCurrentID))!=OV_UndefinedIdentifier)
 			 * {
-			 *   IParameter* l_pParameter=l_pConfigurable->getParameter(l_oCurrentIdentifier);
+			 *   IParameter* l_pParameter=l_pConfigurable->getParameter(l_oCurrentID);
 			 *   // ...
 			 * }
 			 * \endcode

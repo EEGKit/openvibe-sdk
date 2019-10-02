@@ -114,7 +114,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	{
 		m_encoder = new OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>(*this, 0);
 		//number of column without the column contains the dynamic parameter
-		//m_ui32NbColumn-=1;
+		//m_nCol-=1;
 		m_fpRealProcess = &CBoxAlgorithmCSVFileReader::processChannelLocalisation;
 	}
 	else if (m_typeID == OV_TypeId_FeatureVector)
@@ -379,7 +379,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 
 	OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(iMatrix), "Error converting vector data to signal", ErrorType::Internal);
 
-	// this->getLogManager() << LogLevel_Info << "Cols from header " << m_ui32NbColumn << "\n";
+	// this->getLogManager() << LogLevel_Info << "Cols from header " << m_nCol << "\n";
 	// this->getLogManager() << LogLevel_Info << "InMatrix " << (m_vDataMatrix.size() > 0 ? m_vDataMatrix[0].size() : 0) << " outMatrix " << iMatrix->getDimensionSize(0) << "\n";
 
 	m_encoder->encodeBuffer();
@@ -415,7 +415,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		static_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputDynamic() =
-				false;	//atoi(m_vDataMatrix[0][m_ui32NbColumn].c_str());
+				false;	//atoi(m_vDataMatrix[0][m_nCol].c_str());
 
 		m_encoder->encodeHeader();
 

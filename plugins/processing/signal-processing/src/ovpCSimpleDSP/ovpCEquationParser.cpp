@@ -188,21 +188,21 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == SEquationGrammar::variableID)
 	{
-		uint32_t l_ui32Index = 0;
+		uint32_t l_ui32Idx = 0;
 		std::string l_sValue(i->value.begin(), i->value.end());
 		if (l_sValue != "x" && l_sValue != "X")
 		{
-			if (l_sValue[0] >= 'a' && l_sValue[0] <= 'z') { l_ui32Index = l_sValue[0] - 'a'; }
-			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') { l_ui32Index = l_sValue[0] - 'A'; }
+			if (l_sValue[0] >= 'a' && l_sValue[0] <= 'z') { l_ui32Idx = l_sValue[0] - 'a'; }
+			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') { l_ui32Idx = l_sValue[0] - 'A'; }
 		}
 
-		if (l_ui32Index >= m_nVariable)
+		if (l_ui32Idx >= m_nVariable)
 		{
-			OV_WARNING("Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
+			OV_WARNING("Missing input " << l_ui32Idx+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
 					   m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 			return new CAbstractTreeValueNode(0);
 		}
-		return new CAbstractTreeVariableNode(l_ui32Index);
+		return new CAbstractTreeVariableNode(l_ui32Idx);
 	}
 	else if (i->value.id() == SEquationGrammar::constantID)
 	{

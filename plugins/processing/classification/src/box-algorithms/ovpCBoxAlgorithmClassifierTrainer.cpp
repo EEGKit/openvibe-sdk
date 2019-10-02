@@ -65,13 +65,13 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	if (strategyClassID == OV_UndefinedIdentifier)
 	{
 		//That means that we want to use a classical algorithm so just let's create it
-		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(classifierAlgorithmClassID);
+		const CIdentifier l_oClassifierAlgorithmID = this->getAlgorithmManager().createAlgorithm(classifierAlgorithmClassID);
 
-		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
-							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
+		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmID != OV_UndefinedIdentifier,
+							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmID.toString() << "]",
 							OpenViBE::Kernel::ErrorType::BadConfig);
 
-		m_classifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
+		m_classifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmID);
 		m_classifier->initialize();
 	}
 	else

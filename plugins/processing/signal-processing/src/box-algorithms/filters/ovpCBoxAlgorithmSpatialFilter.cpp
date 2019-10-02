@@ -88,15 +88,15 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 	m_pStreamDecoder = nullptr;
 	m_pStreamEncoder = nullptr;
 
-	CIdentifier l_oIdentifier;
-	boxContext.getInputType(0, l_oIdentifier);
+	CIdentifier l_oID;
+	boxContext.getInputType(0, l_oID);
 
-	if (l_oIdentifier == OV_TypeId_StreamedMatrix)
+	if (l_oID == OV_TypeId_StreamedMatrix)
 	{
 		m_pStreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 		m_pStreamEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 	}
-	else if (l_oIdentifier == OV_TypeId_Signal)
+	else if (l_oID == OV_TypeId_Signal)
 	{
 		m_pStreamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 		m_pStreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
@@ -104,7 +104,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
 			static_cast<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamDecoder)->getOutputSamplingRate());
 	}
-	else if (l_oIdentifier == OV_TypeId_Spectrum)
+	else if (l_oID == OV_TypeId_Spectrum)
 	{
 		m_pStreamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 		m_pStreamEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
@@ -114,7 +114,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
 			static_cast<OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_pStreamDecoder)->getOutputSamplingRate());
 	}
-	else { OV_ERROR_KRF("Invalid input stream type [" << l_oIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input stream type [" << l_oID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
 	// If we have a filter file, use dimensions and coefficients from that. Otherwise, use box config params.
 	const CString filterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);

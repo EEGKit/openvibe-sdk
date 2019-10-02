@@ -78,14 +78,14 @@ namespace OpenViBEPlugins
 					box.getSettingValue(0, l_sChannels);
 
 					OpenViBE::CString l_sSelectionMethod;
-					OpenViBE::CIdentifier l_oSelectionEnumIdentifier = OV_UndefinedIdentifier;
+					OpenViBE::CIdentifier l_oSelectionEnumID = OV_UndefinedIdentifier;
 					box.getSettingValue(1, l_sSelectionMethod);
-					box.getSettingType(1, l_oSelectionEnumIdentifier);
+					box.getSettingType(1, l_oSelectionEnumID);
 
-					const OpenViBE::CIdentifier l_oSelectionMethodIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(
-						l_oSelectionEnumIdentifier, l_sSelectionMethod);
+					const OpenViBE::CIdentifier l_oSelectionMethodID = this->getTypeManager().getEnumerationEntryValueFromName(
+						l_oSelectionEnumID, l_sSelectionMethod);
 
-					if (l_oSelectionMethodIdentifier == OVP_TypeId_SelectionMethod_Reject) { l_sChannels = OpenViBE::CString("!") + l_sChannels; }
+					if (l_oSelectionMethodID == OVP_TypeId_SelectionMethod_Reject) { l_sChannels = OpenViBE::CString("!") + l_sChannels; }
 					box.setName(l_sChannels);
 				}
 				return true;

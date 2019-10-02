@@ -55,11 +55,11 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	m_oWriterHelper.closeChild();
 	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
 	{
-		CIdentifier l_oIdentifier;
-		boxContext.getInputType(i, l_oIdentifier);
+		CIdentifier l_oID;
+		boxContext.getInputType(i, l_oID);
 
 		m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_StreamType);
-		m_oWriterHelper.setUIntegerAsChildData(l_oIdentifier.toUInteger());
+		m_oWriterHelper.setUIntegerAsChildData(l_oID.toUInteger());
 		m_oWriterHelper.closeChild();
 	}
 	m_oWriterHelper.closeChild();

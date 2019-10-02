@@ -63,10 +63,10 @@ namespace OpenViBE
 			 *
 			 * Typicall use of this function is :
 			 * \code
-			 * CIdentifier l_oTokenIdentifier = OV_UndefinedIdentifier; // defaults to OV_UndefinedIdentifier
-			 * while((l_oTokenIdentifier=l_pConfigurationManager->getNextConfigurationTokenIdentifier(l_oTokenIdentifier)) != OV_UndefinedIdentifier)
+			 * CIdentifier l_oTokenID = OV_UndefinedIdentifier; // defaults to OV_UndefinedIdentifier
+			 * while((l_oTokenID=l_pConfigurationManager->getNextConfigurationTokenIdentifier(l_oTokenID)) != OV_UndefinedIdentifier)
 			 * {
-			 *     // do some stuff with current token identified with l_oTokenIdentifier
+			 *     // do some stuff with current token identified with l_oTokenID
 			 * }
 			 * \endcode
 			 */

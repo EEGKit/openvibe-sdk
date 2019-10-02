@@ -122,9 +122,9 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 			if (localConfigurationTokens->getValue(i, name, value))
 			{
 				this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << name << "] = [" << value << "].\n";
-				CIdentifier l_oTokenIdentifier = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
-				if (l_oTokenIdentifier == OV_UndefinedIdentifier) { m_runtimeConfigManager->createConfigurationToken(name, value); }
-				else { m_runtimeConfigManager->setConfigurationTokenValue(l_oTokenIdentifier, value); }
+				CIdentifier l_oTokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
+				if (l_oTokenID == OV_UndefinedIdentifier) { m_runtimeConfigManager->createConfigurationToken(name, value); }
+				else { m_runtimeConfigManager->setConfigurationTokenValue(l_oTokenID, value); }
 			}
 				// This should not happen
 			else { this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n"; }

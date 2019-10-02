@@ -50,11 +50,11 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 	for (size_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
 		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
-		const uint32_t l_f64FirstIndex                                              = uint32_t(l_rTemp.m_f64FirstClass);
-		const uint32_t l_f64SecondIndex                                             = uint32_t(l_rTemp.m_f64SecondClass);
+		const uint32_t l_f64FirstIdx                                              = uint32_t(l_rTemp.m_f64FirstClass);
+		const uint32_t l_f64SecondIdx                                             = uint32_t(l_rTemp.m_f64SecondClass);
 		const double* l_pValues                                                     = l_rTemp.m_pClassificationValue->getBuffer();
-		l_pProbabilityMatrix[l_f64FirstIndex * m_nClass + l_f64SecondIndex] = l_pValues[0];
-		l_pProbabilityMatrix[l_f64SecondIndex * m_nClass + l_f64FirstIndex] = 1 - l_pValues[0];
+		l_pProbabilityMatrix[l_f64FirstIdx * m_nClass + l_f64SecondIdx] = l_pValues[0];
+		l_pProbabilityMatrix[l_f64SecondIdx * m_nClass + l_f64FirstIdx] = 1 - l_pValues[0];
 	}
 
 #if PKPD_DEBUG
@@ -69,15 +69,15 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 
 	double* l_pProbVector   = new double[m_nClass];
 	double l_pProbVectorSum = 0;
-	for (uint32_t l_ui32ClassIndex = 0; l_ui32ClassIndex < m_nClass; ++l_ui32ClassIndex)
+	for (uint32_t l_ui32ClassIdx = 0; l_ui32ClassIdx < m_nClass; ++l_ui32ClassIdx)
 	{
 		double l_pTempSum = 0;
 		for (uint32_t l_ui32SecondClass = 0; l_ui32SecondClass < m_nClass; ++l_ui32SecondClass)
 		{
-			if (l_ui32SecondClass != l_ui32ClassIndex) { l_pTempSum += 1 / l_pProbabilityMatrix[m_nClass * l_ui32ClassIndex + l_ui32SecondClass]; }
+			if (l_ui32SecondClass != l_ui32ClassIdx) { l_pTempSum += 1 / l_pProbabilityMatrix[m_nClass * l_ui32ClassIdx + l_ui32SecondClass]; }
 		}
-		l_pProbVector[l_ui32ClassIndex] = 1 / (l_pTempSum - (m_nClass - 2));
-		l_pProbVectorSum += l_pProbVector[l_ui32ClassIndex];
+		l_pProbVector[l_ui32ClassIdx] = 1 / (l_pTempSum - (m_nClass - 2));
+		l_pProbVectorSum += l_pProbVector[l_ui32ClassIdx];
 	}
 
 	for (uint32_t i = 0; i < m_nClass; ++i) { l_pProbVector[i] /= l_pProbVectorSum; }

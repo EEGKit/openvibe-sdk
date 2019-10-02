@@ -71,7 +71,7 @@ bool CScheduler::setScenario(const CIdentifier& scenarioID)
 	// We need to flatten the scenario here as the application using the scheduler needs time
 	// between the moment the visualisation tree is complete and the moment when boxes are initialized.
 	// The application needs to initialize necessary windows for the boxes to draw into.
-	m_pScenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
+	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
 
 	if (!this->flattenScenario())
 	{
@@ -79,7 +79,7 @@ bool CScheduler::setScenario(const CIdentifier& scenarioID)
 		return false;
 	}
 
-	m_pScenario = nullptr;
+	m_scenario = nullptr;
 
 	return true;
 }
@@ -105,7 +105,7 @@ bool CScheduler::isHoldingResources() const { return !m_vSimulatedBox.empty(); }
 
 bool CScheduler::flattenScenario()
 {
-	OV_ERROR_UNLESS_KRF(m_pScenario->applyLocalSettings(), "Failed to flatten scenario: applying local settings failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_scenario->applyLocalSettings(), "Failed to flatten scenario: applying local settings failed", ErrorType::Internal);
 
 	// We are going to find all metaboxes in the scenario and then push their contents to this one
 	// As the scenario itself can contain more metaboxes, we are going to repeat this process
@@ -120,17 +120,17 @@ bool CScheduler::flattenScenario()
 		{
 			CIdentifier* listID = nullptr;
 			size_t nbElems      = 0;
-			m_pScenario->getBoxIdentifierList(&listID, &nbElems);
+			m_scenario->getBoxIdentifierList(&listID, &nbElems);
 			for (size_t i = 0; i < nbElems; ++i)
 			{
 				const CIdentifier boxID = listID[i];
-				const IBox* box         = m_pScenario->getBoxDetails(boxID);
+				const IBox* box         = m_scenario->getBoxDetails(boxID);
 
 				if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 				{
 					if (box->hasAttribute(OV_AttributeId_Box_Disabled))	// We only process this box if it is not disabled
 					{
-						m_pScenario->removeBox(boxID);
+						m_scenario->removeBox(boxID);
 					}
 					else if (box->hasAttribute(OVP_AttributeId_Metabox_Identifier)) // We verify that the box actually has a backend scenario
 					{
@@ -147,17 +147,17 @@ bool CScheduler::flattenScenario()
 						{
 							// Non-utilisable metaboxes can be easily removed
 							OV_WARNING_K("The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.");
-							m_pScenario->removeBox(boxID);
+							m_scenario->removeBox(boxID);
 						}
 					}
 					else
 					{
 						OV_WARNING_K("The metabox [" << boxID << "] is missing its identifier field.");
-						m_pScenario->removeBox(boxID);
+						m_scenario->removeBox(boxID);
 					}
 				}
 			}
-			m_pScenario->releaseIdentifierList(listID);
+			m_scenario->releaseIdentifierList(listID);
 		}
 
 		if (l_vScenarioMetabox.empty()) { l_bHasFinishedHandlingMetaboxes = true; }
@@ -168,28 +168,28 @@ bool CScheduler::flattenScenario()
 		// Merge the scenario into this one
 		// Re-connect all links for the scenario
 
-		for (CIdentifier l_oMetaboxIdentifier : l_vScenarioMetabox)
+		for (CIdentifier l_oMetaboxID : l_vScenarioMetabox)
 		{
-			IBox* l_pBox = m_pScenario->getBoxDetails(l_oMetaboxIdentifier);
+			IBox* l_pBox = m_scenario->getBoxDetails(l_oMetaboxID);
 
 			// The box has an attribute with the metabox ID and config manager has a path to each metabox scenario
-			CString l_sMetaboxIdentifier = l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+			CString l_sMetaboxID = l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
 			CIdentifier metaboxId;
-			metaboxId.fromString(l_sMetaboxIdentifier);
+			metaboxId.fromString(l_sMetaboxID);
 			CString l_sMetaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-			OV_ERROR_UNLESS_KRF(l_sMetaboxIdentifier != CString(""), "Failed to find metabox with id " << l_sMetaboxIdentifier, ErrorType::ResourceNotFound);
+			OV_ERROR_UNLESS_KRF(l_sMetaboxID != CString(""), "Failed to find metabox with id " << l_sMetaboxID, ErrorType::ResourceNotFound);
 
 			// We are going to copy the template scenario, flatten it and then copy all
 			// Note that copy constructor for IScenario does not exist
-			CIdentifier l_oMetaboxScenarioTemplateIdentifier;
+			CIdentifier l_oMetaboxScenarioTemplateID;
 
 			OV_ERROR_UNLESS_KRF(
-				m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(l_oMetaboxScenarioTemplateIdentifier,
+				m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(l_oMetaboxScenarioTemplateID,
 					OV_ScenarioImportContext_SchedulerMetaboxImport, l_sMetaboxScenarioPath),
 				"Failed to import the scenario file", ErrorType::Internal);
 
-			IScenario& l_rMetaboxScenarioInstance = m_rPlayer.getRuntimeScenarioManager().getScenario(l_oMetaboxScenarioTemplateIdentifier);
+			IScenario& l_rMetaboxScenarioInstance = m_rPlayer.getRuntimeScenarioManager().getScenario(l_oMetaboxScenarioTemplateID);
 
 			OV_WARNING_UNLESS_K(l_rMetaboxScenarioInstance.hasAttribute(OV_AttributeId_Scenario_MetaboxHash),
 								"Box " << l_pBox->getName() << " [" << l_sMetaboxScenarioPath << "] has no computed hash");
@@ -197,31 +197,31 @@ bool CScheduler::flattenScenario()
 			OV_WARNING_UNLESS_K(
 				l_pBox->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue) == l_rMetaboxScenarioInstance.getAttributeValue(
 					OV_AttributeId_Scenario_MetaboxHash),
-				"Box " << l_pBox->getName() << " [" << l_sMetaboxIdentifier << "] should be updated");
+				"Box " << l_pBox->getName() << " [" << l_sMetaboxID << "] should be updated");
 
 			l_rMetaboxScenarioInstance.addAttribute(OV_AttributeId_ScenarioFilename, l_sMetaboxScenarioPath);
 
 			// Push down the settings from the box to the scenario
-			for (uint32_t l_ui32SettingIndex = 0; l_ui32SettingIndex < l_pBox->getSettingCount(); l_ui32SettingIndex++)
+			for (uint32_t settingIdx = 0; settingIdx < l_pBox->getSettingCount(); settingIdx++)
 			{
 				CString l_sSettingValue;
-				CIdentifier l_oSettingIdentifier;
+				CIdentifier settingID;
 
-				l_pBox->getSettingValue(l_ui32SettingIndex, l_sSettingValue);
-				l_pBox->getInterfacorIdentifier(Setting, l_ui32SettingIndex, l_oSettingIdentifier);
+				l_pBox->getSettingValue(settingIdx, l_sSettingValue);
+				l_pBox->getInterfacorIdentifier(Setting, settingIdx, settingID);
 
-				if (l_oSettingIdentifier != OV_UndefinedIdentifier) { l_rMetaboxScenarioInstance.setSettingValue(l_oSettingIdentifier, l_sSettingValue); }
-				else { l_rMetaboxScenarioInstance.setSettingValue(l_ui32SettingIndex, l_sSettingValue); }
+				if (settingID != OV_UndefinedIdentifier) { l_rMetaboxScenarioInstance.setSettingValue(settingID, l_sSettingValue); }
+				else { l_rMetaboxScenarioInstance.setSettingValue(settingIdx, l_sSettingValue); }
 			}
 
 			// Create settings with the path to the Metabox,
 			// these settings will be accessible from within the Metabox on runtime
-			std::string l_sMetaboxFilename      = l_sMetaboxScenarioPath.toASCIIString();
+			std::string metaboxFilename      = l_sMetaboxScenarioPath.toASCIIString();
 			std::string l_sMetaboxDirectoryPath = ".";
 			l_rMetaboxScenarioInstance.addSetting("Player_MetaboxScenarioFilename", OV_TypeId_Filename, l_sMetaboxScenarioPath);
 
-			const size_t l_uiLastSlashPosition = l_sMetaboxFilename.rfind("/");
-			if (l_uiLastSlashPosition != std::string::npos) { l_sMetaboxDirectoryPath = l_sMetaboxFilename.substr(0, l_uiLastSlashPosition).c_str(); }
+			const size_t l_uiLastSlashPosition = metaboxFilename.rfind("/");
+			if (l_uiLastSlashPosition != std::string::npos) { l_sMetaboxDirectoryPath = metaboxFilename.substr(0, l_uiLastSlashPosition).c_str(); }
 
 			l_rMetaboxScenarioInstance.addSetting("Player_MetaboxScenarioDirectory", OV_TypeId_Foldername, l_sMetaboxDirectoryPath.c_str());
 
@@ -233,21 +233,21 @@ bool CScheduler::flattenScenario()
 			{
 			public:
 				explicit CScenarioMergeCallback(std::map<CIdentifier, CIdentifier>& rIdentifierCorrespondence)
-					: m_rIdentifierCorrespondence(rIdentifierCorrespondence) { }
+					: m_correspondenceID(rIdentifierCorrespondence) { }
 
 				void process(CIdentifier& rOriginalIdentifier, CIdentifier& rNewIdentifier) override
 				{
-					m_rIdentifierCorrespondence[rOriginalIdentifier] = rNewIdentifier;
+					m_correspondenceID[rOriginalIdentifier] = rNewIdentifier;
 				}
 
 			private:
-				std::map<CIdentifier, CIdentifier>& m_rIdentifierCorrespondence;
+				std::map<CIdentifier, CIdentifier>& m_correspondenceID;
 			};
 
 			CScenarioMergeCallback l_oScenarioMergeCallback(l_mIdentifierCorrespondence);
 
 			// Copy the boxes and the links from the template metabox scenario to this one
-			m_pScenario->merge(l_rMetaboxScenarioInstance, &l_oScenarioMergeCallback, false, false);
+			m_scenario->merge(l_rMetaboxScenarioInstance, &l_oScenarioMergeCallback, false, false);
 
 			// Now reconnect all the pipes
 
@@ -255,76 +255,76 @@ bool CScheduler::flattenScenario()
 			{
 				CIdentifier* listID = nullptr;
 				size_t nbElems      = 0;
-				m_pScenario->getLinkIdentifierToBoxList(l_pBox->getIdentifier(), &listID, &nbElems);
+				m_scenario->getLinkIdentifierToBoxList(l_pBox->getIdentifier(), &listID, &nbElems);
 				for (size_t i = 0; i < nbElems; ++i)
 				{
-					ILink* l_rLink = m_pScenario->getLinkDetails(listID[i]);
+					ILink* l_rLink = m_scenario->getLinkDetails(listID[i]);
 					// Find out the target inside the metabox scenario
-					CIdentifier l_oTargetBoxIdentifier;
-					uint32_t l_ui32TargetBoxInputIndex    = 0;
-					CIdentifier l_oMetaBoxInputIdentifier = l_rLink->getTargetBoxInputIdentifier();
-					uint32_t l_ui32MetaBoxInputIndex      = l_rLink->getTargetBoxInputIndex();
+					CIdentifier dstBoxID;
+					uint32_t dstBoxInputIdx    = 0;
+					CIdentifier l_oMetaBoxInputID = l_rLink->getTargetBoxInputIdentifier();
+					uint32_t metaBoxInputIdx      = l_rLink->getTargetBoxInputIndex();
 
-					if (l_oMetaBoxInputIdentifier != OV_UndefinedIdentifier)
+					if (l_oMetaBoxInputID != OV_UndefinedIdentifier)
 					{
-						l_rMetaboxScenarioInstance.getInterfacorIndex(Input, l_oMetaBoxInputIdentifier, l_ui32MetaBoxInputIndex);
+						l_rMetaboxScenarioInstance.getInterfacorIndex(Input, l_oMetaBoxInputID, metaBoxInputIdx);
 					}
-					OV_ERROR_UNLESS_KRF(l_ui32MetaBoxInputIndex != OV_Value_UndefinedIndexUInt,
-										"Failed to find metabox input with identifier " << l_oMetaBoxInputIdentifier.toString(),
+					OV_ERROR_UNLESS_KRF(metaBoxInputIdx != OV_Value_UndefinedIndexUInt,
+										"Failed to find metabox input with identifier " << l_oMetaBoxInputID.toString(),
 										ErrorType::ResourceNotFound);
-					l_rMetaboxScenarioInstance.getScenarioInputLink(l_ui32MetaBoxInputIndex, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
+					l_rMetaboxScenarioInstance.getScenarioInputLink(metaBoxInputIdx, dstBoxID, dstBoxInputIdx);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
-					CIdentifier l_oTargetBoxInputIdentifier = OV_UndefinedIdentifier;
-					if (l_oTargetBoxIdentifier != OV_UndefinedIdentifier)
+					CIdentifier l_oTargetBoxInputID = OV_UndefinedIdentifier;
+					if (dstBoxID != OV_UndefinedIdentifier)
 					{
-						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier])->getInterfacorIdentifier(
-							Input, l_ui32TargetBoxInputIndex, l_oTargetBoxInputIdentifier);
+						m_scenario->getBoxDetails(l_mIdentifierCorrespondence[dstBoxID])->getInterfacorIdentifier(
+							Input, dstBoxInputIdx, l_oTargetBoxInputID);
 
-						l_rLink->setTarget(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier], l_ui32TargetBoxInputIndex, l_oTargetBoxInputIdentifier);
+						l_rLink->setTarget(l_mIdentifierCorrespondence[dstBoxID], dstBoxInputIdx, l_oTargetBoxInputID);
 					}
 				}
-				m_pScenario->releaseIdentifierList(listID);
+				m_scenario->releaseIdentifierList(listID);
 			}
 
 			// Connect metabox outputs
 			{
 				CIdentifier* listID = nullptr;
 				size_t nbElems      = 0;
-				m_pScenario->getLinkIdentifierFromBoxList(l_pBox->getIdentifier(), &listID, &nbElems);
+				m_scenario->getLinkIdentifierFromBoxList(l_pBox->getIdentifier(), &listID, &nbElems);
 				for (size_t i = 0; i < nbElems; ++i)
 				{
-					ILink* l_rLink = m_pScenario->getLinkDetails(listID[i]);
+					ILink* l_rLink = m_scenario->getLinkDetails(listID[i]);
 					// Find out the Source inside the metabox scenario
-					CIdentifier l_oSourceBoxIdentifier;
-					uint32_t l_ui32SourceBoxOutputIndex    = 0;
-					CIdentifier l_oMetaBoxOutputIdentifier = l_rLink->getSourceBoxOutputIdentifier();
-					uint32_t l_ui32MetaBoxOutputIndex      = l_rLink->getSourceBoxOutputIndex();
+					CIdentifier srcBoxID;
+					uint32_t l_ui32SourceBoxOutputIdx    = 0;
+					CIdentifier l_oMetaBoxOutputID = l_rLink->getSourceBoxOutputIdentifier();
+					uint32_t l_ui32MetaBoxOutputIdx      = l_rLink->getSourceBoxOutputIndex();
 
-					if (l_oMetaBoxOutputIdentifier != OV_UndefinedIdentifier)
+					if (l_oMetaBoxOutputID != OV_UndefinedIdentifier)
 					{
-						l_rMetaboxScenarioInstance.getInterfacorIndex(Output, l_oMetaBoxOutputIdentifier, l_ui32MetaBoxOutputIndex);
+						l_rMetaboxScenarioInstance.getInterfacorIndex(Output, l_oMetaBoxOutputID, l_ui32MetaBoxOutputIdx);
 					}
-					OV_ERROR_UNLESS_KRF(l_ui32MetaBoxOutputIndex != OV_Value_UndefinedIndexUInt,
-										"Failed to find metabox input with identifier " << l_oMetaBoxOutputIdentifier.toString(), ErrorType::ResourceNotFound);
-					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_ui32MetaBoxOutputIndex, l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex);
+					OV_ERROR_UNLESS_KRF(l_ui32MetaBoxOutputIdx != OV_Value_UndefinedIndexUInt,
+										"Failed to find metabox input with identifier " << l_oMetaBoxOutputID.toString(), ErrorType::ResourceNotFound);
+					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_ui32MetaBoxOutputIdx, srcBoxID, l_ui32SourceBoxOutputIdx);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
-					CIdentifier l_oSourceBoxOutputIdentifier = OV_UndefinedIdentifier;
-					if (l_oSourceBoxIdentifier != OV_UndefinedIdentifier)
+					CIdentifier l_oSourceBoxOutputID = OV_UndefinedIdentifier;
+					if (srcBoxID != OV_UndefinedIdentifier)
 					{
-						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier])->getInterfacorIdentifier(
-							Output, l_ui32SourceBoxOutputIndex, l_oSourceBoxOutputIdentifier);
+						m_scenario->getBoxDetails(l_mIdentifierCorrespondence[srcBoxID])->getInterfacorIdentifier(
+							Output, l_ui32SourceBoxOutputIdx, l_oSourceBoxOutputID);
 
-						l_rLink->setSource(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier], l_ui32SourceBoxOutputIndex, l_oSourceBoxOutputIdentifier);
+						l_rLink->setSource(l_mIdentifierCorrespondence[srcBoxID], l_ui32SourceBoxOutputIdx, l_oSourceBoxOutputID);
 					}
 				}
-				m_pScenario->releaseIdentifierList(listID);
+				m_scenario->releaseIdentifierList(listID);
 			}
 		}
 
 		// Remove processed metaboxes from the scenario
-		for (CIdentifier l_oMetaboxIdentifier : l_vScenarioMetabox) { m_pScenario->removeBox(l_oMetaboxIdentifier); }
+		for (CIdentifier l_oMetaboxID : l_vScenarioMetabox) { m_scenario->removeBox(l_oMetaboxID); }
 	}
 
 	return true;
@@ -337,24 +337,24 @@ ESchedulerInitializationCode CScheduler::initialize()
 	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall,
 					  SchedulerInitialization_Failed);
 
-	m_pScenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
+	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
 
-	OV_ERROR_UNLESS_K(m_pScenario, "Failed to find scenario with id " << m_oScenarioIdentifier.toString(), ErrorType::ResourceNotFound,
+	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_oScenarioIdentifier.toString(), ErrorType::ResourceNotFound,
 					  SchedulerInitialization_Failed);
 
-	OV_ERROR_UNLESS_K(m_pScenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_K(m_scenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
 					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
 
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
-	OV_ERROR_UNLESS_K(m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id "
+	OV_ERROR_UNLESS_K(m_scenario->acceptVisitor(l_oBoxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id "
 					  << m_oScenarioIdentifier.toString(), ErrorType::Internal, SchedulerInitialization_Failed);
 
 
 	{
 		CIdentifier* listID = nullptr;
 		size_t nbElems      = 0;
-		m_pScenario->getBoxIdentifierList(&listID, &nbElems);
+		m_scenario->getBoxIdentifierList(&listID, &nbElems);
 
 		// Create sets of x and y positions, note that C++ sets are always ordered
 		// We work with indexes rather than just positions because the positions are not bounded and can overflow
@@ -362,7 +362,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 		std::set<int> ypositions;
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const IBox* box = m_pScenario->getBoxDetails(listID[i]);
+			const IBox* box = m_scenario->getBoxDetails(listID[i]);
 
 			if (box->hasAttribute(OV_AttributeId_Box_YCenterPosition))
 			{
@@ -397,9 +397,9 @@ ESchedulerInitializationCode CScheduler::initialize()
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			const CIdentifier boxID = listID[i];
-			const IBox* l_pBox      = m_pScenario->getBoxDetails(boxID);
+			const IBox* l_pBox      = m_scenario->getBoxDetails(boxID);
 			OV_ERROR_UNLESS_K(
-				!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
+				!m_scenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
 				"Box [" << l_pBox->getName() << "] with class identifier [" << boxID.toString() << "] should be updated",
 				ErrorType::Internal, SchedulerInitialization_Failed);
 
@@ -456,7 +456,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 				m_vSimulatedBoxChrono[boxID].reset(uint32_t(m_ui64Frequency));
 			}
 		}
-		m_pScenario->releaseIdentifierList(listID);
+		m_scenario->releaseIdentifierList(listID);
 	}
 
 	OV_ERROR_UNLESS_K(!m_vSimulatedBox.empty(), "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
@@ -514,7 +514,7 @@ bool CScheduler::uninitialize()
 		 itSimulatedBox) { delete itSimulatedBox->second; }
 	m_vSimulatedBox.clear();
 
-	m_pScenario = nullptr;
+	m_scenario = nullptr;
 
 	return l_bBoxUninitialization;
 }
@@ -535,7 +535,7 @@ bool CScheduler::loop()
 
 		System::CChrono& l_rSimulatedBoxChrono = m_vSimulatedBoxChrono[itSimulatedBox->first.second];
 
-		IBox* l_pBox = m_pScenario->getBoxDetails(itSimulatedBox->first.second);
+		IBox* l_pBox = m_scenario->getBoxDetails(itSimulatedBox->first.second);
 
 		OV_ERROR_UNLESS_KRF(l_pBox, "Unable to get box details for box with id " << itSimulatedBox->first.second.toString(), ErrorType::ResourceNotFound);
 
@@ -555,7 +555,7 @@ bool CScheduler::loop()
 
 		if (l_rSimulatedBoxChrono.hasNewEstimation())
 		{
-			//IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
+			//IBox* l_pBox=m_scenario->getBoxDetails(itSimulatedBox->first.second);
 			l_pBox->addAttribute(OV_AttributeId_Box_ComputationTimeLastSecond, "");
 			l_pBox->setAttributeValue(OV_AttributeId_Box_ComputationTimeLastSecond, CIdentifier(l_rSimulatedBoxChrono.getTotalStepInDuration()).toString());
 		}
@@ -623,7 +623,7 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 
 bool CScheduler::sendInput(const CChunk& chunk, const CIdentifier& boxId, const uint32_t index)
 {
-	IBox* l_pBox = m_pScenario->getBoxDetails(boxId);
+	IBox* l_pBox = m_scenario->getBoxDetails(boxId);
 	if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
 	OV_ERROR_UNLESS_KRF(l_pBox, "Tried to send data chunk with invalid box identifier " << boxId.toString(), ErrorType::ResourceNotFound);
 
@@ -655,12 +655,12 @@ double CScheduler::getFastForwardMaximumFactor() const { return m_rPlayer.getFas
 
 void CScheduler::handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception)
 {
-	CIdentifier l_oTargetBoxIdentifier = OV_UndefinedIdentifier;
-	box->getBoxIdentifier(l_oTargetBoxIdentifier);
+	CIdentifier dstBoxID = OV_UndefinedIdentifier;
+	box->getBoxIdentifier(dstBoxID);
 
 	box->getLogManager() << LogLevel_Error << "Exception caught in box\n";
 	box->getLogManager() << LogLevel_Error << "  [name:" << box->getName() << "]\n";
-	box->getLogManager() << LogLevel_Error << "  [class identifier:" << l_oTargetBoxIdentifier << "]\n";
+	box->getLogManager() << LogLevel_Error << "  [class identifier:" << dstBoxID << "]\n";
 	box->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
 	box->getLogManager() << LogLevel_Error << "  [cause:" << exception.what() << "]\n";
 

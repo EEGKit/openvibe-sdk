@@ -34,7 +34,7 @@ bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioID)
 						"Scenario with identifier " << scenarioID.toString() << " does not exist",
 						ErrorType::ResourceNotFound);
 
-	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(scenarioID);
+	m_scenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(scenarioID);
 	return true;
 }
 
@@ -48,16 +48,16 @@ bool CSimulatedBox::getBoxIdentifier(CIdentifier& boxId) const
 
 bool CSimulatedBox::setBoxIdentifier(const CIdentifier& boxId)
 {
-	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", ErrorType::BadCall);
 
-	m_pBox = m_pScenario->getBoxDetails(boxId);
+	m_pBox = m_scenario->getBoxDetails(boxId);
 	return m_pBox != nullptr;
 }
 
 bool CSimulatedBox::initialize()
 {
 	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
-	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", ErrorType::BadCall);
 
 	m_bChunkConsistencyChecking = this->getConfigurationManager().expandAsBoolean("${Kernel_CheckChunkConsistency}", true);
 	m_vInput.resize(m_pBox->getInputCount());
@@ -187,20 +187,20 @@ bool CSimulatedBox::process()
 	{
 		CIdentifier* listID = nullptr;
 		size_t nbElems      = 0;
-		m_pScenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &listID, &nbElems);
+		m_scenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const ILink* l_pLink = m_pScenario->getLinkDetails(listID[i]);
+			const ILink* l_pLink = m_scenario->getLinkDetails(listID[i]);
 			if (l_pLink)
 			{
-				CIdentifier l_oTargetBoxIdentifier = l_pLink->getTargetBoxIdentifier();
-				uint32_t l_ui32TargetBoxInputIndex = l_pLink->getTargetBoxInputIndex();
+				CIdentifier dstBoxID = l_pLink->getTargetBoxIdentifier();
+				uint32_t dstBoxInputIdx = l_pLink->getTargetBoxInputIndex();
 
-				uint32_t l_ui32SourceOutputIndex = l_pLink->getSourceBoxOutputIndex();
-				for (auto& chunk : m_vOutput[l_ui32SourceOutputIndex]) { m_rScheduler.sendInput(chunk, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex); }
+				uint32_t l_ui32SourceOutputIdx = l_pLink->getSourceBoxOutputIndex();
+				for (auto& chunk : m_vOutput[l_ui32SourceOutputIdx]) { m_rScheduler.sendInput(chunk, dstBoxID, dstBoxInputIdx); }
 			}
 		}
-		m_pScenario->releaseIdentifierList(listID);
+		m_scenario->releaseIdentifierList(listID);
 	}
 
 	// perform input cleaning
@@ -239,7 +239,7 @@ bool CSimulatedBox::isReadyToProcess() const { return m_bReadyToProcess; }
 
 CString CSimulatedBox::getName() const { return m_pBox->getName(); }
 
-const IScenario& CSimulatedBox::getScenario() const { return *m_pScenario; }
+const IScenario& CSimulatedBox::getScenario() const { return *m_scenario; }
 
 // ________________________________________________________________________________________________________________
 //
