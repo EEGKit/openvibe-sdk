@@ -115,9 +115,9 @@ namespace OpenViBE
 			const IBox* m_pBox                      = nullptr;
 			CScheduler& m_rScheduler;
 
-			uint64_t m_ui64LastClockActivationDate = 0;
-			uint64_t m_ui64ClockFrequency          = 0;
-			uint64_t m_ui64ClockActivationStep     = 0;
+			uint64_t m_lastClockActivationDate = 0;
+			uint64_t m_clockFrequency          = 0;
+			uint64_t m_clockActivationStep     = 0;
 
 		public:
 

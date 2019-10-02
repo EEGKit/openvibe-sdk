@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
 			double m_f64MinCropValue                            = 0;
 			double m_f64MaxCropValue                            = 0;
-			uint64_t m_ui64CropMethod                           = 0;
+			uint64_t m_cropMethod                           = 0;
 		};
 
 		class CBoxAlgorithmCropListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

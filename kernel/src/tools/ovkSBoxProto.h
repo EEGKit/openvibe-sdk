@@ -15,8 +15,8 @@ namespace
 		bool addInput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64InputCountHash);
-			swap_byte(m_ui64InputCountHash, 0x7936A0F3BD12D936LL);
+			swap_byte(v, m_inputCountHash);
+			swap_byte(m_inputCountHash, 0x7936A0F3BD12D936LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			if (id != OV_UndefinedIdentifier)
 			{
@@ -30,8 +30,8 @@ namespace
 		bool addOutput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			if (id != OV_UndefinedIdentifier)
 			{
@@ -46,8 +46,8 @@ namespace
 						const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64SettingCountHash);
-			swap_byte(m_ui64SettingCountHash, 0x3C87F3AAE9F8303BLL);
+			swap_byte(v, m_settingCountHash);
+			swap_byte(m_settingCountHash, 0x3C87F3AAE9F8303BLL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			if (id != OV_UndefinedIdentifier)
 			{
@@ -61,8 +61,8 @@ namespace
 		bool addInputSupport(const CIdentifier& typeID) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
@@ -70,8 +70,8 @@ namespace
 		bool addInputAndDerivedSupport(const CIdentifier& typeID)
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
@@ -79,8 +79,8 @@ namespace
 		bool addOutputSupport(const CIdentifier& typeID) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
@@ -88,8 +88,8 @@ namespace
 		bool addOutputAndDerivedSupport(const CIdentifier& typeID)
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
@@ -148,9 +148,9 @@ namespace
 
 		CIdentifier m_oHash             = OV_UndefinedIdentifier;
 		bool m_bIsDeprecated            = false;
-		uint64_t m_ui64InputCountHash   = 0x64AC3CB54A35888CLL;
-		uint64_t m_ui64OutputCountHash  = 0x21E0FAAFE5CAF1E1LL;
-		uint64_t m_ui64SettingCountHash = 0x6BDFB15B54B09F63LL;
+		uint64_t m_inputCountHash   = 0x64AC3CB54A35888CLL;
+		uint64_t m_outputCountHash  = 0x21E0FAAFE5CAF1E1LL;
+		uint64_t m_settingCountHash = 0x6BDFB15B54B09F63LL;
 		ITypeManager& m_TypeManager;
 	};
 } // namespace

@@ -75,7 +75,7 @@ namespace EBML
 
 			CIdentifier m_oIdentifier;
 			CWriterNode* m_pParentNode  = nullptr;
-			uint64_t m_ui64BufferLength = 0;
+			uint64_t m_bufferLength = 0;
 			unsigned char* m_buffer    = nullptr;
 			bool m_bBuffered            = false;
 			vector<CWriterNode*> m_vChildren;
@@ -114,14 +114,14 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	rWriterCallback.write(id, identifierLength);
 	rWriterCallback.write(pContentSize, contentSizeLength);
 
-	if (m_vChildren.empty()) { rWriterCallback.write(m_buffer, m_ui64BufferLength); }
+	if (m_vChildren.empty()) { rWriterCallback.write(m_buffer, m_bufferLength); }
 	else { for (auto i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); } }
 }
 
 uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 {
 	uint64_t contentSize = 0;
-	if (m_vChildren.empty()) { contentSize = m_ui64BufferLength; }
+	if (m_vChildren.empty()) { contentSize = m_bufferLength; }
 	else { for (auto i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
 
 	uint64_t res = contentSize;
@@ -192,7 +192,7 @@ bool CWriter::setChildData(const void* buffer, const uint64_t size)
 
 	delete [] m_pCurrentNode->m_buffer;
 
-	m_pCurrentNode->m_ui64BufferLength = size;
+	m_pCurrentNode->m_bufferLength = size;
 	m_pCurrentNode->m_buffer          = bufferCopy;
 	m_pCurrentNode->m_bBuffered        = true;
 	return true;
@@ -204,7 +204,7 @@ bool CWriter::closeChild()
 
 	if ((!m_pCurrentNode->m_bBuffered) && (m_pCurrentNode->m_vChildren.empty()))
 	{
-		m_pCurrentNode->m_ui64BufferLength = 0;
+		m_pCurrentNode->m_bufferLength = 0;
 		m_pCurrentNode->m_buffer          = nullptr;
 		m_pCurrentNode->m_bBuffered        = true;
 	}

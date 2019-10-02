@@ -301,29 +301,29 @@ bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& memoryBuffer, c
 {
 	CIdentifier srcBoxID;
 	CIdentifier dstBoxID;
-	uint32_t l_ui32SourceBoxOutputIdx = OV_Value_UndefinedIndexUInt;
+	uint32_t srcBoxOutputIdx = OV_Value_UndefinedIndexUInt;
 	uint32_t dstBoxInputIdx  = OV_Value_UndefinedIndexUInt;
-	CIdentifier l_oSourceBoxOutputID;
-	CIdentifier l_oTargetBoxInputID;
+	CIdentifier srcBoxOutputID;
+	CIdentifier dstBoxInputID;
 
-	rLink.getSource(srcBoxID, l_ui32SourceBoxOutputIdx, l_oSourceBoxOutputID);
-	rLink.getTarget(dstBoxID, dstBoxInputIdx, l_oTargetBoxInputID);
+	rLink.getSource(srcBoxID, srcBoxOutputIdx, srcBoxOutputID);
+	rLink.getTarget(dstBoxID, dstBoxInputIdx, dstBoxInputID);
 
 	m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link);
 	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Identifier, rLink.getIdentifier());
 	m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source);
 	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier, srcBoxID);
-	if (l_oSourceBoxOutputID != OV_UndefinedIdentifier)
+	if (srcBoxOutputID != OV_UndefinedIdentifier)
 	{
-		m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier, l_oSourceBoxOutputID);
+		m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier, srcBoxOutputID);
 	}
-	else { m_parent.exportUInteger(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, l_ui32SourceBoxOutputIdx); }
+	else { m_parent.exportUInteger(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, srcBoxOutputIdx); }
 	m_parent.exportStop(memoryBuffer);
 	m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target);
 	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier, dstBoxID);
-	if (l_oTargetBoxInputID != OV_UndefinedIdentifier)
+	if (dstBoxInputID != OV_UndefinedIdentifier)
 	{
-		m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, l_oTargetBoxInputID);
+		m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, dstBoxInputID);
 	}
 	else { m_parent.exportUInteger(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex, dstBoxInputIdx); }
 	m_parent.exportStop(memoryBuffer);

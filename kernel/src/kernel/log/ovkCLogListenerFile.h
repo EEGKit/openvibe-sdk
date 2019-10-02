@@ -51,7 +51,7 @@ namespace OpenViBE
 			// Log Settings
 			bool m_bTimeInSeconds        = true;
 			bool m_bLogWithHexa          = false;
-			uint64_t m_ui64TimePrecision = 3;
+			uint64_t m_timePrecision = 3;
 
 		private:
 			template <typename T>

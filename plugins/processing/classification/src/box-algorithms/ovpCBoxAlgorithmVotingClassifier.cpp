@@ -54,10 +54,10 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 	m_resultClassLabelBase = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 	m_bChooseOneIfExAequo      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
 
-	m_ui64LastTime = 0;
+	m_lastTime = 0;
 
 	m_oClassificationChoiceEncoder.encodeHeader();
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());
 
 	return true;
 }
@@ -139,7 +139,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 			if (input.m_pDecoder->isEndReceived())
 			{
 				m_oClassificationChoiceEncoder.encodeEnd();
-				boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
+				boxContext.markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());
 			}
 		}
 
@@ -195,8 +195,8 @@ bool CBoxAlgorithmVotingClassifier::process()
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(resultClassLabel, time, 0);
 
 		m_oClassificationChoiceEncoder.encodeBuffer();
-		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, time);
-		m_ui64LastTime = time;
+		boxContext.markOutputAsReadyToSend(0, m_lastTime, time);
+		m_lastTime = time;
 	}
 
 	return true;

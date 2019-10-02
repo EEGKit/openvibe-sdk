@@ -339,8 +339,8 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 #endif // CPlayer_Debug_Time
 
 	uint64_t l_ui64LatenessSec = l_ui64Lateness >> 32;
-	uint64_t m_ui64LatenessSec = m_lateness >> 32;
-	OV_WARNING_UNLESS_K(l_ui64LatenessSec == m_ui64LatenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue
+	uint64_t m_latenessSec = m_lateness >> 32;
+	OV_WARNING_UNLESS_K(l_ui64LatenessSec == m_latenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue
 						<< "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit << LogColor_ForegroundBlue
 						<< "can not reach realtime" << LogColor_PopStateBit << "> " << l_ui64LatenessSec << " second(s) late...\n");
 

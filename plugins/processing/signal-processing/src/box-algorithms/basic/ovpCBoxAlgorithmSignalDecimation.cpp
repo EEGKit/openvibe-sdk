@@ -37,14 +37,14 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 	m_nChannel                  = 0;
 	m_ui32InputSampleIndex              = 0;
 	m_ui32InputSampleCountPerSentBlock  = 0;
-	m_ui64OutputSamplingFrequency       = 0;
+	m_outputSamplingFrequency       = 0;
 	m_ui32OutputSampleIndex             = 0;
 	m_ui32OutputSampleCountPerSentBlock = 0;
 
 	m_nTotalSample = 0;
-	m_ui64StartTimeBase    = 0;
-	m_ui64LastStartTime    = 0;
-	m_ui64LastEndTime      = 0;
+	m_startTimeBase    = 0;
+	m_lastStartTime    = 0;
+	m_lastEndTime      = 0;
 
 	return true;
 }
@@ -95,35 +95,35 @@ bool CBoxAlgorithmSignalDecimation::process()
 		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
 		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
 
-		if (tStart != m_ui64LastEndTime)
+		if (tStart != m_lastEndTime)
 		{
-			m_ui64StartTimeBase     = tStart;
+			m_startTimeBase     = tStart;
 			m_ui32InputSampleIndex  = 0;
 			m_ui32OutputSampleIndex = 0;
 			m_nTotalSample  = 0;
 		}
 
-		m_ui64LastStartTime = tStart;
-		m_ui64LastEndTime   = tEnd;
+		m_lastStartTime = tStart;
+		m_lastEndTime   = tEnd;
 
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			m_ui32InputSampleIndex             = 0;
 			m_ui32InputSampleCountPerSentBlock = op_pMatrix->getDimensionSize(1);
-			m_ui64InputSamplingFrequency       = op_ui64SamplingRate;
+			m_inputSamplingFrequency       = op_ui64SamplingRate;
 
-			OV_ERROR_UNLESS_KRF(m_ui64InputSamplingFrequency%m_i64DecimationFactor == 0,
-								"Failed to decimate: input sampling frequency [" << m_ui64InputSamplingFrequency << "] not multiple of decimation factor [" <<
+			OV_ERROR_UNLESS_KRF(m_inputSamplingFrequency%m_i64DecimationFactor == 0,
+								"Failed to decimate: input sampling frequency [" << m_inputSamplingFrequency << "] not multiple of decimation factor [" <<
 								m_i64DecimationFactor << "]",
 								OpenViBE::Kernel::ErrorType::BadSetting);
 
 			m_ui32OutputSampleIndex             = 0;
 			m_ui32OutputSampleCountPerSentBlock = uint32_t(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
 			m_ui32OutputSampleCountPerSentBlock = (m_ui32OutputSampleCountPerSentBlock ? m_ui32OutputSampleCountPerSentBlock : 1);
-			m_ui64OutputSamplingFrequency       = op_ui64SamplingRate / m_i64DecimationFactor;
+			m_outputSamplingFrequency       = op_ui64SamplingRate / m_i64DecimationFactor;
 
-			OV_ERROR_UNLESS_KRF(m_ui64OutputSamplingFrequency != 0, "Failed to decimate: output sampling frequency is 0",
+			OV_ERROR_UNLESS_KRF(m_outputSamplingFrequency != 0, "Failed to decimate: output sampling frequency is 0",
 								OpenViBE::Kernel::ErrorType::BadOutput);
 
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
@@ -131,7 +131,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
 			ip_pMatrix->setDimensionSize(1, m_ui32OutputSampleCountPerSentBlock);
-			ip_ui64SamplingRate = m_ui64OutputSamplingFrequency;
+			ip_ui64SamplingRate = m_outputSamplingFrequency;
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
 			OpenViBEToolkit::Tools::Matrix::clearContent(*ip_pMatrix);
 
@@ -171,10 +171,10 @@ bool CBoxAlgorithmSignalDecimation::process()
 						oBuffer                 = ip_pMatrix->getBuffer();
 						m_ui32OutputSampleIndex = 0;
 						m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-						const uint64_t tStartSample = m_ui64StartTimeBase + TimeArithmetics::sampleCountToTime(
-														  m_ui64OutputSamplingFrequency, m_nTotalSample);
-						const uint64_t tEndSample = m_ui64StartTimeBase + TimeArithmetics::sampleCountToTime(
-														m_ui64OutputSamplingFrequency, m_nTotalSample + m_ui32OutputSampleCountPerSentBlock);
+						const uint64_t tStartSample = m_startTimeBase + TimeArithmetics::sampleCountToTime(
+														  m_outputSamplingFrequency, m_nTotalSample);
+						const uint64_t tEndSample = m_startTimeBase + TimeArithmetics::sampleCountToTime(
+														m_outputSamplingFrequency, m_nTotalSample + m_ui32OutputSampleCountPerSentBlock);
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_ui32OutputSampleCountPerSentBlock;
 

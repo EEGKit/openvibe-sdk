@@ -33,7 +33,7 @@ void CLogListenerFile::configure(const IConfigurationManager& configurationManag
 {
 	m_bTimeInSeconds    = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
 	m_bLogWithHexa      = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
-	m_ui64TimePrecision = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
+	m_timePrecision = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
 bool CLogListenerFile::isActive(ELogLevel logLevel)
@@ -63,7 +63,7 @@ void CLogListenerFile::log(const time64 value)
 	{
 		double l_f64Time = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;
-		ss.precision(m_ui64TimePrecision);
+		ss.precision(m_timePrecision);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";

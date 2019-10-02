@@ -25,8 +25,8 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
 
-			uint64_t m_ui64StimulationIdentifier = 0;
-			uint64_t m_ui64ActionIdentifier      = 0;
+			uint64_t m_stimulationIdentifier = 0;
+			uint64_t m_actionIdentifier      = 0;
 		};
 
 		class CBoxAlgorithmPlayerControllerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

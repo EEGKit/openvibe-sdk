@@ -57,7 +57,7 @@ namespace FS
 		bool isHidden() override { return m_bIsHidden; }
 		bool isSystem() override { return m_bIsSystem; }
 		bool isExecutable() override { return m_bIsExecutable; }
-		uint64_t getSize() override { return m_ui64Size; }
+		uint64_t getSize() override { return m_size; }
 
 		bool m_bIsFile         = false;
 		bool m_bIsDirectory    = false;
@@ -67,7 +67,7 @@ namespace FS
 		bool m_bIsHidden       = false;
 		bool m_bIsSystem       = false;
 		bool m_bIsExecutable   = false;
-		uint64_t m_ui64Size    = 0;
+		uint64_t m_size    = 0;
 	};
 }  // namespace FS
 
@@ -183,7 +183,7 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 				l_oAttributes.m_bIsSystem=S_ISBLK(l_oStat.st_mode)|S_ISFIFO(l_oStat.st_mode)|S_ISSOCK(l_oStat.st_mode)|S_ISCHR(l_oStat.st_mode)?true:false;
 				l_oAttributes.m_bIsExecutable=l_oStat.st_mode&S_IXUSR?true:false;
 
-				l_oAttributes.m_ui64Size=l_oStat.st_size;
+				l_oAttributes.m_size=l_oStat.st_size;
 
 				// Sends to callback
 				if(!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
@@ -290,7 +290,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 				l_oAttributes.m_bIsSystem     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? true : false;
 				l_oAttributes.m_bIsExecutable = false; // TODO
 
-				l_oAttributes.m_ui64Size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
+				l_oAttributes.m_size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
 
 				// Sends to callback
 				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes)) { l_bFinished = true; }

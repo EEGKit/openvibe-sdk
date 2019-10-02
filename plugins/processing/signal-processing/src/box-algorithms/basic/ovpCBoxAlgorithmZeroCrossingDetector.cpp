@@ -46,8 +46,8 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_f64WindowTime > 0, "Invalid negative number for window length", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_ui64StimulationId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_ui64StimulationId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_stimulationId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_stimulationId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	CIdentifier typeID;
 	this->getStaticBoxContext().getInputType(0, typeID);
@@ -166,14 +166,14 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					{
 						// negative ZC : positive-to-negative
 						oBuffer0[k + j * nSample] = -1;
-						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId2, stimulationDate, 0);
+						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_stimulationId2, stimulationDate, 0);
 						m_vStateHistory[j] = -1;
 					}
 					else if ((m_vStateHistory[j] == -1) && (signals[k] < m_f64HysteresisThreshold) && (signals[k + 1] > m_f64HysteresisThreshold))
 					{
 						// positive ZC : negative-to-positive
 						oBuffer0[k + j * nSample] = 1;
-						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId1, stimulationDate, 0);
+						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_stimulationId1, stimulationDate, 0);
 						m_vStateHistory[j] = 1;
 
 						// for the rythm estimation

@@ -20,7 +20,7 @@ namespace OpenViBE
 		CIdentifier TMessage<T>::getIdentifier() const { return m_oIdentifier; }
 
 		template <class T>
-		uint64_t TMessage<T>::getTime() const { return m_ui64Time; }
+		uint64_t TMessage<T>::getTime() const { return m_time; }
 
 		template <class T>
 		bool TMessage<T>::setIdentifier(const CIdentifier& identifier)
@@ -34,7 +34,7 @@ namespace OpenViBE
 		template <class T>
 		bool TMessage<T>::setTime(const uint64_t ui64Time)
 		{
-			m_ui64Time = ui64Time;
+			m_time = ui64Time;
 			return true;
 		}
 

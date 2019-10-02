@@ -58,7 +58,7 @@ bool CBoxAlgorithmCrop::initialize()
 	TParameterHandler<IMatrix*>(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix)).
 			setReferenceTarget(m_pMatrix);
 
-	m_ui64CropMethod  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_cropMethod  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_f64MinCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_f64MaxCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
@@ -114,11 +114,11 @@ bool CBoxAlgorithmCrop::process()
 			double* buffer = m_pMatrix->getBuffer();
 			for (uint32_t j = 0; j < m_pMatrix->getBufferElementCount(); j++, buffer++)
 			{
-				if (*buffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax))
+				if (*buffer < m_f64MinCropValue && (m_cropMethod == OVP_TypeId_CropMethod_Min || m_cropMethod == OVP_TypeId_CropMethod_MinMax))
 				{
 					*buffer = m_f64MinCropValue;
 				}
-				if (*buffer > m_f64MaxCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Max || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax))
+				if (*buffer > m_f64MaxCropValue && (m_cropMethod == OVP_TypeId_CropMethod_Max || m_cropMethod == OVP_TypeId_CropMethod_MinMax))
 				{
 					*buffer = m_f64MaxCropValue;
 				}

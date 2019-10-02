@@ -34,7 +34,7 @@ namespace System
 		bool m_bIsInStep         = false;
 		bool m_bHasNewEstimation = false;
 
-		uint64_t m_ui64TotalStepInTime  = 0;
-		uint64_t m_ui64TotalStepOutTime = 0;
+		uint64_t m_totalStepInTime  = 0;
+		uint64_t m_totalStepOutTime = 0;
 	};
 } // namespace System

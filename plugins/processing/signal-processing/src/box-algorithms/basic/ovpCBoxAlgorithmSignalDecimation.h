@@ -25,15 +25,15 @@ namespace OpenViBEPlugins
 			uint32_t m_nChannel                  = 0;
 			uint32_t m_ui32InputSampleIndex              = 0;
 			uint32_t m_ui32InputSampleCountPerSentBlock  = 0;
-			uint64_t m_ui64InputSamplingFrequency        = 0;
+			uint64_t m_inputSamplingFrequency        = 0;
 			uint32_t m_ui32OutputSampleIndex             = 0;
 			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
-			uint64_t m_ui64OutputSamplingFrequency       = 0;
+			uint64_t m_outputSamplingFrequency       = 0;
 
 			uint64_t m_nTotalSample = 0;
-			uint64_t m_ui64StartTimeBase    = 0;
-			uint64_t m_ui64LastStartTime    = 0;
-			uint64_t m_ui64LastEndTime      = 0;
+			uint64_t m_startTimeBase    = 0;
+			uint64_t m_lastStartTime    = 0;
+			uint64_t m_lastEndTime      = 0;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;

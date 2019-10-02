@@ -24,7 +24,7 @@ using namespace Plugins;
 #define OV_IncorrectTime 0xffffffffffffffffULL
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& ctx, CScheduler& rScheduler)
-	: TKernelObject<IBoxIO>(ctx), m_rScheduler(rScheduler), m_ui64LastClockActivationDate(OV_IncorrectTime) {}
+	: TKernelObject<IBoxIO>(ctx), m_rScheduler(rScheduler), m_lastClockActivationDate(OV_IncorrectTime) {}
 
 CSimulatedBox::~CSimulatedBox() {}
 
@@ -66,9 +66,9 @@ bool CSimulatedBox::initialize()
 	m_vLastOutputStartTime.resize(m_pBox->getOutputCount(), 0);
 	m_vLastOutputEndTime.resize(m_pBox->getOutputCount(), 0);
 
-	m_ui64LastClockActivationDate = OV_IncorrectTime;
-	m_ui64ClockFrequency          = 0;
-	m_ui64ClockActivationStep     = 0;
+	m_lastClockActivationDate = OV_IncorrectTime;
+	m_clockFrequency          = 0;
+	m_clockActivationStep     = 0;
 
 	m_pBoxAlgorithm = getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), nullptr);
 
@@ -112,8 +112,8 @@ bool CSimulatedBox::processClock()
 			uint64_t l_ui64NewClockFrequency = m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
 			if (l_ui64NewClockFrequency == 0)
 			{
-				m_ui64ClockActivationStep     = OV_IncorrectTime;
-				m_ui64LastClockActivationDate = OV_IncorrectTime;
+				m_clockActivationStep     = OV_IncorrectTime;
+				m_lastClockActivationDate = OV_IncorrectTime;
 			}
 			else
 			{
@@ -128,22 +128,22 @@ bool CSimulatedBox::processClock()
 				//       would result in an integer over shift (the one
 				//       would exit). Thus the left shift of 63 bits
 				//       and the left shift of 1 bit after the division
-				m_ui64ClockActivationStep = ((1ULL << 63) / l_ui64NewClockFrequency) << 1;
+				m_clockActivationStep = ((1ULL << 63) / l_ui64NewClockFrequency) << 1;
 			}
-			m_ui64ClockFrequency = l_ui64NewClockFrequency;
+			m_clockFrequency = l_ui64NewClockFrequency;
 		}
 	}
 
-	if ((m_ui64ClockFrequency != 0) && (m_ui64LastClockActivationDate == OV_IncorrectTime || m_rScheduler.getCurrentTime() - m_ui64LastClockActivationDate >=
-										m_ui64ClockActivationStep))
+	if ((m_clockFrequency != 0) && (m_lastClockActivationDate == OV_IncorrectTime || m_rScheduler.getCurrentTime() - m_lastClockActivationDate >=
+										m_clockActivationStep))
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			if (m_ui64LastClockActivationDate == OV_IncorrectTime) { m_ui64LastClockActivationDate = m_rScheduler.getCurrentTime(); }
-			else { m_ui64LastClockActivationDate = m_ui64LastClockActivationDate + m_ui64ClockActivationStep; }
+			if (m_lastClockActivationDate == OV_IncorrectTime) { m_lastClockActivationDate = m_rScheduler.getCurrentTime(); }
+			else { m_lastClockActivationDate = m_lastClockActivationDate + m_clockActivationStep; }
 
 			CMessageClock l_oClockMessage(this->getKernelContext());
-			l_oClockMessage.setTime(m_ui64LastClockActivationDate);
+			l_oClockMessage.setTime(m_lastClockActivationDate);
 
 			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage),
 								"Box algorithm <" << m_pBox->getName() << "> processClock() function failed", ErrorType::Internal);

@@ -40,8 +40,8 @@ bool CChrono::reset(uint32_t ui32StepCount)
 	m_bIsInStep         = false;
 	m_bHasNewEstimation = false;
 
-	m_ui64TotalStepInTime  = 0;
-	m_ui64TotalStepOutTime = 0;
+	m_totalStepInTime  = 0;
+	m_totalStepOutTime = 0;
 
 	return true;
 }
@@ -55,12 +55,12 @@ bool CChrono::stepIn()
 	m_pStepInTime[m_ui32StepIndex] = Time::zgetTime();
 	if (m_ui32StepIndex == m_nStep)
 	{
-		m_ui64TotalStepInTime  = 0;
-		m_ui64TotalStepOutTime = 0;
+		m_totalStepInTime  = 0;
+		m_totalStepOutTime = 0;
 		for (uint32_t i = 0; i < m_nStep; i++)
 		{
-			m_ui64TotalStepInTime += m_pStepOutTime[i] - m_pStepInTime[i];
-			m_ui64TotalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];
+			m_totalStepInTime += m_pStepOutTime[i] - m_pStepInTime[i];
+			m_totalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];
 		}
 		m_pStepInTime[0]    = m_pStepInTime[m_nStep];
 		m_ui32StepIndex     = 0;
@@ -83,9 +83,9 @@ bool CChrono::stepOut()
 	return true;
 }
 
-uint64_t CChrono::getTotalStepInDuration() const { return m_ui64TotalStepInTime; }
+uint64_t CChrono::getTotalStepInDuration() const { return m_totalStepInTime; }
 
-uint64_t CChrono::getTotalStepOutDuration() const { return m_ui64TotalStepOutTime; }
+uint64_t CChrono::getTotalStepOutDuration() const { return m_totalStepOutTime; }
 
 uint64_t CChrono::getAverageStepInDuration() const { return m_nStep ? this->getTotalStepInDuration() / m_nStep : 0; }
 

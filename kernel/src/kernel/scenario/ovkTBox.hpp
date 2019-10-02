@@ -1342,8 +1342,8 @@ namespace OpenViBE
 				{
 					BoxEventMessage l_oEvent;
 					l_oEvent.m_Type          = eType;
-					l_oEvent.m_FirstIndex  = firstIdx;
-					l_oEvent.m_SecondIndex = secondIdx;
+					l_oEvent.m_FirstIdx  = firstIdx;
+					l_oEvent.m_SecondIdx = secondIdx;
 
 					this->setChanged();
 					this->notifyObservers(&l_oEvent);

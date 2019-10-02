@@ -48,7 +48,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_oClassificationChoiceEncoder;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_pClassificationChoiceStimulationSet;
 
-			uint64_t m_ui64LastTime = 0;
+			uint64_t m_lastTime = 0;
 			bool m_bMatrixBased = false;
 		};
 

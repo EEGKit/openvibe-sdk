@@ -17,7 +17,7 @@ CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CStrin
 	: TKernelObject<ILogListener>(ctx)
 	  , m_eLogColor(LogColor_Default)
 	  , m_sApplicationName(sApplicationName), m_bTimeInSeconds(true)
-	  , m_ui64TimePrecision(3)
+	  , m_timePrecision(3)
 	  , m_bUseColor(true)
 {
 #if defined TARGET_OS_Windows
@@ -29,7 +29,7 @@ void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationM
 {
 	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogTimeInSecond}", true);
 	m_bLogWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogWithHexa}", false);
-	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_ConsoleLogTimePrecision}", 3);
+	m_timePrecision = rConfigurationManager.expandAsUInteger("${Kernel_ConsoleLogTimePrecision}", 3);
 	m_bUseColor         = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogUseColor}", true);
 }
 
@@ -63,7 +63,7 @@ void CLogListenerConsole::log(const time64 value)
 
 	if (m_bTimeInSeconds)
 	{
-		uint64_t l_ui64Precision = m_ui64TimePrecision;
+		uint64_t l_ui64Precision = m_timePrecision;
 		double l_f64Time         = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));

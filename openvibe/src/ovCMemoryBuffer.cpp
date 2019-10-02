@@ -30,7 +30,7 @@ namespace OpenViBE
 
 			uint8_t* m_buffer           = nullptr;
 			uint64_t m_size              = 0;
-			uint64_t m_ui64AllocatedSize = 0;
+			uint64_t m_allocatedSize = 0;
 		};
 	} // namespace
 } // namespace OpenViBE
@@ -46,12 +46,12 @@ CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
 	if (m_buffer)
 	{
 		m_size              = rMemoryBuffer.getSize();
-		m_ui64AllocatedSize = rMemoryBuffer.getSize();
+		m_allocatedSize = rMemoryBuffer.getSize();
 		if (rMemoryBuffer.getDirectPointer())
 		{
 			memcpy(m_buffer, rMemoryBuffer.getDirectPointer(), size_t(m_size)); // $$$
 		}
-		m_buffer[m_ui64AllocatedSize] = 0;
+		m_buffer[m_allocatedSize] = 0;
 	}
 }
 
@@ -61,12 +61,12 @@ CMemoryBufferImpl::CMemoryBufferImpl(const uint8_t* pMemoryBuffer, const uint64_
 	if (m_buffer)
 	{
 		m_size              = size;
-		m_ui64AllocatedSize = size;
+		m_allocatedSize = size;
 		if (pMemoryBuffer)
 		{
 			memcpy(m_buffer, pMemoryBuffer, size_t(m_size)); // $$$
 		}
-		m_buffer[m_ui64AllocatedSize] = 0;
+		m_buffer[m_allocatedSize] = 0;
 	}
 }
 
@@ -87,7 +87,7 @@ uint64_t CMemoryBufferImpl::getSize() const { return m_size; }
 
 bool CMemoryBufferImpl::reserve(const uint64_t ui64Size)
 {
-	if (ui64Size > m_ui64AllocatedSize)
+	if (ui64Size > m_allocatedSize)
 	{
 		uint8_t* l_pSavedBuffer = m_buffer;
 		m_buffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
@@ -95,23 +95,23 @@ bool CMemoryBufferImpl::reserve(const uint64_t ui64Size)
 		memcpy(m_buffer, l_pSavedBuffer, size_t(m_size)); // $$$
 
 		delete [] l_pSavedBuffer;
-		m_ui64AllocatedSize            = ui64Size;
-		m_buffer[m_ui64AllocatedSize] = 0;
+		m_allocatedSize            = ui64Size;
+		m_buffer[m_allocatedSize] = 0;
 	}
 	return true;
 }
 
 bool CMemoryBufferImpl::setSize(const uint64_t ui64Size, const bool bDiscard)
 {
-	if (ui64Size > m_ui64AllocatedSize)
+	if (ui64Size > m_allocatedSize)
 	{
 		uint8_t* l_pSavedBuffer = m_buffer;
 		m_buffer               = new uint8_t[size_t(ui64Size + 1)]; // $$$
 		if (!m_buffer) { return false; }
 		if (!bDiscard) { memcpy(m_buffer, l_pSavedBuffer, size_t(m_size)); }	// $$$
 		delete [] l_pSavedBuffer;
-		m_ui64AllocatedSize            = ui64Size;
-		m_buffer[m_ui64AllocatedSize] = 0;
+		m_allocatedSize            = ui64Size;
+		m_buffer[m_allocatedSize] = 0;
 	}
 	m_size = ui64Size;
 	return true;

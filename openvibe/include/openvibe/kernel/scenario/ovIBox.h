@@ -30,8 +30,8 @@ namespace OpenViBE
 		{
 		public:
 			EBoxEventMessageType m_Type;
-			int m_FirstIndex  = 0;
-			int m_SecondIndex = 0;
+			int m_FirstIdx  = 0;
+			int m_SecondIdx = 0;
 		};
 
 		/**

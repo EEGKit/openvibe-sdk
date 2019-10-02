@@ -39,10 +39,10 @@ namespace OpenViBE
 			bool loop();
 
 			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, uint32_t index);
-			uint64_t getCurrentTime() const { return m_ui64CurrentTime; }
+			uint64_t getCurrentTime() const { return m_currentTime; }
 			uint64_t getCurrentLateness() const;
-			uint64_t getFrequency() const { return m_ui64Frequency; }
-			uint64_t getStepDuration() const { return m_ui64StepDuration; }
+			uint64_t getFrequency() const { return m_frequency; }
+			uint64_t getStepDuration() const { return m_stepDuration; }
 			double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
 			double getFastForwardMaximumFactor() const;
 
@@ -55,13 +55,13 @@ namespace OpenViBE
 			CPlayer& m_rPlayer;
 			CIdentifier m_oScenarioIdentifier = OV_UndefinedIdentifier;
 			IScenario* m_scenario            = nullptr;
-			uint64_t m_ui64Steps              = 0;
-			uint64_t m_ui64Frequency          = 0;
-			uint64_t m_ui64StepDuration       = 0;
-			uint64_t m_ui64CurrentTime        = 0;
+			uint64_t m_steps              = 0;
+			uint64_t m_frequency          = 0;
+			uint64_t m_stepDuration       = 0;
+			uint64_t m_currentTime        = 0;
 
-			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_vSimulatedBox;
-			std::map<CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
+			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_simulatedBoxes;
+			std::map<CIdentifier, System::CChrono> m_simulatedBoxChronos;
 			std::map<CIdentifier, std::map<uint32_t, std::list<CChunk>>> m_vSimulatedBoxInput;
 
 		private:
