@@ -31,9 +31,9 @@ CNameValuePairList& CNameValuePairList::operator=(const CNameValuePairList& rNam
 	return *this;
 }
 
-bool CNameValuePairList::setValue(const CString& name, const CString& rValue)
+bool CNameValuePairList::setValue(const CString& name, const CString& value)
 {
-	m_pNameValuePairListImpl->m_Map[name] = rValue;
+	m_pNameValuePairListImpl->m_Map[name] = value;
 	return true;
 }
 
@@ -56,14 +56,14 @@ bool CNameValuePairList::setValue(const CString& name, const bool value)
 	return true;
 }
 
-bool CNameValuePairList::getValue(const CString& name, CString& rValue) const
+bool CNameValuePairList::getValue(const CString& name, CString& value) const
 {
 	if (m_pNameValuePairListImpl->m_Map.find(name) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
-	rValue = m_pNameValuePairListImpl->m_Map[name];
+	value = m_pNameValuePairListImpl->m_Map[name];
 	return true;
 }
 
-bool CNameValuePairList::getValue(const CString& name, double& rValue) const
+bool CNameValuePairList::getValue(const CString& name, double& value) const
 {
 	if (m_pNameValuePairListImpl->m_Map.find(name) == m_pNameValuePairListImpl->m_Map.end()) { return false; }
 	double temp;
@@ -71,7 +71,7 @@ bool CNameValuePairList::getValue(const CString& name, double& rValue) const
 	try { temp = std::stod(m_pNameValuePairListImpl->m_Map[name].toASCIIString()); }
 	catch (const std::exception&) { return false; }
 
-	rValue = temp;
+	value = temp;
 	return true;
 }
 

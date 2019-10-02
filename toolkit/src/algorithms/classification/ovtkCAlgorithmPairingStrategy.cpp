@@ -9,25 +9,25 @@ using namespace Plugins;
 
 using namespace OpenViBEToolkit;
 
-static std::map<uint64_t, fClassifierComparison> comparisionFunctionMap;
+static std::map<uint64_t, fClassifierComparison> comparisionFunctions;
 
-void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& classID, fClassifierComparison comparision) { comparisionFunctionMap[classID.toUInteger()] = comparision; }
+void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& classID, fClassifierComparison comparision) { comparisionFunctions[classID.toUInteger()] = comparision; }
 
 fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& classID)
 {
-	if (comparisionFunctionMap.count(classID.toUInteger()) == 0) { return nullptr; }
-	return comparisionFunctionMap[classID.toUInteger()];
+	if (comparisionFunctions.count(classID.toUInteger()) == 0) { return nullptr; }
+	return comparisionFunctions[classID.toUInteger()];
 }
 
 bool CAlgorithmPairingStrategy::process()
 {
 	if (this->isInputTriggerActive(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture))
 	{
-		TParameterHandler<CIdentifier*> ip_pClassifierID(this->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
+		TParameterHandler<CIdentifier*> ip_classifierID(this->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
 		TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
 
 		const uint64_t nClass          = uint64_t(ip_pClassCount);
-		const CIdentifier classifierID = *static_cast<CIdentifier*>(ip_pClassifierID);
+		const CIdentifier classifierID = *static_cast<CIdentifier*>(ip_classifierID);
 		if (this->designArchitecture(classifierID, uint32_t(nClass))) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{

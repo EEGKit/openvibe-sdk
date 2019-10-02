@@ -102,9 +102,8 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
 	const std::string serverName = argv[1];
-	char* end;
-	const uint32_t port = strtol(argv[2], &end, 10);
-	uint32_t packetCount = strtol(argv[3], &end, 10);;
+	int portNumber               = std::atoi(argv[2]);
+	uint32_t packetCount         = uint32_t(std::atoi(argv[3]));
 
 	// test asynchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -117,27 +116,27 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	Socket::IConnectionClient* client = Socket::createConnectionClient();
 
 	// launch server on background thread
-	std::thread serverThread(onServerListening, port, packetCount);
+	std::thread serverThread(onServerListening, portNumber, packetCount);
 
 	// wait until the server is started to connect clients
 	std::unique_lock<std::mutex> lock(g_ServerStartedMutex);
 	g_ServerStartedCondVar.wait(lock, []() { return g_ServerStarted; });
 
-	client->connect(serverName.c_str(), port);
+	client->connect(serverName.c_str(), portNumber);
 
 	// transmit data
 	// transmission follows the protocol: data size transmission + data transmission
 	const std::string baseData = "Data packet index: ";
 
+	char dataBuffer[32];
 	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
-		size_t size = dataString.size();
-		char dataBuffer[32];
-		std::copy(dataString.begin(), dataString.end(), dataBuffer);
+		std::strcpy(dataBuffer, dataString.c_str());
+		uint32_t dataSize = uint32_t(dataString.size());
 
-		sendData(client, &size, sizeof(size));
-		sendData(client, dataBuffer, size);
+		sendData(client, &dataSize, sizeof(dataSize));
+		sendData(client, dataBuffer, dataSize);
 	}
 
 	serverThread.join(); // wait until the end of the thread

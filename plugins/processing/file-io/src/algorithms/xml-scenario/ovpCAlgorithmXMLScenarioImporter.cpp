@@ -53,7 +53,7 @@ namespace
 	class _AutoBind_
 	{
 	public:
-		explicit _AutoBind_(const std::string& sValue) : m_value(sValue) { }
+		explicit _AutoBind_(const std::string& value) : m_value(value) { }
 		operator CString() { return CString(m_value.c_str()); }
 
 		operator CIdentifier()
