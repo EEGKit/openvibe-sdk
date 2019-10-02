@@ -41,11 +41,11 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint32_t m_ui32Status        = 0;
+			uint32_t m_status        = 0;
 			uint32_t m_dimensionIdx      = 0;
 			uint32_t m_dimensionEntryIdx = 0;
 			//			uint32_t m_ui32DimensionEntryIndexUnit = 0;
-			uint64_t m_ui64MatrixBufferSize = 0;
+			uint64_t m_matrixBufferSize = 0;
 		};
 
 		class CStreamedMatrixDecoderDesc : public CEBMLBaseDecoderDesc

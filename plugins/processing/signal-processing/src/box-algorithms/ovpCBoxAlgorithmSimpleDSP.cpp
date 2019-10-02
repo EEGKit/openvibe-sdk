@@ -252,30 +252,30 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 		//The equation is not a special one, we have to execute the whole stack of function calls
 		case OP_USERDEF:
 			//for every samples
-			for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++)
+			for (uint64_t i = 0; i < m_matrixBufferSize; i++)
 			{
 				m_f64Variable = buffer[i];
 				m_pMatrixBuffer[i] = m_Parser->executeEquation();
 			}
 			break;
-		case OP_X2: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] * buffer[i]; } break;
-		case OP_NONE: System::Memory::copy(m_pMatrixBuffer, buffer, m_ui64MatrixBufferSize * sizeof(double)); break;
-		case OP_ABS: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = abs(buffer[i]); } break;
-		case OP_ACOS: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = acos(buffer[i]); } break;
-		case OP_ASIN: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = asin(buffer[i]); } break;
-		case OP_ATAN: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = atan(buffer[i]); } break;
-		case OP_CEIL: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = ceil(buffer[i]); } break;
-		case OP_COS: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = cos(buffer[i]); } break;
-		case OP_EXP: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = exp(buffer[i]); } break;
-		case OP_FLOOR: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = floor(buffer[i]); } break;
-		case OP_LOG: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = log(buffer[i]); } break;
-		case OP_LOG10: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = log10(buffer[i]); } break;
-		case OP_SIN: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = sin(buffer[i]); } break;
-		case OP_SQRT: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = sqrt(buffer[i]); } break;
-		case OP_TAN: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = tan(buffer[i]); } break;
-		case OP_ADD: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] + m_SpecialEquationParam; } break;
-		case OP_MUL: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] * m_SpecialEquationParam; } break;
-		case OP_DIV: for (uint64_t i = 0; i < m_ui64MatrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] / m_SpecialEquationParam; } break;
+		case OP_X2: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] * buffer[i]; } break;
+		case OP_NONE: System::Memory::copy(m_pMatrixBuffer, buffer, m_matrixBufferSize * sizeof(double)); break;
+		case OP_ABS: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = abs(buffer[i]); } break;
+		case OP_ACOS: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = acos(buffer[i]); } break;
+		case OP_ASIN: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = asin(buffer[i]); } break;
+		case OP_ATAN: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = atan(buffer[i]); } break;
+		case OP_CEIL: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = ceil(buffer[i]); } break;
+		case OP_COS: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = cos(buffer[i]); } break;
+		case OP_EXP: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = exp(buffer[i]); } break;
+		case OP_FLOOR: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = floor(buffer[i]); } break;
+		case OP_LOG: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = log(buffer[i]); } break;
+		case OP_LOG10: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = log10(buffer[i]); } break;
+		case OP_SIN: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = sin(buffer[i]); } break;
+		case OP_SQRT: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = sqrt(buffer[i]); } break;
+		case OP_TAN: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = tan(buffer[i]); } break;
+		case OP_ADD: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] + m_SpecialEquationParam; } break;
+		case OP_MUL: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] * m_SpecialEquationParam; } break;
+		case OP_DIV: for (uint64_t i = 0; i < m_matrixBufferSize; i++) { m_pMatrixBuffer[i] = buffer[i] / m_SpecialEquationParam; } break;
 	}
 #endif
 }

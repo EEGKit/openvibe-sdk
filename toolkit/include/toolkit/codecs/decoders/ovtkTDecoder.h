@@ -18,7 +18,7 @@ namespace OpenViBEToolkit
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
-		using T::m_ui32ConnectorIndex;
+		using T::m_connectorIdx;
 
 		virtual void setInputChunk(const OpenViBE::IMemoryBuffer* pInputChunkMemoryBuffer) { m_pInputMemoryBuffer = pInputChunkMemoryBuffer; }
 
@@ -42,9 +42,9 @@ namespace OpenViBEToolkit
 		*/
 		virtual bool decode(uint32_t chunkIdx, const bool markInputAsDeprecated = true)
 		{
-			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, chunkIdx));
+			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_connectorIdx, chunkIdx));
 			if (! m_pCodec->process()) return false;
-			if (markInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, chunkIdx);
+			if (markInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_connectorIdx, chunkIdx);
 			return true;
 		}
 

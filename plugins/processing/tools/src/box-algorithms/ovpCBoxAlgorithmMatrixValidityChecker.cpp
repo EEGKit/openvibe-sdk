@@ -15,11 +15,11 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 
 	uint64_t logLevel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_eLogLevel               = ELogLevel(logLevel);
-	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_validityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (boxContext.getSettingCount() == 1
 	)
 	{
-		m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger();
+		m_validityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger();
 	} // note that for boxes with one setting, we fallback to the old behavior 
 
 	OV_ERROR_UNLESS_KRF(boxContext.getSettingCount() <= 1 || boxContext.getInputCount() == boxContext.getOutputCount(),
@@ -83,7 +83,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 			{
 				if (nSetting > 1) { m_vStreamEncoder[i].encodeHeader(); }
 
-				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
+				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
 					m_nTotalInterpolatedSample[i] = 0;
 					m_nTotalInterpolatedChunk[i]  = 0;
@@ -94,7 +94,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 			if (m_vStreamDecoder[i].isBufferReceived())
 			{
 				// log warning
-				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
+				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
@@ -103,7 +103,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 				}
 					// stop player
-				else if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
+				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
@@ -115,7 +115,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 				}
 					// interpolate
-				else if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
+				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
 					const uint32_t nChannel      = l_pMatrix->getDimensionSize(0);
 					const uint32_t nSample       = l_pMatrix->getDimensionSize(1);
@@ -160,7 +160,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 						m_nTotalInterpolatedChunk[i]  = 0;
 					}
 				}
-				else { OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]"); }
+				else { OV_WARNING_K("Invalid action type [" << m_validityCheckerType << "]"); }
 
 				if (nSetting > 1) { m_vStreamEncoder[i].encodeBuffer(); }
 			}

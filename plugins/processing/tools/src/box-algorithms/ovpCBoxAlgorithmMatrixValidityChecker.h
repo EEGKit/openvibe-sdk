@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamDecoder;
 			std::vector<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamEncoder;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
-			uint64_t m_ui64ValidityCheckerType      = 0;
+			uint64_t m_validityCheckerType      = 0;
 
 			std::vector<uint32_t> m_nTotalInterpolatedSample;
 			std::vector<uint32_t> m_nTotalInterpolatedChunk;

@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			bool validateXMLAgainstSchema(const char* validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
 
 			OpenViBE::Plugins::IAlgorithmScenarioImporterContext* m_pContext = nullptr;
-			uint32_t m_ui32Status                                            = 0;
+			uint32_t m_status                                            = 0;
 			XML::IReader* m_pReader                                          = nullptr;
 			std::stack<std::string> m_vNodes;
 		};

@@ -67,7 +67,7 @@ namespace OpenViBEToolkit
 
 		// Every codec has an algorithm
 		OpenViBE::Kernel::IAlgorithmProxy* m_pCodec = nullptr;
-		uint32_t m_ui32ConnectorIndex               = 0;//one codec per connector
+		uint32_t m_connectorIdx               = 0;//one codec per connector
 
 	public:
 		TCodec() : m_pBoxAlgorithm(nullptr) { }
@@ -80,7 +80,7 @@ namespace OpenViBEToolkit
 			if (m_pBoxAlgorithm == nullptr)
 			{
 				m_pBoxAlgorithm      = &rBoxAlgorithm;
-				m_ui32ConnectorIndex = connectorIndex;//TODO : can we check the box static context and verify the requested connector exist?
+				m_connectorIdx = connectorIndex;//TODO : can we check the box static context and verify the requested connector exist?
 			}
 			else { return false; }
 			// we call the initialization process specific to each codec

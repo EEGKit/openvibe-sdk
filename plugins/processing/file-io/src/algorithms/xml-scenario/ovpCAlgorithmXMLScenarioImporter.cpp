@@ -118,93 +118,93 @@ void CAlgorithmXMLScenarioImporter::openChild(const char* name, const char** /*a
 
 	std::string& l_sTop = m_vNodes.top();
 
-	if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingNothing)
+	if (l_sTop == "OpenViBE-Scenario" && m_status == Status_ParsingNothing)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingScenarioAttribute;
+		m_status = Status_ParsingScenarioAttribute;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute);
 	}
-	else if (l_sTop == "Setting" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Setting" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingScenarioSetting;
+		m_status = Status_ParsingScenarioSetting;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting);
 	}
-	else if (l_sTop == "Input" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Input" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingScenarioInput;
+		m_status = Status_ParsingScenarioInput;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input);
 	}
-	else if (l_sTop == "Output" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Output" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingScenarioOutput;
+		m_status = Status_ParsingScenarioOutput;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output);
 	}
 
-	else if (l_sTop == "Box" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Box" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingBox;
+		m_status = Status_ParsingBox;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Box);
 	}
-	else if (l_sTop == "Input" && m_ui32Status == Status_ParsingBox)
+	else if (l_sTop == "Input" && m_status == Status_ParsingBox)
 	{
-		m_ui32Status = Status_ParsingBoxInput;
+		m_status = Status_ParsingBoxInput;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input);
 	}
-	else if (l_sTop == "Output" && m_ui32Status == Status_ParsingBox)
+	else if (l_sTop == "Output" && m_status == Status_ParsingBox)
 	{
-		m_ui32Status = Status_ParsingBoxOutput;
+		m_status = Status_ParsingBoxOutput;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output);
 	}
-	else if (l_sTop == "Setting" && m_ui32Status == Status_ParsingBox)
+	else if (l_sTop == "Setting" && m_status == Status_ParsingBox)
 	{
-		m_ui32Status = Status_ParsingBoxSetting;
+		m_status = Status_ParsingBoxSetting;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting);
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingBox)
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingBox)
 	{
-		m_ui32Status = Status_ParsingBoxAttribute;
+		m_status = Status_ParsingBoxAttribute;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute);
 	}
 
-	else if (l_sTop == "Comment" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Comment" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingComment;
+		m_status = Status_ParsingComment;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Comment);
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingComment)
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingComment)
 	{
-		m_ui32Status = Status_ParsingCommentAttribute;
+		m_status = Status_ParsingCommentAttribute;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute);
 	}
 
-	else if (l_sTop == "Entry" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Entry" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingMetadataEntry;
+		m_status = Status_ParsingMetadataEntry;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry);
 	}
 
-	else if (l_sTop == "Link" && m_ui32Status == Status_ParsingScenario)
+	else if (l_sTop == "Link" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingLink;
+		m_status = Status_ParsingLink;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link);
 	}
-	else if (l_sTop == "Source" && m_ui32Status == Status_ParsingLink)
+	else if (l_sTop == "Source" && m_status == Status_ParsingLink)
 	{
-		m_ui32Status = Status_ParsingLinkSource;
+		m_status = Status_ParsingLinkSource;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source);
 	}
-	else if (l_sTop == "Target" && m_ui32Status == Status_ParsingLink)
+	else if (l_sTop == "Target" && m_status == Status_ParsingLink)
 	{
-		m_ui32Status = Status_ParsingLinkTarget;
+		m_status = Status_ParsingLinkTarget;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target);
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingLink)
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingLink)
 	{
-		m_ui32Status = Status_ParsingLinkAttribute;
+		m_status = Status_ParsingLinkAttribute;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute);
 	}
 }
@@ -213,7 +213,7 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 {
 	std::string& l_sTop = m_vNodes.top();
 
-	switch (m_ui32Status)
+	switch (m_status)
 	{
 		case Status_ParsingBox:
 			if (l_sTop == "Identifier") { m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier, _AutoBind_(sData)); }
@@ -317,94 +317,94 @@ void CAlgorithmXMLScenarioImporter::closeChild()
 	std::string& l_sTop = m_vNodes.top();
 
 	if (false) { }
-	if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingScenario)
+	if (l_sTop == "OpenViBE-Scenario" && m_status == Status_ParsingScenario)
 	{
-		m_ui32Status = Status_ParsingNothing;
+		m_status = Status_ParsingNothing;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Setting" && m_ui32Status == Status_ParsingScenarioSetting)
+	else if (l_sTop == "Setting" && m_status == Status_ParsingScenarioSetting)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Input" && m_ui32Status == Status_ParsingScenarioInput)
+	else if (l_sTop == "Input" && m_status == Status_ParsingScenarioInput)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Output" && m_ui32Status == Status_ParsingScenarioOutput)
+	else if (l_sTop == "Output" && m_status == Status_ParsingScenarioOutput)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingScenarioAttribute)
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingScenarioAttribute)
 	{
-		m_ui32Status = Status_ParsingScenario;
-		m_pContext->processStop();
-	}
-
-	else if (l_sTop == "Box" && m_ui32Status == Status_ParsingBox)
-	{
-		m_ui32Status = Status_ParsingScenario;
-		m_pContext->processStop();
-	}
-	else if (l_sTop == "Input" && m_ui32Status == Status_ParsingBoxInput)
-	{
-		m_ui32Status = Status_ParsingBox;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
 
-	else if (l_sTop == "Output" && m_ui32Status == Status_ParsingBoxOutput)
+	else if (l_sTop == "Box" && m_status == Status_ParsingBox)
 	{
-		m_ui32Status = Status_ParsingBox;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Setting" && m_ui32Status == Status_ParsingBoxSetting)
+	else if (l_sTop == "Input" && m_status == Status_ParsingBoxInput)
 	{
-		m_ui32Status = Status_ParsingBox;
-		m_pContext->processStop();
-	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingBoxAttribute)
-	{
-		m_ui32Status = Status_ParsingBox;
+		m_status = Status_ParsingBox;
 		m_pContext->processStop();
 	}
 
-	else if (l_sTop == "Comment" && m_ui32Status == Status_ParsingComment)
+	else if (l_sTop == "Output" && m_status == Status_ParsingBoxOutput)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingBox;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingCommentAttribute)
+	else if (l_sTop == "Setting" && m_status == Status_ParsingBoxSetting)
 	{
-		m_ui32Status = Status_ParsingComment;
+		m_status = Status_ParsingBox;
+		m_pContext->processStop();
+	}
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingBoxAttribute)
+	{
+		m_status = Status_ParsingBox;
 		m_pContext->processStop();
 	}
 
-	else if (l_sTop == "Entry" && m_ui32Status == Status_ParsingMetadataEntry)
+	else if (l_sTop == "Comment" && m_status == Status_ParsingComment)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingScenario;
+		m_pContext->processStop();
+	}
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingCommentAttribute)
+	{
+		m_status = Status_ParsingComment;
 		m_pContext->processStop();
 	}
 
-	else if (l_sTop == "Link" && m_ui32Status == Status_ParsingLink)
+	else if (l_sTop == "Entry" && m_status == Status_ParsingMetadataEntry)
 	{
-		m_ui32Status = Status_ParsingScenario;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Source" && m_ui32Status == Status_ParsingLinkSource)
+
+	else if (l_sTop == "Link" && m_status == Status_ParsingLink)
 	{
-		m_ui32Status = Status_ParsingLink;
+		m_status = Status_ParsingScenario;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Target" && m_ui32Status == Status_ParsingLinkTarget)
+	else if (l_sTop == "Source" && m_status == Status_ParsingLinkSource)
 	{
-		m_ui32Status = Status_ParsingLink;
+		m_status = Status_ParsingLink;
 		m_pContext->processStop();
 	}
-	else if (l_sTop == "Attribute" && m_ui32Status == Status_ParsingLinkAttribute)
+	else if (l_sTop == "Target" && m_status == Status_ParsingLinkTarget)
 	{
-		m_ui32Status = Status_ParsingLink;
+		m_status = Status_ParsingLink;
+		m_pContext->processStop();
+	}
+	else if (l_sTop == "Attribute" && m_status == Status_ParsingLinkAttribute)
+	{
+		m_status = Status_ParsingLink;
 		m_pContext->processStop();
 	}
 

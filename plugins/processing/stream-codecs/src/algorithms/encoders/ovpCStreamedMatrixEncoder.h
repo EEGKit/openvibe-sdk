@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			uint64_t m_ui64MatrixBufferSize = 0;
+			uint64_t m_matrixBufferSize = 0;
 		};
 
 		class CStreamedMatrixEncoderDesc : public CEBMLBaseEncoderDesc
