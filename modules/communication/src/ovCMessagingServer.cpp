@@ -1,10 +1,6 @@
 #include "ovCMessagingServer.h"
 #include "ovCMessagingImpl.hpp"
 
-#include <array>
-#include <algorithm>
-#include <iterator>
-
 using namespace Communication;
 
 MessagingServer::~MessagingServer()

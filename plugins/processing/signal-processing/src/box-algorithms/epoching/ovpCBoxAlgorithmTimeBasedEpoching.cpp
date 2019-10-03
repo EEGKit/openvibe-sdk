@@ -3,7 +3,6 @@
 #include <system/ovCMemory.h>
 
 #include <openvibe/ovTimeArithmetics.h>
-#include <cstdio>
 #include <iostream>
 #include <algorithm>
 

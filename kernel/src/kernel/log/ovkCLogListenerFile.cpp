@@ -1,6 +1,5 @@
 #include "ovkCLogListenerFile.h"
 
-#include <cstdio>
 #include <sstream>
 #include <iostream>
 

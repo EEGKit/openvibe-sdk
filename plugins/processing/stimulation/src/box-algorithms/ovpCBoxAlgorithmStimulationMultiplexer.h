@@ -5,7 +5,6 @@
 #include <toolkit/ovtk_all.h>
 #include <vector>
 #include <map>
-#include <cstdio>
 
 namespace OpenViBEPlugins
 {

@@ -5,9 +5,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <cstdio>
-#include <cstring>
-#include <cstdlib>
-#include <vector>
 #include <iostream>
 
 //#define OV_DEBUG_CLASSIFIER_LISTENER

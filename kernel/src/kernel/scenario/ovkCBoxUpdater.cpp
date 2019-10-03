@@ -2,9 +2,6 @@
 
 #include "ovkCScenario.h"
 #include "ovkCBoxUpdater.h"
-#include "../ovkCObjectVisitorContext.h"
-
-#include "ovkCLink.h"
 #include "ovkTBox.hpp"
 
 using namespace std;
@@ -58,20 +55,16 @@ bool CBoxUpdater::initialize()
 		metaboxId.fromString(metaboxID);
 		CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-		OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""),
-							"Metabox scenario is not available for " << m_SourceBox->getName(),
-							ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""), "Metabox scenario is not available for " << m_SourceBox->getName(), ErrorType::BadCall);
 
 
 		// We are going to copy the template scenario, flatten it and then copy all
 		// Note that copy constructor for IScenario does not exist
 		CIdentifier metaboxScenarioTemplateIdentifier;
 
-		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport,
-																			 metaboxScenarioPath);
+		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport, metaboxScenarioPath);
 
-		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(
-			metaboxScenarioTemplateIdentifier)));
+		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(metaboxScenarioTemplateIdentifier)));
 		metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
 		m_KernelBox = metaboxScenarioInstance;
 	}
@@ -112,7 +105,7 @@ bool CBoxUpdater::initialize()
 
 	m_IsUpdateRequired = false;
 
-	bool isHashDifferent = m_Scenario->isBoxOutdated(m_SourceBox->getIdentifier());
+	const bool isHashDifferent = m_Scenario->isBoxOutdated(m_SourceBox->getIdentifier());
 
 	if (this->flaggedForManualUpdate())
 	{
@@ -135,7 +128,7 @@ bool CBoxUpdater::initialize()
 }
 
 
-bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
+bool CBoxUpdater::checkForSupportedTypesToBeUpdated() const
 {
 	//check for supported inputs diff
 	for (auto& type : m_SourceBox->getInputSupportTypes()) { if (!m_KernelBox->hasInputSupport(type)) { return true; } }
@@ -147,7 +140,7 @@ bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 	return false;
 }
 
-bool CBoxUpdater::checkForSupportedIOSAttributesToBeUpdated()
+bool CBoxUpdater::checkForSupportedIOSAttributesToBeUpdated() const
 {
 	// check for attributes
 	for (auto& attr : UPDATABLE_ATTRIBUTES)
@@ -293,8 +286,7 @@ bool CBoxUpdater::updateInterfacors(EBoxInterfacorType interfacorType)
 	return updated;
 }
 
-uint32_t CBoxUpdater::getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
-										 const CString& name)
+uint32_t CBoxUpdater::getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name)
 {
 	uint32_t index = OV_Value_UndefinedIndexUInt;
 	if (identifier != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(interfacorType, identifier))

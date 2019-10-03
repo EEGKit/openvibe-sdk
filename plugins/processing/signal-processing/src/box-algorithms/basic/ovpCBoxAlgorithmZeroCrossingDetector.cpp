@@ -25,8 +25,6 @@
 #include <openvibe/ovTimeArithmetics.h>
 
 #include <vector>
-#include <algorithm>
-#include <cstdio>
 #include <iostream>
 
 using namespace OpenViBE;

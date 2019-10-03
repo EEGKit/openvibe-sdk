@@ -84,9 +84,9 @@ bool CAlgorithmScenarioExporter::process()
 	OV_ERROR_UNLESS_KRF(scenario, "Input scenario is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 
 	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
-	IMemoryBuffer* l_pMemoryBuffer = op_pMemoryBuffer;
+	IMemoryBuffer* memoryBuffer = op_pMemoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(l_pMemoryBuffer, "Output memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
+	OV_ERROR_UNLESS_KRF(memoryBuffer, "Output memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 
 	this->exportStart(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 	this->exportString(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("2"));
@@ -163,8 +163,8 @@ bool CAlgorithmScenarioExporter::process()
 
 	this->exportStop(tmpBuffer);
 
-	l_pMemoryBuffer->setSize(0, true);
-	l_pMemoryBuffer->append(tmpBuffer);
+	memoryBuffer->setSize(0, true);
+	memoryBuffer->append(tmpBuffer);
 
 	return true;
 }
@@ -338,24 +338,24 @@ bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& memoryBuffer, c
 bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& memoryBuffer, const IScenario& scenario, const uint32_t index) const
 {
 	CIdentifier settingID;
-	CIdentifier l_oSettingTypeID;
-	CString l_sSettingName;
-	CString l_sDefaultValue;
-	CString l_sValue;
+	CIdentifier settingTypeID;
+	CString settingName;
+	CString defaultValue;
+	CString value;
 
 
-	scenario.getSettingName(index, l_sSettingName);
+	scenario.getSettingName(index, settingName);
 	scenario.getInterfacorIdentifier(Setting, index, settingID);
-	scenario.getSettingType(index, l_oSettingTypeID);
-	scenario.getSettingValue(index, l_sValue);
-	scenario.getSettingDefaultValue(index, l_sDefaultValue);
+	scenario.getSettingType(index, settingTypeID);
+	scenario.getSettingValue(index, value);
+	scenario.getSettingDefaultValue(index, defaultValue);
 
 	m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting);
 	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier, settingID);
-	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, l_oSettingTypeID);
-	m_parent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name, l_sSettingName);
-	m_parent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue, l_sDefaultValue);
-	m_parent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Value, l_sValue);
+	m_parent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, settingTypeID);
+	m_parent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name, settingName);
+	m_parent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue, defaultValue);
+	m_parent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Value, value);
 	m_parent.exportStop(memoryBuffer);
 
 	return true;

@@ -4,7 +4,6 @@
 
 #include "plugins/ovkCPluginModule.h"
 
-#include <string>
 #include <algorithm>
 
 using namespace std;
@@ -23,7 +22,6 @@ IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& classID)
 	IObject* res = nullptr;
 
 	create(classID, OV_ClassId_Kernel_Plugins_PluginModule, res, Kernel::CPluginModule);
-
 	create(classID, OV_ClassId_Kernel_Configurable, res, Kernel::CConfigurable);
 
 	OV_ERROR_UNLESS_KRN(res, "Unable to allocate object with class id " << classID.toString(), ErrorType::BadAlloc);

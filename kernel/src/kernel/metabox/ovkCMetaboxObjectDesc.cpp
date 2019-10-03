@@ -62,13 +62,13 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 
 bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& prototype) const
 {
-	for (auto& input : m_Inputs) { prototype.addInput(input.m_sName, input.m_typeID, input.m_oIdentifier); }
+	for (auto& input : m_Inputs) { prototype.addInput(input.m_name, input.m_typeID, input.m_id); }
 
-	for (auto& output : m_Outputs) { prototype.addOutput(output.m_sName, output.m_typeID, output.m_oIdentifier); }
+	for (auto& output : m_Outputs) { prototype.addOutput(output.m_name, output.m_typeID, output.m_id); }
 
 	for (auto& setting : m_Settings)
 	{
-		prototype.addSetting(setting.m_sName, setting.m_typeID, setting.m_sDefaultValue, false, setting.m_oIdentifier);
+		prototype.addSetting(setting.m_name, setting.m_typeID, setting.m_defaultValue, false, setting.m_id);
 	}
 
 	return true;

@@ -4,7 +4,6 @@
 #include <chrono>
 #include <cstdlib>
 #include <stdlib.h>
-#include <cstring>
 #include <random>
 #include <thread>
 #include <algorithm>
@@ -31,9 +30,6 @@ using namespace Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace Tools;
-
-CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
-	: m_AcceptTimeout(10ULL << 32) {}
 
 uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 {

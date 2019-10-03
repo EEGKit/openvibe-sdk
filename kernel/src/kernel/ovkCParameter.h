@@ -3,9 +3,7 @@
 #include "ovkTKernelObject.h"
 #include "ovkTParameter.h"
 
-#include <iostream>
 #include <cstring>
-#include <cstdlib>
 
 namespace OpenViBE
 {

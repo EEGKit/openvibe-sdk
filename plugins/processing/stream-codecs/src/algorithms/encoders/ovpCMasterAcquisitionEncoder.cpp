@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "ovpCMasterAcquisitionEncoder.h"
 #include "../../algorithms/encoders/ovpCAcquisitionEncoder.h"
 #include "../../algorithms/encoders/ovpCExperimentInformationEncoder.h"

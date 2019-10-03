@@ -14,7 +14,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <cstdio>
 #include <system/ovCMath.h>
 #include <system/ovCMemory.h>
 #include <memory>
@@ -55,14 +54,14 @@ namespace
 		CInterfacor() { }
 
 		CInterfacor(const CInterfacor& other)
-			: m_name(other.m_name), m_typeID(other.m_typeID), m_oIdentifier(other.m_oIdentifier), m_bDeprecated(other.m_bDeprecated) { }
+			: m_name(other.m_name), m_typeID(other.m_typeID), m_id(other.m_id), m_bDeprecated(other.m_bDeprecated) { }
 
 		CInterfacor(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id)
-			: m_name(name), m_typeID(idType), m_oIdentifier(id) {}
+			: m_name(name), m_typeID(idType), m_id(id) {}
 
 		OpenViBE::CString m_name;
 		OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
-		OpenViBE::CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
+		OpenViBE::CIdentifier m_id     = OV_UndefinedIdentifier;
 		bool m_bDeprecated                      = false;
 	};
 
@@ -81,14 +80,14 @@ namespace
 	public:
 		CSetting() { }
 
-		CSetting(const CSetting& s) : CInterfacor(s), m_sDefaultValue(s.m_sDefaultValue), m_sValue(s.m_sValue), m_bMod(s.m_bMod) { this->m_bDeprecated = false; }
+		CSetting(const CSetting& s) : CInterfacor(s), m_defaultValue(s.m_defaultValue), m_value(s.m_value), m_bMod(s.m_bMod) { this->m_bDeprecated = false; }
 
 		CSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id, const OpenViBE::CString& defaultValue,
 				 const bool modifiable)
-			: CInterfacor(name, idType, id), m_sDefaultValue(defaultValue), m_sValue(defaultValue), m_bMod(modifiable) { }
+			: CInterfacor(name, idType, id), m_defaultValue(defaultValue), m_value(defaultValue), m_bMod(modifiable) { }
 
-		OpenViBE::CString m_sDefaultValue;
-		OpenViBE::CString m_sValue;
+		OpenViBE::CString m_defaultValue;
+		OpenViBE::CString m_value;
 		bool m_bMod = false;
 	};
 } // namespace
@@ -413,7 +412,7 @@ namespace OpenViBE
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				identifier = m_interfacors.at(interfacorType)[index]->m_oIdentifier;
+				identifier = m_interfacors.at(interfacorType)[index]->m_id;
 				return true;
 			}
 
@@ -735,7 +734,7 @@ namespace OpenViBE
 					for (const auto& link : scenarioLinks) { m_ownerScenario->setScenarioInputLink(link.first, link.second.first, link.second.second - 1); }
 				}
 
-				const CIdentifier toBeRemovedId = m_interfacors[Input][index]->m_oIdentifier;
+				const CIdentifier toBeRemovedId = m_interfacors[Input][index]->m_id;
 				CString toBeRemovedName         = m_interfacors[Input][index]->m_name;
 
 				// Erases actual input
@@ -840,7 +839,7 @@ namespace OpenViBE
 						for (const auto& link : scenarioLinks) { m_ownerScenario->setScenarioOutputLink(link.first, link.second.first, link.second.second - 1); }
 					}
 				}
-				const CIdentifier toBeRemovedId = m_interfacors.at(Output)[index]->m_oIdentifier;
+				const CIdentifier toBeRemovedId = m_interfacors.at(Output)[index]->m_id;
 				CString toBeRemovedName         = m_interfacors.at(Output)[index]->m_name;
 
 				// Erases actual output
@@ -995,10 +994,10 @@ namespace OpenViBE
 				CSetting s;
 				s.m_name            = name;
 				s.m_typeID = typeID;
-				s.m_sDefaultValue   = l_sValue;
-				s.m_sValue          = l_sValue;
+				s.m_defaultValue   = l_sValue;
+				s.m_value          = l_sValue;
 				s.m_bMod            = bModifiability;
-				s.m_oIdentifier     = identifier;
+				s.m_id     = identifier;
 
 				const uint32_t l_ui32Idx = index;
 
@@ -1022,12 +1021,12 @@ namespace OpenViBE
 					l_ui32InsertLocation = index;
 				}
 
-				if (s.m_oIdentifier != OV_UndefinedIdentifier)
+				if (s.m_id != OV_UndefinedIdentifier)
 				{
-					// add access by CIdentifier key if defined so that size differs from m_vSetting
-					m_interfacorIDToIdx[Setting][s.m_oIdentifier] = l_ui32InsertLocation;
+					// add access by CIdentifier key if defined so that size differs from m_settings
+					m_interfacorIDToIdx[Setting][s.m_id] = l_ui32InsertLocation;
 				}
-				// add access by name key (always done so that synchronized with m_vSetting
+				// add access by name key (always done so that synchronized with m_settings
 				const CString newName                                = this->getUnusedName(m_interfacorNameToIdx.at(Setting), s.m_name);
 				m_interfacors[Setting][l_ui32InsertLocation]->m_name = newName;
 				m_interfacorNameToIdx[Setting][newName]              = l_ui32InsertLocation;
@@ -1040,7 +1039,7 @@ namespace OpenViBE
 
 				this->getLogManager() << LogLevel_Debug
 						<< "Pushed '" << m_interfacors.at(Setting)[l_ui32InsertLocation]->m_name << "' : '"
-						<< std::static_pointer_cast<CSetting>(m_interfacors.at(Setting)[l_ui32InsertLocation])->m_sValue
+						<< std::static_pointer_cast<CSetting>(m_interfacors.at(Setting)[l_ui32InsertLocation])->m_value
 						<< "' to slot " << l_ui32InsertLocation << " with the array size now " << int(m_interfacors.at(Setting).size()) << "\n";
 
 				if (bNotify)
@@ -1057,7 +1056,7 @@ namespace OpenViBE
 				auto it = m_interfacors[Setting].begin() + index;
 				OV_ERROR_UNLESS_KRF(it != m_interfacors[Setting].end(), "No setting found at index " << index, ErrorType::ResourceNotFound);
 
-				const CIdentifier toBeRemovedId = m_interfacors[Setting][index]->m_oIdentifier;
+				const CIdentifier toBeRemovedId = m_interfacors[Setting][index]->m_id;
 				CString toBeRemovedName         = m_interfacors[Setting][index]->m_name;
 
 				it = m_interfacors[Setting].erase(it);
@@ -1112,7 +1111,7 @@ namespace OpenViBE
 									"])",
 									ErrorType::OutOfBound);
 
-				rDefaultValue = std::static_pointer_cast<CSetting>(m_interfacors.at(Setting)[index])->m_sDefaultValue;
+				rDefaultValue = std::static_pointer_cast<CSetting>(m_interfacors.at(Setting)[index])->m_defaultValue;
 				return true;
 			}
 
@@ -1141,7 +1140,7 @@ namespace OpenViBE
 									"])",
 									ErrorType::OutOfBound);
 
-				rValue = std::static_pointer_cast<CSetting>(m_interfacors.at(Setting)[index])->m_sValue;
+				rValue = std::static_pointer_cast<CSetting>(m_interfacors.at(Setting)[index])->m_value;
 				return true;
 			}
 
@@ -1203,7 +1202,7 @@ namespace OpenViBE
 									"])",
 									ErrorType::OutOfBound);
 
-				std::static_pointer_cast<CSetting>(m_interfacors[Setting][index])->m_sDefaultValue = rDefaultValue;
+				std::static_pointer_cast<CSetting>(m_interfacors[Setting][index])->m_defaultValue = rDefaultValue;
 
 				this->notify(BoxModification_SettingDefaultValueChanged, index);
 
@@ -1235,9 +1234,9 @@ namespace OpenViBE
 									ErrorType::OutOfBound);
 
 				auto setting = std::static_pointer_cast<CSetting>(m_interfacors[Setting][index]);
-				if (setting->m_sValue != rValue)
+				if (setting->m_value != rValue)
 				{
-					setting->m_sValue = rValue;
+					setting->m_value = rValue;
 
 					if (bNotify)
 					{
@@ -1385,7 +1384,7 @@ namespace OpenViBE
 										"Conflict in " << g_InterfacorTypeToName.at(interfacorType) <<
 										" identifiers. An entity with the same identifier exists.",
 										ErrorType::ResourceNotFound);
-					m_interfacors[interfacorType][index]->m_oIdentifier = newID;
+					m_interfacors[interfacorType][index]->m_id = newID;
 					m_interfacorIDToIdx[interfacorType][newID]          = index;
 					// remove the old identifier key
 					const auto itOld = m_interfacorIDToIdx[interfacorType].find(oldIdentifier);

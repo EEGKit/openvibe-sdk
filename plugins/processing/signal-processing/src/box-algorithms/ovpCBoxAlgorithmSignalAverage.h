@@ -15,8 +15,8 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmSignalAverage();
-			void release() override;
+			CBoxAlgorithmSignalAverage() {}
+			void release() override {}
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processInput(const uint32_t index) override;

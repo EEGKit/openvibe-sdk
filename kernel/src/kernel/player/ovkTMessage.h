@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../ovk_base.h"
-
 #include <openvibe/ov_all.h>
 
 namespace OpenViBE
@@ -25,8 +23,8 @@ namespace OpenViBE
 
 		protected:
 
-			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			uint64_t m_time       = 0;
+			CIdentifier m_id = OV_UndefinedIdentifier;
+			uint64_t m_time  = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

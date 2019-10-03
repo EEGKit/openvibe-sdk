@@ -13,7 +13,6 @@
  #include <netdb.h>
  #include <unistd.h>
 #elif defined TARGET_OS_Windows
-#include <fcntl.h>
 #include <cerrno>
 
 #include <WS2tcpip.h>

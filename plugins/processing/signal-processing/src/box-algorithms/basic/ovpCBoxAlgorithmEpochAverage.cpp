@@ -2,8 +2,6 @@
 
 #include "../../algorithms/basic/ovpCAlgorithmMatrixAverage.h"
 
-#include <cstdlib>
-
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;

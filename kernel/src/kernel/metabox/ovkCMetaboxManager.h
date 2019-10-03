@@ -2,7 +2,6 @@
 
 #include "../ovkTKernelObject.h"
 
-#include <vector>
 #include <map>
 
 

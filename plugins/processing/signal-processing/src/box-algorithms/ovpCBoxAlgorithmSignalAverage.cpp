@@ -1,8 +1,6 @@
 #include "ovpCBoxAlgorithmSignalAverage.h"
 
 #include <cmath>
-#include <iostream>
-#include <sstream>
 
 using namespace OpenViBE;
 using namespace Plugins;
@@ -32,10 +30,6 @@ void CBoxAlgorithmSignalAverage::computeAverage()
 	}
 }
 
-
-CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage() {}
-
-void CBoxAlgorithmSignalAverage::release() {}
 
 bool CBoxAlgorithmSignalAverage::initialize()
 {

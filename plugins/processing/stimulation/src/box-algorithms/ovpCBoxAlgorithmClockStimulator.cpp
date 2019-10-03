@@ -1,5 +1,4 @@
 #include "ovpCBoxAlgorithmClockStimulator.h"
-#include <cstdlib>
 
 using namespace OpenViBE;
 using namespace Kernel;

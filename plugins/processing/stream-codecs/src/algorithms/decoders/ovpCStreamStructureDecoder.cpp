@@ -1,8 +1,5 @@
 #include "ovpCStreamStructureDecoder.h"
 
-#include <cstring>
-#include <cstdlib>
-
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;

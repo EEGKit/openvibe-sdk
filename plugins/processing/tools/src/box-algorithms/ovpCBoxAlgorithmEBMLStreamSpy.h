@@ -8,7 +8,6 @@
 #include <stack>
 #include <map>
 #include <string>
-#include <cstdio>
 
 namespace OpenViBEPlugins
 {

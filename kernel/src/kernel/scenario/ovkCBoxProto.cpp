@@ -1,9 +1,5 @@
 #include "ovkCBoxProto.h"
 
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
-
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;

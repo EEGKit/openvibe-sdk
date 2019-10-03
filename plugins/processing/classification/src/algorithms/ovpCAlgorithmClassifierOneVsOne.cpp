@@ -4,9 +4,6 @@
 #include <map>
 #include <cmath>
 #include <sstream>
-#include <cstring>
-#include <cstdlib>
-#include <string>
 #include <utility>
 #include <iostream>
 #include <system/ovCMemory.h>

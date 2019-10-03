@@ -6,13 +6,10 @@
 #include <algorithm>
 #include <functional>
 #include <cctype>
-#include <cstdio>
 #include <algorithm>
 
 #define OV_TRACE_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
-
 #define OV_DEBUG_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
-
 #define OV_DEBUG_UNLESS_K(expression, message) if (!(expression)) { OV_DEBUG_K(message); }
 
 using namespace OpenViBE;

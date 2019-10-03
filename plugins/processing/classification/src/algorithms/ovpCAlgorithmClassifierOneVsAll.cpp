@@ -2,8 +2,6 @@
 
 #include <map>
 #include <sstream>
-#include <cstring>
-#include <string>
 #include <utility>
 #include <iostream>
 #include <system/ovCMemory.h>

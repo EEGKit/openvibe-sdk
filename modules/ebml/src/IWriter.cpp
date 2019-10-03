@@ -73,7 +73,7 @@ namespace EBML
 
 		public:
 
-			CIdentifier m_oIdentifier;
+			CIdentifier m_id;
 			CWriterNode* m_pParentNode  = nullptr;
 			uint64_t m_bufferLength = 0;
 			unsigned char* m_buffer    = nullptr;
@@ -87,7 +87,7 @@ namespace EBML
 //
 
 CWriterNode::CWriterNode(const CIdentifier& identifier, CWriterNode* pParentNode)
-	: m_oIdentifier(identifier), m_pParentNode(pParentNode) {}
+	: m_id(identifier), m_pParentNode(pParentNode) {}
 
 CWriterNode::~CWriterNode()
 {
@@ -109,7 +109,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	const uint64_t contentSize = getTotalContentSize(false);
 
 	if (!getCodedBuffer(contentSize, pContentSize, &contentSizeLength)) { }	// SHOULD NEVER HAPPEN
-	if (!getCodedBuffer(m_oIdentifier, id, &identifierLength)) { }	// SHOULD NEVER HAPPEN
+	if (!getCodedBuffer(m_id, id, &identifierLength)) { }	// SHOULD NEVER HAPPEN
 
 	rWriterCallback.write(id, identifierLength);
 	rWriterCallback.write(pContentSize, contentSizeLength);
@@ -127,7 +127,7 @@ uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 	uint64_t res = contentSize;
 	if (bCountIdentifierAndSize)
 	{
-		res += getCodedSizeLength(m_oIdentifier);
+		res += getCodedSizeLength(m_id);
 		res += getCodedSizeLength(contentSize);
 	}
 

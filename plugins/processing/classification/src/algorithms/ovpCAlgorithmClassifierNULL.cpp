@@ -1,9 +1,7 @@
 #include "ovpCAlgorithmClassifierNULL.h"
 
 #include <cstdlib>
-#include <sstream>
 #include <iostream>
-#include <cstring>
 
 using namespace OpenViBE;
 using namespace Kernel;

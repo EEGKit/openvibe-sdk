@@ -3,10 +3,7 @@
 
 #include "ovpCBoxAlgorithmContinuousWaveletAnalysis.h"
 
-#include <sstream>
-#include <cstdio>
 #include <string.h>
-#include <iomanip>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -27,26 +24,11 @@ namespace SigProSTD
 		return factor;
 	}
 
-	double WaveletScale2Period(char* waveletType, const double waveletParameter, const double scale)
-	{
-		const double fourierFactor = WaveletFourierFactor(waveletType, waveletParameter);
+	double WaveletScale2Period(char* waveletType, const double waveletParameter, const double scale) { return WaveletFourierFactor(waveletType, waveletParameter) * scale; }
 
-		return fourierFactor * scale;
-	}
+	double WaveletScale2Freq(char* waveletType, const double waveletParameter, const double scale) { return 1.0 / (WaveletFourierFactor(waveletType, waveletParameter) * scale); }
 
-	double WaveletScale2Freq(char* waveletType, const double waveletParameter, const double scale)
-	{
-		const double fourierFactor = WaveletFourierFactor(waveletType, waveletParameter);
-
-		return 1.0 / (fourierFactor * scale);
-	}
-
-	double WaveletFreq2Scale(char* waveletType, const double waveletParameter, const double frequency)
-	{
-		const double fourierFactor = WaveletFourierFactor(waveletType, waveletParameter);
-
-		return 1.0 / (fourierFactor * frequency);
-	}
+	double WaveletFreq2Scale(char* waveletType, const double waveletParameter, const double frequency) { return 1.0 / (WaveletFourierFactor(waveletType, waveletParameter) * frequency); }
 } // namespace SigProSTD
 
 bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
@@ -58,9 +40,9 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	m_vEncoder[3].initialize(*this, 3);
 
 	const uint64_t waveletType    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_waveletParam           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_nScaleJ               = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_highestFreq           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_waveletParam                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_nScaleJ                     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_highestFreq                 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	const double frequencySpacing = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
 	if (waveletType == OVP_TypeId_ContinuousWaveletType_Morlet.toUInteger())
@@ -128,7 +110,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	m_smallestScaleS0 = SigProSTD::WaveletFreq2Scale(const_cast<char *>(m_waveletType), m_waveletParam, m_highestFreq);
 	m_scaleSpacingDj  = SigProSTD::WaveletFreq2Scale(const_cast<char *>(m_waveletType), m_waveletParam, frequencySpacing);
 
-	m_scaleType         = "pow";
+	m_scaleType        = "pow";
 	m_scalePowerBaseA0 = 2; // base of power if ScaleType = "pow"
 
 	return true;
@@ -219,10 +201,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				oMatrix->setDimensionSize(1, uint32_t(m_nScaleJ));
 				oMatrix->setDimensionSize(2, uint32_t(nSample));
 
-				for (size_t c = 0; c < nChannel; ++c)
-				{
-					oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c));
-				}
+				for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 				for (size_t scaleIndex = 0; scaleIndex < m_nScaleJ; ++scaleIndex)
 				{
 					const double scaleValue     = m_waveletTransform->scale[scaleIndex];
@@ -261,8 +240,8 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				{
 					for (size_t sampleIdx = 0; sampleIdx < nSample; sampleIdx++)
 					{
-						const double real = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].re;
-						const double imag = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].im;
+						const double real      = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].re;
+						const double imag      = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].im;
 						const size_t outputIdx = sampleIdx + (m_nScaleJ - scaleIdx - 1) * nSample + c * nSample * m_nScaleJ; // t+f*T+c*T*F
 
 						oAmplitudeBuffer[outputIdx] = std::sqrt(real * real + imag * imag);

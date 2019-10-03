@@ -1,9 +1,7 @@
 #include "ovkCBoxSettingModifierVisitor.h"
 
-#include "ovkCSimulatedBox.h"
 #include "ovkCPlayer.h"
 
-#include <openvibe/ovIObjectVisitor.h>
 #include <xml/IReader.h>
 #include <fs/Files.h>
 #include "../../tools/ovk_setting_checker.h"
@@ -11,8 +9,6 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <limits>
 
 #define OVD_AttributeId_SettingOverrideFilename             OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
 #define OV_AttributeId_Box_Disabled                         OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
@@ -37,15 +33,15 @@ void CBoxSettingModifierVisitor::processChildData(const char* sData)
 {
 	if (m_bIsParsingSettingValue)
 	{
-		m_pObjectVisitorContext->getLogManager() << LogLevel_Debug << "Using [" << CString(sData) << "] as setting " << m_ui32SettingIndex << "...\n";
-		m_pBox->setSettingValue(m_ui32SettingIndex, sData);
+		m_pObjectVisitorContext->getLogManager() << LogLevel_Debug << "Using [" << CString(sData) << "] as setting " << m_settingIdx << "...\n";
+		m_pBox->setSettingValue(m_settingIdx, sData);
 	}
 }
 
 void CBoxSettingModifierVisitor::closeChild()
 {
 	//We need to count it here because we need to take in account the empty value
-	if (m_bIsParsingSettingValue) { m_ui32SettingIndex++; }
+	if (m_bIsParsingSettingValue) { m_settingIdx++; }
 	m_bIsParsingSettingValue = false;
 }
 
@@ -57,24 +53,21 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 	// settings from external file
 	if (box.hasAttribute(OVD_AttributeId_SettingOverrideFilename))
 	{
-		CString l_sSettingOverrideFilename = box.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
-		CString l_sSettingOverrideFilenameFinal;
-		if (m_configManager == nullptr)
-		{
-			l_sSettingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
-		}
-		else { l_sSettingOverrideFilenameFinal = m_configManager->expand(l_sSettingOverrideFilename); }
+		const CString settingOverrideFilename = box.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
+		CString settingOverrideFilenameFinal;
+		if (m_configManager == nullptr) { settingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(settingOverrideFilename); }
+		else { settingOverrideFilenameFinal = m_configManager->expand(settingOverrideFilename); }
 
 		// message
 		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
-				l_sSettingOverrideFilename << " which expands to " << l_sSettingOverrideFilenameFinal << "] !\n";
+				settingOverrideFilename << " which expands to " << settingOverrideFilenameFinal << "] !\n";
 
 		// creates XML reader
 		XML::IReader* l_pReader = createReader(*this);
 
 		// adds new box settings
 		m_pBox                      = &box;
-		m_ui32SettingIndex          = 0;
+		m_settingIdx                = 0;
 		m_bIsParsingSettingValue    = false;
 		m_bIsParsingSettingOverride = false;
 
@@ -82,7 +75,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 		{
 			// cleans up internal state
 			m_pBox                      = nullptr;
-			m_ui32SettingIndex          = 0;
+			m_settingIdx                = 0;
 			m_bIsParsingSettingValue    = false;
 			m_bIsParsingSettingOverride = false;
 
@@ -96,7 +89,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 		//    and sending what is read to the XML parser
 		// 3. Close the settings file
 		ifstream file;
-		FS::Files::openIFStream(file, l_sSettingOverrideFilenameFinal.toASCIIString(), ios::binary);
+		FS::Files::openIFStream(file, settingOverrideFilenameFinal.toASCIIString(), ios::binary);
 		if (file.is_open())
 		{
 			char buffer[1024];
@@ -115,11 +108,11 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			file.close();
 
 			// message
-			if (m_ui32SettingIndex == box.getSettingCount())
+			if (m_settingIdx == box.getSettingCount())
 			{
-				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_ui32SettingIndex << " setting(s) with this configuration file...\n";
+				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_settingIdx << " setting(s) with this configuration file...\n";
 
-				for (uint32_t i = 0; i < m_ui32SettingIndex; i++)
+				for (uint32_t i = 0; i < m_settingIdx; i++)
 				{
 					CString settingName     = "";
 					CString rawSettingvalue = "";
@@ -145,7 +138,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			{
 				cleanup();
 				OV_ERROR(
-					"Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal <<
+					"Overrode " << m_settingIdx << " setting(s) with configuration file [" << settingOverrideFilenameFinal <<
 					"]. That does not match the box setting count " << box.getSettingCount(),
 					ErrorType::OutOfBound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 			}
@@ -160,7 +153,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			{
 				cleanup();
 				OV_ERROR(
-					"Could not override [" << box.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal <<
+					"Could not override [" << box.getName() << "] settings because configuration file [" << settingOverrideFilenameFinal <<
 					"] could not be opened",
 					ErrorType::ResourceNotFound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 			}

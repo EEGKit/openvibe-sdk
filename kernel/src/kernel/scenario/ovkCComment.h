@@ -4,8 +4,6 @@
 
 #include "ovkTAttributable.h"
 
-#include <vector>
-#include <string>
 #include <iostream>
 
 namespace OpenViBE
@@ -27,15 +25,14 @@ namespace OpenViBE
 			bool initializeFromExistingComment(const IComment& rExisitingComment) override;
 			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >,
-									   OVK_ClassId_Kernel_Scenario_Comment)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IComment>>, OVK_ClassId_Kernel_Scenario_Comment)
 
 		protected:
 
 			CScenario& m_rOwnerScenario;
 
-			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			CString m_sText;
+			CIdentifier m_id = OV_UndefinedIdentifier;
+			CString m_text;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

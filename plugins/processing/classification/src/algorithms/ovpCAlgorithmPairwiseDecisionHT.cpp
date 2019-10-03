@@ -6,7 +6,6 @@
 #include <iostream>
 #include <sstream>
 
-
 #include <xml/IXMLNode.h>
 #include <xml/IXMLHandler.h>
 

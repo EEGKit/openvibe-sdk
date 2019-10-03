@@ -1,8 +1,6 @@
 #include "ovkCPlayerManager.h"
 #include "ovkCPlayer.h"
 
-#include "../../ovk_tools.h"
-
 #include <system/ovCMath.h>
 
 using namespace OpenViBE;
@@ -18,12 +16,12 @@ bool CPlayerManager::createPlayer(CIdentifier& playerID)
 
 bool CPlayerManager::releasePlayer(const CIdentifier& playerID)
 {
-	auto itPlayer = m_vPlayer.find(playerID);
+	auto it = m_vPlayer.find(playerID);
 
-	OV_ERROR_UNLESS_KRF(itPlayer != m_vPlayer.end(), "Player release failed, identifier :" << playerID.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(it != m_vPlayer.end(), "Player release failed, identifier :" << playerID.toString(), ErrorType::ResourceNotFound);
 
-	delete itPlayer->second;
-	m_vPlayer.erase(itPlayer);
+	delete it->second;
+	m_vPlayer.erase(it);
 	return true;
 }
 

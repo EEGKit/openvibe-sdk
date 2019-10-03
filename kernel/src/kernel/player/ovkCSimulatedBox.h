@@ -121,8 +121,8 @@ namespace OpenViBE
 
 		public:
 
-			std::vector<std::deque<CChunk>> m_vInput;
-			std::vector<std::deque<CChunk>> m_vOutput;
+			std::vector<std::deque<CChunk>> m_inputs;
+			std::vector<std::deque<CChunk>> m_outputs;
 			std::vector<CChunk> m_vCurrentOutput;
 			std::vector<uint64_t> m_vLastOutputStartTime;
 			std::vector<uint64_t> m_vLastOutputEndTime;

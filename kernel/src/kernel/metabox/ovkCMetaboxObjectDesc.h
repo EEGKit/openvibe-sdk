@@ -3,7 +3,6 @@
 #include "../ovkTKernelObject.h"
 
 #include <vector>
-#include <map>
 
 namespace OpenViBE
 {
@@ -47,32 +46,32 @@ namespace OpenViBE
 			typedef struct _SIOStream
 			{
 				_SIOStream()
-					: m_sName(""),
+					: m_name(""),
 					  m_typeID(OV_UndefinedIdentifier),
-					  m_oIdentifier(OV_UndefinedIdentifier) {}
+					  m_id(OV_UndefinedIdentifier) {}
 
 				_SIOStream(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier)
-					: m_sName(name),
+					: m_name(name),
 					  m_typeID(typeID),
-					  m_oIdentifier(identifier) {}
+					  m_id(identifier) {}
 
-				CString m_sName;
+				CString m_name;
 				CIdentifier m_typeID = OV_UndefinedIdentifier;
-				CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
+				CIdentifier m_id     = OV_UndefinedIdentifier;
 			} SIOStream;
 
 			typedef struct _SSetting
 			{
 				_SSetting()
-					: m_sName(""), m_typeID(OV_UndefinedIdentifier), m_sDefaultValue(""), m_oIdentifier(OV_UndefinedIdentifier) {}
+					: m_name(""), m_typeID(OV_UndefinedIdentifier), m_defaultValue(""), m_id(OV_UndefinedIdentifier) {}
 
 				_SSetting(const CString& name, const CIdentifier& typeID, const CString& value, const CIdentifier& id)
-					: m_sName(name), m_typeID(typeID), m_sDefaultValue(value), m_oIdentifier(id) { }
+					: m_name(name), m_typeID(typeID), m_defaultValue(value), m_id(id) { }
 
-				CString m_sName;
+				CString m_name;
 				CIdentifier m_typeID = OV_UndefinedIdentifier;
-				CString m_sDefaultValue;
-				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+				CString m_defaultValue;
+				CIdentifier m_id = OV_UndefinedIdentifier;
 			} SSetting;
 
 			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override;

@@ -24,9 +24,7 @@
 #endif
 
 #include <assert.h>
-#include <iostream>
 #include <vector>
-#include <algorithm>
 
 namespace Socket
 {

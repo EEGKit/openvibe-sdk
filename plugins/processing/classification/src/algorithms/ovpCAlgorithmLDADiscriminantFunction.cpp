@@ -1,17 +1,16 @@
 #include "ovpCAlgorithmLDADiscriminantFunction.h"
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
+#include <Eigen/Eigenvalues>
+
 #include <sstream>
 #include <vector>
 
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
-
 using namespace OpenViBEPlugins::Classification;
-
 using namespace OpenViBEToolkit;
-
 using namespace Eigen;
 
 

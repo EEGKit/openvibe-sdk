@@ -7,7 +7,6 @@
 
 #include <system/ovCChrono.h>
 
-#include <map>
 #include <string>
 
 namespace OpenViBE

@@ -2,7 +2,6 @@
 
 #include "ovkCBoxAlgorithmLogManager.h"
 #include "../ovkTKernelObject.h"
-#include <memory>
 
 namespace OpenViBE
 {

@@ -286,25 +286,44 @@ namespace OpenViBEToolkit
 				case OpenViBE::Kernel::BoxModification_DefaultInitialized: return this->onDefaultInitialized(m_pBoxListenerContext->getBox());
 				case OpenViBE::Kernel::BoxModification_NameChanged: return this->onNameChanged(m_pBoxListenerContext->getBox());
 				case OpenViBE::Kernel::BoxModification_IdentifierChanged: return this->onIdentifierChanged(m_pBoxListenerContext->getBox());
-				case OpenViBE::Kernel::BoxModification_AlgorithmClassIdentifierChanged: return this->onAlgorithmClassIdentifierChanged(m_pBoxListenerContext->getBox());
-				case OpenViBE::Kernel::BoxModification_InputConnected: return this->onInputConnected(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputDisconnected: return this->onInputDisconnected(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputAdded: return this->onInputAdded(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputRemoved: return this->onInputRemoved(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputTypeChanged: return this->onInputTypeChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputNameChanged: return this->onInputNameChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputConnected: return this->onOutputConnected(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputDisconnected: return this->onOutputDisconnected(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputAdded: return this->onOutputAdded(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputRemoved: return this->onOutputRemoved(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputTypeChanged: return this->onOutputTypeChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputNameChanged: return this->onOutputNameChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingAdded: return this->onSettingAdded(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingRemoved: return this->onSettingRemoved(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingTypeChanged: return this->onSettingTypeChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_AlgorithmClassIdentifierChanged: return this->onAlgorithmClassIdentifierChanged(
+						m_pBoxListenerContext->getBox());
+				case OpenViBE::Kernel::BoxModification_InputConnected: return this->onInputConnected(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_InputDisconnected: return this->onInputDisconnected(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_InputAdded: return this->
+							onInputAdded(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_InputRemoved: return this->onInputRemoved(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_InputTypeChanged: return this->onInputTypeChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_InputNameChanged: return this->onInputNameChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_OutputConnected: return this->onOutputConnected(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_OutputDisconnected: return this->onOutputDisconnected(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_OutputAdded: return this->onOutputAdded(m_pBoxListenerContext->getBox(),
+																							   m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_OutputRemoved: return this->onOutputRemoved(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_OutputTypeChanged: return this->onOutputTypeChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_OutputNameChanged: return this->onOutputNameChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_SettingAdded: return this->onSettingAdded(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_SettingRemoved: return this->onSettingRemoved(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_SettingTypeChanged: return this->onSettingTypeChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
+				case OpenViBE::Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(
+						m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
 				default: OV_ERROR_KRF("Unhandled box modification type " << (uint32_t)eBoxModificationType, OpenViBE::Kernel::ErrorType::BadArgument);
 			}
 			return false;

@@ -1,12 +1,8 @@
 #include "ovkCPluginManager.h"
 #include "ovkCPluginModule.h"
 
-#include "../../ovk_tools.h"
-
 #include <fs/IEntryEnumerator.h>
 #include <fs/Files.h>
-
-#include <system/ovCMemory.h>
 
 #include <cinttypes>
 #include <cstdio>

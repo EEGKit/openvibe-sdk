@@ -6,7 +6,6 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
-#include <cfloat>
 #include <cerrno>
 
 // for save/load
@@ -408,7 +407,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						}
 
 						//retrieve value
-						errno              = 0;
+						errno = 0;
 						char* end;
 						const double value = strtod(curString.c_str(), &end);
 #if defined TARGET_OS_Windows

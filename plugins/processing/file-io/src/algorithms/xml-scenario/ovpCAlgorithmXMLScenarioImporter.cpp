@@ -79,7 +79,7 @@ namespace
 	public:
 
 		explicit CErrorHandler(IAlgorithmContext& algorithmCtx)
-			: m_rAlgorithmContext(algorithmCtx) { }
+			: m_algorithmContext(algorithmCtx) { }
 
 		void fatalError(const SAXParseException& exception) override { this->error(exception); }
 
@@ -88,7 +88,7 @@ namespace
 			// we just issue a trace here because the calling method
 			// implements a fallback mechanism and we don't want to populate
 			// the error manager if the importer returns gracefully.
-			m_rAlgorithmContext.getLogManager() << LogLevel_Trace
+			m_algorithmContext.getLogManager() << LogLevel_Trace
 					<< "Failed to validate xml: error ["
 					<< xercesToString(exception.getMessage()).c_str()
 					<< "], line number [" << uint64_t(exception.getLineNumber()) << "]"
@@ -100,11 +100,11 @@ namespace
 			OV_WARNING(
 				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << uint64_t(exception.
 					getLineNumber()) << "]",
-				m_rAlgorithmContext.getLogManager());
+				m_algorithmContext.getLogManager());
 		}
 
 	private:
-		IAlgorithmContext& m_rAlgorithmContext;
+		IAlgorithmContext& m_algorithmContext;
 	};
 }
 

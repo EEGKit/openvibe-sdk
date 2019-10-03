@@ -7,17 +7,11 @@
 #include "../scenario/ovkCScenarioSettingKeywordParserCallback.h"
 #include "ovkCBoxSettingModifierVisitor.h"
 
-#include <system/ovCTime.h>
-#include <xml/IReader.h>
 #include <fs/Files.h>
 
 #include <string>
-#include <cstring>
 
 #include <cstdlib>
-#include <limits>
-#include <algorithm>
-#include <cstring>
 #include <set>
 
 #if defined TARGET_OS_Windows
@@ -51,9 +45,7 @@ using namespace Plugins;
 //                                                                   //
 
 CScheduler::CScheduler(const IKernelContext& ctx, CPlayer& player)
-	: TKernelObject<IKernelObject>(ctx)
-	  , m_rPlayer(player)
-	  , m_oScenarioIdentifier(OV_UndefinedIdentifier) {}
+	: TKernelObject<IKernelObject>(ctx), m_rPlayer(player), m_scenarioID(OV_UndefinedIdentifier) {}
 
 CScheduler::~CScheduler() { this->uninitialize(); }
 
@@ -66,12 +58,12 @@ bool CScheduler::setScenario(const CIdentifier& scenarioID)
 
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
-	m_oScenarioIdentifier = scenarioID;
+	m_scenarioID = scenarioID;
 
 	// We need to flatten the scenario here as the application using the scheduler needs time
 	// between the moment the visualisation tree is complete and the moment when boxes are initialized.
 	// The application needs to initialize necessary windows for the boxes to draw into.
-	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
+	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_scenarioID);
 
 	if (!this->flattenScenario())
 	{
@@ -332,9 +324,9 @@ ESchedulerInitializationCode CScheduler::initialize()
 
 	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall, SchedulerInitialization_Failed);
 
-	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
+	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_scenarioID);
 
-	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_oScenarioIdentifier.toString(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
+	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_scenarioID.toString(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
 
 	OV_ERROR_UNLESS_K(m_scenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
 					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
@@ -342,7 +334,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
 	OV_ERROR_UNLESS_K(m_scenario->acceptVisitor(l_oBoxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id "
-					  << m_oScenarioIdentifier.toString(), ErrorType::Internal, SchedulerInitialization_Failed);
+					  << m_scenarioID.toString(), ErrorType::Internal, SchedulerInitialization_Failed);
 
 
 	{
@@ -416,7 +408,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 								  ErrorType::BadResourceCreation, SchedulerInitialization_Failed);
 
 				CSimulatedBox* simulatedBox = new CSimulatedBox(this->getKernelContext(), *this);
-				simulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
+				simulatedBox->setScenarioIdentifier(m_scenarioID);
 				simulatedBox->setBoxIdentifier(boxID);
 
 

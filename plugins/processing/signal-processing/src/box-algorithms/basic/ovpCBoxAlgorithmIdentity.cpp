@@ -1,7 +1,5 @@
 #include "ovpCBoxAlgorithmIdentity.h"
 
-#include <iostream>
-
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;

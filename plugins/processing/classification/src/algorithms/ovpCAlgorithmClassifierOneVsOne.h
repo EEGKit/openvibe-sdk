@@ -6,9 +6,7 @@
 
 #include <xml/IXMLNode.h>
 
-#include <vector>
 #include <map>
-
 
 namespace OpenViBEPlugins
 {

@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <ovp_global_defines.h>
 #include "ovtAssert.h"
 #include "ovtTestFixtureCommon.h"

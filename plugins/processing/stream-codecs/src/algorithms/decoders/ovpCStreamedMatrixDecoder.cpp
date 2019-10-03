@@ -3,7 +3,6 @@
 #include <system/ovCMemory.h>
 
 #include <cstring>
-#include <cstdlib>
 
 using namespace OpenViBE;
 using namespace Kernel;

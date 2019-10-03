@@ -22,11 +22,8 @@
 #pragma once
 
 #include <sstream>
-#include <cassert>
-#include <csignal>
 
 #include "ovCIdentifier.h"
-#include "ov_common_types.h"
 #include "ovTimeArithmetics.h"
 
 namespace OpenViBE

@@ -6,9 +6,6 @@
 #include "../../ovtkIFeatureVectorSet.h"
 #include "ovtkCAlgorithmClassifier.h"
 
-#include <vector>
-
-
 #define OVTK_ClassId_Algorithm_PairingStrategy                                      OpenViBE::CIdentifier(0xFD3CB444, 0x58F00765)
 #define OVTK_ClassId_Algorithm_PairingStrategyDesc                                  OpenViBE::CIdentifier(0x4341B8D6, 0xC65B7BBB)
 
@@ -33,10 +30,7 @@ namespace OpenViBEToolkit
 
 		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
 		bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
-		bool classify(const IFeatureVector& rFeatureVector
-					  , double& rf64Class
-					  , IVector& rDistanceValue
-					  , IVector& rProbabilityValue) override = 0;
+		bool classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rDistanceValue, IVector& rProbabilityValue) override = 0;
 		XML::IXMLNode* saveConfiguration() override = 0;
 		bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) override = 0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)

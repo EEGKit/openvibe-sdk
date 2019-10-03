@@ -4,7 +4,6 @@
 #include "../ovk_base.h"
 
 #include <openvibe/kernel/ovITypeManager.h>
-#include <iostream>
 #include <algorithm>
 #include <string>
 #include <functional>

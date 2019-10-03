@@ -1,5 +1,4 @@
 #include "ovpCBoxAlgorithmStimulationListener.h"
-#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -75,13 +74,6 @@ bool CBoxAlgorithmStimulationListener::process()
 						"Invalid out of range date [" << time64(op_pStimulationSet->getStimulationDate(k)) << "] (expected value between [" << time64(boxContext
 							.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "])");
 				}
-				/*
-				if(TimeArithmetics::timeToSeconds(boxContext.getInputChunkStartTime(i, j)) > 234 && op_pStimulationSet->getStimulationCount()==0)
-				{
-					this->getLogManager() << LogLevel_Info << "Chunk is empty at [" << time64(boxContext.getInputChunkStartTime(i, j)) << ", " 
-										  << time64(boxContext.getInputChunkEndTime(i, j)) << "]\n";
-				}
-				*/
 			}
 			if (m_vStimulationDecoder[i]->isEndReceived()) { }
 			boxContext.markInputAsDeprecated(i, j);

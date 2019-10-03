@@ -12,29 +12,29 @@ using namespace Plugins;
 //                                                                   //
 
 CComment::CComment(const IKernelContext& ctx, CScenario& rOwnerScenario)
-	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_sText("") {}
+	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_text("") {}
 
 CComment::~CComment() {}
 
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CComment::getIdentifier() const { return m_oIdentifier; }
+CIdentifier CComment::getIdentifier() const { return m_id; }
 
-CString CComment::getText() const { return m_sText; }
+CString CComment::getText() const { return m_text; }
 
 bool CComment::setIdentifier(const CIdentifier& identifier)
 {
-	if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
+	if (m_id != OV_UndefinedIdentifier) { return false; }
 	if (identifier == OV_UndefinedIdentifier) { return false; }
-	m_oIdentifier = identifier;
+	m_id = identifier;
 
 	return true;
 }
 
 bool CComment::setText(const CString& sText)
 {
-	m_sText = sText;
+	m_text = sText;
 	return true;
 }
 
@@ -43,7 +43,7 @@ bool CComment::setText(const CString& sText)
 
 bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
-	m_sText = rExisitingComment.getText();
+	m_text = rExisitingComment.getText();
 
 	CIdentifier l_oID = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
 	while (l_oID != OV_UndefinedIdentifier)

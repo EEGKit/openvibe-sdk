@@ -3,9 +3,6 @@
 #include "../ovkTKernelObject.h"
 
 #include "ovkCScenario.h"
-#include "ovkTBox.hpp"
-#include "ovkTAttributable.h"
-#include "ovkCBoxProto.h"
 
 #include <map>
 #include <array>
@@ -72,13 +69,13 @@ namespace OpenViBE
 			 * \brief Check if supported type have to be updated between the box to be updated and the kernel
 			 * \return true when at least input or output supported types have to be updated
 			 */
-			bool checkForSupportedTypesToBeUpdated();
+			bool checkForSupportedTypesToBeUpdated() const;
 
 			/**
 			 * \brief Check if supported inputs, outputs or settings attributes have to be updated between the box to be updated and the kernel
 			 * \return true when at least input, output or settings attributes have to be updated
 			 */
-			bool checkForSupportedIOSAttributesToBeUpdated();
+			bool checkForSupportedIOSAttributesToBeUpdated() const;
 
 			// pointer to the parent scenario
 			CScenario* m_Scenario = nullptr;

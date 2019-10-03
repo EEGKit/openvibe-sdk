@@ -18,7 +18,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmExternalProcessing final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			CBoxAlgorithmExternalProcessing();
+			CBoxAlgorithmExternalProcessing() : m_AcceptTimeout(10ULL << 32) {}
 			void release() override { delete this; }
 			uint64_t getClockFrequency() override;
 			bool initialize() override;

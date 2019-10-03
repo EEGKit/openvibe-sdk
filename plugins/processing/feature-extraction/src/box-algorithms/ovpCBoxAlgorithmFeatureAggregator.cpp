@@ -3,7 +3,6 @@
 #include <system/ovCMemory.h>
 
 #include <iostream>
-#include <cstdio>
 
 using namespace OpenViBE;
 using namespace Plugins;

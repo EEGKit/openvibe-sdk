@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <fs/Files.h>
 #include <cassert>
-#include <algorithm>
 #include <openvibe/kernel/scenario/ovIAlgorithmScenarioImporter.h>
 #include <openvibe/kernel/scenario/ovIAlgorithmScenarioExporter.h>
 #include "../../tools/ovkSBoxProto.h"

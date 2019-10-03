@@ -15,7 +15,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/version.hpp>
 #include <boost/algorithm/string/replace.hpp>
-#include <iostream>
 #include <cstdio>
 #include <cstring>
 

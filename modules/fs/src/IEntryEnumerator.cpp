@@ -31,10 +31,10 @@ namespace FS
 	{
 	public:
 
-		explicit CEntry(const string& name) : m_sName(name) {}
-		const char* getName() override { return m_sName.c_str(); }
+		explicit CEntry(const string& name) : m_name(name) {}
+		const char* getName() override { return m_name.c_str(); }
 
-		string m_sName;
+		string m_name;
 	};
 } // namespace FS
 

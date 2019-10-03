@@ -24,8 +24,6 @@
 #include <vector>
 #include <cmath>
 #include <tuple>
-#include <numeric>
-#include <algorithm>
 #include <chrono>
 
 #include "system/ovCTime.h"

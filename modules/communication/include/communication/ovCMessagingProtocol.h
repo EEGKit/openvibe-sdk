@@ -6,8 +6,6 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include <algorithm>
-
 
 namespace Communication
 {

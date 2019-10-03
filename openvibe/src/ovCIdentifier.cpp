@@ -1,9 +1,6 @@
 #include "ovCIdentifier.h"
 
-#include <cstdlib>
 #include <cstdio>
-#include <cmath>
-#include <cstring>
 #include <random>
 
 using namespace OpenViBE;

@@ -12,13 +12,13 @@ using namespace Kernel;
 CLink::CLink(const IKernelContext& ctx, CScenario& rOwnerScenario)
 	: TAttributable<TKernelObject<ILink>>(ctx)
 	  , m_rOwnerScenario(rOwnerScenario)
-	  , m_oIdentifier(OV_UndefinedIdentifier)
+	  , m_id(OV_UndefinedIdentifier)
 	  , m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
 	  , m_oTargetBoxIdentifier(OV_UndefinedIdentifier) {}
 
 bool CLink::initializeFromExistingLink(const ILink& link)
 {
-	m_oIdentifier                = link.getIdentifier();
+	m_id                = link.getIdentifier();
 	m_oSourceBoxIdentifier       = link.getSourceBoxIdentifier();
 	m_oTargetBoxIdentifier       = link.getTargetBoxIdentifier();
 	m_oSourceBoxOutputIdentifier = link.getSourceBoxOutputIdentifier();
@@ -34,11 +34,11 @@ bool CLink::initializeFromExistingLink(const ILink& link)
 
 bool CLink::setIdentifier(const CIdentifier& identifier)
 {
-	m_oIdentifier = identifier;
+	m_id = identifier;
 	return true;
 }
 
-CIdentifier CLink::getIdentifier() const { return m_oIdentifier; }
+CIdentifier CLink::getIdentifier() const { return m_id; }
 
 //___________________________________________________________________//
 //                                                                   //

@@ -2,7 +2,6 @@
 
 #include "../ovkTKernelObject.h"
 
-#include "ovkTAttributable.h"
 #include "ovkTBox.hpp"
 
 #include <vector>

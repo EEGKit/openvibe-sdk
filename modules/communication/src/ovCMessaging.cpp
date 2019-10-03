@@ -4,9 +4,7 @@
 #include <cstdint>
 #include <thread>
 #include <mutex>
-#include <algorithm>
 #include <memory>
-#include <cstring>
 #include <map>
 
 #include "ovCMessaging.h"

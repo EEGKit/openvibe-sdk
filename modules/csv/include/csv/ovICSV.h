@@ -26,7 +26,6 @@
 #include <queue>
 #include <string>
 #include <vector>
-#include <array>
 #include <cstdint>
 
 namespace OpenViBE

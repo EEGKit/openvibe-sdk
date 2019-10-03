@@ -1,15 +1,9 @@
 ﻿#include "ovCMessagingClient.h"
 #include "ovCMessagingImpl.hpp"
 
-#include <array>
-#include <algorithm>
-#include <iterator>
-
 using namespace Communication;
 
-MessagingClient::MessagingClient()
-	: CMessaging()
-	  , m_Client(Socket::createConnectionClient()) {}
+MessagingClient::MessagingClient() : CMessaging(), m_Client(Socket::createConnectionClient()) {}
 
 MessagingClient::~MessagingClient()
 {

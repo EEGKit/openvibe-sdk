@@ -21,9 +21,7 @@
 
 #include "ovpCBoxAlgorithmSignalResampling.h"
 
-#include <cstdio>
 #include <iostream>
-#include <vector>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -34,8 +32,7 @@ using namespace SignalProcessing;
 
 namespace SigProSTD
 {
-	template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr, typename std::enable_if<std::is_unsigned<T>::value>::type* =
-					  nullptr>
+	template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr, typename std::enable_if<std::is_unsigned<T>::value>::type* = nullptr>
 	T gcd(T a, T b)
 	{
 		T t;

@@ -1,7 +1,5 @@
 #include "ovkCPlayerContext.h"
 #include "ovkCSimulatedBox.h"
-#include "ovkCScheduler.h"
-#include "ovkCPlayer.h"
 
 using namespace OpenViBE;
 using namespace Kernel;

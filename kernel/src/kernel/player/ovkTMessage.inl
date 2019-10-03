@@ -11,13 +11,13 @@ namespace OpenViBE
 
 		template <class T>
 		TMessage<T>::TMessage(const IKernelContext& ctx)
-			: T(ctx), m_oIdentifier(OV_UndefinedIdentifier) {}
+			: T(ctx), m_id(OV_UndefinedIdentifier) {}
 
 		//___________________________________________________________________//
 		//                                                                   //
 
 		template <class T>
-		CIdentifier TMessage<T>::getIdentifier() const { return m_oIdentifier; }
+		CIdentifier TMessage<T>::getIdentifier() const { return m_id; }
 
 		template <class T>
 		uint64_t TMessage<T>::getTime() const { return m_time; }
@@ -25,9 +25,9 @@ namespace OpenViBE
 		template <class T>
 		bool TMessage<T>::setIdentifier(const CIdentifier& identifier)
 		{
-			if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
+			if (m_id != OV_UndefinedIdentifier) { return false; }
 			if (identifier == OV_UndefinedIdentifier) { return false; }
-			m_oIdentifier = identifier;
+			m_id = identifier;
 			return true;
 		}
 

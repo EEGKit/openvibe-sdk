@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../ovk_base.h"
-
 #include <openvibe/ov_all.h>
 
 namespace OpenViBE

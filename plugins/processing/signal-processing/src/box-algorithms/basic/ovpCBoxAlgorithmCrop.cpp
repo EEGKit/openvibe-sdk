@@ -1,5 +1,4 @@
 #include "ovpCBoxAlgorithmCrop.h"
-#include <cstdlib>
 
 using namespace OpenViBE;
 using namespace Kernel;

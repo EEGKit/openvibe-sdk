@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <iostream>
-
 #include "ovsp_defines.h"
 
 namespace OpenViBE

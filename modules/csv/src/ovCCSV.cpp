@@ -34,6 +34,7 @@
 #include <sstream>
 #include <numeric>
 #include <algorithm>
+#include <array>
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/algorithm/string.hpp>

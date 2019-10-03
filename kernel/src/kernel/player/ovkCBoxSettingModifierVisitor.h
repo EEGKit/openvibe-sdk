@@ -14,7 +14,7 @@ class CBoxSettingModifierVisitor final : public OpenViBE::IObjectVisitor, public
 {
 public:
 
-	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : OpenViBE::IObjectVisitor(),m_configManager(pConfigurationManager) {}
+	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : OpenViBE::IObjectVisitor(), m_configManager(pConfigurationManager) {}
 
 	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) override;
 	void processChildData(const char* sData) override;
@@ -24,10 +24,10 @@ public:
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext = nullptr;
 	OpenViBE::Kernel::IBox* m_pBox                                   = nullptr;
-	uint32_t m_ui32SettingIndex                                      = 0;
+	uint32_t m_settingIdx                                            = 0;
 	bool m_bIsParsingSettingValue                                    = false;
 	bool m_bIsParsingSettingOverride                                 = false;
-	OpenViBE::Kernel::IConfigurationManager* m_configManager = nullptr;
+	OpenViBE::Kernel::IConfigurationManager* m_configManager         = nullptr;
 
 	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier)
 };

@@ -19,11 +19,9 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
 #include <string>
 #include <cstring>
 #include <thread>
-#include <chrono>
 #include <condition_variable>
 #include <vector>
 

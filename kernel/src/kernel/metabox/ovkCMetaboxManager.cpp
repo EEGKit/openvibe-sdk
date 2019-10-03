@@ -1,14 +1,10 @@
 #include "ovkCMetaboxManager.h"
 
-#include "../../ovk_tools.h"
-
 #include <fs/IEntryEnumerator.h>
 
 #include <map>
-#include <algorithm>
 #include <random>
 
-#include "../../tools/ovkSBoxProto.h"
 #include "ovp_global_defines.h"
 #include "ovkCMetaboxObjectDesc.h"
 
@@ -35,15 +31,14 @@ namespace OpenViBE
 					const char* fullFileName = rEntry.getName();
 
 					CIdentifier scenarioID, metaboxId, metaboxHash;
-					this->getKernelContext().getScenarioManager().
-						  importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
 					if (scenarioID != OV_UndefinedIdentifier)
 					{
 						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
-						bool isValid               = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
-							bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+							const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
 							if (!hasHash)
 							{
 								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() <<
@@ -67,7 +62,7 @@ namespace OpenViBE
 
 			uint32_t resetMetaboxCount()
 			{
-				uint32_t returnValue = m_MetaBoxCount;
+				const uint32_t returnValue = m_MetaBoxCount;
 				m_MetaBoxCount       = 0;
 				return returnValue;
 			}
@@ -80,8 +75,7 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-CMetaboxManager::CMetaboxManager(const IKernelContext& ctx)
-	: TKernelObject<IMetaboxManager>(ctx)
+CMetaboxManager::CMetaboxManager(const IKernelContext& ctx) : TKernelObject<IMetaboxManager>(ctx)
 {
 	this->TKernelObject<IMetaboxManager>::getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
