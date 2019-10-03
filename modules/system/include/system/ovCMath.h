@@ -2,13 +2,7 @@
 
 #include "defines.h"
 
-#if defined TARGET_OS_Windows
-#include <float.h>
-#elif defined System_OS_Linux
- #include <cmath>
-#else
- #include <cmath>
-#endif
+#include <cmath>
 
 namespace System
 {
@@ -35,17 +29,7 @@ namespace System
 		static float randomFloat32BetweenZeroAndOne();
 		static double randomFloat64();
 
-		// Numerical check
-		// Checks if the value is normal, subnormal or zero, but not infinite or NAN.
-		static bool isfinite(double value);
-		// Checks if the value is positive or negative infinity.
-		static bool isinf(double value);
-		// Checks if the value is Not a Number
-		static bool isnan(double value);
-		// Checks if the value is normal, i.e. is neither zero, subnormal, infinite, nor NaN.
-		static bool isnormal(double value);
 	private:
-
 		Math() = delete;
 	};
 } // namespace System

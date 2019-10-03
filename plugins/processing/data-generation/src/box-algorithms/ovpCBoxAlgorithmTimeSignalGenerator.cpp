@@ -1,9 +1,5 @@
 #include "ovpCBoxAlgorithmTimeSignalGenerator.h"
 
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-
 #include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;

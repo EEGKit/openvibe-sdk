@@ -2,7 +2,6 @@
 
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
-#include <cstdio>
 
 namespace OpenViBEPlugins
 {

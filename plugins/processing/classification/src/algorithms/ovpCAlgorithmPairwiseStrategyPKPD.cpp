@@ -1,11 +1,8 @@
 #define PKPD_DEBUG 0
 #include "ovpCAlgorithmPairwiseStrategyPKPD.h"
+#include <xml/IXMLNode.h>
 
 #include <iostream>
-
-
-#include <xml/IXMLNode.h>
-#include <xml/IXMLHandler.h>
 
 namespace
 {

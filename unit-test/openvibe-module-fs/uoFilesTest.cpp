@@ -24,6 +24,7 @@
 #include <fs/Files.h>
 
 #include "ovtAssert.h"
+#include <iostream>
 
 int uoFilesTest(int /*argc*/, char* argv[])
 {

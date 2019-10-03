@@ -2,9 +2,7 @@
 
 #include "defines.h"
 #include <cstdio>
-#include <iostream>
 #include <fstream>
-#include <cinttypes>
 
 namespace FS
 {

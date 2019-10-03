@@ -2,7 +2,6 @@
 
 #include <string>
 #include <cstring>
-#include <cstdlib>
 
 using namespace EBML;
 using namespace std;

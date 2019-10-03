@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <cassert>
-#include <iostream>
 
 // \warning On Windows, avoid "using namespace System;" here as it may cause confusion with stuff coming from windows/boost
 // \note Support of C++11 steady clock:

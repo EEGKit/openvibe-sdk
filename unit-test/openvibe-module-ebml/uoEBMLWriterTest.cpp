@@ -25,7 +25,6 @@
 
 #include "ebml/defines.h"
 #include "ebml/IWriter.h"
-#include "ebml/IWriterHelper.h"
 #include "ebml/CWriterHelper.h"
 
 #include "ovtAssert.h"

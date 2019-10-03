@@ -2,8 +2,7 @@
 
 #include <system/ovCMemory.h>
 
-#include <cstdio>
-#include <limits>
+#include <climits>
 
 using namespace OpenViBE;
 using namespace Kernel;

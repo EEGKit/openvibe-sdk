@@ -2,8 +2,6 @@
 
 #include "IConnection.h"
 
-#include <map>
-#include <string>
 #include <array>
 
 namespace Socket

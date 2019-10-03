@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include <climits>
+#include <limits>
 
 namespace Communication
 {

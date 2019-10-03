@@ -24,7 +24,6 @@
 #include <fstream>
 
 #include "ebml/IReader.h"
-#include "ebml/IReaderHelper.h"
 #include "ebml/CReader.h"
 #include "ebml/CReaderHelper.h"
 

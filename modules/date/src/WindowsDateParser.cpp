@@ -55,7 +55,7 @@ using namespace DateParser;
 #define	SECSPERDAY		86400
 #define	TM_YEAR_BASE	1900
 
-static int conv_num(const char** buf, int* dest, int llim, int ulim);
+static int ConvNum(const char** buf, int* dest, const int llim, const int ulim);
 
 static const std::array<const std::string, 7> DAY = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 static const std::array<const std::string, 7> AB_DAY = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -196,7 +196,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 
 			case 'C':	/* The century number. */
 				LEGAL_ALT(ALT_E);
-				if (!(conv_num(&bp, &i, 0, 99))) { return (nullptr); }
+				if (!(ConvNum(&bp, &i, 0, 99))) { return (nullptr); }
 
 				if (split_year) { tmParsed->tm_year = (tmParsed->tm_year % 100) + (i * 100); }
 				else
@@ -209,7 +209,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'd':	/* The day of month. */
 			case 'e':
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_mday, 1, 31))) { return (nullptr); }
+				if (!(ConvNum(&bp, &tmParsed->tm_mday, 1, 31))) { return (nullptr); }
 				break;
 
 			case 'k':	/* The hour (24-hour clock representation). */
@@ -217,7 +217,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				/* FALLTHROUGH */
 			case 'H':
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_hour, 0, 23))) { return (nullptr); }
+				if (!(ConvNum(&bp, &tmParsed->tm_hour, 0, 23))) { return (nullptr); }
 				break;
 
 			case 'l':	/* The hour (12-hour clock representation). */
@@ -225,24 +225,24 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				/* FALLTHROUGH */
 			case 'I':
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_hour, 1, 12))) { return (nullptr); }
+				if (!(ConvNum(&bp, &tmParsed->tm_hour, 1, 12))) { return (nullptr); }
 				if (tmParsed->tm_hour == 12) { tmParsed->tm_hour = 0; }
 				break;
 
 			case 'j':	/* The day of year. */
 				LEGAL_ALT(0);
-				if (!(conv_num(&bp, &i, 1, 366))) { return (nullptr); }
+				if (!(ConvNum(&bp, &i, 1, 366))) { return (nullptr); }
 				tmParsed->tm_yday = i - 1;
 				break;
 
 			case 'M':	/* The minute. */
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_min, 0, 59))) { return (nullptr); }
+				if (!(ConvNum(&bp, &tmParsed->tm_min, 0, 59))) { return (nullptr); }
 				break;
 
 			case 'm':	/* The month. */
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &i, 1, 12))) { return (nullptr); }
+				if (!(ConvNum(&bp, &i, 1, 12))) { return (nullptr); }
 				tmParsed->tm_mon = i - 1;
 				break;
 
@@ -269,7 +269,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 
 			case 'S':	/* The seconds. */
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_sec, 0, 61))) { return (nullptr); }
+				if (!(ConvNum(&bp, &tmParsed->tm_sec, 0, 61))) { return (nullptr); }
 				break;
 
 			case 'U':	/* The week of year, beginning on sunday. */
@@ -281,24 +281,24 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				* point to calculate a real value, so just check the
 				* range for now.
 				*/
-				if (!(conv_num(&bp, &i, 0, 53))) { return (nullptr); }
+				if (!(ConvNum(&bp, &i, 0, 53))) { return (nullptr); }
 				break;
 
 			case 'w':	/* The day of week, beginning on sunday. */
 				LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_wday, 0, 6))) { return (nullptr); }
+				if (!(ConvNum(&bp, &tmParsed->tm_wday, 0, 6))) { return (nullptr); }
 				break;
 
 			case 'Y':	/* The year. */
 				LEGAL_ALT(ALT_E);
-				if (!(conv_num(&bp, &i, 0, 9999))) { return (nullptr); }
+				if (!(ConvNum(&bp, &i, 0, 9999))) { return (nullptr); }
 
 				tmParsed->tm_year = i - TM_YEAR_BASE;
 				break;
 
 			case 'y':	/* The year within 100 years of the epoch. */
 				LEGAL_ALT(ALT_E | ALT_O);
-				if (!(conv_num(&bp, &i, 0, 99))) { return (nullptr); }
+				if (!(ConvNum(&bp, &i, 0, 99))) { return (nullptr); }
 
 				if (split_year)
 				{
@@ -329,7 +329,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 }
 
 
-static int conv_num(const char** buf, int* dest, const int llim, const int ulim)
+static int ConvNum(const char** buf, int* dest, const int llim, const int ulim)
 {
 	int result = 0;
 

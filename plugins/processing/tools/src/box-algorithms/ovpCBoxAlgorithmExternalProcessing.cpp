@@ -1,5 +1,4 @@
 ﻿#include "ovpCBoxAlgorithmExternalProcessing.h"
-#include <fs/Files.h>
 
 #include <chrono>
 #include <cstdlib>
@@ -454,7 +453,7 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 
 char* strToChar(const std::string& s)
 {
-	char* pc;
+	char* pc = nullptr;
 	std::copy(s.begin(), s.end(), pc);
 	return pc;
 }

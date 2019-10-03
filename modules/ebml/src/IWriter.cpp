@@ -1,7 +1,6 @@
 #include "ebml/IWriter.h"
 
 #include <vector>
-#include <cstdlib>
 #include <cstring>
 
 using namespace EBML;

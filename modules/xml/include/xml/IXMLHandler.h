@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include "IXMLNode.h"
+#include <string>
 
 namespace XML
 {

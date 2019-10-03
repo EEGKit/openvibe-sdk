@@ -61,7 +61,7 @@ namespace
 		OpenViBE::CString m_name;
 		OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 		OpenViBE::CIdentifier m_id     = OV_UndefinedIdentifier;
-		bool m_bDeprecated                      = false;
+		bool m_bDeprecated             = false;
 	};
 
 	class CInputOutput : public CInterfacor
@@ -991,12 +991,12 @@ namespace OpenViBE
 				}
 
 				CSetting s;
-				s.m_name            = name;
-				s.m_typeID = typeID;
-				s.m_defaultValue   = l_sValue;
-				s.m_value          = l_sValue;
-				s.m_bMod            = bModifiability;
-				s.m_id     = identifier;
+				s.m_name         = name;
+				s.m_typeID       = typeID;
+				s.m_defaultValue = l_sValue;
+				s.m_value        = l_sValue;
+				s.m_bMod         = bModifiability;
+				s.m_id           = identifier;
 
 				const uint32_t l_ui32Idx = index;
 
@@ -1339,7 +1339,7 @@ namespace OpenViBE
 				if (m_isObserverNotificationActive)
 				{
 					BoxEventMessage l_oEvent;
-					l_oEvent.m_Type          = eType;
+					l_oEvent.m_Type      = eType;
 					l_oEvent.m_FirstIdx  = firstIdx;
 					l_oEvent.m_SecondIdx = secondIdx;
 
@@ -1384,7 +1384,7 @@ namespace OpenViBE
 										" identifiers. An entity with the same identifier exists.",
 										ErrorType::ResourceNotFound);
 					m_interfacors[interfacorType][index]->m_id = newID;
-					m_interfacorIDToIdx[interfacorType][newID]          = index;
+					m_interfacorIDToIdx[interfacorType][newID] = index;
 					// remove the old identifier key
 					const auto itOld = m_interfacorIDToIdx[interfacorType].find(oldIdentifier);
 					if (itOld != m_interfacorIDToIdx[interfacorType].end()) { m_interfacorIDToIdx[interfacorType].erase(itOld); }

@@ -1,8 +1,6 @@
 #include "ovpCBoxAlgorithmOVCSVFileReader.h"
-#include <iostream>
 #include <sstream>
 #include <map>
-#include <cmath>  // std::ceil() on Linux
 #include <algorithm>
 
 #include <openvibe/ovTimeArithmetics.h>
@@ -14,6 +12,7 @@ using namespace Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace FileIO;
+using namespace TimeArithmetics;
 
 CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader()
 	: m_readerLib(createCSVHandler(), releaseCSVHandler), m_isHeaderSent(false)
@@ -188,7 +187,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send", ErrorType::Internal);
 	}
 
-	const double currentTime = TimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime());
+	const double currentTime = timeToSeconds(this->getPlayerContext().getCurrentTime());
 
 	if (!m_readerLib->hasDataToRead() && m_savedChunks.empty()) { return true; }
 
@@ -228,9 +227,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 				OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", ErrorType::Internal);
 
-				OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
-										TimeArithmetics::secondsToTime(chunk.startTime),
-										TimeArithmetics::secondsToTime(chunk.endTime)),
+				OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, secondsToTime(chunk.startTime), TimeArithmetics::secondsToTime(chunk.endTime)),
 									"Failed to mark signal output as ready to send",
 									ErrorType::Internal);
 
@@ -244,9 +241,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		{
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", ErrorType::Internal);
 
-			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
-									TimeArithmetics::secondsToTime(m_savedChunks.back().startTime),
-									TimeArithmetics::secondsToTime(m_savedChunks.back().endTime)),
+			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, secondsToTime(m_savedChunks.back().startTime), TimeArithmetics::secondsToTime(m_savedChunks.back().endTime)),
 								"Failed to mark signal output as ready to send",
 								ErrorType::Internal);
 		}
@@ -297,8 +292,8 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
-				stimulationSet->appendStimulation(it->stimulationIdentifier, TimeArithmetics::secondsToTime(it->stimulationDate), TimeArithmetics::secondsToTime(it->stimulationDuration));
-				m_lastStimulationDate = TimeArithmetics::secondsToTime(it->stimulationDate);
+				stimulationSet->appendStimulation(it->stimulationIdentifier, secondsToTime(it->stimulationDate), secondsToTime(it->stimulationDuration));
+				m_lastStimulationDate = secondsToTime(it->stimulationDate);
 			}
 			else
 			{

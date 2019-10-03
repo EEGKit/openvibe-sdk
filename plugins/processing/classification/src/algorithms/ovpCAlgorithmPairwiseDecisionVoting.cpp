@@ -3,9 +3,7 @@
 
 #include <iostream>
 
-
 #include <xml/IXMLNode.h>
-#include <xml/IXMLHandler.h>
 
 namespace
 {

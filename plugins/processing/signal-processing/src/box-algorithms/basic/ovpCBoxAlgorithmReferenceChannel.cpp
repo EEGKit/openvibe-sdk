@@ -73,8 +73,6 @@ bool CBoxAlgorithmReferenceChannel::processInput(const uint32_t /*index*/)
 	return true;
 }
 
-#include <cstdio>
-
 bool CBoxAlgorithmReferenceChannel::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();

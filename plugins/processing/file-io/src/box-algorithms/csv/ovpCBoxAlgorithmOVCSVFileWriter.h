@@ -2,7 +2,6 @@
 
 #include "../../ovp_defines.h"
 #include <cstdio>
-#include <fstream>
 #include <memory>
 
 #include <openvibe/ov_all.h>
