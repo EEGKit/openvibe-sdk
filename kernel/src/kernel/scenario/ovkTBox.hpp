@@ -3,7 +3,6 @@
 #include "../ovkTKernelObject.h"
 
 #include "ovkTAttributable.h"
-#include "ovkCScenario.h"
 #include "ovkCBoxListenerContext.h"
 #include "ovkCBoxProto.h"
 #include <openvibe/plugins/ovIPluginObjectDesc.h>
@@ -20,7 +19,7 @@
 
 namespace
 {
-	std::map<OpenViBE::Kernel::EBoxInterfacorType, OpenViBE::CString> g_InterfacorTypeToName = {
+	std::map<OpenViBE::Kernel::EBoxInterfacorType, OpenViBE::CString> interfacorTypeToName = {
 		{ OpenViBE::Kernel::EBoxInterfacorType::Setting, "Setting" },
 		{ OpenViBE::Kernel::EBoxInterfacorType::Input, "Input" },
 		{ OpenViBE::Kernel::EBoxInterfacorType::Output, "Output" }
@@ -330,7 +329,7 @@ namespace OpenViBE
 					case Input:
 					case Output:
 						OV_ERROR_UNLESS_KRF(this->getTypeManager().isStream(typeID),
-											"While adding " << g_InterfacorTypeToName.at(interfacorType) << " '" << newName << "' to box '" << this->getName()
+											"While adding " << interfacorTypeToName.at(interfacorType) << " '" << newName << "' to box '" << this->getName()
 											<< "', unknown stream type identifier " << typeID.toString(),
 											ErrorType::BadArgument);
 						break;
@@ -408,7 +407,7 @@ namespace OpenViBE
 			{
 				identifier = OV_UndefinedIdentifier;
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -421,7 +420,7 @@ namespace OpenViBE
 				index         = OV_Value_UndefinedIndexUInt;
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with identifier " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with identifier " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				index = it->second;
@@ -433,7 +432,7 @@ namespace OpenViBE
 				index         = OV_Value_UndefinedIndexUInt;
 				const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
 
 				index = it->second;
 				return true;
@@ -442,7 +441,7 @@ namespace OpenViBE
 			bool getInterfacorType(const EBoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeID) const override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])", ErrorType::OutOfBound);
 
 				typeID = m_interfacors.at(interfacorType)[index]->m_typeID;
@@ -453,7 +452,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				return this->getInterfacorType(interfacorType, it->second, typeID);
@@ -463,7 +462,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
 
 				return this->getInterfacorType(interfacorType, it->second, typeID);
 			}
@@ -472,7 +471,7 @@ namespace OpenViBE
 			bool getInterfacorName(const EBoxInterfacorType interfacorType, const uint32_t index, CString& name) const override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -484,7 +483,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				return this->getInputName(it->second, name);
@@ -494,7 +493,7 @@ namespace OpenViBE
 			{
 				if (index >= m_interfacors.at(interfacorType).size()) { OV_WARNING_K("DUH"); }
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -506,7 +505,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				return this->getInterfacorDeprecatedStatus(interfacorType, it->second, value);
@@ -535,7 +534,7 @@ namespace OpenViBE
 					case Input:
 					case Output:
 						OV_ERROR_UNLESS_KRF(this->getTypeManager().isStream(typeID),
-											"While changing box '" << this->getName() << "' " << g_InterfacorTypeToName.at(interfacorType) <<
+											"While changing box '" << this->getName() << "' " << interfacorTypeToName.at(interfacorType) <<
 											" type, unknown stream type identifier " << typeID.toString(),
 											ErrorType::BadArgument);
 						break;
@@ -544,7 +543,7 @@ namespace OpenViBE
 				}
 
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -573,7 +572,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorType(interfacorType, it->second, typeID);
@@ -583,7 +582,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorNameToIdx[interfacorType].find(name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx[interfacorType].end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
 
 				return this->setInterfacorType(interfacorType, it->second, typeID);
 			}
@@ -592,7 +591,7 @@ namespace OpenViBE
 			bool setInterfacorName(const EBoxInterfacorType interfacorType, const uint32_t index, const CString& newName) override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors[interfacorType].size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors[interfacorType].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -605,7 +604,7 @@ namespace OpenViBE
 				// remove entry from name key map
 				const auto it = m_interfacorNameToIdx[interfacorType].find(m_interfacors[interfacorType][index]->m_name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx[interfacorType].end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << m_interfacors[interfacorType][index]->
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with name " << m_interfacors[interfacorType][index]->
 									m_name,
 									ErrorType::ResourceNotFound);
 				m_interfacorNameToIdx[interfacorType].erase(it);
@@ -638,7 +637,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorName(interfacorType, it->second, newName);
@@ -647,7 +646,7 @@ namespace OpenViBE
 			bool setInterfacorDeprecatedStatus(const EBoxInterfacorType interfacorType, const uint32_t index, const bool newValue) override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors[interfacorType].size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors[interfacorType].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -660,7 +659,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
-									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << "  with id " << identifier.toString(),
+									"Failed to find " << interfacorTypeToName.at(interfacorType) << "  with id " << identifier.toString(),
 									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorDeprecatedStatus(interfacorType, it->second, newValue);
@@ -1300,11 +1299,11 @@ namespace OpenViBE
 			bool swapInterfacors(const EBoxInterfacorType interfacorType, const uint32_t indexA, const uint32_t indexB)
 			{
 				OV_ERROR_UNLESS_KRF(indexA < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 				OV_ERROR_UNLESS_KRF(indexB < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexB << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << indexB << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
@@ -1366,11 +1365,11 @@ namespace OpenViBE
 			bool updateInterfacorIdentifier(const EBoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newID) override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
+									interfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(
 										m_interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				OV_ERROR_UNLESS_KRF(newID != OV_UndefinedIdentifier, g_InterfacorTypeToName.at(interfacorType) << " identifier can not be undefined",
+				OV_ERROR_UNLESS_KRF(newID != OV_UndefinedIdentifier, interfacorTypeToName.at(interfacorType) << " identifier can not be undefined",
 									ErrorType::BadArgument);
 
 				CIdentifier oldIdentifier = OV_UndefinedIdentifier;
@@ -1381,7 +1380,7 @@ namespace OpenViBE
 					// identifier key update is necessary
 					const auto it = m_interfacorIDToIdx.at(interfacorType).find(newID);
 					OV_ERROR_UNLESS_KRF(it == m_interfacorIDToIdx.at(interfacorType).end(),
-										"Conflict in " << g_InterfacorTypeToName.at(interfacorType) <<
+										"Conflict in " << interfacorTypeToName.at(interfacorType) <<
 										" identifiers. An entity with the same identifier exists.",
 										ErrorType::ResourceNotFound);
 					m_interfacors[interfacorType][index]->m_id = newID;
