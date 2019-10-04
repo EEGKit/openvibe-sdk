@@ -44,7 +44,7 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 	ip_pPairwise = OV_UndefinedIdentifier.toUInteger();
 
 	m_pDecisionStrategyAlgorithm  = nullptr;
-	m_oPairwiseDecisionIdentifier = OV_UndefinedIdentifier;
+	m_oPairwiseDecisionID = OV_UndefinedIdentifier;
 
 	return CAlgorithmPairingStrategy::initialize();
 }
@@ -82,10 +82,10 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	//Create the decision strategy
 	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to initialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
-	m_oPairwiseDecisionIdentifier = this->getEnumerationParameter(
+	m_oPairwiseDecisionID = this->getEnumerationParameter(
 		OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, OVP_TypeId_ClassificationPairwiseStrategy);
 
-	OV_ERROR_UNLESS_KRF(m_oPairwiseDecisionIdentifier != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(m_oPairwiseDecisionID != OV_UndefinedIdentifier,
 						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.toString() << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
@@ -95,7 +95,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
 		m_pDecisionStrategyAlgorithm = nullptr;
 	}
-	m_pDecisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionIdentifier));
+	m_pDecisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionID));
 
 	OV_ERROR_UNLESS_KRF(m_pDecisionStrategyAlgorithm->initialize(), "Failed to unitialize decision strategy algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
@@ -318,7 +318,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration() 
 	m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration);
 	tmp->addChild(static_cast<XML::IXMLNode*>(op_pConfiguration));
 
-	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_oPairwiseDecisionIdentifier.toString());
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_oPairwiseDecisionID.toString());
 
 	return tmp;
 }
@@ -367,7 +367,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* configNode)
 	tempNode = configNode->getChildByName(PAIRWISE_DECISION_NAME);
 	CIdentifier pairwiseID;
 	pairwiseID.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
-	if (pairwiseID != m_oPairwiseDecisionIdentifier)
+	if (pairwiseID != m_oPairwiseDecisionID)
 	{
 		if (m_pDecisionStrategyAlgorithm != nullptr)
 		{
@@ -375,8 +375,8 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* configNode)
 			this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
 			m_pDecisionStrategyAlgorithm = nullptr;
 		}
-		m_oPairwiseDecisionIdentifier = pairwiseID;
-		m_pDecisionStrategyAlgorithm  = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionIdentifier));
+		m_oPairwiseDecisionID = pairwiseID;
+		m_pDecisionStrategyAlgorithm  = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionID));
 		m_pDecisionStrategyAlgorithm->initialize();
 	}
 	TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration));

@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 		public:
 
 			CBoxAlgorithmVotingClassifierListener()
-				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
+				: m_oInputTypeID(OV_TypeId_Stimulations) { }
 
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
@@ -65,10 +65,10 @@ namespace OpenViBEPlugins
 				box.getInputType(index, inputTypeID);
 				if (inputTypeID == OV_TypeId_Stimulations || inputTypeID == OV_TypeId_StreamedMatrix)
 				{
-					m_oInputTypeIdentifier = inputTypeID;
-					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeIdentifier); }
+					m_oInputTypeID = inputTypeID;
+					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeID); }
 				}
-				else { box.setInputType(index, m_oInputTypeIdentifier); }
+				else { box.setInputType(index, m_oInputTypeID); }
 				return true;
 			}
 
@@ -76,7 +76,7 @@ namespace OpenViBEPlugins
 			{
 				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
-					box.setInputType(i, m_oInputTypeIdentifier);
+					box.setInputType(i, m_oInputTypeID);
 					box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());
 				}
 				return true;
@@ -86,7 +86,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_oInputTypeID = OV_UndefinedIdentifier;
 		};
 
 		class CBoxAlgorithmVotingClassifierDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 				OpenViBE::CMatrix* m_pFeatureVectorMatrix;
 				uint64_t m_startTime;
 				uint64_t m_endTime;
-				uint32_t m_ui32InputIndex;
+				uint32_t m_ui32InputIdx;
 			} SFeatureVector;
 
 			bool train(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx);

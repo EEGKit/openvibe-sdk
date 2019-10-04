@@ -225,7 +225,7 @@ bool CAlgorithmProxy::removeOutputTrigger(const CIdentifier& triggerID)
 
 bool CAlgorithmProxy::initialize()
 {
-	assert(!m_bIsInitialized);
+	assert(!m_isInitialized);
 
 	return translateException([&]()
 							  {
@@ -233,15 +233,15 @@ bool CAlgorithmProxy::initialize()
 								  // The dual state initialized or not does not take into account
 								  // a partially initialized state. Thus, we have to trust algorithms to implement
 								  // their initialization routine as a rollback transaction mechanism
-								  m_bIsInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
-								  return m_bIsInitialized;
+								  m_isInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
+								  return m_isInitialized;
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1));
 }
 
 bool CAlgorithmProxy::uninitialize()
 {
-	assert(m_bIsInitialized);
+	assert(m_isInitialized);
 
 	return translateException([&]()
 							  {
@@ -253,7 +253,7 @@ bool CAlgorithmProxy::uninitialize()
 
 bool CAlgorithmProxy::process()
 {
-	assert(m_bIsInitialized);
+	assert(m_isInitialized);
 
 	return translateException([&]()
 							  {
@@ -268,7 +268,7 @@ bool CAlgorithmProxy::process()
 
 bool CAlgorithmProxy::process(const CIdentifier& triggerID)
 {
-	assert(m_bIsInitialized);
+	assert(m_isInitialized);
 	if (!this->activateInputTrigger(triggerID, true)) { return false; }
 	return this->process();
 }

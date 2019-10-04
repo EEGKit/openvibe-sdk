@@ -24,14 +24,14 @@ using namespace Plugins;
 
 void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, uint64_t /*nAttribute*/)
 {
-	if (!m_bIsParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_bIsParsingSettingOverride = true; } }
-	else if (string(name) == string("SettingValue")) { m_bIsParsingSettingValue = true; }
-	else { m_bIsParsingSettingValue = false; }
+	if (!m_isParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_isParsingSettingOverride = true; } }
+	else if (string(name) == string("SettingValue")) { m_isParsingSettingValue = true; }
+	else { m_isParsingSettingValue = false; }
 }
 
 void CBoxSettingModifierVisitor::processChildData(const char* sData)
 {
-	if (m_bIsParsingSettingValue)
+	if (m_isParsingSettingValue)
 	{
 		m_pObjectVisitorContext->getLogManager() << LogLevel_Debug << "Using [" << CString(sData) << "] as setting " << m_settingIdx << "...\n";
 		m_pBox->setSettingValue(m_settingIdx, sData);
@@ -41,8 +41,8 @@ void CBoxSettingModifierVisitor::processChildData(const char* sData)
 void CBoxSettingModifierVisitor::closeChild()
 {
 	//We need to count it here because we need to take in account the empty value
-	if (m_bIsParsingSettingValue) { m_settingIdx++; }
-	m_bIsParsingSettingValue = false;
+	if (m_isParsingSettingValue) { m_settingIdx++; }
+	m_isParsingSettingValue = false;
 }
 
 bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& box)
@@ -68,16 +68,16 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 		// adds new box settings
 		m_pBox                      = &box;
 		m_settingIdx                = 0;
-		m_bIsParsingSettingValue    = false;
-		m_bIsParsingSettingOverride = false;
+		m_isParsingSettingValue    = false;
+		m_isParsingSettingOverride = false;
 
 		auto cleanup = [&]()
 		{
 			// cleans up internal state
 			m_pBox                      = nullptr;
 			m_settingIdx                = 0;
-			m_bIsParsingSettingValue    = false;
-			m_bIsParsingSettingOverride = false;
+			m_isParsingSettingValue    = false;
+			m_isParsingSettingOverride = false;
 
 			// releases XML reader
 			l_pReader->release();

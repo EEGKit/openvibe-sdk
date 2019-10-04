@@ -51,7 +51,7 @@ namespace XML
 		std::map<std::string, std::string> m_mAttibuteMap;
 		std::string m_sNodeName;
 		std::string m_sPCData;
-		bool m_bHasPCData;
+		bool m_hasPCData;
 	};
 }
 
@@ -64,7 +64,7 @@ void IXMLNodeImpl::release() { delete this; }
 
 IXMLNodeImpl::IXMLNodeImpl(const char* name): m_sNodeName(name)
 											   , m_sPCData("")
-											   , m_bHasPCData(false) {}
+											   , m_hasPCData(false) {}
 
 const char* IXMLNodeImpl::getName() const { return m_sNodeName.c_str(); }
 
@@ -90,13 +90,13 @@ const char* IXMLNodeImpl::getAttribute(const char* sAttributeName) const
 void IXMLNodeImpl::setPCData(const char* childData)
 {
 	m_sPCData    = childData;
-	m_bHasPCData = true;
+	m_hasPCData = true;
 }
 
 void IXMLNodeImpl::appendPCData(const char* childData)
 {
 	m_sPCData += childData;
-	m_bHasPCData = true;
+	m_hasPCData = true;
 }
 
 const char* IXMLNodeImpl::getPCData() const { return m_sPCData.c_str(); }
@@ -154,7 +154,7 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 		}
 	}
 	//If we have nothing else to print let's close the node and return
-	if (!m_bHasPCData && m_oNodeVector.empty())
+	if (!m_hasPCData && m_oNodeVector.empty())
 	{
 		l_sRes       = l_sRes + string("/>");
 		char* l_pRes = ::strdup(l_sRes.c_str());
@@ -163,7 +163,7 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 
 	l_sRes = l_sRes + string(">");
 
-	if (m_bHasPCData) { l_sRes = l_sRes + sanitize(m_sPCData); }
+	if (m_hasPCData) { l_sRes = l_sRes + sanitize(m_sPCData); }
 
 	for (auto it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{

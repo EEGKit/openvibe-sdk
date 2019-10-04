@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
 				//we are only interested in the setting 0 and the type changes (select or reject)
-				if ((index == 0 || index == 1) && (!m_bHasUserSetName))
+				if ((index == 0 || index == 1) && (!m_hasUserSetName))
 				{
 					OpenViBE::CString l_sChannels;
 					box.getSettingValue(0, l_sChannels);
@@ -94,26 +94,26 @@ namespace OpenViBEPlugins
 			bool onNameChanged(OpenViBE::Kernel::IBox& box) override
 			//when user set box name manually
 			{
-				if (m_bHasUserSetName)
+				if (m_hasUserSetName)
 				{
 					const OpenViBE::CString rename = box.getName();
 					if (rename == OpenViBE::CString("Channel Selector"))
 					{//default name, we switch back to default behaviour
-						m_bHasUserSetName = false;
+						m_hasUserSetName = false;
 					}
 				}
-				else { m_bHasUserSetName = true; }
+				else { m_hasUserSetName = true; }
 				return true;
 			}
 
 			bool initialize() override
 			{
-				m_bHasUserSetName = false;//need to initialize this value
+				m_hasUserSetName = false;//need to initialize this value
 				return true;
 			}
 
 		private:
-			bool m_bHasUserSetName = false;
+			bool m_hasUserSetName = false;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};

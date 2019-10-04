@@ -183,28 +183,28 @@ bool CMatrixImpl::refreshInternalBuffer() const
 // ________________________________________________________________________________________________________________
 //
 
-CMatrix::CMatrix() { m_pMatrixImpl = new CMatrixImpl(); }
-CMatrix::CMatrix(const CMatrix& other) { m_pMatrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_pMatrixImpl)); }
-CMatrix::~CMatrix() { delete m_pMatrixImpl; }
+CMatrix::CMatrix() { m_matrixImpl = new CMatrixImpl(); }
+CMatrix::CMatrix(const CMatrix& other) { m_matrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_matrixImpl)); }
+CMatrix::~CMatrix() { delete m_matrixImpl; }
 
 CMatrix& CMatrix::operator=(const CMatrix& other)
 {
-	delete m_pMatrixImpl;
-	m_pMatrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_pMatrixImpl));
+	delete m_matrixImpl;
+	m_matrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_matrixImpl));
 	return *this;
 }
 
-uint32_t CMatrix::getDimensionCount() const { return m_pMatrixImpl->getDimensionCount(); }
-uint32_t CMatrix::getDimensionSize(const uint32_t index) const { return m_pMatrixImpl->getDimensionSize(index); }
-const char* CMatrix::getDimensionLabel(const uint32_t index, const uint32_t entryIndex) const { return m_pMatrixImpl->getDimensionLabel(index, entryIndex); }
-const double* CMatrix::getBuffer() const { return m_pMatrixImpl->getBuffer(); }
-uint32_t CMatrix::getBufferElementCount() const { return m_pMatrixImpl->getBufferElementCount(); }
-bool CMatrix::setDimensionCount(const uint32_t count) { return m_pMatrixImpl->setDimensionCount(count); }
-bool CMatrix::setDimensionSize(const uint32_t index, const uint32_t size) { return m_pMatrixImpl->setDimensionSize(index, size); }
+uint32_t CMatrix::getDimensionCount() const { return m_matrixImpl->getDimensionCount(); }
+uint32_t CMatrix::getDimensionSize(const uint32_t index) const { return m_matrixImpl->getDimensionSize(index); }
+const char* CMatrix::getDimensionLabel(const uint32_t index, const uint32_t entryIndex) const { return m_matrixImpl->getDimensionLabel(index, entryIndex); }
+const double* CMatrix::getBuffer() const { return m_matrixImpl->getBuffer(); }
+uint32_t CMatrix::getBufferElementCount() const { return m_matrixImpl->getBufferElementCount(); }
+bool CMatrix::setDimensionCount(const uint32_t count) { return m_matrixImpl->setDimensionCount(count); }
+bool CMatrix::setDimensionSize(const uint32_t index, const uint32_t size) { return m_matrixImpl->setDimensionSize(index, size); }
 
 bool CMatrix::setDimensionLabel(const uint32_t index, const uint32_t entryIndex, const char* label)
 {
-	return m_pMatrixImpl->setDimensionLabel(index, entryIndex, label);
+	return m_matrixImpl->setDimensionLabel(index, entryIndex, label);
 }
 
-double* CMatrix::getBuffer() { return m_pMatrixImpl->getBuffer(); }
+double* CMatrix::getBuffer() { return m_matrixImpl->getBuffer(); }

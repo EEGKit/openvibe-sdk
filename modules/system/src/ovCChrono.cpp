@@ -36,9 +36,9 @@ bool CChrono::reset(uint32_t ui32StepCount)
 	m_pStepOutTime = stepOutTime;
 
 	m_nStep     = ui32StepCount;
-	m_ui32StepIndex     = 0;
-	m_bIsInStep         = false;
-	m_bHasNewEstimation = false;
+	m_ui32StepIdx     = 0;
+	m_isInStep         = false;
+	m_hasNewEstimation = false;
 
 	m_totalStepInTime  = 0;
 	m_totalStepOutTime = 0;
@@ -48,12 +48,12 @@ bool CChrono::reset(uint32_t ui32StepCount)
 
 bool CChrono::stepIn()
 {
-	if (m_bIsInStep || !m_nStep) { return false; }
+	if (m_isInStep || !m_nStep) { return false; }
 
-	m_bIsInStep = !m_bIsInStep;
+	m_isInStep = !m_isInStep;
 
-	m_pStepInTime[m_ui32StepIndex] = Time::zgetTime();
-	if (m_ui32StepIndex == m_nStep)
+	m_pStepInTime[m_ui32StepIdx] = Time::zgetTime();
+	if (m_ui32StepIdx == m_nStep)
 	{
 		m_totalStepInTime  = 0;
 		m_totalStepOutTime = 0;
@@ -63,22 +63,22 @@ bool CChrono::stepIn()
 			m_totalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];
 		}
 		m_pStepInTime[0]    = m_pStepInTime[m_nStep];
-		m_ui32StepIndex     = 0;
-		m_bHasNewEstimation = true;
+		m_ui32StepIdx     = 0;
+		m_hasNewEstimation = true;
 	}
-	else { m_bHasNewEstimation = false; }
+	else { m_hasNewEstimation = false; }
 
 	return true;
 }
 
 bool CChrono::stepOut()
 {
-	if (!m_bIsInStep || !m_nStep) { return false; }
+	if (!m_isInStep || !m_nStep) { return false; }
 
-	m_bIsInStep = !m_bIsInStep;
+	m_isInStep = !m_isInStep;
 
-	m_pStepOutTime[m_ui32StepIndex] = Time::zgetTime();
-	m_ui32StepIndex++;
+	m_pStepOutTime[m_ui32StepIdx] = Time::zgetTime();
+	m_ui32StepIdx++;
 
 	return true;
 }
@@ -103,4 +103,4 @@ double CChrono::getStepOutPercentage() const
 	return totalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / totalStepDuration : 0;
 }
 
-bool CChrono::hasNewEstimation() { return m_bHasNewEstimation; }
+bool CChrono::hasNewEstimation() { return m_hasNewEstimation; }

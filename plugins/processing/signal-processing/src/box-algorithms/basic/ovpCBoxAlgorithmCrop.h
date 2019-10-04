@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::IMatrix* m_pMatrix                        = nullptr;
+			OpenViBE::IMatrix* m_matrix                        = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
 			double m_f64MinCropValue                            = 0;

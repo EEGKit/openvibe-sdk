@@ -91,7 +91,7 @@ namespace OpenViBE
 			CString m_StockItemName;
 			CString m_AddedSoftwareVersion;
 			CString m_UpdatedSoftwareVersion;
-			CString m_MetaboxIdentifier;
+			CString m_MetaboxID;
 
 			std::vector<SIOStream> m_Inputs;
 			std::vector<SIOStream> m_Outputs;

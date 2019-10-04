@@ -24,9 +24,9 @@ namespace XML
 	protected:
 		IWriterCallback& m_rWriterCallback;
 		stack<string> m_vNodes;
-		bool m_bHasChild             = false;
-		bool m_bHasData              = false;
-		bool m_bHasClosedOpeningNode = true;
+		bool m_hasChild             = false;
+		bool m_hasData              = false;
+		bool m_hasClosedOpeningNode = true;
 	};
 }
 
@@ -36,21 +36,21 @@ bool CWriter::openChild(const char* name)
 {
 	if (name == nullptr) { return false; }
 
-	if (m_bHasData) { return false; }
+	if (m_hasData) { return false; }
 
-	if (!m_bHasClosedOpeningNode)
+	if (!m_hasClosedOpeningNode)
 	{
 		m_rWriterCallback.write(">");
-		m_bHasClosedOpeningNode = true;
+		m_hasClosedOpeningNode = true;
 	}
 
 	string l_sIndent(m_vNodes.size(), '\t');
 	string res = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
 	m_rWriterCallback.write(res.c_str());
 	m_vNodes.push(name);
-	m_bHasChild             = false;
-	m_bHasData              = false;
-	m_bHasClosedOpeningNode = false;
+	m_hasChild             = false;
+	m_hasData              = false;
+	m_hasClosedOpeningNode = false;
 	return true;
 }
 
@@ -58,20 +58,20 @@ bool CWriter::setChildData(const char* sData)
 {
 	if (sData == nullptr) { return false; }
 
-	if (m_bHasChild) { return false; }
+	if (m_hasChild) { return false; }
 
-	if (!m_bHasClosedOpeningNode)
+	if (!m_hasClosedOpeningNode)
 	{
 		m_rWriterCallback.write(">");
-		m_bHasClosedOpeningNode = true;
+		m_hasClosedOpeningNode = true;
 	}
 
 	string l_sData(sData);
 	this->sanitize(l_sData, false);
 
 	m_rWriterCallback.write(l_sData.c_str());
-	m_bHasChild = false;
-	m_bHasData  = true;
+	m_hasChild = false;
+	m_hasData  = true;
 	return true;
 }
 
@@ -81,11 +81,11 @@ bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeVal
 
 	if (sAttributeValue == nullptr) { return false; }
 
-	if (m_bHasChild) { return false; }
+	if (m_hasChild) { return false; }
 
-	if (m_bHasData) { return false; }
+	if (m_hasData) { return false; }
 
-	if (m_bHasClosedOpeningNode) { return false; }
+	if (m_hasClosedOpeningNode) { return false; }
 
 	string l_sAttributeValue(sAttributeValue);
 	this->sanitize(l_sAttributeValue);
@@ -99,18 +99,18 @@ bool CWriter::closeChild()
 {
 	if (m_vNodes.empty()) { return false; }
 
-	if (!m_bHasClosedOpeningNode)
+	if (!m_hasClosedOpeningNode)
 	{
 		m_rWriterCallback.write(">");
-		m_bHasClosedOpeningNode = true;
+		m_hasClosedOpeningNode = true;
 	}
 
 	string l_sIndent(m_vNodes.size() - 1, '\t');
-	string res = ((m_bHasData || !m_bHasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
+	string res = ((m_hasData || !m_hasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
 	m_rWriterCallback.write(res.c_str());
 	m_vNodes.pop();
-	m_bHasChild = true;
-	m_bHasData  = false;
+	m_hasChild = true;
+	m_hasData  = false;
 	return true;
 }
 

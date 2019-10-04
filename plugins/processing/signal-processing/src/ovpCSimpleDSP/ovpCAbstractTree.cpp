@@ -411,7 +411,7 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& parser)
 
 void CAbstractTreeValueNode::generateCode(CEquationParser& parser) { parser.push_value(m_value); }
 
-void CAbstractTreeVariableNode::generateCode(CEquationParser& parser) { parser.push_var(m_ui32Index); }
+void CAbstractTreeVariableNode::generateCode(CEquationParser& parser) { parser.push_var(m_ui32Idx); }
 
 void CAbstractTree::recognizeSpecialTree(uint64_t& treeId, double& parameter)
 {

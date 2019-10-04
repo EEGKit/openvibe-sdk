@@ -59,7 +59,7 @@ namespace OpenViBE
 			bool internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const;
 
 			IConfigurationManager* m_pParentConfigurationManager = nullptr;
-			mutable uint32_t m_ui32Index;
+			mutable uint32_t m_ui32Idx;
 			mutable uint32_t m_ui32StartTime;
 
 			uint32_t getRandom() const;

@@ -30,9 +30,9 @@ namespace System
 		uint64_t* m_pStepInTime  = nullptr;
 		uint64_t* m_pStepOutTime = nullptr;
 		uint32_t m_nStep = 0;
-		uint32_t m_ui32StepIndex = 0;
-		bool m_bIsInStep         = false;
-		bool m_bHasNewEstimation = false;
+		uint32_t m_ui32StepIdx = 0;
+		bool m_isInStep         = false;
+		bool m_hasNewEstimation = false;
 
 		uint64_t m_totalStepInTime  = 0;
 		uint64_t m_totalStepOutTime = 0;

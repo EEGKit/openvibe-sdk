@@ -473,11 +473,11 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 ******************************************************************************/
 
 EBMLMessage::EBMLMessage()
-	: m_IOIndex(std::numeric_limits<decltype(m_IOIndex)>::max()), m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max()),
+	: m_IOIdx(std::numeric_limits<decltype(m_IOIdx)>::max()), m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max()),
 	  m_EndTime(std::numeric_limits<decltype(m_EndTime)>::max()) { m_IsValid = false; }
 
 EBMLMessage::EBMLMessage(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
-	: m_IOIndex(index), m_StartTime(startTime), m_EndTime(endTime), m_EBML(ebml) { m_IsValid = true; }
+	: m_IOIdx(index), m_StartTime(startTime), m_EndTime(endTime), m_EBML(ebml) { m_IsValid = true; }
 
 std::vector<uint8_t> EBMLMessage::toBytes() const
 {
@@ -486,7 +486,7 @@ std::vector<uint8_t> EBMLMessage::toBytes() const
 	std::vector<uint8_t> buffer(s_MinimumSize);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_IOIndex);
+	copyTobuffer(buffer, bufferIndex, m_IOIdx);
 	copyTobuffer(buffer, bufferIndex, m_StartTime);
 	copyTobuffer(buffer, bufferIndex, m_EndTime);
 	copyTobuffer(buffer, bufferIndex, uint32_t(m_EBML->size()));
@@ -502,7 +502,7 @@ bool EBMLMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IOIndexIndex, m_IOIndex)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_IOIndexIndex, m_IOIdx)) { return false; }
 	if (!copyToVariable(buffer, bufferIndex + s_StartTimeIndex, m_StartTime)) { return false; }
 	if (!copyToVariable(buffer, bufferIndex + s_EndTimeIndex, m_EndTime)) { return false; }
 

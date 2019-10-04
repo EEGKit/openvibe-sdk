@@ -49,24 +49,24 @@ namespace FS
 
 		CAttributes() {}
 		~CAttributes() override {}
-		bool isFile() override { return m_bIsFile; }
-		bool isDirectory() override { return m_bIsDirectory; }
-		bool isSymbolicLink() override { return m_bIsSymbolicLink; }
-		bool isArchive() override { return m_bIsArchive; }
-		bool isReadOnly() override { return m_bIsReadOnly; }
-		bool isHidden() override { return m_bIsHidden; }
-		bool isSystem() override { return m_bIsSystem; }
-		bool isExecutable() override { return m_bIsExecutable; }
+		bool isFile() override { return m_isFile; }
+		bool isDirectory() override { return m_isDirectory; }
+		bool isSymbolicLink() override { return m_isSymbolicLink; }
+		bool isArchive() override { return m_isArchive; }
+		bool isReadOnly() override { return m_isReadOnly; }
+		bool isHidden() override { return m_isHidden; }
+		bool isSystem() override { return m_isSystem; }
+		bool isExecutable() override { return m_isExecutable; }
 		uint64_t getSize() override { return m_size; }
 
-		bool m_bIsFile         = false;
-		bool m_bIsDirectory    = false;
-		bool m_bIsSymbolicLink = false;
-		bool m_bIsArchive      = false;
-		bool m_bIsReadOnly     = false;
-		bool m_bIsHidden       = false;
-		bool m_bIsSystem       = false;
-		bool m_bIsExecutable   = false;
+		bool m_isFile         = false;
+		bool m_isDirectory    = false;
+		bool m_isSymbolicLink = false;
+		bool m_isArchive      = false;
+		bool m_isReadOnly     = false;
+		bool m_isHidden       = false;
+		bool m_isSystem       = false;
+		bool m_isExecutable   = false;
 		uint64_t m_size    = 0;
 	};
 }  // namespace FS
@@ -173,15 +173,15 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 			struct stat l_oStat;
 			if(!lstat(l_sName, &l_oLStat) && !stat(l_sName, &l_oStat))
 			{
-				l_oAttributes.m_bIsDirectory=S_ISDIR(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_bIsFile=S_ISREG(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_bIsSymbolicLink=S_ISLNK(l_oLStat.st_mode)?true:false;
+				l_oAttributes.m_isDirectory=S_ISDIR(l_oStat.st_mode)?true:false;
+				l_oAttributes.m_isFile=S_ISREG(l_oStat.st_mode)?true:false;
+				l_oAttributes.m_isSymbolicLink=S_ISLNK(l_oLStat.st_mode)?true:false;
 
-				l_oAttributes.m_bIsArchive=false;
-				l_oAttributes.m_bIsReadOnly=l_oStat.st_mode&S_IWUSR?false:true;
-				l_oAttributes.m_bIsHidden=false;
-				l_oAttributes.m_bIsSystem=S_ISBLK(l_oStat.st_mode)|S_ISFIFO(l_oStat.st_mode)|S_ISSOCK(l_oStat.st_mode)|S_ISCHR(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_bIsExecutable=l_oStat.st_mode&S_IXUSR?true:false;
+				l_oAttributes.m_isArchive=false;
+				l_oAttributes.m_isReadOnly=l_oStat.st_mode&S_IWUSR?false:true;
+				l_oAttributes.m_isHidden=false;
+				l_oAttributes.m_isSystem=S_ISBLK(l_oStat.st_mode)|S_ISFIFO(l_oStat.st_mode)|S_ISSOCK(l_oStat.st_mode)|S_ISCHR(l_oStat.st_mode)?true:false;
+				l_oAttributes.m_isExecutable=l_oStat.st_mode&S_IXUSR?true:false;
 
 				l_oAttributes.m_size=l_oStat.st_size;
 
@@ -280,15 +280,15 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 				CEntry l_oEntry(entryName.c_str());
 				CAttributes l_oAttributes;
 
-				l_oAttributes.m_bIsDirectory    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
-				l_oAttributes.m_bIsFile         = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? false : true;
-				l_oAttributes.m_bIsSymbolicLink = false;
+				l_oAttributes.m_isDirectory    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
+				l_oAttributes.m_isFile         = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? false : true;
+				l_oAttributes.m_isSymbolicLink = false;
 
-				l_oAttributes.m_bIsArchive    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? true : false;
-				l_oAttributes.m_bIsReadOnly   = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
-				l_oAttributes.m_bIsHidden     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ? true : false;
-				l_oAttributes.m_bIsSystem     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? true : false;
-				l_oAttributes.m_bIsExecutable = false; // TODO
+				l_oAttributes.m_isArchive    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? true : false;
+				l_oAttributes.m_isReadOnly   = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
+				l_oAttributes.m_isHidden     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ? true : false;
+				l_oAttributes.m_isSystem     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? true : false;
+				l_oAttributes.m_isExecutable = false; // TODO
 
 				l_oAttributes.m_size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
 

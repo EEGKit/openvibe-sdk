@@ -32,7 +32,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 
 	m_IncCovarianceProxies.resize(m_NumClasses);
 
-	m_StimulationIdentifier              = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_StimulationID              = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_SpatialFilterConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_FiltersPerClass                    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_SaveAsBoxConf                      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -280,7 +280,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			const TParameterHandler<IStimulationSet*> stimSet(m_StimulationDecoder.getOutputStimulationSet());
 			for (size_t j = 0; j < stimSet->getStimulationCount(); j++)
 			{
-				if (stimSet->getStimulationIdentifier(j) == m_StimulationIdentifier)
+				if (stimSet->getStimulationIdentifier(j) == m_StimulationID)
 				{
 					trainDate           = stimSet->getStimulationDate(stimSet->getStimulationCount() - 1);
 					trainChunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, i);

@@ -51,11 +51,11 @@ bool CBoxAlgorithmCrop::initialize()
 			m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 	}
 
-	m_pMatrix = new CMatrix();
+	m_matrix = new CMatrix();
 	TParameterHandler<IMatrix*>(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)).
-			setReferenceTarget(m_pMatrix);
+			setReferenceTarget(m_matrix);
 	TParameterHandler<IMatrix*>(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix)).
-			setReferenceTarget(m_pMatrix);
+			setReferenceTarget(m_matrix);
 
 	m_cropMethod  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_f64MinCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -71,7 +71,7 @@ bool CBoxAlgorithmCrop::initialize()
 
 bool CBoxAlgorithmCrop::uninitialize()
 {
-	delete m_pMatrix;
+	delete m_matrix;
 
 	m_pStreamEncoder->uninitialize();
 	m_pStreamDecoder->uninitialize();
@@ -110,8 +110,8 @@ bool CBoxAlgorithmCrop::process()
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			double* buffer = m_pMatrix->getBuffer();
-			for (uint32_t j = 0; j < m_pMatrix->getBufferElementCount(); j++, buffer++)
+			double* buffer = m_matrix->getBuffer();
+			for (uint32_t j = 0; j < m_matrix->getBufferElementCount(); j++, buffer++)
 			{
 				if (*buffer < m_f64MinCropValue && (m_cropMethod == OVP_TypeId_CropMethod_Min || m_cropMethod == OVP_TypeId_CropMethod_MinMax))
 				{

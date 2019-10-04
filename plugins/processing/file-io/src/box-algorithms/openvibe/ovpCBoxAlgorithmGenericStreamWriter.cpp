@@ -71,7 +71,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 
 	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
 
-	m_bIsHeaderGenerate = true;
+	m_isHeaderGenerate = true;
 	return true;
 }
 
@@ -86,7 +86,7 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	IBoxIO& boxContext    = this->getDynamicBoxContext();
 	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
 
-	if (!m_bIsHeaderGenerate) { if (!generateFileHeader()) { return false; } }
+	if (!m_isHeaderGenerate) { if (!generateFileHeader()) { return false; } }
 
 	m_oSwap.setSize(0, true);
 

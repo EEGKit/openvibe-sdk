@@ -25,8 +25,8 @@ public:
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext = nullptr;
 	OpenViBE::Kernel::IBox* m_pBox                                   = nullptr;
 	uint32_t m_settingIdx                                            = 0;
-	bool m_bIsParsingSettingValue                                    = false;
-	bool m_bIsParsingSettingOverride                                 = false;
+	bool m_isParsingSettingValue                                    = false;
+	bool m_isParsingSettingOverride                                 = false;
 	OpenViBE::Kernel::IConfigurationManager* m_configManager         = nullptr;
 
 	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier)

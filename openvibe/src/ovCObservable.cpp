@@ -32,20 +32,20 @@ void CObservable::deleteObserver(IObserver* o)
 	}
 }
 
-void CObservable::setChanged() { m_bHasChanged = true; }
+void CObservable::setChanged() { m_hasChanged = true; }
 
-void CObservable::clearChanged() { m_bHasChanged = false; }
+void CObservable::clearChanged() { m_hasChanged = false; }
 
-bool CObservable::hasChanged() { return m_bHasChanged; }
+bool CObservable::hasChanged() { return m_hasChanged; }
 
 void CObservable::notifyObservers(void* data)
 {
-	if (m_bHasChanged)
+	if (m_hasChanged)
 	{
 		for (auto it = m_pObserverList->m_Vector.begin(); it != m_pObserverList->m_Vector.end(); ++it)
 		{
 			static_cast<IObserver *>(*it)->update(*this, data);
 		}
-		m_bHasChanged = false;
+		m_hasChanged = false;
 	}
 }

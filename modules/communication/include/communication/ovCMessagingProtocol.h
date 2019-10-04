@@ -327,13 +327,13 @@ namespace Communication
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
 		EMessageType getMessageType() const override { return MessageType_EBML; }
-		uint32_t getIndex() const { return m_IOIndex; }
+		uint32_t getIndex() const { return m_IOIdx; }
 		uint64_t getStartTime() const { return m_StartTime; }
 		uint64_t getEndTime() const { return m_EndTime; }
 		std::shared_ptr<const std::vector<uint8_t>> getEBML() const { return m_EBML; }
 
 	private:
-		uint32_t m_IOIndex   = 0;
+		uint32_t m_IOIdx   = 0;
 		uint64_t m_StartTime = 0;
 		uint64_t m_EndTime   = 0;
 

@@ -279,7 +279,7 @@ bool CPluginManager::isPluginObjectFlaggedAsDeprecated(const CIdentifier& classI
 	{
 		SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
 		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
-		return l_oBoxPrototype.m_bIsDeprecated;
+		return l_oBoxPrototype.m_isDeprecated;
 	}
 	return false;
 }

@@ -44,15 +44,15 @@ namespace
 
 	struct TTestEqSourceBoxOutput
 	{
-		TTestEqSourceBoxOutput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_OutputIndex(index) { }
+		TTestEqSourceBoxOutput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_OutputIdx(index) { }
 
 		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const
 		{
-			return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIndex;
+			return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIdx;
 		}
 
 		const CIdentifier& m_BoxId;
-		uint32_t m_OutputIndex;
+		uint32_t m_OutputIdx;
 	};
 
 	struct TTestEqTargetBox
@@ -64,15 +64,15 @@ namespace
 
 	struct TTestEqTargetBoxInput
 	{
-		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_InputIndex(index) { }
+		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_InputIdx(index) { }
 
 		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const
 		{
-			return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIndex;
+			return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIdx;
 		}
 
 		const CIdentifier& m_BoxId;
-		uint32_t m_InputIndex;
+		uint32_t m_InputIdx;
 	};
 
 	template <class T, class TTest>
@@ -130,7 +130,7 @@ namespace
 
 CScenario::CScenario(const IKernelContext& ctx, const CIdentifier& identifier)
 	: TBox<IScenario>(ctx)
-	  , m_FirstMetadataIdentifier(OV_UndefinedIdentifier)
+	  , m_FirstMetadataID(OV_UndefinedIdentifier)
 {
 	// Some operations on boxes manipulate the owner scenario, for example removing inputs
 	// by default we set the scenario as owning itself to avoid segfaults
@@ -155,8 +155,8 @@ bool CScenario::clear()
 
 	for (auto& metadata : m_Metadata) { delete metadata.second; }
 	m_Metadata.clear();
-	m_FirstMetadataIdentifier = OV_UndefinedIdentifier;
-	m_NextMetadataIdentifier.clear();
+	m_FirstMetadataID = OV_UndefinedIdentifier;
+	m_NextMetadataID.clear();
 
 	for (auto& link : m_Links) { delete link.second; }
 	m_Links.clear();
@@ -513,11 +513,11 @@ bool CScenario::removeComment(const CIdentifier& commentID)
 
 CIdentifier CScenario::getNextMetadataIdentifier(const CIdentifier& previousID) const
 {
-	if (previousID == OV_UndefinedIdentifier) { return m_FirstMetadataIdentifier; }
+	if (previousID == OV_UndefinedIdentifier) { return m_FirstMetadataID; }
 
 	if (m_Metadata.count(previousID) == 0) { return OV_UndefinedIdentifier; }
 
-	return m_NextMetadataIdentifier.at(previousID);
+	return m_NextMetadataID.at(previousID);
 }
 
 const IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataID) const
@@ -552,8 +552,8 @@ bool CScenario::addMetadata(CIdentifier& metadataID, const CIdentifier& suggeste
 	CMetadata* metadata = new CMetadata(this->getKernelContext(), *this);
 	metadata->setIdentifier(metadataID);
 
-	m_NextMetadataIdentifier[metadataID] = m_FirstMetadataIdentifier;
-	m_FirstMetadataIdentifier            = metadataID;
+	m_NextMetadataID[metadataID] = m_FirstMetadataID;
+	m_FirstMetadataID            = metadataID;
 	m_Metadata[metadataID]               = metadata;
 	return true;
 }
@@ -570,19 +570,19 @@ bool CScenario::removeMetadata(const CIdentifier& metadataID)
 
 	m_Metadata.erase(itMetadata);
 
-	if (metadataID == m_FirstMetadataIdentifier)
+	if (metadataID == m_FirstMetadataID)
 	{
-		m_FirstMetadataIdentifier = m_NextMetadataIdentifier[m_FirstMetadataIdentifier];
-		m_NextMetadataIdentifier.erase(metadataID);
+		m_FirstMetadataID = m_NextMetadataID[m_FirstMetadataID];
+		m_NextMetadataID.erase(metadataID);
 	}
 	else
 	{
-		auto previousID = std::find_if(m_NextMetadataIdentifier.begin(), m_NextMetadataIdentifier.end(), [metadataID](const std::pair<CIdentifier, CIdentifier>& v) { return v.second == metadataID; });
+		auto previousID = std::find_if(m_NextMetadataID.begin(), m_NextMetadataID.end(), [metadataID](const std::pair<CIdentifier, CIdentifier>& v) { return v.second == metadataID; });
 
-		OV_FATAL_UNLESS_K(previousID != m_NextMetadataIdentifier.end(), "Removing metadata [" << metadataID << "] which is not in the cache ", ErrorType::Internal);
+		OV_FATAL_UNLESS_K(previousID != m_NextMetadataID.end(), "Removing metadata [" << metadataID << "] which is not in the cache ", ErrorType::Internal);
 
-		m_NextMetadataIdentifier[previousID->first] = m_NextMetadataIdentifier[metadataID];
-		m_NextMetadataIdentifier.erase(metadataID);
+		m_NextMetadataID[previousID->first] = m_NextMetadataID[metadataID];
+		m_NextMetadataID.erase(metadataID);
 	}
 
 	return true;

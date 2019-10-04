@@ -150,7 +150,7 @@ namespace OpenViBE
 CConfigurationManager::CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* pParentConfigurationManager)
 	: TKernelObject<IConfigurationManager>(ctx), m_pParentConfigurationManager(pParentConfigurationManager)
 {
-	m_ui32Index     = 0;
+	m_ui32Idx     = 0;
 	m_ui32StartTime = System::Time::getTime();
 }
 
@@ -757,7 +757,7 @@ uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& rEx
 
 uint32_t CConfigurationManager::getRandom() const { return System::Math::randomUInteger32(); }
 
-uint32_t CConfigurationManager::getIndex() const { return m_ui32Index++; }
+uint32_t CConfigurationManager::getIndex() const { return m_ui32Idx++; }
 
 CString CConfigurationManager::getTime() const
 {

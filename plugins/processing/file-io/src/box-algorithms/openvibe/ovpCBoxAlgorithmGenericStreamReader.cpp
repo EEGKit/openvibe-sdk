@@ -24,8 +24,8 @@ bool CBoxAlgorithmGenericStreamReader::initialize()
 
 	m_bPending = false;
 
-	m_vStreamIndexToOutputIndex.clear();
-	m_vStreamIndexToTypeIdentifier.clear();
+	m_vStreamIndexToOutputIdx.clear();
+	m_vStreamIndexToTypeID.clear();
 
 	return true;
 }
@@ -74,12 +74,12 @@ bool CBoxAlgorithmGenericStreamReader::process()
 		{
 			if (m_endTime <= time)
 			{
-				OV_ERROR_UNLESS_KRF(m_ui32OutputIndex < nInput,
-									"Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs",
+				OV_ERROR_UNLESS_KRF(m_ui32OutputIdx < nInput,
+									"Stream index " << m_ui32OutputIdx << " can not be output from this box because it does not have enough outputs",
 									OpenViBE::Kernel::ErrorType::BadOutput);
 
-				boxContext.getOutputChunk(m_ui32OutputIndex)->append(m_oPendingChunk);
-				boxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_startTime, m_endTime);
+				boxContext.getOutputChunk(m_ui32OutputIdx)->append(m_oPendingChunk);
+				boxContext.markOutputAsReadyToSend(m_ui32OutputIdx, m_startTime, m_endTime);
 				m_bPending = false;
 			}
 			else { finished = true; }
@@ -107,7 +107,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				m_oPendingChunk.setSize(0, true);
 				m_startTime   = std::numeric_limits<uint64_t>::max();
 				m_endTime     = std::numeric_limits<uint64_t>::max();
-				m_ui32OutputIndex = std::numeric_limits<uint32_t>::max();
+				m_ui32OutputIdx = std::numeric_limits<uint32_t>::max();
 
 				m_oReader.processData(m_oSwap.getDirectPointer(), m_oSwap.getSize());
 			}
@@ -137,18 +137,18 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& identi
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
-	if (l_rTop == EBML_Identifier_Header) { m_bHasEBMLHeader = true; }
+	if (l_rTop == EBML_Identifier_Header) { m_hasEBMLHeader = true; }
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header)
 	{
-		if (!m_bHasEBMLHeader)
+		if (!m_hasEBMLHeader)
 		{
 			this->getLogManager() << LogLevel_Info << "The file " << m_sFilename << " uses an outdated (but still compatible) version of the .ov file format\n";
 		}
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header)
 	{
-		m_vStreamIndexToOutputIndex.clear();
-		m_vStreamIndexToTypeIdentifier.clear();
+		m_vStreamIndexToOutputIdx.clear();
+		m_vStreamIndexToTypeID.clear();
 	}
 }
 
@@ -168,15 +168,15 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* buffer, cons
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header_StreamType)
 	{
-		m_vStreamIndexToTypeIdentifier[m_vStreamIndexToTypeIdentifier.size()] = m_oReaderHelper.getUIntegerFromChildData(buffer, size);
+		m_vStreamIndexToTypeID[m_vStreamIndexToTypeID.size()] = m_oReaderHelper.getUIntegerFromChildData(buffer, size);
 	}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex)
 	{
 		const uint32_t streamIdx = uint32_t(m_oReaderHelper.getUIntegerFromChildData(buffer, size));
-		if (m_vStreamIndexToTypeIdentifier.find(streamIdx) != m_vStreamIndexToTypeIdentifier.end())
+		if (m_vStreamIndexToTypeID.find(streamIdx) != m_vStreamIndexToTypeID.end())
 		{
-			m_ui32OutputIndex = m_vStreamIndexToOutputIndex[streamIdx];
+			m_ui32OutputIdx = m_vStreamIndexToOutputIdx[streamIdx];
 		}
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_startTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
@@ -202,7 +202,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		bool lastOutputs = false;
 
 		// Go on each stream of the file
-		for (auto it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
+		for (auto it = m_vStreamIndexToTypeID.begin(); it != m_vStreamIndexToTypeID.end(); ++it)
 		{
 			CIdentifier OutputTypeID;
 			uint32_t index = std::numeric_limits<uint32_t>::max();
@@ -249,12 +249,12 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 				OV_WARNING_K("No free output connector for stream " << it->first << " of type " << it->second << " (" << l_sTypeName << ")");
 
-				m_vStreamIndexToOutputIndex[it->first] = std::numeric_limits<uint32_t>::max();
+				m_vStreamIndexToOutputIdx[it->first] = std::numeric_limits<uint32_t>::max();
 				lostStreams                         = true;
 			}
 			else
 			{
-				m_vStreamIndexToOutputIndex[it->first]   = index;
+				m_vStreamIndexToOutputIdx[it->first]   = index;
 				l_vOutputIndexToStreamIdx[index] = it->first;
 			}
 		}
@@ -276,7 +276,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer)
 	{
-		m_bPending = ((m_ui32OutputIndex != std::numeric_limits<uint32_t>::max()) &&
+		m_bPending = ((m_ui32OutputIdx != std::numeric_limits<uint32_t>::max()) &&
 					  (m_startTime != std::numeric_limits<uint64_t>::max()) &&
 					  (m_endTime != std::numeric_limits<uint64_t>::max()));
 	}

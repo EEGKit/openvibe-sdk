@@ -28,7 +28,7 @@ namespace OpenViBE
 
 			uint64_t getEndTime() const { return m_endTime; }
 
-			bool isDeprecated() const { return m_bIsDeprecated; }
+			bool isDeprecated() const { return m_isDeprecated; }
 
 			CBuffer& getBuffer() { return m_oBuffer; }
 
@@ -46,7 +46,7 @@ namespace OpenViBE
 
 			bool markAsDeprecated(bool isDeprecated)
 			{
-				m_bIsDeprecated = isDeprecated;
+				m_isDeprecated = isDeprecated;
 				return true;
 			}
 
@@ -55,7 +55,7 @@ namespace OpenViBE
 			CBuffer m_oBuffer;
 			uint64_t m_startTime = 0;
 			uint64_t m_endTime   = 0;
-			bool m_bIsDeprecated     = false;
+			bool m_isDeprecated     = false;
 		};
 
 		class CSimulatedBox final : public TKernelObject<IBoxIO>

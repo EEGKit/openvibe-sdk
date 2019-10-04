@@ -29,44 +29,44 @@ bool CEncoderAlgorithmTest::initialize()
 		op_pMemoryBuffer[i].initialize(m_pStreamEncoder[i]->getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 	}
 
-	m_pMatrix1 = new CMatrix();
-	m_pMatrix1->setDimensionCount(2);
-	m_pMatrix1->setDimensionSize(0, 16);
-	m_pMatrix1->setDimensionSize(1, 16);
-	OpenViBEToolkit::Tools::Matrix::clearContent(*m_pMatrix1);
+	m_matrix1 = new CMatrix();
+	m_matrix1->setDimensionCount(2);
+	m_matrix1->setDimensionSize(0, 16);
+	m_matrix1->setDimensionSize(1, 16);
+	OpenViBEToolkit::Tools::Matrix::clearContent(*m_matrix1);
 
-	m_pMatrix2 = new CMatrix();
-	m_pMatrix2->setDimensionCount(1);
-	m_pMatrix2->setDimensionSize(0, 16);
-	OpenViBEToolkit::Tools::Matrix::clearContent(*m_pMatrix2);
+	m_matrix2 = new CMatrix();
+	m_matrix2->setDimensionCount(1);
+	m_matrix2->setDimensionSize(0, 16);
+	OpenViBEToolkit::Tools::Matrix::clearContent(*m_matrix2);
 
-	m_pMatrix3 = new CMatrix();
-	m_pMatrix3->setDimensionCount(2);
-	m_pMatrix3->setDimensionSize(0, 4);
-	m_pMatrix3->setDimensionLabel(0, 0, "C3");
-	m_pMatrix3->setDimensionLabel(0, 1, "Cz");
-	m_pMatrix3->setDimensionLabel(0, 2, "C4");
-	m_pMatrix3->setDimensionLabel(0, 3, "Pz");
-	m_pMatrix3->setDimensionSize(1, 3);
-	m_pMatrix3->setDimensionLabel(1, 0, "x");
-	m_pMatrix3->setDimensionLabel(1, 1, "y");
-	m_pMatrix3->setDimensionLabel(1, 2, "z");
-	OpenViBEToolkit::Tools::Matrix::clearContent(*m_pMatrix3);
+	m_matrix3 = new CMatrix();
+	m_matrix3->setDimensionCount(2);
+	m_matrix3->setDimensionSize(0, 4);
+	m_matrix3->setDimensionLabel(0, 0, "C3");
+	m_matrix3->setDimensionLabel(0, 1, "Cz");
+	m_matrix3->setDimensionLabel(0, 2, "C4");
+	m_matrix3->setDimensionLabel(0, 3, "Pz");
+	m_matrix3->setDimensionSize(1, 3);
+	m_matrix3->setDimensionLabel(1, 0, "x");
+	m_matrix3->setDimensionLabel(1, 1, "y");
+	m_matrix3->setDimensionLabel(1, 2, "z");
+	OpenViBEToolkit::Tools::Matrix::clearContent(*m_matrix3);
 
 	m_pStimulationSet = new CStimulationSet();
 
 	uint64_t m_samplingRate = 16;
 
-	m_pStreamEncoder[1]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
-	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
+	m_pStreamEncoder[1]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
+	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
 	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setValue(&m_samplingRate);
-	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
-	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setValue(&m_pMatrix2);
+	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
+	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setValue(&m_matrix2);
 	m_pStreamEncoder[4]->getInputParameter(OVP_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet)->setValue(&m_pStimulationSet);
-	m_pStreamEncoder[5]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix2);
-	m_pStreamEncoder[6]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix3);
+	m_pStreamEncoder[5]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix2);
+	m_pStreamEncoder[6]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix3);
 
-	m_bHasSentHeader = false;
+	m_hasSentHeader = false;
 	m_startTime  = 0;
 	m_endTime    = 0;
 
@@ -76,9 +76,9 @@ bool CEncoderAlgorithmTest::initialize()
 bool CEncoderAlgorithmTest::uninitialize()
 {
 	delete m_pStimulationSet;
-	delete m_pMatrix3;
-	delete m_pMatrix2;
-	delete m_pMatrix1;
+	delete m_matrix3;
+	delete m_matrix2;
+	delete m_matrix1;
 
 	for (uint32_t i = 0; i < 7; i++)
 	{
@@ -103,7 +103,7 @@ bool CEncoderAlgorithmTest::process()
 	const IBox& l_rStaticBoxContext  = getStaticBoxContext();
 	IPlayerContext& l_rPlayerContext = getPlayerContext();
 
-	if (!m_bHasSentHeader)
+	if (!m_hasSentHeader)
 	{
 		m_startTime = 0;
 		m_endTime   = 0;
@@ -112,7 +112,7 @@ bool CEncoderAlgorithmTest::process()
 			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
 			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader);
 		}
-		m_bHasSentHeader = true;
+		m_hasSentHeader = true;
 	}
 	else
 	{

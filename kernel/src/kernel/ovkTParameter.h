@@ -14,11 +14,11 @@ namespace OpenViBE
 		public:
 
 			TBaseParameter(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = OV_UndefinedIdentifier)
-				: TBase(ctx), m_pValueRef(nullptr), m_Value(0), m_eParameterType(eParameterType), m_oSubTypeIdentifier(subTypeID) { }
+				: TBase(ctx), m_pValueRef(nullptr), m_Value(0), m_eParameterType(eParameterType), m_oSubTypeID(subTypeID) { }
 
 			uint64_t getParameterSize() const override { return sizeof(TType); }
 			EParameterType getType() const override { return m_eParameterType; }
-			CIdentifier getSubTypeIdentifier() const override { return m_oSubTypeIdentifier; }
+			CIdentifier getSubTypeIdentifier() const override { return m_oSubTypeID; }
 
 			bool clearReferenceTarget() override
 			{
@@ -77,7 +77,7 @@ namespace OpenViBE
 			TType* m_pValueRef          = nullptr;
 			TType m_Value;
 			EParameterType m_eParameterType;
-			CIdentifier m_oSubTypeIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_oSubTypeID = OV_UndefinedIdentifier;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

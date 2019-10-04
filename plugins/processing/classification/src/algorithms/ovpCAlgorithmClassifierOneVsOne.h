@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 			fClassifierComparison m_algorithmComparison = nullptr;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm = nullptr;
-			OpenViBE::CIdentifier m_oPairwiseDecisionIdentifier             = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_oPairwiseDecisionID             = OV_UndefinedIdentifier;
 
 			static XML::IXMLNode* getClassifierConfiguration(double firstClass, double secondClass, OpenViBE::Kernel::IAlgorithmProxy* subClassifier);
 			XML::IXMLNode* getPairwiseDecisionConfiguration() const;

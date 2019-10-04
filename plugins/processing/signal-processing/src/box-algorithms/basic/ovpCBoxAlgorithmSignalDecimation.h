@@ -23,10 +23,10 @@ namespace OpenViBEPlugins
 
 			int64_t m_i64DecimationFactor                = 0;
 			uint32_t m_nChannel                  = 0;
-			uint32_t m_ui32InputSampleIndex              = 0;
+			uint32_t m_ui32InputSampleIdx              = 0;
 			uint32_t m_ui32InputSampleCountPerSentBlock  = 0;
 			uint64_t m_inputSamplingFrequency        = 0;
-			uint32_t m_ui32OutputSampleIndex             = 0;
+			uint32_t m_ui32OutputSampleIdx             = 0;
 			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
 			uint64_t m_outputSamplingFrequency       = 0;
 

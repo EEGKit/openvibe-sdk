@@ -264,15 +264,15 @@ namespace OpenViBEToolkit
 
 		explicit TGenericListener(const uint32_t typeFlag = Type_All)
 		{
-			if (typeFlag & Type_StreamedMatrix) m_vAllowedTypeIdentifier[OV_TypeId_StreamedMatrix] = true;
-			if (typeFlag & Type_Signal) m_vAllowedTypeIdentifier[OV_TypeId_Signal] = true;
-			if (typeFlag & Type_Spectrum) m_vAllowedTypeIdentifier[OV_TypeId_Spectrum] = true;
-			if (typeFlag & Type_Covariance) m_vAllowedTypeIdentifier[OV_TypeId_CovarianceMatrix] = true;
+			if (typeFlag & Type_StreamedMatrix) m_vAllowedTypeID[OV_TypeId_StreamedMatrix] = true;
+			if (typeFlag & Type_Signal) m_vAllowedTypeID[OV_TypeId_Signal] = true;
+			if (typeFlag & Type_Spectrum) m_vAllowedTypeID[OV_TypeId_Spectrum] = true;
+			if (typeFlag & Type_Covariance) m_vAllowedTypeID[OV_TypeId_CovarianceMatrix] = true;
 		}
 
 		bool isValidInputType(const OpenViBE::CIdentifier& typeID, uint32_t /*index*/)
 		{
-			return m_vAllowedTypeIdentifier[typeID];
+			return m_vAllowedTypeID[typeID];
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
@@ -291,7 +291,7 @@ namespace OpenViBEToolkit
 
 		bool isValidOutputType(const OpenViBE::CIdentifier& typeID, uint32_t /*index*/)
 		{
-			return m_vAllowedTypeIdentifier[typeID];
+			return m_vAllowedTypeID[typeID];
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
@@ -312,6 +312,6 @@ namespace OpenViBEToolkit
 
 	private:
 
-		std::map<OpenViBE::CIdentifier, bool> m_vAllowedTypeIdentifier;
+		std::map<OpenViBE::CIdentifier, bool> m_vAllowedTypeID;
 	};
 } // namespace OpenViBEToolkit

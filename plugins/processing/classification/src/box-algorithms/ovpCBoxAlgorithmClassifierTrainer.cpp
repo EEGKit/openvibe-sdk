@@ -187,7 +187,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 	// Collect index set of feature vectors per class
 	std::vector<std::vector<size_t>> classIndexes;
 	classIndexes.resize(nClass);
-	for (size_t i = 0; i < m_datasets.size(); i++) { classIndexes[m_datasets[i].m_ui32InputIndex].push_back(i); }
+	for (size_t i = 0; i < m_datasets.size(); i++) { classIndexes[m_datasets[i].m_ui32InputIdx].push_back(i); }
 
 	// Count how many vectors the largest class has
 	uint32_t nMax = 0;
@@ -282,7 +282,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				featureVector.m_pFeatureVectorMatrix = new CMatrix();
 				featureVector.m_startTime        = boxContext.getInputChunkStartTime(i, j);
 				featureVector.m_endTime          = boxContext.getInputChunkEndTime(i, j);
-				featureVector.m_ui32InputIndex       = i - 1;
+				featureVector.m_ui32InputIdx       = i - 1;
 
 				OpenViBEToolkit::Tools::Matrix::copy(*featureVector.m_pFeatureVectorMatrix, *pFeatureVectorMatrix);
 				m_datasets.push_back(featureVector);
@@ -417,7 +417,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& da
 	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); j++)
 	{
 		const size_t k       = permutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
-		const double classId = double(dataset[k].m_ui32InputIndex);
+		const double classId = double(dataset[k].m_ui32InputIdx);
 		System::Memory::copy(l_pFeatureVectorSetBuffer, dataset[k].m_pFeatureVectorMatrix->getBuffer(), featureVectorSize * sizeof(double));
 
 		l_pFeatureVectorSetBuffer[featureVectorSize] = classId;
@@ -462,7 +462,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 		const size_t k = permutation[j];
 
 		double* featureVectorBuffer = ip_pFeatureVector->getBuffer();
-		const double correctValue   = double(dataset[k].m_ui32InputIndex);
+		const double correctValue   = double(dataset[k].m_ui32InputIdx);
 
 		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 

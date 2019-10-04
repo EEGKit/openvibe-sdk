@@ -62,8 +62,8 @@ void CChannelUnitsDecoder::processChildData(const void* buffer, const uint64_t s
 	{
 		if (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false); }
 
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
+		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIdx*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
+		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIdx*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
@@ -78,7 +78,7 @@ void CChannelUnitsDecoder::closeChild()
 	{
 		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit)
 		//{
-		//	m_ui32UnitIndex++;
+		//	m_ui32UnitIdx++;
 		//}
 	}
 	else { CStreamedMatrixDecoder::closeChild(); }

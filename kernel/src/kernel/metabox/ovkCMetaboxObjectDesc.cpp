@@ -15,7 +15,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 	  , m_StockItemName("")
 	  , m_AddedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
 	  , m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
-	  , m_MetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
+	  , m_MetaboxID(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
 {
 	for (uint32_t l_ui32ScenarioInputIdx = 0; l_ui32ScenarioInputIdx < metaboxScenario.getInputCount(); l_ui32ScenarioInputIdx++)
 	{

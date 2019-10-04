@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			bool m_bIsHeaderGenerate = false;
+			bool m_isHeaderGenerate = false;
 			OpenViBE::CString m_sFilename;
 			EBML::CWriter m_oWriter;
 			EBML::CWriterHelper m_oWriterHelper;

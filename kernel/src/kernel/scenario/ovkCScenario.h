@@ -147,8 +147,8 @@ namespace OpenViBE
 
 			// Helper members. These are used for quick lookup of next identifiers for the purpose
 			// of the getNextMetadataIdentifier function.
-			std::map<CIdentifier, CIdentifier> m_NextMetadataIdentifier;
-			CIdentifier m_FirstMetadataIdentifier = OV_UndefinedIdentifier;
+			std::map<CIdentifier, CIdentifier> m_NextMetadataID;
+			CIdentifier m_FirstMetadataID = OV_UndefinedIdentifier;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE
