@@ -140,7 +140,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 	//current element index (incremented every time a value is stored in matrix)
 	uint32_t curElementIdx = 0;
 	//number of dimensions
-	// uint32_t l_ui32DimensionCount = dst.getDimensionCount();
+	// uint32_t l_nDimension = dst.getDimensionCount();
 	//current dimension index
 	uint32_t curDimIdx = uint32_t(-1);
 	//vector keeping track of dimension sizes
@@ -222,7 +222,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						/*
 						//dump dimension count and size
 						char l_pBuf[1024]={'\0'};
-						for(size_t i=0; i<l_vDimensionSize.size(); i++)
+						for (size_t i=0; i<l_vDimensionSize.size(); i++)
 						{
 							if(i>0)
 							{

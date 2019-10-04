@@ -241,11 +241,11 @@ bool CBoxAlgorithmSpatialFilter::process()
 
 			System::Memory::set(out, nSample*nChannelOut*sizeof(double), 0);
 
-			for(uint32_t j = 0; j < nChannelOut; j++)
+			for (uint32_t j = 0; j < nChannelOut; j++)
 			{
-				for(uint32_t k = 0; k < nChannelIn; k++)
+				for (uint32_t k = 0; k < nChannelIn; k++)
 				{
-					for(uint32_t l = 0; l < nSample; l++) { out[j*nSample+l] += filter[j * nChannelIn + k] * in[k * nSample + l]; }
+					for (uint32_t l = 0; l < nSample; l++) { out[j*nSample+l] += filter[j * nChannelIn + k] * in[k * nSample + l]; }
 				}
 			}
 #endif

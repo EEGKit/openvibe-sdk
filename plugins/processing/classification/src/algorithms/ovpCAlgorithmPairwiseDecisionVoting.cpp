@@ -38,7 +38,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 #if VOTING_DEBUG
 	std::cout << pClassificationValueList.size() << std::endl;
 
-	for(uint32_t i = 0 ; i< pClassificationValueList.size() ; ++i){
+	for (uint32_t i = 0 ; i< pClassificationValueList.size() ; ++i){
 		std::cout << pClassificationValueList[i].m_f64FirstClass << " " << pClassificationValueList[i].m_f64SecondClass << std::endl;
 		std::cout << pClassificationValueList[i].m_f64ClassLabel;
 		std::cout << std::endl;
@@ -56,7 +56,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	}
 
 #if VOTING_DEBUG
-	for(size_t i = 0; i < m_nClass ;  ++i)
+	for (size_t i = 0; i < m_nClass ;  ++i)
 	{
 		std::cout << (double(l_pWinCount[i])/pClassificationValueList.size() <<  " ";
 	}

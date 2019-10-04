@@ -53,9 +53,9 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	for (size_t i = 0; i < m_nClass; ++i) { l_pProbabilityMatrix[i * m_nClass + i] = 0.; }
 
 #if HT_DEBUG
-	for(uint32_t i = 0 ; i< m_nClass ; ++i){
+	for (uint32_t i = 0 ; i< m_nClass ; ++i){
 
-		for(uint32_t j = 0 ; j<m_nClass ; ++j){
+		for (uint32_t j = 0 ; j<m_nClass ; ++j){
 			std::cout << l_pProbabilityMatrix[i*m_nClass + j] << " ";
 		}
 		std::cout << std::endl;
@@ -93,14 +93,14 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 #if HT_DEBUG
 	std::cout << "Initial probability and Mu" << std::endl;
-	for(uint32_t i = 0 ; i< m_nClass ; ++i){
+	for (uint32_t i = 0 ; i< m_nClass ; ++i){
 			std::cout << l_pP[i] << " ";
 	}
 	std::cout << std::endl << std::endl;
 
-	for(uint32_t i = 0 ; i< m_nClass ; ++i){
+	for (uint32_t i = 0 ; i< m_nClass ; ++i){
 
-		for(uint32_t j = 0 ; j<m_nClass ; ++j){
+		for (uint32_t j = 0 ; j<m_nClass ; ++j){
 			std::cout << l_pMu[i][j] << " ";
 		}
 		std::cout << std::endl;
@@ -146,14 +146,14 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 #if HT_DEBUG
 	std::cout << "Intermediate probability, MU and alpha" << std::endl;
 	std::cout << alpha << std::endl;
-	for(uint32_t i = 0 ; i< m_nClass ; ++i){
+	for (uint32_t i = 0 ; i< m_nClass ; ++i){
 			std::cout << l_pP[i] << " ";
 	}
 	std::cout << std::endl << std::endl;
 
-	for(uint32_t i = 0 ; i< m_nClass ; ++i){
+	for (uint32_t i = 0 ; i< m_nClass ; ++i){
 
-		for(uint32_t j = 0 ; j<m_nClass ; ++j){
+		for (uint32_t j = 0 ; j<m_nClass ; ++j){
 			std::cout << l_pMu[i][j] << " ";
 		}
 		std::cout << std::endl;
@@ -165,7 +165,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 #if HT_DEBUG
 	std::cout << "Result " << std::endl;
-	for(uint32_t i = 0; i<m_nClass ; ++i) { std::cout << l_pP[i] << " "; }
+	for (uint32_t i = 0; i<m_nClass ; ++i) { std::cout << l_pP[i] << " "; }
 	std::cout << std::endl << std::endl;
 #endif
 

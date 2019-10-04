@@ -298,7 +298,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFil
 	pFilter1->process(SampleCount, &buffer);
 
 	//reversal of the buffer
-	for(j=0; j<SampleCount/2; j++)
+	for (j=0; j<SampleCount/2; j++)
 	{
 		double l_f64TemporalVar = buffer[j];
 		buffer[j] = buffer[SampleCount-1-j];
@@ -309,7 +309,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFil
 	pFilter2->process(SampleCount, &buffer);
 
 	//reversal of the buffer
-	for(j=0; j<SampleCount/2; j++)
+	for (j=0; j<SampleCount/2; j++)
 	{
 		double l_f64TemporalVar = buffer[j];
 		buffer[j] = buffer[SampleCount-1-j];
@@ -327,15 +327,15 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 	std::vector<double> l_vBuffer;
 	l_vBuffer.resize(SampleCount+2*l_ui32TransientLength);
 
-	for(j=0; j<l_ui32TransientLength; j++)
+	for (j=0; j<l_ui32TransientLength; j++)
 	{
 		l_vBuffer[j] = 2*buffer[0]-buffer[l_ui32TransientLength-j];
 	}
-	for(j=0; j<SampleCount; j++)
+	for (j=0; j<SampleCount; j++)
 	{
 		l_vBuffer[j+l_ui32TransientLength] = buffer[j];
 	}
-	for(j=0; j<l_ui32TransientLength; j++)
+	for (j=0; j<l_ui32TransientLength; j++)
 	{
 		l_vBuffer[j+l_ui32TransientLength+SampleCount] = 2*buffer[SampleCount-1]-buffer[SampleCount-1-j-1];
 	}
@@ -348,7 +348,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 	filtfilt2 (pFilter1, pFilter2, SampleCount, pBufferTemp);
 
 	//central part of the buffer
-	for(j=0; j<SampleCount-2*l_ui32TransientLength; j++)
+	for (j=0; j<SampleCount-2*l_ui32TransientLength; j++)
 	{
 		buffer[j] = pBufferTemp[j+l_ui32TransientLength];
 	}

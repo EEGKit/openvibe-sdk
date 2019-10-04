@@ -91,11 +91,11 @@ namespace OpenViBE
 
 		/**
 		 * \brief Sets dimension count for this matrix
-		 * \param ui32DimensionCount [in] : the number of dimension for this matrix
+		 * \param nDimension [in] : the number of dimension for this matrix
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setDimensionCount(uint32_t ui32DimensionCount) = 0;
+		virtual bool setDimensionCount(uint32_t nDimension) = 0;
 		/**
 		 * \brief Sets the dimension size for this matrix on a given dimension index
 		 * \param ui32DimensionIndex [in] : the dimension index which size has to be changed

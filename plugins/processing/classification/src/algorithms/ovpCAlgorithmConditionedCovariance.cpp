@@ -25,9 +25,9 @@ using namespace Eigen;
 void CAlgorithmConditionedCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr, const MatrixXdRowMajor &mat, const CString &desc)
 {
 	rMgr << LogLevel_Info << desc << "\n";
-	for(int i=0;i<mat.rows();i++) {
+	for (int i=0;i<mat.rows();i++) {
 		rMgr << LogLevel_Info << "Row " << i << ": ";
-		for(int j=0;j<mat.cols();j++) {
+		for (int j=0;j<mat.cols();j++) {
 			rMgr << mat(i,j) << " ";
 		}
 		rMgr << "\n";

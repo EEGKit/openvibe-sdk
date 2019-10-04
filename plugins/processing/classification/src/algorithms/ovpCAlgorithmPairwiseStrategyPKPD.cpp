@@ -55,9 +55,9 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 	}
 
 #if PKPD_DEBUG
-	for(uint32_t i = 0 ; i< m_nClass ; ++i){
+	for (uint32_t i = 0 ; i< m_nClass ; ++i){
 
-		for(uint32_t j = 0 ; j<m_nClass ; ++j){
+		for (uint32_t j = 0 ; j<m_nClass ; ++j){
 			std::cout << l_pProbabilityMatrix[i*m_nClass + j] << " ";
 		}
 		std::cout << std::endl;
@@ -80,7 +80,7 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 	for (uint32_t i = 0; i < m_nClass; ++i) { l_pProbVector[i] /= l_pProbVectorSum; }
 
 #if PKPD_DEBUG
-	for(uint32_t i = 0; i<m_nClass ; ++i) { std::cout << l_pProbVector[i] << " "; }
+	for (uint32_t i = 0; i<m_nClass ; ++i) { std::cout << l_pProbVector[i] << " "; }
 	std::cout << std::endl;
 #endif
 

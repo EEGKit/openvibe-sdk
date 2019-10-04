@@ -56,7 +56,7 @@ namespace OpenViBEPlugins
 				const uint32_t i = box.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
 				box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
-				//for(i=0; i<box.getInputCount(); i++) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
+				//for (i=0; i<box.getInputCount(); i++) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 

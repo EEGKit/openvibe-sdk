@@ -206,9 +206,9 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector,
 		}
 	}
 
-	//	for(size_t i =0 ; i < l_ui32ClassCount ; ++i )
+	//	for (size_t i =0 ; i < l_ui32ClassCount ; ++i )
 	//	{
-	//		for(size_t j = 0; j < l_ui32ClassCount ; ++j) { std::cout << l_pProbabilityMatrix->getBuffer()[i*l_ui32ClassCount + j] << " " ; }
+	//		for (size_t j = 0; j < l_ui32ClassCount ; ++j) { std::cout << l_pProbabilityMatrix->getBuffer()[i*l_ui32ClassCount + j] << " " ; }
 	//		std::cout << std::endl;
 	//	}
 	//	std::cout << std::endl;
