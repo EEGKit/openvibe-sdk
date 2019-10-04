@@ -312,43 +312,43 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	{
 		SBoxProto l_oMetaboxProto(getKernelContext().getTypeManager());
 
-		for (uint32_t l_ui32ScenarioInputIdx = 0; l_ui32ScenarioInputIdx < scenario.getInputCount(); l_ui32ScenarioInputIdx++)
+		for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < scenario.getInputCount(); scenarioInputIdx++)
 		{
 			CIdentifier l_oInputputID;
 			CString inputName;
 			CIdentifier inputTypeID;
 
-			scenario.getInterfacorIdentifier(Input, l_ui32ScenarioInputIdx, l_oInputputID);
-			scenario.getInputType(l_ui32ScenarioInputIdx, inputTypeID);
-			scenario.getInputName(l_ui32ScenarioInputIdx, inputName);
+			scenario.getInterfacorIdentifier(Input, scenarioInputIdx, l_oInputputID);
+			scenario.getInputType(scenarioInputIdx, inputTypeID);
+			scenario.getInputName(scenarioInputIdx, inputName);
 
 			l_oMetaboxProto.addInput(inputName, inputTypeID, l_oInputputID, true);
 		}
 
-		for (uint32_t l_ui32ScenarioOutputIdx = 0; l_ui32ScenarioOutputIdx < scenario.getOutputCount(); l_ui32ScenarioOutputIdx++)
+		for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < scenario.getOutputCount(); scenarioOutputIdx++)
 		{
 			CIdentifier OutputID;
 			CString outputName;
 			CIdentifier OutputTypeID;
 
-			scenario.getInterfacorIdentifier(Output, l_ui32ScenarioOutputIdx, OutputID);
-			scenario.getOutputType(l_ui32ScenarioOutputIdx, OutputTypeID);
-			scenario.getOutputName(l_ui32ScenarioOutputIdx, outputName);
+			scenario.getInterfacorIdentifier(Output, scenarioOutputIdx, OutputID);
+			scenario.getOutputType(scenarioOutputIdx, OutputTypeID);
+			scenario.getOutputName(scenarioOutputIdx, outputName);
 
 			l_oMetaboxProto.addOutput(outputName, OutputTypeID, OutputID, true);
 		}
 
-		for (uint32_t l_ui32ScenarioSettingIdx = 0; l_ui32ScenarioSettingIdx < scenario.getSettingCount(); l_ui32ScenarioSettingIdx++)
+		for (uint32_t scenarioSettingIdx = 0; scenarioSettingIdx < scenario.getSettingCount(); scenarioSettingIdx++)
 		{
 			CString l_sSettingName;
 			CIdentifier l_oSettingTypeID;
 			CString l_sSettingDefaultValue;
 			CIdentifier settingID;
 
-			scenario.getSettingName(l_ui32ScenarioSettingIdx, l_sSettingName);
-			scenario.getSettingType(l_ui32ScenarioSettingIdx, l_oSettingTypeID);
-			scenario.getSettingDefaultValue(l_ui32ScenarioSettingIdx, l_sSettingDefaultValue);
-			scenario.getInterfacorIdentifier(Setting, l_ui32ScenarioSettingIdx, settingID);
+			scenario.getSettingName(scenarioSettingIdx, l_sSettingName);
+			scenario.getSettingType(scenarioSettingIdx, l_oSettingTypeID);
+			scenario.getSettingDefaultValue(scenarioSettingIdx, l_sSettingDefaultValue);
+			scenario.getInterfacorIdentifier(Setting, scenarioSettingIdx, settingID);
 
 			l_oMetaboxProto.addSetting(l_sSettingName, l_oSettingTypeID, l_sSettingDefaultValue, false, settingID, true);
 		}

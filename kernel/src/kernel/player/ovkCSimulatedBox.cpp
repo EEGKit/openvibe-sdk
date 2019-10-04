@@ -191,8 +191,8 @@ bool CSimulatedBox::process()
 				CIdentifier dstBoxID = l_pLink->getTargetBoxIdentifier();
 				uint32_t dstBoxInputIdx = l_pLink->getTargetBoxInputIndex();
 
-				uint32_t l_ui32SourceOutputIdx = l_pLink->getSourceBoxOutputIndex();
-				for (auto& chunk : m_outputs[l_ui32SourceOutputIdx]) { m_rScheduler.sendInput(chunk, dstBoxID, dstBoxInputIdx); }
+				uint32_t sourceOutputIdx = l_pLink->getSourceBoxOutputIndex();
+				for (auto& chunk : m_outputs[sourceOutputIdx]) { m_rScheduler.sendInput(chunk, dstBoxID, dstBoxInputIdx); }
 			}
 		}
 		m_scenario->releaseIdentifierList(listID);
