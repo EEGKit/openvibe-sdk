@@ -64,7 +64,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CKernelContextBridge(const IKernelContext& ctx) : m_kernelContext(ctx) { }
+			explicit CKernelContextBridge(const IKernelContext& ctx) : m_kernelCtx(ctx) { }
 
 			bool initialize() { return true; }
 			bool uninitialize() override { return true; }
@@ -82,32 +82,32 @@ namespace OpenViBE
 
 			IAlgorithmManager& getAlgorithmManager() const override
 			{
-				return m_algorithmManager ? *m_algorithmManager : m_kernelContext.getAlgorithmManager();
+				return m_algorithmManager ? *m_algorithmManager : m_kernelCtx.getAlgorithmManager();
 			}
 
 			IConfigurationManager& getConfigurationManager() const override
 			{
-				return m_configManager ? *m_configManager : m_kernelContext.getConfigurationManager();
+				return m_configManager ? *m_configManager : m_kernelCtx.getConfigurationManager();
 			}
 
 			IKernelObjectFactory& getKernelObjectFactory() const override
 			{
-				return m_kernelObjectFactory ? *m_kernelObjectFactory : m_kernelContext.getKernelObjectFactory();
+				return m_kernelObjectFactory ? *m_kernelObjectFactory : m_kernelCtx.getKernelObjectFactory();
 			}
 
-			IPlayerManager& getPlayerManager() const override { return m_playerManager ? *m_playerManager : m_kernelContext.getPlayerManager(); }
-			IPluginManager& getPluginManager() const override { return m_pluginManager ? *m_pluginManager : m_kernelContext.getPluginManager(); }
-			IMetaboxManager& getMetaboxManager() const override { return m_metaboxManager ? *m_metaboxManager : m_kernelContext.getMetaboxManager(); }
-			IScenarioManager& getScenarioManager() const override { return m_scenarioManager ? *m_scenarioManager : m_kernelContext.getScenarioManager(); }
-			ITypeManager& getTypeManager() const override { return m_typeManager ? *m_typeManager : m_kernelContext.getTypeManager(); }
-			ILogManager& getLogManager() const override { return m_logManager ? *m_logManager : m_kernelContext.getLogManager(); }
-			IErrorManager& getErrorManager() const override { return m_errorManager ? *m_errorManager : m_kernelContext.getErrorManager(); }
+			IPlayerManager& getPlayerManager() const override { return m_playerManager ? *m_playerManager : m_kernelCtx.getPlayerManager(); }
+			IPluginManager& getPluginManager() const override { return m_pluginManager ? *m_pluginManager : m_kernelCtx.getPluginManager(); }
+			IMetaboxManager& getMetaboxManager() const override { return m_metaboxManager ? *m_metaboxManager : m_kernelCtx.getMetaboxManager(); }
+			IScenarioManager& getScenarioManager() const override { return m_scenarioManager ? *m_scenarioManager : m_kernelCtx.getScenarioManager(); }
+			ITypeManager& getTypeManager() const override { return m_typeManager ? *m_typeManager : m_kernelCtx.getTypeManager(); }
+			ILogManager& getLogManager() const override { return m_logManager ? *m_logManager : m_kernelCtx.getLogManager(); }
+			IErrorManager& getErrorManager() const override { return m_errorManager ? *m_errorManager : m_kernelCtx.getErrorManager(); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
 		protected:
 
-			const IKernelContext& m_kernelContext;
+			const IKernelContext& m_kernelCtx;
 
 			mutable IAlgorithmManager* m_algorithmManager         = nullptr;
 			mutable IConfigurationManager* m_configManager = nullptr;

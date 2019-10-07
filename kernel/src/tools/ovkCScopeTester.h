@@ -20,7 +20,7 @@ namespace OpenViBE
 		protected:
 
 			CString m_sPrefix;
-			const Kernel::IKernelContext& m_kernelContext;
+			const Kernel::IKernelContext& m_kernelCtx;
 		};
 	} // namespace Tools
 } // namespace OpenViBE
