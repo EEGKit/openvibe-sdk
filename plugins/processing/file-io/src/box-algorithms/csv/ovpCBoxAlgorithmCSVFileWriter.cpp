@@ -105,7 +105,7 @@ bool CBoxAlgorithmCSVFileWriter::process()
 bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
 		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
@@ -131,7 +131,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 					// This [n X 1] will get written as a single row due to transpose later
 					m_oMatrix.setDimensionSize(0, l_pMatrix->getDimensionSize(0));
 					m_oMatrix.setDimensionSize(1, 1);
-					for (uint32_t j = 0; j < l_pMatrix->getDimensionSize(0); j++) { m_oMatrix.setDimensionLabel(0, j, l_pMatrix->getDimensionLabel(0, j)); }
+					for (uint32_t j = 0; j < l_pMatrix->getDimensionSize(0); ++j) { m_oMatrix.setDimensionLabel(0, j, l_pMatrix->getDimensionLabel(0, j)); }
 				}
 				else
 				{
@@ -140,7 +140,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 				}
 				//			std::cout<<&m_Matrix<<" "<<&op_pMatrix<<"\n";
 				m_oFileStream << "Time (s)";
-				for (uint32_t c = 0; c < m_oMatrix.getDimensionSize(0); c++)
+				for (uint32_t c = 0; c < m_oMatrix.getDimensionSize(0); ++c)
 				{
 					std::string l_sLabel(m_oMatrix.getDimensionLabel(0, c));
 					while (l_sLabel.length() > 0 && l_sLabel[l_sLabel.length() - 1] == ' ') { l_sLabel.erase(l_sLabel.length() - 1); }
@@ -169,7 +169,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 			//this->getLogManager() << LogLevel_Info << " dimsIn " << l_pMatrix->getDimensionSize(0) << "," << l_pMatrix->getDimensionSize(1) << "\n";
 			//this->getLogManager() << LogLevel_Info << " dimsBuf " << m_oMatrix.getDimensionSize(0) << "," << m_oMatrix.getDimensionSize(1) << "\n";
 
-			for (uint32_t s = 0; s < l_ui32NumSamples; s++)
+			for (uint32_t s = 0; s < l_ui32NumSamples; ++s)
 			{
 				if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_FeatureVector)
 				{
@@ -185,7 +185,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 					m_oFileStream << TimeArithmetics::timeToSeconds(l_ui64SampleTime);
 				}
 				else if (m_typeID == OV_TypeId_Spectrum) { m_oFileStream << TimeArithmetics::timeToSeconds(tEnd); }
-				for (uint32_t c = 0; c < l_ui32NumChannels; c++)
+				for (uint32_t c = 0; c < l_ui32NumChannels; ++c)
 				{
 					m_oFileStream << m_sSeparator.toASCIIString() << l_pMatrix->getBuffer()[c * l_ui32NumSamples + s];
 				}
@@ -236,7 +236,7 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (size_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_pStreamDecoder->decode(i);
 		if (m_pStreamDecoder->isHeaderReceived())
@@ -251,7 +251,7 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 		if (m_pStreamDecoder->isBufferReceived())
 		{
 			const IStimulationSet* stimSet = dynamic_cast<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_pStreamDecoder)->getOutputStimulationSet();
-			for (size_t j = 0; j < stimSet->getStimulationCount(); j++)
+			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
 			{
 				m_oFileStream << TimeArithmetics::timeToSeconds(stimSet->getStimulationDate(j))
 						<< m_sSeparator.toASCIIString() << stimSet->getStimulationIdentifier(j) << m_sSeparator.toASCIIString()

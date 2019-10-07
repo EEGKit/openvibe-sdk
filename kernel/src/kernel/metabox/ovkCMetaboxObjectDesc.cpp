@@ -17,7 +17,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 	  , m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
 	  , m_MetaboxID(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
 {
-	for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < metaboxScenario.getInputCount(); scenarioInputIdx++)
+	for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < metaboxScenario.getInputCount(); ++scenarioInputIdx)
 	{
 		CString inputName;
 		CIdentifier inputTypeID;
@@ -30,7 +30,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 		m_Inputs.push_back(SIOStream(inputName, inputTypeID, InputID));
 	}
 
-	for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < metaboxScenario.getOutputCount(); scenarioOutputIdx++)
+	for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < metaboxScenario.getOutputCount(); ++scenarioOutputIdx)
 	{
 		CString outputName;
 		CIdentifier OutputTypeID;
@@ -43,7 +43,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 		m_Outputs.push_back(SIOStream(outputName, OutputTypeID, OutputID));
 	}
 
-	for (uint32_t scenarioSettingIdx = 0; scenarioSettingIdx < metaboxScenario.getSettingCount(); scenarioSettingIdx++)
+	for (uint32_t scenarioSettingIdx = 0; scenarioSettingIdx < metaboxScenario.getSettingCount(); ++scenarioSettingIdx)
 	{
 		CString l_sSettingName;
 		CIdentifier l_oSettingTypeID;

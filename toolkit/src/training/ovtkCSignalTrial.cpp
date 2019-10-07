@@ -31,11 +31,11 @@ bool CSignalTrial::setSamplingRate(const uint32_t samplingFrequency)
 bool CSignalTrial::setChannelCount(const uint32_t count)
 {
 	uint32_t i;
-	for (i = 0; i < count; i++)
+	for (i = 0; i < count; ++i)
 	{
 		if (m_channelSamples.find(i) == m_channelSamples.end()) { m_channelSamples[i] = new double[m_nSampleReserved]; }
 	}
-	for (i = count; i < m_nChannel; i++)
+	for (i = count; i < m_nChannel; ++i)
 	{
 		delete [] m_channelSamples[i];
 		m_channelSamples.erase(m_channelSamples.find(i));

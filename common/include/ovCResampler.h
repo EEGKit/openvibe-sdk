@@ -61,7 +61,7 @@ namespace Common
 
 			void clear()
 			{
-				for (size_t j = 0; j < m_vResampler.size(); j++) { delete m_vResampler[j]; }
+				for (size_t j = 0; j < m_vResampler.size(); ++j) { delete m_vResampler[j]; }
 				m_vResampler.clear();
 
 				m_nChannel                     = 0;
@@ -146,7 +146,7 @@ namespace Common
 				m_iSamplingRate = iSampleRate;
 				m_oSamplingRate = oSampleRate;
 
-				for (size_t i = 0; i < m_vResampler.size(); i++) { delete m_vResampler[i]; }
+				for (size_t i = 0; i < m_vResampler.size(); ++i) { delete m_vResampler[i]; }
 				m_vResampler.clear();
 				m_vResampler.resize(nChannel);
 
@@ -154,7 +154,7 @@ namespace Common
 													   ? std::min(6.02 * m_nFractionalDelayFilterSample + 40, r8b::CDSPFIRFilter::getLPMaxAtten())
 													   : m_stopBandAttenuation;
 
-				for (size_t j = 0; j < nChannel; j++)
+				for (size_t j = 0; j < nChannel; ++j)
 				{
 					switch (m_nFractionalDelayFilterSample) // it defines iFractionalDelayPositionCount 
 					{
@@ -304,9 +304,9 @@ namespace Common
 				std::vector<double> iBuffers(nSampleIn);
 				std::vector<TFloat> oBuffers;
 
-				for (uint32_t j = 0; j < m_nChannel; j++)
+				for (uint32_t j = 0; j < m_nChannel; ++j)
 				{
-					for (uint32_t k = 0; k < nSampleIn; k++) { iBuffers[k] = double(inputSample[k * m_nChannel + j]); }
+					for (uint32_t k = 0; k < nSampleIn; ++k) { iBuffers[k] = double(inputSample[k * m_nChannel + j]); }
 
 					double* resamplerOutputBuffer;
 					nI = m_vResampler[j]->process(&iBuffers[0], int(nSampleIn), resamplerOutputBuffer);
@@ -317,10 +317,10 @@ namespace Common
 						isFirstChannel = false;
 					}
 
-					for (int k = 0; k < nI; k++) { oBuffers[k * m_nChannel + j] = TFloat(resamplerOutputBuffer[k]); }
+					for (int k = 0; k < nI; ++k) { oBuffers[k * m_nChannel + j] = TFloat(resamplerOutputBuffer[k]); }
 				}
 
-				for (int k = 0; k < nI; k++) { callback.processResampler(&oBuffers[k * m_nChannel], m_nChannel); }
+				for (int k = 0; k < nI; ++k) { callback.processResampler(&oBuffers[k * m_nChannel], m_nChannel); }
 
 				return nI;
 			}
@@ -342,9 +342,9 @@ namespace Common
 				std::vector<double> iBuffers(nSampleIn);
 				std::vector<TFloat> oBuffers;
 
-				for (size_t j = 0; j < m_nChannel; j++)
+				for (size_t j = 0; j < m_nChannel; ++j)
 				{
-					for (size_t k = 0; k < nSampleIn; k++) { iBuffers[k] = double(inputSample[j * nSampleIn + k]); }
+					for (size_t k = 0; k < nSampleIn; ++k) { iBuffers[k] = double(inputSample[j * nSampleIn + k]); }
 
 					double* l_pResamplerOutputBuffer;
 					nI = m_vResampler[j]->process(&iBuffers[0], int(nSampleIn), l_pResamplerOutputBuffer);
@@ -355,10 +355,10 @@ namespace Common
 						isFirstChannel = false;
 					}
 
-					for (int k = 0; k < nI; k++) { oBuffers[k * m_nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]); }
+					for (int k = 0; k < nI; ++k) { oBuffers[k * m_nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]); }
 				}
 
-				for (int k = 0; k < nI; k++) { callback.processResampler(&oBuffers[k * m_nChannel], m_nChannel); }
+				for (int k = 0; k < nI; ++k) { callback.processResampler(&oBuffers[k * m_nChannel], m_nChannel); }
 
 				return nI;
 			}
@@ -375,7 +375,7 @@ namespace Common
 
 				void processResampler(const TFloat* sample, const size_t nChannel) const override
 				{
-					for (size_t i = 0; i < nChannel; i++)
+					for (size_t i = 0; i < nChannel; ++i)
 					{
 						*m_pOutputSample = *sample;
 						++m_pOutputSample;
@@ -396,7 +396,7 @@ namespace Common
 
 				void processResampler(const TFloat* sample, const size_t nChannel) const override
 				{
-					for (size_t i = 0; i < nChannel; i++) { m_OutputSample[i * m_NOutputSample + m_OutputSampleIdx] = sample[i]; }
+					for (size_t i = 0; i < nChannel; ++i) { m_OutputSample[i * m_NOutputSample + m_OutputSampleIdx] = sample[i]; }
 					m_OutputSampleIdx++;
 					m_OutputSampleIdx %= m_NOutputSample;
 				}

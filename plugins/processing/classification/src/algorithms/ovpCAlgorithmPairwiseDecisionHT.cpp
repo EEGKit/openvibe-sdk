@@ -188,7 +188,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 	const uint32_t nClass                                = ip_pRepartitionSetVector->getDimensionSize(0);
 
 	std::stringstream ss;
-	for (size_t i = 0; i < nClass; i++) { ss << ip_pRepartitionSetVector->getBuffer()[i] << " "; }
+	for (size_t i = 0; i < nClass; ++i) { ss << ip_pRepartitionSetVector->getBuffer()[i] << " "; }
 	XML::IXMLNode* repartition = XML::createNode(REPARTITION_NODE_NAME);
 	repartition->setPCData(ss.str().c_str());
 	rootNode->addChild(repartition);
@@ -212,6 +212,6 @@ bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& node)
 
 	ip_pRepartitionSetVector->setDimensionCount(1);
 	ip_pRepartitionSetVector->setDimensionSize(0, repartition.size());
-	for (size_t i = 0; i < repartition.size(); i++) { ip_pRepartitionSetVector->getBuffer()[i] = repartition[i]; }
+	for (size_t i = 0; i < repartition.size(); ++i) { ip_pRepartitionSetVector->getBuffer()[i] = repartition[i]; }
 	return true;
 }

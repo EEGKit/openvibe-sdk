@@ -36,7 +36,7 @@ bool CStreamedMatrixEncoder::processHeader()
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_DimensionCount);
 	m_pEBMLWriterHelper->setUIntegerAsChildData(matrix->getDimensionCount());
 	m_pEBMLWriterHelper->closeChild();
-	for (uint32_t i = 0; i < matrix->getDimensionCount(); i++)
+	for (uint32_t i = 0; i < matrix->getDimensionCount(); ++i)
 	{
 		m_matrixBufferSize *= matrix->getDimensionSize(i);
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension);
@@ -44,13 +44,13 @@ bool CStreamedMatrixEncoder::processHeader()
 		m_pEBMLWriterHelper->setUIntegerAsChildData(matrix->getDimensionSize(i));
 		m_pEBMLWriterHelper->closeChild();
 		bool shouldSendLabels = false;
-		for (j = 0; j < matrix->getDimensionSize(i) && !shouldSendLabels; j++)
+		for (j = 0; j < matrix->getDimensionSize(i) && !shouldSendLabels; ++j)
 		{
 			if (matrix->getDimensionLabel(i, j) != nullptr && matrix->getDimensionLabel(i, j)[0] != '\0') { shouldSendLabels = true; }
 		}
 		if (shouldSendLabels)
 		{
-			for (j = 0; j < matrix->getDimensionSize(i); j++)
+			for (j = 0; j < matrix->getDimensionSize(i); ++j)
 			{
 				m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Label);
 				m_pEBMLWriterHelper->setASCIIStringAsChildData(matrix->getDimensionLabel(i, j));

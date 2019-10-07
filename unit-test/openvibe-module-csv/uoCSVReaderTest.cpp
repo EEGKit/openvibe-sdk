@@ -65,7 +65,7 @@ namespace
 		ASSERT_EQ(expected.first.first, actual.startTime);
 		ASSERT_EQ(expected.first.second, actual.endTime);
 		ASSERT_EQ(expected.second.size(), actual.matrix.size());
-		for (size_t sample = 0; sample < expected.second.size(); sample++) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
+		for (size_t sample = 0; sample < expected.second.size(); ++sample) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
 	}
 } // namespace
 

@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 	std::string connectionID;
 	uint32_t port = 49687;
 
-	for (int i = 0; i < argc; i++)
+	for (int i = 0; i < argc; ++i)
 	{
 		if (std::strcmp(argv[i], "--connection-id") == 0) { if (argc > i + 1) { connectionID = argv[i + 1]; } }
 		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = uint32_t(std::stoi(argv[i + 1])); } }
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
-	for (size_t i = 0; i < client.getOutputCount(); i++)
+	for (size_t i = 0; i < client.getOutputCount(); ++i)
 	{
 		uint32_t index;
 		uint64_t type;
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 
 	map<string, string> parameters;
 
-	for (uint32_t i = 0; i < client.getParameterCount(); i++)
+	for (uint32_t i = 0; i < client.getParameterCount(); ++i)
 	{
 		uint32_t index;
 		uint64_t type;
@@ -238,9 +238,9 @@ int main(int argc, char** argv)
 
 		while (sentSamples < expectedSamples && (samplesToSend == 0 || sentSamples < samplesToSend))
 		{
-			for (size_t channel = 0; channel < nChannel; channel++)
+			for (size_t channel = 0; channel < nChannel; ++channel)
 			{
-				for (size_t sample = 0; sample < samplesPerBuffer; sample++)
+				for (size_t sample = 0; sample < samplesPerBuffer; ++sample)
 				{
 					matrix[channel * samplesPerBuffer + sample] = sin((sentSamples + sample) / double(samplingRate));
 				}

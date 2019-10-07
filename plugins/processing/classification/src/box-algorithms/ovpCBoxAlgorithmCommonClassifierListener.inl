@@ -85,7 +85,7 @@ namespace OpenViBEPlugins
 			{
 				box.setInputType(0, OV_TypeId_Stimulations);
 				box.setInputName(0, "Stimulations");
-				for (uint32_t i = 1; i < box.getInputCount(); i++)
+				for (uint32_t i = 1; i < box.getInputCount(); ++i)
 				{
 					box.setInputName(i, ("Features for class " + std::to_string(i)).c_str());
 					box.setInputType(i, OV_TypeId_FeatureVector);

@@ -112,7 +112,7 @@ void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& identifier)
 
 	getLogManager() << m_eLogLevel;
 
-	for (size_t i = 0; i <= m_vNodes.size(); i++) { getLogManager() << "  "; }
+	for (size_t i = 0; i <= m_vNodes.size(); ++i) { getLogManager() << "  "; }
 
 	getLogManager() << "Opened EBML node [id:" << CIdentifier(identifier) << "]-[name:" << CString(n != m_vName.end() ? n->second.c_str() : "unknown") << "]";
 
@@ -126,7 +126,7 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* buffer, const ui
 {
 	const uint64_t n = (size / sizeof(T));
 	const T* buf     = static_cast<const T*>(buffer);
-	for (uint64_t i = 0; i < std::min(m_nExpandValues, n); i++) { getLogManager() << (i == 0 ? "" : " ") << buf[i]; }
+	for (uint64_t i = 0; i < std::min(m_nExpandValues, n); ++i) { getLogManager() << (i == 0 ? "" : " ") << buf[i]; }
 	if (m_nExpandValues < n) { getLogManager() << " ..."; }
 }
 
@@ -230,7 +230,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 
 	getLogManager() << m_eLogLevel << "\n";
 
-	for (uint32_t i = 0; i < staticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < staticBoxContext.getInputCount(); ++i)
 	{
 		if (boxContext.getInputChunkCount(i))
 		{
@@ -242,7 +242,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 
 			getLogManager() << m_eLogLevel << "For input " << inputName << " of type " << getTypeManager().getTypeName(inputType) << " :\n";
 
-			for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+			for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 			{
 				boxContext.getInputChunk(i, j, tStart, tEnd, size, buffer);
 				boxContext.markInputAsDeprecated(i, j);

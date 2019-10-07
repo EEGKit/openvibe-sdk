@@ -188,7 +188,7 @@ static void XMLCALL XML::ExpatXMLStart(void* pData, const char* pElement, const 
 	const char** l_pAttributeName  = new const char*[size_t(l_ui64AttributeCount)];
 	const char** l_pAttributeValue = new const char*[size_t(l_ui64AttributeCount)];
 
-	for (uint64_t i = 0; i < l_ui64AttributeCount; i++)
+	for (uint64_t i = 0; i < l_ui64AttributeCount; ++i)
 	{
 		l_pAttributeName[i]  = ppAttribute[(i << 1)];
 		l_pAttributeValue[i] = ppAttribute[(i << 1) + 1];

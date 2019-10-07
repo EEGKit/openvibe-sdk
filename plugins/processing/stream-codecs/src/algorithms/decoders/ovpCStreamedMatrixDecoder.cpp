@@ -160,7 +160,7 @@ void CStreamedMatrixDecoder::closeChild()
 			else
 			{
 				m_matrixBufferSize = 1;
-				for (uint32_t i = 0; i < op_pMatrix->getDimensionCount(); i++) { m_matrixBufferSize *= op_pMatrix->getDimensionSize(i); }
+				for (uint32_t i = 0; i < op_pMatrix->getDimensionCount(); ++i) { m_matrixBufferSize *= op_pMatrix->getDimensionSize(i); }
 			}
 		}
 	}

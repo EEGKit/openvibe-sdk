@@ -166,7 +166,7 @@ bool CMatrixImpl::refreshInternalBuffer() const
 	if (m_buffer || m_vDimensionSize.empty()) { return false; }
 
 	m_size = 1;
-	for (size_t i = 0; i < m_vDimensionSize.size(); i++) { m_size *= m_vDimensionSize[i]; }
+	for (size_t i = 0; i < m_vDimensionSize.size(); ++i) { m_size *= m_vDimensionSize[i]; }
 
 	if (m_size == 0) { return false; }
 

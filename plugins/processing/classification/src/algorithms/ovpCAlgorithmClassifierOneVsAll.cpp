@@ -47,7 +47,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorS
 	const uint32_t nClass = uint32_t(m_oSubClassifierList.size());
 	std::map<double, size_t> classLabels;
 
-	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); i++)
+	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); ++i)
 	{
 		if (!classLabels.count(featureVectorSet[i].getLabel())) { classLabels[featureVectorSet[i].getLabel()] = 0; }
 		classLabels[featureVectorSet[i].getLabel()]++;
@@ -66,7 +66,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorS
 	featureVectorSetReference->setDimensionSize(1, featureVectorSize + 1);
 
 	double* featureVectorSetBuffer = featureVectorSetReference->getBuffer();
-	for (uint32_t j = 0; j < featureVectorSet.getFeatureVectorCount(); j++)
+	for (uint32_t j = 0; j < featureVectorSet.getFeatureVectorCount(); ++j)
 	{
 		System::Memory::copy(featureVectorSetBuffer, featureVectorSet[j].getBuffer(), featureVectorSize * sizeof(double));
 		//We let the space for the label
@@ -81,7 +81,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorS
 		ip_pFeatureVectorSet = static_cast<IMatrix*>(featureVectorSetReference);
 
 		featureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
-		for (uint32_t j = 0; j < featureVectorSet.getFeatureVectorCount(); j++)
+		for (uint32_t j = 0; j < featureVectorSet.getFeatureVectorCount(); ++j)
 		{
 			//Modify the class of each featureVector
 			const double classLabel = featureVectorSet[j].getLabel();

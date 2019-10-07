@@ -143,7 +143,7 @@ bool CEquationParser::compileEquation(const char* equation)
 	const size_t pos = str.find(info.stop);
 	if (pos != std::string::npos)
 	{
-		for (size_t i = 0; i < pos; i++) { error += " "; }
+		for (size_t i = 0; i < pos; ++i) { error += " "; }
 		error += "^--Here\n";
 	}
 

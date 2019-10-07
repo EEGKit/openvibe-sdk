@@ -112,7 +112,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			{
 				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_settingIdx << " setting(s) with this configuration file...\n";
 
-				for (uint32_t i = 0; i < m_settingIdx; i++)
+				for (uint32_t i = 0; i < m_settingIdx; ++i)
 				{
 					CString settingName     = "";
 					CString rawSettingvalue = "";

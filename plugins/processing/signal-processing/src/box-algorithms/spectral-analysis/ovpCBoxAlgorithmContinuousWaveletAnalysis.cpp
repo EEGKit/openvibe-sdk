@@ -226,7 +226,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			double* oRealPartBuffer  = m_vEncoder[2].getInputMatrix()->getBuffer();
 			double* oImagPartBuffer  = m_vEncoder[3].getInputMatrix()->getBuffer();
 
-			for (size_t c = 0; c < nChannel; c++)
+			for (size_t c = 0; c < nChannel; ++c)
 			{
 				// compute CWT
 				if (cwt(m_waveletTransform, ibuffer) != 0)
@@ -236,9 +236,9 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				}
 
 				// format of m_waveletTransform->output: dimensions = m_nScaleJ * l_iSampleCount, stored in row major format
-				for (size_t scaleIdx = 0; scaleIdx < m_nScaleJ; scaleIdx++)
+				for (size_t scaleIdx = 0; scaleIdx < m_nScaleJ; ++scaleIdx)
 				{
-					for (size_t sampleIdx = 0; sampleIdx < nSample; sampleIdx++)
+					for (size_t sampleIdx = 0; sampleIdx < nSample; ++sampleIdx)
 					{
 						const double real      = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].re;
 						const double imag      = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].im;

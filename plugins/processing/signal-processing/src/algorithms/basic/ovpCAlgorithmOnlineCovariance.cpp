@@ -151,7 +151,7 @@ bool CAlgorithmOnlineCovariance::process()
 			l_oChunkContribution.resizeLike(m_oIncrementalCov);
 			l_oChunkContribution.setZero();
 
-			for (uint32_t i = l_ui32Start; i < nRows; i++)
+			for (uint32_t i = l_ui32Start; i < nRows; ++i)
 			{
 				m_oIncrementalMean += l_oSampleChunk.row(i);
 

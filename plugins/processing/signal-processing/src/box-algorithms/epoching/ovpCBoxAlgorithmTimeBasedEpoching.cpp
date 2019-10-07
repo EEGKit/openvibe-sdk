@@ -49,7 +49,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
 
@@ -80,7 +80,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			oMatrix->setDimensionCount(2);
 			oMatrix->setDimensionSize(0, nChannel);
 			oMatrix->setDimensionSize(1, m_nOutputSample);
-			for (uint32_t c = 0; c < nChannel; c++)
+			for (uint32_t c = 0; c < nChannel; ++c)
 			{
 				oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c));
 			}
@@ -121,7 +121,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 				{
 					// Copies samples to buffer
 					const uint32_t sampleToFill = std::min(m_nOutputSample - m_outputSampleIdx, nISample - sampleProcessed);
-					for (uint32_t c = 0; c < nChannel; c++)
+					for (uint32_t c = 0; c < nChannel; ++c)
 					{
 						System::Memory::copy(oBuffer + c * m_nOutputSample + m_outputSampleIdx,
 											 iBuffer + c * nISample + sampleProcessed,
@@ -145,7 +145,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 						{
 							// Shifts samples for next epoch when overlap
 							const uint32_t samplesToSave = m_nOutputSample - m_nOutputSampleBetweenEpoch;
-							for (uint32_t c = 0; c < nChannel; c++)
+							for (uint32_t c = 0; c < nChannel; ++c)
 							{
 								System::Memory::move(oBuffer + c * m_nOutputSample,
 													 oBuffer + c * m_nOutputSample + m_nOutputSample - samplesToSave,

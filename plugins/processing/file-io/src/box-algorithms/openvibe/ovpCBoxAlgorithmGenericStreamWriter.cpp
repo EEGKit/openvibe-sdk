@@ -53,7 +53,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_Compression);
 	m_oWriterHelper.setUIntegerAsChildData(0 /* compression flag */);
 	m_oWriterHelper.closeChild();
-	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
 		CIdentifier l_oID;
 		boxContext.getInputType(i, l_oID);
@@ -90,9 +90,9 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 
 	m_oSwap.setSize(0, true);
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			m_oWriterHelper.connect(&m_oWriter);
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer);

@@ -59,7 +59,7 @@ bool CBoxAlgorithmSpectrumAverage::process()
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
@@ -78,11 +78,11 @@ bool CBoxAlgorithmSpectrumAverage::process()
 			double* oMatrix     = op_pMatrix->getBuffer();
 			const uint32_t nChannel = op_pMatrix->getDimensionSize(0);
 			const uint32_t nBand    = op_pMatrix->getDimensionSize(1);
-			for (uint32_t j = 0; j < nChannel; j++)
+			for (uint32_t j = 0; j < nChannel; ++j)
 			{
 				double mean     = 0;
 				uint32_t n = 0;
-				for (uint32_t k = 0; k < nBand; k++)
+				for (uint32_t k = 0; k < nBand; ++k)
 				{
 					mean += *oMatrix;
 					n += (m_bZeroCare || *oMatrix != 0) ? 1 : 0;

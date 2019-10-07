@@ -369,7 +369,7 @@ namespace OpenViBE
 		int nArg;
 		LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &nArg);
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-		for (int i = 0; i < nArg; i++) { args.push_back(converter.to_bytes(argListUtf16[i])); }
+		for (int i = 0; i < nArg; ++i) { args.push_back(converter.to_bytes(argListUtf16[i])); }
 #else
 		args = std::vector<std::string>(argv, argv + argc);
 #endif

@@ -17,7 +17,7 @@ namespace
 
 		if (matchMethodID == OVP_TypeId_MatchMethod_Name)
 		{
-			for (uint32_t i = start; i < matrix.getDimensionSize(0); i++)
+			for (uint32_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
 				if (OpenViBEToolkit::Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
 			}
@@ -78,7 +78,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
 		if (m_oDecoder.isHeaderReceived())
@@ -104,7 +104,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 			oMatrix.setDimensionCount(2);
 			oMatrix.setDimensionSize(0, iMatrix.getDimensionSize(0) - 1);
 			oMatrix.setDimensionSize(1, iMatrix.getDimensionSize(1));
-			for (uint32_t j = 0, k = 0; j < iMatrix.getDimensionSize(0); j++)
+			for (uint32_t j = 0, k = 0; j < iMatrix.getDimensionSize(0); ++j)
 			{
 				if (j != m_referenceChannelIdx) { oMatrix.setDimensionLabel(0, k++, iMatrix.getDimensionLabel(0, j)); }
 			}
@@ -120,11 +120,11 @@ bool CBoxAlgorithmReferenceChannel::process()
 			double* refBuffer  = iMatrix.getBuffer() + m_referenceChannelIdx * iMatrix.getDimensionSize(1);
 			const uint32_t nChannel = iMatrix.getDimensionSize(0);
 			const uint32_t nSample  = iMatrix.getDimensionSize(1);
-			for (uint32_t j = 0; j < nChannel; j++)
+			for (uint32_t j = 0; j < nChannel; ++j)
 			{
 				if (j != m_referenceChannelIdx)
 				{
-					for (uint32_t k = 0; k < nSample; k++) { oBuffer[k] = iBuffer[k] - refBuffer[k]; }
+					for (uint32_t k = 0; k < nSample; ++k) { oBuffer[k] = iBuffer[k] - refBuffer[k]; }
 					oBuffer += nSample;
 				}
 				iBuffer += nSample;

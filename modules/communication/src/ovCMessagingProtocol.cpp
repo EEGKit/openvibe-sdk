@@ -353,21 +353,21 @@ bool BoxDescriptionMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t
 	m_Outputs.clear();
 	m_Parameters.clear();
 
-	for (uint32_t i = 0; i < inputCount; i++)
+	for (uint32_t i = 0; i < inputCount; ++i)
 	{
 		InputOutput input;
 		if (!input.fromBytes(buffer, bufferIndex)) { return false; }
 		m_Inputs.push_back(input);
 	}
 
-	for (uint32_t i = 0; i < outputCount; i++)
+	for (uint32_t i = 0; i < outputCount; ++i)
 	{
 		InputOutput output;
 		if (!output.fromBytes(buffer, bufferIndex)) { return false; }
 		m_Outputs.push_back(output);
 	}
 
-	for (uint32_t i = 0; i < parameterCount; i++)
+	for (uint32_t i = 0; i < parameterCount; ++i)
 	{
 		Parameter parameter;
 		if (!parameter.fromBytes(buffer, bufferIndex)) { return false; }

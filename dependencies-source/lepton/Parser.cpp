@@ -68,7 +68,7 @@ string Parser::trim(const string& expression)
 	// Remove leading and trailing spaces.
 
 	size_t start, end;
-	for (start = 0; start < expression.size() && isspace(expression[start]); start++) { }
+	for (start = 0; start < expression.size() && isspace(expression[start]); ++start) { }
 	for (end = expression.size() - 1; end > start && isspace(expression[end]); end--) { }
 	if (start == end && isspace(expression[end])) { return ""; }
 	return expression.substr(start, end - start + 1);
@@ -85,7 +85,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 	{
 		// White space
 
-		for (size_t pos = start + 1; pos < expression.size(); pos++)
+		for (size_t pos = start + 1; pos < expression.size(); ++pos)
 		{
 			if (!isspace(expression[pos])) { return ParseToken(expression.substr(start, pos - start), ParseToken::Whitespace); }
 		}
@@ -98,7 +98,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 		bool foundDecimal = (c == '.');
 		bool foundExp     = false;
 		size_t pos;
-		for (pos = start + 1; pos < expression.size(); pos++)
+		for (pos = start + 1; pos < expression.size(); ++pos)
 		{
 			c = expression[pos];
 			if (Digits.find(c) != string::npos) { continue; }
@@ -120,7 +120,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 
 	// A variable, function, or left parenthesis
 
-	for (size_t pos = start; pos < expression.size(); pos++)
+	for (size_t pos = start; pos < expression.size(); ++pos)
 	{
 		c = expression[pos];
 		if (c == '(') { return ParseToken(expression.substr(start, pos - start + 1), ParseToken::Function); }
@@ -165,7 +165,7 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	// Parse the subexpressions.
 
 	map<string, ExpressionTreeNode> subexpDefs;
-	for (size_t i = 0; i < subexpressions.size(); i++)
+	for (size_t i = 0; i < subexpressions.size(); ++i)
 	{
 		size_t equalsPos = subexpressions[i].find('=');
 		if (equalsPos == string::npos) { throw Exception("Parse error: subexpression does not specify a name"); }

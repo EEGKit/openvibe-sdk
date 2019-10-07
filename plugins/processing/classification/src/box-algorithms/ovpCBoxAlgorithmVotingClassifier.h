@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 				if (inputTypeID == OV_TypeId_Stimulations || inputTypeID == OV_TypeId_StreamedMatrix)
 				{
 					m_oInputTypeID = inputTypeID;
-					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeID); }
+					for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, m_oInputTypeID); }
 				}
 				else { box.setInputType(index, m_oInputTypeID); }
 				return true;
@@ -74,7 +74,7 @@ namespace OpenViBEPlugins
 
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); i++)
+				for (uint32_t i = 0; i < box.getInputCount(); ++i)
 				{
 					box.setInputType(i, m_oInputTypeID);
 					box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());

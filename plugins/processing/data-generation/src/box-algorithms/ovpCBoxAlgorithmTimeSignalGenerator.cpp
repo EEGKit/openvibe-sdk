@@ -72,7 +72,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 		{
 			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
 
-			for (uint32_t i = 0; i < m_nGeneratedEpochSample; i++)
+			for (uint32_t i = 0; i < m_nGeneratedEpochSample; ++i)
 			{
 				l_pSampleBuffer[i] = (i + m_nSentSample) / double(m_samplingFrequency);
 			}

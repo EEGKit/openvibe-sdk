@@ -125,7 +125,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
@@ -133,7 +133,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			m_vSelectionFactor.clear();
-			for (uint32_t j = 0; j < ip_pFrequencyAbscissa->getDimensionSize(0); j++)
+			for (uint32_t j = 0; j < ip_pFrequencyAbscissa->getDimensionSize(0); ++j)
 			{
 				double frequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[j];
 				const bool selected      = std::any_of(m_vSelected.begin(), m_vSelected.end(), [frequencyAbscissa](const BandRange& currentBandRange)
@@ -148,9 +148,9 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			uint32_t offset = 0;
-			for (uint32_t j = 0; j < m_oMatrix.getDimensionSize(0); j++)
+			for (uint32_t j = 0; j < m_oMatrix.getDimensionSize(0); ++j)
 			{
-				for (uint32_t k = 0; k < m_oMatrix.getDimensionSize(1); k++)
+				for (uint32_t k = 0; k < m_oMatrix.getDimensionSize(1); ++k)
 				{
 					m_oMatrix.getBuffer()[offset] = m_vSelectionFactor[k] * m_oMatrix.getBuffer()[offset];
 					offset++;

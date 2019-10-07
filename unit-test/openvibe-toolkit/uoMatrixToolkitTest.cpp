@@ -30,9 +30,9 @@ using namespace OpenViBE;
 
 void fillMatrix(CMatrix& matrix)
 {
-	for (uint32_t i = 0; i < matrix.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < matrix.getDimensionCount(); ++i)
 	{
-		for (uint32_t j = 0; j < matrix.getDimensionSize(i); j++)
+		for (uint32_t j = 0; j < matrix.getDimensionSize(i); ++j)
 		{
 			std::stringstream dimensionLabel;
 
@@ -42,7 +42,7 @@ void fillMatrix(CMatrix& matrix)
 		}
 	}
 
-	for (uint32_t i = 0; i < matrix.getBufferElementCount(); i++)
+	for (uint32_t i = 0; i < matrix.getBufferElementCount(); ++i)
 	{
 		matrix.getBuffer()[i] = System::Math::randomFloat32BetweenZeroAndOne() * double(System::Math::randomSInteger8());
 	}
@@ -74,7 +74,7 @@ bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, const uint
 		return false;
 	}
 
-	for (uint32_t i = 0; i < expectedMatrix.getBufferElementCount(); i++)
+	for (uint32_t i = 0; i < expectedMatrix.getBufferElementCount(); ++i)
 	{
 		const double error = std::fabs(expectedMatrix.getBuffer()[i] - resultMatrix.getBuffer()[i]);
 

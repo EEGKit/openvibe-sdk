@@ -50,14 +50,14 @@ public:
 	{
 		m_CurrentID = identifier;
 
-		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
+		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
 		g_OutputStream << "Opening child node [0x" << std::setw(16) << std::setfill('0') << std::hex << m_CurrentID << std::dec << "]\n";
 		m_Depth++;
 	}
 
 	void processChildData(const void* buffer, const uint64_t size) override
 	{
-		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
+		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
 		if (m_CurrentID == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(buffer, size) << "]\n"; }
 		else if (m_CurrentID == EBML_Identifier_EBMLVersion) { g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
 		else if (m_CurrentID == EBML_Identifier_EBMLIdLength) { g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
@@ -73,7 +73,7 @@ public:
 	void closeChild() override
 	{
 		m_Depth--;
-		for (int i = 0; i < m_Depth; i++) { g_OutputStream << "   "; }
+		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
 		g_OutputStream << "Node closed\n";
 	}
 

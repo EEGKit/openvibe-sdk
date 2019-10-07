@@ -18,12 +18,12 @@ void CBoxAlgorithmSignalAverage::computeAverage()
 	const uint32_t nSample  = m_Decoder.getOutputMatrix()->getDimensionSize(1);
 
 	//for each channel
-	for (uint32_t c = 0; c < nChannel; c++)
+	for (uint32_t c = 0; c < nChannel; ++c)
 	{
 		double sum = 0;
 
 		//sum its samples
-		for (uint32_t i = 0; i < nSample; i++) { sum += input[(c * nSample) + i]; }
+		for (uint32_t i = 0; i < nSample; ++i) { sum += input[(c * nSample) + i]; }
 
 		//computes and stores the average for a channel
 		output[c] = sum / nSample;
@@ -58,7 +58,7 @@ bool CBoxAlgorithmSignalAverage::process()
 	IDynamicBoxContext* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
-	for (uint32_t i = 0; i < boxContext->getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext->getInputChunkCount(0); ++i)
 	{
 		m_Decoder.decode(i);
 
@@ -80,7 +80,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			oMatrix->setDimensionSize(0, iMatrix->getDimensionSize(0));
 			oMatrix->setDimensionSize(1, 1);
 
-			for (uint32_t j = 0; j < oMatrix->getDimensionSize(0); j++) { oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j)); }
+			for (uint32_t j = 0; j < oMatrix->getDimensionSize(0); ++j) { oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j)); }
 
 			m_Encoder.encodeHeader();
 

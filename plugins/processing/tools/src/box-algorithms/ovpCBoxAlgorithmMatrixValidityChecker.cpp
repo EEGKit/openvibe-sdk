@@ -29,7 +29,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 
 	m_vStreamDecoder.resize(boxContext.getInputCount());
 	m_vStreamEncoder.resize(boxContext.getInputCount());
-	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
 		m_vStreamDecoder[i].initialize(*this, i);
 		m_vStreamEncoder[i].initialize(*this, i);
@@ -49,7 +49,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
 		m_vStreamDecoder[i].uninitialize();
 		m_vStreamEncoder[i].uninitialize();
@@ -72,9 +72,9 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 	const size_t nInput   = this->getStaticBoxContext().getInputCount();
 	const size_t nSetting = this->getStaticBoxContext().getSettingCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			m_vStreamDecoder[i].decode(j);
 			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
@@ -122,9 +122,9 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					double* buffer               = l_pMatrix->getBuffer();
 					uint32_t nInterpolatedSample = 0;
 
-					for (uint32_t k = 0; k < nChannel; k++)
+					for (uint32_t k = 0; k < nChannel; ++k)
 					{
-						for (uint32_t l = 0; l < nSample; l++)
+						for (uint32_t l = 0; l < nSample; ++l)
 						{
 							if (std::isnan(buffer[l + k * nSample]) || std::isinf(buffer[l + k * nSample]))
 							{

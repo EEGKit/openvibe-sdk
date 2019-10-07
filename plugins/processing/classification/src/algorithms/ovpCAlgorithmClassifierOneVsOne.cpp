@@ -112,7 +112,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 
 	//Calculate the amount of sample for each class
 	std::map<double, uint32_t> l_vClassLabels;
-	for (uint32_t i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); i++)
+	for (uint32_t i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); ++i)
 	{
 		if (!l_vClassLabels.count(rFeatureVectorSet[i].getLabel())) { l_vClassLabels[rFeatureVectorSet[i].getLabel()] = 0; }
 		l_vClassLabels[rFeatureVectorSet[i].getLabel()]++;
@@ -147,7 +147,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 			ip_pFeatureVectorSet->setDimensionSize(1, l_iFeatureVectorSize + 1);
 
 			double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
-			for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
+			for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); ++j)
 			{
 				const double l_f64TempClass = rFeatureVectorSet[j].getLabel();
 				if (l_f64TempClass == double(firstClass) || l_f64TempClass == double(secondClass))

@@ -278,7 +278,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 	for (uint32_t i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
 		auto maybeStimulationDecoder = m_StimulationDecoders.find(i);
-		for (uint32_t j = 0; j < dynamicBoxContext->getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < dynamicBoxContext->getInputChunkCount(i); ++j)
 		{
 			if (!m_HasReceivedEndMessage)
 			{

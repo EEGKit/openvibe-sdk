@@ -83,7 +83,7 @@ bool CBoxAlgorithmTimeout::process()
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// Discard input data
-	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++) { dynamicBoxContext.markInputAsDeprecated(0, i); }
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i) { dynamicBoxContext.markInputAsDeprecated(0, i); }
 
 	// Encoding the header
 	if (!m_isHeaderSent)

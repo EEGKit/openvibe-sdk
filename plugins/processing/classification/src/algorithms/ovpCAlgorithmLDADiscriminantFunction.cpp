@@ -36,7 +36,7 @@ bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* c
 	}
 
 	m_weight.resize(coefficients.size());
-	for (size_t i = 0; i < coefficients.size(); i++) { m_weight(i, 0) = coefficients[i]; }
+	for (size_t i = 0; i < coefficients.size(); ++i) { m_weight(i, 0) = coefficients[i]; }
 	return true;
 }
 
@@ -47,7 +47,7 @@ XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration()
 	std::stringstream weigths, bias;
 
 	weigths << std::scientific;
-	for (int i = 0; i < m_weight.size(); i++) { weigths << " " << m_weight(i, 0); }
+	for (int i = 0; i < m_weight.size(); ++i) { weigths << " " << m_weight(i, 0); }
 
 	bias << m_bias;
 

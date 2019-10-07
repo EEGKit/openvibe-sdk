@@ -82,14 +82,14 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	// Push the stimulations to a queue
 	bool newStimulus = false;
-	for (size_t j = 0; j < boxContext.getInputChunkCount(0); j++)
+	for (size_t j = 0; j < boxContext.getInputChunkCount(0); ++j)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, j);
 		m_decoder->process();
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
+			for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); ++k)
 			{
 				uint64_t stimulationId   = op_pStimulationSet->getStimulationIdentifier(k);
 				uint64_t stimulationDate = op_pStimulationSet->getStimulationDate(k);

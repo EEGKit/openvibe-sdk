@@ -47,7 +47,7 @@ CompiledExpression::CompiledExpression(const ParsedExpression& expression)
 	compileExpression(expr.getRootNode(), temps);
 }
 
-CompiledExpression::~CompiledExpression() { for (size_t i = 0; i < operation.size(); i++) if (operation[i] != nullptr) delete operation[i]; }
+CompiledExpression::~CompiledExpression() { for (size_t i = 0; i < operation.size(); ++i) if (operation[i] != nullptr) delete operation[i]; }
 
 CompiledExpression::CompiledExpression(const CompiledExpression& expression) { *this = expression; }
 
@@ -60,7 +60,7 @@ CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expr
 	workspace.resize(expression.workspace.size());
 	argValues.resize(expression.argValues.size());
 	operation.resize(expression.operation.size());
-	for (size_t i = 0; i < operation.size(); i++) { operation[i] = expression.operation[i]->clone(); }
+	for (size_t i = 0; i < operation.size(); ++i) { operation[i] = expression.operation[i]->clone(); }
 	return *this;
 }
 
@@ -96,7 +96,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 			// If the arguments are sequential, we can just pass a pointer to the first one.
 
 			bool sequential = true;
-			for ( size_t i = 1; i < args.size(); i++) if (args[i] != args[i - 1] + 1) sequential = false;
+			for ( size_t i = 1; i < args.size(); ++i) if (args[i] != args[i - 1] + 1) sequential = false;
 			if (sequential) arguments[stepIndex].push_back(args[0]);
 			else
 			{
@@ -111,7 +111,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 
 int CompiledExpression::findTempIndex(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
 {
-	for (size_t i = 0; i < temps.size(); i++) if (temps[i].first == node) return i;
+	for (size_t i = 0; i < temps.size(); ++i) if (temps[i].first == node) return i;
 	return -1;
 }
 
@@ -128,13 +128,13 @@ double CompiledExpression::evaluate() const
 {
 	// Loop over the operations and evaluate each one.
 
-	for (uint32_t step = 0; step < operation.size(); step++)
+	for (uint32_t step = 0; step < operation.size(); ++step)
 	{
 		const vector<int>& args = arguments[step];
 		if (args.size() == 1) workspace[target[step]] = operation[step]->evaluate(&workspace[args[0]], dummyVariables);
 		else
 		{
-			for (size_t i = 0; i < args.size(); i++) argValues[i] = workspace[args[i]];
+			for (size_t i = 0; i < args.size(); ++i) argValues[i] = workspace[args[i]];
 			workspace[target[step]] = operation[step]->evaluate(&argValues[0], dummyVariables);
 		}
 	}

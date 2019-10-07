@@ -35,7 +35,7 @@ namespace
 
 	void clearMatrix(vector<vector<string>>& vMatrix)
 	{
-		for (uint32_t i = 0; i < vMatrix.size(); i++) { vMatrix[i].clear(); }
+		for (uint32_t i = 0; i < vMatrix.size(); ++i) { vMatrix[i].clear(); }
 		vMatrix.clear();
 	}
 }
@@ -283,7 +283,7 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
 
-		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 		m_encoder->encodeHeader();
 		m_bHeaderSent = true;
 
@@ -325,7 +325,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 			getInputStimulationSet();
 	ip_pStimulationSet->clear();
 
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); ++i)
 	{
 		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == 3, "Invalid data row length: must be 3 for stimulation date, index and duration", ErrorType::BadParsing);
 
@@ -367,7 +367,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
 
-		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputSamplingRate() = m_samplingRate;
 
@@ -412,7 +412,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
 
-		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		static_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputDynamic() =
 				false;	//atoi(m_vDataMatrix[0][m_nCol].c_str());
@@ -425,12 +425,12 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 	}
 
 	vector<vector<string>> channelBloc;
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++) { channelBloc.push_back(m_vDataMatrix[i]); }
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); ++i) { channelBloc.push_back(m_vDataMatrix[i]); }
 
 	//clear matrix
 	clearMatrix(m_vDataMatrix);
 
-	for (size_t i = 0; i < channelBloc.size(); i++)
+	for (size_t i = 0; i < channelBloc.size(); ++i)
 	{
 		m_vDataMatrix.push_back(channelBloc[i]);
 
@@ -468,7 +468,7 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 		iMatrix->setDimensionCount(1);
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
 
-		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 
 		m_encoder->encodeHeader();
 
@@ -478,13 +478,13 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 	}
 
 	// Each vector has to be sent separately
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); ++i)
 	{
 		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_nColumn,
 							"Unexpected number of elements" << "(got " << uint64_t(m_vDataMatrix[i].size()) << ", expected " << m_nColumn << ")",
 							ErrorType::BadParsing);
 
-		for (uint32_t j = 0; j < m_nColumn - 1; j++) { matrix->getBuffer()[j] = atof(m_vDataMatrix[i][j + 1].c_str()); }
+		for (uint32_t j = 0; j < m_nColumn - 1; ++j) { matrix->getBuffer()[j] = atof(m_vDataMatrix[i][j + 1].c_str()); }
 
 		m_encoder->encodeBuffer();
 
@@ -509,12 +509,12 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
 		iMatrix->setDimensionSize(1, m_vDataMatrix.size());
 
-		for (uint32_t i = 1; i < m_nColumn; i++) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
+		for (uint32_t i = 1; i < m_nColumn; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 		iFrequencyAbscissa->setDimensionCount(1);
 		iFrequencyAbscissa->setDimensionSize(0, m_vDataMatrix.size());
 		if (m_vDataMatrix.size() > 1)
 		{
-			for (uint32_t frequencyBandIndex = 0; frequencyBandIndex < m_vDataMatrix.size(); frequencyBandIndex++)
+			for (uint32_t frequencyBandIndex = 0; frequencyBandIndex < m_vDataMatrix.size(); ++frequencyBandIndex)
 			{
 				const double curFrequencyAbscissa = std::stod(m_vDataMatrix[frequencyBandIndex][m_nColumn].c_str())
 													+ double(frequencyBandIndex) / (m_vDataMatrix.size() - 1) * (
@@ -539,12 +539,12 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 	}
 
 	vector<vector<string>> l_vSpectrumBloc;
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++) { l_vSpectrumBloc.push_back(m_vDataMatrix[i]); }
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); ++i) { l_vSpectrumBloc.push_back(m_vDataMatrix[i]); }
 
 	//clear matrix
 	clearMatrix(m_vDataMatrix);
 
-	for (size_t i = 0; i < l_vSpectrumBloc.size(); i++)
+	for (size_t i = 0; i < l_vSpectrumBloc.size(); ++i)
 	{
 		m_vDataMatrix.push_back(l_vSpectrumBloc[i]);
 		//send the current bloc if the next data hasn't the same date
@@ -576,10 +576,10 @@ bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
 						<< ", expected at most " << matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0), ErrorType::Overflow);
 
 	stringstream l_sMatrix;
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); ++i)
 	{
 		l_sMatrix << "at time (" << m_vDataMatrix[i][0].c_str() << "):";
-		for (uint32_t j = 0; j < m_nColumn - 1; j++)
+		for (uint32_t j = 0; j < m_nColumn - 1; ++j)
 		{
 			matrix->getBuffer()[j * matrix->getDimensionSize(1) + i] = std::stod(m_vDataMatrix[i][j + 1].c_str());
 			l_sMatrix << matrix->getBuffer()[j * matrix->getDimensionSize(1) + i] << ";";

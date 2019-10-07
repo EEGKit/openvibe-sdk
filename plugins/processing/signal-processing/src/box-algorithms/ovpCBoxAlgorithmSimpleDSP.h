@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
 				box.setOutputType(0, typeID);
-				for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
+				for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 				return true;
 			}
 
@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
 				box.setOutputType(0, typeID);
-				for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
+				for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 				return true;
 			}
 

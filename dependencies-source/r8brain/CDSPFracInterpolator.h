@@ -87,7 +87,7 @@ namespace r8b
 
 			if (FilterLen <= 20)
 			{
-				for (i = -pc2 + 1; i <= FilterFracs + pc2; i++)
+				for (i = -pc2 + 1; i <= FilterFracs + pc2; ++i)
 				{
 					sinc.FracDelay = double(FilterFracs - i) / FilterFracs;
 					sinc.initFrac(CDSPSincFilterGen::wftVaneev, Params);
@@ -100,7 +100,7 @@ namespace r8b
 			}
 			else
 			{
-				for (i = -pc2 + 1; i <= FilterFracs + pc2; i++)
+				for (i = -pc2 + 1; i <= FilterFracs + pc2; ++i)
 				{
 					sinc.FracDelay = double(FilterFracs - i) / FilterFracs;
 					sinc.initFrac(CDSPSincFilterGen::wftKaiser, Params, true);
@@ -326,7 +326,7 @@ namespace r8b
 				double* const wp2 = wp1 + BufLen;
 				int i;
 
-				for (i = 0; i < b; i++)
+				for (i = 0; i < b; ++i)
 				{
 					wp1[i] = ip[i];
 					wp2[i] = ip[i];
@@ -355,7 +355,7 @@ namespace r8b
 				const double x3 = x2 * x;
 #endif // R8B_FLTTEST
 
-					for (i = 0; i < FilterLen; i++)
+					for (i = 0; i < FilterLen; ++i)
 					{
 #if !R8B_FLTTEST
 						s += (ftp[ii] + ftp[ii + 1] * x +

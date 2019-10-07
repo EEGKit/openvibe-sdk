@@ -33,7 +33,7 @@ inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* buffer, uint64
 	if (codeSizeLength > *pBufferLength) { return false; }
 
 	size_t l_ulIthBit = codeSizeLength;
-	for (size_t i = 0; i < codeSizeLength; i++)
+	for (size_t i = 0; i < codeSizeLength; ++i)
 	{
 		const size_t l_ulByteShift = codeSizeLength - i - 1;
 		size_t l_ulByte            = (l_ulByteShift >= 8 ? 0 : static_cast<unsigned char>((uiValue >> (l_ulByteShift * 8)) & 0xff));

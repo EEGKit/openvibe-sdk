@@ -62,7 +62,7 @@ namespace Socket
 
 			*btaddr = 0;
 
-			for (size_t i = 0; i < 6; i++)
+			for (size_t i = 0; i < 6; ++i)
 			{
 				const unsigned long long tmpaddr = static_cast<unsigned long long>(aaddr[i] & 0xff);
 				*btaddr                    = (*btaddr << 8) + tmpaddr;

@@ -89,7 +89,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	m_nPartition = uint64_t(nPartition);
 
 	m_stimulationDecoder.initialize(*this, 0);
-	for (uint32_t i = 1; i < boxContext.getInputCount(); i++)
+	for (uint32_t i = 1; i < boxContext.getInputCount(); ++i)
 	{
 		m_featureVectorDecoder.push_back(new OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
 		m_featureVectorDecoder.back()->initialize(*this, i);
@@ -135,7 +135,7 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 		this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
 	}
 
-	for (uint32_t i = 0; i < m_featureVectorDecoder.size(); i++)
+	for (uint32_t i = 0; i < m_featureVectorDecoder.size(); ++i)
 	{
 		m_featureVectorDecoder[i]->uninitialize();
 		delete m_featureVectorDecoder[i];
@@ -145,7 +145,7 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	m_stimulationEncoder.uninitialize();
 	m_stimulationDecoder.uninitialize();
 
-	for (uint32_t i = 0; i < m_datasets.size(); i++)
+	for (uint32_t i = 0; i < m_datasets.size(); ++i)
 	{
 		delete m_datasets[i].m_pFeatureVectorMatrix;
 		m_datasets[i].m_pFeatureVectorMatrix = nullptr;
@@ -187,16 +187,16 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 	// Collect index set of feature vectors per class
 	std::vector<std::vector<size_t>> classIndexes;
 	classIndexes.resize(nClass);
-	for (size_t i = 0; i < m_datasets.size(); i++) { classIndexes[m_datasets[i].m_ui32InputIdx].push_back(i); }
+	for (size_t i = 0; i < m_datasets.size(); ++i) { classIndexes[m_datasets[i].m_ui32InputIdx].push_back(i); }
 
 	// Count how many vectors the largest class has
 	uint32_t nMax = 0;
-	for (uint32_t i = 0; i < nClass; i++) { nMax = std::max<uint32_t>(nMax, classIndexes[i].size()); }
+	for (uint32_t i = 0; i < nClass; ++i) { nMax = std::max<uint32_t>(nMax, classIndexes[i].size()); }
 
 	m_balancedDatasets.clear();
 
 	// Pad those classes with resampled examples (sampling with replacement) that have fewer examples than the largest class
-	for (uint32_t i = 0; i < nClass; i++)
+	for (uint32_t i = 0; i < nClass; ++i)
 	{
 		const uint32_t examplesInClass = classIndexes[i].size();
 		const uint32_t paddingNeeded   = nMax - examplesInClass;
@@ -210,9 +210,9 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_datasets owns the data pointer.
 		const std::vector<size_t>& thisClassesIndexes = classIndexes[i];
-		for (uint32_t j = 0; j < examplesInClass; j++) { m_balancedDatasets.push_back(m_datasets[thisClassesIndexes[j]]); }
+		for (uint32_t j = 0; j < examplesInClass; ++j) { m_balancedDatasets.push_back(m_datasets[thisClassesIndexes[j]]); }
 
-		for (uint32_t j = 0; j < paddingNeeded; j++)
+		for (uint32_t j = 0; j < paddingNeeded; ++j)
 		{
 			const uint32_t sampledIndex        = System::Math::randomUInteger32WithCeiling(examplesInClass);
 			const SFeatureVector& sourceVector = m_datasets[thisClassesIndexes[sampledIndex]];
@@ -231,7 +231,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	bool startTrain = false;
 
 	// Parses stimulations
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_stimulationDecoder.decode(i);
 
@@ -246,7 +246,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			IStimulationSet* oStimulationSet       = m_stimulationEncoder.getInputStimulationSet();
 			oStimulationSet->clear();
 
-			for (size_t j = 0; j < iStimulationSet->getStimulationCount(); j++)
+			for (size_t j = 0; j < iStimulationSet->getStimulationCount(); ++j)
 			{
 				if (iStimulationSet->getStimulationIdentifier(j) == m_trainStimulation)
 				{
@@ -267,9 +267,9 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	}
 
 	// Parses feature vectors
-	for (uint32_t i = 1; i < nInput; i++)
+	for (uint32_t i = 1; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			m_featureVectorDecoder[i - 1]->decode(j);
 
@@ -303,7 +303,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << uint32_t(m_datasets.size()) << "x"
 				<< m_datasets[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
-		for (uint32_t i = 1; i < nInput; i++)
+		for (uint32_t i = 1; i < nInput; ++i)
 		{
 			this->getLogManager() << LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
 		}
@@ -319,7 +319,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		// create a vector used for mapping feature vectors (initialize it as v[i] = i)
 		std::vector<size_t> featurePermutation;
-		for (size_t i = 0; i < actualDataset.size(); i++) { featurePermutation.push_back(i); }
+		for (size_t i = 0; i < actualDataset.size(); ++i) { featurePermutation.push_back(i); }
 
 		// randomize the vector if necessary
 		if (randomizeVectorOrder)
@@ -342,7 +342,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			OpenViBEToolkit::Tools::Matrix::clearContent(confusion);
 
 			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
-			for (size_t i = 0; i < m_nPartition; i++)
+			for (size_t i = 0; i < m_nPartition; ++i)
 			{
 				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_nPartition);
 				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_nPartition);
@@ -364,7 +364,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			const double mean = finalAccuracy / m_nPartition;
 			double deviation  = 0;
 
-			for (size_t i = 0; i < m_nPartition; i++)
+			for (size_t i = 0; i < m_nPartition; ++i)
 			{
 				const double diff = partitionAccuracies[i] - mean;
 				deviation += diff * diff;
@@ -414,7 +414,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& da
 	ip_pFeatureVectorSet->setDimensionSize(1, featureVectorSize + 1);
 
 	double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
-	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); j++)
+	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); ++j)
 	{
 		const size_t k       = permutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
 		const double classId = double(dataset[k].m_ui32InputIdx);
@@ -457,7 +457,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 	size_t nSuccess = 0;
 
-	for (size_t j = startIdx; j < stopIdx; j++)
+	for (size_t j = startIdx; j < stopIdx; ++j)
 	{
 		const size_t k = permutation[j];
 
@@ -510,25 +510,25 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	rowSum.setDimensionSize(0, rows);
 	OpenViBEToolkit::Tools::Matrix::clearContent(rowSum);
 
-	for (uint32_t i = 0; i < rows; i++)
+	for (uint32_t i = 0; i < rows; ++i)
 	{
-		for (uint32_t j = 0; j < rows; j++) { rowSum[i] += tmp[i * rows + j]; }
-		for (uint32_t j = 0; j < rows; j++) { tmp[i * rows + j] /= rowSum[i]; }
+		for (uint32_t j = 0; j < rows; ++j) { rowSum[i] += tmp[i * rows + j]; }
+		for (uint32_t j = 0; j < rows; ++j) { tmp[i * rows + j] /= rowSum[i]; }
 	}
 
 	std::stringstream ss;
 	ss << std::fixed;
 
 	ss << "  Cls vs cls ";
-	for (uint32_t i = 0; i < rows; i++) { ss << setw(6) << (i + 1); }
+	for (uint32_t i = 0; i < rows; ++i) { ss << setw(6) << (i + 1); }
 	this->getLogManager() << LogLevel_Info << ss.str().c_str() << "\n";
 
 	ss.precision(1);
-	for (uint32_t i = 0; i < rows; i++)
+	for (uint32_t i = 0; i < rows; ++i)
 	{
 		ss.str("");
 		ss << "  Target " << setw(2) << (i + 1) << ": ";
-		for (uint32_t j = 0; j < rows; j++) { ss << setw(6) << tmp[i * rows + j] * 100; }
+		for (uint32_t j = 0; j < rows; ++j) { ss << setw(6) << tmp[i * rows + j] * 100; }
 		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << uint32_t(rowSum[i]) << " examples\n";
 	}
 

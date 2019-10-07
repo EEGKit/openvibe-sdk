@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 			m_nInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
 
 			// Prepares decoders
-			for (uint32_t i = 0; i < m_nInput; i++)
+			for (uint32_t i = 0; i < m_nInput; ++i)
 			{
 				TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* streamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
 				m_pStreamedMatrixDecoder.push_back(streamedMatrixDecoder);
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 
 		bool CBoxAlgorithmFeatureAggregator::uninitialize()
 		{
-			for (uint32_t i = 0; i < m_nInput; i++)
+			for (uint32_t i = 0; i < m_nInput; ++i)
 			{
 				if (m_pStreamedMatrixDecoder.back())
 				{
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 			bool readyToProcess = true;
 
 			//checks every input's first chunk's dates
-			for (uint32_t i = 0; i < m_nInput && readyToProcess; i++)
+			for (uint32_t i = 0; i < m_nInput && readyToProcess; ++i)
 			{
 				if (boxIO->getInputChunkCount(i) != 0)
 				{
@@ -93,9 +93,9 @@ namespace OpenViBEPlugins
 					if (tEnd - tStart != m_lastChunkEndTime - m_lastChunkStartTime)
 					{
 						//marks everything as deprecated and sends a error
-						for (uint32_t input = 0; input < m_nInput; input++)
+						for (uint32_t input = 0; input < m_nInput; ++input)
 						{
-							for (uint32_t chunk = 0; chunk < boxIO->getInputChunkCount(input); chunk++) { boxIO->markInputAsDeprecated(input, chunk); }
+							for (uint32_t chunk = 0; chunk < boxIO->getInputChunkCount(input); ++chunk) { boxIO->markInputAsDeprecated(input, chunk); }
 						}
 
 						//readyToProcess = false;
@@ -121,7 +121,7 @@ namespace OpenViBEPlugins
 			uint64_t totalBufferSize = 0;
 			bool bufferReceived      = false;
 
-			for (uint32_t input = 0; input < boxContext->getInputCount(); input++)
+			for (uint32_t input = 0; input < boxContext->getInputCount(); ++input)
 			{
 				m_pStreamedMatrixDecoder[input]->decode(0);
 				//*
@@ -135,7 +135,7 @@ namespace OpenViBEPlugins
 						oMatrix->setDimensionCount(1);
 						oMatrix->setDimensionSize(0, uint32_t(totalBufferSize));
 
-						for (uint32_t i = 0; i < uint32_t(totalBufferSize); i++)
+						for (uint32_t i = 0; i < uint32_t(totalBufferSize); ++i)
 						{
 							oMatrix->setDimensionLabel(0, i, ("Feature " + std::to_string(i + 1)).c_str());
 						}
@@ -153,14 +153,14 @@ namespace OpenViBEPlugins
 					const uint32_t size = iMatrix->getBufferElementCount();
 
 					double* buffer = iMatrix->getBuffer();
-					for (uint32_t i = 0; i < size; i++) { bufferElements.push_back(buffer[i]); }
+					for (uint32_t i = 0; i < size; ++i) { bufferElements.push_back(buffer[i]); }
 				}
 			}
 
 			if (m_bHeaderSent && bufferReceived)
 			{
 				double* oBuffer = oMatrix->getBuffer();
-				for (uint32_t i = 0; i < bufferElements.size(); i++) { oBuffer[i] = bufferElements[i]; }
+				for (uint32_t i = 0; i < bufferElements.size(); ++i) { oBuffer[i] = bufferElements[i]; }
 				m_pFeatureVectorEncoder->encodeBuffer();
 				boxIO->markOutputAsReadyToSend(0, m_lastChunkStartTime, m_lastChunkEndTime);
 			}

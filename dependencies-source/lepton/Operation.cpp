@@ -58,7 +58,7 @@ ExpressionTreeNode Operation::Custom::differentiate(const std::vector<Expression
 {
 	if (function->getNumArguments() == 0) { return ExpressionTreeNode(new Constant(0.0)); }
 	ExpressionTreeNode result = ExpressionTreeNode(new Multiply(), ExpressionTreeNode(new Custom(*this, 0), children), childDerivs[0]);
-	for (int i = 1; i < getNumArguments(); i++)
+	for (int i = 1; i < getNumArguments(); ++i)
 	{
 		result = ExpressionTreeNode(new Add(),
 									result,

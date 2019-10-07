@@ -49,7 +49,7 @@ bool CLogListenerConsole::activate(ELogLevel eLogLevel, bool bActive)
 
 bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
+	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = bActive; }
 	return true;
 }
 

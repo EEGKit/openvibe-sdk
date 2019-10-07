@@ -208,7 +208,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			uint32_t index = std::numeric_limits<uint32_t>::max();
 
 			// Find the first box output with this type that has no file stream connected
-			for (uint32_t i = 0; i < boxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); i++)
+			for (uint32_t i = 0; i < boxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); ++i)
 			{
 				if (boxContext.getOutputType(i, OutputTypeID))
 				{
@@ -224,7 +224,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 			}
 
 			// In case no suitable output was found, see if we can downcast some type
-			for (uint32_t i = 0; i < boxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); i++)
+			for (uint32_t i = 0; i < boxContext.getOutputCount() && index == std::numeric_limits<uint32_t>::max(); ++i)
 			{
 				if (boxContext.getOutputType(i, OutputTypeID))
 				{
@@ -260,7 +260,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		}
 
 		// Warns for output with no stream connected to them
-		for (uint32_t i = 0; i < boxContext.getOutputCount(); i++)
+		for (uint32_t i = 0; i < boxContext.getOutputCount(); ++i)
 		{
 			if (l_vOutputIndexToStreamIdx.find(i) == l_vOutputIndexToStreamIdx.end())
 			{

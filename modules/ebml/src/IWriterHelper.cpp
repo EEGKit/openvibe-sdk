@@ -83,7 +83,7 @@ bool CWriterHelper::setSIntegerAsChildData(const int64_t value)
 	else if (value >= -0x80000000000000LL && value <= 0x7fffffffffffffLL) { size = 7; }
 	//else { size = 8; }
 
-	for (uint64_t i = 0; i < size; i++) { buffer[size - i - 1] = static_cast<unsigned char>((value >> (i * 8)) & 0xff); }
+	for (uint64_t i = 0; i < size; ++i) { buffer[size - i - 1] = static_cast<unsigned char>((value >> (i * 8)) & 0xff); }
 
 	return m_pWriter->setChildData(buffer, size);
 }
@@ -102,7 +102,7 @@ bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue)
 	else if (uiValue < 0x001000000000000LL) { size = 6; }
 	else if (uiValue < 0x100000000000000LL) { size = 7; }
 
-	for (uint64_t i = 0; i < size; i++) { buffer[size - i - 1] = static_cast<unsigned char>((uiValue >> (i * 8)) & 0xff); }
+	for (uint64_t i = 0; i < size; ++i) { buffer[size - i - 1] = static_cast<unsigned char>((uiValue >> (i * 8)) & 0xff); }
 
 	return m_pWriter->setChildData(buffer, size);
 }
@@ -114,7 +114,7 @@ bool CWriterHelper::setFloat32AsChildData(const float fValue)
 	memcpy(&value, &fValue, sizeof(fValue));
 
 	const uint64_t size = (fValue != 0 ? 4 : 0);
-	for (uint64_t i = 0; i < size; i++) { buffer[size - i - 1] = static_cast<unsigned char>((value >> (i * 8)) & 0xff); }
+	for (uint64_t i = 0; i < size; ++i) { buffer[size - i - 1] = static_cast<unsigned char>((value >> (i * 8)) & 0xff); }
 	return m_pWriter->setChildData(buffer, size);
 }
 
@@ -124,7 +124,7 @@ bool CWriterHelper::setFloat64AsChildData(const double fValue)
 	unsigned char buffer[8];
 	memcpy(&l_uiValue, &fValue, sizeof(fValue));
 	const uint64_t size = (fValue != 0 ? 8 : 0);
-	for (uint64_t i = 0; i < size; i++) { buffer[size - i - 1] = static_cast<unsigned char>((l_uiValue >> (i * 8)) & 0xff); }
+	for (uint64_t i = 0; i < size; ++i) { buffer[size - i - 1] = static_cast<unsigned char>((l_uiValue >> (i * 8)) & 0xff); }
 	return m_pWriter->setChildData(buffer, size);
 }
 

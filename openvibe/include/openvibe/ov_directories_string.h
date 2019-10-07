@@ -96,7 +96,7 @@ namespace OpenViBE
 		{
 			std::string out(strIn);
 			const size_t len = strIn.length();
-			for (size_t i = 0; i < len; i++) { if (strIn[i] == '\\') { out[i] = '/'; } }
+			for (size_t i = 0; i < len; ++i) { if (strIn[i] == '\\') { out[i] = '/'; } }
 			return out;
 		}
 

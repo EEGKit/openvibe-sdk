@@ -33,7 +33,7 @@ void CAbstractTree::simplifyTree()
 }
 
 // Dirty hack to avoid GCC 4.3 crash at compilation time
-static void ClearChildren(std::vector<CAbstractTreeNode *>& children) { for (size_t i = 0; i < children.size(); i++) { delete children[i]; } }
+static void ClearChildren(std::vector<CAbstractTreeNode *>& children) { for (size_t i = 0; i < children.size(); ++i) { delete children[i]; } }
 
 CAbstractTreeParentNode::~CAbstractTreeParentNode()
 {
@@ -48,7 +48,7 @@ void CAbstractTreeParentNode::levelOperators()
 	vector<CAbstractTreeNode*> newChildren;
 
 	//for all the node's children
-	for (size_t i = 0; i < nChildren; i++)
+	for (size_t i = 0; i < nChildren; ++i)
 	{
 		CAbstractTreeNode* child = m_Children[i];
 
@@ -124,7 +124,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		childrenChanged = false;
 
 		//try to simplify all the children
-		for (size_t i = 0; i < nChildren; i++)
+		for (size_t i = 0; i < nChildren; ++i)
 		{
 			CAbstractTreeNode* child = m_Children[i];
 			childrenChanged          = child->simplify(child);
@@ -262,7 +262,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				total = 0;
 
 				//add the values of all the constant children
-				for (i = 0; i < nChildren && m_Children[i]->isConstant(); i++)
+				for (i = 0; i < nChildren && m_Children[i]->isConstant(); ++i)
 				{
 					total += reinterpret_cast<CAbstractTreeValueNode*>(m_Children[i])->getValue();
 
@@ -275,7 +275,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			case OP_MUL:
 				total = 1;
 				//multiply the values of all the constant children
-				for (i = 0; i < nChildren && m_Children[i]->isConstant(); i++)
+				for (i = 0; i < nChildren && m_Children[i]->isConstant(); ++i)
 				{
 					total *= reinterpret_cast<CAbstractTreeValueNode*>(m_Children[i])->getValue();
 
@@ -301,7 +301,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			l_oNewChildren.push_back(new CAbstractTreeValueNode(total));
 
 			//adds the other remaining children
-			for (; i < nChildren; i++) { l_oNewChildren.push_back(m_Children[i]); }
+			for (; i < nChildren; ++i) { l_oNewChildren.push_back(m_Children[i]); }
 			//we keep this node, but modify its children
 			m_Children = l_oNewChildren;
 
@@ -322,7 +322,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				{
 					//don't keep the valueNode
 					//adds the other remaining children
-					for (; i < nChildren; i++) { l_oNewChildren.push_back(m_Children[i]); }
+					for (; i < nChildren; ++i) { l_oNewChildren.push_back(m_Children[i]); }
 
 					//we keep this node, but modify its children
 					m_Children = l_oNewChildren;
@@ -351,7 +351,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 	const size_t nChildren = m_Children.size();
 
 	//try to use the negation operator in all the children
-	for (size_t i = 0; i < nChildren; i++)
+	for (size_t i = 0; i < nChildren; ++i)
 	{
 		CAbstractTreeNode* l_pChild = m_Children[i];
 		l_pChild->useNegationOperator();
@@ -390,7 +390,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 				{
 					CAbstractTreeParentNode* l_pNewOperatorNode = new CAbstractTreeParentNode(OP_MUL, true);
 
-					for (size_t i = 1; i < nChildren; i++) { l_pNewOperatorNode->addChild(m_Children[i]); }
+					for (size_t i = 1; i < nChildren; ++i) { l_pNewOperatorNode->addChild(m_Children[i]); }
 
 					m_Children.clear();
 					m_Children.push_back(l_pNewOperatorNode);
@@ -406,7 +406,7 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& parser)
 {
 	const size_t nChildren = m_Children.size();
 	parser.push_op(m_ID);
-	for (size_t i = 0; i < nChildren; i++) { m_Children[i]->generateCode(parser); }
+	for (size_t i = 0; i < nChildren; ++i) { m_Children[i]->generateCode(parser); }
 }
 
 void CAbstractTreeValueNode::generateCode(CEquationParser& parser) { parser.push_value(m_value); }

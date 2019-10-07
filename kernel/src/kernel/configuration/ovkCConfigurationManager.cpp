@@ -417,7 +417,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 	std::string l_sValue;
 	std::string l_sExpandedValue;
 
-	for (size_t i = 0; i < sValue.length(); i++)
+	for (size_t i = 0; i < sValue.length(); ++i)
 	{
 		bool l_bShouldExpand;
 
@@ -585,7 +585,7 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 	std::string l_sValue;
 	std::string l_sExpandedValue;
 
-	for (size_t i = 0; i < sValue.length(); i++)
+	for (size_t i = 0; i < sValue.length(); ++i)
 	{
 		bool l_bShouldExpand;
 

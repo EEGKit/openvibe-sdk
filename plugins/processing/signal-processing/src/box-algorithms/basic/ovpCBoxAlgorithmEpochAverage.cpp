@@ -104,9 +104,9 @@ bool CBoxAlgorithmEpochAverage::process()
 	IBoxIO& boxContext  = getDynamicBoxContext();
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			TParameterHandler<const IMemoryBuffer*> l_oInputMemoryBufferHandle(
 				m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));

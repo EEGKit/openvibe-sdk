@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 			{
 				bool isSeparator(const uint8_t value, uint8_t* separator, const uint32_t nSeparator)
 				{
-					for (uint32_t i = 0; i < nSeparator; i++) { if (value == separator[i]) { return true; } }
+					for (uint32_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
 					return false;
 				}
 

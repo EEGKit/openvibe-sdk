@@ -172,7 +172,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 	uint32_t j;
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
 
@@ -241,7 +241,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 			Dsp::Params params;
 			(*fpGetParameters)(params, samplingRate, m_filterType, m_filterOrder, m_lowCutFrequency, m_highCutFrequency, m_bandPassRipple);
 
-			for (j = 0; j < nChannel; j++)
+			for (j = 0; j < nChannel; ++j)
 			{
 				std::shared_ptr<Dsp::Filter> l_pFilter = (*fpCreateFilter)(m_filterType, nSmoothingSample);
 				l_pFilter->setParams(params);
@@ -263,18 +263,18 @@ bool CBoxAlgorithmTemporalFilter::process()
 				m_firstSamples.resize(nChannel, 0); //initialization to 0
 				if (m_filterType == OVP_TypeId_FilterType_BandPass || m_filterType == OVP_TypeId_FilterType_HighPass)
 				{
-					for (j = 0; j < nChannel; j++)
+					for (j = 0; j < nChannel; ++j)
 					{
 						m_firstSamples[j] = buffer[j * nSample]; //first value of the signal = DC offset
 					}
 				}
 			}
 
-			for (j = 0; j < nChannel; j++)
+			for (j = 0; j < nChannel; ++j)
 			{
 				//for bandpass and highpass filters, suppression of the value m_firstSamples = DC offset
 				//otherwise, no treatment, since m_firstSamples = 0
-				for (uint32_t k = 0; k < nSample; k++) { buffer[k] -= m_firstSamples[j]; }
+				for (uint32_t k = 0; k < nSample; ++k) { buffer[k] -= m_firstSamples[j]; }
 
 				if (m_filters[j]) { m_filters[j]->process(nSample, &buffer); }
 				buffer += nSample;
@@ -298,7 +298,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFil
 	pFilter1->process(SampleCount, &buffer);
 
 	//reversal of the buffer
-	for (j=0; j<SampleCount/2; j++)
+	for (j=0; j<SampleCount/2; ++j)
 	{
 		double l_f64TemporalVar = buffer[j];
 		buffer[j] = buffer[SampleCount-1-j];
@@ -309,7 +309,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFil
 	pFilter2->process(SampleCount, &buffer);
 
 	//reversal of the buffer
-	for (j=0; j<SampleCount/2; j++)
+	for (j=0; j<SampleCount/2; ++j)
 	{
 		double l_f64TemporalVar = buffer[j];
 		buffer[j] = buffer[SampleCount-1-j];
@@ -327,15 +327,15 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 	std::vector<double> l_vBuffer;
 	l_vBuffer.resize(SampleCount+2*l_ui32TransientLength);
 
-	for (j=0; j<l_ui32TransientLength; j++)
+	for (j=0; j<l_ui32TransientLength; ++j)
 	{
 		l_vBuffer[j] = 2*buffer[0]-buffer[l_ui32TransientLength-j];
 	}
-	for (j=0; j<SampleCount; j++)
+	for (j=0; j<SampleCount; ++j)
 	{
 		l_vBuffer[j+l_ui32TransientLength] = buffer[j];
 	}
-	for (j=0; j<l_ui32TransientLength; j++)
+	for (j=0; j<l_ui32TransientLength; ++j)
 	{
 		l_vBuffer[j+l_ui32TransientLength+SampleCount] = 2*buffer[SampleCount-1]-buffer[SampleCount-1-j-1];
 	}
@@ -348,7 +348,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 	filtfilt2 (pFilter1, pFilter2, SampleCount, pBufferTemp);
 
 	//central part of the buffer
-	for (j=0; j<SampleCount-2*l_ui32TransientLength; j++)
+	for (j=0; j<SampleCount-2*l_ui32TransientLength; ++j)
 	{
 		buffer[j] = pBufferTemp[j+l_ui32TransientLength];
 	}

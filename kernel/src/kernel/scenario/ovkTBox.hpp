@@ -717,7 +717,7 @@ namespace OpenViBE
 				if (m_identifier != OV_UndefinedIdentifier)
 				{
 					std::vector<std::pair<uint32_t, std::pair<uint64_t, uint32_t>>> scenarioLinks;
-					for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < m_ownerScenario->getInterfacorCount(Input); scenarioInputIdx++)
+					for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < m_ownerScenario->getInterfacorCount(Input); ++scenarioInputIdx)
 					{
 						CIdentifier boxID        = OV_UndefinedIdentifier;
 						uint32_t boxConnectorIdx = uint32_t(-1);
@@ -822,7 +822,7 @@ namespace OpenViBE
 					if (m_identifier != OV_UndefinedIdentifier)
 					{
 						std::vector<std::pair<uint32_t, std::pair<uint64_t, uint32_t>>> scenarioLinks;
-						for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < m_ownerScenario->getOutputCount(); scenarioOutputIdx++)
+						for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < m_ownerScenario->getOutputCount(); ++scenarioOutputIdx)
 						{
 							CIdentifier boxID        = OV_UndefinedIdentifier;
 							uint32_t boxConnectorIdx = uint32_t(-1);

@@ -17,10 +17,10 @@ ILogManager& operator <<(ILogManager& rLogManager, IMatrix& rMatrix)
 {
 	rLogManager << "Matrix :\n";
 	rLogManager << " | Dimension count : " << rMatrix.getDimensionCount() << "\n";
-	for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < rMatrix.getDimensionCount(); ++i)
 	{
 		rLogManager << " |   Dimension size " << i << " : " << rMatrix.getDimensionSize(i) << "\n";
-		for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++)
+		for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); ++j)
 		{
 			rLogManager << " |     Dimension label " << i << " " << j << " : " << rMatrix.getDimensionLabel(i, j) << "\n";
 		}
@@ -33,7 +33,7 @@ ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulation
 {
 	rLogManager << "Stimulation set :\n";
 	rLogManager << " | Number of elements : " << rStimulationSet.getStimulationCount() << "\n";
-	for (size_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
+	for (size_t i = 0; i < rStimulationSet.getStimulationCount(); ++i)
 	{
 		rLogManager << " |   Stimulation " << i << " : "
 				<< "id=" << rStimulationSet.getStimulationIdentifier(i) << " "
@@ -54,7 +54,7 @@ bool CDecoderAlgorithmTest::initialize()
 	m_pStreamDecoder[5] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StreamedMatrixStreamDecoder));
 	m_pStreamDecoder[6] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoder));
 
-	for (uint32_t i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; ++i)
 	{
 		m_pStreamDecoder[i]->initialize();
 		ip_pMemoryBuffer[i].initialize(m_pStreamDecoder[i]->getInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode));
@@ -65,7 +65,7 @@ bool CDecoderAlgorithmTest::initialize()
 
 bool CDecoderAlgorithmTest::uninitialize()
 {
-	for (uint32_t i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; ++i)
 	{
 		ip_pMemoryBuffer[i].uninitialize();
 		m_pStreamDecoder[i]->uninitialize();
@@ -87,9 +87,9 @@ bool CDecoderAlgorithmTest::process()
 	IBoxIO& boxContext    = getDynamicBoxContext();
 	const uint32_t nInput = getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			ip_pMemoryBuffer[i] = boxContext.getInputChunk(i, j);
 			m_pStreamDecoder[i]->process();

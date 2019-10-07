@@ -15,7 +15,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 									   OV_Value_EnumeratedStringSeparator);
 
 	m_names.clear();
-	for (uint32_t i = 0; i < tokenCount; i++) { m_names.push_back(tokens[i].toASCIIString()); }
+	for (uint32_t i = 0; i < tokenCount; ++i) { m_names.push_back(tokens[i].toASCIIString()); }
 
 	this->getStaticBoxContext().getOutputType(0, m_typeID);
 
@@ -70,13 +70,13 @@ bool CBoxAlgorithmChannelRename::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
+	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); ++chunk)
 	{
 		m_decoder.decode(chunk);
 		if (m_decoder.isHeaderReceived())
 		{
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
-			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); channel++)
+			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
 			{
 				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());
 			}

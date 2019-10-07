@@ -356,7 +356,7 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 	if (l_pMessageBuffer)
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);
-		for (size_t i = 0; i < l_iMessageLength; i++) { if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r') { l_pMessageBuffer[i] = ' '; } }
+		for (size_t i = 0; i < l_iMessageLength; ++i) { if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r') { l_pMessageBuffer[i] = ' '; } }
 		res = l_pMessageBuffer;
 	}
 	LocalFree(LPVOID(l_pMessageBuffer));

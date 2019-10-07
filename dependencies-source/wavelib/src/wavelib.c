@@ -2204,7 +2204,7 @@ void iswt(wt_object wt, double* swtop)
 
 		int value = (int)pow(2.0, (double)(J - 1 - iter));
 
-		for (int count = 0; count < value; count++)
+		for (int count = 0; count < value; ++count)
 		{
 			int len = 0;
 			for (index = count; index < N; index += value)
@@ -2321,7 +2321,7 @@ static void modwt_per(wt_object wt, int M, double* inp, int N, double* cA, int l
 		int t = i;
 		cA[i] = filt[0] * inp[t];
 		cD[i] = filt[len_avg] * inp[t];
-		for (int l = 1; l < len_avg; l++)
+		for (int l = 1; l < len_avg; ++l)
 		{
 			t -= M;
 			while (t >= len_cA) { t -= len_cA; }
@@ -2402,7 +2402,7 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 	{
 		int t = i;
 		X[i]  = (filt[0] * cA[t]) + (filt[len_avg] * cD[t]);
-		for (int l = 1; l < len_avg; l++)
+		for (int l = 1; l < len_avg; ++l)
 		{
 			t += M;
 			while (t >= len_cA) { t -= len_cA; }

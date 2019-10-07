@@ -70,7 +70,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	bool train = false;
 
-	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i)
 	{
 		m_stimEncoder.getInputStimulationSet()->clear();
 		m_stimDecoder.decode(i);
@@ -78,7 +78,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		if (m_stimDecoder.isHeaderReceived()) { m_stimEncoder.encodeHeader(); }
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
 			{
 				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
 
@@ -110,11 +110,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		// Decodes input signals
 
-		for (uint32_t j = 0; j < 2; j++)
+		for (uint32_t j = 0; j < 2; ++j)
 		{
 			n[j] = 0;
 
-			for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); i++)
+			for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i)
 			{
 				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& m_rSignalDecoder = m_signalDecoder[j];
 				m_rSignalDecoder.decode(i);
@@ -265,7 +265,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
 
-			for (uint32_t i = 0; i < eigenVectors.getBufferElementCount(); i++) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
+			for (uint32_t i = 0; i < eigenVectors.getBufferElementCount(); ++i) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
 			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_filterDimension);

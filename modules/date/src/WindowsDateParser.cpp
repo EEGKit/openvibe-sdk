@@ -154,7 +154,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'A':	/* The day of week, using the locale's form. */
 			case 'a':
 				LEGAL_ALT(0);
-				for (i = 0; i < 7; i++)
+				for (i = 0; i < 7; ++i)
 				{
 					/* Full name. */
 					len = DAY[i].size();
@@ -176,7 +176,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'b':
 			case 'h':
 				LEGAL_ALT(0);
-				for (i = 0; i < 12; i++)
+				for (i = 0; i < 12; ++i)
 				{
 					/* Full name. */
 					len = MON[i].size();

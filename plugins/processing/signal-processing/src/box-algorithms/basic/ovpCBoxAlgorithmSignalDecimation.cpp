@@ -87,7 +87,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
@@ -142,11 +142,11 @@ bool CBoxAlgorithmSignalDecimation::process()
 			double* iBuffer = op_pMatrix->getBuffer();
 			double* oBuffer = ip_pMatrix->getBuffer() + m_ui32OutputSampleIdx;
 
-			for (uint32_t j = 0; j < m_ui32InputSampleCountPerSentBlock; j++)
+			for (uint32_t j = 0; j < m_ui32InputSampleCountPerSentBlock; ++j)
 			{
 				double* iBufferTmp = iBuffer;
 				double* oBufferTmp = oBuffer;
-				for (uint32_t k = 0; k < m_nChannel; k++)
+				for (uint32_t k = 0; k < m_nChannel; ++k)
 				{
 					*oBufferTmp += *iBufferTmp;
 					oBufferTmp += m_ui32OutputSampleCountPerSentBlock;
@@ -158,7 +158,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 				{
 					m_ui32InputSampleIdx = 0;
 					oBufferTmp             = oBuffer;
-					for (uint32_t k = 0; k < m_nChannel; k++)
+					for (uint32_t k = 0; k < m_nChannel; ++k)
 					{
 						*oBufferTmp /= m_i64DecimationFactor;
 						oBufferTmp += m_ui32OutputSampleCountPerSentBlock;

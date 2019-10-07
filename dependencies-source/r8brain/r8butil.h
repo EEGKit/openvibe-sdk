@@ -181,7 +181,7 @@ namespace r8b
 				{
 					// Perform 2 approximate binary searches.
 
-					for (int k = 0; k < 2; k++)
+					for (int k = 0; k < 2; ++k)
 					{
 						double l     = (k == 0 ? premaxth : maxth);
 						double curgl = (k == 0 ? premaxg : maxg);

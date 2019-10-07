@@ -31,9 +31,9 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 	IBoxIO& boxContext    = this->getDynamicBoxContext();
 	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			const IMemoryBuffer* iBuffer = boxContext.getInputChunk(i, j);
 			const uint64_t tStart        = boxContext.getInputChunkStartTime(i, j);

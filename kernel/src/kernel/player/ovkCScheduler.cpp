@@ -194,7 +194,7 @@ bool CScheduler::flattenScenario()
 			l_rMetaboxScenarioInstance.addAttribute(OV_AttributeId_ScenarioFilename, l_sMetaboxScenarioPath);
 
 			// Push down the settings from the box to the scenario
-			for (uint32_t settingIdx = 0; settingIdx < l_pBox->getSettingCount(); settingIdx++)
+			for (uint32_t settingIdx = 0; settingIdx < l_pBox->getSettingCount(); ++settingIdx)
 			{
 				CString l_sSettingValue;
 				CIdentifier settingID;

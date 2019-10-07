@@ -24,7 +24,7 @@ bool CChrono::reset(uint32_t ui32StepCount)
 		return false;
 	}
 
-	for (uint32_t i = 0; i <= ui32StepCount; i++)
+	for (uint32_t i = 0; i <= ui32StepCount; ++i)
 	{
 		stepInTime[i]  = 0;
 		stepOutTime[i] = 0;
@@ -57,7 +57,7 @@ bool CChrono::stepIn()
 	{
 		m_totalStepInTime  = 0;
 		m_totalStepOutTime = 0;
-		for (uint32_t i = 0; i < m_nStep; i++)
+		for (uint32_t i = 0; i < m_nStep; ++i)
 		{
 			m_totalStepInTime += m_pStepOutTime[i] - m_pStepInTime[i];
 			m_totalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];

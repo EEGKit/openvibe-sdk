@@ -10,7 +10,7 @@ using namespace Tools;
 bool CBoxAlgorithmStimulationListener::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
 		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
 	}
@@ -23,7 +23,7 @@ bool CBoxAlgorithmStimulationListener::initialize()
 bool CBoxAlgorithmStimulationListener::uninitialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
 		m_vStimulationDecoder[i]->uninitialize();
 		delete m_vStimulationDecoder[i];
@@ -45,9 +45,9 @@ bool CBoxAlgorithmStimulationListener::process()
 	IBoxIO& boxContext           = this->getDynamicBoxContext();
 	const size_t nInput          = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			m_vStimulationDecoder[i]->decode(j);
 			if (m_vStimulationDecoder[i]->isHeaderReceived()) { }
@@ -57,7 +57,7 @@ bool CBoxAlgorithmStimulationListener::process()
 
 				CString inputName;
 				staticBoxContext.getInputName(i, inputName);
-				for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
+				for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); ++k)
 				{
 					this->getLogManager() << m_eLogLevel
 							<< "For input " << i << " with name " << inputName

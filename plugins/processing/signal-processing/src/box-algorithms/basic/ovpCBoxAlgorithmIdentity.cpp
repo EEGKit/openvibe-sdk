@@ -25,9 +25,9 @@ bool CBoxAlgorithmIdentity::process()
 	uint64_t size         = 0;
 	const uint8_t* buffer = nullptr;
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext->getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext->getInputChunkCount(i); ++j)
 		{
 			boxContext->getInputChunk(i, j, tStart, tEnd, size, buffer);
 			boxContext->appendOutputChunkData(i, buffer, size);

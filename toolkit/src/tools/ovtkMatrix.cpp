@@ -34,11 +34,11 @@ bool Matrix::copyDescription(IMatrix& dst, const IMatrix& src)
 
 	const uint32_t nDim = src.getDimensionCount();
 	if (!dst.setDimensionCount(nDim)) { return false; }
-	for (uint32_t i = 0; i < nDim; i++)
+	for (uint32_t i = 0; i < nDim; ++i)
 	{
 		const uint32_t dimSize = src.getDimensionSize(i);
 		if (!dst.setDimensionSize(i, dimSize)) { return false; }
-		for (uint32_t j = 0; j < dimSize; j++) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
+		for (uint32_t j = 0; j < dimSize; ++j) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
 	}
 	return true;
 }
@@ -68,13 +68,13 @@ bool Matrix::isDescriptionSimilar(const IMatrix& src1, const IMatrix& src2, cons
 
 	if (src1.getDimensionCount() != src2.getDimensionCount()) { return false; }
 
-	for (uint32_t i = 0; i < src1.getDimensionCount(); i++) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
+	for (uint32_t i = 0; i < src1.getDimensionCount(); ++i) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
 
 	if (checkLabels)
 	{
-		for (uint32_t i = 0; i < src1.getDimensionCount(); i++)
+		for (uint32_t i = 0; i < src1.getDimensionCount(); ++i)
 		{
-			for (uint32_t j = 0; j < src1.getDimensionSize(i); j++)
+			for (uint32_t j = 0; j < src1.getDimensionSize(i); ++j)
 			{
 				if (strcmp(src1.getDimensionLabel(i, j), src2.getDimensionLabel(i, j)) != 0) { return false; }
 			}
@@ -208,21 +208,21 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 
 						//resize matrix
 						matrix.setDimensionCount(uint32_t(dimSize.size()));
-						for (size_t i = 0; i < dimSize.size(); i++) { matrix.setDimensionSize(uint32_t(i), dimSize[i]); }
+						for (size_t i = 0; i < dimSize.size(); ++i) { matrix.setDimensionSize(uint32_t(i), dimSize[i]); }
 
 						nValue.resize(matrix.getDimensionCount());
 
 						// set labels now that we know the matrix size
 						uint32_t l_ui32Element = 0;
-						for (uint32_t i = 0; i < matrix.getDimensionCount(); i++)
+						for (uint32_t i = 0; i < matrix.getDimensionCount(); ++i)
 						{
-							for (uint32_t j = 0; j < matrix.getDimensionSize(i); j++) { matrix.setDimensionLabel(i, j, labels[l_ui32Element++].c_str()); }
+							for (uint32_t j = 0; j < matrix.getDimensionSize(i); ++j) { matrix.setDimensionLabel(i, j, labels[l_ui32Element++].c_str()); }
 						}
 
 						/*
 						//dump dimension count and size
 						char l_pBuf[1024]={'\0'};
-						for (size_t i=0; i<l_vDimensionSize.size(); i++)
+						for (size_t i=0; i<l_vDimensionSize.size(); ++i)
 						{
 							if(i>0)
 							{
@@ -463,7 +463,7 @@ bool dumpMatrixBuffer(const IMatrix& matrix, std::stringstream& buffer, const ui
 	if (dimensionIndex == matrix.getDimensionCount() - 1)
 	{
 		//dimension start
-		for (uint32_t j = 0; j < dimensionIndex; j++) { buffer << CONSTANT_TAB; }
+		for (uint32_t j = 0; j < dimensionIndex; ++j) { buffer << CONSTANT_TAB; }
 		buffer << CONSTANT_LEFT_SQUARE_BRACKET;
 
 		//dump current cell contents
@@ -478,16 +478,16 @@ bool dumpMatrixBuffer(const IMatrix& matrix, std::stringstream& buffer, const ui
 	else
 	{
 		//dump all entries in current dimension
-		for (uint32_t i = 0; i < matrix.getDimensionSize(dimensionIndex); i++)
+		for (uint32_t i = 0; i < matrix.getDimensionSize(dimensionIndex); ++i)
 		{
 			//dimension start
-			for (uint32_t j = 0; j < dimensionIndex; j++) { buffer << CONSTANT_TAB; }
+			for (uint32_t j = 0; j < dimensionIndex; ++j) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
 			dumpMatrixBuffer(matrix, buffer, dimensionIndex + 1, ui32ElementIndex);
 
 			//dimension end
-			for (uint32_t j = 0; j < dimensionIndex; j++) { buffer << CONSTANT_TAB; }
+			for (uint32_t j = 0; j < dimensionIndex; ++j) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
 		}
 	}
@@ -508,11 +508,11 @@ bool Matrix::toString(const IMatrix& matrix, CString& sString, const uint32_t pr
 	buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
 	//dump labels for each dimension
-	for (uint32_t i = 0; i < matrix.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < matrix.getDimensionCount(); ++i)
 	{
 		buffer << CONSTANT_TAB << CONSTANT_LEFT_SQUARE_BRACKET;
 
-		for (uint32_t j = 0; j < matrix.getDimensionSize(i); j++)
+		for (uint32_t j = 0; j < matrix.getDimensionSize(i); ++j)
 		{
 			buffer << CONSTANT_SPACE << CONSTANT_DOUBLE_QUOTE << matrix.getDimensionLabel(i, j) << CONSTANT_DOUBLE_QUOTE;
 		}

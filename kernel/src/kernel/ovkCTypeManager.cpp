@@ -176,7 +176,7 @@ bool CTypeManager::registerBitMaskEntry(const CIdentifier& typeID, const CString
 		else { OV_DEBUG_K("Bitmask type [" << typeID.toString() << "] already has element [" << ui64EntryValue << "]."); }
 	}
 
-	for (uint32_t l_ui32BitCount = 0, i = 0; i < 64; i++)
+	for (uint32_t l_ui32BitCount = 0, i = 0; i < 64; ++i)
 	{
 		if (ui64EntryValue & (1LL << i))
 		{
@@ -400,7 +400,7 @@ CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier&
 	if (itBitMask == m_vBitMask.end()) { return ""; }
 
 	std::string res;
-	for (uint32_t i = 0; i < 64; i++)
+	for (uint32_t i = 0; i < 64; ++i)
 	{
 		if (ui64EntryCompositionValue & (1LL << i))
 		{

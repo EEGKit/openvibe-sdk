@@ -46,7 +46,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 
 
 	m_SignalDecoders.resize(m_NumClasses);
-	for (uint32_t i = 0; i < m_NumClasses; i++)
+	for (uint32_t i = 0; i < m_NumClasses; ++i)
 	{
 		m_SignalDecoders[i].initialize(*this, i + 1);
 
@@ -88,7 +88,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::uninitialize()
 
 	if (m_HasBeenInitialized)
 	{
-		for (uint32_t i = 0; i < m_NumClasses; i++)
+		for (uint32_t i = 0; i < m_NumClasses; ++i)
 		{
 			m_SignalDecoders[i].uninitialize();
 			if (m_IncCovarianceProxies[i].incrementalCov)
@@ -113,7 +113,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const uint32_t index)
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 	IncrementalCovarianceProxy& curCovProxy(m_IncCovarianceProxies[index]);
-	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(index + 1); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(index + 1); ++i)
 	{
 		OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>* decoder = &m_SignalDecoders[index];
 		const IMatrix* inputSignal                                                   = decoder->getOutputMatrix();
@@ -181,11 +181,11 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(const uint32_t skipI
 	uint64_t totalOutclassSamples = 0;
 
 	// Compute the total number of samples
-	for (uint32_t i = 0; i < m_NumClasses; i++) { if (i != skipIndex) { totalOutclassSamples += m_IncCovarianceProxies[i].numSamples; } }
+	for (uint32_t i = 0; i < m_NumClasses; ++i) { if (i != skipIndex) { totalOutclassSamples += m_IncCovarianceProxies[i].numSamples; } }
 
 	// Compute weigths for averaging
 	classWeights.resize(m_NumClasses);
-	for (uint32_t i = 0; i < m_NumClasses; i++)
+	for (uint32_t i = 0; i < m_NumClasses; ++i)
 	{
 		classWeights[i] = i == skipIndex ? 0 : m_IncCovarianceProxies[i].numSamples / double(totalOutclassSamples);
 		this->getLogManager() << LogLevel_Debug << "Condition " << i + 1 << " averaging weight = " << classWeights[i] << "\n";
@@ -194,7 +194,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(const uint32_t skipI
 	// Average the covs
 	covAvg.resizeLike(cov[0]);
 	covAvg.setZero();
-	for (uint32_t i = 0; i < m_NumClasses; i++) { covAvg += (classWeights[i] * cov[i]); }
+	for (uint32_t i = 0; i < m_NumClasses; ++i) { covAvg += (classWeights[i] * cov[i]); }
 
 	return true;
 }
@@ -224,7 +224,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 
 	EigenSolver<MatrixXd> eigenSolverGeneral;
 
-	for (uint32_t classIndex = 0; classIndex < m_NumClasses; classIndex++)
+	for (uint32_t classIndex = 0; classIndex < m_NumClasses; ++classIndex)
 	{
 		try { covInv[classIndex] = (cov[classIndex] + tikhonov).inverse(); }
 		catch (...) { OV_ERROR_KRF("Inversion failed for condition [" << classIndex+1 << "]", OpenViBE::Kernel::ErrorType::BadProcessing); }
@@ -244,12 +244,12 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 		// Sort the vectors -_-
 		std::vector<std::pair<double, int>> indexes;
 		indexes.reserve(eigenValues[classIndex].size());
-		for (int i = 0; i < eigenValues[classIndex].size(); i++) { indexes.emplace_back(std::make_pair((eigenValues[classIndex])[i], i)); }
+		for (int i = 0; i < eigenValues[classIndex].size(); ++i) { indexes.emplace_back(std::make_pair((eigenValues[classIndex])[i], i)); }
 		std::sort(indexes.begin(), indexes.end(), std::greater<std::pair<double, int>>());
 
 		sortedEigenValues[classIndex].resizeLike(eigenValues[classIndex]);
 		sortedEigenVectors[classIndex].resizeLike(eigenVectors[classIndex]);
-		for (int i = 0; i < eigenValues[classIndex].size(); i++)
+		for (int i = 0; i < eigenValues[classIndex].size(); ++i)
 		{
 			sortedEigenValues[classIndex][i]      = eigenValues[classIndex][indexes[size_t(i)].second];
 			sortedEigenVectors[classIndex].col(i) = eigenVectors[classIndex].col(indexes[i].second);
@@ -267,7 +267,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 	uint64_t trainDate = 0, trainChunkStartTime = 0, trainChunkEndTime = 0;
 
 	// Handle input stimulations
-	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i)
 	{
 		m_StimulationDecoder.decode(i);
 		if (m_StimulationDecoder.isHeaderReceived())
@@ -278,7 +278,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		if (m_StimulationDecoder.isBufferReceived())
 		{
 			const TParameterHandler<IStimulationSet*> stimSet(m_StimulationDecoder.getOutputStimulationSet());
-			for (size_t j = 0; j < stimSet->getStimulationCount(); j++)
+			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
 			{
 				if (stimSet->getStimulationIdentifier(j) == m_StimulationID)
 				{
@@ -294,7 +294,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 	}
 
 	// Update all covs with the current data chunks (if any)
-	for (size_t i = 0; i < m_NumClasses; i++) { if (!updateCov(i)) { return false; } }
+	for (size_t i = 0; i < m_NumClasses; ++i) { if (!updateCov(i)) { return false; } }
 
 	if (shouldTrain)
 	{
@@ -308,7 +308,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		// Get out the covariances
 		std::vector<MatrixXd> cov(m_NumClasses);
 
-		for (size_t i = 0; i < m_NumClasses; i++)
+		for (size_t i = 0; i < m_NumClasses; ++i)
 		{
 			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2,
 								"Invalid sample count of [" <<m_IncCovarianceProxies[i].numSamples << "] for condition number " << i << " (expected value > 2)",
@@ -332,7 +332,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 
 		// Sanity check
-		for (size_t i = 1; i < m_NumClasses; i++)
+		for (size_t i = 1; i < m_NumClasses; ++i)
 		{
 			OV_ERROR_UNLESS_KRF(cov[i-1].rows() == cov[i].rows() && cov[i-1].cols() == cov[i].cols(),
 								"Mismatch between the number of channel in both input streams", OpenViBE::Kernel::ErrorType::BadValue);
@@ -340,7 +340,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << uint32_t(cov[0].rows()) << "x" << uint32_t(cov[0].cols())
 				<< "]. Number of samples per condition : \n";
-		for (size_t i = 0; i < m_NumClasses; i++)
+		for (size_t i = 0; i < m_NumClasses; ++i)
 		{
 			this->getLogManager() << LogLevel_Info << "  cond " << i + 1 << " = "
 					<< m_IncCovarianceProxies[i].numBuffers << " chunks, sized " << input->getDimensionSize(1) << " -> " << m_IncCovarianceProxies[i].numSamples
@@ -362,7 +362,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		Map<MatrixXdRowMajor> selectedVectorsMapper(selectedVectors.getBuffer(), m_FiltersPerClass * m_NumClasses, nChannels);
 
-		for (size_t c = 0; c < m_NumClasses; c++)
+		for (size_t c = 0; c < m_NumClasses; ++c)
 		{
 			selectedVectorsMapper.block(c * m_FiltersPerClass, 0, m_FiltersPerClass, nChannels) =
 					sortedEigenVectors[c].block(0, 0, nChannels, m_FiltersPerClass).transpose();
@@ -381,7 +381,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			fprintf(file, "\t<SettingValue>");
 
 			const size_t numCoefficients = m_FiltersPerClass * m_NumClasses * nChannels;
-			for (size_t i = 0; i < numCoefficients; i++) { fprintf(file, "%e ", selectedVectors.getBuffer()[i]); }
+			for (size_t i = 0; i < numCoefficients; ++i) { fprintf(file, "%e ", selectedVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
 			fprintf(file, "\t<SettingValue>%d</SettingValue>\n", m_FiltersPerClass * m_NumClasses);
@@ -393,7 +393,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 		else
 		{
-			for (uint32_t i = 0; i < selectedVectors.getDimensionSize(0); i++)
+			for (uint32_t i = 0; i < selectedVectors.getDimensionSize(0); ++i)
 			{
 				std::stringstream label;
 				label << "Cond " << i / m_FiltersPerClass + 1 << " filter " << i % m_FiltersPerClass + 1;

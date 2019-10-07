@@ -202,10 +202,10 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 	spectrumWriterTest->setFormatType(EStreamType::Spectrum);
 
 	std::vector<double> frequencyAbscissa;
-	for (double frequency = 0.0; frequency < 64.0; frequency++) { frequencyAbscissa.push_back(frequency); }
+	for (double frequency = 0.0; frequency < 64.0; ++frequency) { frequencyAbscissa.push_back(frequency); }
 	ASSERT_TRUE(spectrumWriterTest->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 	double time = 0;
-	for (uint32_t i = 0; i < 10; i++)
+	for (uint32_t i = 0; i < 10; ++i)
 	{
 		const uint32_t epoch = i / 4;
 		std::vector<double> sample;
@@ -231,7 +231,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongInputType)
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Signal);
 	std::vector<double> frequencyAbscissa;
-	for (double frequency = 0.0; frequency < 64.0; frequency++) { frequencyAbscissa.push_back(frequency); }
+	for (double frequency = 0.0; frequency < 64.0; ++frequency) { frequencyAbscissa.push_back(frequency); }
 
 	ASSERT_FALSE(spectrumWriterTest->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 
@@ -247,7 +247,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongMatrixSize)
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Spectrum);
 	std::vector<double> frequencyAbscissa;
-	for (double frequency = 0.0; frequency < 64.0; frequency++) { frequencyAbscissa.push_back(frequency); }
+	for (double frequency = 0.0; frequency < 64.0; ++frequency) { frequencyAbscissa.push_back(frequency); }
 	ASSERT_TRUE(spectrumWriterTest->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 
 	ASSERT_FALSE(spectrumWriterTest->addSample({ 0, 1, { -20.20, -10.10, 0.0, 10.10, 20.20 }, 0 }));
@@ -266,7 +266,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
@@ -290,7 +290,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
@@ -314,7 +314,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 1, 4 }, { "L1", "A", "B", "C", "D" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -10.10, 10.10, 20.20 }, epoch }));
@@ -356,9 +356,9 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 			"Y" }));
 
 	std::vector<double> values;
-	for (uint32_t index = 0; index < 96; index++) { values.push_back(double(index)); }
+	for (uint32_t index = 0; index < 96; ++index) { values.push_back(double(index)); }
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, values, epoch }));
@@ -383,9 +383,9 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 4, 1, 4 }, { "L1", "L2", "L3", "L4", "X", "R1", "R2", "R3", "R4" }));
 
 	std::vector<double> values;
-	for (uint32_t index = 0; index < 16; index++) { values.push_back(double(index)); }
+	for (uint32_t index = 0; index < 16; ++index) { values.push_back(double(index)); }
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, values, epoch }));
@@ -433,7 +433,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 	ASSERT_TRUE(matrixWriterTest->writeHeaderToFile());
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i) + 1.0, { double(i), 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 }, epoch }));
@@ -462,7 +462,7 @@ TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 
 	ASSERT_TRUE(featureVectorWriterTest->setFeatureVectorInformation({ "F1", "F2", "F3" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(featureVectorWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
@@ -487,7 +487,7 @@ TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 
 	ASSERT_TRUE(featureVectorWriterTest->setFeatureVectorInformation({ "", "", "" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(featureVectorWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
@@ -529,7 +529,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "C1", "C2", "C1", "C2", "Matrix 1", "Matrix 2" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
@@ -552,7 +552,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
-	for (uint32_t i = 0; i < 50; i++)
+	for (uint32_t i = 0; i < 50; ++i)
 	{
 		const uint32_t epoch = i / 10;
 		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));

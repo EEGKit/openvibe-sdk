@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
+				for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 
@@ -61,7 +61,7 @@ namespace OpenViBEPlugins
 
 				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
+					for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 
 					box.setOutputType(0, typeID);
 				}
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 
 				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, typeID); }
+					for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 				}
 				else
 				{

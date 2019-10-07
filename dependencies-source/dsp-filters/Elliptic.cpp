@@ -98,7 +98,7 @@ namespace Dsp
 				int ni = ((n & 1) == 1) ? 0 : 1;
 				int i;
 				double f[100]; // HACK!!!
-				for (i = 1; i <= n / 2; i++)
+				for (i = 1; i <= n / 2; ++i)
 				{
 					double u  = (2 * i - ni) * m_K / n;
 					double sn = calcsn(u);
@@ -109,7 +109,7 @@ namespace Dsp
 				double fb      = 1 / (2 * doublePi);
 				m_nin          = n % 2;
 				m_n2           = n / 2;
-				for (i = 1; i <= m_n2; i++)
+				for (i = 1; i <= m_n2; ++i)
 				{
 					double x = f[m_n2 + 1 - i];
 					m_z1[i]  = sqrt(1 - 1 / (x * x));
@@ -168,11 +168,11 @@ namespace Dsp
 			m_b1[0] = m_s1[1];
 			m_b1[1] = 1;
 			int i;
-			for (int j = 2; j <= sn; j++)
+			for (int j = 2; j <= sn; ++j)
 			{
 				m_a1[0] = m_s1[j] * m_b1[0];
-				for (i = 1; i <= j - 1; i++) { m_a1[i] = m_b1[i - 1] + m_s1[j] * m_b1[i]; }
-				for (i = 0; i != j; i++) { m_b1[i] = m_a1[i]; }
+				for (i = 1; i <= j - 1; ++i) { m_a1[i] = m_b1[i - 1] + m_s1[j] * m_b1[i]; }
+				for (i = 0; i != j; ++i) { m_b1[i] = m_a1[i]; }
 				m_b1[j] = 1;
 			}
 		}
@@ -201,7 +201,7 @@ namespace Dsp
 		{
 			int i = 1;
 			if (m_nin == 1) { m_s1[i++] = 1; }
-			for (; i <= m_nin + m_n2; i++) { m_s1[i] = m_s1[i + m_n2] = m_z1[i - m_nin]; }
+			for (; i <= m_nin + m_n2; ++i) { m_s1[i] = m_s1[i + m_n2] = m_z1[i - m_nin]; }
 			prodpoly(m_nin + 2 * m_n2);
 			for (i = 0; i <= m_em; i += 2) { m_a1[i] = m_e * m_b1[i]; }
 			for (i = 0; i <= 2 * m_em; i += 2) { calcfz2(i); }
@@ -211,9 +211,9 @@ namespace Dsp
 		void AnalogLowPass::calcqz()
 		{
 			int i;
-			for (i = 1; i <= m_nin; i++) { m_s1[i] = -10; }
-			for (; i <= m_nin + m_n2; i++) { m_s1[i] = -10 * m_z1[i - m_nin] * m_z1[i - m_nin]; }
-			for (; i <= m_nin + 2 * m_n2; i++) { m_s1[i] = m_s1[i - m_n2]; }
+			for (i = 1; i <= m_nin; ++i) { m_s1[i] = -10; }
+			for (; i <= m_nin + m_n2; ++i) { m_s1[i] = -10 * m_z1[i - m_nin] * m_z1[i - m_nin]; }
+			for (; i <= m_nin + 2 * m_n2; ++i) { m_s1[i] = m_s1[i - m_n2]; }
 			prodpoly(m_m);
 			int dd = ((m_nin & 1) == 1) ? -1 : 1;
 			for (i = 0; i <= 2 * m_m; i += 2) { m_d1[i] = dd * m_b1[i / 2]; }
@@ -224,7 +224,7 @@ namespace Dsp
 		{
 			int i;
 			double a = 0;
-			for (i = 1; i <= t; i++) { m_a1[i] /= m_a1[0]; }
+			for (i = 1; i <= t; ++i) { m_a1[i] /= m_a1[0]; }
 			m_a1[0] = m_b1[0] = m_c1[0] = 1;
 			int i1  = 0;
 			for (;;)
@@ -236,8 +236,8 @@ namespace Dsp
 				{
 					m_b1[1] = m_a1[1] - p0;
 					m_c1[1] = m_b1[1] - p0;
-					for (i = 2; i <= t; i++) { m_b1[i] = m_a1[i] - p0 * m_b1[i - 1] - q0 * m_b1[i - 2]; }
-					for (i = 2; i < t; i++) { m_c1[i] = m_b1[i] - p0 * m_c1[i - 1] - q0 * m_c1[i - 2]; }
+					for (i = 2; i <= t; ++i) { m_b1[i] = m_a1[i] - p0 * m_b1[i - 1] - q0 * m_b1[i - 2]; }
+					for (i = 2; i < t; ++i) { m_c1[i] = m_b1[i] - p0 * m_c1[i - 1] - q0 * m_c1[i - 2]; }
 					int x1    = t - 1;
 					int x2    = t - 2;
 					int x3    = t - 3;
@@ -253,7 +253,7 @@ namespace Dsp
 				m_q1[i1] = q0;
 				m_a1[1]  = m_a1[1] - p0;
 				t -= 2;
-				for (i = 2; i <= t; i++) { m_a1[i] -= p0 * m_a1[i - 1] + q0 * m_a1[i - 2]; }
+				for (i = 2; i <= t; ++i) { m_a1[i] -= p0 * m_a1[i - 1] + q0 * m_a1[i - 2]; }
 				if (t <= 2) { break; }
 			}
 
@@ -274,7 +274,7 @@ namespace Dsp
 			// q = modular constant
 			double q = exp(-doublePi * m_Kprime / m_K);
 			double v = doublePi * .5 * u / m_K;
-			for (int j = 0; ; j++)
+			for (int j = 0; ; ++j)
 			{
 				double w = pow(q, j + .5);
 				sn += w * sin((2 * j + 1) * v) / (1 - w * w);

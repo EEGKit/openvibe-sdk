@@ -59,7 +59,7 @@ inline uint64_t getValue(unsigned char* buffer, unsigned long ulBufferLength)
 	uint64_t result            = 0;
 	const unsigned long length = getCodedSizeLength(buffer, ulBufferLength);
 	unsigned long ithBit       = length;
-	for (unsigned long i = 0; i < length; i++)
+	for (unsigned long i = 0; i < length; ++i)
 	{
 		result = (result << 8) + (buffer[i]);
 		result &= ~(ithBit > 0 && ithBit <= 8 ? (1 << (8 - ithBit)) : 0);
@@ -156,7 +156,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 	if (_Debug_)
 	{
 		printf("Received %i byte(s) new buffer :", int(size));
-		for (int i = 0; i < int(size) /* && i<4*/; i++) { printf("[%02X]", ((unsigned char*)buffer)[i]); }
+		for (int i = 0; i < int(size) /* && i<4*/; ++i) { printf("[%02X]", ((unsigned char*)buffer)[i]); }
 		std::cout << "...\n";
 	}
 
@@ -176,7 +176,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 			if (m_nPending)
 			{
 				printf("%i byte(s) pending : ", int(m_nPending));
-				for (int i = 0; i < int(m_nPending); i++) { printf("[%02X]", m_pending[i]); }
+				for (int i = 0; i < int(m_nPending); ++i) { printf("[%02X]", m_pending[i]); }
 				std::cout << "\n";
 			}
 		}

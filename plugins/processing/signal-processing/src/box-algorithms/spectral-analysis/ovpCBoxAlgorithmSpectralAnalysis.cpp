@@ -76,7 +76,7 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 
 bool CBoxAlgorithmSpectralAnalysis::uninitialize()
 {
-	for (size_t i = 0; i < m_spectrumEncoders.size(); i++)
+	for (size_t i = 0; i < m_spectrumEncoders.size(); ++i)
 	{
 		m_spectrumEncoders[i]->uninitialize();
 		delete m_spectrumEncoders[i];
@@ -99,7 +99,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
-	for (uint32_t i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext->getInputChunkCount(0); ++i)
 	{
 		const uint64_t startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
 		const uint64_t endTime   = dynamicBoxContext->getInputChunkEndTime(0, i);
@@ -126,13 +126,13 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_frequencyAbscissa->setDimensionSize(0, m_sizeFFT); // FFTSize frquency abscissa
 
 			// Frequency values
-			for (uint32_t frequencyAbscissaIndex = 0; frequencyAbscissaIndex < m_sizeFFT; frequencyAbscissaIndex++)
+			for (uint32_t frequencyAbscissaIndex = 0; frequencyAbscissaIndex < m_sizeFFT; ++frequencyAbscissaIndex)
 			{
 				m_frequencyAbscissa->getBuffer()[frequencyAbscissaIndex] = frequencyAbscissaIndex * (double(m_samplingRate) / m_nSample);
 			}
 
 			// All spectra share the same header structure
-			for (size_t encoderIndex = 0; encoderIndex < m_spectrumEncoders.size(); encoderIndex++)
+			for (size_t encoderIndex = 0; encoderIndex < m_spectrumEncoders.size(); ++encoderIndex)
 			{
 				// We build the chunk only if the encoder is activated
 				if (m_isSpectrumEncoderActive[encoderIndex])
@@ -144,10 +144,10 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					spectrum->setDimensionSize(1, m_sizeFFT);
 
 					// Spectrum channel names
-					for (uint32_t j = 0; j < m_nChannel; j++) { spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
+					for (uint32_t j = 0; j < m_nChannel; ++j) { spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
 
 					// We also name the spectrum bands "Abscissa"
-					for (uint32_t j = 0; j < m_sizeFFT; j++) { spectrum->setDimensionLabel(1, j, std::to_string(m_frequencyAbscissa->getBuffer()[j]).c_str()); }
+					for (uint32_t j = 0; j < m_sizeFFT; ++j) { spectrum->setDimensionLabel(1, j, std::to_string(m_frequencyAbscissa->getBuffer()[j]).c_str()); }
 
 					m_spectrumEncoders[encoderIndex]->encodeHeader();
 					dynamicBoxContext->markOutputAsReadyToSend(uint32_t(encoderIndex), startTime, endTime);
@@ -164,11 +164,11 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			// This matrix will contain the channels spectra (COMPLEX values, RowMajor for copy into openvibe matrix)
 			MatrixXcd spectra = MatrixXcd::Zero(m_nChannel, m_sizeFFT);
 
-			for (uint32_t j = 0; j < m_nChannel; j++)
+			for (uint32_t j = 0; j < m_nChannel; ++j)
 			{
 				VectorXd samples = VectorXd::Zero(m_nSample);
 
-				for (uint32_t k = 0; k < m_nSample; k++) { samples(k) = matrix->getBuffer()[j * m_nSample + k]; }
+				for (uint32_t k = 0; k < m_nSample; ++k) { samples(k) = matrix->getBuffer()[j * m_nSample + k]; }
 
 				VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
 
@@ -191,7 +191,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				spectra.block(0, 1, m_nChannel, m_sizeFFT - 1) *= std::sqrt(2);
 			}
 
-			for (size_t encoderIndex = 0; encoderIndex < m_spectrumEncoders.size(); encoderIndex++)
+			for (size_t encoderIndex = 0; encoderIndex < m_spectrumEncoders.size(); ++encoderIndex)
 			{
 				// We build the chunk only if the encoder is activated
 				if (m_isSpectrumEncoderActive[encoderIndex])
@@ -222,9 +222,9 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 
 					IMatrix* spectrum = m_spectrumEncoders[encoderIndex]->getInputMatrix();
 
-					for (uint32_t j = 0; j < m_nChannel; j++)
+					for (uint32_t j = 0; j < m_nChannel; ++j)
 					{
-						for (uint32_t k = 0; k < m_sizeFFT; k++) { spectrum->getBuffer()[j * m_sizeFFT + k] = processResult(j, k, spectra); }
+						for (uint32_t k = 0; k < m_sizeFFT; ++k) { spectrum->getBuffer()[j * m_sizeFFT + k] = processResult(j, k, spectra); }
 					}
 
 					m_spectrumEncoders[encoderIndex]->encodeBuffer();
@@ -235,7 +235,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 
 		if (m_decoder.isEndReceived())
 		{
-			for (size_t encoderIndex = 0; encoderIndex < m_spectrumEncoders.size(); encoderIndex++)
+			for (size_t encoderIndex = 0; encoderIndex < m_spectrumEncoders.size(); ++encoderIndex)
 			{
 				// We build the chunk only if the encoder is activated
 				if (m_isSpectrumEncoderActive[encoderIndex])

@@ -23,7 +23,7 @@ bool CEncoderAlgorithmTest::initialize()
 	m_pStreamEncoder[5] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StreamedMatrixStreamEncoder));
 	m_pStreamEncoder[6] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ChannelLocalisationStreamEncoder));
 
-	for (uint32_t i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; ++i)
 	{
 		m_pStreamEncoder[i]->initialize();
 		op_pMemoryBuffer[i].initialize(m_pStreamEncoder[i]->getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
@@ -80,7 +80,7 @@ bool CEncoderAlgorithmTest::uninitialize()
 	delete m_matrix2;
 	delete m_matrix1;
 
-	for (uint32_t i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; ++i)
 	{
 		op_pMemoryBuffer[i].uninitialize();
 		m_pStreamEncoder[i]->uninitialize();
@@ -107,7 +107,7 @@ bool CEncoderAlgorithmTest::process()
 	{
 		m_startTime = 0;
 		m_endTime   = 0;
-		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
+		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); ++i)
 		{
 			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
 			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader);
@@ -116,14 +116,14 @@ bool CEncoderAlgorithmTest::process()
 	}
 	else
 	{
-		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
+		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); ++i)
 		{
 			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
 			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 	}
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++) { boxContext.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); ++i) { boxContext.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
 
 	m_startTime = m_endTime;
 	m_endTime   = l_rPlayerContext.getCurrentTime();

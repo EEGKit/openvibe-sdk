@@ -952,7 +952,7 @@ std::string CCSVHandler::createHeaderString()
 			{
 				std::string timeColumn = "Time" + std::string(1, DATA_SEPARATOR);
 
-				for (uint32_t index = 0; index < m_nDim; index++)
+				for (uint32_t index = 0; index < m_nDim; ++index)
 				{
 					timeColumn += std::to_string(m_dimSizes[index]);
 					if ((index + 1) < m_nDim) { timeColumn += std::string(1, DIMENSION_SEPARATOR); }
@@ -1013,7 +1013,7 @@ std::string CCSVHandler::createHeaderString()
 				header += SEPARATOR;
 				size_t previousDimensionsSize = 0;
 
-				for (size_t index = 0; index < position.size(); index++)
+				for (size_t index = 0; index < position.size(); ++index)
 				{
 					header += m_dimLabels[previousDimensionsSize + position[index]];
 					previousDimensionsSize += m_dimSizes[index];
@@ -1278,7 +1278,7 @@ bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 	}
 
 	// get dimension labels
-	for (size_t index = N_PRE_DATA_COL; index < header.size() - N_POST_DATA_COL; index++) { m_dimLabels.push_back(header[index]); }
+	for (size_t index = N_PRE_DATA_COL; index < header.size() - N_POST_DATA_COL; ++index) { m_dimLabels.push_back(header[index]); }
 
 	if (!this->calculateSampleCountPerBuffer()) { return false; } // m_LastErrorString set in the function, m_LogError set outside the function
 
@@ -1504,7 +1504,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	// check if labels are already filled or if it's a reset (labels are empty before being set, but empty labels are accepted)
 	std::vector<std::vector<bool>> filledLabel(m_nDim);
 
-	for (size_t index = 0; index < m_dimSizes.size(); index++)
+	for (size_t index = 0; index < m_dimSizes.size(); ++index)
 	{
 		labelsInDimensions[index].resize(m_dimSizes[index]);
 		filledLabel[index].resize(m_dimSizes[index], false);
@@ -1692,7 +1692,7 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 		return false;
 	}
 
-	for (size_t index = 0; index < stimIdentifiers.size(); index++) { stimulations.emplace_back(stimIdentifiers[index], stimDates[index], stimDurations[index]); }
+	for (size_t index = 0; index < stimIdentifiers.size(); ++index) { stimulations.emplace_back(stimIdentifiers[index], stimDates[index], stimDurations[index]); }
 
 	return true;
 }
@@ -1701,7 +1701,7 @@ bool CCSVHandler::increasePositionIndexes(std::vector<uint32_t>& position)
 {
 	position.back()++;
 
-	for (size_t counter = 1; counter <= position.size(); counter++)
+	for (size_t counter = 1; counter <= position.size(); ++counter)
 	{
 		const size_t index = position.size() - counter;
 

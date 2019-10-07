@@ -24,8 +24,8 @@ namespace OpenViBEPlugins
 			static bool check(OpenViBE::Kernel::IBox& box)
 			{
 				uint32_t i;
-				for (i = 0; i < box.getInputCount(); i++) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
-				for (i = 0; i < box.getOutputCount(); i++) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
+				for (i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
+				for (i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 

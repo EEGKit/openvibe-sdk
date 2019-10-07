@@ -144,7 +144,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 				<< "\n";
 
 		std::vector<CString> inputNames(box.getInputCount());
-		for (uint32_t i = 0; i < box.getInputCount(); i++)
+		for (uint32_t i = 0; i < box.getInputCount(); ++i)
 		{
 			CIdentifier typeID;
 			box.getInputName(i, inputNames[i]);
@@ -184,7 +184,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 				<< "\n";
 
 		std::vector<CString> outputNames(box.getOutputCount());
-		for (uint32_t i = 0; i < box.getOutputCount(); i++)
+		for (uint32_t i = 0; i < box.getOutputCount(); ++i)
 		{
 			CIdentifier typeID;
 			box.getOutputName(i, outputNames[i]);
@@ -224,7 +224,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 				<< "\n";
 
 		std::vector<CString> settingsNames(box.getSettingCount());
-		for (uint32_t i = 0; i < box.getSettingCount(); i++)
+		for (uint32_t i = 0; i < box.getSettingCount(); ++i)
 		{
 			CIdentifier typeID;
 			CString defaultValue;

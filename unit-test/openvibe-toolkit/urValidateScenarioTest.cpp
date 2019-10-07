@@ -59,7 +59,7 @@ TEST(validate_scenario_test_case, test_no_false_positive)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 3; i++) { EXPECT_TRUE(importScenarioFromFile(files[i])); }
+	for (uint32_t i = 0; i < 3; ++i) { EXPECT_TRUE(importScenarioFromFile(files[i])); }
 }
 
 TEST(validate_scenario_test_case, test_root)
@@ -80,7 +80,7 @@ TEST(validate_scenario_test_case, test_root)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 9; i++)
+	for (uint32_t i = 0; i < 9; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -100,7 +100,7 @@ TEST(validate_scenario_test_case, test_attribute)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 4; i++)
+	for (uint32_t i = 0; i < 4; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -126,7 +126,7 @@ TEST(validate_scenario_test_case, test_box)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 10; i++)
+	for (uint32_t i = 0; i < 10; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -147,7 +147,7 @@ TEST(validate_scenario_test_case, test_comment)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 5; i++)
+	for (uint32_t i = 0; i < 5; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -167,7 +167,7 @@ TEST(validate_scenario_test_case, test_input)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 4; i++)
+	for (uint32_t i = 0; i < 4; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -190,7 +190,7 @@ TEST(validate_scenario_test_case, test_link)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -210,7 +210,7 @@ TEST(validate_scenario_test_case, test_output)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 4; i++)
+	for (uint32_t i = 0; i < 4; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -235,7 +235,7 @@ TEST(validate_scenario_test_case, test_setting)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 9; i++)
+	for (uint32_t i = 0; i < 9; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -256,7 +256,7 @@ TEST(validate_scenario_test_case, test_source)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 5; i++)
+	for (uint32_t i = 0; i < 5; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -278,7 +278,7 @@ TEST(validate_scenario_test_case, test_target)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (uint32_t i = 0; i < 5; i++)
+	for (uint32_t i = 0; i < 5; ++i)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());

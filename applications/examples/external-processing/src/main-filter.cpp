@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 	std::string connectionID;
 	uint32_t port = 49687;
 
-	for (int i = 0; i < argc; i++)
+	for (int i = 0; i < argc; ++i)
 	{
 		if (std::strcmp(argv[i], "--connection-id") == 0) { if (argc > i + 1) { connectionID = argv[i + 1]; } }
 		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = uint32_t(std::stoi(argv[i + 1])); } }
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 
 	// Initialize
 
-	for (size_t i = 0; i < client.getInputCount(); i++)
+	for (size_t i = 0; i < client.getInputCount(); ++i)
 	{
 		uint32_t index;
 		uint64_t type;
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 		if (client.getInput(i, index, type, name)) { std::cout << "Input:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
-	for (size_t i = 0; i < client.getOutputCount(); i++)
+	for (size_t i = 0; i < client.getOutputCount(); ++i)
 	{
 		uint32_t index;
 		uint64_t type;
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 		if (client.getOutput(i, index, type, name)) { std::cout << "Output:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
-	for (size_t i = 0; i < client.getParameterCount(); i++)
+	for (size_t i = 0; i < client.getParameterCount(); ++i)
 	{
 		uint32_t index;
 		uint64_t type;

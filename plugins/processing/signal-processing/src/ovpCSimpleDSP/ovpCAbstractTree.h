@@ -193,7 +193,7 @@ public:
 		}
 
 		logManager << "(" << op.c_str() << " ";
-		for (size_t i = 0; i < m_Children.size(); i++)
+		for (size_t i = 0; i < m_Children.size(); ++i)
 		{
 			if (m_Children[i] == nullptr) { }
 			else { m_Children[i]->print(logManager); }

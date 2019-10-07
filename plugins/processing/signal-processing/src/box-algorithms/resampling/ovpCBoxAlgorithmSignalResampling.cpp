@@ -97,7 +97,7 @@ bool CBoxAlgorithmSignalResampling::process()
 {
 	m_pDynamicBoxContext = &this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < m_pDynamicBoxContext->getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < m_pDynamicBoxContext->getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
 
@@ -170,7 +170,7 @@ void CBoxAlgorithmSignalResampling::processResampler(const double* pSample, cons
 	double* buffer                 = m_oEncoder.getInputMatrix()->getBuffer();
 	const uint64_t outputSampleIdx = m_totalOutSampleCount % m_nOutSample;
 
-	for (uint32_t j = 0; j < nChannel; j++) { buffer[j * m_nOutSample + outputSampleIdx] = pSample[j]; }
+	for (uint32_t j = 0; j < nChannel; ++j) { buffer[j * m_nOutSample + outputSampleIdx] = pSample[j]; }
 	m_totalOutSampleCount++;
 
 	if ((m_totalOutSampleCount % m_nOutSample) == 0)

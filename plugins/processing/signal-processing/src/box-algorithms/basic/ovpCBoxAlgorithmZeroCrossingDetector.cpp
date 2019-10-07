@@ -90,7 +90,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 	uint32_t j, k;
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
 		m_oEncoder1.getInputStimulationSet()->clear();
@@ -137,16 +137,16 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 			// ZC detector, with hysteresis
 			std::vector<double> signals(nSample + 1, 0);
 
-			for (j = 0; j < nChannel; j++)
+			for (j = 0; j < nChannel; ++j)
 			{
 				// signal, with the last sample of the previous chunk
 				signals[0] = m_vSignalHistory[j];
-				for (k = 0; k < nSample; k++) { signals[k + 1] = iBuffer[k + j * nSample]; }
+				for (k = 0; k < nSample; ++k) { signals[k + 1] = iBuffer[k + j * nSample]; }
 				m_vSignalHistory[j] = signals.back();
 
 				if (m_nChunk == 0) { m_vStateHistory[j] = (signals[1] >= 0) ? 1 : -1; }
 
-				for (k = 0; k < nSample; k++)
+				for (k = 0; k < nSample; ++k)
 				{
 					uint64_t stimulationDate;
 					if (m_samplingRate > 0)
@@ -183,7 +183,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 			}
 
 			// rythm estimation, in events per min
-			for (j = 0; j < nChannel; j++)
+			for (j = 0; j < nChannel; ++j)
 			{
 				int compt = 0;
 
@@ -202,7 +202,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					}
 				}
 
-				for (k = 0; k < nSample; k++) { oBuffer2[k + j * nSample] = 60.0 * compt / m_f64WindowTime; }
+				for (k = 0; k < nSample; ++k) { oBuffer2[k + j * nSample] = 60.0 * compt / m_f64WindowTime; }
 			}
 
 			m_nChunk++;

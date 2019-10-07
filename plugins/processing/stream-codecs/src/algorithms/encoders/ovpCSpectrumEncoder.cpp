@@ -40,7 +40,7 @@ bool CSpectrumEncoder::processHeader()
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_SamplingRate);
 	m_pEBMLWriterHelper->setUIntegerAsChildData(samplingRate);
 	m_pEBMLWriterHelper->closeChild();
-	for (uint32_t i = 0; i < frequencyAbscissa->getDimensionSize(0); i++)
+	for (uint32_t i = 0; i < frequencyAbscissa->getDimensionSize(0); ++i)
 	{
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_FrequencyAbscissa);
 		m_pEBMLWriterHelper->setFloat64AsChildData(frequencyAbscissa->getBuffer()[i]);

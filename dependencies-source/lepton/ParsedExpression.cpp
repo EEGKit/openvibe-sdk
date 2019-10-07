@@ -53,7 +53,7 @@ double ParsedExpression::evaluate(const ExpressionTreeNode& node, const map<stri
 {
 	size_t numArgs = node.getChildren().size();
 	vector<double> args(max(numArgs, size_t(1)));
-	for (size_t i = 0; i < numArgs; i++) { args[i] = evaluate(node.getChildren()[i], variables); }
+	for (size_t i = 0; i < numArgs; ++i) { args[i] = evaluate(node.getChildren()[i], variables); }
 	return node.getOperation().evaluate(&args[0], variables);
 }
 
@@ -115,7 +115,7 @@ ExpressionTreeNode ParsedExpression::precalculateConstantSubexpressions(const Ex
 ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const ExpressionTreeNode& node)
 {
 	vector<ExpressionTreeNode> children(node.getChildren().size());
-	for (int i = 0; i < int(children.size()); i++) { children[i] = substituteSimplerExpression(node.getChildren()[i]); }
+	for (int i = 0; i < int(children.size()); ++i) { children[i] = substituteSimplerExpression(node.getChildren()[i]); }
 	switch (node.getOperation().getId())
 	{
 		case Operation::ADD:
@@ -365,7 +365,7 @@ ParsedExpression ParsedExpression::differentiate(const string& variable) const {
 ExpressionTreeNode ParsedExpression::differentiate(const ExpressionTreeNode& node, const string& variable)
 {
 	vector<ExpressionTreeNode> childDerivs(node.getChildren().size());
-	for (size_t i = 0; i < childDerivs.size(); i++) { childDerivs[i] = differentiate(node.getChildren()[i], variable); }
+	for (size_t i = 0; i < childDerivs.size(); ++i) { childDerivs[i] = differentiate(node.getChildren()[i], variable); }
 	return node.getOperation().differentiate(node.getChildren(), childDerivs, variable);
 }
 
@@ -392,7 +392,7 @@ ExpressionTreeNode ParsedExpression::renameNodeVariables(const ExpressionTreeNod
 		if (replace != replacements.end()) { return ExpressionTreeNode(new Operation::Variable(replace->second)); }
 	}
 	vector<ExpressionTreeNode> children;
-	for (size_t i = 0; i <node.getChildren().size(); i++)
+	for (size_t i = 0; i <node.getChildren().size(); ++i)
 	{
 		children.push_back(renameNodeVariables(node.getChildren()[i], replacements));
 	}
@@ -415,7 +415,7 @@ ostream& Lepton::operator<<(ostream& out, const ExpressionTreeNode& node)
 		if (!node.getChildren().empty())
 		{
 			out << "(";
-			for (size_t i = 0; i < node.getChildren().size(); i++)
+			for (size_t i = 0; i < node.getChildren().size(); ++i)
 			{
 				if (i > 0) { out << ", "; }
 				out << node.getChildren()[i];

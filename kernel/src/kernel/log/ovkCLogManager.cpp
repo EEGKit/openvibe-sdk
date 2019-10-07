@@ -19,7 +19,7 @@ bool CLogManager::activate(const ELogLevel level, const bool active)
 
 bool CLogManager::activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active)
 {
-	for (int i = startLevel; i <= endLevel; i++) { m_vActiveLevel[ELogLevel(i)] = active; }
+	for (int i = startLevel; i <= endLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = active; }
 	return true;
 }
 

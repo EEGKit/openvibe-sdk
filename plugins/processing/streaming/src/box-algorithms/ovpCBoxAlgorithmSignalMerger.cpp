@@ -13,7 +13,7 @@ bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++) { m_vStreamDecoder.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
+	for (uint32_t i = 0; i < nInput; ++i) { m_vStreamDecoder.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
 
 	m_pStreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
 
@@ -27,7 +27,7 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 	m_pStreamEncoder->uninitialize();
 	delete m_pStreamEncoder;
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
 		m_vStreamDecoder[i]->uninitialize();
 		delete m_vStreamDecoder[i];
@@ -46,7 +46,7 @@ bool CBoxAlgorithmSignalMerger::processInput(const uint32_t index)
 
 	const uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
 	const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
-	for (uint32_t i = 1; i < nInput; i++)
+	for (uint32_t i = 1; i < nInput; ++i)
 	{
 		if (boxContext.getInputChunkCount(i) == 0) { return true; }
 
@@ -63,7 +63,7 @@ bool CBoxAlgorithmSignalMerger::processInput(const uint32_t index)
 
 	if (index == nInput - 1)
 	{
-		for (uint32_t i = 1; i < nInput; i++)
+		for (uint32_t i = 1; i < nInput; ++i)
 		{
 			OV_ERROR_UNLESS_KRF(boxContext.getInputChunkCount(0) >= boxContext.getInputChunkCount(i),
 								"Invalid input chunk count [" << boxContext.getInputChunkCount(i) << "] on input [" << i
@@ -83,9 +83,9 @@ bool CBoxAlgorithmSignalMerger::process()
 
 	uint32_t nChunk = boxContext.getInputChunkCount(0);
 
-	for (uint32_t input = 1; input < nInput; input++) { if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); } }
+	for (uint32_t input = 1; input < nInput; ++input) { if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); } }
 
-	for (uint32_t c = 0; c < nChunk; c++)
+	for (uint32_t c = 0; c < nChunk; ++c)
 	{
 		uint32_t nSamplePerBlock = 0;
 		uint32_t nChannel        = 0;
@@ -93,7 +93,7 @@ bool CBoxAlgorithmSignalMerger::process()
 		uint32_t nBuffer         = 0;
 		uint32_t nEnd            = 0;
 
-		for (uint32_t i = 0; i < nInput; i++)
+		for (uint32_t i = 0; i < nInput; ++i)
 		{
 			m_vStreamDecoder[i]->decode(c);
 
@@ -143,7 +143,7 @@ bool CBoxAlgorithmSignalMerger::process()
 			ip_pMatrix->setDimensionCount(2);
 			ip_pMatrix->setDimensionSize(0, nChannel);
 			ip_pMatrix->setDimensionSize(1, nSamplePerBlock);
-			for (uint32_t i = 0, k = 0; i < nInput; i++)
+			for (uint32_t i = 0, k = 0; i < nInput; ++i)
 			{
 				const IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
 				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
@@ -168,7 +168,7 @@ bool CBoxAlgorithmSignalMerger::process()
 
 			nSamplePerBlock = ip_pMatrix->getDimensionSize(1);
 
-			for (uint32_t i = 0, k = 0; i < nInput; i++)
+			for (uint32_t i = 0, k = 0; i < nInput; ++i)
 			{
 				IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
 				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)

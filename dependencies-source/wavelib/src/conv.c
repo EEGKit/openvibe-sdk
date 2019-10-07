@@ -76,36 +76,36 @@ void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 
 	if (N >= L)
 	{
-		for (k = 0; k < L; k++)
+		for (k = 0; k < L; ++k)
 		{
 			oup[k] = 0.0;
-			for (m = 0; m <= k; m++) { oup[k] += inp1[m] * inp2[k - m]; }
+			for (m = 0; m <= k; ++m) { oup[k] += inp1[m] * inp2[k - m]; }
 		}
 
-		for (k = L; k < M; k++)
+		for (k = L; k < M; ++k)
 		{
 			oup[k] = 0.0;
 			i++;
 			t1   = L + i;
 			tmin = MIN(t1, N);
-			for (m = i; m < tmin; m++) { oup[k] += inp1[m] * inp2[k - m]; }
+			for (m = i; m < tmin; ++m) { oup[k] += inp1[m] * inp2[k - m]; }
 		}
 	}
 	else
 	{
-		for (k = 0; k < N; k++)
+		for (k = 0; k < N; ++k)
 		{
 			oup[k] = 0.0;
-			for (m = 0; m <= k; m++) { oup[k] += inp2[m] * inp1[k - m]; }
+			for (m = 0; m <= k; ++m) { oup[k] += inp2[m] * inp1[k - m]; }
 		}
 
-		for (k = N; k < M; k++)
+		for (k = N; k < M; ++k)
 		{
 			oup[k] = 0.0;
 			i++;
 			t1   = N + i;
 			tmin = MIN(t1, L);
-			for (m = i; m < tmin; m++) { oup[k] += inp2[m] * inp1[k - m]; }
+			for (m = i; m < tmin; ++m) { oup[k] += inp2[m] * inp1[k - m]; }
 		}
 	}
 }
@@ -127,7 +127,7 @@ void conv_fft(const conv_object obj,fft_type* inp1,fft_type* inp2,fft_type* oup)
 	fft_data* bo = (fft_data*)malloc(sizeof(fft_data) * N);
 	fft_type* co = (fft_type*)malloc(sizeof(fft_data) * N);
 
-	for (i = 0; i < N; i++)
+	for (i = 0; i < N; ++i)
 	{
 		if (i < L1) { a[i] = inp1[i]; }
 		else { a[i] = 0.0; }
@@ -139,7 +139,7 @@ void conv_fft(const conv_object obj,fft_type* inp1,fft_type* inp2,fft_type* oup)
 	fft_r2c_exec(obj->fobj, a, ao);
 	fft_r2c_exec(obj->fobj, b, bo);
 
-	for (i = 0; i < N; i++)
+	for (i = 0; i < N; ++i)
 	{
 		c[i].re = ao[i].re * bo[i].re - ao[i].im * bo[i].im;
 		c[i].im = ao[i].im * bo[i].re + ao[i].re * bo[i].im;
@@ -147,7 +147,7 @@ void conv_fft(const conv_object obj,fft_type* inp1,fft_type* inp2,fft_type* oup)
 
 	fft_c2r_exec(obj->iobj, c, co);
 
-	for (i = 0; i < ls; i++) { oup[i] = co[i] / N; }
+	for (i = 0; i < ls; ++i) { oup[i] = co[i] / N; }
 
 	free(a);
 	free(b);

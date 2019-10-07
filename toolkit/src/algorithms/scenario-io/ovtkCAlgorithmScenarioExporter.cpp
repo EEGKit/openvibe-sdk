@@ -94,21 +94,21 @@ bool CAlgorithmScenarioExporter::process()
 	this->exportString(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion,
 					   this->getConfigurationManager().expand("${Application_Version}"));
 	this->exportStart(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Settings);
-	for (uint32_t i = 0; i < scenario->getSettingCount(); i++)
+	for (uint32_t i = 0; i < scenario->getSettingCount(); ++i)
 	{
 		helper.exportSetting(tmpBuffer, *scenario, i);
 	}
 	this->exportStop(tmpBuffer);
 
 	this->exportStart(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Inputs);
-	for (uint32_t i = 0; i < scenario->getInputCount(); i++)
+	for (uint32_t i = 0; i < scenario->getInputCount(); ++i)
 	{
 		helper.exportInput(tmpBuffer, *scenario, i);
 	}
 	this->exportStop(tmpBuffer);
 
 	this->exportStart(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Outputs);
-	for (uint32_t i = 0; i < scenario->getOutputCount(); i++)
+	for (uint32_t i = 0; i < scenario->getOutputCount(); ++i)
 	{
 		helper.exportOutput(tmpBuffer, *scenario, i);
 	}
@@ -183,7 +183,7 @@ bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& memoryBuffer, co
 	if (box.getInputCount() != 0)
 	{
 		m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Inputs);
-		for (uint32_t i = 0; i < box.getInputCount(); i++)
+		for (uint32_t i = 0; i < box.getInputCount(); ++i)
 		{
 			CIdentifier inputID;
 			CIdentifier inputTypeID;
@@ -207,7 +207,7 @@ bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& memoryBuffer, co
 	if (box.getOutputCount() != 0)
 	{
 		m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Outputs);
-		for (uint32_t i = 0; i < box.getOutputCount(); i++)
+		for (uint32_t i = 0; i < box.getOutputCount(); ++i)
 		{
 			CIdentifier outputID;
 			CIdentifier outputTypeID;
@@ -231,7 +231,7 @@ bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& memoryBuffer, co
 	if (box.getSettingCount() != 0)
 	{
 		m_parent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings);
-		for (uint32_t i = 0; i < box.getSettingCount(); i++)
+		for (uint32_t i = 0; i < box.getSettingCount(); ++i)
 		{
 			CIdentifier settingID;
 			CIdentifier settingTypeID;

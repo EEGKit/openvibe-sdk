@@ -24,7 +24,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 	boxContext.getInputType(0, typeID);
 	m_bMatrixBased = (typeID == OV_TypeId_StreamedMatrix);
 
-	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
 		SInput& input = m_vClassificationResults[i];
 		if (m_bMatrixBased)
@@ -66,7 +66,7 @@ bool CBoxAlgorithmVotingClassifier::uninitialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (uint32_t i = 0; i < nInput; ++i)
 	{
 		SInput& input = m_vClassificationResults[i];
 		input.m_pDecoder->uninitialize();
@@ -91,10 +91,10 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 	bool canChoose = true;
 
-	for (size_t i = 0; i < nInput; i++)
+	for (size_t i = 0; i < nInput; ++i)
 	{
 		SInput& input = m_vClassificationResults[i];
-		for (size_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			input.m_pDecoder->decode(j);
 
@@ -125,7 +125,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 				}
 				else
 				{
-					for (size_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); k++)
+					for (size_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); ++k)
 					{
 						const uint64_t stimulationId = input.op_pStimulationSet->getStimulationIdentifier(k);
 						if (stimulationId == m_targetClassLabel || stimulationId == m_nonTargetClassLabel || stimulationId == m_rejectClassLabel)
@@ -153,11 +153,11 @@ bool CBoxAlgorithmVotingClassifier::process()
 		uint64_t time             = 0;
 
 		std::map<uint32_t, double> score;
-		for (size_t i = 0; i < nInput; i++)
+		for (size_t i = 0; i < nInput; ++i)
 		{
 			SInput& input = m_vClassificationResults[i];
 			score[i]      = 0;
-			for (size_t j = 0; j < m_nRepetitions; j++) { score[i] += input.m_vScore[j].first; }
+			for (size_t j = 0; j < m_nRepetitions; ++j) { score[i] += input.m_vScore[j].first; }
 
 			if (score[i] > resultScore)
 			{

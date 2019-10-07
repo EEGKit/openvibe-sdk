@@ -130,11 +130,11 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(uint32_t(m_dimSizes.size())), "Failed to set dimension count", ErrorType::Internal);
 			uint32_t previousDimensionSize = 0;
 
-			for (size_t index = 0; index < m_dimSizes.size(); index++)
+			for (size_t index = 0; index < m_dimSizes.size(); ++index)
 			{
 				OV_FATAL_UNLESS_K(matrix->setDimensionSize(uint32_t(index), m_dimSizes[index]), "Failed to set dimension size " << uint32_t(index + 1), ErrorType::Internal);
 
-				for (uint32_t labelIndex = 0; labelIndex < m_dimSizes[index]; labelIndex++)
+				for (uint32_t labelIndex = 0; labelIndex < m_dimSizes[index]; ++labelIndex)
 				{
 					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(uint32_t(index), labelIndex, m_channelNames[previousDimensionSize + labelIndex].c_str()),
 									  "Failed to set dimension label", ErrorType::Internal);

@@ -147,14 +147,14 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	std::vector<uint32_t> l_vClassCounts;
 	l_vClassCounts.resize(m_nClasses);
 
-	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); i++)
+	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); ++i)
 	{
 		uint32_t classIdx = uint32_t(featureVectorSet[i].getLabel());
 		l_vClassCounts[classIdx]++;
 	}
 
 	// Get class labels
-	for (uint32_t i = 0; i < m_nClasses; i++)
+	for (uint32_t i = 0; i < m_nClasses; ++i)
 	{
 		m_labels.push_back(i);
 		m_discriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
@@ -178,7 +178,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 			l_oClassData.setDimensionSize(0, l_ui32nExamplesInClass);
 			l_oClassData.setDimensionSize(1, nCols);
 			double* buffer = l_oClassData.getBuffer();
-			for (uint32_t i = 0; i < nRows; i++)
+			for (uint32_t i = 0; i < nRows; ++i)
 			{
 				if (featureVectorSet[i].getLabel() == l_ui32classIdx)
 				{
@@ -209,7 +209,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 		double* buffer = ip_pFeatureVectorSet->getBuffer();
 
 		// Insert all data as the input of the cov algorithm
-		for (uint32_t i = 0; i < nRows; i++)
+		for (uint32_t i = 0; i < nRows; ++i)
 		{
 			System::Memory::copy(buffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
 			buffer += nCols;
@@ -235,9 +235,9 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 
 	if (diagonalCov)
 	{
-		for (uint32_t i = 0; i < nCols; i++)
+		for (uint32_t i = 0; i < nCols; ++i)
 		{
-			for (uint32_t j = i + 1; j < nCols; j++)
+			for (uint32_t j = i + 1; j < nCols; ++j)
 			{
 				l_oGlobalCov(i, j) = 0.0;
 				l_oGlobalCov(j, i) = 0.0;
@@ -250,7 +250,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	SelfAdjointEigenSolver<MatrixXd> l_oEigenSolver;
 	l_oEigenSolver.compute(l_oGlobalCov);
 	VectorXd l_oEigenValues = l_oEigenSolver.eigenvalues();
-	for (uint32_t i = 0; i < nCols; i++) { if (l_oEigenValues(i) >= l_f64Tolerance) { l_oEigenValues(i) = 1.0 / l_oEigenValues(i); } }
+	for (uint32_t i = 0; i < nCols; ++i) { if (l_oEigenValues(i) >= l_f64Tolerance) { l_oEigenValues(i) = 1.0 / l_oEigenValues(i); } }
 	const MatrixXd l_oGlobalCovInv = l_oEigenSolver.eigenvectors() * l_oEigenValues.asDiagonal() * l_oEigenSolver.eigenvectors().inverse();
 
 	// const MatrixXd l_oGlobalCovInv = l_oGlobalCov.inverse();
@@ -281,7 +281,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 
 	// Hack for classes with zero examples, give them valid models but such that will always lose
 	size_t l_ui32NonZeroClassIdx = 0;
-	for (size_t i = 0; i < getClassCount(); i++)
+	for (size_t i = 0; i < getClassCount(); ++i)
 	{
 		if (l_vClassCounts[i] > 0)
 		{
@@ -289,7 +289,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 			break;
 		}
 	}
-	for (size_t i = 0; i < getClassCount(); i++)
+	for (size_t i = 0; i < getClassCount(); ++i)
 	{
 		if (l_vClassCounts[i] == 0)
 		{
@@ -446,7 +446,7 @@ void CAlgorithmClassifierLDA::loadCoefficientsFromNode(XML::IXMLNode* pNode)
 
 	m_weights.resize(1, l_vCoefficients.size());
 	m_nCols = uint32_t(l_vCoefficients.size());
-	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_weights(0, i) = l_vCoefficients[i]; }
+	for (size_t i = 0; i < l_vCoefficients.size(); ++i) { m_weights(0, i) = l_vCoefficients[i]; }
 }
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

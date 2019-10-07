@@ -63,7 +63,7 @@ bool CBoxAlgorithmCommonAverageReference::process()
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
@@ -77,7 +77,7 @@ bool CBoxAlgorithmCommonAverageReference::process()
 		{
 			const uint32_t nChannel = m_oMatrix.getDimensionSize(0),
 						   nSample  = m_oMatrix.getDimensionSize(1);
-			for (uint32_t j = 0; j < nSample; j++)
+			for (uint32_t j = 0; j < nSample; ++j)
 			{
 				double* buffer = m_oMatrix.getBuffer() + j;
 				double sum     = 0;

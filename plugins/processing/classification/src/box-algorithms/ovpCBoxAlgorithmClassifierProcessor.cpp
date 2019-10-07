@@ -85,7 +85,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		OpenViBE::Kernel::ErrorType::BadParsing);
 
 	//Now load every stimulation and store them in the map with the right class id
-	for (uint32_t i = 0; i < l_pStimulationsNode->getChildCount(); i++)
+	for (uint32_t i = 0; i < l_pStimulationsNode->getChildCount(); ++i)
 	{
 		tmp = l_pStimulationsNode->getChild(i);
 
@@ -195,13 +195,13 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Check if we have a command first
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(1); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(1); ++i)
 	{
 		m_oStimulationDecoder.decode(i);
 		if (m_oStimulationDecoder.isHeaderReceived()) { }
 		if (m_oStimulationDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (size_t j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
 			{
 				if (m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
 				{
@@ -215,7 +215,7 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	}
 
 	// Classify data
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
 		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);

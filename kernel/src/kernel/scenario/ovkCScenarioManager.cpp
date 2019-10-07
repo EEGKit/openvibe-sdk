@@ -312,7 +312,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	{
 		SBoxProto l_oMetaboxProto(getKernelContext().getTypeManager());
 
-		for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < scenario.getInputCount(); scenarioInputIdx++)
+		for (uint32_t scenarioInputIdx = 0; scenarioInputIdx < scenario.getInputCount(); ++scenarioInputIdx)
 		{
 			CIdentifier l_oInputputID;
 			CString inputName;
@@ -325,7 +325,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 			l_oMetaboxProto.addInput(inputName, inputTypeID, l_oInputputID, true);
 		}
 
-		for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < scenario.getOutputCount(); scenarioOutputIdx++)
+		for (uint32_t scenarioOutputIdx = 0; scenarioOutputIdx < scenario.getOutputCount(); ++scenarioOutputIdx)
 		{
 			CIdentifier OutputID;
 			CString outputName;
@@ -338,7 +338,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 			l_oMetaboxProto.addOutput(outputName, OutputTypeID, OutputID, true);
 		}
 
-		for (uint32_t scenarioSettingIdx = 0; scenarioSettingIdx < scenario.getSettingCount(); scenarioSettingIdx++)
+		for (uint32_t scenarioSettingIdx = 0; scenarioSettingIdx < scenario.getSettingCount(); ++scenarioSettingIdx)
 		{
 			CString l_sSettingName;
 			CIdentifier l_oSettingTypeID;

@@ -179,7 +179,7 @@ bool CAlgorithmMatrixAverage::process()
 				double* oMatrixBuffer = oMatrix->getBuffer();
 				double* iMatrixBuffer  = matrix->getBuffer();
 
-				for (uint32_t i = 0; i < n; i++)
+				for (uint32_t i = 0; i < n; ++i)
 				{
 					*oMatrixBuffer += *iMatrixBuffer * scale;
 					oMatrixBuffer++;

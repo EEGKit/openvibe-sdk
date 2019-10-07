@@ -13,7 +13,7 @@ ISignalTrial& OpenViBEToolkit::copyHeader(ISignalTrial& trial, const ISignalTria
 	{
 		const uint32_t nChannel = srcTrial->getChannelCount();
 		trial.setChannelCount(nChannel);
-		for (uint32_t i = 0; i < nChannel; i++) { trial.setChannelName(i, srcTrial->getChannelName(i)); }
+		for (uint32_t i = 0; i < nChannel; ++i) { trial.setChannelName(i, srcTrial->getChannelName(i)); }
 		trial.setSamplingRate(srcTrial->getSamplingRate());
 	}
 
@@ -31,7 +31,7 @@ ISignalTrial& OpenViBEToolkit::copy(ISignalTrial& trial, const ISignalTrial* src
 		const uint32_t nChannel = srcTrial->getChannelCount();
 		const uint32_t nSample  = srcTrial->getSampleCount();
 		trial.setSampleCount(nSample, false);
-		for (uint32_t i = 0; i < nChannel; i++)
+		for (uint32_t i = 0; i < nChannel; ++i)
 		{
 			System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), nSample * sizeof(double));
 		}
@@ -51,7 +51,7 @@ ISignalTrial& OpenViBEToolkit::selectSamples(ISignalTrial& trial, const uint32_t
 	const uint32_t nSample  = sampleEnd - sampleStart;
 
 	trial.setSampleCount(nSample, false);
-	for (uint32_t i = 0; i < nChannel; i++)
+	for (uint32_t i = 0; i < nChannel; ++i)
 	{
 		System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i) + sampleStart, nSample * sizeof(double));
 	}
@@ -80,7 +80,7 @@ ISignalTrial& OpenViBEToolkit::removeSamples(ISignalTrial& trial, const uint32_t
 	const uint32_t srcNSample  = srcTrial->getSampleCount() - (sampleEnd - sampleStart);
 
 	trial.setSampleCount(srcNSample, false);
-	for (uint32_t i = 0; i < srcNChannel; i++)
+	for (uint32_t i = 0; i < srcNChannel; ++i)
 	{
 		System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double));
 		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart, srcTrial->getChannelSampleBuffer(i) + sampleEnd,
@@ -111,7 +111,7 @@ ISignalTrial& OpenViBEToolkit::insertBufferSamples(ISignalTrial& trial, const ui
 	const uint32_t srcNSample  = srcTrial->getSampleCount();
 
 	trial.setSampleCount(srcNSample + nSample, true);
-	for (uint32_t i = 0; i < srcNChannel; i++)
+	for (uint32_t i = 0; i < srcNChannel; ++i)
 	{
 		if (&trial != srcTrial) { System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double)); }
 

@@ -3107,7 +3107,7 @@ int filtlength(const char* name)
 	if (len > 2 && strstr(name, "db") != NULL)
 	{
 		char* new_str = (char*)malloc(sizeof(char) * (len - 2 + 1));
-		for (size_t i = 2; i < len + 1; i++) { new_str[i - 2] = name[i]; }
+		for (size_t i = 2; i < len + 1; ++i) { new_str[i - 2] = name[i]; }
 
 		const int N = atoi(new_str);
 		free(new_str);
@@ -3152,7 +3152,7 @@ int filtlength(const char* name)
 	if (len > 4 && strstr(name, "coif") != NULL)
 	{
 		char* new_str = (char*)malloc(sizeof(char) * (len - 4 + 1));
-		for (size_t i = 4; i < len + 1; i++) { new_str[i - 4] = name[i]; }
+		for (size_t i = 4; i < len + 1; ++i) { new_str[i - 4] = name[i]; }
 
 		const int N = atoi(new_str);
 		free(new_str);
@@ -3167,7 +3167,7 @@ int filtlength(const char* name)
 	if (len > 3 && strstr(name, "sym") != NULL)
 	{
 		char* new_str = (char*)malloc(sizeof(char) * (len - 3 + 1));
-		for (size_t i = 3; i < len + 1; i++) { new_str[i - 3] = name[i]; }
+		for (size_t i = 3; i < len + 1; ++i) { new_str[i - 3] = name[i]; }
 
 		const int N = atoi(new_str);
 		free(new_str);
@@ -3185,7 +3185,7 @@ int filtlength(const char* name)
 
 void copy_reverse(const double* in, const int N, double* out)
 {
-	for (int count = 0; count < N; count++) { out[count] = in[N - count - 1]; }
+	for (int count = 0; count < N; ++count) { out[count] = in[N - count - 1]; }
 }
 
 void qmf_wrev(const double* in, const int N, double* out)
@@ -3199,7 +3199,7 @@ void qmf_wrev(const double* in, const int N, double* out)
 
 void qmf_even(const double* in, const int N, double* out)
 {
-	for (int count = 0; count < N; count++)
+	for (int count = 0; count < N; ++count)
 	{
 		out[count] = in[N - count - 1];
 		if (count % 2 != 0) { out[count] = -1 * out[count]; }
@@ -3208,7 +3208,7 @@ void qmf_even(const double* in, const int N, double* out)
 
 void copy(const double* in, const int N, double* out)
 {
-	for (int count = 0; count < N; count++) { out[count] = in[count]; }
+	for (int count = 0; count < N; ++count) { out[count] = in[count]; }
 }
 
 int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp2)

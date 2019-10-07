@@ -268,7 +268,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 
 	if (mergeSettings)
 	{
-		for (uint32_t settingIndex = 0; settingIndex < scenario.getSettingCount(); settingIndex++)
+		for (uint32_t settingIndex = 0; settingIndex < scenario.getSettingCount(); ++settingIndex)
 		{
 			CIdentifier settingTypeIdentifier;
 			CString settingName;
@@ -652,7 +652,7 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIdx, const CIde
 	if (scenarioInputIdx >= m_ScenarioInputLinks.size()) { m_ScenarioInputLinks.resize(this->getInputCount()); }
 
 	// Remove any existing inputs connected to the target
-	for (size_t inputLinkIndex = 0; inputLinkIndex < m_ScenarioInputLinks.size(); inputLinkIndex++)
+	for (size_t inputLinkIndex = 0; inputLinkIndex < m_ScenarioInputLinks.size(); ++inputLinkIndex)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
 		uint32_t alreadyConnectedBoxInputIndex;
@@ -708,7 +708,7 @@ bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIdx, const CI
 	if (scenarioOutputIdx >= m_ScenarioOutputLinks.size()) { m_ScenarioOutputLinks.resize(this->getOutputCount()); }
 
 	// Remove any existing outputs connected to the target
-	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); outputLinkIndex++)
+	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); ++outputLinkIndex)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
 		uint32_t alreadyConnectedBoxOutputIndex;
@@ -995,7 +995,7 @@ bool CScenario::applyLocalSettings()
 		CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
 		this->getConfigurationManager().registerKeywordParser("var", scenarioSettingKeywordParserCallback);
 
-		for (uint32_t settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
+		for (uint32_t settingIndex = 0; settingIndex < box.second->getSettingCount(); ++settingIndex)
 		{
 			CString settingName  = "";
 			CString settingValue = "";
@@ -1078,7 +1078,7 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 			CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
 			this->getConfigurationManager().registerKeywordParser("var", scenarioSettingKeywordParserCallback);
 
-			for (uint32_t settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
+			for (uint32_t settingIndex = 0; settingIndex < box.second->getSettingCount(); ++settingIndex)
 			{
 				CString settingName     = "";
 				CString rawSettingValue = "";

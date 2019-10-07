@@ -30,7 +30,7 @@ CReaderHelper::CReaderHelper() {}
 uint64_t CReaderHelper::getUIntegerFromChildData(const void* buffer, const uint64_t size)
 {
 	uint64_t result = 0;
-	for (uint64_t i = 0; i < size; i++)
+	for (uint64_t i = 0; i < size; ++i)
 	{
 		result <<= 8;
 		result |= ((unsigned char*)buffer)[i];
@@ -43,7 +43,7 @@ int64_t CReaderHelper::getSIntegerFromChildData(const void* buffer, const uint64
 	int64_t result = 0;
 	if (size != 0 && ((unsigned char*)buffer)[0] & 0x80) { result = -1; }
 
-	for (uint64_t i = 0; i < size; i++)
+	for (uint64_t i = 0; i < size; ++i)
 	{
 		result <<= 8;
 		result |= ((unsigned char*)buffer)[i];
