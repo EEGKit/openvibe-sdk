@@ -5,8 +5,8 @@
 
 namespace OpenViBEToolkit
 {
-	template <class CBoxAlgorithmParentClass>
-	class TBoxAlgorithm : public CBoxAlgorithmParentClass
+	template <class TBoxAlgorithmParentClass>
+	class TBoxAlgorithm : public TBoxAlgorithmParentClass
 	{
 	public:
 
@@ -116,7 +116,7 @@ namespace OpenViBEToolkit
 		template <uint32_t outputIdx>
 		void appendOutputChunkData(const void* buffer, const uint64_t size) { appendOutputChunkData(outputIdx, buffer, size); }
 
-		_IsDerivedFromClass_(CBoxAlgorithmParentClass, OVTK_ClassId_)
+		_IsDerivedFromClass_(TBoxAlgorithmParentClass, OVTK_ClassId_)
 
 	protected:
 
