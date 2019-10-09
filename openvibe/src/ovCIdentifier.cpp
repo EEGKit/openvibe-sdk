@@ -65,6 +65,6 @@ CIdentifier CIdentifier::random()
 {
 	std::random_device rd;
 	std::default_random_engine rng(rd());
-	std::uniform_int_distribution<uint64_t> uni(0, std::numeric_limits<uint64_t>::max() - 1); // This exclude OV_UndefinedIdentifier value
+	std::uniform_int_distribution<size_t> uni(0, std::numeric_limits<size_t>::max() - 1); // This exclude OV_UndefinedIdentifier value
 	return CIdentifier(uni(rng));
 }

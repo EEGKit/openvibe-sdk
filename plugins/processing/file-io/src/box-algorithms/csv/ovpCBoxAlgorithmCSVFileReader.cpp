@@ -277,7 +277,7 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 	IMatrix* iMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
@@ -285,7 +285,7 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 
 		for (uint32_t i = 1; i < m_nColumn; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_vHeaderFile[i].c_str()); }
 		m_encoder->encodeHeader();
-		m_bHeaderSent = true;
+		m_headerSent = true;
 
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 	}
@@ -313,10 +313,10 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 bool CBoxAlgorithmCSVFileReader::processStimulation()
 {
 	//Header
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		m_encoder->encodeHeader();
-		m_bHeaderSent = true;
+		m_headerSent = true;
 
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 	}
@@ -357,7 +357,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 	IMatrix* iMatrix = static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		// This is the first chunk, find out the start time from the file
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
@@ -372,7 +372,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 		static_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputSamplingRate() = m_samplingRate;
 
 		m_encoder->encodeHeader();
-		m_bHeaderSent = true;
+		m_headerSent = true;
 
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 	}
@@ -406,7 +406,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 {
 	IMatrix* iMatrix = static_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
@@ -421,7 +421,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 
-		m_bHeaderSent = true;
+		m_headerSent = true;
 	}
 
 	vector<vector<string>> channelBloc;
@@ -460,7 +460,7 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 	IMatrix* matrix    = static_cast<OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		// in this case we need to transpose it
 		IMatrix* iMatrix = static_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
@@ -474,7 +474,7 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 
-		m_bHeaderSent = true;
+		m_headerSent = true;
 	}
 
 	// Each vector has to be sent separately
@@ -503,7 +503,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 	IMatrix* iFrequencyAbscissa = static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputFrequencyAbscissa();
 
 	//Header
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nColumn - 1);
@@ -532,7 +532,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 		static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputSamplingRate() = uint64_t(
 			m_vDataMatrix.size() / (stod(m_vDataMatrix[m_vDataMatrix.size() - 1][m_nColumn].c_str()) - stod(m_vDataMatrix[0][m_nColumn].c_str())
 			));
-		m_bHeaderSent = true;
+		m_headerSent = true;
 		m_encoder->encodeHeader();
 
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);

@@ -29,6 +29,6 @@ namespace Socket
 
 	protected:
 
-		virtual ~IConnection();
+		virtual ~IConnection() = default;
 	};
 } // namespace Socket

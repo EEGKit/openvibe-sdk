@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			m_oDimensionSize.resize(m_nInput);
 			m_oFeatureNames.resize(m_nInput);
 
-			m_bHeaderSent = false;
+			m_headerSent = false;
 
 			return true;
 		}
@@ -125,7 +125,7 @@ namespace OpenViBEPlugins
 			{
 				m_pStreamedMatrixDecoder[input]->decode(0);
 				//*
-				if ((m_pStreamedMatrixDecoder[input]->isHeaderReceived()) && !m_bHeaderSent)
+				if ((m_pStreamedMatrixDecoder[input]->isHeaderReceived()) && !m_headerSent)
 				{
 					//getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "header " << input << "\n";
 					IMatrix* iMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
@@ -142,7 +142,7 @@ namespace OpenViBEPlugins
 
 						m_pFeatureVectorEncoder->encodeHeader();
 						boxIO->markOutputAsReadyToSend(0, m_lastChunkStartTime, m_lastChunkEndTime);
-						m_bHeaderSent = true;
+						m_headerSent = true;
 					}
 				}
 				//*/
@@ -157,7 +157,7 @@ namespace OpenViBEPlugins
 				}
 			}
 
-			if (m_bHeaderSent && bufferReceived)
+			if (m_headerSent && bufferReceived)
 			{
 				double* oBuffer = oMatrix->getBuffer();
 				for (uint32_t i = 0; i < bufferElements.size(); ++i) { oBuffer[i] = bufferElements[i]; }

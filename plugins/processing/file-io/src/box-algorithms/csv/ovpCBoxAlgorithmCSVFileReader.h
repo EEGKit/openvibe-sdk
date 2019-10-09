@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
-			bool m_bHeaderSent = false;
+			bool m_headerSent = false;
 			std::vector<std::string> m_vLastLineSplit;
 			std::vector<std::string> m_vHeaderFile;
 			std::vector<std::vector<std::string>> m_vDataMatrix;

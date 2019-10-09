@@ -13,7 +13,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 {
 	m_lastStartTime = 0;
 	m_lastEndTime   = 0;
-	m_bHeaderSent   = false;
+	m_headerSent   = false;
 
 	return true;
 }
@@ -39,7 +39,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 			const uint64_t tStart        = boxContext.getInputChunkStartTime(i, j);
 			const uint64_t tEnd          = boxContext.getInputChunkEndTime(i, j);
 
-			if ((!m_bHeaderSent && tStart == tEnd) || (m_bHeaderSent && tStart != tEnd))
+			if ((!m_headerSent && tStart == tEnd) || (m_headerSent && tStart != tEnd))
 			{
 				IMemoryBuffer* oBuffer = boxContext.getOutputChunk(0);
 				oBuffer->setSize(iBuffer->getSize(), true);
@@ -55,7 +55,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				m_lastEndTime   = tEnd;
 
 				boxContext.markOutputAsReadyToSend(0, tStart, tEnd);
-				m_bHeaderSent = true;
+				m_headerSent = true;
 			}
 
 			boxContext.markInputAsDeprecated(i, j);

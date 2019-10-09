@@ -13,7 +13,7 @@ uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { ret
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 {
-	m_bHeaderSent = false;
+	m_headerSent = false;
 	m_bBufferSent = false;
 
 	// Creates algorithms
@@ -71,7 +71,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& /
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 {
-	if (m_bHeaderSent == true && m_bBufferSent == true) { return true; }
+	if (m_headerSent == true && m_bBufferSent == true) { return true; }
 
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
@@ -85,7 +85,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 						"Wrong format for electrode localisation matrix loaded from file " << m_sFilename,
 						OpenViBE::Kernel::ErrorType::BadParsing);
 
-	if (m_bHeaderSent == false)
+	if (m_headerSent == false)
 	{
 		// Connects parameters to memory buffer
 		//op_pChannelLocalisationMemoryBuffer = boxContext.getOutputChunk(0);
@@ -102,7 +102,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		// Sends header
 		boxContext.markOutputAsReadyToSend(0, 0, 0);
 
-		m_bHeaderSent = true;
+		m_headerSent = true;
 	}
 
 	if (m_bBufferSent == false /*&&

@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 			// number of inputs
 			uint32_t m_nInput = 0;
 
-			bool m_bHeaderSent = false;
+			bool m_headerSent = false;
 		};
 
 		class CBoxAlgorithmFeatureAggregatorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

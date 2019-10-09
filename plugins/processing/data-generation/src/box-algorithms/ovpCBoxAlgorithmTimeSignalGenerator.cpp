@@ -21,7 +21,7 @@ bool CBoxAlgorithmTimeSignalGenerator::initialize()
 	// Parses box settings to try connecting to server
 	m_samplingFrequency         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_nGeneratedEpochSample = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_bHeaderSent                   = false;
+	m_headerSent                   = false;
 
 	m_nSentSample = 0;
 
@@ -45,7 +45,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 {
 	IBoxIO* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-	if (!m_bHeaderSent)
+	if (!m_headerSent)
 	{
 		m_oSignalEncoder.getInputSamplingRate() = m_samplingFrequency;
 
@@ -58,7 +58,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		m_oSignalEncoder.encodeHeader();
 
-		m_bHeaderSent = true;
+		m_headerSent = true;
 
 		l_pDynamicBoxContext->markOutputAsReadyToSend(0, 0, 0);
 	}
