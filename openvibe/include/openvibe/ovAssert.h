@@ -141,7 +141,7 @@ namespace OpenViBE
 do { \
 	logManager << OpenViBE::Kernel::LogLevel_Error << "{Error description} : {" << description \
 			   << "}, {Error type} : {" << convertErrorTypeToString(type) << " (code " \
-			   << uint32_t((type)) << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
+			   << size_t((type)) << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
 } while(0)
 
 /**
@@ -344,7 +344,7 @@ do { \
 			   << "}, {Error type} : {" \
 			   << convertErrorTypeToString(type) \
 			   << " (code " \
-			   << uint32_t((type)) \
+			   << size_t((type)) \
 			   << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
 	std::abort(); \
 } while(0)

@@ -42,9 +42,9 @@ bool CLogListenerFile::isActive(ELogLevel logLevel)
 	return it->second;
 }
 
-bool CLogListenerFile::activate(ELogLevel eLogLevel, bool bActive)
+bool CLogListenerFile::activate(ELogLevel level, bool bActive)
 {
-	m_vActiveLevel[eLogLevel] = bActive;
+	m_vActiveLevel[level] = bActive;
 	return true;
 }
 

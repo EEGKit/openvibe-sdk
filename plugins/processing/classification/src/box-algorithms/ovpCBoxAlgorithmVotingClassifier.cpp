@@ -78,7 +78,7 @@ bool CBoxAlgorithmVotingClassifier::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmVotingClassifier::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

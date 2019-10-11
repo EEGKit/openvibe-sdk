@@ -108,7 +108,7 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileWriter::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Error while marking algorithm as ready to process", ErrorType::Internal);
 	return true;

@@ -150,7 +150,7 @@ bool CSimulatedBox::processClock()
 	return true;
 }
 
-bool CSimulatedBox::processInput(const uint32_t index, const CChunk& rChunk)
+bool CSimulatedBox::processInput(const size_t index, const CChunk& rChunk)
 {
 	m_inputs[index].push_back(rChunk);
 

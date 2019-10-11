@@ -2,6 +2,8 @@
 
 #include <cstdio>
 #include <random>
+#include <sstream>
+#include <iomanip>
 
 using namespace OpenViBE;
 
@@ -49,6 +51,16 @@ CString CIdentifier::toString() const
 	const uint32_t id2 = uint32_t(m_id);
 	sprintf(buffer, "(0x%08x, 0x%08x)", id1, id2);
 	return CString(buffer);
+}
+
+std::string CIdentifier::str() const
+{
+	const uint32_t id1 = uint32_t(m_id >> 32);
+	const uint32_t id2 = uint32_t(m_id);
+	std::stringstream ss;
+	ss.fill('0');
+	ss << "(0x" << std::setw(8) << std::hex << id1 << ", 0x" << std::setw(8) << std::hex << id2 << ")";
+	return ss.str();
 }
 
 bool CIdentifier::fromString(const CString& str)

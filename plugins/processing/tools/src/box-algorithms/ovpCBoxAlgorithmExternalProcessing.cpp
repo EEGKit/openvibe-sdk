@@ -243,7 +243,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*messageClock*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
-bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmExternalProcessing::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

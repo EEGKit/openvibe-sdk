@@ -113,19 +113,19 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tests whether a log level is active or not
-			 * \param eLogLevel [in] : the log level which has to be tested
+			 * \param level [in] : the log level which has to be tested
 			 * \return \e true if this log level is active.
 			 * \return \e false if this log level is not active.
 			 */
-			virtual bool isActive(ELogLevel eLogLevel) = 0;
+			virtual bool isActive(ELogLevel level) = 0;
 			/**
 			 * \brief Changes the activation status of a specific log level
-			 * \param eLogLevel [in] : the log level which status has to be changed
+			 * \param level [in] : the log level which status has to be changed
 			 * \param bActive [in] : a boolean telling whether this level should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(ELogLevel eLogLevel, bool bActive) = 0;
+			virtual bool activate(ELogLevel level, bool bActive) = 0;
 			/**
 			 * \brief Changes the activation status of a specific range of log level
 			 * \param eStartLogLevel [in] : the first log level which status has to be changed

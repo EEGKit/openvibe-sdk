@@ -76,7 +76,7 @@ bool CBoxAlgorithmSignalDecimation::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSignalDecimation::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmSignalDecimation::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

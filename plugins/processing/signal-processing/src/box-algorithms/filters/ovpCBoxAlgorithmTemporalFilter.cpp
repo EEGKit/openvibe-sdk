@@ -160,7 +160,7 @@ bool CBoxAlgorithmTemporalFilter::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTemporalFilter::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmTemporalFilter::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -64,7 +64,7 @@ bool CBoxAlgorithmStimulationVoter::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmStimulationVoter::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmStimulationVoter::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

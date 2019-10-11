@@ -76,7 +76,7 @@ bool CDecoderAlgorithmTest::uninitialize()
 	return true;
 }
 
-bool CDecoderAlgorithmTest::processInput(const uint32_t /*index*/)
+bool CDecoderAlgorithmTest::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

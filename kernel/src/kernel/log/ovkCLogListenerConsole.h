@@ -14,8 +14,8 @@ namespace OpenViBE
 		public:
 
 			CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName);
-			bool isActive(ELogLevel eLogLevel) override;
-			bool activate(ELogLevel eLogLevel, bool bActive) override;
+			bool isActive(ELogLevel level) override;
+			bool activate(ELogLevel level, bool bActive) override;
 			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
 			bool activate(bool bActive) override;
 
@@ -35,8 +35,8 @@ namespace OpenViBE
 			void log(const CIdentifier& value) override;
 			void log(const CString& value) override;
 			void log(const char* value) override;
-			void log(const ELogLevel eLogLevel) override;
-			void log(const ELogColor eLogColor) override;
+			void log(const ELogLevel level) override;
+			void log(const ELogColor color) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole)
 

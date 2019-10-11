@@ -212,7 +212,7 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* buffer, const uint
 
 void CBoxAlgorithmEBMLStreamSpy::closeChild() { m_vNodes.pop(); }
 
-bool CBoxAlgorithmEBMLStreamSpy::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmEBMLStreamSpy::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

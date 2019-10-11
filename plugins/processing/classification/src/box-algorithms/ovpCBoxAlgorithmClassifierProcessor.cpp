@@ -183,7 +183,7 @@ bool CBoxAlgorithmClassifierProcessor::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmClassifierProcessor::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmClassifierProcessor::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

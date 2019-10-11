@@ -41,7 +41,7 @@ bool CBoxAlgorithmStimulationMultiplexer::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmStimulationMultiplexer::processInput(const uint32_t)
+bool CBoxAlgorithmStimulationMultiplexer::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

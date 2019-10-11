@@ -142,7 +142,7 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 	const uint32_t nInput          = this->getStaticBoxContext().getInputCount();

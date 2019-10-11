@@ -73,7 +73,7 @@ namespace OpenViBE
 			bool uninitialize();
 
 			bool processClock();
-			bool processInput(const uint32_t index, const CChunk& rChunk);
+			bool processInput(const size_t index, const CChunk& rChunk);
 			bool process();
 			bool isReadyToProcess() const;
 

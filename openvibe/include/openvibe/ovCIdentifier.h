@@ -3,6 +3,7 @@
 #include "ov_base.h"
 #include "ovCString.h"
 #include <climits>
+#include <string>
 
 #define OV_UndefinedIdentifier OpenViBE::CIdentifier(0xffffffff, 0xffffffff)
 
@@ -178,6 +179,11 @@ namespace OpenViBE
 		 * \return This identifier represented as an OpenViBE string
 		 */
 		CString toString() const;
+		/**
+		 * \brief Converts this identifier into an OpenViBE string
+		 * \return This identifier represented as an OpenViBE string
+		 */
+		std::string str() const;
 		/**
 		 * \brief Reads a an OpenViBE string to extract this identifier
 		 * \param str [in] : the string to convert

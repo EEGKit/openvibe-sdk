@@ -79,7 +79,7 @@ bool CBoxAlgorithmZeroCrossingDetector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmZeroCrossingDetector::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmZeroCrossingDetector::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

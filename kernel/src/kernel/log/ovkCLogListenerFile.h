@@ -16,7 +16,7 @@ namespace OpenViBE
 			CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename);
 			~CLogListenerFile() override { m_fsFileStream.close(); }
 			bool isActive(ELogLevel logLevel) override;
-			bool activate(ELogLevel eLogLevel, bool bActive) override;
+			bool activate(ELogLevel level, bool bActive) override;
 			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
 			bool activate(bool bActive) override;
 

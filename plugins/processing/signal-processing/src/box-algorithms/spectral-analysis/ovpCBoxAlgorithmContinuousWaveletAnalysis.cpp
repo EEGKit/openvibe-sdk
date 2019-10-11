@@ -130,7 +130,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

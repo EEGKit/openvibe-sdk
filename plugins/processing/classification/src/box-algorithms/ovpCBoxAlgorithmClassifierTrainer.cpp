@@ -170,7 +170,7 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmClassifierTrainer::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

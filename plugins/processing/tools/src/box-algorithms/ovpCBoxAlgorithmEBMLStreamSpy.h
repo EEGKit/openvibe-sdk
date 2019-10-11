@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			void openChild(const EBML::CIdentifier& identifier) override;
 			void processChildData(const void* buffer, const uint64_t size) override;
 			void closeChild() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EBMLStreamSpy)
