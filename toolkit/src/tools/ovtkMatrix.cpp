@@ -207,7 +207,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						) { return false; } // getLogManager() << LogLevel_Trace << "End of header section reached, found 0 dimensions : parsing aborted\n";
 
 						//resize matrix
-						matrix.setDimensionCount(uint32_t(dimSize.size()));
+						matrix.setDimensionCount(dimSize.size());
 						for (size_t i = 0; i < dimSize.size(); ++i) { matrix.setDimensionSize(uint32_t(i), dimSize[i]); }
 
 						nValue.resize(matrix.getDimensionCount());

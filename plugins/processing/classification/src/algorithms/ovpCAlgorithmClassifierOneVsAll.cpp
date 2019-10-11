@@ -44,7 +44,7 @@ bool CAlgorithmClassifierOneVsAll::uninitialize()
 
 bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorSet)
 {
-	const uint32_t nClass = uint32_t(m_oSubClassifierList.size());
+	const uint32_t nClass = m_oSubClassifierList.size();
 	std::map<double, size_t> classLabels;
 
 	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); ++i)
@@ -186,7 +186,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 
 	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
 	double subProbabilitySum = 0;
-	probabilityValue.setSize(uint32_t(m_oSubClassifierList.size()));
+	probabilityValue.setSize(m_oSubClassifierList.size());
 	for (uint32_t i = 0; i < m_oSubClassifierList.size(); ++i)
 	{
 		TParameterHandler<IMatrix*> op_ProbabilityValues(
@@ -303,7 +303,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* configuratio
 	return loadSubClassifierConfiguration(configurationNode->getChildByName(SUB_CLASSIFIERS_NODE_NAME));
 }
 
-uint32_t CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength() { return uint32_t(m_oSubClassifierList.size()); }
+uint32_t CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength() { return m_oSubClassifierList.size(); }
 
 uint32_t CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
 {
@@ -328,7 +328,7 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode*
 	return true;
 }
 
-uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const { return uint32_t(m_oSubClassifierList.size()); }
+uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const { return m_oSubClassifierList.size(); }
 
 bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier& id)
 {

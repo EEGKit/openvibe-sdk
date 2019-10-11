@@ -50,11 +50,11 @@ using namespace CSV;
 
 namespace
 {
-	const uint32_t SIGNAL_EPOCH_COL_IDX = 1;
-	const uint32_t TIME_COL_IDX         = 0;
-	const uint32_t END_TIME_COL_IDX     = 1;
-	const uint32_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
-	const uint32_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
+	const size_t SIGNAL_EPOCH_COL_IDX = 1;
+	const size_t TIME_COL_IDX         = 0;
+	const size_t END_TIME_COL_IDX     = 1;
+	const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
+	const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
 
 	//Separators
 	const char SEPARATOR(',');
@@ -66,8 +66,8 @@ namespace
 	const std::string EVENT_DATE_COL     = "Event Date";
 	const std::string EVENT_DURATION_COL = "Event Duration";
 
-	const uint32_t CHAR_TO_READ          = 1000;
-	//const uint32_t MAXIMUM_FLOAT_DECIMAL = 32;
+	const size_t CHAR_TO_READ          = 1000;
+	//const size_t MAXIMUM_FLOAT_DECIMAL = 32;
 
 	const char END_OF_LINE_CHAR('\n');
 }
@@ -146,7 +146,7 @@ void CCSVHandler::setFormatType(const EStreamType typeID)
 	m_hasInputType = true;
 }
 
-bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer)
+bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, size_t samplingFrequency, size_t sampleCountPerBuffer)
 {
 	if (m_inputTypeID != EStreamType::Signal)
 	{
@@ -176,7 +176,7 @@ bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNa
 	return true;
 }
 
-bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer)
+bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, size_t& samplingFrequency, size_t& sampleCountPerBuffer)
 {
 	if (m_inputTypeID != EStreamType::Signal)
 	{
@@ -214,7 +214,7 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, u
 	return true;
 }
 
-bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate)
+bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const size_t samplingRate)
 {
 	if (m_inputTypeID != EStreamType::Spectrum)
 	{
@@ -240,13 +240,13 @@ bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channel
 	}
 
 	m_dimLabels            = channelNames;
-	m_dimSizes             = { uint32_t(channelNames.size()), uint32_t(frequencyAbscissa.size()) };
+	m_dimSizes             = { channelNames.size(), frequencyAbscissa.size() };
 	m_frequencyAbscissa    = frequencyAbscissa;
 	m_originalSampleNumber = samplingRate;
 	return true;
 }
 
-bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate)
+bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& samplingRate)
 {
 	if (m_inputTypeID != EStreamType::Spectrum)
 	{
@@ -309,7 +309,7 @@ bool CCSVHandler::setFeatureVectorInformation(const std::vector<std::string>& ch
 	}
 
 	m_dimLabels = channelNames;
-	m_dimSizes  = { uint32_t(channelNames.size()) };
+	m_dimSizes  = { channelNames.size() };
 	m_nDim      = 1;
 	return true;
 }
@@ -336,7 +336,7 @@ bool CCSVHandler::getFeatureVectorInformation(std::vector<std::string>& channelN
 	return true;
 }
 
-bool CCSVHandler::setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels)
+bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimensionSizes, const std::vector<std::string>& labels)
 {
 	if (m_isSetInfoCalled)
 	{
@@ -370,12 +370,12 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<uint32_t>& dime
 
 	m_isSetInfoCalled = true;
 	m_dimSizes        = dimensionSizes;
-	m_nDim            = uint32_t(m_dimSizes.size());
+	m_nDim            = m_dimSizes.size();
 	m_dimLabels       = labels;
 	return true;
 }
 
-bool CCSVHandler::getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels)
+bool CCSVHandler::getStreamedMatrixInformation(std::vector<size_t>& dimensionSizes, std::vector<std::string>& labels)
 {
 	if (m_inputTypeID != EStreamType::StreamedMatrix && m_inputTypeID != EStreamType::CovarianceMatrix)
 	{
@@ -533,7 +533,7 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t linesToRead, std::vector<S
 
 	while (chunks.size() < linesToRead && m_hasDataToRead)
 	{
-		for (uint32_t lineIndex = 0; lineIndex < m_nSamplePerBuffer; lineIndex++)
+		for (size_t lineIndex = 0; lineIndex < m_nSamplePerBuffer; lineIndex++)
 		{
 			std::string lineValue;
 
@@ -710,7 +710,7 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 			break;
 
 		default:
-			const uint32_t columnsToHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<uint32_t>());
+			const size_t columnsToHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
 
 			if (sample.matrix.size() != columnsToHave)
 			{
@@ -952,7 +952,7 @@ std::string CCSVHandler::createHeaderString()
 			{
 				std::string timeColumn = "Time" + std::string(1, DATA_SEPARATOR);
 
-				for (uint32_t index = 0; index < m_nDim; ++index)
+				for (size_t index = 0; index < m_nDim; ++index)
 				{
 					timeColumn += std::to_string(m_dimSizes[index]);
 					if ((index + 1) < m_nDim) { timeColumn += std::string(1, DIMENSION_SEPARATOR); }
@@ -996,7 +996,7 @@ std::string CCSVHandler::createHeaderString()
 		case EStreamType::CovarianceMatrix:
 		case EStreamType::StreamedMatrix:
 		{
-			const uint32_t matrixColumns = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<uint32_t>());
+			const size_t matrixColumns = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
 
 			if (matrixColumns == 0)
 			{
@@ -1005,7 +1005,7 @@ std::string CCSVHandler::createHeaderString()
 				return invalidHeader;
 			}
 
-			std::vector<uint32_t> position(m_nDim, 0);
+			std::vector<size_t> position(m_nDim, 0);
 			m_nCol += matrixColumns;
 
 			do
@@ -1074,7 +1074,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 			|| m_inputTypeID == EStreamType::CovarianceMatrix
 			|| m_inputTypeID == EStreamType::StreamedMatrix)
 		{
-			uint32_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<uint32_t>());
+			size_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
 			columnstoHave += N_PRE_DATA_COL + N_POST_DATA_COL;
 
 			if (columnstoHave != m_nCol)
@@ -1307,7 +1307,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 		return false;
 	}
 
-	const auto getNextElem = [&](uint32_t& resultvar, const char separator, const char* missingString)
+	const auto getNextElem = [&](size_t& resultvar, const char separator, const char* missingString)
 	{
 		this->streamReader(iss, buffer, separator, bufferTemp);
 
@@ -1324,7 +1324,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 		return true;
 	};
 
-	uint32_t dimensionSize = 0;
+	size_t dimensionSize = 0;
 
 	if (!getNextElem(dimensionSize, DIMENSION_SEPARATOR, "channels number")) { return false; }
 
@@ -1354,7 +1354,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 	std::string channelLabel;
 	m_dimLabels.clear();
 
-	for (uint32_t labelCounter = 0; labelCounter < m_dimSizes[0]; labelCounter++)
+	for ( size_t labelCounter = 0; labelCounter < m_dimSizes[0]; labelCounter++)
 	{
 		double lastFrequency = 0.0;
 
@@ -1463,7 +1463,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 
 	for (const std::string& dimensionSize : dimensionParts)
 	{
-		uint32_t size = 0;
+		 size_t size = 0;
 
 		try { size = std::stoul(dimensionSize); }
 		catch (std::exception& e)
@@ -1490,7 +1490,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	}
 
 	// check columnLabels number according to dimension sizes
-	const uint32_t matrixColumnCount = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1, std::multiplies<uint32_t>());
+	const  size_t matrixColumnCount = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1, std::multiplies< size_t>());
 
 	if ((matrixColumnCount + N_PRE_DATA_COL + N_POST_DATA_COL) != header.size())
 	{
@@ -1511,7 +1511,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	}
 
 	// corresponding to the position in the multi multidimensional matrix (as exemple the third label of the second dimension will be positionsInDimensions[1] = 2)
-	std::vector<uint32_t> positionsInDimensions(m_nDim, 0);
+	std::vector< size_t> positionsInDimensions(m_nDim, 0);
 	size_t columnIndex = 0;
 
 	// we will visit each column containing matrix labels
@@ -1646,8 +1646,8 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 		return false;
 	}
 
-	if (m_inputTypeID == EStreamType::Signal) { for (size_t index = 0; index < m_dimLabels.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + uint32_t(lineNb)] = columnsMatrix[index]; } }
-	else if (m_inputTypeID == EStreamType::Spectrum) { for (size_t index = 0; index < columnsMatrix.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + uint32_t(lineNb)] = columnsMatrix[index]; } }
+	if (m_inputTypeID == EStreamType::Signal) { for (size_t index = 0; index < m_dimLabels.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = columnsMatrix[index]; } }
+	else if (m_inputTypeID == EStreamType::Spectrum) { for (size_t index = 0; index < columnsMatrix.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = columnsMatrix[index]; } }
 	else
 	{
 		sample.matrix.clear();
@@ -1697,7 +1697,7 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 	return true;
 }
 
-bool CCSVHandler::increasePositionIndexes(std::vector<uint32_t>& position)
+bool CCSVHandler::increasePositionIndexes(std::vector<size_t>& position)
 {
 	position.back()++;
 
@@ -1722,7 +1722,7 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 {
 	// get samples per buffer
 	std::vector<std::string> lineParts({ "", "0" });
-	uint32_t nSample = 0;
+	size_t nSample = 0;
 
 	std::string bufferTemp;
 

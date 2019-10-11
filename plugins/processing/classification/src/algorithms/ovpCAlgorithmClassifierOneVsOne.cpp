@@ -120,7 +120,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 
 	OV_ERROR_UNLESS_KRF(
 		l_vClassLabels.size() == m_nClasses,
-		"There are samples for " << uint32_t(l_vClassLabels.size()) << " classes but expected samples for " << m_nClasses << " classes.",
+		"There are samples for " << l_vClassLabels.size() << " classes but expected samples for " << m_nClasses << " classes.",
 		OpenViBE::Kernel::ErrorType::BadConfig);
 
 	//Now we create the corresponding repartition set
@@ -438,7 +438,7 @@ bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode*
 	}
 
 	OV_ERROR_UNLESS_KRF(m_subClassifiers.size() == m_nSubClassifiers,
-						"Invalid number of loaded classifiers [" << uint64_t(m_subClassifiers.size()) << "] (expected = " << m_nSubClassifiers << ")",
+						"Invalid number of loaded classifiers [" << m_subClassifiers.size() << "] (expected = " << m_nSubClassifiers << ")",
 						OpenViBE::Kernel::ErrorType::Internal);
 
 	return true;

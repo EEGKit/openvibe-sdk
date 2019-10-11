@@ -432,7 +432,7 @@ void CAlgorithmClassifierLDA::loadClassesFromNode(XML::IXMLNode* pNode)
 	std::stringstream l_sData(pNode->getPCData());
 	double l_f64Temp;
 	while (l_sData >> l_f64Temp) { m_labels.push_back(l_f64Temp); }
-	m_nClasses = uint32_t(m_labels.size());
+	m_nClasses = m_labels.size();
 }
 
 //Load the weight vector
@@ -445,7 +445,7 @@ void CAlgorithmClassifierLDA::loadCoefficientsFromNode(XML::IXMLNode* pNode)
 	while (l_sData >> l_f64Value) { l_vCoefficients.push_back(l_f64Value); }
 
 	m_weights.resize(1, l_vCoefficients.size());
-	m_nCols = uint32_t(l_vCoefficients.size());
+	m_nCols = l_vCoefficients.size();
 	for (size_t i = 0; i < l_vCoefficients.size(); ++i) { m_weights(0, i) = l_vCoefficients[i]; }
 }
 

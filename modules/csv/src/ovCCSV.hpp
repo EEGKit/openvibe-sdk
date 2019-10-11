@@ -49,14 +49,14 @@ namespace OpenViBE
 			 *
 			 * \return the Floating point precision.
 			 */
-			uint32_t getOutputFloatPrecision() override { return m_outputFloatPrecision; }
+			size_t getOutputFloatPrecision() override { return m_outputFloatPrecision; }
 
 			/**
 			 * \brief Set the floating point precision used to write float values.
 			 *
 			 * \param precision the floating point precision.
 			 */
-			void setOutputFloatPrecision(uint32_t precision) override { m_outputFloatPrecision = precision; }
+			void setOutputFloatPrecision(size_t precision) override { m_outputFloatPrecision = precision; }
 
 			void setFormatType(EStreamType typeID) override;
 			EStreamType getFormatType() override { return m_inputTypeID; }
@@ -64,18 +64,18 @@ namespace OpenViBE
 			void setLastMatrixOnlyMode(bool isActivated) override { m_lastMatrixOnly = isActivated; }
 			bool getLastMatrixOnlyMode() override { return m_lastMatrixOnly; }
 
-			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) override;
-			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) override;
+			bool setSignalInformation(const std::vector<std::string>& channelNames, size_t samplingFrequency, size_t sampleCountPerBuffer) override;
+			bool getSignalInformation(std::vector<std::string>& channelNames, size_t& samplingFrequency, size_t& sampleCountPerBuffer) override;
 
 			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
-										uint32_t samplingRate) override;
-			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) override;
+										size_t samplingRate) override;
+			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& samplingRate) override;
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames) override;
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames) override;
 
-			bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels) override;
-			bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels) override;
+			bool setStreamedMatrixInformation(const std::vector<size_t>& dimensionSizes, const std::vector<std::string>& labels) override;
+			bool getStreamedMatrixInformation(std::vector<size_t>& dimensionSizes, std::vector<std::string>& labels) override;
 
 			/**
 			 * \brief Write the header to the file
@@ -294,7 +294,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of browse matrix
 			 */
-			bool increasePositionIndexes(std::vector<uint32_t>& position);
+			bool increasePositionIndexes(std::vector<size_t>& position);
 
 			/**
 			 * \brief Read lines of the first epoch to found sample count per buffer.
@@ -324,15 +324,15 @@ namespace OpenViBE
 			EStreamType m_inputTypeID;
 
 			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
-			uint32_t m_nDim = 0;
-			std::vector<uint32_t> m_dimSizes;
+			size_t m_nDim = 0;
+			std::vector<size_t> m_dimSizes;
 			std::vector<std::string> m_dimLabels;
-			uint32_t m_nSamplePerBuffer = 0;
+			size_t m_nSamplePerBuffer = 0;
 			double m_noEventSince       = 0;
 
 			std::vector<double> m_frequencyAbscissa;
 
-			uint32_t m_samplingRate = 0;
+			size_t m_samplingRate = 0;
 			size_t m_nCol           = 0;
 
 			bool m_hasInputType       = false;
@@ -341,8 +341,8 @@ namespace OpenViBE
 			bool m_isSetInfoCalled    = false;
 			bool m_hasEpoch           = false;
 
-			uint32_t m_originalSampleNumber = 0;
-			uint32_t m_outputFloatPrecision = 10;
+			size_t m_originalSampleNumber = 0;
+			size_t m_outputFloatPrecision = 10;
 
 			bool m_lastMatrixOnly = false;
 

@@ -115,7 +115,7 @@ ExpressionTreeNode ParsedExpression::precalculateConstantSubexpressions(const Ex
 ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const ExpressionTreeNode& node)
 {
 	vector<ExpressionTreeNode> children(node.getChildren().size());
-	for (int i = 0; i < int(children.size()); ++i) { children[i] = substituteSimplerExpression(node.getChildren()[i]); }
+	for (int i = 0; i < children.size(); ++i) { children[i] = substituteSimplerExpression(node.getChildren()[i]); }
 	switch (node.getOperation().getId())
 	{
 		case Operation::ADD:

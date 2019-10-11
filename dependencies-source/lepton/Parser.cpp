@@ -228,7 +228,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		do
 		{
 			args.push_back(parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 0));
-			moreArgs = (pos < int(tokens.size()) && tokens[pos].getType() == ParseToken::Comma);
+			moreArgs = (pos < tokens.size() && tokens[pos].getType() == ParseToken::Comma);
 			if (moreArgs) { pos++; }
 		} while (moreArgs);
 		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen) { throw Exception("Parse error: unbalanced parentheses"); }
@@ -251,7 +251,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 
 	// Now deal with the next binary operator.
 
-	while (pos < int(tokens.size()) && tokens[pos].getType() == ParseToken::Operator)
+	while (pos < tokens.size() && tokens[pos].getType() == ParseToken::Operator)
 	{
 		token            = tokens[pos];
 		int opIndex      = int(Operators.find(token.getText()));

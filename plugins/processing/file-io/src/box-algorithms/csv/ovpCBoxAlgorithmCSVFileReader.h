@@ -44,10 +44,10 @@ namespace OpenViBEPlugins
 			OpenViBE::CString m_sFilename;
 
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
-			uint32_t m_nColumn              = 0;
-			uint64_t m_samplingRate             = 0;
-			uint32_t m_samplesPerBuffer         = 0;
-			uint32_t m_channelsPerBuffer   = 0;
+			size_t m_nColumn              = 0;
+			size_t m_samplingRate             = 0;
+			size_t m_samplesPerBuffer         = 0;
+			size_t m_channelsPerBuffer   = 0;
 
 			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)() = nullptr;
 
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 			uint64_t m_chunkStartTime = 0;
 			uint64_t m_chunkEndTime   = 0;
 
-			static const uint32_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
+			static const size_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
 		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

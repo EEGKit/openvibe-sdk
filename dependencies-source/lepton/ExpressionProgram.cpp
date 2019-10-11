@@ -76,7 +76,7 @@ void ExpressionProgram::buildProgram(const ExpressionTreeNode& node)
 	operations.push_back(node.getOperation().clone());
 }
 
-int ExpressionProgram::getNumOperations() const { return int(operations.size()); }
+int ExpressionProgram::getNumOperations() const { return operations.size(); }
 
 const Operation& ExpressionProgram::getOperation(int index) const { return *operations[index]; }
 

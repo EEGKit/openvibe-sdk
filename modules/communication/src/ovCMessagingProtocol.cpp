@@ -219,7 +219,7 @@ std::vector<uint8_t> InputOutput::toBytes() const
 
 	copyTobuffer(buffer, bufferIndex, m_Id);
 	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Name.size()));
+	copyTobuffer(buffer, bufferIndex, m_Name.size());
 	copyTobuffer(buffer, bufferIndex, m_Name);
 
 	return buffer;
@@ -267,8 +267,8 @@ std::vector<uint8_t> Parameter::toBytes() const
 
 	copyTobuffer(buffer, bufferIndex, m_Id);
 	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Name.size()));
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Value.size()));
+	copyTobuffer(buffer, bufferIndex, m_Name.size());
+	copyTobuffer(buffer, bufferIndex, m_Value.size());
 	copyTobuffer(buffer, bufferIndex, m_Name);
 	copyTobuffer(buffer, bufferIndex, m_Value);
 
@@ -308,9 +308,9 @@ std::vector<uint8_t> BoxDescriptionMessage::toBytes() const
 	std::vector<uint8_t> buffer(s_MinimumSize);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Inputs.size()));
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Outputs.size()));
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Parameters.size()));
+	copyTobuffer(buffer, bufferIndex, m_Inputs.size());
+	copyTobuffer(buffer, bufferIndex, m_Outputs.size());
+	copyTobuffer(buffer, bufferIndex, m_Parameters.size());
 
 	for (const InputOutput& input : m_Inputs)
 	{
@@ -433,7 +433,7 @@ std::vector<uint8_t> LogMessage::toBytes() const
 	size_t bufferIndex = 0;
 
 	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Message.size()));
+	copyTobuffer(buffer, bufferIndex, m_Message.size());
 	copyTobuffer(buffer, bufferIndex, m_Message);
 
 	return buffer;

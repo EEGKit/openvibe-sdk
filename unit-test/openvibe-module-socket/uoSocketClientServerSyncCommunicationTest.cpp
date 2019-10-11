@@ -128,7 +128,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
-		uint32_t dataSize      = uint32_t(dataString.size());
+		uint32_t dataSize      = dataString.size();
 
 		client->sendBufferBlocking(&dataSize, sizeof(dataSize));
 		client->sendBufferBlocking(dataString.c_str(), dataSize);

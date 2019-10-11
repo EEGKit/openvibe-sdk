@@ -296,12 +296,12 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	if (startTrain)
 	{
 		OV_ERROR_UNLESS_KRF(m_datasets.size() >= m_nPartition,
-							"Received fewer examples (" << uint32_t(m_datasets.size()) << ") than specified partition count (" << m_nPartition << ")",
+							"Received fewer examples (" << m_datasets.size() << ") than specified partition count (" << m_nPartition << ")",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!m_datasets.empty(), "No training example received", OpenViBE::Kernel::ErrorType::BadInput);
 
-		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << uint32_t(m_datasets.size()) << "x"
+		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
 				<< m_datasets[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
 		for (uint32_t i = 1; i < nInput; ++i)
 		{

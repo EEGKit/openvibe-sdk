@@ -124,7 +124,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		}
 	}
 
-	this->getLogManager() << LogLevel_Debug << "Queue size is " << uint64_t(m_oStimulusDeque.size()) << "\n";
+	this->getLogManager() << LogLevel_Debug << "Queue size is " << m_oStimulusDeque.size() << "\n";
 
 	if (m_oStimulusDeque.size() < m_minimumVotes)
 	{

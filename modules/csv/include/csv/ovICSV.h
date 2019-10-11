@@ -117,16 +117,16 @@ namespace OpenViBE
 			/**
 			 * \brief Return the number of digit of float numbers in output file.
 			 *
-			 * \return uint32_t number of digits
+			 * \return size_t number of digits
 			 */
-			virtual uint32_t getOutputFloatPrecision() = 0;
+			virtual size_t getOutputFloatPrecision() = 0;
 
 			/**
 			 * \brief Set the number of digits of float numbers in output file.
 			 *
 			 * \param precision number of digits
 			 */
-			virtual void setOutputFloatPrecision(uint32_t precision) = 0;
+			virtual void setOutputFloatPrecision(size_t precision) = 0;
 
 			/**
 			 * \brief Set the format type that will be written or read.
@@ -167,7 +167,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) = 0;
+			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, size_t samplingFrequency, size_t sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Get signal information in file
@@ -179,7 +179,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) = 0;
+			virtual bool getSignalInformation(std::vector<std::string>& channelNames, size_t& samplingFrequency, size_t& sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write spectrum data
@@ -191,8 +191,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
-												uint32_t samplingRate) = 0;
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, size_t samplingRate) = 0;
 
 			/**
 			 * \brief get spectrum information in file
@@ -204,7 +203,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) = 0;
+			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& samplingRate) = 0;
 
 			/**
 			 * \brief Set informations to read or write vector data
@@ -235,7 +234,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels) = 0;
+			virtual bool setStreamedMatrixInformation(const std::vector<size_t>& dimensionSizes, const std::vector<std::string>& labels) = 0;
 
 			/**
 			 * \brief Get streamed or covariance matrix information in file
@@ -246,7 +245,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error
 			 */
-			virtual bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels) = 0;
+			virtual bool getStreamedMatrixInformation(std::vector<size_t>& dimensionSizes, std::vector<std::string>& labels) = 0;
 
 			/**
 			 * \brief Write the header if available in the file

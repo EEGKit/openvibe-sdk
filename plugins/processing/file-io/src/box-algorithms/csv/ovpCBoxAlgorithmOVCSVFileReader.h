@@ -42,9 +42,9 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 			std::vector<std::string> m_channelNames;
-			std::vector<uint32_t> m_dimSizes;
-			uint32_t m_samplingRate         = 0;
-			uint32_t m_nSamplePerBuffer = 0;
+			std::vector<size_t> m_dimSizes;
+			size_t m_samplingRate         = 0;
+			size_t m_nSamplePerBuffer = 0;
 
 			bool m_isHeaderSent;
 			bool m_isStimulationHeaderSent;

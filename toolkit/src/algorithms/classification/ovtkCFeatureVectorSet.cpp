@@ -39,5 +39,5 @@ uint32_t CFeatureVectorSet::getLabelCount() const
 	std::map<double, bool> labels;
 	for (auto itFeatureVector = m_features.begin(); itFeatureVector != m_features.end(); ++
 		 itFeatureVector) { labels[itFeatureVector->second.getLabel()] = true; }
-	return uint32_t(labels.size());
+	return labels.size();
 }

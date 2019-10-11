@@ -410,7 +410,7 @@ namespace Socket
 				return false;
 			}
 
-			*pairedBluetoothDevicesCount = uint32_t(bluetoothDevicesAddress.size());
+			*pairedBluetoothDevicesCount = bluetoothDevicesAddress.size();
 			strarray                     = new char*[*pairedBluetoothDevicesCount];
 
 			for (uint32_t i = 0; i < *pairedBluetoothDevicesCount; ++i)

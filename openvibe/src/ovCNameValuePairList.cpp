@@ -102,4 +102,4 @@ bool CNameValuePairList::getValue(const uint32_t rIndex, CString& name, CString&
 	return true;
 }
 
-uint32_t CNameValuePairList::getSize() const { return uint32_t(m_pNameValuePairListImpl->m_Map.size()); }
+uint32_t CNameValuePairList::getSize() const { return m_pNameValuePairListImpl->m_Map.size(); }

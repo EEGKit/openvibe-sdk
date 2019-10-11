@@ -86,9 +86,9 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 	}
 	else
 	{
-		int stepIndex = int(arguments.size());
+		int stepIndex = arguments.size();
 		arguments.push_back(vector<int>());
-		target.push_back(int(workspace.size()));
+		target.push_back(workspace.size());
 		operation.push_back(node.getOperation().clone());
 		if (args.size() == 0) arguments[stepIndex].push_back(0); // The value won't actually be used.  We just need something there.
 		else

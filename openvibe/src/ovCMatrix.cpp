@@ -85,7 +85,7 @@ CMatrixImpl::~CMatrixImpl()
 	}
 }
 
-uint32_t CMatrixImpl::getDimensionCount() const { return uint32_t(m_vDimensionSize.size()); }
+uint32_t CMatrixImpl::getDimensionCount() const { return m_vDimensionSize.size(); }
 
 uint32_t CMatrixImpl::getDimensionSize(const uint32_t index) const
 {

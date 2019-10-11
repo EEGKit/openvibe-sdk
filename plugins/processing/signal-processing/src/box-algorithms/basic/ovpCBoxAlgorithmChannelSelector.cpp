@@ -266,7 +266,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", OpenViBE::Kernel::ErrorType::BadConfig);
 
 			m_pOutputMatrix->setDimensionCount(2);
-			m_pOutputMatrix->setDimensionSize(0, uint32_t(m_vLookup.size()));
+			m_pOutputMatrix->setDimensionSize(0, m_vLookup.size());
 			m_pOutputMatrix->setDimensionSize(1, m_pInputMatrix->getDimensionSize(1));
 			Tools::Matrix::clearContent(*m_pOutputMatrix);
 			for (uint32_t j = 0; j < m_vLookup.size(); ++j)

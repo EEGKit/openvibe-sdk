@@ -139,7 +139,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32_t index = 0; index < dynamicBoxContext.getInputChunkCount(0); ++index)
+	for (size_t index = 0; index < dynamicBoxContext.getInputChunkCount(0); ++index)
 	{
 		OV_ERROR_UNLESS_KRF(m_streamDecoder.decode(index),
 							"Failed to decode chunk",
@@ -158,10 +158,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				OV_ERROR_UNLESS_KRF(m_streamDecoder.getOutputSamplingRate() != 0, "Sampling rate can not be 0", ErrorType::BadInput);
 				std::vector<std::string> dimensionLabels;
 
-				for (uint32_t j = 0; j < matrix->getDimensionSize(0); ++j) { dimensionLabels.push_back(matrix->getDimensionLabel(0, j)); }
+				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { dimensionLabels.push_back(matrix->getDimensionLabel(0, j)); }
 
 				OV_ERROR_UNLESS_KRF(
-					m_writerLib->setSignalInformation(dimensionLabels, uint32_t(m_streamDecoder.getOutputSamplingRate()), matrix->getDimensionSize(1)),
+					m_writerLib->setSignalInformation(dimensionLabels, m_streamDecoder.getOutputSamplingRate(), matrix->getDimensionSize(1)),
 					(OpenViBE::CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: " +
 						m_writerLib->getLastErrorString())).c_str(),
 					ErrorType::Internal);
@@ -177,13 +177,13 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 			{
 				std::vector<std::string> dimensionLabels;
-				std::vector<uint32_t> dimensionSizes;
+				std::vector<size_t> dimensionSizes;
 
-				for (uint32_t dimensionIndex = 0; dimensionIndex < matrix->getDimensionCount(); ++dimensionIndex)
+				for (size_t dimensionIndex = 0; dimensionIndex < matrix->getDimensionCount(); ++dimensionIndex)
 				{
 					dimensionSizes.push_back(matrix->getDimensionSize(dimensionIndex));
 
-					for (uint32_t j = 0; j < matrix->getDimensionSize(dimensionIndex); ++j)
+					for (size_t j = 0; j < matrix->getDimensionSize(dimensionIndex); ++j)
 					{
 						dimensionLabels.push_back(matrix->getDimensionLabel(dimensionIndex, j));
 					}
@@ -206,7 +206,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				std::vector<std::string> channelsLabels;
 
-				for (uint32_t j = 0; j < matrix->getDimensionSize(0); ++j) { channelsLabels.push_back(matrix->getDimensionLabel(0, j)); }
+				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { channelsLabels.push_back(matrix->getDimensionLabel(0, j)); }
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->setFeatureVectorInformation(channelsLabels),
 									(OpenViBE::CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
@@ -227,14 +227,14 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				std::vector<std::string> channelsLabels;
 				std::vector<double> frequencyAbscissa;
 
-				for (uint32_t j = 0; j < matrix->getDimensionSize(0); ++j) { channelsLabels.push_back(matrix->getDimensionLabel(0, j)); }
+				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { channelsLabels.push_back(matrix->getDimensionLabel(0, j)); }
 
-				for (uint32_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); ++j)
+				for (size_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); ++j)
 				{
 					frequencyAbscissa.push_back(frequencyAbscissaMatrix->getBuffer()[j]);
 				}
 
-				OV_ERROR_UNLESS_KRF(m_writerLib->setSpectrumInformation(channelsLabels, frequencyAbscissa, uint32_t(m_streamDecoder.getOutputSamplingRate())),
+				OV_ERROR_UNLESS_KRF(m_writerLib->setSpectrumInformation(channelsLabels, frequencyAbscissa, m_streamDecoder.getOutputSamplingRate()),
 									(OpenViBE::CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
 										"Details: " + m_writerLib->getLastErrorString())).c_str(),
 									ErrorType::Internal);
@@ -257,10 +257,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				const uint64_t samplingFrequency = m_streamDecoder.getOutputSamplingRate();
 				const uint64_t chunkStartTime    = dynamicBoxContext.getInputChunkStartTime(0, index);
-				const uint32_t nChannel      = matrix->getDimensionSize(0);
-				const uint32_t nSample       = matrix->getDimensionSize(1);
+				const size_t nChannel      = matrix->getDimensionSize(0);
+				const size_t nSample       = matrix->getDimensionSize(1);
 
-				for (uint32_t sampleIndex = 0; sampleIndex < nSample; ++sampleIndex)
+				for (size_t sampleIndex = 0; sampleIndex < nSample; ++sampleIndex)
 				{
 					std::vector<double> matrixValues;
 					// get starting and ending time
@@ -272,7 +272,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					const double endTime                 = double(TimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
 
 					// get matrix values
-					for (uint32_t channelIndex = 0; channelIndex < nChannel; ++channelIndex)
+					for (size_t channelIndex = 0; channelIndex < nChannel; ++channelIndex)
 					{
 						matrixValues.push_back(imatrix->getBuffer()[channelIndex * nSample + sampleIndex]);
 					}
@@ -336,7 +336,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// add every stimulation received
-	for (uint32_t index = 0; index < dynamicBoxContext.getInputChunkCount(1); ++index)
+	for (size_t index = 0; index < dynamicBoxContext.getInputChunkCount(1); ++index)
 	{
 		OV_ERROR_UNLESS_KRF(m_stimulationDecoder.decode(index),
 							"Failed to decode stimulation chunk",

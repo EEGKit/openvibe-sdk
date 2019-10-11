@@ -50,7 +50,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test settings
 		OVT_ASSERT(scenario.getSettingCount() == simpleScenarioSettings.size(), "Imported scenario does not have the correct number of settings");
 
-		for (uint32_t settingIndex = 0; settingIndex < uint32_t(simpleScenarioSettings.size()); settingIndex += 1)
+		for (uint32_t settingIndex = 0; settingIndex < simpleScenarioSettings.size(); settingIndex += 1)
 		{
 			CIdentifier settingTypeId;
 			OVT_ASSERT(scenario.getSettingType(settingIndex, settingTypeId), "Cannot get setting type");
@@ -82,7 +82,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test inputs
 		OVT_ASSERT(scenario.getInputCount() == simpleScenarioInputs.size(), "Imported scenario has wrong number of inputs");
 
-		for (uint32_t index = 0; index < uint32_t(simpleScenarioInputs.size()); index += 1)
+		for (uint32_t index = 0; index < simpleScenarioInputs.size(); index += 1)
 		{
 			CIdentifier inputTypeId;
 			OVT_ASSERT(scenario.getInputType(index, inputTypeId), "Cannot get input type");
@@ -104,7 +104,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test outputs
 		OVT_ASSERT(scenario.getOutputCount() == simpleScenarioOutputs.size(), "Imported scenario has wrong number of outputs");
 
-		for (uint32_t idx = 0; idx < uint32_t(simpleScenarioOutputs.size()); idx += 1)
+		for (uint32_t idx = 0; idx < simpleScenarioOutputs.size(); idx += 1)
 		{
 			CIdentifier outputTypeId;
 			OVT_ASSERT(scenario.getOutputType(idx, outputTypeId), "Cannot get output type");
