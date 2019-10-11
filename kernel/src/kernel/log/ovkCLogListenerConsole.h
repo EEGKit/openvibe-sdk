@@ -34,6 +34,7 @@ namespace OpenViBE
 			void log(const bool value) override;
 			void log(const CIdentifier& value) override;
 			void log(const CString& value) override;
+			void log(const std::string& value) override;
 			void log(const char* value) override;
 			void log(const ELogLevel level) override;
 			void log(const ELogColor color) override;

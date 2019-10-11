@@ -41,6 +41,7 @@ namespace OpenViBE
 			void log(const double value) override { m_LogManager.log(value); }
 			void log(const bool value) override { m_LogManager.log(value); }
 			void log(const CString& value) override { m_LogManager.log(value); }
+			void log(const std::string& value) override { m_LogManager.log(value); }
 			void log(const char* value) override { m_LogManager.log(value); }
 			void log(const CIdentifier& value) override { m_LogManager.log(value); }
 			void log(const ELogColor value) override { m_LogManager.log(value); }

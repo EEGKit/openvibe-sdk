@@ -219,6 +219,11 @@ namespace OpenViBE
 			 */
 			virtual void log(const CString& value) = 0;
 			/**
+			 * \brief Logs a string
+			 * \param value [in] : the value that should be logged
+			 */
+			virtual void log(const std::string& value) = 0;
+			/**
 			 * \brief Logs an ASCII string value
 			 * \param value [in] : the value that should be logged
 			 */

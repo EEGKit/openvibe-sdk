@@ -213,6 +213,14 @@ void CLogListenerConsole::log(const CString& value)
 	this->log(LogColor_PopStateBit);
 }
 
+void CLogListenerConsole::log(const std::string& value) 
+{
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
+	cout << value;
+	this->log(LogColor_PopStateBit);
+}
+
 void CLogListenerConsole::log(const char* value) { cout << value << flush; }
 
 void CLogListenerConsole::log(const ELogLevel level)

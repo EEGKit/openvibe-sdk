@@ -74,32 +74,6 @@ void CLogListenerFile::log(const time64 value)
 	else { logInteger(value.timeValue); }
 }
 
-void CLogListenerFile::log(const uint64_t value) { logInteger(value); }
-void CLogListenerFile::log(const uint32_t value) { logInteger(value); }
-void CLogListenerFile::log(const uint16_t value) { logInteger(value); }
-void CLogListenerFile::log(const uint8_t value) { logInteger(value); }
-void CLogListenerFile::log(const int64_t value) { logInteger(value); }
-void CLogListenerFile::log(const int value) { logInteger(value); }
-void CLogListenerFile::log(const int16_t value) { logInteger(value); }
-void CLogListenerFile::log(const int8_t value) { logInteger(value); }
-
-void CLogListenerFile::log(const float value) { m_fsFileStream << value; }
-void CLogListenerFile::log(const double value) { m_fsFileStream << value; }
-void CLogListenerFile::log(const bool value) { m_fsFileStream << (value ? "true" : "false"); }
-void CLogListenerFile::log(const CIdentifier& value) { m_fsFileStream << value.toString(); }
-
-void CLogListenerFile::log(const CString& value)
-{
-	m_fsFileStream << value;
-	m_fsFileStream << flush;
-}
-
-void CLogListenerFile::log(const char* value)
-{
-	m_fsFileStream << value;
-	m_fsFileStream << flush;
-}
-
 void CLogListenerFile::log(const ELogLevel level)
 {
 	switch (level)

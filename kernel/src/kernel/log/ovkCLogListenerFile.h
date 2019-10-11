@@ -2,6 +2,8 @@
 
 #include "../ovkTKernelObject.h"
 
+#include <sstream>
+#include <iostream>
 #include <map>
 #include <fstream>
 
@@ -22,20 +24,21 @@ namespace OpenViBE
 
 			void configure(const IConfigurationManager& configurationManager);
 			void log(const time64 value) override;
-			void log(const uint64_t value) override;
-			void log(const uint32_t value) override;
-			void log(const uint16_t value) override;
-			void log(const uint8_t value) override;
-			void log(const int64_t value) override;
-			void log(const int value) override;
-			void log(const int16_t value) override;
-			void log(const int8_t value) override;
-			void log(const double value) override;
-			void log(const float value) override;
-			void log(const bool value) override;
-			void log(const CIdentifier& value) override;
-			void log(const CString& value) override;
-			void log(const char* value) override;
+			void log(const uint64_t value) override { logInteger(value); }
+			void log(const uint32_t value) override { logInteger(value); }
+			void log(const uint16_t value) override { logInteger(value); }
+			void log(const uint8_t value) override { logInteger(value); }
+			void log(const int64_t value) override { logInteger(value); }
+			void log(const int value) override { logInteger(value); }
+			void log(const int16_t value) override { logInteger(value); }
+			void log(const int8_t value) override { logInteger(value); }
+			void log(const double value) override { m_fsFileStream << value; }
+			void log(const float value) override { m_fsFileStream << value; }
+			void log(const bool value) override { m_fsFileStream << (value ? "true" : "false"); }
+			void log(const CIdentifier& value) override { m_fsFileStream << value.str(); }
+			void log(const CString& value) override { m_fsFileStream << value << std::flush; }
+			void log(const std::string& value) override { m_fsFileStream << value << std::flush; }
+			void log(const char* value) override { m_fsFileStream << value << std::flush; }
 			void log(const ELogLevel level) override;
 			void log(const ELogColor /*color*/) override { }
 
