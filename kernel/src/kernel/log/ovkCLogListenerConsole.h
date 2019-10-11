@@ -15,20 +15,16 @@ namespace OpenViBE
 
 			CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName);
 			bool isActive(ELogLevel level) override;
-			bool activate(ELogLevel level, bool bActive) override;
-			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
-			bool activate(bool bActive) override;
+			bool activate(ELogLevel level, bool active) override;
+			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) override;
+			bool activate(bool active) override;
 
 			void configure(const IConfigurationManager& rConfigurationManager);
 			void log(const time64 value) override;
 			void log(const uint64_t value) override;
 			void log(const uint32_t value) override;
-			void log(const uint16_t value) override;
-			void log(const uint8_t value) override;
 			void log(const int64_t value) override;
 			void log(const int value) override;
-			void log(const int16_t value) override;
-			void log(const int8_t value) override;
 			void log(const double value) override;
 			void log(const float value) override;
 			void log(const bool value) override;
@@ -50,7 +46,7 @@ namespace OpenViBE
 			ELogColor m_eLogColor;
 			CString m_sApplicationName;
 
-			bool m_bLogWithHexa          = false;
+			bool m_logWithHexa          = false;
 			bool m_bTimeInSeconds        = false;
 			uint64_t m_timePrecision = 0;
 			bool m_bUseColor             = false;

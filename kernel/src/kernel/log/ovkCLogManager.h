@@ -25,12 +25,8 @@ namespace OpenViBE
 			void log(const time64 value) override { logForEach<const time64>(value); }
 			void log(const uint64_t value) override { logForEach<const uint64_t>(value); }
 			void log(const uint32_t value) override { logForEach<const uint32_t>(value); }
-			void log(const uint16_t value) override { logForEach<const uint16_t>(value); }
-			void log(const uint8_t value) override { logForEach<const uint8_t>(value); }
 			void log(const int64_t value) override { logForEach<const int64_t>(value); }
 			void log(const int value) override { logForEach<const int>(value); }
-			void log(const int16_t value) override { logForEach<const int16_t>(value); }
-			void log(const int8_t value) override { logForEach<const int8_t>(value); }
 			void log(const double value) override { logForEach<const double>(value); }
 			void log(const float value) override { logForEach<const float>(value); }
 			void log(const bool value) override { logForEach<const bool>(value); }

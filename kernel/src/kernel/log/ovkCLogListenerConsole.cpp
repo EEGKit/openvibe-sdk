@@ -28,7 +28,7 @@ CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CStrin
 void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationManager)
 {
 	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogTimeInSecond}", true);
-	m_bLogWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogWithHexa}", false);
+	m_logWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogWithHexa}", false);
 	m_timePrecision = rConfigurationManager.expandAsUInteger("${Kernel_ConsoleLogTimePrecision}", 3);
 	m_bUseColor         = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogUseColor}", true);
 }
@@ -41,25 +41,25 @@ bool CLogListenerConsole::isActive(ELogLevel level)
 	return itLogLevel->second;
 }
 
-bool CLogListenerConsole::activate(ELogLevel level, bool bActive)
+bool CLogListenerConsole::activate(ELogLevel level, bool active)
 {
-	m_vActiveLevel[level] = bActive;
+	m_vActiveLevel[level] = active;
 	return true;
 }
 
-bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
+bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = bActive; }
+	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = active; }
 	return true;
 }
 
-bool CLogListenerConsole::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
+bool CLogListenerConsole::activate(bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
 void CLogListenerConsole::log(const time64 value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
+	ios_base::fmtflags fmt = cout.flags();
 
 	if (m_bTimeInSeconds)
 	{
@@ -70,17 +70,17 @@ void CLogListenerConsole::log(const time64 value)
 		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
-		if (m_bLogWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
+		if (m_logWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
 
 		cout << ss.str().c_str();
 	}
 	else
 	{
 		cout << dec << value.timeValue;
-		if (m_bLogWithHexa) { cout << " (0x" << hex << value.timeValue << ")"; }
+		if (m_logWithHexa) { cout << " (0x" << hex << value.timeValue << ")"; }
 	}
 
-	cout.flags(l_oFormat);
+	cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -88,11 +88,11 @@ void CLogListenerConsole::log(const uint64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
+	ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
+	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
 
-	cout.flags(l_oFormat);
+	cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -100,32 +100,10 @@ void CLogListenerConsole::log(const uint32_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
+	ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
-	this->log(LogColor_PopStateBit);
-}
-
-void CLogListenerConsole::log(const uint16_t value)
-{
-	this->log(LogColor_PushStateBit);
-	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
-	this->log(LogColor_PopStateBit);
-}
-
-void CLogListenerConsole::log(const uint8_t value)
-{
-	this->log(LogColor_PushStateBit);
-	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
+	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
+	cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -133,10 +111,10 @@ void CLogListenerConsole::log(const int64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
+	ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
+	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
+	cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -144,32 +122,10 @@ void CLogListenerConsole::log(const int value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
+	ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
-	this->log(LogColor_PopStateBit);
-}
-
-void CLogListenerConsole::log(const int16_t value)
-{
-	this->log(LogColor_PushStateBit);
-	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
-	this->log(LogColor_PopStateBit);
-}
-
-void CLogListenerConsole::log(const int8_t value)
-{
-	this->log(LogColor_PushStateBit);
-	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(l_oFormat);
+	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
+	cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 

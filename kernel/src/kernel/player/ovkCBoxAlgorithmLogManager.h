@@ -16,14 +16,14 @@ namespace OpenViBE
 
 			bool isActive(ELogLevel level) override { return m_LogManager.isActive(level); }
 
-			bool activate(ELogLevel level, bool bActive) override { return m_LogManager.activate(level, bActive); }
+			bool activate(ELogLevel level, bool active) override { return m_LogManager.activate(level, active); }
 
-			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override
+			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) override
 			{
-				return m_LogManager.activate(eStartLogLevel, eEndLogLevel, bActive);
+				return m_LogManager.activate(eStartLogLevel, eEndLogLevel, active);
 			}
 
-			bool activate(bool bActive) override { return m_LogManager.activate(bActive); }
+			bool activate(bool active) override { return m_LogManager.activate(active); }
 
 			bool addListener(ILogListener* listener) override { return m_LogManager.addListener(listener); }
 			bool removeListener(ILogListener* listener) override { return m_LogManager.removeListener(listener); }
@@ -31,12 +31,8 @@ namespace OpenViBE
 			void log(const time64 value) override { m_LogManager.log(value); }
 			void log(const uint64_t value) override { m_LogManager.log(value); }
 			void log(const uint32_t value) override { m_LogManager.log(value); }
-			void log(const uint16_t value) override { m_LogManager.log(value); }
-			void log(const uint8_t value) override { m_LogManager.log(value); }
 			void log(const int64_t value) override { m_LogManager.log(value); }
 			void log(const int value) override { m_LogManager.log(value); }
-			void log(const int16_t value) override { m_LogManager.log(value); }
-			void log(const int8_t value) override { m_LogManager.log(value); }
 			void log(const float value) override { m_LogManager.log(value); }
 			void log(const double value) override { m_LogManager.log(value); }
 			void log(const bool value) override { m_LogManager.log(value); }

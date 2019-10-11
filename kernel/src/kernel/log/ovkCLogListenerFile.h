@@ -18,20 +18,16 @@ namespace OpenViBE
 			CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename);
 			~CLogListenerFile() override { m_fsFileStream.close(); }
 			bool isActive(ELogLevel logLevel) override;
-			bool activate(ELogLevel level, bool bActive) override;
-			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
-			bool activate(bool bActive) override;
+			bool activate(ELogLevel level, bool active) override;
+			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) override;
+			bool activate(bool active) override;
 
 			void configure(const IConfigurationManager& configurationManager);
 			void log(const time64 value) override;
 			void log(const uint64_t value) override { logInteger(value); }
 			void log(const uint32_t value) override { logInteger(value); }
-			void log(const uint16_t value) override { logInteger(value); }
-			void log(const uint8_t value) override { logInteger(value); }
 			void log(const int64_t value) override { logInteger(value); }
 			void log(const int value) override { logInteger(value); }
-			void log(const int16_t value) override { logInteger(value); }
-			void log(const int8_t value) override { logInteger(value); }
 			void log(const double value) override { m_fsFileStream << value; }
 			void log(const float value) override { m_fsFileStream << value; }
 			void log(const bool value) override { m_fsFileStream << (value ? "true" : "false"); }
@@ -53,7 +49,7 @@ namespace OpenViBE
 
 			// Log Settings
 			bool m_bTimeInSeconds        = true;
-			bool m_bLogWithHexa          = false;
+			bool m_logWithHexa          = false;
 			uint64_t m_timePrecision = 3;
 
 		private:
@@ -61,7 +57,7 @@ namespace OpenViBE
 			void logInteger(T value)
 			{
 				m_fsFileStream << value << " ";
-				if (m_bLogWithHexa)
+				if (m_logWithHexa)
 				{
 					m_fsFileStream.setf(std::ios::hex);
 					m_fsFileStream << "(" << value << ")";

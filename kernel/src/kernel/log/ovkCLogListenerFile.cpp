@@ -31,7 +31,7 @@ CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& app
 void CLogListenerFile::configure(const IConfigurationManager& configurationManager)
 {
 	m_bTimeInSeconds    = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
-	m_bLogWithHexa      = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
+	m_logWithHexa      = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
 	m_timePrecision = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
@@ -42,19 +42,19 @@ bool CLogListenerFile::isActive(ELogLevel logLevel)
 	return it->second;
 }
 
-bool CLogListenerFile::activate(ELogLevel level, bool bActive)
+bool CLogListenerFile::activate(ELogLevel level, bool active)
 {
-	m_vActiveLevel[level] = bActive;
+	m_vActiveLevel[level] = active;
 	return true;
 }
 
-bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
+bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = bActive; }
+	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = active; }
 	return true;
 }
 
-bool CLogListenerFile::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
+bool CLogListenerFile::activate(bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
 void CLogListenerFile::log(const time64 value)
 {
@@ -67,7 +67,7 @@ void CLogListenerFile::log(const time64 value)
 		ss << l_f64Time;
 		ss << " sec";
 
-		if (m_bLogWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
+		if (m_logWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
 
 		m_fsFileStream << ss.str();
 	}
