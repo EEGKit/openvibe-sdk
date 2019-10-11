@@ -66,10 +66,7 @@ namespace OpenViBEPlugins
 		public:
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				std::stringstream name;
-				name << "Signal condition " << index;
-				box.setInputName(index, name.str().c_str());
-
+				box.setInputName(index, ("Signal condition " + std::to_string(index)).c_str());
 				return true;
 			}
 

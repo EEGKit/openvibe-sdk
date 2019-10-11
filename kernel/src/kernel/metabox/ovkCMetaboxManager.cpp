@@ -41,12 +41,12 @@ namespace OpenViBE
 							const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
 							if (!hasHash)
 							{
-								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() <<
+								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.str().c_str() <<
 										" has no Hash in the scenario " << fullFileName << "\n";
 							}
 							m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(fullFileName));
 							m_MetaboxManager.setMetaboxHash(metaboxId, metaboxHash);
-							m_MetaboxManager.setMetaboxObjectDesc(metaboxId, new CMetaboxObjectDesc(metaboxId.toString().toASCIIString(), metaboxScenario));
+							m_MetaboxManager.setMetaboxObjectDesc(metaboxId, new CMetaboxObjectDesc(metaboxId.str().c_str(), metaboxScenario));
 							m_MetaBoxCount++;
 						}
 						else

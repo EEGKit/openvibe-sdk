@@ -79,8 +79,8 @@ namespace OpenViBE
 			const ILink* getLinkDetails(const CIdentifier& linkID) const override;
 			ILink* getLinkDetails(const CIdentifier& linkID) override;
 
-			bool connect(CIdentifier& linkID, const CIdentifier& srcBoxID, uint32_t srcBoxOutputIdx,
-						 const CIdentifier& dstBoxID, uint32_t dstBoxInputIdx, const CIdentifier& suggestedLinkID) override;
+			bool connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const uint32_t srcBoxOutputIdx,
+						 const CIdentifier& dstBoxID, const uint32_t dstBoxInputIdx, const CIdentifier& suggestedLinkID) override;
 			bool connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID,
 						 const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, const CIdentifier& suggestedLinkID) override;
 			bool disconnect(const CIdentifier& srcBoxID, uint32_t srcBoxOutputIdx, const CIdentifier& dstBoxID, uint32_t dstBoxInputIdx) override;

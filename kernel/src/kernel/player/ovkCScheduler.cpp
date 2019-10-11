@@ -138,7 +138,7 @@ bool CScheduler::flattenScenario()
 						else
 						{
 							// Non-utilisable metaboxes can be easily removed
-							OV_WARNING_K("The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.");
+							OV_WARNING_K("The scenario for metabox [" << metaboxId.str().c_str() << "] is missing.");
 							m_scenario->removeBox(boxID);
 						}
 					}

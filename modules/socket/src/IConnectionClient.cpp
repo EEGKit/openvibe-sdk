@@ -25,7 +25,7 @@ namespace Socket
 	{
 	public:
 
-		bool connect(const char* sServerName, uint32_t ui32ServerPort, uint32_t ui32TimeOut) override
+		bool connect(const char* sServerName, const uint32_t ui32ServerPort, uint32_t ui32TimeOut) override
 		{
 			if (!open()) { return false; }
 

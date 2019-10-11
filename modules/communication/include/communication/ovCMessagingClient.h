@@ -36,7 +36,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool connect(const std::string& uri, uint32_t port);
+		bool connect(const std::string& uri, const uint32_t port);
 
 		/**
 		 * \brief Closes the connection to the server.

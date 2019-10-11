@@ -313,7 +313,7 @@ namespace Socket
 
 		void release() override { delete this; }
 
-		bool connect(const char* sURL, unsigned long ul32BaudRate) override
+		bool connect(const char* sURL, const unsigned long ul32BaudRate) override
 		{
 			m_sLastError.clear();
 

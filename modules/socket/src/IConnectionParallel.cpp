@@ -188,7 +188,7 @@ namespace Socket
 			delete this;
 		}
 
-		bool connect(unsigned short ui16PortNumber) override
+		bool connect(const unsigned short ui16PortNumber) override
 		{
 			if (this->isConnected()) { return false; }
 

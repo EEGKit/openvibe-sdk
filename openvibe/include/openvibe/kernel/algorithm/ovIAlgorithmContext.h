@@ -120,7 +120,7 @@ namespace OpenViBE
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, bool bTriggerState) = 0;
+			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, const bool bTriggerState) = 0;
 
 			//@}
 

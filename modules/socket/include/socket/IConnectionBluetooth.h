@@ -15,7 +15,7 @@ namespace Socket
 		 * \param[in] ui64BluetoothAddress the MAC address of the Bluetooth device.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual bool connect(unsigned long long ui64BluetoothAddress) = 0;
+		virtual bool connect(const unsigned long long ui64BluetoothAddress) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.

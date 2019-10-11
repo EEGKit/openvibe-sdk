@@ -132,7 +132,7 @@ bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& memoryBuffer
 
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting identifier failed", OpenViBE::Kernel::ErrorType::Internal);
 
-	m_pWriter->setChildData(value.toString().toASCIIString());
+	m_pWriter->setChildData(value.str().c_str());
 	this->exportStop(memoryBuffer);
 
 	return true;

@@ -266,7 +266,7 @@ namespace Socket
 
 		void release() override { delete this; }
 
-		bool connect(unsigned long long u64BluetoothAddress) override
+		bool connect(const unsigned long long u64BluetoothAddress) override
 		{
 			m_sLastError.clear();
 

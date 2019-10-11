@@ -235,8 +235,8 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c linkID remains unchanged.
 			 */
-			virtual bool connect(CIdentifier& linkID, const CIdentifier& srcBoxID, uint32_t srcBoxOutputIdx,
-								 const CIdentifier& dstBoxID, uint32_t dstBoxInputIndex, const CIdentifier& suggestedLinkID) = 0;
+			virtual bool connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const uint32_t srcBoxOutputIdx,
+								 const CIdentifier& dstBoxID, const uint32_t dstBoxInputIndex, const CIdentifier& suggestedLinkID) = 0;
 
 			/**
 			 * \brief Creates a connection between two boxes

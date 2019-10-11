@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			bool process() override;
 
 			// implementation for TResampler::ICallback
-			void processResampler(const double* pSample, size_t nChannel) const override;
+			void processResampler(const double* pSample, const size_t nChannel) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling)
 

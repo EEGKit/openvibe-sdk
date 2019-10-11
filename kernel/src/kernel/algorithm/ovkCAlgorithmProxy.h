@@ -44,7 +44,7 @@ namespace OpenViBE
 			CIdentifier getNextOutputTriggerIdentifier(const CIdentifier& triggerID) const override;
 			CString getOutputTriggerName(const CIdentifier& triggerID) const override;
 			bool isOutputTriggerActive(const CIdentifier& triggerID) const override;
-			bool activateOutputTrigger(const CIdentifier& triggerID, bool triggerState);
+			bool activateOutputTrigger(const CIdentifier& triggerID, const bool triggerState);
 			bool removeOutputTrigger(const CIdentifier& triggerID);
 			bool initialize() override;
 			bool uninitialize() override;
