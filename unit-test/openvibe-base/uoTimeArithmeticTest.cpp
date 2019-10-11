@@ -56,7 +56,7 @@ namespace
 	};
 
 	// sampling rates to test
-	std::vector<uint32_t> samplingRatesToTest = { 100, 128, 512, 1000, 1024, 16000, 44100 };
+	std::vector<size_t> samplingRatesToTest = { 100, 128, 512, 1000, 1024, 16000, 44100 };
 
 	// sample to test
 	std::vector<uint64_t> samplesToTest = { 0, 1, 100, 128, 512, 1000, 1021, 1024, 5005, 12345, 59876, 100000, 717893, 1000001 };

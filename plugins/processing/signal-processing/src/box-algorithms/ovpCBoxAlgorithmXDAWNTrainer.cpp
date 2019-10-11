@@ -100,7 +100,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	if (train)
 	{
-		std::vector<uint32_t> ERPSampleIndexes;
+		std::vector<size_t> ERPSampleIndexes;
 		std::array<Eigen::MatrixXd, 2> X; // X[0] is session matrix, X[1] is averaged ERP
 		std::array<Eigen::MatrixXd, 2> C; // Covariance matrices
 		std::array<uint32_t, 2> n;

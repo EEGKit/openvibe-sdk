@@ -144,9 +144,9 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 	//current dimension index
 	uint32_t curDimIdx = uint32_t(-1);
 	//vector keeping track of dimension sizes
-	std::vector<uint32_t> dimSize;
+	std::vector<size_t> dimSize;
 	//vector keeping track of number of values found in each dimension
-	std::vector<uint32_t> nValue;
+	std::vector<size_t> nValue;
 	// Dim labels
 	std::vector<std::string> labels;
 	//current quote-delimited string

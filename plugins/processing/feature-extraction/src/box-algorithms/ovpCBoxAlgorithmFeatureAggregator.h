@@ -38,10 +38,10 @@ namespace OpenViBEPlugins
 			std::vector<std::vector<std::vector<std::string>>> m_oFeatureNames;
 
 			// contains the dimension size for each dimension of each input
-			std::vector<std::vector<uint32_t>> m_oDimensionSize;
+			std::vector<std::vector<size_t>> m_oDimensionSize;
 
 			// contains the input buffer's total size for each input
-			std::vector<uint64_t> m_oInputBufferSizes;
+			std::vector<size_t> m_oInputBufferSizes;
 
 			//start time and end time of the last arrived chunk
 			uint64_t m_lastChunkStartTime = 0;

@@ -246,7 +246,7 @@ bool CBoxAlgorithmChannelSelector::process()
 
 				if (selectionMethodID == OVP_TypeId_SelectionMethod_Reject)
 				{
-					std::vector<uint32_t> inversedLookup;
+					std::vector<size_t> inversedLookup;
 					for (uint32_t j = 0; j < m_pInputMatrix->getDimensionSize(0); ++j)
 					{
 						bool selected = false;

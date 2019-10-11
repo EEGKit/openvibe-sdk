@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			OpenViBE::IMatrix* m_pInputMatrix  = nullptr;
 			OpenViBE::IMatrix* m_pOutputMatrix = nullptr;
 
-			std::vector<uint32_t> m_vLookup;
+			std::vector<size_t> m_vLookup;
 		};
 
 		class CBoxAlgorithmChannelSelectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

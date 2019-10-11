@@ -144,7 +144,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	m_nClasses = uint32_t(ip_pNumberOfClasses);
 
 	// Count the classes actually present
-	std::vector<uint32_t> l_vClassCounts;
+	std::vector<size_t> l_vClassCounts;
 	l_vClassCounts.resize(m_nClasses);
 
 	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); ++i)

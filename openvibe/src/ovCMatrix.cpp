@@ -40,7 +40,7 @@ namespace OpenViBE
 			mutable double* m_buffer = nullptr;
 			mutable uint32_t m_size   = 0;
 
-			std::vector<uint32_t> m_vDimensionSize;
+			std::vector<size_t> m_vDimensionSize;
 			std::vector<std::vector<std::string>> m_vDimensionLabel;
 		};
 	} // namespace

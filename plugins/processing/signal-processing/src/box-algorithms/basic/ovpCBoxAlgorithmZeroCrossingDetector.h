@@ -56,8 +56,8 @@ namespace OpenViBEPlugins
 			uint32_t m_samplingRate = 0;
 			double m_f64WindowTime      = 0;
 			uint32_t m_ui32WindowTime   = 0;
-			std::vector<std::vector<uint64_t>> m_vMemoryChunk;
-			std::vector<std::vector<uint32_t>> m_vMemorySample;
+			std::vector<std::vector<size_t>> m_vMemoryChunk;
+			std::vector<std::vector<size_t>> m_vMemorySample;
 
 			uint64_t m_stimulationId1 = 0;
 			uint64_t m_stimulationId2 = 0;

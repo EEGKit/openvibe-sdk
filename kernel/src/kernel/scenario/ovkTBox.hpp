@@ -1448,7 +1448,7 @@ namespace OpenViBE
 
 			//to avoid having to recheck every setting every time
 			//careful to update at each setting modification
-			std::vector<uint32_t> m_modifiableSettingIndexes;
+			std::vector<size_t> m_modifiableSettingIndexes;
 
 			std::vector<CIdentifier> m_supportInputTypes;
 			std::vector<CIdentifier> m_supportOutputTypes;

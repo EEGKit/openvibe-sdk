@@ -26,8 +26,8 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
 			uint64_t m_validityCheckerType      = 0;
 
-			std::vector<uint32_t> m_nTotalInterpolatedSample;
-			std::vector<uint32_t> m_nTotalInterpolatedChunk;
+			std::vector<size_t> m_nTotalInterpolatedSample;
+			std::vector<size_t> m_nTotalInterpolatedChunk;
 			std::vector<std::vector<double>> m_vLastValidSample;
 		};
 
