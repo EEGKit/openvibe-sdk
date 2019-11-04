@@ -21,13 +21,13 @@ public:
 
 private:
 	// Return a string that correspond to the indexed categories under rst format
-	std::string generateRstIndex(std::vector<std::pair<std::string, std::string>> categories);
+	std::string generateRstIndex(std::vector<std::pair<std::string, std::string>> categories) const;
 
 protected:
 
 	std::string m_docTemplateDirectory;
 	std::vector<std::pair<std::string, std::string>> m_categories;
 	std::vector<std::pair<std::string, std::string>> m_deprecatedBoxesCategories;
-	OpenViBE::CIdentifier m_scenarioID = OV_UndefinedIdentifier;
-	OpenViBE::Kernel::IScenario* m_scenario    = nullptr;
+	OpenViBE::CIdentifier m_scenarioID      = OV_UndefinedIdentifier;
+	OpenViBE::Kernel::IScenario* m_scenario = nullptr;
 };

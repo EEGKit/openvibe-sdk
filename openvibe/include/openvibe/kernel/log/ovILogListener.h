@@ -178,11 +178,6 @@ namespace OpenViBE
 			 */
 			virtual void log(const double value) = 0;
 			/**
-			 * \brief Logs a 32 bits floating point value
-			 * \param value [in] : the value that should be logged
-			 */
-			virtual void log(const float value) = 0;
-			/**
 			 * \brief Logs a boolean value
 			 * \param value [in] : the value that should be logged
 			 */

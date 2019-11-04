@@ -33,7 +33,6 @@ namespace OpenViBE
 			void log(const uint32_t value) override { m_LogManager.log(value); }
 			void log(const int64_t value) override { m_LogManager.log(value); }
 			void log(const int value) override { m_LogManager.log(value); }
-			void log(const float value) override { m_LogManager.log(value); }
 			void log(const double value) override { m_LogManager.log(value); }
 			void log(const bool value) override { m_LogManager.log(value); }
 			void log(const CString& value) override { m_LogManager.log(value); }

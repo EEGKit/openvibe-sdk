@@ -19,14 +19,13 @@ namespace OpenViBE
 			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) override;
 			bool activate(bool active) override;
 
-			void configure(const IConfigurationManager& rConfigurationManager);
+			void configure(const IConfigurationManager& configManager);
 			void log(const time64 value) override;
 			void log(const uint64_t value) override;
 			void log(const uint32_t value) override;
 			void log(const int64_t value) override;
 			void log(const int value) override;
 			void log(const double value) override;
-			void log(const float value) override;
 			void log(const bool value) override;
 			void log(const CIdentifier& value) override;
 			void log(const CString& value) override;
@@ -46,10 +45,10 @@ namespace OpenViBE
 			ELogColor m_eLogColor;
 			CString m_sApplicationName;
 
-			bool m_logWithHexa          = false;
-			bool m_bTimeInSeconds        = false;
+			bool m_logWithHexa       = false;
+			bool m_bTimeInSeconds    = false;
 			uint64_t m_timePrecision = 0;
-			bool m_bUseColor             = false;
+			bool m_bUseColor         = false;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

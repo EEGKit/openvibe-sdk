@@ -14,29 +14,25 @@ using namespace Kernel;
 using namespace std;
 
 CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)
-	: TKernelObject<ILogListener>(ctx)
-	  , m_eLogColor(LogColor_Default)
-	  , m_sApplicationName(sApplicationName), m_bTimeInSeconds(true)
-	  , m_timePrecision(3)
-	  , m_bUseColor(true)
+	: TKernelObject<ILogListener>(ctx), m_eLogColor(LogColor_Default), m_sApplicationName(sApplicationName), m_bTimeInSeconds(true), m_timePrecision(3), m_bUseColor(true)
 {
 #if defined TARGET_OS_Windows
 	SetConsoleOutputCP(CP_UTF8);
 #endif
 }
 
-void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationManager)
+void CLogListenerConsole::configure(const IConfigurationManager& configManager)
 {
-	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogTimeInSecond}", true);
-	m_logWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogWithHexa}", false);
-	m_timePrecision = rConfigurationManager.expandAsUInteger("${Kernel_ConsoleLogTimePrecision}", 3);
-	m_bUseColor         = rConfigurationManager.expandAsBoolean("${Kernel_ConsoleLogUseColor}", true);
+	m_bTimeInSeconds = configManager.expandAsBoolean("${Kernel_ConsoleLogTimeInSecond}", true);
+	m_logWithHexa    = configManager.expandAsBoolean("${Kernel_ConsoleLogWithHexa}", false);
+	m_timePrecision  = configManager.expandAsUInteger("${Kernel_ConsoleLogTimePrecision}", 3);
+	m_bUseColor      = configManager.expandAsBoolean("${Kernel_ConsoleLogUseColor}", true);
 }
 
 
 bool CLogListenerConsole::isActive(ELogLevel level)
 {
-	auto itLogLevel = m_vActiveLevel.find(level);
+	const auto itLogLevel = m_vActiveLevel.find(level);
 	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
@@ -59,20 +55,20 @@ void CLogListenerConsole::log(const time64 value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags fmt = cout.flags();
+	const ios_base::fmtflags fmt = cout.flags();
 
 	if (m_bTimeInSeconds)
 	{
-		uint64_t l_ui64Precision = m_timePrecision;
-		double l_f64Time         = TimeArithmetics::timeToSeconds(value.timeValue);
+		const uint64_t precision = m_timePrecision;
+		const double time        = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;
-		ss.precision(static_cast<long long>(l_ui64Precision));
+		ss.precision(static_cast<long long>(precision));
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << l_f64Time;
+		ss << time;
 		ss << " sec";
 		if (m_logWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
 
-		cout << ss.str().c_str();
+		cout << ss.str();
 	}
 	else
 	{
@@ -88,7 +84,7 @@ void CLogListenerConsole::log(const uint64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags fmt = cout.flags();
+	const ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
 	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
 
@@ -100,7 +96,7 @@ void CLogListenerConsole::log(const uint32_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags fmt = cout.flags();
+	const ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
 	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(fmt);
@@ -111,7 +107,7 @@ void CLogListenerConsole::log(const int64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags fmt = cout.flags();
+	const ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
 	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(fmt);
@@ -122,7 +118,7 @@ void CLogListenerConsole::log(const int value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	ios_base::fmtflags fmt = cout.flags();
+	const ios_base::fmtflags fmt = cout.flags();
 	cout << dec << value;
 	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(fmt);
@@ -130,14 +126,6 @@ void CLogListenerConsole::log(const int value)
 }
 
 void CLogListenerConsole::log(const double value)
-{
-	this->log(LogColor_PushStateBit);
-	this->log(LogColor_ForegroundMagenta);
-	cout << value;
-	this->log(LogColor_PopStateBit);
-}
-
-void CLogListenerConsole::log(const float value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -169,7 +157,7 @@ void CLogListenerConsole::log(const CString& value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const std::string& value) 
+void CLogListenerConsole::log(const std::string& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -289,41 +277,41 @@ void CLogListenerConsole::log(const ELogColor color)
 			// Tests 'color' bit
 			if (color & LogColor_ForegroundColorBit)
 			{
-				ELogColor l_eColorMask = ELogColor(LogColor_ForegroundColorRedBit | LogColor_ForegroundColorGreenBit | LogColor_ForegroundColorBlueBit);
-				m_eLogColor            = ELogColor(m_eLogColor & (~l_eColorMask));
-				m_eLogColor            = ELogColor(m_eLogColor | (color & l_eColorMask) | LogColor_ForegroundBit | LogColor_ForegroundColorBit);
+				const ELogColor colorMask = ELogColor(LogColor_ForegroundColorRedBit | LogColor_ForegroundColorGreenBit | LogColor_ForegroundColorBlueBit);
+				m_eLogColor               = ELogColor(m_eLogColor & (~colorMask));
+				m_eLogColor               = ELogColor(m_eLogColor | (color & colorMask) | LogColor_ForegroundBit | LogColor_ForegroundColorBit);
 			}
 
 			// Test 'light' bit
 			if (color & LogColor_ForegroundLightBit)
 			{
-				ELogColor l_eLightMask = ELogColor(LogColor_ForegroundLightBit | LogColor_ForegroundLightStateBit);
-				m_eLogColor            = ELogColor(m_eLogColor & (~l_eLightMask));
-				m_eLogColor            = ELogColor(m_eLogColor | (color & l_eLightMask) | LogColor_ForegroundBit);
+				const ELogColor lightMask = ELogColor(LogColor_ForegroundLightBit | LogColor_ForegroundLightStateBit);
+				m_eLogColor               = ELogColor(m_eLogColor & (~lightMask));
+				m_eLogColor               = ELogColor(m_eLogColor | (color & lightMask) | LogColor_ForegroundBit);
 			}
 
 			// Test 'blink' bit
 			if (color & LogColor_ForegroundBlinkBit)
 			{
-				ELogColor l_eBlinkMask = ELogColor(LogColor_ForegroundBlinkBit | LogColor_ForegroundBlinkStateBit);
-				m_eLogColor            = ELogColor(m_eLogColor & (~l_eBlinkMask));
-				m_eLogColor            = ELogColor(m_eLogColor | (color & l_eBlinkMask) | LogColor_ForegroundBit);
+				const ELogColor blinkMask = ELogColor(LogColor_ForegroundBlinkBit | LogColor_ForegroundBlinkStateBit);
+				m_eLogColor               = ELogColor(m_eLogColor & (~blinkMask));
+				m_eLogColor               = ELogColor(m_eLogColor | (color & blinkMask) | LogColor_ForegroundBit);
 			}
 
 			// Test 'bold' bit
 			if (color & LogColor_ForegroundBoldBit)
 			{
-				ELogColor l_eBoldMask = ELogColor(LogColor_ForegroundBoldBit | LogColor_ForegroundBoldStateBit);
-				m_eLogColor           = ELogColor(m_eLogColor & (~l_eBoldMask));
-				m_eLogColor           = ELogColor(m_eLogColor | (color & l_eBoldMask) | LogColor_ForegroundBit);
+				const ELogColor boldMask = ELogColor(LogColor_ForegroundBoldBit | LogColor_ForegroundBoldStateBit);
+				m_eLogColor              = ELogColor(m_eLogColor & (~boldMask));
+				m_eLogColor              = ELogColor(m_eLogColor | (color & boldMask) | LogColor_ForegroundBit);
 			}
 
 			// Test 'underline' bit
 			if (color & LogColor_ForegroundUnderlineBit)
 			{
-				ELogColor l_eUnderlineMask = ELogColor(LogColor_ForegroundBlinkBit | LogColor_ForegroundBlinkStateBit);
-				m_eLogColor                = ELogColor(m_eLogColor & (~l_eUnderlineMask));
-				m_eLogColor                = ELogColor(m_eLogColor | (color & l_eUnderlineMask) | LogColor_ForegroundBit);
+				const ELogColor underlineMask = ELogColor(LogColor_ForegroundBlinkBit | LogColor_ForegroundBlinkStateBit);
+				m_eLogColor                   = ELogColor(m_eLogColor & (~underlineMask));
+				m_eLogColor                   = ELogColor(m_eLogColor | (color & underlineMask) | LogColor_ForegroundBit);
 			}
 		}
 
@@ -333,25 +321,25 @@ void CLogListenerConsole::log(const ELogColor color)
 			// Tests 'color' bit
 			if (color & LogColor_BackgroundColorBit)
 			{
-				ELogColor l_eColorMask = ELogColor(LogColor_BackgroundColorRedBit | LogColor_BackgroundColorGreenBit | LogColor_BackgroundColorBlueBit);
-				m_eLogColor            = ELogColor(m_eLogColor & (~l_eColorMask));
-				m_eLogColor            = ELogColor(m_eLogColor | (color & l_eColorMask) | LogColor_BackgroundBit | LogColor_BackgroundColorBit);
+				const ELogColor colorMask = ELogColor(LogColor_BackgroundColorRedBit | LogColor_BackgroundColorGreenBit | LogColor_BackgroundColorBlueBit);
+				m_eLogColor               = ELogColor(m_eLogColor & (~colorMask));
+				m_eLogColor               = ELogColor(m_eLogColor | (color & colorMask) | LogColor_BackgroundBit | LogColor_BackgroundColorBit);
 			}
 
 			// Test 'light' bit
 			if (color & LogColor_BackgroundLightBit)
 			{
-				ELogColor l_eLightMask = ELogColor(LogColor_BackgroundLightBit | LogColor_BackgroundLightStateBit);
-				m_eLogColor            = ELogColor(m_eLogColor & (~l_eLightMask));
-				m_eLogColor            = ELogColor(m_eLogColor | (color & l_eLightMask) | LogColor_BackgroundBit);
+				const ELogColor lightMask = ELogColor(LogColor_BackgroundLightBit | LogColor_BackgroundLightStateBit);
+				m_eLogColor               = ELogColor(m_eLogColor & (~lightMask));
+				m_eLogColor               = ELogColor(m_eLogColor | (color & lightMask) | LogColor_BackgroundBit);
 			}
 
 			// Test 'blink' bit
 			if (color & LogColor_BackgroundBlinkBit)
 			{
-				ELogColor l_eBlinkMask = ELogColor(LogColor_BackgroundBlinkBit | LogColor_BackgroundBlinkStateBit);
-				m_eLogColor            = ELogColor(m_eLogColor & (~l_eBlinkMask));
-				m_eLogColor            = ELogColor(m_eLogColor | (color & l_eBlinkMask) | LogColor_BackgroundBit);
+				const ELogColor blinkMask = ELogColor(LogColor_BackgroundBlinkBit | LogColor_BackgroundBlinkStateBit);
+				m_eLogColor               = ELogColor(m_eLogColor & (~blinkMask));
+				m_eLogColor               = ELogColor(m_eLogColor | (color & blinkMask) | LogColor_BackgroundBit);
 			}
 		}
 
@@ -364,9 +352,9 @@ void CLogListenerConsole::log(const ELogColor color)
 
 void CLogListenerConsole::applyColor()
 {
-	int l_iGotACommand=0;
+	int gotACommand=0;
 
-	#define _command_separator_ (l_iGotACommand++?";":"")
+	#define _command_separator_ (gotACommand++?";":"")
 
 	cout << "\033[00m";
 
@@ -455,31 +443,31 @@ void CLogListenerConsole::applyColor()
 
 void CLogListenerConsole::applyColor()
 {
-	WORD l_dwTextAttribute = 0;
+	WORD attribute = 0;
 
 	if (m_eLogColor & LogColor_ForegroundBit)
 	{
 		if (m_eLogColor & LogColor_ForegroundColorBit)
 		{
-			l_dwTextAttribute |= ((m_eLogColor & LogColor_ForegroundColorRedBit) ? FOREGROUND_RED : 0);
-			l_dwTextAttribute |= ((m_eLogColor & LogColor_ForegroundColorGreenBit) ? FOREGROUND_GREEN : 0);
-			l_dwTextAttribute |= ((m_eLogColor & LogColor_ForegroundColorBlueBit) ? FOREGROUND_BLUE : 0);
+			attribute |= ((m_eLogColor & LogColor_ForegroundColorRedBit) ? FOREGROUND_RED : 0);
+			attribute |= ((m_eLogColor & LogColor_ForegroundColorGreenBit) ? FOREGROUND_GREEN : 0);
+			attribute |= ((m_eLogColor & LogColor_ForegroundColorBlueBit) ? FOREGROUND_BLUE : 0);
 		}
 		else
 		{
-			l_dwTextAttribute |= FOREGROUND_RED;
-			l_dwTextAttribute |= FOREGROUND_GREEN;
-			l_dwTextAttribute |= FOREGROUND_BLUE;
+			attribute |= FOREGROUND_RED;
+			attribute |= FOREGROUND_GREEN;
+			attribute |= FOREGROUND_BLUE;
 		}
 
-		if (m_eLogColor & LogColor_ForegroundLightBit && m_eLogColor & LogColor_ForegroundLightStateBit) { l_dwTextAttribute |= FOREGROUND_INTENSITY; }
+		if (m_eLogColor & LogColor_ForegroundLightBit && m_eLogColor & LogColor_ForegroundLightStateBit) { attribute |= FOREGROUND_INTENSITY; }
 
 		if (m_eLogColor & LogColor_ForegroundBoldBit && m_eLogColor & LogColor_ForegroundBoldStateBit)
 		{
 			// No function to do that
 		}
 
-		if (m_eLogColor & LogColor_ForegroundUnderlineBit && m_eLogColor & LogColor_ForegroundUnderlineStateBit) { l_dwTextAttribute |= COMMON_LVB_UNDERSCORE; }
+		if (m_eLogColor & LogColor_ForegroundUnderlineBit && m_eLogColor & LogColor_ForegroundUnderlineStateBit) { attribute |= COMMON_LVB_UNDERSCORE; }
 
 		if (m_eLogColor & LogColor_ForegroundBlinkBit && m_eLogColor & LogColor_ForegroundBlinkStateBit)
 		{
@@ -488,21 +476,21 @@ void CLogListenerConsole::applyColor()
 	}
 	else
 	{
-		l_dwTextAttribute |= FOREGROUND_RED;
-		l_dwTextAttribute |= FOREGROUND_GREEN;
-		l_dwTextAttribute |= FOREGROUND_BLUE;
+		attribute |= FOREGROUND_RED;
+		attribute |= FOREGROUND_GREEN;
+		attribute |= FOREGROUND_BLUE;
 	}
 
 	if (m_eLogColor & LogColor_BackgroundBit)
 	{
 		if (m_eLogColor & LogColor_BackgroundColorBit)
 		{
-			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorRedBit) ? BACKGROUND_RED : 0);
-			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorGreenBit) ? BACKGROUND_GREEN : 0);
-			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorBlueBit) ? BACKGROUND_BLUE : 0);
+			attribute |= ((m_eLogColor & LogColor_BackgroundColorRedBit) ? BACKGROUND_RED : 0);
+			attribute |= ((m_eLogColor & LogColor_BackgroundColorGreenBit) ? BACKGROUND_GREEN : 0);
+			attribute |= ((m_eLogColor & LogColor_BackgroundColorBlueBit) ? BACKGROUND_BLUE : 0);
 		}
 
-		if (m_eLogColor & LogColor_BackgroundLightBit && m_eLogColor & LogColor_BackgroundLightStateBit) { l_dwTextAttribute |= BACKGROUND_INTENSITY; }
+		if (m_eLogColor & LogColor_BackgroundLightBit && m_eLogColor & LogColor_BackgroundLightStateBit) { attribute |= BACKGROUND_INTENSITY; }
 
 		if (m_eLogColor & LogColor_BackgroundBlinkBit && m_eLogColor & LogColor_BackgroundBlinkStateBit)
 		{
@@ -510,7 +498,7 @@ void CLogListenerConsole::applyColor()
 		}
 	}
 
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), l_dwTextAttribute);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attribute);
 }
 
 #else

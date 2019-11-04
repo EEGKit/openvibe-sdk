@@ -67,4 +67,4 @@ namespace OpenViBE
 
 	/* Define the common parser to be used in the application */
 	using ProgramOptionParser = ProgramOptions<ProgramOptionsTraits::String, ProgramOptionsTraits::Float, ProgramOptionsTraits::TokenPairList>;
-}
+}	// namespace OpenViBE

@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 	else
 	{
 		cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << endl;
-		IKernelDesc* kernelDesc       = nullptr;
+		IKernelDesc* kernelDesc = nullptr;
 		kernelLoader.initialize();
 		kernelLoader.getKernelDesc(kernelDesc);
 		if (!kernelDesc) { cout << "[ FAILED ] No kernel descriptor" << endl; }

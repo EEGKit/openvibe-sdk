@@ -29,7 +29,6 @@ namespace OpenViBE
 			void log(const int64_t value) override { logInteger(value); }
 			void log(const int value) override { logInteger(value); }
 			void log(const double value) override { m_fsFileStream << value; }
-			void log(const float value) override { m_fsFileStream << value; }
 			void log(const bool value) override { m_fsFileStream << (value ? "true" : "false"); }
 			void log(const CIdentifier& value) override { m_fsFileStream << value.str(); }
 			void log(const CString& value) override { m_fsFileStream << value << std::flush; }
@@ -48,8 +47,8 @@ namespace OpenViBE
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_bTimeInSeconds        = true;
-			bool m_logWithHexa          = false;
+			bool m_bTimeInSeconds    = true;
+			bool m_logWithHexa       = false;
 			uint64_t m_timePrecision = 3;
 
 		private:
