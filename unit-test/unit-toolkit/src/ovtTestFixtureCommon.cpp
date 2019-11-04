@@ -31,10 +31,6 @@ namespace OpenViBETest
 	using namespace Kernel;
 	using namespace Plugins;
 
-	SKernelFixture::SKernelFixture(const std::string& configFile) : m_configurationFile(configFile) { }
-
-	void SKernelFixture::setConfigurationFile(const std::string& configFile) { m_configurationFile = configFile; }
-
 	void SKernelFixture::setUp()
 	{
 #if defined TARGET_OS_Windows

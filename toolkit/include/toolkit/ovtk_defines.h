@@ -8,16 +8,16 @@
 //___________________________________________________________________//
 //                                                                   //
 
-#define OVTK_TypeId_Boolean                                            OpenViBE::CIdentifier(0x2CDB2F0B, 0x12F231EA)
-#define OVTK_TypeId_Integer                                            OpenViBE::CIdentifier(0x007DEEF9, 0x2F3E95C6)
-#define OVTK_TypeId_Float                                              OpenViBE::CIdentifier(0x512A166F, 0x5C3EF83F)
-#define OVTK_TypeId_String                                             OpenViBE::CIdentifier(0x79A9EDEB, 0x245D83FC)
-#define OVTK_TypeId_Filename                                           OpenViBE::CIdentifier(0x330306DD, 0x74A95F98)
-#define OVTK_TypeId_Stimulation                                        OpenViBE::CIdentifier(0x2C132D6E, 0x44AB0D97)
-#define OVTK_TypeId_GDF_Stimulation                                    OpenViBE::CIdentifier(0xA538DBF0, 0xBC229750)
+#define OVTK_TypeId_Boolean							OpenViBE::CIdentifier(0x2CDB2F0B, 0x12F231EA)
+#define OVTK_TypeId_Integer                  		OpenViBE::CIdentifier(0x007DEEF9, 0x2F3E95C6)
+#define OVTK_TypeId_Float                    		OpenViBE::CIdentifier(0x512A166F, 0x5C3EF83F)
+#define OVTK_TypeId_String                   		OpenViBE::CIdentifier(0x79A9EDEB, 0x245D83FC)
+#define OVTK_TypeId_Filename                 		OpenViBE::CIdentifier(0x330306DD, 0x74A95F98)
+#define OVTK_TypeId_Stimulation              		OpenViBE::CIdentifier(0x2C132D6E, 0x44AB0D97)
+#define OVTK_TypeId_GDF_Stimulation          		OpenViBE::CIdentifier(0xA538DBF0, 0xBC229750)
 
-#define OVTK_TypeId_ClassificationAlgorithm                            OpenViBE::CIdentifier(0xD765A736, 0xED708C65)
-#define OVTK_TypeId_ClassificationStrategy                             OpenViBE::CIdentifier(0xBE9EBA5C, 0xA8415D37)
+#define OVTK_TypeId_ClassificationAlgorithm  		OpenViBE::CIdentifier(0xD765A736, 0xED708C65)
+#define OVTK_TypeId_ClassificationStrategy   		OpenViBE::CIdentifier(0xBE9EBA5C, 0xA8415D37)
 
 
 //___________________________________________________________________//
@@ -26,16 +26,16 @@
 //___________________________________________________________________//
 //                                                                   //
 
-#define OVTK_TypeId_EBMLStream                                         OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
-#define   OVTK_TypeId_ExperimentInformation                            OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
-#define   OVTK_TypeId_ExperimentationInformation                       OpenViBE::CIdentifier(0x403488E7, 0x565D70B6) // deprecated token, kept for compatibility, equal to the one above
-#define   OVTK_TypeId_Stimulations                                     OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
-#define   OVTK_TypeId_StreamedMatrix                                   OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
-#define     OVTK_TypeId_FeatureVector                                  OpenViBE::CIdentifier(0x17341935, 0x152FF448)
-#define     OVTK_TypeId_Signal                                         OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
-#define     OVTK_TypeId_Spectrum                                       OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
-#define     OVTK_TypeId_ChannelLocalisation                            OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
-#define     OVTK_TypeId_ChannelUnits                                   OpenViBE::CIdentifier(0x6AB26B81, 0x0F8C02F3)
+#define OVTK_TypeId_EBMLStream                  	OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
+#define   OVTK_TypeId_ExperimentInformation     	OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
+#define   OVTK_TypeId_ExperimentationInformation	OpenViBE::CIdentifier(0x403488E7, 0x565D70B6) // deprecated token, kept for compatibility, equal to the one above
+#define   OVTK_TypeId_Stimulations              	OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
+#define   OVTK_TypeId_StreamedMatrix            	OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
+#define     OVTK_TypeId_FeatureVector           	OpenViBE::CIdentifier(0x17341935, 0x152FF448)
+#define     OVTK_TypeId_Signal                  	OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
+#define     OVTK_TypeId_Spectrum                	OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
+#define     OVTK_TypeId_ChannelLocalisation     	OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
+#define     OVTK_TypeId_ChannelUnits            	OpenViBE::CIdentifier(0x6AB26B81, 0x0F8C02F3)
 
 
 //___________________________________________________________________//
@@ -45,15 +45,15 @@
 //                                                                   //
 
 // deprecated
-#define OVTK_Value_Sex_Unknown                                        0
-#define OVTK_Value_Sex_Male                                           1
-#define OVTK_Value_Sex_Female                                         2
-#define OVTK_Value_Sex_NotSpecified                                   9
+#define OVTK_Value_Sex_Unknown                    	0
+#define OVTK_Value_Sex_Male                       	1
+#define OVTK_Value_Sex_Female                     	2
+#define OVTK_Value_Sex_NotSpecified               	9
 
-#define OVTK_Value_Gender_Unknown                                     0
-#define OVTK_Value_Gender_Male                                        1
-#define OVTK_Value_Gender_Female                                      2
-#define OVTK_Value_Gender_NotSpecified                                9
+#define OVTK_Value_Gender_Unknown                 	0
+#define OVTK_Value_Gender_Male                    	1
+#define OVTK_Value_Gender_Female                  	2
+#define OVTK_Value_Gender_NotSpecified            	9
 
 //___________________________________________________________________//
 //                                                                   //
@@ -61,22 +61,22 @@
 //___________________________________________________________________//
 //                                                                   //
 
-#define OVTK_StimulationId_Label(i)                          0x00008100|((i)&0xff)
-#define OVTK_StimulationId_LabelStart                        0x00008100
-#define OVTK_StimulationId_LabelEnd                          0x000081ff
+#define OVTK_StimulationId_Label(i)            		0x00008100|((i)&0xff)
+#define OVTK_StimulationId_LabelStart          		0x00008100
+#define OVTK_StimulationId_LabelEnd            		0x000081ff
 
 // These are low-order stimulations that may be required for some legacy communication 
 // channels like parallel port handling only 1 byte codes. The name and number of these stimuli exactly matches.
-#define OVTK_StimulationId_NumberStart                        0x00000000
-#define OVTK_StimulationId_NumberEnd                          0x000000ff
+#define OVTK_StimulationId_NumberStart           	0x00000000
+#define OVTK_StimulationId_NumberEnd             	0x000000ff
 
-#define OVTK_GDF_Condition(i)                                       (i)
+#define OVTK_GDF_Condition(i)                      	       (i)
 
-#define OVTK_StimulationId_ThresholdPassed_Positive          0x00008209
-#define OVTK_StimulationId_ThresholdPassed_Negative          0x00008210
+#define OVTK_StimulationId_ThresholdPassed_Positive	0x00008209
+#define OVTK_StimulationId_ThresholdPassed_Negative	0x00008210
 
-#define OVTK_StimulationId_NoArtifact                        0x00008301
-#define OVTK_StimulationId_Artifact                          0x00008302
+#define OVTK_StimulationId_NoArtifact              	0x00008301
+#define OVTK_StimulationId_Artifact                	0x00008302
 
 //___________________________________________________________________//
 //                                                                   //
@@ -778,7 +778,7 @@
  *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency 2 name)
  *       ...
  *   OVTK_NodeId_Header_Spectrum
- *       OVTK_NodeId_Header_Spectrum_SamplingRate (double)
+ *       OVTK_NodeId_Header_Spectrum_Sampling (double)
  *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
  *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
  *		 ...
@@ -792,12 +792,12 @@
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *
  */
-#define OVTK_NodeId_Header_Spectrum                                     EBML::CIdentifier(0x00CCFA4B, 0x14F37D4D)
-#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated            EBML::CIdentifier(0x0010983C, 0x21F8BDE5)
-#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated      EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
-#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated       EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
-#define OVTK_NodeId_Header_Spectrum_FrequencyAbscissa                   EBML::CIdentifier(0x00D7287D, 0x622A2BF5)
-#define OVTK_NodeId_Header_Spectrum_SamplingRate                        EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
+#define OVTK_NodeId_Header_Spectrum                               	EBML::CIdentifier(0x00CCFA4B, 0x14F37D4D)
+#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated      	EBML::CIdentifier(0x0010983C, 0x21F8BDE5)
+#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated	EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
+#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated 	EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
+#define OVTK_NodeId_Header_Spectrum_FrequencyAbscissa             	EBML::CIdentifier(0x00D7287D, 0x622A2BF5)
+#define OVTK_NodeId_Header_Spectrum_Sampling                  		EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
 
 
 //___________________________________________________________________//
@@ -807,13 +807,13 @@
 //                                                                   //
 
 /*
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x0027615F, 0x2243F7B5)
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x00866CC6, 0x1EFE4BDC)
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x00C91900, 0x55E50FF0)
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x00E0E260, 0x646BF99E)
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x00DCE72C, 0x386A40C5)
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x00C520C6, 0x09AE98B5)
-#define OVTK_NodeId_                                                    EBML::CIdentifier(0x00F1CBCB, 0x56BD6821)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x0027615F, 0x2243F7B5)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x00866CC6, 0x1EFE4BDC)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x00C91900, 0x55E50FF0)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x00E0E260, 0x646BF99E)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x00DCE72C, 0x386A40C5)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x00C520C6, 0x09AE98B5)
+#define OVTK_NodeId_                           						EBML::CIdentifier(0x00F1CBCB, 0x56BD6821)
 */
 #define OVTK_ClassId_                                                   OpenViBE::CIdentifier(0x00C6D56F, 0x30890D27)
 #define OVTK_ClassId_Stimulation                                        OpenViBE::CIdentifier(0xE4E131F0, 0xC6550E9E)

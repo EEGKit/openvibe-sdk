@@ -43,7 +43,7 @@ OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated                   EBML::CId
 OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated             EBML::CIdentifier(0x00AA5654, 0x2403A2CB) float
 OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated              EBML::CIdentifier(0x00A44C82, 0x05BE50D5) float
 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa                          EBML::CIdentifier(0x00D7287D, 0x622A2BF5) float
-OVTK_NodeId_Header_Spectrum_SamplingRate                               EBML::CIdentifier(0x006876E9, 0x1DCB0CA1) uinteger
+OVTK_NodeId_Header_Spectrum_Sampling                               EBML::CIdentifier(0x006876E9, 0x1DCB0CA1) uinteger
 
 OVTK_NodeId_Buffer_Stimulation                                         EBML::CIdentifier(0x006DEABE, 0x7FC05A20) master
 OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations                    EBML::CIdentifier(0x00BB790B, 0x2B8574D8) uinteger

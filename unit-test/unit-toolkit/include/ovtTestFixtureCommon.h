@@ -33,9 +33,9 @@ namespace OpenViBETest
 	struct SKernelFixture final : TestFixture
 	{
 		SKernelFixture() = default;
-		explicit SKernelFixture(const std::string& configFile);
+		explicit SKernelFixture(const std::string& configFile) : m_configurationFile(configFile) { }
 
-		void setConfigurationFile(const std::string& configFile);
+		void setConfigurationFile(const std::string& configFile) { m_configurationFile = configFile; }
 
 		void setUp() override;
 		void tearDown() override;

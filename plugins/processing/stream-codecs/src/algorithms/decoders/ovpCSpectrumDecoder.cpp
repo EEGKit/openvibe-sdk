@@ -40,7 +40,7 @@ bool CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
 	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated) { return false; }
 	if (identifier == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { return false; }
-	if (identifier == OVTK_NodeId_Header_Spectrum_SamplingRate) { return false; }
+	if (identifier == OVTK_NodeId_Header_Spectrum_Sampling) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
@@ -90,7 +90,7 @@ void CSpectrumDecoder::processChildData(const void* buffer, const uint64_t size)
 	{
 		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIdx] = m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
 	}
-	else if (top == OVTK_NodeId_Header_Spectrum_SamplingRate) { op_pSamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+	else if (top == OVTK_NodeId_Header_Spectrum_Sampling) { op_pSamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 

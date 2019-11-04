@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../ovtkTAlgorithm.h"
-#include "../../ovtkIVector.h"
 #include <openvibe/ov_all.h>
+#include "../../ovtk_defines.h"
+#include "../../ovtkIVector.h"
 #include "../../ovtkIFeatureVector.h"
 #include "../../ovtkIFeatureVectorSet.h"
+#include "../ovtkTAlgorithm.h"
 
 #include <xml/IXMLNode.h>
 

@@ -8,7 +8,7 @@ using namespace OpenViBEToolkit;
 //                                                                                                                    *
 // VIM Replace string to easily add enumeration values :                                                              *
 //                                                                                                                    *
-// :%s/#define \([A-Za-z0-9_]\+\).*/	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Stimulation, "\1", \1);/g   *
+// :%s/#define \([A-Za-z0-9_]\+\).*/	typeManager.registerEnumerationEntry(OV_TypeId_Stimulation, "\1", \1);/g   *
 //                                                                                                                    *
 // ********************************************************************************************************************
 
@@ -22,7 +22,7 @@ bool OpenViBEToolkit::initialize(const IKernelContext& ctx)
 	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "?", OVTK_UNIT_Unspecified);
 	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "-", OVTK_UNIT_Dimensionless);
 	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "%", OVTK_UNIT_10_2_Percent);
-	//	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "percent", OVTK_UNIT_10_2_Percent);
+	// typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "percent", OVTK_UNIT_10_2_Percent);
 	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppht", OVTK_UNIT_10_3_Parts_Per_Thousand);
 	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppm", OVTK_UNIT_10_6_Parts_Per_Million);
 	typeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppmd", OVTK_UNIT_10_9_Parts_Per_Milliard);

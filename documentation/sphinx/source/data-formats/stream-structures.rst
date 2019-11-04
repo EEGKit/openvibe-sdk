@@ -41,15 +41,15 @@ streams : **channel localisation**, **channel units**, **feature vector**,
 
 ::
 
-   #define OVTK_TypeId_EBMLStream                                   OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
-   #define   OVTK_TypeId_ExperimentInformation                      OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
-   #define   OVTK_TypeId_Stimulations                               OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
-   #define   OVTK_TypeId_StreamedMatrix                             OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
-   #define     OVTK_TypeId_FeatureVector                            OpenViBE::CIdentifier(0x17341935, 0x152FF448)
-   #define     OVTK_TypeId_Signal                                   OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
-   #define     OVTK_TypeId_Spectrum                                 OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
-   #define     OVTK_TypeId_ChannelLocalisation                      OpenViBE::CIdentifier(0x1E4C0D6E, 0x5204EEB2)
-   #define     OVTK_TypeId_ChannelUnits                             OpenViBE::CIdentifier(0x5E330216, 0x2C09724C)
+   #define OVTK_TypeId_EBMLStream                              		OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
+   #define   OVTK_TypeId_ExperimentInformation                 		OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
+   #define   OVTK_TypeId_Stimulations                          		OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
+   #define   OVTK_TypeId_StreamedMatrix                        		OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
+   #define     OVTK_TypeId_FeatureVector                       		OpenViBE::CIdentifier(0x17341935, 0x152FF448)
+   #define     OVTK_TypeId_Signal                              		OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
+   #define     OVTK_TypeId_Spectrum                            		OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
+   #define     OVTK_TypeId_ChannelLocalisation                 		OpenViBE::CIdentifier(0x1E4C0D6E, 0x5204EEB2)
+   #define     OVTK_TypeId_ChannelUnits                        		OpenViBE::CIdentifier(0x5E330216, 0x2C09724C)
 
 
 The following sections will describe each stream type.
@@ -374,7 +374,7 @@ EBML description & identifiers
    *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency band 2 name)
    *       ...
    *   OVTK_NodeId_Header_Spectrum
-   *     OVTK_NodeId_Header_Spectrum_SamplingRate
+   *     OVTK_NodeId_Header_Spectrum_Sampling
    *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
    *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
    *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
@@ -398,7 +398,7 @@ EBML description & identifiers
    #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated      EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
    #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated       EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
    #define OVTK_NodeId_Header_Spectrum_FrequencyAbscissa                   EBML::CIdentifier(0x00D7287D, 0x622A2BF5)
-   #define OVTK_NodeId_Header_Spectrum_SamplingRate                        EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
+   #define OVTK_NodeId_Header_Spectrum_Sampling                        EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
 
 .. _Doc_Streams_Signal:
 
@@ -436,7 +436,7 @@ EBML description & identifiers
    *   OVTK_NodeId_Header_StreamType (integer:)
    *   OVTK_NodeId_Header_StreamVersion (integer:)
    *   OVTK_NodeId_Header_Signal
-   *     OVTK_NodeId_Header_Signal_SamplingRate (integer)
+   *     OVTK_NodeId_Header_Signal_Sampling (integer)
    *   OVTK_NodeId_Header_StreamedMatrix
    *     OVTK_NodeId_Header_StreamedMatrix_DimensionCount (integer:2)
    *     OVTK_NodeId_Header_StreamedMatrix_Dimension
@@ -464,7 +464,7 @@ EBML description & identifiers
    * NODE IDENTIFIERS
    * ----------------
    #define OVTK_NodeId_Header_Signal                                    EBML::CIdentifier(0x007855DE, 0x3748D375)
-   #define OVTK_NodeId_Header_Signal_SamplingRate                       EBML::CIdentifier(0x00141C43, 0x0C37006B)
+   #define OVTK_NodeId_Header_Signal_Sampling                       EBML::CIdentifier(0x00141C43, 0x0C37006B)
 
 .. _Doc_Streams_Stimulation:
 
