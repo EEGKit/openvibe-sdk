@@ -1,9 +1,9 @@
 
   // Process a block of samples in the given form
   template <class StateType, typename Sample>
-  void processSynthesis (int numSamples, Sample* dest, StateType& state) const
+  void processSynthesis (int nSamples, Sample* dest, StateType& state) const
   {
-    while (--numSamples >= 0)
+    while (--nSamples >= 0)
     {
       *dest = state.processSynthesis (*dest, *this);
       dest++;

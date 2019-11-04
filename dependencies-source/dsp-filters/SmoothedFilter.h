@@ -56,7 +56,7 @@ namespace Dsp
 
 		// Process a block of samples.
 		template <typename Sample>
-		void processBlock(int numSamples,
+		void processBlock(int nSamples,
 						  Sample* const* destChannelArray)
 		{
 			const int numChannels = this->getNumChannels();
@@ -65,7 +65,7 @@ namespace Dsp
 			assert(m_remainingSamples >= 0);
 
 			// first handle any transition samples
-			int remainingSamples = std::min(m_remainingSamples, numSamples);
+			int remainingSamples = std::min(m_remainingSamples, nSamples);
 
 			if (remainingSamples > 0)
 			{
@@ -93,18 +93,18 @@ namespace Dsp
 			}
 
 			// do what's left
-			if (numSamples - remainingSamples > 0)
+			if (nSamples - remainingSamples > 0)
 			{
 				// no transition
 				for (int i = 0; i < numChannels; ++i)
 				{
-					this->m_design.process(numSamples - remainingSamples, destChannelArray[i] + remainingSamples, this->m_state[i]);
+					this->m_design.process(nSamples - remainingSamples, destChannelArray[i] + remainingSamples, this->m_state[i]);
 				}
 			}
 		}
 
-		void process(int numSamples, float* const* arrayOfChannels) override { processBlock(numSamples, arrayOfChannels); }
-		void process(int numSamples, double* const* arrayOfChannels) override { processBlock(numSamples, arrayOfChannels); }
+		void process(int nSamples, float* const* arrayOfChannels) override { processBlock(nSamples, arrayOfChannels); }
+		void process(int nSamples, double* const* arrayOfChannels) override { processBlock(nSamples, arrayOfChannels); }
 
 #include "SmoothedFilterSynthesisH.inl"
 

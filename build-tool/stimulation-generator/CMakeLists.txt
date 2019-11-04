@@ -5,8 +5,8 @@ SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
 SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.inl)
-ADD_EXECUTABLE(openvibe-stimulation-generator ${source_files})
+FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.inl)
+ADD_EXECUTABLE(openvibe-stimulation-generator ${SRC_FILES})
 
 # if(UNIX)
 # SET(stim_generator_path  "${CMAKE_CURRENT_BINARY_DIR}" CACHE INTERNAL "stim_generator_path")

@@ -29,7 +29,7 @@ namespace r8b
 		fprLinearPhase = 0 ///< Linear-phase response. Features a linear-phase
 		///< high-latency response, with the latency expressed as integer
 		///< value.
-		//	fprMinPhase ///< Minimum-phase response. Features a minimal latency
+		// fprMinPhase ///< Minimum-phase response. Features a minimal latency
 		///< response, but the response's phase is non-linear. The latency is
 		///< usually expressed as non-integer value, and usually is small, but
 		///< is never equal to zero. The minimum-phase filter is transformed

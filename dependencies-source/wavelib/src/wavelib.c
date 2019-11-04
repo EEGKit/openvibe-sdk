@@ -7,7 +7,7 @@
 wave_object wave_init(char* wname)
 {
 	const int retval = (wname != NULL) ? filtlength(wname) : 0;
-	wave_object obj = (wave_object)malloc(sizeof(struct wave_set) + sizeof(double) * 4 * retval);
+	wave_object obj  = (wave_object)malloc(sizeof(struct wave_set) + sizeof(double) * 4 * retval);
 
 	obj->filtlength = retval;
 	obj->lpd_len    = obj->hpd_len = obj->lpr_len = obj->hpr_len = obj->filtlength;
@@ -28,7 +28,7 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 		exit(-1);
 	}
 
-	const int size = wave->filtlength;
+	const int size    = wave->filtlength;
 	const int MaxIter = wmaxiter(siglength, size);
 
 	if (J > MaxIter)
@@ -114,7 +114,7 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 		exit(-1);
 	}
 
-	const int size = wave->filtlength;
+	const int size    = wave->filtlength;
 	const int MaxIter = wmaxiter(siglength, size);
 
 	if (J > MaxIter)
@@ -170,7 +170,7 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 		exit(-1);
 	}
 
-	const int size = wave->filtlength;
+	const int size    = wave->filtlength;
 	const int MaxIter = wmaxiter(siglength, size);
 	if (J > MaxIter)
 	{

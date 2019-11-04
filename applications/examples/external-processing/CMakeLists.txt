@@ -1,8 +1,8 @@
 PROJECT(sdk-examples-communication-client-generator)
 
-SET(source_files src/main-generator.cpp)
+SET(SRC_FILES src/main-generator.cpp)
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-toolkit)
 
 INCLUDE("FindOpenViBECommon")
@@ -19,9 +19,9 @@ INSTALL(TARGETS ${PROJECT_NAME}
 
 PROJECT(sdk-examples-communication-client-filter)
 
-SET(source_files src/main-filter.cpp)
+SET(SRC_FILES src/main-filter.cpp)
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleSocket")

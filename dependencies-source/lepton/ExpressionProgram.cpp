@@ -51,7 +51,7 @@ ExpressionProgram::ExpressionProgram(const ParsedExpression& expression) : maxAr
 	}
 }
 
-ExpressionProgram::~ExpressionProgram() { for (size_t  i = 0; i < operations.size(); ++i) { delete operations[i]; } }
+ExpressionProgram::~ExpressionProgram() { for (size_t i = 0; i < operations.size(); ++i) { delete operations[i]; } }
 
 ExpressionProgram::ExpressionProgram(const ExpressionProgram& program) { *this = program; }
 
@@ -60,23 +60,17 @@ ExpressionProgram& ExpressionProgram::operator=(const ExpressionProgram& program
 	maxArgs   = program.maxArgs;
 	stackSize = program.stackSize;
 	operations.resize(program.operations.size());
-	for (size_t i = 0; i < operations.size(); ++i)
-	{
-		operations[i] = program.operations[i]->clone();
-	}
+	for (size_t i = 0; i < operations.size(); ++i) { operations[i] = program.operations[i]->clone(); }
 	return *this;
 }
 
 void ExpressionProgram::buildProgram(const ExpressionTreeNode& node)
 {
-	for (size_t i = node.getChildren().size() - 1; i >= 0; i--)
-	{
-		buildProgram(node.getChildren()[i]);
-	}
+	for (size_t i = node.getChildren().size() - 1; i >= 0; i--) { buildProgram(node.getChildren()[i]); }
 	operations.push_back(node.getOperation().clone());
 }
 
-int ExpressionProgram::getNumOperations() const { return operations.size(); }
+int ExpressionProgram::getNumOperations() const { return int(operations.size()); }
 
 const Operation& ExpressionProgram::getOperation(int index) const { return *operations[index]; }
 

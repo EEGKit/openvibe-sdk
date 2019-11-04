@@ -3183,10 +3183,7 @@ int filtlength(const char* name)
 	return -1;
 }
 
-void copy_reverse(const double* in, const int N, double* out)
-{
-	for (int count = 0; count < N; ++count) { out[count] = in[N - count - 1]; }
-}
+void copy_reverse(const double* in, const int N, double* out) { for (int count = 0; count < N; ++count) { out[count] = in[N - count - 1]; } }
 
 void qmf_wrev(const double* in, const int N, double* out)
 {
@@ -3206,10 +3203,7 @@ void qmf_even(const double* in, const int N, double* out)
 	}
 }
 
-void copy(const double* in, const int N, double* out)
-{
-	for (int count = 0; count < N; ++count) { out[count] = in[count]; }
-}
+void copy(const double* in, const int N, double* out) { for (int count = 0; count < N; ++count) { out[count] = in[count]; } }
 
 int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp2)
 {
