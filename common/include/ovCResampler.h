@@ -65,10 +65,10 @@ namespace Common
 				m_vResampler.clear();
 
 				m_nChannel                     = 0;
-				m_iSamplingRate                = 0;
-				m_oSamplingRate                = 0;
+				m_iSampling                    = 0;
+				m_oSampling                    = 0;
 				m_nFractionalDelayFilterSample = 6;
-				m_iMaxInputSampleCount         = 1024;
+				m_iMaxNSampleIn                = 1024;
 				m_transitionBandPercent        = 45;
 				m_stopBandAttenuation          = 49;
 			}
@@ -98,10 +98,10 @@ namespace Common
 			 * Input buffers longer than this value should never be supplied to the resampler. 
 			 * Note that the resampler may use the input buffer itself for intermediate sample data storage.
 			 */
-			bool setMaxInputSampleCount(const int n = 8)
+			bool setMaxNSampleIn(const int n = 8)
 			{
 				if (n < 8 || 2048 < n) { return false; }
-				m_iMaxInputSampleCount = n;
+				m_iMaxNSampleIn = n;
 				return true;
 			}
 
@@ -138,18 +138,19 @@ namespace Common
 			/* 
 			 * This fonction initializes the vector of Resampler, using the number of channels, the input and the output sampling rates.
 			 */
-			bool reset(const size_t nChannel, const uint32_t iSampleRate, const uint32_t oSampleRate)
+			bool reset(const size_t nChannel, const size_t iSampling, const size_t oSampling)
 			{
 				if (nChannel == 0) { return false; }
-				if (iSampleRate == 0) { return false; }
-				if (oSampleRate == 0) { return false; }
-				m_iSamplingRate = iSampleRate;
-				m_oSamplingRate = oSampleRate;
+				if (iSampling == 0) { return false; }
+				if (oSampling == 0) { return false; }
+				m_iSampling = iSampling;
+				m_oSampling = oSampling;
 
 				for (size_t i = 0; i < m_vResampler.size(); ++i) { delete m_vResampler[i]; }
 				m_vResampler.clear();
 				m_vResampler.resize(nChannel);
 
+				const double in                  = double(iSampling), out = double(oSampling);
 				const double stopBandAttenuation = m_stopBandAttenuation == 0
 													   ? std::min(6.02 * m_nFractionalDelayFilterSample + 40, r8b::CDSPFIRFilter::getLPMaxAtten())
 													   : m_stopBandAttenuation;
@@ -160,82 +161,82 @@ namespace Common
 					{
 						case 6:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 8:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 10:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 12:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 14:
 							//stopBandAttenuation = 109.56;
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 16:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 18:
 							//stopBandAttenuation = 136.45;
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 20:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 22:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 24:
 							//stopBandAttenuation = 180.15;
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 26:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 28:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 30:
 							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(
-								iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_transitionBandPercent, stopBandAttenuation,
+								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
@@ -279,11 +280,17 @@ namespace Common
 			 */
 			virtual int getMaxOutLen(const int maxInLen) const { return m_vResampler[0]->getMaxOutLen(maxInLen); }
 
-			float getBuiltInLatency() const { return (m_iSamplingRate != 0) ? (1.0f * m_vResampler[0]->getInLenBeforeOutStart(0) / m_iSamplingRate) : 0.f; }
+			double getBuiltInLatency() const { return (m_iSampling != 0) ? (1.0 * m_vResampler[0]->getInLenBeforeOutStart(0) / m_iSampling) : 0.0; }
 
-			size_t resample(const ICallback& callback, const TFloat* inputSample, const size_t nSampleIn) { return (this->*m_fpResample)(callback, inputSample, nSampleIn); }
+			size_t resample(const ICallback& callback, const TFloat* iSample, const size_t nInSample)
+			{
+				return (this->*m_fpResample)(callback, iSample, nInSample);
+			}
 
-			size_t downsample(const ICallback& callback, const TFloat* inputSample, const size_t nSampleIn) { return (this->*m_fpResample)(callback, inputSample, nSampleIn); }
+			size_t downsample(const ICallback& callback, const TFloat* iSample, const size_t nInSample)
+			{
+				return (this->*m_fpResample)(callback, iSample, nInSample);
+			}
 
 		private:
 
@@ -292,24 +299,24 @@ namespace Common
 			 *  - sample 1 of channel 1, sample 1 of channel 2, ..., sample 1 of channel nChannel,
 			 *  - sample 2 of channel 1, sample 2 of channel 2, ..., sample 2 of channel nChannel,
 			 *  - ...
-			 *  - sample nSampleIn of channel 1, sample nSampleIn of channel 2, ..., sample nSampleIn of channel nChannel,
+			 *  - sample nInSample of channel 1, sample nInSample of channel 2, ..., sample nInSample of channel nChannel,
 			 *
 			 * This is convenient for resampling at the acquisition level.
 			 */
-			size_t resampleChannelWise(const ICallback& callback, const TFloat* inputSample, const size_t nSampleIn)
+			size_t resampleChannelWise(const ICallback& callback, const TFloat* iSample, const size_t nInSample)
 			{
 				int nI              = 0;
 				bool isFirstChannel = true;
 
-				std::vector<double> iBuffers(nSampleIn);
+				std::vector<double> iBuffers(nInSample);
 				std::vector<TFloat> oBuffers;
 
-				for (uint32_t j = 0; j < m_nChannel; ++j)
+				for (size_t j = 0; j < m_nChannel; ++j)
 				{
-					for (uint32_t k = 0; k < nSampleIn; ++k) { iBuffers[k] = double(inputSample[k * m_nChannel + j]); }
+					for (size_t k = 0; k < nInSample; ++k) { iBuffers[k] = double(iSample[k * m_nChannel + j]); }
 
 					double* resamplerOutputBuffer;
-					nI = m_vResampler[j]->process(&iBuffers[0], int(nSampleIn), resamplerOutputBuffer);
+					nI = m_vResampler[j]->process(&iBuffers[0], int(nInSample), resamplerOutputBuffer);
 
 					if (isFirstChannel)
 					{
@@ -327,27 +334,27 @@ namespace Common
 
 			/*
 			 * This function resamples the signal assuming the input samples are ordered this way :
-			 *  - sample 1 of channel 1, sample 2 of channel 1, ..., sample nSampleIn of channel 1,
-			 *  - sample 1 of channel 2, sample 2 of channel 2, ..., sample nSampleIn of channel 2,
+			 *  - sample 1 of channel 1, sample 2 of channel 1, ..., sample nInSample of channel 1,
+			 *  - sample 1 of channel 2, sample 2 of channel 2, ..., sample nInSample of channel 2,
 			 *  - ...
-			 *  - sample 1 of channel nChannel, sample 2 of channel nChannel, ..., sample nSampleIn of channel nChannel,
+			 *  - sample 1 of channel nChannel, sample 2 of channel nChannel, ..., sample nInSample of channel nChannel,
 			 *
 			 * This is convenient for resampling at the signal-processing level.
 			 */
-			size_t resampleSampleWise(const ICallback& callback, const TFloat* inputSample, const size_t nSampleIn)
+			size_t resampleSampleWise(const ICallback& callback, const TFloat* iSample, const size_t nInSample)
 			{
 				int nI              = 0;
 				bool isFirstChannel = true;
 
-				std::vector<double> iBuffers(nSampleIn);
+				std::vector<double> iBuffers(nInSample);
 				std::vector<TFloat> oBuffers;
 
 				for (size_t j = 0; j < m_nChannel; ++j)
 				{
-					for (size_t k = 0; k < nSampleIn; ++k) { iBuffers[k] = double(inputSample[j * nSampleIn + k]); }
+					for (size_t k = 0; k < nInSample; ++k) { iBuffers[k] = double(iSample[j * nInSample + k]); }
 
-					double* l_pResamplerOutputBuffer;
-					nI = m_vResampler[j]->process(&iBuffers[0], int(nSampleIn), l_pResamplerOutputBuffer);
+					double* resamplerOutputBuffer;
+					nI = m_vResampler[j]->process(&iBuffers[0], int(nInSample), resamplerOutputBuffer);
 
 					if (isFirstChannel)
 					{
@@ -355,7 +362,7 @@ namespace Common
 						isFirstChannel = false;
 					}
 
-					for (int k = 0; k < nI; ++k) { oBuffers[k * m_nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]); }
+					for (int k = 0; k < nI; ++k) { oBuffers[k * m_nChannel + j] = TFloat(resamplerOutputBuffer[k]); }
 				}
 
 				for (int k = 0; k < nI; ++k) { callback.processResampler(&oBuffers[k * m_nChannel], m_nChannel); }
@@ -371,7 +378,7 @@ namespace Common
 			class CCallbackChannelWise final : public ICallback
 			{
 			public:
-				CCallbackChannelWise(TFloat* outputSample) : m_pOutputSample(outputSample) { }
+				CCallbackChannelWise(TFloat* oSample) : m_pOutputSample(oSample) { }
 
 				void processResampler(const TFloat* sample, const size_t nChannel) const override
 				{
@@ -392,7 +399,7 @@ namespace Common
 			class CCallbackSampleWise final : public ICallback
 			{
 			public:
-				CCallbackSampleWise(TFloat* outputSample, const size_t nOutputSample) : m_OutputSample(outputSample), m_NOutputSample(nOutputSample) { }
+				CCallbackSampleWise(TFloat* oSample, const size_t nOutSample) : m_OutputSample(oSample), m_NOutputSample(nOutSample) { }
 
 				void processResampler(const TFloat* sample, const size_t nChannel) const override
 				{
@@ -406,31 +413,43 @@ namespace Common
 				mutable size_t m_OutputSampleIdx = 0;
 			};
 
-			size_t resampleChannelWise(TFloat* oSample, const TFloat* iSample, const size_t nSampleIn, const size_t /*nOutputSample*/) { return this->resample(CCallbackChannelWise(oSample), iSample, nSampleIn); }
+			size_t resampleChannelWise(TFloat* oSample, const TFloat* iSample, const size_t nInSample, const size_t /*nOutSample*/)
+			{
+				return this->resample(CCallbackChannelWise(oSample), iSample, nInSample);
+			}
 
-			size_t resampleSampleWise(TFloat* oSample, const TFloat* iSample, const size_t nSampleIn, const size_t nOutputSample) { return this->resample(CCallbackSampleWise(oSample, nOutputSample), iSample, nSampleIn); }
+			size_t resampleSampleWise(TFloat* oSample, const TFloat* iSample, const size_t nInSample, const size_t nOutSample)
+			{
+				return this->resample(CCallbackSampleWise(oSample, nOutSample), iSample, nInSample);
+			}
 
 		public:
 
-			size_t resample(TFloat* oSample, const TFloat* iSample, const size_t nSampleIn, const size_t nOutputSample = 1) { return (this->*m_fpResampleDirect)(oSample, iSample, nSampleIn, nOutputSample); }
+			size_t resample(TFloat* oSample, const TFloat* iSample, const size_t nInSample, const size_t nOutSample = 1)
+			{
+				return (this->*m_fpResampleDirect)(oSample, iSample, nInSample, nOutSample);
+			}
 
-			size_t downsample(TFloat* oSample, const TFloat* iSample, const size_t nSampleIn, const size_t nOutputSample = 1) { return resample(oSample, iSample, nSampleIn, nOutputSample); }
+			size_t downsample(TFloat* oSample, const TFloat* iSample, const size_t nInSample, const size_t nOutSample = 1)
+			{
+				return resample(oSample, iSample, nInSample, nOutSample);
+			}
 
 		protected:
 
 			size_t m_nChannel      = 0;
-			size_t m_iSamplingRate = 0;
-			size_t m_oSamplingRate = 0;
+			size_t m_iSampling = 0;
+			size_t m_oSampling = 0;
 
 			int m_nFractionalDelayFilterSample = 6;
-			int m_iMaxInputSampleCount         = 1024;
+			int m_iMaxNSampleIn         = 1024;
 			double m_transitionBandPercent     = 45;
 			double m_stopBandAttenuation       = 49;
 
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 
-			size_t (TResampler<TFloat, TStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, const size_t nSampleIn);
-			size_t (TResampler<TFloat, TStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, const size_t nSampleIn, const size_t nOutputSample);
+			size_t (TResampler<TFloat, TStoreMode>::*m_fpResample)(const ICallback& callback, const TFloat* iSample, const size_t nInSample);
+			size_t (TResampler<TFloat, TStoreMode>::*m_fpResampleDirect)(TFloat* oSample, const TFloat* iSample, const size_t nInSample, const size_t nOutSample);
 		};
 
 		typedef TResampler<float, ResamplerStoreMode_SampleWise> CResamplerSf;

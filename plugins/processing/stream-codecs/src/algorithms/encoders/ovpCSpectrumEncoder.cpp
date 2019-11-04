@@ -11,7 +11,7 @@ bool CSpectrumEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 	ip_pFrequencyAbscissa.initialize(getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
-	ip_pSamplingRate.initialize(getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
+	ip_pSamplingRate.initialize(getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_Sampling));
 	return true;
 }
 

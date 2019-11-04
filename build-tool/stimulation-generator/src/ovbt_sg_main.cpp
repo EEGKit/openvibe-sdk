@@ -73,32 +73,29 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 int main(int argc, char** argv)
 {
 	if (argc < 3) { return -1; }
-	generation_type l_eType = parse_argument(argv[1]);
+	generation_type type = parse_argument(argv[1]);
 
-	vector<SStimulation> l_oStimulationList;
-	vector<CFileGeneratorBase*> l_oGeneratorList;
+	vector<SStimulation> stimulations;
+	vector<CFileGeneratorBase*> generators;
 
-	ifstream l_oStimulationFile(argv[2]);
-	string l_sName, l_sId, l_sHexaCode;
-	while (l_oStimulationFile >> l_sName >> l_sId >> l_sHexaCode)
+	ifstream stimFile(argv[2]);
+	string name, id, hexaCode;
+	while (stimFile >> name >> id >> hexaCode)
 	{
-		SStimulation l_oTemp = { l_sName, l_sId, l_sHexaCode };
-		l_oStimulationList.push_back(l_oTemp);
+		SStimulation temp = { name, id, hexaCode };
+		stimulations.push_back(temp);
 	}
 
-	if (generate_generator_list(l_oGeneratorList, l_eType, argc, argv)) { return -1; }
+	if (generate_generator_list(generators, type, argc, argv)) { return -1; }
 
 	//Now we generate all files that needs to be done
-	for (auto it = l_oStimulationList.begin(); it != l_oStimulationList.end(); ++it)
+	for (auto it = stimulations.begin(); it != stimulations.end(); ++it)
 	{
-		SStimulation& l_oTemp = *it;
-		for (auto it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen)
-		{
-			(*it_gen)->appendStimulation(l_oTemp);
-		}
+		SStimulation& temp = *it;
+		for (auto it_gen = generators.begin(); it_gen != generators.end(); ++it_gen) { (*it_gen)->appendStimulation(temp); }
 	}
 
-	for (auto it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen) { (*it_gen)->closeFile(); }
+	for (auto it_gen = generators.begin(); it_gen != generators.end(); ++it_gen) { (*it_gen)->closeFile(); }
 
 	return 0;
 }

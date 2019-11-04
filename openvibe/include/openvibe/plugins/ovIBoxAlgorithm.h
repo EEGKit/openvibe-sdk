@@ -218,7 +218,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processInput(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/, const uint32_t /*index*/) { return false; }
+			virtual bool processInput(Kernel::IBoxAlgorithmContext& /*boxAlgorithmContext*/, const size_t /*index*/) { return false; }
 
 			//@}
 			/** \name Algorithm processing */

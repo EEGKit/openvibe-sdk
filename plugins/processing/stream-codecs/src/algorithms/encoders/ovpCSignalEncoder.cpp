@@ -11,7 +11,7 @@ bool CSignalEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 
-	ip_ui64SamplingRate.initialize(getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
+	ip_ui64SamplingRate.initialize(getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_Sampling));
 
 	return true;
 }

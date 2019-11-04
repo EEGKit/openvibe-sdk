@@ -14,7 +14,7 @@ bool CSignalDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_ui64SamplingRate.initialize(getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+	op_ui64SamplingRate.initialize(getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_Sampling));
 
 	return true;
 }

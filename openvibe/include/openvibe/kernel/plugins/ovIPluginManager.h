@@ -69,14 +69,14 @@ namespace OpenViBE
 			 * \brief Gets next plugin object descriptor identifier given a base class identifier
 			 * \param previousID [in] : The identifier
 			 *        for the preceeding plugin object descriptor
-			 * \param rBaseClassIdentifier [in] : the class the plugin object descriptor should derive from
+			 * \param baseClassID [in] : the class the plugin object descriptor should derive from
 			 * \return The identifier of the next plugin object descriptor in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousID
 			 *       will cause this function to return the first plugin object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& rBaseClassIdentifier) const = 0;
+			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& baseClassID) const = 0;
 			/**
 			 * \brief Checks if a plugin object can be created or not
 			 * \param classID [in] : the class identifier a descriptor should be able to create
@@ -120,7 +120,7 @@ namespace OpenViBE
 			 */
 			virtual CIdentifier getPluginObjectHashValue(const CIdentifier& classID) const = 0;
 
-			virtual CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const = 0;
+			virtual CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc) const = 0;
 			/**
 			 * \brief Gets a hint whether a plugin is deprecated or not
 			 * \param classID [in] : the class identifier of the plugin which deprecation should be returned
@@ -165,32 +165,32 @@ namespace OpenViBE
 			/**
 			 * \brief Creates a new algorithm given its class identifier and eventually returns the associated descriptor
 			 * \param classID [in] : the class identifier of the algorithm to create
-			 * \param ppAlgorithmDesc [out] : a pointer where to store the descriptor information
+			 * \param algorithmDesc [out] : a pointer where to store the descriptor information
 			 * \return The newly created algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& classID, const Plugins::IAlgorithmDesc** ppAlgorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& classID, const Plugins::IAlgorithmDesc** algorithmDesc) = 0;
 			/**
 			 * \brief Creates a new algorithm given a descriptor
-			 * \param rAlgorithmDesc [in] : the class descriptor of the algorithm to create
+			 * \param algorithmDesc [in] : the class descriptor of the algorithm to create
 			 * \return The newly created algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) = 0;
 			/**
 			 * \brief Creates a new box algorithm given its class identifier and eventually returns the associated descriptor
 			 * \param classID [in] : the class identifier of the box algorithm to create
-			 * \param ppBoxAlgorithmDesc [out] : a pointer where to store the descriptor information
+			 * \param boxAlgorithmDesc [out] : a pointer where to store the descriptor information
 			 * \return The newly created box algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& classID, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) = 0;
+			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& classID, const Plugins::IBoxAlgorithmDesc** boxAlgorithmDesc) = 0;
 
 			//@}
 

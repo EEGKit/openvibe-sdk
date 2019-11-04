@@ -18,14 +18,14 @@ bool CCppCodeGenerator::openFile(const char* sFilename)
 
 	m_oFile << "bool OpenViBEToolkit::initializeStimulationList(const IKernelContext& ctx)" << endl;
 	m_oFile << "{" << endl;
-	m_oFile << "\tITypeManager& l_rTypeManager=ctx.getTypeManager();" << endl << endl;
+	m_oFile << "\tITypeManager& typeManager=ctx.getTypeManager();" << endl << endl;
 	return true;
 }
 
 
 bool CCppCodeGenerator::appendStimulation(SStimulation& rStim)
 {
-	m_oFile << "\tl_rTypeManager.registerEnumerationEntry(OV_TypeId_Stimulation, \""
+	m_oFile << "\ttypeManager.registerEnumerationEntry(OV_TypeId_Stimulation, \""
 			<< rStim.m_Name
 			<< "\", "
 			<< rStim.m_Id

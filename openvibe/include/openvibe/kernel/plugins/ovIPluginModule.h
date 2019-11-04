@@ -61,7 +61,7 @@ namespace OpenViBE
 			/**
 			 * \brief Gets a specific plugin object descriptor
 			 * \param index [in] : the index of the plugin object descriptor to get
-			 * \param rpPluginObjectDescription [out] : a pointer on the associated plugin object descriptor
+			 * \param pluginObjectDesc [out] : a pointer on the associated plugin object descriptor
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
@@ -72,11 +72,11 @@ namespace OpenViBE
 			 *
 			 * This function calls the onGetPluginObjectDescription main function of the plugin module.
 			 *
-			 * \note \c rpPluginObjectDescription can be \c NULL even if the function returned \e true
-			 * \note \c rpPluginObjectDescription IS \c NULL if the function returned \e false
+			 * \note \c pluginObjectDesc can be \c NULL even if the function returned \e true
+			 * \note \c pluginObjectDesc IS \c NULL if the function returned \e false
 			 * \note It is ok to call this function several times for a same index.
 			 */
-			virtual bool getPluginObjectDescription(uint32_t index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
+			virtual bool getPluginObjectDescription(size_t index, Plugins::IPluginObjectDesc*& pluginObjectDesc) = 0;
 			/**
 			 * \brief Uninitializes this plugin module
 			 * \return \e true in case of success.

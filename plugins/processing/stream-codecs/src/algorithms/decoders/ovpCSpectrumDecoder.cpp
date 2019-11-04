@@ -15,7 +15,7 @@ bool CSpectrumDecoder::initialize()
 	CStreamedMatrixDecoder::initialize();
 
 	op_pFrequencyAbscissa.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
-	op_pSamplingRate.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
+	op_pSamplingRate.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_Sampling));
 
 	return true;
 }

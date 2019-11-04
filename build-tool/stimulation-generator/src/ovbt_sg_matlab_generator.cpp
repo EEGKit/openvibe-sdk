@@ -6,9 +6,9 @@
 using namespace std;
 
 
-string getBrutHexaCode(string l_oFormatedHexaCode)
+string getBrutHexaCode(string formatedHexaCode)
 {
-	string res = l_oFormatedHexaCode;
+	string res = formatedHexaCode;
 	res.erase(res.begin(), res.begin() + 2);
 	return res;
 }

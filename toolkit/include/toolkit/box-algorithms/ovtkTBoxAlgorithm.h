@@ -52,7 +52,7 @@ namespace OpenViBEToolkit
 			return processClock(messageClock);
 		}
 
-		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const uint32_t index)
+		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmContext, const size_t index)
 		{
 			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmContext, &boxAlgorithmContext);
 			return processInput(index);

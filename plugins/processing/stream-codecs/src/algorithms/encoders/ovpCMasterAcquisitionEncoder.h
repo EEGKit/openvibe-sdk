@@ -60,7 +60,7 @@ namespace OpenViBEPlugins
 				rAlgorithmPrototype.addInputParameter(
 					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalMatrix, "Signal matrix", OpenViBE::Kernel::ParameterType_Matrix);
 				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSamplingRate, "Signal sampling rate",
+					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSampling, "Signal sampling rate",
 					OpenViBE::Kernel::ParameterType_UInteger);
 				rAlgorithmPrototype.addInputParameter(
 					OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_StimulationSet, "Stimulation set",

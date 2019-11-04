@@ -110,7 +110,7 @@ bool CDecoderAlgorithmTest::process()
 
 				{
 					TParameterHandler<uint64_t>
-							l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+							l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_Sampling));
 					if (l_oHandle.exists()) { OV_WARNING_K(l_oHandle); }
 				}
 			}

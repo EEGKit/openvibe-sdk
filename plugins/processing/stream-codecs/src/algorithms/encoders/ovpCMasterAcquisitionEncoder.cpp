@@ -44,7 +44,7 @@ bool CMasterAcquisitionEncoder::initialize()
 	TParameterHandler<uint64_t> ip_ui64SubjectAge(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectAge));
 	TParameterHandler<uint64_t> ip_ui64SubjectGender(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SubjectGender));
 	TParameterHandler<IMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalMatrix));
-	TParameterHandler<uint64_t> ip_ui64SamplingRate(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSamplingRate));
+	TParameterHandler<uint64_t> ip_ui64SamplingRate(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_SignalSampling));
 	TParameterHandler<IStimulationSet*> ip_pStimulationSet(
 		this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<uint64_t> ip_ui64BufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_BufferDuration));
@@ -92,7 +92,7 @@ bool CMasterAcquisitionEncoder::initialize()
 
 	TParameterHandler<IMatrix*> ip_pSignalMatrix(m_pSignalStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
 	TParameterHandler<uint64_t> ip_ui64SignalSamplingRate(
-		m_pSignalStreamEncoder->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
+		m_pSignalStreamEncoder->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_Sampling));
 	TParameterHandler<IMemoryBuffer*> op_pSignalMemoryBuffer(
 		m_pSignalStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
