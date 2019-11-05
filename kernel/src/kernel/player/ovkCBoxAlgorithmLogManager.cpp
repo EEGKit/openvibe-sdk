@@ -7,8 +7,8 @@ using namespace Kernel;
 void CBoxAlgorithmLogManager::log(const ELogLevel logLevel)
 {
 	CIdentifier boxId;
-	m_SimulatedBox.getBoxIdentifier(boxId);
+	m_simulatedBox.getBoxIdentifier(boxId);
 
-	m_LogManager << logLevel << "At time " << time64(m_PlayerContext.getCurrentTime()) << " <" << LogColor_PushStateBit << LogColor_ForegroundBlue
-			<< "Box algorithm" << LogColor_PopStateBit << "::" << boxId << " aka " << m_SimulatedBox.getName() << "> ";
+	m_logManager << logLevel << "At time " << time64(m_playerCtx.getCurrentTime()) << " <" << LogColor_PushStateBit << LogColor_ForegroundBlue
+			<< "Box algorithm" << LogColor_PopStateBit << "::" << boxId << " aka " << m_simulatedBox.getName() << "> ";
 }

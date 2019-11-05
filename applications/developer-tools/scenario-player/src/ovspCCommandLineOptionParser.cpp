@@ -132,4 +132,4 @@ namespace OpenViBE
 
 		return EPlayerReturnCode::Success;
 	}
-}
+}	// namespace OpenViBE

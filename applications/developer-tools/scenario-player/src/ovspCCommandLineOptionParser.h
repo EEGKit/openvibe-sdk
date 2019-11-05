@@ -62,4 +62,4 @@ namespace OpenViBE
 		ProgramOptionParser& m_OptionParser;
 		std::vector<std::shared_ptr<SCommand>> m_CommandList;
 	};
-}
+}	// namespace OpenViBE

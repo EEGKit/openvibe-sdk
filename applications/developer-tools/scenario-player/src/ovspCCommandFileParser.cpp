@@ -46,7 +46,7 @@ namespace OpenViBE
 	{
 		// given a string of type "token : value", return a pair of (token,value)
 		// split method is not used because only the first delimiter is of interest
-		const auto split = str.find_first_of(":");
+		const auto split = str.find_first_of(':');
 
 		if (split == std::string::npos) { throw std::runtime_error("Impossible to convert " + str + " to token/value pair"); }
 
@@ -60,8 +60,8 @@ namespace OpenViBE
 	std::vector<std::string> CommandFileParser::split(const std::string& str, const char delimiter)
 	{
 		std::vector<std::string> vec;
-		std::size_t currentIndex   = 0;
-		std::size_t delimiterIndex = str.find(delimiter);
+		size_t currentIndex   = 0;
+		size_t delimiterIndex = str.find(delimiter);
 
 		auto trimmed = trim(str.substr(currentIndex, delimiterIndex));
 
@@ -122,7 +122,7 @@ namespace OpenViBE
 		{
 			// rawToken is expected to be trimmed
 
-			const auto split = rawToken.find_first_of(":");
+			const auto split = rawToken.find_first_of(':');
 			const auto size  = rawToken.size();
 
 			// (a:b) pattern expected
@@ -359,4 +359,4 @@ namespace OpenViBE
 
 		return EPlayerReturnCode::Success;
 	}
-}
+}	// namespace OpenViBE

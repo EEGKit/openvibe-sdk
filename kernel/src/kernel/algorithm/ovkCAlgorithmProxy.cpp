@@ -13,16 +13,15 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace std;
 
-CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
-	: TKernelObject<IAlgorithmProxy>(ctx), m_rAlgorithmDesc(rAlgorithmDesc)
-	  , m_rAlgorithm(rAlgorithm)
+CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& algorithmDesc)
+	: TKernelObject<IAlgorithmProxy>(ctx), m_rAlgorithmDesc(algorithmDesc), m_rAlgorithm(rAlgorithm)
 {
 	m_pInputConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 	m_pOutputConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 
 	// FIXME
 	CAlgorithmProto algorithmProto(ctx, *this);
-	rAlgorithmDesc.getAlgorithmPrototype(algorithmProto);
+	algorithmDesc.getAlgorithmPrototype(algorithmProto);
 }
 
 CAlgorithmProxy::~CAlgorithmProxy()
@@ -86,7 +85,7 @@ bool CAlgorithmProxy::removeInputParameter(const CIdentifier& parameterID)
 	return true;
 }
 
-bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const CString& sOutputName, const EParameterType parameterType,
+bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const CString& name, const EParameterType parameterType,
 										 const CIdentifier& subTypeID)
 {
 	OV_ERROR_UNLESS_KRF(m_pOutputConfigurable->getParameter(parameterID) == nullptr,
@@ -95,7 +94,7 @@ bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const C
 						ErrorType::BadResourceCreation);
 
 	m_pOutputConfigurable->createParameter(parameterID, parameterType, subTypeID);
-	m_vOutputParameterName[parameterID] = sOutputName;
+	m_vOutputParameterName[parameterID] = name;
 	return true;
 }
 
@@ -206,7 +205,7 @@ bool CAlgorithmProxy::isOutputTriggerActive(const CIdentifier& triggerID) const
 	return itTrigger->second.second;
 }
 
-bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& triggerID, const bool /*bTriggerState*/)
+bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& triggerID, const bool /*state*/)
 {
 	const auto itTrigger = m_vOutputTrigger.find(triggerID);
 	if (itTrigger == m_vOutputTrigger.end()) { return false; }
@@ -229,11 +228,11 @@ bool CAlgorithmProxy::initialize()
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  CAlgorithmContext context(getKernelContext(), *this, m_rAlgorithmDesc);
 								  // The dual state initialized or not does not take into account
 								  // a partially initialized state. Thus, we have to trust algorithms to implement
 								  // their initialization routine as a rollback transaction mechanism
-								  m_isInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
+								  m_isInitialized = m_rAlgorithm.initialize(context);
 								  return m_isInitialized;
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1));
@@ -245,8 +244,8 @@ bool CAlgorithmProxy::uninitialize()
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-								  return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
+								  CAlgorithmContext context(getKernelContext(), *this, m_rAlgorithmDesc);
+								  return m_rAlgorithm.uninitialize(context);
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm uninitialization", std::placeholders::_1));
 }
@@ -257,9 +256,9 @@ bool CAlgorithmProxy::process()
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  CAlgorithmContext context(getKernelContext(), *this, m_rAlgorithmDesc);
 								  this->setAllOutputTriggers(false);
-								  const bool result = m_rAlgorithm.process(l_oAlgorithmContext);
+								  const bool result = m_rAlgorithm.process(context);
 								  this->setAllInputTriggers(false);
 								  return result;
 							  },

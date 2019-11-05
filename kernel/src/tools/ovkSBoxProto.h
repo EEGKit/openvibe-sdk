@@ -146,8 +146,8 @@ namespace
 
 		_IsDerivedFromClass_Final_(IBoxProto, OV_UndefinedIdentifier)
 
-		CIdentifier m_oHash             = OV_UndefinedIdentifier;
-		bool m_isDeprecated            = false;
+		CIdentifier m_oHash         = OV_UndefinedIdentifier;
+		bool m_isDeprecated         = false;
 		uint64_t m_inputCountHash   = 0x64AC3CB54A35888CLL;
 		uint64_t m_outputCountHash  = 0x21E0FAAFE5CAF1E1LL;
 		uint64_t m_settingCountHash = 0x6BDFB15B54B09F63LL;

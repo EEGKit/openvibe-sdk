@@ -70,4 +70,4 @@ namespace OpenViBE
 		cmd.doPrint(os);
 		return os;
 	}
-}
+}	// namespace OpenViBE

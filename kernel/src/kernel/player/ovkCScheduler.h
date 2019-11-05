@@ -1,9 +1,7 @@
 #pragma once
 
 #include "../ovkTKernelObject.h"
-
 #include <system/ovCChrono.h>
-
 #include <map>
 #include <list>
 

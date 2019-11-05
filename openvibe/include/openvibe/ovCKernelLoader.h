@@ -10,7 +10,7 @@ namespace OpenViBE
 
 		CKernelLoader();
 		~CKernelLoader() override;
-		bool load(const CString& sFileName, CString* pError = nullptr) override;
+		bool load(const CString& filename, CString* pError = nullptr) override;
 		bool unload(CString* pError = nullptr) override;
 		bool initialize() override;
 		bool getKernelDesc(Kernel::IKernelDesc*& rpKernelDesc) override;

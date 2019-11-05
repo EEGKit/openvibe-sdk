@@ -5,7 +5,7 @@
 #include <climits>
 #include <string>
 
-#define OV_UndefinedIdentifier OpenViBE::CIdentifier(0xffffffff, 0xffffffff)
+#define OV_UndefinedIdentifier	OpenViBE::CIdentifier(0xffffffff, 0xffffffff)
 
 namespace OpenViBE
 {

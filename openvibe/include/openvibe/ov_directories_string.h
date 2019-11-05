@@ -129,7 +129,7 @@ namespace OpenViBE
 			readlink("/proc/self/exe", path, sizeof(path));
 			fullpath = std::string(path);
 #elif defined TARGET_OS_MacOS
-			uint32_t size = 0;
+			size_t size = 0;
 			_NSGetExecutablePath(nullptr, &size);
 			std::unique_ptr<char> path(new char[size + 1]);
 
@@ -138,7 +138,7 @@ namespace OpenViBE
 			fullpath = std::string(path.get());
 #endif
 			const auto slashBeforeLast = fullpath.find_last_of('/', fullpath.find_last_of('/') - 1);
-			rootDir                = fullpath.substr(0, slashBeforeLast);
+			rootDir                    = fullpath.substr(0, slashBeforeLast);
 			return rootDir;
 		}
 

@@ -82,4 +82,4 @@ namespace OpenViBE
 		ICommandParser(const ICommandParser&)            = delete;
 		ICommandParser& operator=(const ICommandParser&) = delete;
 	};
-}
+}	// namespace OpenViBE

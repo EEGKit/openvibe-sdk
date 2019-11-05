@@ -21,8 +21,6 @@ namespace
 	protected:
 
 		StreamedMatrixTest() { }
-
-
 		~StreamedMatrixTest() override { }
 
 		void SetUp() override

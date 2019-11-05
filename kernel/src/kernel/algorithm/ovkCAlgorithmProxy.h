@@ -12,7 +12,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& rAlgorithmDesc);
+			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& algorithmDesc);
 			~CAlgorithmProxy() override;
 
 			Plugins::IAlgorithm& getAlgorithm();
