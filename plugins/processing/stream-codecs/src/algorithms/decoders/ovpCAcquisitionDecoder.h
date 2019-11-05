@@ -58,24 +58,24 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_AcquisitionStreamDecoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAcquisitionDecoder(); }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseDecoderDesc::getAlgorithmPrototype(prototype);
 
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ExperimentInformationStream, "Experiment information stream",
 					OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_SignalStream, "Signal stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_StimulationStream, "Stimulation stream",
 					OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelLocalisationStream, "Channel localisation stream",
 					OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelUnitsStream, "Channel units stream",
 					OpenViBE::Kernel::ParameterType_MemoryBuffer);
 

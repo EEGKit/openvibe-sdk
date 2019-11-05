@@ -41,11 +41,11 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_OVMatrixFileWriter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmOVMatrixFileWriter; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Filename, "Filename", OpenViBE::Kernel::ParameterType_String);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 				return true;
 			}

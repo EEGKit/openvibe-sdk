@@ -45,14 +45,14 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierNULL; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmClassifierNULL; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
-				rAlgorithmPrototype.addInputParameter(
+				CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
+				prototype.addInputParameter(
 					OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1, "Parameter 1", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2, "Parameter 2", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", OpenViBE::Kernel::ParameterType_Enumeration,
 					OV_TypeId_Stimulation);
 				return true;

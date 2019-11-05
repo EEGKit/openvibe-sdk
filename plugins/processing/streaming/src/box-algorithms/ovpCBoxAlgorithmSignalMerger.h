@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmSignalMergerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputName(index, ("Input " + std::to_string(index + 1)).c_str());
 				box.setInputType(index, OV_TypeId_Signal);

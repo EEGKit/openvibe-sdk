@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmChannelSelectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(0, typeID);
@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(0, typeID);
@@ -69,7 +69,7 @@ namespace OpenViBEPlugins
 							 OpenViBE::Kernel::ErrorType::BadInput);
 			}
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				//we are only interested in the setting 0 and the type changes (select or reject)
 				if ((index == 0 || index == 1) && (!m_hasUserSetName))

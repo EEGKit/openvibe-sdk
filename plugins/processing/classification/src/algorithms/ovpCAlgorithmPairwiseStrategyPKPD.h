@@ -62,9 +62,9 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmPairwiseStrategyPKPD; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(prototype);
 				return true;
 			}
 

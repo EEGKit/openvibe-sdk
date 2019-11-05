@@ -59,7 +59,7 @@ namespace OpenViBEPlugins
 			CBoxAlgorithmVotingClassifierListener()
 				: m_oInputTypeID(OV_TypeId_Stimulations) { }
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier inputTypeID = OV_UndefinedIdentifier;
 				box.getInputType(index, inputTypeID);
@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				for (uint32_t i = 0; i < box.getInputCount(); ++i)
 				{

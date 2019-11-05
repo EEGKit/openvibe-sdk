@@ -27,10 +27,10 @@ namespace OpenViBE
 		class OV_API IAlgorithmScenarioExporterDesc : public IAlgorithmDesc
 		{
 		public:
-			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario, "Scenario", Kernel::ParameterType_Object);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario, "Scenario", Kernel::ParameterType_Object);
+				prototype.addOutputParameter(
 					OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer, "Memory buffer", Kernel::ParameterType_MemoryBuffer);
 				return true;
 			}

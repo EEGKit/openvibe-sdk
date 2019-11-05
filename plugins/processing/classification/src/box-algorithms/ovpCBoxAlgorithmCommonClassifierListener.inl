@@ -93,7 +93,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				//index represent the number of the class (because of rejected offset)
 				const std::string buffer = "Class " + std::to_string(index) + " label";
@@ -105,7 +105,7 @@ namespace OpenViBEPlugins
 				return onInputAddedOrRemoved(box);
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				//First remove the removed input from settings
 				box.removeSetting(3 - 1 + getStrategySettingsCount(box) + index);
@@ -151,7 +151,7 @@ namespace OpenViBEPlugins
 			//Return the index of the combo box used to select the classification algorithm
 			uint32_t getClassifierIndex(OpenViBE::Kernel::IBox& box) { return getStrategySettingsCount(box) + 3 + box.getInputCount() - 1; }
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				if (index == getClassifierIndex(box)) { return this->onAlgorithmClassifierChanged(box); }
 				if (index == getStrategyIndex()) { return this->onStrategyChanged(box); }

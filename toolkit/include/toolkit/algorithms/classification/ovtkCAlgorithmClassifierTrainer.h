@@ -28,16 +28,16 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmClassifierTrainerDesc : public OpenViBE::Plugins::IAlgorithmDesc
 	{
 	public:
-		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 		{
-			rAlgorithmPrototype.addInputParameter(
+			prototype.addInputParameter(
 				OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addOutputParameter(
+			prototype.addOutputParameter(
 				OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration, "Configuration", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train, "Train");
-			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration, "Save configuration");
-			rAlgorithmPrototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, "Success");
-			rAlgorithmPrototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, "Failed");
+			prototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train, "Train");
+			prototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration, "Save configuration");
+			prototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, "Success");
+			prototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, "Failed");
 			return true;
 		}
 

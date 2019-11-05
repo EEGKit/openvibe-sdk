@@ -276,7 +276,7 @@ namespace OpenViBEToolkit
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index)
 		{
 			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 			box.getInputType(index, typeID);
@@ -295,7 +295,7 @@ namespace OpenViBEToolkit
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index)
 		{
 			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 			box.getOutputType(index, typeID);

@@ -51,7 +51,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_StreamedMatrix);
 				if (box.getSettingCount() > 1) { box.addOutput("", OV_TypeId_StreamedMatrix); }
@@ -59,14 +59,14 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.removeOutput(index);
 				this->check(box);
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setOutputType(index, OV_TypeId_StreamedMatrix);
 				box.addInput("", OV_TypeId_StreamedMatrix);
@@ -74,7 +74,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.removeInput(index);
 				this->check(box);

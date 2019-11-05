@@ -68,20 +68,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_EBMLStream);
 				this->check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;

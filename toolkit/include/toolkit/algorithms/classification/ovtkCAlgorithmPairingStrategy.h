@@ -47,14 +47,14 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
 	{
 	public:
-		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 		{
-			CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+			CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
 
-			rAlgorithmPrototype.addInputParameter(
+			prototype.addInputParameter(
 				OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", OpenViBE::Kernel::ParameterType_Identifier);
 
-			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
+			prototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
 			return true;
 		}
 
