@@ -13,7 +13,7 @@ namespace OpenViBE
 	{
 		typedef struct _InterfacorRequest
 		{
-			uint32_t index         = OV_Value_UndefinedIndexUInt;
+			size_t index           = OV_Value_UndefinedIndexUInt;
 			CIdentifier identifier = OV_UndefinedIdentifier;
 			CIdentifier typeID     = OV_UndefinedIdentifier;
 			CString name;
@@ -34,27 +34,27 @@ namespace OpenViBE
 
 			bool initialize();
 
-			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(EBoxInterfacorType interfacorType) const
+			const std::map<size_t, size_t>& getOriginalToUpdatedInterfacorCorrespondence(EBoxInterfacorType interfacorType) const
 			{
-				return m_OriginalToUpdatedCorrespondence.at(interfacorType);
+				return m_originalToUpdatedCorrespondence.at(interfacorType);
 			}
 
-			IBox& getUpdatedBox() const { return *m_UpdatedBox; }
+			IBox& getUpdatedBox() const { return *m_updatedBox; }
 
 			bool flaggedForManualUpdate() const
 			{
-				OV_FATAL_UNLESS_K(m_Initialized, "Box Updater is not initialized", ErrorType::BadCall);
+				OV_FATAL_UNLESS_K(m_initialized, "Box Updater is not initialized", ErrorType::BadCall);
 
-				return m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
-					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
-					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
-					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
-					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
-					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
-					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
+				return m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
+					   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
+					   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
+					   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
+					   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
+					   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
+					   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
 			}
 
-			bool isUpdateRequired() const { return m_IsUpdateRequired; }
+			bool isUpdateRequired() const { return m_isUpdateRequired; }
 
 			static const std::array<CIdentifier, 10> UPDATABLE_ATTRIBUTES;
 
@@ -62,7 +62,8 @@ namespace OpenViBE
 
 		private:
 
-			static uint32_t getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name);
+			static size_t getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
+											 const CString& name);
 			bool updateInterfacors(EBoxInterfacorType interfacorType);
 
 			/**
@@ -78,18 +79,18 @@ namespace OpenViBE
 			bool checkForSupportedIOSAttributesToBeUpdated() const;
 
 			// pointer to the parent scenario
-			CScenario* m_Scenario = nullptr;
+			CScenario* m_scenario = nullptr;
 			// pointer to the original box to be updated
-			IBox* m_SourceBox = nullptr;
+			IBox* m_sourceBox = nullptr;
 			// pointer to the kernel box
-			const IBox* m_KernelBox = nullptr;
+			const IBox* m_kernelBox = nullptr;
 			// pointer to the updated box. This box will be used to update the prototype of the original box
-			IBox* m_UpdatedBox = nullptr;
+			IBox* m_updatedBox = nullptr;
 			// true when updater has been initialized
-			bool m_Initialized = false;
+			bool m_initialized = false;
 
-			std::map<EBoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
-			bool m_IsUpdateRequired = false;
+			std::map<EBoxInterfacorType, std::map<size_t, size_t>> m_originalToUpdatedCorrespondence;
+			bool m_isUpdateRequired = false;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

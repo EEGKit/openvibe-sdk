@@ -12,12 +12,14 @@ namespace OpenViBE
 
 			CBoxProto(const IKernelContext& ctx, IBox& box) : TKernelObject<IBoxProto>(ctx), m_box(box) {}
 			~CBoxProto() override = default;
-			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
-			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
+						  const bool notify                                                             = true) override;
+			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
+						   const bool notify                                                             = true) override;
 
 			//virtual bool addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue); 
 			bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue,
-							const bool bModifiable = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+							const bool bModifiable = false, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) override;
 			bool addFlag(const EBoxFlag eBoxFlag) override;
 			bool addFlag(const CIdentifier& cIdentifierFlag) override;
 			bool addInputSupport(const CIdentifier& typeID) override { return m_box.addInputSupport(typeID); }

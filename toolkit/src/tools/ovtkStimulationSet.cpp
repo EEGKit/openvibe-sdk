@@ -5,7 +5,7 @@ using namespace OpenViBE;
 bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64_t ui64TimeShift)
 {
 	const size_t count = rStimulationSet.getStimulationCount();
-	for (uint64_t i = 0; i < count; ++i) { rStimulationSet.setStimulationDate(i, rStimulationSet.getStimulationDate(i) + ui64TimeShift); }
+	for (size_t i = 0; i < count; ++i) { rStimulationSet.setStimulationDate(i, rStimulationSet.getStimulationDate(i) + ui64TimeShift); }
 	return true;
 }
 
@@ -20,7 +20,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinatio
 													const uint64_t ui64TimeShift)
 {
 	const size_t count = rSourceStimulationSet.getStimulationCount();
-	for (uint64_t i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 	{
 		rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i),
 													 rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift,
@@ -33,7 +33,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDesti
 														 const uint64_t ui64SourceStartTime, const uint64_t ui64SourceEndTime, const uint64_t ui64TimeShift)
 {
 	const size_t count = rSourceStimulationSet.getStimulationCount();
-	for (uint64_t i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 	{
 		const uint64_t date = rSourceStimulationSet.getStimulationDate(i);
 		if (ui64SourceStartTime <= date && date < ui64SourceEndTime)

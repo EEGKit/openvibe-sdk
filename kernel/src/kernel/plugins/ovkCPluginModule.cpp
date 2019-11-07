@@ -57,7 +57,8 @@ namespace OpenViBE
 			public:
 
 				explicit CPluginModuleContext(const IKernelContext& ctx)
-					: TKernelObject<IPluginModuleContext>(ctx), m_logManager(ctx.getLogManager()), m_typeManager(ctx.getTypeManager()), m_rScenarioManager(ctx.getScenarioManager()) { }
+					: TKernelObject<IPluginModuleContext>(ctx), m_logManager(ctx.getLogManager()), m_typeManager(ctx.getTypeManager()),
+					  m_rScenarioManager(ctx.getScenarioManager()) { }
 
 				ILogManager& getLogManager() const override { return m_logManager; }
 				ITypeManager& getTypeManager() const override { return m_typeManager; }
@@ -97,7 +98,7 @@ bool CPluginModuleBase::getPluginObjectDescription(size_t index, IPluginObjectDe
 		if (!isOpen()) { return false; }
 		if (!m_onGetPluginObjectDescriptionCB) { return false; }
 
-		size_t idx                          = 0;
+		size_t idx             = 0;
 		IPluginObjectDesc* pod = nullptr;
 		while (m_onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), idx, pod))
 		{

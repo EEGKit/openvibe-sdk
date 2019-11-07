@@ -71,6 +71,6 @@ namespace OpenViBE
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Comment)
 		};
 
-		typedef IComment IStaticCommentContext;
+		typedef IComment static_comment_context_t;
 	} // namespace Kernel
 } // namespace OpenViBE

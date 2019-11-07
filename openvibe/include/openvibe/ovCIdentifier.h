@@ -49,7 +49,7 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(const uint32_t id1, const uint32_t id2) : m_id((uint64_t(id1) << 32) + id2) {}
+		CIdentifier(const size_t id1, const size_t id2) : m_id((uint64_t(id1) << 32) + id2) {}
 		/**
 		 * \brief 64 bits integer based constructor
 		 * \param id [in] : The identifier
@@ -173,7 +173,7 @@ namespace OpenViBE
 		friend OV_API bool operator>=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 < id2); }
 
 		//@}
-		
+
 		/**
 		 * \brief Converts this identifier into an OpenViBE string
 		 * \return This identifier represented as an OpenViBE string

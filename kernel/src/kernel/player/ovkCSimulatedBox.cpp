@@ -39,9 +39,9 @@ bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioID)
 
 bool CSimulatedBox::getBoxIdentifier(CIdentifier& boxId) const
 {
-	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_box, "Simulated box not initialized", ErrorType::BadCall);
 
-	boxId = m_pBox->getIdentifier();
+	boxId = m_box->getIdentifier();
 	return true;
 }
 
@@ -49,34 +49,35 @@ bool CSimulatedBox::setBoxIdentifier(const CIdentifier& boxId)
 {
 	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", ErrorType::BadCall);
 
-	m_pBox = m_scenario->getBoxDetails(boxId);
-	return m_pBox != nullptr;
+	m_box = m_scenario->getBoxDetails(boxId);
+	return m_box != nullptr;
 }
 
 bool CSimulatedBox::initialize()
 {
-	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_box, "Simulated box not initialized", ErrorType::BadCall);
 	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", ErrorType::BadCall);
 
 	m_bChunkConsistencyChecking = this->getConfigurationManager().expandAsBoolean("${Kernel_CheckChunkConsistency}", true);
-	m_inputs.resize(m_pBox->getInputCount());
-	m_outputs.resize(m_pBox->getOutputCount());
-	m_vCurrentOutput.resize(m_pBox->getOutputCount());
-	m_vLastOutputStartTime.resize(m_pBox->getOutputCount(), 0);
-	m_vLastOutputEndTime.resize(m_pBox->getOutputCount(), 0);
+	m_inputs.resize(m_box->getInputCount());
+	m_outputs.resize(m_box->getOutputCount());
+	m_vCurrentOutput.resize(m_box->getOutputCount());
+	m_vLastOutputStartTime.resize(m_box->getOutputCount(), 0);
+	m_vLastOutputEndTime.resize(m_box->getOutputCount(), 0);
 
 	m_lastClockActivationDate = OV_IncorrectTime;
 	m_clockFrequency          = 0;
 	m_clockActivationStep     = 0;
 
-	m_pBoxAlgorithm = getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), nullptr);
+	m_boxAlgorithm = getPluginManager().createBoxAlgorithm(m_box->getAlgorithmClassIdentifier(), nullptr);
 
-	OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm, "Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier().toString(), ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(m_boxAlgorithm, "Could not create box algorithm with class id " << m_box->getAlgorithmClassIdentifier().toString(),
+						ErrorType::BadResourceCreation);
 
 	{
-		CBoxAlgorithmCtx l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
+		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext), "Box algorithm <" << m_pBox->getName() << "> initialization failed", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->initialize(context), "Box algorithm <" << m_box->getName() << "> initialization failed", ErrorType::Internal);
 		}
 	}
 
@@ -85,17 +86,18 @@ bool CSimulatedBox::initialize()
 
 bool CSimulatedBox::uninitialize()
 {
-	if (!m_pBoxAlgorithm) { return true; }
+	if (!m_boxAlgorithm) { return true; }
 
 	{
-		CBoxAlgorithmCtx l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
+		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext), "Box algorithm <" << m_pBox->getName() << "> uninitialization failed", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->uninitialize(context), "Box algorithm <" << m_box->getName() << "> uninitialization failed",
+								ErrorType::Internal);
 		}
 	}
 
-	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
-	m_pBoxAlgorithm = nullptr;
+	getPluginManager().releasePluginObject(m_boxAlgorithm);
+	m_boxAlgorithm = nullptr;
 
 	return true;
 }
@@ -103,9 +105,9 @@ bool CSimulatedBox::uninitialize()
 bool CSimulatedBox::processClock()
 {
 	{
-		CBoxAlgorithmCtx l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
+		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			const uint64_t newFreq = m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
+			const uint64_t newFreq = m_boxAlgorithm->getClockFrequency(context);
 			if (newFreq == 0)
 			{
 				m_clockActivationStep     = OV_IncorrectTime;
@@ -114,7 +116,7 @@ bool CSimulatedBox::processClock()
 			else
 			{
 				OV_ERROR_UNLESS_KRF(newFreq <= m_rScheduler.getFrequency()<<32,
-									"Box " << m_pBox->getName() << " requested higher clock frequency ("
+									"Box " << m_box->getName() << " requested higher clock frequency ("
 									<< newFreq << " == " << TimeArithmetics::timeToSeconds(newFreq) << "hz) " <<
 									"than what the scheduler can handle ("
 									<< (m_rScheduler.getFrequency()<<32) << " == " << TimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)",
@@ -130,20 +132,21 @@ bool CSimulatedBox::processClock()
 		}
 	}
 
-	if ((m_clockFrequency != 0) && (m_lastClockActivationDate == OV_IncorrectTime || m_rScheduler.getCurrentTime() - m_lastClockActivationDate >= m_clockActivationStep))
+	if ((m_clockFrequency != 0) && (m_lastClockActivationDate == OV_IncorrectTime || m_rScheduler.getCurrentTime() - m_lastClockActivationDate >=
+									m_clockActivationStep))
 	{
-		CBoxAlgorithmCtx boxAlgorithmContext(getKernelContext(), this, m_pBox);
+		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
 			if (m_lastClockActivationDate == OV_IncorrectTime) { m_lastClockActivationDate = m_rScheduler.getCurrentTime(); }
 			else { m_lastClockActivationDate = m_lastClockActivationDate + m_clockActivationStep; }
 
-			CMessageClock l_oClockMessage(this->getKernelContext());
-			l_oClockMessage.setTime(m_lastClockActivationDate);
+			CMessageClock message(this->getKernelContext());
+			message.setTime(m_lastClockActivationDate);
 
-			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->processClock(boxAlgorithmContext, l_oClockMessage),
-								"Box algorithm <" << m_pBox->getName() << "> processClock() function failed", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processClock(context, message),
+								"Box algorithm <" << m_box->getName() << "> processClock() function failed", ErrorType::Internal);
 
-			m_bReadyToProcess |= boxAlgorithmContext.isAlgorithmReadyToProcess();
+			m_bReadyToProcess |= context.isAlgorithmReadyToProcess();
 		}
 	}
 
@@ -155,12 +158,12 @@ bool CSimulatedBox::processInput(const size_t index, const CChunk& rChunk)
 	m_inputs[index].push_back(rChunk);
 
 	{
-		CBoxAlgorithmCtx l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
+		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, index),
-								"Box algorithm <" << m_pBox->getName() << "> processInput() function failed", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processInput(context, index),
+								"Box algorithm <" << m_box->getName() << "> processInput() function failed", ErrorType::Internal);
 		}
-		m_bReadyToProcess |= l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
+		m_bReadyToProcess |= context.isAlgorithmReadyToProcess();
 	}
 
 	return true;
@@ -169,11 +172,10 @@ bool CSimulatedBox::processInput(const size_t index, const CChunk& rChunk)
 bool CSimulatedBox::process()
 {
 	if (!m_bReadyToProcess) { return true; }
-
 	{
-		CBoxAlgorithmCtx l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
+		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->process(l_oBoxAlgorithmContext), "Box algorithm <" << m_pBox->getName() << "> processInput function failed",
+			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->process(context), "Box algorithm <" << m_box->getName() << "> processInput function failed",
 								ErrorType::Internal);
 		}
 	}
@@ -182,16 +184,16 @@ bool CSimulatedBox::process()
 	{
 		CIdentifier* listID = nullptr;
 		size_t nbElems      = 0;
-		m_scenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &listID, &nbElems);
+		m_scenario->getLinkIdentifierFromBoxList(m_box->getIdentifier(), &listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const ILink* l_pLink = m_scenario->getLinkDetails(listID[i]);
-			if (l_pLink)
+			const ILink* link = m_scenario->getLinkDetails(listID[i]);
+			if (link)
 			{
-				CIdentifier dstBoxID = l_pLink->getTargetBoxIdentifier();
-				uint32_t dstBoxInputIdx = l_pLink->getTargetBoxInputIndex();
+				CIdentifier dstBoxID        = link->getTargetBoxIdentifier();
+				const size_t dstBoxInputIdx = link->getTargetBoxInputIndex();
 
-				uint32_t sourceOutputIdx = l_pLink->getSourceBoxOutputIndex();
+				const size_t sourceOutputIdx = link->getSourceBoxOutputIndex();
 				for (auto& chunk : m_outputs[sourceOutputIdx]) { m_rScheduler.sendInput(chunk, dstBoxID, dstBoxInputIdx); }
 			}
 		}
@@ -232,89 +234,89 @@ bool CSimulatedBox::isReadyToProcess() const { return m_bReadyToProcess; }
 // - --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- -
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-CString CSimulatedBox::getName() const { return m_pBox->getName(); }
+CString CSimulatedBox::getName() const { return m_box->getName(); }
 
 const IScenario& CSimulatedBox::getScenario() const { return *m_scenario; }
 
 // ________________________________________________________________________________________________________________
 //
 
-uint32_t CSimulatedBox::getInputChunkCount(const uint32_t index) const
+size_t CSimulatedBox::getInputChunkCount(const size_t index) const
 {
 	OV_ERROR_UNLESS_KRF(index < m_inputs.size(),
-						"Input index = [" << index << "] is out of range (max index = [" << uint32_t(m_inputs.size() - 1) << "])",
+						"Input index = [" << index << "] is out of range (max index = [" << m_inputs.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
-	return uint32_t(m_inputs[index].size());
+	return size_t(m_inputs[index].size());
 }
 
-bool CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& startTime, uint64_t& rEndTime, uint64_t& rChunkSize,
+bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& rEndTime, size_t& rChunkSize,
 								  const uint8_t*& rpChunkBuffer) const
 {
 	OV_ERROR_UNLESS_KRF(inputIdx < m_inputs.size(),
-						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_inputs.size() - 1) << "])", ErrorType::OutOfBound);
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_inputs.size() - 1 << "])", ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRF(chunkIdx < m_inputs[inputIdx].size(),
-						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_inputs[inputIdx].size() - 1) << "])",
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << m_inputs[inputIdx].size() - 1 << "])",
 						ErrorType::OutOfBound);
 
-	const CChunk& l_rChunk = m_inputs[inputIdx][chunkIdx];
-	startTime             = l_rChunk.getStartTime();
-	rEndTime               = l_rChunk.getEndTime();
-	rChunkSize             = l_rChunk.getBuffer().getSize();
-	rpChunkBuffer          = l_rChunk.getBuffer().getDirectPointer();
+	const CChunk& chunk = m_inputs[inputIdx][chunkIdx];
+	startTime           = chunk.getStartTime();
+	rEndTime            = chunk.getEndTime();
+	rChunkSize          = chunk.getBuffer().getSize();
+	rpChunkBuffer       = chunk.getBuffer().getDirectPointer();
 	return true;
 }
 
-const IMemoryBuffer* CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx) const
+const IMemoryBuffer* CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx) const
 {
 	OV_ERROR_UNLESS_KRN(inputIdx < m_inputs.size(),
-						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_inputs.size() - 1) << "])",
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_inputs.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRN(chunkIdx < m_inputs[inputIdx].size(),
-						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_inputs[inputIdx].size() - 1) << "])",
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << m_inputs[inputIdx].size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	return &(m_inputs[inputIdx][chunkIdx]).getBuffer();
 }
 
-uint64_t CSimulatedBox::getInputChunkStartTime(const uint32_t inputIdx, const uint32_t chunkIdx) const
+uint64_t CSimulatedBox::getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const
 {
 	OV_ERROR_UNLESS_KRZ(inputIdx < m_inputs.size(),
-						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_inputs.size() - 1) << "])",
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_inputs.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRZ(chunkIdx < m_inputs[inputIdx].size(),
-						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_inputs[inputIdx].size() - 1) << "])",
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << m_inputs[inputIdx].size() - 1 << "])",
 						ErrorType::OutOfBound);
 
-	const CChunk& l_rChunk = m_inputs[inputIdx][chunkIdx];
-	return l_rChunk.getStartTime();
+	const CChunk& chunk = m_inputs[inputIdx][chunkIdx];
+	return chunk.getStartTime();
 }
 
-uint64_t CSimulatedBox::getInputChunkEndTime(const uint32_t inputIdx, const uint32_t chunkIdx) const
+uint64_t CSimulatedBox::getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const
 {
 	OV_ERROR_UNLESS_KRZ(inputIdx < m_inputs.size(),
-						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_inputs.size() - 1) << "])",
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_inputs.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRZ(chunkIdx < m_inputs[inputIdx].size(),
-						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_inputs[inputIdx].size() - 1) << "])",
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << m_inputs[inputIdx].size() - 1 << "])",
 						ErrorType::OutOfBound);
 
-	const CChunk& l_rChunk = m_inputs[inputIdx][chunkIdx];
-	return l_rChunk.getEndTime();
+	const CChunk& chunk = m_inputs[inputIdx][chunkIdx];
+	return chunk.getEndTime();
 }
 
-bool CSimulatedBox::markInputAsDeprecated(const uint32_t inputIdx, const uint32_t chunkIdx)
+bool CSimulatedBox::markInputAsDeprecated(const size_t inputIdx, const size_t chunkIdx)
 {
 	OV_ERROR_UNLESS_KRZ(inputIdx < m_inputs.size(),
-						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_inputs.size() - 1) << "])",
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_inputs.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRZ(chunkIdx < m_inputs[inputIdx].size(),
-						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_inputs[inputIdx].size() - 1) << "])",
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << m_inputs[inputIdx].size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	m_inputs[inputIdx][chunkIdx].markAsDeprecated(true);
@@ -324,92 +326,92 @@ bool CSimulatedBox::markInputAsDeprecated(const uint32_t inputIdx, const uint32_
 // ________________________________________________________________________________________________________________
 //
 
-uint64_t CSimulatedBox::getOutputChunkSize(const uint32_t outputIdx) const
+size_t CSimulatedBox::getOutputChunkSize(const size_t outputIdx) const
 {
 	OV_ERROR_UNLESS_KRZ(outputIdx < m_vCurrentOutput.size(),
-						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_vCurrentOutput.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[outputIdx].getBuffer().getSize();
 }
 
-bool CSimulatedBox::setOutputChunkSize(const uint32_t outputIdx, const uint64_t size, const bool bDiscard)
+bool CSimulatedBox::setOutputChunkSize(const size_t outputIdx, const size_t size, const bool bDiscard)
 {
 	OV_ERROR_UNLESS_KRF(outputIdx < m_vCurrentOutput.size(),
-						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_vCurrentOutput.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[outputIdx].getBuffer().setSize(size, bDiscard);
 }
 
-uint8_t* CSimulatedBox::getOutputChunkBuffer(const uint32_t outputIdx)
+uint8_t* CSimulatedBox::getOutputChunkBuffer(const size_t outputIdx)
 {
 	OV_ERROR_UNLESS_KRN(outputIdx < m_vCurrentOutput.size(),
-						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_vCurrentOutput.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[outputIdx].getBuffer().getDirectPointer();
 }
 
-bool CSimulatedBox::appendOutputChunkData(const uint32_t outputIdx, const uint8_t* buffer, const uint64_t size)
+bool CSimulatedBox::appendOutputChunkData(const size_t outputIdx, const uint8_t* buffer, const size_t size)
 {
 	OV_ERROR_UNLESS_KRF(outputIdx < m_vCurrentOutput.size(),
-						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_vCurrentOutput.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[outputIdx].getBuffer().append(buffer, size);
 }
 
-IMemoryBuffer* CSimulatedBox::getOutputChunk(const uint32_t outputIdx)
+IMemoryBuffer* CSimulatedBox::getOutputChunk(const size_t outputIdx)
 {
 	OV_ERROR_UNLESS_KRN(outputIdx < m_vCurrentOutput.size(),
-						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_vCurrentOutput.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	return &m_vCurrentOutput[outputIdx].getBuffer();
 }
 
-bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t outputIdx, const uint64_t ui64StartTime, const uint64_t ui64EndTime)
+bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64_t ui64StartTime, const uint64_t ui64EndTime)
 {
 	OV_ERROR_UNLESS_KRF(outputIdx < m_vCurrentOutput.size(),
-						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_vCurrentOutput.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
 	if (m_bChunkConsistencyChecking)
 	{
-		bool l_bIsConsistent           = true;
-		const char* l_sSpecificMessage = nullptr;
+		bool isConsistent           = true;
+		const char* specificMessage = nullptr;
 
 		// checks chunks consistency
-		CIdentifier l_oType;
-		m_pBox->getOutputType(outputIdx, l_oType);
-		if (l_oType == OV_TypeId_Stimulations)
+		CIdentifier type;
+		m_box->getOutputType(outputIdx, type);
+		if (type == OV_TypeId_Stimulations)
 		{
 			if (m_vLastOutputEndTime[outputIdx] != ui64StartTime)
 			{
-				l_bIsConsistent    = false;
-				l_sSpecificMessage = "'Stimulations' streams should have continuously dated chunks";
+				isConsistent    = false;
+				specificMessage = "'Stimulations' streams should have continuously dated chunks";
 			}
 		}
 
 		if (m_vLastOutputEndTime[outputIdx] > ui64EndTime)
 		{
-			l_bIsConsistent    = false;
-			l_sSpecificMessage = "Current 'end time' can not be earlier than previous 'end time'";
+			isConsistent    = false;
+			specificMessage = "Current 'end time' can not be earlier than previous 'end time'";
 		}
 
 		if (m_vLastOutputStartTime[outputIdx] > ui64StartTime)
 		{
-			l_bIsConsistent    = false;
-			l_sSpecificMessage = "Current 'start time' can not be earlier than previous 'start time'";
+			isConsistent    = false;
+			specificMessage = "Current 'start time' can not be earlier than previous 'start time'";
 		}
 
-		if (!l_bIsConsistent)
+		if (!isConsistent)
 		{
-			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Box <" << m_pBox->getName() << "> sends inconsistent chunk dates on output [" <<
+			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Box <" << m_box->getName() << "> sends inconsistent chunk dates on output [" <<
 					outputIdx << "] (current chunk dates are [" << ui64StartTime << "," << ui64EndTime << "] whereas previous chunk dates were [" <<
 					m_vLastOutputStartTime[outputIdx] << "," << m_vLastOutputEndTime[outputIdx] << "])\n";
-			if (l_sSpecificMessage) { this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << l_sSpecificMessage << "\n"; }
+			if (specificMessage) { this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << specificMessage << "\n"; }
 			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Please report to box author and attach your scenario\n";
 			this->getLogManager() << LogLevel_Trace << "Previous warning can be disabled setting Kernel_CheckChunkConsistency to false\n";
 			m_eChunkConsistencyCheckingLogLevel = LogLevel_Trace;

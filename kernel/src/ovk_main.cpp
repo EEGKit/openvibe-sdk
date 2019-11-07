@@ -33,7 +33,7 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-static CKernelDesc gst_oKernelDesc;
+static CKernelDesc gKernelDesc;
 
 #include <system/ovCTime.h>
 
@@ -43,7 +43,7 @@ OVK_API bool onInitialize() { return true; }
 
 OVK_API bool onGetKernelDesc(IKernelDesc*& rpKernelDesc)
 {
-	rpKernelDesc = &gst_oKernelDesc;
+	rpKernelDesc = &gKernelDesc;
 	return true;
 }
 

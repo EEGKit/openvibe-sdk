@@ -20,7 +20,7 @@ namespace OpenViBEToolkit
 		void release() override { delete this; }
 		bool process() override;
 		virtual bool train(const IFeatureVectorSet& rFeatureVectorSet) = 0;
-		virtual bool saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) = 0;
+		virtual bool saveConfiguration(OpenViBE::IMemoryBuffer& memoryBuffer) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_ClassifierTrainer)
 	};

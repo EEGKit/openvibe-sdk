@@ -143,14 +143,14 @@ namespace OpenViBE
 		{ \
 			return true; \
 		} \
-		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& context, uint32_t index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
+		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& context, size_t index, OpenViBE::Plugins::IPluginObjectDesc*& pluginObjectDesc) \
 		{ \
 			if(index>=g_descriptors.size()) \
 			{ \
-				rpPluginObjectDescription=NULL; \
+				pluginObjectDesc=NULL; \
 				return false; \
 			} \
-			rpPluginObjectDescription=g_descriptors[index].get(); \
+			pluginObjectDesc=g_descriptors[index].get(); \
 			return true; \
 		} \
 	}

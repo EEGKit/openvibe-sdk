@@ -50,7 +50,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test settings
 		OVT_ASSERT(scenario.getSettingCount() == simpleScenarioSettings.size(), "Imported scenario does not have the correct number of settings");
 
-		for (uint32_t settingIndex = 0; settingIndex < simpleScenarioSettings.size(); settingIndex += 1)
+		for (size_t settingIndex = 0; settingIndex < simpleScenarioSettings.size(); settingIndex += 1)
 		{
 			CIdentifier settingTypeId;
 			OVT_ASSERT(scenario.getSettingType(settingIndex, settingTypeId), "Cannot get setting type");
@@ -82,7 +82,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test inputs
 		OVT_ASSERT(scenario.getInputCount() == simpleScenarioInputs.size(), "Imported scenario has wrong number of inputs");
 
-		for (uint32_t index = 0; index < simpleScenarioInputs.size(); index += 1)
+		for (size_t index = 0; index < simpleScenarioInputs.size(); index += 1)
 		{
 			CIdentifier inputTypeId;
 			OVT_ASSERT(scenario.getInputType(index, inputTypeId), "Cannot get input type");
@@ -93,7 +93,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 			OVT_ASSERT_STREQ(to_cppstring(inputName), std::get<1>(simpleScenarioInputs[index]), "Input has wrong name");
 
 			CIdentifier dstBoxID;
-			uint32_t dstBoxInputIdx;
+			size_t dstBoxInputIdx;
 			CIdentifier dstBoxInputID = OV_UndefinedIdentifier;
 			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputIdx), "Cannot get scenario input details by index");
 			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputID), "Cannot get scenario input details by identifier");
@@ -104,7 +104,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test outputs
 		OVT_ASSERT(scenario.getOutputCount() == simpleScenarioOutputs.size(), "Imported scenario has wrong number of outputs");
 
-		for (uint32_t idx = 0; idx < simpleScenarioOutputs.size(); idx += 1)
+		for (size_t idx = 0; idx < simpleScenarioOutputs.size(); idx += 1)
 		{
 			CIdentifier outputTypeId;
 			OVT_ASSERT(scenario.getOutputType(idx, outputTypeId), "Cannot get output type");
@@ -115,7 +115,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[idx]), "Output has wrong name");
 
 			CIdentifier dstBoxID;
-			uint32_t dstBoxOutputIndex;
+			size_t dstBoxOutputIndex;
 			CIdentifier dstBoxOutputIdentifier = OV_UndefinedIdentifier;
 			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIndex), "Cannot get scenario output details by index");
 			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
@@ -130,14 +130,14 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		const ILink* clockStimulatorToStimulationListenerLink = scenario.getLinkDetails(s_ClockStimulatorToStimulationListenerLinkId);
 
 		CIdentifier linkSourceBoxId;
-		uint32_t linkSourceOutputIndex;
+		size_t linkSourceOutputIndex;
 		CIdentifier linkSourceOutputIdentifier;
 		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier), "Could not get link details");
 		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
 		OVT_ASSERT(linkSourceOutputIndex == 0, "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
 
 		CIdentifier linkTargetBoxId;
-		uint32_t linkTargetInputIndex;
+		size_t linkTargetInputIndex;
 		CIdentifier linkTargetInputIdentifier;
 		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier), "Could not get link details");
 		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");

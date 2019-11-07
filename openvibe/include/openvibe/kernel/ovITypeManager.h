@@ -191,7 +191,7 @@ namespace OpenViBE
 			 * \param typeID [in] : the enumeration type identifier
 			 * \return the number of entry for this enumeration type.
 			 */
-			virtual uint64_t getEnumerationEntryCount(const CIdentifier& typeID) const = 0;
+			virtual size_t getEnumerationEntryCount(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Gets details for a specific enumeration type entry
 			 * \param typeID [in] : the enumeration type identifier
@@ -228,7 +228,7 @@ namespace OpenViBE
 			 * \param typeID [in] : the bitmask type identifier
 			 * \return the number of entry for this bitmask type.
 			 */
-			virtual uint64_t getBitMaskEntryCount(const CIdentifier& typeID) const = 0;
+			virtual size_t getBitMaskEntryCount(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Gets details for a specific bitmask type entry
 			 * \param typeID [in] : the bitmask type identifier

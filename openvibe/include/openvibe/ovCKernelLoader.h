@@ -20,6 +20,6 @@ namespace OpenViBE
 
 	private:
 
-		IKernelLoader* m_pKernelLoaderImpl = nullptr; //!< Internal implementation
+		IKernelLoader* m_impl = nullptr; //!< Internal implementation
 	};
 } // namespace OpenViBE

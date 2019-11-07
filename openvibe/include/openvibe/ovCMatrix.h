@@ -43,20 +43,20 @@ namespace OpenViBE
 		~CMatrix() override;
 
 		//@}
-		uint32_t getDimensionCount() const override;
-		uint32_t getDimensionSize(uint32_t index) const override;
-		const char* getDimensionLabel(uint32_t index, uint32_t entryIndex) const override;
+		size_t getDimensionCount() const override;
+		size_t getDimensionSize(const size_t index) const override;
+		const char* getDimensionLabel(const size_t index1, const size_t index2) const override;
 		const double* getBuffer() const override;
-		uint32_t getBufferElementCount() const override;
-		bool setDimensionCount(uint32_t count) override;
-		bool setDimensionSize(uint32_t index, uint32_t size) override;
-		bool setDimensionLabel(uint32_t index, uint32_t entryIndex, const char* label) override;
+		size_t getBufferElementCount() const override;
+		bool setDimensionCount(const size_t count) override;
+		bool setDimensionSize(const size_t index, const size_t size) override;
+		bool setDimensionLabel(const size_t index1, const size_t index2, const char* label) override;
 		double* getBuffer() override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge)
 
 	private:
 
-		IMatrix* m_matrixImpl = nullptr; //!< Internal implementation
+		IMatrix* m_impl = nullptr; //!< Internal implementation
 	};
 } // namespace OpenViBE

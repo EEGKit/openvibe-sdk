@@ -31,12 +31,12 @@ namespace OpenViBE
 
 		/**
 		 * \brief Loads a kernel DLL/so file
-		 * \param sFileName [in] : the filename to load
+		 * \param filename [in] : the filename to load
 		 * \param pError [out] : an optional error string to get when loading fails
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 */
-		virtual bool load(const CString& sFileName, CString* pError = nullptr) = 0;
+		virtual bool load(const CString& filename, CString* pError = nullptr) = 0;
 		/**
 		 * \brief Unloads a loaded kernel DLL/so file
 		 * \return \e true on success.

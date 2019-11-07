@@ -133,13 +133,13 @@ namespace
 			uint8_t S[sizeof(s)];
 			System::Memory::hostToLittleEndian(v, V);
 			System::Memory::hostToLittleEndian(s, S);
-			for (uint32_t i = 0; i < sizeof(s); i += 2)
+			for (size_t i = 0; i < sizeof(s); i += 2)
 			{
-				uint32_t j = S[i] % sizeof(v);
-				uint32_t k = S[i + 1] % sizeof(v);
-				uint8_t t  = V[j];
-				V[j]       = V[k];
-				V[k]       = t;
+				size_t j  = S[i] % sizeof(v);
+				size_t k  = S[i + 1] % sizeof(v);
+				uint8_t t = V[j];
+				V[j]      = V[k];
+				V[k]      = t;
 			}
 			System::Memory::littleEndianToHost(V, &v);
 		}

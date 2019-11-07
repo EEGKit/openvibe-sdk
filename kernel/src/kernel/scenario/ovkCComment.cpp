@@ -45,11 +45,11 @@ bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
 	m_text = rExisitingComment.getText();
 
-	CIdentifier l_oID = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-	while (l_oID != OV_UndefinedIdentifier)
+	CIdentifier id = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
+	while (id != OV_UndefinedIdentifier)
 	{
-		addAttribute(l_oID, rExisitingComment.getAttributeValue(l_oID));
-		l_oID = rExisitingComment.getNextAttributeIdentifier(l_oID);
+		addAttribute(id, rExisitingComment.getAttributeValue(id));
+		id = rExisitingComment.getNextAttributeIdentifier(id);
 	}
 
 	return true;
@@ -60,6 +60,6 @@ bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 
 bool CComment::acceptVisitor(IObjectVisitor& rObjectVisitor)
 {
-	CObjectVisitorContext l_oObjectVisitorContext(getKernelContext());
-	return rObjectVisitor.processBegin(l_oObjectVisitorContext, *this) && rObjectVisitor.processEnd(l_oObjectVisitorContext, *this);
+	CObjectVisitorContext context(getKernelContext());
+	return rObjectVisitor.processBegin(context, *this) && rObjectVisitor.processEnd(context, *this);
 }

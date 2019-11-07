@@ -27,21 +27,10 @@ using namespace OpenViBE;
 using namespace Kernel;
 
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
-	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this)
-	  , m_algorithmManager(nullptr)
-	  , m_configManager(nullptr)
-	  , m_kernelObjectFactory(nullptr)
-	  , m_playerManager(nullptr)
-	  , m_pluginManager(nullptr)
-	  , m_metaboxManager(nullptr)
-	  , m_scenarioManager(nullptr)
-	  , m_typeManager(nullptr)
-	  , m_logManager(nullptr)
-	  , m_errorManager(nullptr)
-	  , m_sApplicationName(rApplicationName)
-	  , m_sConfigurationFile(rConfigurationFile)
-	  , m_logListenerConsole(nullptr)
-	  , m_logListenerFile(nullptr) {}
+	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this), m_algorithmManager(nullptr), m_configManager(nullptr),
+	  m_kernelObjectFactory(nullptr), m_playerManager(nullptr), m_pluginManager(nullptr), m_metaboxManager(nullptr), m_scenarioManager(nullptr),
+	  m_typeManager(nullptr), m_logManager(nullptr), m_errorManager(nullptr), m_sApplicationName(rApplicationName), m_sConfigurationFile(rConfigurationFile),
+	  m_logListenerConsole(nullptr), m_logListenerFile(nullptr) {}
 
 CKernelContext::~CKernelContext() { this->uninitialize(); }
 
@@ -121,16 +110,16 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	OV_ERROR_UNLESS_KRF(m_configManager->addConfigurationFromFile(m_sConfigurationFile),
 						"Problem parsing config file [" << m_sConfigurationFile << "]", ErrorType::Internal);
 
-	CString l_sPathTmp = m_configManager->expand("${Path_UserData}");
-	FS::Files::createPath(l_sPathTmp.toASCIIString());
-	l_sPathTmp = m_configManager->expand("${Path_Tmp}");
-	FS::Files::createPath(l_sPathTmp.toASCIIString());
-	l_sPathTmp = m_configManager->expand("${Path_Log}");
-	FS::Files::createPath(l_sPathTmp);
-	CString l_sLogFile = l_sPathTmp + "/openvibe-" + m_sApplicationName + ".log";
+	CString pathTmp = m_configManager->expand("${Path_UserData}");
+	FS::Files::createPath(pathTmp.toASCIIString());
+	pathTmp = m_configManager->expand("${Path_Tmp}");
+	FS::Files::createPath(pathTmp.toASCIIString());
+	pathTmp = m_configManager->expand("${Path_Log}");
+	FS::Files::createPath(pathTmp);
+	const CString logFile = pathTmp + "/openvibe-" + m_sApplicationName + ".log";
 
 	// We do this here to allow user to set the Path_Log in the .conf. The downside is that earlier log messages will not appear in the file log.
-	m_logListenerFile.reset(new CLogListenerFile(m_rMasterKernelContext, m_sApplicationName, l_sLogFile));
+	m_logListenerFile.reset(new CLogListenerFile(m_rMasterKernelContext, m_sApplicationName, logFile));
 	m_logListenerFile->activate(true);
 	this->getLogManager().addListener(m_logListenerFile.get());
 
@@ -145,7 +134,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	m_logListenerFile->configure(*m_configManager);
 	m_logListenerFile->configure(*m_configManager);
 
-	if (m_logListenerConsole.get())
+	if (m_logListenerConsole)
 	{
 		m_logListenerConsole->activate(false);
 		m_logListenerConsole->activate(consoleLogLevel, LogLevel_Last, true);

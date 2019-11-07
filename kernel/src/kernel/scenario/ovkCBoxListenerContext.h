@@ -10,8 +10,8 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxListenerContext(const IKernelContext& ctx, IBox& box, const uint32_t index)
-				: TKernelObject<IBoxListenerContext>(ctx), m_box(box), m_ui32Idx(index) { }
+			CBoxListenerContext(const IKernelContext& ctx, IBox& box, const size_t index)
+				: TKernelObject<IBoxListenerContext>(ctx), m_box(box), m_idx(index) { }
 
 			IAlgorithmManager& getAlgorithmManager() const override { return this->getKernelContext().getAlgorithmManager(); }
 			IPlayerManager& getPlayerManager() const override { return this->getKernelContext().getPlayerManager(); }
@@ -30,14 +30,14 @@ namespace OpenViBE
 						 this->getKernelContext().getLogManager());
 			}
 
-			uint32_t getIndex() const override { return m_ui32Idx; }
+			size_t getIndex() const override { return m_idx; }
 
 			_IsDerivedFromClass_Final_(TKernelObject<IBoxListenerContext>, OVK_ClassId_Kernel_Scenario_BoxListenerContext)
 
 		private:
 
 			IBox& m_box;
-			uint32_t m_ui32Idx = 0;
+			size_t m_idx = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

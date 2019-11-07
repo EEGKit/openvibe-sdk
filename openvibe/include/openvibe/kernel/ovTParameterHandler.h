@@ -117,10 +117,10 @@ namespace OpenViBE
 			 * in arithmetic operations :
 			 *
 			 * \code
-			 * // l_oParameter will directly be used as if it is an unsigned integer
-			 * TParameterHandler<uint64_t> l_oParameter ( ... );
+			 * // parameter will directly be used as if it is an unsigned integer
+			 * TParameterHandler<uint64_t> parameter ( ... );
 			 * uint64_t a= ...;
-			 * uint64_t c=a*l_oParameter+l_oParameter;
+			 * uint64_t c=a*parameter+parameter;
 			 * \endcode
 			 */
 			operator T() const
@@ -139,9 +139,9 @@ namespace OpenViBE
 			 * as if it was a matrix pointer :
 			 *
 			 * \code
-			 * // l_oParameter will directly be used as if it is a matrix pointer
-			 * TParameterHandler<IMatrix*> l_oParameter ( ... );
-			 * l_oParameter->setDimensionCount(2);
+			 * // parameter will directly be used as if it is a matrix pointer
+			 * TParameterHandler<IMatrix*> parameter ( ... );
+			 * parameter->setDimensionCount(2);
 			 * \endcode
 			 */
 			T operator ->() const
@@ -160,9 +160,9 @@ namespace OpenViBE
 			 * handler can be affected this way :
 			 *
 			 * \code
-			 * // the affectation of l_oParameter will directly go to its handled unsigned integer
-			 * TParameterHandler<uint64_t> l_oParameter ( ... );
-			 * l_oParameter = 1;
+			 * // the affectation of parameter will directly go to its handled unsigned integer
+			 * TParameterHandler<uint64_t> parameter ( ... );
+			 * parameter = 1;
 			 * \endcode
 			 */
 			TParameterHandler<T>& operator=(const T& t)

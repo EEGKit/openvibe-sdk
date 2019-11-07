@@ -21,7 +21,7 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual uint32_t addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue) = 0;
+			virtual size_t addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Server_ServerExtensionProto)
 		};

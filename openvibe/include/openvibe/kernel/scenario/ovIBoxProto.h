@@ -50,8 +50,7 @@ namespace OpenViBE
 			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
-								  const bool notify                                                             = true) = 0;
+			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**
 			 * \brief Adds an output to the box
@@ -61,8 +60,7 @@ namespace OpenViBE
 			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier,
-								   const bool notify                                                             = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 				
 			/**
 			 * \brief Add an setting to the box
@@ -76,8 +74,7 @@ namespace OpenViBE
 			 * \return true if successful
 			 */
 			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& defaultValue, const bool modifiable = false,
-									const CIdentifier& identifier                                                                      = OV_UndefinedIdentifier,
-									const bool notify                                                                                  = true) = 0;
+									const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box

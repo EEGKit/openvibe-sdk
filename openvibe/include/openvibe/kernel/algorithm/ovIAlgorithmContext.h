@@ -65,13 +65,13 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next input parameter identifier given the previous input parameter
-			 * \param rPreviousInputParameterIdentifier [in] : the previous input parameter
+			 * \param prevInputParameterID [in] : the previous input parameter
 			 * \return the next input parameter identifier if existing.
 			 * \return \c OV_UndefinedIdentifier if the previous was the last input parameter identifier.
-			 * \note Passing \c OV_UndefinedIdentifier as \c rPreviousInputParameterIdentifier will
+			 * \note Passing \c OV_UndefinedIdentifier as \c prevInputParameterID will
 			 *       cause this function to return the firs input parameter identifier.
 			 */
-			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const = 0;
+			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& prevInputParameterID) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific input parameter
 			 * \param InputParameterID [in] : the identifier of the parameter which details should be returned
@@ -86,13 +86,13 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next output parameter identifier given the previous output parameter
-			 * \param rPreviousOutputParameterIdentifier [in] : the previous output parameter
+			 * \param prevOutputParameterID [in] : the previous output parameter
 			 * \return the next output parameter identifier if existing.
 			 * \return \c OV_UndefinedIdentifier if the previous was the last output parameter identifier.
-			 * \note Passing \c OV_UndefinedIdentifier as \c rPreviousOutputParameterIdentifier will
+			 * \note Passing \c OV_UndefinedIdentifier as \c prevOutputParameterID will
 			 *       cause this function to return the firs output parameter identifier.
 			 */
-			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const = 0;
+			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& prevOutputParameterID) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific output parameter
 			 * \param outputParameterID [in] : the identifier of the parameter which details should be returned
@@ -115,12 +115,12 @@ namespace OpenViBE
 			/**
 			 * \brief Activates an output trigger before calling the processing function.
 			 * \param outputTriggerID [in] : the identifier of the output to activate
-			 * \param bTriggerState [in]: the new trigger state this output trigger should take
+			 * \param state [in]: the new trigger state this output trigger should take
 			 *                            (\e true for active, \e false for inactive)
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, const bool bTriggerState) = 0;
+			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, const bool state) = 0;
 
 			//@}
 

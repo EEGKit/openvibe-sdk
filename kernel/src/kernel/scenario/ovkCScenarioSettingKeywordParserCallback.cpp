@@ -17,7 +17,7 @@ bool CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpan
 		if (m_rScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 		{
 			const std::string filename = m_rScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
-			const size_t iDir          = filename.rfind("/");
+			const size_t iDir          = filename.rfind('/');
 			if (iDir != std::string::npos) { rExpandedString = CString(filename.substr(0, iDir).c_str()); }
 		}
 		return true;

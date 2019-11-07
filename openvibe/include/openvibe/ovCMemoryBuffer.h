@@ -37,14 +37,14 @@ namespace OpenViBE
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer);
+		CMemoryBuffer(const IMemoryBuffer& memoryBuffer);
 		/**
 		 * \brief Copy constructor
 		 *
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const uint8_t* pMemoryBuffer, uint64_t size);
+		CMemoryBuffer(const uint8_t* pMemoryBuffer, size_t size);
 		/**
 		 * \brief Destructor
 		 *
@@ -53,18 +53,18 @@ namespace OpenViBE
 		~CMemoryBuffer() override;
 
 		//@}
-		bool reserve(const uint64_t ui64Size) override;
-		bool setSize(const uint64_t ui64Size, const bool bDiscard) override;
-		uint64_t getSize() const override;
+		bool reserve(const size_t size) override;
+		bool setSize(const size_t size, const bool discard) override;
+		size_t getSize() const override;
 		uint8_t* getDirectPointer() override;
 		const uint8_t* getDirectPointer() const override;
-		bool append(const uint8_t* buffer, const uint64_t size) override;
-		bool append(const IMemoryBuffer& rMemoryBuffer) override;
+		bool append(const uint8_t* buffer, const size_t size) override;
+		bool append(const IMemoryBuffer& memoryBuffer) override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
 
 	protected:
 
-		IMemoryBuffer* m_pMemoryBufferImpl = nullptr; //!< Internal implementation
+		IMemoryBuffer* m_impl = nullptr; //!< Internal implementation
 	};
 } // namespace OpenViBE

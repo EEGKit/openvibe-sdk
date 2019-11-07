@@ -36,12 +36,12 @@ namespace OpenViBE
 			virtual CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) = 0;
 			/**
 			  * \brief Creates a new algorithm
-			  * \param rAlgorithmDesc [in] : the algorithm descriptor of
+			  * \param algorithmDesc [in] : the algorithm descriptor of
 			  *        the algorithm to create
 			  * \return \e identifier of the created algorithm
 			  * \return \e OV_UndefinedIdentifier
 			  */
-			virtual CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
+			virtual CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) = 0;
 
 			/**
 			 * \brief Releases an existing algorithm

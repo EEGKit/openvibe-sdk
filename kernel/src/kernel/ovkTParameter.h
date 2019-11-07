@@ -14,58 +14,58 @@ namespace OpenViBE
 		public:
 
 			TBaseParameter(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = OV_UndefinedIdentifier)
-				: TBase(ctx), m_pValueRef(nullptr), m_Value(0), m_eParameterType(eParameterType), m_oSubTypeID(subTypeID) { }
+				: TBase(ctx), m_valueRef(nullptr), m_value(0), m_parameterType(eParameterType), m_subTypeID(subTypeID) { }
 
 			uint64_t getParameterSize() const override { return sizeof(TType); }
-			EParameterType getType() const override { return m_eParameterType; }
-			CIdentifier getSubTypeIdentifier() const override { return m_oSubTypeID; }
+			EParameterType getType() const override { return m_parameterType; }
+			CIdentifier getSubTypeIdentifier() const override { return m_subTypeID; }
 
 			bool clearReferenceTarget() override
 			{
-				m_pValueRef     = NULL;
-				m_pParameterRef = nullptr;
+				m_valueRef     = NULL;
+				m_parameterRef = nullptr;
 				return true;
 			}
 
 			bool getReferenceTarget(IParameter*& pParameterRef) const override
 			{
-				pParameterRef = m_pParameterRef;
+				pParameterRef = m_parameterRef;
 				return true;
 			}
 
 			bool setReferenceTarget(IParameter* pParameterRef) override
 			{
-				if (m_pValueRef) { m_pValueRef = NULL; }
-				m_pParameterRef = pParameterRef;
+				if (m_valueRef) { m_valueRef = NULL; }
+				m_parameterRef = pParameterRef;
 				return true;
 			}
 
 			bool getReferenceTarget(void* pValue) const override
 			{
-				memcpy(&pValue, &m_pValueRef, sizeof(TType*));
+				memcpy(&pValue, &m_valueRef, sizeof(TType*));
 				return true;
 			}
 
 			bool setReferenceTarget(const void* pValue) override
 			{
-				if (m_pParameterRef) { m_pParameterRef = nullptr; }
-				memcpy(&m_pValueRef, &pValue, sizeof(TType*));
+				if (m_parameterRef) { m_parameterRef = nullptr; }
+				memcpy(&m_valueRef, &pValue, sizeof(TType*));
 				return true;
 			}
 
 			bool getValue(void* pValue) const override
 			{
-				if (m_pParameterRef) { return m_pParameterRef->getValue(pValue); }
-				if (m_pValueRef) { memcpy(pValue, m_pValueRef, sizeof(TType)); }
-				else { memcpy(pValue, &m_Value, sizeof(TType)); }
+				if (m_parameterRef) { return m_parameterRef->getValue(pValue); }
+				if (m_valueRef) { memcpy(pValue, m_valueRef, sizeof(TType)); }
+				else { memcpy(pValue, &m_value, sizeof(TType)); }
 				return true;
 			}
 
 			bool setValue(const void* pValue) override
 			{
-				if (m_pParameterRef) { return m_pParameterRef->setValue(pValue); }
-				if (m_pValueRef) { memcpy(m_pValueRef, pValue, sizeof(TType)); }
-				else { memcpy(&m_Value, pValue, sizeof(TType)); }
+				if (m_parameterRef) { return m_parameterRef->setValue(pValue); }
+				if (m_valueRef) { memcpy(m_valueRef, pValue, sizeof(TType)); }
+				else { memcpy(&m_value, pValue, sizeof(TType)); }
 				return true;
 			}
 
@@ -73,11 +73,11 @@ namespace OpenViBE
 
 		protected:
 
-			IParameter* m_pParameterRef = nullptr;
-			TType* m_pValueRef          = nullptr;
-			TType m_Value;
-			EParameterType m_eParameterType;
-			CIdentifier m_oSubTypeID = OV_UndefinedIdentifier;
+			IParameter* m_parameterRef = nullptr;
+			TType* m_valueRef          = nullptr;
+			TType m_value;
+			EParameterType m_parameterType;
+			CIdentifier m_subTypeID = OV_UndefinedIdentifier;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

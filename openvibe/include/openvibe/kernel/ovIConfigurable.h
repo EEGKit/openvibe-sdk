@@ -57,11 +57,11 @@ namespace OpenViBE
 			 * Sample code to iterate on parameter identifiers :
 			 *
 			 * \code
-			 * IConfigurable* l_pConfigurable= // ...
-			 * CIdentifier l_oCurrentID=OV_UndefinedIdentifier;
-			 * while((l_oCurrentID=l_pConfigurable->getNextParameterIdentifier(l_oCurrentID))!=OV_UndefinedIdentifier)
+			 * IConfigurable* configurable= // ...
+			 * CIdentifier currentID=OV_UndefinedIdentifier;
+			 * while((currentID=configurable->getNextParameterIdentifier(currentID))!=OV_UndefinedIdentifier)
 			 * {
-			 *   IParameter* l_pParameter=l_pConfigurable->getParameter(l_oCurrentID);
+			 *   IParameter* parameter=configurable->getParameter(currentID);
 			 *   // ...
 			 * }
 			 * \endcode
@@ -70,15 +70,15 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets a specific parameter given its identifier
-			 * \param rParameterIdentifier [in] : the identifier of the parameter to get
+			 * \param identifier [in] : the identifier of the parameter to get
 			 * \return a pointer to the corresponding parameter in case of success.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier) = 0;
+			virtual IParameter* getParameter(const CIdentifier& identifier) = 0;
 			/**
 			 * \brief Replaces the parameter with a client handled object
-			 * \param rParameterIdentifier [in] : the identifier of the parameter to replace
-			 * \param rpParameter [in] : the parameter object to put in place of the old parameter
+			 * \param identifier [in] : the identifier of the parameter to replace
+			 * \param parameter [in] : the parameter object to put in place of the old parameter
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \note The parameter should have been created before and should exist.
@@ -87,28 +87,28 @@ namespace OpenViBE
 			 *       none of \c removeParameter nor configurable destruction will release
 			 *       this parameter object. The caller should take care of this when needed.
 			 */
-			virtual bool setParameter(const CIdentifier& rParameterIdentifier, IParameter& rpParameter) = 0;
+			virtual bool setParameter(const CIdentifier& identifier, IParameter& parameter) = 0;
 			/**
 			 * \brief Creates a new parameter of a specific type
-			 * \param rParameterIdentifier [in] : the parameter identifier which has to be created
-			 * \param eParameterType [in] : the type of this parameter
+			 * \param identifier [in] : the parameter identifier which has to be created
+			 * \param type [in] : the type of this parameter
 			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \sa EParameterType
 			 * \sa IParameter
 			 *
 			 * This function creates a new parameter with its associated object.
 			 */
-			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType,
+			virtual IParameter* createParameter(const CIdentifier& identifier, const EParameterType type,
 												const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter
-			 * \param rParameterIdentifier [in] : the identifier of the parameter to remove
+			 * \param identifier [in] : the identifier of the parameter to remove
 			 * \return \e true in case of success
 			 * \return \e false in case of error
 			 * \note if the parameter object is not released if it was replaced by a custom
 			 *       parameter object thanks to \c setParameter function.
 			 */
-			virtual bool removeParameter(const CIdentifier& rParameterIdentifier) = 0;
+			virtual bool removeParameter(const CIdentifier& identifier) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configurable)
 		};

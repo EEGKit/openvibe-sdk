@@ -19,9 +19,9 @@ namespace OpenViBEToolkit
 		{
 			namespace
 			{
-				bool isSeparator(const uint8_t value, uint8_t* separator, const uint32_t nSeparator)
+				bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
 				{
-					for (uint32_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
+					for (size_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
 					return false;
 				}
 
@@ -35,16 +35,16 @@ namespace OpenViBEToolkit
 	} // namespace Tools
 } // namespace OpenViBEToolkit
 
-uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
+size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
 {
 	return split(rString, splitCB, &separator, 1);
 }
 
-uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const uint32_t nSeparator)
+size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
 {
 	if (nSeparator == 0 || separator == nullptr) { return 0; }
 
-	uint32_t n = 0;
+	size_t n = 0;
 	std::string str(rString.toASCIIString());
 	size_t i = 0;
 	while (i < str.length())

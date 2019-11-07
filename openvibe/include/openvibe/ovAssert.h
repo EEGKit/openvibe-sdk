@@ -70,7 +70,7 @@ namespace OpenViBE
 		return os;
 	}
 
-#define HAS_ImbuedOStreamWithCIdentifier
+#define HAS_IMBUED_O_STREAM_WITH_C_IDENTIFIER
 
 	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	{

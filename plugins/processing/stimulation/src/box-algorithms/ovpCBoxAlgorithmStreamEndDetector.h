@@ -42,8 +42,8 @@ namespace OpenViBEPlugins
 			uint64_t m_endDate               = 0;
 			uint64_t m_currentChunkEndDate   = 0;
 			uint64_t m_previousTime          = 0;
-			uint32_t m_inputEBMLIdx          = 0;
-			uint32_t m_outputStimulationsIdx = 0;
+			size_t m_inputEBMLIdx          = 0;
+			size_t m_outputStimulationsIdx = 0;
 			bool m_isHeaderSent              = false;
 			EEndState m_endState             = EEndState::WaitingForEnd;
 		};
