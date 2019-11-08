@@ -27,13 +27,13 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 						"])",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_vStreamDecoder.resize(boxContext.getInputCount());
-	m_vStreamEncoder.resize(boxContext.getInputCount());
+	m_decoders.resize(boxContext.getInputCount());
+	m_encoders.resize(boxContext.getInputCount());
 	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
-		m_vStreamDecoder[i].initialize(*this, i);
-		m_vStreamEncoder[i].initialize(*this, i);
-		m_vStreamEncoder[i].getInputMatrix().setReferenceTarget(m_vStreamDecoder[i].getOutputMatrix());
+		m_decoders[i].initialize(*this, i);
+		m_encoders[i].initialize(*this, i);
+		m_encoders[i].getInputMatrix().setReferenceTarget(m_decoders[i].getOutputMatrix());
 	}
 
 	m_vLastValidSample.clear();
@@ -51,11 +51,11 @@ bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		m_vStreamDecoder[i].uninitialize();
-		m_vStreamEncoder[i].uninitialize();
+		m_decoders[i].uninitialize();
+		m_encoders[i].uninitialize();
 	}
-	m_vStreamDecoder.clear();
-	m_vStreamEncoder.clear();
+	m_decoders.clear();
+	m_encoders.clear();
 
 	return true;
 }
@@ -76,12 +76,12 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 	{
 		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			m_vStreamDecoder[i].decode(j);
-			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
+			m_decoders[i].decode(j);
+			IMatrix* l_pMatrix = m_decoders[i].getOutputMatrix();
 
-			if (m_vStreamDecoder[i].isHeaderReceived())
+			if (m_decoders[i].isHeaderReceived())
 			{
-				if (nSetting > 1) { m_vStreamEncoder[i].encodeHeader(); }
+				if (nSetting > 1) { m_encoders[i].encodeHeader(); }
 
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
@@ -91,7 +91,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					m_vLastValidSample[i].resize(l_pMatrix->getDimensionSize(0));
 				}
 			}
-			if (m_vStreamDecoder[i].isBufferReceived())
+			if (m_decoders[i].isBufferReceived())
 			{
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
@@ -162,9 +162,9 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				}
 				else { OV_WARNING_K("Invalid action type [" << m_validityCheckerType << "]"); }
 
-				if (nSetting > 1) { m_vStreamEncoder[i].encodeBuffer(); }
+				if (nSetting > 1) { m_encoders[i].encodeBuffer(); }
 			}
-			if (m_vStreamDecoder[i].isEndReceived()) { if (nSetting > 1) { m_vStreamEncoder[i].encodeEnd(); } }
+			if (m_decoders[i].isEndReceived()) { if (nSetting > 1) { m_encoders[i].encodeEnd(); } }
 			if (nSetting > 1) { boxContext.markOutputAsReadyToSend(i, boxContext.getInputChunkStartTime(i, j), boxContext.getInputChunkEndTime(i, j)); }
 		}
 	}

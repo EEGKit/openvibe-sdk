@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 
 			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimulationDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
 
 			unsigned long long m_epoch = 0;
 

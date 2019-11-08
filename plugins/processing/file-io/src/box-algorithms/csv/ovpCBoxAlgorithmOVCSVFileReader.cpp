@@ -61,7 +61,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	}
 	else { OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput); }
 
-	OV_ERROR_UNLESS_KRF(m_stimulationEncoder.initialize(*this, 1), "Error during stimulation encoder initialize", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_stimEncoder.initialize(*this, 1), "Error during stimulation encoder initialize", ErrorType::Internal);
 
 	const char *msg = (ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " + m_readerLib->getLastErrorString())).c_str();
 	if (m_typeID == OV_TypeId_Signal)
@@ -92,7 +92,7 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 
 	m_algorithmEncoder.uninitialize();
 
-	OV_ERROR_UNLESS_KRF(m_stimulationEncoder.uninitialize(), "Failed to uninitialize stimulation encoder", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_stimEncoder.uninitialize(), "Failed to uninitialize stimulation encoder", ErrorType::Internal);
 
 	return true;
 }
@@ -255,14 +255,14 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 {
 	if (!m_isStimulationHeaderSent)
 	{
-		OV_ERROR_UNLESS_KRF(m_stimulationEncoder.encodeHeader(), "Failed to encode stimulation header", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeHeader(), "Failed to encode stimulation header", ErrorType::Internal);
 		m_isStimulationHeaderSent = true;
 
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, 0, 0),
 							"Failed to mark stimulation header as ready to send", ErrorType::Internal);
 	}
 
-	IStimulationSet* stimulationSet = m_stimulationEncoder.getInputStimulationSet();
+	IStimulationSet* stimulationSet = m_stimEncoder.getInputStimulationSet();
 	stimulationSet->clear();
 
 	const uint64_t stimulationChunkStartTime = m_lastStimulationDate;
@@ -274,7 +274,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 		{
 			m_lastStimulationDate = currentTime;
 
-			OV_ERROR_UNLESS_KRF(m_stimulationEncoder.encodeBuffer(), "Failed to encode stimulation buffer", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", ErrorType::Internal);
 
 			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
 								"Failed to mark stimulation output as ready to send",
@@ -308,7 +308,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 		if (it != m_savedStimulations.begin()) { m_savedStimulations.erase(m_savedStimulations.begin(), it); }
 
 
-		OV_ERROR_UNLESS_KRF(m_stimulationEncoder.encodeBuffer(), "Failed to encode stimulation buffer", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", ErrorType::Internal);
 
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, stimulationChunkStartTime, m_lastStimulationDate),
 							"Failed to mark stimulation output as ready to send", ErrorType::Internal);

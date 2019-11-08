@@ -44,7 +44,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 	}
 	else { OV_ERROR_KRF("Input is a type derived from matrix that the box doesn't recognize", ErrorType::BadInput); }
 
-	OV_ERROR_UNLESS_KRF(m_stimulationDecoder.initialize(*this, 1),
+	OV_ERROR_UNLESS_KRF(m_stimDecoder.initialize(*this, 1),
 						"Error while stimulation decoder initialization",
 						ErrorType::Internal);
 
@@ -88,7 +88,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 {
 	m_streamDecoder.uninitialize();
-	m_stimulationDecoder.uninitialize();
+	m_stimDecoder.uninitialize();
 
 	OV_ERROR_UNLESS_KRF(m_writerLib->noEventsUntilDate(std::numeric_limits<double>::max()),
 						(OpenViBE::CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: "
@@ -338,13 +338,13 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 	// add every stimulation received
 	for (size_t index = 0; index < dynamicBoxContext.getInputChunkCount(1); ++index)
 	{
-		OV_ERROR_UNLESS_KRF(m_stimulationDecoder.decode(index),
+		OV_ERROR_UNLESS_KRF(m_stimDecoder.decode(index),
 							"Failed to decode stimulation chunk",
 							ErrorType::Internal);
 
-		if (m_stimulationDecoder.isBufferReceived())
+		if (m_stimDecoder.isBufferReceived())
 		{
-			const IStimulationSet* stimulationSet = m_stimulationDecoder.getOutputStimulationSet();
+			const IStimulationSet* stimulationSet = m_stimDecoder.getOutputStimulationSet();
 			// for each stimulation, get its informations
 
 			for (size_t stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); ++stimulationIndex)

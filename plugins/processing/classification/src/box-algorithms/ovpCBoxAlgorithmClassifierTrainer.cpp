@@ -88,7 +88,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	m_nPartition = uint64_t(nPartition);
 
-	m_stimulationDecoder.initialize(*this, 0);
+	m_stimDecoder.initialize(*this, 0);
 	for (uint32_t i = 1; i < boxContext.getInputCount(); ++i)
 	{
 		m_featureVectorDecoder.push_back(new OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
@@ -99,7 +99,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	TParameterHandler<map<CString, CString> *> ip_pExtraParameter(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 	ip_pExtraParameter = m_parameter;
 
-	m_stimulationEncoder.initialize(*this, 0);
+	m_stimEncoder.initialize(*this, 0);
 
 	m_nFeatures.clear();
 
@@ -126,8 +126,8 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 bool CBoxAlgorithmClassifierTrainer::uninitialize()
 {
-	m_stimulationDecoder.uninitialize();
-	m_stimulationEncoder.uninitialize();
+	m_stimDecoder.uninitialize();
+	m_stimEncoder.uninitialize();
 
 	if (m_classifier)
 	{
@@ -142,8 +142,8 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	}
 	m_featureVectorDecoder.clear();
 
-	m_stimulationEncoder.uninitialize();
-	m_stimulationDecoder.uninitialize();
+	m_stimEncoder.uninitialize();
+	m_stimDecoder.uninitialize();
 
 	for (uint32_t i = 0; i < m_datasets.size(); ++i)
 	{
@@ -233,17 +233,17 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	// Parses stimulations
 	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		m_stimulationDecoder.decode(i);
+		m_stimDecoder.decode(i);
 
-		if (m_stimulationDecoder.isHeaderReceived())
+		if (m_stimDecoder.isHeaderReceived())
 		{
-			m_stimulationEncoder.encodeHeader();
+			m_stimEncoder.encodeHeader();
 			boxContext.markOutputAsReadyToSend(0, 0, 0);
 		}
-		if (m_stimulationDecoder.isBufferReceived())
+		if (m_stimDecoder.isBufferReceived())
 		{
-			const IStimulationSet* iStimulationSet = m_stimulationDecoder.getOutputStimulationSet();
-			IStimulationSet* oStimulationSet       = m_stimulationEncoder.getInputStimulationSet();
+			const IStimulationSet* iStimulationSet = m_stimDecoder.getOutputStimulationSet();
+			IStimulationSet* oStimulationSet       = m_stimEncoder.getInputStimulationSet();
 			oStimulationSet->clear();
 
 			for (size_t j = 0; j < iStimulationSet->getStimulationCount(); ++j)
@@ -255,13 +255,13 @@ bool CBoxAlgorithmClassifierTrainer::process()
 					oStimulationSet->appendStimulation(stimId, iStimulationSet->getStimulationDate(j), 0);
 				}
 			}
-			m_stimulationEncoder.encodeBuffer();
+			m_stimEncoder.encodeBuffer();
 
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
-		if (m_stimulationDecoder.isEndReceived())
+		if (m_stimDecoder.isEndReceived())
 		{
-			m_stimulationEncoder.encodeEnd();
+			m_stimEncoder.encodeEnd();
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 	}

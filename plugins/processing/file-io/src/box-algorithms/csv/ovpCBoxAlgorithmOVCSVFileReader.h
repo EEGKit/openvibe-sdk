@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_readerLib;
 
 			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_algorithmEncoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimEncoder;
 
 			std::deque<OpenViBE::CSV::SMatrixChunk> m_savedChunks;
 			std::deque<OpenViBE::CSV::SStimulationChunk> m_savedStimulations;

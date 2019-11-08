@@ -13,7 +13,7 @@ bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; ++i) { m_vStreamDecoder.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
+	for (uint32_t i = 0; i < nInput; ++i) { m_decoders.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
 
 	m_pStreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
 
@@ -29,10 +29,10 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 
 	for (uint32_t i = 0; i < nInput; ++i)
 	{
-		m_vStreamDecoder[i]->uninitialize();
-		delete m_vStreamDecoder[i];
+		m_decoders[i]->uninitialize();
+		delete m_decoders[i];
 	}
-	m_vStreamDecoder.clear();
+	m_decoders.clear();
 
 	return true;
 }
@@ -95,10 +95,10 @@ bool CBoxAlgorithmSignalMerger::process()
 
 		for (uint32_t i = 0; i < nInput; ++i)
 		{
-			m_vStreamDecoder[i]->decode(c);
+			m_decoders[i]->decode(c);
 
-			const IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
-			if (m_vStreamDecoder[i]->isHeaderReceived())
+			const IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
+			if (m_decoders[i]->isHeaderReceived())
 			{
 				nHeader++;
 				if (i == 0)
@@ -114,16 +114,16 @@ bool CBoxAlgorithmSignalMerger::process()
 										<< "] must match sample count per block [" << nSamplePerBlock << "]",
 										OpenViBE::Kernel::ErrorType::BadInput);
 
-					OV_ERROR_UNLESS_KRF(m_vStreamDecoder[0]->getOutputSamplingRate() == m_vStreamDecoder[i]->getOutputSamplingRate(),
-										"Output sampling rate [" << m_vStreamDecoder[i]->getOutputSamplingRate() << "] on input [" << i
-										<< "] must match the sampling rate on input 0 [" << m_vStreamDecoder[0]->getOutputSamplingRate() << "]",
+					OV_ERROR_UNLESS_KRF(m_decoders[0]->getOutputSamplingRate() == m_decoders[i]->getOutputSamplingRate(),
+										"Output sampling rate [" << m_decoders[i]->getOutputSamplingRate() << "] on input [" << i
+										<< "] must match the sampling rate on input 0 [" << m_decoders[0]->getOutputSamplingRate() << "]",
 										OpenViBE::Kernel::ErrorType::BadInput);
 
 					nChannel += op_pMatrix->getDimensionSize(0);
 				}
 			}
-			if (m_vStreamDecoder[i]->isBufferReceived()) { nBuffer++; }
-			if (m_vStreamDecoder[i]->isEndReceived()) { nEnd++; }
+			if (m_decoders[i]->isBufferReceived()) { nBuffer++; }
+			if (m_decoders[i]->isEndReceived()) { nEnd++; }
 		}
 
 		OV_ERROR_UNLESS_KRF(!nHeader || nHeader == nInput,
@@ -145,13 +145,13 @@ bool CBoxAlgorithmSignalMerger::process()
 			ip_pMatrix->setDimensionSize(1, nSamplePerBlock);
 			for (uint32_t i = 0, k = 0; i < nInput; ++i)
 			{
-				const IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
+				const IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
 				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
 				{
 					ip_pMatrix->setDimensionLabel(0, k, op_pMatrix->getDimensionLabel(0, j));
 				}
 			}
-			const uint64_t l_ui64SamplingRate        = m_vStreamDecoder[0]->getOutputSamplingRate();
+			const uint64_t l_ui64SamplingRate        = m_decoders[0]->getOutputSamplingRate();
 			m_pStreamEncoder->getInputSamplingRate() = l_ui64SamplingRate;
 
 			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << l_ui64SamplingRate << "\n";
@@ -170,7 +170,7 @@ bool CBoxAlgorithmSignalMerger::process()
 
 			for (uint32_t i = 0, k = 0; i < nInput; ++i)
 			{
-				IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
+				IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
 				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
 				{
 					System::Memory::copy(ip_pMatrix->getBuffer() + k * nSamplePerBlock, op_pMatrix->getBuffer() + j * nSamplePerBlock,

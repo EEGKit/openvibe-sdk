@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_vStreamDecoder;
+			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_decoders;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_pStreamEncoder = nullptr;
 		};
 

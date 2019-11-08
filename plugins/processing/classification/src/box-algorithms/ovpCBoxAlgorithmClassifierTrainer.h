@@ -59,10 +59,10 @@ namespace OpenViBEPlugins
 			uint64_t m_trainStimulation                  = 0;
 			size_t m_nPartition                            = 0;
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimulationDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimDecoder;
 			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_featureVectorDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_stimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_stimEncoder;
 
 			std::map<OpenViBE::CString, OpenViBE::CString>* m_parameter = nullptr;
 

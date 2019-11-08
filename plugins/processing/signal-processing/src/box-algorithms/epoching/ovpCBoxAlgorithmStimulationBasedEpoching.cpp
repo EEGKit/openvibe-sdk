@@ -34,7 +34,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 	m_lastSignalChunkEndTime        = 0;
 
 	m_signalDecoder.initialize(*this, 0);
-	m_stimulationDecoder.initialize(*this, 1);
+	m_stimDecoder.initialize(*this, 1);
 
 	m_signalEncoder.initialize(*this, 0);
 
@@ -55,7 +55,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::uninitialize()
 {
 	m_signalDecoder.uninitialize();
 	m_signalEncoder.uninitialize();
-	m_stimulationDecoder.uninitialize();
+	m_stimDecoder.uninitialize();
 	m_cachedChunks.clear();
 	return true;
 }
@@ -127,16 +127,16 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(INPUT_STIMULATIONS_IDX); ++chunk)
 	{
-		m_stimulationDecoder.decode(chunk);
+		m_stimDecoder.decode(chunk);
 		// We only handle buffers and ignore stimulation headers and ends
-		if (m_stimulationDecoder.isBufferReceived())
+		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t stimulation = 0; stimulation < m_stimulationDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+			for (size_t stimulation = 0; stimulation < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 			{
-				if (m_stimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation) == m_stimulationID)
+				if (m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation) == m_stimulationID)
 				{
 					// Stimulations are put into cache, we ignore stimulations that would produce output chunks with negative start date (after applying the offset)
-					uint64_t stimulationDate = m_stimulationDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
+					uint64_t stimulationDate = m_stimDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
 					if (stimulationDate < m_lastReceivedStimulationDate)
 					{
 						OV_WARNING_K(

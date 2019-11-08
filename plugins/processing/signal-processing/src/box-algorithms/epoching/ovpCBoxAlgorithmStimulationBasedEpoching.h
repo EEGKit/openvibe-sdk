@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 
 		private:
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_signalDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimulationDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_signalEncoder;
 
 			uint64_t m_stimulationID        = 0;
