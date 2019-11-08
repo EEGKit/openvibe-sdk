@@ -34,12 +34,12 @@ namespace OpenViBEToolkit
 	public:
 
 		explicit CFeatureVectorSet(const OpenViBE::IMatrix& rMatrix);
-		uint32_t getFeatureVectorCount() const override { return m_matrix.getDimensionSize(0); }
-		bool setFeatureVectorCount(const uint32_t /*nFeatureVector*/) override { return false; }
+		size_t getFeatureVectorCount() const override { return m_matrix.getDimensionSize(0); }
+		bool setFeatureVectorCount(const size_t /*nFeatureVector*/) override { return false; }
 		bool addFeatureVector(const IFeatureVector& /*featureVector*/) override { return false; }
-		IFeatureVector& getFeatureVector(const uint32_t index) override;
-		const IFeatureVector& getFeatureVector(const uint32_t index) const override;
-		uint32_t getLabelCount() const override;
+		IFeatureVector& getFeatureVector(const size_t index) override;
+		const IFeatureVector& getFeatureVector(const size_t index) const override;
+		size_t getLabelCount() const override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier)
 

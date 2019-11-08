@@ -437,12 +437,12 @@ namespace Common
 
 		protected:
 
-			size_t m_nChannel      = 0;
+			size_t m_nChannel  = 0;
 			size_t m_iSampling = 0;
 			size_t m_oSampling = 0;
 
 			int m_nFractionalDelayFilterSample = 6;
-			int m_iMaxNSampleIn         = 1024;
+			int m_iMaxNSampleIn                = 1024;
 			double m_transitionBandPercent     = 45;
 			double m_stopBandAttenuation       = 49;
 

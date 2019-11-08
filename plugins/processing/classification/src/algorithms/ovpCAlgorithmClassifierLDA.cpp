@@ -392,23 +392,23 @@ XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 //Extract a double from the PCDATA of a node
 double getFloatFromNode(XML::IXMLNode* pNode)
 {
-	std::stringstream l_sData(pNode->getPCData());
+	std::stringstream ss(pNode->getPCData());
 	double res;
-	l_sData >> res;
+	ss >> res;
 
 	return res;
 }
 
-bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNode)
+bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* configNode)
 {
-	OV_ERROR_UNLESS_KRF(pConfigurationNode->hasAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME),
+	OV_ERROR_UNLESS_KRF(configNode->hasAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME),
 						"Invalid model: model trained with an obsolete version of LDA",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_labels.clear();
 	m_discriminantFunctions.clear();
 
-	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(CLASSES_NODE_NAME);
+	XML::IXMLNode* l_pTempNode = configNode->getChildByName(CLASSES_NODE_NAME);
 
 	OV_ERROR_UNLESS_KRF(l_pTempNode != nullptr, "Failed to retrieve xml node", OpenViBE::Kernel::ErrorType::BadParsing);
 
@@ -416,7 +416,7 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNod
 
 
 	//We send corresponding data to the computation helper
-	XML::IXMLNode* l_pConfigsNode = pConfigurationNode->getChildByName(COMPUTATION_HELPERS_CONFIGURATION_NODE);
+	XML::IXMLNode* l_pConfigsNode = configNode->getChildByName(COMPUTATION_HELPERS_CONFIGURATION_NODE);
 
 	for (size_t i = 0; i < l_pConfigsNode->getChildCount(); ++i)
 	{
@@ -429,24 +429,24 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNod
 
 void CAlgorithmClassifierLDA::loadClassesFromNode(XML::IXMLNode* pNode)
 {
-	std::stringstream l_sData(pNode->getPCData());
-	double l_f64Temp;
-	while (l_sData >> l_f64Temp) { m_labels.push_back(l_f64Temp); }
+	std::stringstream ss(pNode->getPCData());
+	double value;
+	while (ss >> value) { m_labels.push_back(value); }
 	m_nClasses = m_labels.size();
 }
 
 //Load the weight vector
-void CAlgorithmClassifierLDA::loadCoefficientsFromNode(XML::IXMLNode* pNode)
+void CAlgorithmClassifierLDA::loadCoefsFromNode(XML::IXMLNode* pNode)
 {
-	std::stringstream l_sData(pNode->getPCData());
+	std::stringstream ss(pNode->getPCData());
 
-	std::vector<double> l_vCoefficients;
-	double l_f64Value;
-	while (l_sData >> l_f64Value) { l_vCoefficients.push_back(l_f64Value); }
+	std::vector<double> Coefs;
+	double value;
+	while (ss >> value) { Coefs.push_back(value); }
 
-	m_weights.resize(1, l_vCoefficients.size());
-	m_nCols = l_vCoefficients.size();
-	for (size_t i = 0; i < l_vCoefficients.size(); ++i) { m_weights(0, i) = l_vCoefficients[i]; }
+	m_weights.resize(1, Coefs.size());
+	m_nCols = Coefs.size();
+	for (size_t i = 0; i < Coefs.size(); ++i) { m_weights(0, i) = Coefs[i]; }
 }
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

@@ -22,19 +22,19 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix) : m_matrix(rMatrix)
 	}
 }
 
-IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t index)
+IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index)
 {
 	auto itFeatureVector = m_features.find(index);
 	return itFeatureVector->second;
 }
 
-const IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t index) const
+const IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index) const
 {
 	const auto itFeatureVector = m_features.find(index);
 	return itFeatureVector->second;
 }
 
-uint32_t CFeatureVectorSet::getLabelCount() const
+size_t CFeatureVectorSet::getLabelCount() const
 {
 	std::map<double, bool> labels;
 	for (auto itFeatureVector = m_features.begin(); itFeatureVector != m_features.end(); ++

@@ -30,9 +30,9 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance,
-						  OpenViBEToolkit::IVector& rProbabilityValue) override;
+						  OpenViBEToolkit::IVector& probability) override;
 			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
+			bool loadConfiguration(XML::IXMLNode* configNode) override;
 			uint32_t getOutputProbabilityVectorLength() override { return m_discriminantFunctions.size(); }
 			uint32_t getOutputDistanceVectorLength() override { return m_discriminantFunctions.size(); }
 
@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 
 		private:
 			void loadClassesFromNode(XML::IXMLNode* pNode);
-			void loadCoefficientsFromNode(XML::IXMLNode* pNode);
+			void loadCoefsFromNode(XML::IXMLNode* pNode);
 
 			uint32_t getClassCount();
 		};

@@ -30,7 +30,7 @@ namespace OpenViBEToolkit
 
 		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
 		bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
-		bool classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rDistanceValue, IVector& rProbabilityValue) override = 0;
+		bool classify(const IFeatureVector& rFeatureVector, double& classId, IVector& distance, IVector& probability) override = 0;
 		XML::IXMLNode* saveConfiguration() override = 0;
 		bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) override = 0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
