@@ -718,7 +718,7 @@ uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& exp
 	return fallbackValue;
 }
 
-size_t CConfigurationManager::getRandom() const { return size_t(System::Math::randomUInteger64()); }
+size_t CConfigurationManager::getRandom() const { return size_t(System::Math::randomI()); }
 
 size_t CConfigurationManager::getIndex() const { return m_idx++; }
 

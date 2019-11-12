@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include <cstdlib>	// fix Unix compatibility
 
 namespace System
 {
@@ -8,10 +9,10 @@ namespace System
 	{
 	public:
 
-		static bool copy(void* pTargetBuffer, const void* pSourceBuffer, uint64_t size);
-		static bool move(void* pTargetBuffer, const void* pSourceBuffer, uint64_t size);
-		static bool set(void* pTargetBuffer, uint64_t size, uint8_t value);
-		static bool compare(const void* pSourceBuffer1, const void* pSourceBuffer2, uint64_t size);
+		static bool copy(void* dstBuffer, const void* srcBuffer, size_t size);
+		static bool move(void* dstBuffer, const void* srcBuffer, size_t size);
+		static bool set(void* dstBuffer, size_t size, uint8_t value);
+		static bool compare(const void* srcBuffer1, const void* srcBuffer2, size_t size);
 
 		static bool hostToLittleEndian(uint16_t value, uint8_t* buffer);
 		static bool hostToLittleEndian(uint32_t value, uint8_t* buffer);

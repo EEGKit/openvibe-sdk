@@ -41,7 +41,7 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64_t calibrateSleep(const uint32_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
+uint64_t calibrateSleep(const size_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t maxTime = 0;
 	for (size_t i = 0; i < nSample; ++i)
@@ -73,9 +73,9 @@ std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*
 // \brief Return a warning count that is incremented when sleep function did not meet following requirements:
 //       - sleep enough time
 //       - sleep less than the expected time + delta
-uint32_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes, const std::vector<uint64_t>& resultTimes, const uint64_t delta, const uint64_t epsilon)
+size_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes, const std::vector<uint64_t>& resultTimes, const uint64_t delta, const uint64_t epsilon)
 {
-	uint32_t warningCount = 0;
+	size_t warningCount = 0;
 	for (size_t i = 0; i < expectedTimes.size(); ++i)
 	{
 		if (resultTimes[i] + epsilon < expectedTimes[i]
@@ -133,7 +133,7 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds                         = uint32_t(data >> 32);
+		auto seconds                         = data >> 32;
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
@@ -144,7 +144,7 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds                         = uint32_t(data >> 32);
+		auto seconds                         = data >> 32;
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
@@ -170,7 +170,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	OVT_ASSERT(Time::checkResolution(1), "Failure to check for resolution");
 
 	// A stress test to check no overflow happens
-	OVT_ASSERT(Time::checkResolution(std::numeric_limits<uint32_t >::max()), "Failure to check for resolution");
+	OVT_ASSERT(Time::checkResolution(std::numeric_limits<size_t >::max()), "Failure to check for resolution");
 
 	//
 	// zSleep() function test
@@ -192,7 +192,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
-	const uint32_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime, OpenViBE::TimeArithmetics::secondsToTime(0.005));
+	const size_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime, OpenViBE::TimeArithmetics::secondsToTime(0.005));
 
 	// relax this threshold in case there is some recurrent problems
 	// according to the runtime environment

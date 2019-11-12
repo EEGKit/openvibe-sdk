@@ -17,12 +17,7 @@ void* WindowsUtilities::utf16CompliantLoadLibrary(const char* path, HANDLE file,
 	return ::LoadLibraryEx(path, file, flags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
 }
 
-BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* name, const char* value)
-{
-	/*std::wstring l_sUtf16EnvVarName = castToWString(name);
-	std::wstring l_sUtf16EnvVarValue = castToWString(value);*/
-	return SetEnvironmentVariable(name, value);
-}
+BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* name, const char* value) { return SetEnvironmentVariable(name, value); }
 		
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code

@@ -2,21 +2,20 @@
 #include "system/ovCTime.h"
 
 using namespace System;
-
-CChrono::CChrono() {}
+using namespace std;
 
 CChrono::~CChrono()
 {
-	delete [] m_pStepInTime;
-	delete [] m_pStepOutTime;
+	delete [] m_stepInTime;
+	delete [] m_stepOutTime;
 }
 
-bool CChrono::reset(uint32_t ui32StepCount)
+bool CChrono::reset(size_t nStep)
 {
-	if (!ui32StepCount) { return false; }
+	if (!nStep) { return false; }
 
-	uint64_t* stepInTime  = new uint64_t[ui32StepCount + 1];
-	uint64_t* stepOutTime = new uint64_t[ui32StepCount + 1];
+	uint64_t* stepInTime  = new uint64_t[nStep + 1];
+	uint64_t* stepOutTime = new uint64_t[nStep + 1];
 	if (!stepInTime || !stepOutTime)
 	{
 		delete [] stepInTime;
@@ -24,19 +23,19 @@ bool CChrono::reset(uint32_t ui32StepCount)
 		return false;
 	}
 
-	for (uint32_t i = 0; i <= ui32StepCount; ++i)
+	for (size_t i = 0; i <= nStep; ++i)
 	{
 		stepInTime[i]  = 0;
 		stepOutTime[i] = 0;
 	}
 
-	delete [] m_pStepInTime;
-	delete [] m_pStepOutTime;
-	m_pStepInTime  = stepInTime;
-	m_pStepOutTime = stepOutTime;
+	delete [] m_stepInTime;
+	delete [] m_stepOutTime;
+	m_stepInTime  = stepInTime;
+	m_stepOutTime = stepOutTime;
 
-	m_nStep     = ui32StepCount;
-	m_ui32StepIdx     = 0;
+	m_nStep            = nStep;
+	m_stepIdx          = 0;
 	m_isInStep         = false;
 	m_hasNewEstimation = false;
 
@@ -52,18 +51,18 @@ bool CChrono::stepIn()
 
 	m_isInStep = !m_isInStep;
 
-	m_pStepInTime[m_ui32StepIdx] = Time::zgetTime();
-	if (m_ui32StepIdx == m_nStep)
+	m_stepInTime[m_stepIdx] = Time::zgetTime();
+	if (m_stepIdx == m_nStep)
 	{
 		m_totalStepInTime  = 0;
 		m_totalStepOutTime = 0;
-		for (uint32_t i = 0; i < m_nStep; ++i)
+		for (size_t i = 0; i < m_nStep; ++i)
 		{
-			m_totalStepInTime += m_pStepOutTime[i] - m_pStepInTime[i];
-			m_totalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];
+			m_totalStepInTime += m_stepOutTime[i] - m_stepInTime[i];
+			m_totalStepOutTime += m_stepInTime[i + 1] - m_stepOutTime[i];
 		}
-		m_pStepInTime[0]    = m_pStepInTime[m_nStep];
-		m_ui32StepIdx     = 0;
+		m_stepInTime[0]    = m_stepInTime[m_nStep];
+		m_stepIdx          = 0;
 		m_hasNewEstimation = true;
 	}
 	else { m_hasNewEstimation = false; }
@@ -77,8 +76,8 @@ bool CChrono::stepOut()
 
 	m_isInStep = !m_isInStep;
 
-	m_pStepOutTime[m_ui32StepIdx] = Time::zgetTime();
-	m_ui32StepIdx++;
+	m_stepOutTime[m_stepIdx] = Time::zgetTime();
+	m_stepIdx++;
 
 	return true;
 }

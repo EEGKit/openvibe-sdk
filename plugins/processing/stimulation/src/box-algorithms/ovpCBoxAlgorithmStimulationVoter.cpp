@@ -35,12 +35,12 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
 	op_pStimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
 
-	m_minimumVotes     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_minimumVotes      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_timeWindow        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_clearVotes          = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
-	m_outputDateMode      = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
-	m_rejectClassLabel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
-	m_rejectClassCanWin  = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
+	m_clearVotes        = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
+	m_outputDateMode    = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
+	m_rejectClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_rejectClassCanWin = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
 
 	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_clearVotes << ", timestamp at " << m_outputDateMode << ", reject mode " <<
 			m_rejectClassCanWin << "\n";
@@ -74,10 +74,8 @@ bool CBoxAlgorithmStimulationVoter::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	TParameterHandler<IStimulationSet*> ip_pStimulationSet(
-		m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(
-		m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IStimulationSet*> ip_pStimulationSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
+	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
@@ -93,7 +91,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 			{
 				uint64_t stimulationId   = op_pStimulationSet->getStimulationIdentifier(k);
 				uint64_t stimulationDate = op_pStimulationSet->getStimulationDate(k);
-				m_latestStimulusDate = std::max(m_latestStimulusDate, stimulationDate);
+				m_latestStimulusDate     = std::max(m_latestStimulusDate, stimulationDate);
 				if (TimeArithmetics::timeToSeconds(m_latestStimulusDate - stimulationDate) <= m_timeWindow)
 				{
 					// Stimulus is fresh, append
@@ -133,7 +131,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	}
 
 	std::map<uint64_t, uint64_t> lastSeen;			// The last occurrence of each type in time
-	std::map<uint64_t, uint32_t> votes;				// Histogram of votes
+	std::map<uint64_t, size_t> votes;				// Histogram of votes
 
 	// Make a histogram of the votes
 	for (auto it = m_oStimulusDeque.begin(); it != m_oStimulusDeque.end(); ++it)
@@ -148,12 +146,12 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	// Find the winner
 	uint64_t resultClassLabel = m_rejectClassLabel;
-	uint64_t maxVotes         = 0;
+	size_t maxVotes         = 0;
 
 	for (auto it = votes.begin(); it != votes.end(); ++it)
 	{
 		const uint64_t stimulusType  = (*it).first;
-		const uint64_t stimulusVotes = (*it).second; // can not be zero by construction above
+		const size_t stimulusVotes = (*it).second; // can not be zero by construction above
 
 		if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && stimulusType == m_rejectClassLabel)
 		{
@@ -169,7 +167,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		else if (stimulusVotes == maxVotes)
 		{
 			// Break ties arbitrarily
-			if (System::Math::randomFloat32BetweenZeroAndOne() > 0.5)
+			if (System::Math::random0To1() > 0.5)
 			{
 				resultClassLabel = stimulusType;
 				maxVotes         = stimulusVotes;

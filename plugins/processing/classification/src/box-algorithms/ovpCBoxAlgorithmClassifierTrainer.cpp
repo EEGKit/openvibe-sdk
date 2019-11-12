@@ -214,7 +214,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 
 		for (uint32_t j = 0; j < paddingNeeded; ++j)
 		{
-			const uint32_t sampledIndex        = System::Math::randomUInteger32WithCeiling(examplesInClass);
+			const uint32_t sampledIndex        = System::Math::randomWithCeiling(examplesInClass);
 			const SFeatureVector& sourceVector = m_datasets[thisClassesIndexes[sampledIndex]];
 			m_balancedDatasets.push_back(sourceVector);
 		}
@@ -325,7 +325,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		if (randomizeVectorOrder)
 		{
 			this->getLogManager() << LogLevel_Info << "Randomizing the feature vector set\n";
-			random_shuffle(featurePermutation.begin(), featurePermutation.end(), System::Math::randomUInteger32WithCeiling);
+			random_shuffle(featurePermutation.begin(), featurePermutation.end(), System::Math::randomWithCeiling);
 		}
 
 		const uint32_t nClass = nInput - 1;

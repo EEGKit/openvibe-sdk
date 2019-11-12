@@ -44,37 +44,37 @@ public:
 		std::shared_ptr<SNode> parent{ nullptr };
 	};
 
-	std::shared_ptr<SNode> currentNode{ nullptr };
+	std::shared_ptr<SNode> m_CurrentNode{ nullptr };
 
 protected:
 
-	void openChild(const char* name, const char** attributeName, const char** attributeValue, uint64_t attributeCount) override
+	void openChild(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute) override
 	{
 		auto node = std::make_shared<SNode>();
 
-		if (currentNode)
+		if (m_CurrentNode)
 		{
-			node->parent = currentNode;
-			currentNode->children.push_back(node);
+			node->parent = m_CurrentNode;
+			m_CurrentNode->children.push_back(node);
 		}
 
-		currentNode       = node;
-		currentNode->name = name;
+		m_CurrentNode       = node;
+		m_CurrentNode->name = name;
 
-		for (uint64_t i = 0; i < attributeCount; ++i) { currentNode->attributes[attributeName[i]] = attributeValue[i]; }
+		for (size_t i = 0; i < nAttribute; ++i) { m_CurrentNode->attributes[attributeName[i]] = attributeValue[i]; }
 	}
 
-	void processChildData(const char* data) override { currentNode->data = data; }
+	void processChildData(const char* data) override { m_CurrentNode->data = data; }
 
-	void closeChild() override { if (currentNode->parent) { currentNode = currentNode->parent; } }
+	void closeChild() override { if (m_CurrentNode->parent) { m_CurrentNode = m_CurrentNode->parent; } }
 };
 
 TEST(XML_Reader_Test_Case, validateReader)
 {
 	std::string dataFile = std::string(DATA_DIR) + "/ref_data.xml";
 
-	CReaderCallBack readerCallback;
-	XML::IReader* xmlReader = createReader(readerCallback);
+	CReaderCallBack callback;
+	XML::IReader* xmlReader = createReader(callback);
 
 	FILE* inputTestDataFile = fopen(dataFile.c_str(), "r");
 
@@ -92,7 +92,7 @@ TEST(XML_Reader_Test_Case, validateReader)
 
 	// Analyze results
 
-	auto rootNode = readerCallback.currentNode;
+	auto rootNode = callback.m_CurrentNode;
 
 	// Root node check
 	ASSERT_EQ("Document", rootNode->name);
