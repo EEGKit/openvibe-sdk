@@ -12,28 +12,27 @@ namespace XML
 	class CReader final : public IReader
 	{
 	public:
-		explicit CReader(IReaderCallback& rReaderCallback);
-		bool processData(const void* buffer, uint64_t size) override;
+		explicit CReader(IReaderCallback& callback);
+		bool processData(const void* buffer, size_t size) override;
 		void release() override;
 
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
-		void processChildData(const char* sData);
+		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, size_t nAttribute);
+		void processChildData(const char* data);
 		void closeChild();
 
 	protected:
 
-		IReaderCallback& m_rReaderCallback;
+		IReaderCallback& m_callback;
 		XML_Parser m_pXMLParser;
-		std::string m_sData;
+		std::string m_data;
 	};
 
-	static void XMLCALL ExpatXMLStart(void* pData, const char* pElement, const char** ppAttribute);
+	static void XMLCALL ExpatXMLStart(void* data, const char* element, const char** attribute);
 	static void XMLCALL ExpatXMLEnd(void* data, const char* element);
 	static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
-}
+} // namespace XML
 
-CReader::CReader(IReaderCallback& rReaderCallback)
-	: m_rReaderCallback(rReaderCallback), m_pXMLParser(nullptr)
+CReader::CReader(IReaderCallback& callback) : m_callback(callback), m_pXMLParser(nullptr)
 {
 	m_pXMLParser = XML_ParserCreate(nullptr);
 	XML_SetElementHandler(m_pXMLParser, ExpatXMLStart, ExpatXMLEnd);
@@ -41,7 +40,7 @@ CReader::CReader(IReaderCallback& rReaderCallback)
 	XML_SetUserData(m_pXMLParser, this);
 }
 
-bool CReader::processData(const void* buffer, const uint64_t size)
+bool CReader::processData(const void* buffer, const size_t size)
 {
 	// $$$ TODO take 64bits size into consideration
 	const XML_Status status = XML_Parse(m_pXMLParser, static_cast<const char*>(buffer), static_cast<const int>(size), false);
@@ -61,43 +60,43 @@ void CReader::release()
 	delete this;
 }
 
-void CReader::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute)
+void CReader::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, size_t nAttribute)
 {
-	m_rReaderCallback.openChild(name, sAttributeName, sAttributeValue, nAttribute);
-	m_sData = "";
+	m_callback.openChild(name, sAttributeName, sAttributeValue, nAttribute);
+	m_data = "";
 }
 
-void CReader::processChildData(const char* sData) { m_sData += sData; }
+void CReader::processChildData(const char* data) { m_data += data; }
 
 void CReader::closeChild()
 {
-	if (m_sData.size() != 0) { m_rReaderCallback.processChildData(m_sData.c_str()); }
-	m_sData = "";
-	m_rReaderCallback.closeChild();
+	if (m_data.size() != 0) { m_callback.processChildData(m_data.c_str()); }
+	m_data = "";
+	m_callback.closeChild();
 }
 
-XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback) { return new CReader(rReaderCallback); }
+XML_API IReader* XML::createReader(IReaderCallback& callback) { return new CReader(callback); }
 
-static void XMLCALL XML::ExpatXMLStart(void* pData, const char* pElement, const char** ppAttribute)
+static void XMLCALL XML::ExpatXMLStart(void* data, const char* element, const char** attribute)
 {
-	uint64_t l_ui64AttributeCount = 0;
-	while (ppAttribute[l_ui64AttributeCount++]) { ; }
-	l_ui64AttributeCount >>= 1;
+	size_t nAttribute = 0;
+	while (attribute[nAttribute++]) { }
+	nAttribute >>= 1;
 
 	// $$$ TODO take 64bits size into consideration
-	const char** l_pAttributeName  = new const char*[size_t(l_ui64AttributeCount)];
-	const char** l_pAttributeValue = new const char*[size_t(l_ui64AttributeCount)];
+	const char** name  = new const char*[nAttribute];
+	const char** value = new const char*[nAttribute];
 
-	for (uint64_t i = 0; i < l_ui64AttributeCount; ++i)
+	for (size_t i = 0; i < nAttribute; ++i)
 	{
-		l_pAttributeName[i]  = ppAttribute[(i << 1)];
-		l_pAttributeValue[i] = ppAttribute[(i << 1) + 1];
+		name[i]  = attribute[(i << 1)];
+		value[i] = attribute[(i << 1) + 1];
 	}
 
-	static_cast<CReader*>(pData)->openChild(pElement, l_pAttributeName, l_pAttributeValue, l_ui64AttributeCount);
+	static_cast<CReader*>(data)->openChild(element, name, value, nAttribute);
 
-	delete [] l_pAttributeName;
-	delete [] l_pAttributeValue;
+	delete [] name;
+	delete [] value;
 }
 
 static void XMLCALL XML::ExpatXMLEnd(void* data, const char* /*element*/) { static_cast<CReader*>(data)->closeChild(); }
