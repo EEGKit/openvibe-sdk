@@ -23,7 +23,7 @@ namespace XML
 
 	protected:
 		IWriterCallback& m_rWriterCallback;
-		stack<string> m_vNodes;
+		stack<string> m_nodes;
 		bool m_hasChild             = false;
 		bool m_hasData              = false;
 		bool m_hasClosedOpeningNode = true;
@@ -44,10 +44,10 @@ bool CWriter::openChild(const char* name)
 		m_hasClosedOpeningNode = true;
 	}
 
-	string l_sIndent(m_vNodes.size(), '\t');
-	string res = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
+	string l_sIndent(m_nodes.size(), '\t');
+	string res = (!m_nodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
 	m_rWriterCallback.write(res.c_str());
-	m_vNodes.push(name);
+	m_nodes.push(name);
 	m_hasChild             = false;
 	m_hasData              = false;
 	m_hasClosedOpeningNode = false;
@@ -97,7 +97,7 @@ bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeVal
 
 bool CWriter::closeChild()
 {
-	if (m_vNodes.empty()) { return false; }
+	if (m_nodes.empty()) { return false; }
 
 	if (!m_hasClosedOpeningNode)
 	{
@@ -105,10 +105,10 @@ bool CWriter::closeChild()
 		m_hasClosedOpeningNode = true;
 	}
 
-	string l_sIndent(m_vNodes.size() - 1, '\t');
-	string res = ((m_hasData || !m_hasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
+	string l_sIndent(m_nodes.size() - 1, '\t');
+	string res = ((m_hasData || !m_hasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_nodes.top() + string(">");
 	m_rWriterCallback.write(res.c_str());
-	m_vNodes.pop();
+	m_nodes.pop();
 	m_hasChild = true;
 	m_hasData  = false;
 	return true;
@@ -116,7 +116,7 @@ bool CWriter::closeChild()
 
 void CWriter::release()
 {
-	while (!m_vNodes.empty()) { closeChild(); }
+	while (!m_nodes.empty()) { closeChild(); }
 	delete this;
 }
 

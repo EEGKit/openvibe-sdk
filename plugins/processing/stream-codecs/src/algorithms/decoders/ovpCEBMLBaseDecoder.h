@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& identifier);
 			virtual void openChild(const EBML::CIdentifier& identifier);
-			virtual void processChildData(const void* /*buffer*/, const uint64_t /*size*/) { }
+			virtual void processChildData(const void* /*buffer*/, const size_t /*size*/) { }
 			virtual void closeChild() { }
 
 		protected:

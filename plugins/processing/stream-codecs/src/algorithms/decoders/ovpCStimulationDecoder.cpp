@@ -44,44 +44,44 @@ bool CStimulationDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CStimulationDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Buffer_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) { }
+	if ((top == OVTK_NodeId_Buffer_Stimulation)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) { }
 	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
 void CStimulationDecoder::processChildData(const void* buffer, const uint64_t size)
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Buffer_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
+	if ((top == OVTK_NodeId_Buffer_Stimulation)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
 	{
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
+		if (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
 		{
 			op_pStimulationSet->setStimulationCount(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 			m_stimulationIdx = 0;
 		}
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
 		{
 			op_pStimulationSet->setStimulationIdentifier(m_stimulationIdx, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 		}
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		{
 			op_pStimulationSet->setStimulationDate(m_stimulationIdx, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 		}
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
 		{
 			op_pStimulationSet->setStimulationDuration(m_stimulationIdx, m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size));
 		}
@@ -91,18 +91,18 @@ void CStimulationDecoder::processChildData(const void* buffer, const uint64_t si
 
 void CStimulationDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Buffer_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
+	if ((top == OVTK_NodeId_Buffer_Stimulation)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
 	{
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_stimulationIdx++; }
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_stimulationIdx++; }
 	}
 	else { CEBMLBaseDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }

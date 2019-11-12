@@ -63,84 +63,84 @@ bool CAcquisitionDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CAcquisitionDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Acquisition_Header_BufferDuration)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelUnits)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_Signal)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
+	if ((top == OVTK_NodeId_Acquisition_Header_BufferDuration)
+		|| (top == OVTK_NodeId_Acquisition_Header_ExperimentInformation)
+		|| (top == OVTK_NodeId_Acquisition_Header_Signal)
+		|| (top == OVTK_NodeId_Acquisition_Header_Stimulation)
+		|| (top == OVTK_NodeId_Acquisition_Header_ChannelLocalisation)
+		|| (top == OVTK_NodeId_Acquisition_Header_ChannelUnits)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_Signal)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_Stimulation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	) { }
 	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
-void CAcquisitionDecoder::processChildData(const void* buffer, const uint64_t size)
+void CAcquisitionDecoder::processChildData(const void* buffer, const size_t size)
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Acquisition_Header_BufferDuration)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelUnits)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_Signal)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
+	if ((top == OVTK_NodeId_Acquisition_Header_BufferDuration)
+		|| (top == OVTK_NodeId_Acquisition_Header_ExperimentInformation)
+		|| (top == OVTK_NodeId_Acquisition_Header_Signal)
+		|| (top == OVTK_NodeId_Acquisition_Header_Stimulation)
+		|| (top == OVTK_NodeId_Acquisition_Header_ChannelLocalisation)
+		|| (top == OVTK_NodeId_Acquisition_Header_ChannelUnits)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_Signal)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_Stimulation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	)
 	{
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_ui64BufferDuration = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_ExperimentInformation) { this->appendMemoryBuffer(op_pExperimentInformationStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_Signal) { this->appendMemoryBuffer(op_pSignalStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_Stimulation) { this->appendMemoryBuffer(op_pStimulationStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) { this->appendMemoryBuffer(op_pExperimentInformationStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_Signal) { this->appendMemoryBuffer(op_pSignalStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_Stimulation) { this->appendMemoryBuffer(op_pStimulationStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, buffer, size); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_ui64BufferDuration = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_ExperimentInformation) { appendMemoryBuffer(op_pExperimentInformationStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_Signal) { appendMemoryBuffer(op_pSignalStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_Stimulation) { appendMemoryBuffer(op_pStimulationStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) { appendMemoryBuffer(op_pChannelLocalisationStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_ChannelUnits) { appendMemoryBuffer(op_pChannelUnitsStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) { appendMemoryBuffer(op_pExperimentInformationStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Buffer_Signal) { appendMemoryBuffer(op_pSignalStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Buffer_Stimulation) { appendMemoryBuffer(op_pStimulationStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { appendMemoryBuffer(op_pChannelLocalisationStream, buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { appendMemoryBuffer(op_pChannelUnitsStream, buffer, size); }
 	}
 	else { CEBMLBaseDecoder::processChildData(buffer, size); }
 }
 
 void CAcquisitionDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Acquisition_Header_BufferDuration)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelUnits)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_Signal)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_Stimulation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
+	if ((top == OVTK_NodeId_Acquisition_Header_BufferDuration)
+		|| (top == OVTK_NodeId_Acquisition_Header_ExperimentInformation)
+		|| (top == OVTK_NodeId_Acquisition_Header_Signal)
+		|| (top == OVTK_NodeId_Acquisition_Header_Stimulation)
+		|| (top == OVTK_NodeId_Acquisition_Header_ChannelLocalisation)
+		|| (top == OVTK_NodeId_Acquisition_Header_ChannelUnits)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_Signal)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_Stimulation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	) { }
 	else { CEBMLBaseDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }
 
-void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* pMemoryBuffer, const void* buffer, const uint64_t size)
+void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* memoryBuffer, const void* buffer, const size_t size)
 {
-	if (pMemoryBuffer)
+	if (memoryBuffer)
 	{
-		const uint64_t currentBufferSize = pMemoryBuffer->getSize();
-		pMemoryBuffer->setSize(currentBufferSize + size, false);
-		System::Memory::copy(pMemoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
+		const size_t currentBufferSize = memoryBuffer->getSize();
+		memoryBuffer->setSize(currentBufferSize + size, false);
+		System::Memory::copy(memoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
 	}
 }

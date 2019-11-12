@@ -74,11 +74,11 @@
  * public:
  *   CReaderCallback()
  *   {
- *     m_pReaderHelper=EBML::createReaderHelper();
+ *     m_helper=EBML::createReaderHelper();
  *   }
  *   virtual ~CReaderCallback()
  *   {
- *     if(m_pReaderHelper) m_pReaderHelper->release();
+ *     if(m_helper) m_helper->release();
  *   }
  *   virtual bool isMasterChild(const EBML::CIdentifier& identifier)
  *   {
@@ -91,17 +91,17 @@
  *   {
  *     m_oCurrent=identifier;
  *   }
- *   virtual void processChildData(const void* buffer, const uint64_t size)
+ *   virtual void processChildData(const void* buffer, const size_t size)
  *   {
  *     if(m_oCurrent==EBML_Identifier_DocType)
- *       std::cout << "Doc type:" << m_pReaderHelper->getASCIIStringFromChildData(buffer, size) << std::endl;
+ *       std::cout << "Doc type:" << m_helper->getStr(buffer, size) << std::endl;
  *     if(m_oCurrent==EBML_Identifier_DocTypeVersion)
- *       std::cout << "Dox type version:" << m_pReaderHelper->getUIntegerFromChildData(buffer, size) << std::endl;
+ *       std::cout << "Dox type version:" << m_helper->getUint(buffer, size) << std::endl;
  *   }
  *   virtual void closeChild()
  *   {
  *   }
- *   EBML::IReaderHelper* m_pReaderHelper;
+ *   EBML::IReaderHelper* m_helper;
  * };
  * \endcode
  *

@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			std::stack<EBML::CIdentifier> m_vNodes;
+			std::stack<EBML::CIdentifier> m_nodes;
 
 			uint32_t m_ui32FrequencyBandIdx = 0;
 

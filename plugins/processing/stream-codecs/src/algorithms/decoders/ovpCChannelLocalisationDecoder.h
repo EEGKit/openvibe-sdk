@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const size_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			std::stack<EBML::CIdentifier> m_vNodes;
+			std::stack<EBML::CIdentifier> m_nodes;
 		};
 
 		class CChannelLocalisationDecoderDesc final : public CStreamedMatrixDecoderDesc
@@ -53,8 +53,7 @@ namespace OpenViBEPlugins
 			{
 				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
 
-				prototype.addOutputParameter(
-					OVP_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
+				prototype.addOutputParameter(OVP_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 
 				return true;
 			}

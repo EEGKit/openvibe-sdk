@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const size_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -29,8 +29,8 @@ namespace OpenViBEPlugins
 
 		private:
 
-			std::stack<EBML::CIdentifier> m_vNodes;
-			//			uint32_t m_ui32UnitIdx = 0;
+			std::stack<EBML::CIdentifier> m_nodes;
+			// size_t m_unitIdx = 0;
 		};
 
 		class CChannelUnitsDecoderDesc final : public CStreamedMatrixDecoderDesc

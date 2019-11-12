@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IAlgorithmScenarioImporterContext* m_pContext = nullptr;
 			uint32_t m_status                                            = 0;
 			XML::IReader* m_pReader                                          = nullptr;
-			std::stack<std::string> m_vNodes;
+			std::stack<std::string> m_nodes;
 		};
 
 		class CAlgorithmXMLScenarioImporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc

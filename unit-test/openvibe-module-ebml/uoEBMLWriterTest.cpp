@@ -28,6 +28,7 @@
 #include "ebml/CWriterHelper.h"
 
 #include "ovtAssert.h"
+#include <iostream>
 
 #define OVP_NodeId_OpenViBEStream_Header              EBML::CIdentifier(0xF59505AB, 0x3684C8D8)
 #define OVP_NodeId_OpenViBEStream_Header_Compression  EBML::CIdentifier(0x40358769, 0x166380D1)

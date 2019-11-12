@@ -46,9 +46,9 @@ bool CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& top = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
 	if (top == OVTK_NodeId_Header_Spectrum)
 	{
@@ -62,7 +62,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 
 void CSpectrumDecoder::processChildData(const void* buffer, const uint64_t size)
 {
-	EBML::CIdentifier& top = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 	if ((top == OVTK_NodeId_Header_Spectrum)
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)) { }
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { m_lowerFreq = m_pEBMLReaderHelper->getFloatFromChildData(buffer, size); }
@@ -96,13 +96,13 @@ void CSpectrumDecoder::processChildData(const void* buffer, const uint64_t size)
 
 void CSpectrumDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Spectrum)
-		|| (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
-		|| (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)) { }
-	else if ((l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) || (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)) { m_ui32FrequencyBandIdx++; }
+	if ((top == OVTK_NodeId_Header_Spectrum)
+		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
+		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)) { }
+	else if ((top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) || (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)) { m_ui32FrequencyBandIdx++; }
 	else { CStreamedMatrixDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }

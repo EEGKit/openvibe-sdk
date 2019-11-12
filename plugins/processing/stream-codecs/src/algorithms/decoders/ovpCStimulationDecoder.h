@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			std::stack<EBML::CIdentifier> m_vNodes;
+			std::stack<EBML::CIdentifier> m_nodes;
 
 			uint64_t m_stimulationIdx = 0;
 			OpenViBE::CStimulationSet m_stimSet;

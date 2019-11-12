@@ -72,80 +72,80 @@ bool CExperimentInformationDecoder::isMasterChild(const EBML::CIdentifier& ident
 
 void CExperimentInformationDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Age)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)) { }
+	if ((top == OVTK_NodeId_Header_ExperimentInformation)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Age)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)) { }
 	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
-void CExperimentInformationDecoder::processChildData(const void* buffer, const uint64_t size)
+void CExperimentInformationDecoder::processChildData(const void* buffer, const size_t size)
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Age)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName))
+	if ((top == OVTK_NodeId_Header_ExperimentInformation)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Age)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName))
 	{
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
 		{
 			op_ui64ExperimentIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size);
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
 		{
 			op_pExperimentDate->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size));
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
 		{
 			op_ui64SubjectIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size);
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
 		{
 			op_pSubjectName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size));
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Age) { op_ui64SubjectAge = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Age) { op_ui64SubjectAge = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
 		{
 			op_ui64SubjectGender = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size);
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
 		{
 			op_ui64LaboratoryIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size);
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
 		{
 			op_pLaboratoryName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size));
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
 		{
 			op_ui64TechnicianIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size);
 		}
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)
+		if (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)
 		{
 			op_pTechnicianName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size));
 		}
@@ -155,23 +155,23 @@ void CExperimentInformationDecoder::processChildData(const void* buffer, const u
 
 void CExperimentInformationDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ExperimentInformation)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Age)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
-		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)) { }
+	if ((top == OVTK_NodeId_Header_ExperimentInformation)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Name)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Age)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
+		|| (top == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)) { }
 	else { CEBMLBaseDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }

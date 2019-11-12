@@ -26,7 +26,7 @@ namespace EBML
 
 		void openChild(const CIdentifier& identifier) override { if (m_mfpOpenChild) { (m_rOwnerObject.*m_mfpOpenChild)(identifier); } }
 
-		void processChildData(const void* buffer, const uint64_t size) override
+		void processChildData(const void* buffer, const size_t size) override
 		{
 			if (m_mfpProcessChildData) { (m_rOwnerObject.*m_mfpProcessChildData)(buffer, size); }
 		}
@@ -62,7 +62,7 @@ namespace EBML
 
 		void openChild(const CIdentifier& identifier) override { if (m_mfpOpenChild) { (m_rOwnerObject.*m_mfpOpenChild)(identifier); } }
 
-		void processChildData(const void* buffer, const uint64_t size) override
+		void processChildData(const void* buffer, const size_t size) override
 		{
 			if (m_mfpProcessChildData) { (m_rOwnerObject.*m_mfpProcessChildData)(buffer, size); }
 		}

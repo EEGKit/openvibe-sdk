@@ -11,7 +11,7 @@ bool CStreamedMatrixEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 	ip_pMatrix.initialize(getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	m_matrixBufferSize = 0;
+	m_size = 0;
 	return true;
 }
 
@@ -28,17 +28,17 @@ bool CStreamedMatrixEncoder::uninitialize()
 bool CStreamedMatrixEncoder::processHeader()
 {
 	IMatrix* matrix = ip_pMatrix;
-	uint32_t j;
+	size_t j;
 
-	m_matrixBufferSize = (matrix->getDimensionCount() == 0 ? 0 : 1);
+	m_size = (matrix->getDimensionCount() == 0 ? 0 : 1);
 
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_DimensionCount);
 	m_pEBMLWriterHelper->setUIntegerAsChildData(matrix->getDimensionCount());
 	m_pEBMLWriterHelper->closeChild();
-	for (uint32_t i = 0; i < matrix->getDimensionCount(); ++i)
+	for (size_t i = 0; i < matrix->getDimensionCount(); ++i)
 	{
-		m_matrixBufferSize *= matrix->getDimensionSize(i);
+		m_size *= matrix->getDimensionSize(i);
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension);
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Size);
 		m_pEBMLWriterHelper->setUIntegerAsChildData(matrix->getDimensionSize(i));
@@ -70,7 +70,7 @@ bool CStreamedMatrixEncoder::processBuffer()
 
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);
-	m_pEBMLWriterHelper->setBinaryAsChildData(matrix->getBuffer(), m_matrixBufferSize * sizeof(double));
+	m_pEBMLWriterHelper->setBinaryAsChildData(matrix->getBuffer(), m_size * sizeof(double));
 	m_pEBMLWriterHelper->closeChild();
 	m_pEBMLWriterHelper->closeChild();
 

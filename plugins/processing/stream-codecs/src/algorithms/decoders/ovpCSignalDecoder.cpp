@@ -40,34 +40,34 @@ bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CSignalDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
+	if ((top == OVTK_NodeId_Header_Signal)
+		|| (top == OVTK_NodeId_Header_Signal_SamplingRate)) { }
 	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
 void CSignalDecoder::processChildData(const void* buffer, const uint64_t size)
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate))
+	if ((top == OVTK_NodeId_Header_Signal)
+		|| (top == OVTK_NodeId_Header_Signal_SamplingRate))
 	{
-		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate) { op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (top == OVTK_NodeId_Header_Signal_SamplingRate) { op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CSignalDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
+	if ((top == OVTK_NodeId_Header_Signal)
+		|| (top == OVTK_NodeId_Header_Signal_SamplingRate)) { }
 	else { CStreamedMatrixDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }

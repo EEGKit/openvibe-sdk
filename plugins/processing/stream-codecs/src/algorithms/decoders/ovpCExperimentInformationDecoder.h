@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			std::stack<EBML::CIdentifier> m_vNodes;
+			std::stack<EBML::CIdentifier> m_nodes;
 		};
 
 		class CExperimentInformationDecoderDesc final : public CEBMLBaseDecoderDesc

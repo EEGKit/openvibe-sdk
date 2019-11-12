@@ -42,7 +42,7 @@ bool CAlgorithmMatrixAverage::uninitialize()
 
 bool CAlgorithmMatrixAverage::process()
 {
-	IMatrix* iMatrix  = ip_pMatrix;
+	IMatrix* iMatrix = ip_pMatrix;
 	IMatrix* oMatrix = op_pAveragedMatrix;
 
 	bool l_bShouldPerformAverage = false;

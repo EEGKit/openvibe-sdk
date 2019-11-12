@@ -42,46 +42,46 @@ bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ChannelUnits)
-		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
+	if ((top == OVTK_NodeId_Header_ChannelUnits)
+		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	) { }
 	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
-void CChannelUnitsDecoder::processChildData(const void* buffer, const uint64_t size)
+void CChannelUnitsDecoder::processChildData(const void* buffer, const size_t size)
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ChannelUnits)
-		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
+	if ((top == OVTK_NodeId_Header_ChannelUnits)
+		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	)
 	{
-		if (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false); }
+		if (top == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false); }
 
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIdx*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIdx*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
+		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_unitIdx*2  ]=m_pEBMLReaderHelper->getDouble(buffer, size);
+		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_unitIdx*2+1]=m_pEBMLReaderHelper->getDouble(buffer, size);
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CChannelUnitsDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ChannelUnits)
-		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
+	if ((top == OVTK_NodeId_Header_ChannelUnits)
+		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	)
 	{
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit)
+		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit)
 		//{
-		//	m_ui32UnitIdx++;
+		// m_unitIdx++;
 		//}
 	}
 	else { CStreamedMatrixDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }

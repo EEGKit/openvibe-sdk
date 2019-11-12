@@ -55,7 +55,7 @@ public:
 		m_Depth++;
 	}
 
-	void processChildData(const void* buffer, const uint64_t size) override
+	void processChildData(const void* buffer, const size_t size) override
 	{
 		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
 		if (m_CurrentID == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(buffer, size) << "]\n"; }
@@ -103,13 +103,12 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	OVT_ASSERT(g_OutputStream.is_open(), "Failure to open output file for writing");
 
 	// parsing
-	for (uint32_t n = 17; n >= 1; n--)
+	for (size_t n = 17; n >= 1; n--)
 	{
 		CReaderCallBack callback;
 		EBML::CReader reader(callback);
 
 		g_OutputStream << "testing with n=" << n << std::endl;
-
 
 		FILE* file = fopen(dataFile.c_str(), "rb");
 
@@ -125,19 +124,16 @@ int uoEBMLReaderTest(int argc, char* argv[])
 		delete[] c;
 		fclose(file);
 	}
-
 	g_OutputStream.close();
-
 	// comparison part
 	std::ifstream generatedStream(outputFile);
 	std::ifstream expectedStream(expectedFile);
-
+	
 	OVT_ASSERT(generatedStream.is_open(), "Failure to open generated results for reading");
 	OVT_ASSERT(expectedStream.is_open(), "Failure to open expected results for reading");
 
 	std::string generatedString;
 	std::string expectedString;
-
 	while (std::getline(expectedStream, expectedString))
 	{
 		OVT_ASSERT(std::getline(generatedStream, generatedString), "Failure to retrieve a line to match");

@@ -17,14 +17,14 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmEBMLStreamSpy();
-			void release() override;
+			CBoxAlgorithmEBMLStreamSpy() { }
+			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
-			void closeChild() override;
+			void processChildData(const void* buffer, const size_t size) override;
+			void closeChild() override { m_nodes.pop(); }
 			bool processInput(const size_t index) override;
 			bool process() override;
 
@@ -33,24 +33,24 @@ namespace OpenViBEPlugins
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* buffer, uint64_t size);
+			void processBinaryBlock(const void* buffer, size_t size);
 
-			std::stack<EBML::CIdentifier> m_vNodes;
+			std::stack<EBML::CIdentifier> m_nodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
 			std::map<EBML::CIdentifier, std::string> m_vType;
-			uint64_t m_nExpandValues        = 0;
+			size_t m_nExpandValues                  = 0;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
-			EBML::IReader* m_pReader                = nullptr;
-			EBML::IReaderHelper* m_pReaderHelper    = nullptr;
+			EBML::IReader* m_reader                 = nullptr;
+			EBML::IReaderHelper* m_helper           = nullptr;
 		};
 
 		class CBoxAlgorithmEBMLStreamSpyListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); ++i)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
 					box.setInputName(i, ("Spied EBML stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_EBMLStream);

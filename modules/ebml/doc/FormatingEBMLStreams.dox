@@ -55,9 +55,9 @@
  * class CWriterCallback : public EBML::IWriterCallback
  * {
  * public:
- *   CWriterCallback(char* sFileName)
+ *   CWriterCallback(char* filename)
  *   {
- *     m_pFile=fopen(sFileName, "wb");
+ *     m_pFile=fopen(filename, "wb");
  *   }
  *   virtual ~CWriterCallback()
  *   {

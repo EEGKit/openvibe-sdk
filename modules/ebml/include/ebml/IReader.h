@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CIdentifier.h"
+#include <cstdlib>	// fix Unix compatibility
 
 namespace EBML
 {
@@ -51,7 +52,7 @@ namespace EBML
 		 * object can process it. Whether the callback object knows how to process the data, whether it requests
 		 * a reader helper object to do the work... See EBML::IReaderHelper for more details on that subject.
 		 */
-		virtual void processChildData(const void* buffer, const uint64_t size) = 0;
+		virtual void processChildData(const void* buffer, const size_t size) = 0;
 		/**
 		 * \brief Informs the callback object the current node parsing is terminated
 		 *
@@ -127,9 +128,9 @@ namespace EBML
 
 	/**
 	 * \brief Instanciation function for EBML reader objects
-	 * \param rReaderCallback [in] : The callback object the reader should use
+	 * \param callback [in] : The callback object the reader should use
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API IReader* createReader(IReaderCallback& rReaderCallback);
+	extern EBML_API IReader* createReader(IReaderCallback& callback);
 } // namespace EBML

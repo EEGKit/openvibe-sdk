@@ -78,9 +78,9 @@ bool CEBMLBaseEncoder::process()
 // ________________________________________________________________________________________________________________
 //
 
-void CEBMLBaseEncoder::write(const void* buffer, const uint64_t size)
+void CEBMLBaseEncoder::write(const void* buffer, const size_t size)
 {
-	const uint64_t currentBufferSize = op_pMemoryBuffer->getSize();
+	const size_t currentBufferSize = op_pMemoryBuffer->getSize();
 	op_pMemoryBuffer->setSize(currentBufferSize + size, false);
 	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
 }
