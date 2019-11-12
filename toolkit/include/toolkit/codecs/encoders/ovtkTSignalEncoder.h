@@ -13,21 +13,20 @@ namespace OpenViBEToolkit
 	{
 	protected:
 		//The signal stream is a streamed matrix plus a sampling rate
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_pInputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> m_iSampling;
 
-		using T::m_pCodec;
-		using T::m_pBoxAlgorithm;
-		using T::m_pOutputMemoryBuffer;
-		using T::m_pInputMatrix;
+		using T::m_codec;
+		using T::m_boxAlgorithm;
+		using T::m_oBuffer;
+		using T::m_iMatrix;
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
-				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
-			m_pCodec->initialize();
-			m_pInputMatrix.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
-			m_pInputSamplingRate.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Sampling));
-			m_pOutputMemoryBuffer.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
+			m_codec->initialize();
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
+			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Sampling));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -38,30 +37,28 @@ namespace OpenViBEToolkit
 
 		bool uninitialize()
 		{
-			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
+			if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
-			m_pInputMatrix.uninitialize();
-			m_pInputSamplingRate.uninitialize();
-			m_pOutputMemoryBuffer.uninitialize();
-			m_pCodec->uninitialize();
-			m_pBoxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_pCodec);
-			m_pBoxAlgorithm = NULL;
+			m_iMatrix.uninitialize();
+			m_iSampling.uninitialize();
+			m_oBuffer.uninitialize();
+			m_codec->uninitialize();
+			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
+			m_boxAlgorithm = NULL;
 
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_pInputSamplingRate; }
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
 
 	protected:
 
 		/*
 		The methods specific to the Signal encoder (overriding the TStreamedMatrixEncoderLocal implementations):
 		*/
-		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader); }
-
-		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer); }
-
-		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	/*
@@ -71,16 +68,16 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSignalEncoder : public TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
-		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
+		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_boxAlgorithm;
 	public:
 		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
 		TSignalEncoder() { }
 
-		TSignalEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
+		TSignalEncoder(T& boxAlgorithm, size_t index)
 		{
-			m_pBoxAlgorithm = NULL;
-			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
+			m_boxAlgorithm = NULL;
+			this->initialize(boxAlgorithm, index);
 		}
 
 		virtual ~TSignalEncoder() { this->uninitialize(); }

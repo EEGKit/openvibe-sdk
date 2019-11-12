@@ -12,23 +12,22 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_pInputFrequencyAbscissa;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_pInputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_iFrequencyAbscissa;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> m_iSampling;
 
-		using T::m_pCodec;
-		using T::m_pBoxAlgorithm;
-		using T::m_pOutputMemoryBuffer;
-		using T::m_pInputMatrix;
+		using T::m_codec;
+		using T::m_boxAlgorithm;
+		using T::m_oBuffer;
+		using T::m_iMatrix;
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
-				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
-			m_pCodec->initialize();
-			m_pInputMatrix.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-			m_pInputFrequencyAbscissa.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
-			m_pInputSamplingRate.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Sampling));
-			m_pOutputMemoryBuffer.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
+			m_codec->initialize();
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
+			m_iFrequencyAbscissa.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
+			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Sampling));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 
 			return true;
@@ -39,47 +38,44 @@ namespace OpenViBEToolkit
 
 		bool uninitialize()
 		{
-			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
+			if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
-			m_pInputMatrix.uninitialize();
-			m_pInputFrequencyAbscissa.uninitialize();
-			m_pInputSamplingRate.uninitialize();
-			m_pOutputMemoryBuffer.uninitialize();
-			m_pCodec->uninitialize();
-			m_pBoxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_pCodec);
-			m_pBoxAlgorithm = NULL;
+			m_iMatrix.uninitialize();
+			m_iFrequencyAbscissa.uninitialize();
+			m_iSampling.uninitialize();
+			m_oBuffer.uninitialize();
+			m_codec->uninitialize();
+			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
+			m_boxAlgorithm = NULL;
 
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_pInputSamplingRate; }
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbscissa() { return m_iFrequencyAbscissa; }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbscissa() { return m_pInputFrequencyAbscissa; }
-
-		size_t getInputFrequencyAbscissaCount() { return m_pInputFrequencyAbscissa->getDimensionSize(0); }
+		size_t getInputFrequencyAbscissaCount() { return m_iFrequencyAbscissa->getDimensionSize(0); }
 
 
 	protected:
-		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader); }
-
-		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer); }
-
-		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>
 	class TSpectrumEncoder : public TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
-		using TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
+		using TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_boxAlgorithm;
 	public:
 		using TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
 		TSpectrumEncoder() { }
 
-		TSpectrumEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
+		TSpectrumEncoder(T& boxAlgorithm, size_t index)
 		{
-			m_pBoxAlgorithm = NULL;
-			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
+			m_boxAlgorithm = NULL;
+			this->initialize(boxAlgorithm, index);
 		}
 
 		virtual ~TSpectrumEncoder() { this->uninitialize(); }

@@ -21,15 +21,15 @@ namespace OpenViBEToolkit
 		virtual ~TTrainingBoxAlgorithm();
 
 		// Signal input reader callback
-		virtual void setChannelCount(const uint32_t count) { m_pendingSignal->setChannelCount(count); }
-		virtual void setChannelName(const uint32_t index, const char* name) { m_pendingSignal->setChannelName(index, name); }
-		virtual void setSampleCountPerBuffer(const uint32_t count) { m_nSamplePerBuffer = count; }
-		virtual void setSamplingRate(const uint32_t samplingRate) { m_pendingSignal->setSamplingRate(samplingRate); }
+		virtual void setChannelCount(const size_t count) { m_pendingSignal->setChannelCount(count); }
+		virtual void setChannelName(const size_t index, const char* name) { m_pendingSignal->setChannelName(index, name); }
+		virtual void setSampleCountPerBuffer(const size_t count) { m_nSamplePerBuffer = count; }
+		virtual void setSamplingRate(const size_t sampling) { m_pendingSignal->setSamplingRate(sampling); }
 		virtual void setSampleBuffer(const double* buffer);
 
 		// Stimulation input reader callback
-		virtual void setStimulationCount(uint32_t /*count*/) {}
-		virtual void setStimulation(uint32_t index, uint64_t identifier, uint64_t date);
+		virtual void setStimulationCount(size_t /*count*/) {}
+		virtual void setStimulation(const size_t index, uint64_t identifier, uint64_t date);
 
 		// What should be implemented by the derived class
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialStart() = 0;
@@ -45,9 +45,9 @@ namespace OpenViBEToolkit
 
 		ISignalTrial* m_pendingSignal = nullptr;
 
-		uint64_t m_trialStartTime       = 0;
-		uint64_t m_trialEndTime         = 0;
-		uint32_t m_nSamplePerBuffer = 0;
+		uint64_t m_trialStartTime          = 0;
+		uint64_t m_trialEndTime            = 0;
+		size_t m_nSamplePerBuffer          = 0;
 		OpenViBE::CIdentifier m_trialLabel = OV_UndefinedIdentifier;
 
 		std::vector<ISignalTrial*> m_signalTrials;
@@ -69,14 +69,11 @@ namespace OpenViBEToolkit
 		m_pendingSignal = createSignalTrial();
 	}
 
-	template <class CBoxAlgorithmParentClass>
-	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
+	template <class TBoxAlgorithmParentClass>
+	TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
 	{
 		releaseSignalTrial(m_pendingSignal);
-		for (auto itSignalTrial = m_signalTrials.begin(); itSignalTrial != m_signalTrials.end(); ++itSignalTrial)
-		{
-			releaseSignalTrial(*itSignalTrial);
-		}
+		for (auto itSignalTrial = m_signalTrials.begin(); itSignalTrial != m_signalTrials.end(); ++itSignalTrial) { releaseSignalTrial(*itSignalTrial); }
 	}
 
 	// ________________________________________________________________________________________________________________
@@ -85,8 +82,8 @@ namespace OpenViBEToolkit
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* buffer)
+	template <class TBoxAlgorithmParentClass>
+	void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setSampleBuffer(const double* buffer)
 	{
 		insertBufferSamples(*m_pendingSignal, m_pendingSignal->getSampleCount(), m_nSamplePerBuffer, buffer, m_pendingSignal);
 
@@ -100,8 +97,8 @@ namespace OpenViBEToolkit
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setStimulation(const uint32_t /*index*/, const uint64_t identifier, const uint64_t date)
+	template <class TBoxAlgorithmParentClass>
+	void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_t /*index*/, const uint64_t identifier, const uint64_t date)
 	{
 		if (identifier == this->getStimulationIdentifierTrain())
 		{
@@ -152,7 +149,7 @@ namespace OpenViBEToolkit
 
 		if (m_trialEndTime != ULLONG_MAX && m_trialStartTime != ULLONG_MAX && m_trialEndTime > m_trialStartTime)
 		{
-			uint32_t nSample = uint32_t(((m_trialEndTime - m_trialStartTime) * m_pendingSignal->getSamplingRate()) >> 32);
+			size_t nSample = size_t(((m_trialEndTime - m_trialStartTime) * m_pendingSignal->getSamplingRate()) >> 32);
 
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
 					<< "Created trial " << OpenViBE::time64(m_trialStartTime) << "-" << OpenViBE::time64(m_trialEndTime) << " with " << nSample << " samples\n";

@@ -11,21 +11,21 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<bool> m_bOutputDynamic;
+		OpenViBE::Kernel::TParameterHandler<bool> m_oDynamic;
 
-		using T::m_pCodec;
-		using T::m_pBoxAlgorithm;
-		using T::m_pInputMemoryBuffer;
-		using T::m_pOutputMatrix;
+		using T::m_codec;
+		using T::m_boxAlgorithm;
+		using T::m_iBuffer;
+		using T::m_oMatrix;
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
-				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsStreamDecoder));
-			m_pCodec->initialize();
-			m_pInputMemoryBuffer.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_InputParameterId_MemoryBufferToDecode));
-			m_pOutputMatrix.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Matrix));
-			m_bOutputDynamic.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(
+				m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsStreamDecoder));
+			m_codec->initialize();
+			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_InputParameterId_MemoryBufferToDecode));
+			m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Matrix));
+			m_oDynamic.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic));
 
 			return true;
 		}
@@ -35,41 +35,41 @@ namespace OpenViBEToolkit
 
 		bool uninitialize()
 		{
-			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
+			if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
-			m_bOutputDynamic.uninitialize();
-			m_pOutputMatrix.uninitialize();
+			m_oDynamic.uninitialize();
+			m_oMatrix.uninitialize();
 
-			m_pInputMemoryBuffer.uninitialize();
-			m_pCodec->uninitialize();
-			m_pBoxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_pCodec);
-			m_pBoxAlgorithm = NULL;
+			m_iBuffer.uninitialize();
+			m_codec->uninitialize();
+			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
+			m_boxAlgorithm = NULL;
 
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_bOutputDynamic; }
+		OpenViBE::Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_oDynamic; }
 
-		virtual bool isHeaderReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedHeader); }
+		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedHeader); }
 
-		virtual bool isBufferReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedBuffer); }
+		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedBuffer); }
 
-		virtual bool isEndReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedEnd); }
+		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
 	template <class T>
 	class TChannelUnitsDecoder : public TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-		using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
+		using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_boxAlgorithm;
 	public:
 		using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
 		TChannelUnitsDecoder() { }
 
-		TChannelUnitsDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
+		TChannelUnitsDecoder(T& boxAlgorithm, size_t index)
 		{
-			m_pBoxAlgorithm = NULL;
-			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
+			m_boxAlgorithm = NULL;
+			this->initialize(boxAlgorithm, index);
 		}
 
 		virtual ~TChannelUnitsDecoder() { this->uninitialize(); }

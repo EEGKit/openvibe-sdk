@@ -6,13 +6,13 @@ using namespace std;
 
 bool CSignalTrialSet::addSignalTrial(ISignalTrial& rSignalTrial)
 {
-	m_vSignalTrial.push_back(&rSignalTrial);
+	m_signalTrials.push_back(&rSignalTrial);
 	return true;
 }
 
 bool CSignalTrialSet::clear()
 {
-	m_vSignalTrial.clear();
+	m_signalTrials.clear();
 	return true;
 }
 
