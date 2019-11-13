@@ -20,24 +20,24 @@ namespace Socket
 	{
 	public:
 
-		bool listen(uint32_t ui32Port) override
+		bool listen(size_t port) override
 		{
 			if (!open()) { return false; }
 
 			int reuseAddress = 1;
 #if defined TARGET_OS_Windows
-			setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&reuseAddress), sizeof(reuseAddress));
+			setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&reuseAddress), sizeof(reuseAddress));
 #else
-			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, &reuseAddress, sizeof(reuseAddress));
+			::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &reuseAddress, sizeof(reuseAddress));
 #endif
 
 			struct sockaddr_in localHostAddress;
 			memset(&localHostAddress, 0, sizeof(localHostAddress));
 			localHostAddress.sin_family      = AF_INET;
-			localHostAddress.sin_port        = htons(static_cast<unsigned short>(ui32Port));
+			localHostAddress.sin_port        = htons(static_cast<unsigned short>(port));
 			localHostAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 
-			if (bind(m_i32Socket, reinterpret_cast<struct sockaddr*>(&localHostAddress), sizeof(localHostAddress)) == -1)
+			if (bind(m_socket, reinterpret_cast<struct sockaddr*>(&localHostAddress), sizeof(localHostAddress)) == -1)
 			{
 				/*
 								switch(errno)
@@ -60,7 +60,7 @@ namespace Socket
 				return false;
 			}
 
-			if (::listen(m_i32Socket, 32) == -1)
+			if (::listen(m_socket, 32) == -1)
 			{
 				/*
 								switch(errno)
@@ -82,17 +82,17 @@ namespace Socket
 		{
 			struct sockaddr_in clientAddress;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			socklen_t clientAddressSize=sizeof(clientAddress);
+			socklen_t clientAddressSize = sizeof(clientAddress);
 #elif defined TARGET_OS_Windows
 			int clientAddressSize = sizeof(clientAddress);
 #else
 #endif
-			const int clientSocket = ::accept(m_i32Socket, reinterpret_cast<struct sockaddr*>(&clientAddress), &clientAddressSize);
+			const int clientSocket = int(::accept(m_socket, reinterpret_cast<struct sockaddr*>(&clientAddress), &clientAddressSize));
 			if (clientSocket == -1) { return nullptr; }
 			return new TConnection<IConnection>(int(clientSocket));
 		}
 
-		bool getSocketPort(uint32_t& port) override
+		bool getSocketPort(size_t& port) override
 		{
 			struct sockaddr_in socketInfo;
 
@@ -102,9 +102,9 @@ namespace Socket
 			int socketInfoLength = sizeof(socketInfo);
 #endif
 
-			if (getsockname(m_i32Socket, reinterpret_cast<sockaddr*>(&socketInfo), &socketInfoLength) == -1) { return false; }
+			if (getsockname(m_socket, reinterpret_cast<sockaddr*>(&socketInfo), &socketInfoLength) == -1) { return false; }
 
-			port = uint32_t(ntohs(socketInfo.sin_port));
+			port = size_t(ntohs(socketInfo.sin_port));
 			return true;
 		}
 	};

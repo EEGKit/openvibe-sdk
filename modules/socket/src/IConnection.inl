@@ -40,7 +40,7 @@ namespace Socket
 	{
 	public:
 
-		TConnection() : m_i32Socket(-1)
+		TConnection() : m_socket(-1)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
@@ -53,7 +53,7 @@ namespace Socket
 #endif
 		}
 
-		explicit TConnection(int i32Socket) : m_i32Socket(i32Socket)
+		explicit TConnection(int socket) : m_socket(socket)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
@@ -81,8 +81,8 @@ namespace Socket
 		{
 			if (isConnected()) { return false; }
 
-			m_i32Socket = int(socket(AF_INET, SOCK_STREAM, 0));
-			if (m_i32Socket == -1) { return false; }
+			m_socket = int(socket(AF_INET, SOCK_STREAM, 0));
+			if (m_socket == size_t(-1)) { return false; }
 
 			return true;
 		}
@@ -94,101 +94,101 @@ namespace Socket
 			if (!isConnected()) { return false; }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			::shutdown(m_i32Socket, SHUT_RDWR);
-			::close(m_i32Socket);
+			::shutdown(m_socket, SHUT_RDWR);
+			::close(m_socket);
 #elif defined TARGET_OS_Windows
-			shutdown(m_i32Socket, SD_BOTH);
-			closesocket(m_i32Socket);
+			shutdown(m_socket, SD_BOTH);
+			closesocket(m_socket);
 #else
 #endif
 
-			m_i32Socket = -1;
+			m_socket = -1;
 			return true;
 		}
 
-		virtual bool isReadyToSend(const uint32_t ui32TimeOut = 0) const
-		{
-			if (!isConnected()) { return false; }
-
-			struct timeval l_oTimeVal;
-			l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);
-			l_oTimeVal.tv_usec = ((ui32TimeOut - l_oTimeVal.tv_sec * 1000) * 1000);
-
-			fd_set l_oWriteFileDescriptors;
-			FD_ZERO(&l_oWriteFileDescriptors);
-			FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
-
-			if (select(m_i32Socket + 1, nullptr, &l_oWriteFileDescriptors, nullptr, &l_oTimeVal) < 0) { return false; }
-			if (!FD_ISSET_PROXY(m_i32Socket, &l_oWriteFileDescriptors)) { return false; }
-			return true;
-		}
-
-		virtual bool isReadyToReceive(const uint32_t timeOut = 0) const
+		virtual bool isReadyToSend(const size_t timeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
 			struct timeval timeVal;
-			timeVal.tv_sec  = (timeOut / 1000);
-			timeVal.tv_usec = ((timeOut - timeVal.tv_sec * 1000) * 1000);
+			timeVal.tv_sec  = int(timeOut / 1000);
+			timeVal.tv_usec = int((timeOut - timeVal.tv_sec * 1000) * 1000);
 
-			fd_set readFileDesc;
-			FD_ZERO(&readFileDesc);
-			FD_SET(m_i32Socket, &readFileDesc);
+			fd_set writeFileDesc;
+			FD_ZERO(&writeFileDesc);
+			FD_SET(m_socket, &writeFileDesc);
 
-			if (select(m_i32Socket + 1, &readFileDesc, nullptr, nullptr, &timeVal) < 0) { return false; }
-			if (!(FD_ISSET_PROXY(m_i32Socket, &readFileDesc))) { return false; }
+			if (select(int(m_socket + 1), nullptr, &writeFileDesc, nullptr, &timeVal) < 0) { return false; }
+			if (!FD_ISSET_PROXY(int(m_socket), &writeFileDesc)) { return false; }
 			return true;
 		}
 
-		virtual uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize)
+		virtual bool isReadyToReceive(const size_t timeOut = 0) const
+		{
+			if (!isConnected()) { return false; }
+
+			struct timeval timeVal;
+			timeVal.tv_sec  = int(timeOut / 1000);
+			timeVal.tv_usec = int((timeOut - timeVal.tv_sec * 1000) * 1000);
+
+			fd_set readFileDesc;
+			FD_ZERO(&readFileDesc);
+			FD_SET(m_socket, &readFileDesc);
+
+			if (select(int(m_socket + 1), &readFileDesc, nullptr, nullptr, &timeVal) < 0) { return false; }
+			if (!(FD_ISSET_PROXY(int(m_socket), &readFileDesc))) { return false; }
+			return true;
+		}
+
+		virtual size_t sendBuffer(const void* buffer, const size_t size)
 		{
 			if (!isConnected()) { return 0; }
 #if 0
 			int l_iTrue=1;
-			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
+			setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			const int res = send(m_i32Socket, static_cast<const char*>(buffer), ui32BufferSize, Socket_SendFlags);
-			if (ui32BufferSize != 0 && res <= 0) { close(); }
-			return res <= 0 ? 0 : uint32_t(res);
+			const int res = send(m_socket, static_cast<const char*>(buffer), int(size), Socket_SendFlags);
+			if (size != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : size_t(res);
 		}
 
-		virtual uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize)
+		virtual size_t receiveBuffer(void* buffer, const size_t size)
 		{
-			if (!isConnected() || !ui32BufferSize) { return 0; }
+			if (!isConnected() || !size) { return 0; }
 #if 0
 			int l_iTrue = 1;
-			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
+			setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			const int res = recv(m_i32Socket, static_cast<char *>(buffer), ui32BufferSize, Socket_ReceiveFlags);
-			if (ui32BufferSize != 0 && res <= 0) { close(); }
-			return res <= 0 ? 0 : uint32_t(res);
+			const int res = recv(m_socket, static_cast<char *>(buffer), int(size), Socket_ReceiveFlags);
+			if (size != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : size_t(res);
 		}
 
-		virtual bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* buffer, const size_t size)
 		{
-			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			const char* tmpBuffer    = static_cast<const char*>(buffer);
+			size_t leftBytes      = size;
+			const char* tmpBuffer = static_cast<const char*>(buffer);
 			do
 			{
-				l_ui32LeftBytes -= sendBuffer(tmpBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
-				if (!isConnected()) { return false; }
-			} while (l_ui32LeftBytes != 0);
-			return true;
-		}
-
-		virtual bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize)
-		{
-			uint32_t leftBytes = ui32BufferSize;
-			char* tmpBuffer    = static_cast<char*>(buffer);
-			do
-			{
-				leftBytes -= receiveBuffer(tmpBuffer + ui32BufferSize - leftBytes, leftBytes);
+				leftBytes -= sendBuffer(tmpBuffer + size - leftBytes, leftBytes);
 				if (!isConnected()) { return false; }
 			} while (leftBytes != 0);
 			return true;
 		}
 
-		virtual bool isConnected() const { return m_i32Socket != -1; }
+		virtual bool receiveBufferBlocking(void* buffer, const size_t size)
+		{
+			size_t leftBytes = size;
+			char* tmpBuffer  = static_cast<char*>(buffer);
+			do
+			{
+				leftBytes -= receiveBuffer(tmpBuffer + size - leftBytes, leftBytes);
+				if (!isConnected()) { return false; }
+			} while (leftBytes != 0);
+			return true;
+		}
+
+		virtual bool isConnected() const { return m_socket != size_t(-1); }
 
 		virtual void release()
 		{
@@ -198,6 +198,6 @@ namespace Socket
 
 	protected:
 
-		int m_i32Socket;
+		size_t m_socket;
 	};
 } // namespace Socket

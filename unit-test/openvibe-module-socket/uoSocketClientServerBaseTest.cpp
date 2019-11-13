@@ -32,7 +32,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 
 	const std::string name = argv[1];
 	char* end;
-	const uint32_t port    = strtol(argv[2], &end, 10);
+	const size_t port    = strtol(argv[2], &end, 10);
 	
 	// basic tests on server and clients
 
@@ -54,7 +54,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 
 	// Test method getSocketPort
 
-	uint32_t guessedPort;
+	size_t guessedPort;
 	OVT_ASSERT(server->getSocketPort(guessedPort), "Failure to get socket informations");
 	OVT_ASSERT(guessedPort == port, "Get Socket information should return server port.");
 	OVT_ASSERT(client->connect(name.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");

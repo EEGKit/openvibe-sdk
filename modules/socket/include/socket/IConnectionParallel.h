@@ -31,10 +31,10 @@ namespace Socket
 
 		HMODULE m_hmodTVicPort = nullptr;
 
-		LPFNTVICPORTOPEN m_lpfnTVicPortOpen = nullptr;
-		LPFNTVICPORTCLOSE m_lpfnTVicPortClose = nullptr;
+		LPFNTVICPORTOPEN m_lpfnTVicPortOpen                 = nullptr;
+		LPFNTVICPORTCLOSE m_lpfnTVicPortClose               = nullptr;
 		LPFNTVICPORTISDRIVEROPENED m_lpfnTVicIsDriverOpened = nullptr;
-		LPFNTVICPORTWRITE m_lpfnTVicPortWrite = nullptr;
+		LPFNTVICPORTWRITE m_lpfnTVicPortWrite               = nullptr;
 #endif
 	};
 

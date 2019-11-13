@@ -32,7 +32,7 @@ using namespace Tools;
 
 uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 {
-	if (m_IsGenerator)
+	if (m_isGenerator)
 	{
 		// We slow down the generator type boxes by default, in order to limit syncing
 		// In fast forward we limit the syncing even more by setting the frequency to 1Hz
@@ -44,16 +44,16 @@ uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 
 bool CBoxAlgorithmExternalProcessing::initialize()
 {
-	m_Port = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_port = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	// Check that the port is not in the system range
-	OV_ERROR_UNLESS_KRF((m_Port >= 49152 && m_Port <= 65535) || (m_Port == 0),
-						"Port [" << m_Port << "] is invalid. It must be either 0 or a number in the range 49152-65535.", ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF((m_port >= 49152 && m_port <= 65535) || (m_port == 0),
+						"Port [" << m_port << "] is invalid. It must be either 0 or a number in the range 49152-65535.", ErrorType::BadConfig);
 
 	// Settings
 	const IBox* staticBoxContext = this->getBoxAlgorithmContext()->getStaticBoxContext();
 
-	for (uint32_t i = 8; i < staticBoxContext->getSettingCount(); ++i)
+	for (size_t i = 8; i < staticBoxContext->getSettingCount(); ++i)
 	{
 		CString name;
 		staticBoxContext->getSettingName(i, name);
@@ -63,27 +63,27 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 		const CString value = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 
-		OV_FATAL_UNLESS_K(m_Messaging.addParameter(i, type.toUInteger(), name.toASCIIString(), value.toASCIIString()),
+		OV_FATAL_UNLESS_K(m_messaging.addParameter(i, type.toUInteger(), name.toASCIIString(), value.toASCIIString()),
 						  "Failed to add a parameter: " << i, ErrorType::Internal);
 	}
 
 	// Inputs
-	for (uint32_t i = 0; i < staticBoxContext->getInputCount(); ++i)
+	for (size_t i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
 		CIdentifier type;
 		staticBoxContext->getInputType(i, type);
 
-		if (type == OV_TypeId_Stimulations) { m_StimulationDecoders[i].initialize(*this, i); }
+		if (type == OV_TypeId_Stimulations) { m_decoders[i].initialize(*this, i); }
 
 		CString name;
 		staticBoxContext->getInputName(i, name);
 
-		OV_FATAL_UNLESS_K(m_Messaging.addInput(i, type.toUInteger(), name.toASCIIString()),
+		OV_FATAL_UNLESS_K(m_messaging.addInput(i, type.toUInteger(), name.toASCIIString()),
 						  "Failed to add an input: " << i, ErrorType::Internal);
 	}
 
 	// Outputs
-	for (uint32_t i = 0; i < staticBoxContext->getOutputCount(); ++i)
+	for (size_t i = 0; i < staticBoxContext->getOutputCount(); ++i)
 	{
 		CIdentifier type;
 		staticBoxContext->getOutputType(i, type);
@@ -91,7 +91,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		CString name;
 		staticBoxContext->getOutputName(i, name);
 
-		if (!m_Messaging.addOutput(i, type.toUInteger(), name.toASCIIString()))
+		if (!m_messaging.addOutput(i, type.toUInteger(), name.toASCIIString()))
 		{
 			this->getLogManager() << LogLevel_Error << "Failed to add an output: " << i << "\n";
 			return false;
@@ -100,26 +100,26 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 	const bool mustGenerateConnectionID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	if (mustGenerateConnectionID) { m_ConnectionID = generateConnectionID(32); }
+	if (mustGenerateConnectionID) { m_connectionID = generateConnectionID(32); }
 	else
 	{
-		const CString connectionIDSetting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
-		m_ConnectionID                    = connectionIDSetting.toASCIIString();
+		const CString connectionID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
+		m_connectionID             = connectionID.toASCIIString();
 	}
 
-	OV_ERROR_UNLESS_KRF(m_Messaging.listen(m_Port),
-						"Could not listen to TCP port: " << m_Port << ". This port may be already used by another service. Please try another one.",
+	OV_ERROR_UNLESS_KRF(m_messaging.listen(m_port),
+						"Could not listen to TCP port: " << m_port << ". This port may be already used by another service. Please try another one.",
 						ErrorType::BadNetworkConnection);
 
-	if (m_Port == 0)
+	if (m_port == 0)
 	{
-		m_Messaging.getSocketPort(m_Port);
-		this->getLogManager() << LogLevel_Info << "Box is now listening on TCP port [" << m_Port << "].\n";
+		m_messaging.getSocketPort(m_port);
+		this->getLogManager() << LogLevel_Info << "Box is now listening on TCP port [" << m_port << "].\n";
 	}
 
-	m_ShouldLaunchProgram = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_shouldLaunchProgram = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	if (m_ShouldLaunchProgram)
+	if (m_shouldLaunchProgram)
 	{
 		const CString programPath = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 		const CString arguments   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
@@ -136,21 +136,21 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	const auto startTime = System::Time::zgetTime();
 
 	bool clientConnected    = false;
-	m_HasReceivedEndMessage = false;
+	m_hasReceivedEndMessage = false;
 
-	m_AcceptTimeout = TimeArithmetics::secondsToTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
-	m_IsGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
+	m_acceptTimeout = TimeArithmetics::secondsToTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
+	m_isGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
-	while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
+	while (System::Time::zgetTime() - startTime < m_acceptTimeout)
 	{
-		if (m_Messaging.accept())
+		if (m_messaging.accept())
 		{
 			clientConnected = true;
 			this->getLogManager() << LogLevel_Info << "Client connected to the server.\n";
 			break;
 		}
-		
-		const Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
+
+		const Communication::MessagingServer::ELibraryError error = m_messaging.getLastError();
 		if (error == Communication::MessagingServer::ELibraryError::BadAuthenticationReceived)
 		{
 			OV_WARNING_K("A client sent a bad authentication.");
@@ -164,74 +164,74 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 	// Now synchronize once with the client so it can perform its initialize before
 	// the processing starts
-	m_Messaging.pushSync();
+	m_messaging.pushSync();
 
 
-	while (m_Messaging.isConnected() && !m_Messaging.waitForSyncMessage()) { if (!m_Messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); } }
+	while (m_messaging.isConnected() && !m_messaging.waitForSyncMessage())
+	{
+		if (!m_messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+	}
 
-	m_SyncTimeout  = TimeArithmetics::secondsToTime(0.0625);
-	m_LastSyncTime = System::Time::zgetTime();
+	m_syncTimeout  = TimeArithmetics::secondsToTime(0.0625);
+	m_lastSyncTime = System::Time::zgetTime();
 	return true;
 }
 
 bool CBoxAlgorithmExternalProcessing::uninitialize()
 {
-	for (auto& decoder : m_StimulationDecoders) { decoder.second.uninitialize(); }
+	for (auto& decoder : m_decoders) { decoder.second.uninitialize(); }
 
-	if (!m_HasReceivedEndMessage)
+	if (!m_hasReceivedEndMessage)
 	{
-		const bool result = m_Messaging.close();
+		const bool result = m_messaging.close();
 
 #ifdef TARGET_OS_Windows
-		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId > 0)
+		if (m_shouldLaunchProgram && m_extProcessId > 0)
 		{
 			DWORD exitCode;
 
 			// Wait for external process to stop by himself, terminate it if necessary
 			const auto startTime = System::Time::zgetTime();
-			while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
+			while (System::Time::zgetTime() - startTime < m_acceptTimeout)
 			{
-				GetExitCodeProcess(HANDLE(m_ThirdPartyProgramProcessId), &exitCode);
+				GetExitCodeProcess(HANDLE(m_extProcessId), &exitCode);
 
 				if (exitCode != STILL_ACTIVE) { break; }
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 
 
-			if (exitCode == STILL_ACTIVE) { OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown); }
-			else if (exitCode != 0) { OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << int(exitCode) << "]"); }
+			if (exitCode == STILL_ACTIVE)
+			{
+				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_extProcessId), EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
+			}
+			else if (exitCode != 0) { OV_WARNING_K("Third party program [" << m_extProcessId << "] has terminated with exit code [" << int(exitCode) << "]"); }
 		}
 #else
-		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId != 0)
+		if (m_shouldLaunchProgram && m_extProcessId != 0)
 		{
 			int status;
-			pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
+			pid_t pid = waitpid(m_extProcessId, &status, WNOHANG);
 			
 			// Wait for external process to stop by himself, terminate it after 10s
 			auto startTime = System::Time::zgetTime();
-			while (pid == 0 && System::Time::zgetTime() - startTime < m_AcceptTimeout)
+			while (pid == 0 && System::Time::zgetTime() - startTime < m_acceptTimeout)
 			{
 				// Check if the program has hung itself
-				pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
+				pid = waitpid(m_extProcessId, &status, WNOHANG);
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 
 			if (pid != 0)
 			{
-				if (WIFEXITED(status))
-				{
-					OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << WEXITSTATUS(status) << "]");
-				}
-				else if (WIFSIGNALED(status))
-				{
-					OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] killed by signal [" << WTERMSIG(status) << "]");
-				}
+				if (WIFEXITED(status)) { OV_WARNING_K("Third party program [" << m_extProcessId << "] has terminated with exit code [" << WEXITSTATUS(status) << "]"); }
+				else if (WIFSIGNALED(status)) { OV_WARNING_K("Third party program [" << m_extProcessId << "] killed by signal [" << WTERMSIG(status) << "]"); }
 			}
 			else
 			{
-				kill(m_ThirdPartyProgramProcessId, SIGTERM);
-				waitpid(m_ThirdPartyProgramProcessId, &status, 0);
-				this->getLogManager() << LogLevel_Info << "Third party program [" << m_ThirdPartyProgramProcessId << "] exited with status [" << WEXITSTATUS(status) << "]\n";
+				kill(m_extProcessId, SIGTERM);
+				waitpid(m_extProcessId, &status, 0);
+				this->getLogManager() << LogLevel_Info << "Third party program [" << m_extProcessId << "] exited with status [" << WEXITSTATUS(status) << "]\n";
 			}
 		}
 #endif
@@ -251,22 +251,21 @@ bool CBoxAlgorithmExternalProcessing::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmExternalProcessing::process()
 {
-	if (m_Messaging.isInErrorState())
+	if (m_messaging.isInErrorState())
 	{
-		const std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
+		const std::string errorString = Communication::MessagingServer::getErrorString(m_messaging.getLastError());
 		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.",
 					 ErrorType::BadNetworkConnection);
 	}
 
-	if (m_HasReceivedEndMessage == false && m_Messaging.isEndReceived() == true)
+	if (m_hasReceivedEndMessage == false && m_messaging.isEndReceived() == true)
 	{
 		this->getLogManager() << LogLevel_Info << "The third party program has ended the communication.\n";
-		m_Messaging.close();
-		m_HasReceivedEndMessage = true;
+		m_messaging.close();
+		m_hasReceivedEndMessage = true;
 	}
 
-	OV_ERROR_UNLESS_KRF(m_Messaging.pushTime(this->getPlayerContext().getCurrentTime())
-						, "Failed to push Time.", ErrorType::BadNetworkConnection);
+	OV_ERROR_UNLESS_KRF(m_messaging.pushTime(this->getPlayerContext().getCurrentTime()), "Failed to push Time.", ErrorType::BadNetworkConnection);
 
 	const IBox* staticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 	IBoxIO* dynamicBoxContext    = getBoxAlgorithmContext()->getDynamicBoxContext();
@@ -275,16 +274,16 @@ bool CBoxAlgorithmExternalProcessing::process()
 
 	bool hasSentDataToClient = false;
 
-	for (uint32_t i = 0; i < staticBoxContext->getInputCount(); ++i)
+	for (size_t i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
-		auto maybeStimulationDecoder = m_StimulationDecoders.find(i);
-		for (uint32_t j = 0; j < dynamicBoxContext->getInputChunkCount(i); ++j)
+		auto maybeStimulationDecoder = m_decoders.find(i);
+		for (size_t j = 0; j < dynamicBoxContext->getInputChunkCount(i); ++j)
 		{
-			if (!m_HasReceivedEndMessage)
+			if (!m_hasReceivedEndMessage)
 			{
 				uint64_t startTime         = 0;
 				uint64_t endTime           = 0;
-				uint64_t chunkSize         = 0;
+				size_t chunkSize           = 0;
 				const uint8_t* chunkBuffer = nullptr;
 
 				OV_FATAL_UNLESS_K(dynamicBoxContext->getInputChunk(i, j, startTime, endTime, chunkSize, chunkBuffer),
@@ -293,33 +292,30 @@ bool CBoxAlgorithmExternalProcessing::process()
 				std::shared_ptr<std::vector<uint8_t>> ebml(new std::vector<uint8_t>(chunkBuffer, chunkBuffer + chunkSize));
 
 				// We only encode stimulation stream chunks if they contain stimulations
-				if (maybeStimulationDecoder != m_StimulationDecoders.end())
+				if (maybeStimulationDecoder != m_decoders.end())
 				{
 					maybeStimulationDecoder->second.decode(j, false); // The input will be marked as deprecated later
 
 					// Cache empty chunks, we will send them when a stimulation or a signal chunk arrives
 					if (maybeStimulationDecoder->second.getOutputStimulationSet()->getStimulationCount() == 0)
 					{
-						m_PacketHistory.emplace(startTime, endTime, i, ebml);
+						m_packetHistory.emplace(startTime, endTime, i, ebml);
 						OV_FATAL_UNLESS_K(dynamicBoxContext->markInputAsDeprecated(i, j), "Failed to mark input as deprecated", ErrorType::Internal);
 						break;
 					}
 				}
 
 				// Empty the history before to send useful data
-				while (!m_PacketHistory.empty())
+				while (!m_packetHistory.empty())
 				{
-					OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(m_PacketHistory.front().index,
-											m_PacketHistory.front().startTime,
-											m_PacketHistory.front().endTime,
-											m_PacketHistory.front().EBML),
-										"Failed to push EBML.", ErrorType::BadNetworkConnection);
+					OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(m_packetHistory.front().index, m_packetHistory.front().startTime, m_packetHistory.front().endTime,
+											m_packetHistory.front().EBML), "Failed to push EBML.", ErrorType::BadNetworkConnection);
 
-					m_PacketHistory.pop();
+					m_packetHistory.pop();
 				}
 
 				// Push the last EBML
-				OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(i, startTime, endTime, ebml), "Failed to push EBML.", ErrorType::BadNetworkConnection);
+				OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(i, startTime, endTime, ebml), "Failed to push EBML.", ErrorType::BadNetworkConnection);
 				hasSentDataToClient = true;
 			}
 
@@ -327,30 +323,30 @@ bool CBoxAlgorithmExternalProcessing::process()
 		}
 	}
 
-	if (hasSentDataToClient || m_IsGenerator || System::Time::zgetTime() - m_LastSyncTime > m_SyncTimeout)
+	if (hasSentDataToClient || m_isGenerator || System::Time::zgetTime() - m_lastSyncTime > m_syncTimeout)
 	{
-		m_LastSyncTime = System::Time::zgetTime();
+		m_lastSyncTime = System::Time::zgetTime();
 		// Here, we send a sync message to tell to the client that we have no more data to send.
 		// Generators do not have input data, so the box never has to send data to the external program
 		// and thus needs to perform syncing on each tick.
 
-		OV_ERROR_UNLESS_KRF(m_Messaging.pushSync(), "Failed to push sync message.", ErrorType::BadNetworkConnection);
+		OV_ERROR_UNLESS_KRF(m_messaging.pushSync(), "Failed to push sync message.", ErrorType::BadNetworkConnection);
 
-		if (!m_HasReceivedEndMessage)
+		if (!m_hasReceivedEndMessage)
 		{
 			this->log();
 
 			uint64_t packetId;
-			uint32_t index;
+			size_t index;
 			uint64_t startTime;
 			uint64_t endTime;
 			std::shared_ptr<const std::vector<uint8_t>> ebml;
 
 			bool receivedSync = false;
-			while (!receivedSync && !m_HasReceivedEndMessage && !m_Messaging.isInErrorState() && m_Messaging.isConnected())
+			while (!receivedSync && !m_hasReceivedEndMessage && !m_messaging.isInErrorState() && m_messaging.isConnected())
 			{
-				receivedSync = m_Messaging.waitForSyncMessage();
-				while (m_Messaging.popEBML(packetId, index, startTime, endTime, ebml))
+				receivedSync = m_messaging.waitForSyncMessage();
+				while (m_messaging.popEBML(packetId, index, startTime, endTime, ebml))
 				{
 					OV_ERROR_UNLESS_KRF(dynamicBoxContext->appendOutputChunkData(index, ebml->data(), ebml->size()),
 										"Failed to append output chunk data.", ErrorType::Internal);
@@ -460,11 +456,11 @@ char* strToChar(const std::string& s)
 
 bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string& programPath, const std::string& arguments)
 {
-	m_ThirdPartyProgramProcessId = 0;
+	m_extProcessId = 0;
 
 	const std::vector<std::string> argumentsVector = splitCommandLine(arguments);
 
-	std::vector<std::string> programArguments = { programPath, "--connection-id", m_ConnectionID, "--port", std::to_string(m_Port) };
+	std::vector<std::string> programArguments = { programPath, "--connection-id", m_connectionID, "--port", std::to_string(m_port) };
 	programArguments.insert(programArguments.begin() + 1, argumentsVector.cbegin(), argumentsVector.cend()); // Add the arguments after the program path.
 	std::vector<char*> argv;
 
@@ -481,8 +477,8 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 		_set_errno(ENOENT);
 	}
 	else { status = int(_spawnvp(_P_NOWAIT, programPath.c_str(), argv.data())); }
-	m_ThirdPartyProgramProcessId = status;
-	//	_P_DETACH,
+	m_extProcessId = status;
+	// _P_DETACH,
 #else
 	posix_spawn_file_actions_t fileAction;
 	int res = posix_spawn_file_actions_init(&fileAction);
@@ -490,9 +486,8 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	res = posix_spawn_file_actions_addclose(&fileAction, STDOUT_FILENO);
 	OV_ERROR_UNLESS_KRF(res==0, "File action 'close' could not be added. Got error [" << res << "]", ErrorType::BadCall);
 
-	this->getLogManager() << LogLevel_Info << "Run third party program [" << programPath.c_str()
-		<< "] with arguments [" << arguments.c_str() << "].\n";
-	int status = posix_spawnp(&m_ThirdPartyProgramProcessId, programPath.c_str(), &fileAction, nullptr, argv.data(), environ);
+	this->getLogManager() << LogLevel_Info << "Run third party program [" << programPath.c_str() << "] with arguments [" << arguments.c_str() << "].\n";
+	int status = posix_spawnp(&m_extProcessId, programPath.c_str(), &fileAction, nullptr, argv.data(), environ);
 
 #ifdef TARGET_OS_Linux
 	// On linux the glibc is bugged and posix_spawnp does not actually work as specified
@@ -506,10 +501,10 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	while (!processExists && !processHasFailed)
 	{
 		System::Time::sleep(10);
-		processExists = (kill(m_ThirdPartyProgramProcessId, 0) == 0);
+		processExists = (kill(m_extProcessId, 0) == 0);
 
 		int childStatus;
-		pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &childStatus, WNOHANG);
+		pid_t pid = waitpid(m_extProcessId, &childStatus, WNOHANG);
 
 		if (pid != 0)
 		{
@@ -519,14 +514,14 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 				// If the exit status is 0 this means that maybe we will actually succeed in launching the program
 				if (WEXITSTATUS(childStatus) != 0)
 				{
-					m_ThirdPartyProgramProcessId = 0;
+					m_extProcessId = 0;
 					status = WEXITSTATUS(childStatus);
 				}
 			}
 			else
 			{
 				OV_WARNING_K("The third party process died");
-				m_ThirdPartyProgramProcessId = 0;
+				m_extProcessId = 0;
 				status = 1;
 			}
 			processHasFailed = true;
@@ -543,7 +538,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	if (status != 0)
 	{
 		const std::string errorMessage = "Failed to launch the program [" + programPath + "]: ";
-		m_ThirdPartyProgramProcessId = 0;
+		m_extProcessId = 0;
 		OV_ERROR_KRF( errorMessage.c_str() << "[" << status << "]", ErrorType::BadResourceCreation);
 	}
 #else
@@ -591,7 +586,7 @@ void CBoxAlgorithmExternalProcessing::log()
 	std::string logMessage;
 	uint64_t packetId;
 
-	while (m_Messaging.popLog(packetId, logLevel, logMessage))
+	while (m_messaging.popLog(packetId, logLevel, logMessage))
 	{
 		ELogLevel loglevel = LogLevel_Info;
 

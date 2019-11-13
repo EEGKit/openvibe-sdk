@@ -48,8 +48,8 @@ namespace Socket
 			{
 				if (!CloseHandle(m_pFile))
 				{
-					m_sLastError = "Failed to close the serial port:" + this->getLastErrorFormated();
-					m_pFile      = nullptr;
+					m_LastError = "Failed to close the serial port:" + this->getLastErrorFormated();
+					m_pFile     = nullptr;
 					return false;
 				}
 
@@ -72,34 +72,34 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-		bool isReadyToSend(const uint32_t /*timeOut*/) const override
+		bool isReadyToSend(const size_t /*timeOut*/) const override
 		{
 			if (!this->isConnected()) { return false; }
 			return true;
 		}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-		bool isReadyToSend(const uint32_t timeOut) const override
+		bool isReadyToSend(const size_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
-			fd_set  l_oOutputFileDescriptorSet;
+			fd_set  oFileDescSet;
 			struct timeval l_oTimeout;
 			l_oTimeout.tv_sec=timeOut/1000;
 			l_oTimeout.tv_usec=(timeOut%1000)*1000;
 
-			FD_ZERO(&l_oOutputFileDescriptorSet);
-			FD_SET(m_iFile, &l_oOutputFileDescriptorSet);
+			FD_ZERO(&oFileDescSet);
+			FD_SET(m_iFile, &oFileDescSet);
 
-			if(!::select(m_iFile+1, nullptr, &l_oOutputFileDescriptorSet, nullptr, &l_oTimeout)) { return false; }
+			if(!::select(m_iFile+1, nullptr, &oFileDescSet, nullptr, &l_oTimeout)) { return false; }
 
-			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
+			if(FD_ISSET(m_iFile, &oFileDescSet)) { return true; }
 			return false;
 	}
 
 #endif
 
 #if defined TARGET_OS_Windows
-		bool isReadyToReceive(const uint32_t /*timeOut*/) const override
+		bool isReadyToReceive(const size_t /*timeOut*/) const override
 		{
 			if (!this->isConnected()) { return false; }
 			struct _COMSTAT status;
@@ -109,29 +109,29 @@ namespace Socket
 			return false;
 		}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		bool isReadyToReceive(const uint32_t timeOut) const override
+		bool isReadyToReceive(const size_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
-			fd_set  l_oInputFileDescriptorSet;
+			fd_set  iFileDescSet;
 			struct timeval l_oTimeout;
 			l_oTimeout.tv_sec=timeOut/1000;
 			l_oTimeout.tv_usec=(timeOut%1000)*1000;
 
-			FD_ZERO(&l_oInputFileDescriptorSet);
-			FD_SET(m_iFile, &l_oInputFileDescriptorSet);
+			FD_ZERO(&iFileDescSet);
+			FD_SET(m_iFile, &iFileDescSet);
 
-			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, nullptr, nullptr, &l_oTimeout)) { return false; }
+			if(!::select(m_iFile+1, &iFileDescSet, nullptr, nullptr, &l_oTimeout)) { return false; }
 
-			if(FD_ISSET(m_iFile, &l_oInputFileDescriptorSet)) { return true; }
+			if(FD_ISSET(m_iFile, &iFileDescSet)) { return true; }
 			return false;
 		}
 #endif
 
-		uint32_t getPendingByteCount() override
+		size_t getPendingByteCount() override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return 0;
 			}
 
@@ -142,7 +142,7 @@ namespace Socket
 
 			if (ClearCommError(m_pFile, &state, &status) == 0)
 			{
-				m_sLastError = "Failed to clear the serial port communication error: " + this->getLastErrorFormated();
+				m_LastError = "Failed to clear the serial port communication error: " + this->getLastErrorFormated();
 				return 0;
 			}
 			return status.cbInQue;
@@ -152,7 +152,7 @@ namespace Socket
 			int l_iByteCount=0;
 			if(-1 == ::ioctl(m_iFile, FIONREAD, &l_iByteCount))
 			{
-				m_sLastError = "Failed to querry pending bytes in ioctl";
+				m_LastError = "Failed to querry pending bytes in ioctl";
 				return 0;
 			}
 			return l_iByteCount;
@@ -164,7 +164,7 @@ namespace Socket
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return false;
 			}
 
@@ -172,7 +172,7 @@ namespace Socket
 
 			if (!FlushFileBuffers(m_pFile))
 			{
-				m_sLastError = "Failed to flush serial port buffer: " + this->getLastErrorFormated();
+				m_LastError = "Failed to flush serial port buffer: " + this->getLastErrorFormated();
 				return false;
 			}
 			return true;
@@ -182,7 +182,7 @@ namespace Socket
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			if(-1 == ::tcdrain(m_iFile))
 			{
-				m_sLastError = "Could not flush connection in tcdrain";
+				m_LastError = "Could not flush connection in tcdrain";
 				return false;
 			}
 			return true;
@@ -190,27 +190,27 @@ namespace Socket
 			return false;
 		}
 
-		uint32_t sendBuffer(const void* buffer, const uint32_t size) override
+		size_t sendBuffer(const void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return 0;
 			}
 
 #if defined TARGET_OS_Windows
 			DWORD l_dwWritten = 0;
 
-			if (!WriteFile(m_pFile, buffer, size, &l_dwWritten, nullptr))
+			if (!WriteFile(m_pFile, buffer, DWORD(size), &l_dwWritten, nullptr))
 			{
-				m_sLastError = "Failed to write on serial port: " + this->getLastErrorFormated();
+				m_LastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
 			if (l_dwWritten == 0)
 			{
-				m_sLastError = "Serial port timeout when trying to write.";
+				m_LastError = "Serial port timeout when trying to write.";
 				this->close();
 				return 0;
 			}
@@ -222,7 +222,7 @@ namespace Socket
 			int res = ::write(m_iFile, buffer, size);
 			if(res < 0)
 			{
-				m_sLastError = "Could not write on connection";
+				m_LastError = "Could not write on connection";
 				this->close();
 				return 0;
 			}
@@ -232,11 +232,11 @@ namespace Socket
 			return 0;
 		}
 
-		uint32_t receiveBuffer(void* buffer, const uint32_t size) override
+		size_t receiveBuffer(void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return 0;
 			}
 
@@ -244,16 +244,16 @@ namespace Socket
 
 			DWORD l_dwRead = 0;
 
-			if (!ReadFile(m_pFile, buffer, size, &l_dwRead, nullptr))
+			if (!ReadFile(m_pFile, buffer, DWORD(size), &l_dwRead, nullptr))
 			{
-				m_sLastError = "Failed to read on serial port: " + this->getLastErrorFormated();
+				m_LastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
 			if (l_dwRead == 0)
 			{
-				m_sLastError = "Serial port timeout when trying to read.";
+				m_LastError = "Serial port timeout when trying to read.";
 				this->close();
 				return 0;
 			}
@@ -265,7 +265,7 @@ namespace Socket
 			int res = ::read(m_iFile, buffer, size);
 			if (res < 0)
 			{
-				m_sLastError = "Could not read from connection";
+				m_LastError = "Could not read from connection";
 				this->close();
 				return 0;
 			}
@@ -275,10 +275,10 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* buffer, const uint32_t size) override
+		bool sendBufferBlocking(const void* buffer, const size_t size) override
 		{
-			const char* p            = reinterpret_cast<const char*>(buffer);
-			uint32_t bytesLeft = size;
+			const char* p    = reinterpret_cast<const char*>(buffer);
+			size_t bytesLeft = size;
 
 			while (bytesLeft != 0 && this->isConnected())
 			{
@@ -289,17 +289,17 @@ namespace Socket
 			return bytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* buffer, const uint32_t size) override
+		bool receiveBufferBlocking(void* buffer, const size_t size) override
 		{
-			char* p                  = reinterpret_cast<char*>(buffer);
-			uint32_t l_ui32BytesLeft = size;
+			char* p          = reinterpret_cast<char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
+			while (bytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(p + size - l_ui32BytesLeft, l_ui32BytesLeft);
+				bytesLeft -= this->receiveBuffer(p + size - bytesLeft, bytesLeft);
 				if (this->isErrorRaised()) { return false; }
 			}
-			return l_ui32BytesLeft == 0;
+			return bytesLeft == 0;
 		}
 
 		bool isConnected() const override
@@ -313,13 +313,13 @@ namespace Socket
 
 		void release() override { delete this; }
 
-		bool connect(const char* sURL, const unsigned long ul32BaudRate) override
+		bool connect(const char* sURL, const size_t baudrate) override
 		{
-			m_sLastError.clear();
+			m_LastError.clear();
 
 			if (this->isConnected())
 			{
-				m_sLastError = "Serial port already connected";
+				m_LastError = "Serial port already connected";
 				return false;
 			}
 
@@ -329,8 +329,8 @@ namespace Socket
 
 			if (m_pFile == INVALID_HANDLE_VALUE || m_pFile == nullptr)
 			{
-				m_sLastError = "Failed to open serial port: " + this->getLastErrorFormated();
-				m_pFile      = nullptr;
+				m_LastError = "Failed to open serial port: " + this->getLastErrorFormated();
+				m_pFile     = nullptr;
 				return false;
 			}
 
@@ -338,13 +338,13 @@ namespace Socket
 
 			if (!GetCommState(m_pFile, &dcb))
 			{
-				m_sLastError = "Failed to get communication state: " + this->getLastErrorFormated();
+				m_LastError = "Failed to get communication state: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
 
 			dcb.DCBlength = sizeof(dcb);
-			dcb.BaudRate  = ul32BaudRate;
+			dcb.BaudRate  = DWORD(baudrate);
 			dcb.ByteSize  = 8;
 			dcb.Parity    = NOPARITY;
 			dcb.StopBits  = ONESTOPBIT;
@@ -353,7 +353,7 @@ namespace Socket
 
 			if (!SetCommState(m_pFile, &dcb))
 			{
-				m_sLastError = "Could not set communication state: " + this->getLastErrorFormated();
+				m_LastError = "Could not set communication state: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
@@ -361,17 +361,17 @@ namespace Socket
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			/* $$$ BAUD RATE PARAMETER IS NOT CONSIDERED ON LINUX, MIGHT BE NECESSARY TO CHANGE THIS $$$ */
-			assert(ul32BaudRate == 230400);
+			assert(baudrate == 230400);
 			if ((m_iFile = ::open(sURL, O_RDWR)) == -1)
 			{
-				m_sLastError = "Failed to open serial port.";
+				m_LastError = "Failed to open serial port.";
 				return false;
 			}
 
 			struct termios l_oTerminalAttributes;
 			if(::tcgetattr(m_iFile, &l_oTerminalAttributes)!=0)
 			{
-				m_sLastError = "Could not get terminal attributes in tcgetattr";
+				m_LastError = "Could not get terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
@@ -383,7 +383,7 @@ namespace Socket
 
 			if (::tcsetattr(m_iFile, TCSAFLUSH, &l_oTerminalAttributes) != 0)
 			{
-				m_sLastError = "Could not set terminal attributes in tcgetattr";
+				m_LastError = "Could not set terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
@@ -391,7 +391,7 @@ namespace Socket
 			return true;
 		}
 
-		bool setTimeouts(const uint32_t decisecondsTimeout) override
+		bool setTimeouts(const size_t decisecondsTimeout) override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -401,7 +401,7 @@ namespace Socket
 
 			if (!GetCommTimeouts(m_pFile, &l_Timeouts))
 			{
-				m_sLastError = "Could not get communication timeouts: " + this->getLastErrorFormated();
+				m_LastError = "Could not get communication timeouts: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
@@ -411,7 +411,7 @@ namespace Socket
 
 			if (!SetCommTimeouts(m_pFile, &l_Timeouts))
 			{
-				m_sLastError = "Could not set communication timeouts: " + this->getLastErrorFormated();
+				m_LastError = "Could not set communication timeouts: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
@@ -421,7 +421,7 @@ namespace Socket
 			struct termios l_oTerminalAttributes;
 			if(::tcgetattr(m_iFile, &l_oTerminalAttributes)!=0)
 			{
-				m_sLastError = "Could not get terminal attributes in tcgetattr";
+				m_LastError = "Could not get terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
@@ -430,7 +430,7 @@ namespace Socket
 
 			if (::tcsetattr(m_iFile, TCSAFLUSH, &l_oTerminalAttributes) != 0)
 			{
-				m_sLastError = "Could not set terminal attributes in tcgetattr";
+				m_LastError = "Could not set terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
@@ -439,7 +439,7 @@ namespace Socket
 			return true;
 		}
 
-		const char* getLastError() override { return m_sLastError.c_str(); }
+		const char* getLastError() override { return m_LastError.c_str(); }
 
 		std::string getLastErrorFormated()
 		{
@@ -461,10 +461,10 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised() override { return !m_sLastError.empty(); }
-		void clearError() override { m_sLastError.clear(); }
+		bool isErrorRaised() override { return !m_LastError.empty(); }
+		void clearError() override { m_LastError.clear(); }
 
-		std::string m_sLastError;
+		std::string m_LastError;
 
 #if defined TARGET_OS_Windows
 		void* m_pFile;

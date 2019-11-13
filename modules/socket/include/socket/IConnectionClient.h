@@ -8,7 +8,7 @@ namespace Socket
 	{
 	public:
 
-		virtual bool connect(const char* serverName, const uint32_t serverPort, const uint32_t timeOut = 0xffffffff) = 0;
+		virtual bool connect(const char* serverName, const size_t serverPort, const size_t timeOut = 0xffffffff) = 0;
 	};
 
 	extern Socket_API IConnectionClient* createConnectionClient();

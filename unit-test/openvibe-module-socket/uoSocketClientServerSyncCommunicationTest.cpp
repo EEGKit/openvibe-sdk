@@ -33,19 +33,19 @@
 
 namespace
 {
-	std::condition_variable g_ServerStartedCondVar;
-	std::mutex g_ServerStartedMutex;
-	std::condition_variable g_ClientConnectedCondVar;
-	std::mutex g_ClientConnectedMutex;
-	std::vector<std::string> g_ReceivedData;
-	bool g_ServerStarted   = false;
-	bool g_ClientConnected = false;
+	std::condition_variable gServerStartedCondVar;
+	std::mutex gServerStartedMutex;
+	std::condition_variable gClientConnectedCondVar;
+	std::mutex gClientConnectedMutex;
+	std::vector<std::string> gReceivedData;
+	bool gServerStarted   = false;
+	bool gClientConnected = false;
 
 	// server callback run from a child thread
-	void onServerListening(const int port, const uint32_t packetCount)
+	void onServerListening(const int port, const size_t packetCount)
 	{
-		// only the server side modifies g_ReceivedData thus no need to handle race condition
-		g_ReceivedData.clear();
+		// only the server side modifies gReceivedData thus no need to handle race condition
+		gReceivedData.clear();
 
 		Socket::IConnection* clientConnection = nullptr;
 
@@ -55,32 +55,32 @@ namespace
 
 		// keep the scope braces here, as it ensures mutex is released
 		{
-			std::lock_guard<std::mutex> lockOnServerStart(g_ServerStartedMutex);
-			g_ServerStarted = true;
+			std::lock_guard<std::mutex> lockOnServerStart(gServerStartedMutex);
+			gServerStarted = true;
 		}
 
-		g_ServerStartedCondVar.notify_one();
+		gServerStartedCondVar.notify_one();
 
 		// connect clients
 		while (!clientConnection) { if (server->isReadyToReceive()) { clientConnection = server->accept(); } }
 
 		// keep the scope braces here, as it ensures mutex is released
 		{
-			std::lock_guard<std::mutex> lockOnClientConnected(g_ClientConnectedMutex);
-			g_ClientConnected = true;
+			std::lock_guard<std::mutex> lockOnClientConnected(gClientConnectedMutex);
+			gClientConnected = true;
 		}
 
-		g_ClientConnectedCondVar.notify_one();
+		gClientConnectedCondVar.notify_one();
 
-		while (g_ReceivedData.size() < packetCount)
+		while (gReceivedData.size() < packetCount)
 		{
 			if (clientConnection->isReadyToReceive())
 			{
-				uint32_t dataSize = 0;
+				size_t dataSize = 0;
 				char dataBuffer[64];
 				clientConnection->receiveBufferBlocking(&dataSize, sizeof(dataSize));
 				clientConnection->receiveBufferBlocking(dataBuffer, dataSize);
-				g_ReceivedData.push_back(std::string(dataBuffer, dataSize));
+				gReceivedData.push_back(std::string(dataBuffer, dataSize));
 			}
 		}
 
@@ -94,8 +94,8 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 
 	const std::string serverName   = argv[1];
 	char* end;
-	const uint32_t port = strtol(argv[2], &end, 10);
-	uint32_t packetCount = strtol(argv[3], &end, 10);;
+	const size_t port = strtol(argv[2], &end, 10);
+	size_t packetCount = strtol(argv[3], &end, 10);
 
 	// test synchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -111,24 +111,24 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	std::thread serverThread(onServerListening, port, packetCount);
 
 	// wait until the server is started to connect client
-	std::unique_lock<std::mutex> lockOnServerStart(g_ServerStartedMutex);
-	g_ServerStartedCondVar.wait(lockOnServerStart, []() { return g_ServerStarted; });
+	std::unique_lock<std::mutex> lockOnServerStart(gServerStartedMutex);
+	gServerStartedCondVar.wait(lockOnServerStart, []() { return gServerStarted; });
 
 
 	client->connect(serverName.c_str(), port);
 
 	// wait until the connection is made to transmit data
-	std::unique_lock<std::mutex> lockOnClientConnected(g_ClientConnectedMutex);
-	g_ClientConnectedCondVar.wait(lockOnClientConnected, []() { return g_ClientConnected; });
+	std::unique_lock<std::mutex> lockOnClientConnected(gClientConnectedMutex);
+	gClientConnectedCondVar.wait(lockOnClientConnected, []() { return gClientConnected; });
 
 	// transmit data
 	// transmission follows the protocol: data size transmission + data transmission
 	const std::string baseData = "Data packet index: ";
 
-	for (uint32_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
+	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
-		uint32_t dataSize      = dataString.size();
+		size_t dataSize      = dataString.size();
 
 		client->sendBufferBlocking(&dataSize, sizeof(dataSize));
 		client->sendBufferBlocking(dataString.c_str(), dataSize);
@@ -141,11 +141,11 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	client->release();
 
 	// do the assertion on the main thread
-	OVT_ASSERT(g_ReceivedData.size() == packetCount, "Failure to retrieve packet count");
+	OVT_ASSERT(gReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (uint32_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
+	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
 	{
-		OVT_ASSERT_STREQ(g_ReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
+		OVT_ASSERT_STREQ(gReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
 	}
 
 	return EXIT_SUCCESS;

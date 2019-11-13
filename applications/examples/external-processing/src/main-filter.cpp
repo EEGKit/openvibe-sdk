@@ -21,12 +21,12 @@ int main(const int argc, char** argv)
 	std::signal(SIGINT, signalHandler);
 
 	std::string connectionID;
-	uint32_t port = 49687;
+	size_t port = 49687;
 
 	for (int i = 0; i < argc; ++i)
 	{
 		if (std::strcmp(argv[i], "--connection-id") == 0) { if (argc > i + 1) { connectionID = argv[i + 1]; } }
-		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = uint32_t(std::stoi(argv[i + 1])); } }
+		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = size_t(std::stoi(argv[i + 1])); } }
 	}
 	didRequestForcedQuit = false;
 
@@ -58,32 +58,32 @@ int main(const int argc, char** argv)
 
 	for (size_t i = 0; i < client.getInputCount(); ++i)
 	{
-		uint32_t index;
-		uint64_t type;
+		uint64_t id;
+		size_t type;
 		std::string name;
 
-		if (client.getInput(i, index, type, name)) { std::cout << "Input:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
+		if (client.getInput(i, id, type, name)) { std::cout << "Input:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
 	for (size_t i = 0; i < client.getOutputCount(); ++i)
 	{
-		uint32_t index;
-		uint64_t type;
+		uint64_t id;
+		size_t type;
 		std::string name;
 
-		if (client.getOutput(i, index, type, name)) { std::cout << "Output:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
+		if (client.getOutput(i, id, type, name)) { std::cout << "Output:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
 	for (size_t i = 0; i < client.getParameterCount(); ++i)
 	{
-		uint32_t index;
-		uint64_t type;
+		uint64_t id;
+		size_t type;
 		std::string name;
 		std::string value;
 
-		if (client.getParameter(i, index, type, name, value))
+		if (client.getParameter(i, id, type, name, value))
 		{
-			std::cout << "Parameter:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\tValue: " << value << "\n\n";
+			std::cout << "Parameter:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\tValue: " << value << "\n\n";
 		}
 	}
 
@@ -119,7 +119,7 @@ int main(const int argc, char** argv)
 		// EBML
 
 		uint64_t packetId;
-		uint32_t index;
+		size_t index;
 		uint64_t startTime;
 		uint64_t endtime;
 		std::shared_ptr<const std::vector<uint8_t>> ebml;

@@ -56,8 +56,8 @@ namespace OpenViBE
 
 		protected:
 
-			IConfigurable* m_pInputConfigurable  = nullptr;
-			IConfigurable* m_pOutputConfigurable = nullptr;
+			IConfigurable* m_iConfigurable  = nullptr;
+			IConfigurable* m_oConfigurable = nullptr;
 			std::map<CIdentifier, CString> m_vInputParameterName;
 			std::map<CIdentifier, CString> m_vOutputParameterName;
 			std::map<CIdentifier, std::pair<CString, bool>> m_vInputTrigger;
