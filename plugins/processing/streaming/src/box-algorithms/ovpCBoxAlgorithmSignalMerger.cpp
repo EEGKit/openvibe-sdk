@@ -13,9 +13,9 @@ bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; ++i) { m_decoders.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
+	for (size_t i = 0; i < nInput; ++i) { m_decoders.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
 
-	m_pStreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
+	m_encoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
 
 	return true;
 }
@@ -24,10 +24,10 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	m_pStreamEncoder->uninitialize();
-	delete m_pStreamEncoder;
+	m_encoder->uninitialize();
+	delete m_encoder;
 
-	for (uint32_t i = 0; i < nInput; ++i)
+	for (size_t i = 0; i < nInput; ++i)
 	{
 		m_decoders[i]->uninitialize();
 		delete m_decoders[i];
@@ -46,7 +46,7 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 
 	const uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
 	const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
-	for (uint32_t i = 1; i < nInput; ++i)
+	for (size_t i = 1; i < nInput; ++i)
 	{
 		if (boxContext.getInputChunkCount(i) == 0) { return true; }
 
@@ -63,7 +63,7 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 
 	if (index == nInput - 1)
 	{
-		for (uint32_t i = 1; i < nInput; ++i)
+		for (size_t i = 1; i < nInput; ++i)
 		{
 			OV_ERROR_UNLESS_KRF(boxContext.getInputChunkCount(0) >= boxContext.getInputChunkCount(i),
 								"Invalid input chunk count [" << boxContext.getInputChunkCount(i) << "] on input [" << i
@@ -81,19 +81,19 @@ bool CBoxAlgorithmSignalMerger::process()
 	IBoxIO& boxContext  = this->getDynamicBoxContext();
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	uint32_t nChunk = boxContext.getInputChunkCount(0);
+	size_t nChunk = boxContext.getInputChunkCount(0);
 
-	for (uint32_t input = 1; input < nInput; ++input) { if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); } }
+	for (size_t input = 1; input < nInput; ++input) { if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); } }
 
-	for (uint32_t c = 0; c < nChunk; ++c)
+	for (size_t c = 0; c < nChunk; ++c)
 	{
-		uint32_t nSamplePerBlock = 0;
-		uint32_t nChannel        = 0;
-		uint32_t nHeader         = 0;
-		uint32_t nBuffer         = 0;
-		uint32_t nEnd            = 0;
+		size_t nSamplePerBlock = 0;
+		size_t nChannel        = 0;
+		size_t nHeader         = 0;
+		size_t nBuffer         = 0;
+		size_t nEnd            = 0;
 
-		for (uint32_t i = 0; i < nInput; ++i)
+		for (size_t i = 0; i < nInput; ++i)
 		{
 			m_decoders[i]->decode(c);
 
@@ -138,25 +138,22 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nHeader)
 		{
 			// We have received headers from all inputs
-			IMatrix* ip_pMatrix = m_pStreamEncoder->getInputMatrix();
+			IMatrix* ip_pMatrix = m_encoder->getInputMatrix();
 
 			ip_pMatrix->setDimensionCount(2);
 			ip_pMatrix->setDimensionSize(0, nChannel);
 			ip_pMatrix->setDimensionSize(1, nSamplePerBlock);
-			for (uint32_t i = 0, k = 0; i < nInput; ++i)
+			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
 				const IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
-				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
-				{
-					ip_pMatrix->setDimensionLabel(0, k, op_pMatrix->getDimensionLabel(0, j));
-				}
+				for (size_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++) { ip_pMatrix->setDimensionLabel(0, k, op_pMatrix->getDimensionLabel(0, j)); }
 			}
-			const uint64_t l_ui64SamplingRate        = m_decoders[0]->getOutputSamplingRate();
-			m_pStreamEncoder->getInputSamplingRate() = l_ui64SamplingRate;
+			const uint64_t sampling           = m_decoders[0]->getOutputSamplingRate();
+			m_encoder->getInputSamplingRate() = sampling;
 
-			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << l_ui64SamplingRate << "\n";
+			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << sampling << "\n";
 
-			m_pStreamEncoder->encodeHeader();
+			m_encoder->encodeHeader();
 
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, c), boxContext.getInputChunkEndTime(0, c));
 		}
@@ -164,20 +161,20 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nBuffer)
 		{
 			// We have received one buffer from each input
-			IMatrix* ip_pMatrix = m_pStreamEncoder->getInputMatrix();
+			IMatrix* ip_pMatrix = m_encoder->getInputMatrix();
 
 			nSamplePerBlock = ip_pMatrix->getDimensionSize(1);
 
-			for (uint32_t i = 0, k = 0; i < nInput; ++i)
+			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
 				IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
-				for (uint32_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
+				for (size_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
 				{
 					System::Memory::copy(ip_pMatrix->getBuffer() + k * nSamplePerBlock, op_pMatrix->getBuffer() + j * nSamplePerBlock,
 										 nSamplePerBlock * sizeof(double));
 				}
 			}
-			m_pStreamEncoder->encodeBuffer();
+			m_encoder->encodeBuffer();
 
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, c), boxContext.getInputChunkEndTime(0, c));
 		}
@@ -185,7 +182,7 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nEnd)
 		{
 			// We have received one end from each input
-			m_pStreamEncoder->encodeEnd();
+			m_encoder->encodeEnd();
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, c), boxContext.getInputChunkEndTime(0, c));
 		}
 	}

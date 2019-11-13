@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamDecoder)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseDecoder)
 
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& identifier);
@@ -32,9 +32,9 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			EBML::IReaderHelper* m_pEBMLReaderHelper = nullptr;
-			EBML::IReader* m_pEBMLReader             = nullptr;
-			EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_oEBMLReaderCallbackProxy;
+			EBML::IReaderHelper* m_readerHelper = nullptr;
+			EBML::IReader* m_reader             = nullptr;
+			EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_callbackProxy;
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pMemoryBufferToDecode;
 		};
@@ -45,17 +45,17 @@ namespace OpenViBEPlugins
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
 				prototype.addInputParameter(
-					OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
+					OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
 					OpenViBE::Kernel::ParameterType_MemoryBuffer);
 
-				prototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader, "Received header");
-				prototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");
-				prototype.addOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedEnd, "Received end");
+				prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader, "Received header");
+				prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");
+				prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, "Received end");
 
 				return true;
 			}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseStreamDecoderDesc)
+			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseDecoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

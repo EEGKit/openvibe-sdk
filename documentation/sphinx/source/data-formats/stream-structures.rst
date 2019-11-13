@@ -42,7 +42,7 @@ streams : **channel localisation**, **channel units**, **feature vector**,
 ::
 
    #define OVTK_TypeId_EBMLStream                              		OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
-   #define   OVTK_TypeId_ExperimentInformation                 		OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
+   #define   OVTK_TypeId_ExperimentInfo                 			OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
    #define   OVTK_TypeId_Stimulations                          		OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
    #define   OVTK_TypeId_StreamedMatrix                        		OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
    #define     OVTK_TypeId_FeatureVector                       		OpenViBE::CIdentifier(0x17341935, 0x152FF448)
@@ -398,7 +398,7 @@ EBML description & identifiers
    #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated      EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
    #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated       EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
    #define OVTK_NodeId_Header_Spectrum_FrequencyAbscissa                   EBML::CIdentifier(0x00D7287D, 0x622A2BF5)
-   #define OVTK_NodeId_Header_Spectrum_Sampling                        EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
+   #define OVTK_NodeId_Header_Spectrum_Sampling                            EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
 
 .. _Doc_Streams_Signal:
 
@@ -463,7 +463,7 @@ EBML description & identifiers
 
    * NODE IDENTIFIERS
    * ----------------
-   #define OVTK_NodeId_Header_Signal                                    EBML::CIdentifier(0x007855DE, 0x3748D375)
+   #define OVTK_NodeId_Header_Signal                                EBML::CIdentifier(0x007855DE, 0x3748D375)
    #define OVTK_NodeId_Header_Signal_Sampling                       EBML::CIdentifier(0x00141C43, 0x0C37006B)
 
 .. _Doc_Streams_Stimulation:
@@ -505,7 +505,7 @@ EBML description & identifiers
    *   OVTK_NodeId_Buffer_Stimulation
    *     OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations (integer)
    *     OVTK_NodeId_Buffer_Stimulation_Stimulation
-   *       OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier (integer)
+   *       OVTK_NodeId_Buffer_Stimulation_Stimulation_ID (integer)
    *       OVTK_NodeId_Buffer_Stimulation_Stimulation_Date (integer)
    *       OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration (integer)
    *     OVTK_NodeId_Stimulation_Stimulation
@@ -523,11 +523,11 @@ EBML description & identifiers
    #define OVTK_NodeId_Buffer_Stimulation                               EBML::CIdentifier(0x006DEABE, 0x7FC05A20)
    #define OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations          EBML::CIdentifier(0x00BB790B, 0x2B8574D8)
    #define OVTK_NodeId_Buffer_Stimulation_Stimulation                   EBML::CIdentifier(0x0016EAC6, 0x29FBCAA1)
-   #define OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier        EBML::CIdentifier(0x006FA5DB, 0x4BAC31E9)
+   #define OVTK_NodeId_Buffer_Stimulation_Stimulation_ID                EBML::CIdentifier(0x006FA5DB, 0x4BAC31E9)
    #define OVTK_NodeId_Buffer_Stimulation_Stimulation_Date              EBML::CIdentifier(0x00B866D8, 0x14DA5374)
    #define OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration          EBML::CIdentifier(0x14EE055F, 0x87FBCC9C)
 
-.. _Doc_Streams_ExperimentInformation:
+.. _Doc_Streams_ExperimentInfo:
 
 Experimentation information stream
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -560,20 +560,20 @@ EBML description & identifiers
    * OVTK_NodeId_Header
    *   OVTK_NodeId_Header_StreamType (integer:)
    *   OVTK_NodeId_Header_StreamVersion (integer:)
-   *   OVTK_NodeId_Header_ExperimentInformation
-   *     OVTK_NodeId_Header_ExperimentInformation_Experiment
-   *       OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier (integer)
-   *       OVTK_NodeId_Header_ExperimentInformation_Experiment_Date (date)
-   *     OVTK_NodeId_Header_ExperimentInformation_Subject
-   *       OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier (integer)
-   *       OVTK_NodeId_Header_ExperimentInformation_Subject_Name (string)
-   *       OVTK_NodeId_Header_ExperimentInformation_Subject_Age (integer)
-   *       OVTK_NodeId_Header_ExperimentInformation_Subject_Gender (integer)
-   *     OVTK_NodeId_Header_ExperimentInformation_Context
-   *       OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier (integer)
-   *       OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName (string)
-   *       OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier (integer)
-   *       OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName (string)
+   *   OVTK_NodeId_Header_ExperimentInfo
+   *     OVTK_NodeId_Header_ExperimentInfo_Experiment
+   *       OVTK_NodeId_Header_ExperimentInfo_Experiment_ID (integer)
+   *       OVTK_NodeId_Header_ExperimentInfo_Experiment_Date (date)
+   *     OVTK_NodeId_Header_ExperimentInfo_Subject
+   *       OVTK_NodeId_Header_ExperimentInfo_Subject_ID (integer)
+   *       OVTK_NodeId_Header_ExperimentInfo_Subject_Name (string)
+   *       OVTK_NodeId_Header_ExperimentInfo_Subject_Age (integer)
+   *       OVTK_NodeId_Header_ExperimentInfo_Subject_Gender (integer)
+   *     OVTK_NodeId_Header_ExperimentInfo_Context
+   *       OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryID (integer)
+   *       OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryName (string)
+   *       OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianID (integer)
+   *       OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianName (string)
    * OVTK_NodeId_End
    *
 
@@ -581,22 +581,22 @@ EBML description & identifiers
 
    * NODE IDENTIFIERS
     * ----------------
-    #define OVTK_NodeId_Header_ExperimentInformation                               EBML::CIdentifier(0x00746BA0, 0x115AE04D)
-    #define OVTK_NodeId_Header_ExperimentInformation_Experiment                    EBML::CIdentifier(0x0011D6B7, 0x48F1AA39)
-    #define OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier         EBML::CIdentifier(0x006ACD74, 0x1C960C26)
-    #define OVTK_NodeId_Header_ExperimentInformation_Experiment_Date               EBML::CIdentifier(0x002F8FB7, 0x6DA7552D)
-    #define OVTK_NodeId_Header_ExperimentInformation_Subject                       EBML::CIdentifier(0x003EC620, 0x333E0A94)
-    #define OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier            EBML::CIdentifier(0x00D62974, 0x473D4AA5)
-    #define OVTK_NodeId_Header_ExperimentInformation_Subject_Name                  EBML::CIdentifier(0x0041FD0A, 0x6BCD9A99)
-    #define OVTK_NodeId_Header_ExperimentInformation_Subject_Age                   EBML::CIdentifier(0x00DF7DD9, 0x33336C51)
+    #define OVTK_NodeId_Header_ExperimentInfo                               EBML::CIdentifier(0x00746BA0, 0x115AE04D)
+    #define OVTK_NodeId_Header_ExperimentInfo_Experiment                    EBML::CIdentifier(0x0011D6B7, 0x48F1AA39)
+    #define OVTK_NodeId_Header_ExperimentInfo_Experiment_ID                 EBML::CIdentifier(0x006ACD74, 0x1C960C26)
+    #define OVTK_NodeId_Header_ExperimentInfo_Experiment_Date               EBML::CIdentifier(0x002F8FB7, 0x6DA7552D)
+    #define OVTK_NodeId_Header_ExperimentInfo_Subject                       EBML::CIdentifier(0x003EC620, 0x333E0A94)
+    #define OVTK_NodeId_Header_ExperimentInfo_Subject_ID                    EBML::CIdentifier(0x00D62974, 0x473D4AA5)
+    #define OVTK_NodeId_Header_ExperimentInfo_Subject_Name                  EBML::CIdentifier(0x0041FD0A, 0x6BCD9A99)
+    #define OVTK_NodeId_Header_ExperimentInfo_Subject_Age                   EBML::CIdentifier(0x00DF7DD9, 0x33336C51)
     /* for retro compat */
-    #define OVTK_NodeId_Header_ExperimentInformation_Subject_Sex                   EBML::CIdentifier(0x0069BB84, 0x3FC8E149)
-    #define OVTK_NodeId_Header_ExperimentInformation_Subject_Gender                EBML::CIdentifier(0x0069BB84, 0x3FC8E149)
-    #define OVTK_NodeId_Header_ExperimentInformation_Context                       EBML::CIdentifier(0x0018C291, 0x7985DFDD)
-    #define OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier  EBML::CIdentifier(0x003F11B9, 0x26D76D9C)
-    #define OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName        EBML::CIdentifier(0x00EB1F23, 0x51C23B83)
-    #define OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier  EBML::CIdentifier(0x00874A7F, 0x60DC34C2)
-    #define OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName        EBML::CIdentifier(0x00C8C393, 0x31CE5B3E)
+    #define OVTK_NodeId_Header_ExperimentInfo_Subject_Sex                   EBML::CIdentifier(0x0069BB84, 0x3FC8E149)
+    #define OVTK_NodeId_Header_ExperimentInfo_Subject_Gender                EBML::CIdentifier(0x0069BB84, 0x3FC8E149)
+    #define OVTK_NodeId_Header_ExperimentInfo_Context                       EBML::CIdentifier(0x0018C291, 0x7985DFDD)
+    #define OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryID          EBML::CIdentifier(0x003F11B9, 0x26D76D9C)
+    #define OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryName        EBML::CIdentifier(0x00EB1F23, 0x51C23B83)
+    #define OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianID          EBML::CIdentifier(0x00874A7F, 0x60DC34C2)
+    #define OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianName        EBML::CIdentifier(0x00C8C393, 0x31CE5B3E)
 
 Acquisition stream
 ~~~~~~~~~~~~~~~~~~
@@ -625,7 +625,7 @@ EBML description & identifiers
    * STREAM STRUCTURE
    * ----------------
    * OVTK_NodeId_Header
-   *   OVTK_NodeId_Acquisition_Header_ExperimentInformation
+   *   OVTK_NodeId_Acquisition_Header_ExperimentInfo
    *     ... some experiment information stream header
    *   OVTK_NodeId_Acquisition_Header_Signal
    *     ... some signal stream header
@@ -636,7 +636,7 @@ EBML description & identifiers
    *   OVTK_NodeId_Acquisition_Header_ChannelUnits
    *     ... some channel units stream header
    * OVTK_NodeId_Buffer
-   *   OVTK_NodeId_Acquisition_Buffer_ExperimentInformation
+   *   OVTK_NodeId_Acquisition_Buffer_ExperimentInfo
    *     ... some experiment information stream buffer
    *   OVTK_NodeId_Acquisition_Buffer_Signal
    *     ... some signal stream buffer

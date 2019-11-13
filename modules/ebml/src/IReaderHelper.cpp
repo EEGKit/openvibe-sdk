@@ -13,85 +13,75 @@ namespace EBML
 		class CReaderHelper final : public IReaderHelper
 		{
 		public:
-			CReaderHelper();
-			uint64_t getUIntegerFromChildData(const void* buffer, uint64_t size) override;
-			int64_t getSIntegerFromChildData(const void* buffer, uint64_t size) override;
-			double getFloatFromChildData(const void* buffer, uint64_t size) override;
-			const char* getASCIIStringFromChildData(const void* buffer, uint64_t size) override;
+			CReaderHelper() { }
+			uint64_t getUInt(const void* buffer, const size_t size) override;
+			int64_t getInt(const void* buffer, const size_t size) override;
+			double getDouble(const void* buffer, const size_t size) override;
+			const char* getStr(const void* buffer, const size_t size) override;
 			void release() override;
 
-			std::string m_ASCIIString;
+			std::string m_Str;
 		};
 	} // namespace
 } // namespace EBML
 
-CReaderHelper::CReaderHelper() {}
-
-uint64_t CReaderHelper::getUIntegerFromChildData(const void* buffer, const uint64_t size)
+uint64_t CReaderHelper::getUInt(const void* buffer, const size_t size)
 {
 	uint64_t result = 0;
-	for (uint64_t i = 0; i < size; ++i)
+	for (size_t i = 0; i < size; ++i)
 	{
 		result <<= 8;
-		result |= ((unsigned char*)buffer)[i];
+		result |= reinterpret_cast<const unsigned char*>(buffer)[i];
 	}
 	return result;
 }
 
-int64_t CReaderHelper::getSIntegerFromChildData(const void* buffer, const uint64_t size)
+int64_t CReaderHelper::getInt(const void* buffer, const size_t size)
 {
 	int64_t result = 0;
-	if (size != 0 && ((unsigned char*)buffer)[0] & 0x80) { result = -1; }
+	if (size != 0 && reinterpret_cast<const unsigned char*>(buffer)[0] & 0x80) { result = -1; }
 
-	for (uint64_t i = 0; i < size; ++i)
+	for (size_t i = 0; i < size; ++i)
 	{
 		result <<= 8;
-		result |= ((unsigned char*)buffer)[i];
+		result |= reinterpret_cast<const unsigned char*>(buffer)[i];
 	}
 	return result;
 }
 
-double CReaderHelper::getFloatFromChildData(const void* buffer, const uint64_t size)
+double CReaderHelper::getDouble(const void* buffer, const size_t size)
 {
-	float l_f32Result;
-	double l_f64Result;
-	int l_ui32Result;
-	int64_t res;
-
 	switch (size)
 	{
-		case 0:
-			l_f64Result = 0;
-			break;
-
 		case 4:
-			l_ui32Result = uint32_t(getUIntegerFromChildData(buffer, size));
-			memcpy(&l_f32Result, &l_ui32Result, sizeof(l_f32Result));
-			l_f64Result = l_f32Result;
-			break;
+		{
+			float res;
+			uint32_t data;
+			data = uint32_t(getUInt(buffer, size));
+			memcpy(&res, &data, sizeof(res));
+			return double(res);
+		}
 
 		case 8:
-			res = uint64_t(getUIntegerFromChildData(buffer, size));
-			memcpy(&l_f64Result, &res, sizeof(l_f64Result));
-			break;
+		{
+			double res;
+			uint64_t data;
+			data = getUInt(buffer, size);
+			memcpy(&res, &data, sizeof(res));
+			return res;
+		}
 
+		case 0:
 		case 10:
-			l_f64Result = 0;
-			break;
-
-		default:
-			l_f64Result = 0;
-			break;
+		default: return 0.0;
 	}
-
-	return l_f64Result;
 }
 
-const char* CReaderHelper::getASCIIStringFromChildData(const void* buffer, const uint64_t size)
+const char* CReaderHelper::getStr(const void* buffer, const size_t size)
 {
-	if (size) { m_ASCIIString.assign((char*)buffer, size_t(size)); }
-	else { m_ASCIIString = ""; }
-	return m_ASCIIString.c_str();
+	if (size) { m_Str.assign(reinterpret_cast<const char*>(buffer), size_t(size)); }
+	else { m_Str = ""; }
+	return m_Str.c_str();
 }
 
 void CReaderHelper::release() { delete this; }

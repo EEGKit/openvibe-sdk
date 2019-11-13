@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 		protected:
 			void write(const char* str) override; // XML::IWriterCallback
 
-			XML::IWriter* m_pWriter                  = nullptr;
+			XML::IWriter* m_writer                   = nullptr;
 			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 

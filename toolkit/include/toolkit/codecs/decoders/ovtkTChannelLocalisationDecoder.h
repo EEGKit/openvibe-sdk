@@ -20,11 +20,11 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelLocalisationStreamDecoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelLocalisationDecoder));
 			m_codec->initialize();
-			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_InputParameterId_MemoryBufferToDecode));
-			m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Matrix));
-			m_oDynamic.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Dynamic));
+			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationDecoder_InputParameterId_MemoryBufferToDecode));
+			m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputParameterId_Matrix));
+			m_oDynamic.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputParameterId_Dynamic));
 
 			return true;
 		}
@@ -50,15 +50,15 @@ namespace OpenViBEToolkit
 
 		virtual bool isHeaderReceived()
 		{
-			return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedHeader);
+			return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
 		virtual bool isBufferReceived()
 		{
-			return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedBuffer);
+			return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedEnd); }
+		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
 	template <class T>

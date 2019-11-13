@@ -37,29 +37,29 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 
 	m_oWriterHelper.openChild(EBML_Identifier_Header);
 	m_oWriterHelper.openChild(EBML_Identifier_DocType);
-	m_oWriterHelper.setASCIIStringAsChildData("OpenViBE_Stream_File");
+	m_oWriterHelper.setStr("OpenViBE_Stream_File");
 	m_oWriterHelper.closeChild();
 
 	m_oWriterHelper.openChild(EBML_Identifier_EBMLVersion);
-	m_oWriterHelper.setUIntegerAsChildData(1);
+	m_oWriterHelper.setUInt(1);
 	m_oWriterHelper.closeChild();
 
 	m_oWriterHelper.openChild(EBML_Identifier_EBMLIdLength);
-	m_oWriterHelper.setUIntegerAsChildData(10);
+	m_oWriterHelper.setUInt(10);
 	m_oWriterHelper.closeChild();
 	m_oWriterHelper.closeChild();
 
 	m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header);
 	m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_Compression);
-	m_oWriterHelper.setUIntegerAsChildData(0 /* compression flag */);
+	m_oWriterHelper.setUInt(0 /* compression flag */);
 	m_oWriterHelper.closeChild();
-	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i)
+	for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
-		CIdentifier l_oID;
-		boxContext.getInputType(i, l_oID);
+		CIdentifier id;
+		boxContext.getInputType(i, id);
 
 		m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_StreamType);
-		m_oWriterHelper.setUIntegerAsChildData(l_oID.toUInteger());
+		m_oWriterHelper.setUInt(id.toUInteger());
 		m_oWriterHelper.closeChild();
 	}
 	m_oWriterHelper.closeChild();
@@ -83,30 +83,30 @@ bool CBoxAlgorithmGenericStreamWriter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmGenericStreamWriter::process()
 {
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
-	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
+	IBoxIO& boxContext  = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
 	if (!m_isHeaderGenerate) { if (!generateFileHeader()) { return false; } }
 
 	m_oSwap.setSize(0, true);
 
-	for (uint32_t i = 0; i < nInput; ++i)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			m_oWriterHelper.connect(&m_oWriter);
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer);
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_StreamIndex);
-			m_oWriterHelper.setUIntegerAsChildData(i);
+			m_oWriterHelper.setUInt(i);
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_StartTime);
-			m_oWriterHelper.setUIntegerAsChildData(boxContext.getInputChunkStartTime(i, j));
+			m_oWriterHelper.setUInt(boxContext.getInputChunkStartTime(i, j));
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_EndTime);
-			m_oWriterHelper.setUIntegerAsChildData(boxContext.getInputChunkEndTime(i, j));
+			m_oWriterHelper.setUInt(boxContext.getInputChunkEndTime(i, j));
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_Content);
-			m_oWriterHelper.setBinaryAsChildData(boxContext.getInputChunk(i, j)->getDirectPointer(), boxContext.getInputChunk(i, j)->getSize());
+			m_oWriterHelper.setBinary(boxContext.getInputChunk(i, j)->getDirectPointer(), boxContext.getInputChunk(i, j)->getSize());
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.disconnect();
@@ -124,4 +124,4 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	return true;
 }
 
-void CBoxAlgorithmGenericStreamWriter::write(const void* buffer, const uint64_t size) { m_oSwap.append(reinterpret_cast<const uint8_t*>(buffer), size); }
+void CBoxAlgorithmGenericStreamWriter::write(const void* buffer, const size_t size) { m_oSwap.append(reinterpret_cast<const uint8_t*>(buffer), size); }

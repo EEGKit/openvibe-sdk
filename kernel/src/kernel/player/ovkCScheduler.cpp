@@ -124,10 +124,10 @@ bool CScheduler::flattenScenario()
 					{
 						m_scenario->removeBox(boxID);
 					}
-					else if (box->hasAttribute(OVP_AttributeId_Metabox_Identifier)) // We verify that the box actually has a backend scenario
+					else if (box->hasAttribute(OVP_AttributeId_Metabox_ID)) // We verify that the box actually has a backend scenario
 					{
 						CIdentifier metaboxId;
-						metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_ID));
 						CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 						if (FS::Files::fileExists(metaboxScenarioPath.toASCIIString()))
@@ -165,7 +165,7 @@ bool CScheduler::flattenScenario()
 			IBox* box = m_scenario->getBoxDetails(boxID);
 
 			// The box has an attribute with the metabox ID and config manager has a path to each metabox scenario
-			CString str = box->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+			CString str = box->getAttributeValue(OVP_AttributeId_Metabox_ID);
 			CIdentifier metaboxId;
 			metaboxId.fromString(str);
 			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
@@ -383,7 +383,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 				ErrorType::Internal, SchedulerInitialization_Failed);
 
 			OV_ERROR_UNLESS_K(box->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
-							  "Not expanded metabox with id [" << box->getAttributeValue(OVP_AttributeId_Metabox_Identifier) << "] detected in the scenario",
+							  "Not expanded metabox with id [" << box->getAttributeValue(OVP_AttributeId_Metabox_ID) << "] detected in the scenario",
 							  ErrorType::Internal, SchedulerInitialization_Failed);
 
 			const IPluginObjectDesc* boxDesc = this->getPluginManager().getPluginObjectDescCreating(box->getAlgorithmClassIdentifier());

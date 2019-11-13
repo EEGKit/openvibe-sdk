@@ -14,7 +14,7 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize()
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 
 	m_decoders.resize(staticBoxContext.getInputCount());
-	uint32_t index = 0;
+	size_t index = 0;
 	for (auto& stimulationDecoder : m_decoders)
 	{
 		stimulationDecoder.initialize(*this, index);
@@ -93,8 +93,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 		{
 			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
-																				 std::get<2>(stimulation->second));
+				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second), std::get<2>(stimulation->second));
 				stimulation = m_vStimulation.erase(stimulation);
 			}
 			else { ++stimulation; }

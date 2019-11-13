@@ -2,14 +2,14 @@
 
 using namespace EBML;
 
-CReader::CReader(IReaderCallback& rReaderCallback) { m_pReaderImplementation = createReader(rReaderCallback); }
+CReader::CReader(IReaderCallback& callback) { m_impl = createReader(callback); }
 
-CReader::~CReader() { m_pReaderImplementation->release(); }
+CReader::~CReader() { m_impl->release(); }
 
-bool CReader::processData(const void* buffer, const uint64_t size) { return m_pReaderImplementation->processData(buffer, size); }
+bool CReader::processData(const void* buffer, const size_t size) { return m_impl->processData(buffer, size); }
 
-CIdentifier CReader::getCurrentNodeIdentifier() const { return m_pReaderImplementation->getCurrentNodeIdentifier(); }
+CIdentifier CReader::getCurrentNodeID() const { return m_impl->getCurrentNodeID(); }
 
-uint64_t CReader::getCurrentNodeSize() const { return m_pReaderImplementation->getCurrentNodeSize(); }
+size_t CReader::getCurrentNodeSize() const { return m_impl->getCurrentNodeSize(); }
 
 void CReader::release() {}

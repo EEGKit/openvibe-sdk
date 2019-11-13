@@ -87,7 +87,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 		else
 		{
 			bool justStarted = true;
-			while (!feof(m_pFile) && m_oReader.getCurrentNodeIdentifier() == EBML::CIdentifier())
+			while (!feof(m_pFile) && m_oReader.getCurrentNodeID() == EBML::CIdentifier())
 			{
 				uint8_t byte;
 				const size_t s = fread(&byte, sizeof(uint8_t), 1, m_pFile);
@@ -159,22 +159,22 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* buffer, cons
 	// Uncomment this when ebml version will be used
 	//if(top == EBML_Identifier_EBMLVersion)
 	//{
-	// const uint64_t versionNumber=(uint64_t)m_oReaderHelper.getUint(buffer, size);
+	// const uint64_t versionNumber=(uint64_t)m_oReaderHelper.getUInt(buffer, size);
 	//}
 
 	if (top == OVP_NodeId_OpenViBEStream_Header_Compression)
 	{
-		if (m_oReaderHelper.getUIntegerFromChildData(buffer, size) != 0) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
+		if (m_oReaderHelper.getUInt(buffer, size) != 0) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
 	}
-	if (top == OVP_NodeId_OpenViBEStream_Header_StreamType) { m_vStreamIndexToTypeID[m_vStreamIndexToTypeID.size()] = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
+	if (top == OVP_NodeId_OpenViBEStream_Header_StreamType) { m_vStreamIndexToTypeID[m_vStreamIndexToTypeID.size()] = m_oReaderHelper.getUInt(buffer, size); }
 
 	if (top == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex)
 	{
-		const size_t streamIdx = size_t(m_oReaderHelper.getUIntegerFromChildData(buffer, size));
+		const size_t streamIdx = size_t(m_oReaderHelper.getUInt(buffer, size));
 		if (m_vStreamIndexToTypeID.find(streamIdx) != m_vStreamIndexToTypeID.end()) { m_outputIdx = m_vStreamIndexToOutputIdx[streamIdx]; }
 	}
-	if (top == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_startTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
-	if (top == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { m_endTime = m_oReaderHelper.getUIntegerFromChildData(buffer, size); }
+	if (top == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_startTime = m_oReaderHelper.getUInt(buffer, size); }
+	if (top == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { m_endTime = m_oReaderHelper.getUInt(buffer, size); }
 	if (top == OVP_NodeId_OpenViBEStream_Buffer_Content)
 	{
 		m_oPendingChunk.setSize(0, true);

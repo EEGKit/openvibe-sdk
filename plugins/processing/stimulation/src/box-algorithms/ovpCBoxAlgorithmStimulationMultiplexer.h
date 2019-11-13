@@ -41,9 +41,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				for (uint32_t input = 0; input < box.getInputCount(); ++input)
+				for (size_t input = 0; input < box.getInputCount(); ++input)
 				{
 					box.setInputName(input, ("Input stimulations " + std::to_string(input + 1)).c_str());
 					box.setInputType(input, OV_TypeId_Stimulations);

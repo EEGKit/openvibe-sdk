@@ -152,20 +152,20 @@ int main(const int argc, char** argv)
 	{
 		helper->openChild(OVTK_NodeId_Header_StreamType);
 		{
-			helper->setUIntegerAsChildData(0);
+			helper->setUInt(0);
 			helper->closeChild();
 		}
 		helper->openChild(OVTK_NodeId_Header_StreamVersion);
 		{
-			helper->setUIntegerAsChildData(0);
+			helper->setUInt(0);
 			helper->closeChild();
 		}
 
 		helper->openChild(OVTK_NodeId_Header_Signal);
 		{
-			helper->openChild(OVTK_NodeId_Header_Signal_SamplingRate);
+			helper->openChild(OVTK_NodeId_Header_Signal_Sampling);
 			{
-				helper->setUIntegerAsChildData(samplingRate);
+				helper->setUInt(samplingRate);
 				helper->closeChild();
 			}
 			helper->closeChild();
@@ -175,14 +175,14 @@ int main(const int argc, char** argv)
 		{
 			helper->openChild(OVTK_NodeId_Header_StreamedMatrix_DimensionCount);
 			{
-				helper->setUIntegerAsChildData(2);
+				helper->setUInt(2);
 				helper->closeChild();
 			}
 			helper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension);
 			{
 				helper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Size);
 				{
-					helper->setUIntegerAsChildData(nChannel);
+					helper->setUInt(nChannel);
 					helper->closeChild();
 				}
 				helper->closeChild();
@@ -191,7 +191,7 @@ int main(const int argc, char** argv)
 			{
 				helper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Size);
 				{
-					helper->setUIntegerAsChildData(samplesPerBuffer);
+					helper->setUInt(samplesPerBuffer);
 					helper->closeChild();
 				}
 				helper->closeChild();
@@ -253,7 +253,7 @@ int main(const int argc, char** argv)
 				{
 					helper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);
 					{
-						helper->setBinaryAsChildData(matrix.data(), matrix.size() * sizeof(double));
+						helper->setBinary(matrix.data(), matrix.size() * sizeof(double));
 						helper->closeChild();
 					}
 					helper->closeChild();

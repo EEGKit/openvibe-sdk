@@ -31,6 +31,6 @@ bool CStreamStructureDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CStreamStructureDecoder::openChild(const EBML::CIdentifier& identifier) { CEBMLBaseDecoder::openChild(identifier); }
 
-void CStreamStructureDecoder::processChildData(const void* buffer, const uint64_t size) { CEBMLBaseDecoder::processChildData(buffer, size); }
+void CStreamStructureDecoder::processChildData(const void* buffer, const size_t size) { CEBMLBaseDecoder::processChildData(buffer, size); }
 
 void CStreamStructureDecoder::closeChild() { CEBMLBaseDecoder::closeChild(); }

@@ -20,11 +20,11 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelLocalisationStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelLocalisationEncoder));
 			m_codec->initialize();
-			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Matrix));
-			m_iDynamic.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Dynamic));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Matrix));
+			m_iDynamic.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Dynamic));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -49,9 +49,9 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::TParameterHandler<bool>& getInputDynamic() { return m_iDynamic; }
 
 	protected:
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>

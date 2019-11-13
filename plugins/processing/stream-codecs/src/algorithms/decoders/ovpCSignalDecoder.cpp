@@ -14,7 +14,7 @@ bool CSignalDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_ui64SamplingRate.initialize(getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_Sampling));
+	op_ui64SamplingRate.initialize(getOutputParameter(OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling));
 
 	return true;
 }
@@ -34,7 +34,7 @@ bool CSignalDecoder::uninitialize()
 bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
 	if (identifier == OVTK_NodeId_Header_Signal) { return true; }
-	if (identifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }
+	if (identifier == OVTK_NodeId_Header_Signal_Sampling) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
@@ -45,18 +45,18 @@ void CSignalDecoder::openChild(const EBML::CIdentifier& identifier)
 	EBML::CIdentifier& top = m_nodes.top();
 
 	if ((top == OVTK_NodeId_Header_Signal)
-		|| (top == OVTK_NodeId_Header_Signal_SamplingRate)) { }
+		|| (top == OVTK_NodeId_Header_Signal_Sampling)) { }
 	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
-void CSignalDecoder::processChildData(const void* buffer, const uint64_t size)
+void CSignalDecoder::processChildData(const void* buffer, const size_t size)
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
 	if ((top == OVTK_NodeId_Header_Signal)
-		|| (top == OVTK_NodeId_Header_Signal_SamplingRate))
+		|| (top == OVTK_NodeId_Header_Signal_Sampling))
 	{
-		if (top == OVTK_NodeId_Header_Signal_SamplingRate) { op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (top == OVTK_NodeId_Header_Signal_Sampling) { op_ui64SamplingRate = m_readerHelper->getUInt(buffer, size); }
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
@@ -66,7 +66,7 @@ void CSignalDecoder::closeChild()
 	EBML::CIdentifier& top = m_nodes.top();
 
 	if ((top == OVTK_NodeId_Header_Signal)
-		|| (top == OVTK_NodeId_Header_Signal_SamplingRate)) { }
+		|| (top == OVTK_NodeId_Header_Signal_Sampling)) { }
 	else { CStreamedMatrixDecoder::closeChild(); }
 
 	m_nodes.pop();

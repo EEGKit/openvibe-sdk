@@ -171,7 +171,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	m_typeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Fatal error", LogLevel_Fatal);
 
 	m_typeManager->registerStreamType(OV_TypeId_EBMLStream, "EBML stream", OV_UndefinedIdentifier);
-	m_typeManager->registerStreamType(OV_TypeId_ExperimentInformation, "Experiment information", OV_TypeId_EBMLStream);
+	m_typeManager->registerStreamType(OV_TypeId_ExperimentInfo, "Experiment information", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_Stimulations, "Stimulations", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_StreamedMatrix, "Streamed matrix", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_ChannelLocalisation, "Channel localisation", OV_TypeId_StreamedMatrix);

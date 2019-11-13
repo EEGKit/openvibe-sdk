@@ -22,12 +22,12 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumEncoder));
 			m_codec->initialize();
-			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-			m_iFrequencyAbscissa.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
-			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Sampling));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Matrix));
+			m_iFrequencyAbscissa.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
+			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_SpectrumEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 
 			return true;
@@ -58,9 +58,9 @@ namespace OpenViBEToolkit
 
 
 	protected:
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_SpectrumEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>

@@ -21,10 +21,10 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixEncoder));
 			m_codec->initialize();
-			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -53,9 +53,9 @@ namespace OpenViBEToolkit
 		/*
 		The methods specific to the Streamed Matrix encoder :
 		*/
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	/*

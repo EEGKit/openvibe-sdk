@@ -125,11 +125,11 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* buffer, const size
 
 	if (t != m_vType.end())
 	{
-		if (t->second == "uinteger") getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getUIntegerFromChildData(buffer, size) << "]";
-		else if (t->second == "integer") getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getSIntegerFromChildData(buffer, size) << "]";
-		else if (t->second == "float") getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getFloatFromChildData(buffer, size) << "]";
-		else if (t->second == "string") getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getASCIIStringFromChildData(buffer, size) << "]";
-		else if (t->second == "binary") getLogManager() << "-[type:" << t->second << "]-[bytes:" << size << "]";
+		if (t->second == "uinteger") { getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getUInt(buffer, size) << "]"; }
+		else if (t->second == "integer") { getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getInt(buffer, size) << "]"; }
+		else if (t->second == "float") { getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getDouble(buffer, size) << "]"; }
+		else if (t->second == "string") { getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getStr(buffer, size) << "]"; }
+		else if (t->second == "binary") { getLogManager() << "-[type:" << t->second << "]-[bytes:" << size << "]"; }
 		else if (t->second == "binary(double)")
 		{
 			getLogManager() << "-[type:" << t->second << "]-[values:";

@@ -48,7 +48,7 @@ bool CBoxUpdater::initialize()
 	// initialize kernel box reference
 	if (m_sourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
-		const CString metaboxID = m_sourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+		const CString metaboxID = m_sourceBox->getAttributeValue(OVP_AttributeId_Metabox_ID);
 		OV_ERROR_UNLESS_KRF(metaboxID != CString(""), "Failed to find metabox with id " << metaboxID, ErrorType::BadCall);
 
 		CIdentifier metaboxId;

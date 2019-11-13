@@ -20,11 +20,11 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest)
 
 		protected:
 
-			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_pStreamDecoder;
+			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_decoder;
 			std::array<OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>, 7> ip_pMemoryBuffer;
 		};
 
@@ -48,12 +48,12 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tests/Algorithms"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CDecoderAlgorithmTest(); }
 
 			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
-				rPrototype.addInput("Experiment information", OV_TypeId_ExperimentInformation);
+				rPrototype.addInput("Experiment information", OV_TypeId_ExperimentInfo);
 				rPrototype.addInput("Feature vector", OV_TypeId_FeatureVector);
 				rPrototype.addInput("Signal", OV_TypeId_Signal);
 				rPrototype.addInput("Spectrum", OV_TypeId_Spectrum);
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTestDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTestDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

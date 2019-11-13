@@ -1,6 +1,6 @@
 #include "algorithms/decoders/ovpCAcquisitionDecoder.h"
 #include "algorithms/decoders/ovpCStreamStructureDecoder.h"
-#include "algorithms/decoders/ovpCExperimentInformationDecoder.h"
+#include "algorithms/decoders/ovpCExperimentInfoDecoder.h"
 #include "algorithms/decoders/ovpCChannelLocalisationDecoder.h"
 #include "algorithms/decoders/ovpCChannelUnitsDecoder.h"
 #include "algorithms/decoders/ovpCFeatureVectorDecoder.h"
@@ -11,7 +11,7 @@
 // #include "algorithms/decoders/ovpCMasterAcquisitionDecoder.h"
 
 #include "algorithms/encoders/ovpCAcquisitionEncoder.h"
-#include "algorithms/encoders/ovpCExperimentInformationEncoder.h"
+#include "algorithms/encoders/ovpCExperimentInfoEncoder.h"
 #include "algorithms/encoders/ovpCChannelLocalisationEncoder.h"
 #include "algorithms/encoders/ovpCChannelUnitsEncoder.h"
 #include "algorithms/encoders/ovpCFeatureVectorEncoder.h"
@@ -25,7 +25,7 @@
 OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CAcquisitionDecoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStreamStructureDecoderDesc);
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInformationDecoderDesc)
+	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInfoDecoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelLocalisationDecoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelUnitsDecoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CFeatureVectorDecoderDesc)
@@ -36,7 +36,7 @@ OVP_Declare_Begin()
 	// OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CMasterAcquisitionDecoderDesc);
 
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CAcquisitionEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInformationEncoderDesc)
+	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInfoEncoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelLocalisationEncoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelUnitsEncoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CFeatureVectorEncoderDesc)

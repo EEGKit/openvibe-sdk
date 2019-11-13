@@ -28,7 +28,7 @@ namespace XML
 		std::string getLastErrorString() const override;
 
 		//Internal function for parsing
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, size_t nAttribute);
+		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute);
 		void processChildData(const char* data);
 		void closeChild();
 

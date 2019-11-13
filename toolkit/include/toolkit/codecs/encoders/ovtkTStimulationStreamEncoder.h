@@ -21,10 +21,10 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));
 			m_codec->initialize();
-			m_iStimulationSet.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iStimulationSet.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -48,9 +48,9 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*>& getInputStimulationSet() { return m_iStimulationSet; }
 
 	protected:
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>

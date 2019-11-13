@@ -18,22 +18,21 @@ namespace OpenViBEPlugins
 
 			CAlgorithmXMLScenarioImporter();
 			~CAlgorithmXMLScenarioImporter() override;
-			bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
-			void openChild(const char* name, const char** attributeName, const char** sAttributeValue, uint64_t nAttribute)
-			override; // XML::IReaderCallback
-			void processChildData(const char* sData) override; // XML::IReaderCallback
+			bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& memoryBuffer) override;
+			void openChild(const char* name, const char** attributeName, const char** sAttributeValue, const size_t nAttribute) override; // XML::IReaderCallback
+			void processChildData(const char* data) override; // XML::IReaderCallback
 			void closeChild() override; // XML::IReaderCallback
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporter, OVP_ClassId_Algorithm_XMLScenarioImporter)
 
 		protected:
 
-			bool validateXML(const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
-			bool validateXMLAgainstSchema(const char* validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
+			bool validateXML(const unsigned char* buffer, size_t size);
+			bool validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, size_t size);
 
-			OpenViBE::Plugins::IAlgorithmScenarioImporterContext* m_pContext = nullptr;
-			uint32_t m_status                                            = 0;
-			XML::IReader* m_pReader                                          = nullptr;
+			OpenViBE::Plugins::IAlgorithmScenarioImporterContext* m_ctx = nullptr;
+			size_t m_status                                             = 0;
+			XML::IReader* m_reader                                      = nullptr;
 			std::stack<std::string> m_nodes;
 		};
 

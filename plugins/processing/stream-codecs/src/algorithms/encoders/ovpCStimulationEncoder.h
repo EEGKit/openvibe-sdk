@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool processBuffer() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StimulationStreamEncoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StimulationEncoder)
 
 		protected:
 
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StimulationStreamEncoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StimulationEncoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CStimulationEncoder(); }
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
@@ -44,12 +44,12 @@ namespace OpenViBEPlugins
 				CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
 
 				prototype.addInputParameter(
-					OVP_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
+					OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet, "Stimulation set", OpenViBE::Kernel::ParameterType_StimulationSet);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StimulationStreamEncoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StimulationEncoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

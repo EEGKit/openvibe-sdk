@@ -63,7 +63,7 @@
  *   {
  *     if(m_pFile) fclose(m_pFile);
  *   }
- *   virtual void write(const void* buffer, const uint64_t size)
+ *   virtual void write(const void* buffer, const size_t size)
  *   {
  *     if(m_pFile) fwrite(buffer, size, 1, m_pFile);
  *   }
@@ -86,10 +86,10 @@
  * \code
  * pWriterHelper->openChild(EBML_Identifier_Header);
  *   pWriterHelper->openChild(EBML_Identifier_DocType);
- *     pWriterHelper->setASCIIStringAsChildData("EBML basic sample");
+ *     pWriterHelper->setStr("EBML basic sample");
  *   pWriterHelper->closeChild();
  *   pWriterHelper->openChild(EBML_Identifier_DocTypeVersion);
- *     pWriterHelper->setUIntegerAsChildData(1);
+ *     pWriterHelper->setUInt(1);
  *   pWriterHelper->closeChild();
  * pWriterHelper->closeChild();
  * \endcode

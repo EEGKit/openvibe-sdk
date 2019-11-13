@@ -13,10 +13,10 @@ namespace XML
 	{
 	public:
 		explicit CReader(IReaderCallback& callback);
-		bool processData(const void* buffer, size_t size) override;
+		bool processData(const void* buffer, const size_t size) override;
 		void release() override;
 
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, size_t nAttribute);
+		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute);
 		void processChildData(const char* data);
 		void closeChild();
 
@@ -60,7 +60,7 @@ void CReader::release()
 	delete this;
 }
 
-void CReader::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, size_t nAttribute)
+void CReader::openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute)
 {
 	m_callback.openChild(name, sAttributeName, sAttributeValue, nAttribute);
 	m_data = "";

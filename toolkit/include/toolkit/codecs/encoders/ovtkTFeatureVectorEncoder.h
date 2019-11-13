@@ -22,17 +22,17 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorEncoder));
 			m_codec->initialize();
-			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputParameterId_Matrix));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_InputParameterId_Matrix));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
 
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorEncoder_InputTriggerId_EncodeEnd); }
 
 	public:
 		using T::initialize;

@@ -38,7 +38,7 @@ namespace
 		for (size_t i = 0; i < vMatrix.size(); ++i) { vMatrix[i].clear(); }
 		vMatrix.clear();
 	}
-}
+} // namespace
 
 bool CBoxAlgorithmCSVFileReader::initialize()
 {

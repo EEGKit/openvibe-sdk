@@ -22,11 +22,11 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalEncoder));
 			m_codec->initialize();
-			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
-			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Sampling));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Matrix));
+			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Sampling));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -56,9 +56,9 @@ namespace OpenViBEToolkit
 		/*
 		The methods specific to the Signal encoder (overriding the TStreamedMatrixEncoderLocal implementations):
 		*/
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	/*

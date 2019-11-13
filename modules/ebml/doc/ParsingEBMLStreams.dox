@@ -96,7 +96,7 @@
  *     if(m_oCurrent==EBML_Identifier_DocType)
  *       std::cout << "Doc type:" << m_helper->getStr(buffer, size) << std::endl;
  *     if(m_oCurrent==EBML_Identifier_DocTypeVersion)
- *       std::cout << "Dox type version:" << m_helper->getUint(buffer, size) << std::endl;
+ *       std::cout << "Dox type version:" << m_helper->getUInt(buffer, size) << std::endl;
  *   }
  *   virtual void closeChild()
  *   {

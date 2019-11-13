@@ -1137,7 +1137,7 @@ bool CScenario::isBoxOutdated(const CIdentifier& boxId)
 	if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		CIdentifier metaboxId;
-		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_ID));
 		boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
 	}
 	else { boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box->getAlgorithmClassIdentifier()); }
@@ -1170,7 +1170,7 @@ bool CScenario::checkOutdatedBoxes()
 		// Do not attempt to update metaboxes which do not have an associated scenario
 		if (boxAlgorithmClassID == OVP_ClassId_BoxAlgorithm_Metabox)
 		{
-			CString metaboxIdentifier = box.second->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+			CString metaboxIdentifier = box.second->getAttributeValue(OVP_AttributeId_Metabox_ID);
 			if (metaboxIdentifier == CString("")) { continue; }
 
 			CIdentifier metaboxId;

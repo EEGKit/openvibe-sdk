@@ -20,10 +20,10 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamDecoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorDecoder));
 			m_codec->initialize();
-			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorStreamDecoder_InputParameterId_MemoryBufferToDecode));
-			m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputParameterId_Matrix));
+			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorDecoder_InputParameterId_MemoryBufferToDecode));
+			m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorDecoder_OutputParameterId_Matrix));
 
 			return true;
 		}
@@ -32,9 +32,9 @@ namespace OpenViBEToolkit
 		using T::initialize;
 		using T::uninitialize;
 
-		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputTriggerId_ReceivedHeader); }
-		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputTriggerId_ReceivedBuffer); }
-		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputTriggerId_ReceivedEnd); }
+		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedHeader); }
+		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedBuffer); }
+		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
 	template <class T>

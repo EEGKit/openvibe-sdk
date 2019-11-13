@@ -20,11 +20,11 @@ namespace OpenViBEToolkit
 
 		bool initializeImpl()
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsStreamEncoder));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsEncoder));
 			m_codec->initialize();
-			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_Matrix));
-			m_iDynamic.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_Dynamic));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_InputParameterId_Matrix));
+			m_iDynamic.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_InputParameterId_Dynamic));
+			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -50,9 +50,9 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::TParameterHandler<bool>& getInputDynamic() { return m_iDynamic; }
 
 	protected:
-		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelUnitsEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelUnitsEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelUnitsEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>

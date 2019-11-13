@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelLocalisationDecoder)
 
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -46,19 +46,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelLocalisationDecoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CChannelLocalisationDecoder(); }
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
 				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
 
-				prototype.addOutputParameter(OVP_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
+				prototype.addOutputParameter(OVP_Algorithm_ChannelLocalisationDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_ChannelLocalisationDecoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

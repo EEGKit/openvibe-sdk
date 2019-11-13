@@ -1,6 +1,6 @@
 #include "ovpCEncoderAlgorithmTest.h"
 
-#include "../algorithms/encoders/ovpCExperimentInformationEncoder.h"
+#include "../algorithms/encoders/ovpCExperimentInfoEncoder.h"
 #include "../algorithms/encoders/ovpCFeatureVectorEncoder.h"
 #include "../algorithms/encoders/ovpCSignalEncoder.h"
 #include "../algorithms/encoders/ovpCSpectrumEncoder.h"
@@ -15,18 +15,18 @@ using namespace StreamCodecs;
 
 bool CEncoderAlgorithmTest::initialize()
 {
-	m_pStreamEncoder[0] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ExperimentInformationStreamEncoder));
-	m_pStreamEncoder[1] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_FeatureVectorStreamEncoder));
-	m_pStreamEncoder[2] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_SignalStreamEncoder));
-	m_pStreamEncoder[3] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_SpectrumStreamEncoder));
-	m_pStreamEncoder[4] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StimulationStreamEncoder));
-	m_pStreamEncoder[5] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StreamedMatrixStreamEncoder));
-	m_pStreamEncoder[6] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ChannelLocalisationStreamEncoder));
+	m_encoders[0] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ExperimentInfoEncoder));
+	m_encoders[1] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_FeatureVectorEncoder));
+	m_encoders[2] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_SignalEncoder));
+	m_encoders[3] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_SpectrumEncoder));
+	m_encoders[4] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StimulationEncoder));
+	m_encoders[5] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StreamedMatrixEncoder));
+	m_encoders[6] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ChannelLocalisationEncoder));
 
-	for (uint32_t i = 0; i < 7; ++i)
+	for (size_t i = 0; i < 7; ++i)
 	{
-		m_pStreamEncoder[i]->initialize();
-		op_pMemoryBuffer[i].initialize(m_pStreamEncoder[i]->getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+		m_encoders[i]->initialize();
+		op_pMemoryBuffer[i].initialize(m_encoders[i]->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 	}
 
 	m_matrix1 = new CMatrix();
@@ -53,39 +53,39 @@ bool CEncoderAlgorithmTest::initialize()
 	m_matrix3->setDimensionLabel(1, 2, "z");
 	OpenViBEToolkit::Tools::Matrix::clearContent(*m_matrix3);
 
-	m_pStimulationSet = new CStimulationSet();
+	m_stimSet = new CStimulationSet();
 
-	uint64_t m_samplingRate = 16;
+	size_t frequency = 16;
 
-	m_pStreamEncoder[1]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
-	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
-	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_Sampling)->setValue(&m_samplingRate);
-	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
-	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setValue(&m_matrix2);
-	m_pStreamEncoder[4]->getInputParameter(OVP_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet)->setValue(&m_pStimulationSet);
-	m_pStreamEncoder[5]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix2);
-	m_pStreamEncoder[6]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_matrix3);
+	m_encoders[1]->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
+	m_encoders[2]->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
+	m_encoders[2]->getInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling)->setValue(&frequency);
+	m_encoders[3]->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)->setValue(&m_matrix1);
+	m_encoders[3]->getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa)->setValue(&m_matrix2);
+	m_encoders[4]->getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet)->setValue(&m_stimSet);
+	m_encoders[5]->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)->setValue(&m_matrix2);
+	m_encoders[6]->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)->setValue(&m_matrix3);
 
 	m_hasSentHeader = false;
-	m_startTime  = 0;
-	m_endTime    = 0;
+	m_startTime     = 0;
+	m_endTime       = 0;
 
 	return true;
 }
 
 bool CEncoderAlgorithmTest::uninitialize()
 {
-	delete m_pStimulationSet;
+	delete m_stimSet;
 	delete m_matrix3;
 	delete m_matrix2;
 	delete m_matrix1;
 
-	for (uint32_t i = 0; i < 7; ++i)
+	for (size_t i = 0; i < 7; ++i)
 	{
 		op_pMemoryBuffer[i].uninitialize();
-		m_pStreamEncoder[i]->uninitialize();
-		getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder[i]);
-		m_pStreamEncoder[i] = nullptr;
+		m_encoders[i]->uninitialize();
+		getAlgorithmManager().releaseAlgorithm(*m_encoders[i]);
+		m_encoders[i] = nullptr;
 	}
 
 	return true;
@@ -99,34 +99,34 @@ bool CEncoderAlgorithmTest::processClock(IMessageClock& /*messageClock*/)
 
 bool CEncoderAlgorithmTest::process()
 {
-	IBoxIO& boxContext               = getDynamicBoxContext();
-	const IBox& l_rStaticBoxContext  = getStaticBoxContext();
-	IPlayerContext& l_rPlayerContext = getPlayerContext();
+	IBoxIO& boxContext            = getDynamicBoxContext();
+	IPlayerContext& playerContext = getPlayerContext();
+	const size_t nInput           = getStaticBoxContext().getOutputCount();
 
 	if (!m_hasSentHeader)
 	{
 		m_startTime = 0;
 		m_endTime   = 0;
-		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); ++i)
+		for (size_t i = 0; i < nInput; ++i)
 		{
 			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
-			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader);
+			m_encoders[i]->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader);
 		}
 		m_hasSentHeader = true;
 	}
 	else
 	{
-		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); ++i)
+		for (size_t i = 0; i < nInput; ++i)
 		{
 			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
-			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);
+			m_encoders[i]->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer);
 		}
 	}
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); ++i) { boxContext.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
+	for (size_t i = 0; i < nInput; ++i) { boxContext.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
 
 	m_startTime = m_endTime;
-	m_endTime   = l_rPlayerContext.getCurrentTime();
+	m_endTime   = playerContext.getCurrentTime();
 
 	return true;
 }

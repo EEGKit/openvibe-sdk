@@ -182,7 +182,7 @@
 
 #define OVP_ClassId_BoxAlgorithm_Metabox                  		OpenViBE::CIdentifier(0xFE420CB6, 0x5F2BA4C3)
 #define OVP_ClassId_BoxAlgorithm_MetaboxDesc              		OpenViBE::CIdentifier(0xA87F133C, 0x1E6B6543)
-#define OVP_AttributeId_Metabox_Identifier                		OpenViBE::CIdentifier(0x198DD621, 0xAB7F153F)
+#define OVP_AttributeId_Metabox_ID                				OpenViBE::CIdentifier(0x198DD621, 0xAB7F153F)
 #define OV_AttributeId_ScenarioFilename                   		OpenViBE::CIdentifier(0x4C536D0A, 0xB23DC545)
 
 //___________________________________________________________________//
@@ -202,7 +202,7 @@
 #define OV_TypeId_LogLevel                                  	OpenViBE::CIdentifier(0xA88B3667, 0x0871638C)
 
 #define OV_TypeId_EBMLStream                                	OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
-#define   OV_TypeId_ExperimentInformation                   	OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
+#define   OV_TypeId_ExperimentInfo                   			OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
 #define   OV_TypeId_ExperimentationInformation              	OpenViBE::CIdentifier(0x403488E7, 0x565D70B6) // deprecated, kept for compatibility
 #define   OV_TypeId_Stimulations                            	OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
 #define   OV_TypeId_StreamedMatrix                          	OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)

@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool processHeader() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SpectrumStreamEncoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SpectrumEncoder)
 
 		protected:
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pFrequencyAbscissa;
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.1.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SpectrumStreamEncoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SpectrumEncoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CSpectrumEncoder(); }
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
@@ -44,14 +44,14 @@ namespace OpenViBEPlugins
 				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(prototype);
 
 				prototype.addInputParameter(
-					OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa, "Frequency abscissa", OpenViBE::Kernel::ParameterType_Matrix);
+					OVP_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa, "Frequency abscissa", OpenViBE::Kernel::ParameterType_Matrix);
 				prototype.addInputParameter(
-					OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_Sampling, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
+					OVP_Algorithm_SpectrumEncoder_InputParameterId_Sampling, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_SpectrumStreamEncoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_SpectrumEncoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

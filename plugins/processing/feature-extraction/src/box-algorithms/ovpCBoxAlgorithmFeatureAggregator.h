@@ -30,25 +30,26 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
 
+		protected:
 			//codecs
-			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_pFeatureVectorEncoder = nullptr;
-			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_pStreamedMatrixDecoder;
+			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_encoder = nullptr;
+			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_decoder;
 
 			// contains the labels for each dimension for each input
-			std::vector<std::vector<std::vector<std::string>>> m_oFeatureNames;
+			std::vector<std::vector<std::vector<std::string>>> m_featureNames;
 
 			// contains the dimension size for each dimension of each input
-			std::vector<std::vector<size_t>> m_oDimensionSize;
+			std::vector<std::vector<size_t>> m_dimSize;
 
 			// contains the input buffer's total size for each input
-			std::vector<size_t> m_oInputBufferSizes;
+			std::vector<size_t> m_iBufferSizes;
 
 			//start time and end time of the last arrived chunk
 			uint64_t m_lastChunkStartTime = 0;
 			uint64_t m_lastChunkEndTime   = 0;
 
 			// number of inputs
-			uint32_t m_nInput = 0;
+			size_t m_nInput = 0;
 
 			bool m_headerSent = false;
 		};
@@ -57,9 +58,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); ++i)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
 					box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_StreamedMatrix);

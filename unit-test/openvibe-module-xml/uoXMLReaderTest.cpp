@@ -48,7 +48,7 @@ public:
 
 protected:
 
-	void openChild(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute) override
+	void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 	{
 		auto node = std::make_shared<SNode>();
 

@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool processHeader() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_ChannelLocalisationStreamEncoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_ChannelLocalisationEncoder)
 
 		protected:
 
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelLocalisationStreamEncoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelLocalisationEncoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CChannelLocalisationEncoder(); }
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
@@ -45,12 +45,12 @@ namespace OpenViBEPlugins
 				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(prototype);
 
 				prototype.addInputParameter(
-					OVP_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
+					OVP_Algorithm_ChannelLocalisationEncoder_InputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_ChannelLocalisationStreamEncoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_ChannelLocalisationEncoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

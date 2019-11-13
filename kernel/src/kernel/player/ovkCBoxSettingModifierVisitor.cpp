@@ -22,7 +22,7 @@ using namespace Kernel;
 using namespace Kernel;
 using namespace Plugins;
 
-void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, size_t /*nAttribute*/)
+void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, const size_t /*nAttribute*/)
 {
 	if (!m_IsParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_IsParsingSettingOverride = true; } }
 	else if (string(name) == string("SettingValue")) { m_IsParsingSettingValue = true; }

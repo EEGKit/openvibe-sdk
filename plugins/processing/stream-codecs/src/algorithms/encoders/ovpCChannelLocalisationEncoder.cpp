@@ -11,7 +11,7 @@ bool CChannelLocalisationEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 
-	ip_bDynamic.initialize(getInputParameter(OVP_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Dynamic));
+	ip_bDynamic.initialize(getInputParameter(OVP_Algorithm_ChannelLocalisationEncoder_InputParameterId_Dynamic));
 
 	return true;
 }
@@ -32,11 +32,11 @@ bool CChannelLocalisationEncoder::processHeader()
 {
 	CStreamedMatrixEncoder::processHeader();
 
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation);
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation_Dynamic);
-	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_bDynamic ? 1 : 0);
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation);
+	m_writerHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation_Dynamic);
+	m_writerHelper->setUInt(ip_bDynamic ? 1 : 0);
+	m_writerHelper->closeChild();
+	m_writerHelper->closeChild();
 
 	return true;
 }

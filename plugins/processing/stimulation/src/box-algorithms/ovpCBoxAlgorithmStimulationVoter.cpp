@@ -26,14 +26,14 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.toString() << "] (expected OV_TypeId_Stimulations type)",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
-	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
+	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));
 	m_encoder->initialize();
 
-	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
+	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
 	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pStimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
+	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
+	op_pStimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
 
 	m_minimumVotes      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_timeWindow        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -74,8 +74,8 @@ bool CBoxAlgorithmStimulationVoter::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	TParameterHandler<IStimulationSet*> ip_pStimulationSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IStimulationSet*> ip_pStimulationSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
@@ -84,8 +84,8 @@ bool CBoxAlgorithmStimulationVoter::process()
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, j);
 		m_decoder->process();
-		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
-		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); ++k)
 			{
@@ -100,7 +100,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 				}
 			}
 		}
-		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd)) { }
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedEnd)) { }
 		boxContext.markInputAsDeprecated(0, j);
 	}
 
@@ -177,7 +177,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	if (m_lastTime == 0)
 	{
-		m_encoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
+		m_encoder->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeHeader);
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, m_lastTime);
 	}
 
@@ -198,7 +198,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 		ip_pStimulationSet->setStimulationCount(0);
 		ip_pStimulationSet->appendStimulation(resultClassLabel, timeStamp, 0);
-		m_encoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer);
+		m_encoder->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeBuffer);
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, currentTime);
 		m_lastTime = currentTime;
 

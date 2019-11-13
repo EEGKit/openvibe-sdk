@@ -19,7 +19,7 @@ bool CBoxAlgorithmTimeSignalGenerator::initialize()
 	m_oSignalEncoder.initialize(*this, 0);
 
 	// Parses box settings to try connecting to server
-	m_samplingFrequency         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_sampling         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_nGeneratedEpochSample = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_headerSent                   = false;
 
@@ -47,7 +47,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 	if (!m_headerSent)
 	{
-		m_oSignalEncoder.getInputSamplingRate() = m_samplingFrequency;
+		m_oSignalEncoder.getInputSamplingRate() = m_sampling;
 
 		IMatrix* l_pMatrix = m_oSignalEncoder.getInputMatrix();
 
@@ -67,21 +67,21 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
-		const uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_samplingFrequency), uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		const uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_sampling), uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
 		while (m_nSentSample + m_nGeneratedEpochSample < nextStepDate)
 		{
 			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
 
 			for (uint32_t i = 0; i < m_nGeneratedEpochSample; ++i)
 			{
-				l_pSampleBuffer[i] = (i + m_nSentSample) / double(m_samplingFrequency);
+				l_pSampleBuffer[i] = (i + m_nSentSample) / double(m_sampling);
 			}
 
 			m_oSignalEncoder.encodeBuffer();
 
-			const uint64_t tStart = TimeArithmetics::sampleCountToTime(m_samplingFrequency, m_nSentSample);
+			const uint64_t tStart = TimeArithmetics::sampleCountToTime(m_sampling, m_nSentSample);
 			m_nSentSample += m_nGeneratedEpochSample;
-			const uint64_t tEnd = TimeArithmetics::sampleCountToTime(m_samplingFrequency, m_nSentSample);
+			const uint64_t tEnd = TimeArithmetics::sampleCountToTime(m_sampling, m_nSentSample);
 
 			l_pDynamicBoxContext->markOutputAsReadyToSend(0, tStart, tEnd);
 		}

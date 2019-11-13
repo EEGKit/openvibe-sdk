@@ -23,19 +23,19 @@ namespace OpenViBEPlugins
 			m_nInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
 
 			// Prepares decoders
-			for (uint32_t i = 0; i < m_nInput; ++i)
+			for (size_t i = 0; i < m_nInput; ++i)
 			{
 				TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* streamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
-				m_pStreamedMatrixDecoder.push_back(streamedMatrixDecoder);
-				m_pStreamedMatrixDecoder.back()->initialize(*this, i);
+				m_decoder.push_back(streamedMatrixDecoder);
+				m_decoder.back()->initialize(*this, i);
 			}
-			m_pFeatureVectorEncoder = new TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>;
-			m_pFeatureVectorEncoder->initialize(*this, 0);
+			m_encoder = new TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>;
+			m_encoder->initialize(*this, 0);
 
 			//resizes everything as needed
-			m_oInputBufferSizes.resize(m_nInput);
-			m_oDimensionSize.resize(m_nInput);
-			m_oFeatureNames.resize(m_nInput);
+			m_iBufferSizes.resize(m_nInput);
+			m_dimSize.resize(m_nInput);
+			m_featureNames.resize(m_nInput);
 
 			m_headerSent = false;
 
@@ -44,20 +44,20 @@ namespace OpenViBEPlugins
 
 		bool CBoxAlgorithmFeatureAggregator::uninitialize()
 		{
-			for (uint32_t i = 0; i < m_nInput; ++i)
+			for (size_t i = 0; i < m_nInput; ++i)
 			{
-				if (m_pStreamedMatrixDecoder.back())
+				if (m_decoder.back())
 				{
-					m_pStreamedMatrixDecoder.back()->uninitialize();
-					delete m_pStreamedMatrixDecoder.back();
-					m_pStreamedMatrixDecoder.pop_back();
+					m_decoder.back()->uninitialize();
+					delete m_decoder.back();
+					m_decoder.pop_back();
 				}
 			}
 
-			if (m_pFeatureVectorEncoder)
+			if (m_encoder)
 			{
-				m_pFeatureVectorEncoder->uninitialize();
-				delete m_pFeatureVectorEncoder;
+				m_encoder->uninitialize();
+				delete m_encoder;
 			}
 
 			return true;
@@ -67,10 +67,10 @@ namespace OpenViBEPlugins
 		{
 			IBoxIO* boxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-			uint64_t lastBufferChunkSize;
+			size_t lastBufferChunkSize;
 			const uint8_t* lastBuffer;
 
-			uint64_t bufferChunkSize;
+			size_t bufferChunkSize;
 			const uint8_t* buffer;
 
 			//gets the first buffer from the concerned input
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 			bool readyToProcess = true;
 
 			//checks every input's first chunk's dates
-			for (uint32_t i = 0; i < m_nInput && readyToProcess; ++i)
+			for (size_t i = 0; i < m_nInput && readyToProcess; ++i)
 			{
 				if (boxIO->getInputChunkCount(i) != 0)
 				{
@@ -93,9 +93,9 @@ namespace OpenViBEPlugins
 					if (tEnd - tStart != m_lastChunkEndTime - m_lastChunkStartTime)
 					{
 						//marks everything as deprecated and sends a error
-						for (uint32_t input = 0; input < m_nInput; ++input)
+						for (size_t input = 0; input < m_nInput; ++input)
 						{
-							for (uint32_t chunk = 0; chunk < boxIO->getInputChunkCount(input); ++chunk) { boxIO->markInputAsDeprecated(input, chunk); }
+							for (size_t chunk = 0; chunk < boxIO->getInputChunkCount(input); ++chunk) { boxIO->markInputAsDeprecated(input, chunk); }
 						}
 
 						//readyToProcess = false;
@@ -116,52 +116,49 @@ namespace OpenViBEPlugins
 			const IBox* boxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 			IBoxIO* boxIO          = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-			IMatrix* oMatrix = m_pFeatureVectorEncoder->getInputMatrix();
+			IMatrix* oMatrix = m_encoder->getInputMatrix();
 			std::vector<double> bufferElements;
-			uint64_t totalBufferSize = 0;
+			size_t totalBufferSize = 0;
 			bool bufferReceived      = false;
 
-			for (uint32_t input = 0; input < boxContext->getInputCount(); ++input)
+			for (size_t input = 0; input < boxContext->getInputCount(); ++input)
 			{
-				m_pStreamedMatrixDecoder[input]->decode(0);
+				m_decoder[input]->decode(0);
 				//*
-				if ((m_pStreamedMatrixDecoder[input]->isHeaderReceived()) && !m_headerSent)
+				if ((m_decoder[input]->isHeaderReceived()) && !m_headerSent)
 				{
 					//getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "header " << input << "\n";
-					IMatrix* iMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
+					IMatrix* iMatrix = m_decoder[input]->getOutputMatrix();
 					totalBufferSize += iMatrix->getBufferElementCount();
 					if (input == boxContext->getInputCount() - 1)
 					{
 						oMatrix->setDimensionCount(1);
-						oMatrix->setDimensionSize(0, uint32_t(totalBufferSize));
+						oMatrix->setDimensionSize(0, totalBufferSize);
 
-						for (uint32_t i = 0; i < uint32_t(totalBufferSize); ++i)
-						{
-							oMatrix->setDimensionLabel(0, i, ("Feature " + std::to_string(i + 1)).c_str());
-						}
+						for (size_t i = 0; i < totalBufferSize; ++i) { oMatrix->setDimensionLabel(0, i, ("Feature " + std::to_string(i + 1)).c_str()); }
 
-						m_pFeatureVectorEncoder->encodeHeader();
+						m_encoder->encodeHeader();
 						boxIO->markOutputAsReadyToSend(0, m_lastChunkStartTime, m_lastChunkEndTime);
 						m_headerSent = true;
 					}
 				}
 				//*/
-				if (m_pStreamedMatrixDecoder[input]->isBufferReceived())
+				if (m_decoder[input]->isBufferReceived())
 				{
-					bufferReceived      = true;
-					IMatrix* iMatrix    = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
-					const uint32_t size = iMatrix->getBufferElementCount();
+					bufferReceived    = true;
+					IMatrix* iMatrix  = m_decoder[input]->getOutputMatrix();
+					const size_t size = iMatrix->getBufferElementCount();
 
 					double* buffer = iMatrix->getBuffer();
-					for (uint32_t i = 0; i < size; ++i) { bufferElements.push_back(buffer[i]); }
+					for (size_t i = 0; i < size; ++i) { bufferElements.push_back(buffer[i]); }
 				}
 			}
 
 			if (m_headerSent && bufferReceived)
 			{
 				double* oBuffer = oMatrix->getBuffer();
-				for (uint32_t i = 0; i < bufferElements.size(); ++i) { oBuffer[i] = bufferElements[i]; }
-				m_pFeatureVectorEncoder->encodeBuffer();
+				for (size_t i = 0; i < bufferElements.size(); ++i) { oBuffer[i] = bufferElements[i]; }
+				m_encoder->encodeBuffer();
 				boxIO->markOutputAsReadyToSend(0, m_lastChunkStartTime, m_lastChunkEndTime);
 			}
 

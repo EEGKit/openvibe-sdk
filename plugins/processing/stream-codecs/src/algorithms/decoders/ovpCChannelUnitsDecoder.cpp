@@ -16,7 +16,7 @@ bool CChannelUnitsDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_bDynamic.initialize(getOutputParameter(OVP_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic));
+	op_bDynamic.initialize(getOutputParameter(OVP_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic));
 
 	return true;
 }
@@ -60,10 +60,10 @@ void CChannelUnitsDecoder::processChildData(const void* buffer, const size_t siz
 		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	)
 	{
-		if (top == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false); }
+		if (top == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_readerHelper->getUInt(buffer, size) ? true : false); }
 
-		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_unitIdx*2  ]=m_pEBMLReaderHelper->getDouble(buffer, size);
-		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_unitIdx*2+1]=m_pEBMLReaderHelper->getDouble(buffer, size);
+		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_unitIdx*2  ]=m_readerHelper->getDouble(buffer, size);
+		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_unitIdx*2+1]=m_readerHelper->getDouble(buffer, size);
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }

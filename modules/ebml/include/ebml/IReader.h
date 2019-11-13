@@ -95,17 +95,17 @@ namespace EBML
 		 * according to the EBML structure contained in the chunk and the previously parsed chunks. See
 		 * EBML::IReaderCallback for more details on the callback object.
 		 */
-		virtual bool processData(const void* buffer, uint64_t size) = 0;
+		virtual bool processData(const void* buffer, const size_t size) = 0;
 		/**
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node
 		 */
-		virtual CIdentifier getCurrentNodeIdentifier() const = 0;
+		virtual CIdentifier getCurrentNodeID() const = 0;
 		/**
 		 * \brief Gets the size of the current node
 		 * \return the size of the current node
 		 */
-		virtual uint64_t getCurrentNodeSize() const = 0;
+		virtual size_t getCurrentNodeSize() const = 0;
 		/**
 		 * \brief Tells this object it won't be used anymore
 		 *

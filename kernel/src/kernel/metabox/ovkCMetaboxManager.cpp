@@ -36,7 +36,7 @@ namespace OpenViBE
 					if (scenarioID != OV_UndefinedIdentifier)
 					{
 						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
-						const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID));
 						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
 							const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));

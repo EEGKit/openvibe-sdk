@@ -22,12 +22,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pOVMatrixFileReader                                                                        = nullptr;
-			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_pChannelLocalisationStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pOVMatrixFileReader                                              = nullptr;
+			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_encoder = nullptr;
 
 			OpenViBE::CString m_sFilename;
-			bool m_headerSent = false;
-			bool m_bBufferSent = false;
+			bool m_headerSent  = false;
+			bool m_bufferSent = false;
 		};
 
 		class CBoxAlgorithmElectrodeLocalisationFileReaderDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

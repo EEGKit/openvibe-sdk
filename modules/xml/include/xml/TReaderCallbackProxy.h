@@ -17,7 +17,7 @@ namespace XML
 							  void (TOwnerClass::*mfpProcessChildData)(const char* data), void (TOwnerClass::*mfpCloseChild)())
 			: m_ownerObject(ownerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		void openChild(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute) override
+		void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 		{
 			if (m_mfpOpenChild) { m_ownerObject.m_mfpOpenChild(name, attributeName, attributeValue, nAttribute); }
 		}
@@ -44,7 +44,7 @@ namespace XML
 		TReaderCallbackProxy2(TOwnerClass ownerObject)
 			: m_ownerObject(ownerObject), m_mfpOpenChild(TMfpOpenChild), m_mfpProcessChildData(TMfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		void openChild(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute) override
+		void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 		{
 			if (TMfpOpenChild) { m_ownerObject.mfpOpenChild(name, attributeName, attributeValue, nAttribute); }
 		}

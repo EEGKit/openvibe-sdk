@@ -8,7 +8,7 @@ using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
 CEBMLBaseDecoder::CEBMLBaseDecoder()
-	: m_oEBMLReaderCallbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild, &CEBMLBaseDecoder::processChildData,
+	: m_callbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild, &CEBMLBaseDecoder::processChildData,
 								 &CEBMLBaseDecoder::closeChild) {}
 
 // ________________________________________________________________________________________________________________
@@ -16,20 +16,20 @@ CEBMLBaseDecoder::CEBMLBaseDecoder()
 
 bool CEBMLBaseDecoder::initialize()
 {
-	ip_pMemoryBufferToDecode.initialize(getInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	m_pEBMLReaderHelper = EBML::createReaderHelper();
-	m_pEBMLReader       = createReader(m_oEBMLReaderCallbackProxy);
+	ip_pMemoryBufferToDecode.initialize(getInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode));
+	m_readerHelper = EBML::createReaderHelper();
+	m_reader       = createReader(m_callbackProxy);
 
 	return true;
 }
 
 bool CEBMLBaseDecoder::uninitialize()
 {
-	m_pEBMLReader->release();
-	m_pEBMLReader = nullptr;
+	m_reader->release();
+	m_reader = nullptr;
 
-	m_pEBMLReaderHelper->release();
-	m_pEBMLReaderHelper = nullptr;
+	m_readerHelper->release();
+	m_readerHelper = nullptr;
 
 	ip_pMemoryBufferToDecode.uninitialize();
 
@@ -41,7 +41,7 @@ bool CEBMLBaseDecoder::uninitialize()
 
 bool CEBMLBaseDecoder::process()
 {
-	m_pEBMLReader->processData(ip_pMemoryBufferToDecode->getDirectPointer(), ip_pMemoryBufferToDecode->getSize());
+	m_reader->processData(ip_pMemoryBufferToDecode->getDirectPointer(), ip_pMemoryBufferToDecode->getSize());
 	return true;
 }
 
@@ -60,7 +60,7 @@ bool CEBMLBaseDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CEBMLBaseDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	if (identifier == OVTK_NodeId_Header) { activateOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader, true); }
-	if (identifier == OVTK_NodeId_Buffer) { activateOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer, true); }
-	if (identifier == OVTK_NodeId_End) { activateOutputTrigger(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedEnd, true); }
+	if (identifier == OVTK_NodeId_Header) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader, true); }
+	if (identifier == OVTK_NodeId_Buffer) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, true); }
+	if (identifier == OVTK_NodeId_End) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, true); }
 }

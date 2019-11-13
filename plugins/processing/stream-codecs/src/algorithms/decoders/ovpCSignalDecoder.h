@@ -15,12 +15,12 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_SignalStreamDecoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_SignalDecoder)
 
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const size_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -46,7 +46,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalStreamDecoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalDecoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CSignalDecoder(); }
 
 			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
@@ -54,12 +54,12 @@ namespace OpenViBEPlugins
 				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
 
 				prototype.addOutputParameter(
-					OVP_Algorithm_SignalStreamDecoder_OutputParameterId_Sampling, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
+					OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_SignalStreamDecoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_SignalDecoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

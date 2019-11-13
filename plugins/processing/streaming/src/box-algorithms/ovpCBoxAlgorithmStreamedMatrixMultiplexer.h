@@ -23,16 +23,16 @@ namespace OpenViBEPlugins
 
 			uint64_t m_lastStartTime = 0;
 			uint64_t m_lastEndTime   = 0;
-			bool m_headerSent       = false;
+			bool m_headerSent        = false;
 		};
 
 		class CBoxAlgorithmStreamedMatrixMultiplexerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
+				for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 
@@ -61,7 +61,7 @@ namespace OpenViBEPlugins
 
 				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
+					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 
 					box.setOutputType(0, typeID);
 				}
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 
 				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
 				{
-					for (uint32_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
+					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 				}
 				else
 				{
@@ -135,5 +135,4 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexerDesc)
 		};
 	} // namespace Streaming
-}
-// namespace OpenViBEPlugins
+} // namespace OpenViBEPlugins
