@@ -49,33 +49,32 @@ namespace OpenViBE
 			 *
 			 * \return the Floating point precision.
 			 */
-			size_t getOutputFloatPrecision() override { return m_outputFloatPrecision; }
+			size_t getOutputFloatPrecision() override { return m_oPrecision; }
 
 			/**
 			 * \brief Set the floating point precision used to write float values.
 			 *
 			 * \param precision the floating point precision.
 			 */
-			void setOutputFloatPrecision(size_t precision) override { m_outputFloatPrecision = precision; }
+			void setOutputFloatPrecision(const size_t precision) override { m_oPrecision = precision; }
 
 			void setFormatType(EStreamType typeID) override;
 			EStreamType getFormatType() override { return m_inputTypeID; }
 
-			void setLastMatrixOnlyMode(bool isActivated) override { m_lastMatrixOnly = isActivated; }
+			void setLastMatrixOnlyMode(const bool isActivated) override { m_lastMatrixOnly = isActivated; }
 			bool getLastMatrixOnlyMode() override { return m_lastMatrixOnly; }
 
-			bool setSignalInformation(const std::vector<std::string>& channelNames, size_t samplingFrequency, size_t sampleCountPerBuffer) override;
-			bool getSignalInformation(std::vector<std::string>& channelNames, size_t& samplingFrequency, size_t& sampleCountPerBuffer) override;
+			bool setSignalInformation(const std::vector<std::string>& channelNames, size_t sampling, size_t nSamplePerBuffer) override;
+			bool getSignalInformation(std::vector<std::string>& channelNames, size_t& sampling, size_t& nSamplePerBuffer) override;
 
-			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
-										size_t samplingRate) override;
-			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& samplingRate) override;
+			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, size_t sampling) override;
+			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& sampling) override;
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames) override;
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames) override;
 
-			bool setStreamedMatrixInformation(const std::vector<size_t>& dimensionSizes, const std::vector<std::string>& labels) override;
-			bool getStreamedMatrixInformation(std::vector<size_t>& dimensionSizes, std::vector<std::string>& labels) override;
+			bool setStreamedMatrixInformation(const std::vector<size_t>& dimSizes, const std::vector<std::string>& labels) override;
+			bool getStreamedMatrixInformation(std::vector<size_t>& dimSizes, std::vector<std::string>& labels) override;
 
 			/**
 			 * \brief Write the header to the file
@@ -106,14 +105,14 @@ namespace OpenViBE
 			/**
 			 * \brief Read samples and stimulations.
 			 *
-			 * \param linesToRead Maximum number of lines to read. If there is no more data in the file, the number of lines read can be lower.
+			 * \param lineNb Maximum number of lines to read. If there is no more data in the file, the number of lines read can be lower.
 			 * \param chunks[out] Valid chunks read.
 			 * \param stimulations[out] Valid stimulations read.
 			 *
-			 * \retval True in case of success, even if the number of lines is different than the linesToRead parameter.
+			 * \retval True in case of success, even if the number of lines is different than the lineNb parameter.
 			 * \retval False in case of error.
 			 */
-			bool readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations) override;
+			bool readSamplesAndEventsFromFile(size_t lineNb, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations) override;
 
 			/**
 			 * \brief Open a OV CSV file.
@@ -190,11 +189,11 @@ namespace OpenViBE
 			/**
 			 * \brief Split a string into a vector of strings.
 			 *
-			 * \param input String to split.
+			 * \param in String to split.
 			 * \param delimiter Delimitor.
-			 * \param output[out] Vector of string.
+			 * \param out[out] Vector of string.
 			 */
-			void split(const std::string& input, char delimiter, std::vector<std::string>& output) const;
+			void split(const std::string& in, char delimiter, std::vector<std::string>& out) const;
 
 			/**
 			 * \brief Create a string with stimulations to add in the buffer.
@@ -272,7 +271,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, uint64_t lineNb);
+			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, size_t lineNb);
 
 			/**
 			 * \brief Read line data conerning stimulations.
@@ -284,7 +283,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, uint64_t lineNb);
+			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, size_t lineNb);
 
 			/**
 			 * \brief Update position into the matrix while reading or writing.
@@ -307,12 +306,12 @@ namespace OpenViBE
 			/**
 			 * \brief Read a stream until a delimiter and provide the string before the delimiter.
 			 *
-			 * \param inputStream The stream to read.
-			 * \param outputString The string before the next delimitor.
+			 * \param in The stream to read.
+			 * \param out The string before the next delimitor.
 			 * \param delimiter The delimiter .
 			 * \param bufferHistory
 			 */
-			bool streamReader(std::istream& inputStream, std::string& outputString, char delimiter, std::string& bufferHistory) const;
+			bool streamReader(std::istream& in, std::string& out, char delimiter, std::string& bufferHistory) const;
 
 			std::fstream m_fs;
 			std::string m_filename;
@@ -323,17 +322,17 @@ namespace OpenViBE
 
 			EStreamType m_inputTypeID;
 
-			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
+			typedef std::istream& GetLine(std::istream& in, std::string& out, char delimiter);
 			size_t m_nDim = 0;
 			std::vector<size_t> m_dimSizes;
 			std::vector<std::string> m_dimLabels;
 			size_t m_nSamplePerBuffer = 0;
-			double m_noEventSince       = 0;
+			double m_noEventSince     = 0;
 
 			std::vector<double> m_frequencyAbscissa;
 
-			size_t m_samplingRate = 0;
-			size_t m_nCol           = 0;
+			size_t m_sampling = 0;
+			size_t m_nCol     = 0;
 
 			bool m_hasInputType       = false;
 			bool m_isFirstLineWritten = false;
@@ -341,8 +340,8 @@ namespace OpenViBE
 			bool m_isSetInfoCalled    = false;
 			bool m_hasEpoch           = false;
 
-			size_t m_originalSampleNumber = 0;
-			size_t m_outputFloatPrecision = 10;
+			size_t m_nSampleOriginal = 0;
+			size_t m_oPrecision      = 10;
 
 			bool m_lastMatrixOnly = false;
 

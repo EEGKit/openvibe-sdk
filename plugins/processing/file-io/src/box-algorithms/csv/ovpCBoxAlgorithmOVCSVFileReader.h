@@ -17,9 +17,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmOVCSVFileReader();
+			CBoxAlgorithmOVCSVFileReader() : m_readerLib(OpenViBE::CSV::createCSVHandler(), OpenViBE::CSV::releaseCSVHandler) { }
 			void release() override { delete this; }
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return 128LL << 32; }
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
@@ -43,11 +43,11 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 			std::vector<std::string> m_channelNames;
 			std::vector<size_t> m_dimSizes;
-			size_t m_samplingRate         = 0;
+			size_t m_sampling         = 0;
 			size_t m_nSamplePerBuffer = 0;
 
-			bool m_isHeaderSent;
-			bool m_isStimulationHeaderSent;
+			bool m_isHeaderSent = false;
+			bool m_isStimulationHeaderSent = false;
 			std::vector<double> m_frequencyAbscissa;
 		};
 

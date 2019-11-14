@@ -32,7 +32,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 			OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<
 				CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
-			input.m_pDecoder       = decoder;
+			input.m_decoder       = decoder;
 			input.op_pMatrix       = decoder->getOutputMatrix();
 			input.m_bTwoValueInput = false;
 		}
@@ -41,7 +41,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStimulationDecoder<
 				CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
-			input.m_pDecoder         = decoder;
+			input.m_decoder         = decoder;
 			input.op_pStimulationSet = decoder->getOutputStimulationSet();
 			input.m_bTwoValueInput   = false;
 		}
@@ -69,8 +69,8 @@ bool CBoxAlgorithmVotingClassifier::uninitialize()
 	for (uint32_t i = 0; i < nInput; ++i)
 	{
 		SInput& input = m_vClassificationResults[i];
-		input.m_pDecoder->uninitialize();
-		delete input.m_pDecoder;
+		input.m_decoder->uninitialize();
+		delete input.m_decoder;
 	}
 
 	m_oClassificationChoiceEncoder.uninitialize();
@@ -96,9 +96,9 @@ bool CBoxAlgorithmVotingClassifier::process()
 		SInput& input = m_vClassificationResults[i];
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			input.m_pDecoder->decode(j);
+			input.m_decoder->decode(j);
 
-			if (input.m_pDecoder->isHeaderReceived())
+			if (input.m_decoder->isHeaderReceived())
 			{
 				if (m_bMatrixBased)
 				{
@@ -114,7 +114,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 					}
 				}
 			}
-			if (input.m_pDecoder->isBufferReceived())
+			if (input.m_decoder->isBufferReceived())
 			{
 				if (m_bMatrixBased)
 				{
@@ -136,7 +136,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 					}
 				}
 			}
-			if (input.m_pDecoder->isEndReceived())
+			if (input.m_decoder->isEndReceived())
 			{
 				m_oClassificationChoiceEncoder.encodeEnd();
 				boxContext.markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());

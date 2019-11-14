@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
 
-			unsigned long long m_epoch = 0;
+			uint64_t m_epoch = 0;
 
 			bool m_isHeaderReceived = false;
 			bool m_isFileOpen       = false;

@@ -400,12 +400,12 @@
 #define OVTK_NodeId_Acquisition_Buffer_ChannelUnits				EBML::CIdentifier(0x00000000, 0x00000045)
 
 #define OVTK_NodeId_Acquisition_Header							EBML::CIdentifier(0x00000000, 0x00004239) // deprecated
-#define OVTK_NodeId_Acquisition_AcquisitionInformation			EBML::CIdentifier(0x00000000, 0x00004240) // deprecated
+#define OVTK_NodeId_Acquisition_AcquisitionInfo					EBML::CIdentifier(0x00000000, 0x00004240) // deprecated
 #define OVTK_NodeId_Acquisition_ExperimentId					EBML::CIdentifier(0x00000000, 0x00004241) // deprecated
 #define OVTK_NodeId_Acquisition_SubjectAge						EBML::CIdentifier(0x00000000, 0x00004242) // deprecated
 #define OVTK_NodeId_Acquisition_SubjectGender					EBML::CIdentifier(0x00000000, 0x00004243) // deprecated
 #define OVTK_NodeId_Acquisition_ChannelCount					EBML::CIdentifier(0x00000000, 0x00004244) // deprecated
-#define OVTK_NodeId_Acquisition_SamplingFrequency				EBML::CIdentifier(0x00000000, 0x00004245) // deprecated
+#define OVTK_NodeId_Acquisition_Sampling						EBML::CIdentifier(0x00000000, 0x00004245) // deprecated
 #define OVTK_NodeId_Acquisition_ChannelNames					EBML::CIdentifier(0x00000000, 0x00004246) // deprecated
 #define OVTK_NodeId_Acquisition_ChannelName						EBML::CIdentifier(0x00000000, 0x00004247) // deprecated
 #define OVTK_NodeId_Acquisition_GainFactors						EBML::CIdentifier(0x00000000, 0x00004248) // deprecated

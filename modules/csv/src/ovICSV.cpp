@@ -39,7 +39,7 @@ namespace
 		{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s)" },
 		{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
 	};
-}
+}	// namespace 
 
 std::string ICSVHandler::getLogError(ELogErrorCodes code)
 {

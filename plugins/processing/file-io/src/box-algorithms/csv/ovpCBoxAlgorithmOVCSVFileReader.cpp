@@ -14,27 +14,17 @@ using namespace OpenViBEPlugins;
 using namespace FileIO;
 using namespace TimeArithmetics;
 
-CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader()
-	: m_readerLib(createCSVHandler(), releaseCSVHandler), m_isHeaderSent(false)
-	  , m_isStimulationHeaderSent(false) {}
-
-uint64_t CBoxAlgorithmOVCSVFileReader::getClockFrequency()
-{
-	return 128LL << 32; // the box clock frequency
-}
-
 bool CBoxAlgorithmOVCSVFileReader::initialize()
 {
-	m_samplingRate            = 0;
+	m_sampling                = 0;
 	m_isHeaderSent            = false;
 	m_isStimulationHeaderSent = false;
 
 	this->getStaticBoxContext().getOutputType(0, m_typeID);
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	OV_ERROR_UNLESS_KRF(m_readerLib->openFile(filename.toASCIIString(), EFileAccessMode::Read),
-						(ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " +
-							m_readerLib->getLastErrorString())).c_str(),
+	OV_ERROR_UNLESS_KRF(m_readerLib->openFile(filename.toASCIIString(), EFileAccessMode::Read), 
+						(ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " + m_readerLib->getLastErrorString())).c_str(),
 						ErrorType::Internal);
 
 	m_nSamplePerBuffer = 1;
@@ -63,22 +53,19 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_stimEncoder.initialize(*this, 1), "Error during stimulation encoder initialize", ErrorType::Internal);
 
-	const char *msg = (ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " + m_readerLib->getLastErrorString())).c_str();
+	const char* msg = (ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " + m_readerLib->getLastErrorString())).c_str();
 	if (m_typeID == OV_TypeId_Signal)
 	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getSignalInformation(m_channelNames, m_samplingRate, m_nSamplePerBuffer), msg, ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_readerLib->getSignalInformation(m_channelNames, m_sampling, m_nSamplePerBuffer), msg, ErrorType::Internal);
 	}
 	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 	{
 		OV_ERROR_UNLESS_KRF(m_readerLib->getStreamedMatrixInformation(m_dimSizes, m_channelNames), msg, ErrorType::Internal);
 	}
-	else if (m_typeID == OV_TypeId_FeatureVector)
-	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getFeatureVectorInformation(m_channelNames), msg, ErrorType::Internal);
-	}
+	else if (m_typeID == OV_TypeId_FeatureVector) { OV_ERROR_UNLESS_KRF(m_readerLib->getFeatureVectorInformation(m_channelNames), msg, ErrorType::Internal); }
 	else if (m_typeID == OV_TypeId_Spectrum)
 	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getSpectrumInformation(m_channelNames, m_frequencyAbscissa, m_samplingRate), msg, ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_readerLib->getSpectrumInformation(m_channelNames, m_frequencyAbscissa, m_sampling), msg, ErrorType::Internal);
 	}
 
 	return true;
@@ -105,6 +92,7 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& /*messageClock*/)
 
 bool CBoxAlgorithmOVCSVFileReader::process()
 {
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 	IMatrix* matrix = m_algorithmEncoder.getInputMatrix();
 
 	// encode Header if not already encoded
@@ -123,23 +111,23 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", ErrorType::Internal);
 			}
 
-			m_algorithmEncoder.getInputSamplingRate() = m_samplingRate;
+			m_algorithmEncoder.getInputSamplingRate() = m_sampling;
 		}
 		else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 		{
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(m_dimSizes.size()), "Failed to set dimension count", ErrorType::Internal);
-			size_t previousDimensionSize = 0;
+			size_t prevDimSize = 0;
 
-			for (size_t index = 0; index < m_dimSizes.size(); ++index)
+			for (size_t d1 = 0; d1 < m_dimSizes.size(); ++d1)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionSize(index, m_dimSizes[index]), "Failed to set dimension size " << index + 1, ErrorType::Internal);
+				OV_FATAL_UNLESS_K(matrix->setDimensionSize(d1, m_dimSizes[d1]), "Failed to set dimension size " << d1 + 1, ErrorType::Internal);
 
-				for (size_t labelIndex = 0; labelIndex < m_dimSizes[index]; ++labelIndex)
+				for (size_t d2 = 0; d2 < m_dimSizes[d1]; ++d2)
 				{
-					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(index, labelIndex, m_channelNames[previousDimensionSize + labelIndex].c_str()), "Failed to set dimension label", ErrorType::Internal);
+					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()), "Failed to set dimension label", ErrorType::Internal);
 				}
 
-				previousDimensionSize += m_dimSizes[index];
+				prevDimSize += m_dimSizes[d1];
 			}
 		}
 		else if (m_typeID == OV_TypeId_FeatureVector)
@@ -173,17 +161,17 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			for (const double& frequencyAbscissaValue : m_frequencyAbscissa)
 			{
 				frequencyAbscissaMatrix->getBuffer()[index] = frequencyAbscissaValue;
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()),
-								  "Failed to set dimension label", ErrorType::Internal);
+				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()), "Failed to set dimension label", ErrorType::Internal);
 			}
 
-			m_algorithmEncoder.getInputSamplingRate() = m_samplingRate;
+			m_algorithmEncoder.getInputSamplingRate() = m_sampling;
 		}
 
 		OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeHeader(), "Failed to encode signal header", ErrorType::Internal);
 
 		m_isHeaderSent = true;
-		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send",
+							ErrorType::Internal);
 	}
 
 	const double currentTime = timeToSeconds(this->getPlayerContext().getCurrentTime());
@@ -199,8 +187,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			std::vector<SStimulationChunk> stimulationChunk;
 
 			OV_ERROR_UNLESS_KRF(m_readerLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
-								(ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " + m_readerLib->getLastErrorString())).c_str(),
-								ErrorType::Internal);
+								(ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " 
+									+ m_readerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 
 			m_savedChunks.insert(m_savedChunks.end(), matrixChunk.begin(), matrixChunk.end());
 			m_savedStimulations.insert(m_savedStimulations.end(), stimulationChunk.begin(), stimulationChunk.end());
@@ -226,9 +214,10 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 				OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", ErrorType::Internal);
 
-				OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, secondsToTime(chunk.startTime), TimeArithmetics::secondsToTime(chunk.endTime)),
-									"Failed to mark signal output as ready to send",
-									ErrorType::Internal);
+				OV_ERROR_UNLESS_KRF(
+					boxContext.markOutputAsReadyToSend(0, secondsToTime(chunk.startTime), secondsToTime(chunk.endTime)),
+					"Failed to mark signal output as ready to send",
+					ErrorType::Internal);
 
 				chunksToRemove++;
 			}
@@ -240,9 +229,10 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		{
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", ErrorType::Internal);
 
-			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, secondsToTime(m_savedChunks.back().startTime), TimeArithmetics::secondsToTime(m_savedChunks.back().endTime)),
-								"Failed to mark signal output as ready to send",
-								ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(
+				boxContext.markOutputAsReadyToSend(0, secondsToTime(m_savedChunks.back().startTime), secondsToTime(m_savedChunks.back().endTime)),
+				"Failed to mark signal output as ready to send",
+				ErrorType::Internal);
 		}
 
 		if (chunksToRemove != 0) { m_savedChunks.erase(m_savedChunks.begin(), m_savedChunks.begin() + chunksToRemove); }
@@ -253,13 +243,13 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, const double endTime)
 {
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 	if (!m_isStimulationHeaderSent)
 	{
 		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeHeader(), "Failed to encode stimulation header", ErrorType::Internal);
 		m_isStimulationHeaderSent = true;
 
-		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, 0, 0),
-							"Failed to mark stimulation header as ready to send", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, 0, 0), "Failed to mark stimulation header as ready to send", ErrorType::Internal);
 	}
 
 	IStimulationSet* stimulationSet = m_stimEncoder.getInputStimulationSet();
@@ -276,7 +266,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 			OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", ErrorType::Internal);
 
-			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
+			OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
 								"Failed to mark stimulation output as ready to send",
 								ErrorType::Internal);
 		}
@@ -287,19 +277,18 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 		for (; it != m_savedStimulations.end(); ++it)
 		{
-			const double stimulationDate = it->stimulationDate;
+			const double stimulationDate = it->date;
 
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
-				stimulationSet->appendStimulation(it->stimulationIdentifier, secondsToTime(it->stimulationDate), secondsToTime(it->stimulationDuration));
-				m_lastStimulationDate = secondsToTime(it->stimulationDate);
+				stimulationSet->appendStimulation(it->id, secondsToTime(it->date), secondsToTime(it->duration));
+				m_lastStimulationDate = secondsToTime(it->date);
 			}
 			else
 			{
-				const std::string message = "The stimulation is not synced with the stream and will be ignored:"
-											" [Value: " + std::to_string(it->stimulationIdentifier) +
-											" | Date: " + std::to_string(it->stimulationDate) +
-											" | Duration: " + std::to_string(it->stimulationDuration) + "]";
+				const std::string message = "The stimulation is not synced with the stream and will be ignored: [Value: "
+											+ std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
+											" | Duration: " + std::to_string(it->duration) + "]";
 
 				OV_WARNING_K(message.c_str());
 			}
@@ -310,7 +299,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", ErrorType::Internal);
 
-		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, stimulationChunkStartTime, m_lastStimulationDate),
+		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, m_lastStimulationDate),
 							"Failed to mark stimulation output as ready to send", ErrorType::Internal);
 
 		// If there is no more data to send, we push the end.
@@ -318,7 +307,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 		{
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", ErrorType::Internal);
 
-			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
+			OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime), 
 								"Failed to mark signal output as ready to send", ErrorType::Internal);
 		}
 	}
