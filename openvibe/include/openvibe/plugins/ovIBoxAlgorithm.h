@@ -269,7 +269,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \param boxListenerCtx [in] : the box listener context
 			 *        containing the description of the box
-			 * \param eBoxModificationType [in] : the type of modification
+			 * \param boxModificationType [in] : the type of modification
 			 *        applied to the box
 			 *
 			 * This function is called as soon as a modification is done
@@ -281,7 +281,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Plugins::IBoxListenerContext
 			 * \sa OpenViBE::Plugins::EBoxModification
 			 */
-			virtual bool process(Kernel::IBoxListenerContext& boxListenerCtx, const Kernel::EBoxModification eBoxModificationType) = 0;
+			virtual bool process(Kernel::IBoxListenerContext& boxListenerCtx, const Kernel::EBoxModification boxModificationType) = 0;
 
 			//@}
 

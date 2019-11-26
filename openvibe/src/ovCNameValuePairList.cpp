@@ -17,17 +17,17 @@ namespace OpenViBE
 
 CNameValuePairList::CNameValuePairList() { m_impl = new CNameValuePairListImpl(); }
 
-CNameValuePairList::CNameValuePairList(const CNameValuePairList& rNameValuePairList)
+CNameValuePairList::CNameValuePairList(const CNameValuePairList& pairs)
 {
 	m_impl        = new CNameValuePairListImpl();
-	m_impl->m_Map = rNameValuePairList.m_impl->m_Map;
+	m_impl->m_Map = pairs.m_impl->m_Map;
 }
 
 CNameValuePairList::~CNameValuePairList() { delete m_impl; }
 
-CNameValuePairList& CNameValuePairList::operator=(const CNameValuePairList& rNameValuePairList)
+CNameValuePairList& CNameValuePairList::operator=(const CNameValuePairList& pairs)
 {
-	m_impl->m_Map = rNameValuePairList.m_impl->m_Map;
+	m_impl->m_Map = pairs.m_impl->m_Map;
 	return *this;
 }
 

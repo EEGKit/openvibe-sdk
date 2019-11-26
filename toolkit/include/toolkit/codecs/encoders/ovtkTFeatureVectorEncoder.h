@@ -17,7 +17,7 @@ namespace OpenViBEToolkit
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
-		using T::m_oBuffer;
+		using T::m_buffer;
 		using T::m_iMatrix;
 
 		bool initializeImpl()
@@ -25,7 +25,7 @@ namespace OpenViBEToolkit
 			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorEncoder));
 			m_codec->initialize();
 			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_InputParameterId_Matrix));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_buffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}

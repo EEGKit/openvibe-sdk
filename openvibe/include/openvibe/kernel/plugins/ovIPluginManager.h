@@ -42,18 +42,18 @@ namespace OpenViBE
 
 			/**
 			 * \brief Loads new DLL/so plugin module file(s)
-			 * \param rFileNameWildCard [in] : a wild card with the file(s) to search plugins in
+			 * \param fileNameWildCard [in] : a wild card with the file(s) to search plugins in
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addPluginsFromFiles(const CString& rFileNameWildCard) = 0;
+			virtual bool addPluginsFromFiles(const CString& fileNameWildCard) = 0;
 			/**
 			 * \brief Registers a plugin object descriptor
-			 * \param rPluginObjectDesc [in] : the actual plugin object descriptor to register
+			 * \param desc [in] : the actual plugin object descriptor to register
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) = 0;
+			virtual bool registerPluginDesc(const Plugins::IPluginObjectDesc& desc) = 0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier
 			 * \param previousID [in] : The identifier
@@ -86,11 +86,11 @@ namespace OpenViBE
 			virtual bool canCreatePluginObject(const CIdentifier& classID) = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor
-			 * \param identifier [in] : the plugin object descriptor identifier which details should be returned
+			 * \param id [in] : the plugin object descriptor id which details should be returned
 			 * \return the corresponding plugin object descriptor pointer.
 			 * \sa getNextPluginObjectDescIdentifier
 			 */
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& identifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& id) const = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor given the class identifier it should create
 			 * \param classID [in] : the plugin object class identifier of the descriptor which details should be returned
@@ -148,7 +148,7 @@ namespace OpenViBE
 			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& classID) = 0;
 			/**
 			 * \brief Tells the plugin manager a plugin object won't be ever used
-			 * \param pPluginObject [in] : the plugin object to release
+			 * \param pluginObject [in] : the plugin object to release
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
@@ -156,7 +156,7 @@ namespace OpenViBE
 			 * call has been made. However, the plugin manager is free to release allocated memory
 			 * and resources for this plugin object.
 			 */
-			virtual bool releasePluginObject(Plugins::IPluginObject* pPluginObject) = 0;
+			virtual bool releasePluginObject(Plugins::IPluginObject* pluginObject) = 0;
 
 			//@{
 			/**\name Helpers */
@@ -165,32 +165,32 @@ namespace OpenViBE
 			/**
 			 * \brief Creates a new algorithm given its class identifier and eventually returns the associated descriptor
 			 * \param classID [in] : the class identifier of the algorithm to create
-			 * \param algorithmDesc [out] : a pointer where to store the descriptor information
+			 * \param desc [out] : a pointer where to store the descriptor information
 			 * \return The newly created algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& classID, const Plugins::IAlgorithmDesc** algorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& classID, const Plugins::IAlgorithmDesc** desc) = 0;
 			/**
 			 * \brief Creates a new algorithm given a descriptor
-			 * \param algorithmDesc [in] : the class descriptor of the algorithm to create
+			 * \param desc [in] : the class descriptor of the algorithm to create
 			 * \return The newly created algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& desc) = 0;
 			/**
 			 * \brief Creates a new box algorithm given its class identifier and eventually returns the associated descriptor
 			 * \param classID [in] : the class identifier of the box algorithm to create
-			 * \param boxAlgorithmDesc [out] : a pointer where to store the descriptor information
+			 * \param desc [out] : a pointer where to store the descriptor information
 			 * \return The newly created box algorithm in case of success.
 			 * \return \c NULL in case of error.
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& classID, const Plugins::IBoxAlgorithmDesc** boxAlgorithmDesc) = 0;
+			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& classID, const Plugins::IBoxAlgorithmDesc** desc) = 0;
 
 			//@}
 

@@ -1,19 +1,11 @@
 #pragma once
 
-//___________________________________________________________________//
-//                                                                   //
-// Global Class Identifiers                                          //
-//___________________________________________________________________//
-//                                                                   //
-
+// Global Class Identifiers
+//---------------------------------------------------------------------------------------------------
 #define OVK_ClassId_KernelDesc                            		OpenViBE::CIdentifier(0x02F2D050, 0x25CD9EE5)
 
-//___________________________________________________________________//
-//                                                                   //
-// Kernel Class Identifiers                                          //
-//___________________________________________________________________//
-//                                                                   //
-
+// Kernel Class Identifiers
+//---------------------------------------------------------------------------------------------------
 #define OVK_ClassId_Kernel_KernelObjectT                   		OpenViBE::CIdentifier(0x672AE465, 0x60CB46D8)
 #define OVK_ClassId_Kernel_KernelObjectFactory             		OpenViBE::CIdentifier(0x7D380DFA, 0x1B33AE2F)
 #define OVK_ClassId_Kernel_KernelContext                   		OpenViBE::CIdentifier(0x72D4050C, 0x543DDAD8)
@@ -73,12 +65,8 @@
 
 #define OVK_ClassId_Kernel_ObjectVisitorContext              	OpenViBE::CIdentifier(0x7F6010A3, 0x17F4F20A)
 
-//___________________________________________________________________//
-//                                                                   //
-// Tools Class Identifiers                                           //
-//___________________________________________________________________//
-//                                                                   //
-
+// Tools Class Identifiers
+//---------------------------------------------------------------------------------------------------
 #define OVK_ClassId_Tools_ScopeTester                        	OpenViBE::CIdentifier(0x5978C732, 0x5903C7A2)
 #define OVK_ClassId_Tools_KernelObjectFactoryHelper          	OpenViBE::CIdentifier(0x6059EA7C, 0x081FDAB5)
 #define OVK_ClassId_Tools_BoxProxyT                          	OpenViBE::CIdentifier(0x4DFDFCE4, 0x49EF078E)
@@ -100,12 +88,8 @@
 #define OVK_ClassId_Kernel_ObjectParameter                   	OpenViBE::CIdentifier(0x5A9CB52C, 0x7F02D159)
 #define OVK_ClassId_Kernel_PointerParameter                  	OpenViBE::CIdentifier(0x29BDDFF0, 0x85B669E2)
 
-//___________________________________________________________________//
-//                                                                   //
-// API Definition                                                    //
-//___________________________________________________________________//
-//                                                                   //
-
+// API Definition
+//---------------------------------------------------------------------------------------------------
 // Taken from
 // - http://people.redhat.com/drepper/dsohowto.pdf
 // - http://www.nedprod.com/programs/gccvisibility.html

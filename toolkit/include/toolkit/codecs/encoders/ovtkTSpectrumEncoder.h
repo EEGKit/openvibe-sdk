@@ -17,7 +17,7 @@ namespace OpenViBEToolkit
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
-		using T::m_oBuffer;
+		using T::m_buffer;
 		using T::m_iMatrix;
 
 		bool initializeImpl()
@@ -27,7 +27,7 @@ namespace OpenViBEToolkit
 			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Matrix));
 			m_iFrequencyAbscissa.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
 			m_iSampling.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_SpectrumEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_buffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_SpectrumEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 
 			return true;
@@ -43,7 +43,7 @@ namespace OpenViBEToolkit
 			m_iMatrix.uninitialize();
 			m_iFrequencyAbscissa.uninitialize();
 			m_iSampling.uninitialize();
-			m_oBuffer.uninitialize();
+			m_buffer.uninitialize();
 			m_codec->uninitialize();
 			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
 			m_boxAlgorithm = NULL;

@@ -48,13 +48,13 @@ namespace OpenViBE
 			virtual CIdentifier createConfigurationToken(const CString& name, const CString& value) = 0;
 			/**
 			 * \brief Removes an existing configuration token
-			 * \param identifier [in] : the identifier of the token to remove
+			 * \param id [in] : the identifier of the token to remove
 			 * \return \e true in case of success
 			 * \return \e false in case of error
 			 * \sa IConfigurationManager::addConfigurationFromFile
 			 * \sa IConfigurationManager::createConfigurationToken
 			 */
-			virtual bool releaseConfigurationToken(const CIdentifier& identifier) = 0;
+			virtual bool releaseConfigurationToken(const CIdentifier& id) = 0;
 			/**
 			 * \brief Iterates on the existing configuration tokens of this configuration manager
 			 * \param prevConfigTokenID [in] : the identifier of the token to start the iteration from
@@ -73,16 +73,16 @@ namespace OpenViBE
 			virtual CIdentifier getNextConfigurationTokenIdentifier(const CIdentifier& prevConfigTokenID) const = 0;
 
 			/**
-			 * \brief Gets a token's name from its identifier
-			 * \param identifier [in] : the token identifier which name should be returned
+			 * \brief Gets a token's name from its id
+			 * \param id [in] : the token id which name should be returned
 			 * \return the name of the token in case of success
 			 * \return an empty string in case of error
 			 * \sa IConfigurationManager::getConfigurationTokenValue
 			 */
-			virtual CString getConfigurationTokenName(const CIdentifier& identifier) const = 0;
+			virtual CString getConfigurationTokenName(const CIdentifier& id) const = 0;
 			/**
-			 * \brief Gets a token's value from its identifier
-			 * \param identifier [in] : the token identifier which value should be returned
+			 * \brief Gets a token's value from its id
+			 * \param id [in] : the token id which value should be returned
 			 * \return the value (unexapanded) of the token in case of success
 			 * \return an empty string in case of error
 			 * \sa IConfigurationManager::getConfigurationTokenName
@@ -91,11 +91,11 @@ namespace OpenViBE
 			 *       value that was passed at creation time is returned. If you want to expand
 			 *       things, please use IConfigurationManager::expand
 			 */
-			virtual CString getConfigurationTokenValue(const CIdentifier& identifier) const = 0;
+			virtual CString getConfigurationTokenValue(const CIdentifier& id) const = 0;
 
 			/**
 			 * \brief Changes the name of an exisiting token
-			 * \param identifier [in] : the identifier of the token which name should be changed
+			 * \param id [in] : the identifier of the token which name should be changed
 			 * \param name [in] : the new name of the configuration token
 			 * \return \e true in case of success
 			 * \return \e false in case of error
@@ -104,10 +104,10 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::addConfigurationFromFile
 			 * \sa IConfigurationManager::setConfigurationTokenValue
 			 */
-			virtual bool setConfigurationTokenName(const CIdentifier& identifier, const CString& name) = 0;
+			virtual bool setConfigurationTokenName(const CIdentifier& id, const CString& name) = 0;
 			/**
 			 * \brief Changes the value of an exisiting token
-			 * \param identifier [in] : the identifier of the token which value should be changed
+			 * \param id [in] : the identifier of the token which value should be changed
 			 * \param value [in] : the new value of the configuration token
 			 * \return \e true in case of success
 			 * \return \e false in case of error
@@ -116,7 +116,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::addConfigurationFromFile
 			 * \sa IConfigurationManager::setConfigurationTokenName
 			 */
-			virtual bool setConfigurationTokenValue(const CIdentifier& identifier, const CString& value) = 0;
+			virtual bool setConfigurationTokenValue(const CIdentifier& id, const CString& value) = 0;
 
 			/**
 			 * \brief Adds a token or replaces the value of a token.
@@ -205,43 +205,43 @@ namespace OpenViBE
 			virtual CString expandOnlyKeyword(const CString& keyword, const CString& expression, bool preserveBackslashes = false) const = 0;
 			/**
 			 * \brief Expands a string to a floating point value based on its use of configuration tokens
-			 * \param expression [in] : the string that you want to expand
+			 * \param in [in] : the string that you want to expand
 			 * \param fallbackValue [in] : a fall back value to return in case the expanded
 			 *                                string can not be parsed as a floating point value
 			 * \return the expanded value
 			 * \sa IConfigurationManager::expand
 			 */
-			virtual double expandAsFloat(const CString& expression, double fallbackValue = 0) const = 0;
+			virtual double expandAsFloat(const CString& in, double fallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to an integer value based on its use of configuration tokens
-			 * \param expression [in] : the string that you want to expand
+			 * \param in [in] : the string that you want to expand
 			 * \param fallbackValue [in] : a fall back value to return in case the expanded
 			 *                                string can not be parsed as an integer value
 			 * \return the expanded value
 			 * \sa IConfigurationManager::expand
 			 */
-			virtual int64_t expandAsInteger(const CString& expression, int64_t fallbackValue = 0) const = 0;
+			virtual int64_t expandAsInteger(const CString& in, int64_t fallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to an unsigned integer value based on its use of configuration tokens
-			 * \param expression [in] : the string that you want to expand
+			 * \param in [in] : the string that you want to expand
 			 * \param fallbackValue [in] : a fall back value to return in case the expanded
 			 *                                 string can not be parsed as an unsigned integer value
 			 * \return the expanded value
 			 * \sa IConfigurationManager::expand
 			 */
-			virtual uint64_t expandAsUInteger(const CString& expression, uint64_t fallbackValue = 0) const = 0;
+			virtual uint64_t expandAsUInteger(const CString& in, uint64_t fallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to a boolean value based on its use of configuration tokens
-			 * \param expression [in] : the string that you want to expand
+			 * \param in [in] : the string that you want to expand
 			 * \param fallbackValue [in] : a fall back value to return in case the expanded
 			 *                              string can not be parsed as a boolean value
 			 * \return the expanded value
 			 * \sa IConfigurationManager::expand
 			 */
-			virtual bool expandAsBoolean(const CString& expression, bool fallbackValue = true) const = 0;
+			virtual bool expandAsBoolean(const CString& in, bool fallbackValue = true) const = 0;
 			/**
 			 * \brief Expands a string to an enumeration entry value based on its use of configuration tokens
-			 * \param expression [in] : the string that you want to expand
+			 * \param in [in] : the string that you want to expand
 			 * \param enumerationTypeID [in] : the enumeration type to use
 			 * \param fallbackValue [in] : a fall back value to return in case the expanded
 			 *                                 string can not be parsed as an enumeration entry value
@@ -249,8 +249,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::expand
 			 * \sa ITypeManager
 			 */
-			virtual uint64_t expandAsEnumerationEntryValue(const CString& expression, const CIdentifier& enumerationTypeID, uint64_t fallbackValue = 0) const =
-			0;
+			virtual uint64_t expandAsEnumerationEntryValue(const CString& in, const CIdentifier& enumerationTypeID, uint64_t fallbackValue = 0) const = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

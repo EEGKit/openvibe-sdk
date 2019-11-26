@@ -36,11 +36,8 @@ CIdentifier& CIdentifier::operator--()
 namespace OpenViBE
 {
 	bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id == id2.m_id; }
-
 	bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 == id2); }
-
 	bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
-
 	bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
 } // namespace OpenViBE
 

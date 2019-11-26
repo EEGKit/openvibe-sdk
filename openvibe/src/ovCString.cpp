@@ -27,7 +27,6 @@ CString::CString(const char* str)
 }
 
 CString::~CString() { delete m_impl; }
-
 CString::operator const char*() const { return m_impl->m_Value.c_str(); }
 
 CString& CString::operator=(const CString& str)
@@ -54,9 +53,7 @@ namespace OpenViBE
 	}
 
 	bool operator==(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) == (str2.m_impl->m_Value); }
-
 	bool operator!=(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) != (str2.m_impl->m_Value); }
-
 	bool operator<(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) < (str2.m_impl->m_Value); }
 } // namespace OpenViBE
 

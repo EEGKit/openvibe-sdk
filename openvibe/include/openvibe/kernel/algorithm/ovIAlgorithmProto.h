@@ -23,44 +23,44 @@ namespace OpenViBE
 
 			/**
 			 * \brief Adds an input parameter
-			 * \param inputParameterID [in] : the identifier for this parameter
-			 * \param sInputName [in] : the name for this parameter
-			 * \param eParameterType [in] : the type for this parameter
+			 * \param id [in] : the identifier for this parameter
+			 * \param name [in] : the name for this parameter
+			 * \param type [in] : the type for this parameter
 			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addInputParameter(const CIdentifier& inputParameterID, const CString& sInputName, EParameterType eParameterType,
+			virtual bool addInputParameter(const CIdentifier& id, const CString& name, EParameterType type,
 										   const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter
-			 * \param outputParameterID [in] : the identifier for this parameter
-			 * \param sOutputName [in] : the name for this parameter
-			 * \param eParameterType [in] : the type for this parameter
+			 * \param id [in] : the identifier for this parameter
+			 * \param name [in] : the name for this parameter
+			 * \param type [in] : the type for this parameter
 			 * \param subTypeID [in] : the optional sub type of this parameter (e.g. for enumerations)
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName, EParameterType eParameterType,
+			virtual bool addOutputParameter(const CIdentifier& id, const CString& name, EParameterType type,
 											const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an input trigger
-			 * \param inputTriggerID [in] : the identifier for this trigger
-			 * \param rInputTriggerName [in] : the name for this trigger
+			 * \param id [in] : the identifier for this trigger
+			 * \param name [in] : the name for this trigger
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addInputTrigger(const CIdentifier& inputTriggerID, const CString& rInputTriggerName) = 0;
+			virtual bool addInputTrigger(const CIdentifier& id, const CString& name) = 0;
 			/**
 			 * \brief Adds an output trigger
-			 * \param outputTriggerID [in] : the identifier for this trigger
-			 * \param rOutputTriggerName [in] : the name for this trigger
+			 * \param id [in] : the identifier for this trigger
+			 * \param name [in] : the name for this trigger
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addOutputTrigger(const CIdentifier& outputTriggerID, const CString& rOutputTriggerName) = 0;
+			virtual bool addOutputTrigger(const CIdentifier& id, const CString& name) = 0;
 
 			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProto)
 		};

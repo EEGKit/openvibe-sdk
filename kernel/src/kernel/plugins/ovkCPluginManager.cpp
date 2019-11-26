@@ -138,8 +138,7 @@ CPluginManager::~CPluginManager()
 
 	for (auto k = m_pluginModules.begin(); k != m_pluginModules.end(); ++k)
 	{
-		this->TKernelObject<IPluginManager>::getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() <<
-				"\n";
+		this->TKernelObject<IPluginManager>::getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
 		(*k)->uninitialize();
 		delete (*k);
 	}
@@ -236,8 +235,8 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(const CIden
 
 	// this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
-	auto elem = std::find_if(m_pluginObjectDescs.begin(), m_pluginObjectDescs.end(),
-							 [classID](const std::pair<IPluginObjectDesc*, IPluginModule*>& v) { return v.first->getCreatedClass() == classID; });
+	const auto elem = std::find_if(m_pluginObjectDescs.begin(), m_pluginObjectDescs.end(),
+								  [classID](const std::pair<IPluginObjectDesc*, IPluginModule*>& v) { return v.first->getCreatedClass() == classID; });
 	if (elem != m_pluginObjectDescs.end()) { return elem->first; }
 	this->getLogManager() << LogLevel_Debug << "Plugin object descriptor class identifier " << classID << " not found\n";
 	return nullptr;
@@ -247,13 +246,13 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const CIdentifier& classID)
 {
 	// std::unique_lock<std::mutex> lock(m_mutex);
 
-	const IPluginObjectDesc* l_pPluginObjectDesc = this->getPluginObjectDescCreating(classID);
-	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc = dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
-	if (l_pBoxAlgorithmDesc)
+	const IPluginObjectDesc* pluginObjectDesc = this->getPluginObjectDescCreating(classID);
+	const IBoxAlgorithmDesc* boxAlgorithmDesc = dynamic_cast<const IBoxAlgorithmDesc*>(pluginObjectDesc);
+	if (boxAlgorithmDesc)
 	{
-		SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
-		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
-		return l_oBoxPrototype.m_oHash;
+		SBoxProto prototype(getKernelContext().getTypeManager());
+		boxAlgorithmDesc->getBoxPrototype(prototype);
+		return prototype.m_oHash;
 	}
 	return OV_UndefinedIdentifier;
 }
@@ -262,22 +261,22 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& bo
 {
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-	SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
-	boxAlgorithmDesc.getBoxPrototype(l_oBoxPrototype);
-	return l_oBoxPrototype.m_oHash;
+	SBoxProto prototype(getKernelContext().getTypeManager());
+	boxAlgorithmDesc.getBoxPrototype(prototype);
+	return prototype.m_oHash;
 }
 
 bool CPluginManager::isPluginObjectFlaggedAsDeprecated(const CIdentifier& classID) const
 {
 	// std::unique_lock<std::mutex> lock(m_mutex);
 
-	const IPluginObjectDesc* l_pPluginObjectDesc = this->getPluginObjectDescCreating(classID);
-	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc = dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
-	if (l_pBoxAlgorithmDesc)
+	const IPluginObjectDesc* pluginObjectDesc = this->getPluginObjectDescCreating(classID);
+	const IBoxAlgorithmDesc* boxAlgorithmDesc = dynamic_cast<const IBoxAlgorithmDesc*>(pluginObjectDesc);
+	if (boxAlgorithmDesc)
 	{
-		SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
-		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
-		return l_oBoxPrototype.m_isDeprecated;
+		SBoxProto prototype(getKernelContext().getTypeManager());
+		boxAlgorithmDesc->getBoxPrototype(prototype);
+		return prototype.m_isDeprecated;
 	}
 	return false;
 }
@@ -319,26 +318,26 @@ IAlgorithm* CPluginManager::createAlgorithm(const CIdentifier& classID, const IA
 
 IAlgorithm* CPluginManager::createAlgorithm(const IAlgorithmDesc& algorithmDesc)
 {
-	IAlgorithmDesc* l_pAlgorithmDesc = const_cast<IAlgorithmDesc*>(&algorithmDesc);
-	IPluginObject* l_pPluginObject   = l_pAlgorithmDesc->create();
+	IAlgorithmDesc* desc = const_cast<IAlgorithmDesc*>(&algorithmDesc);
+	IPluginObject* pluginObject   = desc->create();
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObject,
+	OV_ERROR_UNLESS_KRN(pluginObject,
 						"Could not create plugin object from " << algorithmDesc.getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
-	IAlgorithmDesc* l_pPluginObjectDescT = dynamic_cast<IAlgorithmDesc*>(l_pAlgorithmDesc);
-	IAlgorithm* l_pPluginObjectT         = dynamic_cast<IAlgorithm*>(l_pPluginObject);
+	IAlgorithmDesc* pluginObjectDescT = dynamic_cast<IAlgorithmDesc*>(desc);
+	IAlgorithm* pluginObjectT         = dynamic_cast<IAlgorithm*>(pluginObject);
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObjectDescT && l_pPluginObjectT,
+	OV_ERROR_UNLESS_KRN(pluginObjectDescT && pluginObjectT,
 						"Could not downcast plugin object and/or plugin object descriptor for " << algorithmDesc.getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
 	{
 		std::unique_lock<std::mutex> lock(m_mutex);
-		m_pluginObjects[l_pPluginObjectDescT].push_back(l_pPluginObjectT);
+		m_pluginObjects[pluginObjectDescT].push_back(pluginObjectT);
 	}
 
-	return l_pPluginObjectT;
+	return pluginObjectT;
 }
 
 IBoxAlgorithm* CPluginManager::createBoxAlgorithm(const CIdentifier& classID, const IBoxAlgorithmDesc** boxAlgorithmDesc)
@@ -385,34 +384,34 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 				" (configuration token name was " << CString(substitutionTokenName) << ")\n";
 	}
 
-	IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
+	IPluginObjectDesc* pluginObjectDesc = nullptr;
 	for (auto i = m_pluginObjectDescs.begin(); i != m_pluginObjectDescs.end(); ++i)
 	{
-		if (i->first->getCreatedClass() == CIdentifier(dstClassID)) { l_pPluginObjectDesc = i->first; }
+		if (i->first->getCreatedClass() == CIdentifier(dstClassID)) { pluginObjectDesc = i->first; }
 	}
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObjectDesc,
+	OV_ERROR_UNLESS_KRN(pluginObjectDesc,
 						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(srcClassID).toString() <<
 						" in registered plugin object descriptors",
 						ErrorType::BadResourceCreation);
 
-	IPluginObject* l_pPluginObject = l_pPluginObjectDesc->create();
+	IPluginObject* pluginObject = pluginObjectDesc->create();
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObject,
-						"Could not create plugin object from " << l_pPluginObjectDesc->getName() << " plugin object descriptor",
+	OV_ERROR_UNLESS_KRN(pluginObject,
+						"Could not create plugin object from " << pluginObjectDesc->getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
-	IPluginObjectDescT* l_pPluginObjectDescT = dynamic_cast<IPluginObjectDescT*>(l_pPluginObjectDesc);
-	IPluginObjectT* l_pPluginObjectT         = dynamic_cast<IPluginObjectT*>(l_pPluginObject);
+	IPluginObjectDescT* pluginObjectDescT = dynamic_cast<IPluginObjectDescT*>(pluginObjectDesc);
+	IPluginObjectT* pluginObjectT         = dynamic_cast<IPluginObjectT*>(pluginObject);
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObjectDescT && l_pPluginObjectT,
-						"Could not downcast plugin object and/or plugin object descriptor for " << l_pPluginObjectDesc->getName() <<
+	OV_ERROR_UNLESS_KRN(pluginObjectDescT && pluginObjectT,
+						"Could not downcast plugin object and/or plugin object descriptor for " << pluginObjectDesc->getName() <<
 						" plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
-	if (ppPluginObjectDescT) { *ppPluginObjectDescT = l_pPluginObjectDescT; }
+	if (ppPluginObjectDescT) { *ppPluginObjectDescT = pluginObjectDescT; }
 
-	m_pluginObjects[l_pPluginObjectDescT].push_back(l_pPluginObjectT);
+	m_pluginObjects[pluginObjectDescT].push_back(pluginObjectT);
 
-	return l_pPluginObjectT;
+	return pluginObjectT;
 }

@@ -42,8 +42,8 @@ namespace OpenViBE
 		protected:
 
 			std::map<ELogLevel, bool> m_vActiveLevel;
-			CString m_sApplicationName;
-			CString m_sLogFilename;
+			CString m_applicationName;
+			CString m_logFilename;
 			std::fstream m_fsFileStream;
 
 			// Log Settings

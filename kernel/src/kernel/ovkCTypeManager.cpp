@@ -257,17 +257,17 @@ size_t CTypeManager::getEnumerationEntryCount(const CIdentifier& typeID) const
 	return itEnumeration->second.size();
 }
 
-bool CTypeManager::getEnumerationEntry(const CIdentifier& typeID, const uint64_t entryIdx, CString& name, uint64_t& value) const
+bool CTypeManager::getEnumerationEntry(const CIdentifier& typeID, const uint64_t index, CString& name, uint64_t& value) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	const auto it = m_enumerations.find(typeID);
 	if (it == m_enumerations.end()) { return false; }
 
-	if (entryIdx >= it->second.size()) { return false; }
+	if (index >= it->second.size()) { return false; }
 
 	auto itEntry = it->second.begin();
-	for (size_t i = 0; i < entryIdx && itEntry != it->second.end(); i++, ++itEntry) { }
+	for (size_t i = 0; i < index && itEntry != it->second.end(); i++, ++itEntry) { }
 
 	value = itEntry->first;
 	name  = itEntry->second;
@@ -330,32 +330,32 @@ size_t CTypeManager::getBitMaskEntryCount(const CIdentifier& typeID) const
 	return itBitMask->second.size();
 }
 
-bool CTypeManager::getBitMaskEntry(const CIdentifier& typeID, const uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const
+bool CTypeManager::getBitMaskEntry(const CIdentifier& typeID, const uint64_t index, CString& name, uint64_t& value) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	const auto itBitMask = m_bitMasks.find(typeID);
 	if (itBitMask == m_bitMasks.end()) { return false; }
 
-	if (ui64EntryIndex >= itBitMask->second.size()) { return false; }
+	if (index >= itBitMask->second.size()) { return false; }
 
 	auto itBitMaskEntry = itBitMask->second.begin();
-	for (size_t i = 0; i < ui64EntryIndex && itBitMaskEntry != itBitMask->second.end(); i++, ++itBitMaskEntry) { }
+	for (size_t i = 0; i < index && itBitMaskEntry != itBitMask->second.end(); i++, ++itBitMaskEntry) { }
 
-	rEntryValue = itBitMaskEntry->first;
-	sEntryName  = itBitMaskEntry->second;
+	value = itBitMaskEntry->first;
+	name  = itBitMaskEntry->second;
 	return true;
 }
 
-CString CTypeManager::getBitMaskEntryNameFromValue(const CIdentifier& typeID, const uint64_t ui64EntryValue) const
+CString CTypeManager::getBitMaskEntryNameFromValue(const CIdentifier& typeID, const uint64_t value) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	const auto itBitMask = m_bitMasks.find(typeID);
 	if (itBitMask == m_bitMasks.end()) { return ""; }
-	const auto itBitMaskEntry = itBitMask->second.find(ui64EntryValue);
+	const auto itBitMaskEntry = itBitMask->second.find(value);
 	if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
-	return itBitMask->second.find(ui64EntryValue)->second;
+	return itBitMask->second.find(value)->second;
 }
 
 uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, const CString& name) const
@@ -382,7 +382,6 @@ uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, c
 	try
 	{
 		const uint64_t value = std::stoll(name.toASCIIString());
-
 		if (itBitMask->second.find(value) != itBitMask->second.end()) { return value; }
 	}
 	catch (const std::exception&) { return 0xffffffffffffffffLL; }
@@ -390,7 +389,7 @@ uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, c
 	return 0xffffffffffffffffLL;
 }
 
-CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, const uint64_t ui64EntryCompositionValue) const
+CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, const uint64_t value) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
@@ -400,9 +399,9 @@ CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier&
 	std::string res;
 	for (size_t i = 0; i < 64; ++i)
 	{
-		if (ui64EntryCompositionValue & (1LL << i))
+		if (value & (1LL << i))
 		{
-			const auto itBitMaskEntry = itBitMask->second.find(ui64EntryCompositionValue & (1LL << i));
+			const auto itBitMaskEntry = itBitMask->second.find(value & (1LL << i));
 			if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
 			if (res.empty()) { res = itBitMaskEntry->second.toASCIIString(); }
 			else
@@ -419,8 +418,8 @@ uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_bitMasks.find(typeID);
-	if (itBitMask == m_bitMasks.end()) { return 0; }
+	const auto it = m_bitMasks.find(typeID);
+	if (it == m_bitMasks.end()) { return 0; }
 
 	uint64_t res                           = 0;
 	const std::string entryCompositionName = name.toASCIIString();
@@ -437,7 +436,7 @@ uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier
 			entryName.assign(entryCompositionName, j, i - j);
 
 			bool found = false;
-			for (const auto& mask : itBitMask->second)
+			for (const auto& mask : it->second)
 			{
 				if (mask.second == CString(entryName.c_str()))
 				{

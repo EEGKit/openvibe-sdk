@@ -15,11 +15,11 @@ namespace OpenViBE
 		class OV_API IAlgorithmScenarioExporter : public IAlgorithm
 		{
 		public:
-			virtual bool exportStart(IMemoryBuffer& memoryBuffer, const CIdentifier& identifier) = 0;
-			virtual bool exportIdentifier(IMemoryBuffer& memoryBuffer, const CIdentifier& identifier, const CIdentifier& value) = 0;
-			virtual bool exportString(IMemoryBuffer& memoryBuffer, const CIdentifier& identifier, const CString& value) = 0;
-			virtual bool exportUInteger(IMemoryBuffer& memoryBuffer, const CIdentifier& identifier, uint64_t value) = 0;
-			virtual bool exportStop(IMemoryBuffer& memoryBuffer) = 0;
+			virtual bool exportStart(IMemoryBuffer& buffer, const CIdentifier& id) = 0;
+			virtual bool exportIdentifier(IMemoryBuffer& buffer, const CIdentifier& id, const CIdentifier& value) = 0;
+			virtual bool exportString(IMemoryBuffer& buffer, const CIdentifier& id, const CString& value) = 0;
+			virtual bool exportUInteger(IMemoryBuffer& buffer, const CIdentifier& id, uint64_t value) = 0;
+			virtual bool exportStop(IMemoryBuffer& buffer) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithm, OV_UndefinedIdentifier)
 		};
@@ -30,8 +30,7 @@ namespace OpenViBE
 			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
 				prototype.addInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario, "Scenario", Kernel::ParameterType_Object);
-				prototype.addOutputParameter(
-					OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer, "Memory buffer", Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer, "Memory buffer", Kernel::ParameterType_MemoryBuffer);
 				return true;
 			}
 

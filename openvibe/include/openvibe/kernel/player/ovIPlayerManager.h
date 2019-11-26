@@ -26,14 +26,14 @@ namespace OpenViBE
 
 			/**
 			 * \brief Creates a new player
-			 * \param playerID [out] : the identifier of the created player
+			 * \param id [out] : the identifier of the created player
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool createPlayer(CIdentifier& playerID) = 0;
+			virtual bool createPlayer(CIdentifier& id) = 0;
 			/**
 			 * \brief Releases a specific player
-			 * \param playerID [in] : the identifier of the player to release
+			 * \param id [in] : the identifier of the player to release
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
@@ -41,14 +41,14 @@ namespace OpenViBE
 			 * thus the player manager can release any allocated resource / memory
 			 * for this player.
 			 */
-			virtual bool releasePlayer(const CIdentifier& playerID) = 0;
+			virtual bool releasePlayer(const CIdentifier& id) = 0;
 			/**
 			 * \brief Gets a specific player instance, provided its identifier
-			 * \param playerID [in] : the identifier of the player instance to return
+			 * \param id [in] : the identifier of the player instance to return
 			 * \return A reference on the player instance
 			 * \warning Using a non player identifier will cause a crash
 			 */
-			virtual IPlayer& getPlayer(const CIdentifier& playerID) = 0;
+			virtual IPlayer& getPlayer(const CIdentifier& id) = 0;
 			/**
 			 * \brief Gets next player identifier
 			 * \param previousID [in] : The identifier

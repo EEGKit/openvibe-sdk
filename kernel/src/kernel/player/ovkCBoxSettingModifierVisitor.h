@@ -20,8 +20,8 @@ public:
 	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute) override;
 	void processChildData(const char* data) override;
 	void closeChild() override;
-	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& box) override;
-	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& box) override;
+	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& visitorCtx, OpenViBE::Kernel::IBox& box) override;
+	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& visitorCtx, OpenViBE::Kernel::IBox& box) override;
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_ObjectVisitorCtx = nullptr;
 	OpenViBE::Kernel::IBox* m_Box                               = nullptr;

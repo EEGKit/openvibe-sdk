@@ -32,7 +32,7 @@ namespace OpenViBE
 			CString getTypeName(const CIdentifier& typeID) const override;
 			CIdentifier getStreamParentType(const CIdentifier& typeID) const override;
 			size_t getEnumerationEntryCount(const CIdentifier& typeID) const override;
-			bool getEnumerationEntry(const CIdentifier& typeID, uint64_t entryIdx, CString& name, uint64_t& value) const override;
+			bool getEnumerationEntry(const CIdentifier& typeID, uint64_t index, CString& name, uint64_t& value) const override;
 			CString getEnumerationEntryNameFromValue(const CIdentifier& typeID, uint64_t value) const override;
 			uint64_t getEnumerationEntryValueFromName(const CIdentifier& typeID, const CString& name) const override;
 			size_t getBitMaskEntryCount(const CIdentifier& typeID) const override;

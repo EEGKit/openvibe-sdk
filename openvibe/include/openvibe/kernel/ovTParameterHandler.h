@@ -54,14 +54,14 @@ namespace OpenViBE
 
 			/**
 			 * \brief IParameter based construction
-			 * \param pParameter [in] : the parameter to use for the initialization
+			 * \param parameter [in] : the parameter to use for the initialization
 			 *
 			 * This constructor considers the parameter handler to be
 			 * connected to the provided parameter. This is equivalent to
 			 * using the default constructor and call the initialize function
 			 * with the provided IParameter pointer.
 			 */
-			TParameterHandler(IParameter* pParameter) : m_pParameter(pParameter) { }
+			TParameterHandler(IParameter* parameter) : m_parameter(parameter) { }
 
 			//@}
 			/** \name Initialization */
@@ -69,18 +69,18 @@ namespace OpenViBE
 
 			/**
 			 * \brief Connects this parameter handler to a concrete IParameter pointer
-			 * \param pParameter [in] : the concrete parameter to connect to (it can not be \c NULL )
+			 * \param parameter [in] : the concrete parameter to connect to (it can not be \c NULL )
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
 			 * Future calls to this handler will be redirected to the
 			 * concrete parameter object.
 			 */
-			bool initialize(IParameter* pParameter)
+			bool initialize(IParameter* parameter)
 			{
-				if (m_pParameter || !pParameter) { return false; }
+				if (m_parameter || !parameter) { return false; }
 
-				m_pParameter = pParameter;
+				m_parameter = parameter;
 				return true;
 			}
 
@@ -93,8 +93,8 @@ namespace OpenViBE
 			 */
 			bool uninitialize()
 			{
-				if (!m_pParameter) { return false; }
-				m_pParameter = nullptr;
+				if (!m_parameter) { return false; }
+				m_parameter = nullptr;
 				return true;
 			}
 
@@ -102,7 +102,7 @@ namespace OpenViBE
 			 * \brief Checks whether this handler is connected to a concrete IParameter or not
 			 * \return \e true if this handler is connected to a concrete IParameter, \e false if not
 			 */
-			bool exists() const { return m_pParameter != nullptr; }
+			bool exists() const { return m_parameter != nullptr; }
 
 			//@{
 			/** \name Transparent operators */
@@ -125,9 +125,9 @@ namespace OpenViBE
 			 */
 			operator T() const
 			{
-				if (!m_pParameter) { throw; }
+				if (!m_parameter) { throw; }
 				T t;
-				m_pParameter->getValue(&t);
+				m_parameter->getValue(&t);
 				return t;
 			}
 			/**
@@ -146,9 +146,9 @@ namespace OpenViBE
 			 */
 			T operator ->() const
 			{
-				if (!m_pParameter) { throw; }
+				if (!m_parameter) { throw; }
 				T t;
-				m_pParameter->getValue(&t);
+				m_parameter->getValue(&t);
 				return t;
 			}
 			/**
@@ -167,8 +167,8 @@ namespace OpenViBE
 			 */
 			TParameterHandler<T>& operator=(const T& t)
 			{
-				if (!m_pParameter) { throw; }
-				m_pParameter->setValue(&t);
+				if (!m_parameter) { throw; }
+				m_parameter->setValue(&t);
 				return *this;
 			}
 
@@ -181,7 +181,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool clearReferenceTarget() { return m_pParameter ? m_pParameter->clearReferenceTarget() : false; }
+			bool clearReferenceTarget() const { return m_parameter ? m_parameter->clearReferenceTarget() : false; }
 			/**
 			 * \brief Sets a new reference target
 			 * \param rParameterHandler [in] : a parameter handler of the same type as this parameter handler
@@ -190,7 +190,7 @@ namespace OpenViBE
 			 */
 			bool setReferenceTarget(TParameterHandler<T>& rParameterHandler)
 			{
-				return m_pParameter && rParameterHandler.m_pParameter ? m_pParameter->setReferenceTarget(rParameterHandler.m_pParameter) : false;
+				return m_parameter && rParameterHandler.m_parameter ? m_parameter->setReferenceTarget(rParameterHandler.m_parameter) : false;
 			}
 			/**
 			 * \brief Sets a new reference target
@@ -198,20 +198,20 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool setReferenceTarget(IParameter* pParameter) { return m_pParameter && pParameter ? m_pParameter->setReferenceTarget(pParameter) : false; }
+			bool setReferenceTarget(IParameter* pParameter) const { return m_parameter && pParameter ? m_parameter->setReferenceTarget(pParameter) : false; }
 			/**
 			 * \brief Sets a new reference target
 			 * \param t [in] : a value to use as reference target
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool setReferenceTarget(T& t) { return m_pParameter ? m_pParameter->setReferenceTarget(&t) : false; }
+			bool setReferenceTarget(T& t) { return m_parameter ? m_parameter->setReferenceTarget(&t) : false; }
 
 			//@}
 
 		protected:
 
-			IParameter* m_pParameter = nullptr; //!< Handled parameter
+			IParameter* m_parameter = nullptr; //!< Handled parameter
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

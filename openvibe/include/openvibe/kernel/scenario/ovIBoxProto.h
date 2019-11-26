@@ -46,42 +46,42 @@ namespace OpenViBE
 			 * \brief Adds an input to the box
 			 * \param name [in] : the name of the input to add
 			 * \param typeID [in] : the type of the input
-			 * \param identifier [in] : The input identifier
+			 * \param id [in] : The input id
 			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**
 			 * \brief Adds an output to the box
 			 * \param name [in] : the name of the output to add
 			 * \param typeID [in] : the type of the output
-			 * \param identifier [in] : The output identifier
+			 * \param id [in] : The output id
 			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
 				
 			/**
 			 * \brief Add an setting to the box
 			 * \param name [in] : the name of the setting to add
 			 * \param typeID [in] : the type of the setting
-			 * \param defaultValue [in] : the default value of this
+			 * \param value [in] : the default value of this
 			 *        setting (used to initialize the box itself)
 			 * \param modifiable [in] : true if modifiable setting 
-			 * \param identifier [in] : The setting identifier
+			 * \param id [in] : The setting id
 			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& defaultValue, const bool modifiable = false,
-									const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const bool modifiable = false,
+									const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
-			 * \param eBoxFlag [in] : the flag to add to the box
+			 * \param flag [in] : the flag to add to the box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const EBoxFlag eBoxFlag) = 0;
+			virtual bool addFlag(const EBoxFlag flag) = 0;
 
 			/**
 			 * \brief Adds a flag to the box

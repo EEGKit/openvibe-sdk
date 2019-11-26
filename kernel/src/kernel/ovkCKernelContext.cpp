@@ -26,34 +26,34 @@
 using namespace OpenViBE;
 using namespace Kernel;
 
-CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
-	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this), m_algorithmManager(nullptr), m_configManager(nullptr),
+CKernelContext::CKernelContext(const IKernelContext* masterKernelCtx, const CString& applicationName, const CString& configFile)
+	: m_masterKernelCtx(masterKernelCtx ? *masterKernelCtx : *this), m_algorithmManager(nullptr), m_configManager(nullptr),
 	  m_kernelObjectFactory(nullptr), m_playerManager(nullptr), m_pluginManager(nullptr), m_metaboxManager(nullptr), m_scenarioManager(nullptr),
-	  m_typeManager(nullptr), m_logManager(nullptr), m_errorManager(nullptr), m_sApplicationName(rApplicationName), m_sConfigurationFile(rConfigurationFile),
+	  m_typeManager(nullptr), m_logManager(nullptr), m_errorManager(nullptr), m_applicationName(applicationName), m_configFile(configFile),
 	  m_logListenerConsole(nullptr), m_logListenerFile(nullptr) {}
 
 CKernelContext::~CKernelContext() { this->uninitialize(); }
 
-bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
+bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 {
 	std::map<std::string, std::string> initializationTokens;
 	const auto tokens = tokenList;
-	while (tokens && tokenCount > 0)
+	while (tokens && nToken > 0)
 	{
 		const auto key   = tokenList++;
 		const auto value = tokenList++;
-		tokenCount--;
+		nToken--;
 		initializationTokens[*key] = *value;
 	}
 
-	m_errorManager.reset(new CErrorManager(m_rMasterKernelContext));
+	m_errorManager.reset(new CErrorManager(m_masterKernelCtx));
 
-	m_kernelObjectFactory.reset(new CKernelObjectFactory(m_rMasterKernelContext));
+	m_kernelObjectFactory.reset(new CKernelObjectFactory(m_masterKernelCtx));
 
-	m_logManager.reset(new CLogManager(m_rMasterKernelContext));
+	m_logManager.reset(new CLogManager(m_masterKernelCtx));
 	m_logManager->activate(true);
 
-	m_configManager.reset(new CConfigurationManager(m_rMasterKernelContext));
+	m_configManager.reset(new CConfigurationManager(m_masterKernelCtx));
 	// We create the configuration manager very soon to be able to deactivate the console log listener
 	if (initializationTokens.count("Kernel_SilentConsole"))
 	{
@@ -62,14 +62,14 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 
 	if (!m_configManager->expandAsBoolean("${Kernel_SilentConsole}", false))
 	{
-		m_logListenerConsole.reset(new CLogListenerConsole(m_rMasterKernelContext, m_sApplicationName));
+		m_logListenerConsole.reset(new CLogListenerConsole(m_masterKernelCtx, m_applicationName));
 		m_logListenerConsole->activate(false);
 		m_logListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
 		this->getLogManager().addListener(m_logListenerConsole.get());
 	}
 
 
-	m_configManager->createConfigurationToken("ApplicationName", m_sApplicationName);
+	m_configManager->createConfigurationToken("ApplicationName", m_applicationName);
 	m_configManager->createConfigurationToken("Path_UserData", Directories::getUserDataDir());
 	m_configManager->createConfigurationToken("Path_Log", Directories::getLogDir());
 	m_configManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
@@ -105,10 +105,10 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 
 	for (auto& token : initializationTokens) { m_configManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 
-	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
+	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_configFile << "]\n";
 
-	OV_ERROR_UNLESS_KRF(m_configManager->addConfigurationFromFile(m_sConfigurationFile),
-						"Problem parsing config file [" << m_sConfigurationFile << "]", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_configManager->addConfigurationFromFile(m_configFile),
+						"Problem parsing config file [" << m_configFile << "]", ErrorType::Internal);
 
 	CString pathTmp = m_configManager->expand("${Path_UserData}");
 	FS::Files::createPath(pathTmp.toASCIIString());
@@ -116,10 +116,10 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	FS::Files::createPath(pathTmp.toASCIIString());
 	pathTmp = m_configManager->expand("${Path_Log}");
 	FS::Files::createPath(pathTmp);
-	const CString logFile = pathTmp + "/openvibe-" + m_sApplicationName + ".log";
+	const CString logFile = pathTmp + "/openvibe-" + m_applicationName + ".log";
 
 	// We do this here to allow user to set the Path_Log in the .conf. The downside is that earlier log messages will not appear in the file log.
-	m_logListenerFile.reset(new CLogListenerFile(m_rMasterKernelContext, m_sApplicationName, logFile));
+	m_logListenerFile.reset(new CLogListenerFile(m_masterKernelCtx, m_applicationName, logFile));
 	m_logListenerFile->activate(true);
 	this->getLogManager().addListener(m_logListenerFile.get());
 
@@ -141,11 +141,9 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 		m_logListenerConsole->configure(*m_configManager);
 	}
 
-	m_algorithmManager.reset(new CAlgorithmManager(m_rMasterKernelContext));
-
-	m_playerManager.reset(new CPlayerManager(m_rMasterKernelContext));
-
-	m_typeManager.reset(new CTypeManager(m_rMasterKernelContext));
+	m_algorithmManager.reset(new CAlgorithmManager(m_masterKernelCtx));
+	m_playerManager.reset(new CPlayerManager(m_masterKernelCtx));
+	m_typeManager.reset(new CTypeManager(m_masterKernelCtx));
 
 	m_typeManager->registerType(OV_TypeId_Boolean, "Boolean");
 	m_typeManager->registerType(OV_TypeId_Integer, "Integer");
@@ -185,11 +183,9 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 
 	m_typeManager->registerType(OV_TypeId_Message, "Message");
 
-	m_scenarioManager.reset(new CScenarioManager(m_rMasterKernelContext));
-
-	m_pluginManager.reset(new CPluginManager(m_rMasterKernelContext));
-
-	m_metaboxManager.reset(new CMetaboxManager(m_rMasterKernelContext));
+	m_scenarioManager.reset(new CScenarioManager(m_masterKernelCtx));
+	m_pluginManager.reset(new CPluginManager(m_masterKernelCtx));
+	m_metaboxManager.reset(new CMetaboxManager(m_masterKernelCtx));
 
 	return true;
 }
@@ -298,18 +294,18 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 {
 	assert(m_logManager);
 
-	std::string l_sValue(rLogLevelName.toASCIIString());
-	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c) { return char(std::tolower(c)); });
+	std::string value(rLogLevelName.toASCIIString());
+	std::transform(value.begin(), value.end(), value.begin(), [](char c) { return char(std::tolower(c)); });
 
-	if (l_sValue == "none") { return LogLevel_None; }
-	if (l_sValue == "debug") { return LogLevel_Debug; }
-	if (l_sValue == "benchmarking / profiling") { return LogLevel_Benchmark; }
-	if (l_sValue == "trace") { return LogLevel_Trace; }
-	if (l_sValue == "information") { return LogLevel_Info; }
-	if (l_sValue == "warning") { return LogLevel_Warning; }
-	if (l_sValue == "important warning") { return LogLevel_ImportantWarning; }
-	if (l_sValue == "error") { return LogLevel_Error; }
-	if (l_sValue == "fatal error") { return LogLevel_Fatal; }
+	if (value == "none") { return LogLevel_None; }
+	if (value == "debug") { return LogLevel_Debug; }
+	if (value == "benchmarking / profiling") { return LogLevel_Benchmark; }
+	if (value == "trace") { return LogLevel_Trace; }
+	if (value == "information") { return LogLevel_Info; }
+	if (value == "warning") { return LogLevel_Warning; }
+	if (value == "important warning") { return LogLevel_ImportantWarning; }
+	if (value == "error") { return LogLevel_Error; }
+	if (value == "fatal error") { return LogLevel_Fatal; }
 
 	OV_WARNING("Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug"), (*m_logManager));
 

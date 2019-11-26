@@ -29,19 +29,19 @@ namespace OpenViBE
 			 */
 			virtual uint64_t getTime() const = 0;
 			/**
-			 * \brief Sets the message identifier for this message
-			 * \param identifier [in] : the new identifier of the message
+			 * \brief Sets the message id for this message
+			 * \param id [in] : the new id of the message
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& id) = 0;
 			/**
 			 * \brief Sets the message timestamp
-			 * \param ui64Time [in] : the new timestamp of the message
+			 * \param time [in] : the new timestamp of the message
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setTime(uint64_t ui64Time) = 0;
+			virtual bool setTime(const uint64_t time) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Message)
 		};

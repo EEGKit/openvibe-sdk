@@ -38,13 +38,13 @@ namespace OpenViBE
 		 */
 		virtual size_t getDimensionSize(const size_t index) const = 0;
 		/**
-		 * \brief Gets the dimension label for a given dimension index / dimension entry index pair
-		 * \param index [in] : the dimension index
-		 * \param entryIdx [in] : the dimension entry index for the specified dimension index
-		 * \return the dimension label for the given dimension index / dimension entry index pair
+		 * \brief Gets the dimension label for a given dimension idx1 / dimension entry idx1 pair
+		 * \param idx1 [in] : the dimension idx1
+		 * \param idx2 [in] : the dimension entry idx1 for the specified dimension idx1
+		 * \return the dimension label for the given dimension idx1 / dimension entry idx1 pair
 		 * \note The string is permanent pointer until the dimension size or the label itself changes
 		 */
-		virtual const char* getDimensionLabel(const size_t index, const size_t entryIdx) const = 0;
+		virtual const char* getDimensionLabel(const size_t idx1, const size_t idx2) const = 0;
 
 		/**
 		 * \brief Gets the raw buffer for this matrix
@@ -91,11 +91,11 @@ namespace OpenViBE
 
 		/**
 		 * \brief Sets dimension count for this matrix
-		 * \param nDimension [in] : the number of dimension for this matrix
+		 * \param count [in] : the number of dimension for this matrix
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setDimensionCount(const size_t nDimension) = 0;
+		virtual bool setDimensionCount(const size_t count) = 0;
 		/**
 		 * \brief Sets the dimension size for this matrix on a given dimension index
 		 * \param index [in] : the dimension index which size has to be changed
@@ -105,14 +105,14 @@ namespace OpenViBE
 		 */
 		virtual bool setDimensionSize(const size_t index, const size_t size) = 0;
 		/**
-		 * \brief Sets the dimension label for this matrix on a given dimension index / dimension entry index pair
-		 * \param index [in] : the dimension index
-		 * \param entryIdx [in] : the entry index in the specificed dimension which label has to be changed
-		 * \param label [in] : the new dimension label to apply to this dimension index / dimension entry index pair
+		 * \brief Sets the dimension label for this matrix on a given dimension idx1 / dimension entry idx1 pair
+		 * \param idx1 [in] : the dimension idx1
+		 * \param idx2 [in] : the entry idx1 in the specificed dimension which label has to be changed
+		 * \param label [in] : the new dimension label to apply to this dimension idx1 / dimension entry idx1 pair
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setDimensionLabel(const size_t index, const size_t entryIdx, const char* label) = 0;
+		virtual bool setDimensionLabel(const size_t idx1, const size_t idx2, const char* label) = 0;
 
 		/**
 		 * \brief Gets a writable raw buffer for this matrix

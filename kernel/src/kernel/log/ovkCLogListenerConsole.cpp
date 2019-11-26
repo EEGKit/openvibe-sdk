@@ -14,7 +14,7 @@ using namespace Kernel;
 using namespace std;
 
 CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)
-	: TKernelObject<ILogListener>(ctx), m_eLogColor(LogColor_Default), m_sApplicationName(sApplicationName), m_bTimeInSeconds(true), m_timePrecision(3), m_bUseColor(true)
+	: TKernelObject<ILogListener>(ctx), m_eLogColor(LogColor_Default), m_applicationName(sApplicationName), m_bTimeInSeconds(true), m_timePrecision(3), m_bUseColor(true)
 {
 #if defined TARGET_OS_Windows
 	SetConsoleOutputCP(CP_UTF8);

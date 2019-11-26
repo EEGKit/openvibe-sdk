@@ -15,7 +15,7 @@ namespace OpenViBEToolkit
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
-		using T::m_oBuffer;
+		using T::m_buffer;
 		using T::m_iMatrix;
 
 		bool initializeImpl()
@@ -24,7 +24,7 @@ namespace OpenViBEToolkit
 			m_codec->initialize();
 			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_InputParameterId_Matrix));
 			m_iDynamic.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_InputParameterId_Dynamic));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_buffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -39,7 +39,7 @@ namespace OpenViBEToolkit
 			m_iMatrix.uninitialize();
 			m_iDynamic.uninitialize();
 
-			m_oBuffer.uninitialize();
+			m_buffer.uninitialize();
 			m_codec->uninitialize();
 			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
 			m_boxAlgorithm = NULL;

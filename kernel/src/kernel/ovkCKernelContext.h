@@ -15,9 +15,9 @@ namespace OpenViBE
 		{
 		public:
 
-			CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile);
+			CKernelContext(const IKernelContext* masterKernelCtx, const CString& applicationName, const CString& configFile);
 			~CKernelContext() override;
-			bool initialize(const char* const * tokenList, size_t tokenCount) override;
+			bool initialize(const char* const * tokenList, size_t nToken) override;
 			bool uninitialize() override;
 			IAlgorithmManager& getAlgorithmManager() const override;
 			IConfigurationManager& getConfigurationManager() const override;
@@ -38,7 +38,7 @@ namespace OpenViBE
 
 		private:
 
-			const IKernelContext& m_rMasterKernelContext;
+			const IKernelContext& m_masterKernelCtx;
 
 			std::unique_ptr<IAlgorithmManager> m_algorithmManager;
 			std::unique_ptr<IConfigurationManager> m_configManager;
@@ -51,8 +51,8 @@ namespace OpenViBE
 			std::unique_ptr<ILogManager> m_logManager;
 			std::unique_ptr<IErrorManager> m_errorManager;
 
-			CString m_sApplicationName;
-			CString m_sConfigurationFile;
+			CString m_applicationName;
+			CString m_configFile;
 
 			std::unique_ptr<CLogListenerConsole> m_logListenerConsole;
 			std::unique_ptr<CLogListenerFile> m_logListenerFile;

@@ -204,23 +204,23 @@ namespace OpenViBE
 			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousID, const CIdentifier& boxID, size_t index) const = 0;
 
 			/**
-			 * \brief Tests whether a given identifier is a link or not
-			 * \param identifier the identifier to test
+			 * \brief Tests whether a given id is a link or not
+			 * \param id the id to test
 			 * \retval true if the identified object is a link
 			 * \retval false if the identified object is not a link
-			 * \note Requesting a bad identifier returns \e false
+			 * \note Requesting a bad id returns \e false
 			 */
-			virtual bool isLink(const CIdentifier& identifier) const = 0;
+			virtual bool isLink(const CIdentifier& id) const = 0;
 
 			/**
 			 * \brief Gets the details for a specific link
-			 * \param linkID The identifier of the link which details should be sent.
+			 * \param id The identifier of the link which details should be sent.
 			 * \return The link details
 			 */
-			virtual const ILink* getLinkDetails(const CIdentifier& linkID) const = 0;
+			virtual const ILink* getLinkDetails(const CIdentifier& id) const = 0;
 
 			/// \copydoc getLinkDetails(const OpenViBE::CIdentifier&)const
-			virtual ILink* getLinkDetails(const CIdentifier& linkID) = 0;
+			virtual ILink* getLinkDetails(const CIdentifier& id) = 0;
 
 			/**
 			 * \brief Creates a connection between two boxes
@@ -259,11 +259,11 @@ namespace OpenViBE
 			 * \param srcBoxID The source box identifier
 			 * \param srcBoxOutputIdx The output index for the given source box
 			 * \param dstBoxID The target box identifier
-			 * \param dstBoxInputIndex The input index for the given target box
+			 * \param dstBoxInputIdx The input index for the given target box
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(const CIdentifier& srcBoxID, size_t srcBoxOutputIdx, const CIdentifier& dstBoxID, size_t dstBoxInputIndex) = 0;
+			virtual bool disconnect(const CIdentifier& srcBoxID, size_t srcBoxOutputIdx, const CIdentifier& dstBoxID, size_t dstBoxInputIdx) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -298,10 +298,10 @@ namespace OpenViBE
 			 * \brief Get the input index of a target, for a specific box
 			 * \param[in] dstBoxID The target box identifier
 			 * \param[in] dstBoxInputID The input identifier for the given target box
-			 * \param[out] dstBoxInputIndex The input index for the given target box
+			 * \param[out] dstBoxInputIdx The input index for the given target box
 			 * \retval true in case of success.
 			 */
-			virtual bool getTargetBoxInputIndex(const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, size_t& dstBoxInputIndex) = 0;
+			virtual bool getTargetBoxInputIndex(const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, size_t& dstBoxInputIdx) = 0;
 
 			/**
 			 * \brief  Get the output identifier of a source, for a specific box
@@ -315,11 +315,11 @@ namespace OpenViBE
 			/**
 			 * \brief  Get the input identifier of a target, for a specific box
 			 * \param dstBoxID The target box identifier
-			 * \param dstBoxInputIndex The input index for the given target box
+			 * \param dstBoxInputIdx The input index for the given target box
 			 * \param dstBoxInputID The input identifier for the given target box
 			 * \retval true in case of success.
 			 */
-			virtual bool getTargetBoxInputIdentifier(const CIdentifier& dstBoxID, const size_t& dstBoxInputIndex, CIdentifier& dstBoxInputID) = 0;
+			virtual bool getTargetBoxInputIdentifier(const CIdentifier& dstBoxID, const size_t& dstBoxInputIdx, CIdentifier& dstBoxInputID) = 0;
 
 			//@}
 			/** \name Scenario Input/Output and MetaBox management */
@@ -466,9 +466,9 @@ namespace OpenViBE
 			/**
 			 * \brief Check settings before playing scenario, if the settings are not suitable, stop scenario
 			 * and launch a console warning. Only check numeric values in the beginning
-			 * \param configurationManager: local configuration manager that can contain the definition of local scenario settings
+			 * \param configManager: local configuration manager that can contain the definition of local scenario settings
 			 */
-			virtual bool checkSettings(IConfigurationManager* configurationManager) = 0;
+			virtual bool checkSettings(IConfigurationManager* configManager) = 0;
 
 			/**
 			 * \brief Check if boxes in scenario need to be updated. Feed an map of updates boxes instances with the identifiers

@@ -74,11 +74,11 @@ namespace OpenViBE
 			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& prevInputParameterID) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific input parameter
-			 * \param InputParameterID [in] : the identifier of the parameter which details should be returned
+			 * \param id [in] : the identifier of the parameter which details should be returned
 			 * \return the parameter pointer that corresponds to the provided identifier.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IParameter* getInputParameter(const CIdentifier& InputParameterID) = 0;
+			virtual IParameter* getInputParameter(const CIdentifier& id) = 0;
 
 			//@}
 			/** \name Output parameters */
@@ -95,11 +95,11 @@ namespace OpenViBE
 			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& prevOutputParameterID) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific output parameter
-			 * \param outputParameterID [in] : the identifier of the parameter which details should be returned
+			 * \param id [in] : the identifier of the parameter which details should be returned
 			 * \return the parameter pointer that corresponds to the provided identifier.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IParameter* getOutputParameter(const CIdentifier& outputParameterID) = 0;
+			virtual IParameter* getOutputParameter(const CIdentifier& id) = 0;
 
 			//@}
 			/** \name Trigger management */
@@ -107,20 +107,20 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tests whether an input trigger is activated or not.
-			 * \param inputTriggerID [in] : the identifier of the input trigger which activation status should be returned
+			 * \param id [in] : the identifier of the input trigger which activation status should be returned
 			 * \return \e true if the provided trigger is currently active.
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
-			virtual bool isInputTriggerActive(const CIdentifier& inputTriggerID) const = 0;
+			virtual bool isInputTriggerActive(const CIdentifier& id) const = 0;
 			/**
 			 * \brief Activates an output trigger before calling the processing function.
-			 * \param outputTriggerID [in] : the identifier of the output to activate
+			 * \param id [in] : the identifier of the output to activate
 			 * \param state [in]: the new trigger state this output trigger should take
 			 *                            (\e true for active, \e false for inactive)
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, const bool state) = 0;
+			virtual bool activateOutputTrigger(const CIdentifier& id, const bool state) = 0;
 
 			//@}
 

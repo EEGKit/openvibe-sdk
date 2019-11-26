@@ -338,14 +338,8 @@ do { \
  */
 #define OV_FATAL(description, type, logManager) \
 do { \
-	logManager << OpenViBE::Kernel::LogLevel_Fatal \
-			   << "{Error description} : {" \
-			   << description \
-			   << "}, {Error type} : {" \
-			   << convertErrorTypeToString(type) \
-			   << " (code " \
-			   << size_t((type)) \
-			   << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
+	logManager << OpenViBE::Kernel::LogLevel_Fatal << "{Error description} : {" << description << "}, {Error type} : {" \
+			   << convertErrorTypeToString(type) << " (code " << size_t((type)) << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
 	std::abort(); \
 } while(0)
 
@@ -356,13 +350,7 @@ do { \
  * Use this macro to handle fatal errors unless the condition expressed by
  * \a expression is true.
  */
-#define OV_FATAL_UNLESS(expression, description, type, logManager) \
-do { \
-	if (!(expression)) \
-	{ \
-		OV_FATAL(description, type, logManager); \
-	} \
-} while(0)
+#define OV_FATAL_UNLESS(expression, description, type, logManager) do { if (!(expression)) { OV_FATAL(description, type, logManager); } } while(0)
 
 /**
  * \def OV_FATAL_K(description, type)

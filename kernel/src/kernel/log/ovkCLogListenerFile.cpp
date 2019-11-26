@@ -12,7 +12,7 @@ using namespace Kernel;
 using namespace std;
 
 CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename)
-	: TKernelObject<ILogListener>(ctx), m_sApplicationName(applicationName), m_sLogFilename(logFilename)
+	: TKernelObject<ILogListener>(ctx), m_applicationName(applicationName), m_logFilename(logFilename)
 {
 
 	// Create the path to the log file

@@ -435,8 +435,8 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 
 				if (lowerPrefix.empty())
 				{
-					// l_sValue=this->getConfigurationTokenValue(this->lookUpConfigurationTokenIdentifier(postfix.c_str()));
-					// this->internalGetConfigurationTokenValueFromName(postfix, l_sValue);
+					// value = this->getConfigurationTokenValue(this->lookUpConfigurationTokenIdentifier(postfix.c_str()));
+					// this->internalGetConfigurationTokenValueFromName(postfix, value);
 					value = this->lookUpConfigurationTokenValue(postfix.c_str()).toASCIIString();
 				}
 				else if (lowerPrefix == "environment" || lowerPrefix == "env")

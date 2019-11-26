@@ -28,7 +28,7 @@ namespace OpenViBEToolkit
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
-		using T::m_oBuffer;
+		using T::m_buffer;
 
 		bool initializeImpl()
 		{
@@ -47,7 +47,7 @@ namespace OpenViBEToolkit
 			m_technicianID.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID));
 			m_technicianName.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName));
 
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ExperimentInfoEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_buffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ExperimentInfoEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -70,7 +70,7 @@ namespace OpenViBEToolkit
 			m_technicianID.uninitialize();
 			m_technicianName.uninitialize();
 
-			m_oBuffer.uninitialize();
+			m_buffer.uninitialize();
 			m_codec->uninitialize();
 			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
 			m_boxAlgorithm = NULL;

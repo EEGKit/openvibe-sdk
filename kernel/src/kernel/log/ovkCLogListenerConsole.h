@@ -43,7 +43,7 @@ namespace OpenViBE
 			std::map<ELogLevel, bool> m_vActiveLevel;
 			std::stack<ELogColor> m_vLogColor;
 			ELogColor m_eLogColor;
-			CString m_sApplicationName;
+			CString m_applicationName;
 
 			bool m_logWithHexa       = false;
 			bool m_bTimeInSeconds    = false;

@@ -45,9 +45,9 @@ void CBoxSettingModifierVisitor::closeChild()
 	m_IsParsingSettingValue = false;
 }
 
-bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& box)
+bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& visitorCtx, IBox& box)
 {
-	m_ObjectVisitorCtx = &rObjectVisitorContext;
+	m_ObjectVisitorCtx = &visitorCtx;
 
 	// checks if this box should override
 	// settings from external file
@@ -55,11 +55,11 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 	{
 		const CString settingOverrideFilename = box.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
 		CString settingOverrideFilenameFinal;
-		if (m_ConfigManager == nullptr) { settingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(settingOverrideFilename); }
+		if (m_ConfigManager == nullptr) { settingOverrideFilenameFinal = visitorCtx.getConfigurationManager().expand(settingOverrideFilename); }
 		else { settingOverrideFilenameFinal = m_ConfigManager->expand(settingOverrideFilename); }
 
 		// message
-		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
+		visitorCtx.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
 				settingOverrideFilename << " which expands to " << settingOverrideFilenameFinal << "] !\n";
 
 		// creates XML reader
@@ -110,7 +110,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			// message
 			if (m_SettingIdx == box.getSettingCount())
 			{
-				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_SettingIdx << " setting(s) with this configuration file...\n";
+				visitorCtx.getLogManager() << LogLevel_Trace << "Overrode " << m_SettingIdx << " setting(s) with this configuration file...\n";
 
 				for (size_t i = 0; i < m_SettingIdx; ++i)
 				{
@@ -123,9 +123,9 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 					value         = m_ConfigManager->expand(value);
 					CIdentifier settingType;
 					box.getSettingType(i, settingType);
-					if (!checkSettingValue(value, settingType, rObjectVisitorContext.getTypeManager()))
+					if (!checkSettingValue(value, settingType, visitorCtx.getTypeManager()))
 					{
-						const auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
+						const auto settingTypeName = visitorCtx.getTypeManager().getTypeName(settingType);
 						cleanup();
 						OV_ERROR("<" << box.getName() << "> The following value: [" << rawSettingvalue << "] expanded as [" << value
 								 << "] given as setting is not a valid [" << settingTypeName << "] value.",
@@ -164,8 +164,8 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 	return true;
 }
 
-bool CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& rObjectVisitorContext, IBox& /*box*/)
+bool CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& visitorCtx, IBox& /*box*/)
 {
-	m_ObjectVisitorCtx = &rObjectVisitorContext;
+	m_ObjectVisitorCtx = &visitorCtx;
 	return true;
 }

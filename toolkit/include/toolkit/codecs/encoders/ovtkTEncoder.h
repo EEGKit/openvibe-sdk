@@ -13,16 +13,16 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> m_oBuffer;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> m_buffer;
 
 		using T::initialize;
 		using T::m_codec;
 		using T::m_boxAlgorithm;
 		using T::m_connectorIdx;
 
-		virtual void setOutputChunk(OpenViBE::IMemoryBuffer* pOutputChunkMemoryBuffer) { m_oBuffer = pOutputChunkMemoryBuffer; }
+		virtual void setOutputChunk(OpenViBE::IMemoryBuffer* pOutputChunkMemoryBuffer) { m_buffer = pOutputChunkMemoryBuffer; }
 
-		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getOutputMemoryBuffer() { return m_oBuffer; }
+		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getOutputMemoryBuffer() { return m_buffer; }
 
 		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier oTrigger) { return m_codec->isOutputTriggerActive(oTrigger); }
 

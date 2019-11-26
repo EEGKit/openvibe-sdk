@@ -75,11 +75,11 @@ namespace OpenViBE
 		virtual bool append(const uint8_t* buffer, const size_t size) = 0;
 		/**
 		 * \brief Appends data to this memory buffer
-		 * \param memoryBuffer [in] : the memory buffer containing data that should be appended
+		 * \param buffer [in] : the memory buffer containing data that should be appended
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool append(const IMemoryBuffer& memoryBuffer) { return this->append(memoryBuffer.getDirectPointer(), memoryBuffer.getSize()); }
+		virtual bool append(const IMemoryBuffer& buffer) { return this->append(buffer.getDirectPointer(), buffer.getSize()); }
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer)
 

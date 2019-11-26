@@ -14,7 +14,6 @@ struct CObservable::SObserverList
 };
 
 CObservable::CObservable() { m_observers = new SObserverList(); }
-
 CObservable::~CObservable() { delete m_observers; }
 
 void CObservable::addObserver(IObserver* o) { m_observers->m_Vector.push_back(o); }
@@ -33,9 +32,7 @@ void CObservable::deleteObserver(IObserver* o)
 }
 
 void CObservable::setChanged() { m_hasChanged = true; }
-
 void CObservable::clearChanged() { m_hasChanged = false; }
-
 bool CObservable::hasChanged() { return m_hasChanged; }
 
 void CObservable::notifyObservers(void* data)

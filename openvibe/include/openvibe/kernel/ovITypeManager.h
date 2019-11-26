@@ -49,16 +49,16 @@ namespace OpenViBE
 			/**
 			 * \brief Registers a new simple type of data
 			 * \param typeID [in] : the identifier for this type
-			 * \param sTypeName [in] : the name for this type
+			 * \param name [in] : the name for this type
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool registerType(const CIdentifier& typeID, const CString& sTypeName) = 0;
+			virtual bool registerType(const CIdentifier& typeID, const CString& name) = 0;
 			/**
 			 * \brief Registers a new communication stream type
 			 * \param typeID [in] : the identifier for this type
-			 * \param sTypeName [in] : the name for this type
-			 * \param parentTypeIdentifier [in] : the parent stream type identifier
+			 * \param name [in] : the name for this type
+			 * \param parentTypeID [in] : the parent stream type identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
@@ -68,11 +68,11 @@ namespace OpenViBE
 			 * to determine what stream is compatible with what other stream and
 			 * to allow box connections or not.
 			 */
-			virtual bool registerStreamType(const CIdentifier& typeID, const CString& sTypeName, const CIdentifier& parentTypeIdentifier) = 0;
+			virtual bool registerStreamType(const CIdentifier& typeID, const CString& name, const CIdentifier& parentTypeID) = 0;
 			/**
 			 * \brief Registers a new enumeration type
 			 * \param typeID [in] : the type identifier for this type
-			 * \param sTypeName [in] : the name for this type
+			 * \param name [in] : the name for this type
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \sa registerEnumerationEntry
@@ -80,7 +80,7 @@ namespace OpenViBE
 			 * An enumeration should have several possible values.
 			 * This values have to be created thanks to \c registerEnumerationEntry
 			 */
-			virtual bool registerEnumerationType(const CIdentifier& typeID, const CString& sTypeName) = 0;
+			virtual bool registerEnumerationType(const CIdentifier& typeID, const CString& name) = 0;
 			/**
 			 * \brief Registers a new enumeration value for a given enumeration type
 			 * \param typeID [in] : the type identifier of the enumeration which new entry has to be registered
@@ -95,7 +95,7 @@ namespace OpenViBE
 			/**
 			 * \brief Registers a new bitmask type
 			 * \param typeID [in] : the type identifier for this type
-			 * \param sTypeName [in] : the name for this type
+			 * \param name [in] : the name for this type
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \sa registerBitMaskEntry
@@ -103,7 +103,7 @@ namespace OpenViBE
 			 * A bitmask should have several possible values.
 			 * This values have to be created thanks to \c registerBitMaskEntry
 			 */
-			virtual bool registerBitMaskType(const CIdentifier& typeID, const CString& sTypeName) = 0;
+			virtual bool registerBitMaskType(const CIdentifier& typeID, const CString& name) = 0;
 			/**
 			 * \brief Registers a new bitmask value for a given bitmask type
 			 * \param typeID [in] : the type identifier of the bitmask which new entry has to be registered
@@ -137,17 +137,17 @@ namespace OpenViBE
 			/**
 			 * \brief Tests is a specific type has been registered, is a stream and is derived from another registered stream type
 			 * \param typeID [in] : the type identifier which registration and derivation has to be tested
-			 * \param parentTypeIdentifier [in] : the type identifier of the supposed parent stream
-			 * \return \e true in case \c typeID is registered as a stream type and derived from \c parentTypeIdentifier
-			 * \return \e false in case \c parentTypeIdentifier is not registered
-			 * \return \e false in case \c parentTypeIdentifier is not a stream
+			 * \param parentTypeID [in] : the type identifier of the supposed parent stream
+			 * \return \e true in case \c typeID is registered as a stream type and derived from \c parentTypeID
+			 * \return \e false in case \c parentTypeID is not registered
+			 * \return \e false in case \c parentTypeID is not a stream
 			 * \return \e false in case \c typeID is not registered
 			 * \return \e false in case \c typeID is not a stream
-			 * \return \e false in case \c typeID is not derived from parentTypeIdentifier
+			 * \return \e false in case \c typeID is not derived from parentTypeID
 			 * \note The derivation can be indirect (\c typeID can derive an
-			 *       intermediate stream type which derives \c parentTypeIdentifier)
+			 *       intermediate stream type which derives \c parentTypeID)
 			 */
-			virtual bool isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& parentTypeIdentifier) const = 0;
+			virtual bool isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& parentTypeID) const = 0;
 			/**
 			 * \brief Tests if a specific type has been registered and is an enumeration
 			 * \param typeID [in] : the type identifier which registration has to be tested
@@ -195,13 +195,13 @@ namespace OpenViBE
 			/**
 			 * \brief Gets details for a specific enumeration type entry
 			 * \param typeID [in] : the enumeration type identifier
-			 * \param ui64EntryIndex [in] : the index of the entry which details should be returned
+			 * \param index [in] : the index of the entry which details should be returned
 			 * \param name [out] : the name of the specified entry
 			 * \param value [out] : the value of the speficied entry
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getEnumerationEntry(const CIdentifier& typeID, uint64_t ui64EntryIndex, CString& name, uint64_t& value) const = 0;
+			virtual bool getEnumerationEntry(const CIdentifier& typeID, uint64_t index, CString& name, uint64_t& value) const = 0;
 			/**
 			 * \brief Converts an enumeration entry value to an enumeration entry name
 			 * \param typeID [in] : the enumeration type identifier
@@ -273,14 +273,14 @@ namespace OpenViBE
 			virtual uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& name) const = 0;
 
 			/**
-			* \brief Evaluate the string arithmetic expression settingValue 
+			* \brief Evaluate the string arithmetic expression value 
 			* to a numeric value as a float
-			* \param settingValue [in] : arithmetic expression to evaluate
-			* \param numericResult [out] : result of evaluation
+			* \param value [in] : arithmetic expression to evaluate
+			* \param result [out] : result of evaluation
 			* \return true if the arithmetic evaluation succeeded, 
 			* \return false if the arithmetic expression is incorrect
 			*/
-			virtual bool evaluateSettingValue(CString settingValue, double& numericResult) const = 0;
+			virtual bool evaluateSettingValue(CString value, double& result) const = 0;
 
 			//@}
 

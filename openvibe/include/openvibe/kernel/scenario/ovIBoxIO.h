@@ -35,15 +35,15 @@ namespace OpenViBE
 			 * \brief Gets an input chunk and its time validity.
 			 * \param inputIdx [in] : the index of the desired input.
 			 * \param chunkIdx [in] : the index of the desired chunk in this input.
-			 * \param rStartTime [out] : the time which the chunk starts at
-			 * \param rEndTime [out] : the time which the chunk ends at
-			 * \param rChunkSize [out] : the chunk buffer size in bytes
-			 * \param rpChunkBuffer [out] : the chunk data itself
+			 * \param startTime [out] : the time which the chunk starts at
+			 * \param endTime [out] : the time which the chunk ends at
+			 * \param size [out] : the chunk buffer size in bytes
+			 * \param buffer [out] : the chunk data itself
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \warning When returning \e false, none of the value
-			 *          \c rStartTime, \c rEndTime, \c rChunkSize nor
-			 *          \c rpChunkBuffer are defined.
+			 *          \c startTime, \c endTime, \c size nor
+			 *          \c buffer are defined.
 			 * \warning The chunks are ordered like they arrived
 			 *          to the box, this means chunk 0 arrived
 			 *          before chunk 1, that arrived before
@@ -52,8 +52,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, size_t& rChunkSize,
-									   const uint8_t*& rpChunkBuffer) const = 0;
+			virtual bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size, const uint8_t*& buffer) const = 0;
 			/**
 			 * \brief Gets an input chunk.
 			 * \param inputIdx [in] : the index of the desired input.
@@ -128,11 +127,11 @@ namespace OpenViBE
 			 * \brief Sets an output chunk size
 			 * \param index [in] : the index of the output to work on
 			 * \param size [in] : the new size of the output chunk
-			 * \param bDiscard [in] : tells if existing buffer should be discarded or not
+			 * \param discard [in] : tells if existing buffer should be discarded or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setOutputChunkSize(const size_t index, const size_t size, const bool bDiscard = true) = 0;
+			virtual bool setOutputChunkSize(const size_t index, const size_t size, const bool discard = true) = 0;
 			/**
 			 * \brief Gets a pointer to the current output chunk buffer
 			 * \param index [in] : the index of the output to work on
@@ -161,9 +160,9 @@ namespace OpenViBE
 			/**
 			 * \brief Marks output buffer as 'ready to send'
 			 * \param index [in] : the index of the output to work on
-			 * \param ui64StartTime [in] : the start time for
+			 * \param startTime [in] : the start time for
 			 *        the related buffer.
-			 * \param ui64EndTime [in] : the end time for the
+			 * \param endTime [in] : the end time for the
 			 *        related buffer.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
@@ -182,7 +181,7 @@ namespace OpenViBE
 			 * \note Both time value are given in fixed point 32:32 seconds
 			 * \sa getChunk
 			 */
-			virtual bool markOutputAsReadyToSend(const size_t index, const uint64_t ui64StartTime, const uint64_t ui64EndTime) = 0;
+			virtual bool markOutputAsReadyToSend(const size_t index, const uint64_t startTime, const uint64_t endTime) = 0;
 
 			//@}
 

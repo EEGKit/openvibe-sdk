@@ -34,11 +34,11 @@ namespace OpenViBE
 		CNameValuePairList();
 		/**
 		 * \brief Copy constructor
-		 * \param rNameValuePairList [in] : The list to copy
+		 * \param pairs [in] : The list to copy
 		 *
-		 * Copies the contents of \c rNameValuePairList into the new list.
+		 * Copies the contents of \c pairs into the new list.
 		 */
-		CNameValuePairList(const CNameValuePairList& rNameValuePairList);
+		CNameValuePairList(const CNameValuePairList& pairs);
 		/**
 		 * \brief Destructor
 		 *
@@ -52,10 +52,10 @@ namespace OpenViBE
 
 		/**
 		 * \brief Affectation operator (copy)
-		 * \param rNameValuePairList [in] : The list to copy
+		 * \param pairs [in] : The list to copy
 		 * \return This list.
 		 */
-		CNameValuePairList& operator=(const CNameValuePairList& rNameValuePairList);
+		CNameValuePairList& operator=(const CNameValuePairList& pairs);
 		//@}
 
 		/**

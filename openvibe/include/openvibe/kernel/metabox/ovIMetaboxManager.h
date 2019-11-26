@@ -50,45 +50,44 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets details on a specific metabox object descriptor
-			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which details should be returned
+			 * \param[in] id : the metabox object descriptor identifier which details should be returned
 			 * \return the corresponding metabox object descriptor pointer.
 			 */
-			virtual const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const CIdentifier& metaboxIdentifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const CIdentifier& id) const = 0;
 
 			/**
 			 * \brief Sets details on a specific metabox object descriptor
-			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier
-			 * \param[in] metaboxDescriptor : the metabox object descriptor
+			 * \param[in] id : the metabox object descriptor identifier
+			 * \param[in] desc : the metabox object descriptor
 			 */
-			virtual void setMetaboxObjectDesc(const CIdentifier& metaboxIdentifier,
-											  Plugins::IPluginObjectDesc* metaboxDescriptor) = 0;
+			virtual void setMetaboxObjectDesc(const CIdentifier& id, Plugins::IPluginObjectDesc* desc) = 0;
 
 
 			/**
 			 * \brief Gets the path of the scenario of a specific metabox
-			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which path should be returned
+			 * \param[in] id : the metabox object descriptor identifier which path should be returned
 			 * \return the path to the scenario file of the metabox.
 			 */
-			virtual CString getMetaboxFilePath(const CIdentifier& metaboxIdentifier) const = 0;
+			virtual CString getMetaboxFilePath(const CIdentifier& id) const = 0;
 			/**
 			 * \brief Sets the path of the scenario of a specific metabox
-			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier
+			 * \param[in] id : the metabox object descriptor identifier
 			 * \param[in] filePath : the metabox scenario path
 			 */
-			virtual void setMetaboxFilePath(const CIdentifier& metaboxIdentifier, const CString& filePath) = 0;
+			virtual void setMetaboxFilePath(const CIdentifier& id, const CString& filePath) = 0;
 
 			/**
 			 * \brief Gets the hash of the metabox
-			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which hash should be returned
+			 * \param[in] id : the metabox object descriptor identifier which hash should be returned
 			 * \return the hash of the metabox.
 			 */
-			virtual CIdentifier getMetaboxHash(const CIdentifier& metaboxIdentifier) const = 0;
+			virtual CIdentifier getMetaboxHash(const CIdentifier& id) const = 0;
 			/**
 			 * \brief Sets the hash of the metabox
-			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier
+			 * \param[in] id : the metabox object descriptor identifier
 			 * \param[in] hash : the metabox hash
 			 */
-			virtual void setMetaboxHash(const CIdentifier& metaboxIdentifier, const CIdentifier& hash) = 0;
+			virtual void setMetaboxHash(const CIdentifier& id, const CIdentifier& hash) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Metabox_MetaboxManager)
 		};

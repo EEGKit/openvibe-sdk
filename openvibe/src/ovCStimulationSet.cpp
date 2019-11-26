@@ -15,8 +15,8 @@ namespace OpenViBE
 
 			CStimulation() { }
 
-			CStimulation(const uint64_t identifier, const uint64_t date, const uint64_t duration)
-				: m_Id(identifier), m_Date(date), m_Duration(duration) { }
+			CStimulation(const uint64_t id, const uint64_t date, const uint64_t duration)
+				: m_Id(id), m_Date(date), m_Duration(duration) { }
 
 			uint64_t m_Id       = 0;
 			uint64_t m_Date     = 0;
@@ -28,15 +28,15 @@ namespace OpenViBE
 		public:
 			void clear() override { m_stimulations.clear(); }
 			size_t getStimulationCount() const override { return m_stimulations.size(); }
-			uint64_t getStimulationIdentifier(const size_t index) const override { return m_stimulations[size_t(index)].m_Id; }
-			uint64_t getStimulationDate(const size_t index) const override { return m_stimulations[size_t(index)].m_Date; }
-			uint64_t getStimulationDuration(const size_t index) const override { return m_stimulations[size_t(index)].m_Duration; }
+			uint64_t getStimulationIdentifier(const size_t index) const override { return m_stimulations[index].m_Id; }
+			uint64_t getStimulationDate(const size_t index) const override { return m_stimulations[index].m_Date; }
+			uint64_t getStimulationDuration(const size_t index) const override { return m_stimulations[index].m_Duration; }
 			bool setStimulationCount(const size_t n) override;
-			bool setStimulationIdentifier(const size_t index, const uint64_t identifier) override;
+			bool setStimulationIdentifier(const size_t index, const uint64_t id) override;
 			bool setStimulationDate(const size_t index, const uint64_t date) override;
 			bool setStimulationDuration(const size_t index, const uint64_t duration) override;
-			size_t appendStimulation(const uint64_t identifier, const uint64_t date, const uint64_t duration) override;
-			size_t insertStimulation(const size_t index, const uint64_t identifier, const uint64_t date, const uint64_t duration) override;
+			size_t appendStimulation(const uint64_t id, const uint64_t date, const uint64_t duration) override;
+			size_t insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration) override;
 			bool removeStimulation(const size_t index) override;
 
 			_IsDerivedFromClass_Final_(IStimulationSet, OV_ClassId_StimulationSetImpl)
@@ -57,9 +57,9 @@ bool CStimulationSetImpl::setStimulationCount(const size_t n)
 	return true;
 }
 
-bool CStimulationSetImpl::setStimulationIdentifier(const size_t index, const uint64_t identifier)
+bool CStimulationSetImpl::setStimulationIdentifier(const size_t index, const uint64_t id)
 {
-	m_stimulations[size_t(index)].m_Id = identifier;
+	m_stimulations[size_t(index)].m_Id = id;
 	return true;
 }
 
@@ -75,17 +75,17 @@ bool CStimulationSetImpl::setStimulationDuration(const size_t index, const uint6
 	return true;
 }
 
-size_t CStimulationSetImpl::appendStimulation(const uint64_t identifier, const uint64_t date, const uint64_t duration)
+size_t CStimulationSetImpl::appendStimulation(const uint64_t id, const uint64_t date, const uint64_t duration)
 {
-	m_stimulations.push_back(CStimulation(identifier, date, duration));
+	m_stimulations.push_back(CStimulation(id, date, duration));
 	return m_stimulations.size() - 1;
 }
 
-size_t CStimulationSetImpl::insertStimulation(const size_t index, const uint64_t identifier, const uint64_t date, const uint64_t duration)
+size_t CStimulationSetImpl::insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration)
 {
 	if (index > m_stimulations.size()) { return false; }
-	if (index == m_stimulations.size()) { m_stimulations.push_back(CStimulation(identifier, date, duration)); }
-	else { m_stimulations.insert(m_stimulations.begin() + size_t(index), CStimulation(identifier, date, duration)); }
+	if (index == m_stimulations.size()) { m_stimulations.push_back(CStimulation(id, date, duration)); }
+	else { m_stimulations.insert(m_stimulations.begin() + size_t(index), CStimulation(id, date, duration)); }
 	return true;
 }
 
@@ -99,4 +99,4 @@ bool CStimulationSetImpl::removeStimulation(const size_t index)
 // ________________________________________________________________________________________________________________
 //
 
-CStimulationSet::CStimulationSet() { m_stimulationSet = new CStimulationSetImpl(); }
+CStimulationSet::CStimulationSet() { m_stimSet = new CStimulationSetImpl(); }

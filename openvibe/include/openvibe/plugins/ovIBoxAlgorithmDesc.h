@@ -37,7 +37,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the box prototype for this algorithm
-			 * \param rPrototype [out] : the box prototype to fill
+			 * \param prototype [out] : the box prototype to fill
 			 * \return \e true in case of success \e false in other cases.
 			 *
 			 * When this function is called by the OpenViBE
@@ -48,7 +48,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IBoxProto
 			 */
-			virtual bool getBoxPrototype(Kernel::IBoxProto& rPrototype) const = 0;
+			virtual bool getBoxPrototype(Kernel::IBoxProto& prototype) const = 0;
 			/**
 			 * \brief Gets the stock item to display with this algorithm
 			 * \return The stock item to display with this algorithm.

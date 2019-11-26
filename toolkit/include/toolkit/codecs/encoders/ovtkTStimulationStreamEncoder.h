@@ -17,14 +17,14 @@ namespace OpenViBEToolkit
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
-		using T::m_oBuffer;
+		using T::m_buffer;
 
 		bool initializeImpl()
 		{
 			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));
 			m_codec->initialize();
 			m_iStimulationSet.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
-			m_oBuffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_buffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
@@ -37,7 +37,7 @@ namespace OpenViBEToolkit
 			if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
 			m_iStimulationSet.uninitialize();
-			m_oBuffer.uninitialize();
+			m_buffer.uninitialize();
 			m_codec->uninitialize();
 			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
 			m_boxAlgorithm = NULL;

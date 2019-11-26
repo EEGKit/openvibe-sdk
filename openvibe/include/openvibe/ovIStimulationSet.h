@@ -60,12 +60,12 @@ namespace OpenViBE
 		virtual bool setStimulationCount(const size_t n) = 0;
 		/**
 		 * \brief Changes the identifier of a specific stimulation in this stimulation set
-		 * \param index [in] : the index of the stimulation which identifier should be changed
-		 * \param identifier [in] : the new identifier for the specified stimulation
+		 * \param index [in] : the index of the stimulation which id should be changed
+		 * \param id [in] : the new id for the specified stimulation
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setStimulationIdentifier(const size_t index, const uint64_t identifier) = 0;
+		virtual bool setStimulationIdentifier(const size_t index, const uint64_t id) = 0;
 		/**
 		 * \brief Changes the date of a specific stimulation in this stimulation set
 		 * \param index [in] : the index of the stimulation which date should be changed
@@ -87,16 +87,16 @@ namespace OpenViBE
 		virtual bool setStimulationDuration(const size_t index, const uint64_t duration) = 0;
 		/**
 		 * \brief Appends a stimulation to this stimulation set
-		 * \param identifier [in] : the identifier of the stimulation to append
+		 * \param id [in] : the identifier of the stimulation to append
 		 * \param date [in] : the date of the stimulation
 		 * \param duration [in] : the duration of the stimulation
 		 * \return the index of the appended stimulation in this stimulation set
 		 */
-		virtual size_t appendStimulation(const uint64_t identifier, const uint64_t date, const uint64_t duration) = 0;
+		virtual size_t appendStimulation(const uint64_t id, const uint64_t date, const uint64_t duration) = 0;
 		/**
 		 * \brief Inserts a stimulation to this stimulation set
 		 * \param index [in] : the index of the stimulation to insert
-		 * \param identifier [in] : the identifier of the stimulation
+		 * \param id [in] : the identifier of the stimulation
 		 * \param date [in] : the date of the stimulation
 		 * \param duration [in] : the duration of the stimulation
 		 * \return \e true in case of success
@@ -104,7 +104,7 @@ namespace OpenViBE
 		 * \warning stimulation indexing change after call to this function :
 		 *          following stimulation(s) get one more indexed.
 		 */
-		virtual size_t insertStimulation(const size_t index, const uint64_t identifier, const uint64_t date, const uint64_t duration) = 0;
+		virtual size_t insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration) = 0;
 		/**
 		 * \brief Removes a stimulation from this stimulation set
 		 * \param index [in] : the index of the stimulation to remove

@@ -17,7 +17,7 @@ namespace OpenViBE
 			uint64_t getTime() const override;
 
 			bool setIdentifier(const CIdentifier& identifier) override;
-			bool setTime(uint64_t ui64Time) override;
+			bool setTime(const uint64_t time) override;
 
 			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
 

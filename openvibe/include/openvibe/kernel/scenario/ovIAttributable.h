@@ -18,14 +18,14 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue) = 0;
-			virtual bool removeAttribute(const CIdentifier& attributeID) = 0;
+			virtual bool addAttribute(const CIdentifier& id, const CString& value) = 0;
+			virtual bool removeAttribute(const CIdentifier& id) = 0;
 			virtual bool removeAllAttributes() = 0;
 
-			virtual CString getAttributeValue(const CIdentifier& attributeID) const = 0;
-			virtual bool setAttributeValue(const CIdentifier& attributeID, const CString& sAttributeValue) = 0;
+			virtual CString getAttributeValue(const CIdentifier& id) const = 0;
+			virtual bool setAttributeValue(const CIdentifier& id, const CString& value) = 0;
 
-			virtual bool hasAttribute(const CIdentifier& attributeID) const = 0;
+			virtual bool hasAttribute(const CIdentifier& id) const = 0;
 			virtual bool hasAttributes() const = 0;
 
 			virtual CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const = 0;

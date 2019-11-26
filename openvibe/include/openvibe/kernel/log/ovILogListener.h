@@ -128,13 +128,13 @@ namespace OpenViBE
 			virtual bool activate(ELogLevel level, bool active) = 0;
 			/**
 			 * \brief Changes the activation status of a specific range of log level
-			 * \param eStartLogLevel [in] : the first log level which status has to be changed
-			 * \param eEndLogLevel [in] : the last log level which status has to be changed
+			 * \param startLogLevel [in] : the first log level which status has to be changed
+			 * \param endLogLevel [in] : the last log level which status has to be changed
 			 * \param active [in] : a boolean telling whether these levels should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) = 0;
+			virtual bool activate(ELogLevel startLogLevel, ELogLevel endLogLevel, bool active) = 0;
 			/**
 			 * \brief Changes the activation status of all log levels at once
 			 * \param active [in] : a boolean telling whether the levels should be active or not

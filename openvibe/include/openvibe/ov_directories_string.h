@@ -26,66 +26,34 @@ namespace OpenViBE
 	{
 	public:
 		StringDirectories() = delete;
-
-		static std::string getDistRootDir()
-		{
+		
 #ifdef OV_USE_CMAKE_DEFAULT_PATHS
-			return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT);
+		static std::string getDistRootDir() { return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT); }
 #else
-			return pathFromEnv("OV_PATH_ROOT", guessRootDir().c_str());
+		static std::string getDistRootDir() { return pathFromEnv("OV_PATH_ROOT", guessRootDir().c_str()); }
 #endif
-		}
 
 		static std::string getBinDir() { return pathFromEnvOrExtendedRoot("OV_PATH_BIN", "/bin", OV_CMAKE_PATH_BIN); }
-
 		static std::string getDataDir() { return pathFromEnvOrExtendedRoot("OV_PATH_DATA", "/share/openvibe", OV_CMAKE_PATH_DATA); }
 
-		static std::string getLibDir()
-		{
 #if defined TARGET_OS_Windows
-			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/bin", OV_CMAKE_PATH_BIN);
-#else
-			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/lib", OV_CMAKE_PATH_LIB);
-#endif
-		}
-
-		static std::string getUserHomeDir()
-		{
-#if defined TARGET_OS_Windows
-			return pathFromEnv("USERPROFILE", "openvibe-user");
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			return pathFromEnv("HOME", "openvibe-user");
-#endif
-		}
-
-		static std::string getUserDataDir()
-		{
-#if defined TARGET_OS_Windows
-			return (pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_CONFIG_SUBDIR);
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			return getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR;
-#endif
-		}
-
+		static std::string getLibDir() { return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/bin", OV_CMAKE_PATH_BIN); }
+		static std::string getUserHomeDir() { return pathFromEnv("USERPROFILE", "openvibe-user"); }
+		static std::string getUserDataDir() { return (pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_CONFIG_SUBDIR); }
+		
 		static std::string getAllUsersDataDir()
 		{
-#if defined TARGET_OS_Windows
-			// first chance: Win7 and higher
-			std::string path = pathFromEnv("PROGRAMDATA", "");
-			if (path.empty())
-			{
-				// second chance: WinXP
-				path = pathFromEnv("ALLUSERSPROFILE", "");
-			}
-			// fallback
-			if (path.empty()) { path = "openvibe-user"; }
-
+			std::string path = pathFromEnv("PROGRAMDATA", "");					// first chance: Win7 and higher
+			if (path.empty()) { path = pathFromEnv("ALLUSERSPROFILE", ""); }	// second chance: WinXP
+			if (path.empty()) { path = "openvibe-user"; }						// fallback
 			return path + "/" + OV_CONFIG_SUBDIR;
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			// On Linux, we redirect to current user data folder
-			return getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR;
-#endif
 		}
+#else
+		static std::string getLibDir() { return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/lib", OV_CMAKE_PATH_LIB); }
+		static std::string getUserHomeDir() { return pathFromEnv("HOME", "openvibe-user"); }
+		static std::string getUserDataDir() { return (getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR); }
+		static std::string getAllUsersDataDir() { return (getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR); }
+#endif
 
 		static std::string getLogDir() { return getUserDataDir() + "/log"; }
 

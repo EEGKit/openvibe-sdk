@@ -27,7 +27,7 @@ namespace OpenViBE
 			bool initialize() override;
 			bool getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc) override;
 			bool uninitialize() override;
-			bool getFileName(CString& rFileName) const override;
+			bool getFileName(CString& fileName) const override;
 
 			_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OV_UndefinedIdentifier)
 
@@ -40,7 +40,7 @@ namespace OpenViBE
 			bool m_gotDesc;
 
 			bool (*m_onInitializeCB)(const IPluginModuleContext&);
-			bool (*m_onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&);
+			bool (*m_onGetPluginObjectDescCB)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&);
 			bool (*m_onUninitializeCB)(const IPluginModuleContext&);
 		};
 	} // namespace Kernel
@@ -58,11 +58,11 @@ namespace OpenViBE
 
 				explicit CPluginModuleContext(const IKernelContext& ctx)
 					: TKernelObject<IPluginModuleContext>(ctx), m_logManager(ctx.getLogManager()), m_typeManager(ctx.getTypeManager()),
-					  m_rScenarioManager(ctx.getScenarioManager()) { }
+					  m_scenarioManager(ctx.getScenarioManager()) { }
 
 				ILogManager& getLogManager() const override { return m_logManager; }
 				ITypeManager& getTypeManager() const override { return m_typeManager; }
-				IScenarioManager& getScenarioManager() const override { return m_rScenarioManager; }
+				IScenarioManager& getScenarioManager() const override { return m_scenarioManager; }
 
 				_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext)
 
@@ -70,7 +70,7 @@ namespace OpenViBE
 
 				ILogManager& m_logManager;
 				ITypeManager& m_typeManager;
-				IScenarioManager& m_rScenarioManager;
+				IScenarioManager& m_scenarioManager;
 			};
 		} // namespace
 	} // namespace Kernel
@@ -80,7 +80,7 @@ namespace OpenViBE
 //                                                                   //
 
 CPluginModuleBase::CPluginModuleBase(const IKernelContext& ctx)
-	: TKernelObject<IPluginModule>(ctx), m_gotDesc(false), m_onInitializeCB(nullptr), m_onGetPluginObjectDescriptionCB(nullptr), m_onUninitializeCB(nullptr) {}
+	: TKernelObject<IPluginModule>(ctx), m_gotDesc(false), m_onInitializeCB(nullptr), m_onGetPluginObjectDescCB(nullptr), m_onUninitializeCB(nullptr) {}
 
 CPluginModuleBase::~CPluginModuleBase() { }
 
@@ -96,11 +96,11 @@ bool CPluginModuleBase::getPluginObjectDescription(size_t index, IPluginObjectDe
 	if (!m_gotDesc)
 	{
 		if (!isOpen()) { return false; }
-		if (!m_onGetPluginObjectDescriptionCB) { return false; }
+		if (!m_onGetPluginObjectDescCB) { return false; }
 
 		size_t idx             = 0;
 		IPluginObjectDesc* pod = nullptr;
-		while (m_onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), idx, pod))
+		while (m_onGetPluginObjectDescCB(CPluginModuleContext(getKernelContext()), idx, pod))
 		{
 			if (pod) { m_pluginObjectDescs.push_back(pod); }
 			idx++;
@@ -126,10 +126,10 @@ bool CPluginModuleBase::uninitialize()
 	return m_onUninitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-bool CPluginModuleBase::getFileName(CString& rFileName) const
+bool CPluginModuleBase::getFileName(CString& fileName) const
 {
 	if (!isOpen()) { return false; }
-	rFileName = m_filename;
+	fileName = m_filename;
 	return true;
 }
 
@@ -154,7 +154,7 @@ namespace OpenViBE
 
 		protected:
 
-			void* m_pFileHandle;
+			void* m_fileHandle;
 		};
 	}
 } // namespace OpenViBE
@@ -176,7 +176,7 @@ namespace OpenViBE
 		protected:
 			bool isOpen() const override;
 
-			HMODULE m_pFileHandle;
+			HMODULE m_fileHandle;
 
 		private:
 
@@ -214,41 +214,41 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& ctx) :CPluginModuleBase(ctx),m_pFileHandle(NULL) { }
+CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& ctx) :CPluginModuleBase(ctx),m_fileHandle(NULL) { }
 
 bool CPluginModuleLinux::load(const CString& filename, CString* pError)
 {
-	if(m_pFileHandle)
+	if(m_fileHandle)
 	{
 		if(pError) *pError="plugin module already loaded";
 		return false;
 	}
 
-	// m_pFileHandle=dlopen(filename, RTLD_NOW|RTLD_LOCAL);
+	// m_fileHandle=dlopen(filename, RTLD_NOW|RTLD_LOCAL);
 #if defined OV_LOCAL_SYMBOLS
-	m_pFileHandle=dlopen(filename, RTLD_LAZY|RTLD_LOCAL);
+	m_fileHandle = dlopen(filename, RTLD_LAZY|RTLD_LOCAL);
 #else
-	m_pFileHandle=dlopen(filename, RTLD_LAZY|RTLD_GLOBAL);
+	m_fileHandle = dlopen(filename, RTLD_LAZY|RTLD_GLOBAL);
 #endif
-	if(!m_pFileHandle)
+	if(!m_fileHandle)
 	{
 		if(pError) *pError=dlerror();
 		return false;
 	}
 
-	m_onInitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onInitialize");
-	m_onUninitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onUninitialize");
-	m_onGetPluginObjectDescriptionCB=(bool (*)(const IPluginModuleContext&, size_t, Plugins::IPluginObjectDesc*&))dlsym(m_pFileHandle, "onGetPluginObjectDescription");
+	m_onInitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_fileHandle, "onInitialize");
+	m_onUninitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_fileHandle, "onUninitialize");
+	m_onGetPluginObjectDescCB=(bool (*)(const IPluginModuleContext&, size_t, Plugins::IPluginObjectDesc*&))dlsym(m_fileHandle, "onGetPluginObjectDescription");
 
-	if(!m_onGetPluginObjectDescriptionCB)
+	if(!m_onGetPluginObjectDescCB)
 	{
 		if(pError) *pError=dlerror();
 
-		dlclose(m_pFileHandle);
-		m_pFileHandle=NULL;
+		dlclose(m_fileHandle);
+		m_fileHandle=NULL;
 		m_onInitializeCB=NULL;
 		m_onUninitializeCB=NULL;
-		m_onGetPluginObjectDescriptionCB=NULL;
+		m_onGetPluginObjectDescCB=NULL;
 		return false;
 	}
 
@@ -256,59 +256,56 @@ bool CPluginModuleLinux::load(const CString& filename, CString* pError)
 	return true;
 }
 
-bool CPluginModuleLinux::unload(CString* pError)
+bool CPluginModuleLinux::unload(CString* error)
 {
-	if(!m_pFileHandle)
+	if(!m_fileHandle)
 	{
-		if(pError) *pError="no plugin module currently loaded";
+		if (error) { *error = "no plugin module currently loaded"; }
 		return false;
 	}
 
-	dlclose(m_pFileHandle);
-	m_pFileHandle=NULL;
-	m_onInitializeCB=NULL;
-	m_onUninitializeCB=NULL;
-	m_onGetPluginObjectDescriptionCB=NULL;
+	dlclose(m_fileHandle);
+	m_fileHandle              = NULL;
+	m_onInitializeCB          = NULL;
+	m_onUninitializeCB        = NULL;
+	m_onGetPluginObjectDescCB = NULL;
 	return true;
 }
 
-bool CPluginModuleLinux::isOpen() const
-{
-	return m_pFileHandle != nullptr;
-}
+bool CPluginModuleLinux::isOpen() const { return m_fileHandle != nullptr; }
 
 #elif defined TARGET_OS_Windows
 
-CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& ctx) : CPluginModuleBase(ctx), m_pFileHandle(nullptr) {}
+CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& ctx) : CPluginModuleBase(ctx), m_fileHandle(nullptr) {}
 
 bool CPluginModuleWindows::load(const CString& filename, CString* pError)
 {
-	if (m_pFileHandle)
+	if (m_fileHandle)
 	{
 		if (pError) { *pError = "plugin module already loaded"; }
 		return false;
 	}
 
-	m_pFileHandle = LoadLibrary(filename);
-	if (!m_pFileHandle)
+	m_fileHandle = LoadLibrary(filename);
+	if (!m_fileHandle)
 	{
 		if (pError) { *pError = this->getLastErrorMessageString(); }
 		return false;
 	}
 
-	m_onInitializeCB                 = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_pFileHandle, "onInitialize"));
-	m_onUninitializeCB               = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_pFileHandle, "onUninitialize"));
-	m_onGetPluginObjectDescriptionCB = reinterpret_cast<bool (*)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&)>(GetProcAddress(
-		m_pFileHandle, "onGetPluginObjectDescription"));
-	if (!m_onGetPluginObjectDescriptionCB)
+	m_onInitializeCB          = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_fileHandle, "onInitialize"));
+	m_onUninitializeCB        = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_fileHandle, "onUninitialize"));
+	m_onGetPluginObjectDescCB = reinterpret_cast<bool (*)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&)>(GetProcAddress(
+		m_fileHandle, "onGetPluginObjectDescription"));
+	if (!m_onGetPluginObjectDescCB)
 	{
 		if (pError) { *pError = this->getLastErrorMessageString(); }
 
-		FreeLibrary(m_pFileHandle);
-		m_pFileHandle                    = nullptr;
-		m_onInitializeCB                 = nullptr;
-		m_onGetPluginObjectDescriptionCB = nullptr;
-		m_onUninitializeCB               = nullptr;
+		FreeLibrary(m_fileHandle);
+		m_fileHandle              = nullptr;
+		m_onInitializeCB          = nullptr;
+		m_onGetPluginObjectDescCB = nullptr;
+		m_onUninitializeCB        = nullptr;
 		return false;
 	}
 
@@ -318,21 +315,21 @@ bool CPluginModuleWindows::load(const CString& filename, CString* pError)
 
 bool CPluginModuleWindows::unload(CString* pError)
 {
-	if (!m_pFileHandle)
+	if (!m_fileHandle)
 	{
 		if (pError) { *pError = "no plugin module currently loaded"; }
 		return false;
 	}
 
-	FreeLibrary(m_pFileHandle);
-	m_pFileHandle                    = nullptr;
-	m_onInitializeCB                 = nullptr;
-	m_onGetPluginObjectDescriptionCB = nullptr;
-	m_onUninitializeCB               = nullptr;
+	FreeLibrary(m_fileHandle);
+	m_fileHandle              = nullptr;
+	m_onInitializeCB          = nullptr;
+	m_onGetPluginObjectDescCB = nullptr;
+	m_onUninitializeCB        = nullptr;
 	return true;
 }
 
-bool CPluginModuleWindows::isOpen() const { return m_pFileHandle != nullptr; }
+bool CPluginModuleWindows::isOpen() const { return m_fileHandle != nullptr; }
 
 CString CPluginModuleWindows::getLastErrorMessageString()
 {
@@ -372,15 +369,15 @@ CPluginModule::CPluginModule(const IKernelContext& ctx)
 
 CPluginModule::~CPluginModule() { delete m_impl; }
 
-bool CPluginModule::load(const CString& filename, CString* pError) { return !m_impl ? false : m_impl->load(filename, pError); }
+bool CPluginModule::load(const CString& filename, CString* error) { return !m_impl ? false : m_impl->load(filename, error); }
 
-bool CPluginModule::unload(CString* pError) { return !m_impl ? false : m_impl->unload(pError); }
+bool CPluginModule::unload(CString* error) { return !m_impl ? false : m_impl->unload(error); }
 
 bool CPluginModule::initialize() { return !m_impl ? false : m_impl->initialize(); }
 
-bool CPluginModule::getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc)
+bool CPluginModule::getPluginObjectDescription(const size_t index, IPluginObjectDesc*& desc)
 {
-	return !m_impl ? false : m_impl->getPluginObjectDescription(index, pluginObjectDesc);
+	return !m_impl ? false : m_impl->getPluginObjectDescription(index, desc);
 }
 
 bool CPluginModule::uninitialize() { return !m_impl ? false : m_impl->uninitialize(); }
