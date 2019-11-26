@@ -31,7 +31,7 @@
 
 using namespace OpenViBE;
 
-void initializeParser(ProgramOptionParser& optionParser)
+void initializeParser(ProgramOptionParser& parser)
 {
 	const std::string desc =
 			R"d(Usage: program options
@@ -40,30 +40,29 @@ Program can be run in express mode to directly execute a scenario
 Program can be run in command mode to execute list of commands from a file
 
 )d";
-	optionParser.setGlobalDesc(desc);
+	parser.setGlobalDesc(desc);
 
-	optionParser.addSimpleOption("help", { "h", "Help" });
-	optionParser.addSimpleOption("version", { "v", "Program version" });
+	parser.addSimpleOption("help", { "h", "Help" });
+	parser.addSimpleOption("version", { "v", "Program version" });
 
-	optionParser.addValueOption<ProgramOptionsTraits::String>("mode", { "m", "Execution mode: 'x' for express, 'c' for command [mandatory]" });
+	parser.addValueOption<SProgramOptionsTraits::String>("mode", { "m", "Execution mode: 'x' for express, 'c' for command [mandatory]" });
 
 	// express mode options
-	optionParser.addValueOption<ProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("scenario-file", { "", "Path to scenario file (express mode only) [mandatory]" });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("updated-scenario-file", {
-																  "",
-																  "Enable update process instead of playing scenario. Path to the updated scenario file (express mode only)."
-															  });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", {
-																  "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]"
-															  });
-	optionParser.addValueOption<ProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
-
-	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)" });
-	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::String>("scenario-file", { "", "Path to scenario file (express mode only) [mandatory]" });
+	parser.addValueOption<SProgramOptionsTraits::String>("updated-scenario-file", {
+															 "",
+															 "Enable update process instead of playing scenario. Path to the updated scenario file (express mode only)."
+														 });
+	parser.addValueOption<SProgramOptionsTraits::String>("play-mode", {
+															 "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]"
+														 });
+	parser.addValueOption<SProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });
 
 	// command mode options
-	optionParser.addValueOption<ProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only) [mandatory]" });
+	parser.addValueOption<SProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only) [mandatory]" });
 }
 
 int main(int argc, char** argv)
@@ -91,7 +90,7 @@ int main(int argc, char** argv)
 	{
 		// command parser type is selected from mode
 		std::unique_ptr<ICommandParser> commandParser{ nullptr };
-		const auto mode = optionParser.getOptionValue<ProgramOptionsTraits::String>("mode");
+		const auto mode = optionParser.getOptionValue<SProgramOptionsTraits::String>("mode");
 
 		if (mode == "c")
 		{
@@ -122,12 +121,11 @@ int main(int argc, char** argv)
 
 			if (returnCode == EPlayerReturnCode::Success)
 			{
-				KernelFacade kernel;
+				CKernelFacade kernel;
 
 				for (auto& cmd : commandParser->getCommandList())
 				{
 					returnCode = cmd->execute(kernel);
-
 					if (returnCode != EPlayerReturnCode::Success) { return int(returnCode); }
 				}
 			}

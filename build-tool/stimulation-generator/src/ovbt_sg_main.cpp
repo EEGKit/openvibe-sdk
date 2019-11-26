@@ -1,10 +1,10 @@
+#include "ovbt_sg_defines.h"
+#include "ovbt_sg_file_generator_base.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-
-#include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 using namespace std;
 
@@ -23,9 +23,9 @@ generation_type parse_argument(string option)
 	return UNKNOWN;
 }
 
-int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type rType, int argc, char** argv)
+int generate_generator_list(vector<CFileGeneratorBase*>& list, generation_type type, int argc, char** argv)
 {
-	switch (rType)
+	switch (type)
 	{
 		case CPP:
 		{
@@ -36,7 +36,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 				cerr << "Unable to open " << argv[3] << endl;
 				return -1;
 			}
-			rList.push_back(gen);
+			list.push_back(gen);
 
 			gen = new CCppCodeGenerator();
 			if (!gen->openFile(argv[4]))
@@ -44,7 +44,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 				cerr << "Unable to open " << argv[4] << endl;
 				return -1;
 			}
-			rList.push_back(gen);
+			list.push_back(gen);
 			return 0;
 		}
 
@@ -56,7 +56,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 				cerr << "Unable to open " << argv[3] << endl;
 				return -1;
 			}
-			rList.push_back(gen);
+			list.push_back(gen);
 			return 0;
 		}
 		case PYTHON:
@@ -89,13 +89,9 @@ int main(int argc, char** argv)
 	if (generate_generator_list(generators, type, argc, argv)) { return -1; }
 
 	//Now we generate all files that needs to be done
-	for (auto it = stimulations.begin(); it != stimulations.end(); ++it)
-	{
-		SStimulation& temp = *it;
-		for (auto it_gen = generators.begin(); it_gen != generators.end(); ++it_gen) { (*it_gen)->appendStimulation(temp); }
-	}
+	for (auto& s : stimulations) { for (auto& g : generators) { g->appendStimulation(s); } }
 
-	for (auto it_gen = generators.begin(); it_gen != generators.end(); ++it_gen) { (*it_gen)->closeFile(); }
+	for (auto& g : generators) { g->closeFile(); }
 
 	return 0;
 }

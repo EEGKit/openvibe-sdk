@@ -30,7 +30,7 @@ namespace OpenViBE
 	*/
 
 	/**
-	* \class ReturnCode
+	* \class EPlayerReturnCode
 	* \author cgarraud
 	* \date 2016-01-25
 	* \brief Scenario player list of potential return code
@@ -53,18 +53,18 @@ namespace OpenViBE
 	};
 
 	/**
-	* \class ReturnCode
+	* \class EPlayerPlayMode
 	* \author cgarraud
 	* \date 2016-01-25
 	* \brief Way of playing a scenario
 	* \ingroup ScenarioPlayer
 	*/
-	enum class PlayerPlayMode
+	enum class EPlayerPlayMode
 	{
 		Standard = 0,
 		Fastfoward
 	};
 
 	/* Define the common parser to be used in the application */
-	using ProgramOptionParser = ProgramOptions<ProgramOptionsTraits::String, ProgramOptionsTraits::Float, ProgramOptionsTraits::TokenPairList>;
+	using ProgramOptionParser = ProgramOptions<SProgramOptionsTraits::String, SProgramOptionsTraits::Float, SProgramOptionsTraits::TokenPairList>;
 }	// namespace OpenViBE

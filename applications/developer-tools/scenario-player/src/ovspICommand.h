@@ -25,7 +25,7 @@
 
 namespace OpenViBE
 {
-	class KernelFacade;
+	class CKernelFacade;
 
 	/**
 	* \struct SCommand
@@ -50,7 +50,7 @@ namespace OpenViBE
 		* \brief Execute the command
 		* \param[in] kernelFacade the kernel facade that gives access to kernel features
 		*/
-		virtual EPlayerReturnCode execute(KernelFacade& kernelFacade) const = 0;
+		virtual EPlayerReturnCode execute(CKernelFacade& kernelFacade) const = 0;
 
 	protected:
 

@@ -31,13 +31,9 @@ namespace OpenViBE
 	{
 		// remove leading and trailing space
 		// no use of regex here cause it might be too slow
-		auto begin = str.find_first_not_of(" \t");
-		auto end   = str.find_last_not_of(" \t");
-
+		auto begin = str.find_first_not_of(" \t"), end = str.find_last_not_of(" \t");
 		if (begin == std::string::npos) { begin = 0; }
-
 		if (end == std::string::npos) { end = str.size() - 1; }
-
 		return str.substr(begin, end - begin + 1);
 	}
 
@@ -60,26 +56,24 @@ namespace OpenViBE
 	std::vector<std::string> CommandFileParser::split(const std::string& str, const char delimiter)
 	{
 		std::vector<std::string> vec;
-		size_t currentIndex   = 0;
-		size_t delimiterIndex = str.find(delimiter);
+		size_t currentIdx   = 0;
+		size_t delimiterIdx = str.find(delimiter);
 
-		auto trimmed = trim(str.substr(currentIndex, delimiterIndex));
-
+		auto trimmed = trim(str.substr(currentIdx, delimiterIdx));
 		if (!trimmed.empty()) { vec.push_back(trimmed); }
 
-		while (delimiterIndex != std::string::npos)
+		while (delimiterIdx != std::string::npos)
 		{
 			// abc,cde,fgh
 			//     ^       -> current index points to the first element after a match
 			//        ^    -> delimiter index points to next match
-			currentIndex   = delimiterIndex + 1;
-			delimiterIndex = str.find(delimiter, currentIndex);
+			currentIdx   = delimiterIdx + 1;
+			delimiterIdx = str.find(delimiter, currentIdx);
 
-			trimmed = trim(str.substr(currentIndex, delimiterIndex - currentIndex));
+			trimmed = trim(str.substr(currentIdx, delimiterIdx - currentIdx));
 
 			if (!trimmed.empty()) { vec.push_back(trimmed); }
 		}
-
 		return vec;
 	}
 
@@ -96,7 +90,6 @@ namespace OpenViBE
 		if (str == "false" || str == "0") { result = false; }
 		else if (str == "true" || str == "1") { result = true; }
 		else { throw std::runtime_error("Impossible to convert " + str + " to bool"); }
-
 		return result;
 	}
 
@@ -127,8 +120,10 @@ namespace OpenViBE
 
 			// (a:b) pattern expected
 			// minimal regex std::regex("\\(.+:.+\\)")
-			if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') ||
-				split == std::string::npos) { throw std::runtime_error("Failed to parse token pair from value: " + rawToken); }
+			if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') || split == std::string::npos)
+			{
+				throw std::runtime_error("Failed to parse token pair from value: " + rawToken);
+			}
 
 			Token token;
 			token.first = trim(rawToken.substr(1, split - 1));
@@ -147,27 +142,27 @@ namespace OpenViBE
 	{
 		// using a callback mechanism allows us to implement the core parse() method
 		// very easily (no need to put some if/else blocks everywhere depending on which command is encountered)
-		m_CallbackList["Init"]          = std::bind(&CommandFileParser::initCommandCb, this, _1);
-		m_CallbackList["Reset"]         = std::bind(&CommandFileParser::resetCommandCb, this, _1);
-		m_CallbackList["LoadKernel"]    = std::bind(&CommandFileParser::loadKernelCommandCb, this, _1);
-		m_CallbackList["LoadScenario"]  = std::bind(&CommandFileParser::loadScenarioCommandCb, this, _1);
-		m_CallbackList["SetupScenario"] = std::bind(&CommandFileParser::setupScenarioCommandCb, this, _1);
-		m_CallbackList["RunScenario"]   = std::bind(&CommandFileParser::runScenarioCommandCb, this, _1);
+		m_callbacks["Init"]          = std::bind(&CommandFileParser::initCommandCb, this, _1);
+		m_callbacks["Reset"]         = std::bind(&CommandFileParser::resetCommandCb, this, _1);
+		m_callbacks["LoadKernel"]    = std::bind(&CommandFileParser::loadKernelCommandCb, this, _1);
+		m_callbacks["LoadScenario"]  = std::bind(&CommandFileParser::loadScenarioCommandCb, this, _1);
+		m_callbacks["SetupScenario"] = std::bind(&CommandFileParser::setupScenarioCommandCb, this, _1);
+		m_callbacks["RunScenario"]   = std::bind(&CommandFileParser::runScenarioCommandCb, this, _1);
 	}
 
 	void CommandFileParser::uninitialize()
 	{
-		m_CallbackList.clear();
-		m_CommandList.clear();
+		m_callbacks.clear();
+		m_cmdList.clear();
 	}
 
 	EPlayerReturnCode CommandFileParser::parse()
 	{
-		std::ifstream fileStream(m_CommandFile);
+		std::ifstream fileStream(m_cmdFile);
 
 		if (!fileStream.is_open())
 		{
-			std::cerr << "ERROR: impossible to open file at location: " << m_CommandFile << std::endl;
+			std::cerr << "ERROR: impossible to open file at location: " << m_cmdFile << std::endl;
 			return EPlayerReturnCode::OpeningFileFailure;
 		}
 
@@ -189,7 +184,6 @@ namespace OpenViBE
 				if (isFillingSection) // flush the section that was beeing filled
 				{
 					const auto errorCode = this->flush(sectionTag, sectionContent);
-
 					if (errorCode != EPlayerReturnCode::Success) { return errorCode; }
 				}
 
@@ -198,7 +192,7 @@ namespace OpenViBE
 				// 2 = remove the last ] + account for the first one
 				sectionTag = trimmedLine.substr(1, size - 2);
 
-				if (m_CallbackList.find(sectionTag) == m_CallbackList.end())
+				if (m_callbacks.find(sectionTag) == m_callbacks.end())
 				{
 					std::cerr << "ERROR: Unknown command = " << sectionTag << std::endl;
 					return EPlayerReturnCode::ParsingCommandFailure;
@@ -213,10 +207,8 @@ namespace OpenViBE
 		if (isFillingSection)
 		{
 			const auto errorCode = this->flush(sectionTag, sectionContent);
-
 			if (errorCode != EPlayerReturnCode::Success) { return errorCode; }
 		}
-
 		return EPlayerReturnCode::Success;
 	}
 
@@ -224,24 +216,21 @@ namespace OpenViBE
 	{
 		try // try block here as some conversions are made with the stl in the callback and might throw
 		{
-			const auto returnCode = m_CallbackList[sectionTag](sectionContent);
-
+			const auto returnCode = m_callbacks[sectionTag](sectionContent);
 			if (returnCode != EPlayerReturnCode::Success) { return returnCode; }
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << "ERROR: Caught exception while parsing command = " << sectionTag << std::endl;
 			std::cerr << "ERROR: Exception: " << e.what() << std::endl;
-
 			return EPlayerReturnCode::ParsingCommandFailure;
 		}
-
 		return EPlayerReturnCode::Success;
 	}
 
 	EPlayerReturnCode CommandFileParser::initCommandCb(const std::vector<std::string>& sectionContent)
 	{
-		std::shared_ptr<InitCommand> command = std::make_shared<InitCommand>();
+		std::shared_ptr<SInitCmd> command = std::make_shared<SInitCmd>();
 
 		for (auto& line : sectionContent)
 		{
@@ -256,24 +245,20 @@ namespace OpenViBE
 				else { std::cout << "WARNING: Unknown parameter for Init command: " << param.first << std::endl; }
 			}
 		}
-
-		m_CommandList.push_back(command);
-
+		m_cmdList.push_back(command);
 		return EPlayerReturnCode::Success;
 	}
 
 	EPlayerReturnCode CommandFileParser::resetCommandCb(const std::vector<std::string>& /*sectionContent*/)
 	{
-		const std::shared_ptr<ResetCommand> command = std::make_shared<ResetCommand>();
-
-		m_CommandList.push_back(command);
-
+		const std::shared_ptr<SResetCmd> command = std::make_shared<SResetCmd>();
+		m_cmdList.push_back(command);
 		return EPlayerReturnCode::Success;
 	}
 
 	EPlayerReturnCode CommandFileParser::loadKernelCommandCb(const std::vector<std::string>& sectionContent)
 	{
-		std::shared_ptr<LoadKernelCommand> command = std::make_shared<LoadKernelCommand>();
+		std::shared_ptr<SLoadKernelCmd> command = std::make_shared<SLoadKernelCmd>();
 
 		// cf. initCommandCb
 		for (auto& line : sectionContent)
@@ -281,20 +266,17 @@ namespace OpenViBE
 			if (!line.empty() && line[0] != '#')
 			{
 				auto param = tokenize(line);
-
-				if (param.first == "ConfigurationFile") { command->configurationFile = param.second; }
+				if (param.first == "ConfigurationFile") { command->configFile = param.second; }
 				else { std::cout << "WARNING: Unknown parameter for LoadKernel command: " << param.first << std::endl; }
 			}
 		}
-
-		m_CommandList.push_back(command);
-
+		m_cmdList.push_back(command);
 		return EPlayerReturnCode::Success;
 	}
 
 	EPlayerReturnCode CommandFileParser::loadScenarioCommandCb(const std::vector<std::string>& sectionContent)
 	{
-		std::shared_ptr<LoadScenarioCommand> command = std::make_shared<LoadScenarioCommand>();
+		std::shared_ptr<SLoadScenarioCmd> command = std::make_shared<SLoadScenarioCmd>();
 
 		// cf. initCommandCb
 		for (auto& line : sectionContent)
@@ -308,15 +290,13 @@ namespace OpenViBE
 				else { std::cout << "WARNING: Unknown parameter for LoadScenario command: " << param.first << std::endl; }
 			}
 		}
-
-		m_CommandList.push_back(command);
-
+		m_cmdList.push_back(command);
 		return EPlayerReturnCode::Success;
 	}
 
 	EPlayerReturnCode CommandFileParser::setupScenarioCommandCb(const std::vector<std::string>& sectionContent)
 	{
-		std::shared_ptr<SetupScenarioCommand> command = std::make_shared<SetupScenarioCommand>();
+		std::shared_ptr<SSetupScenarioCmd> command = std::make_shared<SSetupScenarioCmd>();
 
 		// cf. initCommandCb
 		for (auto& line : sectionContent)
@@ -330,15 +310,13 @@ namespace OpenViBE
 				else { std::cout << "WARNING: Unknown parameter for SetupScenario command: " << param.first << std::endl; }
 			}
 		}
-
-		m_CommandList.push_back(command);
-
+		m_cmdList.push_back(command);
 		return EPlayerReturnCode::Success;
 	}
 
 	EPlayerReturnCode CommandFileParser::runScenarioCommandCb(const std::vector<std::string>& sectionContent)
 	{
-		std::shared_ptr<RunScenarioCommand> command = std::make_shared<RunScenarioCommand>();
+		std::shared_ptr<SRunScenarioCmd> command = std::make_shared<SRunScenarioCmd>();
 
 		// cf. initCommandCb
 		for (auto& line : sectionContent)
@@ -348,15 +326,13 @@ namespace OpenViBE
 				auto param = tokenize(line);
 
 				if (param.first == "ScenarioList") { command->scenarioList = toList(param.second); }
-				else if (param.first == "PlayMode") { command->playMode = PlayerPlayMode(std::stoi(param.second)); }
+				else if (param.first == "PlayMode") { command->playMode = EPlayerPlayMode(std::stoi(param.second)); }
 				else if (param.first == "MaximumExecutionTime") { command->maximumExecutionTime = std::stod(param.second); }
 				else if (param.first == "TokenList") { command->tokenList = (toTokenList(param.second)); }
 				else { std::cout << "WARNING: Unknown parameter for RunScenario command: " << param.first << std::endl; }
 			}
 		}
-
-		m_CommandList.push_back(command);
-
+		m_cmdList.push_back(command);
 		return EPlayerReturnCode::Success;
 	}
 }	// namespace OpenViBE
