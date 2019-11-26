@@ -13,12 +13,12 @@ using namespace std;
 
 #if 0
 #define _Debug_ _is_in_debug_mode_(m_totalBytes)
-static bool _is_in_debug_mode_(uint64_t ui64Value)
+static bool _is_in_debug_mode_(uint64_t value)
 {
 	static int i=0;
 	// bool result=i++>5500000;
-	bool result=ui64Value>29605500;
-	if (result) std::cout << "Arround " << ui64Value << std::endl;
+	bool result=value>29605500;
+	if (result) std::cout << "Arround " << value << std::endl;
 	return result;
 
 }

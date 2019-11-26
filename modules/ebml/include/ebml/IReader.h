@@ -26,23 +26,23 @@ namespace EBML
 		virtual ~IReaderCallback() { }
 		/**
 		 * \brief Kind of child querry
-		 * \param identifier [in] : The identifier which type has to be known
+		 * \param id [in] : The id which type has to be known
 		 * \return \e true when the node is a master node
 		 * \return \e false when it is a simple child node.
 		 *
-		 * When called by the reader, this function should tell it whether the node identified by \c identifier is a master
+		 * When called by the reader, this function should tell it whether the node identified by \c id is a master
 		 * node (has child) or not (has data). For that, it has to return \e true when the node should have children, and \e false in other cases.
 		 */
-		virtual bool isMasterChild(const CIdentifier& identifier) = 0;
+		virtual bool isMasterChild(const CIdentifier& id) = 0;
 		/**
 		 * \brief Informs the callback object a new node parsing is starting
-		 * \param identifier [in] : The idenfier of the newly parsing node
+		 * \param id [in] : The idenfier of the newly parsing node
 		 *
 		 * This is called to notify the callback object that the parser has started a new EBML node parsing. This EBML
-		 * node is identified by \c identifier. After this call will follow whether a new \c openChild if this node is
+		 * node is identified by \c id. After this call will follow whether a new \c openChild if this node is
 		 * a master one, whher a processData if this node is a simple child one.
 		 */
-		virtual void openChild(const CIdentifier& identifier) = 0;
+		virtual void openChild(const CIdentifier& id) = 0;
 		/**
 		 * \brief Gives the callback object the data associated with the currently opened child node
 		 * \param buffer [in] : The buffer corresponding to the current simple child node
