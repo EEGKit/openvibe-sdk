@@ -12,10 +12,10 @@ namespace Socket
 	
 		/**
 		 * \brief Connect to the bluetooth device.
-		 * \param[in] ui64BluetoothAddress the MAC address of the Bluetooth device.
+		 * \param[in] address the MAC address of the Bluetooth device.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual bool connect(const uint64_t ui64BluetoothAddress) = 0;
+		virtual bool connect(const uint64_t address) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.
@@ -37,13 +37,13 @@ namespace Socket
 		/** 
 		 * \brief List the paired bluetooth devices: Name and Bluetooth MAC address.
 		 *
-		 * \param[out] nPairedBluetoothDevices the Bluetooth devices count. 
+		 * \param[out] nPairedDevices the Bluetooth devices count. 
 		 * \param[out] names an array of Bluetooth names. 
 		 * \param[out] addresses an array of Bluetooth addresses. 
 		 *
 		 * \return  If the function succeeds, the return value is true, else false.
 		 */
-		virtual bool listPairedBluetoothDevices(size_t* nPairedBluetoothDevices, char** names, uint64_t** addresses) = 0;
+		virtual bool listPairedBluetoothDevices(size_t* nPairedDevices, char** names, uint64_t** addresses) = 0;
 
 		/**
 		 * \brief Convert string MAC Bluetooth address to hexadecimal.

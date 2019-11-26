@@ -22,7 +22,7 @@ namespace Socket
 	class Socket_API IConnectionSerialDelegate : public TConnectionDelegate<IConnectionSerial>
 	{
 	public:
-		IConnectionSerialDelegate(SConnectionSerialDelegate connectionSerialDelegate)
+		IConnectionSerialDelegate(const SConnectionSerialDelegate connectionSerialDelegate)
 			: TConnectionDelegate<IConnectionSerial>(connectionSerialDelegate.connectionDelegate) { }
 
 		~IConnectionSerialDelegate() override { }

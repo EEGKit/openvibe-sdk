@@ -42,10 +42,10 @@ namespace Socket
 
 		/**
 		 * \brief Set tiemouts for read and write function.
-		 * \param decisecondsTimeout [in] Timeout in deciseconds.
+		 * \param timeout [in] Timeout in deciseconds.
 		 * \return True if succeed, else false.
 		 */
-		virtual bool setTimeouts(const size_t decisecondsTimeout) = 0;
+		virtual bool setTimeouts(const size_t timeout) = 0;
 
 	protected:
 		void saveLastError();

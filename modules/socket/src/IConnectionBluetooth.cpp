@@ -33,7 +33,7 @@ namespace Socket
 	public:
 
 #if defined TARGET_OS_Windows
-		CConnectionBluetooth() : m_oSocket(INVALID_SOCKET) { }
+		CConnectionBluetooth() : m_Socket(INVALID_SOCKET) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		CConnectionBluetooth() : m_LastError() { }
 #endif
@@ -77,16 +77,16 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			bool isSuccess = true;
-			if (m_oSocket != INVALID_SOCKET)
+			if (m_Socket != INVALID_SOCKET)
 			{
 				// shutdown the connection since no more data will be sent or received
-				if (_WINSOCK2API_::shutdown(m_oSocket, SD_BOTH) == SOCKET_ERROR)
+				if (_WINSOCK2API_::shutdown(m_Socket, SD_BOTH) == SOCKET_ERROR)
 				{
 					m_LastError = "Failed to shutdown the bluetooth socket:" + this->getLastErrorFormated();
 					isSuccess   = false;
 				}
 
-				if (_WINSOCK2API_::closesocket(m_oSocket) == SOCKET_ERROR)
+				if (_WINSOCK2API_::closesocket(m_Socket) == SOCKET_ERROR)
 				{
 					m_LastError = "Failed to close the bluetooth socket:" + this->getLastErrorFormated();
 					isSuccess   = false;
@@ -98,7 +98,7 @@ namespace Socket
 					isSuccess   = false;
 				}
 
-				m_oSocket = INVALID_SOCKET;
+				m_Socket = INVALID_SOCKET;
 			}
 
 			return isSuccess;
@@ -115,10 +115,9 @@ namespace Socket
 			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
-
 			unsigned long nPendingBytes = 0;
 
-			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
+			if (_WINSOCK2API_::ioctlsocket(m_Socket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
 			{
 				//m_LastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
 				return false;
@@ -143,7 +142,7 @@ namespace Socket
 
 			unsigned long nPendingBytes = 0;
 
-			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
+			if (_WINSOCK2API_::ioctlsocket(m_Socket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
 			{
 				m_LastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
 				return 0;
@@ -166,7 +165,7 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, reinterpret_cast<const char*>(buffer), int(size), 0);
+			const int nBytesSent = _WINSOCK2API_::send(m_Socket, reinterpret_cast<const char*>(buffer), int(size), 0);
 
 			if (nBytesSent == SOCKET_ERROR)
 			{
@@ -193,7 +192,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 
-			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, static_cast<char *>(buffer), int(size), 0);
+			const int nBytesReceived = _WINSOCK2API_::recv(m_Socket, static_cast<char *>(buffer), int(size), 0);
 
 			if (nBytesReceived == SOCKET_ERROR)
 			{
@@ -256,7 +255,7 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			return m_oSocket != INVALID_SOCKET;
+			return m_Socket != INVALID_SOCKET;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return false;
@@ -279,30 +278,30 @@ namespace Socket
 
 			if (!this->initialize()) { return false; }
 
-			m_oSocket = _WINSOCK2API_::socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
+			m_Socket = _WINSOCK2API_::socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
 
-			if (m_oSocket == INVALID_SOCKET)
+			if (m_Socket == INVALID_SOCKET)
 			{
 				m_LastError = "Failed to create bluetooth socket: " + getLastErrorFormated();
 				_WINSOCK2API_::WSACleanup();
 				return false;
 			}
 
-			SOCKADDR_BTH l_oSockAddressBlutoothServer;
-			l_oSockAddressBlutoothServer.btAddr         = u64BluetoothAddress;
-			l_oSockAddressBlutoothServer.addressFamily  = AF_BTH;
-			l_oSockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
-			l_oSockAddressBlutoothServer.port           = BT_PORT_ANY;
+			SOCKADDR_BTH sockAddressBlutoothServer;
+			sockAddressBlutoothServer.btAddr         = u64BluetoothAddress;
+			sockAddressBlutoothServer.addressFamily  = AF_BTH;
+			sockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
+			sockAddressBlutoothServer.port           = BT_PORT_ANY;
 
-			if (_WINSOCK2API_::connect(m_oSocket, reinterpret_cast<SOCKADDR*>(&l_oSockAddressBlutoothServer), sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
+			if (_WINSOCK2API_::connect(m_Socket, reinterpret_cast<SOCKADDR*>(&sockAddressBlutoothServer), sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
 			{
-				m_LastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(l_oSockAddressBlutoothServer.btAddr) + "]: " +
+				m_LastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(sockAddressBlutoothServer.btAddr) + "]: " +
 							  getLastErrorFormated();
 
-				_WINSOCK2API_::closesocket(m_oSocket); // Returned code not checked.
+				_WINSOCK2API_::closesocket(m_Socket); // Returned code not checked.
 				_WINSOCK2API_::WSACleanup(); // Returned code not checked.
 
-				m_oSocket = INVALID_SOCKET;
+				m_Socket = INVALID_SOCKET;
 				return false;
 			}
 
@@ -336,8 +335,8 @@ namespace Socket
 			// Converts std::wstring to std::string and returns it. 
 			const std::wstring message(text, size);
 			LocalFree(text);
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> l_oConverter;
-			return l_oConverter.to_bytes(message);
+			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+			return converter.to_bytes(message);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return "";
@@ -431,7 +430,7 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-		SOCKET m_oSocket;
+		SOCKET m_Socket;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 

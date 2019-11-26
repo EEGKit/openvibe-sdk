@@ -20,7 +20,7 @@ namespace Socket
 	{
 	public:
 
-		bool listen(size_t port) override
+		bool listen(const size_t port) override
 		{
 			if (!open()) { return false; }
 

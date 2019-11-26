@@ -23,7 +23,7 @@ namespace Socket
 	class Socket_API TConnectionDelegate : public T
 	{
 	public:
-		TConnectionDelegate(SConnectionDelegate connectionDelegate) : m_connectionDelegate(connectionDelegate) { }
+		TConnectionDelegate(const SConnectionDelegate connectionDelegate) : m_connectionDelegate(connectionDelegate) { }
 
 		virtual bool close() { return m_connectionDelegate.fpClose(m_connectionDelegate.data); }
 

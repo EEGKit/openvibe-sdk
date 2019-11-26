@@ -33,7 +33,7 @@
 
 namespace Socket
 {
-	static bool FD_ISSET_PROXY(int fd, fd_set* set) { return FD_ISSET(fd, set) ? true : false; }
+	static bool FD_ISSET_PROXY(const int fd, fd_set* set) { return FD_ISSET(fd, set) ? true : false; }
 
 	template <class T>
 	class TConnection : public T
@@ -53,15 +53,15 @@ namespace Socket
 #endif
 		}
 
-		explicit TConnection(int socket) : m_socket(socket)
+		explicit TConnection(const int socket) : m_socket(socket)
 		{
-#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-#elif defined TARGET_OS_Windows
+#if defined TARGET_OS_Windows
 			const int versionHigh     = 2;
 			const int versionLow      = 0;
 			const WORD winsockVersion = MAKEWORD(versionHigh, versionLow);
 			WSADATA wsaData;
 			WSAStartup(winsockVersion, &wsaData);
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #else
 #endif
 		}
@@ -143,10 +143,6 @@ namespace Socket
 		virtual size_t sendBuffer(const void* buffer, const size_t size)
 		{
 			if (!isConnected()) { return 0; }
-#if 0
-			int l_iTrue=1;
-			setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
-#endif
 			const int res = send(m_socket, static_cast<const char*>(buffer), int(size), Socket_SendFlags);
 			if (size != 0 && res <= 0) { close(); }
 			return res <= 0 ? 0 : size_t(res);
@@ -155,10 +151,6 @@ namespace Socket
 		virtual size_t receiveBuffer(void* buffer, const size_t size)
 		{
 			if (!isConnected() || !size) { return 0; }
-#if 0
-			int l_iTrue = 1;
-			setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
-#endif
 			const int res = recv(m_socket, static_cast<char *>(buffer), int(size), Socket_ReceiveFlags);
 			if (size != 0 && res <= 0) { close(); }
 			return res <= 0 ? 0 : size_t(res);
