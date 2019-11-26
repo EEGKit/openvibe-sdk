@@ -402,20 +402,14 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_ID) { m_SymbolicScenario.iScenarios.back().id = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeID) { m_SymbolicScenario.iScenarios.back().typeID = value; }
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxID)
-	{
-		m_SymbolicScenario.iScenarios.back().linkedBoxID = value;
-	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxID) { m_SymbolicScenario.iScenarios.back().linkedBoxID = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputID)
 	{
 		m_SymbolicScenario.iScenarios.back().linkedBoxInputID = value;
 	}
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_ID) { m_SymbolicScenario.oScenarios.back().id = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeID) { m_SymbolicScenario.oScenarios.back().typeID = value; }
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxID)
-	{
-		m_SymbolicScenario.oScenarios.back().linkedBoxID = value;
-	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxID) { m_SymbolicScenario.oScenarios.back().linkedBoxID = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputID)
 	{
 		m_SymbolicScenario.oScenarios.back().linkedBoxOutputID = value;
@@ -429,29 +423,17 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_ID) { m_SymbolicScenario.boxes.back().outputs.back().id = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeID) { m_SymbolicScenario.boxes.back().outputs.back().typeID = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_ID) { m_SymbolicScenario.boxes.back().settings.back().id = value; }
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeID)
-	{
-		m_SymbolicScenario.boxes.back().settings.back().typeID = value;
-	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeID) { m_SymbolicScenario.boxes.back().settings.back().typeID = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_ID) { m_SymbolicScenario.comments.back().id = value; }
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_ID)
-	{
-		m_SymbolicScenario.comments.back().attributes.back().id = value;
-	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_ID) { m_SymbolicScenario.comments.back().attributes.back().id = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_ID) { m_SymbolicScenario.metadata.back().identifier = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Type) { m_SymbolicScenario.metadata.back().type = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_ID) { m_SymbolicScenario.links.back().attributes.back().id = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_ID) { m_SymbolicScenario.links.back().id = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxID) { m_SymbolicScenario.links.back().linkSrc.boxID = value; }
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputID)
-	{
-		m_SymbolicScenario.links.back().linkSrc.boxOutputID = value;
-	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputID) { m_SymbolicScenario.links.back().linkSrc.boxOutputID = value; }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxID) { m_SymbolicScenario.links.back().linkDst.boxID = value; }
-	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputID)
-	{
-		m_SymbolicScenario.links.back().linkDst.boxInputID = value;
-	}
+	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputID) { m_SymbolicScenario.links.back().linkDst.boxInputID = value; }
 
 
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_ID) { m_SymbolicScenario.attributes.back().id = value; }
@@ -506,10 +488,7 @@ bool CAlgorithmScenarioImporterContext::processString(const CIdentifier& identif
 
 bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& identifier, const uint64_t value)
 {
-	if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdx)
-	{
-		m_SymbolicScenario.links.back().linkSrc.boxOutputIdx = size_t(value);
-	}
+	if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdx) { m_SymbolicScenario.links.back().linkSrc.boxOutputIdx = size_t(value); }
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdx)
 	{
 		m_SymbolicScenario.links.back().linkDst.boxInputIdx = size_t(value);

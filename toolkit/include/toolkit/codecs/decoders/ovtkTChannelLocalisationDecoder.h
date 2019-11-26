@@ -48,15 +48,9 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_oDynamic; }
 
-		virtual bool isHeaderReceived()
-		{
-			return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedHeader);
-		}
+		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedHeader); }
 
-		virtual bool isBufferReceived()
-		{
-			return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedBuffer);
-		}
+		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedBuffer); }
 
 		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelLocalisationDecoder_OutputTriggerId_ReceivedEnd); }
 	};

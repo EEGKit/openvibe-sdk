@@ -7,7 +7,6 @@
 #include <boost/spirit/include/classic_symbols.hpp>
 #include <boost/spirit/include/classic_ast.hpp>
 
-using namespace boost::spirit::classic;
 
 /**
 * Enum of parent nodes identifiers.
@@ -85,7 +84,8 @@ enum EVariables
 * Symbols table for unary functions.
 *
 */
-struct SUnaryFunctionSymbols : symbols<uint64_t>
+
+struct SUnaryFunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SUnaryFunctionSymbols()
 	{
@@ -111,7 +111,7 @@ struct SUnaryFunctionSymbols : symbols<uint64_t>
 * Symbols table for binary functions.
 *
 */
-struct SBinaryFunctionSymbols : symbols<uint64_t>
+struct SBinaryFunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SBinaryFunctionSymbols()
 	{
@@ -124,7 +124,7 @@ struct SBinaryFunctionSymbols : symbols<uint64_t>
 * Symbol tables for unary boolean operators
 *
 */
-struct SUnaryBooleanFunctionSymbols : symbols<uint64_t>
+struct SUnaryBooleanFunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SUnaryBooleanFunctionSymbols()
 	{
@@ -137,7 +137,7 @@ struct SUnaryBooleanFunctionSymbols : symbols<uint64_t>
 * Symbol tables for binary boolean operators
 *
 */
-struct SBinaryBoolean1FunctionSymbols : symbols<uint64_t>
+struct SBinaryBoolean1FunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SBinaryBoolean1FunctionSymbols()
 	{
@@ -151,7 +151,7 @@ struct SBinaryBoolean1FunctionSymbols : symbols<uint64_t>
 * Symbol tables for binary boolean operators
 *
 */
-struct SBinaryBoolean2FunctionSymbols : symbols<uint64_t>
+struct SBinaryBoolean2FunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SBinaryBoolean2FunctionSymbols()
 	{
@@ -165,7 +165,7 @@ struct SBinaryBoolean2FunctionSymbols : symbols<uint64_t>
 * Symbol tables for binary boolean operators
 *
 */
-struct SBinaryBoolean3FunctionSymbols : symbols<uint64_t>
+struct SBinaryBoolean3FunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SBinaryBoolean3FunctionSymbols()
 	{
@@ -179,7 +179,7 @@ struct SBinaryBoolean3FunctionSymbols : symbols<uint64_t>
 * Symbols table for comparison 1 functions.
 *
 */
-struct SComparison1FunctionSymbols : symbols<uint64_t>
+struct SComparison1FunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SComparison1FunctionSymbols()
 	{
@@ -195,7 +195,7 @@ struct SComparison1FunctionSymbols : symbols<uint64_t>
 * Symbols table for comparison 2 functions.
 *
 */
-struct SComparison2FunctionSymbols : symbols<uint64_t>
+struct SComparison2FunctionSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SComparison2FunctionSymbols()
 	{
@@ -210,7 +210,7 @@ struct SComparison2FunctionSymbols : symbols<uint64_t>
 * Symbols table for mathematical constants.
 *
 */
-struct SMathConstantSymbols : symbols<double>
+struct SMathConstantSymbols : boost::spirit::classic::symbols<double>
 {
 	SMathConstantSymbols()
 	{
@@ -235,7 +235,7 @@ struct SMathConstantSymbols : symbols<double>
 * Symbols table for variables.
 *
 */
-struct SVariableSymbols : symbols<uint64_t>
+struct SVariableSymbols : boost::spirit::classic::symbols<uint64_t>
 {
 	SVariableSymbols()
 	{
@@ -274,7 +274,7 @@ static SVariableSymbols variable_p;
 /**
 * The parser's grammar.
 */
-struct SEquationGrammar : grammar<SEquationGrammar>
+struct SEquationGrammar : boost::spirit::classic::grammar<SEquationGrammar>
 {
 	static const int realID       = 1;
 	static const int variableID   = 2;
@@ -290,58 +290,44 @@ struct SEquationGrammar : grammar<SEquationGrammar>
 	template <typename ScannerT>
 	struct definition
 	{
-		explicit definition(SEquationGrammar const&)
+		explicit definition(SEquationGrammar const& /*grammar*/)
 		{
-			real = leaf_node_d[real_p];
-
+			using namespace boost::spirit::classic;
+			real     = leaf_node_d[real_p];
 			variable = leaf_node_d[as_lower_d[variable_p]];
-
 			constant = leaf_node_d[as_lower_d[mathConstant_p]];
 
-			function =
-					(root_node_d[as_lower_d[unaryFunction_p]] >> no_node_d[ch_p('(')] >> ifthen >> no_node_d[ch_p(')')]) |
-					(root_node_d[as_lower_d[binaryFunction_p]] >> no_node_d[ch_p('(')] >> infix_node_d[(ifthen >> ',' >> ifthen)] >> no_node_d[ch_p(')')]);
+			function = (root_node_d[as_lower_d[unaryFunction_p]] >> no_node_d[ch_p('(')] >> ifthen >> no_node_d[ch_p(')')])
+					   | (root_node_d[as_lower_d[binaryFunction_p]] >> no_node_d[ch_p('(')] >> infix_node_d[(ifthen >> ',' >> ifthen)] >> no_node_d[ch_p(')')]);
 
-			factor = (function | constant | variable | real)
-					 | inner_node_d['(' >> expression >> ')']
-					 | inner_node_d['(' >> ifthen >> ')']
-					 | (root_node_d[ch_p('-')] >> factor)
-					 | (root_node_d[ch_p('+')] >> factor);
+			factor = (function | constant | variable | real) | inner_node_d['(' >> expression >> ')']
+					 | inner_node_d['(' >> ifthen >> ')'] | (root_node_d[ch_p('-')] >> factor) | (root_node_d[ch_p('+')] >> factor);
 
-			boolean = (root_node_d[unaryBooleanFunction_p] >> factor) | factor;
-
-			term = boolean >> *((root_node_d[ch_p('*')] >> boolean) | (root_node_d[ch_p('/')] >> boolean));
-
-			expression = term >> *((root_node_d[ch_p('+')] >> term) | (root_node_d[ch_p('-')] >> term));
-
+			boolean     = (root_node_d[unaryBooleanFunction_p] >> factor) | factor;
+			term        = boolean >> *((root_node_d[ch_p('*')] >> boolean) | (root_node_d[ch_p('/')] >> boolean));
+			expression  = term >> *((root_node_d[ch_p('+')] >> term) | (root_node_d[ch_p('-')] >> term));
 			comparison1 = (expression >> root_node_d[comparison1Function_p] >> expression) | expression;
-
 			comparison2 = (comparison1 >> root_node_d[comparison2Function_p] >> comparison1) | comparison1;
-
-			boolean1 = (comparison2 >> root_node_d[binaryBoolean1Function_p] >> comparison2) | comparison2;
-
-			boolean2 = (boolean1 >> root_node_d[binaryBoolean2Function_p] >> boolean1) | boolean1;
-
-			boolean3 = (boolean2 >> root_node_d[binaryBoolean3Function_p] >> boolean2) | boolean2;
-
-			ifthen = (boolean3 >> root_node_d[ch_p('?')] >> boolean3 >> no_node_d[ch_p(':')] >> boolean3) | boolean3;
+			boolean1    = (comparison2 >> root_node_d[binaryBoolean1Function_p] >> comparison2) | comparison2;
+			boolean2    = (boolean1 >> root_node_d[binaryBoolean2Function_p] >> boolean1) | boolean1;
+			boolean3    = (boolean2 >> root_node_d[binaryBoolean3Function_p] >> boolean2) | boolean2;
+			ifthen      = (boolean3 >> root_node_d[ch_p('?')] >> boolean3 >> no_node_d[ch_p(':')] >> boolean3) | boolean3;
 		}
 
-		rule<ScannerT, parser_context<>, parser_tag<booleanID>> boolean;
-		rule<ScannerT, parser_context<>, parser_tag<booleanID>> boolean1;
-		rule<ScannerT, parser_context<>, parser_tag<booleanID>> boolean2;
-		rule<ScannerT, parser_context<>, parser_tag<booleanID>> boolean3;
-		rule<ScannerT, parser_context<>, parser_tag<comparisonID>> comparison1;
-		rule<ScannerT, parser_context<>, parser_tag<comparisonID>> comparison2;
-		rule<ScannerT, parser_context<>, parser_tag<ifthenID>> ifthen;
-		rule<ScannerT, parser_context<>, parser_tag<expressionID>> expression;
-		rule<ScannerT, parser_context<>, parser_tag<termID>> term;
-		rule<ScannerT, parser_context<>, parser_tag<factorID>> factor;
-		rule<ScannerT, parser_context<>, parser_tag<realID>> real;
-		rule<ScannerT, parser_context<>, parser_tag<variableID>> variable;
-		rule<ScannerT, parser_context<>, parser_tag<functionID>> function;
-		rule<ScannerT, parser_context<>, parser_tag<constantID>> constant;
-
-		rule<ScannerT, parser_context<>, parser_tag<ifthenID>> const& start() const { return ifthen; }
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<booleanID>> boolean;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<booleanID>> boolean1;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<booleanID>> boolean2;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<booleanID>> boolean3;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<comparisonID>> comparison1;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<comparisonID>> comparison2;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<ifthenID>> ifthen;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<expressionID>> expression;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<termID>> term;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<factorID>> factor;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<realID>> real;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<variableID>> variable;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<functionID>> function;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<constantID>> constant;
+		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<ifthenID>> const& start() const { return ifthen; }
 	};
 };

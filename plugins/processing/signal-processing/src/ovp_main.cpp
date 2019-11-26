@@ -59,8 +59,8 @@ OVP_Declare_Begin()
 	// Temporal filter
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_FilterMethod, "Filter method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Butterworth", OVP_TypeId_FilterMethod_Butterworth.toUInteger());
-	//	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Chebishev", OVP_TypeId_FilterMethod_Chebyshev.toUInteger());
-	//	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Yule Walked", OVP_TypeId_FilterMethod_YuleWalker.toUInteger());
+	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Chebishev", OVP_TypeId_FilterMethod_Chebyshev.toUInteger());
+	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Yule Walked", OVP_TypeId_FilterMethod_YuleWalker.toUInteger());
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_FilterType, "Filter type");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Low Pass", OVP_TypeId_FilterType_LowPass.toUInteger());

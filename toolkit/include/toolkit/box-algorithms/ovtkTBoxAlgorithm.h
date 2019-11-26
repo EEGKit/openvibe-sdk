@@ -113,8 +113,8 @@ namespace OpenViBEToolkit
 			}
 		}
 
-		template <size_t outputIdx>
-		void appendOutputChunkData(const void* buffer, const size_t size) { appendOutputChunkData(outputIdx, buffer, size); }
+		template <size_t TOutputIdx>
+		void appendOutputChunkData(const void* buffer, const size_t size) { appendOutputChunkData(TOutputIdx, buffer, size); }
 
 		_IsDerivedFromClass_(TBoxAlgorithmParentClass, OVTK_ClassId_)
 
@@ -153,7 +153,7 @@ namespace OpenViBEToolkit
 				boxAlgorithmCtx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, identifier, m_settingType);
 			}
 
-			operator uint32_t()
+			operator uint32_t() const
 			{
 				double result;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
@@ -165,7 +165,7 @@ namespace OpenViBEToolkit
 				return uint32_t(result);
 			}
 
-			operator uint64_t()
+			operator uint64_t() const
 			{
 				uint64_t stimId               = std::numeric_limits<uint64_t>::max();
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
@@ -190,7 +190,7 @@ namespace OpenViBEToolkit
 				return stimId;
 			}
 
-			operator int()
+			operator int() const
 			{
 				double res;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
@@ -202,7 +202,7 @@ namespace OpenViBEToolkit
 				return int(res);
 			}
 
-			operator int64_t()
+			operator int64_t() const
 			{
 				double res;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
@@ -214,7 +214,7 @@ namespace OpenViBEToolkit
 				return int64_t(res);
 			}
 
-			operator double()
+			operator double() const
 			{
 				double res;
 				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
@@ -226,9 +226,9 @@ namespace OpenViBEToolkit
 				return double(res);
 			}
 
-			operator bool() { return m_configManager.expandAsBoolean(m_settingValue); }
+			operator bool() const { return m_configManager.expandAsBoolean(m_settingValue); }
 
-			operator OpenViBE::CString() { return m_configManager.expand(m_settingValue); }
+			operator OpenViBE::CString() const { return m_configManager.expand(m_settingValue); }
 
 		private:
 			OpenViBE::Kernel::ILogManager& m_logManager;
@@ -256,8 +256,8 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::IBoxAlgorithmContext* m_boxAlgorithmCtx = nullptr;
 	};
 
-	template <class CBoxListenerParentClass>
-	class TBoxListener : public CBoxListenerParentClass
+	template <class TBoxListenerParentClass>
+	class TBoxListener : public TBoxListenerParentClass
 	{
 	public:
 
@@ -305,9 +305,9 @@ namespace OpenViBEToolkit
 				case OpenViBE::Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
 				case OpenViBE::Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
 				case OpenViBE::Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				default: OV_ERROR_KRF("Unhandled box modification type " << (size_t)eBoxModificationType, OpenViBE::Kernel::ErrorType::BadArgument);
+				default: OV_ERROR_KRF("Unhandled box modification type " << size_t(eBoxModificationType), OpenViBE::Kernel::ErrorType::BadArgument);
 			}
-			return false;
+			//return false;
 		}
 
 		// ====================================================================================================================================
@@ -356,7 +356,7 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		_IsDerivedFromClass_(CBoxListenerParentClass, OVTK_ClassId_)
+		_IsDerivedFromClass_(TBoxListenerParentClass, OVTK_ClassId_)
 
 	private:
 

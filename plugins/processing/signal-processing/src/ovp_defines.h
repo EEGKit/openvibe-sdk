@@ -50,12 +50,8 @@
 #define OVP_TypeId_MatchMethod_Index							OpenViBE::CIdentifier(0x0E0BF9E8, 0x3D612618)
 #define OVP_TypeId_MatchMethod_Smart							OpenViBE::CIdentifier(0x2D87EF07, 0xA2828AC0)
 
-//__________________________________________________________________//
-//																	//
-// Global defines													//
-//__________________________________________________________________//
-//																	//
-
+// Global defines
+//---------------------------------------------------------------------------------------------------
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 #include "ovp_global_defines.h"
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

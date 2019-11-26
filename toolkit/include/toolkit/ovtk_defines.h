@@ -341,7 +341,7 @@
 #define OVTK_FACTOR_Yocto			(24 | 0x00010000) // 65546
 
 // Convert the factor code to a signer integer
-#define OVTK_DECODE_FACTOR(factor)	( (factor & 0x00010000) ? -int(factor & 0x0000FFFF) : int(factor) )
+#define OVTK_DECODE_FACTOR(factor)	( ((factor) & 0x00010000) ? -int((factor) & 0x0000FFFF) : int(factor) )
 
 //__________________________________________________________________//
 //																	//

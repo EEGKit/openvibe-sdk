@@ -258,14 +258,14 @@ class CAbstractTreeVariableNode : public CAbstractTreeNode
 {
 public:
 
-	explicit CAbstractTreeVariableNode(const uint32_t index) : CAbstractTreeNode(true, false), m_ui32Idx(index) { }
+	explicit CAbstractTreeVariableNode(const size_t index) : CAbstractTreeNode(true, false), m_index(index) { }
 
 	~CAbstractTreeVariableNode() override { }
 
 	void print(OpenViBE::Kernel::ILogManager& logManager) override
 	{
 		char name[2];
-		name[0] = 'a' + m_ui32Idx;
+		name[0] = char('a' + m_index);
 		name[1] = 0;
 		logManager << name;
 	}
@@ -282,7 +282,7 @@ public:
 
 protected:
 
-	uint32_t m_ui32Idx = 0;
+	size_t m_index = 0;
 };
 
 /**

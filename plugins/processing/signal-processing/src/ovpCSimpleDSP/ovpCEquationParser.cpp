@@ -9,6 +9,7 @@
 #include <cctype>
 
 using namespace boost::spirit;
+using namespace /*boost::spirit::*/classic;
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
@@ -77,7 +78,7 @@ bool CEquationParser::compileEquation(const char* equation)
 	str = FindAndReplace(str, "\n", "");
 
 	//parses the equation
-	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << CString(str.c_str()) << "]...");
+	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << str << "]...");
 	const tree_parse_info<> info = ast_parse(str.c_str(), m_grammar >> end_p, space_p);
 
 	//If the parsing was successful
@@ -154,7 +155,7 @@ bool CEquationParser::compileEquation(const char* equation)
 
 void CEquationParser::createAbstractTree(tree_parse_info<> oInfo) { m_tree = new CAbstractTree(createNode(oInfo.trees.begin())); }
 
-CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
+CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 {
 	if (i->value.id() == SEquationGrammar::expressionID)
 	{
@@ -188,21 +189,21 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == SEquationGrammar::variableID)
 	{
-		uint32_t l_ui32Idx = 0;
-		std::string l_sValue(i->value.begin(), i->value.end());
-		if (l_sValue != "x" && l_sValue != "X")
+		size_t idx = 0;
+		std::string value(i->value.begin(), i->value.end());
+		if (value != "x" && value != "X")
 		{
-			if (l_sValue[0] >= 'a' && l_sValue[0] <= 'z') { l_ui32Idx = l_sValue[0] - 'a'; }
-			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') { l_ui32Idx = l_sValue[0] - 'A'; }
+			if (value[0] >= 'a' && value[0] <= 'z') { idx = value[0] - 'a'; }
+			if (value[0] >= 'A' && value[0] <= 'Z') { idx = value[0] - 'A'; }
 		}
 
-		if (l_ui32Idx >= m_nVariable)
+		if (idx >= m_nVariable)
 		{
-			OV_WARNING("Missing input " << l_ui32Idx+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
+			OV_WARNING("Missing input " << idx+1 << " (referenced with variable [" << value << "])",
 					   m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 			return new CAbstractTreeValueNode(0);
 		}
-		return new CAbstractTreeVariableNode(l_ui32Idx);
+		return new CAbstractTreeVariableNode(idx);
 	}
 	else if (i->value.id() == SEquationGrammar::constantID)
 	{
@@ -229,8 +230,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == SEquationGrammar::ifthenID)
 	{
-		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1),
-										   createNode(i->children.begin() + 2), false);
+		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1), createNode(i->children.begin() + 2), false);
 	}
 	else if (i->value.id() == SEquationGrammar::comparisonID)
 	{
@@ -272,13 +272,13 @@ void CEquationParser::push_value(const double value)
 	(*(m_functionContextList++)).direct_value = value;
 }
 
-void CEquationParser::push_var(const uint32_t index)
+void CEquationParser::push_var(const size_t index)
 {
 	*(m_functionList++)                         = op_loadVar;
 	(*(m_functionContextList++)).indirect_value = &m_variable[index];
 }
 
-void CEquationParser::push_op(const uint64_t op)
+void CEquationParser::push_op(const size_t op)
 {
 	*(m_functionList++)                         = m_functionTable[op];
 	(*(m_functionContextList++)).indirect_value = nullptr;

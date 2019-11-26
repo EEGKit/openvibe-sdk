@@ -37,7 +37,7 @@ bool CMasterAcquisitionEncoder::initialize()
 	TParameterHandler<uint64_t> ip_ui64SubjectAge(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectAge));
 	TParameterHandler<uint64_t> ip_ui64SubjectGender(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectGender));
 	TParameterHandler<IMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix));
-	TParameterHandler<uint64_t> ip_ui64SamplingRate(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling));
+	TParameterHandler<uint64_t> ip_sampling(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling));
 	TParameterHandler<IStimulationSet*> ip_pStimulationSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<uint64_t> ip_ui64BufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration));
 	TParameterHandler<IMemoryBuffer*> op_pEncodedMemoryBuffer(this->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
@@ -93,7 +93,7 @@ bool CMasterAcquisitionEncoder::initialize()
 	ip_ui64ExperimentInfoSubjectAge.setReferenceTarget(ip_ui64SubjectAge);
 	ip_ui64ExperimentInfoSubjectGender.setReferenceTarget(ip_ui64SubjectGender);
 	ip_pSignalMatrix.setReferenceTarget(ip_pMatrix);
-	ip_ui64SignalSamplingRate.setReferenceTarget(ip_ui64SamplingRate);
+	ip_ui64SignalSamplingRate.setReferenceTarget(ip_sampling);
 	ip_pStimulationStimulationSet.setReferenceTarget(ip_pStimulationSet);
 	ip_ui64AcquisitionBufferDuration.setReferenceTarget(ip_ui64BufferDuration);
 	op_pEncodedMemoryBuffer.setReferenceTarget(op_pAcquisitionMemoryBuffer);

@@ -339,9 +339,8 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 							//ensure the right number of values was parsed in lower dimension
 							if (nValue[curDimIdx + 1] != matrix.getDimensionSize(curDimIdx + 1))
 							{
-								//	getLogManager() << LogLevel_Trace
-								//		<< "Found " << l_vValuesCount[l_ui32CurDimensionIdx+1] << " values in dimension "
-								//		<< l_ui32CurDimensionIdx+1 << ", expected " << op_pMatrix->getDimensionSize(l_ui32CurDimensionIdx+1) << ", parsing aborted\n";
+								//getLogManager() << LogLevel_Trace << "Found " << valuesCount[curDimIdx+1] << " values in dimension "
+								//		<< curDimensionIdx+1 << ", expected " << op_pMatrix->getDimensionSize(curDimIdx+1) << ", parsing aborted\n";
 								return false;
 							}
 							//reset values count of lower dimension to 0
@@ -366,9 +365,9 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 							//ensure values parsed so far in current dimension doesn't exceed current dimension size
 							if (nValue.back() == matrix.getDimensionSize(curDimIdx))
 							{
-								//	getLogManager() << LogLevel_Trace
-								//		<< "Found " << l_vValuesCount.back() << " values in dimension " << l_ui32CurDimensionIdx
-								//		<< ", expected " << RDestinationMatrix.getDimensionSize(l_ui32CurDimensionIdx) << ", parsing aborted\n";
+								//getLogManager() << LogLevel_Trace
+								//		<< "Found " << valuesCount.back() << " values in dimension " << curDimensionIdx
+								//		<< ", expected " << RDestinationMatrix.getDimensionSize(curDimensionIdx) << ", parsing aborted\n";
 								return false;
 							}
 
@@ -410,7 +409,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						if (errno == ERANGE)
 						{
 							//string couldn't be converted to a double
-							// getLogManager() << LogLevel_Trace << "Couldn't convert token \"" << CString(l_sCurString.c_str()) << "\" to floating point value, parsing aborted\n";
+							// getLogManager() << LogLevel_Trace << "Couldn't convert token \"" << CString(sCurString.c_str()) << "\" to floating point value, parsing aborted\n";
 							return false;
 						}
 #endif
@@ -432,11 +431,11 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 
 				default:
 					break;
-			} // switch(l_ui32Status)
+			} // switch(status)
 
 			//increment iterator
 			++it;
-		} // while(l_oIt != what.end()) (read each character of current line)
+		} // while(it != what.end()) (read each character of current line)
 	} while (buffer.good()); //read each line in turn
 
 	//If the file is empty or other (like directory)
@@ -445,7 +444,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 	if (nValue[0] != matrix.getDimensionSize(0))
 	{
 		//	getLogManager() << LogLevel_Trace <<
-		//		"Found " << l_vValuesCount[0] << " values in dimension 0, expected " << op_pMatrix->getDimensionSize(0) << ", parsing aborted\n";
+		//		"Found " << valuesCount[0] << " values in dimension 0, expected " << op_pMatrix->getDimensionSize(0) << ", parsing aborted\n";
 		return false;
 	}
 
@@ -463,10 +462,7 @@ bool dumpMatrixBuffer(const IMatrix& matrix, std::stringstream& buffer, const si
 		buffer << CONSTANT_LEFT_SQUARE_BRACKET;
 
 		//dump current cell contents
-		for (size_t j = 0; j < matrix.getDimensionSize(index1); j++, index2++)
-		{
-			buffer << CONSTANT_SPACE << matrix.getBuffer()[index2];
-		}
+		for (size_t j = 0; j < matrix.getDimensionSize(index1); j++, index2++) { buffer << CONSTANT_SPACE << matrix.getBuffer()[index2]; }
 
 		//dimension end
 		buffer << CONSTANT_SPACE << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;

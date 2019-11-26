@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SamplingRate;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
 
 		private:
 

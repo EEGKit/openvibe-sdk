@@ -19,4 +19,4 @@ bool CSignalTrialSet::clear()
 
 ISignalTrialSet* OpenViBEToolkit::createSignalTrialSet() { return new CSignalTrialSet(); }
 
-void OpenViBEToolkit::releaseSignalTrialSet(ISignalTrialSet* pSignalTrialSet) { delete pSignalTrialSet; }
+void OpenViBEToolkit::releaseSignalTrialSet(ISignalTrialSet* signalTrialSet) { delete signalTrialSet; }

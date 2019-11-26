@@ -61,8 +61,8 @@ bool CAlgorithmOnlineCovariance::process()
 							"Invalid feature vector with " << ip_pFeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
-		const uint32_t nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const size_t nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+		const size_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1,
 							"Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)",
@@ -92,15 +92,15 @@ bool CAlgorithmOnlineCovariance::process()
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Update))
 	{
-		const uint32_t nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const size_t nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+		const size_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		const double* buffer = ip_pFeatureVectorSet->getBuffer();
 
 		OV_ERROR_UNLESS_KRF(buffer, "Input buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 
 		// Cast our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
-		const Map<MatrixXdRowMajor> l_oSampleChunk(const_cast<double*>(buffer), nRows, nCols);
+		const Map<MatrixXdRowMajor> sampleChunk(const_cast<double*>(buffer), nRows, nCols);
 
 		// Update the mean & cov estimates
 
@@ -109,10 +109,10 @@ bool CAlgorithmOnlineCovariance::process()
 			// 'Average of per-chunk covariance matrices'. This might not be a proper cov over
 			// the dataset, but seems occasionally produce nicely smoothed results when used for CSP.
 
-			const MatrixXd l_oChunkMean     = l_oSampleChunk.colwise().mean();
-			const MatrixXd l_oChunkCentered = l_oSampleChunk.rowwise() - l_oChunkMean.row(0);
+			const MatrixXd chunkMean     = sampleChunk.colwise().mean();
+			const MatrixXd chunkCentered = sampleChunk.rowwise() - chunkMean.row(0);
 
-			MatrixXd l_oChunkCov = (1.0 / double(nRows)) * l_oChunkCentered.transpose() * l_oChunkCentered;
+			MatrixXd chunkCov = (1.0 / double(nRows)) * chunkCentered.transpose() * chunkCentered;
 
 			if (ip_bTraceNormalization)
 			{
@@ -122,16 +122,16 @@ bool CAlgorithmOnlineCovariance::process()
 				// the current average power. Such a normalization could also be implemented in its own
 				// box and not done here.
 
-				l_oChunkCov = l_oChunkCov / l_oChunkCov.trace();
+				chunkCov = chunkCov / chunkCov.trace();
 			}
 
-			m_oIncrementalMean += l_oChunkMean;
-			m_oIncrementalCov += l_oChunkCov;
+			m_oIncrementalMean += chunkMean;
+			m_oIncrementalCov += chunkCov;
 
 			m_n++;
 
-			// dumpMatrix(this->getLogManager(), l_oSampleChunk, "SampleChunk");
-			// dumpMatrix(this->getLogManager(), l_oSampleCenteredMean, "SampleCenteredMean");
+			// dumpMatrix(this->getLogManager(), sampleChunk, "SampleChunk");
+			// dumpMatrix(this->getLogManager(), sampleCenteredMean, "SampleCenteredMean");
 		}
 		else if (ip_ui64UpdateMethod == OVP_TypeId_OnlineCovariance_UpdateMethod_Incremental.toUInteger())
 		{
@@ -139,99 +139,99 @@ bool CAlgorithmOnlineCovariance::process()
 			// It should be implementing the Youngs & Cramer algorithm as described in
 			// Chan, Golub, Leveq, "Updating formulae and a pairwise algorithm...", 1979
 
-			uint32_t l_ui32Start = 0;
+			size_t start = 0;
 			if (m_n == 0)
 			{
-				m_oIncrementalMean = l_oSampleChunk.row(0);
-				l_ui32Start        = 1;
-				m_n        = 1;
+				m_oIncrementalMean = sampleChunk.row(0);
+				start              = 1;
+				m_n                = 1;
 			}
 
-			MatrixXd l_oChunkContribution;
-			l_oChunkContribution.resizeLike(m_oIncrementalCov);
-			l_oChunkContribution.setZero();
+			MatrixXd chunkContribution;
+			chunkContribution.resizeLike(m_oIncrementalCov);
+			chunkContribution.setZero();
 
-			for (uint32_t i = l_ui32Start; i < nRows; ++i)
+			for (size_t i = start; i < nRows; ++i)
 			{
-				m_oIncrementalMean += l_oSampleChunk.row(i);
+				m_oIncrementalMean += sampleChunk.row(i);
 
-				const MatrixXd l_oDiff      = (m_n + 1.0) * l_oSampleChunk.row(i) - m_oIncrementalMean;
-				const MatrixXd l_oOuterProd = l_oDiff.transpose() * l_oDiff;
+				const MatrixXd diff      = (m_n + 1.0) * sampleChunk.row(i) - m_oIncrementalMean;
+				const MatrixXd outerProd = diff.transpose() * diff;
 
-				l_oChunkContribution += 1.0 / (m_n * (m_n + 1.0)) * l_oOuterProd;
+				chunkContribution += 1.0 / (m_n * (m_n + 1.0)) * outerProd;
 
 				m_n++;
 			}
 
-			if (ip_bTraceNormalization) { l_oChunkContribution = l_oChunkContribution / l_oChunkContribution.trace(); }
+			if (ip_bTraceNormalization) { chunkContribution = chunkContribution / chunkContribution.trace(); }
 
-			m_oIncrementalCov += l_oChunkContribution;
+			m_oIncrementalCov += chunkContribution;
 
-			// dumpMatrix(this->getLogManager(), l_oSampleChunk, "Sample");
+			// dumpMatrix(this->getLogManager(), sampleChunk, "Sample");
 		}
 #if 0
-		else if(l_ui32Method == 2)
+		else if(method == 2)
 		{
 			// Increment sample counts
-			const uint64_t l_ui64CountBefore = m_n;
-			const uint64_t l_ui64CountChunk = nRows;
-			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
-			const MatrixXd l_oSampleSum = l_oSampleChunk.colwise().sum();
+			const uint64_t countBefore = m_n;
+			const uint64_t countChunk = nRows;
+			const uint64_t countAfter = countBefore + countChunk;
+			const MatrixXd sampleSum = sampleChunk.colwise().sum();
 
 			// Center the chunk
-			const MatrixXd l_oSampleCentered = l_oSampleChunk.rowwise() - l_oSampleSum.row(0)*(1.0/(double)l_ui64CountChunk);
+			const MatrixXd sampleCentered = sampleChunk.rowwise() - sampleSum.row(0)*(1.0/(double)countChunk);
 
-			const MatrixXd l_oSampleCoMoment = (l_oSampleCentered.transpose() * l_oSampleCentered);
+			const MatrixXd sampleCoMoment = (sampleCentered.transpose() * sampleCentered);
 
-			m_oIncrementalCov = m_oIncrementalCov + l_oSampleCoMoment;
+			m_oIncrementalCov = m_oIncrementalCov + sampleCoMoment;
 
-			if(l_ui64CountBefore>0)
+			if(countBefore>0)
 			{
-				const MatrixXd l_oMeanDifference = (l_ui64CountChunk/(double)l_ui64CountBefore) * m_oIncrementalMean - l_oSampleSum;
-				const MatrixXd l_oMeanDiffOuterProduct =  l_oMeanDifference.transpose()*l_oMeanDifference;
+				const MatrixXd meanDifference = (countChunk/(double)countBefore) * m_oIncrementalMean - sampleSum;
+				const MatrixXd meanDiffOuterProduct =  meanDifference.transpose()*meanDifference;
 
-				m_oIncrementalCov += l_oMeanDiffOuterProduct*l_ui64CountBefore/(l_ui64CountChunk*l_ui64CountAfter);
+				m_oIncrementalCov += meanDiffOuterProduct*countBefore/(countChunk*countAfter);
 			}
 
-			m_oIncrementalMean = m_oIncrementalMean + l_oSampleSum;
+			m_oIncrementalMean = m_oIncrementalMean + sampleSum;
 
-			m_n = l_ui64CountAfter;
+			m_n = countAfter;
 		}
 		else
 		{
 			// Increment sample counts
-			const uint64_t l_ui64CountBefore = m_n;
-			const uint64_t l_ui64CountChunk = nRows;
-			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
+			const uint64_t countBefore = m_n;
+			const uint64_t countChunk = nRows;
+			const uint64_t countAfter = countBefore + countChunk;
 
 			// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
-			const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(buffer),nRows,nCols);
+			const Map<MatrixXdRowMajor> dataMatrix(const_cast<double*>(buffer),nRows,nCols);
 
 			// Estimate the current sample means
-			const MatrixXdRowMajor l_oSampleMean = l_oDataMatrix.colwise().mean();
+			const MatrixXdRowMajor sampleMean = dataMatrix.colwise().mean();
 
 			// Center the current data with the previous(!) mean
-			const MatrixXdRowMajor l_oSampleCentered = l_oDataMatrix.rowwise() - m_oIncrementalMean.row(0);
+			const MatrixXdRowMajor sampleCentered = dataMatrix.rowwise() - m_oIncrementalMean.row(0);
 
 			// Estimate the current covariance
-			const MatrixXd l_oSampleCov = (l_oSampleCentered.transpose() * l_oSampleCentered) * (1.0/(double)nRows);
+			const MatrixXd sampleCov = (sampleCentered.transpose() * sampleCentered) * (1.0/(double)nRows);
 
 			// fixme: recheck the weights ...
 
 			// Update the global mean and cov
-			if(l_ui64CountBefore>0)
+			if(countBefore>0)
 			{
-				m_oIncrementalMean = ( m_oIncrementalMean*l_ui64CountBefore + l_oSampleMean*nRows) / (double)l_ui64CountAfter;
-				m_oIncrementalCov = ( m_oIncrementalCov*l_ui64CountBefore + l_oSampleCov*(l_ui64CountBefore/(double)l_ui64CountAfter) ) / (double)l_ui64CountAfter;
+				m_oIncrementalMean = ( m_oIncrementalMean*countBefore + sampleMean*nRows) / (double)countAfter;
+				m_oIncrementalCov = ( m_oIncrementalCov*countBefore + sampleCov*(countBefore/(double)countAfter) ) / (double)countAfter;
 			}
 			else
 			{
-				m_oIncrementalMean = l_oSampleMean;
-				m_oIncrementalCov = l_oSampleCov;
+				m_oIncrementalMean = sampleMean;
+				m_oIncrementalCov = sampleCov;
 			}
 
 
-			m_n = l_ui64CountAfter;
+			m_n = countAfter;
 		}
 #endif
 		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_ui64UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
@@ -240,48 +240,48 @@ bool CAlgorithmOnlineCovariance::process()
 	// Give output with regularization (mix prior + cov)?
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_GetCov))
 	{
-		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const size_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
-		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, nCols);
-		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
+		Map<MatrixXdRowMajor> outputMean(op_pMean->getBuffer(), 1, nCols);
+		Map<MatrixXdRowMajor> outputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// The shrinkage parameter pulls the covariance matrix towards diagonal covariance
-		MatrixXd l_oPriorCov;
-		l_oPriorCov.resizeLike(m_oIncrementalCov);
-		l_oPriorCov.setIdentity();
+		MatrixXd priorCov;
+		priorCov.resizeLike(m_oIncrementalCov);
+		priorCov.setIdentity();
 
 		// Mix the prior and the sample estimates according to the shrinkage parameter. We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / double(m_n);
-		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / double(m_n));
+		outputMean = m_oIncrementalMean / double(m_n);
+		outputCov  = ip_f64Shrinkage * priorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / double(m_n));
 
 		// Debug block
-		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");
+		dumpMatrix(this->getLogManager(), outputMean, "Data mean");
 		dumpMatrix(this->getLogManager(), m_oIncrementalCov / double(m_n), "Data cov");
-		dumpMatrix(this->getLogManager(), ip_f64Shrinkage * l_oPriorCov, "Prior cov");
-		dumpMatrix(this->getLogManager(), l_oOutputCov, "Output cov");
+		dumpMatrix(this->getLogManager(), ip_f64Shrinkage * priorCov, "Prior cov");
+		dumpMatrix(this->getLogManager(), outputCov, "Output cov");
 	}
 
 	// Give just the output with no shrinkage?
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw))
 	{
-		const uint32_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const size_t nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
-		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, nCols);
-		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
+		Map<MatrixXdRowMajor> outputMean(op_pMean->getBuffer(), 1, nCols);
+		Map<MatrixXdRowMajor> outputCov(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / double(m_n);
-		l_oOutputCov  = m_oIncrementalCov / double(m_n);
+		outputMean = m_oIncrementalMean / double(m_n);
+		outputCov  = m_oIncrementalCov / double(m_n);
 
 		// Debug block
-		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");
-		dumpMatrix(this->getLogManager(), l_oOutputCov, "Data Cov");
+		dumpMatrix(this->getLogManager(), outputMean, "Data mean");
+		dumpMatrix(this->getLogManager(), outputCov, "Data Cov");
 	}
 
 	return true;

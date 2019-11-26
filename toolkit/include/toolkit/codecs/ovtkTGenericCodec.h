@@ -65,7 +65,7 @@ namespace OpenViBEToolkit
 	public:
 
 		TGenericDecoder() : m_streamedMatrixDecoder(nullptr), m_signalDecoder(nullptr), m_spectrumDecoder(nullptr), m_featureVectorDecoder(nullptr)
-		{ 
+		{
 			this->reset();
 		}
 
@@ -101,7 +101,7 @@ namespace OpenViBEToolkit
 
 		void uninitialize() { this->reset(); }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputMatrix() 
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputMatrix()
 		{
 			decoder_return_impl(getOutputMatrix());
 		}

@@ -24,8 +24,8 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
 
 		const OpenViBE::IMatrix* m_Matrix = nullptr;
-		uint32_t m_DimensionIdx            = 0;
-		uint32_t m_Size                    = 0;
+		uint32_t m_DimensionIdx           = 0;
+		uint32_t m_Size                   = 0;
 		const double* m_Buffer            = nullptr;
 	};
 
@@ -33,7 +33,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		explicit CFeatureVectorSet(const OpenViBE::IMatrix& rMatrix);
+		explicit CFeatureVectorSet(const OpenViBE::IMatrix& matrix);
 		size_t getFeatureVectorCount() const override { return m_matrix.getDimensionSize(0); }
 		bool setFeatureVectorCount(const size_t /*nFeatureVector*/) override { return false; }
 		bool addFeatureVector(const IFeatureVector& /*featureVector*/) override { return false; }
