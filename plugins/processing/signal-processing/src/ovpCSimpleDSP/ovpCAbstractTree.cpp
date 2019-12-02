@@ -292,7 +292,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		{
 			node       = new CAbstractTreeValueNode(total);
 			hasChanged = true;
-			// cout<<l_f64TotalValue<<endl;
+			// cout<<l_TotalValue<<endl;
 		}
 			//if there are still some other children, but we reduced at least two children
 		else if (i > 1)

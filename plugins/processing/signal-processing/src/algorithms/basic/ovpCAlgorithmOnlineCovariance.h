@@ -31,11 +31,11 @@ namespace OpenViBEPlugins
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
-			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
+			static void dumpMatrix(OpenViBE::Kernel::ILogManager& mgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 
 			// These are non-normalized estimates for the corresp. statistics
-			Eigen::MatrixXd m_oIncrementalCov;
-			Eigen::MatrixXd m_oIncrementalMean;
+			Eigen::MatrixXd m_cov;
+			Eigen::MatrixXd m_mean;
 
 			// The divisor for the above estimates to do the normalization
 			uint64_t m_n = 0;

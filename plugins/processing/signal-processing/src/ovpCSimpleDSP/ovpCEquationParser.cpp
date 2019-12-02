@@ -105,9 +105,7 @@ bool CEquationParser::compileEquation(const char* equation)
 		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Generating bytecode...");
 		m_tree->useNegationOperator();
 		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
-#endif
 
-#if 0
 		//Detects if it is a special tree (updates m_treeCategory and m_treeParameter)
 		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Recognizing special tree...");
 		m_tree->recognizeSpecialTree(m_treeCategory, m_treeParameter);
@@ -224,9 +222,15 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the unary function's symbols table
-		if ((functionID = find(unaryFunction_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false); }
+		if ((functionID = find(unaryFunction_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false);
+		}
 		//gets the function's Id from the binary function's symbols table
-		if ((functionID = find(binaryFunction_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
+		if ((functionID = find(binaryFunction_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
+		}
 	}
 	else if (i->value.id() == SEquationGrammar::ifthenID)
 	{
@@ -241,9 +245,15 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the comparison function's symbols table
-		if ((functionID = find(comparison1Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
+		if ((functionID = find(comparison1Function_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
+		}
 		//gets the function's Id from the comparison function's symbols table
-		if ((functionID = find(comparison2Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
+		if ((functionID = find(comparison2Function_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
+		}
 	}
 	else if (i->value.id() == SEquationGrammar::booleanID)
 	{
@@ -254,13 +264,25 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 		std::transform(value.begin(), value.end(), value.begin(), ::ToLower<std::string::value_type>);
 
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(binaryBoolean1Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
+		if ((functionID = find(binaryBoolean1Function_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
+		}
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(binaryBoolean2Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
+		if ((functionID = find(binaryBoolean2Function_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
+		}
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(binaryBoolean3Function_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false); }
+		if ((functionID = find(binaryBoolean3Function_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
+		}
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((functionID = find(unaryBooleanFunction_p, value.c_str())) != nullptr) { return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false); }
+		if ((functionID = find(unaryBooleanFunction_p, value.c_str())) != nullptr)
+		{
+			return new CAbstractTreeParentNode(*functionID, createNode(i->children.begin()), false);
+		}
 	}
 
 	return nullptr;
@@ -286,76 +308,36 @@ void CEquationParser::push_op(const size_t op)
 
 // Functions called by our "pseudo - VM"
 
-void CEquationParser::op_neg(double*& stack, UFunctionContext& /*ctx*/)
-{
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "neg : " << *(stack);
-#endif
-	*stack = - (*stack);
-#ifdef EQ_PARSER_DEBUG
-	std::cout << " = " << *stack << std::endl;
-#endif
-}
+void CEquationParser::op_neg(double*& stack, UFunctionContext& /*ctx*/) { *stack = - (*stack); }
 
 void CEquationParser::op_add(double*& stack, UFunctionContext& /*ctx*/)
 {
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "add : " << *(stack) << " + " << *(stack-1);
-#endif
 	stack--;
 	*(stack) = *(stack + 1) + *(stack);
-#ifdef EQ_PARSER_DEBUG
-	std::cout << " = " << *stack << std::endl;
-#endif
 }
 
 void CEquationParser::op_sub(double*& stack, UFunctionContext& /*ctx*/)
 {
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "sub : " << *(stack) << " - " << *(stack-1);
-#endif
 	stack--;
 	*(stack) = *(stack + 1) - *(stack);
-#ifdef EQ_PARSER_DEBUG
-	std::cout << " = " << *stack << std::endl;
-#endif
 }
 
 void CEquationParser::op_mul(double*& stack, UFunctionContext& /*ctx*/)
 {
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "mult : " << *(stack) << " * " << *(stack-1);
-#endif
 	stack--;
 	*(stack) = *(stack + 1) * *(stack);
-#ifdef EQ_PARSER_DEBUG
-	std::cout << " = " << *stack << std::endl;
-#endif
 }
 
 void CEquationParser::op_div(double*& stack, UFunctionContext& /*ctx*/)
 {
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "divi : " << *(stack) << " / " << *(stack-1);
-#endif
 	stack--;
 	*(stack) = *(stack + 1) / *(stack);
-
-#ifdef EQ_PARSER_DEBUG
-	std::cout << " = " << *stack << std::endl;
-#endif
 }
 
 void CEquationParser::op_power(double*& stack, UFunctionContext& /*ctx*/)
 {
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "pow: " << *(stack) << " " << *(stack-1) << std::endl;
-#endif
 	stack--;
 	*stack = pow(*(stack + 1), *(stack));
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "Pow Result: " << *stack << std::endl;
-#endif
 }
 
 void CEquationParser::op_abs(double*& stack, UFunctionContext& /*ctx*/) { *stack = fabs(*(stack)); }
@@ -437,18 +419,5 @@ void CEquationParser::op_bool_xor(double*& stack, UFunctionContext& /*ctx*/)
 	stack[0] = (stack[1] != stack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_loadVal(double*& stack, UFunctionContext& ctx)
-{
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "loadVal : " << ctx.direct_value << std::endl;
-#endif
-	*(++stack) = ctx.direct_value;
-}
-
-void CEquationParser::op_loadVar(double*& stack, UFunctionContext& ctx)
-{
-#ifdef EQ_PARSER_DEBUG
-	std::cout << "loadVar : " << **(ctx.indirect_value) << std::endl;
-#endif
-	*(++stack) = **(ctx.indirect_value);
-}
+void CEquationParser::op_loadVal(double*& stack, UFunctionContext& ctx) { *(++stack) = ctx.direct_value; }
+void CEquationParser::op_loadVar(double*& stack, UFunctionContext& ctx) { *(++stack) = **(ctx.indirect_value); }

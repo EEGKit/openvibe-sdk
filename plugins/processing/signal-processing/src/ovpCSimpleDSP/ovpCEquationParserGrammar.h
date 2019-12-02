@@ -328,6 +328,7 @@ struct SEquationGrammar : boost::spirit::classic::grammar<SEquationGrammar>
 		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<variableID>> variable;
 		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<functionID>> function;
 		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<constantID>> constant;
+
 		boost::spirit::classic::rule<ScannerT, boost::spirit::classic::parser_context<>, boost::spirit::classic::parser_tag<ifthenID>> const& start() const { return ifthen; }
 	};
 };

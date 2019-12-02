@@ -14,10 +14,10 @@ using namespace SignalProcessing;
 
 bool CAlgorithmMatrixAverage::initialize()
 {
-	ip_ui64AveragingMethod.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod));
-	ip_ui64MatrixCount.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount));
-	ip_pMatrix.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_Matrix));
-	op_pAveragedMatrix.initialize(getOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix));
+	ip_averagingMethod.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod));
+	ip_matrixCount.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount));
+	ip_matrix.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_Matrix));
+	op_averagedMatrix.initialize(getOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix));
 
 	m_nAverageSamples = 0;
 
@@ -29,10 +29,10 @@ bool CAlgorithmMatrixAverage::uninitialize()
 	for (auto it = m_history.begin(); it != m_history.end(); ++it) { delete *it; }
 	m_history.clear();
 
-	op_pAveragedMatrix.uninitialize();
-	ip_pMatrix.uninitialize();
-	ip_ui64MatrixCount.uninitialize();
-	ip_ui64AveragingMethod.uninitialize();
+	op_averagedMatrix.uninitialize();
+	ip_matrix.uninitialize();
+	ip_matrixCount.uninitialize();
+	ip_averagingMethod.uninitialize();
 
 	return true;
 }
@@ -42,10 +42,10 @@ bool CAlgorithmMatrixAverage::uninitialize()
 
 bool CAlgorithmMatrixAverage::process()
 {
-	IMatrix* iMatrix = ip_pMatrix;
-	IMatrix* oMatrix = op_pAveragedMatrix;
+	IMatrix* iMatrix = ip_matrix;
+	IMatrix* oMatrix = op_averagedMatrix;
 
-	bool l_bShouldPerformAverage = false;
+	bool shouldPerformAverage = false;
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset))
 	{
@@ -58,75 +58,75 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
 	{
-		if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_MovingAverage.toUInteger())
+		if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_MovingAverage.toUInteger())
 		{
-			IMatrix* l_pSwapMatrix = nullptr;
+			IMatrix* swapMatrix;
 
-			if (m_history.size() >= ip_ui64MatrixCount)
+			if (m_history.size() >= ip_matrixCount)
 			{
-				l_pSwapMatrix = m_history.front();
+				swapMatrix = m_history.front();
 				m_history.pop_front();
 			}
 			else
 			{
-				l_pSwapMatrix = new CMatrix();
-				OpenViBEToolkit::Tools::Matrix::copyDescription(*l_pSwapMatrix, *iMatrix);
+				swapMatrix = new CMatrix();
+				OpenViBEToolkit::Tools::Matrix::copyDescription(*swapMatrix, *iMatrix);
 			}
 
-			OpenViBEToolkit::Tools::Matrix::copyContent(*l_pSwapMatrix, *iMatrix);
+			OpenViBEToolkit::Tools::Matrix::copyContent(*swapMatrix, *iMatrix);
 
-			m_history.push_back(l_pSwapMatrix);
-			l_bShouldPerformAverage = (m_history.size() == ip_ui64MatrixCount);
+			m_history.push_back(swapMatrix);
+			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
-		else if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_MovingAverageImmediate.toUInteger())
+		else if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_MovingAverageImmediate.toUInteger())
 		{
-			IMatrix* l_pSwapMatrix = nullptr;
+			IMatrix* swapMatrix;
 
-			if (m_history.size() >= ip_ui64MatrixCount)
+			if (m_history.size() >= ip_matrixCount)
 			{
-				l_pSwapMatrix = m_history.front();
+				swapMatrix = m_history.front();
 				m_history.pop_front();
 			}
 			else
 			{
-				l_pSwapMatrix = new CMatrix();
-				OpenViBEToolkit::Tools::Matrix::copyDescription(*l_pSwapMatrix, *iMatrix);
+				swapMatrix = new CMatrix();
+				OpenViBEToolkit::Tools::Matrix::copyDescription(*swapMatrix, *iMatrix);
 			}
 
-			OpenViBEToolkit::Tools::Matrix::copyContent(*l_pSwapMatrix, *iMatrix);
+			OpenViBEToolkit::Tools::Matrix::copyContent(*swapMatrix, *iMatrix);
 
-			m_history.push_back(l_pSwapMatrix);
-			l_bShouldPerformAverage = (!m_history.empty());
+			m_history.push_back(swapMatrix);
+			shouldPerformAverage = (!m_history.empty());
 		}
-		else if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger())
+		else if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger())
 		{
-			IMatrix* l_pSwapMatrix = new CMatrix();
+			IMatrix* swapMatrix = new CMatrix();
 
-			if (m_history.size() >= ip_ui64MatrixCount)
+			if (m_history.size() >= ip_matrixCount)
 			{
 				for (auto it = m_history.begin(); it != m_history.end(); ++it) { delete *it; }
 				m_history.clear();
 			}
 
-			OpenViBEToolkit::Tools::Matrix::copyDescription(*l_pSwapMatrix, *iMatrix);
-			OpenViBEToolkit::Tools::Matrix::copyContent(*l_pSwapMatrix, *iMatrix);
+			OpenViBEToolkit::Tools::Matrix::copyDescription(*swapMatrix, *iMatrix);
+			OpenViBEToolkit::Tools::Matrix::copyContent(*swapMatrix, *iMatrix);
 
-			m_history.push_back(l_pSwapMatrix);
-			l_bShouldPerformAverage = (m_history.size() == ip_ui64MatrixCount);
+			m_history.push_back(swapMatrix);
+			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
-		else if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
+		else if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
 		{
 			m_history.push_back(iMatrix);
-			l_bShouldPerformAverage = true;
+			shouldPerformAverage = true;
 		}
-		else { l_bShouldPerformAverage = false; }
+		else { shouldPerformAverage = false; }
 	}
 
-	if (l_bShouldPerformAverage)
+	if (shouldPerformAverage)
 	{
 		OpenViBEToolkit::Tools::Matrix::clearContent(*oMatrix);
 
-		if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
+		if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
 		{
 			IMatrix* matrix = m_history.at(0);
 
@@ -134,8 +134,8 @@ bool CAlgorithmMatrixAverage::process()
 
 			if (m_nAverageSamples == 1) // If it's the first matrix, the average is the first matrix
 			{
-				double* buffer          = matrix->getBuffer();
-				const uint32_t size = matrix->getBufferElementCount();
+				double* buffer    = matrix->getBuffer();
+				const size_t size = matrix->getBufferElementCount();
 
 				m_averageMatrices.clear();
 				m_averageMatrices.insert(m_averageMatrices.begin(), buffer, buffer + size);
@@ -146,7 +146,7 @@ bool CAlgorithmMatrixAverage::process()
 
 				const double n = double(m_nAverageSamples);
 
-				double* iMatrixBuffer = matrix->getBuffer();
+				double* iBuffer = matrix->getBuffer();
 
 				for (double& value : m_averageMatrices)
 				{
@@ -154,36 +154,36 @@ bool CAlgorithmMatrixAverage::process()
 					// mean{k} = mean{k-1} + (new_value - mean{k-1}) / k
 					// which is a recurrence equivalent to mean{k] = mean{k-1} * (k-1)/k + new_value/k
 					// but more numerically stable
-					value += (*iMatrixBuffer - value) / n;
-					iMatrixBuffer++;
+					value += (*iBuffer - value) / n;
+					iBuffer++;
 				}
 			}
 
-			double* oMatrixBuffer = oMatrix->getBuffer();
+			double* oBuffer = oMatrix->getBuffer();
 
 			for (const double& value : m_averageMatrices)
 			{
-				*oMatrixBuffer = double(value);
-				oMatrixBuffer++;
+				*oBuffer = double(value);
+				oBuffer++;
 			}
 
 			m_history.clear();
 		}
 		else
 		{
-			const uint32_t n = oMatrix->getBufferElementCount();
-			const double scale    = 1. / m_history.size();
+			const size_t n     = oMatrix->getBufferElementCount();
+			const double scale = 1. / m_history.size();
 
 			for (IMatrix* matrix : m_history)
 			{
-				double* oMatrixBuffer = oMatrix->getBuffer();
-				double* iMatrixBuffer  = matrix->getBuffer();
+				double* oBuffer = oMatrix->getBuffer();
+				double* iBuffer = matrix->getBuffer();
 
-				for (uint32_t i = 0; i < n; ++i)
+				for (size_t i = 0; i < n; ++i)
 				{
-					*oMatrixBuffer += *iMatrixBuffer * scale;
-					oMatrixBuffer++;
-					iMatrixBuffer++;
+					*oBuffer += *iBuffer * scale;
+					oBuffer++;
+					iBuffer++;
 				}
 			}
 		}

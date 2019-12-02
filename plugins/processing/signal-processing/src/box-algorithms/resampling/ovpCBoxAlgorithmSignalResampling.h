@@ -44,26 +44,26 @@ namespace OpenViBEPlugins
 			bool process() override;
 
 			// implementation for TResampler::ICallback
-			void processResampler(const double* pSample, const size_t nChannel) const override;
+			void processResampler(const double* sample, const size_t nChannel) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_oDecoder;
-			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_decoder;
+			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_encoder;
 
-			uint32_t m_outSamplingRate = 0;
-			uint32_t m_nOutSample  = 0;
+			size_t m_oSampling = 0;
+			size_t m_oNSample  = 0;
 
 			int m_nFractionalDelayFilterSample = 0;
 			double m_transitionBandPercent     = 0;
-			double m_stopBandAttenuation         = 0;
+			double m_stopBandAttenuation       = 0;
 
-			uint32_t m_inSamplingRate = 0;
-			mutable uint64_t m_totalOutSampleCount = 0;
-			CResampler m_oResampler;
-			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext = nullptr;
+			size_t m_iSampling              = 0;
+			mutable uint64_t m_oTotalSample = 0;
+			CResampler m_resampler;
+			OpenViBE::Kernel::IBoxIO* m_boxContext = nullptr;
 		};
 
 		class CBoxAlgorithmSignalResamplingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -97,7 +97,7 @@ namespace OpenViBEPlugins
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
 				prototype.addSetting("New Sampling Frequency", OV_TypeId_Integer, "128", false,
-									 OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
+									 OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSampling);
 				prototype.addSetting("Sample Count Per Buffer", OV_TypeId_Integer, "8", false,
 									 OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
 				prototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true", false,

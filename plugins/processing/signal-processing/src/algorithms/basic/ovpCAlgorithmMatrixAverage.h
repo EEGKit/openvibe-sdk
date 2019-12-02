@@ -23,10 +23,10 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64MatrixCount;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pAveragedMatrix;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_averagingMethod;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_matrixCount;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_matrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_averagedMatrix;
 
 			std::deque<OpenViBE::IMatrix*> m_history;
 			std::vector<double> m_averageMatrices;
