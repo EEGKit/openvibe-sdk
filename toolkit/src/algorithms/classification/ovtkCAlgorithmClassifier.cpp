@@ -34,12 +34,12 @@ bool CAlgorithmClassifier::process()
 {
 	const TParameterHandler<IMatrix*> ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	const TParameterHandler<IMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-	const TParameterHandler<XML::IXMLNode*> ip_Configuration(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+	const TParameterHandler<XML::IXMLNode*> ip_Config(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 
 	TParameterHandler<double> op_EstimatedClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	TParameterHandler<IMatrix*> op_ClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	TParameterHandler<IMatrix*> op_ProbabilityValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-	TParameterHandler<XML::IXMLNode*> op_Configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_Config(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_Train))
 	{
@@ -86,10 +86,10 @@ bool CAlgorithmClassifier::process()
 		}
 	}
 
-	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration))
+	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfig))
 	{
-		XML::IXMLNode* rootNode = this->saveConfiguration();
-		op_Configuration        = rootNode;
+		XML::IXMLNode* rootNode = this->saveConfig();
+		op_Config        = rootNode;
 		if (rootNode) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{
@@ -98,20 +98,20 @@ bool CAlgorithmClassifier::process()
 		}
 	}
 
-	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration))
+	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig))
 	{
-		XML::IXMLNode* rootNode = ip_Configuration;
+		XML::IXMLNode* rootNode = ip_Config;
 		if (!rootNode)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Configuration XML node is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
-		if (this->loadConfiguration(rootNode))
+		if (this->loadConfig(rootNode))
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 			//Now we need to parametrize the two output Matrix for values
-			setMatrixOutputDimension(op_ProbabilityValues, this->getOutputProbabilityVectorLength());
-			setMatrixOutputDimension(op_ClassificationValues, this->getOutputDistanceVectorLength());
+			setMatrixOutputDimension(op_ProbabilityValues, this->getNProbabilities());
+			setMatrixOutputDimension(op_ClassificationValues, this->getNDistances());
 		}
 		else
 		{
@@ -152,7 +152,7 @@ CString& CAlgorithmClassifier::getParameterValue(const CIdentifier& parameterID)
 	return (*static_cast<std::map<CString, CString>*>(m_ExtraParametersMap))[parameterName];
 }
 
-void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, const uint32_t length)
+void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, const size_t length)
 {
 	matrix->setDimensionCount(1);
 	matrix->setDimensionSize(0, length);
@@ -172,7 +172,7 @@ int64_t CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterID)
 	return int64_t(temp);
 }
 
-double CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterID)
+double CAlgorithmClassifier::getDoubleParameter(const CIdentifier& parameterID)
 {
 	TParameterHandler<double> temp(getInputParameter(parameterID));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(parameterID));

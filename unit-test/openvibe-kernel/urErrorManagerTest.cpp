@@ -133,7 +133,7 @@ int urErrorManagerTest(int argc, char* argv[])
 	OVT_ASSERT(argc >= 2, "Failure retrieve test parameters");
 
 	OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture;
-	fixture->setConfigurationFile(argv[1]);
+	fixture->setConfigFile(argv[1]);
 
 	context = fixture->context;
 

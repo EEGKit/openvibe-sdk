@@ -12,11 +12,11 @@ using namespace Kernel;
 
 int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 {
-	const char* configurationFile = argv[1];
+	const char* configFile = argv[1];
 	const char* dataDirectory     = argv[2];
 
 	{
-		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configurationFile);
+		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configFile);
 		auto& context = fixture->context;
 
 #if defined TARGET_OS_Windows

@@ -21,11 +21,11 @@ namespace OpenViBEPlugins
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distanceValue,
 						  OpenViBEToolkit::IVector& probabilityValue) override;
-			bool designArchitecture(const OpenViBE::CIdentifier& id, uint32_t nClass) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode* configurationNode) override;
-			uint32_t getOutputProbabilityVectorLength() override;
-			uint32_t getOutputDistanceVectorLength() override;
+			bool designArchitecture(const OpenViBE::CIdentifier& id, const size_t nClass) override;
+			XML::IXMLNode* saveConfig() override;
+			bool loadConfig(XML::IXMLNode* configurationNode) override;
+			size_t getNProbabilities() override { return m_oSubClassifierList.size(); }
+			size_t getNDistances() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsAll)
 

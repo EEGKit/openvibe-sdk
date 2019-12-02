@@ -40,7 +40,7 @@ namespace OpenViBE
 			bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& callback) override;
 			CString expand(const CString& expression) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >, OVK_ClassId_Kernel_Configuration_ConfigurationManager)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >, OVK_ClassId_Kernel_Config_ConfigManager)
 			CString expandOnlyKeyword(const CString& rKeyword, const CString& expression, bool preserveBackslashes) const override;
 			double expandAsFloat(const CString& expression, double fallbackValue) const override;
 			int64_t expandAsInteger(const CString& expression, int64_t fallbackValue) const override;

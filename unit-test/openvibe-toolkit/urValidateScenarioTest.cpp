@@ -290,7 +290,7 @@ int urValidateScenarioTest(int argc, char* argv[])
 	OVT_ASSERT(argc >= 3, "Failure retrieve test parameters");
 
 	OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture;
-	fixture->setConfigurationFile(argv[1]);
+	fixture->setConfigFile(argv[1]);
 
 	g_dataDirectory = argv[2];
 	context       = fixture->context;

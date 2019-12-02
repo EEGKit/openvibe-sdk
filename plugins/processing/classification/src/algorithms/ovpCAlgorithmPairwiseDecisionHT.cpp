@@ -180,7 +180,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
+XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 {
 	XML::IXMLNode* rootNode = XML::createNode(TYPE_NODE_NAME);
 
@@ -196,7 +196,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 	return rootNode;
 }
 
-bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& node)
+bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 {
 	std::stringstream ss(node.getChildByName(REPARTITION_NODE_NAME)->getPCData());
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);

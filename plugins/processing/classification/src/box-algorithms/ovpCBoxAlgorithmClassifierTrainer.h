@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			bool balanceDataset();
 
 		private:
-			bool saveConfiguration();
+			bool saveConfig();
 
 		protected:
 

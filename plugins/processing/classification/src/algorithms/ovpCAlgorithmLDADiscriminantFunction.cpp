@@ -21,7 +21,7 @@ namespace
 	const char* const BIAS_NODE_NAME   = "Bias";
 } // namespace
 
-bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* configuration)
+bool CAlgorithmLDADiscriminantFunction::loadConfig(const XML::IXMLNode* configuration)
 {
 	std::stringstream bias(configuration->getChildByName(BIAS_NODE_NAME)->getPCData());
 	bias >> m_bias;

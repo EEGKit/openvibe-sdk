@@ -13,7 +13,7 @@ namespace OpenViBE
 		 * \author Yann Renard (INRIA/IRISA)
 		 * \date 2008-11-05
 		 * \brief Manager for all kind of configuration
-		 * \ingroup Group_Configuration
+		 * \ingroup Group_Config
 		 * \ingroup Group_Kernel
 		 */
 		class OV_API IConfigurationManager : public IKernelObject
@@ -200,7 +200,7 @@ namespace OpenViBE
 			 */
 			virtual CString expand(const CString& expression) const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configuration_ConfigurationManager)
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Config_ConfigManager)
 
 			virtual CString expandOnlyKeyword(const CString& keyword, const CString& expression, bool preserveBackslashes = false) const = 0;
 			/**

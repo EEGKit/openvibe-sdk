@@ -82,7 +82,7 @@ bool CAlgorithmClassifierLDA::initialize()
 	TParameterHandler<bool> ip_bDiagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 	ip_bDiagonalCov = false;
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	op_pConfiguration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
@@ -110,7 +110,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 	bool diagonalCov;
 	if (useShrinkage)
 	{
-		this->getFloat64Parameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage);
+		this->getDoubleParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage);
 		diagonalCov = this->getBooleanParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov);
 	}
 	else
@@ -140,7 +140,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 						OpenViBE::Kernel::ErrorType::BadInput);
 
 	// The max amount of classes to be expected
-	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
+	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
 	m_nClasses = uint32_t(ip_pNumberOfClasses);
 
 	// Count the classes actually present
@@ -366,7 +366,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, doub
 
 uint32_t CAlgorithmClassifierLDA::getClassCount() { return m_nClasses; }
 
-XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
+XML::IXMLNode* CAlgorithmClassifierLDA::saveConfig()
 {
 	XML::IXMLNode* l_pAlgorithmNode = XML::createNode(TYPE_NODE_NAME);
 	l_pAlgorithmNode->addAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME, "1");
@@ -399,7 +399,7 @@ double getFloatFromNode(XML::IXMLNode* pNode)
 	return res;
 }
 
-bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* configNode)
+bool CAlgorithmClassifierLDA::loadConfig(XML::IXMLNode* configNode)
 {
 	OV_ERROR_UNLESS_KRF(configNode->hasAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME),
 						"Invalid model: model trained with an obsolete version of LDA",
@@ -421,7 +421,7 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* configNode)
 	for (size_t i = 0; i < l_pConfigsNode->getChildCount(); ++i)
 	{
 		m_discriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
-		m_discriminantFunctions[i].loadConfiguration(l_pConfigsNode->getChild(i));
+		m_discriminantFunctions[i].loadConfig(l_pConfigsNode->getChild(i));
 	}
 
 	return true;

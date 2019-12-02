@@ -58,9 +58,9 @@ namespace OpenViBETest
 			return false;
 		}
 
-		const CString configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
+		const CString configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 
-		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 		if (!ctx)
 		{

@@ -19,11 +19,11 @@ int urImportScenarioFromFileTest(int argc, char* argv[]);
 
 int urExportScenarioToFileTest(const int argc, char* argv[])
 {
-	const char* configurationFile  = argv[1];
+	const char* configFile  = argv[1];
 	const char* temporaryDirectory = argv[2];
 
 	{
-		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configurationFile);
+		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configFile);
 
 		auto& context = fixture->context;
 

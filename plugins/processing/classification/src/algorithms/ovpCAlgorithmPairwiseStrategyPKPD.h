@@ -27,8 +27,8 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool parameterize() override;
 			bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode& /*node*/) override { return true; }
+			XML::IXMLNode* saveConfig() override;
+			bool loadConfig(XML::IXMLNode& /*node*/) override { return true; }
 
 			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, OVP_ClassId_Algorithm_PairwiseStrategy_PKPD)
 

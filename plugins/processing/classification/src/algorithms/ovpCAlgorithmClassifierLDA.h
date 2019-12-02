@@ -31,10 +31,10 @@ namespace OpenViBEPlugins
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance,
 						  OpenViBEToolkit::IVector& probability) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode* configNode) override;
-			uint32_t getOutputProbabilityVectorLength() override { return m_discriminantFunctions.size(); }
-			uint32_t getOutputDistanceVectorLength() override { return m_discriminantFunctions.size(); }
+			XML::IXMLNode* saveConfig() override;
+			bool loadConfig(XML::IXMLNode* configNode) override;
+			size_t getNProbabilities() override { return m_discriminantFunctions.size(); }
+			size_t getNDistances() override { return m_discriminantFunctions.size(); }
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA)
 

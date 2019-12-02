@@ -20,24 +20,24 @@ bool CAlgorithmPairwiseDecision::process()
 		TParameterHandler<IMatrix*> op_pProbabilityVector = this->getOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
 		return this->compute(*static_cast<std::vector<SClassificationInfo> *>(ip_pClassificationValues), static_cast<IMatrix*>(op_pProbabilityVector));
 	}
-	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration))
+	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig))
 	{
-		TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Configuration));
-		XML::IXMLNode* l_pTempNode = this->saveConfiguration();
+		TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config));
+		XML::IXMLNode* l_pTempNode = this->saveConfig();
 
 		OV_ERROR_UNLESS_KRF(l_pTempNode != nullptr, "Invalid NULL xml node returned while saving configuration", OpenViBE::Kernel::ErrorType::Internal);
 
 		op_pConfiguration = l_pTempNode;
 		return true;
 	}
-	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfiguration))
+	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfig))
 	{
-		TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration));
+		TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config));
 		XML::IXMLNode* l_pTempNode = static_cast<XML::IXMLNode*>(op_pConfiguration);
 
 		OV_ERROR_UNLESS_KRF(l_pTempNode != nullptr, "Invalid NULL xml node to load configuration in", OpenViBE::Kernel::ErrorType::BadInput);
 
-		return this->loadConfiguration(*l_pTempNode);
+		return this->loadConfig(*l_pTempNode);
 	}
 	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize)) { return this->parameterize(); }
 

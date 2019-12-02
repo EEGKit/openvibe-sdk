@@ -3,16 +3,11 @@
 #define OVP_Classification_BoxTrainerFormatVersion 4
 #define OVP_Classification_BoxTrainerFormatVersionRequired 4
 
-//___________________________________________________________________//
-//   //
-// Global defines  //
-//___________________________________________________________________//
-//   //
-
+// Global defines
+//---------------------------------------------------------------------------------------------------
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 #include "ovp_global_defines.h"
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
 
 #define OVP_TypeId_ClassificationPairwiseStrategy								OpenViBE::CIdentifier(0x0DD51C74, 0x3C4E74C9)
 #define OVP_TypeId_OneVsOne_DecisionAlgorithms									OpenViBE::CIdentifier(0xDEC1510, 0xDEC1510)
@@ -43,7 +38,6 @@
 #define OVP_ClassId_BoxAlgorithm_VotingClassifier								OpenViBE::CIdentifier(0xFAF62C2B, 0x0B75D1B3)
 #define OVP_ClassId_BoxAlgorithm_VotingClassifierDesc							OpenViBE::CIdentifier(0x97E3CCC5, 0xAC353ED2)
 
-
 #define OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage				OpenViBE::CIdentifier(0x01357534, 0x028312A0)
 #define OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage					OpenViBE::CIdentifier(0x01357534, 0x028312A1)
 #define OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov				OpenViBE::CIdentifier(0x067E45C5, 0x15285CC7)
@@ -56,20 +50,18 @@
 #define OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean				OpenViBE::CIdentifier(0x0C671FB7, 0x550B01B3)
 #define OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix	OpenViBE::CIdentifier(0x19F07FB4, 0x084E273B)
 #define OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix				OpenViBE::CIdentifier(0xF48D35AD, 0xB8EFF834)
-#define OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration		OpenViBE::CIdentifier(0x10EBAC09, 0x80926A63)
+#define OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config				OpenViBE::CIdentifier(0x10EBAC09, 0x80926A63)
 #define OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier	OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E017)
 #define OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition		OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E018)
 #define OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs	OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E019)
 #define OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount				OpenViBE::CIdentifier(0xBE71BE18, 0x82A0E01A)
 #define OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector				OpenViBE::CIdentifier(0x883599FE, 0x2FDB32FF)
-#define OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Configuration		OpenViBE::CIdentifier(0x69F05A61, 0x25C94515)
+#define OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config				OpenViBE::CIdentifier(0x69F05A61, 0x25C94515)
 #define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Train					OpenViBE::CIdentifier(0x32219D21, 0xD3BE6105)
 #define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize			OpenViBE::CIdentifier(0x32219D21, 0xD3BE6106)
 #define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute				OpenViBE::CIdentifier(0x3637344B, 0x05D03D7E)
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration		OpenViBE::CIdentifier(0xF19574AD, 0x024045A7)
-#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfiguration		OpenViBE::CIdentifier(0x97AF6C6C, 0x670A12E6)
-
-
+#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig				OpenViBE::CIdentifier(0xF19574AD, 0x024045A7)
+#define OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfig				OpenViBE::CIdentifier(0x97AF6C6C, 0x670A12E6)
 
 extern const char* const FORMAT_VERSION_ATTRIBUTE_NAME;
 extern const char* const IDENTIFIER_ATTRIBUTE_NAME;

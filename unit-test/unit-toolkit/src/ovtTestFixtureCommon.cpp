@@ -60,13 +60,13 @@ namespace OpenViBETest
 			return;
 		}
 
-		CString configurationFile;
+		CString configFile;
 
-		if (!m_configurationFile.empty()) { configurationFile = m_configurationFile.c_str(); }
-		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
+		if (!m_configFile.empty()) { configFile = m_configFile.c_str(); }
+		else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 		if (!ctx)
 		{

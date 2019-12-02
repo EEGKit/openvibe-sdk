@@ -30,7 +30,7 @@ typedef std::pair<double, IMatrix*> CClassifierOutput;
 
 bool CAlgorithmClassifierOneVsAll::initialize()
 {
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	op_pConfiguration = nullptr;
 
 	return CAlgorithmPairingStrategy::initialize();
@@ -211,7 +211,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 	IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
 	subClassifier->initialize();
 
-	TParameterHandler<uint64_t> ip_pNumberOfClasses(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
+	TParameterHandler<uint64_t> ip_pNumberOfClasses(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
 	ip_pNumberOfClasses = 2;
 
 	//Set a references to the extra parameters input of the pairing strategy
@@ -232,7 +232,7 @@ void CAlgorithmClassifierOneVsAll::removeClassifierAtBack()
 	this->m_oSubClassifierList.pop_back();
 }
 
-bool CAlgorithmClassifierOneVsAll::designArchitecture(const CIdentifier& id, uint32_t nClass)
+bool CAlgorithmClassifierOneVsAll::designArchitecture(const CIdentifier& id, const size_t nClass)
 {
 	if (!this->setSubClassifierIdentifier(id)) { return false; }
 	for (size_t i = 0; i < nClass; ++i) { if (!this->addNewClassifierAtBack()) { return false; } }
@@ -241,13 +241,13 @@ bool CAlgorithmClassifierOneVsAll::designArchitecture(const CIdentifier& id, uin
 
 XML::IXMLNode* CAlgorithmClassifierOneVsAll::getClassifierConfiguration(IAlgorithmProxy* classifier)
 {
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfig);
 	XML::IXMLNode* l_pRes = op_pConfiguration;
 	return l_pRes;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration()
+XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfig()
 {
 	std::stringstream classCountes;
 	classCountes << getClassCount();
@@ -274,7 +274,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration()
 	return oneVsAllNode;
 }
 
-bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* configurationNode)
+bool CAlgorithmClassifierOneVsAll::loadConfig(XML::IXMLNode* configurationNode)
 {
 	XML::IXMLNode* tempNode = configurationNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	CIdentifier id;
@@ -303,12 +303,9 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* configuratio
 	return loadSubClassifierConfiguration(configurationNode->getChildByName(SUB_CLASSIFIERS_NODE_NAME));
 }
 
-uint32_t CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength() { return m_oSubClassifierList.size(); }
-
-uint32_t CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
+size_t CAlgorithmClassifierOneVsAll::getNDistances()
 {
-	TParameterHandler<IMatrix*> op_pDistanceValues(
-		m_oSubClassifierList[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	TParameterHandler<IMatrix*> op_pDistanceValues(m_oSubClassifierList[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	return op_pDistanceValues->getDimensionSize(0);
 }
 
@@ -317,11 +314,10 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode*
 	for (uint32_t i = 0; i < subClassifiersNode->getChildCount(); ++i)
 	{
 		XML::IXMLNode* subClassifierNode = subClassifiersNode->getChild(i);
-		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(
-			m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 		ip_pConfiguration = subClassifierNode;
 
-		OV_ERROR_UNLESS_KRF(m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
+		OV_ERROR_UNLESS_KRF(m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig),
 							"Unable to load the configuration of the classifier " << uint64_t(i+1),
 							OpenViBE::Kernel::ErrorType::Internal);
 	}
@@ -333,7 +329,7 @@ uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const { return m_oSubClas
 bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier& id)
 {
 	m_subClassifierAlgorithmID = id;
-	m_fAlgorithmComparison              = getClassificationComparisonFunction(id);
+	m_fAlgorithmComparison     = getClassificationComparisonFunction(id);
 
 	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr,
 						"No comparison function found for classifier [" << m_subClassifierAlgorithmID.toString() << "]",

@@ -32,11 +32,11 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVector) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance, OpenViBEToolkit::IVector& probability) override;
-			bool designArchitecture(const OpenViBE::CIdentifier& id, uint32_t classCount) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode* configNode) override;
-			uint32_t getOutputProbabilityVectorLength() override;
-			uint32_t getOutputDistanceVectorLength() override;
+			bool designArchitecture(const OpenViBE::CIdentifier& id, const size_t classCount) override;
+			XML::IXMLNode* saveConfig() override;
+			bool loadConfig(XML::IXMLNode* configNode) override;
+			size_t getNProbabilities() override { return m_nClasses; }
+			size_t getNDistances() override { return 0; }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
 

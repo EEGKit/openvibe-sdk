@@ -128,11 +128,11 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	// note: labelsencoder cannot be directly bound here as the classifier returns a float, but we need to output a stimulation
 
 	TParameterHandler<XML::IXMLNode*> ip_pClassificationConfiguration(
-		m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+		m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 	ip_pClassificationConfiguration = rootNode->getChildByName(CLASSIFIER_ROOT)->getChild(0);
 
 	OV_ERROR_UNLESS_KRF(
-		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
+		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig),
 		"Loading configuration failed for subclassifier [" << classifierAlgorithmID.toString() << "]",
 		OpenViBE::Kernel::ErrorType::Internal);
 

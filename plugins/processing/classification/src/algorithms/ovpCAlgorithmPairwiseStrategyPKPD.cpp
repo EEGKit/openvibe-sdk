@@ -94,7 +94,7 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfiguration()
+XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfig()
 {
 	XML::IXMLNode* rootNode = XML::createNode(TYPE_NODE_NAME);
 	return rootNode;

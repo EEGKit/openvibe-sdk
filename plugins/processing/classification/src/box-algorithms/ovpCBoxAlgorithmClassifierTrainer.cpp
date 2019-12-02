@@ -108,7 +108,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	// Provide the number of classes to the classifier
 	const uint32_t nClass = boxContext.getInputCount() - 1;
-	TParameterHandler<uint64_t> ip_NumClasses(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
+	TParameterHandler<uint64_t> ip_NumClasses(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
 	ip_NumClasses = nClass;
 
 	//If we have to deal with a pairing strategy we have to pass argument
@@ -394,7 +394,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		printConfusionMatrix(confusion);
 
-		OV_ERROR_UNLESS_KRF(this->saveConfiguration(), "Failed to save configuration", OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(this->saveConfig(), "Failed to save configuration", OpenViBE::Kernel::ErrorType::Internal);
 	}
 
 	return true;
@@ -426,13 +426,13 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& da
 
 	OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train), "Training failed", OpenViBE::Kernel::ErrorType::Internal);
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* l_pTempNode = static_cast<XML::IXMLNode*>(op_pConfiguration);
 
 	if (l_pTempNode != nullptr) { l_pTempNode->release(); }
 	op_pConfiguration = nullptr;
 
-	return m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
+	return m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfig);
 }
 
 // Note that this function is incremental for confusionMatrix and can be called many times; so we don't clear the matrix
@@ -443,12 +443,12 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 	const uint32_t featureVectorSize = dataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* node = op_pConfiguration;//Requested for affectation
-	TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 	ip_pConfiguration = node;
 
-	m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration);
+	m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig);
 
 	TParameterHandler<IMatrix*> ip_pFeatureVector(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler<double> op_f64ClassificationStateClass(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
@@ -535,11 +535,11 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
+bool CBoxAlgorithmClassifierTrainer::saveConfig()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* algorithmConfigurationNode = XML::createNode(CLASSIFIER_ROOT);
 	algorithmConfigurationNode->addChild(static_cast<XML::IXMLNode*>(op_pConfiguration));
 

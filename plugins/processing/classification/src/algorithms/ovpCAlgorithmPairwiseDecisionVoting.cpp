@@ -72,7 +72,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfiguration()
+XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfig()
 {
 	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
 	return l_pRootNode;

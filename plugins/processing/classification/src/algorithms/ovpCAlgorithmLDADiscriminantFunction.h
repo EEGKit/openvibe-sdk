@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 			uint32_t getWeightVectorSize() const { return m_weight.size(); }
 
 
-			bool loadConfiguration(const XML::IXMLNode* configuration);
+			bool loadConfig(const XML::IXMLNode* configuration);
 			XML::IXMLNode* getConfiguration();
 
 			const Eigen::VectorXd& getWeight() const { return m_weight; }

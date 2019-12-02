@@ -14,7 +14,7 @@ namespace OpenViBE
 		 * \author Jozef Legeny (Mensia Technologies)
 		 * \date 2014-05-06
 		 * \brief Callback used for overriding a keyword in IConfigurationManager
-		 * \ingroup Group_Configuration
+		 * \ingroup Group_Config
 		 * \ingroup Group_Kernel
 		 */
 		class OV_API IConfigurationKeywordExpandCallback

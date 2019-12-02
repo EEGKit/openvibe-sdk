@@ -22,7 +22,7 @@ bool CAlgorithmClassifierNULL::initialize()
 	ip_f64Parameter2  = 3.141592654;
 	ip_ui64Parameter3 = OVTK_StimulationId_Label_00;
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	op_pConfiguration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
