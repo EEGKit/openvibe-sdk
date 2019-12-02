@@ -89,14 +89,14 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEBMLStreamSpyListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Spied EBML stream 1", OV_TypeId_EBMLStream);
-				rPrototype.addSetting("EBML nodes description", OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
-				rPrototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
-				rPrototype.addSetting("Expand binary blocks", OV_TypeId_Boolean, "false");
-				rPrototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer, "4");
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Spied EBML stream 1", OV_TypeId_EBMLStream);
+				prototype.addSetting("EBML nodes description", OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
+				prototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
+				prototype.addSetting("Expand binary blocks", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer, "4");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 				return true;
 			}
 

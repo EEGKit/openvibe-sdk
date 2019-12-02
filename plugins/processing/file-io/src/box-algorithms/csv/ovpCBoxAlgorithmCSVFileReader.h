@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 		protected:
 			bool initializeFile();
 
-			FILE* m_pFile = nullptr;
+			FILE* m_file = nullptr;
 			std::string m_sSeparator;
 			bool m_bDoNotUseFileTime = false;
 			OpenViBE::CString m_sFilename;

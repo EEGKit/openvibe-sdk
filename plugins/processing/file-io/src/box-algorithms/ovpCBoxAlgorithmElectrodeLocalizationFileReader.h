@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_encoder = nullptr;
 
 			OpenViBE::CString m_sFilename;
-			bool m_headerSent  = false;
+			bool m_headerSent = false;
 			bool m_bufferSent = false;
 		};
 

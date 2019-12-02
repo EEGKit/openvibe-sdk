@@ -119,7 +119,7 @@ namespace OpenViBEPlugins
 			IMatrix* oMatrix = m_encoder->getInputMatrix();
 			std::vector<double> bufferElements;
 			size_t totalBufferSize = 0;
-			bool bufferReceived      = false;
+			bool bufferReceived    = false;
 
 			for (size_t input = 0; input < boxContext->getInputCount(); ++input)
 			{

@@ -116,7 +116,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		m_encoder->encodeBuffer();
 
 		// Sends buffer
-		boxContext.markOutputAsReadyToSend(0, 0/*op_ui64CurrentStartTime*/, 0/*op_ui64CurrentEndTime*/);
+		boxContext.markOutputAsReadyToSend(0, 0/*op_CurrentStartTime*/, 0/*op_CurrentEndTime*/);
 
 		m_bufferSent = true;
 	}

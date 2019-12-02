@@ -18,8 +18,8 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SpectrumEncoder)
 
 		protected:
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pFrequencyAbscissa;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_pSamplingRate;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_frequencyAbscissa;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_sampling;
 		};
 
 		class CSpectrumEncoderDesc final : public CStreamedMatrixEncoderDesc

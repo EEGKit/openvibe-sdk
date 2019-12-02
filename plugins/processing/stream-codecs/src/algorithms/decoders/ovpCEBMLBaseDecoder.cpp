@@ -8,8 +8,7 @@ using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
 CEBMLBaseDecoder::CEBMLBaseDecoder()
-	: m_callbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild, &CEBMLBaseDecoder::processChildData,
-								 &CEBMLBaseDecoder::closeChild) {}
+	: m_callbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild, &CEBMLBaseDecoder::processChildData, &CEBMLBaseDecoder::closeChild) {}
 
 // ________________________________________________________________________________________________________________
 //

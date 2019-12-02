@@ -46,7 +46,7 @@ namespace OpenViBEPlugins
 			bool m_bPending      = false;
 			bool m_hasEBMLHeader = false;
 
-			FILE* m_pFile = nullptr;
+			FILE* m_file = nullptr;
 			std::stack<EBML::CIdentifier> m_nodes;
 			std::map<size_t, size_t> m_vStreamIndexToOutputIdx;
 			std::map<size_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeID;

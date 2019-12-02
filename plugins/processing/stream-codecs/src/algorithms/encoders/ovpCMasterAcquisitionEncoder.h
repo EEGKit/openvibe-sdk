@@ -19,12 +19,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pAcquisitionStreamEncoder         = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pExperimentInfoStreamEncoder      = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pSignalStreamEncoder              = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStimulationStreamEncoder         = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelLocalisationStreamEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelUnitsStreamEncoder        = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_acquisitionStreamEncoder         = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_experimentInfoStreamEncoder      = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_signalStreamEncoder              = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_stimulationStreamEncoder         = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_channelLocalisationStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_channelUnitsStreamEncoder        = nullptr;
 		};
 
 		class CMasterAcquisitionEncoderDesc final : public OpenViBE::Plugins::IAlgorithmDesc
@@ -59,7 +59,6 @@ namespace OpenViBEPlugins
 				prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
 				prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelLocalisation, "Channel localisation", OpenViBE::Kernel::ParameterType_Matrix);
 				prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits, "Channel units", OpenViBE::Kernel::ParameterType_Matrix);
-
 				prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelLocalisationData, "Encode channel localisation data", OpenViBE::Kernel::ParameterType_Boolean);
 				prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelUnitData, "Encode channel unit data", OpenViBE::Kernel::ParameterType_Boolean);
 

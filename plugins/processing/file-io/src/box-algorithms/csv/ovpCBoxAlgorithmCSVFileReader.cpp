@@ -68,10 +68,10 @@ bool CBoxAlgorithmCSVFileReader::initialize()
 
 bool CBoxAlgorithmCSVFileReader::uninitialize()
 {
-	if (m_pFile)
+	if (m_file)
 	{
-		fclose(m_pFile);
-		m_pFile = nullptr;
+		fclose(m_file);
+		m_file = nullptr;
 	}
 	if (m_encoder)
 	{
@@ -84,21 +84,21 @@ bool CBoxAlgorithmCSVFileReader::uninitialize()
 
 bool CBoxAlgorithmCSVFileReader::initializeFile()
 {
-	//open file
-	m_pFile = fopen(m_sFilename.toASCIIString(), "r"); // we don't open as binary as that gives us \r\n on Windows as line-endings and leaves a dangling char after split. CSV files should be text.
+	//open file,  we don't open as binary as that gives us \r\n on Windows as line-endings and leaves a dangling char after split. CSV files should be text.
+	m_file = fopen(m_sFilename.toASCIIString(), "r");
 
-	OV_ERROR_UNLESS_KRF(m_pFile, "Error opening file [" << m_sFilename << "] for reading", OpenViBE::Kernel::ErrorType::BadFileRead);
+	OV_ERROR_UNLESS_KRF(m_file, "Error opening file [" << m_sFilename << "] for reading", OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	// simulate RAII through closure
 	const auto releaseResources = [&]()
 	{
-		fclose(m_pFile);
-		m_pFile = nullptr;
+		fclose(m_file);
+		m_file = nullptr;
 	};
 
 	//read the header
 	char line[BUFFER_LEN];
-	char* result = fgets(line, BUFFER_LEN, m_pFile);
+	char* result = fgets(line, BUFFER_LEN, m_file);
 	if (nullptr == result)
 	{
 		releaseResources();
@@ -106,7 +106,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	}
 
 	m_vHeaderFile = split(string(line), m_sSeparator);
-	m_nCol     = m_vHeaderFile.size();
+	m_nCol        = m_vHeaderFile.size();
 
 	if (m_typeID == OV_TypeId_ChannelLocalisation)
 	{
@@ -135,7 +135,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		m_fpRealProcess = &CBoxAlgorithmCSVFileReader::processSignal;
 
 		//find the sampling rate
-		result = fgets(line, BUFFER_LEN, m_pFile);
+		result = fgets(line, BUFFER_LEN, m_file);
 
 		if (nullptr == result)
 		{
@@ -167,8 +167,8 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		}
 
 		// Skip the header
-		rewind(m_pFile);
-		result = fgets(line, BUFFER_LEN, m_pFile);
+		rewind(m_file);
+		result = fgets(line, BUFFER_LEN, m_file);
 		if (nullptr == result)
 		{
 			releaseResources();
@@ -205,7 +205,7 @@ bool CBoxAlgorithmCSVFileReader::processClock(IMessageClock& /*messageClock*/)
 
 bool CBoxAlgorithmCSVFileReader::process()
 {
-	if (m_pFile == nullptr) { OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_sFilename, ErrorType::Internal); }
+	if (m_file == nullptr) { OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_sFilename, ErrorType::Internal); }
 	//line buffer
 	char line[BUFFER_LEN];
 	const double currentTime = TimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
@@ -216,7 +216,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	{
 		//next line
 		size_t nSamples = 0;
-		while (!feof(m_pFile) && nSamples < m_samplesPerBuffer && fgets(line, BUFFER_LEN, m_pFile) != nullptr)
+		while (!feof(m_file) && nSamples < m_samplesPerBuffer && fgets(line, BUFFER_LEN, m_file) != nullptr)
 		{
 			m_vLastLineSplit = split(string(line), m_sSeparator);
 
@@ -227,7 +227,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 				&& m_typeID != OV_TypeId_ChannelLocalisation) { m_vDataMatrix.push_back(m_vLastLineSplit); }
 		}
 		if ((m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_Signal)
-			&& feof(m_pFile) && nSamples < m_samplesPerBuffer)
+			&& feof(m_file) && nSamples < m_samplesPerBuffer)
 		{
 			// Last chunk will be partial, zero the whole output matrix...
 			IMatrix* iMatrix = dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
@@ -246,7 +246,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 
 			somethingToSend = true;
 
-			if (!feof(m_pFile) && fgets(line, BUFFER_LEN, m_pFile) != nullptr) { m_vLastLineSplit = split(string(line), m_sSeparator); }
+			if (!feof(m_file) && fgets(line, BUFFER_LEN, m_file) != nullptr) { m_vLastLineSplit = split(string(line), m_sSeparator); }
 			else { m_vLastLineSplit.clear(); }
 		}
 	}
@@ -273,7 +273,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* iMatrix = dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* iMatrix   = dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -355,7 +355,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 bool CBoxAlgorithmCSVFileReader::processSignal()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* iMatrix = dynamic_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* iMatrix   = dynamic_cast<OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -406,7 +406,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* iMatrix = dynamic_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* iMatrix   = dynamic_cast<OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	if (!m_headerSent)
 	{

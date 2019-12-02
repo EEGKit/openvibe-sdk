@@ -19,17 +19,17 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64ExperimentID;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ExperimentID;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pExperimentDate;
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SubjectID;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_subjectID;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pSubjectName;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SubjectAge;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SubjectGender;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_subjectAge;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_subjectGender;
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64LaboratoryID;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_LaboratoryID;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pLaboratoryName;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64TechnicianID;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_TechnicianID;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pTechnicianName;
 		};
 
@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID, "Experiment identifier", OpenViBE::Kernel::ParameterType_UInteger);
 				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate, "Experiment date", OpenViBE::Kernel::ParameterType_String);
 				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID, "Subject identifier", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName, "Subject name", OpenViBE::Kernel::ParameterType_String); 
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName, "Subject name", OpenViBE::Kernel::ParameterType_String);
 				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge, "Subject age", OpenViBE::Kernel::ParameterType_UInteger);
 				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender, "Subject gender", OpenViBE::Kernel::ParameterType_UInteger);
 				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID, "Laboratory identifier", OpenViBE::Kernel::ParameterType_UInteger);

@@ -102,12 +102,12 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmFeatureAggregatorListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
-				// rPrototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
-				rPrototype.addOutput("Feature vector stream", OV_TypeId_FeatureVector);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
+				// prototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Feature vector stream", OV_TypeId_FeatureVector);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}

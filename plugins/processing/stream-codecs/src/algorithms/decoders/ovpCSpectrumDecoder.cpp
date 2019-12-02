@@ -14,16 +14,16 @@ bool CSpectrumDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_pFrequencyAbscissa.initialize(getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
-	op_pSamplingRate.initialize(getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_Sampling));
+	op_frequencyAbscissa.initialize(getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
+	op_sampling.initialize(getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_Sampling));
 
 	return true;
 }
 
 bool CSpectrumDecoder::uninitialize()
 {
-	op_pFrequencyAbscissa.uninitialize();
-	op_pSamplingRate.uninitialize();
+	op_frequencyAbscissa.uninitialize();
+	op_sampling.uninitialize();
 
 	CStreamedMatrixDecoder::uninitialize();
 
@@ -52,8 +52,8 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 
 	if (top == OVTK_NodeId_Header_Spectrum)
 	{
-		op_pFrequencyAbscissa->setDimensionCount(1);
-		op_pFrequencyAbscissa->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
+		op_frequencyAbscissa->setDimensionCount(1);
+		op_frequencyAbscissa->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
 		m_frequencyBandIdx = 0;
 	}
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { }
@@ -70,27 +70,26 @@ void CSpectrumDecoder::processChildData(const void* buffer, const size_t size)
 	{
 		const double upperFreq      = m_readerHelper->getDouble(buffer, size);
 		double curFrequencyAbscissa = 0;
-		if (op_pFrequencyAbscissa->getDimensionSize(0) > 1)
+		if (op_frequencyAbscissa->getDimensionSize(0) > 1)
 		{
 			// In the old format, frequencies were separated into bins with lower and upper bounds.
 			// These were calculated as lowerFreq = frequencyIndex/frequencyCount, upperFreq = (frequencyIndex + 1)/frequencyCount, with 0 based indexes.
 			// This formula reverses the calculation and puts the 'middle' frequency into the right place
-			curFrequencyAbscissa = m_lowerFreq + double(m_frequencyBandIdx) / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq
-								   );
+			curFrequencyAbscissa = m_lowerFreq + double(m_frequencyBandIdx) / (op_frequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
 		}
-		op_pFrequencyAbscissa->getBuffer()[m_frequencyBandIdx] = curFrequencyAbscissa;
+		op_frequencyAbscissa->getBuffer()[m_frequencyBandIdx] = curFrequencyAbscissa;
 		std::ostringstream s;
 		s << std::setprecision(10);
 		s << curFrequencyAbscissa;
 		op_pMatrix->setDimensionLabel(1, m_frequencyBandIdx, s.str().c_str());
 
-		op_pSamplingRate = uint64_t((m_frequencyBandIdx + 1) * (upperFreq - op_pFrequencyAbscissa->getBuffer()[0]));
+		op_sampling = uint64_t((m_frequencyBandIdx + 1) * (upperFreq - op_frequencyAbscissa->getBuffer()[0]));
 	}
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{
-		op_pFrequencyAbscissa->getBuffer()[m_frequencyBandIdx] = m_readerHelper->getDouble(buffer, size);
+		op_frequencyAbscissa->getBuffer()[m_frequencyBandIdx] = m_readerHelper->getDouble(buffer, size);
 	}
-	else if (top == OVTK_NodeId_Header_Spectrum_Sampling) { op_pSamplingRate = m_readerHelper->getUInt(buffer, size); }
+	else if (top == OVTK_NodeId_Header_Spectrum_Sampling) { op_sampling = m_readerHelper->getUInt(buffer, size); }
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 

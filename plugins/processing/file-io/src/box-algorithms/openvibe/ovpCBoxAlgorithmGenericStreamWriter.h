@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 			void write(const void* buffer, const size_t size) override;
 
 			OpenViBE::CMemoryBuffer m_oSwap;
-			std::ofstream m_oFile;
+			std::ofstream m_file;
 		};
 
 		class CBoxAlgorithmGenericStreamWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

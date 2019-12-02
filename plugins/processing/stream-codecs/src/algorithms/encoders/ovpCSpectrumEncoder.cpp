@@ -10,15 +10,15 @@ using namespace StreamCodecs;
 bool CSpectrumEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
-	ip_pFrequencyAbscissa.initialize(getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
-	ip_pSamplingRate.initialize(getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
+	ip_frequencyAbscissa.initialize(getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
+	ip_sampling.initialize(getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
 	return true;
 }
 
 bool CSpectrumEncoder::uninitialize()
 {
-	ip_pFrequencyAbscissa.uninitialize();
-	ip_pSamplingRate.uninitialize();
+	ip_frequencyAbscissa.uninitialize();
+	ip_sampling.uninitialize();
 
 	CStreamedMatrixEncoder::uninitialize();
 
@@ -30,11 +30,11 @@ bool CSpectrumEncoder::uninitialize()
 
 bool CSpectrumEncoder::processHeader()
 {
-	// ip_pFrequencyAbscissa dimension count should be 1
-	// ip_pFrequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1
+	// ip_frequencyAbscissa dimension count should be 1
+	// ip_frequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1
 
-	IMatrix* frequencyAbscissa = ip_pFrequencyAbscissa;
-	uint64_t sampling         = ip_pSamplingRate;
+	IMatrix* frequencyAbscissa = ip_frequencyAbscissa;
+	uint64_t sampling          = ip_sampling;
 	CStreamedMatrixEncoder::processHeader();
 	m_writerHelper->openChild(OVTK_NodeId_Header_Spectrum);
 	m_writerHelper->openChild(OVTK_NodeId_Header_Spectrum_Sampling);

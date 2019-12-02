@@ -23,7 +23,7 @@ bool CBoxAlgorithmGenericStreamWriter::initialize()
 
 bool CBoxAlgorithmGenericStreamWriter::uninitialize()
 {
-	if (m_oFile.is_open()) { m_oFile.close(); }
+	if (m_file.is_open()) { m_file.close(); }
 	return true;
 }
 
@@ -65,11 +65,11 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	m_oWriterHelper.closeChild();
 	m_oWriterHelper.disconnect();
 
-	FS::Files::openOFStream(m_oFile, m_sFilename.toASCIIString(), std::ios::binary | std::ios::trunc);
+	FS::Files::openOFStream(m_file, m_sFilename.toASCIIString(), std::ios::binary | std::ios::trunc);
 
-	OV_ERROR_UNLESS_KRF(m_oFile.good(), "Error opening file [" << m_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
-	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
+	m_file.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
 
 	m_isHeaderGenerate = true;
 	return true;
@@ -116,9 +116,9 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 
 	if (m_oSwap.getSize() != 0)
 	{
-		m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
+		m_file.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
 
-		OV_ERROR_UNLESS_KRF(m_oFile.good(), "Error opening file [" << m_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
 	}
 
 	return true;

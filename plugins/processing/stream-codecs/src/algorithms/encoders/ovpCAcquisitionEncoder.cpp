@@ -11,7 +11,7 @@ bool CAcquisitionEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
-	ip_ui64BufferDuration.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_BufferDuration));
+	ip_bufferDuration.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_BufferDuration));
 	ip_pExperimentInfoStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ExperimentInfoStream));
 	ip_pSignalStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_SignalStream));
 	ip_pStimulationStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_StimulationStream));
@@ -28,7 +28,7 @@ bool CAcquisitionEncoder::uninitialize()
 	ip_pStimulationStream.uninitialize();
 	ip_pSignalStream.uninitialize();
 	ip_pExperimentInfoStream.uninitialize();
-	ip_ui64BufferDuration.uninitialize();
+	ip_bufferDuration.uninitialize();
 
 	CEBMLBaseEncoder::uninitialize();
 
@@ -41,7 +41,7 @@ bool CAcquisitionEncoder::uninitialize()
 bool CAcquisitionEncoder::processHeader()
 {
 	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_BufferDuration);
-	m_writerHelper->setUInt(ip_ui64BufferDuration);
+	m_writerHelper->setUInt(ip_bufferDuration);
 	m_writerHelper->closeChild();
 	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_ExperimentInfo);
 	m_writerHelper->setBinary(ip_pExperimentInfoStream->getDirectPointer(), ip_pExperimentInfoStream->getSize());

@@ -18,7 +18,7 @@ bool CAcquisitionDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
-	op_ui64BufferDuration.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_BufferDuration));
+	op_bufferDuration.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_BufferDuration));
 	op_pExperimentInfoStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ExperimentInfoStream));
 	op_pSignalStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_SignalStream));
 	op_pStimulationStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_StimulationStream));
@@ -35,7 +35,7 @@ bool CAcquisitionDecoder::uninitialize()
 	op_pStimulationStream.uninitialize();
 	op_pSignalStream.uninitialize();
 	op_pExperimentInfoStream.uninitialize();
-	op_ui64BufferDuration.uninitialize();
+	op_bufferDuration.uninitialize();
 
 	CEBMLBaseDecoder::uninitialize();
 
@@ -99,7 +99,7 @@ void CAcquisitionDecoder::processChildData(const void* buffer, const size_t size
 		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	)
 	{
-		if (top == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_ui64BufferDuration = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_bufferDuration = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Acquisition_Header_ExperimentInfo) { appendMemoryBuffer(op_pExperimentInfoStream, buffer, size); }
 		if (top == OVTK_NodeId_Acquisition_Header_Signal) { appendMemoryBuffer(op_pSignalStream, buffer, size); }
 		if (top == OVTK_NodeId_Acquisition_Header_Stimulation) { appendMemoryBuffer(op_pStimulationStream, buffer, size); }

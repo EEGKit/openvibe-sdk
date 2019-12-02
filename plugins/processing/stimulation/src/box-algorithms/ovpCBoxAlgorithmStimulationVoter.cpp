@@ -134,43 +134,43 @@ bool CBoxAlgorithmStimulationVoter::process()
 	std::map<uint64_t, size_t> votes;				// Histogram of votes
 
 	// Make a histogram of the votes
-	for (auto it = m_oStimulusDeque.begin(); it != m_oStimulusDeque.end(); ++it)
+	for (const auto& stim : m_oStimulusDeque)
 	{
-		uint64_t stimulusType = (*it).first;
-		uint64_t stimulusDate = (*it).second;
+		const uint64_t type = stim.first;
+		const uint64_t date = stim.second;
 
-		votes[stimulusType]++;
-		lastSeen[stimulusType] = std::max(lastSeen[stimulusType], stimulusDate);
+		votes[type]++;
+		lastSeen[type] = std::max(lastSeen[type], date);
 		// Never pop here, only pop on expiration
 	}
 
 	// Find the winner
 	uint64_t resultClassLabel = m_rejectClassLabel;
-	size_t maxVotes         = 0;
+	size_t maxVotes           = 0;
 
-	for (auto it = votes.begin(); it != votes.end(); ++it)
+	for (const auto& vote : votes)
 	{
-		const uint64_t stimulusType  = (*it).first;
-		const size_t stimulusVotes = (*it).second; // can not be zero by construction above
+		const uint64_t type = vote.first;
+		const size_t nVotes = vote.second; // can not be zero by construction above
 
-		if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && stimulusType == m_rejectClassLabel)
+		if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && type == m_rejectClassLabel)
 		{
 			// Reject class never wins
 			continue;
 		}
 
-		if (stimulusVotes > maxVotes)
+		if (nVotes > maxVotes)
 		{
-			resultClassLabel = stimulusType;
-			maxVotes         = stimulusVotes;
+			resultClassLabel = type;
+			maxVotes         = nVotes;
 		}
-		else if (stimulusVotes == maxVotes)
+		else if (nVotes == maxVotes)
 		{
 			// Break ties arbitrarily
 			if (System::Math::random0To1() > 0.5)
 			{
-				resultClassLabel = stimulusType;
-				maxVotes         = stimulusVotes;
+				resultClassLabel = type;
+				maxVotes         = nVotes;
 			}
 		}
 	}

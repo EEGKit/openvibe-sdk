@@ -12,8 +12,7 @@ bool CBoxAlgorithmPlayerController::initialize()
 	m_stimulationID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_actionID      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	m_decoder = &this->getAlgorithmManager().
-							  getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
+	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
 	m_decoder->initialize();
 
 	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
@@ -71,8 +70,7 @@ bool CBoxAlgorithmPlayerController::process()
 					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = this->getPlayerContext().forward(); }
 
 					OV_ERROR_UNLESS_KRF(res,
-										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
-											m_actionID) << "]",
+										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]",
 										OpenViBE::Kernel::ErrorType::BadConfig);
 				}
 			}

@@ -25,8 +25,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pFrequencyAbscissa;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_pSamplingRate;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_frequencyAbscissa;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
 
 
 		private:

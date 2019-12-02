@@ -16,15 +16,15 @@ bool CExperimentInfoDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
-	op_ui64ExperimentID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentID));
+	op_ExperimentID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentID));
 	op_pExperimentDate.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentDate));
-	op_ui64SubjectID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectID));
+	op_subjectID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectID));
 	op_pSubjectName.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectName));
-	op_ui64SubjectAge.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectAge));
-	op_ui64SubjectGender.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectGender));
-	op_ui64LaboratoryID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryID));
+	op_subjectAge.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectAge));
+	op_subjectGender.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectGender));
+	op_LaboratoryID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryID));
 	op_pLaboratoryName.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryName));
-	op_ui64TechnicianID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianID));
+	op_TechnicianID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianID));
 	op_pTechnicianName.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianName));
 
 	return true;
@@ -33,15 +33,15 @@ bool CExperimentInfoDecoder::initialize()
 bool CExperimentInfoDecoder::uninitialize()
 {
 	op_pTechnicianName.uninitialize();
-	op_ui64TechnicianID.uninitialize();
+	op_TechnicianID.uninitialize();
 	op_pLaboratoryName.uninitialize();
-	op_ui64LaboratoryID.uninitialize();
-	op_ui64SubjectGender.uninitialize();
-	op_ui64SubjectAge.uninitialize();
+	op_LaboratoryID.uninitialize();
+	op_subjectGender.uninitialize();
+	op_subjectAge.uninitialize();
 	op_pSubjectName.uninitialize();
-	op_ui64SubjectID.uninitialize();
+	op_subjectID.uninitialize();
 	op_pExperimentDate.uninitialize();
-	op_ui64ExperimentID.uninitialize();
+	op_ExperimentID.uninitialize();
 
 	CEBMLBaseDecoder::uninitialize();
 
@@ -112,21 +112,15 @@ void CExperimentInfoDecoder::processChildData(const void* buffer, const size_t s
 		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianID)
 		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianName))
 	{
-		if (top == OVTK_NodeId_Header_ExperimentInfo_Experiment_ID) { op_ui64ExperimentID = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Header_ExperimentInfo_Experiment_ID) { op_ExperimentID = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Experiment_Date) { op_pExperimentDate->set(m_readerHelper->getStr(buffer, size)); }
-		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_ID) { op_ui64SubjectID = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_ID) { op_subjectID = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_Name) { op_pSubjectName->set(m_readerHelper->getStr(buffer, size)); }
-		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_Age) { op_ui64SubjectAge = m_readerHelper->getUInt(buffer, size); }
-		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_Gender) { op_ui64SubjectGender = m_readerHelper->getUInt(buffer, size); }
-		if (top == OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryID)
-		{
-			op_ui64LaboratoryID = m_readerHelper->getUInt(buffer, size);
-		}
+		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_Age) { op_subjectAge = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_Gender) { op_subjectGender = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryID) { op_LaboratoryID = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryName) { op_pLaboratoryName->set(m_readerHelper->getStr(buffer, size)); }
-		if (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianID)
-		{
-			op_ui64TechnicianID = m_readerHelper->getUInt(buffer, size);
-		}
+		if (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianID) { op_TechnicianID = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianName) { op_pTechnicianName->set(m_readerHelper->getStr(buffer, size)); }
 	}
 	else { CEBMLBaseDecoder::processChildData(buffer, size); }

@@ -51,15 +51,15 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CDecoderAlgorithmTest(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Experiment information", OV_TypeId_ExperimentInfo);
-				rPrototype.addInput("Feature vector", OV_TypeId_FeatureVector);
-				rPrototype.addInput("Signal", OV_TypeId_Signal);
-				rPrototype.addInput("Spectrum", OV_TypeId_Spectrum);
-				rPrototype.addInput("Stimulation", OV_TypeId_Stimulations);
-				rPrototype.addInput("Streamed matrix", OV_TypeId_StreamedMatrix);
-				rPrototype.addInput("Channel localisation", OV_TypeId_ChannelLocalisation);
+				prototype.addInput("Experiment information", OV_TypeId_ExperimentInfo);
+				prototype.addInput("Feature vector", OV_TypeId_FeatureVector);
+				prototype.addInput("Signal", OV_TypeId_Signal);
+				prototype.addInput("Spectrum", OV_TypeId_Spectrum);
+				prototype.addInput("Stimulation", OV_TypeId_Stimulations);
+				prototype.addInput("Streamed matrix", OV_TypeId_StreamedMatrix);
+				prototype.addInput("Channel localisation", OV_TypeId_ChannelLocalisation);
 				return true;
 			}
 

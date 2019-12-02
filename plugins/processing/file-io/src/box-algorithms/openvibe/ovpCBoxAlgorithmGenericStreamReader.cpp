@@ -32,10 +32,10 @@ bool CBoxAlgorithmGenericStreamReader::initialize()
 
 bool CBoxAlgorithmGenericStreamReader::uninitialize()
 {
-	if (m_pFile)
+	if (m_file)
 	{
-		fclose(m_pFile);
-		m_pFile = nullptr;
+		fclose(m_file);
+		m_file = nullptr;
 	}
 
 	return true;
@@ -43,12 +43,9 @@ bool CBoxAlgorithmGenericStreamReader::uninitialize()
 
 bool CBoxAlgorithmGenericStreamReader::initializeFile()
 {
-	m_pFile = FS::Files::open(m_sFilename.toASCIIString(), "rb");
+	m_file = FS::Files::open(m_sFilename.toASCIIString(), "rb");
 
-	OV_ERROR_UNLESS_KRF(
-		m_pFile,
-		"Error opening file [" << m_sFilename << "] for reading",
-		OpenViBE::Kernel::ErrorType::BadFileRead);
+	OV_ERROR_UNLESS_KRF(m_file, "Error opening file [" << m_sFilename << "] for reading", OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	return true;
 }
@@ -62,13 +59,13 @@ bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& /*messageCloc
 
 bool CBoxAlgorithmGenericStreamReader::process()
 {
-	if (m_pFile == nullptr) { if (!initializeFile()) { return false; } }
+	if (m_file == nullptr) { if (!initializeFile()) { return false; } }
 	IBoxIO& boxContext  = this->getDynamicBoxContext();
 	const size_t nInput = this->getStaticBoxContext().getOutputCount();
 	const uint64_t time = this->getPlayerContext().getCurrentTime();
 	bool finished       = false;
 
-	while (!finished && (!feof(m_pFile) || m_bPending))
+	while (!finished && (!feof(m_file) || m_bPending))
 	{
 		if (m_bPending)
 		{
@@ -87,20 +84,20 @@ bool CBoxAlgorithmGenericStreamReader::process()
 		else
 		{
 			bool justStarted = true;
-			while (!feof(m_pFile) && m_oReader.getCurrentNodeID() == EBML::CIdentifier())
+			while (!feof(m_file) && m_oReader.getCurrentNodeID() == EBML::CIdentifier())
 			{
 				uint8_t byte;
-				const size_t s = fread(&byte, sizeof(uint8_t), 1, m_pFile);
+				const size_t s = fread(&byte, sizeof(uint8_t), 1, m_file);
 
 				OV_ERROR_UNLESS_KRF(s == 1 || justStarted, "Unexpected EOF in " << m_sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 
 				m_oReader.processData(&byte, sizeof(byte));
 				justStarted = false;
 			}
-			if (!feof(m_pFile) && m_oReader.getCurrentNodeSize() != 0)
+			if (!feof(m_file) && m_oReader.getCurrentNodeSize() != 0)
 			{
 				m_oSwap.setSize(m_oReader.getCurrentNodeSize(), true);
-				const size_t s = size_t(fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), size_t(m_oSwap.getSize()), m_pFile));
+				const size_t s = size_t(fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), size_t(m_oSwap.getSize()), m_file));
 
 				OV_ERROR_UNLESS_KRF(s == m_oSwap.getSize(), "Unexpected EOF in " << m_sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 

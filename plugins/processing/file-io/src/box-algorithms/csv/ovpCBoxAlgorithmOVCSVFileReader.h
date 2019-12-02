@@ -46,7 +46,7 @@ namespace OpenViBEPlugins
 			size_t m_sampling         = 0;
 			size_t m_nSamplePerBuffer = 0;
 
-			bool m_isHeaderSent = false;
+			bool m_isHeaderSent            = false;
 			bool m_isStimulationHeaderSent = false;
 			std::vector<double> m_frequencyAbscissa;
 		};

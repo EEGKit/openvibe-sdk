@@ -103,10 +103,7 @@ void CStreamedMatrixDecoder::processChildData(const void* buffer, const size_t s
 		switch (m_status)
 		{
 			case Status_ParsingHeader:
-				if (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
-				{
-					op_pMatrix->setDimensionCount(size_t(m_readerHelper->getUInt(buffer, size)));
-				}
+				if (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(size_t(m_readerHelper->getUInt(buffer, size))); }
 				break;
 
 			case Status_ParsingDimension:
