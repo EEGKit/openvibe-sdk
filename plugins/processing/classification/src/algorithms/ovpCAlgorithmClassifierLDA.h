@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 	{
 		class CAlgorithmLDADiscriminantFunction;
 
-		int LDAClassificationCompare(OpenViBE::IMatrix& firstClassificationValue, OpenViBE::IMatrix& secondClassificationValue);
+		int LDAClassificationCompare(OpenViBE::IMatrix& first, OpenViBE::IMatrix& second);
 
 		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -28,8 +28,8 @@ namespace OpenViBEPlugins
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance,
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& dataset) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& sample, double& classId, OpenViBEToolkit::IVector& distance,
 						  OpenViBEToolkit::IVector& probability) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode* configNode) override;
@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
-			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
+			static void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 
 			std::vector<double> m_labels;
 			std::vector<CAlgorithmLDADiscriminantFunction> m_discriminantFunctions;
@@ -50,16 +50,16 @@ namespace OpenViBEPlugins
 			double m_biasDistance = 0;
 			double m_w0           = 0;
 
-			uint32_t m_nCols    = 0;
-			uint32_t m_nClasses = 0;
+			size_t m_nCols    = 0;
+			size_t m_nClasses = 0;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_covarianceAlgorithm = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_covAlgorithm = nullptr;
 
 		private:
-			void loadClassesFromNode(XML::IXMLNode* pNode);
-			void loadCoefsFromNode(XML::IXMLNode* pNode);
+			void loadClassesFromNode(XML::IXMLNode* node);
+			void loadCoefsFromNode(XML::IXMLNode* node);
 
-			uint32_t getClassCount();
+			size_t getClassCount() const { return m_nClasses; }
 		};
 
 		class CAlgorithmClassifierLDADesc final : public OpenViBEToolkit::CAlgorithmClassifierDesc
@@ -84,7 +84,6 @@ namespace OpenViBEPlugins
 				prototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
 				prototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);
 				prototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
-
 
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
 				return true;
