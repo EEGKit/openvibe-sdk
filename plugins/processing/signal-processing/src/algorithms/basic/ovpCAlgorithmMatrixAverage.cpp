@@ -58,7 +58,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
 	{
-		if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_MovingAverage.toUInteger())
+		if (ip_averagingMethod == Moving)
 		{
 			IMatrix* swapMatrix;
 
@@ -78,7 +78,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
-		else if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_MovingAverageImmediate.toUInteger())
+		else if (ip_averagingMethod == MovingImmediate)
 		{
 			IMatrix* swapMatrix;
 
@@ -98,7 +98,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (!m_history.empty());
 		}
-		else if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger())
+		else if (ip_averagingMethod == Block)
 		{
 			IMatrix* swapMatrix = new CMatrix();
 
@@ -114,7 +114,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
-		else if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
+		else if (ip_averagingMethod == Cumulative)
 		{
 			m_history.push_back(iMatrix);
 			shouldPerformAverage = true;
@@ -126,7 +126,7 @@ bool CAlgorithmMatrixAverage::process()
 	{
 		OpenViBEToolkit::Tools::Matrix::clearContent(*oMatrix);
 
-		if (ip_averagingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
+		if (ip_averagingMethod == Cumulative)
 		{
 			IMatrix* matrix = m_history.at(0);
 

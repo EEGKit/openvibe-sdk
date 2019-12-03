@@ -21,14 +21,14 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_pStreamDecoder = nullptr;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_pStreamEncoder = nullptr;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_decoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_encoder = nullptr;
 
 			OpenViBE::CMatrix m_oFilterBank;
 
 		private:
 			// Loads the m_vCoefficient vector (representing a matrix) from the given string. c1 and c2 are separator characters between floats.
-			uint32_t loadCoefficients(const OpenViBE::CString& rCoefficients, char c1, char c2, uint32_t nRows, uint32_t nCols);
+			size_t loadCoefs(const OpenViBE::CString& coefs, char c1, char c2, size_t nRows, size_t nCols);
 		};
 
 		class CBoxAlgorithmSpatialFilterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

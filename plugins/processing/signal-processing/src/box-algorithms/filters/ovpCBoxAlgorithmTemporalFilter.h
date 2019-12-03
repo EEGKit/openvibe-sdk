@@ -24,19 +24,20 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_oDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_oEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
 
-			uint64_t m_filterMethod = 0;
-			uint64_t m_filterType   = 0;
-			uint64_t m_filterOrder  = 0;
 
-			double m_lowCutFrequency  = 0;
-			double m_highCutFrequency = 0;
-			double m_bandPassRipple   = 0; // for Chebyshev
+			size_t m_method = 0;
+			size_t m_type   = 0;
+			size_t m_order  = 0;
+
+			double m_lowCut  = 0;
+			double m_highCut = 0;
+			double m_ripple  = 0; // for Chebyshev
 
 			std::vector<std::shared_ptr<Dsp::Filter>> m_filters;
-			//std::vector < std::shared_ptr < Dsp::Filter > > m_vFilter2;
+			//std::vector < std::shared_ptr < Dsp::Filter > > m_filters;
 
 			std::vector<double> m_firstSamples;
 		};
@@ -71,8 +72,8 @@ namespace OpenViBEPlugins
 			{
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
-				prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, OVP_TypeId_FilterMethod_Butterworth.toString());
-				prototype.addSetting("Filter Type", OVP_TypeId_FilterType, OVP_TypeId_FilterType_BandPass.toString());
+				prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, "Butterworth");
+				prototype.addSetting("Filter Type", OVP_TypeId_FilterType, "Band Pass");
 				prototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
 				prototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
 				prototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");

@@ -23,11 +23,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_pDecoder = nullptr;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_pEncoder = nullptr;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
 
-			OpenViBE::IMatrix* m_pInputMatrix  = nullptr;
-			OpenViBE::IMatrix* m_pOutputMatrix = nullptr;
+			OpenViBE::IMatrix* m_iMatrix = nullptr;
+			OpenViBE::IMatrix* m_oMatrix = nullptr;
 
 			std::vector<size_t> m_vLookup;
 		};
@@ -74,19 +74,18 @@ namespace OpenViBEPlugins
 				//we are only interested in the setting 0 and the type changes (select or reject)
 				if ((index == 0 || index == 1) && (!m_hasUserSetName))
 				{
-					OpenViBE::CString l_sChannels;
-					box.getSettingValue(0, l_sChannels);
+					OpenViBE::CString channels;
+					box.getSettingValue(0, channels);
 
-					OpenViBE::CString l_sSelectionMethod;
-					OpenViBE::CIdentifier l_oSelectionEnumID = OV_UndefinedIdentifier;
-					box.getSettingValue(1, l_sSelectionMethod);
-					box.getSettingType(1, l_oSelectionEnumID);
+					OpenViBE::CString method;
+					OpenViBE::CIdentifier enumID = OV_UndefinedIdentifier;
+					box.getSettingValue(1, method);
+					box.getSettingType(1, enumID);
 
-					const OpenViBE::CIdentifier l_oSelectionMethodID = this->getTypeManager().getEnumerationEntryValueFromName(
-						l_oSelectionEnumID, l_sSelectionMethod);
+					const OpenViBE::CIdentifier methodID = this->getTypeManager().getEnumerationEntryValueFromName(enumID, method);
 
-					if (l_oSelectionMethodID == OVP_TypeId_SelectionMethod_Reject) { l_sChannels = OpenViBE::CString("!") + l_sChannels; }
-					box.setName(l_sChannels);
+					if (methodID == Reject) { channels = OpenViBE::CString("!") + channels; }
+					box.setName(channels);
 				}
 				return true;
 			}
@@ -147,8 +146,8 @@ namespace OpenViBEPlugins
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
 				prototype.addSetting("Channel List", OV_TypeId_String, ":");
-				prototype.addSetting("Action", OVP_TypeId_SelectionMethod, OVP_TypeId_SelectionMethod_Select.toString());
-				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
+				prototype.addSetting("Action", OVP_TypeId_SelectionMethod, "Select");
+				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, "Smart");
 
 				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);

@@ -21,12 +21,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::IMatrix* m_matrix                        = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			double m_f64MinCropValue                            = 0;
-			double m_f64MaxCropValue                            = 0;
-			uint64_t m_cropMethod                           = 0;
+			OpenViBE::IMatrix* m_matrix                  = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			double m_minCropValue                        = 0;
+			double m_maxCropValue                        = 0;
+			uint64_t m_cropMethod                        = 0;
 		};
 
 		class CBoxAlgorithmCropListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -74,7 +74,7 @@ namespace OpenViBEPlugins
 			{
 				prototype.addInput("Input matrix", OV_TypeId_StreamedMatrix);
 				prototype.addOutput("Output matrix", OV_TypeId_StreamedMatrix);
-				prototype.addSetting("Crop method", OVP_TypeId_CropMethod, OVP_TypeId_CropMethod_MinMax.toString());
+				prototype.addSetting("Crop method", OVP_TypeId_CropMethod, "MinMax");
 				prototype.addSetting("Min crop value", OV_TypeId_Float, "-1");
 				prototype.addSetting("Max crop value", OV_TypeId_Float, "1");
 				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);

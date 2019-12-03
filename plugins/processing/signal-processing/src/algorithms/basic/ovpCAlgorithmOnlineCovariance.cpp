@@ -102,7 +102,7 @@ bool CAlgorithmOnlineCovariance::process()
 
 		// Update the mean & cov estimates
 
-		if (ip_UpdateMethod == OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toUInteger())
+		if (ip_UpdateMethod == ChunkAverage)
 		{
 			// 'Average of per-chunk covariance matrices'. This might not be a proper cov over
 			// the dataset, but seems occasionally produce nicely smoothed results when used for CSP.
@@ -131,7 +131,7 @@ bool CAlgorithmOnlineCovariance::process()
 			// dumpMatrix(this->getLogManager(), sampleChunk, "SampleChunk");
 			// dumpMatrix(this->getLogManager(), sampleCenteredMean, "SampleCenteredMean");
 		}
-		else if (ip_UpdateMethod == OVP_TypeId_OnlineCovariance_UpdateMethod_Incremental.toUInteger())
+		else if (ip_UpdateMethod == Incremental)
 		{
 			// Incremental sample-per-sample cov updating.
 			// It should be implementing the Youngs & Cramer algorithm as described in

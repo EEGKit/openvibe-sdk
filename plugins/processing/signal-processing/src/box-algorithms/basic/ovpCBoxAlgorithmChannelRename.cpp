@@ -10,12 +10,11 @@ using namespace SignalProcessing;
 bool CBoxAlgorithmChannelRename::initialize()
 {
 	std::vector<CString> tokens;
-	const CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	const uint32_t tokenCount  = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
-									   OV_Value_EnumeratedStringSeparator);
+	const CString setting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const size_t nToken   = split(setting, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_names.clear();
-	for (uint32_t i = 0; i < tokenCount; ++i) { m_names.push_back(tokens[i].toASCIIString()); }
+	for (size_t i = 0; i < nToken; ++i) { m_names.push_back(tokens[i].toASCIIString()); }
 
 	this->getStaticBoxContext().getOutputType(0, m_typeID);
 
@@ -68,15 +67,15 @@ bool CBoxAlgorithmChannelRename::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmChannelRename::process()
 {
-	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); ++chunk)
+	for (size_t chunk = 0; chunk < boxContext.getInputChunkCount(0); ++chunk)
 	{
 		m_decoder.decode(chunk);
 		if (m_decoder.isHeaderReceived())
 		{
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
-			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
+			for (size_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
 			{
 				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());
 			}
@@ -85,8 +84,8 @@ bool CBoxAlgorithmChannelRename::process()
 		if (m_decoder.isBufferReceived()) { m_encoder.encodeBuffer(); }
 		if (m_decoder.isEndReceived()) { m_encoder.encodeEnd(); }
 
-		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, chunk), dynamicBoxContext.getInputChunkEndTime(0, chunk));
-		dynamicBoxContext.markInputAsDeprecated(0, chunk);
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, chunk), boxContext.getInputChunkEndTime(0, chunk));
+		boxContext.markInputAsDeprecated(0, chunk);
 	}
 
 	return true;

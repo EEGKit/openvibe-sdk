@@ -21,15 +21,15 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SamplingRate;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SamplingRate;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_matrix;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_sampling;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 
 			OpenViBE::CMatrix m_oMatrix;
 		};
