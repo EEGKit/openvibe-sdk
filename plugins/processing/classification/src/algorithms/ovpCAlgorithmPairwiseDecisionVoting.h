@@ -26,14 +26,14 @@ namespace OpenViBEPlugins
 			bool initialize() override { return true; }
 			bool uninitialize() override { return true; }
 			bool parameterize() override;
-			bool compute(std::vector<classification_info_t>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) override;
+			bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode& /*node*/) override { return true; }
 
 			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, OVP_ClassId_Algorithm_PairwiseDecision_Voting)
 
 		private:
-			uint32_t m_nClass = 0;
+			size_t m_nClass = 0;
 		};
 
 		class CAlgorithmPairwiseDecisionVotingDesc final : virtual public CAlgorithmPairwiseDecisionDesc

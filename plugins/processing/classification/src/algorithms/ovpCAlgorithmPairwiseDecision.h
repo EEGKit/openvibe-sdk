@@ -24,9 +24,9 @@ namespace OpenViBEPlugins
 
 			virtual bool parameterize() = 0;
 
-			virtual bool compute(std::vector<classification_info_t>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) = 0;
+			virtual bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) = 0;
 			virtual XML::IXMLNode* saveConfig() = 0;
-			virtual bool loadConfig(XML::IXMLNode& rNode) = 0;
+			virtual bool loadConfig(XML::IXMLNode& node) = 0;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision)
@@ -44,10 +44,8 @@ namespace OpenViBEPlugins
 				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs, "Classification Outputs", OpenViBE::Kernel::ParameterType_Pointer);
 				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount, "Class Count", OpenViBE::Kernel::ParameterType_UInteger);
 
-
 				prototype.addOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector, "Probability Vector", OpenViBE::Kernel::ParameterType_Matrix);
 				prototype.addOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);
-
 
 				prototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute, "Compute");
 				prototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize, "Parametrize");

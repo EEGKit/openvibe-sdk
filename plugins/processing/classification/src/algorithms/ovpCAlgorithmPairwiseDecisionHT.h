@@ -21,17 +21,17 @@ namespace OpenViBEPlugins
 
 			CAlgorithmPairwiseDecisionHT() { }
 			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
+			bool initialize() override { return true; }
+			bool uninitialize() override { return true; }
 			bool parameterize() override;
-			bool compute(std::vector<classification_info_t>& pClassificationValueList, OpenViBE::IMatrix* probabilityVector) override;
+			bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode& node) override;
 
 			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, OVP_ClassId_Algorithm_PairwiseDecision_HT)
 
 		private:
-			uint32_t m_nClass = 0;
+			size_t m_nClass = 0;
 		};
 
 		class CAlgorithmPairwiseDecisionHTDesc final : virtual public CAlgorithmPairwiseDecisionDesc
