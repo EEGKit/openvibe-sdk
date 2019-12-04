@@ -30,7 +30,7 @@ bool CAlgorithmPairwiseDecisionVoting::parameterize()
 	return true;
 }
 
-bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<classification_info_t>& pClassificationValueList, IMatrix* pProbabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadInput);
@@ -39,8 +39,8 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	std::cout << pClassificationValueList.size() << std::endl;
 
 	for (uint32_t i = 0 ; i< pClassificationValueList.size() ; ++i){
-		std::cout << pClassificationValueList[i].m_f64FirstClass << " " << pClassificationValueList[i].m_f64SecondClass << std::endl;
-		std::cout << pClassificationValueList[i].m_f64ClassLabel;
+		std::cout << pClassificationValueList[i].firstClass << " " << pClassificationValueList[i].secondClass << std::endl;
+		std::cout << pClassificationValueList[i].classLabel;
 		std::cout << std::endl;
 	}
 #endif
@@ -50,9 +50,9 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 
 	for (uint32_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
-		SClassificationInfo& l_rTemp = pClassificationValueList[i];
-		if (l_rTemp.m_f64ClassLabel == 0) { ++(l_pWinCount[uint32_t(l_rTemp.m_f64FirstClass)]); }
-		else { ++(l_pWinCount[uint32_t(l_rTemp.m_f64SecondClass)]); }
+		classification_info_t& l_rTemp = pClassificationValueList[i];
+		if (l_rTemp.classLabel == 0) { ++(l_pWinCount[uint32_t(l_rTemp.firstClass)]); }
+		else { ++(l_pWinCount[uint32_t(l_rTemp.secondClass)]); }
 	}
 
 #if VOTING_DEBUG

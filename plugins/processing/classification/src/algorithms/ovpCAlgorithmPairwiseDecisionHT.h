@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 			bool parameterize() override;
-			bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* probabilityVector) override;
+			bool compute(std::vector<classification_info_t>& pClassificationValueList, OpenViBE::IMatrix* probabilityVector) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode& node) override;
 

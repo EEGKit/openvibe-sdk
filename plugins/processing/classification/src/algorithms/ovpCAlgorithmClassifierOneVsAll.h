@@ -18,28 +18,28 @@ namespace OpenViBEPlugins
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distanceValue,
-						  OpenViBEToolkit::IVector& probabilityValue) override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& dataset) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& sample, double& classId, OpenViBEToolkit::IVector& distance,
+						  OpenViBEToolkit::IVector& probability) override;
 			bool designArchitecture(const OpenViBE::CIdentifier& id, const size_t nClass) override;
 			XML::IXMLNode* saveConfig() override;
-			bool loadConfig(XML::IXMLNode* configurationNode) override;
-			size_t getNProbabilities() override { return m_oSubClassifierList.size(); }
+			bool loadConfig(XML::IXMLNode* configNode) override;
+			size_t getNProbabilities() override { return m_subClassifiers.size(); }
 			size_t getNDistances() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsAll)
 
 
 		private:
-			XML::IXMLNode* getClassifierConfiguration(OpenViBE::Kernel::IAlgorithmProxy* classifier);
+			static XML::IXMLNode* getClassifierConfig(OpenViBE::Kernel::IAlgorithmProxy* classifier);
 			bool addNewClassifierAtBack();
 			void removeClassifierAtBack();
 			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& id);
-			uint32_t getClassCount() const;
+			size_t getClassCount() const { return m_subClassifiers.size(); }
 
-			bool loadSubClassifierConfiguration(XML::IXMLNode* subClassifiersNode);
+			bool loadSubClassifierConfig(XML::IXMLNode* node);
 
-			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_oSubClassifierList;
+			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_subClassifiers;
 			fClassifierComparison m_fAlgorithmComparison = nullptr;
 		};
 
