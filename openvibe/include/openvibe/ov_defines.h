@@ -147,10 +147,10 @@
 // #define OV_AttributeId_Comment_XSize							OpenViBE::CIdentifier(0xE680C753, 0x605306E0)
 // #define OV_AttributeId_Comment_YSize							OpenViBE::CIdentifier(0x6E73BAD9, 0x92143DB3)
 
-#define OV_AttributeId_Link_XSourcePosition						OpenViBE::CIdentifier(0x358AE8B5, 0x0F8BACD1)
-#define OV_AttributeId_Link_YSourcePosition						OpenViBE::CIdentifier(0x1B32C44C, 0x1905E0E9)
-#define OV_AttributeId_Link_XTargetPosition						OpenViBE::CIdentifier(0x6267B5C5, 0x676E3E42)
-#define OV_AttributeId_Link_YTargetPosition						OpenViBE::CIdentifier(0x3F0A3B27, 0x570913D2)
+#define OV_AttributeId_Link_XSrc								OpenViBE::CIdentifier(0x358AE8B5, 0x0F8BACD1)
+#define OV_AttributeId_Link_YSrc								OpenViBE::CIdentifier(0x1B32C44C, 0x1905E0E9)
+#define OV_AttributeId_Link_XDst								OpenViBE::CIdentifier(0x6267B5C5, 0x676E3E42)
+#define OV_AttributeId_Link_YDst								OpenViBE::CIdentifier(0x3F0A3B27, 0x570913D2)
 #define OV_AttributeId_Link_Invalid								OpenViBE::CIdentifier(0x5699FEAA, 0xF45DC988)
 
 #define OVP_ClassId_BoxAlgorithm_Metabox						OpenViBE::CIdentifier(0xFE420CB6, 0x5F2BA4C3)

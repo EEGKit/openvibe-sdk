@@ -116,7 +116,7 @@ namespace EBML
 		 * \brief Sets a 32 bits float value as child data
 		 * \param value [in] : The 32 bits float value to set
 		 */
-		virtual bool setFloat(float value) = 0;
+		virtual bool setFloat(const float value) = 0;
 		/**
 		 * \brief Sets a 64 bits float value as child data
 		 * \param value [in] : The 64 bits float value to set
