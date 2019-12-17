@@ -1,5 +1,4 @@
 #include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 #include <iostream>
 #include <fstream>
@@ -78,9 +77,9 @@ int main(int argc, char** argv)
 	vector<SStimulation> stimulations;
 	vector<CFileGeneratorBase*> generators;
 
-	ifstream stimFile(argv[2]);
+	ifstream file(argv[2]);
 	string name, id, hexaCode;
-	while (stimFile >> name >> id >> hexaCode)
+	while (file >> name >> id >> hexaCode)
 	{
 		SStimulation temp = { name, id, hexaCode };
 		stimulations.push_back(temp);

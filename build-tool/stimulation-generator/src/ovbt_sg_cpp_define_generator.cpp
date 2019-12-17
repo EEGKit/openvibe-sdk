@@ -1,5 +1,4 @@
 #include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 #include <fstream>
 
@@ -17,7 +16,7 @@ bool CCppDefineGenerator::openFile(const char* filename)
 
 bool CCppDefineGenerator::appendStimulation(SStimulation& stim)
 {
-	m_file << "#define " << stim.id << "  " << stim.code << endl;
+	m_file << "#define " << stim.id << "  " << stim.hexa << endl;
 	return true;
 }
 

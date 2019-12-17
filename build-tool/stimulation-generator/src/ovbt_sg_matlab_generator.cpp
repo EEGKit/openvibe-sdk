@@ -1,5 +1,4 @@
 #include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 #include <fstream>
 
@@ -30,7 +29,7 @@ bool CMatlabGenerator::openFile(const char* filename)
 bool CMatlabGenerator::appendStimulation(SStimulation& stim)
 {
 	m_file << "\tglobal " << stim.id << ";" << endl;
-	m_file << "\t" << stim.id << " = uint64_t(hex2dec('" << getBrutHexaCode(stim.code) << "'));" << endl << endl;
+	m_file << "\t" << stim.id << " = uint64_t(hex2dec('" << getBrutHexaCode(stim.hexa) << "'));" << endl << endl;
 	return true;
 }
 
