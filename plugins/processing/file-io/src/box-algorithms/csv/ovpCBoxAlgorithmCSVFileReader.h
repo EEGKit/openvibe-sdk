@@ -39,9 +39,9 @@ namespace OpenViBEPlugins
 			bool initializeFile();
 
 			FILE* m_file = nullptr;
-			std::string m_sSeparator;
-			bool m_bDoNotUseFileTime = false;
-			OpenViBE::CString m_sFilename;
+			std::string m_separator;
+			bool m_doNotUseFileTime = false;
+			OpenViBE::CString m_filename;
 
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 			size_t m_nCol                  = 0;
@@ -49,19 +49,19 @@ namespace OpenViBEPlugins
 			size_t m_samplesPerBuffer      = 0;
 			size_t m_channelsPerBuffer     = 0;
 
-			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)() = nullptr;
+			bool (CBoxAlgorithmCSVFileReader::*m_realProcess)() = nullptr;
 
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
 			bool m_headerSent = false;
-			std::vector<std::string> m_vLastLineSplit;
-			std::vector<std::string> m_vHeaderFile;
-			std::vector<std::vector<std::string>> m_vDataMatrix;
+			std::vector<std::string> m_lastLineSplits;
+			std::vector<std::string> m_headerFiles;
+			std::vector<std::vector<std::string>> m_dataMatrices;
 
 			double m_nextTime = 0;
 
-			uint64_t m_chunkStartTime = 0;
-			uint64_t m_chunkEndTime   = 0;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
 
 			static const size_t BUFFER_LEN = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};

@@ -45,19 +45,19 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 			m_decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>();
 			m_decoder->initialize(*this, 0);
 		}
-		m_fpRealProcess = &CBoxAlgorithmCSVFileWriter::processStreamedMatrix;
+		m_realProcess = &CBoxAlgorithmCSVFileWriter::processStreamedMatrix;
 	}
 	else if (m_typeID == OV_TypeId_Stimulations)
 	{
 		m_decoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>();
 		m_decoder->initialize(*this, 0);
-		m_fpRealProcess = &CBoxAlgorithmCSVFileWriter::processStimulation;
+		m_realProcess = &CBoxAlgorithmCSVFileWriter::processStimulation;
 	}
 	else { OV_ERROR_KRF("Invalid input type identifier " << this->getTypeManager().getTypeName(m_typeID), OpenViBE::Kernel::ErrorType::BadInput); }
 
 	m_nSample = 0;
 
-	m_bFirstBuffer   = true;
+	m_firstBuffer    = true;
 	m_headerReceived = false;
 
 	return true;
@@ -100,7 +100,7 @@ bool CBoxAlgorithmCSVFileWriter::processInput(const size_t /*index*/)
 bool CBoxAlgorithmCSVFileWriter::process()
 {
 	if (!m_fileStream.is_open()) { if (!initializeFile()) { return false; } }
-	return (this->*m_fpRealProcess)();
+	return (this->*m_realProcess)();
 }
 
 bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
@@ -185,7 +185,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 				else if (m_typeID == OV_TypeId_Spectrum) { m_fileStream << timeToSeconds(tEnd); }
 				for (size_t c = 0; c < nChannel; ++c) { m_fileStream << m_separator.toASCIIString() << matrix->getBuffer()[c * nSample + s]; }
 
-				if (m_bFirstBuffer)
+				if (m_firstBuffer)
 				{
 					if (m_typeID == OV_TypeId_Signal)
 					{
@@ -194,7 +194,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 
 						m_fileStream << m_separator.toASCIIString() << uint64_t(frequency);
 
-						m_bFirstBuffer = false;
+						m_firstBuffer = false;
 					}
 					else if (m_typeID == OV_TypeId_Spectrum)
 					{
@@ -220,7 +220,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 			}
 			m_nSample += nSample;
 
-			m_bFirstBuffer = false;
+			m_firstBuffer = false;
 		}
 		if (m_decoder->isEndReceived()) { }
 		boxContext.markInputAsDeprecated(0, i);
@@ -247,7 +247,8 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 		}
 		if (m_decoder->isBufferReceived())
 		{
-			const IStimulationSet* stimSet = static_cast<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputStimulationSet();
+			const IStimulationSet* stimSet = static_cast<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
+					getOutputStimulationSet();
 			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
 			{
 				m_fileStream << timeToSeconds(stimSet->getStimulationDate(j)) << m_separator.toASCIIString()
