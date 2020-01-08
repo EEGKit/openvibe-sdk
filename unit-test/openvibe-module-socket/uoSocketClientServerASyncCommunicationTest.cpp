@@ -101,7 +101,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 
 	const std::string serverName = argv[1];
 	int portNumber               = std::atoi(argv[2]);
-	size_t packetCount         = size_t(std::atoi(argv[3]));
+	size_t packetCount           = size_t(std::atoi(argv[3]));
 
 	// test asynchronous data transmission from a single client to server:
 	// - launch a server on a background thread

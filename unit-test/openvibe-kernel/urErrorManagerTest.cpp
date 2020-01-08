@@ -6,7 +6,7 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before the kernel context.
@@ -118,7 +118,7 @@ TEST(error_manager_test_case, test_stress_push)
 	for (size_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
 
 	size_t errorCount = 0;
-	auto error              = errorManager.getLastError();
+	auto error        = errorManager.getLastError();
 	while (error)
 	{
 		errorCount++;

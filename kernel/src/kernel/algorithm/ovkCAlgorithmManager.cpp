@@ -4,7 +4,7 @@
 #include <system/ovCMath.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace std;
 

@@ -13,7 +13,7 @@
 #define OV_DEBUG_UNLESS_K(expression, message) if (!(expression)) { OV_DEBUG_K(message); }
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 namespace
 {

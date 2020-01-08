@@ -19,7 +19,7 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 // The following is a hack, can be removed once there is a copy constructor for scenarios, boxes, etc
@@ -281,7 +281,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			scenario.getSettingMod(settingIndex, isModifiable);
 			scenario.getInterfacorIdentifier(Setting, settingIndex, id);
 
-			this->addSetting(settingName, settingTypeIdentifier, defaultValue, OV_Value_UndefinedIndexUInt, isModifiable, id, true);
+			this->addSetting(settingName, settingTypeIdentifier, defaultValue, size_t(-1), isModifiable, id, true);
 			this->setSettingValue(previousSettingCount + settingIndex, value);
 		}
 
@@ -679,7 +679,7 @@ bool CScenario::setScenarioInputLink(const size_t scenarioInputIdx, const CIdent
 
 bool CScenario::setScenarioInputLink(const size_t scenarioInputIdx, const CIdentifier& boxID, const CIdentifier& boxInputID)
 {
-	size_t boxInputIdx = OV_Value_UndefinedIndexUInt;
+	size_t boxInputIdx = size_t(-1);
 
 	if (boxID != OV_UndefinedIdentifier)
 	{
@@ -729,7 +729,7 @@ bool CScenario::setScenarioOutputLink(const size_t scenarioOutputIdx, const CIde
 
 bool CScenario::setScenarioOutputLink(const size_t scenarioOutputIdx, const CIdentifier& boxID, const CIdentifier& boxOutputID)
 {
-	size_t boxOutputIdx = OV_Value_UndefinedIndexUInt;
+	size_t boxOutputIdx = size_t(-1);
 
 	if (boxID != OV_UndefinedIdentifier)
 	{

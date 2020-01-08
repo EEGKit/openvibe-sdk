@@ -1,7 +1,7 @@
 #include "toolkit/ovtk_all.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace OpenViBEToolkit;
 
 // ********************************************************************************************************************

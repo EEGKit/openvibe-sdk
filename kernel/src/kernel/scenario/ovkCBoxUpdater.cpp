@@ -6,7 +6,7 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 
 const std::array<CIdentifier, 10> CBoxUpdater::UPDATABLE_ATTRIBUTES = {
@@ -190,7 +190,7 @@ bool CBoxUpdater::updateInterfacors(EBoxInterfacorType interfacorType)
 		}
 
 		auto indexInBox = getInterfacorIndex(interfacorType, *m_sourceBox, kTypeIdentifier, kIdentifier, kName);
-		if (indexInBox != OV_Value_UndefinedIndexUInt)
+		if (indexInBox != size_t(-1))
 		{
 			CIdentifier identifier;
 			CString name;
@@ -291,7 +291,7 @@ bool CBoxUpdater::updateInterfacors(EBoxInterfacorType interfacorType)
 size_t CBoxUpdater::getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
 									   const CString& name)
 {
-	size_t index = OV_Value_UndefinedIndexUInt;
+	size_t index = size_t(-1);
 	if (identifier != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(interfacorType, identifier))
 	{
 		box.getInterfacorIndex(interfacorType, identifier, index);

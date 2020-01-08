@@ -287,7 +287,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
-	const std::vector<std::string> expectedLabels       = { "", "", "", "", "", "" };
+	const std::vector<std::string> expectedLabels = { "", "", "", "", "", "" };
 	const std::vector<size_t> goodDimensionsSizes = { 2, 2, 2 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
@@ -364,7 +364,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
-	const std::vector<std::string> expectedLabels       = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
+	const std::vector<std::string> expectedLabels = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
 	const std::vector<size_t> goodDimensionsSizes = { 2, 2, 5 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));

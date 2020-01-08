@@ -26,7 +26,7 @@
 namespace OpenViBETest
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 	using namespace Plugins;
 
 	bool ctx::initialize()

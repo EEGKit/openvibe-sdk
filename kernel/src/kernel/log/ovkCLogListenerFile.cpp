@@ -8,7 +8,7 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
 CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename)

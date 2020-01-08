@@ -10,7 +10,7 @@
 #include <ovp_global_defines.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 namespace
 {

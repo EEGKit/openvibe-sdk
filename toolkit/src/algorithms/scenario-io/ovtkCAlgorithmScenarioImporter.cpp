@@ -6,7 +6,7 @@
 #include <algorithm>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEToolkit;
@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 			CIdentifier typeID = OV_UndefinedIdentifier;
 			CString name;
 			CIdentifier linkedBoxID      = OV_UndefinedIdentifier;
-			size_t linkedBoxInputIdx     = OV_Value_UndefinedIndexUInt;
+			size_t linkedBoxInputIdx     = size_t(-1);
 			CIdentifier linkedBoxInputID = OV_UndefinedIdentifier;
 		} scenario_input_t;
 
@@ -31,7 +31,7 @@ namespace OpenViBEToolkit
 			CIdentifier typeID = OV_UndefinedIdentifier;
 			CString name;
 			CIdentifier linkedBoxID       = OV_UndefinedIdentifier;
-			size_t linkedBoxOutputIdx     = OV_Value_UndefinedIndexUInt;
+			size_t linkedBoxOutputIdx     = size_t(-1);
 			CIdentifier linkedBoxOutputID = OV_UndefinedIdentifier;
 		} scenario_output_t;
 
@@ -93,14 +93,14 @@ namespace OpenViBEToolkit
 		typedef struct SLinkSrc
 		{
 			CIdentifier boxID;
-			size_t boxOutputIdx     = OV_Value_UndefinedIndexUInt;
+			size_t boxOutputIdx     = size_t(-1);
 			CIdentifier boxOutputID = OV_UndefinedIdentifier;
 		} link_src_t;
 
 		typedef struct SLinkDst
 		{
 			CIdentifier boxID;
-			size_t boxInputIdx     = OV_Value_UndefinedIndexUInt;
+			size_t boxInputIdx     = size_t(-1);
 			CIdentifier boxInputID = OV_UndefinedIdentifier;
 		} link_dst_t;
 
@@ -171,7 +171,7 @@ bool CAlgorithmScenarioImporter::process()
 		CIdentifier settingID = s->id;
 		// compute identifier only if it does not exists
 		if (settingID == OV_UndefinedIdentifier) { settingID = scenario->getUnusedSettingIdentifier(); }
-		scenario->addSetting(s->name, s->typeID, s->defaultValue, OV_Value_UndefinedIndexUInt, false, settingID);
+		scenario->addSetting(s->name, s->typeID, s->defaultValue, size_t(-1), false, settingID);
 		scenario->setSettingValue(scenario->getSettingCount() - 1, s->value);
 	}
 
@@ -203,7 +203,7 @@ bool CAlgorithmScenarioImporter::process()
 					OV_WARNING_K("The type of the setting " << s->name <<" (" << type.toString() << ") from box " << b->name << " cannot be recognized.");
 				}
 
-				box->addSetting(s->name, s->typeID, s->defaultValue, OV_Value_UndefinedIndexUInt, s->modifiability, s->id);
+				box->addSetting(s->name, s->typeID, s->defaultValue, size_t(-1), s->modifiability, s->id);
 				box->setSettingValue(box->getSettingCount() - 1, s->value);
 			}
 			for (auto a = b->attributes.begin(); a != b->attributes.end(); ++a) { box->addAttribute(a->id, a->value); }
@@ -255,12 +255,12 @@ bool CAlgorithmScenarioImporter::process()
 
 		if (srcBoxOutputID != OV_UndefinedIdentifier) { scenario->getSourceBoxOutputIndex(boxIdMapping[l->linkSrc.boxID], srcBoxOutputID, srcBoxOutputIdx); }
 
-		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != OV_Value_UndefinedIndexUInt, "Output index of the source box could not be found",
+		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found",
 							OpenViBE::Kernel::ErrorType::BadOutput);
 
 		if (dstBoxInputID != OV_UndefinedIdentifier) { scenario->getTargetBoxInputIndex(boxIdMapping[l->linkDst.boxID], dstBoxInputID, dstBoxInputIdx); }
 
-		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != OV_Value_UndefinedIndexUInt, "Input index of the target box could not be found",
+		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found",
 							OpenViBE::Kernel::ErrorType::BadOutput);
 
 		scenario->connect(newLinkID, boxIdMapping[l->linkSrc.boxID], srcBoxOutputIdx, boxIdMapping[l->linkDst.boxID], dstBoxInputIdx, l->id);
@@ -292,7 +292,7 @@ bool CAlgorithmScenarioImporter::process()
 					scenario->getTargetBoxInputIndex(symbolicScenarioInput.linkedBoxID, linkedBoxInputIdentifier, linkedBoxInputIndex);
 				}
 
-				OV_ERROR_UNLESS_KRF(linkedBoxInputIndex != OV_Value_UndefinedIndexUInt, "Input index of the target box could not be found",
+				OV_ERROR_UNLESS_KRF(linkedBoxInputIndex != size_t(-1), "Input index of the target box could not be found",
 									OpenViBE::Kernel::ErrorType::BadOutput);
 
 				scenario->setScenarioInputLink(scenarioInputIdx, symbolicScenarioInput.linkedBoxID, linkedBoxInputIndex);
@@ -325,7 +325,7 @@ bool CAlgorithmScenarioImporter::process()
 					scenario->getSourceBoxOutputIndex(symbolicScenarioOutput.linkedBoxID, linkedBoxOutputIdentifier, linkedBoxOutputIndex);
 				}
 
-				OV_ERROR_UNLESS_KRF(linkedBoxOutputIndex != OV_Value_UndefinedIndexUInt, "Output index of the target box could not be found",
+				OV_ERROR_UNLESS_KRF(linkedBoxOutputIndex != size_t(-1), "Output index of the target box could not be found",
 									OpenViBE::Kernel::ErrorType::BadOutput);
 				scenario->setScenarioOutputLink(scenarioOutputIdx, symbolicScenarioOutput.linkedBoxID, linkedBoxOutputIndex);
 			}

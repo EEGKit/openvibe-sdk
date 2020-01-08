@@ -431,7 +431,7 @@ namespace OpenViBE
 
 			bool getInterfacorIndex(const EBoxInterfacorType interfacorType, const CIdentifier& identifier, size_t& index) const override
 			{
-				index         = OV_Value_UndefinedIndexUInt;
+				index         = size_t(-1);
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
 									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with identifier " << identifier.str(),
@@ -443,7 +443,7 @@ namespace OpenViBE
 
 			bool getInterfacorIndex(const EBoxInterfacorType interfacorType, const CString& name, size_t& index) const override
 			{
-				index         = OV_Value_UndefinedIndexUInt;
+				index         = size_t(-1);
 				const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
 									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
@@ -1050,7 +1050,7 @@ namespace OpenViBE
 
 				size_t insertLocation;
 
-				if (index == OV_Value_UndefinedIndexUInt || index == size_t(m_interfacors[Setting].size()))
+				if (index == size_t(-1) || index == size_t(m_interfacors[Setting].size()))
 				{
 					m_interfacors[Setting].push_back(std::make_shared<CSetting>(s));
 					insertLocation = (size_t(m_interfacors[Setting].size())) - 1;

@@ -6,7 +6,7 @@
 #include <string>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;

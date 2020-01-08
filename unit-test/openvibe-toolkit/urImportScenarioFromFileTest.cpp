@@ -6,14 +6,14 @@
 #include "urSimpleTestScenarioDefinition.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 #define to_cppstring(str) std::string(str.toASCIIString())
 
 int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 {
-	const char* configFile = argv[1];
-	const char* dataDirectory     = argv[2];
+	const char* configFile    = argv[1];
+	const char* dataDirectory = argv[2];
 
 	{
 		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configFile);

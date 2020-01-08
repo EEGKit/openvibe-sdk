@@ -6,7 +6,7 @@
 
 using namespace OpenViBE;
 using namespace Plugins;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace OpenViBEPlugins;
 using namespace FeatureExtraction;
 

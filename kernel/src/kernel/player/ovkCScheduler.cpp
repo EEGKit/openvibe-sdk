@@ -29,7 +29,7 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 #include <ovp_global_defines.h>
@@ -255,7 +255,7 @@ bool CScheduler::flattenScenario()
 					size_t metaBoxInputIdx     = link->getTargetBoxInputIndex();
 
 					if (metaBoxInputID != OV_UndefinedIdentifier) { metaboxScenarioInstance.getInterfacorIndex(Input, metaBoxInputID, metaBoxInputIdx); }
-					OV_ERROR_UNLESS_KRF(metaBoxInputIdx != OV_Value_UndefinedIndexUInt, "Failed to find metabox input with identifier " << metaBoxInputID.str(),
+					OV_ERROR_UNLESS_KRF(metaBoxInputIdx != size_t(-1), "Failed to find metabox input with identifier " << metaBoxInputID.str(),
 										ErrorType::ResourceNotFound);
 					metaboxScenarioInstance.getScenarioInputLink(metaBoxInputIdx, dstBoxID, dstBoxInputIdx);
 
@@ -285,7 +285,7 @@ bool CScheduler::flattenScenario()
 					size_t metaBoxOutputIdx     = link->getSourceBoxOutputIndex();
 
 					if (metaBoxOutputID != OV_UndefinedIdentifier) { metaboxScenarioInstance.getInterfacorIndex(Output, metaBoxOutputID, metaBoxOutputIdx); }
-					OV_ERROR_UNLESS_KRF(metaBoxOutputIdx != OV_Value_UndefinedIndexUInt,
+					OV_ERROR_UNLESS_KRF(metaBoxOutputIdx != size_t(-1),
 										"Failed to find metabox input with identifier " << metaBoxOutputID.toString(), ErrorType::ResourceNotFound);
 					metaboxScenarioInstance.getScenarioOutputLink(metaBoxOutputIdx, srcBoxID, srcBoxOutputIdx);
 

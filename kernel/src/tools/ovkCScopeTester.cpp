@@ -1,7 +1,7 @@
 #include "ovkCScopeTester.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Tools;
 
 CScopeTester::CScopeTester(const IKernelContext& ctx, const CString& sPrefix)

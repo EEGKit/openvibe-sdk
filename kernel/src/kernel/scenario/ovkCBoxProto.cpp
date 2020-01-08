@@ -1,14 +1,15 @@
 #include "ovkCBoxProto.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 bool CBoxProto::addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id, const bool notify)
 {
 	if (!m_box.addInput(name, typeID, id, notify)) { return false; }
 
-	const char* buffer = std::to_string(m_box.getInputCount()).c_str();
+	const std::string tmp = std::to_string(m_box.getInputCount());
+	const CString buffer(tmp.c_str());
 	if (m_box.hasAttribute(OV_AttributeId_Box_InitialInputCount)) { m_box.setAttributeValue(OV_AttributeId_Box_InitialInputCount, buffer); }
 	else { m_box.addAttribute(OV_AttributeId_Box_InitialInputCount, buffer); }
 
@@ -19,7 +20,8 @@ bool CBoxProto::addOutput(const CString& name, const CIdentifier& typeID, const 
 {
 	if (!m_box.addOutput(name, typeID, id, notify)) { return false; }
 
-	const char* buffer = std::to_string(m_box.getOutputCount()).c_str();
+	const std::string tmp = std::to_string(m_box.getOutputCount());
+	const CString buffer(tmp.c_str());
 	if (m_box.hasAttribute(OV_AttributeId_Box_InitialOutputCount)) { m_box.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, buffer); }
 	else { m_box.addAttribute(OV_AttributeId_Box_InitialOutputCount, buffer); }
 
@@ -29,9 +31,10 @@ bool CBoxProto::addOutput(const CString& name, const CIdentifier& typeID, const 
 bool CBoxProto::addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const bool modifiable,
 						   const CIdentifier& id, const bool notify)
 {
-	if (!m_box.addSetting(name, typeID, value, OV_Value_UndefinedIndexUInt, modifiable, id, notify)) { return false; }
+	if (!m_box.addSetting(name, typeID, value, size_t(-1), modifiable, id, notify)) { return false; }
 
-	const char* buffer = std::to_string(m_box.getSettingCount()).c_str();
+	const std::string tmp = std::to_string(m_box.getSettingCount());
+	const CString buffer(tmp.c_str());
 	if (m_box.hasAttribute(OV_AttributeId_Box_InitialSettingCount)) { m_box.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, buffer); }
 	else { m_box.addAttribute(OV_AttributeId_Box_InitialSettingCount, buffer); }
 

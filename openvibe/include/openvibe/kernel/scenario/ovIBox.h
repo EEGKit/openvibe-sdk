@@ -362,7 +362,7 @@ namespace OpenViBE
 			 * The default value -1 means that the setting
 			 * will be add to the end.
 			 */
-			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const size_t index = OV_Value_UndefinedIndexUInt,
+			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const size_t index = size_t(-1),
 									const bool modifiability = false, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**

@@ -4,7 +4,7 @@
 #include "../ovkCObjectVisitorContext.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 //___________________________________________________________________//
 //                                                                   //

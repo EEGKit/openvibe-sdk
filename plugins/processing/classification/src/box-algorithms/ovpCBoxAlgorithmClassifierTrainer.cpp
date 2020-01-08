@@ -28,7 +28,7 @@ const char* const CLASS_STIMULATION_NODE_NAME    = "Class-Stimulation";
 const char* const CLASSIFICATION_BOX_ROOT        = "OpenViBE-Classifier-Box";
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;

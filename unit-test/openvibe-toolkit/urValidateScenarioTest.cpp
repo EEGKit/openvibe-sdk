@@ -10,7 +10,7 @@
 #include <array>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before
@@ -293,7 +293,7 @@ int urValidateScenarioTest(int argc, char* argv[])
 	fixture->setConfigFile(argv[1]);
 
 	g_dataDirectory = argv[2];
-	context       = fixture->context;
+	context         = fixture->context;
 
 #if defined TARGET_OS_Windows
 	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");

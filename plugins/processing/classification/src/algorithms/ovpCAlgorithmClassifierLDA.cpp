@@ -42,7 +42,7 @@ int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix&
 }
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace OpenViBEPlugins::Classification;
 using namespace OpenViBEToolkit;

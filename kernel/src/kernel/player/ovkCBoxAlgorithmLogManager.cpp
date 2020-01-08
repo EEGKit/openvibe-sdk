@@ -2,7 +2,7 @@
 #include "ovkCSimulatedBox.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 void CBoxAlgorithmLogManager::log(const ELogLevel logLevel)
 {

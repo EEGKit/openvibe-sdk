@@ -6,7 +6,7 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 int urImportScenarioFromFileTest(int argc, char* argv[]);
 
@@ -19,7 +19,7 @@ int urImportScenarioFromFileTest(int argc, char* argv[]);
 
 int urExportScenarioToFileTest(const int argc, char* argv[])
 {
-	const char* configFile  = argv[1];
+	const char* configFile         = argv[1];
 	const char* temporaryDirectory = argv[2];
 
 	{

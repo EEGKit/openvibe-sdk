@@ -4,7 +4,7 @@
 #include "ovkCPlayer.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 CPlayerContext::CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox)
 	: TKernelObject<IPlayerContext>(ctx), m_simulatedBox(*pSimulatedBox), m_pluginManager(ctx.getPluginManager()),

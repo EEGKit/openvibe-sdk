@@ -13,7 +13,7 @@ namespace OpenViBE
 	{
 		typedef struct _InterfacorRequest
 		{
-			size_t index           = OV_Value_UndefinedIndexUInt;
+			size_t index           = size_t(-1);
 			CIdentifier identifier = OV_UndefinedIdentifier;
 			CIdentifier typeID     = OV_UndefinedIdentifier;
 			CString name;

@@ -18,8 +18,8 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, const size_t /*nAttribute*/)

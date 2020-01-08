@@ -2,7 +2,7 @@
 #include <openvibe/ov_all.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 #include <iostream>
 

@@ -24,7 +24,7 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 CKernelContext::CKernelContext(const IKernelContext* masterKernelCtx, const CString& applicationName, const CString& configFile)
 	: m_masterKernelCtx(masterKernelCtx ? *masterKernelCtx : *this), m_algorithmManager(nullptr), m_configManager(nullptr),

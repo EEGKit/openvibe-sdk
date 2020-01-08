@@ -1,7 +1,7 @@
 #include "ovtkCFeatureVectorSet.hpp"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEToolkit;

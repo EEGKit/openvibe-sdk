@@ -11,7 +11,7 @@
 #include <string>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 //___________________________________________________________________//
 //                                                                   //
@@ -217,7 +217,7 @@ bool CKernelLoaderWindows::load(const CString& filename, CString* error)
 		}
 
 		FreeLibrary(m_fileHandle);
-		m_fileHandle       = nullptr;
+		m_fileHandle        = nullptr;
 		m_onInitializeCB    = nullptr;
 		m_onGetKernelDescCB = nullptr;
 		m_onUninitializeCB  = nullptr;
@@ -234,7 +234,7 @@ bool CKernelLoaderWindows::unload(CString* error)
 		return false;
 	}
 	FreeLibrary(m_fileHandle);
-	m_fileHandle       = nullptr;
+	m_fileHandle        = nullptr;
 	m_onInitializeCB    = nullptr;
 	m_onGetKernelDescCB = nullptr;
 	m_onUninitializeCB  = nullptr;

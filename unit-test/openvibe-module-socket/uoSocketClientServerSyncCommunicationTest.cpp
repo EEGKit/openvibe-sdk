@@ -92,9 +92,9 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
-	const std::string serverName   = argv[1];
+	const std::string serverName = argv[1];
 	char* end;
-	const size_t port = strtol(argv[2], &end, 10);
+	const size_t port  = strtol(argv[2], &end, 10);
 	size_t packetCount = strtol(argv[3], &end, 10);
 
 	// test synchronous data transmission from a single client to server:
@@ -128,7 +128,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
-		size_t dataSize      = dataString.size();
+		size_t dataSize        = dataString.size();
 
 		client->sendBufferBlocking(&dataSize, sizeof(dataSize));
 		client->sendBufferBlocking(dataString.c_str(), dataSize);

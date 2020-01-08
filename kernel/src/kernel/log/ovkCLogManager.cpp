@@ -1,7 +1,7 @@
 #include "ovkCLogManager.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
 bool CLogManager::isActive(const ELogLevel level)

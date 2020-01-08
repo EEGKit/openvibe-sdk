@@ -128,7 +128,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	// comparison part
 	std::ifstream generatedStream(outputFile);
 	std::ifstream expectedStream(expectedFile);
-	
+
 	OVT_ASSERT(generatedStream.is_open(), "Failure to open generated results for reading");
 	OVT_ASSERT(expectedStream.is_open(), "Failure to open expected results for reading");
 

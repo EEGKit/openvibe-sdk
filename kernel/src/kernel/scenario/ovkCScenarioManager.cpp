@@ -9,7 +9,7 @@
 #include "../../tools/ovkSBoxProto.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
 CScenarioManager::CScenarioManager(const IKernelContext& ctx)

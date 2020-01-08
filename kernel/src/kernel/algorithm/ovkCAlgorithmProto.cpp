@@ -2,7 +2,7 @@
 #include "ovkCAlgorithmProxy.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 CAlgorithmProto::CAlgorithmProto(const IKernelContext& ctx, CAlgorithmProxy& rAlgorithmProxy)
 	: TKernelObject<IAlgorithmProto>(ctx), m_rAlgorithmProxy(rAlgorithmProxy) {}

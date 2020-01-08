@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEToolkit;
@@ -89,7 +89,7 @@ bool CAlgorithmClassifier::process()
 	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfig))
 	{
 		XML::IXMLNode* rootNode = this->saveConfig();
-		op_Config        = rootNode;
+		op_Config               = rootNode;
 		if (rootNode) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{

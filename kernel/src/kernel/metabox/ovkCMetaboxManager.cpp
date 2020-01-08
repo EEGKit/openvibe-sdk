@@ -9,7 +9,7 @@
 #include "ovkCMetaboxObjectDesc.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Metabox;
 using namespace std;
 

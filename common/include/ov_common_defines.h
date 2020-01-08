@@ -74,8 +74,8 @@
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OV_Shared
 #if defined TARGET_OS_Windows
-  #define OV_API_Export __declspec(dllexport)
-  #define OV_API_Import __declspec(dllimport)
+#define OV_API_Export __declspec(dllexport)
+#define OV_API_Import __declspec(dllimport)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
   #define OV_API_Export __attribute__((visibility("default")))
   #define OV_API_Import __attribute__((visibility("default")))

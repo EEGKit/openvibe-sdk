@@ -24,7 +24,7 @@
 #include "ovkCErrorManager.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 // Error manager IError internal implementation
 namespace OpenViBE

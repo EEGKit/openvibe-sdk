@@ -10,7 +10,7 @@
 #include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
 CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)

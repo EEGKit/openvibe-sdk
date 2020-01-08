@@ -3,7 +3,7 @@
 #include <sstream>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEToolkit;
@@ -282,8 +282,8 @@ bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& buffer, const I
 {
 	CIdentifier srcBoxID;
 	CIdentifier dstBoxID;
-	size_t srcBoxOutputIdx = OV_Value_UndefinedIndexUInt;
-	size_t dstBoxInputIdx  = OV_Value_UndefinedIndexUInt;
+	size_t srcBoxOutputIdx = size_t(-1);
+	size_t dstBoxInputIdx  = size_t(-1);
 	CIdentifier srcBoxOutputID;
 	CIdentifier dstBoxInputID;
 

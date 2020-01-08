@@ -196,7 +196,6 @@
 //---------------------------------------------------------------------------------------------------
 #define OV_Value_EnumeratedStringSeparator						';'
 #define OV_Value_RangeStringSeparator							':'
-#define OV_Value_UndefinedIndexUInt								0xFFFFFFFF
 // Importer contexts
 
 #define OV_ScenarioImportContext_SchedulerMetaboxImport			OpenViBE::CIdentifier(0xDDBDD59F, 0xE8C76702)

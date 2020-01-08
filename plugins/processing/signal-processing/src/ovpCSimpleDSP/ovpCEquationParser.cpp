@@ -11,7 +11,7 @@
 using namespace boost::spirit;
 using namespace /*boost::spirit::*/classic;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace OpenViBEToolkit;
 

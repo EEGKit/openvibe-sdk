@@ -26,7 +26,7 @@ namespace OpenViBE
 	{
 	public:
 		StringDirectories() = delete;
-		
+
 #ifdef OV_USE_CMAKE_DEFAULT_PATHS
 		static std::string getDistRootDir() { return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT); }
 #else
@@ -40,7 +40,7 @@ namespace OpenViBE
 		static std::string getLibDir() { return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/bin", OV_CMAKE_PATH_BIN); }
 		static std::string getUserHomeDir() { return pathFromEnv("USERPROFILE", "openvibe-user"); }
 		static std::string getUserDataDir() { return (pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_CONFIG_SUBDIR); }
-		
+
 		static std::string getAllUsersDataDir()
 		{
 			std::string path = pathFromEnv("PROGRAMDATA", "");					// first chance: Win7 and higher

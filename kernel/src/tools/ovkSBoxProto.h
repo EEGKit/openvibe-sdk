@@ -6,7 +6,7 @@
 namespace
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 
 	struct SBoxProto final : IBoxProto
 	{

@@ -7,7 +7,7 @@
 
 using namespace OpenViBE;
 using namespace CSV;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;

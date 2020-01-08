@@ -32,7 +32,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 
 	const std::string name = argv[1];
 	char* end;
-	const size_t port    = strtol(argv[2], &end, 10);
+	const size_t port = strtol(argv[2], &end, 10);
 	
 	// basic tests on server and clients
 

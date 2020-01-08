@@ -12,7 +12,7 @@
 using namespace Eigen;
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
