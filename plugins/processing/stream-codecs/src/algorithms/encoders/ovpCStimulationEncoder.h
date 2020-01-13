@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> ip_pStimulationSet;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> ip_stimSet;
 		};
 
 		class CStimulationEncoderDesc final : public CEBMLBaseEncoderDesc

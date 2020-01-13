@@ -10,13 +10,13 @@ using namespace StreamCodecs;
 bool CStimulationEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
-	ip_pStimulationSet.initialize(getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	ip_stimSet.initialize(getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
 	return true;
 }
 
 bool CStimulationEncoder::uninitialize()
 {
-	ip_pStimulationSet.uninitialize();
+	ip_stimSet.uninitialize();
 	CEBMLBaseEncoder::uninitialize();
 	return true;
 }
@@ -26,7 +26,7 @@ bool CStimulationEncoder::uninitialize()
 
 bool CStimulationEncoder::processBuffer()
 {
-	IStimulationSet* stimulationSet = ip_pStimulationSet;
+	IStimulationSet* stimulationSet = ip_stimSet;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations);
