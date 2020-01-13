@@ -9,32 +9,16 @@ using namespace std;
 // ________________________________________________________________________________________________________________
 //
 
-CSignalTrial::CSignalTrial() {}
-
-CSignalTrial::~CSignalTrial()
+bool CSignalTrial::setSamplingRate(const size_t sampling)
 {
-	for (auto itChannel = m_channelSamples.begin(); itChannel != m_channelSamples.end(); ++itChannel)
-	{
-		delete [] itChannel->second;
-	}
+	m_sampling = sampling;
+	return m_sampling != 0;
 }
 
-// ________________________________________________________________________________________________________________
-//
-
-bool CSignalTrial::setSamplingRate(const uint32_t samplingFrequency)
+bool CSignalTrial::setChannelCount(const size_t count)
 {
-	m_samplingRate = samplingFrequency;
-	return m_samplingRate != 0;
-}
-
-bool CSignalTrial::setChannelCount(const uint32_t count)
-{
-	uint32_t i;
-	for (i = 0; i < count; ++i)
-	{
-		if (m_channelSamples.find(i) == m_channelSamples.end()) { m_channelSamples[i] = new double[m_nSampleReserved]; }
-	}
+	size_t i;
+	for (i = 0; i < count; ++i) { if (m_channelSamples.find(i) == m_channelSamples.end()) { m_channelSamples[i] = new double[m_nSampleReserved]; } }
 	for (i = count; i < m_nChannel; ++i)
 	{
 		delete [] m_channelSamples[i];
@@ -47,7 +31,7 @@ bool CSignalTrial::setChannelCount(const uint32_t count)
 	return m_nChannel != 0;
 }
 
-bool CSignalTrial::setChannelName(const uint32_t index, const char* name)
+bool CSignalTrial::setChannelName(const size_t index, const char* name)
 {
 	if (index < m_nChannel)
 	{
@@ -63,22 +47,19 @@ bool CSignalTrial::setLabelIdentifier(const CIdentifier& labelID)
 	return true;
 }
 
-bool CSignalTrial::setSampleCount(const uint32_t count, const bool preserve)
+bool CSignalTrial::setSampleCount(const size_t count, const bool preserve)
 {
-	const uint32_t nSampleRounding = 0x00000fff;
+	const size_t nSampleRounding = 0x00000fff;
 
 	if (count > m_nSampleReserved)
 	{
-		const uint32_t nSampleReserved = (count + nSampleRounding + 1) & (~nSampleRounding);
-		for (auto itChannelSample = m_channelSamples.begin(); itChannelSample != m_channelSamples.end(); ++itChannelSample)
+		const size_t nSampleReserved = (count + nSampleRounding + 1) & (~nSampleRounding);
+		for (auto it = m_channelSamples.begin(); it != m_channelSamples.end(); ++it)
 		{
 			double* sample = new double[nSampleReserved];
-			if (preserve)
-			{
-				System::Memory::copy(sample, itChannelSample->second, (count < m_nSample ? count : m_nSample) * sizeof(double));
-			}
-			delete [] itChannelSample->second;
-			itChannelSample->second = sample;
+			if (preserve) { System::Memory::copy(sample, it->second, (count < m_nSample ? count : m_nSample) * sizeof(double)); }
+			delete [] it->second;
+			it->second = sample;
 		}
 		m_nSampleReserved = nSampleReserved;
 	}
@@ -89,17 +70,17 @@ bool CSignalTrial::setSampleCount(const uint32_t count, const bool preserve)
 // ________________________________________________________________________________________________________________
 //
 
-const char* CSignalTrial::getChannelName(const uint32_t index) const
+const char* CSignalTrial::getChannelName(const size_t index) const
 {
-	const auto itChannelName = m_channelNames.find(index);
-	if (itChannelName != m_channelNames.end()) { return itChannelName->second.c_str(); }
+	const auto it = m_channelNames.find(index);
+	if (it != m_channelNames.end()) { return it->second.c_str(); }
 	return "";
 }
 
-double* CSignalTrial::getChannelSampleBuffer(const uint32_t index) const
+double* CSignalTrial::getChannelSampleBuffer(const size_t index) const
 {
-	const auto itChannelSample = m_channelSamples.find(index);
-	if (itChannelSample != m_channelSamples.end()) { return itChannelSample->second; }
+	const auto it = m_channelSamples.find(index);
+	if (it != m_channelSamples.end()) { return it->second; }
 	return nullptr;
 }
 

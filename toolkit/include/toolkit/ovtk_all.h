@@ -53,8 +53,8 @@
 #include "codecs/encoders/ovtkTChannelUnitsEncoder.h"
 #include "codecs/decoders/ovtkTChannelUnitsDecoder.h"
 
-#include "codecs/encoders/ovtkTExperimentInformationEncoder.h"
-#include "codecs/decoders/ovtkTExperimentInformationDecoder.h"
+#include "codecs/encoders/ovtkTExperimentInfoEncoder.h"
+#include "codecs/decoders/ovtkTExperimentInfoDecoder.h"
 
 #include "codecs/encoders/ovtkTFeatureVectorEncoder.h"
 #include "codecs/decoders/ovtkTFeatureVectorDecoder.h"

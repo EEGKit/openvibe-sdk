@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include <cstdlib>	// fix Unix compatibility
 
 namespace System
 {
@@ -8,10 +9,10 @@ namespace System
 	{
 	public:
 
-		CChrono();
+		CChrono() { }
 		~CChrono();
 
-		bool reset(uint32_t ui32StepCount);
+		bool reset(size_t nStep);
 
 		bool stepIn();
 		bool stepOut();
@@ -27,10 +28,10 @@ namespace System
 
 	private:
 
-		uint64_t* m_pStepInTime  = nullptr;
-		uint64_t* m_pStepOutTime = nullptr;
-		uint32_t m_nStep = 0;
-		uint32_t m_ui32StepIdx = 0;
+		uint64_t* m_stepInTime  = nullptr;
+		uint64_t* m_stepOutTime = nullptr;
+		size_t m_nStep          = 0;
+		size_t m_stepIdx        = 0;
 		bool m_isInStep         = false;
 		bool m_hasNewEstimation = false;
 

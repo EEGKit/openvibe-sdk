@@ -9,12 +9,12 @@ namespace Socket
 		void* data;
 		bool (*fpOpen)(void*);
 		bool (*fpClose)(void*);
-		bool (*fpIsReadyToSend)(void*, uint32_t);
-		bool (*fpIsReadyToReceive)(void*, uint32_t);
-		uint32_t (*fpSendBuffer)(void*, const void*, uint32_t);
-		uint32_t (*fpReceiveBuffer)(void*, void*, uint32_t);
-		bool (*fpSendBufferBlocking)(void*, const void*, uint32_t);
-		bool (*fpReceiveBufferBlocking)(void*, void*, uint32_t);
+		bool (*fpIsReadyToSend)(void*, size_t);
+		bool (*fpIsReadyToReceive)(void*, size_t);
+		size_t (*fpSendBuffer)(void*, const void*, size_t);
+		size_t (*fpReceiveBuffer)(void*, void*, size_t);
+		bool (*fpSendBufferBlocking)(void*, const void*, size_t);
+		bool (*fpReceiveBufferBlocking)(void*, void*, size_t);
 		bool (*fpIsConnected)(void*);
 		bool (*fpRelease)(void*);
 	};
@@ -23,45 +23,27 @@ namespace Socket
 	class Socket_API TConnectionDelegate : public T
 	{
 	public:
-		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) : m_oConnectionDelegate(oConnectionDelegate) { }
+		TConnectionDelegate(const SConnectionDelegate connectionDelegate) : m_connectionDelegate(connectionDelegate) { }
 
-		virtual bool close() { return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.data); }
+		virtual bool close() { return m_connectionDelegate.fpClose(m_connectionDelegate.data); }
 
-		virtual bool isReadyToSend(const uint32_t timeOut) const { return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.data, timeOut); }
+		virtual bool isReadyToSend(const size_t timeOut) const { return m_connectionDelegate.fpIsReadyToSend(m_connectionDelegate.data, timeOut); }
+		virtual bool isReadyToReceive(const size_t timeOut) const { return m_connectionDelegate.fpIsReadyToReceive(m_connectionDelegate.data, timeOut); }
 
-		virtual bool isReadyToReceive(const uint32_t timeOut) const
-		{
-			return m_oConnectionDelegate.fpIsReadyToReceive(m_oConnectionDelegate.data, timeOut);
-		}
+		virtual size_t sendBuffer(const void* buffer, const size_t size) { return m_connectionDelegate.fpSendBuffer(m_connectionDelegate.data, buffer, size); }
+		virtual size_t receiveBuffer(void* buffer, const size_t size) { return m_connectionDelegate.fpReceiveBuffer(m_connectionDelegate.data, buffer, size); }
 
-		virtual uint32_t sendBuffer(const void* buffer, const uint32_t size)
-		{
-			return m_oConnectionDelegate.fpSendBuffer(m_oConnectionDelegate.data, buffer, size);
-		}
+		virtual bool sendBufferBlocking(const void* buffer, const size_t size) { return m_connectionDelegate.fpSendBufferBlocking(m_connectionDelegate.data, buffer, size); }
+		virtual bool receiveBufferBlocking(void* buffer, const size_t bufferSize) { return m_connectionDelegate.fpReceiveBufferBlocking(m_connectionDelegate.data, buffer, bufferSize); }
 
-		virtual uint32_t receiveBuffer(void* buffer, const uint32_t size)
-		{
-			return m_oConnectionDelegate.fpReceiveBuffer(m_oConnectionDelegate.data, buffer, size);
-		}
+		virtual bool isConnected() const { return m_connectionDelegate.fpIsConnected(m_connectionDelegate.data); }
 
-		virtual bool sendBufferBlocking(const void* buffer, const uint32_t size)
-		{
-			return m_oConnectionDelegate.fpSendBufferBlocking(m_oConnectionDelegate.data, buffer, size);
-		}
-
-		virtual bool receiveBufferBlocking(void* buffer, const uint32_t bufferSize)
-		{
-			return m_oConnectionDelegate.fpReceiveBufferBlocking(m_oConnectionDelegate.data, buffer, bufferSize);
-		}
-
-		virtual bool isConnected() const { return m_oConnectionDelegate.fpIsConnected(m_oConnectionDelegate.data); }
-
-		virtual void release() { m_oConnectionDelegate.fpRelease(m_oConnectionDelegate.data); }
+		virtual void release() { m_connectionDelegate.fpRelease(m_connectionDelegate.data); }
 
 		virtual ~TConnectionDelegate() { }
 	protected:
-		virtual bool open() { return m_oConnectionDelegate.fpOpen(m_oConnectionDelegate.data); }
+		virtual bool open() { return m_connectionDelegate.fpOpen(m_connectionDelegate.data); }
 
-		SConnectionDelegate m_oConnectionDelegate;
+		SConnectionDelegate m_connectionDelegate;
 	};
 } // namespace Socket

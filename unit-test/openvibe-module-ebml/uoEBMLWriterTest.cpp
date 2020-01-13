@@ -28,6 +28,7 @@
 #include "ebml/CWriterHelper.h"
 
 #include "ovtAssert.h"
+#include <iostream>
 
 #define OVP_NodeId_OpenViBEStream_Header              EBML::CIdentifier(0xF59505AB, 0x3684C8D8)
 #define OVP_NodeId_OpenViBEStream_Header_Compression  EBML::CIdentifier(0x40358769, 0x166380D1)
@@ -45,28 +46,28 @@
 class CWriterCallBack : public EBML::IWriterCallBack
 {
 public:
-	CWriterCallBack(const char* filename) { m_File = std::fopen(filename, "wb"); }
+	CWriterCallBack(const char* filename) { m_file = std::fopen(filename, "wb"); }
 
 	~CWriterCallBack() override
 	{
-		if (m_File)
+		if (m_file)
 		{
-			std::fclose(m_File); // in case release is not called
+			std::fclose(m_file); // in case release is not called
 		}
 	}
 
-	void write(const void* buffer, const uint64_t size) override { if (m_File) { std::fwrite(buffer, size_t(size), 1, m_File); } }
+	void write(const void* buffer, const size_t size) override { if (m_file) { std::fwrite(buffer, size_t(size), 1, m_file); } }
 
 	// necessary thjor the test to close the stream and re-open it for inspection
 	void release()
 	{
-		std::fclose(m_File);
-		m_File = nullptr;
+		std::fclose(m_file);
+		m_file = nullptr;
 	}
 
 private:
 
-	std::FILE* m_File{ nullptr };
+	std::FILE* m_file{ nullptr };
 };
 
 int uoEBMLWriterTest(int argc, char* argv[])
@@ -80,46 +81,46 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	// to a reference.
 
 	// serializing
-	CWriterCallBack writerCallback(outputFile.c_str());
+	CWriterCallBack callback(outputFile.c_str());
 
-	EBML::IWriter* writer = createWriter(writerCallback);
-	EBML::CWriterHelper writerHelper;
+	EBML::IWriter* writer = createWriter(callback);
+	EBML::CWriterHelper helper;
 
-	writerHelper.connect(writer);
+	helper.connect(writer);
 
-	writerHelper.openChild(EBML_Identifier_Header);
+	helper.openChild(EBML_Identifier_Header);
 
-	writerHelper.openChild(EBML_Identifier_DocType);
-	writerHelper.setASCIIStringAsChildData("matroska");
-	writerHelper.closeChild();
+	helper.openChild(EBML_Identifier_DocType);
+	helper.setStr("matroska");
+	helper.closeChild();
 
-	writerHelper.openChild(EBML_Identifier_DocTypeVersion);
-	writerHelper.setUIntegerAsChildData(1);
-	writerHelper.closeChild();
+	helper.openChild(EBML_Identifier_DocTypeVersion);
+	helper.setUInt(1);
+	helper.closeChild();
 
-	writerHelper.openChild(EBML_Identifier_DocTypeReadVersion);
-	writerHelper.setSIntegerAsChildData(655356);
-	writerHelper.closeChild();
+	helper.openChild(EBML_Identifier_DocTypeReadVersion);
+	helper.setInt(655356);
+	helper.closeChild();
 
-	writerHelper.closeChild();
+	helper.closeChild();
 
-	writerHelper.openChild(0x1234);
-	writerHelper.setUIntegerAsChildData(0);
-	writerHelper.closeChild();
+	helper.openChild(0x1234);
+	helper.setUInt(0);
+	helper.closeChild();
 
-	writerHelper.openChild(0xffffffffffffffffLL);
-	writerHelper.setUIntegerAsChildData(0xff000000ff000000LL);
-	writerHelper.closeChild();
+	helper.openChild(0xffffffffffffffffLL);
+	helper.setUInt(0xff000000ff000000LL);
+	helper.closeChild();
 
-	writerHelper.openChild(0x4321);
-	writerHelper.setFloat64AsChildData(M_PI);
-	writerHelper.closeChild();
+	helper.openChild(0x4321);
+	helper.setDouble(M_PI);
+	helper.closeChild();
 
-	writerHelper.openChild(0x8765);
-	writerHelper.setFloat32AsChildData(float(M_PI));
-	writerHelper.closeChild();
+	helper.openChild(0x8765);
+	helper.setFloat(M_PI);
+	helper.closeChild();
 	writer->release();
-	writerCallback.release();
+	callback.release();
 
 
 	// comparison part

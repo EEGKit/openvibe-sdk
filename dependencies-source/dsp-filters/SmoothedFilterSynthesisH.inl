@@ -1,7 +1,7 @@
 
  // Process a block of samples.
   template <typename Sample>
-  void processBlockSynthesis (int numSamples,
+  void processBlockSynthesis (int nSamples,
                      Sample* const* destChannelArray)
   {
     const int numChannels = this->getNumChannels();
@@ -10,7 +10,7 @@
     assert (m_remainingSamples >= 0);
 
     // first handle any transition samples
-    int remainingSamples = std::min (m_remainingSamples, numSamples);
+    int remainingSamples = std::min (m_remainingSamples, nSamples);
 
     if (remainingSamples > 0)	// A PRIORI, never used in our case!
     {
@@ -41,19 +41,19 @@
     }
 
     // do what's left
-    if (numSamples - remainingSamples > 0)
+    if (nSamples - remainingSamples > 0)
     {
       // no transition
       for (int i = 0; i < numChannels; ++i)
-        this->m_design.processSynthesis (numSamples - remainingSamples,
+        this->m_design.processSynthesis (nSamples - remainingSamples,
                           destChannelArray[i] + remainingSamples,
                           this->m_state[i]);
     }
   }
 
-  void processSynthesis (int numSamples, double* const* arrayOfChannels)
+  void processSynthesis (int nSamples, double* const* arrayOfChannels)
   {
-    processBlockSynthesis (numSamples, arrayOfChannels);
+    processBlockSynthesis (nSamples, arrayOfChannels);
   }
 
  void doSetParamsSynthesis (const Params& parameters)

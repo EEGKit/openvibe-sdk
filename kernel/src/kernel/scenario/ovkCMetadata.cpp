@@ -8,18 +8,14 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 //___________________________________________________________________//
 //                                                                   //
 
 CMetadata::CMetadata(const IKernelContext& ctx, CScenario& ownerScenario)
-	: TKernelObject<IMetadata>(ctx)
-	  , m_ownerScenario(ownerScenario)
-	  , m_id(OV_UndefinedIdentifier)
-	  , m_type(OV_UndefinedIdentifier)
-	  , m_data("") {}
+	: TKernelObject<IMetadata>(ctx), m_ownerScenario(ownerScenario), m_id(OV_UndefinedIdentifier), m_type(OV_UndefinedIdentifier), m_data("") {}
 
 CMetadata::~CMetadata() {}
 

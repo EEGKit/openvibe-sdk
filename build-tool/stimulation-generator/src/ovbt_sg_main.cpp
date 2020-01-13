@@ -1,10 +1,9 @@
+#include "ovbt_sg_defines.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-
-#include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 using namespace std;
 
@@ -23,9 +22,9 @@ generation_type parse_argument(string option)
 	return UNKNOWN;
 }
 
-int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type rType, int argc, char** argv)
+int generate_generator_list(vector<CFileGeneratorBase*>& list, generation_type type, int argc, char** argv)
 {
-	switch (rType)
+	switch (type)
 	{
 		case CPP:
 		{
@@ -36,7 +35,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 				cerr << "Unable to open " << argv[3] << endl;
 				return -1;
 			}
-			rList.push_back(gen);
+			list.push_back(gen);
 
 			gen = new CCppCodeGenerator();
 			if (!gen->openFile(argv[4]))
@@ -44,7 +43,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 				cerr << "Unable to open " << argv[4] << endl;
 				return -1;
 			}
-			rList.push_back(gen);
+			list.push_back(gen);
 			return 0;
 		}
 
@@ -56,7 +55,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 				cerr << "Unable to open " << argv[3] << endl;
 				return -1;
 			}
-			rList.push_back(gen);
+			list.push_back(gen);
 			return 0;
 		}
 		case PYTHON:
@@ -73,32 +72,25 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 int main(int argc, char** argv)
 {
 	if (argc < 3) { return -1; }
-	generation_type l_eType = parse_argument(argv[1]);
+	generation_type type = parse_argument(argv[1]);
 
-	vector<SStimulation> l_oStimulationList;
-	vector<CFileGeneratorBase*> l_oGeneratorList;
+	vector<SStimulation> stimulations;
+	vector<CFileGeneratorBase*> generators;
 
-	ifstream l_oStimulationFile(argv[2]);
-	string l_sName, l_sId, l_sHexaCode;
-	while (l_oStimulationFile >> l_sName >> l_sId >> l_sHexaCode)
+	ifstream file(argv[2]);
+	string name, id, hexaCode;
+	while (file >> name >> id >> hexaCode)
 	{
-		SStimulation l_oTemp = { l_sName, l_sId, l_sHexaCode };
-		l_oStimulationList.push_back(l_oTemp);
+		SStimulation temp = { name, id, hexaCode };
+		stimulations.push_back(temp);
 	}
 
-	if (generate_generator_list(l_oGeneratorList, l_eType, argc, argv)) { return -1; }
+	if (generate_generator_list(generators, type, argc, argv)) { return -1; }
 
 	//Now we generate all files that needs to be done
-	for (auto it = l_oStimulationList.begin(); it != l_oStimulationList.end(); ++it)
-	{
-		SStimulation& l_oTemp = *it;
-		for (auto it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen)
-		{
-			(*it_gen)->appendStimulation(l_oTemp);
-		}
-	}
+	for (auto& s : stimulations) { for (auto& g : generators) { g->appendStimulation(s); } }
 
-	for (auto it_gen = l_oGeneratorList.begin(); it_gen != l_oGeneratorList.end(); ++it_gen) { (*it_gen)->closeFile(); }
+	for (auto& g : generators) { g->closeFile(); }
 
 	return 0;
 }

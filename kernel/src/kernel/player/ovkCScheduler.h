@@ -1,9 +1,7 @@
 #pragma once
 
 #include "../ovkTKernelObject.h"
-
 #include <system/ovCChrono.h>
-
 #include <map>
 #include <list>
 
@@ -38,10 +36,10 @@ namespace OpenViBE
 			bool uninitialize();
 			bool loop();
 
-			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, uint32_t index);
+			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, size_t index);
 			uint64_t getCurrentTime() const { return m_currentTime; }
 			uint64_t getCurrentLateness() const;
-			uint64_t getFrequency() const { return m_frequency; }
+			size_t getFrequency() const { return m_frequency; }
 			uint64_t getStepDuration() const { return m_stepDuration; }
 			double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
 			double getFastForwardMaximumFactor() const;
@@ -54,15 +52,15 @@ namespace OpenViBE
 
 			CPlayer& m_rPlayer;
 			CIdentifier m_scenarioID = OV_UndefinedIdentifier;
-			IScenario* m_scenario            = nullptr;
-			uint64_t m_steps              = 0;
-			uint64_t m_frequency          = 0;
-			uint64_t m_stepDuration       = 0;
-			uint64_t m_currentTime        = 0;
+			IScenario* m_scenario    = nullptr;
+			size_t m_steps           = 0;
+			size_t m_frequency       = 0;
+			uint64_t m_stepDuration  = 0;
+			uint64_t m_currentTime   = 0;
 
 			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_simulatedBoxes;
 			std::map<CIdentifier, System::CChrono> m_simulatedBoxChronos;
-			std::map<CIdentifier, std::map<uint32_t, std::list<CChunk>>> m_vSimulatedBoxInput;
+			std::map<CIdentifier, std::map<size_t, std::list<CChunk>>> m_vSimulatedBoxInput;
 
 		private:
 

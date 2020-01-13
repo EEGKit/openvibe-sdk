@@ -11,16 +11,15 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		using T::m_pCodec;
-		using T::m_pBoxAlgorithm;
-		using T::m_pInputMemoryBuffer;
+		using T::m_codec;
+		using T::m_boxAlgorithm;
+		using T::m_iBuffer;
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
-				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamStructureDecoder));
-			m_pCodec->initialize();
-			m_pInputMemoryBuffer.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_StreamStructureDecoder_InputParameterId_MemoryBufferToDecode));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamStructureDecoder));
+			m_codec->initialize();
+			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StreamStructureDecoder_InputParameterId_MemoryBufferToDecode));
 
 			return true;
 		}
@@ -30,36 +29,34 @@ namespace OpenViBEToolkit
 
 		bool uninitialize()
 		{
-			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
+			if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
-			m_pInputMemoryBuffer.uninitialize();
-			m_pCodec->uninitialize();
-			m_pBoxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_pCodec);
-			m_pBoxAlgorithm = NULL;
+			m_iBuffer.uninitialize();
+			m_codec->uninitialize();
+			m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
+			m_boxAlgorithm = NULL;
 
 			return true;
 		}
 
-		virtual bool isHeaderReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedHeader); }
-
-		virtual bool isBufferReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedBuffer); }
-
-		virtual bool isEndReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedEnd); }
+		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedHeader); }
+		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedBuffer); }
+		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
 	template <class T>
 	class TStreamStructureDecoder : public TStreamStructureDecoderLocal<TDecoder<T>>
 	{
-		using TStreamStructureDecoderLocal<TDecoder<T>>::m_pBoxAlgorithm;
+		using TStreamStructureDecoderLocal<TDecoder<T>>::m_boxAlgorithm;
 	public:
 		using TStreamStructureDecoderLocal<TDecoder<T>>::uninitialize;
 
 		TStreamStructureDecoder() { }
 
-		TStreamStructureDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
+		TStreamStructureDecoder(T& boxAlgorithm, size_t index)
 		{
-			m_pBoxAlgorithm = NULL;
-			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
+			m_boxAlgorithm = NULL;
+			this->initialize(boxAlgorithm, index);
 		}
 
 		virtual ~TStreamStructureDecoder() { this->uninitialize(); }

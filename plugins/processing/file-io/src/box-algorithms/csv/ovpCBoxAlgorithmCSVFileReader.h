@@ -38,38 +38,38 @@ namespace OpenViBEPlugins
 		protected:
 			bool initializeFile();
 
-			FILE* m_pFile = nullptr;
-			std::string m_sSeparator;
-			bool m_bDoNotUseFileTime = false;
-			OpenViBE::CString m_sFilename;
+			FILE* m_file = nullptr;
+			std::string m_separator;
+			bool m_doNotUseFileTime = false;
+			OpenViBE::CString m_filename;
 
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
-			size_t m_nColumn              = 0;
-			size_t m_samplingRate             = 0;
-			size_t m_samplesPerBuffer         = 0;
-			size_t m_channelsPerBuffer   = 0;
+			size_t m_nCol                  = 0;
+			size_t m_sampling              = 0;
+			size_t m_samplesPerBuffer      = 0;
+			size_t m_channelsPerBuffer     = 0;
 
-			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)() = nullptr;
+			bool (CBoxAlgorithmCSVFileReader::*m_realProcess)() = nullptr;
 
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
 			bool m_headerSent = false;
-			std::vector<std::string> m_vLastLineSplit;
-			std::vector<std::string> m_vHeaderFile;
-			std::vector<std::vector<std::string>> m_vDataMatrix;
+			std::vector<std::string> m_lastLineSplits;
+			std::vector<std::string> m_headerFiles;
+			std::vector<std::vector<std::string>> m_dataMatrices;
 
 			double m_nextTime = 0;
 
-			uint64_t m_chunkStartTime = 0;
-			uint64_t m_chunkEndTime   = 0;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
 
-			static const size_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
+			static const size_t BUFFER_LEN = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
 		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);

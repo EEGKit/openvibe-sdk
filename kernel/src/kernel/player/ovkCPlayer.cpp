@@ -21,8 +21,8 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 
@@ -39,7 +39,8 @@ CPlayer::CPlayer(const IKernelContext& ctx)
 	if (schedulerFrequency == 0)
 	{
 		OV_WARNING_K("Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "="
-			<< this->TKernelObject<IPlayer>::getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " << SCHEDULER_DEFAULT_FREQUENCY);
+			<< this->TKernelObject<IPlayer>::getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " <<
+			SCHEDULER_DEFAULT_FREQUENCY);
 		schedulerFrequency = SCHEDULER_DEFAULT_FREQUENCY;
 	}
 	else { TKernelObject<IPlayer>::getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n"; }
@@ -92,11 +93,11 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 		m_runtimeConfigManager->createConfigurationToken("Player_ScenarioDirectory", directoryName.c_str());
 		m_runtimeConfigManager->createConfigurationToken("__volatile_ScenarioDir", directoryName.c_str());
 		const std::string workspaceConfigurationFile = directoryName + "/" + std::string("openvibe-workspace.conf");
-		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << CString(workspaceConfigurationFile.c_str()) <<
+		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << workspaceConfigurationFile <<
 				"] to runtime configuration manager\n";
 		m_runtimeConfigManager->addConfigurationFromFile(CString(workspaceConfigurationFile.c_str()));
 		std::string scenarioConfigurationFile = directoryName + "/" + std::string("scenario.conf");
-		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) <<
+		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << scenarioConfigurationFile <<
 				"] to runtime configuration manager\n";
 		m_runtimeConfigManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 
@@ -104,7 +105,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 		if (ext != std::string::npos)
 		{
 			scenarioConfigurationFile = filename.substr(0, ext) + std::string(".conf");
-			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) <<
+			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << scenarioConfigurationFile <<
 					"] to runtime configuration manager\n";
 			m_runtimeConfigManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 		}
@@ -115,19 +116,22 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 	if (localConfigurationTokens != nullptr)
 	{
 		this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
-		for (uint32_t i = 0; i < localConfigurationTokens->getSize(); ++i)
+		for (size_t i = 0; i < localConfigurationTokens->getSize(); ++i)
 		{
 			CString name;
 			CString value;
 			if (localConfigurationTokens->getValue(i, name, value))
 			{
 				this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << name << "] = [" << value << "].\n";
-				CIdentifier l_oTokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
-				if (l_oTokenID == OV_UndefinedIdentifier) { m_runtimeConfigManager->createConfigurationToken(name, value); }
-				else { m_runtimeConfigManager->setConfigurationTokenValue(l_oTokenID, value); }
+				CIdentifier tokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
+				if (tokenID == OV_UndefinedIdentifier) { m_runtimeConfigManager->createConfigurationToken(name, value); }
+				else { m_runtimeConfigManager->setConfigurationTokenValue(tokenID, value); }
 			}
 				// This should not happen
-			else { this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n"; }
+			else
+			{
+				this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n";
+			}
 		}
 	}
 
@@ -155,9 +159,12 @@ EPlayerReturnCode CPlayer::initialize()
 	const ESchedulerInitializationCode code = m_scheduler.initialize();
 
 	if (code == SchedulerInitialization_Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed); }
-	if (code == SchedulerInitialization_BoxInitializationFailed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed); }
+	if (code == SchedulerInitialization_BoxInitializationFailed)
+	{
+		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
+	}
 
-	m_benchmarkChrono.reset(uint32_t(m_scheduler.getFrequency()));
+	m_benchmarkChrono.reset(size_t(m_scheduler.getFrequency()));
 
 	m_currentTimeToReach = 0;
 	m_lateness           = 0;
@@ -291,7 +298,7 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 		const uint64_t nextSchedulerTime = m_scheduler.getCurrentTime() + schedulerStepDuration;
 
 #if defined CPlayer_Debug_Time
-::printf("    Next time : %llx\n", l_ui64NextSchedulerTime);
+::printf("    Next time : %llx\n", nextSchedulerTime);
 #endif // CPlayer_Debug_Time
 		if (m_status == PlayerStatus_Stop) { finished = true; }
 
@@ -328,21 +335,24 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 		}
 	}
 
-	if ((m_status == PlayerStatus_Forward && m_currentTimeToReach > m_scheduler.getCurrentTime() + schedulerStepDuration) || !hasTimeToReach) { m_currentTimeToReach = m_scheduler.getCurrentTime(); }
+	if ((m_status == PlayerStatus_Forward && m_currentTimeToReach > m_scheduler.getCurrentTime() + schedulerStepDuration) || !hasTimeToReach)
+	{
+		m_currentTimeToReach = m_scheduler.getCurrentTime();
+	}
 
-	uint64_t l_ui64Lateness;
-	if (m_currentTimeToReach > m_scheduler.getCurrentTime()) { l_ui64Lateness = m_currentTimeToReach - m_scheduler.getCurrentTime(); }
-	else { l_ui64Lateness = 0; }
+	uint64_t lateness;
+	if (m_currentTimeToReach > m_scheduler.getCurrentTime()) { lateness = m_currentTimeToReach - m_scheduler.getCurrentTime(); }
+	else { lateness = 0; }
 
 #if defined CPlayer_Debug_Time
 ::printf("Done -- New time to reach : %llx\n", m_currentTimeToReach);
 #endif // CPlayer_Debug_Time
 
-	uint64_t l_ui64LatenessSec = l_ui64Lateness >> 32;
-	uint64_t m_latenessSec = m_lateness >> 32;
-	OV_WARNING_UNLESS_K(l_ui64LatenessSec == m_latenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue
+	const uint64_t latenessSec     = lateness >> 32;
+	const uint64_t prevlatenessSec = m_lateness >> 32;
+	OV_WARNING_UNLESS_K(latenessSec == prevlatenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue
 						<< "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit << LogColor_ForegroundBlue
-						<< "can not reach realtime" << LogColor_PopStateBit << "> " << l_ui64LatenessSec << " second(s) late...\n");
+						<< "can not reach realtime" << LogColor_PopStateBit << "> " << latenessSec << " second(s) late...\n");
 
 	return true;
 }

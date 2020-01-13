@@ -6,18 +6,19 @@
 #include <iostream>
 
 using namespace EBML;
+using namespace std;
 
 // ________________________________________________________________________________________________________________
 //
 
 #if 0
 #define _Debug_ _is_in_debug_mode_(m_totalBytes)
-static bool _is_in_debug_mode_(uint64_t ui64Value)
+static bool _is_in_debug_mode_(uint64_t value)
 {
 	static int i=0;
 	// bool result=i++>5500000;
-	bool result=ui64Value>29605500;
-	if (result) std::cout << "Arround " << ui64Value << std::endl;
+	bool result=value>29605500;
+	if (result) std::cout << "Arround " << value << std::endl;
 	return result;
 
 }
@@ -30,36 +31,26 @@ static bool _is_in_debug_mode_(uint64_t ui64Value)
 
 inline bool needsTwoBytesToGetCodedSizeLength(const unsigned char* buffer) { return buffer[0] == 0; }
 
-inline unsigned long getCodedSizeLength(const unsigned char* buffer, unsigned long bufferLength)
+inline size_t getCodedSizeLength(const unsigned char* buffer)
 {
-	unsigned long codedSizeLength;
-	if (buffer[0] >> 7) { codedSizeLength = 1; }
-	else if (buffer[0] >> 6) { codedSizeLength = 2; }
-	else if (buffer[0] >> 5) { codedSizeLength = 3; }
-	else if (buffer[0] >> 4) { codedSizeLength = 4; }
-	else if (buffer[0] >> 3) { codedSizeLength = 5; }
-	else if (buffer[0] >> 2) { codedSizeLength = 6; }
-	else if (buffer[0] >> 1) { codedSizeLength = 7; }
-	else if (buffer[0]) { codedSizeLength = 8; }
-	else
-	{
-		if (_Debug_ && bufferLength < 2)
-		{
-			std::cout << "EBML::getCodedSizeLength called with smaller buffer size " << bufferLength << " - needs at least 2" << std::endl;
-		}
-
-		if (buffer[1] >> 7) { codedSizeLength = 9; }
-		else { codedSizeLength = 10; }
-	}
-	return codedSizeLength;
+	if (buffer[0] >> 7) { return 1; }
+	if (buffer[0] >> 6) { return 2; }
+	if (buffer[0] >> 5) { return 3; }
+	if (buffer[0] >> 4) { return 4; }
+	if (buffer[0] >> 3) { return 5; }
+	if (buffer[0] >> 2) { return 6; }
+	if (buffer[0] >> 1) { return 7; }
+	if (buffer[0]) { return 8; }
+	if (buffer[1] >> 7) { return 9; }
+	return 10;
 }
 
-inline uint64_t getValue(unsigned char* buffer, unsigned long ulBufferLength)
+inline uint64_t getValue(unsigned char* buffer)
 {
-	uint64_t result            = 0;
-	const unsigned long length = getCodedSizeLength(buffer, ulBufferLength);
-	unsigned long ithBit       = length;
-	for (unsigned long i = 0; i < length; ++i)
+	uint64_t result     = 0;
+	const size_t length = getCodedSizeLength(buffer);
+	size_t ithBit       = length;
+	for (size_t i = 0; i < length; ++i)
 	{
 		result = (result << 8) + (buffer[i]);
 		result &= ~(ithBit > 0 && ithBit <= 8 ? (1 << (8 - ithBit)) : 0);
@@ -78,7 +69,7 @@ namespace EBML
 		class CReaderNode
 		{
 		public:
-			CReaderNode(const CIdentifier& identifier, CReaderNode* pParentNode) : m_ParentNode(pParentNode), m_Id(identifier) { }
+			CReaderNode(const CIdentifier& identifier, CReaderNode* parentNode) : m_ParentNode(parentNode), m_Id(identifier) { }
 
 		private:
 			CReaderNode() = delete;
@@ -87,9 +78,9 @@ namespace EBML
 
 			CReaderNode* m_ParentNode = nullptr;
 			CIdentifier m_Id;
-			uint64_t m_ContentSize     = 0;
-			uint64_t m_ReadContentSize = 0;
-			unsigned char* m_Buffer       = nullptr;
+			size_t m_ContentSize     = 0;
+			size_t m_ReadContentSize = 0;
+			unsigned char* m_Buffer  = nullptr;
 		};
 	} // namespace
 } // namespace EBML
@@ -105,16 +96,16 @@ namespace EBML
 		{
 		public:
 
-			explicit CReader(IReaderCallback& rReaderCallback) : m_readerCB(rReaderCallback) { }
+			explicit CReader(IReaderCallback& callback) : m_readerCB(callback) { }
 			~CReader() override;
-			bool processData(const void* buffer, uint64_t size) override;
-			CIdentifier getCurrentNodeIdentifier() const override;
-			uint64_t getCurrentNodeSize() const override;
+			bool processData(const void* buffer, const size_t size) override;
+			CIdentifier getCurrentNodeID() const override;
+			size_t getCurrentNodeSize() const override;
 			void release() override;
 
 		protected:
 
-			enum Status
+			enum EStatus
 			{
 				FillingIdentifier,
 				FillingContentSize,
@@ -122,15 +113,15 @@ namespace EBML
 			};
 
 			IReaderCallback& m_readerCB;
-			CReaderNode* m_currentNode       = nullptr;
-			uint64_t m_pendingSize        = 0;
-			uint64_t m_nPending       = 0;
-			unsigned char* m_pending         = nullptr;
-			Status m_status                  = FillingIdentifier;
-			Status m_lastStatus              = FillingIdentifier;
-			CIdentifier m_currentID  = 0;
-			uint64_t m_currentContentSize = 0;
-			uint64_t m_totalBytes = 0;
+			CReaderNode* m_currentNode  = nullptr;
+			size_t m_pendingSize        = 0;
+			size_t m_nPending           = 0;
+			unsigned char* m_pending    = nullptr;
+			EStatus m_status            = FillingIdentifier;
+			EStatus m_lastStatus        = FillingIdentifier;
+			CIdentifier m_currentID     = 0;
+			size_t m_currentContentSize = 0;
+			size_t m_totalBytes         = 0;
 		};
 	} // namespace
 } // namespace EBML
@@ -149,7 +140,7 @@ CReader::~CReader()
 	}
 }
 
-bool CReader::processData(const void* buffer, const uint64_t size)
+bool CReader::processData(const void* buffer, const size_t size)
 {
 	m_totalBytes += size;
 
@@ -163,22 +154,19 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 	if (!buffer || !size) { return true; }
 
 	unsigned char* tmpBuffer = (unsigned char*)buffer;
-	uint64_t currentSize     = size;
+	size_t currentSize       = size;
 	bool finished            = false;
 	while (!finished)
 	{
-		uint64_t processedPendingBytes = 0;
-		uint64_t processedBytes        = 0;
-		m_lastStatus                        = m_status;
+		size_t processedPendingBytes = 0;
+		size_t processedBytes        = 0;
+		m_lastStatus                 = m_status;
 
-		if (_Debug_)
+		if (_Debug_ && m_nPending)
 		{
-			if (m_nPending)
-			{
-				printf("%i byte(s) pending : ", int(m_nPending));
-				for (int i = 0; i < int(m_nPending); ++i) { printf("[%02X]", m_pending[i]); }
-				std::cout << "\n";
-			}
+			printf("%i byte(s) pending : ", int(m_nPending));
+			for (int i = 0; i < int(m_nPending); ++i) { printf("[%02X]", m_pending[i]); }
+			std::cout << "\n";
 		}
 
 		// Processes data
@@ -205,18 +193,18 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 					}
 				}
 
-				const unsigned long codedSizeLength = getCodedSizeLength(m_nPending ? m_pending : tmpBuffer, static_cast<unsigned long>(m_nPending ? m_nPending : currentSize));
-				if (codedSizeLength > currentSize + m_nPending) { finished = true; }
+				const size_t length = getCodedSizeLength(m_nPending ? m_pending : tmpBuffer);
+				if (length > currentSize + m_nPending) { finished = true; }
 				else
 				{
-					unsigned char* encodedBuffer      = new unsigned char[codedSizeLength];
-					const uint64_t pendingBytesToCopy = (codedSizeLength > m_nPending ? m_nPending : codedSizeLength);
+					unsigned char* encodedBuffer    = new unsigned char[length];
+					const size_t pendingBytesToCopy = (length > m_nPending ? m_nPending : length);
 					memcpy(encodedBuffer, m_pending, size_t(pendingBytesToCopy));
-					memcpy(encodedBuffer + pendingBytesToCopy, tmpBuffer, size_t(codedSizeLength - pendingBytesToCopy));
-					const uint64_t value = getValue(encodedBuffer, codedSizeLength);
+					memcpy(encodedBuffer + pendingBytesToCopy, tmpBuffer, size_t(length - pendingBytesToCopy));
+					const uint64_t value = getValue(encodedBuffer);
 					delete [] encodedBuffer;
 					processedPendingBytes = pendingBytesToCopy;
-					processedBytes        = codedSizeLength;
+					processedBytes        = length;
 
 					switch (m_status)
 					{
@@ -282,8 +270,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 						processedBytes = m_currentNode->m_ContentSize;
 						if (_Debug_)
 						{
-							std::cout << "Optimized processing of " << m_currentNode->m_ContentSize <<
-									" byte(s) content - Changing status to FillingIdentifier...\n";
+							std::cout << "Optimized processing of " << m_currentNode->m_ContentSize << " byte(s) content - Changing status to FillingIdentifier...\n";
 						}
 						m_readerCB.processChildData(tmpBuffer, m_currentNode->m_ContentSize);
 					}
@@ -304,8 +291,7 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 							m_status = FillingIdentifier;
 							if (_Debug_)
 							{
-								std::cout << "Finished with " << m_currentNode->m_ContentSize <<
-										" byte(s) content - Changing status to FillingIdentifier...\n";
+								std::cout << "Finished with " << m_currentNode->m_ContentSize << " byte(s) content - Changing status to FillingIdentifier...\n";
 							}
 							m_readerCB.processChildData(m_currentNode->m_Buffer, m_currentNode->m_ContentSize);
 						}
@@ -316,25 +302,25 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 		}
 
 		// Updates buffer pointer and size
-		const uint64_t processedBytesInBuffer = processedBytes - processedPendingBytes;
+		const size_t processedBytesInBuffer = processedBytes - processedPendingBytes;
 		tmpBuffer += processedBytesInBuffer;
 		currentSize -= processedBytesInBuffer;
 		m_nPending -= processedPendingBytes;
 
 		// Updates read size
-		CReaderNode* l_pNode = m_currentNode;
-		while (l_pNode)
+		CReaderNode* node = m_currentNode;
+		while (node)
 		{
-			l_pNode->m_ReadContentSize += processedBytes;
-			l_pNode = l_pNode->m_ParentNode;
+			node->m_ReadContentSize += processedBytes;
+			node = node->m_ParentNode;
 		}
 
 		// Creates new node when needed
 		if (m_status != FillingContentSize && m_lastStatus == FillingContentSize)
 		{
-			m_currentNode                    = new CReaderNode(m_currentID, m_currentNode);
+			m_currentNode                = new CReaderNode(m_currentID, m_currentNode);
 			m_currentNode->m_ContentSize = m_currentContentSize;
-			m_currentNode->m_Buffer         = new unsigned char[uint32_t(m_currentContentSize)];
+			m_currentNode->m_Buffer      = new unsigned char[m_currentContentSize];
 			m_readerCB.openChild(m_currentNode->m_Id);
 		}
 		else
@@ -343,10 +329,10 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 			while (m_currentNode && (m_currentNode->m_ContentSize == m_currentNode->m_ReadContentSize || m_currentNode->m_ContentSize == 0))
 			{
 				m_readerCB.closeChild();
-				CReaderNode* l_pParentNode = m_currentNode->m_ParentNode;
+				CReaderNode* parent = m_currentNode->m_ParentNode;
 				delete [] m_currentNode->m_Buffer;
 				delete m_currentNode;
-				m_currentNode = l_pParentNode;
+				m_currentNode = parent;
 			}
 		}
 	}
@@ -354,35 +340,26 @@ bool CReader::processData(const void* buffer, const uint64_t size)
 	// Updates pending data
 	if (m_nPending + currentSize > m_pendingSize)
 	{
-		unsigned char* l_pPending = new unsigned char[uint32_t(m_nPending + currentSize + 1)
+		unsigned char* pending = new unsigned char[m_nPending + currentSize + 1
 		]; // Ugly hack, reserve 1 more byte on pending data so we are sure we can insert this additional pending byte when only one byte is pending and two bytes are needed for decoding identifier and/or buffer size
-		memcpy(l_pPending, m_pending, size_t(m_nPending));
+		memcpy(pending, m_pending, m_nPending);
 		delete [] m_pending;
-		m_pending        = l_pPending;
+		m_pending     = pending;
 		m_pendingSize = m_nPending + currentSize;
 	}
-	memcpy(m_pending + m_nPending, tmpBuffer, size_t(currentSize));
+	memcpy(m_pending + m_nPending, tmpBuffer, currentSize);
 	m_nPending += currentSize;
 
 	if (_Debug_) { std::cout << "\n"; }
 	return true;
 }
 
-CIdentifier CReader::getCurrentNodeIdentifier() const
-{
-	if (_Debug_) { std::cout << "getCurrentNodeIdentifier : " << m_currentNode << std::endl; }
-	return m_currentNode ? m_currentNode->m_Id : CIdentifier();
-}
-
-uint64_t CReader::getCurrentNodeSize() const
-{
-	if (_Debug_) { std::cout << "getCurrentNodeSize : " << m_currentNode->m_ContentSize << std::endl; }
-	return m_currentNode ? m_currentNode->m_ContentSize : 0;
-}
+CIdentifier CReader::getCurrentNodeID() const { return m_currentNode ? m_currentNode->m_Id : CIdentifier(); }
+uint64_t CReader::getCurrentNodeSize() const { return m_currentNode ? m_currentNode->m_ContentSize : 0; }
 
 void CReader::release() { delete this; }
 
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IReader* EBML::createReader(IReaderCallback& rReaderCallback) { return new CReader(rReaderCallback); }
+EBML_API IReader* EBML::createReader(IReaderCallback& callback) { return new CReader(callback); }

@@ -6,8 +6,8 @@ Detailed description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_TemporalFilter_Description|
- This plugin is used to filter the input signal. This plugin allows the selection of the kinf of filter (Butterworth, Chebychev, Yule-Walker),
- the kind of filter (low-pass, high-pass, band-pass, band-stop), the low or/and the high edge of the filter, and the passband ripple for the Chebychev filter.
+ This plugin is used to filter the input signal. This plugin allows the selection of the kinf of filter (Butterworth, Chebyshev, Yule-Walker),
+ the kind of filter (low-pass, high-pass, band-pass, band-stop), the low or/and the high edge of the filter, and the passband ripple for the Chebyshev filter.
  * |OVP_DocEnd_BoxAlgorithm_TemporalFilter_Description|
 __________________________________________________________________
 
@@ -40,7 +40,7 @@ __________________________________________________________________
  * |OVP_DocEnd_BoxAlgorithm_TemporalFilter_Settings|
 
  * |OVP_DocBegin_BoxAlgorithm_TemporalFilter_Setting1|
- Select the name of filter between Butterworth, Chebychev and Yule-Walker.
+ Select the name of filter between Butterworth, Chebyshev and Yule-Walker.
  * |OVP_DocEnd_BoxAlgorithm_TemporalFilter_Setting1|
 
  * |OVP_DocBegin_BoxAlgorithm_TemporalFilter_Setting2|
@@ -62,7 +62,7 @@ __________________________________________________________________
  * |OVP_DocEnd_BoxAlgorithm_TemporalFilter_Setting5|
 
  * |OVP_DocBegin_BoxAlgorithm_TemporalFilter_Setting6|
- If Chebychev filter is selected, pass band ripple in dB is a necessary information.
+ If Chebyshev filter is selected, pass band ripple in dB is a necessary information.
  * |OVP_DocEnd_BoxAlgorithm_TemporalFilter_Setting6|
 __________________________________________________________________
 

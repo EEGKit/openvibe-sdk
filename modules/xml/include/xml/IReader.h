@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include <cstdlib>	// fix Unix compatibility
 
 namespace XML
 {
@@ -8,8 +9,8 @@ namespace XML
 	{
 	public:
 		virtual ~IReaderCallback() { }
-		virtual void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) = 0;
-		virtual void processChildData(const char* sData) = 0;
+		virtual void openChild(const char* name, const char** attributeName, const char** attributeValue,  const size_t nAttribute) = 0;
+		virtual void processChildData(const char* data) = 0;
 		virtual void closeChild() = 0;
 	};
 
@@ -18,11 +19,11 @@ namespace XML
 	class XML_API IReader
 	{
 	public:
-		virtual bool processData(const void* buffer, uint64_t size) = 0;
+		virtual bool processData(const void* buffer, const size_t size) = 0;
 		virtual void release() = 0;
 	protected:
 		virtual ~IReader() { }
 	};
 
-	extern XML_API IReader* createReader(IReaderCallback& rReaderCallback);
-}
+	extern XML_API IReader* createReader(IReaderCallback& callback);
+} // namespace XML

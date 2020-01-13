@@ -65,8 +65,8 @@ namespace
 	std::vector<double> epochDurationsToTest = { 0.01, 0.1, 0.2, 0.25, 0.5, 1.0, 1.1, 1.5, 2, 5, 10, 50, 100 };
 
 	// We require at least a millisecond precision
-	const double timeTolerance = 0.001;
-}
+	const double TIME_TOLERANCE = 0.001;
+}	// namespace 
 
 
 TEST(time_arithmetic_test_case, seconds_to_fixed_to_seconds)
@@ -75,7 +75,7 @@ TEST(time_arithmetic_test_case, seconds_to_fixed_to_seconds)
 	for (auto testTimeInSecond : timesToTestInSecond)
 	{
 		const auto computedTimeInSecond = TimeArithmetics::timeToSeconds(TimeArithmetics::secondsToTime(testTimeInSecond));
-		EXPECT_LT(std::abs(computedTimeInSecond - testTimeInSecond), timeTolerance);
+		EXPECT_LT(std::abs(computedTimeInSecond - testTimeInSecond), TIME_TOLERANCE);
 	}
 }
 
@@ -139,7 +139,7 @@ TEST(time_arithmetic_test_case, legacy_epoching)
 	// compare second -> time conversion to legacy method
 	for (auto testEpochDuration : epochDurationsToTest)
 	{
-		const auto legacyTime               = static_cast<unsigned long long>(testEpochDuration * (1LL << 32)); // Legacy code from stimulationBasedEpoching
+		const auto legacyTime               = uint64_t(testEpochDuration * (1LL << 32)); // Legacy code from stimulationBasedEpoching
 		const auto computedTimeInFixedPoint = TimeArithmetics::secondsToTime(testEpochDuration);
 
 		EXPECT_EQ(computedTimeInFixedPoint, legacyTime);

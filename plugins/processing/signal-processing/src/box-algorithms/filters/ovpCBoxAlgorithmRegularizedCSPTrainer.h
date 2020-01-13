@@ -28,35 +28,33 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			bool updateCov(uint32_t index);
-			bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
-			bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors, std::vector<Eigen::VectorXd>& sortedEigenValues);
+			bool updateCov(size_t index);
+			bool outclassCovAverage(size_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
+			bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
+							std::vector<Eigen::VectorXd>& sortedEigenValues);
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_StimulationDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_stimDecoder;
+			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>> m_signalDecoders;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_encoder;
 
-			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>> m_SignalDecoders;
+			uint64_t m_stimID = 0;
+			OpenViBE::CString m_configFilename;
+			size_t m_filtersPerClass  = 0;
+			bool m_saveAsBoxConf      = false;
+			bool m_hasBeenInitialized = false;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_StimulationEncoder;
+			double m_tikhonov = 0;
 
-			uint64_t m_StimulationID = 0;
-			OpenViBE::CString m_SpatialFilterConfigurationFilename;
-			uint32_t m_FiltersPerClass = 0;
-			bool m_SaveAsBoxConf       = false;
-			bool m_HasBeenInitialized  = false;
-
-			double m_Tikhonov = 0;
-
-			struct IncrementalCovarianceProxy
+			struct SIncrementalCovarianceProxy
 			{
-				IncrementalCovarianceProxy() : incrementalCov(nullptr), numBuffers(0), numSamples(0) {}
-				OpenViBE::Kernel::IAlgorithmProxy* incrementalCov;
-				uint64_t numBuffers;
-				uint64_t numSamples;
+				OpenViBE::Kernel::IAlgorithmProxy* cov = nullptr;
+				size_t nBuffers                        = 0;
+				size_t nSamples                        = 0;
 			};
 
-			std::vector<IncrementalCovarianceProxy> m_IncCovarianceProxies;
+			std::vector<SIncrementalCovarianceProxy> m_covProxies;
 
-			uint32_t m_NumClasses = 0;
+			size_t m_nClasses = 0;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
 		};
@@ -64,7 +62,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmRegularizedCSPTrainerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputName(index, ("Signal condition " + std::to_string(index)).c_str());
 				return true;
@@ -106,8 +104,7 @@ namespace OpenViBEPlugins
 				prototype.addSetting("Save filters as box config", OV_TypeId_Boolean, "false");
 
 				// Params of the cov algorithm; would be better to poll the params from the algorithm, however this is not straightforward to do
-				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod,
-									 OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
+				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average");
 				prototype.addSetting("Trace normalization", OV_TypeId_Boolean, "false");
 				prototype.addSetting("Shrinkage coefficient", OV_TypeId_Float, "0.0");
 				prototype.addSetting("Tikhonov coefficient", OV_TypeId_Float, "0.0");

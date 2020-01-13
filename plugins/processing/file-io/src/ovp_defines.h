@@ -1,33 +1,7 @@
 #pragma once
 
-//__________________________________________________________________//
-//																	//
-// Type definitions													//
-//__________________________________________________________________//
-//																	//
-
-#define OVP_NodeId_OpenViBEStream_Header								EBML::CIdentifier(0xF59505AB, 0x3684C8D8)
-#define OVP_NodeId_OpenViBEStream_Header_Compression					EBML::CIdentifier(0x40358769, 0x166380D1)
-#define OVP_NodeId_OpenViBEStream_Header_StreamType						EBML::CIdentifier(0x732EC1D1, 0xFE904087)
-#define OVP_NodeId_OpenViBEStream_Header_ChannelType					OVP_NodeId_OpenViBEStream_Header_StreamType // deprecated old name
-#define OVP_NodeId_OpenViBEStream_Buffer								EBML::CIdentifier(0x2E60AD18, 0x87A29BDF)
-#define OVP_NodeId_OpenViBEStream_Buffer_StreamIndex					EBML::CIdentifier(0x30A56D8A, 0xB9C12238)
-#define OVP_NodeId_OpenViBEStream_Buffer_ChannelIndex					OVP_NodeId_OpenViBEStream_Buffer_StreamIndex // deprecated old name
-#define OVP_NodeId_OpenViBEStream_Buffer_StartTime						EBML::CIdentifier(0x093E6A0A, 0xC5A9467B)
-#define OVP_NodeId_OpenViBEStream_Buffer_EndTime						EBML::CIdentifier(0x8B5CCCD9, 0xC5024F29)
-#define OVP_NodeId_OpenViBEStream_Buffer_Content						EBML::CIdentifier(0x8D4B0BE8, 0x7051265C)
-
-//__________________________________________________________________//
-//																	//
-// Global defines													//
-//__________________________________________________________________//
-//																	//
-
-#ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-#include "ovp_global_defines.h"
-#endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-
+// Boxes
+//---------------------------------------------------------------------------------------------------
 #define OVP_ClassId_Algorithm_OVMatrixFileReader						OpenViBE::CIdentifier(0x10661A33, 0x0B0F44A7)
 #define OVP_ClassId_Algorithm_OVMatrixFileReaderDesc					OpenViBE::CIdentifier(0x0E873B5E, 0x0A287FCB)
 #define OVP_ClassId_Algorithm_OVMatrixFileWriter						OpenViBE::CIdentifier(0x739158FC, 0x1E8240CC)
@@ -50,6 +24,26 @@
 #define OVP_ClassId_BoxAlgorithm_OVCSVFileReaderDesc					OpenViBE::CIdentifier(0x584E1948, 0x65E91650)
 #define OVP_ClassId_BoxAlgorithm_OVCSVFileWriter						OpenViBE::CIdentifier(0x428375E8, 0x325F2DB9)
 #define OVP_ClassId_BoxAlgorithm_OVCSVFileWriterDesc					OpenViBE::CIdentifier(0x4B5C1D8F, 0x570E45FD)
+
+// Type definitions
+//---------------------------------------------------------------------------------------------------
+#define OVP_NodeId_OpenViBEStream_Header								EBML::CIdentifier(0xF59505AB, 0x3684C8D8)
+#define OVP_NodeId_OpenViBEStream_Header_Compression					EBML::CIdentifier(0x40358769, 0x166380D1)
+#define OVP_NodeId_OpenViBEStream_Header_StreamType						EBML::CIdentifier(0x732EC1D1, 0xFE904087)
+#define OVP_NodeId_OpenViBEStream_Header_ChannelType					OVP_NodeId_OpenViBEStream_Header_StreamType // deprecated old name
+#define OVP_NodeId_OpenViBEStream_Buffer								EBML::CIdentifier(0x2E60AD18, 0x87A29BDF)
+#define OVP_NodeId_OpenViBEStream_Buffer_StreamIndex					EBML::CIdentifier(0x30A56D8A, 0xB9C12238)
+#define OVP_NodeId_OpenViBEStream_Buffer_ChannelIndex					OVP_NodeId_OpenViBEStream_Buffer_StreamIndex // deprecated old name
+#define OVP_NodeId_OpenViBEStream_Buffer_StartTime						EBML::CIdentifier(0x093E6A0A, 0xC5A9467B)
+#define OVP_NodeId_OpenViBEStream_Buffer_EndTime						EBML::CIdentifier(0x8B5CCCD9, 0xC5024F29)
+#define OVP_NodeId_OpenViBEStream_Buffer_Content						EBML::CIdentifier(0x8D4B0BE8, 0x7051265C)
+
+// Global defines
+//---------------------------------------------------------------------------------------------------
+#ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
+#include "ovp_global_defines.h"
+#endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
+
 
 #define OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename		OpenViBE::CIdentifier(0x28F87B29, 0x0B09737E)
 #define OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix		OpenViBE::CIdentifier(0x2F9521E0, 0x027D789F)

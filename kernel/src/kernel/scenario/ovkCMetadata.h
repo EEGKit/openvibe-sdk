@@ -33,7 +33,7 @@ namespace OpenViBE
 
 			CScenario& m_ownerScenario;
 
-			CIdentifier m_id = OV_UndefinedIdentifier;
+			CIdentifier m_id   = OV_UndefinedIdentifier;
 			CIdentifier m_type = OV_UndefinedIdentifier;
 			CString m_data;
 		};

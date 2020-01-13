@@ -21,9 +21,9 @@
 
 PROJECT(openvibe-plugin-inspector)
 
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.h)
+FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")

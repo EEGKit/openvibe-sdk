@@ -3,7 +3,7 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -13,8 +13,8 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	uint64_t logLevel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_eLogLevel               = ELogLevel(logLevel);
+	uint64_t logLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_eLogLevel           = ELogLevel(logLevel);
 	m_validityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (boxContext.getSettingCount() == 1
 	)
@@ -27,13 +27,13 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 						"])",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_vStreamDecoder.resize(boxContext.getInputCount());
-	m_vStreamEncoder.resize(boxContext.getInputCount());
-	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i)
+	m_decoders.resize(boxContext.getInputCount());
+	m_encoders.resize(boxContext.getInputCount());
+	for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
-		m_vStreamDecoder[i].initialize(*this, i);
-		m_vStreamEncoder[i].initialize(*this, i);
-		m_vStreamEncoder[i].getInputMatrix().setReferenceTarget(m_vStreamDecoder[i].getOutputMatrix());
+		m_decoders[i].initialize(*this, i);
+		m_encoders[i].initialize(*this, i);
+		m_encoders[i].getInputMatrix().setReferenceTarget(m_decoders[i].getOutputMatrix());
 	}
 
 	m_vLastValidSample.clear();
@@ -49,13 +49,13 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
-	for (uint32_t i = 0; i < nInput; ++i)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		m_vStreamDecoder[i].uninitialize();
-		m_vStreamEncoder[i].uninitialize();
+		m_decoders[i].uninitialize();
+		m_encoders[i].uninitialize();
 	}
-	m_vStreamDecoder.clear();
-	m_vStreamEncoder.clear();
+	m_decoders.clear();
+	m_encoders.clear();
 
 	return true;
 }
@@ -72,31 +72,31 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 	const size_t nInput   = this->getStaticBoxContext().getInputCount();
 	const size_t nSetting = this->getStaticBoxContext().getSettingCount();
 
-	for (uint32_t i = 0; i < nInput; ++i)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			m_vStreamDecoder[i].decode(j);
-			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
+			m_decoders[i].decode(j);
+			IMatrix* matrix = m_decoders[i].getOutputMatrix();
 
-			if (m_vStreamDecoder[i].isHeaderReceived())
+			if (m_decoders[i].isHeaderReceived())
 			{
-				if (nSetting > 1) { m_vStreamEncoder[i].encodeHeader(); }
+				if (nSetting > 1) { m_encoders[i].encodeHeader(); }
 
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
 					m_nTotalInterpolatedSample[i] = 0;
 					m_nTotalInterpolatedChunk[i]  = 0;
 					// for each channel, save of the last valid sample
-					m_vLastValidSample[i].resize(l_pMatrix->getDimensionSize(0));
+					m_vLastValidSample[i].resize(matrix->getDimensionSize(0));
 				}
 			}
-			if (m_vStreamDecoder[i].isBufferReceived())
+			if (m_decoders[i].isBufferReceived())
 			{
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
-					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
+					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
 					{
 						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
 								time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
@@ -105,7 +105,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// stop player
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
-					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
+					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
 					{
 						this->getPlayerContext().stop();
 						OV_ERROR_KRF(
@@ -117,14 +117,14 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// interpolate
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
-					const uint32_t nChannel      = l_pMatrix->getDimensionSize(0);
-					const uint32_t nSample       = l_pMatrix->getDimensionSize(1);
-					double* buffer               = l_pMatrix->getBuffer();
-					uint32_t nInterpolatedSample = 0;
+					const size_t nChannel      = matrix->getDimensionSize(0);
+					const size_t nSample       = matrix->getDimensionSize(1);
+					double* buffer             = matrix->getBuffer();
+					size_t nInterpolatedSample = 0;
 
-					for (uint32_t k = 0; k < nChannel; ++k)
+					for (size_t k = 0; k < nChannel; ++k)
 					{
-						for (uint32_t l = 0; l < nSample; ++l)
+						for (size_t l = 0; l < nSample; ++l)
 						{
 							if (std::isnan(buffer[l + k * nSample]) || std::isinf(buffer[l + k * nSample]))
 							{
@@ -162,9 +162,9 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				}
 				else { OV_WARNING_K("Invalid action type [" << m_validityCheckerType << "]"); }
 
-				if (nSetting > 1) { m_vStreamEncoder[i].encodeBuffer(); }
+				if (nSetting > 1) { m_encoders[i].encodeBuffer(); }
 			}
-			if (m_vStreamDecoder[i].isEndReceived()) { if (nSetting > 1) { m_vStreamEncoder[i].encodeEnd(); } }
+			if (m_decoders[i].isEndReceived()) { if (nSetting > 1) { m_encoders[i].encodeEnd(); } }
 			if (nSetting > 1) { boxContext.markOutputAsReadyToSend(i, boxContext.getInputChunkStartTime(i, j), boxContext.getInputChunkEndTime(i, j)); }
 		}
 	}

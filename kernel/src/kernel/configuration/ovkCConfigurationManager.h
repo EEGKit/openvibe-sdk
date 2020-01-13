@@ -14,65 +14,63 @@ namespace OpenViBE
 
 		typedef struct
 		{
-			CString m_sConfigurationName;
-			CString m_sConfigurationValue;
-		} SConfigurationToken;
+			CString name;
+			CString value;
+		} config_token_t;
 
 		class CConfigurationManager final : public TKernelObject<IConfigurationManager>
 		{
 		public:
 
-			CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* pParentConfigurationManager = nullptr);
+			CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* parentConfigManager = nullptr);
 			void clear() override;
 			bool addConfigurationFromFile(const CString& rFileNameWildCard) override;
-			CIdentifier createConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue) override;
-			bool releaseConfigurationToken(const CIdentifier& rConfigurationTokenIdentifier) override;
-			CIdentifier getNextConfigurationTokenIdentifier(const CIdentifier& rPreviousConfigurationTokenIdentifier) const override;
-			CString getConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier) const override;
-			CString getConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier) const override;
-			bool setConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenName) override;
-			bool setConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenValue) override;
-			bool addOrReplaceConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue) override;
-			CIdentifier lookUpConfigurationTokenIdentifier(const CString& rConfigurationTokenName, bool bRecursive) const override;
-			CString lookUpConfigurationTokenValue(const CString& rConfigurationTokenName) const override;
-			bool registerKeywordParser(const CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback) override;
-			bool unregisterKeywordParser(const CString& rKeyword) override;
-			bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback) override;
-			CString expand(const CString& rExpression) const override;
+			CIdentifier createConfigurationToken(const CString& name, const CString& value) override;
+			bool releaseConfigurationToken(const CIdentifier& identifier) override;
+			CIdentifier getNextConfigurationTokenIdentifier(const CIdentifier& prevConfigTokenID) const override;
+			CString getConfigurationTokenName(const CIdentifier& identifier) const override;
+			CString getConfigurationTokenValue(const CIdentifier& identifier) const override;
+			bool setConfigurationTokenName(const CIdentifier& identifier, const CString& name) override;
+			bool setConfigurationTokenValue(const CIdentifier& identifier, const CString& value) override;
+			bool addOrReplaceConfigurationToken(const CString& name, const CString& value) override;
+			CIdentifier lookUpConfigurationTokenIdentifier(const CString& name, bool recursive) const override;
+			CString lookUpConfigurationTokenValue(const CString& name) const override;
+			bool registerKeywordParser(const CString& keyword, const IConfigurationKeywordExpandCallback& callback) override;
+			bool unregisterKeywordParser(const CString& keyword) override;
+			bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& callback) override;
+			CString expand(const CString& expression) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >,
-									   OVK_ClassId_Kernel_Configuration_ConfigurationManager)
-			CString expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const override;
-			double expandAsFloat(const CString& rExpression, double f64FallbackValue) const override;
-			int64_t expandAsInteger(const CString& rExpression, int64_t i64FallbackValue) const override;
-			uint64_t expandAsUInteger(const CString& rExpression, uint64_t ui64FallbackValue) const override;
-			bool expandAsBoolean(const CString& rExpression, bool bFallbackValue) const override;
-			uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier,
-												   uint64_t fallbackValue) const override;
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >, OVK_ClassId_Kernel_Config_ConfigManager)
+			CString expandOnlyKeyword(const CString& rKeyword, const CString& expression, bool preserveBackslashes) const override;
+			double expandAsFloat(const CString& expression, double fallbackValue) const override;
+			int64_t expandAsInteger(const CString& expression, int64_t fallbackValue) const override;
+			uint64_t expandAsUInteger(const CString& expression, uint64_t fallbackValue) const override;
+			bool expandAsBoolean(const CString& expression, bool fallbackValue) const override;
+			uint64_t expandAsEnumerationEntryValue(const CString& expression, const CIdentifier& enumTypeID, uint64_t fallbackValue) const override;
 
 		protected:
 
 			CIdentifier getUnusedIdentifier() const;
 
-			bool internalExpand(const std::string& sValue, std::string& sResult) const;
+			bool internalExpand(const std::string& sValue, std::string& result) const;
 			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes) const;
-			bool internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const;
+			bool internalGetConfigurationTokenValueFromName(const std::string& name, std::string& value) const;
 
-			IConfigurationManager* m_pParentConfigurationManager = nullptr;
-			mutable uint32_t m_ui32Idx;
-			mutable uint32_t m_ui32StartTime;
+			IConfigurationManager* m_parentConfigManager = nullptr;
+			mutable size_t m_idx;
+			mutable size_t m_startTime;
 
-			uint32_t getRandom() const;
-			uint32_t getIndex() const;
+			size_t getRandom() const;
+			size_t getIndex() const;
 			CString getTime() const;
 			CString getDate() const;
-			uint32_t getRealTime() const;
-			uint32_t getProcessId() const;
+			size_t getRealTime() const;
+			size_t getProcessId() const;
 
-			std::map<CIdentifier, SConfigurationToken> m_vConfigurationToken;
-			std::map<CString, const IConfigurationKeywordExpandCallback*> m_vKeywordOverride;
+			std::map<CIdentifier, config_token_t> m_ConfigTokens;
+			std::map<CString, const IConfigurationKeywordExpandCallback*> m_keywordOverrides;
 
-			mutable std::recursive_mutex m_oMutex;
+			mutable std::recursive_mutex m_mutex;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

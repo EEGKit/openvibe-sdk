@@ -28,7 +28,6 @@ namespace OpenViBE
 			void log(const int64_t value) override { logForEach<const int64_t>(value); }
 			void log(const int value) override { logForEach<const int>(value); }
 			void log(const double value) override { logForEach<const double>(value); }
-			void log(const float value) override { logForEach<const float>(value); }
 			void log(const bool value) override { logForEach<const bool>(value); }
 			void log(const CIdentifier& value) override { logForEach<const CIdentifier&>(value); }
 			void log(const CString& value) override { log(value.toASCIIString()); }
@@ -44,36 +43,33 @@ namespace OpenViBE
 		protected:
 
 			// This macro waits until m_oHolder is either the current thread id or unassigned
-#define GRAB_OWNERSHIP std::unique_lock<std::mutex> lock(m_oMutex); \
-	m_oCondition.wait(lock, [this]() { return (this->m_oOwner == std::thread::id() || this->m_oOwner == std::this_thread::get_id() ); } ); \
-	m_oOwner = std::this_thread::get_id();
+#define GRAB_OWNERSHIP std::unique_lock<std::mutex> lock(m_mutex); \
+	m_condition.wait(lock, [this]() { return (this->m_owner == std::thread::id() || this->m_owner == std::this_thread::get_id() ); } ); \
+	m_owner = std::this_thread::get_id();
 
 			template <class T>
 			void logForEach(T tValue)
 			{
 				GRAB_OWNERSHIP;
 
-				if (m_eCurrentLogLevel != LogLevel_None && this->isActive(m_eCurrentLogLevel))
+				if (m_currentLogLevel != LogLevel_None && this->isActive(m_currentLogLevel))
 				{
-					for (auto i = m_vListener.begin(); i != m_vListener.end(); ++i)
-					{
-						if ((*i)->isActive(m_eCurrentLogLevel)) { (*i)->log(tValue); }
-					}
+					for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) { if ((*i)->isActive(m_currentLogLevel)) { (*i)->log(tValue); } }
 				}
 			}
 
-			std::vector<ILogListener*> m_vListener;
-			std::map<ELogLevel, bool> m_vActiveLevel;
-			ELogLevel m_eCurrentLogLevel = LogLevel_Info;
+			std::vector<ILogListener*> m_listeners;
+			std::map<ELogLevel, bool> m_activeLevels;
+			ELogLevel m_currentLogLevel = LogLevel_Info;
 
 			// Variables to make sure only one thread writes to the LogManager at a time.
 			// Concurrency control operating logic:
 			//   Calling log() will wait until it obtains logmanager ownership for the calling thread
 			//   Only thread having the ownership can write to the log
 			//   After a thread logs an entry ending in an EOL character, the ownership is freed.
-			std::mutex m_oMutex;
-			std::condition_variable m_oCondition;
-			std::thread::id m_oOwner;
+			std::mutex m_mutex;
+			std::condition_variable m_condition;
+			std::thread::id m_owner;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

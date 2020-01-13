@@ -432,12 +432,12 @@ namespace Dsp
 	//--------------------------------------------------------------------------
 
 	template <typename T>
-	void validate(int numChannels, int numSamples, T const* const* src)
+	void validate(int numChannels, int nSamples, T const* const* src)
 	{
 		for (int i = 0; i < numChannels; ++i)
 		{
 			T const* p = src[i];
-			for (int j = numSamples; j > 0; --j)
+			for (int j = nSamples; j > 0; --j)
 			{
 				T v = *p++;
 				assert(v < 2 && v > -2);
@@ -687,12 +687,12 @@ void zero (int samples,
 
 		Value getSlope(int channel) const { return m_slope[channel]; }
 
-		void process(size_t numSamples, const Value** input)
+		void process(size_t nSamples, const Value** input)
 		{
 			for (int i = 0; i < Channels; ++i)
 			{
 				const Value* src = input[i];
-				int n            = numSamples;
+				int n            = nSamples;
 
 				if (m_firstTime)
 				{

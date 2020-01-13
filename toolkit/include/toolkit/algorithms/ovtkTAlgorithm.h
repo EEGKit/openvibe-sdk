@@ -89,10 +89,7 @@ namespace OpenViBEToolkit
 			return m_algorithmCtx->getOutputParameter(outputParameterID);
 		}
 
-		virtual bool isInputTriggerActive(const OpenViBE::CIdentifier& inputTriggerID) const
-		{
-			return m_algorithmCtx->isInputTriggerActive(inputTriggerID);
-		}
+		virtual bool isInputTriggerActive(const OpenViBE::CIdentifier& inputTriggerID) const { return m_algorithmCtx->isInputTriggerActive(inputTriggerID); }
 
 		virtual bool activateOutputTrigger(const OpenViBE::CIdentifier& outputTriggerID, const bool bTriggerState)
 		{

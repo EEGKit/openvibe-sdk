@@ -12,7 +12,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& rAlgorithmDesc);
+			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& algorithmDesc);
 			~CAlgorithmProxy() override;
 
 			Plugins::IAlgorithm& getAlgorithm();
@@ -56,8 +56,8 @@ namespace OpenViBE
 
 		protected:
 
-			IConfigurable* m_pInputConfigurable  = nullptr;
-			IConfigurable* m_pOutputConfigurable = nullptr;
+			IConfigurable* m_iConfigurable  = nullptr;
+			IConfigurable* m_oConfigurable = nullptr;
 			std::map<CIdentifier, CString> m_vInputParameterName;
 			std::map<CIdentifier, CString> m_vOutputParameterName;
 			std::map<CIdentifier, std::pair<CString, bool>> m_vInputTrigger;

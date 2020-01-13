@@ -4,7 +4,7 @@
 #include <system/ovCMath.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace std;
 
@@ -47,19 +47,19 @@ CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& algorithmClass
 	return algorithmId;
 }
 
-CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& rAlgorithmDesc)
+CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& algorithmDesc)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	IAlgorithm* algorithm = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
+	IAlgorithm* algorithm = getKernelContext().getPluginManager().createAlgorithm(algorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(),
+	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << algorithmDesc.getClassIdentifier().toString(),
 						ErrorType::BadResourceCreation);
 
-	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
+	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << algorithmDesc.getClassIdentifier() << "\n";
 
 	CIdentifier algorithmId         = getUnusedIdentifier();
-	CAlgorithmProxy* algorithmProxy = new CAlgorithmProxy(getKernelContext(), *algorithm, rAlgorithmDesc);
+	CAlgorithmProxy* algorithmProxy = new CAlgorithmProxy(getKernelContext(), *algorithm, algorithmDesc);
 	m_vAlgorithms[algorithmId]      = algorithmProxy;
 	return algorithmId;
 }

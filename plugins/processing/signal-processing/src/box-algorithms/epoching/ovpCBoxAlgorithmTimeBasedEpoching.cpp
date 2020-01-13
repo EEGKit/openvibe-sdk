@@ -7,7 +7,7 @@
 #include <algorithm>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -21,8 +21,8 @@ bool CBoxAlgorithmTimeBasedEpoching::initialize()
 	m_interval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	OV_ERROR_UNLESS_KRF(m_duration>0 && m_interval>0,
-						"Epocher settings are invalid (duration:" << m_duration << "|" << "interval:" << m_interval << "). These parameters should be strictly positive.",
-						ErrorType::Internal);
+						"Epocher settings are invalid (duration:" << m_duration << "|interval:"
+						<< m_interval << "). These parameters should be strictly positive.", ErrorType::Internal);
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -49,41 +49,37 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
 
 		IMatrix* iMatrix = m_decoder.getOutputMatrix();
 		IMatrix* oMatrix = m_encoder.getInputMatrix();
 
-		const uint32_t nChannel = iMatrix->getDimensionSize(0);
-		const uint32_t nISample = iMatrix->getDimensionSize(1);
+		const size_t nChannel = iMatrix->getDimensionSize(0);
+		const size_t nISample = iMatrix->getDimensionSize(1);
 
 		if (m_decoder.isHeaderReceived())
 		{
-			m_lastInputEndTime  = 0;
-			m_outputSampleIdx = 0;
-			m_outputChunkIdx  = 0;
-			m_referenceTime     = 0;
+			m_lastInputEndTime = 0;
+			m_oSampleIdx       = 0;
+			m_oChunkIdx        = 0;
+			m_referenceTime    = 0;
 
-			m_samplingRate = m_decoder.getOutputSamplingRate();
-			OV_ERROR_UNLESS_KRZ(m_samplingRate, "Input sampling frequency is equal to 0. Plugin can not process.", ErrorType::Internal);
+			m_sampling = m_decoder.getOutputSamplingRate();
+			OV_ERROR_UNLESS_KRZ(m_sampling, "Input sampling frequency is equal to 0. Plugin can not process.", ErrorType::Internal);
 
-			m_nOutputSample             = uint32_t(m_duration * m_samplingRate); // sample count per output epoch
-			m_nOutputSampleBetweenEpoch = uint32_t(m_interval * m_samplingRate);
+			m_oNSample             = size_t(m_duration * m_sampling); // sample count per output epoch
+			m_oNSampleBetweenEpoch = size_t(m_interval * m_sampling);
 
-			OV_ERROR_UNLESS_KRF(m_nOutputSample>0 && m_nOutputSampleBetweenEpoch>0,
-								"Input sampling frequency is [" << m_samplingRate << "]. This is too low in order to produce epochs of [" << m_duration
-								<< "] seconds with an interval of [" << m_interval << "] seconds.",
-								ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_oNSample>0 && m_oNSampleBetweenEpoch>0,
+								"Input sampling frequency is [" << m_sampling << "]. This is too low in order to produce epochs of ["
+								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", ErrorType::Internal);
 
 			oMatrix->setDimensionCount(2);
 			oMatrix->setDimensionSize(0, nChannel);
-			oMatrix->setDimensionSize(1, m_nOutputSample);
-			for (uint32_t c = 0; c < nChannel; ++c)
-			{
-				oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c));
-			}
+			oMatrix->setDimensionSize(1, m_oNSample);
+			for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 
 			m_encoder.encodeHeader();
 			boxContext.markOutputAsReadyToSend(0, 0, 0);
@@ -96,9 +92,9 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			if (m_lastInputEndTime != iTStart)
 			{
 				// reset
-				m_referenceTime     = iTStart; // reference time = start time of the first chunk of the continuous stream of chunks
-				m_outputSampleIdx = 0;
-				m_outputChunkIdx  = 0;
+				m_referenceTime = iTStart; // reference time = start time of the first chunk of the continuous stream of chunks
+				m_oSampleIdx    = 0;
+				m_oChunkIdx     = 0;
 			}
 
 			m_lastInputEndTime = iTEnd;
@@ -112,62 +108,59 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			double* iBuffer = iMatrix->getBuffer();
 			double* oBuffer = oMatrix->getBuffer();
 
-			uint32_t sampleProcessed = 0;
+			size_t sampleProcessed = 0;
 
 			// Iterates on bytes to process
 			while (sampleProcessed != nISample)
 			{
-				if (m_outputSampleIdx < m_nOutputSample) // Some samples should be filled
+				if (m_oSampleIdx < m_oNSample) // Some samples should be filled
 				{
 					// Copies samples to buffer
-					const uint32_t sampleToFill = std::min(m_nOutputSample - m_outputSampleIdx, nISample - sampleProcessed);
-					for (uint32_t c = 0; c < nChannel; ++c)
+					const size_t sampleToFill = std::min(m_oNSample - m_oSampleIdx, nISample - sampleProcessed);
+					for (size_t c = 0; c < nChannel; ++c)
 					{
-						System::Memory::copy(oBuffer + c * m_nOutputSample + m_outputSampleIdx,
-											 iBuffer + c * nISample + sampleProcessed,
-											 sampleToFill * sizeof(double));
+						System::Memory::copy(oBuffer + c * m_oNSample + m_oSampleIdx, iBuffer + c * nISample + sampleProcessed, sampleToFill * sizeof(double));
 					}
-					m_outputSampleIdx += sampleToFill;
+					m_oSampleIdx += sampleToFill;
 					sampleProcessed += sampleToFill;
 
-					if (m_outputSampleIdx == m_nOutputSample) // An epoch has been totally filled !
+					if (m_oSampleIdx == m_oNSample) // An epoch has been totally filled !
 					{
 						// Calculates start and end time of output
-						const uint64_t oTStart = m_referenceTime + TimeArithmetics::sampleCountToTime(m_samplingRate, m_outputChunkIdx * m_nOutputSampleBetweenEpoch);
-						const uint64_t oTEnd = m_referenceTime + TimeArithmetics::sampleCountToTime(m_samplingRate, m_outputChunkIdx * m_nOutputSampleBetweenEpoch + m_nOutputSample);
-						m_outputChunkIdx++;
+						const uint64_t oTStart = m_referenceTime + TimeArithmetics::sampleCountToTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch);
+						const uint64_t oTEnd   = m_referenceTime + TimeArithmetics::sampleCountToTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample);
+						m_oChunkIdx++;
 
 						// Writes epoch
 						m_encoder.encodeBuffer();
 						boxContext.markOutputAsReadyToSend(0, oTStart, oTEnd);
 
-						if (m_nOutputSampleBetweenEpoch < m_nOutputSample)
+						if (m_oNSampleBetweenEpoch < m_oNSample)
 						{
 							// Shifts samples for next epoch when overlap
-							const uint32_t samplesToSave = m_nOutputSample - m_nOutputSampleBetweenEpoch;
-							for (uint32_t c = 0; c < nChannel; ++c)
+							const size_t samplesToSave = m_oNSample - m_oNSampleBetweenEpoch;
+							for (size_t c = 0; c < nChannel; ++c)
 							{
-								System::Memory::move(oBuffer + c * m_nOutputSample,
-													 oBuffer + c * m_nOutputSample + m_nOutputSample - samplesToSave,
+								System::Memory::move(oBuffer + c * m_oNSample, oBuffer + c * m_oNSample + m_oNSample - samplesToSave,
 													 samplesToSave * sizeof(double));
 							}
 
 							// The counter can be reset
-							m_outputSampleIdx = samplesToSave;
+							m_oSampleIdx = samplesToSave;
 						}
 					}
 				}
 				else
 				{
 					// The next few samples are useless: the stream of chunks is not continuous, we can remove the samples before the discontinuity
-					const uint32_t sampleToSkip = std::min(m_nOutputSampleBetweenEpoch - m_outputSampleIdx, nISample - sampleProcessed);
-					m_outputSampleIdx += sampleToSkip;
+					const size_t sampleToSkip = std::min(m_oNSampleBetweenEpoch - m_oSampleIdx, nISample - sampleProcessed);
+					m_oSampleIdx += sampleToSkip;
 					sampleProcessed += sampleToSkip;
 
-					if (m_outputSampleIdx == m_nOutputSampleBetweenEpoch)
+					if (m_oSampleIdx == m_oNSampleBetweenEpoch)
 					{
 						// The counter can be reset
-						m_outputSampleIdx = 0;
+						m_oSampleIdx = 0;
 					}
 				}
 			}

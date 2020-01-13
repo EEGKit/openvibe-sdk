@@ -33,8 +33,8 @@ SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 # Add executable
 # ----------------------
 ADD_DEFINITIONS( -DPROJECT_VERSION="${PROJECT_VERSION}" )
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp)
-ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp)
+ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 
 # ----------------------
 # External dependecies 

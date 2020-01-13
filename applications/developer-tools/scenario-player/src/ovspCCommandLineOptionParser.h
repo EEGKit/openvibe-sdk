@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "ovspICommandParser.h"
 #include "ovsp_defines.h"
+#include "ovspICommandParser.h"
 
 namespace OpenViBE
 {
@@ -50,7 +50,6 @@ namespace OpenViBE
 		explicit CommandLineOptionParser(ProgramOptionParser& parser);
 
 		void initialize() override;
-
 		void uninitialize() override;
 
 		std::vector<std::shared_ptr<SCommand>> getCommandList() const override;
@@ -59,7 +58,7 @@ namespace OpenViBE
 
 	private:
 
-		ProgramOptionParser& m_OptionParser;
-		std::vector<std::shared_ptr<SCommand>> m_CommandList;
+		ProgramOptionParser& m_parser;
+		std::vector<std::shared_ptr<SCommand>> m_cmdList;
 	};
-}
+}	// namespace OpenViBE

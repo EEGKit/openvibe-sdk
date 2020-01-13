@@ -28,12 +28,8 @@
 namespace OpenViBETest
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 	using namespace Plugins;
-
-	SKernelFixture::SKernelFixture(const std::string& configFile) : m_configurationFile(configFile) { }
-
-	void SKernelFixture::setConfigurationFile(const std::string& configFile) { m_configurationFile = configFile; }
 
 	void SKernelFixture::setUp()
 	{
@@ -64,13 +60,13 @@ namespace OpenViBETest
 			return;
 		}
 
-		CString configurationFile;
+		CString configFile;
 
-		if (!m_configurationFile.empty()) { configurationFile = m_configurationFile.c_str(); }
-		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
+		if (!m_configFile.empty()) { configFile = m_configFile.c_str(); }
+		else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 		if (!ctx)
 		{

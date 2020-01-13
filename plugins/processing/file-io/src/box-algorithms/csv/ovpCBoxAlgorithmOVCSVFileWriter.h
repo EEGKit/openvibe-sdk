@@ -36,9 +36,9 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 
 			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimulationDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
 
-			unsigned long long m_epoch = 0;
+			uint64_t m_epoch = 0;
 
 			bool m_isHeaderReceived = false;
 			bool m_isFileOpen       = false;
@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmOVCSVFileWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				if (index == 1)
 				{

@@ -6,7 +6,7 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before the kernel context.
@@ -114,11 +114,11 @@ TEST(error_manager_test_case, test_stress_push)
 	auto& errorManager = context->getErrorManager();
 
 	errorManager.releaseErrors();
-	const uint32_t expectedErrorCount = 10;
-	for (uint32_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
+	const size_t expectedErrorCount = 10;
+	for (size_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
 
-	uint32_t errorCount = 0;
-	auto error              = errorManager.getLastError();
+	size_t errorCount = 0;
+	auto error        = errorManager.getLastError();
 	while (error)
 	{
 		errorCount++;
@@ -133,7 +133,7 @@ int urErrorManagerTest(int argc, char* argv[])
 	OVT_ASSERT(argc >= 2, "Failure retrieve test parameters");
 
 	OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture;
-	fixture->setConfigurationFile(argv[1]);
+	fixture->setConfigFile(argv[1]);
 
 	context = fixture->context;
 

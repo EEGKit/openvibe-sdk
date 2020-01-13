@@ -21,14 +21,14 @@
 
 #pragma once
 
+#include "ovsp_defines.h"
+#include "ovspICommandParser.h"
 #include <string>
 #include <functional>
 #include <fstream>
 #include <vector>
 #include <map>
 
-#include "ovspICommandParser.h"
-#include "ovsp_defines.h"
 
 namespace OpenViBE
 {
@@ -66,13 +66,12 @@ namespace OpenViBE
 		* \param[in] file path to the command file
 		*
 		*/
-		explicit CommandFileParser(const std::string& file) : m_CommandFile(file) { }
+		explicit CommandFileParser(const std::string& file) : m_cmdFile(file) { }
 
 		void initialize() override;
-
 		void uninitialize() override;
 
-		std::vector<std::shared_ptr<SCommand>> getCommandList() const override { return m_CommandList; }
+		std::vector<std::shared_ptr<SCommand>> getCommandList() const override { return m_cmdList; }
 
 		EPlayerReturnCode parse() override;
 
@@ -97,8 +96,8 @@ namespace OpenViBE
 		EPlayerReturnCode setupScenarioCommandCb(const std::vector<std::string>& sectionContent);
 		EPlayerReturnCode runScenarioCommandCb(const std::vector<std::string>& sectionContent);
 
-		std::string m_CommandFile;
-		std::vector<std::shared_ptr<SCommand>> m_CommandList;
-		std::map<std::string, CallbackType> m_CallbackList;
+		std::string m_cmdFile;
+		std::vector<std::shared_ptr<SCommand>> m_cmdList;
+		std::map<std::string, CallbackType> m_callbacks;
 	};
 } // namespace OpenViBE

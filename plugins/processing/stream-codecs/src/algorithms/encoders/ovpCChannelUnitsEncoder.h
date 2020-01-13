@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool processHeader() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_ChannelUnitsStreamEncoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_ChannelUnitsEncoder)
 
 		protected:
 
@@ -37,21 +37,21 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelUnitsStreamEncoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelUnitsEncoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CChannelUnitsEncoder(); }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(prototype);
 
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
-				// rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_MeasurementUnits, "Measurement units", OpenViBE::Kernel::ParameterType_Matrix);
+				prototype.addInputParameter(
+					OVP_Algorithm_ChannelUnitsEncoder_InputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
+				// prototype.addInputParameter(OVP_Algorithm_ChannelUnitsEncoder_InputParameterId_MeasurementUnits, "Measurement units", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_ChannelUnitsStreamEncoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_ChannelUnitsEncoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

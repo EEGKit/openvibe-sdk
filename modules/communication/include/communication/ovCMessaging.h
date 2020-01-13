@@ -73,7 +73,7 @@ namespace Communication
 		 * \retval True if the socket is connected.
 		 * \retval False if the socket is not connected.
 		 */
-		bool isConnected();
+		bool isConnected() const;
 
 		/**
 		 * \brief Check that the synchronization is in error state.
@@ -87,7 +87,7 @@ namespace Communication
 		 * \brief Set the connection ID to a new value
 		 * \param connectionID The connection Id to set
 		 */
-		void setConnectionID(const std::string& connectionID);
+		void setConnectionID(const std::string& connectionID) const;
 
 		/**
 		 * \brief Check that a End message was received.
@@ -113,7 +113,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if library is in error state.
 		 */
-		bool pushMessage(const Message& message);
+		bool pushMessage(const Message& message) const;
 
 		/**
 		 * \brief Set the last error code.
@@ -122,14 +122,14 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		void setLastError(ELibraryError libraryError);
+		void setLastError(ELibraryError libraryError) const;
 
 		/**
 		 * \brief Provide the connection to the base class to communicate.
 		 *
 		 * \param connection The connection
 		 */
-		void setConnection(Socket::IConnection* connection);
+		void setConnection(Socket::IConnection* connection) const;
 
 		/**
 		 * \brief Start a thread that will push the outgoing data, pull and process the incoming data.
@@ -152,7 +152,7 @@ namespace Communication
 		 *
 		 * \sa startSyncing
 		 */
-		bool stopSyncing();
+		bool stopSyncing() const;
 
 		/**
 		 * @brief Get the oldest authentication message
@@ -188,7 +188,7 @@ namespace Communication
 		 * @param ebml[out] The encoded EBML buffer
 		 * @return true if a message was popped, false if the queue is empty
 		 */
-		virtual bool popEBML(uint64_t& id, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml);
+		virtual bool popEBML(uint64_t& id, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml);
 
 		/**
 		 * @brief Pop the oldest log message from the queue
@@ -219,7 +219,7 @@ namespace Communication
 		 * @brief Reset the library state. Stop sending and receiving buffers, disconnect
 		 * and empty all buffers.
 		 */
-		void reset();
+		void reset() const;
 
 		/**
 		 * \brief Checks if a sync message was received and reset it if it was.
@@ -251,7 +251,7 @@ namespace Communication
 		 *
 		 * \sa push
 		 */
-		bool pull();
+		bool pull() const;
 
 		/**
 		 * \brief Send all the data to the socket.
@@ -264,7 +264,7 @@ namespace Communication
 		 *
 		 * \sa push
 		 */
-		bool push();
+		bool push() const;
 
 		/**
 		 * \brief Process incoming data, unpack it and put messages in queues.
@@ -276,7 +276,7 @@ namespace Communication
 		 *
 		 * \sa processBuffer
 		 */
-		bool processIncomingMessages();
+		bool processIncomingMessages() const;
 
 		/**
 		 * \brief Process buffer, pack it and put messages in queues.
@@ -298,7 +298,7 @@ namespace Communication
 		 *
 		 * \sa processIncomingMessages
 		 */
-		bool processBuffer(const std::vector<uint8_t>& buffer, size_t& byteRead);
+		bool processBuffer(const std::vector<uint8_t>& buffer, size_t& byteRead) const;
 
 		/**
 		 * \brief Sync fucntion that is used in a thread to pull, push and process the incoming data.
@@ -311,7 +311,7 @@ namespace Communication
 		 * \sa push
 		 * \sa processIncomingMessages
 		 */
-		void sync();
+		void sync() const;
 
 	public:
 		static const uint8_t s_CommunicationProtocol_MajorVersion = 1;
@@ -321,4 +321,4 @@ namespace Communication
 		struct SMessagingImpl;
 		SMessagingImpl* impl = nullptr;
 	};
-}
+}  // namespace Communication

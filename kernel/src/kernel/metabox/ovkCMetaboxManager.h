@@ -26,9 +26,9 @@ namespace OpenViBE
 			_IsDerivedFromClass_Final_(TKernelObject<IMetaboxManager>, OVK_ClassId_Kernel_Metaboxes_MetaboxManager)
 
 		protected:
-			std::map<CIdentifier, const Plugins::IPluginObjectDesc*> m_MetaboxObjectDesc;
-			std::map<CIdentifier, CString> m_MetaboxFilePath;
-			std::map<CIdentifier, CIdentifier> m_MetaboxHash;
+			std::map<CIdentifier, const Plugins::IPluginObjectDesc*> m_objectDesc;
+			std::map<CIdentifier, CString> m_filepath;
+			std::map<CIdentifier, CIdentifier> m_hash;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

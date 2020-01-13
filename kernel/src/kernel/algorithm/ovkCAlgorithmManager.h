@@ -18,7 +18,7 @@ namespace OpenViBE
 			explicit CAlgorithmManager(const IKernelContext& ctx);
 			~CAlgorithmManager() override;
 			CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) override;
-			CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) override;
+			CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) override;
 			bool releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
 			bool releaseAlgorithm(IAlgorithmProxy& rAlgorithm) override;
 			IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;

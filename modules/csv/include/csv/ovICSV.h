@@ -39,23 +39,17 @@ namespace OpenViBE
 			std::vector<double> matrix;
 			uint64_t epoch;
 
-			SMatrixChunk(double startTime, double endTime, const std::vector<double>& matrix, uint64_t epoch)
-				: startTime(startTime)
-				  , endTime(endTime)
-				  , matrix(matrix)
-				  , epoch(epoch) { }
+			SMatrixChunk(const double startTime, const double endTime, const std::vector<double>& matrix, const uint64_t epoch)
+				: startTime(startTime), endTime(endTime), matrix(matrix), epoch(epoch) { }
 		};
 
 		struct SStimulationChunk
 		{
-			uint64_t stimulationIdentifier;
-			double stimulationDate;
-			double stimulationDuration;
-
-			SStimulationChunk(uint64_t stimulationIdentifier, double stimulationDate, double stimulationDuration)
-				: stimulationIdentifier(stimulationIdentifier)
-				  , stimulationDate(stimulationDate)
-				  , stimulationDuration(stimulationDuration) { }
+			uint64_t id;
+			double date;
+			double duration;
+			SStimulationChunk(const uint64_t id, const double date, const double duration)
+				: id(id), date(date), duration(duration) { }
 		};
 
 		enum class EStreamType
@@ -161,49 +155,49 @@ namespace OpenViBE
 			 * \brief Set informations to read or write signal data
 			 *
 			 * \param channelNames all channels names for the matrix
-			 * \param samplingFrequency sampling frequency
-			 * \param sampleCountPerBuffer number of sample per buffer
+			 * \param sampling sampling frequency
+			 * \param nSamplePerBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, size_t samplingFrequency, size_t sampleCountPerBuffer) = 0;
+			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, size_t sampling, size_t nSamplePerBuffer) = 0;
 
 			/**
 			 * \brief Get signal information in file
 			 *
 			 * \param channelNames reference to fill with file channel names
-			 * \param samplingFrequency sampling frequency
-			 * \param sampleCountPerBuffer number of sample per buffer
+			 * \param sampling sampling frequency
+			 * \param nSamplePerBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSignalInformation(std::vector<std::string>& channelNames, size_t& samplingFrequency, size_t& sampleCountPerBuffer) = 0;
+			virtual bool getSignalInformation(std::vector<std::string>& channelNames, size_t& sampling, size_t& nSamplePerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write spectrum data
 			 *
 			 * \param channelNames Channels names of the matrix
 			 * \param frequencyAbscissa Frequencies abscissa of the measurements
-			 * \param samplingRate Sampling rate of the original measurements
+			 * \param sampling Sampling rate of the original measurements
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, size_t samplingRate) = 0;
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, size_t sampling) = 0;
 
 			/**
 			 * \brief get spectrum information in file
 			 *
 			 * \param channelNames Channels names of the matrix
 			 * \param frequencyAbscissa Frequencies abscissa of the measurements
-			 * \param samplingRate Sampling rate of the original measurements
+			 * \param sampling Sampling rate of the original measurements
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& samplingRate) = 0;
+			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& sampling) = 0;
 
 			/**
 			 * \brief Set informations to read or write vector data
@@ -385,5 +379,5 @@ namespace OpenViBE
 		extern CSV_API ICSVHandler* createCSVHandler();
 
 		extern CSV_API void releaseCSVHandler(ICSVHandler* object);
-	}
-}
+	}	// namespace CSV
+}	// namespace OpenViBE

@@ -6,7 +6,7 @@
 namespace
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 
 	struct SBoxProto final : IBoxProto
 	{
@@ -133,21 +133,21 @@ namespace
 			uint8_t S[sizeof(s)];
 			System::Memory::hostToLittleEndian(v, V);
 			System::Memory::hostToLittleEndian(s, S);
-			for (uint32_t i = 0; i < sizeof(s); i += 2)
+			for (size_t i = 0; i < sizeof(s); i += 2)
 			{
-				uint32_t j = S[i] % sizeof(v);
-				uint32_t k = S[i + 1] % sizeof(v);
-				uint8_t t  = V[j];
-				V[j]       = V[k];
-				V[k]       = t;
+				size_t j  = S[i] % sizeof(v);
+				size_t k  = S[i + 1] % sizeof(v);
+				uint8_t t = V[j];
+				V[j]      = V[k];
+				V[k]      = t;
 			}
 			System::Memory::littleEndianToHost(V, &v);
 		}
 
 		_IsDerivedFromClass_Final_(IBoxProto, OV_UndefinedIdentifier)
 
-		CIdentifier m_oHash             = OV_UndefinedIdentifier;
-		bool m_isDeprecated            = false;
+		CIdentifier m_oHash         = OV_UndefinedIdentifier;
+		bool m_isDeprecated         = false;
 		uint64_t m_inputCountHash   = 0x64AC3CB54A35888CLL;
 		uint64_t m_outputCountHash  = 0x21E0FAAFE5CAF1E1LL;
 		uint64_t m_settingCountHash = 0x6BDFB15B54B09F63LL;

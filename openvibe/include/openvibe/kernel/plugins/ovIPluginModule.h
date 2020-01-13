@@ -31,25 +31,25 @@ namespace OpenViBE
 			/**
 			 * \brief Tries to load a file as an OpenViBE module
 			 * \param name [in] : the name of the file to try to load
-			 * \param pError [out] : an optional output string containing the error on load failure
+			 * \param error [out] : an optional output string containing the error on load failure
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool load(const CString& name, CString* pError = nullptr) = 0;
+			virtual bool load(const CString& name, CString* error = nullptr) = 0;
 			/**
 			 * \brief Tries to unload the loaded OpenViBE module
-			 * \param pError [out] : an optional output string containing the error on unload failure
+			 * \param error [out] : an optional output string containing the error on unload failure
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool unload(CString* pError = nullptr) = 0;
+			virtual bool unload(CString* error = nullptr) = 0;
 			/**
 			 * \brief Gets the current filename associated with this plugin module
-			 * \param rFileName [out] : the filename of this plugin module
+			 * \param fileName [out] : the filename of this plugin module
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getFileName(CString& rFileName) const = 0;
+			virtual bool getFileName(CString& fileName) const = 0;
 			/**
 			 * \brief Initializes this plugin module
 			 * \return \e true in case of success.
@@ -61,7 +61,7 @@ namespace OpenViBE
 			/**
 			 * \brief Gets a specific plugin object descriptor
 			 * \param index [in] : the index of the plugin object descriptor to get
-			 * \param rpPluginObjectDescription [out] : a pointer on the associated plugin object descriptor
+			 * \param desc [out] : a pointer on the associated plugin object descriptor
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
@@ -72,11 +72,11 @@ namespace OpenViBE
 			 *
 			 * This function calls the onGetPluginObjectDescription main function of the plugin module.
 			 *
-			 * \note \c rpPluginObjectDescription can be \c NULL even if the function returned \e true
-			 * \note \c rpPluginObjectDescription IS \c NULL if the function returned \e false
+			 * \note \c desc can be \c NULL even if the function returned \e true
+			 * \note \c desc IS \c NULL if the function returned \e false
 			 * \note It is ok to call this function several times for a same index.
 			 */
-			virtual bool getPluginObjectDescription(uint32_t index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
+			virtual bool getPluginObjectDescription(size_t index, Plugins::IPluginObjectDesc*& desc) = 0;
 			/**
 			 * \brief Uninitializes this plugin module
 			 * \return \e true in case of success.

@@ -31,11 +31,11 @@ namespace OpenViBEPlugins
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
-			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
+			static void dumpMatrix(OpenViBE::Kernel::ILogManager& mgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 
 			// These are non-normalized estimates for the corresp. statistics
-			Eigen::MatrixXd m_oIncrementalCov;
-			Eigen::MatrixXd m_oIncrementalMean;
+			Eigen::MatrixXd m_cov;
+			Eigen::MatrixXd m_mean;
 
 			// The divisor for the above estimates to do the normalization
 			uint64_t m_n = 0;
@@ -63,28 +63,28 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_OnlineCovariance; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmOnlineCovariance; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage, "Shrinkage", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors, "Input vectors", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod, "Cov update method", OpenViBE::Kernel::ParameterType_Enumeration,
 					OVP_TypeId_OnlineCovariance_UpdateMethod);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization, "Trace normalization", OpenViBE::Kernel::ParameterType_Boolean);
 
 				// The algorithm returns these outputs
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Reset, "Reset the algorithm");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Update, "Append a chunk of data");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, "Get the current regularized covariance matrix & mean");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, "Get the current covariance matrix & mean");
+				prototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Reset, "Reset the algorithm");
+				prototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Update, "Append a chunk of data");
+				prototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, "Get the current regularized covariance matrix & mean");
+				prototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, "Get the current covariance matrix & mean");
 
 				return true;
 			}

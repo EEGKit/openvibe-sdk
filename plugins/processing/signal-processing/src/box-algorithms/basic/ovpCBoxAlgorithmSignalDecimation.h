@@ -21,27 +21,27 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			int64_t m_i64DecimationFactor                = 0;
-			uint32_t m_nChannel                  = 0;
-			uint32_t m_ui32InputSampleIdx              = 0;
-			uint32_t m_ui32InputSampleCountPerSentBlock  = 0;
-			uint64_t m_inputSamplingFrequency        = 0;
-			uint32_t m_ui32OutputSampleIdx             = 0;
-			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
-			uint64_t m_outputSamplingFrequency       = 0;
+			size_t m_decimationFactor = 0;
+			size_t m_nChannel         = 0;
+			size_t m_iSampleIdx       = 0;
+			size_t m_iNSamplePerBlock = 0;
+			size_t m_iSampling        = 0;
+			size_t m_oSampleIdx       = 0;
+			size_t m_oNSamplePerBlock = 0;
+			size_t m_oSampling        = 0;
 
-			uint64_t m_nTotalSample = 0;
-			uint64_t m_startTimeBase    = 0;
-			uint64_t m_lastStartTime    = 0;
-			uint64_t m_lastEndTime      = 0;
+			size_t m_nTotalSample    = 0;
+			uint64_t m_startTimeBase = 0;
+			uint64_t m_lastStartTime = 0;
+			uint64_t m_lastEndTime   = 0;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SamplingRate;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SamplingRate;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_sampling;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
 		};

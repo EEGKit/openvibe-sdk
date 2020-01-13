@@ -14,15 +14,15 @@ namespace OpenViBE
 			class _CName_ : public _Base_##_CName_ \
 			{ \
 			public: \
-				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& subTypeID=OV_UndefinedIdentifier) \
+				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& subTypeID = OV_UndefinedIdentifier) \
 					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(ctx, eParameterType, subTypeID) \
 				{ \
-					m_oDefaultValue=0; \
-					memcpy(&m_Value, &m_oDefaultValue, sizeof(IType)); \
+					m_defaultValue = 0; \
+					memcpy(&m_value, &m_defaultValue, sizeof(IType)); \
 				} \
 				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId) \
 			protected: \
-				CType m_oDefaultValue; \
+				CType m_defaultValue; \
 			};
 
 #define _parameter_template_instance_object_(_CName_, CType, IType, oClassId) \
@@ -33,12 +33,12 @@ namespace OpenViBE
 				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType) \
 					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(ctx, eParameterType) \
 				{ \
-					IType l_pDefaultValue=&m_oDefaultValue; \
-					memcpy(&m_Value, &l_pDefaultValue, sizeof(IType)); \
+					IType defaultValue=&m_defaultValue; \
+					memcpy(&m_value, &defaultValue, sizeof(IType)); \
 				} \
 				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId) \
 			protected: \
-				CType m_oDefaultValue; \
+				CType m_defaultValue; \
 			};
 
 #define _parameter_template_instance_pointer_(_CName_, CType, IType, oClassId) \
@@ -49,13 +49,13 @@ namespace OpenViBE
 				_CName_(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::EParameterType eParameterType) \
 					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(ctx, eParameterType) \
 				{ \
-					m_oDefaultValue = nullptr; \
-					IType l_pDefaultValue=&m_oDefaultValue; \
-					memcpy(&m_Value, &l_pDefaultValue, sizeof(IType)); \
+					m_defaultValue = nullptr; \
+					IType defaultValue=&m_defaultValue; \
+					memcpy(&m_value, &defaultValue, sizeof(IType)); \
 				} \
 				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId) \
 			protected: \
-				CType m_oDefaultValue; \
+				CType m_defaultValue; \
 			};
 
 		_parameter_template_instance_simple_type_(CIntegerParameter, int64_t, int64_t, OVK_ClassId_Kernel_IntegerParameter)

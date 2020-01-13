@@ -67,7 +67,10 @@ namespace OpenViBE
 
 			bool hasAttributes() const override { return !m_attributes.empty(); }
 
-			CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const override { return getNextIdentifier<CString>(m_attributes, previousID); }
+			CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const override
+			{
+				return getNextIdentifier<CString>(m_attributes, previousID);
+			}
 
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT)
 

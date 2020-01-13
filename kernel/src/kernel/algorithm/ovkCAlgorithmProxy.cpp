@@ -9,26 +9,25 @@
 #include <openvibe/ovExceptionHandler.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace std;
 
-CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
-	: TKernelObject<IAlgorithmProxy>(ctx), m_rAlgorithmDesc(rAlgorithmDesc)
-	  , m_rAlgorithm(rAlgorithm)
+CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& algorithmDesc)
+	: TKernelObject<IAlgorithmProxy>(ctx), m_rAlgorithmDesc(algorithmDesc), m_rAlgorithm(rAlgorithm)
 {
-	m_pInputConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
-	m_pOutputConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_iConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_oConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 
 	// FIXME
 	CAlgorithmProto algorithmProto(ctx, *this);
-	rAlgorithmDesc.getAlgorithmPrototype(algorithmProto);
+	algorithmDesc.getAlgorithmPrototype(algorithmProto);
 }
 
 CAlgorithmProxy::~CAlgorithmProxy()
 {
-	getKernelContext().getKernelObjectFactory().releaseObject(m_pOutputConfigurable);
-	getKernelContext().getKernelObjectFactory().releaseObject(m_pInputConfigurable);
+	getKernelContext().getKernelObjectFactory().releaseObject(m_oConfigurable);
+	getKernelContext().getKernelObjectFactory().releaseObject(m_iConfigurable);
 }
 
 IAlgorithm& CAlgorithmProxy::getAlgorithm() { return m_rAlgorithm; }
@@ -40,23 +39,23 @@ const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const { return m_rAlgo
 bool CAlgorithmProxy::addInputParameter(const CIdentifier& parameterID, const CString& name, const EParameterType parameterType,
 										const CIdentifier& subTypeID)
 {
-	OV_ERROR_UNLESS_KRF(m_pInputConfigurable->getParameter(parameterID) == nullptr,
+	OV_ERROR_UNLESS_KRF(m_iConfigurable->getParameter(parameterID) == nullptr,
 						"For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << parameterID.toString() << " already exists",
 						ErrorType::BadResourceCreation);
 
-	m_pInputConfigurable->createParameter(parameterID, parameterType, subTypeID);
+	m_iConfigurable->createParameter(parameterID, parameterType, subTypeID);
 	m_vInputParameterName[parameterID] = name;
 	return true;
 }
 
 CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& parameterID) const
 {
-	return m_pInputConfigurable->getNextParameterIdentifier(parameterID);
+	return m_iConfigurable->getNextParameterIdentifier(parameterID);
 }
 
 IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& parameterID)
 {
-	IParameter* parameter = m_pInputConfigurable->getParameter(parameterID);
+	IParameter* parameter = m_iConfigurable->getParameter(parameterID);
 
 	OV_ERROR_UNLESS_KRN(
 		parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << parameterID.toString(),
@@ -67,7 +66,7 @@ IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& parameterID)
 
 EParameterType CAlgorithmProxy::getInputParameterType(const CIdentifier& parameterID) const
 {
-	IParameter* parameter = m_pInputConfigurable->getParameter(parameterID);
+	IParameter* parameter = m_iConfigurable->getParameter(parameterID);
 	if (!parameter) { return ParameterType_None; }
 	return parameter->getType();
 }
@@ -81,32 +80,32 @@ CString CAlgorithmProxy::getInputParameterName(const CIdentifier& parameterID) c
 
 bool CAlgorithmProxy::removeInputParameter(const CIdentifier& parameterID)
 {
-	if (!m_pInputConfigurable->removeParameter(parameterID)) { return false; }
+	if (!m_iConfigurable->removeParameter(parameterID)) { return false; }
 	m_vInputParameterName.erase(m_vInputParameterName.find(parameterID));
 	return true;
 }
 
-bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const CString& sOutputName, const EParameterType parameterType,
+bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const CString& name, const EParameterType parameterType,
 										 const CIdentifier& subTypeID)
 {
-	OV_ERROR_UNLESS_KRF(m_pOutputConfigurable->getParameter(parameterID) == nullptr,
+	OV_ERROR_UNLESS_KRF(m_oConfigurable->getParameter(parameterID) == nullptr,
 						"For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << parameterID.toString() <<
 						" already exists",
 						ErrorType::BadResourceCreation);
 
-	m_pOutputConfigurable->createParameter(parameterID, parameterType, subTypeID);
-	m_vOutputParameterName[parameterID] = sOutputName;
+	m_oConfigurable->createParameter(parameterID, parameterType, subTypeID);
+	m_vOutputParameterName[parameterID] = name;
 	return true;
 }
 
 CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& parameterID) const
 {
-	return m_pOutputConfigurable->getNextParameterIdentifier(parameterID);
+	return m_oConfigurable->getNextParameterIdentifier(parameterID);
 }
 
 IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& parameterID)
 {
-	IParameter* parameter = m_pOutputConfigurable->getParameter(parameterID);
+	IParameter* parameter = m_oConfigurable->getParameter(parameterID);
 
 	OV_ERROR_UNLESS_KRN(
 		parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << parameterID.toString(),
@@ -117,7 +116,7 @@ IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& parameterID)
 
 EParameterType CAlgorithmProxy::getOutputParameterType(const CIdentifier& parameterID) const
 {
-	IParameter* parameter = m_pOutputConfigurable->getParameter(parameterID);
+	IParameter* parameter = m_oConfigurable->getParameter(parameterID);
 	if (!parameter) { return ParameterType_None; }
 	return parameter->getType();
 }
@@ -131,7 +130,7 @@ CString CAlgorithmProxy::getOutputParameterName(const CIdentifier& parameterID) 
 
 bool CAlgorithmProxy::removeOutputParameter(const CIdentifier& parameterID)
 {
-	if (!m_pOutputConfigurable->removeParameter(parameterID)) { return false; }
+	if (!m_oConfigurable->removeParameter(parameterID)) { return false; }
 	m_vOutputParameterName.erase(m_vOutputParameterName.find(parameterID));
 	return true;
 }
@@ -206,7 +205,7 @@ bool CAlgorithmProxy::isOutputTriggerActive(const CIdentifier& triggerID) const
 	return itTrigger->second.second;
 }
 
-bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& triggerID, const bool /*bTriggerState*/)
+bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& triggerID, const bool /*state*/)
 {
 	const auto itTrigger = m_vOutputTrigger.find(triggerID);
 	if (itTrigger == m_vOutputTrigger.end()) { return false; }
@@ -229,11 +228,11 @@ bool CAlgorithmProxy::initialize()
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  CAlgorithmContext context(getKernelContext(), *this, m_rAlgorithmDesc);
 								  // The dual state initialized or not does not take into account
 								  // a partially initialized state. Thus, we have to trust algorithms to implement
 								  // their initialization routine as a rollback transaction mechanism
-								  m_isInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
+								  m_isInitialized = m_rAlgorithm.initialize(context);
 								  return m_isInitialized;
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1));
@@ -245,8 +244,8 @@ bool CAlgorithmProxy::uninitialize()
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-								  return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
+								  CAlgorithmContext context(getKernelContext(), *this, m_rAlgorithmDesc);
+								  return m_rAlgorithm.uninitialize(context);
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm uninitialization", std::placeholders::_1));
 }
@@ -257,9 +256,9 @@ bool CAlgorithmProxy::process()
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  CAlgorithmContext context(getKernelContext(), *this, m_rAlgorithmDesc);
 								  this->setAllOutputTriggers(false);
-								  const bool result = m_rAlgorithm.process(l_oAlgorithmContext);
+								  const bool result = m_rAlgorithm.process(context);
 								  this->setAllInputTriggers(false);
 								  return result;
 							  },

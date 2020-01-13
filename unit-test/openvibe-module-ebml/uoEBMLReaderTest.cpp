@@ -55,18 +55,18 @@ public:
 		m_Depth++;
 	}
 
-	void processChildData(const void* buffer, const uint64_t size) override
+	void processChildData(const void* buffer, const size_t size) override
 	{
 		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
-		if (m_CurrentID == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(buffer, size) << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_EBMLVersion) { g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_EBMLIdLength) { g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_DocTypeVersion) { g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_DocTypeReadVersion) { g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML::CIdentifier(0x1234)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML::CIdentifier(0xffffffffffffffffLL)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML::CIdentifier(0x4321)) { g_OutputStream << "Got double : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n"; }
-		else if (m_CurrentID == EBML::CIdentifier(0x8765)) { g_OutputStream << "Got float : [" << m_ReaderHelper.getFloatFromChildData(buffer, size) << "]\n"; }
+		if (m_CurrentID == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_helper.getStr(buffer, size) << "]\n"; }
+		else if (m_CurrentID == EBML_Identifier_EBMLVersion) { g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML_Identifier_EBMLIdLength) { g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML_Identifier_DocTypeVersion) { g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML_Identifier_DocTypeReadVersion) { g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML::CIdentifier(0x1234)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML::CIdentifier(0xffffffffffffffffLL)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML::CIdentifier(0x4321)) { g_OutputStream << "Got double : [" << m_helper.getDouble(buffer, size) << "]\n"; }
+		else if (m_CurrentID == EBML::CIdentifier(0x8765)) { g_OutputStream << "Got float : [" << m_helper.getDouble(buffer, size) << "]\n"; }
 		else { g_OutputStream << "Got " << size << " data bytes, node id not known\n"; }
 	}
 
@@ -81,7 +81,7 @@ private:
 
 	int m_Depth = 0;
 
-	EBML::CReaderHelper m_ReaderHelper;
+	EBML::CReaderHelper m_helper;
 	EBML::CIdentifier m_CurrentID;
 };
 
@@ -103,13 +103,12 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	OVT_ASSERT(g_OutputStream.is_open(), "Failure to open output file for writing");
 
 	// parsing
-	for (uint32_t n = 17; n >= 1; n--)
+	for (size_t n = 17; n >= 1; n--)
 	{
 		CReaderCallBack callback;
 		EBML::CReader reader(callback);
 
 		g_OutputStream << "testing with n=" << n << std::endl;
-
 
 		FILE* file = fopen(dataFile.c_str(), "rb");
 
@@ -125,9 +124,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 		delete[] c;
 		fclose(file);
 	}
-
 	g_OutputStream.close();
-
 	// comparison part
 	std::ifstream generatedStream(outputFile);
 	std::ifstream expectedStream(expectedFile);
@@ -137,7 +134,6 @@ int uoEBMLReaderTest(int argc, char* argv[])
 
 	std::string generatedString;
 	std::string expectedString;
-
 	while (std::getline(expectedStream, expectedString))
 	{
 		OVT_ASSERT(std::getline(generatedStream, generatedString), "Failure to retrieve a line to match");

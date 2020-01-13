@@ -32,10 +32,10 @@ namespace OpenViBE
 	/**
 	  * \brief Invokes code and potentially translates exceptions to boolean
 	  * 
-	  * \tparam Callback callable type (e.g. functor) with Callback() returning boolean
+	  * \tparam TCallback callable type (e.g. functor) with TCallback() returning boolean
 	  * 
 	  * \param callable code that must be guarded against exceptions
-	  * \param exceptionHandler callback that handles the exception
+	  * \param handler callback that handles the exception
 	  * \return false either if callable() returns false or an exception 
 	  * 		occurs, true otherwise
 	  * 
@@ -43,21 +43,19 @@ namespace OpenViBE
 	  * 		 method. If an exception is caught, it is handled by calling
 	  * 		 the provided exception handler.
 	  */
-	template <
-		typename Callback,
-		typename std::enable_if<std::is_same<bool, typename std::result_of<Callback()>::type>::value>::type* = nullptr
-	>
-	bool translateException(Callback&& callable, ExceptionHandlerType exceptionHandler)
+	template <typename TCallback,
+			  typename std::enable_if<std::is_same<bool, typename std::result_of<TCallback()>::type>::value>::type* = nullptr>
+	bool translateException(TCallback&& callable, const ExceptionHandlerType& handler)
 	{
 		try { return callable(); }
 		catch (const std::exception& exception)
 		{
-			exceptionHandler(exception);
+			handler(exception);
 			return false;
 		}
 		catch (...)
 		{
-			exceptionHandler(std::runtime_error("unknown exception"));
+			handler(std::runtime_error("unknown exception"));
 			return false;
 		}
 	}

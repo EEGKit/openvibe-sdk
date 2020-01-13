@@ -14,7 +14,7 @@ namespace OpenViBE
 		 * \author Jozef Legeny (Mensia Technologies)
 		 * \date 2014-05-06
 		 * \brief Callback used for overriding a keyword in IConfigurationManager
-		 * \ingroup Group_Configuration
+		 * \ingroup Group_Config
 		 * \ingroup Group_Kernel
 		 */
 		class OV_API IConfigurationKeywordExpandCallback
@@ -22,7 +22,7 @@ namespace OpenViBE
 		public:
 
 			virtual ~IConfigurationKeywordExpandCallback() {}
-			virtual bool expand(const CString& rStringToExpand, CString& rExpandedString) const = 0;
+			virtual bool expand(const CString& in, CString& out) const = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

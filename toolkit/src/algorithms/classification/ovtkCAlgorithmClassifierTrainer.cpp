@@ -2,14 +2,14 @@
 #include "ovtkCFeatureVectorSet.hpp"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace OpenViBEToolkit;
 
 bool CAlgorithmClassifierTrainer::process()
 {
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(this->getInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet));
-	TParameterHandler<IMemoryBuffer*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration));
+	TParameterHandler<IMemoryBuffer*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Config));
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train))
 	{
@@ -28,16 +28,16 @@ bool CAlgorithmClassifierTrainer::process()
 		}
 	}
 
-	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration))
+	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfig))
 	{
-		IMemoryBuffer* configuration = op_pConfiguration;
-		if (!configuration)
+		IMemoryBuffer* config = op_pConfiguration;
+		if (!config)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Configuration memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 		}
-		configuration->setSize(0, true);
-		if (this->saveConfiguration(*configuration)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
+		config->setSize(0, true);
+		if (this->saveConfig(*config)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);

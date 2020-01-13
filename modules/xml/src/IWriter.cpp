@@ -11,26 +11,26 @@ namespace XML
 	class CWriter final : public IWriter
 	{
 	public:
-		explicit CWriter(IWriterCallback& rWriterCallback);
+		explicit CWriter(IWriterCallback& callback);
 		bool openChild(const char* name) override;
-		bool setChildData(const char* sData) override;
-		bool setAttribute(const char* sAttributeName, const char* sAttributeValue) override;
+		bool setChildData(const char* data) override;
+		bool setAttribute(const char* name, const char* value) override;
 		bool closeChild() override;
 		void release() override;
 
 	private:
-		void sanitize(string& sString, bool escapeQuotes = true);
+		static void sanitize(string& str, bool escapeQuotes = true);
 
 	protected:
-		IWriterCallback& m_rWriterCallback;
-		stack<string> m_vNodes;
+		IWriterCallback& m_callback;
+		stack<string> m_nodes;
 		bool m_hasChild             = false;
 		bool m_hasData              = false;
 		bool m_hasClosedOpeningNode = true;
 	};
-}
+} // namespace XML
 
-CWriter::CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
+CWriter::CWriter(IWriterCallback& callback) : m_callback(callback) {}
 
 bool CWriter::openChild(const char* name)
 {
@@ -40,75 +40,71 @@ bool CWriter::openChild(const char* name)
 
 	if (!m_hasClosedOpeningNode)
 	{
-		m_rWriterCallback.write(">");
+		m_callback.write(">");
 		m_hasClosedOpeningNode = true;
 	}
 
-	string l_sIndent(m_vNodes.size(), '\t');
-	string res = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(name);
-	m_rWriterCallback.write(res.c_str());
-	m_vNodes.push(name);
+	const string indent(m_nodes.size(), '\t');
+	const string res = (!m_nodes.empty() ? string("\n") : string("")) + indent + string("<") + string(name);
+	m_callback.write(res.c_str());
+	m_nodes.push(name);
 	m_hasChild             = false;
 	m_hasData              = false;
 	m_hasClosedOpeningNode = false;
 	return true;
 }
 
-bool CWriter::setChildData(const char* sData)
+bool CWriter::setChildData(const char* data)
 {
-	if (sData == nullptr) { return false; }
+	if (data == nullptr) { return false; }
 
 	if (m_hasChild) { return false; }
 
 	if (!m_hasClosedOpeningNode)
 	{
-		m_rWriterCallback.write(">");
+		m_callback.write(">");
 		m_hasClosedOpeningNode = true;
 	}
 
-	string l_sData(sData);
-	this->sanitize(l_sData, false);
+	string str(data);
+	this->sanitize(str, false);
 
-	m_rWriterCallback.write(l_sData.c_str());
+	m_callback.write(str.c_str());
 	m_hasChild = false;
 	m_hasData  = true;
 	return true;
 }
 
-bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeValue)
+bool CWriter::setAttribute(const char* name, const char* value)
 {
-	if (sAttributeName == nullptr) { return false; }
-
-	if (sAttributeValue == nullptr) { return false; }
-
+	if (name == nullptr) { return false; }
+	if (value == nullptr) { return false; }
 	if (m_hasChild) { return false; }
-
 	if (m_hasData) { return false; }
-
 	if (m_hasClosedOpeningNode) { return false; }
 
-	string l_sAttributeValue(sAttributeValue);
-	this->sanitize(l_sAttributeValue);
+	string str(value);
+	this->sanitize(str);
 
-	string res = string(" ") + string(sAttributeName) + string("=\"") + string(l_sAttributeValue) + string("\"");
-	m_rWriterCallback.write(res.c_str());
+	const string res = string(" ") + string(name) + string("=\"") + string(str) + string("\"");
+	m_callback.write(res.c_str());
 	return true;
 }
 
 bool CWriter::closeChild()
 {
-	if (m_vNodes.empty()) { return false; }
+	if (m_nodes.empty()) { return false; }
 
 	if (!m_hasClosedOpeningNode)
 	{
-		m_rWriterCallback.write(">");
+		m_callback.write(">");
 		m_hasClosedOpeningNode = true;
 	}
 
-	string l_sIndent(m_vNodes.size() - 1, '\t');
-	string res = ((m_hasData || !m_hasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
-	m_rWriterCallback.write(res.c_str());
-	m_vNodes.pop();
+	const string indent(m_nodes.size() - 1, '\t');
+	const string res = ((m_hasData || !m_hasChild) ? string("") : string("\n") + indent) + string("</") + m_nodes.top() + string(">");
+	m_callback.write(res.c_str());
+	m_nodes.pop();
 	m_hasChild = true;
 	m_hasData  = false;
 	return true;
@@ -116,27 +112,27 @@ bool CWriter::closeChild()
 
 void CWriter::release()
 {
-	while (!m_vNodes.empty()) { closeChild(); }
+	while (!m_nodes.empty()) { closeChild(); }
 	delete this;
 }
 
-void CWriter::sanitize(string& sString, bool escapeQuotes)
+void CWriter::sanitize(string& str, bool escapeQuotes)
 {
 	string::size_type i;
-	if (sString.length() != 0)
+	if (str.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = sString.find("&", 0); i != string::npos; i = sString.find("&", i + 1)) { sString.replace(i, 1, "&amp;"); }
-		for (i = sString.find("<", 0); i != string::npos; i = sString.find("<", i + 1)) { sString.replace(i, 1, "&lt;"); }
-		for (i = sString.find(">", 0); i != string::npos; i = sString.find(">", i + 1)) { sString.replace(i, 1, "&gt;"); }
+		for (i = str.find("&", 0); i != string::npos; i = str.find("&", i + 1)) { str.replace(i, 1, "&amp;"); }
+		for (i = str.find('<', 0); i != string::npos; i = str.find('<', i + 1)) { str.replace(i, 1, "&lt;"); }
+		for (i = str.find('>', 0); i != string::npos; i = str.find('>', i + 1)) { str.replace(i, 1, "&gt;"); }
 
 		// Quotes need only be escaped in attributes
 		if (escapeQuotes)
 		{
-			for (i = sString.find("'", 0); i != string::npos; i = sString.find("'", i + 1)) { sString.replace(i, 1, "&apos;"); }
-			for (i = sString.find("\"", 0); i != string::npos; i = sString.find("\"", i + 1)) { sString.replace(i, 1, "&quot;"); }
+			for (i = str.find('\'', 0); i != string::npos; i = str.find('\'', i + 1)) { str.replace(i, 1, "&apos;"); }
+			for (i = str.find('\"', 0); i != string::npos; i = str.find('\"', i + 1)) { str.replace(i, 1, "&quot;"); }
 		}
 	}
 }
 
-XML_API IWriter* XML::createWriter(IWriterCallback& rWriterCallback) { return new CWriter(rWriterCallback); }
+XML_API IWriter* XML::createWriter(IWriterCallback& callback) { return new CWriter(callback); }

@@ -52,13 +52,12 @@ namespace OpenViBE
 
 			/**
 			 * \brief Attaches a scenario to this player
-			 * \param scenarioID [in] : the scenario identifier to attach to this player.
-			 *                                   The scenario itself is found from the scenario manager.
-			 * \param pLocalConfigurationTokens [in] : An optional map that contains configuration tokens to add.
+			 * \param id [in] : the scenario identifier to attach to this player. The scenario itself is found from the scenario manager.
+			 * \param localConfigTokens [in] : An optional map that contains configuration tokens to add.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setScenario(const CIdentifier& scenarioID, const CNameValuePairList* pLocalConfigurationTokens = nullptr) = 0;
+			virtual bool setScenario(const CIdentifier& id, const CNameValuePairList* localConfigTokens = nullptr) = 0;
 
 			/**
 			 * \brief returns a reference to the runtime configuration manager
@@ -147,14 +146,13 @@ namespace OpenViBE
 
 			/**
 			 * \brief Sets maximum fast forward factor coefficient
-			 * \param f64FastForwardFactor : the maximum speed multiplier to be applied
-			 *        when playing in PlayerStatus_Forward mode
+			 * \param factor : the maximum speed multiplier to be applied when playing in PlayerStatus_Forward mode
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \note If a negative value is passed, it is turned back to 0
 			 * \note It the fast forward factor is 0, it tells the player to go as fast as possible
 			 */
-			virtual bool setFastForwardMaximumFactor(double f64FastForwardFactor) = 0;
+			virtual bool setFastForwardMaximumFactor(double factor) = 0;
 			/**
 			 * \brief Gets the maximum fast forward factor coefficient
 			 * \return The maximum fast forward factor coefficient.
@@ -169,16 +167,16 @@ namespace OpenViBE
 
 			/**
 			 * \brief "short time" function to be called repeatedly by the outstide application
-			 * \param ui64ElapsedTime [in] : real elapsed time given in seconds 32:32
-			 * \param ui64MaximumTimeToReach [in] : maximum time to reach given in seconds 32:32
+			 * \param elapsedTime [in] : real elapsed time given in seconds 32:32
+			 * \param maximumTimeToReach [in] : maximum time to reach given in seconds 32:32
 			 * \return \e true if the execution went successfully.
 			 * \return \e false in case their was a problem or the execution terminated.
 			 *
-			 * The \e ui64MaximumTimeToReach parameter guarantees that the player does not
+			 * The \e maximumTimeToReach parameter guarantees that the player does not
 			 * run beyond the specified time when ran in fast forward mode. It defaults
 			 * to \c uint64_t(-1) which represents the largest OpenViBE time.
 			 */
-			virtual bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach = uint64_t(-1)) = 0;
+			virtual bool loop(uint64_t elapsedTime, uint64_t maximumTimeToReach = uint64_t(-1)) = 0;
 
 			virtual uint64_t getCurrentSimulatedTime() const = 0;
 

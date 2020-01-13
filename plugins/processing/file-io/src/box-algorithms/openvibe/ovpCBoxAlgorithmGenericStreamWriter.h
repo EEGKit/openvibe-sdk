@@ -38,10 +38,10 @@ namespace OpenViBEPlugins
 			EBML::CWriterHelper m_oWriterHelper;
 
 		private:
-			void write(const void* buffer, const uint64_t size) override;
+			void write(const void* buffer, const size_t size) override;
 
 			OpenViBE::CMemoryBuffer m_oSwap;
-			std::ofstream m_oFile;
+			std::ofstream m_file;
 		};
 
 		class CBoxAlgorithmGenericStreamWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 			//the check is unnecessary when removing/changing inputs and on already named inputs
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				const uint32_t i = box.getInputCount() - 1;
+				const size_t i = box.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
 				box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
 				//for (i=0; i<box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
@@ -68,20 +68,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_EBMLStream);
 				this->check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;

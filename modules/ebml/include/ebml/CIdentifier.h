@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <climits>
+#include <cstdlib>	// For Unix Compatibility
 
 namespace EBML
 {
@@ -46,7 +47,7 @@ namespace EBML
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(const uint32_t id1, const uint32_t id2) : m_id((uint64_t(id1) << 32) + id2) {}
+		CIdentifier(const size_t id1, const size_t id2) : m_id((uint64_t(id1) << 32) + id2) {}
 		/**
 		 * \brief Copy constructor
 		 * \param id [in] : The source identifier to use
@@ -62,13 +63,14 @@ namespace EBML
 
 		/**
 		 * \brief Copy operator
-		 * \param identifier [in] : The source identifier to copy from
+		 * \param id [in] : The source identifier to copy from
 		 * \return a const reference on this identifier
 		 *
 		 * Initializes this identifier to the same value as
 		 * the given source identifier.
 		 */
 		const CIdentifier& operator=(const CIdentifier& id);
+
 		/**
 		 * \brief Equality comparison operator
 		 * \param id1 [in] : The first identifier to compare

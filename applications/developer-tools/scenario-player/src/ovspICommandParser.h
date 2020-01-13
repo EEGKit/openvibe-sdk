@@ -21,10 +21,9 @@
 
 #pragma once
 
+#include "ovsp_defines.h"
 #include <vector>
 #include <memory>
-
-#include "ovsp_defines.h"
 
 namespace OpenViBE
 {
@@ -52,7 +51,6 @@ namespace OpenViBE
 		*
 		*/
 		virtual void initialize() = 0;
-
 
 		/**
 		* \brief Unitialize parser
@@ -82,4 +80,4 @@ namespace OpenViBE
 		ICommandParser(const ICommandParser&)            = delete;
 		ICommandParser& operator=(const ICommandParser&) = delete;
 	};
-}
+}	// namespace OpenViBE

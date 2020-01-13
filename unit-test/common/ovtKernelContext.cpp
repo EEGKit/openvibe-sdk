@@ -26,19 +26,17 @@
 namespace OpenViBETest
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 	using namespace Plugins;
 
 	bool ctx::initialize()
 	{
-		CString kernelFile;
-
 #if defined TARGET_OS_Windows
-		kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
+		const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+		const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+		const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 		CString error;
 
@@ -60,9 +58,9 @@ namespace OpenViBETest
 			return false;
 		}
 
-		CString configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
+		const CString configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 
-		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 		if (!ctx)
 		{
@@ -92,4 +90,4 @@ namespace OpenViBETest
 
 		return true;
 	}
-}
+}  // namespace OpenViBETest

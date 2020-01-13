@@ -18,42 +18,42 @@ namespace OpenViBE
 			explicit CTypeManager(const IKernelContext& ctx);
 			CIdentifier getNextTypeIdentifier(const CIdentifier& previousID) const override;
 			std::vector<std::pair<CIdentifier, CString>> getSortedTypes() const override;
-			bool registerType(const CIdentifier& typeID, const CString& sTypeName) override;
-			bool registerStreamType(const CIdentifier& typeID, const CString& sTypeName, const CIdentifier& rParentTypeIdentifier) override;
-			bool registerEnumerationType(const CIdentifier& typeID, const CString& sTypeName) override;
-			bool registerEnumerationEntry(const CIdentifier& typeID, const CString& sEntryName, uint64_t ui64EntryValue) override;
-			bool registerBitMaskType(const CIdentifier& typeID, const CString& sTypeName) override;
-			bool registerBitMaskEntry(const CIdentifier& typeID, const CString& sEntryName, uint64_t ui64EntryValue) override;
+			bool registerType(const CIdentifier& typeID, const CString& name) override;
+			bool registerStreamType(const CIdentifier& typeID, const CString& name, const CIdentifier& parentTypeID) override;
+			bool registerEnumerationType(const CIdentifier& typeID, const CString& name) override;
+			bool registerEnumerationEntry(const CIdentifier& typeID, const CString& name, uint64_t value) override;
+			bool registerBitMaskType(const CIdentifier& typeID, const CString& name) override;
+			bool registerBitMaskEntry(const CIdentifier& typeID, const CString& name, uint64_t value) override;
 			bool isRegistered(const CIdentifier& typeID) const override;
 			bool isStream(const CIdentifier& typeID) const override;
-			bool isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& rParentTypeIdentifier) const override;
+			bool isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& parentTypeID) const override;
 			bool isEnumeration(const CIdentifier& typeID) const override;
 			bool isBitMask(const CIdentifier& typeID) const override;
 			CString getTypeName(const CIdentifier& typeID) const override;
 			CIdentifier getStreamParentType(const CIdentifier& typeID) const override;
-			uint64_t getEnumerationEntryCount(const CIdentifier& typeID) const override;
-			bool getEnumerationEntry(const CIdentifier& typeID, uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const override;
-			CString getEnumerationEntryNameFromValue(const CIdentifier& typeID, uint64_t ui64EntryValue) const override;
-			uint64_t getEnumerationEntryValueFromName(const CIdentifier& typeID, const CString& rEntryName) const override;
-			uint64_t getBitMaskEntryCount(const CIdentifier& typeID) const override;
-			bool getBitMaskEntry(const CIdentifier& typeID, uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const override;
-			CString getBitMaskEntryNameFromValue(const CIdentifier& typeID, uint64_t ui64EntryValue) const override;
-			uint64_t getBitMaskEntryValueFromName(const CIdentifier& typeID, const CString& rEntryName) const override;
-			CString getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, uint64_t ui64EntryCompositionValue) const override;
-			uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& rEntryCompositionName) const override;
-			bool evaluateSettingValue(CString settingValue, double& numericResult) const override;
+			size_t getEnumerationEntryCount(const CIdentifier& typeID) const override;
+			bool getEnumerationEntry(const CIdentifier& typeID, uint64_t index, CString& name, uint64_t& value) const override;
+			CString getEnumerationEntryNameFromValue(const CIdentifier& typeID, uint64_t value) const override;
+			uint64_t getEnumerationEntryValueFromName(const CIdentifier& typeID, const CString& name) const override;
+			size_t getBitMaskEntryCount(const CIdentifier& typeID) const override;
+			bool getBitMaskEntry(const CIdentifier& typeID, uint64_t index, CString& name, uint64_t& value) const override;
+			CString getBitMaskEntryNameFromValue(const CIdentifier& typeID, uint64_t value) const override;
+			uint64_t getBitMaskEntryValueFromName(const CIdentifier& typeID, const CString& name) const override;
+			CString getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, uint64_t value) const override;
+			uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& name) const override;
+			bool evaluateSettingValue(CString value, double& result) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager)
 
 		protected:
 
-			std::map<CIdentifier, CString> m_vName;
-			std::set<CString> m_TakenNames;
-			std::map<CIdentifier, std::map<uint64_t, CString>> m_vEnumeration;
-			std::map<CIdentifier, std::map<uint64_t, CString>> m_vBitMask;
-			std::map<CIdentifier, CIdentifier> m_vStream;
+			std::map<CIdentifier, CString> m_names;
+			std::set<CString> m_takenNames;
+			std::map<CIdentifier, std::map<uint64_t, CString>> m_enumerations;
+			std::map<CIdentifier, std::map<uint64_t, CString>> m_bitMasks;
+			std::map<CIdentifier, CIdentifier> m_streams;
 
-			mutable std::recursive_mutex m_oMutex;
+			mutable std::recursive_mutex m_mutex;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

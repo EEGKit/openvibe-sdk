@@ -11,14 +11,14 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 namespace
 {
 	std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
 
-	std::string generateRstTitle(const std::string title, const int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
+	std::string generateRstTitle(const std::string& title, const int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
@@ -44,31 +44,17 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 
 	if (!ofBoxIdx.good())
 	{
-		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDirectory + "/index-boxes.rst").c_str() <<
-				"]\n";
+		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDirectory + "/index-boxes.rst").c_str() << "]\n";
 		return false;
 	}
 
-	ofBoxIdx
-			<< ".. _Doc_BoxAlgorithms:\n"
-			<< "\n"
-			<< generateRstTitle("Boxes list", 0)
-			<< "\n"
-			<< "Available box algorithms are :\n"
-			<< "\n";
-
-	ofBoxIdx << generateRstIndex(m_categories);
-	ofBoxIdx << " \n";
+	ofBoxIdx << ".. _Doc_BoxAlgorithms:\n\n" << generateRstTitle("Boxes list", 0) << "\nAvailable box algorithms are :\n\n" << generateRstIndex(m_categories) << " \n";
 
 	if (!m_deprecatedBoxesCategories.empty())
 	{
-		ofBoxIdx << "\n\n"
-				<< generateRstTitle("Deprecated boxes list", 0)
-				<< "\n"
-				<< "The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n";
-
-		ofBoxIdx << generateRstIndex(m_deprecatedBoxesCategories);
-		ofBoxIdx << " \n";
+		ofBoxIdx << "\n\n" << generateRstTitle("Deprecated boxes list", 0) <<
+				"\nThe following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n"
+				<< generateRstIndex(m_deprecatedBoxesCategories) << " \n";
 	}
 
 	ofBoxIdx << " \n";
@@ -78,34 +64,34 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc& pluginObjectDesc)
 {
-	string fileName = "BoxAlgorithm_" + this->transform(pluginObjectDesc.getName().toASCIIString());
+	const string fileName = "BoxAlgorithm_" + transform(pluginObjectDesc.getName().toASCIIString());
 	CIdentifier boxID;
 
 	if (pluginObjectDesc.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_scenario->addBox(boxID, static_cast<const IBoxAlgorithmDesc&>(pluginObjectDesc), OV_UndefinedIdentifier))
+		if (!m_scenario->addBox(boxID, dynamic_cast<const IBoxAlgorithmDesc&>(pluginObjectDesc), OV_UndefinedIdentifier))
 		{
-			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
+			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
 	else if (!m_scenario->addBox(boxID, pluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
 	{
-		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
+		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 		return true;
 	}
 
 
 	IBox& box = *m_scenario->getBoxDetails(boxID);
 
-	m_kernelCtx.getLogManager() << LogLevel_Trace << "Working on [" << CString(fileName.c_str()) << "]\n";
+	m_kernelCtx.getLogManager() << LogLevel_Trace << "Working on [" << fileName << "]\n";
 
 	// --------------------------------------------------------------------------------------------------------------------
-	std::ofstream ofBoxTemplate;
-	FS::Files::openOFStream(ofBoxTemplate, (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str());
+	std::ofstream ofs;
+	FS::Files::openOFStream(ofs, (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str());
 
-	if (!ofBoxTemplate.good())
+	if (!ofs.good())
 	{
 		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file ["
 				<< (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str()
@@ -113,118 +99,67 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		return false;
 	}
 
-	ofBoxTemplate
-			<< ".. _Doc_" << fileName << ":\n"
-			<< "\n"
-			<< generateRstTitle(pluginObjectDesc.getName().toASCIIString(), 0)
-			<< "\n"
-			<< ".. container:: attribution\n"
-			<< "\n"
-			<< "   :Author:\n"
-			<< "      " << pluginObjectDesc.getAuthorName().toASCIIString() << "\n"
-			<< "   :Company:\n"
-			<< "      " << pluginObjectDesc.getAuthorCompanyName().toASCIIString() << "\n"
-			<< "\n"
-			<< "\n"
-			<< ".. todo::  Write general box description...\n"
-			<< "\n"
-			<< "\n";
+	ofs << ".. _Doc_" << fileName << ":\n\n" << generateRstTitle(pluginObjectDesc.getName().toASCIIString(), 0)
+			<< "\n.. container:: attribution\n\n   :Author:\n      " << pluginObjectDesc.getAuthorName().toASCIIString() << "\n"
+			<< "   :Company:\n      " << pluginObjectDesc.getAuthorCompanyName().toASCIIString() << "\n\n\n"
+			<< ".. todo::  Write general box description...\n\n\n";
 
 
 	if (box.getInputCount())
 	{
-		ofBoxTemplate
-				<< ".. _Doc_" << fileName.c_str() << "_Inputs:\n"
-				<< "\n"
-				<< generateRstTitle("Inputs", 1).c_str()
-				<< ".. todo::  Write general input description...\n"
-				<< "\n"
-				<< ".. csv-table::\n"
-				<< "   :header: \"Input Name\", \"Stream Type\"\n"
-				<< "\n";
+		ofs << ".. _Doc_" << fileName.c_str() << "_Inputs:\n\n" << generateRstTitle("Inputs", 1).c_str()
+				<< ".. todo::  Write general input description...\n\n.. csv-table::\n   :header: \"Input Name\", \"Stream Type\"\n\n";
 
 		std::vector<CString> inputNames(box.getInputCount());
-		for (uint32_t i = 0; i < box.getInputCount(); ++i)
+		for (size_t i = 0; i < box.getInputCount(); ++i)
 		{
 			CIdentifier typeID;
 			box.getInputName(i, inputNames[i]);
 			box.getInputType(i, typeID);
 			CString typeName = m_kernelCtx.getTypeManager().getTypeName(typeID);
 
-			ofBoxTemplate
-					<< "   \"" << inputNames[i] << "\", \"" << typeName << "\"\n";
+			ofs << "   \"" << inputNames[i] << "\", \"" << typeName << "\"\n";
 		}
-		uint32_t index = 1;
-		for (CString inputName : inputNames)
+		size_t index = 1;
+		for (const auto& name : inputNames)
 		{
-			ofBoxTemplate
-					<< "\n"
-					<< ".. _Doc_" << fileName << "_Input_" << index << ":\n"
-					<< "\n"
-					<< generateRstTitle(inputName.toASCIIString(), 2)
-					<< "\n"
-					<< ".. todo::  Write input description...\n"
-					<< "\n"
-					<< "\n";
+			ofs << "\n.. _Doc_" << fileName << "_Input_" << index << ":\n\n" << generateRstTitle(name.toASCIIString(), 2)
+					<< "\n.. todo::  Write input description...\n\n\n";
 			index++;
 		}
 	}
 
 	if (box.getOutputCount())
 	{
-		ofBoxTemplate
-				<< ".. _Doc_" << fileName << "_Outputs:\n"
-				<< "\n"
-				<< generateRstTitle("Outputs", 1)
-				<< "\n"
-				<< ".. todo::  Write general output description...\n"
-				<< "\n"
-				<< ".. csv-table::\n"
-				<< "   :header: \"Output Name\", \"Stream Type\"\n"
-				<< "\n";
+		ofs << ".. _Doc_" << fileName << "_Outputs:\n\n" << generateRstTitle("Outputs", 1)
+				<< "\n.. todo::  Write general output description...\n\n.. csv-table::\n   :header: \"Output Name\", \"Stream Type\"\n\n";
 
 		std::vector<CString> outputNames(box.getOutputCount());
-		for (uint32_t i = 0; i < box.getOutputCount(); ++i)
+		for (size_t i = 0; i < box.getOutputCount(); ++i)
 		{
 			CIdentifier typeID;
 			box.getOutputName(i, outputNames[i]);
 			box.getOutputType(i, typeID);
 			CString typeName = m_kernelCtx.getTypeManager().getTypeName(typeID);
 
-			ofBoxTemplate
-					<< "   \"" << outputNames[i] << "\", \"" << typeName << "\"\n";
+			ofs << "   \"" << outputNames[i] << "\", \"" << typeName << "\"\n";
 		}
-		uint32_t index = 1;
-		for (CString outputName : outputNames)
+		size_t index = 1;
+		for (const auto& outputName : outputNames)
 		{
-			ofBoxTemplate
-					<< "\n"
-					<< ".. _Doc_" << fileName << "_Output_" << index << ":\n"
-					<< "\n"
-					<< generateRstTitle(outputName.toASCIIString(), 2)
-					<< "\n"
-					<< ".. todo::  Write output description...\n"
-					<< "\n"
-					<< "\n";
+			ofs << "\n.. _Doc_" << fileName << "_Output_" << index << ":\n\n" << generateRstTitle(outputName.toASCIIString(), 2)
+					<< "\n.. todo::  Write output description...\n\n\n";
 			index++;
 		}
 	}
 
 	if (box.getSettingCount())
 	{
-		ofBoxTemplate
-				<< ".. _Doc_" << fileName.c_str() << "_Settings:\n"
-				<< "\n"
-				<< generateRstTitle("Settings", 1)
-				<< "\n"
-				<< ".. todo::  Write settings general description...\n"
-				<< "\n"
-				<< ".. csv-table::\n"
-				<< "   :header: \"Setting Name\", \"Type\", \"Default Value\"\n"
-				<< "\n";
+		ofs << ".. _Doc_" << fileName.c_str() << "_Settings:\n\n" << generateRstTitle("Settings", 1) << "\n"
+				<< ".. todo::  Write settings general description...\n\n.. csv-table::\n   :header: \"Setting Name\", \"Type\", \"Default Value\"\n\n";
 
 		std::vector<CString> settingsNames(box.getSettingCount());
-		for (uint32_t i = 0; i < box.getSettingCount(); ++i)
+		for (size_t i = 0; i < box.getSettingCount(); ++i)
 		{
 			CIdentifier typeID;
 			CString defaultValue;
@@ -233,44 +168,24 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			box.getSettingDefaultValue(i, defaultValue);
 			CString typeName = m_kernelCtx.getTypeManager().getTypeName(typeID);
 
-			ofBoxTemplate
-					<< "   \"" << settingsNames[i] << "\", \"" << typeName << "\", \"" << defaultValue << "\"\n";
+			ofs << "   \"" << settingsNames[i] << "\", \"" << typeName << "\", \"" << defaultValue << "\"\n";
 		}
-		uint32_t index = 1;
-		for (CString settingName : settingsNames)
+		size_t index = 1;
+		for (const auto& name : settingsNames)
 		{
-			ofBoxTemplate
-					<< "\n"
-					<< ".. _Doc_" << fileName << "_Setting_" << index << ":\n"
-					<< "\n"
-					<< generateRstTitle(settingName.toASCIIString(), 2)
-					<< "\n"
-					<< ".. todo:: Write setting description... \n"
-					<< "\n"
-					<< "\n";
+			ofs << "\n.. _Doc_" << fileName << "_Setting_" << index << ":\n\n" << generateRstTitle(name.toASCIIString(), 2)
+					<< "\n.. todo:: Write setting description... \n\n\n";
 			index++;
 		}
 	}
 
-	ofBoxTemplate
-			<< ".. _Doc_" << fileName << "_Examples:\n"
-			<< "\n"
-			<< generateRstTitle("Examples", 1)
-			<< "\n"
-			<< ".. todo::  Write example of use...\n"
-			<< "\n"
-			<< "\n";
+	ofs << ".. _Doc_" << fileName << "_Examples:\n\n" << generateRstTitle("Examples", 1)
+			<< "\n.. todo::  Write example of use...\n\n\n";
 
-	ofBoxTemplate
-			<< ".. _Doc_" << fileName << "_Miscellaneous:\n"
-			<< "\n"
-			<< generateRstTitle("Miscellaneous", 1)
-			<< "\n"
-			<< ".. todo::  Write any miscellaneous information...\n"
-			<< "\n"
-			<< "\n";
+	ofs << ".. _Doc_" << fileName << "_Miscellaneous:\n\n" << generateRstTitle("Miscellaneous", 1)
+			<< "\n.. todo::  Write any miscellaneous information...\n\n\n";
 
-	ofBoxTemplate.close();
+	ofs.close();
 
 	// m_categories is used to generate the list of boxes. Documentation for deprecated boxes
 	// should remain available if needed but not be listed
@@ -283,9 +198,9 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	return true;
 }
 
-string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<std::pair<std::string, std::string>> categories)
+string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<std::pair<std::string, std::string>> categories) const
 {
-	string res = "";
+	string res;
 
 	string lastCategoryName;
 	vector<string> lastSplittedCategories;
@@ -317,26 +232,21 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 			}
 
 			auto itLast = lastSplittedCategories.begin();
-			auto it1 = splittedCategories.begin();
-			for (;itLast != lastSplittedCategories.end() && it1 != splittedCategories.end() && *itLast == *it1; ++itLast, ++it1) { }
+			auto it1    = splittedCategories.begin();
+			for (; itLast != lastSplittedCategories.end() && it1 != splittedCategories.end() && *itLast == *it1; ++itLast, ++it1) { }
 
 			for (; it1 != splittedCategories.end(); ++it1)
 			{
 				size_t level = 1;
 				for (auto it2 = splittedCategories.begin(); it2 != it1; ++it2) { level++; }
-				res += "\n\n"
-						+ generateRstTitle(*it1, level)
-						+ "\n"
-						+ ".. toctree::\n"
-						+ "   :maxdepth: 1\n"
-						+ "\n";
+				res += "\n\n" + generateRstTitle(*it1, int(level)) + "\n.. toctree::\n   :maxdepth: 1\n\n";
 			}
 
 			lastCategoryName       = categoryName;
 			lastSplittedCategories = splittedCategories;
 		}
 
-		res += "   Doc_BoxAlgorithm_" + this->transform(name) + "\n";
+		res += "   Doc_BoxAlgorithm_" + transform(name) + "\n";
 	}
 	return res;
 }

@@ -12,54 +12,50 @@ namespace XML
 	class TReaderCallbackProxy1 final : public IReaderCallback
 	{
 	public:
-		TReaderCallbackProxy1(TOwnerClass& rOwnerObject,
-							  void (TOwnerClass::*mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue,
-																uint64_t nAttribute),
-							  void (TOwnerClass::*mfpProcessChildData)(const char* sData), void (TOwnerClass::*mfpCloseChild)())
-			: m_rOwnerObject(rOwnerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
+		TReaderCallbackProxy1(TOwnerClass& ownerObject,
+							  void (TOwnerClass::*mfpOpenChild)(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute),
+							  void (TOwnerClass::*mfpProcessChildData)(const char* data), void (TOwnerClass::*mfpCloseChild)())
+			: m_ownerObject(ownerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) override
+		void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 		{
-			if (m_mfpOpenChild) { m_rOwnerObject.m_mfpOpenChild(name, sAttributeName, sAttributeValue, nAttribute); }
+			if (m_mfpOpenChild) { m_ownerObject.m_mfpOpenChild(name, attributeName, attributeValue, nAttribute); }
 		}
 
-		void processChildData(const char* sData) override { if (m_mfpProcessChildData) { m_rOwnerObject.m_mfpProcessChildData(sData); } }
-		void closeChild() override { if (m_mfpCloseChild) { m_rOwnerObject.m_mfpCloseChild(); } }
+		void processChildData(const char* data) override { if (m_mfpProcessChildData) { m_ownerObject.m_mfpProcessChildData(data); } }
+		void closeChild() override { if (m_mfpCloseChild) { m_ownerObject.m_mfpCloseChild(); } }
 
 	protected:
-		TOwnerClass& m_rOwnerObject;
-		void (TOwnerClass::*m_mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
-		void (TOwnerClass::*m_mfpProcessChildData)(const char* sData);
+		TOwnerClass& m_ownerObject;
+		void (TOwnerClass::*m_mfpOpenChild)(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute);
+		void (TOwnerClass::*m_mfpProcessChildData)(const char* data);
 		void (TOwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue,
-																   uint64_t nAttribute), void (COwnerClass::*mfpProcessChildData)(const char* sData),
-			  void (COwnerClass::*mfpCloseChild)()>
+	template <class TOwnerClass,
+			  void (TOwnerClass::*TMfpOpenChild)(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute),
+			  void (TOwnerClass::*TMfpProcessChildData)(const char* data), void (TOwnerClass::*mfpCloseChild)()>
 	class TReaderCallbackProxy2 final : public IReaderCallback
 	{
 	public:
-		TReaderCallbackProxy2(COwnerClass rOwnerObject)
-			: m_rOwnerObject(rOwnerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
+		TReaderCallbackProxy2(TOwnerClass ownerObject)
+			: m_ownerObject(ownerObject), m_mfpOpenChild(TMfpOpenChild), m_mfpProcessChildData(TMfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute) override
+		void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 		{
-			if (mfpOpenChild) { m_rOwnerObject.mfpOpenChild(name, sAttributeName, sAttributeValue, nAttribute); }
+			if (TMfpOpenChild) { m_ownerObject.mfpOpenChild(name, attributeName, attributeValue, nAttribute); }
 		}
 
-		void processChildData(const char* sData) override { if (mfpProcessChildData) { m_rOwnerObject.mfpProcessChildData(sData); } }
-		void closeChild() override { if (mfpCloseChild) { m_rOwnerObject.mfpCloseChild(); } }
+		void processChildData(const char* data) override { if (TMfpProcessChildData) { m_ownerObject.mfpProcessChildData(data); } }
+		void closeChild() override { if (mfpCloseChild) { m_ownerObject.mfpCloseChild(); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpOpenChild)(const char* name, const char** sAttributeName, const char** sAttributeValue, uint64_t nAttribute);
-		void (COwnerClass::*m_mfpProcessChildData)(const char* sData);
-		void (COwnerClass::*m_mfpCloseChild)();
+		TOwnerClass& m_ownerObject;
+		void (TOwnerClass::*m_mfpOpenChild)(const char* name, const char** attributeName, const char** attributeValue, size_t nAttribute);
+		void (TOwnerClass::*m_mfpProcessChildData)(const char* data);
+		void (TOwnerClass::*m_mfpCloseChild)();
 	};
-
-	// ________________________________________________________________________________________________________________
-	//
-}
+}  // namespace XML

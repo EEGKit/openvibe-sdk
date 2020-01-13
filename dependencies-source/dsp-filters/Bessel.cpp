@@ -52,10 +52,7 @@ namespace Dsp
 		}
 
 		// returns the k-th zero based coefficient of the reverse bessel polynomial of degree n
-		static double reversebessel(const int k, const int n)
-		{
-			return fact(2 * n - k) / ((fact(n - k) * fact(k)) * pow(2., n - k));
-		}
+		static double reversebessel(const int k, const int n) { return fact(2 * n - k) / ((fact(n - k) * fact(k)) * pow(2., n - k)); }
 
 		//------------------------------------------------------------------------------
 

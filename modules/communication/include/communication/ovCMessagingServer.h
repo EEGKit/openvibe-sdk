@@ -14,7 +14,7 @@ namespace Communication
 		/**
 		 * \brief	Default constructor.
 		 */
-		MessagingServer(): CMessaging(), m_Server(Socket::createConnectionServer()) {}
+		MessagingServer() : CMessaging(), m_Server(Socket::createConnectionServer()) {}
 
 		/**
 		 * \brief	Destructor.
@@ -31,7 +31,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool listen(const uint32_t port) const { return m_Server->listen(port); }
+		bool listen(const size_t port) const { return m_Server->listen(port); }
 
 		/**
 		 * \brief Close the connection
@@ -54,7 +54,7 @@ namespace Communication
 		* This is useful if you set the port to '0'.
 		* \param port [out]: port on the one the server is listening
 		*/
-		bool getSocketPort(uint32_t& port) const { return m_Server->getSocketPort(port); }
+		bool getSocketPort(size_t& port) const { return m_Server->getSocketPort(port); }
 
 
 		/**
@@ -71,7 +71,7 @@ namespace Communication
 		 * \sa addInput
 		 * \sa addOutput
 		 */
-		bool addParameter(uint32_t id, uint64_t type, const std::string& name, const std::string& value);
+		bool addParameter(uint64_t id, size_t type, const std::string& name, const std::string& value) const;
 
 		/**
 		 * \brief Adds an input in the box Information.
@@ -86,7 +86,7 @@ namespace Communication
 		 * \sa addParameter
 		 * \sa addOutput
 		 */
-		bool addInput(uint32_t id, uint64_t type, const std::string& name);
+		bool addInput(uint64_t id, size_t type, const std::string& name) const;
 
 		/**
 		 * \brief Adds an output in the box information.
@@ -101,7 +101,7 @@ namespace Communication
 		 * \sa addParameter
 		 * \sa addInput
 		 */
-		bool addOutput(uint32_t id, uint64_t type, const std::string& name);
+		bool addOutput(uint64_t id, size_t type, const std::string& name) const;
 
 		/**
 		 * \brief Get the log message received from the client.
@@ -127,7 +127,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
+		bool popEBML(uint64_t& packetId, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
 
 		/**
 		 * \brief Push Error message to the client
@@ -138,7 +138,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool pushError(EError error, uint64_t guiltyId);
+		bool pushError(EError error, uint64_t guiltyId) const;
 
 		/**
 		 * \brief Push EBML message to the client
@@ -151,7 +151,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml);
+		bool pushEBML(size_t index, uint64_t startTime, uint64_t endTime, const std::shared_ptr<const std::vector<uint8_t>>& ebml) const;
 
 		/**
 		 * \brief Push Time message to the client
@@ -183,4 +183,4 @@ namespace Communication
 		Socket::IConnectionServer* m_Server = nullptr; //< Server connection
 		Socket::IConnection* m_Client       = nullptr;
 	};
-}
+}  // namespace Communication

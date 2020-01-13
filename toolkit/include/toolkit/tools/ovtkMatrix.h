@@ -14,12 +14,12 @@ namespace OpenViBEToolkit
 			OVTK_API bool clearContent(OpenViBE::IMatrix& matrix);
 			OVTK_API bool isDescriptionSimilar(const OpenViBE::IMatrix& src1, const OpenViBE::IMatrix& src2, bool checkLabels = true);
 			OVTK_API bool isContentSimilar(const OpenViBE::IMatrix& src1, const OpenViBE::IMatrix& src2);
-			OVTK_API bool isContentValid(const OpenViBE::IMatrix& src, bool checkNotANumber = true, bool checkInfinity = true);
+			OVTK_API bool isContentValid(const OpenViBE::IMatrix& src, const bool checkNotANumber = true, const bool checkInfinity = true);
 
-			OVTK_API bool toString(const OpenViBE::IMatrix& matrix, OpenViBE::CString& sString, uint32_t precision = 6);
+			OVTK_API bool toString(const OpenViBE::IMatrix& matrix, OpenViBE::CString& sString, const size_t precision = 6);
 			OVTK_API bool fromString(OpenViBE::IMatrix& matrix, const OpenViBE::CString& sString);
 
-			OVTK_API bool saveToTextFile(const OpenViBE::IMatrix& matrix, const OpenViBE::CString& filename, uint32_t precision = 6);
+			OVTK_API bool saveToTextFile(const OpenViBE::IMatrix& matrix, const OpenViBE::CString& filename, const size_t precision = 6);
 			OVTK_API bool loadFromTextFile(OpenViBE::IMatrix& matrix, const OpenViBE::CString& sFilename);
 		} // namespace Matrix
 

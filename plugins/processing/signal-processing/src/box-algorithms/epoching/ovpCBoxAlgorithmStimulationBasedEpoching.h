@@ -24,8 +24,8 @@ namespace OpenViBEPlugins
 
 		private:
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_signalDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimulationDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_signalEncoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimDecoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_encoder;
 
 			uint64_t m_stimulationID        = 0;
 			double m_epochDurationInSeconds = 0;
@@ -33,12 +33,12 @@ namespace OpenViBEPlugins
 			int64_t m_epochOffset           = 0;
 
 			// Input matrix parameters
-			uint64_t m_samplingRate              = 0;
-			uint32_t m_nSamplePerInputBuffer = 0;
+			size_t m_sampling              = 0;
+			size_t m_nSamplePerInputBuffer = 0;
 
 			// Output matrix dimensions
-			uint32_t m_nChannel              = 0;
-			uint32_t m_nSampleCountOutputEpoch = 0;
+			size_t m_nChannel                = 0;
+			size_t m_nSampleCountOutputEpoch = 0;
 
 			uint64_t m_lastSignalChunkEndTime        = 0;
 			uint64_t m_lastStimulationChunkStartTime = 0;

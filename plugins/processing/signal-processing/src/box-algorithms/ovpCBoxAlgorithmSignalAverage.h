@@ -24,11 +24,12 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
+		protected:
 			void computeAverage();
-
+			
 			// Needed to read the input and write the output
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_Decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_Encoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_encoder;
 		};
 
 		/**
@@ -51,10 +52,10 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalAverage(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rPrototype.addOutput("Filtered signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Filtered signal", OV_TypeId_Signal);
 
 				return true;
 			}

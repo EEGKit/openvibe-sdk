@@ -37,19 +37,19 @@ namespace OpenViBE
 			virtual CString getText() const = 0;
 			/**
 			 * \brief Changes the identifier of this comment
-			 * \param identifier [in] : The new identifier
+			 * \param id [in] : The new id
 			 *        this comment should take.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& id) = 0;
 			/**
 			 * \brief Changes the text of this comment
-			 * \param sText [in] : The text this comment should contain
+			 * \param text [in] : The text this comment should contain
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setText(const CString& sText) = 0;
+			virtual bool setText(const CString& text) = 0;
 
 			//@}
 			/** \name Initialisation from prototypes etc... */
@@ -57,20 +57,20 @@ namespace OpenViBE
 
 			/**
 			 * \brief Initializes the comment from an already existing comment
-			 * \param rExisitingComment [in] : The existing box.
+			 * \param comment [in] : The existing box.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
 			 * Resets the comment and initializes its text/attributes
 			 * according to the existing comment.
 			 */
-			virtual bool initializeFromExistingComment(const IComment& rExisitingComment) = 0;
+			virtual bool initializeFromExistingComment(const IComment& comment) = 0;
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Comment)
 		};
 
-		typedef IComment IStaticCommentContext;
+		typedef IComment static_comment_context_t;
 	} // namespace Kernel
 } // namespace OpenViBE

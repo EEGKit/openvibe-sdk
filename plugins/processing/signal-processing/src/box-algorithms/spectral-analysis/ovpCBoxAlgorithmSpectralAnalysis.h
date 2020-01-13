@@ -24,11 +24,11 @@ namespace OpenViBEPlugins
 			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
 			std::vector<bool> m_isSpectrumEncoderActive;
 
-			uint32_t m_nChannel = 0;
-			uint32_t m_nSample  = 0;
-			uint32_t m_samplingRate = 0;
+			size_t m_nChannel = 0;
+			size_t m_nSample  = 0;
+			size_t m_sampling = 0;
 
-			uint32_t m_sizeFFT = 0;
+			size_t m_sizeFFT = 0;
 
 			OpenViBE::IMatrix* m_frequencyAbscissa = nullptr;
 		};
@@ -51,19 +51,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_SpectralAnalysis; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSpectralAnalysis(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
 
-				rPrototype.addOutput("Amplitude", OV_TypeId_Spectrum);
-				rPrototype.addOutput("Phase", OV_TypeId_Spectrum);
-				rPrototype.addOutput("Real Part", OV_TypeId_Spectrum);
-				rPrototype.addOutput("Imaginary Part", OV_TypeId_Spectrum);
+				prototype.addOutput("Amplitude", OV_TypeId_Spectrum);
+				prototype.addOutput("Phase", OV_TypeId_Spectrum);
+				prototype.addOutput("Real Part", OV_TypeId_Spectrum);
+				prototype.addOutput("Imaginary Part", OV_TypeId_Spectrum);
 
-				rPrototype.addSetting("Amplitude", OV_TypeId_Boolean, "true");
-				rPrototype.addSetting("Phase", OV_TypeId_Boolean, "false");
-				rPrototype.addSetting("Real Part", OV_TypeId_Boolean, "false");
-				rPrototype.addSetting("Imaginary Part", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Amplitude", OV_TypeId_Boolean, "true");
+				prototype.addSetting("Phase", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Real Part", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Imaginary Part", OV_TypeId_Boolean, "false");
 
 				return true;
 			}

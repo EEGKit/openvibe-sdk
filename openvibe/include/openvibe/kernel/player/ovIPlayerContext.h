@@ -58,7 +58,7 @@ namespace OpenViBE
 			*        targets contained in the \c dstID array.
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier* dstID, const uint32_t nDstID) = 0;
+			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier* dstID, const size_t nDstID) = 0;
 
 			//}@
 

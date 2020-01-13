@@ -39,19 +39,19 @@ namespace OpenViBE
 
 			/**
 			 * \brief Change the identifier of this metadata
-			 * \param[in] identifier The new identifier
+			 * \param[in] id The new id
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 */
-			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& id) = 0;
 
 			/**
 			 * \brief Change the identifier of this metadata
-			 * \param[in] identifier The new identifier
+			 * \param[in] id The new id
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 */
-			virtual bool setType(const CIdentifier& identifier) = 0;
+			virtual bool setType(const CIdentifier& id) = 0;
 
 			/**
 			 * \brief Change the enclosed data
@@ -63,13 +63,13 @@ namespace OpenViBE
 
 			/**
 			 * \brief Initializes the metadata from an already existing metadata
-			 * \param[in] existingMetadata The existing metadata
+			 * \param[in] metadata The existing metadata
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 *
 			 * Resets the metadata and initializes its text/attributes according to the existing object.
 			 */
-			virtual bool initializeFromExistingMetadata(const IMetadata& existingMetadata) = 0;
+			virtual bool initializeFromExistingMetadata(const IMetadata& metadata) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_Metadata)
 		};

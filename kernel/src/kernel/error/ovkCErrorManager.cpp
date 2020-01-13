@@ -24,7 +24,7 @@
 #include "ovkCErrorManager.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 // Error manager IError internal implementation
 namespace OpenViBE
@@ -35,27 +35,27 @@ namespace OpenViBE
 		{
 		public:
 
-			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, uint32_t line)
-				: m_ErrorType(type), m_NestedError(nestedError), m_Description(description), m_Location(std::string(filename) + ":" + std::to_string(line)) { }
+			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, const size_t line)
+				: m_errorType(type), m_nestedError(nestedError), m_description(description), m_location(std::string(filename) + ":" + std::to_string(line)) { }
 
 			~CError() override { }
 
-			const char* getErrorString() const override { return m_Description.c_str(); }
+			const char* getErrorString() const override { return m_description.c_str(); }
 
-			const char* getErrorLocation() const override { return m_Location.c_str(); }
+			const char* getErrorLocation() const override { return m_location.c_str(); }
 
-			ErrorType getErrorType() const override { return m_ErrorType; }
+			ErrorType getErrorType() const override { return m_errorType; }
 
-			const IError* getNestedError() const override { return m_NestedError.get(); }
+			const IError* getNestedError() const override { return m_nestedError.get(); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IError, OVK_ClassId_Kernel_Error_Error)
 
 		private:
 
-			ErrorType m_ErrorType;
-			std::unique_ptr<IError> m_NestedError;
-			std::string m_Description;
-			std::string m_Location;
+			ErrorType m_errorType;
+			std::unique_ptr<IError> m_nestedError;
+			std::string m_description;
+			std::string m_location;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE
@@ -65,47 +65,47 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		CErrorManager::CErrorManager(const IKernelContext& context) : TKernelObject<IErrorManager>(context), m_TopError(nullptr) { }
+		CErrorManager::CErrorManager(const IKernelContext& context) : TKernelObject<IErrorManager>(context), m_topError(nullptr) { }
 
 		CErrorManager::~CErrorManager() { this->releaseErrors(); }
 
 		void CErrorManager::pushError(ErrorType type, const char* description) { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
 
-		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, uint32_t line)
+		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, size_t line)
 		{
-			std::lock_guard<std::mutex> lock(m_ManagerGuard);
-			auto lastTopError = m_TopError.release();
-			m_TopError.reset(new CError(type, description, lastTopError, filename, line));
+			std::lock_guard<std::mutex> lock(m_managerGuard);
+			auto lastTopError = m_topError.release();
+			m_topError.reset(new CError(type, description, lastTopError, filename, line));
 		}
 
 		void CErrorManager::releaseErrors()
 		{
-			std::lock_guard<std::mutex> lock(m_ManagerGuard);
-			m_TopError.reset(nullptr);
+			std::lock_guard<std::mutex> lock(m_managerGuard);
+			m_topError.reset(nullptr);
 		}
 
 		bool CErrorManager::hasError() const
 		{
-			std::lock_guard<std::mutex> lock(m_ManagerGuard);
-			return (m_TopError != nullptr);
+			std::lock_guard<std::mutex> lock(m_managerGuard);
+			return (m_topError != nullptr);
 		}
 
 		const IError* CErrorManager::getLastError() const
 		{
-			std::lock_guard<std::mutex> lock(m_ManagerGuard);
-			return m_TopError.get();
+			std::lock_guard<std::mutex> lock(m_managerGuard);
+			return m_topError.get();
 		}
 
 		const char* CErrorManager::getLastErrorString() const
 		{
-			std::lock_guard<std::mutex> lock(m_ManagerGuard);
-			return (m_TopError ? m_TopError->getErrorString() : "");
+			std::lock_guard<std::mutex> lock(m_managerGuard);
+			return (m_topError ? m_topError->getErrorString() : "");
 		}
 
 		ErrorType CErrorManager::getLastErrorType() const
 		{
-			std::lock_guard<std::mutex> lock(m_ManagerGuard);
-			return (m_TopError ? m_TopError->getErrorType() : ErrorType::NoErrorFound);
+			std::lock_guard<std::mutex> lock(m_managerGuard);
+			return (m_topError ? m_topError->getErrorType() : ErrorType::NoErrorFound);
 		}
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -14,24 +14,24 @@ namespace OpenViBE
 	{
 		/**
 		 * \brief Given a sample count and the sampling rate, returns the duration of the samples in fixed point time
-		 * \param samplingRate : the sampling rate of the signal, must not be 0 or the function will crash.
+		 * \param sampling : the sampling rate of the signal, must not be 0 or the function will crash.
 		 * \param sampleCount : the size of the sample
 		 * \return Time in fixed point format corresponding to the input parameters
 		 */
-		inline uint64_t sampleCountToTime(const uint64_t samplingRate, const uint64_t sampleCount)
+		inline uint64_t sampleCountToTime(const uint64_t sampling, const uint64_t sampleCount)
 		{
-			// Note that if samplingRate is 0, this will crash. Its preferable to silent fail, the caller should check the argument.
+			// Note that if sampling is 0, this will crash. Its preferable to silent fail, the caller should check the argument.
 			// FIXME: assert or something
-			return (sampleCount << 32) / samplingRate;
+			return (sampleCount << 32) / sampling;
 		}
 
 		/**
 		 * \brief Given a fixed point time and the sampling rate, returns the number of samples obtained
-		 * \param samplingRate : the sampling rate of the signal
+		 * \param sampling : the sampling rate of the signal
 		 * \param time : elapsed time in fixed point format
 		 * \return Sample count corresponding to the input parameters
 		 */
-		inline uint64_t timeToSampleCount(const uint64_t samplingRate, const uint64_t time) { return ((time + 1) * samplingRate - 1) >> 32; }
+		inline uint64_t timeToSampleCount(const uint64_t sampling, const uint64_t time) { return ((time + 1) * sampling - 1) >> 32; }
 		
 		/**
 		 * \brief Get the time in seconds given a fixed point time

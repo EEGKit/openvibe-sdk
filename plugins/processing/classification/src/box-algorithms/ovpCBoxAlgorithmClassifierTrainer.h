@@ -15,13 +15,13 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		const char* const TRAIN_TRIGGER_SETTING_NAME = "Train trigger";
-		const char* const FILENAME_SETTING_NAME = "Filename to save configuration to";
+		const char* const TRAIN_TRIGGER_SETTING_NAME       = "Train trigger";
+		const char* const FILENAME_SETTING_NAME            = "Filename to save configuration to";
 		const char* const MULTICLASS_STRATEGY_SETTING_NAME = "Multiclass strategy to apply";
-		const char* const ALGORITHM_SETTING_NAME = "Algorithm to use";
-		const char* const FOLD_SETTING_NAME = "Number of partitions for k-fold cross-validation test";
-		const char* const BALANCE_SETTING_NAME = "Balance classes";
-		
+		const char* const ALGORITHM_SETTING_NAME           = "Algorithm to use";
+		const char* const FOLD_SETTING_NAME                = "Number of partitions for k-fold cross-validation test";
+		const char* const BALANCE_SETTING_NAME             = "Balance classes";
+
 		class CBoxAlgorithmClassifierTrainer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
@@ -37,38 +37,37 @@ namespace OpenViBEPlugins
 
 			typedef struct
 			{
-				OpenViBE::CMatrix* m_pFeatureVectorMatrix;
-				uint64_t m_startTime;
-				uint64_t m_endTime;
-				uint32_t m_ui32InputIdx;
-			} SFeatureVector;
+				OpenViBE::CMatrix* sampleMatrix;
+				uint64_t startTime;
+				uint64_t endTime;
+				size_t inputIdx;
+			} sample_t;
 
-			bool train(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx);
-			double getAccuracy(const std::vector<SFeatureVector>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx, OpenViBE::CMatrix& confusionMatrix);
+			bool train(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx);
+			double getAccuracy(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx, OpenViBE::CMatrix& confusionMatrix);
 			bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
 			bool balanceDataset();
 
 		private:
-			bool saveConfiguration();
+			bool saveConfig();
 
 		protected:
 
-			std::map<uint32_t, uint32_t> m_nFeatures;
+			std::map<size_t, size_t> m_nFeatures;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_classifier = nullptr;
-			uint64_t m_trainStimulation                  = 0;
-			size_t m_nPartition                            = 0;
+			uint64_t m_trainStimulation                     = 0;
+			size_t m_nPartition                             = 0;
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimulationDecoder;
-			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_featureVectorDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimDecoder;
+			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_sampleDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_stimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_encoder;
 
 			std::map<OpenViBE::CString, OpenViBE::CString>* m_parameter = nullptr;
 
-			std::vector<SFeatureVector> m_datasets;
-
-			std::vector<SFeatureVector> m_balancedDatasets;
+			std::vector<sample_t> m_datasets;
+			std::vector<sample_t> m_balancedDatasets;
 		};
 
 		class CBoxAlgorithmClassifierTrainerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

@@ -30,9 +30,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); ++i)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
 					box.setInputName(i, ("Stimulation stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_Stimulations);
@@ -41,8 +41,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};

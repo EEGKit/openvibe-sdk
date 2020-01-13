@@ -15,9 +15,9 @@ namespace OpenViBE
 		{
 		public:
 
-			CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile);
+			CKernelContext(const IKernelContext* masterKernelCtx, const CString& applicationName, const CString& configFile);
 			~CKernelContext() override;
-			bool initialize(const char* const * tokenList, size_t tokenCount) override;
+			bool initialize(const char* const * tokenList, size_t nToken) override;
 			bool uninitialize() override;
 			IAlgorithmManager& getAlgorithmManager() const override;
 			IConfigurationManager& getConfigurationManager() const override;
@@ -38,7 +38,7 @@ namespace OpenViBE
 
 		private:
 
-			const IKernelContext& m_rMasterKernelContext;
+			const IKernelContext& m_masterKernelCtx;
 
 			std::unique_ptr<IAlgorithmManager> m_algorithmManager;
 			std::unique_ptr<IConfigurationManager> m_configManager;
@@ -51,8 +51,8 @@ namespace OpenViBE
 			std::unique_ptr<ILogManager> m_logManager;
 			std::unique_ptr<IErrorManager> m_errorManager;
 
-			CString m_sApplicationName;
-			CString m_sConfigurationFile;
+			CString m_applicationName;
+			CString m_configFile;
 
 			std::unique_ptr<CLogListenerConsole> m_logListenerConsole;
 			std::unique_ptr<CLogListenerFile> m_logListenerFile;
@@ -80,10 +80,7 @@ namespace OpenViBE
 			void setLogManager(ILogManager* manager) { m_logManager = manager; }
 			void setErrorManager(IErrorManager* manager) { m_errorManager = manager; }
 
-			IAlgorithmManager& getAlgorithmManager() const override
-			{
-				return m_algorithmManager ? *m_algorithmManager : m_kernelCtx.getAlgorithmManager();
-			}
+			IAlgorithmManager& getAlgorithmManager() const override { return m_algorithmManager ? *m_algorithmManager : m_kernelCtx.getAlgorithmManager(); }
 
 			IConfigurationManager& getConfigurationManager() const override
 			{
@@ -109,16 +106,16 @@ namespace OpenViBE
 
 			const IKernelContext& m_kernelCtx;
 
-			mutable IAlgorithmManager* m_algorithmManager         = nullptr;
-			mutable IConfigurationManager* m_configManager = nullptr;
-			mutable IKernelObjectFactory* m_kernelObjectFactory   = nullptr;
-			mutable IPlayerManager* m_playerManager               = nullptr;
-			mutable IPluginManager* m_pluginManager               = nullptr;
-			mutable IMetaboxManager* m_metaboxManager             = nullptr;
-			mutable IScenarioManager* m_scenarioManager           = nullptr;
-			mutable ITypeManager* m_typeManager                   = nullptr;
-			mutable ILogManager* m_logManager                     = nullptr;
-			mutable IErrorManager* m_errorManager                 = nullptr;
+			mutable IAlgorithmManager* m_algorithmManager       = nullptr;
+			mutable IConfigurationManager* m_configManager      = nullptr;
+			mutable IKernelObjectFactory* m_kernelObjectFactory = nullptr;
+			mutable IPlayerManager* m_playerManager             = nullptr;
+			mutable IPluginManager* m_pluginManager             = nullptr;
+			mutable IMetaboxManager* m_metaboxManager           = nullptr;
+			mutable IScenarioManager* m_scenarioManager         = nullptr;
+			mutable ITypeManager* m_typeManager                 = nullptr;
+			mutable ILogManager* m_logManager                   = nullptr;
+			mutable IErrorManager* m_errorManager               = nullptr;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

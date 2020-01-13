@@ -26,14 +26,14 @@ namespace OpenViBEPlugins
 			bool initialize() override { return true; }
 			bool uninitialize() override { return true; }
 			bool parameterize() override;
-			bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode& /*node*/) override { return true; }
+			bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) override;
+			XML::IXMLNode* saveConfig() override;
+			bool loadConfig(XML::IXMLNode& /*node*/) override { return true; }
 
 			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, OVP_ClassId_Algorithm_PairwiseDecision_Voting)
 
 		private:
-			uint32_t m_nClass = 0;
+			size_t m_nClass = 0;
 		};
 
 		class CAlgorithmPairwiseDecisionVotingDesc final : virtual public CAlgorithmPairwiseDecisionDesc
@@ -53,9 +53,9 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseDecision_Voting; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmPairwiseDecisionVoting; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(prototype);
 				return true;
 			}
 

@@ -6,7 +6,7 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -34,7 +34,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 
 	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
-	m_filterDimension = uint32_t(filterDimension);
+	m_filterDim = size_t(filterDimension);
 
 	m_saveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
@@ -70,7 +70,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	bool train = false;
 
-	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i)
 	{
 		m_stimEncoder.getInputStimulationSet()->clear();
 		m_stimDecoder.decode(i);
@@ -100,40 +100,36 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 	if (train)
 	{
-		std::vector<size_t> ERPSampleIndexes;
+		std::vector<size_t> erpSampleIndexes;
 		std::array<Eigen::MatrixXd, 2> X; // X[0] is session matrix, X[1] is averaged ERP
 		std::array<Eigen::MatrixXd, 2> C; // Covariance matrices
-		std::array<uint32_t, 2> n;
-		uint32_t nChannel = 0;
+		std::array<size_t, 2> n;
+		size_t nChannel = 0;
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
 
 		// Decodes input signals
 
-		for (uint32_t j = 0; j < 2; ++j)
+		for (size_t j = 0; j < 2; ++j)
 		{
 			n[j] = 0;
 
-			for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i)
+			for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i)
 			{
-				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& m_rSignalDecoder = m_signalDecoder[j];
-				m_rSignalDecoder.decode(i);
+				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
+				decoder.decode(i);
 
-				IMatrix* matrix = m_rSignalDecoder.getOutputMatrix();
-				nChannel    = matrix->getDimensionSize(0);
-				const uint32_t nSample = matrix->getDimensionSize(1);
-				const uint32_t samplingRate = uint32_t(m_rSignalDecoder.getOutputSamplingRate());
+				IMatrix* matrix       = decoder.getOutputMatrix();
+				nChannel              = matrix->getDimensionSize(0);
+				const size_t nSample  = matrix->getDimensionSize(1);
+				const size_t sampling = size_t(decoder.getOutputSamplingRate());
 
-				if (m_rSignalDecoder.isHeaderReceived())
+				if (decoder.isHeaderReceived())
 				{
-					OV_ERROR_UNLESS_KRF(samplingRate > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n",
-										OpenViBE::Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n",
-										OpenViBE::Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n",
-										OpenViBE::Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(m_filterDimension <= nChannel, "The filter dimension must not be superior than the channel count.\n",
-										OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -145,10 +141,9 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 					}
 				}
 
-				if (m_rSignalDecoder.isBufferReceived())
+				if (decoder.isBufferReceived())
 				{
-					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
-						matrix->getBuffer(), nChannel, nSample);
+					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(matrix->getBuffer(), nChannel, nSample);
 
 					switch (j)
 					{
@@ -161,9 +156,8 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 							// $$$ Assumes continuous session signal starting at date 0
 							{
-								uint32_t ERPSampleIndex = uint32_t(
-									((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16) * samplingRate) >> 16);
-								ERPSampleIndexes.push_back(ERPSampleIndex);
+								size_t ERPSampleIndex = size_t(((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16) * sampling) >> 16);
+								erpSampleIndexes.push_back(ERPSampleIndex);
 							}
 							break;
 
@@ -175,7 +169,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				}
 
 #if 0
-				if (m_rSignalDecoder.isEndReceived())
+				if (decoder.isEndReceived())
 				{
 				}
 #endif
@@ -189,7 +183,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 					break;
 
 				case 1: // ERP
-					X[j] = X[j] / n[j]; // Averages ERP
+					X[j] = X[j] / double(n[j]); // Averages ERP
 					break;
 
 				default:
@@ -199,7 +193,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		// We need equal number of channels
 		OV_ERROR_UNLESS_KRF(X[0].rows() == X[1].rows(),
-							"Dimension mismatch, first input had " << uint32_t(X[0].rows()) << " channels while second input had " << uint32_t(X[1].rows()) <<
+							"Dimension mismatch, first input had " << size_t(X[0].rows()) << " channels while second input had " << size_t(X[1].rows()) <<
 							" channels\n",
 							OpenViBE::Kernel::ErrorType::BadValue);
 
@@ -211,9 +205,9 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		// Now we compute matrix D
 
 		const Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
-		Eigen::MatrixXd D  = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
+		Eigen::MatrixXd D        = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
-		for (uint32_t sampleIndex : ERPSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
+		for (size_t sampleIndex : erpSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
 
 		// Computes covariance matrices
 
@@ -227,7 +221,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		if (eigenSolver.info() != Eigen::Success)
 		{
 			const enum Eigen::ComputationInfo error = eigenSolver.info();
-			const char* errorMessage          = "unknown";
+			const char* errorMessage                = "unknown";
 
 			switch (error)
 			{
@@ -235,7 +229,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 					break;
 				case Eigen::NoConvergence: errorMessage = "No convergence";
 					break;
-					//				case Eigen::InvalidInput: errorMessage="Invalid input"; break; // FIXME
+					// case Eigen::InvalidInput: errorMessage="Invalid input"; break; // FIXME
 				default: break;
 			}
 
@@ -247,12 +241,12 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		CMatrix eigenVectors;
 		eigenVectors.setDimensionCount(2);
-		eigenVectors.setDimensionSize(0, m_filterDimension);
+		eigenVectors.setDimensionSize(0, m_filterDim);
 		eigenVectors.setDimensionSize(1, nChannel);
 
-		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDimension, nChannel);
+		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDim, nChannel);
 
-		vectorsMapper.block(0, 0, m_filterDimension, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_filterDimension).transpose();			
+		vectorsMapper.block(0, 0, m_filterDim, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_filterDim).transpose();			
 					
 		// Saves filters
 
@@ -265,11 +259,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
 
-			for (uint32_t i = 0; i < eigenVectors.getBufferElementCount(); ++i) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
+			for (size_t i = 0; i < eigenVectors.getBufferElementCount(); ++i) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
-			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_filterDimension);
-			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", nChannel);
+			fprintf(file, "\t<SettingValue>%zu</SettingValue>\n", m_filterDim);
+			fprintf(file, "\t<SettingValue>%zu</SettingValue>\n", nChannel);
 			fprintf(file, "\t<SettingValue></SettingValue>\n");
 			fprintf(file, "</OpenViBE-SettingsOverride>");
 		}

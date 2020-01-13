@@ -47,6 +47,7 @@
 
 using namespace OpenViBE;
 using namespace CSV;
+using namespace boost::spirit;
 
 namespace
 {
@@ -66,13 +67,13 @@ namespace
 	const std::string EVENT_DATE_COL     = "Event Date";
 	const std::string EVENT_DURATION_COL = "Event Duration";
 
-	const size_t CHAR_TO_READ          = 1000;
+	const size_t CHAR_TO_READ = 1000;
 	//const size_t MAXIMUM_FLOAT_DECIMAL = 32;
 
 	const char END_OF_LINE_CHAR('\n');
-}
+}	// namespace 
 
-bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputString, const char delimiter, std::string& bufferHistory) const
+bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char delimiter, std::string& bufferHistory) const
 {
 	// To improve the performance of the reading, we read a bunch a chars rather one char by one char.
 	// We keep the part of the readed stream, that is not used, in a buffer history.
@@ -90,11 +91,11 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 	while (lineBreakPos == std::string::npos)
 	{
 		buffer.emplace_back(CHAR_TO_READ, '\0');		   // Construct a string that will store the characters.
-		inputStream.read(&buffer.back()[0], CHAR_TO_READ); // Read X chars by X chars
+		in.read(&buffer.back()[0], CHAR_TO_READ); // Read X chars by X chars
 		lineBreakPos = buffer.back().find_first_of(delimiter);
 
 		// If it's the end of the file and no delimiter has been found...
-		if (inputStream.gcount() != CHAR_TO_READ && lineBreakPos == std::string::npos) { break; }
+		if (in.gcount() != CHAR_TO_READ && lineBreakPos == std::string::npos) { break; }
 	}
 
 	// There is no delimitor in the stream ...
@@ -111,33 +112,33 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 	// And we remove this part from the last string because we will join them.
 	buffer.back().erase(lineBreakPos, buffer.back().size());
 
-	outputString.clear();
-	outputString.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), size_t(0), [](const size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
+	out.clear();
+	out.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), size_t(0), [](const size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
 
 	// Let's join the strings !
-	for_each(buffer.begin(), buffer.end(), [&outputString](const std::string& s) { outputString += s; });
+	for_each(buffer.begin(), buffer.end(), [&out](const std::string& s) { out += s; });
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	// Check if we are looking for an end of line char and handle the CR/LF Windows/Linux cases.
-	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !outputString.empty()) { outputString.pop_back(); }	// Remove the carriage return char.
+	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !out.empty()) { out.pop_back(); }	// Remove the carriage return char.
 #endif
 
 	return true;
 }
 
-void CCSVHandler::split(const std::string& input, char delimiter, std::vector<std::string>& output) const
+void CCSVHandler::split(const std::string& in, const char delimiter, std::vector<std::string>& out) const
 {
-	std::stringstream stringStream(input);
+	std::stringstream stringStream(in);
 	std::string item;
-	output.reserve(m_nCol);
+	out.reserve(m_nCol);
 
 	std::string buffer;
 
 	// Loop until the last delimiter
-	while (this->streamReader(stringStream, item, delimiter, buffer)) { output.push_back(item); }
+	while (this->streamReader(stringStream, item, delimiter, buffer)) { out.push_back(item); }
 
 	// Get the part after the last delimiter
-	if (this->streamReader(stringStream, item, '\0', buffer)) { output.push_back(item); }
+	if (this->streamReader(stringStream, item, '\0', buffer)) { out.push_back(item); }
 }
 
 void CCSVHandler::setFormatType(const EStreamType typeID)
@@ -146,7 +147,7 @@ void CCSVHandler::setFormatType(const EStreamType typeID)
 	m_hasInputType = true;
 }
 
-bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, size_t samplingFrequency, size_t sampleCountPerBuffer)
+bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, const size_t sampling, const size_t nSamplePerBuffer)
 {
 	if (m_inputTypeID != EStreamType::Signal)
 	{
@@ -170,13 +171,13 @@ bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNa
 		return false;
 	}
 
-	m_samplingRate     = samplingFrequency;
+	m_sampling         = sampling;
 	m_dimLabels        = channelNames;
-	m_nSamplePerBuffer = sampleCountPerBuffer;
+	m_nSamplePerBuffer = nSamplePerBuffer;
 	return true;
 }
 
-bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, size_t& samplingFrequency, size_t& sampleCountPerBuffer)
+bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, size_t& sampling, size_t& nSamplePerBuffer)
 {
 	if (m_inputTypeID != EStreamType::Signal)
 	{
@@ -194,7 +195,7 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, s
 		return false;
 	}
 
-	if (m_samplingRate == 0)
+	if (m_sampling == 0)
 	{
 		m_lastStringError = "Sampling rate invalid";
 		m_logError        = LogErrorCodes_WrongHeader;
@@ -208,13 +209,13 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, s
 		return false;
 	}
 
-	channelNames         = m_dimLabels;
-	samplingFrequency    = m_samplingRate;
-	sampleCountPerBuffer = m_nSamplePerBuffer;
+	channelNames     = m_dimLabels;
+	sampling         = m_sampling;
+	nSamplePerBuffer = m_nSamplePerBuffer;
 	return true;
 }
 
-bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const size_t samplingRate)
+bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const size_t sampling)
 {
 	if (m_inputTypeID != EStreamType::Spectrum)
 	{
@@ -239,14 +240,14 @@ bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channel
 		return false;
 	}
 
-	m_dimLabels            = channelNames;
-	m_dimSizes             = { channelNames.size(), frequencyAbscissa.size() };
-	m_frequencyAbscissa    = frequencyAbscissa;
-	m_originalSampleNumber = samplingRate;
+	m_dimLabels         = channelNames;
+	m_dimSizes          = { channelNames.size(), frequencyAbscissa.size() };
+	m_frequencyAbscissa = frequencyAbscissa;
+	m_nSampleOriginal   = sampling;
 	return true;
 }
 
-bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& samplingRate)
+bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& sampling)
 {
 	if (m_inputTypeID != EStreamType::Spectrum)
 	{
@@ -280,7 +281,7 @@ bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames,
 
 	channelNames      = m_dimLabels;
 	frequencyAbscissa = m_frequencyAbscissa;
-	samplingRate      = m_originalSampleNumber;
+	sampling          = m_nSampleOriginal;
 	return true;
 }
 
@@ -336,7 +337,7 @@ bool CCSVHandler::getFeatureVectorInformation(std::vector<std::string>& channelN
 	return true;
 }
 
-bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimensionSizes, const std::vector<std::string>& labels)
+bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimSizes, const std::vector<std::string>& labels)
 {
 	if (m_isSetInfoCalled)
 	{
@@ -352,14 +353,14 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimens
 		return false;
 	}
 
-	if (dimensionSizes.empty())
+	if (dimSizes.empty())
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_DimensionSizeEmpty;
 		return false;
 	}
 
-	const size_t size = std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), size_t(0));
+	const size_t size = std::accumulate(dimSizes.begin(), dimSizes.end(), size_t(0));
 
 	if (size != labels.size())
 	{
@@ -369,13 +370,13 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimens
 	}
 
 	m_isSetInfoCalled = true;
-	m_dimSizes        = dimensionSizes;
+	m_dimSizes        = dimSizes;
 	m_nDim            = m_dimSizes.size();
 	m_dimLabels       = labels;
 	return true;
 }
 
-bool CCSVHandler::getStreamedMatrixInformation(std::vector<size_t>& dimensionSizes, std::vector<std::string>& labels)
+bool CCSVHandler::getStreamedMatrixInformation(std::vector<size_t>& dimSizes, std::vector<std::string>& labels)
 {
 	if (m_inputTypeID != EStreamType::StreamedMatrix && m_inputTypeID != EStreamType::CovarianceMatrix)
 	{
@@ -400,12 +401,12 @@ bool CCSVHandler::getStreamedMatrixInformation(std::vector<size_t>& dimensionSiz
 		return false;
 	}
 
-	dimensionSizes = m_dimSizes;
-	labels         = m_dimLabels;
+	dimSizes = m_dimSizes;
+	labels   = m_dimLabels;
 	return true;
 }
 
-bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
+bool CCSVHandler::openFile(const std::string& fileName, const EFileAccessMode mode)
 {
 	if (m_fs.is_open())
 	{
@@ -501,7 +502,7 @@ bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 	return true;
 }
 
-bool CCSVHandler::readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
+bool CCSVHandler::readSamplesAndEventsFromFile(const size_t lineNb, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
 {
 	if (!m_hasDataToRead) { return false; }
 
@@ -531,7 +532,7 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t linesToRead, std::vector<S
 
 	SMatrixChunk chunk(0, 0, std::vector<double>(matrixSize), 0);
 
-	while (chunks.size() < linesToRead && m_hasDataToRead)
+	while (chunks.size() < lineNb && m_hasDataToRead)
 	{
 		for (size_t lineIndex = 0; lineIndex < m_nSamplePerBuffer; lineIndex++)
 		{
@@ -550,13 +551,12 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t linesToRead, std::vector<S
 				return true;
 			}
 
-			const int64_t columnCount = std::count(lineValue.cbegin(), lineValue.cend(), ',') + 1;
+			const size_t columnCount = std::count(lineValue.cbegin(), lineValue.cend(), ',') + 1;
 
 			if (columnCount != m_nCol)
 			{
-				m_lastStringError = "There is " + std::to_string(columnCount)
-									+ " columns in the Header instead of " + std::to_string(m_nCol)
-									+ " on line " + std::to_string(lineIndex + 1);
+				m_lastStringError = "There is " + std::to_string(columnCount) + " columns in the Header instead of " + std::to_string(m_nCol) + " on line " +
+									std::to_string(lineIndex + 1);
 
 				m_logError = LogErrorCodes_WrongLineSize;
 				return false;
@@ -663,7 +663,7 @@ bool CCSVHandler::closeFile()
 	m_frequencyAbscissa.clear();
 	m_nDim               = 0;
 	m_nCol               = 0;
-	m_samplingRate       = 0;
+	m_sampling           = 0;
 	m_hasInputType       = false;
 	m_isFirstLineWritten = false;
 	m_isSetInfoCalled    = false;
@@ -734,7 +734,10 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 		 || (!m_chunks.empty() && sample.epoch != m_chunks.back().epoch)))
 	{
 		m_chunks.clear();
-		m_stimulations.erase(std::remove_if(m_stimulations.begin(), m_stimulations.end(), [&sample](const SStimulationChunk& chunk) { return chunk.stimulationDate < sample.startTime; }),
+		m_stimulations.erase(std::remove_if(m_stimulations.begin(), m_stimulations.end(), [&sample](const SStimulationChunk& chunk)
+							 {
+								 return chunk.date < sample.startTime;
+							 }),
 							 m_stimulations.end());
 	}
 
@@ -787,15 +790,14 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 		if (m_inputTypeID == EStreamType::Signal)
 		{
 			const uint64_t lastEpoch = samples.back().epoch;
-			const auto rangeStart    = std::find_if(samples.begin(), samples.end(),
-													[&lastEpoch](const SMatrixChunk& s) { return s.epoch == lastEpoch; });
+			const auto rangeStart    = std::find_if(samples.begin(), samples.end(), [&lastEpoch](const SMatrixChunk& s) { return s.epoch == lastEpoch; });
 
 			if (!m_chunks.empty() && m_chunks.front().epoch != lastEpoch) { m_chunks.clear(); }
 
 			m_chunks.insert(m_chunks.end(), rangeStart, samples.end());
 			const double curTime = m_chunks.front().startTime;
 			m_stimulations.erase(std::remove_if(m_stimulations.begin(), m_stimulations.end(),
-												[curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_stimulations.end());
+												[curTime](const SStimulationChunk& chunk) { return chunk.date < curTime; }), m_stimulations.end());
 		}
 		else
 		{
@@ -803,7 +805,7 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 			m_chunks.push_back(samples.back());
 			const double curTime = m_chunks.front().startTime;
 			m_stimulations.erase(std::remove_if(m_stimulations.begin(), m_stimulations.end(),
-												[curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_stimulations.end());
+												[curTime](const SStimulationChunk& chunk) { return chunk.date < curTime; }), m_stimulations.end());
 		}
 	}
 	else { m_chunks.insert(m_chunks.end(), samples.begin(), samples.end()); }
@@ -833,14 +835,14 @@ bool CCSVHandler::addEvent(uint64_t code, double date, double duration)
 
 bool CCSVHandler::addEvent(const SStimulationChunk& event)
 {
-	if (std::signbit(event.stimulationDate))
+	if (std::signbit(event.date))
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_DateError;
 		return false;
 	}
 
-	if (std::signbit(event.stimulationDuration))
+	if (std::signbit(event.duration))
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_DurationError;
@@ -851,7 +853,7 @@ bool CCSVHandler::addEvent(const SStimulationChunk& event)
 	return true;
 }
 
-bool CCSVHandler::noEventsUntilDate(double date)
+bool CCSVHandler::noEventsUntilDate(const double date)
 {
 	if (std::signbit(date))
 	{
@@ -876,30 +878,30 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 
 	if (itBegin != itEnd)
 	{
-		stimulations.at(0) = std::to_string(itBegin->stimulationIdentifier);
+		stimulations.at(0) = std::to_string(itBegin->id);
 
 		std::stringstream ss;
 		ss.str("");
-		ss.precision(m_outputFloatPrecision);
-		ss << std::fixed << itBegin->stimulationDate;
+		ss.precision(m_oPrecision);
+		ss << std::fixed << itBegin->date;
 		stimulations.at(1) = ss.str();
 
 		ss.str("");
-		ss << std::fixed << itBegin->stimulationDuration;
+		ss << std::fixed << itBegin->duration;
 		stimulations.at(2) = ss.str();
 	}
 
 	for (auto it = itBegin + 1; it != itEnd; ++it)
 	{
-		stimulations.at(0) += std::string(1, DATA_SEPARATOR) + std::to_string(it->stimulationIdentifier);
+		stimulations.at(0) += std::string(1, DATA_SEPARATOR) + std::to_string(it->id);
 		std::stringstream ss;
 		ss.str("");
-		ss.precision(m_outputFloatPrecision);
-		ss << std::fixed << it->stimulationDate;
+		ss.precision(m_oPrecision);
+		ss << std::fixed << it->date;
 		stimulations.at(1) += std::string(1, DATA_SEPARATOR) + ss.str();
 
 		ss.str("");
-		ss << std::fixed << it->stimulationDuration;
+		ss << std::fixed << it->duration;
 		stimulations.at(2) += std::string(1, DATA_SEPARATOR) + ss.str();
 	}
 
@@ -923,7 +925,7 @@ std::string CCSVHandler::createHeaderString()
 	switch (m_inputTypeID)
 	{
 		case EStreamType::Signal:
-			addColumn("Time" + std::string(1, DATA_SEPARATOR) + std::to_string(m_samplingRate) + "Hz");
+			addColumn("Time" + std::string(1, DATA_SEPARATOR) + std::to_string(m_sampling) + "Hz");
 			break;
 
 		case EStreamType::Spectrum:
@@ -933,11 +935,9 @@ std::string CCSVHandler::createHeaderString()
 				return invalidHeader;
 			}
 
-			addColumn("Time" + std::string(1, DATA_SEPARATOR) + std::to_string(m_dimSizes[0])
-					  + std::string(1, DIMENSION_SEPARATOR) + std::to_string(m_dimSizes[1]) + std::string(1, DATA_SEPARATOR)
-					  + std::to_string(m_originalSampleNumber != 0 //original number of samples or calculated one	
-										   ? m_originalSampleNumber : m_dimSizes[0] * m_dimSizes[1])
-			);
+			addColumn(
+				"Time" + std::string(1, DATA_SEPARATOR) + std::to_string(m_dimSizes[0]) + std::string(1, DIMENSION_SEPARATOR) + std::to_string(m_dimSizes[1]) +
+				std::string(1, DATA_SEPARATOR) + std::to_string(m_nSampleOriginal != 0 ? m_nSampleOriginal : m_dimSizes[0] * m_dimSizes[1]));
 			break;
 
 		case EStreamType::CovarianceMatrix:
@@ -1025,7 +1025,10 @@ std::string CCSVHandler::createHeaderString()
 			break;
 
 		case EStreamType::Spectrum:
-			for (const std::string& label : m_dimLabels) { for (double frequencyAbscissa : m_frequencyAbscissa) { addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa)); } }
+			for (const std::string& label : m_dimLabels)
+			{
+				for (double frequencyAbscissa : m_frequencyAbscissa) { addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa)); }
+			}
 			break;
 	}
 
@@ -1035,7 +1038,7 @@ std::string CCSVHandler::createHeaderString()
 	return header;
 }
 
-bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
+bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& csv)
 {
 	// if chunks is empty, their is no more lines to write
 	if (m_chunks.empty()) { return true; }
@@ -1052,7 +1055,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 
 	while (!m_chunks.empty() && (canWriteAll
 								 || (m_stimulations.empty() && m_chunks.front().endTime <= m_noEventSince)
-								 || (!m_stimulations.empty() && m_chunks.front().startTime <= m_stimulations.back().stimulationDate))
+								 || (!m_stimulations.empty() && m_chunks.front().startTime <= m_stimulations.back().date))
 	)
 	{
 		// Signal data must be written as sampleCounterPerBuffer th lines;
@@ -1089,7 +1092,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 		const std::pair<double, double> currentTime = { m_chunks.front().startTime, m_chunks.front().endTime };
 		std::stringstream ss;
 		ss.str("");
-		ss.precision(m_outputFloatPrecision);
+		ss.precision(m_oPrecision);
 		ss << std::fixed << currentTime.first;
 
 		csv += ss.str();
@@ -1128,7 +1131,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 		{
 			std::vector<SStimulationChunk> stimulationsToWrite;
 
-			double stimulationTime = m_stimulations.front().stimulationDate;
+			double stimulationTime = m_stimulations.front().date;
 
 			while ((stimulationTime - currentTime.first) < (currentTime.second - currentTime.first))
 			{
@@ -1137,7 +1140,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 
 				if (m_stimulations.empty()) { break; }
 
-				stimulationTime = m_stimulations.front().stimulationDate;
+				stimulationTime = m_stimulations.front().date;
 			}
 
 			csv += stimulationsToString(stimulationsToWrite);
@@ -1262,7 +1265,7 @@ bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 	}
 
 	// get sampling rate
-	try { m_samplingRate = std::stoul(header[TIME_COL_IDX].substr(5, header[TIME_COL_IDX].size() - 3)); }
+	try { m_sampling = std::stoul(header[TIME_COL_IDX].substr(5, header[TIME_COL_IDX].size() - 3)); }
 	catch (const std::exception& ia)
 	{
 		m_lastStringError = "On entry \"" + header[0].substr(5, header[0].size() - 3) + "\", exception have been thrown: ";
@@ -1334,7 +1337,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 
 	m_dimSizes.push_back(dimensionSize);
 
-	if (!getNextElem(m_originalSampleNumber, '\0', "original number of samples")) { return false; }
+	if (!getNextElem(m_nSampleOriginal, '\0', "original number of samples")) { return false; }
 
 	if (m_dimSizes[0] == 0 || m_dimSizes[1] == 0)
 	{
@@ -1354,7 +1357,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 	std::string channelLabel;
 	m_dimLabels.clear();
 
-	for ( size_t labelCounter = 0; labelCounter < m_dimSizes[0]; labelCounter++)
+	for (size_t labelCounter = 0; labelCounter < m_dimSizes[0]; labelCounter++)
 	{
 		double lastFrequency = 0.0;
 
@@ -1463,7 +1466,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 
 	for (const std::string& dimensionSize : dimensionParts)
 	{
-		 size_t size = 0;
+		size_t size = 0;
 
 		try { size = std::stoul(dimensionSize); }
 		catch (std::exception& e)
@@ -1490,7 +1493,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	}
 
 	// check columnLabels number according to dimension sizes
-	const  size_t matrixColumnCount = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1, std::multiplies< size_t>());
+	const size_t matrixColumnCount = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1, std::multiplies<size_t>());
 
 	if ((matrixColumnCount + N_PRE_DATA_COL + N_POST_DATA_COL) != header.size())
 	{
@@ -1511,7 +1514,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	}
 
 	// corresponding to the position in the multi multidimensional matrix (as exemple the third label of the second dimension will be positionsInDimensions[1] = 2)
-	std::vector< size_t> positionsInDimensions(m_nDim, 0);
+	std::vector<size_t> positionsInDimensions(m_nDim, 0);
 	size_t columnIndex = 0;
 
 	// we will visit each column containing matrix labels
@@ -1577,23 +1580,24 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 		columnIndex++;
 	} while (increasePositionIndexes(positionsInDimensions));
 
-	for (const std::vector<std::string>& dimensionIndex : labelsInDimensions) { m_dimLabels.insert(m_dimLabels.end(), dimensionIndex.begin(), dimensionIndex.end()); }
+	for (const std::vector<std::string>& dimensionIndex : labelsInDimensions)
+	{
+		m_dimLabels.insert(m_dimLabels.end(), dimensionIndex.begin(), dimensionIndex.end());
+	}
 
 	m_nSamplePerBuffer = 1;
 
 	return true;
 }
 
-bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample, const uint64_t lineNb)
+bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample, const size_t lineNb)
 {
 	const auto firstColumn  = std::find(line.cbegin(), line.cend(), SEPARATOR);
 	const auto secondColumn = std::find(firstColumn + 1, line.cend(), SEPARATOR);
 
 	if (lineNb % m_nSamplePerBuffer == 0)
 	{
-		if (!boost::spirit::qi::parse(line.cbegin(), firstColumn,
-									  boost::spirit::qi::double_,
-									  sample.startTime))
+		if (!qi::parse(line.cbegin(), firstColumn, qi::double_, sample.startTime))
 		{
 			m_lastStringError = "Invalid value for the start time. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1603,24 +1607,20 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (m_inputTypeID == EStreamType::Signal)
 	{
-		if (!boost::spirit::qi::parse(firstColumn + 1, secondColumn,
-									  boost::spirit::qi::ulong_long,
-									  sample.epoch))
+		if (!qi::parse(firstColumn + 1, secondColumn, qi::ulong_long, sample.epoch))
 		{
 			m_lastStringError = "Invalid value for the epoch. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
 			return false;
 		}
 
-		sample.endTime = sample.startTime + (double(m_nSamplePerBuffer) / double(m_samplingRate));
+		sample.endTime = sample.startTime + (double(m_nSamplePerBuffer) / double(m_sampling));
 	}
 	else
 	{
 		sample.epoch = std::numeric_limits<uint64_t>::max();
 
-		if (!boost::spirit::qi::parse(firstColumn + 1, secondColumn,
-									  boost::spirit::qi::double_,
-									  sample.endTime))
+		if (!qi::parse(firstColumn + 1, secondColumn, qi::double_, sample.endTime))
 		{
 			m_lastStringError = "Invalid value for the end time. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1628,71 +1628,65 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 		}
 	}
 
-	const size_t eventDurationColumn = line.find_last_of(SEPARATOR);
-	const size_t eventDateColumn     = line.find_last_of(SEPARATOR, eventDurationColumn - 1);
-	const size_t eventIdColumn       = line.find_last_of(SEPARATOR, eventDateColumn - 1);
+	const size_t eventDurationCol = line.find_last_of(SEPARATOR);
+	const size_t eventDateCol     = line.find_last_of(SEPARATOR, eventDurationCol - 1);
+	const size_t eventIdCol       = line.find_last_of(SEPARATOR, eventDateCol - 1);
 
-	std::vector<double> columnsMatrix;
+	std::vector<double> colMatrix;
 
-	boost::spirit::qi::phrase_parse(secondColumn + 1, line.cbegin() + eventIdColumn,
-									boost::spirit::qi::double_ % SEPARATOR,
-									boost::spirit::ascii::space,
-									columnsMatrix);
+	qi::phrase_parse(secondColumn + 1, line.cbegin() + eventIdCol, qi::double_ % SEPARATOR, ascii::space, colMatrix);
 
-	if (columnsMatrix.size() != m_nCol - N_POST_DATA_COL - N_PRE_DATA_COL)
+	if (colMatrix.size() != m_nCol - N_POST_DATA_COL - N_PRE_DATA_COL)
 	{
 		m_lastStringError = "Invalid number of channel. Error on line " + std::to_string(lineNb);
 		m_logError        = LogErrorCodes_InvalidArgumentException;
 		return false;
 	}
 
-	if (m_inputTypeID == EStreamType::Signal) { for (size_t index = 0; index < m_dimLabels.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = columnsMatrix[index]; } }
-	else if (m_inputTypeID == EStreamType::Spectrum) { for (size_t index = 0; index < columnsMatrix.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = columnsMatrix[index]; } }
+	if (m_inputTypeID == EStreamType::Signal)
+	{
+		for (size_t index = 0; index < m_dimLabels.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index]; }
+	}
+	else if (m_inputTypeID == EStreamType::Spectrum)
+	{
+		for (size_t index = 0; index < colMatrix.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index]; }
+	}
 	else
 	{
 		sample.matrix.clear();
-		std::move(columnsMatrix.begin(), columnsMatrix.end(), std::back_inserter(sample.matrix));
+		std::move(colMatrix.begin(), colMatrix.end(), std::back_inserter(sample.matrix));
 	}
 
 	return true;
 }
 
-bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const uint64_t /*lineNb*/)
+bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const size_t /*lineNb*/)
 {
-	const size_t eventDurationColumn = line.find_last_of(SEPARATOR);
-	const size_t eventDateColumn     = line.find_last_of(SEPARATOR, eventDurationColumn - 1);
-	const size_t eventIdColumn       = line.find_last_of(SEPARATOR, eventDateColumn - 1);
+	const size_t eventDurationCol = line.find_last_of(SEPARATOR);
+	const size_t eventDateCol     = line.find_last_of(SEPARATOR, eventDurationCol - 1);
+	const size_t eventIdCol       = line.find_last_of(SEPARATOR, eventDateCol - 1);
 
-	std::vector<uint64_t> stimIdentifiers;
+	std::vector<uint64_t> stimIDs;
 	// pick all time identifiers for the current time
-	boost::spirit::qi::phrase_parse(line.cbegin() + eventIdColumn + 1, line.cbegin() + eventDateColumn,
-									boost::spirit::qi::ulong_long % DATA_SEPARATOR,
-									boost::spirit::ascii::space,
-									stimIdentifiers);
+	qi::phrase_parse(line.cbegin() + eventIdCol + 1, line.cbegin() + eventDateCol, qi::ulong_long % DATA_SEPARATOR, ascii::space, stimIDs);
 
 	std::vector<double> stimDates;
 	// pick all time identifiers for the current time
-	boost::spirit::qi::phrase_parse(line.cbegin() + eventDateColumn + 1, line.cbegin() + eventDurationColumn,
-									boost::spirit::qi::double_ % DATA_SEPARATOR,
-									boost::spirit::ascii::space,
-									stimDates);
+	qi::phrase_parse(line.cbegin() + eventDateCol + 1, line.cbegin() + eventDurationCol, qi::double_ % DATA_SEPARATOR, ascii::space, stimDates);
 
 	std::vector<double> stimDurations;
 	// pick all time identifiers for the current time
-	boost::spirit::qi::phrase_parse(line.cbegin() + eventDurationColumn + 1, line.cend(),
-									boost::spirit::qi::double_ % DATA_SEPARATOR,
-									boost::spirit::ascii::space,
-									stimDurations);
+	qi::phrase_parse(line.cbegin() + eventDurationCol + 1, line.cend(), qi::double_ % DATA_SEPARATOR, ascii::space, stimDurations);
 
-	if (stimIdentifiers.size() != stimDates.size() || stimIdentifiers.size() != stimDurations.size())
+	if (stimIDs.size() != stimDates.size() || stimIDs.size() != stimDurations.size())
 	{
-		m_lastStringError = "There is " + std::to_string(stimIdentifiers.size()) + " identifiers, " + std::to_string(stimDates.size()) + " dates, and " + std::
+		m_lastStringError = "There is " + std::to_string(stimIDs.size()) + " identifiers, " + std::to_string(stimDates.size()) + " dates, and " + std::
 							to_string(stimDurations.size()) + " durations";
 		m_logError = LogErrorCodes_StimulationSize;
 		return false;
 	}
 
-	for (size_t index = 0; index < stimIdentifiers.size(); ++index) { stimulations.emplace_back(stimIdentifiers[index], stimDates[index], stimDurations[index]); }
+	for (size_t index = 0; index < stimIDs.size(); ++index) { stimulations.emplace_back(stimIDs[index], stimDates[index], stimDurations[index]); }
 
 	return true;
 }

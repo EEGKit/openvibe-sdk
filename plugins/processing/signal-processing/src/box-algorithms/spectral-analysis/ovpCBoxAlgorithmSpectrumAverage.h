@@ -29,16 +29,16 @@ namespace OpenViBEPlugins
 
 			bool m_bZeroCare = false;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_matrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
 
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 
-			std::vector<size_t> m_vSelectedIndices;
+			std::vector<size_t> m_selectedIndices;
 		};
 
 		class CBoxAlgorithmSpectrumAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

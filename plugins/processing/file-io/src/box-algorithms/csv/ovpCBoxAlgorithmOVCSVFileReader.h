@@ -17,9 +17,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmOVCSVFileReader();
+			CBoxAlgorithmOVCSVFileReader() : m_readerLib(OpenViBE::CSV::createCSVHandler(), OpenViBE::CSV::releaseCSVHandler) { }
 			void release() override { delete this; }
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return 128LL << 32; }
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_readerLib;
 
 			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_algorithmEncoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimEncoder;
 
 			std::deque<OpenViBE::CSV::SMatrixChunk> m_savedChunks;
 			std::deque<OpenViBE::CSV::SStimulationChunk> m_savedStimulations;
@@ -43,18 +43,18 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 			std::vector<std::string> m_channelNames;
 			std::vector<size_t> m_dimSizes;
-			size_t m_samplingRate         = 0;
+			size_t m_sampling         = 0;
 			size_t m_nSamplePerBuffer = 0;
 
-			bool m_isHeaderSent;
-			bool m_isStimulationHeaderSent;
+			bool m_isHeaderSent            = false;
+			bool m_isStimulationHeaderSent = false;
 			std::vector<double> m_frequencyAbscissa;
 		};
 
 		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);

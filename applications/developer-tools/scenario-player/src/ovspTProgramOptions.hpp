@@ -21,14 +21,12 @@
 
 #pragma once
 
+#include "ovsp_defines.h"
+#include <boost/variant.hpp>
 #include <iostream>
 #include <map>
 #include <vector>
 #include <algorithm>
-
-#include <boost/variant.hpp>
-
-#include "ovsp_defines.h"
 
 #if defined TARGET_OS_Windows
 #include <codecvt>
@@ -39,7 +37,7 @@
 namespace OpenViBE
 {
 	/**
-	* \struct ProgramOptionsTraits
+	* \struct SProgramOptionsTraits
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Helper class for ProgramOptions type checking
@@ -49,7 +47,7 @@ namespace OpenViBE
 	* as well as type checking meta-programming features.
 	*
 	*/
-	struct ProgramOptionsTraits
+	struct SProgramOptionsTraits
 	{
 		// add a new type here (type must be default constructible)
 		// and add the corresponding callback in ProgramOptions
@@ -71,98 +69,97 @@ namespace OpenViBE
 		// template meta-programming features
 
 		/* Base type that represents a true value at compile-time */
-		struct TrueType
+		struct STrueType
 		{
 			static const bool value = true;
 		};
 
 		/* Base type that represents a false value at compile-time */
-		struct FalseType
+		struct SFalseType
 		{
 			static const bool value = false;
 		};
 
-		/* IsCompliant is used to statically check if a type is compliant with the handled types */
+		/* SIsCompliant is used to statically check if a type is compliant with the handled types */
 		template <typename T>
-		struct IsCompliant : FalseType { };
+		struct SIsCompliant : SFalseType { };
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::TokenPair> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::TokenPair> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::TokenPairList> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::TokenPairList> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::String> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::String> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::StringList> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::StringList> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::Integer> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::Integer> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::IntegerList> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::IntegerList> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::Float> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::Float> : STrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::FloatList> : TrueType {};
+		struct SIsCompliant<SProgramOptionsTraits::FloatList> : STrueType {};
 
-		/* IsSignatureCompliant is used to statically checked a list of type is compliant with handled type */
-		template <typename... List>
-		struct IsSignatureCompliant;
+		/* SIsSignatureCompliant is used to statically checked a list of type is compliant with handled type */
+		template <typename... TList>
+		struct SIsSignatureCompliant;
 
 		/* Specialization for empty list */
 		template <>
-		struct IsSignatureCompliant<> : TrueType {};
+		struct SIsSignatureCompliant<> : STrueType {};
 
 		/* Specialization for non-empty list */
-		template <typename Head, typename... Tail>
-		struct IsSignatureCompliant<Head, Tail...> :
-				std::conditional<IsCompliant<Head>::value, IsSignatureCompliant<Tail...>, FalseType>::type { };
+		template <typename THead, typename... TTail>
+		struct SIsSignatureCompliant<THead, TTail...> :
+				std::conditional<SIsCompliant<THead>::value, SIsSignatureCompliant<TTail...>, SFalseType>::type { };
 
-		/* IsIn is used to statically check if a type T is in a list of types List*/
-		template <typename T, typename... List>
-		struct IsIn; // interface
+		/* SIsIn is used to statically check if a type T is in a list of types TList*/
+		template <typename T, typename... TList>
+		struct SIsIn; // interface
 
 		/* Specialization for empty list */
 		template <typename T>
-		struct IsIn<T> : FalseType {};
+		struct SIsIn<T> : SFalseType {};
 
 		/* Specialization for list where 1st element is a match */
-		template <typename T, typename... Tail>
-		struct IsIn<T, T, Tail...> : TrueType {};
+		template <typename T, typename... TTail>
+		struct SIsIn<T, T, TTail...> : STrueType {};
 
 		/* Specialization for list of many elements */
-		template <typename T, typename Head, typename... Tail>
-		struct IsIn<T, Head, Tail...> : IsIn<T, Tail...> {};
+		template <typename T, typename THead, typename... TTail>
+		struct SIsIn<T, THead, TTail...> : SIsIn<T, TTail...> {};
 
-		/* HasDuplicate is used to statically check if a list of types has duplicates*/
-		template <typename... List>
-		struct HasDuplicate;
+		/* SHasDuplicate is used to statically check if a list of types has duplicates*/
+		template <typename... TList>
+		struct SHasDuplicate;
 
 		/* Specialization for empty list */
 		template <>
-		struct HasDuplicate<> : FalseType {};
+		struct SHasDuplicate<> : SFalseType {};
 
 		/* Specialization for 1-element list */
 		template <typename T>
-		struct HasDuplicate<T> : FalseType {};
+		struct SHasDuplicate<T> : SFalseType {};
 
 		/* Specialization for list of many elements */
-		template <typename Head, typename... Tail>
-		struct HasDuplicate<Head, Tail...> :
-				std::conditional<IsIn<Head, Tail...>::value, TrueType, HasDuplicate<Tail...>>::type { };
+		template <typename THead, typename... TTail>
+		struct SHasDuplicate<THead, TTail...> : std::conditional<SIsIn<THead, TTail...>::value, STrueType, SHasDuplicate<TTail...>>::type { };
 	} // namespace ProgramOptionsUtils
 
 	/**
@@ -194,24 +191,24 @@ namespace OpenViBE
 	* boost program_options compiled library if possible.
 	*
 	*/
-	template <typename First, typename... Types>
+	template <typename TFirst, typename... TTypes>
 	class ProgramOptions final
 	{
 	public:
 
 		// static assert are used to raise understandable errors at compile time
-		static_assert(!ProgramOptionsUtils::HasDuplicate<First, Types...>::value, "Duplicates in the type list");
-		static_assert(ProgramOptionsUtils::IsSignatureCompliant<First, Types...>::value, "Types not handled by ProgramOptions");
+		static_assert(!ProgramOptionsUtils::SHasDuplicate<TFirst, TTypes...>::value, "Duplicates in the type list");
+		static_assert(ProgramOptionsUtils::SIsSignatureCompliant<TFirst, TTypes...>::value, "TTypes not handled by ProgramOptions");
 
 		/**
 		* Struct used to store used-defined option parameters.
 		*/
-		struct OptionDesc // using a struct allows more extensibility than method parameters
+		struct SOptionDesc // using a struct allows more extensibility than method parameters
 		{
 			/** Option shortname (e.g. h for help) */
-			std::string m_ShortName;
+			std::string shortName;
 			/** Option description used for printing option list */
-			std::string m_Desc;
+			std::string desc;
 		};
 
 		/**
@@ -232,7 +229,7 @@ namespace OpenViBE
 		* Simple options are option withou value (e.g. --help or --version)
 		*
 		*/
-		void addSimpleOption(const std::string& name, const OptionDesc& optionDesc);
+		void addSimpleOption(const std::string& name, const SOptionDesc& optionDesc);
 
 
 		/**
@@ -243,7 +240,7 @@ namespace OpenViBE
 		* Template paramter T: The type of the option to be added
 		*/
 		template <typename T>
-		void addValueOption(const std::string& name, const OptionDesc& optionDesc);
+		void addValueOption(const std::string& name, const SOptionDesc& optionDesc);
 
 		/**
 		* \brief Parse command line options
@@ -290,79 +287,79 @@ namespace OpenViBE
 		{
 		public:
 
-			OptionVisitor(std::string& value) : m_Value(value) { }
+			OptionVisitor(std::string& value) : m_value(value) { }
 
-			void operator()(ProgramOptionsTraits::Integer& operand) const { operand = std::stoi(m_Value); }
-			void operator()(ProgramOptionsTraits::Float& operand) const { operand = std::stod(m_Value); }
-			void operator()(ProgramOptionsTraits::String& operand) const { operand = m_Value; }
-			void operator()(ProgramOptionsTraits::TokenPair& operand) const { operand = this->parsePair(m_Value); }
-			void operator()(ProgramOptionsTraits::IntegerList& operand) const { operand.push_back(std::stoi(m_Value)); }
-			void operator()(ProgramOptionsTraits::FloatList& operand) const { operand.push_back(std::stod(m_Value)); }
-			void operator()(ProgramOptionsTraits::StringList& operand) const { operand.push_back(m_Value); }
-			void operator()(ProgramOptionsTraits::TokenPairList& operand) const { operand.push_back(this->parsePair(m_Value)); }
+			void operator()(SProgramOptionsTraits::Integer& operand) const { operand = std::stoi(m_value); }
+			void operator()(SProgramOptionsTraits::Float& operand) const { operand = std::stod(m_value); }
+			void operator()(SProgramOptionsTraits::String& operand) const { operand = m_value; }
+			void operator()(SProgramOptionsTraits::TokenPair& operand) const { operand = this->parsePair(m_value); }
+			void operator()(SProgramOptionsTraits::IntegerList& operand) const { operand.push_back(std::stoi(m_value)); }
+			void operator()(SProgramOptionsTraits::FloatList& operand) const { operand.push_back(std::stod(m_value)); }
+			void operator()(SProgramOptionsTraits::StringList& operand) const { operand.push_back(m_value); }
+			void operator()(SProgramOptionsTraits::TokenPairList& operand) const { operand.push_back(this->parsePair(m_value)); }
 
 		private:
 
-			static ProgramOptionsTraits::TokenPair parsePair(const std::string& str);
+			static SProgramOptionsTraits::TokenPair parsePair(const std::string& str);
 
-			std::string& m_Value;
+			std::string& m_value;
 		};
 
-		using OptionValue = boost::variant<First, Types...>;
+		using OptionValue = boost::variant<TFirst, TTypes...>;
 
 		// the pair contais a boolean to quickly know if an option
 		// is a simple option or a value option
-		using FullOptionDesc = std::pair<bool, OptionDesc>;
+		using FullOptionDesc = std::pair<bool, SOptionDesc>;
 
-		std::string m_GlobalDesc;
-		std::map<std::string, FullOptionDesc> m_DescMap;
-		std::map<std::string, OptionValue> m_ValueMap;
-		std::vector<std::string> m_ParsedOptions;
+		std::string m_globalDesc;
+		std::map<std::string, FullOptionDesc> m_descs;
+		std::map<std::string, OptionValue> m_values;
+		std::vector<std::string> m_options;
 	};
 
 	///////////////////////////////////////////
 	/////// Definition ProgramOptions /////////
 	///////////////////////////////////////////
 
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::setGlobalDesc(const std::string& desc) { m_GlobalDesc = desc; }
+	template <typename TFirst, typename... TTypes>
+	void ProgramOptions<TFirst, TTypes...>::setGlobalDesc(const std::string& desc) { m_globalDesc = desc; }
 
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::addSimpleOption(const std::string& name, const OptionDesc& optionDesc)
+	template <typename TFirst, typename... TTypes>
+	void ProgramOptions<TFirst, TTypes...>::addSimpleOption(const std::string& name, const SOptionDesc& optionDesc)
 	{
-		m_DescMap[name] = std::make_pair(true, optionDesc);
+		m_descs[name] = std::make_pair(true, optionDesc);
 	}
 
-	template <typename First, typename... Types>
+	template <typename TFirst, typename... TTypes>
 	template <typename T>
-	void ProgramOptions<First, Types...>::addValueOption(const std::string& name, const OptionDesc& optionDesc)
+	void ProgramOptions<TFirst, TTypes...>::addValueOption(const std::string& name, const SOptionDesc& optionDesc)
 	{
-		m_DescMap[name] = std::make_pair(false, optionDesc);
+		m_descs[name] = std::make_pair(false, optionDesc);
 
 		T defaultValue{}; // with this implementation, only default constructible type can be added 
-		m_ValueMap[name] = defaultValue;
+		m_values[name] = defaultValue;
 	}
 
-	template <typename First, typename... Types>
-	bool ProgramOptions<First, Types...>::hasOption(const std::string& name) const
+	template <typename TFirst, typename... TTypes>
+	bool ProgramOptions<TFirst, TTypes...>::hasOption(const std::string& name) const
 	{
-		return std::find(m_ParsedOptions.begin(), m_ParsedOptions.end(), name) != m_ParsedOptions.end();
+		return std::find(m_options.begin(), m_options.end(), name) != m_options.end();
 	}
 
-	template <typename First, typename... Types>
+	template <typename TFirst, typename... TTypes>
 	template <typename T>
-	T ProgramOptions<First, Types...>::getOptionValue(const std::string& name) const
+	T ProgramOptions<TFirst, TTypes...>::getOptionValue(const std::string& name) const
 	{
 		T value{};
 
-		try { value = boost::get<T>(m_ValueMap.at(name)); }
+		try { value = boost::get<T>(m_values.at(name)); }
 		catch (const std::exception& e) { std::cerr << "ERROR: Caught exception during option value retrieval: " << e.what() << std::endl; }
 
 		return value;
 	}
 
-	template <typename First, typename... Types>
-	bool ProgramOptions<First, Types...>::parse(int argc, char** argv)
+	template <typename TFirst, typename... TTypes>
+	bool ProgramOptions<TFirst, TTypes...>::parse(const int argc, char** argv)
 	{
 		std::vector<std::string> args;
 #if defined TARGET_OS_Windows
@@ -377,21 +374,22 @@ namespace OpenViBE
 		for (int i = 1; i < argc; ++i)
 		{
 			std::string arg     = args[i];
-			const auto argSplit = arg.find_first_of("=");				// = is the separator for value option
+			const auto argSplit = arg.find_first_of("=");		// = is the separator for value option
 			std::string key;
 
 			if (argSplit == std::string::npos) { key = arg; }	// simple option
 			else { key = arg.substr(0, argSplit); }				// value option
 
 			// first check if the key exists
-			auto keyMatch = std::find_if(m_DescMap.begin(), m_DescMap.end(), [&](const std::pair<std::string, FullOptionDesc>& p)
+			auto keyMatch = std::find_if(m_descs.begin(), m_descs.end(), [&](const std::pair<std::string, FullOptionDesc>& p)
 										 {
 											 const auto& desc = p.second.second;
-											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (("--" + desc.m_ShortName) == key);
+											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.shortName) == key) || (
+														("--" + desc.shortName) == key);
 										 }
 			);
 
-			if (keyMatch == m_DescMap.end())
+			if (keyMatch == m_descs.end())
 			{
 				std::cout << "WARNING: Found unknown option: " << key << std::endl;
 				std::cout << "Skipping..." << std::endl;
@@ -408,7 +406,7 @@ namespace OpenViBE
 
 				std::string val = arg.substr(argSplit + 1, arg.size() - argSplit - 1); // take value part of the arg
 
-				try { boost::apply_visitor(OptionVisitor(val), m_ValueMap[keyMatch->first]); }
+				try { boost::apply_visitor(OptionVisitor(val), m_values[keyMatch->first]); }
 				catch (const std::exception& e)
 				{
 					std::cerr << "ERROR: Caught exception during option parsing: " << e.what() << std::endl;
@@ -417,27 +415,27 @@ namespace OpenViBE
 				}
 			}
 
-			m_ParsedOptions.push_back(keyMatch->first);
+			m_options.push_back(keyMatch->first);
 		}
 
 
 		return true;
 	}
 
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::printOptionsDesc() const
+	template <typename TFirst, typename... TTypes>
+	void ProgramOptions<TFirst, TTypes...>::printOptionsDesc() const
 	{
-		if (!m_GlobalDesc.empty()) { std::cout << m_GlobalDesc << std::endl; }
+		if (!m_globalDesc.empty()) { std::cout << m_globalDesc << std::endl; }
 
-		std::cout << "List of available options:\n" << std::endl;
+		std::cout << "TList of available options:\n" << std::endl;
 
-		for (auto& option : m_DescMap)
+		for (auto& option : m_descs)
 		{
 			std::cout << "Option: --" << option.first << std::endl;
 			const auto& desc = option.second.second;
-			if (!desc.m_ShortName.empty()) { std::cout << "Shortname: --" << desc.m_ShortName << std::endl; }
+			if (!desc.shortName.empty()) { std::cout << "Shortname: --" << desc.shortName << std::endl; }
 			std::cout << "Description: " << std::endl;
-			std::cout << desc.m_Desc << std::endl << std::endl;
+			std::cout << desc.desc << std::endl << std::endl;
 		}
 	}
 
@@ -445,8 +443,8 @@ namespace OpenViBE
 	/////// Definition Internal Visitor ///////
 	///////////////////////////////////////////
 
-	template <typename First, typename... Types>
-	ProgramOptionsTraits::TokenPair ProgramOptions<First, Types...>::OptionVisitor::parsePair(const std::string& str)
+	template <typename TFirst, typename... TTypes>
+	SProgramOptionsTraits::TokenPair ProgramOptions<TFirst, TTypes...>::OptionVisitor::parsePair(const std::string& str)
 	{
 		const auto split = str.find_first_of(":");
 		const auto size  = str.size();

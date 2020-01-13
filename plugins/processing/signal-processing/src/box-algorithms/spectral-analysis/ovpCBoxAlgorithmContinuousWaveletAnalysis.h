@@ -22,8 +22,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_oDecoder;
-			std::array<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis>, 4> m_vEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_decoder;
+			std::array<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis>, 4> m_encoders;
 
 			const char* m_waveletType = nullptr;
 			double m_waveletParam     = 0;
@@ -47,7 +47,10 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
 			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using CWT."); }
 
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
+			OpenViBE::CString getDetailedDescription() const override
+			{
+				return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform.");
+			}
 
 			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
@@ -58,20 +61,20 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_ContinuousWaveletAnalysis; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmContinuousWaveletAnalysis(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
 
-				rPrototype.addOutput("Amplitude", OV_TypeId_TimeFrequency);
-				rPrototype.addOutput("Phase", OV_TypeId_TimeFrequency);
-				rPrototype.addOutput("Real Part", OV_TypeId_TimeFrequency);
-				rPrototype.addOutput("Imaginary Part", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Amplitude", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Phase", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Real Part", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Imaginary Part", OV_TypeId_TimeFrequency);
 
-				rPrototype.addSetting("Wavelet type", OVP_TypeId_ContinuousWaveletType, OVP_TypeId_ContinuousWaveletType_Morlet.toString());
-				rPrototype.addSetting("Wavelet parameter", OV_TypeId_Float, "4");
-				rPrototype.addSetting("Number of frequencies", OV_TypeId_Integer, "60");
-				rPrototype.addSetting("Highest frequency", OV_TypeId_Float, "35");
-				rPrototype.addSetting("Frequency spacing", OV_TypeId_Float, "12.5");
+				prototype.addSetting("Wavelet type", OVP_TypeId_ContinuousWaveletType, "Morlet wavelet");
+				prototype.addSetting("Wavelet parameter", OV_TypeId_Float, "4");
+				prototype.addSetting("Number of frequencies", OV_TypeId_Integer, "60");
+				prototype.addSetting("Highest frequency", OV_TypeId_Float, "35");
+				prototype.addSetting("Frequency spacing", OV_TypeId_Float, "12.5");
 
 				return true;
 			}

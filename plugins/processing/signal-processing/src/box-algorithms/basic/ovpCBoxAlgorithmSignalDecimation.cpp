@@ -5,7 +5,7 @@
 #include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -13,38 +13,38 @@ using namespace SignalProcessing;
 
 bool CBoxAlgorithmSignalDecimation::initialize()
 {
-	m_pStreamDecoder = nullptr;
-	m_pStreamEncoder = nullptr;
+	m_decoder = nullptr;
+	m_encoder = nullptr;
 
-	m_i64DecimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	OV_ERROR_UNLESS_KRF(m_i64DecimationFactor > 1, "Invalid decimation factor [" << m_i64DecimationFactor << "] (expected value > 1)",
+	m_decimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	OV_ERROR_UNLESS_KRF(m_decimationFactor > 1, "Invalid decimation factor [" << m_decimationFactor << "] (expected value > 1)",
 						OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
-	m_pStreamDecoder->initialize();
+	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalDecoder));
+	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_SignalStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pMatrix.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_Matrix));
-	op_ui64SamplingRate.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_SignalDecoder_InputParameterId_MemoryBufferToDecode));
+	op_pMatrix.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SignalDecoder_OutputParameterId_Matrix));
+	op_sampling.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SignalDecoder_OutputParameterId_Sampling));
 
-	m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
-	m_pStreamEncoder->initialize();
+	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalEncoder));
+	m_encoder->initialize();
 
-	ip_ui64SamplingRate.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
-	ip_pMatrix.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
-	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	ip_sampling.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Sampling));
+	ip_pMatrix.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Matrix));
+	op_pMemoryBuffer.initialize(m_encoder->getOutputParameter(OVP_GD_Algorithm_SignalEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	m_nChannel                  = 0;
-	m_ui32InputSampleIdx              = 0;
-	m_ui32InputSampleCountPerSentBlock  = 0;
-	m_outputSamplingFrequency       = 0;
-	m_ui32OutputSampleIdx             = 0;
-	m_ui32OutputSampleCountPerSentBlock = 0;
+	m_nChannel         = 0;
+	m_iSampleIdx       = 0;
+	m_iNSamplePerBlock = 0;
+	m_oSampling        = 0;
+	m_oSampleIdx       = 0;
+	m_oNSamplePerBlock = 0;
 
-	m_nTotalSample = 0;
-	m_startTimeBase    = 0;
-	m_lastStartTime    = 0;
-	m_lastEndTime      = 0;
+	m_nTotalSample  = 0;
+	m_startTimeBase = 0;
+	m_lastStartTime = 0;
+	m_lastEndTime   = 0;
 
 	return true;
 }
@@ -53,24 +53,24 @@ bool CBoxAlgorithmSignalDecimation::uninitialize()
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_pMatrix.uninitialize();
-	ip_ui64SamplingRate.uninitialize();
+	ip_sampling.uninitialize();
 
-	if (m_pStreamEncoder)
+	if (m_encoder)
 	{
-		m_pStreamEncoder->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-		m_pStreamEncoder = nullptr;
+		m_encoder->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_encoder);
+		m_encoder = nullptr;
 	}
 
-	op_ui64SamplingRate.uninitialize();
+	op_sampling.uninitialize();
 	op_pMatrix.uninitialize();
 	ip_pMemoryBuffer.uninitialize();
 
-	if (m_pStreamDecoder)
+	if (m_decoder)
 	{
-		m_pStreamDecoder->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-		m_pStreamDecoder = nullptr;
+		m_decoder->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_decoder);
+		m_decoder = nullptr;
 	}
 
 	return true;
@@ -84,10 +84,9 @@ bool CBoxAlgorithmSignalDecimation::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSignalDecimation::process()
 {
-	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = boxContext.getOutputChunk(0);
@@ -97,86 +96,82 @@ bool CBoxAlgorithmSignalDecimation::process()
 
 		if (tStart != m_lastEndTime)
 		{
-			m_startTimeBase     = tStart;
-			m_ui32InputSampleIdx  = 0;
-			m_ui32OutputSampleIdx = 0;
+			m_startTimeBase = tStart;
+			m_iSampleIdx    = 0;
+			m_oSampleIdx    = 0;
 			m_nTotalSample  = 0;
 		}
 
 		m_lastStartTime = tStart;
 		m_lastEndTime   = tEnd;
 
-		m_pStreamDecoder->process();
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
+		m_decoder->process();
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalDecoder_OutputTriggerId_ReceivedHeader))
 		{
-			m_ui32InputSampleIdx             = 0;
-			m_ui32InputSampleCountPerSentBlock = op_pMatrix->getDimensionSize(1);
-			m_inputSamplingFrequency       = op_ui64SamplingRate;
+			m_iSampleIdx       = 0;
+			m_iNSamplePerBlock = op_pMatrix->getDimensionSize(1);
+			m_iSampling        = op_sampling;
 
-			OV_ERROR_UNLESS_KRF(m_inputSamplingFrequency%m_i64DecimationFactor == 0,
-								"Failed to decimate: input sampling frequency [" << m_inputSamplingFrequency << "] not multiple of decimation factor [" <<
-								m_i64DecimationFactor << "]",
-								OpenViBE::Kernel::ErrorType::BadSetting);
+			OV_ERROR_UNLESS_KRF(m_iSampling%m_decimationFactor == 0,
+								"Failed to decimate: input sampling frequency [" << m_iSampling << "] not multiple of decimation factor [" <<
+								m_decimationFactor << "]", OpenViBE::Kernel::ErrorType::BadSetting);
 
-			m_ui32OutputSampleIdx             = 0;
-			m_ui32OutputSampleCountPerSentBlock = uint32_t(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
-			m_ui32OutputSampleCountPerSentBlock = (m_ui32OutputSampleCountPerSentBlock ? m_ui32OutputSampleCountPerSentBlock : 1);
-			m_outputSamplingFrequency       = op_ui64SamplingRate / m_i64DecimationFactor;
+			m_oSampleIdx       = 0;
+			m_oNSamplePerBlock = size_t(m_iNSamplePerBlock / m_decimationFactor);
+			m_oNSamplePerBlock = (m_oNSamplePerBlock ? m_oNSamplePerBlock : 1);
+			m_oSampling        = op_sampling / m_decimationFactor;
 
-			OV_ERROR_UNLESS_KRF(m_outputSamplingFrequency != 0, "Failed to decimate: output sampling frequency is 0",
-								OpenViBE::Kernel::ErrorType::BadOutput);
+			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", OpenViBE::Kernel::ErrorType::BadOutput);
 
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
 
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
-			ip_pMatrix->setDimensionSize(1, m_ui32OutputSampleCountPerSentBlock);
-			ip_ui64SamplingRate = m_outputSamplingFrequency;
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
+			ip_pMatrix->setDimensionSize(1, m_oNSamplePerBlock);
+			ip_sampling = m_oSampling;
+			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader);
 			OpenViBEToolkit::Tools::Matrix::clearContent(*ip_pMatrix);
 
 			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			double* iBuffer = op_pMatrix->getBuffer();
-			double* oBuffer = ip_pMatrix->getBuffer() + m_ui32OutputSampleIdx;
+			double* oBuffer = ip_pMatrix->getBuffer() + m_oSampleIdx;
 
-			for (uint32_t j = 0; j < m_ui32InputSampleCountPerSentBlock; ++j)
+			for (size_t j = 0; j < m_iNSamplePerBlock; ++j)
 			{
 				double* iBufferTmp = iBuffer;
 				double* oBufferTmp = oBuffer;
-				for (uint32_t k = 0; k < m_nChannel; ++k)
+				for (size_t k = 0; k < m_nChannel; ++k)
 				{
 					*oBufferTmp += *iBufferTmp;
-					oBufferTmp += m_ui32OutputSampleCountPerSentBlock;
-					iBufferTmp += m_ui32InputSampleCountPerSentBlock;
+					oBufferTmp += m_oNSamplePerBlock;
+					iBufferTmp += m_iNSamplePerBlock;
 				}
 
-				m_ui32InputSampleIdx++;
-				if (m_ui32InputSampleIdx == m_i64DecimationFactor)
+				m_iSampleIdx++;
+				if (m_iSampleIdx == m_decimationFactor)
 				{
-					m_ui32InputSampleIdx = 0;
-					oBufferTmp             = oBuffer;
-					for (uint32_t k = 0; k < m_nChannel; ++k)
+					m_iSampleIdx = 0;
+					oBufferTmp   = oBuffer;
+					for (size_t k = 0; k < m_nChannel; ++k)
 					{
-						*oBufferTmp /= m_i64DecimationFactor;
-						oBufferTmp += m_ui32OutputSampleCountPerSentBlock;
+						*oBufferTmp /= m_decimationFactor;
+						oBufferTmp += m_oNSamplePerBlock;
 					}
 
 					oBuffer++;
-					m_ui32OutputSampleIdx++;
-					if (m_ui32OutputSampleIdx == m_ui32OutputSampleCountPerSentBlock)
+					m_oSampleIdx++;
+					if (m_oSampleIdx == m_oNSamplePerBlock)
 					{
-						oBuffer                 = ip_pMatrix->getBuffer();
-						m_ui32OutputSampleIdx = 0;
-						m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-						const uint64_t tStartSample = m_startTimeBase + TimeArithmetics::sampleCountToTime(
-														  m_outputSamplingFrequency, m_nTotalSample);
-						const uint64_t tEndSample = m_startTimeBase + TimeArithmetics::sampleCountToTime(
-														m_outputSamplingFrequency, m_nTotalSample + m_ui32OutputSampleCountPerSentBlock);
+						oBuffer      = ip_pMatrix->getBuffer();
+						m_oSampleIdx = 0;
+						m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeBuffer);
+						const uint64_t tStartSample = m_startTimeBase + TimeArithmetics::sampleCountToTime(m_oSampling, m_nTotalSample);
+						const uint64_t tEndSample   = m_startTimeBase + TimeArithmetics::sampleCountToTime(m_oSampling, m_nTotalSample + m_oNSamplePerBlock);
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
-						m_nTotalSample += m_ui32OutputSampleCountPerSentBlock;
+						m_nTotalSample += m_oNSamplePerBlock;
 
 						OpenViBEToolkit::Tools::Matrix::clearContent(*ip_pMatrix);
 					}
@@ -185,9 +180,9 @@ bool CBoxAlgorithmSignalDecimation::process()
 				iBuffer++;
 			}
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd))
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalDecoder_OutputTriggerId_ReceivedEnd))
 		{
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
+			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeEnd);
 			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
 

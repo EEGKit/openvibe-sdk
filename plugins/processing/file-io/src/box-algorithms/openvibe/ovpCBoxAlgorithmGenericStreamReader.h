@@ -40,22 +40,22 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			OpenViBE::CMemoryBuffer m_oPendingChunk;
-			uint64_t m_startTime   = 0;
-			uint64_t m_endTime     = 0;
-			uint32_t m_ui32OutputIdx = 0;
-			bool m_bPending            = false;
-			bool m_hasEBMLHeader      = false;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
+			size_t m_outputIdx   = 0;
+			bool m_bPending      = false;
+			bool m_hasEBMLHeader = false;
 
-			FILE* m_pFile = nullptr;
-			std::stack<EBML::CIdentifier> m_vNodes;
-			std::map<uint32_t, uint32_t> m_vStreamIndexToOutputIdx;
-			std::map<uint32_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeID;
+			FILE* m_file = nullptr;
+			std::stack<EBML::CIdentifier> m_nodes;
+			std::map<size_t, size_t> m_vStreamIndexToOutputIdx;
+			std::map<size_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeID;
 
 		private:
 			bool initializeFile();
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const size_t size) override;
 			void closeChild() override;
 		};
 
@@ -65,10 +65,7 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				for (uint32_t i = 0; i < box.getOutputCount(); ++i)
-				{
-					box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str());
-				}
+				for (size_t i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 
@@ -80,20 +77,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setOutputType(index, OV_TypeId_EBMLStream);
 				this->check(box);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				this->check(box);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				this->check(box);
 				return true;

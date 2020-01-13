@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 			bool processHeader() override;
 			bool processBuffer() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StreamedMatrixStreamEncoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StreamedMatrixEncoder)
 
 		protected:
 
@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			uint64_t m_matrixBufferSize = 0;
+			size_t m_size = 0;
 		};
 
 		class CStreamedMatrixEncoderDesc : public CEBMLBaseEncoderDesc
@@ -41,20 +41,20 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamedMatrixStreamEncoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamedMatrixEncoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CStreamedMatrixEncoder(); }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
 
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				prototype.addInputParameter(
+					OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StreamedMatrixStreamEncoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StreamedMatrixEncoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

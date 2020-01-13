@@ -17,10 +17,10 @@ namespace Communication
 	struct CMessaging::SMessagingImpl
 	{
 		std::string m_ConnectionID;
-		BoxDescriptionMessage m_BoxDescription;
+		BoxDescriptionMessage m_BoxDesc;
 		std::atomic<uint64_t> m_Time;
 
-		unsigned long long m_MessageCount;
+		uint64_t m_nMessage = 0;
 
 		std::mutex m_IncAuthMutex;
 		std::queue<std::pair<uint64_t, AuthenticationMessage>> m_IncomingAuthentications;
@@ -46,7 +46,7 @@ namespace Communication
 		static const size_t s_BufferSize = 1024 * 64; //< Empirical value
 
 		std::vector<uint8_t> m_RcvBuffer;
-		std::array<uint8_t, s_BufferSize> m_TemporaryRcvBuffer;
+		std::array<uint8_t, s_BufferSize> m_TempRcvBuffer;
 
 		std::mutex m_SendBufferMutex;
 		std::vector<uint8_t> m_SendBuffer;

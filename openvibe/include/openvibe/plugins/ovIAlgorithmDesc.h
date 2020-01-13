@@ -27,7 +27,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the prototype for this algorithm
-			 * \param rAlgorithmPrototype [out] : the prototype to fill
+			 * \param prototype [out] : the prototype to fill
 			 * \return \e true in case of success \e false in other cases.
 			 *
 			 * When this function is called by the OpenViBE
@@ -38,7 +38,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IAlgorithmProto
 			 */
-			virtual bool getAlgorithmPrototype(Kernel::IAlgorithmProto& rAlgorithmPrototype) const = 0;
+			virtual bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_AlgorithmDesc)
 		};

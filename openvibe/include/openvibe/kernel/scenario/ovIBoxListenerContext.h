@@ -88,7 +88,7 @@ namespace OpenViBE
 			 * \return the index of the concerned callback message in case it makes sense
 			 * \return \c 0xffffffff in case it does not make any sense
 			 */
-			virtual uint32_t getIndex() const = 0;
+			virtual size_t getIndex() const = 0;
 
 			//@}
 

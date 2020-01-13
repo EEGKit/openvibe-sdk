@@ -76,7 +76,7 @@ __________________________________________________________________
 [  INF  ] <Box algorithm::EBML stream spy>     Opened EBML node [id:(0x00cdd0f7, 0x46b0278d)]-[name:OVTK_NodeId_Header_StreamType]-[type:uinteger]-[value:0 (0x0)]
 [  INF  ] <Box algorithm::EBML stream spy>     Opened EBML node [id:(0x006f5a08, 0x7796ebc5)]-[name:OVTK_NodeId_Header_StreamVersion]-[type:uinteger]-[value:0 (0x0)]
 [  INF  ] <Box algorithm::EBML stream spy>     Opened EBML node [id:(0x007855de, 0x3748d375)]-[name:OVTK_NodeId_Header_Signal]
-[  INF  ] <Box algorithm::EBML stream spy>       Opened EBML node [id:(0x00141c43, 0x0c37006b)]-[name:OVTK_NodeId_Header_Signal_SamplingRate]-[type:uinteger]-[value:512 (0x200)]
+[  INF  ] <Box algorithm::EBML stream spy>       Opened EBML node [id:(0x00141c43, 0x0c37006b)]-[name:OVTK_NodeId_Header_Signal_Sampling]-[type:uinteger]-[value:512 (0x200)]
 [  INF  ] <Box algorithm::EBML stream spy>     Opened EBML node [id:(0x0072f560, 0x7ed2cbed)]-[name:OVTK_NodeId_Header_StreamedMatrix]
 [  INF  ] <Box algorithm::EBML stream spy>       Opened EBML node [id:(0x003febd4, 0x2725d428)]-[name:OVTK_NodeId_Header_StreamedMatrix_DimensionCount]-[type:uinteger]-[value:2 (0x2)]
 [  INF  ] <Box algorithm::EBML stream spy>       Opened EBML node [id:(0x0000e3c0, 0x3a7d5141)]-[name:OVTK_NodeId_Header_StreamedMatrix_Dimension]
@@ -184,7 +184,7 @@ OVTK_NodeId_Buffer_StreamedMatrix                                      EBML::CId
 OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer                            EBML::CIdentifier(0x00B18C10, 0x427D098C) binary
 
 OVTK_NodeId_Header_Signal                                              EBML::CIdentifier(0x007855DE, 0x3748D375) master
-OVTK_NodeId_Header_Signal_SamplingRate                                 EBML::CIdentifier(0x00141C43, 0x0C37006B) uinteger
+OVTK_NodeId_Header_Signal_Sampling                                 EBML::CIdentifier(0x00141C43, 0x0C37006B) uinteger
 
 ...
 \endverbatim

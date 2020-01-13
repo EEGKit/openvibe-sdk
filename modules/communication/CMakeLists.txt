@@ -2,16 +2,16 @@ PROJECT(openvibe-module-communication)
 
 INCLUDE_DIRECTORIES("include/communication/")
 
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp include/*.h include/*.hpp)
+FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp include/*.h include/*.hpp)
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${source_files})
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	COMPILE_FLAGS "-DCommunication_Shared -DCommunication_Exports")
 
-ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${source_files})
+ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}

@@ -6,7 +6,7 @@
 #include <sstream>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
@@ -17,127 +17,119 @@ CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP() {}
 bool CBoxAlgorithmSimpleDSP::initialize()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
-	uint32_t i;
 
-	m_Variable = new double*[boxContext.getInputCount()];
+	m_variables = new double*[boxContext.getInputCount()];
 
-	OV_ERROR_UNLESS_KRF(m_Variable, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs",
+	OV_ERROR_UNLESS_KRF(m_variables, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs",
 						OpenViBE::Kernel::ErrorType::BadAlloc);
 
-	const CString l_sEquation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_Parser                  = new CEquationParser(*this, m_Variable, boxContext.getInputCount());
+	const CString equation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_parser               = new CEquationParser(*this, m_variables, boxContext.getInputCount());
 
-	OV_ERROR_UNLESS_KRF(m_Parser, "Failed to create equation parser", OpenViBE::Kernel::ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_parser, "Failed to create equation parser", OpenViBE::Kernel::ErrorType::BadAlloc);
 
-	OV_ERROR_UNLESS_KRF(m_Parser->compileEquation(l_sEquation.toASCIIString()), "Failed to compile equation [" << l_sEquation << "]",
+	OV_ERROR_UNLESS_KRF(m_parser->compileEquation(equation.toASCIIString()), "Failed to compile equation [" << equation << "]",
 						OpenViBE::Kernel::ErrorType::Internal);
 
-	m_EquationType         = m_Parser->getTreeCategory();
-	m_SpecialEquationParam = m_Parser->getTreeParameter();
+	m_equationType  = m_parser->getTreeCategory();
+	m_equationParam = m_parser->getTreeParameter();
 
-	CIdentifier l_oStreamType;
-	boxContext.getOutputType(0, l_oStreamType);
+	CIdentifier streamType;
+	boxContext.getOutputType(0, streamType);
 
-	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(l_oStreamType, OV_TypeId_StreamedMatrix),
-						"Invalid output stream [" << l_oStreamType.toString() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
+	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(streamType, OV_TypeId_StreamedMatrix),
+						"Invalid output stream [" << streamType.toString() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
 						OpenViBE::Kernel::ErrorType::Internal);
 
-	if (l_oStreamType == OV_TypeId_StreamedMatrix)
+	if (streamType == OV_TypeId_StreamedMatrix)
 	{
-		m_Encoder = &this->getAlgorithmManager().getAlgorithm(
-			this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
-		m_Encoder->initialize();
-		for (i = 0; i < boxContext.getInputCount(); ++i)
+		m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixEncoder));
+		m_encoder->initialize();
+		for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
-				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
-			l_pStreamDecoder->initialize();
-			m_Decoder.push_back(l_pStreamDecoder);
+			IAlgorithmProxy* decoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixDecoder));
+			decoder->initialize();
+			m_decoders.push_back(decoder);
 		}
 	}
-	else if (l_oStreamType == OV_TypeId_FeatureVector)
+	else if (streamType == OV_TypeId_FeatureVector)
 	{
-		m_Encoder = &this->getAlgorithmManager().getAlgorithm(
-			this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamEncoder));
-		m_Encoder->initialize();
-		for (i = 0; i < boxContext.getInputCount(); ++i)
+		m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorEncoder));
+		m_encoder->initialize();
+		for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
-				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamDecoder));
-			l_pStreamDecoder->initialize();
-			m_Decoder.push_back(l_pStreamDecoder);
+			IAlgorithmProxy* decoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorDecoder));
+			decoder->initialize();
+			m_decoders.push_back(decoder);
 		}
 	}
-	else if (l_oStreamType == OV_TypeId_Signal)
+	else if (streamType == OV_TypeId_Signal)
 	{
-		m_Encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
-		m_Encoder->initialize();
-		for (i = 0; i < boxContext.getInputCount(); ++i)
+		m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalEncoder));
+		m_encoder->initialize();
+		for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
-				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
-			l_pStreamDecoder->initialize();
-			TParameterHandler<uint64_t> ip_ui64SamplingRate(
-				m_Encoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
-			TParameterHandler<uint64_t> op_ui64SamplingRate(
-				l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
-			ip_ui64SamplingRate.setReferenceTarget(op_ui64SamplingRate);
-			m_Decoder.push_back(l_pStreamDecoder);
+			IAlgorithmProxy* decoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalDecoder));
+			decoder->initialize();
+			TParameterHandler<uint64_t> ip_sampling(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Sampling));
+			TParameterHandler<uint64_t> op_sampling(decoder->getOutputParameter(OVP_GD_Algorithm_SignalDecoder_OutputParameterId_Sampling));
+			ip_sampling.setReferenceTarget(op_sampling);
+			m_decoders.push_back(decoder);
 		}
 	}
-	else if (l_oStreamType == OV_TypeId_Spectrum)
+	else if (streamType == OV_TypeId_Spectrum)
 	{
-		m_Encoder = &this->getAlgorithmManager().getAlgorithm(
-			this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
-		m_Encoder->initialize();
-		for (i = 0; i < boxContext.getInputCount(); ++i)
+		m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumEncoder));
+		m_encoder->initialize();
+		for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 		{
-			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(
-				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
-			l_pStreamDecoder->initialize();
-			TParameterHandler<IMatrix*> op_ui64CenterFrequencyBands(
-				m_Encoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
-			TParameterHandler<IMatrix*> ip_ui64CenterFrequencyBands(
-				l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
-			ip_ui64CenterFrequencyBands.setReferenceTarget(op_ui64CenterFrequencyBands);
-			l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate)->setReferenceTarget(
-				m_Encoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
-			m_Decoder.push_back(l_pStreamDecoder);
+			IAlgorithmProxy* decoder = &this->getAlgorithmManager().getAlgorithm(
+				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumDecoder));
+			decoder->initialize();
+			TParameterHandler<IMatrix*> op_CenterBands(m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
+			TParameterHandler<IMatrix*> ip_CenterBands(decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
+			ip_CenterBands.setReferenceTarget(op_CenterBands);
+			decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_Sampling)->setReferenceTarget(
+				m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
+			m_decoders.push_back(decoder);
 		}
 	}
 	else
 	{
-		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(l_oStreamType) << ":id=" << l_oStreamType.toString() << "] not yet implemented",
+		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(streamType) << ":id=" << streamType.str() << "] not yet implemented",
 					 OpenViBE::Kernel::ErrorType::NotImplemented);
 	}
 
-	m_CheckChunkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
-	this->getLogManager() << LogLevel_Trace << (m_CheckChunkDates ? "Checking chunk dates..." : "Not checking chunk dates !") << "\n";
+	m_checkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
+	this->getLogManager() << LogLevel_Trace << (m_checkDates ? "Checking chunk dates..." : "Not checking chunk dates !") << "\n";
 
 	return true;
 }
 
 bool CBoxAlgorithmSimpleDSP::uninitialize()
 {
-	for (auto it = m_Decoder.begin(); it != m_Decoder.end(); ++it)
+	for (auto& d : m_decoders)
 	{
-		(*it)->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(**it);
+		d->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*d);
 	}
-	m_Decoder.clear();
+	m_decoders.clear();
 
-	if (m_Encoder)
+	if (m_encoder)
 	{
-		m_Encoder->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_Encoder);
-		m_Encoder = nullptr;
+		m_encoder->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_encoder);
+		m_encoder = nullptr;
 	}
 
-	delete m_Parser;
-	m_Parser = nullptr;
+	delete m_parser;
+	m_parser = nullptr;
 
-	delete [] m_Variable;
-	m_Variable = nullptr;
+	delete [] m_variables;
+	m_variables = nullptr;
 
 	return true;
 }
@@ -145,16 +137,16 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
-	const uint32_t nInput          = this->getStaticBoxContext().getInputCount();
+	const size_t nInput            = this->getStaticBoxContext().getInputCount();
 
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }
 
 	const uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
 	const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
-	for (uint32_t i = 1; i < nInput; ++i)
+	for (size_t i = 1; i < nInput; ++i)
 	{
 		if (boxContext.getInputChunkCount(i) == 0) { return true; }
-		if (m_CheckChunkDates)
+		if (m_checkDates)
 		{
 			OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0) || tEnd == boxContext.getInputChunkEndTime(i, 0),
 								"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",
@@ -170,57 +162,55 @@ bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 bool CBoxAlgorithmSimpleDSP::process()
 {
 	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
-	const uint32_t nInput          = this->getStaticBoxContext().getInputCount();
+	const size_t nInput            = this->getStaticBoxContext().getInputCount();
 
-	uint32_t nHeader = 0;
-	uint32_t nBuffer = 0;
-	uint32_t nEnd    = 0;
+	size_t nHeader = 0;
+	size_t nBuffer = 0;
+	size_t nEnd    = 0;
 
-	TParameterHandler<IMatrix*> ip_pMatrix(m_Encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_Encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IMatrix*> ip_matrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	m_Matrix.clear();
+	m_matrices.clear();
 
-	op_pMemoryBuffer = boxContext.getOutputChunk(0);
-	for (uint32_t i = 0; i < nInput; ++i)
+	op_buffer = boxContext.getOutputChunk(0);
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(m_Decoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
-		TParameterHandler<IMatrix*> op_pMatrix(m_Decoder[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
-		ip_pMemoryBuffer = boxContext.getInputChunk(i, 0);
-		m_Decoder[i]->process();
-		if (m_Decoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedHeader))
+		TParameterHandler<const IMemoryBuffer*> ip_buffer(
+			m_decoders[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<IMatrix*> op_matrix(m_decoders[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+		ip_buffer = boxContext.getInputChunk(i, 0);
+		m_decoders[i]->process();
+		if (m_decoders[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			if (i != 0)
 			{
-				OV_ERROR_UNLESS_KRF(m_Matrix[0]->getBufferElementCount() == op_pMatrix->getBufferElementCount(),
-									"Invalid matrix dimension [" << m_Matrix[0]->getBufferElementCount() << "] (expected value = " << op_pMatrix->
-									getBufferElementCount() <<")",
-									OpenViBE::Kernel::ErrorType::BadValue);
+				OV_ERROR_UNLESS_KRF(m_matrices[0]->getBufferElementCount() == op_matrix->getBufferElementCount(),
+									"Invalid matrix dimension [" << m_matrices[0]->getBufferElementCount() << "] (expected value = "
+									<< op_matrix->getBufferElementCount() <<")", OpenViBE::Kernel::ErrorType::BadValue);
 			}
 			nHeader++;
 		}
-		if (m_Decoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer)) { nBuffer++; }
-		if (m_Decoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd)) { nEnd++; }
-		m_Matrix.push_back(op_pMatrix);
+		if (m_decoders[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedBuffer)) { nBuffer++; }
+		if (m_decoders[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedEnd)) { nEnd++; }
+		m_matrices.push_back(op_matrix);
 		boxContext.markInputAsDeprecated(i, 0);
 	}
 
-	OV_ERROR_UNLESS_KRF((!nHeader || nHeader == nInput) &&
-						(!nBuffer || nBuffer == nInput) &&
-						(!nEnd || nEnd == nInput),
+	OV_ERROR_UNLESS_KRF((!nHeader || nHeader == nInput) && (!nBuffer || nBuffer == nInput) && (!nEnd || nEnd == nInput),
 						"Invalid stream structure", OpenViBE::Kernel::ErrorType::BadValue);
 
 	if (nHeader)
 	{
-		OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *m_Matrix[0]);
-		m_Encoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader);
+		OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
+		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 	}
 	if (nBuffer)
 	{
 		this->evaluate();
-		m_Encoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
+		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeBuffer);
 	}
-	if (nEnd) { m_Encoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
+	if (nEnd) { m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeEnd); }
 
 	if (nHeader || nBuffer || nEnd) { boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, 0), boxContext.getInputChunkEndTime(0, 0)); }
 
@@ -231,51 +221,16 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputCount(); ++i) { m_Variable[i] = m_Matrix[i]->getBuffer(); }
+	for (size_t i = 0; i < boxContext.getInputCount(); ++i) { m_variables[i] = m_matrices[i]->getBuffer(); }
 
-	TParameterHandler<IMatrix*> ip_pMatrix(m_Encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
+	TParameterHandler<IMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	double* buffer    = ip_pMatrix->getBuffer();
 	double* bufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getBufferElementCount();
 
 	while (buffer != bufferEnd)
 	{
-		*buffer = m_Parser->executeEquation();
-
-		for (uint32_t i = 0; i < boxContext.getInputCount(); ++i) { m_Variable[i]++; }
-
+		*buffer = m_parser->executeEquation();
+		for (size_t i = 0; i < boxContext.getInputCount(); ++i) { m_variables[i]++; }
 		buffer++;
 	}
-
-#if 0
-	switch (m_EquationType)
-	{
-		//The equation is not a special one, we have to execute the whole stack of function calls
-		case OP_USERDEF:
-			//for every samples
-			for (uint64_t i = 0; i < m_matrixBufferSize; ++i)
-			{
-				m_f64Variable = buffer[i];
-				m_matrixBuffer[i] = m_Parser->executeEquation();
-			}
-			break;
-		case OP_X2: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = buffer[i] * buffer[i]; } break;
-		case OP_NONE: System::Memory::copy(m_matrixBuffer, buffer, m_matrixBufferSize * sizeof(double)); break;
-		case OP_ABS: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = abs(buffer[i]); } break;
-		case OP_ACOS: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = acos(buffer[i]); } break;
-		case OP_ASIN: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = asin(buffer[i]); } break;
-		case OP_ATAN: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = atan(buffer[i]); } break;
-		case OP_CEIL: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = ceil(buffer[i]); } break;
-		case OP_COS: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = cos(buffer[i]); } break;
-		case OP_EXP: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = exp(buffer[i]); } break;
-		case OP_FLOOR: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = floor(buffer[i]); } break;
-		case OP_LOG: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = log(buffer[i]); } break;
-		case OP_LOG10: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = log10(buffer[i]); } break;
-		case OP_SIN: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = sin(buffer[i]); } break;
-		case OP_SQRT: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = sqrt(buffer[i]); } break;
-		case OP_TAN: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = tan(buffer[i]); } break;
-		case OP_ADD: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = buffer[i] + m_SpecialEquationParam; } break;
-		case OP_MUL: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = buffer[i] * m_SpecialEquationParam; } break;
-		case OP_DIV: for (uint64_t i = 0; i < m_matrixBufferSize; ++i) { m_matrixBuffer[i] = buffer[i] / m_SpecialEquationParam; } break;
-	}
-#endif
 }

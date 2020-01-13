@@ -24,7 +24,7 @@ TCharT ToLower(TCharT c) { return std::tolower(c); }
 * \param typeManager [in] :
 * \return \e true in case of success (numeric value is well formed).
 * \return \e false in case of error. In such case,
-*         \c rValue remains unchanged.
+*         \c value remains unchanged.
 */
 inline bool checkSettingValue(const OpenViBE::CString& value, const OpenViBE::CIdentifier& typeID, const OpenViBE::Kernel::ITypeManager& typeManager)
 {

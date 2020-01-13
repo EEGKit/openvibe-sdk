@@ -32,12 +32,12 @@ namespace OpenViBE
 			virtual bool initializeFromExistingLink(const ILink& link) = 0;
 			
 			/**
-			 * \brief Changes this link's identifier
-			 * \param identifier [in] : The new identifier this link should have
+			 * \brief Changes this link's id
+			 * \param id [in] : The new id this link should have
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& id) = 0;
 			/**
 			 * \brief Gets the identifier of this link
 			 * \return The identifier of this link.
@@ -56,7 +56,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSource(const CIdentifier& boxID, uint32_t boxOutputIdx, CIdentifier boxOutputID) = 0;
+			virtual bool setSource(const CIdentifier& boxID, size_t boxOutputIdx, CIdentifier boxOutputID) = 0;
 			/**
 			 * \brief Sets the target of this link
 			 * \param boxID [in] : The identifier of the target box
@@ -65,7 +65,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setTarget(const CIdentifier& boxID, uint32_t boxInputIdx, CIdentifier boxInputID) = 0;
+			virtual bool setTarget(const CIdentifier& boxID, size_t boxInputIdx, CIdentifier boxInputID) = 0;
 			/**
 			 * \brief Gets the source information for this link
 			 * \param boxID [out] : The identifier of the source box
@@ -74,7 +74,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getSource(CIdentifier& boxID, uint32_t& boxOutputIdx, CIdentifier& boxOutputID) const = 0;
+			virtual bool getSource(CIdentifier& boxID, size_t& boxOutputIdx, CIdentifier& boxOutputID) const = 0;
 			/**
 			 * \brief Gets the source box identifier for this link
 			 * \return the source box identifier for thit link
@@ -84,7 +84,7 @@ namespace OpenViBE
 			 * \brief Gets the source box output index for this link
 			 * \return the source box output index for this link
 			 */
-			virtual uint32_t getSourceBoxOutputIndex() const = 0;
+			virtual size_t getSourceBoxOutputIndex() const = 0;
 			/**
 			 * \brief Gets the source box output index for this link
 			 * \return the source box output index for this link
@@ -92,13 +92,13 @@ namespace OpenViBE
 			virtual CIdentifier getSourceBoxOutputIdentifier() const = 0;
 			/**
 			 * \brief Gets the target information for this link
-			 * \param rTargetBoxIdentifier [out] : The identifier of the target box
+			 * \param boxID [out] : The identifier of the target box
 			 * \param boxInputIdx [out] : The input index of the target box
 			 * \param boxInputID [out] : The input identifier of the target box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& boxInputIdx, CIdentifier& boxInputID) const = 0;
+			virtual bool getTarget(CIdentifier& boxID, size_t& boxInputIdx, CIdentifier& boxInputID) const = 0;
 			/**
 			 * \brief Gets the target box identifier for this link
 			 * \return the target box identifier for this link
@@ -108,7 +108,7 @@ namespace OpenViBE
 			 * \brief Gets the target box input index for this link
 			 * \return the target box input index for this link
 			 */
-			virtual uint32_t getTargetBoxInputIndex() const = 0;			
+			virtual size_t getTargetBoxInputIndex() const = 0;			
 			/**
 			 * \brief Gets the target box input identifier for this link
 			 * \return the target box input identifier for this link

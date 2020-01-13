@@ -21,9 +21,9 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_oDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_oEncoder;
-			uint32_t m_referenceChannelIdx = 0;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_encoder;
+			size_t m_referenceChannelIdx = 0;
 		};
 
 		class CBoxAlgorithmReferenceChannelDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -58,7 +58,7 @@ namespace OpenViBEPlugins
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
 				prototype.addSetting("Channel", OV_TypeId_String, "Ref_Nose");
-				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
+				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, "Smart");
 				return true;
 			}
 

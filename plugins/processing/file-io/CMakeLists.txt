@@ -5,14 +5,14 @@ SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
 SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.c src/*.h src/*.hpp src/*.inl)
-LIST(REMOVE_ITEM source_files
+FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.c src/*.h src/*.hpp src/*.inl)
+LIST(REMOVE_ITEM SRC_FILES
 	src/box-algorithms/csv/ovpCBoxAlgorithmCSVFileReader.cpp
 	src/box-algorithms/csv/ovpCBoxAlgorithmCSVFileWriter.cpp
 	src/box-algorithms/csv/ovpCBoxAlgorithmCSVFileReader.h
 	src/box-algorithms/csv/ovpCBoxAlgorithmCSVFileWriter.h)
 INCLUDE("FindSourceRCProperties")
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${source_files})
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}

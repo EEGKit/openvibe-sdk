@@ -27,16 +27,11 @@ namespace OpenViBE
 		class OV_API IServerExtensionDynamicContext : public IKernelObject
 		{
 		public:
-			virtual uint32_t getChannelCount() = 0;
-
-			virtual uint32_t getSampleCountPerSentBlock() = 0;
-
+			virtual size_t getChannelCount() = 0;
+			virtual size_t getSampleCountPerSentBlock() = 0;
 			virtual double* getBuffer() = 0;
-
 			virtual uint64_t getStimulationSetStartTime() = 0;
-
 			virtual uint64_t getStimulationSetEndTime() = 0;
-
 			virtual IStimulationSet& getStimulationSet() = 0;
 		};
 	} // namespace Kernel

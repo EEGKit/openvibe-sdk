@@ -129,7 +129,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			CAbstractTreeNode* child = m_Children[i];
 			childrenChanged          = child->simplify(child);
 
-			//if there has been a change, actualize l_bHasChanged
+			//if there has been a change, actualize hasChanged
 			hasChanged |= childrenChanged;
 
 			//if the child has become a new node
@@ -205,7 +205,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 					delete m_Children[1];
 					m_Children[1] = nullptr;
 
-					node          = new CAbstractTreeValueNode(total);
+					node       = new CAbstractTreeValueNode(total);
 					hasChanged = true;
 
 					break;
@@ -220,7 +220,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 					delete m_Children[1];
 					m_Children[1] = nullptr;
 
-					node          = new CAbstractTreeValueNode(total);
+					node       = new CAbstractTreeValueNode(total);
 					hasChanged = true;
 					break;
 				}
@@ -250,10 +250,10 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		sort(m_Children.begin(), m_Children.end(), CAbstractTreeNodeOrderingFunction());
 
 		//the new children if there are changes
-		vector<CAbstractTreeNode *> l_oNewChildren;
+		vector<CAbstractTreeNode *> newChildren;
 
 		//iterator on the children
-		size_t i               = 0;
+		size_t i     = 0;
 		double total = 0;
 
 		switch (m_ID)
@@ -292,18 +292,18 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		{
 			node       = new CAbstractTreeValueNode(total);
 			hasChanged = true;
-			// cout<<l_f64TotalValue<<endl;
+			// cout<<l_TotalValue<<endl;
 		}
 			//if there are still some other children, but we reduced at least two children
 		else if (i > 1)
 		{
 			//adds the new result node to the list
-			l_oNewChildren.push_back(new CAbstractTreeValueNode(total));
+			newChildren.push_back(new CAbstractTreeValueNode(total));
 
 			//adds the other remaining children
-			for (; i < nChildren; ++i) { l_oNewChildren.push_back(m_Children[i]); }
+			for (; i < nChildren; ++i) { newChildren.push_back(m_Children[i]); }
 			//we keep this node, but modify its children
-			m_Children = l_oNewChildren;
+			m_Children = newChildren;
 
 			hasChanged = true;
 		}
@@ -322,17 +322,17 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				{
 					//don't keep the valueNode
 					//adds the other remaining children
-					for (; i < nChildren; ++i) { l_oNewChildren.push_back(m_Children[i]); }
+					for (; i < nChildren; ++i) { newChildren.push_back(m_Children[i]); }
 
 					//we keep this node, but modify its children
-					m_Children = l_oNewChildren;
+					m_Children = newChildren;
 				}
 				hasChanged = true;
 			}
 			else if (total == 0 && m_ID == OP_MUL)
 			{
 				//kill this node and replace it by a 0 node
-				node          = new CAbstractTreeValueNode(0);
+				node       = new CAbstractTreeValueNode(0);
 				hasChanged = true;
 			}
 			else
@@ -353,8 +353,8 @@ void CAbstractTreeParentNode::useNegationOperator()
 	//try to use the negation operator in all the children
 	for (size_t i = 0; i < nChildren; ++i)
 	{
-		CAbstractTreeNode* l_pChild = m_Children[i];
-		l_pChild->useNegationOperator();
+		CAbstractTreeNode* child = m_Children[i];
+		child->useNegationOperator();
 	}
 
 	//replace (/ Something -1) by (NEG Something)
@@ -376,7 +376,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 		{
 			if (reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue() == -1)
 			{
-				m_ID = OP_NEG;
+				m_ID            = OP_NEG;
 				m_IsAssociative = false;
 
 				//if there were just two children : replace (* -1 Sth) by (NEG Sth)
@@ -388,12 +388,12 @@ void CAbstractTreeParentNode::useNegationOperator()
 					//>2 there were more than two children
 				else
 				{
-					CAbstractTreeParentNode* l_pNewOperatorNode = new CAbstractTreeParentNode(OP_MUL, true);
+					CAbstractTreeParentNode* newOperatorNode = new CAbstractTreeParentNode(OP_MUL, true);
 
-					for (size_t i = 1; i < nChildren; ++i) { l_pNewOperatorNode->addChild(m_Children[i]); }
+					for (size_t i = 1; i < nChildren; ++i) { newOperatorNode->addChild(m_Children[i]); }
 
 					m_Children.clear();
-					m_Children.push_back(l_pNewOperatorNode);
+					m_Children.push_back(newOperatorNode);
 				}
 			}
 		}
@@ -411,7 +411,7 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& parser)
 
 void CAbstractTreeValueNode::generateCode(CEquationParser& parser) { parser.push_value(m_value); }
 
-void CAbstractTreeVariableNode::generateCode(CEquationParser& parser) { parser.push_var(m_ui32Idx); }
+void CAbstractTreeVariableNode::generateCode(CEquationParser& parser) { parser.push_var(m_index); }
 
 void CAbstractTree::recognizeSpecialTree(uint64_t& treeId, double& parameter)
 {

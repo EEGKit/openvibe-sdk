@@ -12,30 +12,30 @@ namespace EBML
 	class TWriterCallbackProxy1 final : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy1(TOwnerClass& rOwnerObject, void (TOwnerClass::*mfpWrite)(const void* buffer, uint64_t size))
-			: m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy1(TOwnerClass& ownerObject, void (TOwnerClass::*mfpWrite)(const void* buffer, size_t size))
+			: m_ownerObject(ownerObject), m_mfpWrite(mfpWrite) { }
 
-		void write(const void* buffer, const uint64_t size) override { if (m_mfpWrite) { (m_rOwnerObject.*m_mfpWrite)(buffer, size); } }
+		void write(const void* buffer, const size_t size) override { if (m_mfpWrite) { (m_ownerObject.*m_mfpWrite)(buffer, size); } }
 
 	protected:
-		TOwnerClass& m_rOwnerObject;
-		void (TOwnerClass::*m_mfpWrite)(const void* buffer, uint64_t size);
+		TOwnerClass& m_ownerObject;
+		void (TOwnerClass::*m_mfpWrite)(const void* buffer, size_t size);
 	};
 
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class TOwnerClass, void (TOwnerClass::*mfpWrite)(const void* buffer, uint64_t size)>
+	template <class TOwnerClass, void (TOwnerClass::*TMfpWrite)(const void* buffer, size_t size)>
 	class TWriterCallbackProxy2 final : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy2(TOwnerClass& rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy2(TOwnerClass& ownerObject) : m_ownerObject(ownerObject), m_mfpWrite(TMfpWrite) { }
 
-		void write(const void* buffer, const uint64_t size) override { if (m_mfpWrite) { (m_rOwnerObject.*m_mfpWrite)(buffer, size); } }
+		void write(const void* buffer, const size_t size) override { if (m_mfpWrite) { (m_ownerObject.*m_mfpWrite)(buffer, size); } }
 
 	protected:
-		TOwnerClass& m_rOwnerObject;
-		void (TOwnerClass::*m_mfpWrite)(const void* buffer, uint64_t size);
+		TOwnerClass& m_ownerObject;
+		void (TOwnerClass::*m_mfpWrite)(const void* buffer, size_t size);
 	};
 
 	// ________________________________________________________________________________________________________________

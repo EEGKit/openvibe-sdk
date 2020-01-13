@@ -1,7 +1,7 @@
 #include "ovpCBoxAlgorithmStreamEndDetector.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -46,7 +46,7 @@ bool CBoxAlgorithmStreamEndDetector::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(m_inputEBMLIdx); ++chunk)
+	for (size_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(m_inputEBMLIdx); ++chunk)
 	{
 		OV_ERROR_UNLESS_KRF(m_decoder.decode(chunk), "Failed to decode chunk", ErrorType::Internal);
 

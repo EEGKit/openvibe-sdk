@@ -1,30 +1,29 @@
 #include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 #include <fstream>
 
 using namespace std;
 
-bool CCppDefineGenerator::openFile(const char* sFilename)
+bool CCppDefineGenerator::openFile(const char* filename)
 {
-	m_oFile.open(sFilename, ios::out | ios::trunc);
-	if (!m_oFile.is_open()) { return false; }
-	m_oFile << "#pragma once" << endl << endl;
+	m_file.open(filename, ios::out | ios::trunc);
+	if (!m_file.is_open()) { return false; }
+	m_file << "#pragma once" << endl << endl;
 
 	return true;
 }
 
 
-bool CCppDefineGenerator::appendStimulation(SStimulation& rStim)
+bool CCppDefineGenerator::appendStimulation(SStimulation& stim)
 {
-	m_oFile << "#define " << rStim.m_Id << "  " << rStim.m_HexaCode << endl;
+	m_file << "#define " << stim.id << "  " << stim.hexa << endl;
 	return true;
 }
 
 
 bool CCppDefineGenerator::closeFile()
 {
-	m_oFile << endl;
-	m_oFile.close();
+	m_file << endl;
+	m_file.close();
 	return true;
 }

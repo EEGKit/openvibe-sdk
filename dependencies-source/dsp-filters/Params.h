@@ -183,8 +183,8 @@ namespace Dsp
 
 	private:
 		ParamID m_id;
-		const char* m_szLabel = nullptr;
-		const char* m_szName = nullptr;
+		const char* m_szLabel       = nullptr;
+		const char* m_szName        = nullptr;
 		double m_arg1               = 0;
 		double m_arg2               = 0;
 		double m_defaultNativeValue = 0;

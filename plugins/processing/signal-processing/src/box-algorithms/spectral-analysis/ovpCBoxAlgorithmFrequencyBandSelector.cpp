@@ -1,29 +1,27 @@
 #include "ovpCBoxAlgorithmFrequencyBandSelector.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
+using namespace std;
 
 #include <vector>
 #include <string>
 
-#define min(a,b) ((a)<(b)?(a):(b))
-#define max(a,b) ((a)<(b)?(b):(a))
-
 namespace
 {
-	std::vector<std::string> split(const std::string& sString, const char c)
+	vector<string> split(const string& str, const char c)
 	{
-		std::vector<std::string> result;
+		vector<string> result;
 		size_t i = 0;
-		while (i < sString.length())
+		while (i < str.length())
 		{
 			size_t j = i;
-			while (j < sString.length() && sString[j] != c) { j++; }
-			if (i != j) { result.push_back(std::string(sString, i, j - i)); }
+			while (j < str.length() && str[j] != c) { j++; }
+			if (i != j) { result.push_back(string(str, i, j - i)); }
 			i = j + 1;
 		}
 		return result;
@@ -32,21 +30,21 @@ namespace
 
 bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {
-	const CString settingValue       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	std::vector<std::string> setting = split(settingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
-	bool hadError                    = false;
+	const CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	vector<string> setting     = split(settingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
+	bool hadError              = false;
 	CString errorMsg;
-	m_vSelected.clear();
+	m_selecteds.clear();
 	for (auto it = setting.begin(); it != setting.end(); ++it)
 	{
-		bool good                             = true;
-		std::vector<std::string> settingRange = split(*it, OV_Value_RangeStringSeparator);
+		bool good                   = true;
+		vector<string> settingRange = split(*it, OV_Value_RangeStringSeparator);
 		if (settingRange.size() == 1)
 		{
 			try
 			{
-				double l_dValue = std::stod(settingRange[0].c_str());
-				m_vSelected.push_back(std::pair<double, double>(l_dValue, l_dValue));
+				double value = std::stod(settingRange[0]);
+				m_selecteds.push_back(std::pair<double, double>(value, value));
 			}
 			catch (const std::exception&) { good = false; }
 		}
@@ -54,9 +52,9 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 		{
 			try
 			{
-				double low  = std::stod(settingRange[0].c_str());
-				double high = std::stod(settingRange[1].c_str());
-				m_vSelected.push_back(std::pair<double, double>(min(low, high), max(low, high)));
+				double low  = std::stod(settingRange[0]);
+				double high = std::stod(settingRange[1]);
+				m_selecteds.push_back(std::pair<double, double>(std::min(low, high), std::max(low, high)));
 			}
 			catch (const std::exception&) { good = false; }
 		}
@@ -68,49 +66,49 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 		}
 	}
 
-	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
-	m_pStreamDecoder->initialize();
+	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumDecoder));
+	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pMatrix.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_Matrix));
-	op_pBands.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+	ip_buffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_SpectrumDecoder_InputParameterId_MemoryBufferToDecode));
+	op_matrix.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_Matrix));
+	op_bands.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
 
-	m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
-	m_pStreamEncoder->initialize();
+	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumEncoder));
+	m_encoder->initialize();
 
-	ip_pMatrix.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-	ip_pFrequencyAbscissa.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
-	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	ip_matrix.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Matrix));
+	ip_frequencyAbscissa.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
+	op_buffer.initialize(m_encoder->getOutputParameter(OVP_GD_Algorithm_SpectrumEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	ip_pFrequencyAbscissa.setReferenceTarget(op_pBands);
-	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(
-		m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
+	ip_frequencyAbscissa.setReferenceTarget(op_bands);
+	m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Sampling)
+			 ->setReferenceTarget(m_decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_Sampling));
 
-	ip_pMatrix = &m_oMatrix;
-	op_pMatrix = &m_oMatrix;
+	ip_matrix = &m_oMatrix;
+	op_matrix = &m_oMatrix;
 
-	OV_ERROR_UNLESS_KRF(!hadError || !m_vSelected.empty(), errorMsg, OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }
 
 bool CBoxAlgorithmFrequencyBandSelector::uninitialize()
 {
-	op_pMemoryBuffer.uninitialize();
-	ip_pFrequencyAbscissa.uninitialize();
-	ip_pMatrix.uninitialize();
+	op_buffer.uninitialize();
+	ip_frequencyAbscissa.uninitialize();
+	ip_matrix.uninitialize();
 
-	m_pStreamEncoder->uninitialize();
-	this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-	m_pStreamEncoder = nullptr;
+	m_encoder->uninitialize();
+	this->getAlgorithmManager().releaseAlgorithm(*m_encoder);
+	m_encoder = nullptr;
 
-	op_pBands.uninitialize();
-	op_pMatrix.uninitialize();
-	ip_pMemoryBuffer.uninitialize();
+	op_bands.uninitialize();
+	op_matrix.uninitialize();
+	ip_buffer.uninitialize();
 
-	m_pStreamDecoder->uninitialize();
-	this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-	m_pStreamDecoder = nullptr;
+	m_decoder->uninitialize();
+	this->getAlgorithmManager().releaseAlgorithm(*m_decoder);
+	m_decoder = nullptr;
 
 	return true;
 }
@@ -125,41 +123,44 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = boxContext.getOutputChunk(0);
-		m_pStreamDecoder->process();
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
+		ip_buffer = boxContext.getInputChunk(0, i);
+		op_buffer = boxContext.getOutputChunk(0);
+		m_decoder->process();
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedHeader))
 		{
-			m_vSelectionFactor.clear();
-			for (uint32_t j = 0; j < ip_pFrequencyAbscissa->getDimensionSize(0); ++j)
+			m_selectionFactors.clear();
+			for (size_t j = 0; j < ip_frequencyAbscissa->getDimensionSize(0); ++j)
 			{
-				double frequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[j];
-				const bool selected      = std::any_of(m_vSelected.begin(), m_vSelected.end(), [frequencyAbscissa](const BandRange& currentBandRange)
+				double frequencyAbscissa = ip_frequencyAbscissa->getBuffer()[j];
+				const bool selected      = std::any_of(m_selecteds.begin(), m_selecteds.end(), [frequencyAbscissa](const BandRange& currentBandRange)
 				{
 					return currentBandRange.first <= frequencyAbscissa && frequencyAbscissa <= currentBandRange.second;
 				});
-				m_vSelectionFactor.push_back(selected ? 1. : 0.);
+				m_selectionFactors.push_back(selected ? 1. : 0.);
 			}
 
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader);
+			m_encoder->process(OVP_GD_Algorithm_SpectrumEncoder_InputTriggerId_EncodeHeader);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			uint32_t offset = 0;
-			for (uint32_t j = 0; j < m_oMatrix.getDimensionSize(0); ++j)
+			size_t offset = 0;
+			for (size_t j = 0; j < m_oMatrix.getDimensionSize(0); ++j)
 			{
-				for (uint32_t k = 0; k < m_oMatrix.getDimensionSize(1); ++k)
+				for (size_t k = 0; k < m_oMatrix.getDimensionSize(1); ++k)
 				{
-					m_oMatrix.getBuffer()[offset] = m_vSelectionFactor[k] * m_oMatrix.getBuffer()[offset];
+					m_oMatrix.getBuffer()[offset] = m_selectionFactors[k] * m_oMatrix.getBuffer()[offset];
 					offset++;
 				}
 			}
 
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer);
+			m_encoder->process(OVP_GD_Algorithm_SpectrumEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedEnd))
+		{
+			m_encoder->process(OVP_GD_Algorithm_SpectrumEncoder_InputTriggerId_EncodeEnd);
+		}
 
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		boxContext.markInputAsDeprecated(0, i);

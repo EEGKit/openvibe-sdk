@@ -75,9 +75,9 @@ namespace Dsp
 
 		// Process a block of samples in the given form
 		template <class StateType, typename Sample>
-		void process(int numSamples, Sample* dest, StateType& state) const
+		void process(int nSamples, Sample* dest, StateType& state) const
 		{
-			while (--numSamples >= 0)
+			while (--nSamples >= 0)
 			{
 				*dest = state.process(*dest, *this);
 				++dest;
@@ -138,20 +138,20 @@ namespace Dsp
 		explicit Biquad(const BiquadPoleState& bps);
 
 		// Process a block of samples, interpolating from the old section's coefficients
-		// to this section's coefficients, over numSamples. This implements smooth
+		// to this section's coefficients, over nSamples. This implements smooth
 		// parameter changes.
 
 		template <class StateType, typename Sample>
-		void smoothProcess1(int numSamples, Sample* dest, StateType& state, Biquad sectionPrev) const
+		void smoothProcess1(int nSamples, Sample* dest, StateType& state, Biquad sectionPrev) const
 		{
-			double t   = 1. / numSamples;
+			double t   = 1. / nSamples;
 			double da1 = (m_a1 - sectionPrev.m_a1) * t;
 			double da2 = (m_a2 - sectionPrev.m_a2) * t;
 			double db0 = (m_b0 - sectionPrev.m_b0) * t;
 			double db1 = (m_b1 - sectionPrev.m_b1) * t;
 			double db2 = (m_b2 - sectionPrev.m_b2) * t;
 
-			while (--numSamples >= 0)
+			while (--nSamples >= 0)
 			{
 				sectionPrev.m_a1 += da1;
 				sectionPrev.m_a2 += da2;
@@ -165,23 +165,23 @@ namespace Dsp
 		}
 
 		// Process a block of samples, interpolating from the old section's pole/zeros
-		// to this section's pole/zeros, over numSamples. The interpolation is done
+		// to this section's pole/zeros, over nSamples. The interpolation is done
 		// in the z-plane using polar coordinates.
 		template <class StateType, typename Sample>
-		void smoothProcess2(int numSamples,
+		void smoothProcess2(int nSamples,
 							Sample* dest,
 							StateType& state,
 							BiquadPoleState zPrev) const
 		{
 			BiquadPoleState z(*this);
-			double t      = 1. / numSamples;
+			double t      = 1. / nSamples;
 			complex_t dp0 = (z.poles.first - zPrev.poles.first) * t;
 			complex_t dp1 = (z.poles.second - zPrev.poles.second) * t;
 			complex_t dz0 = (z.zeros.first - zPrev.zeros.first) * t;
 			complex_t dz1 = (z.zeros.second - zPrev.zeros.second) * t;
 			double dg     = (z.gain - zPrev.gain) * t;
 
-			while (--numSamples >= 0)
+			while (--nSamples >= 0)
 			{
 				zPrev.poles.first += dp0;
 				zPrev.poles.second += dp1;

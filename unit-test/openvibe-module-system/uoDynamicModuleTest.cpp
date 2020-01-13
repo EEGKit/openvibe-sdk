@@ -58,7 +58,7 @@ namespace
 	const std::string SYMBOL_NAME_NTDLL             = "toupper";
 
 	const HKEY EXISTING_REGISTRY_KEY     = HKEY_LOCAL_MACHINE; // 0x80000002
-	const HKEY NON_EXISTING_REGISTRY_KEY = (HKEY)(ULONG_PTR)((LONG)0x800000FF);
+	const HKEY NON_EXISTING_REGISTRY_KEY = HKEY(ULONG_PTR(LONG(0x800000FF)));
 
 	const std::string EXISTING_REGISTRY_PATH     = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
 	const std::string NON_EXISTING_REGISTRY_PATH = "SOFTWARE\\Random\\Random\\Random";
@@ -286,7 +286,7 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
 	const char lowerCase = 'r';
-	char upperCase = char(toupperSymbol(lowerCase));
+	char upperCase       = char(toupperSymbol(lowerCase));
 
 	ASSERT_EQ(upperCase, 'R');
 

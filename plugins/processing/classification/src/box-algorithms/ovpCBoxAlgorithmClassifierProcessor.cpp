@@ -6,55 +6,50 @@
 #include <xml/IXMLNode.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace Classification;
 using namespace std;
 
-bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
+bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 {
-	if (m_pClassifier)
+	if (m_classifier)
 	{
-		m_pClassifier->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-		m_pClassifier = nullptr;
+		m_classifier->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
+		m_classifier = nullptr;
 	}
 
 	XML::IXMLHandler* handler = XML::createXMLHandler();
-	XML::IXMLNode* rootNode   = handler->parseFile(sFilename);
+	XML::IXMLNode* rootNode   = handler->parseFile(filename);
 
-	OV_ERROR_UNLESS_KRF(rootNode, "Unable to get xml root node from file at " << sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(rootNode, "Unable to get xml root node from file at " << filename, OpenViBE::Kernel::ErrorType::BadParsing);
 
-	m_vStimulation.clear();
+	m_stimulations.clear();
 
 	// Check the version of the file
-	OV_ERROR_UNLESS_KRF(rootNode->hasAttribute(FORMAT_VERSION_ATTRIBUTE_NAME),
-						"Configuration file [" << sFilename << "] has no version information",
+	OV_ERROR_UNLESS_KRF(rootNode->hasAttribute(FORMAT_VERSION_ATTRIBUTE_NAME), "Configuration file [" << filename << "] has no version information",
 						OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	std::stringstream data(rootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME));
-	uint32_t version;
+	size_t version;
 	data >> version;
 
 	OV_WARNING_UNLESS_K(version <= OVP_Classification_BoxTrainerFormatVersion,
-						"Classifier configuration in [" << sFilename << "] saved using a newer version: saved version = [" << version
+						"Classifier configuration in [" << filename << "] saved using a newer version: saved version = [" << version
 						<< "] vs current version = [" << OVP_Classification_BoxTrainerFormatVersion << "]");
 
 	OV_ERROR_UNLESS_KRF(version >= OVP_Classification_BoxTrainerFormatVersionRequired,
-						"Classifier configuration in [" << sFilename << "] saved using an obsolete version [" << version
-						<< "] (minimum expected version = " << OVP_Classification_BoxTrainerFormatVersionRequired << ")",
-						OpenViBE::Kernel::ErrorType::BadVersion);
+						"Classifier configuration in [" << filename << "] saved using an obsolete version [" << version << "] (minimum expected version = "
+						<< OVP_Classification_BoxTrainerFormatVersionRequired << ")", OpenViBE::Kernel::ErrorType::BadVersion);
 
 	CIdentifier algorithmClassID = OV_UndefinedIdentifier;
 
 	XML::IXMLNode* tmp = rootNode->getChildByName(STRATEGY_NODE_NAME);
 
-	OV_ERROR_UNLESS_KRF(
-		tmp,
-		"Configuration file [" << sFilename << "] has no node " << STRATEGY_NODE_NAME,
-		OpenViBE::Kernel::ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << STRATEGY_NODE_NAME, OpenViBE::Kernel::ErrorType::BadParsing);
 
 	algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
@@ -63,78 +58,64 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	{
 		tmp = rootNode->getChildByName(ALGORITHM_NODE_NAME);
 
-		OV_ERROR_UNLESS_KRF(tmp,
-							"Configuration file [" << sFilename << "] has no node " << ALGORITHM_NODE_NAME,
-							OpenViBE::Kernel::ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << ALGORITHM_NODE_NAME, OpenViBE::Kernel::ErrorType::BadParsing);
 
 		algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
 		//If the algorithm is still unknown, that means that we face an error
-		OV_ERROR_UNLESS_KRF(
-			algorithmClassID != OV_UndefinedIdentifier,
-			"No classifier retrieved from configuration file [" << sFilename << "]",
-			OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(algorithmClassID != OV_UndefinedIdentifier, "No classifier retrieved from configuration file [" << filename << "]",
+							OpenViBE::Kernel::ErrorType::BadConfig);
 	}
 
 	//Now loading all stimulations output
-	XML::IXMLNode* l_pStimulationsNode = rootNode->getChildByName(STIMULATIONS_NODE_NAME);
+	XML::IXMLNode* stimNode = rootNode->getChildByName(STIMULATIONS_NODE_NAME);
 
-	OV_ERROR_UNLESS_KRF(
-		l_pStimulationsNode,
-		"Configuration file [" << sFilename << "] has no node " << STIMULATIONS_NODE_NAME,
-		OpenViBE::Kernel::ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(stimNode, "Configuration file [" << filename << "] has no node " << STIMULATIONS_NODE_NAME, OpenViBE::Kernel::ErrorType::BadParsing);
 
 	//Now load every stimulation and store them in the map with the right class id
-	for (uint32_t i = 0; i < l_pStimulationsNode->getChildCount(); ++i)
+	for (size_t i = 0; i < stimNode->getChildCount(); ++i)
 	{
-		tmp = l_pStimulationsNode->getChild(i);
+		tmp = stimNode->getChild(i);
 
-		OV_ERROR_UNLESS_KRF(tmp,
-							"Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]",
-							OpenViBE::Kernel::ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(tmp, "Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]", OpenViBE::Kernel::ErrorType::BadParsing);
 
-		CString l_sStimulationName(tmp->getPCData());
+		CString name(tmp->getPCData());
 
 		double classID;
-		const char* l_sAttributeData = tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
+		const char* data = tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
 
-		OV_ERROR_UNLESS_KRF(l_sAttributeData,
-							"Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute [" << IDENTIFIER_ATTRIBUTE_NAME << "] not found",
-							OpenViBE::Kernel::ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(data, "Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute ["
+							<< IDENTIFIER_ATTRIBUTE_NAME << "] not found", OpenViBE::Kernel::ErrorType::BadParsing);
 
-		std::stringstream identifierData(l_sAttributeData);
-		identifierData >> classID;
-		m_vStimulation[classID] = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, l_sStimulationName);
+		std::stringstream ss(data);
+		ss >> classID;
+		m_stimulations[classID] = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, name);
 	}
 
-	const CIdentifier classifierAlgorithmID = this->getAlgorithmManager().createAlgorithm(algorithmClassID);
+	const CIdentifier id = this->getAlgorithmManager().createAlgorithm(algorithmClassID);
 
-	OV_ERROR_UNLESS_KRF(classifierAlgorithmID != OV_UndefinedIdentifier,
-						"Invalid classifier algorithm with id [" << algorithmClassID.toString() << "] in configuration file [" << sFilename << "]",
+	OV_ERROR_UNLESS_KRF(id != OV_UndefinedIdentifier,
+						"Invalid classifier algorithm with id [" << algorithmClassID.toString() << "] in configuration file [" << filename << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_pClassifier = &this->getAlgorithmManager().getAlgorithm(classifierAlgorithmID);
-	m_pClassifier->initialize();
+	m_classifier = &this->getAlgorithmManager().getAlgorithm(id);
+	m_classifier->initialize();
 
 	// Connect the params to the new classifier
 
-	TParameterHandler<IMatrix*> ip_oFeatureVector = m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
-	ip_oFeatureVector.setReferenceTarget(m_oFeatureVectorDecoder.getOutputMatrix());
+	TParameterHandler<IMatrix*> ip_sample = m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
+	ip_sample.setReferenceTarget(m_sampleDecoder.getOutputMatrix());
 
-	m_oHyperplaneValuesEncoder.getInputMatrix().setReferenceTarget(
-		m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	m_oProbabilityValuesEncoder.getInputMatrix().setReferenceTarget(
-		m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+	m_hyperplanesEncoder.getInputMatrix().
+						 setReferenceTarget(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	m_probabilitiesEncoder.getInputMatrix().setReferenceTarget(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 	// note: labelsencoder cannot be directly bound here as the classifier returns a float, but we need to output a stimulation
 
-	TParameterHandler<XML::IXMLNode*> ip_pClassificationConfiguration(
-		m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
-	ip_pClassificationConfiguration = rootNode->getChildByName(CLASSIFIER_ROOT)->getChild(0);
+	TParameterHandler<XML::IXMLNode*> ip_classificationConfig(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
+	ip_classificationConfig = rootNode->getChildByName(CLASSIFIER_ROOT)->getChild(0);
 
-	OV_ERROR_UNLESS_KRF(
-		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
-		"Loading configuration failed for subclassifier [" << classifierAlgorithmID.toString() << "]",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig),
+						"Loading configuration failed for subclassifier [" << id.str() << "]", OpenViBE::Kernel::ErrorType::Internal);
 
 	rootNode->release();
 	handler->release();
@@ -144,41 +125,38 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 bool CBoxAlgorithmClassifierProcessor::initialize()
 {
-	m_pClassifier = nullptr;
+	m_classifier = nullptr;
 
 	//First of all, let's get the XML file for configuration
-	const CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const CString configFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	OV_ERROR_UNLESS_KRF(
-		l_sConfigurationFilename != CString(""),
-		"Invalid empty configuration file name",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(configFilename != CString(""), "Invalid empty configuration file name", OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_oFeatureVectorDecoder.initialize(*this, 0);
-	m_oStimulationDecoder.initialize(*this, 1);
+	m_sampleDecoder.initialize(*this, 0);
+	m_stimDecoder.initialize(*this, 1);
 
-	m_oLabelsEncoder.initialize(*this, 0);
-	m_oHyperplaneValuesEncoder.initialize(*this, 1);
-	m_oProbabilityValuesEncoder.initialize(*this, 2);
+	m_labelsEncoder.initialize(*this, 0);
+	m_hyperplanesEncoder.initialize(*this, 1);
+	m_probabilitiesEncoder.initialize(*this, 2);
 
-	return loadClassifier(l_sConfigurationFilename.toASCIIString());
+	return loadClassifier(configFilename.toASCIIString());
 }
 
 bool CBoxAlgorithmClassifierProcessor::uninitialize()
 {
-	if (m_pClassifier)
+	if (m_classifier)
 	{
-		m_pClassifier->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-		m_pClassifier = nullptr;
+		m_classifier->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
+		m_classifier = nullptr;
 	}
 
-	m_oProbabilityValuesEncoder.uninitialize();
-	m_oHyperplaneValuesEncoder.uninitialize();
-	m_oLabelsEncoder.uninitialize();
+	m_probabilitiesEncoder.uninitialize();
+	m_hyperplanesEncoder.uninitialize();
+	m_labelsEncoder.uninitialize();
 
-	m_oStimulationDecoder.uninitialize();
-	m_oFeatureVectorDecoder.uninitialize();
+	m_stimDecoder.uninitialize();
+	m_sampleDecoder.uninitialize();
 
 	return true;
 }
@@ -186,7 +164,6 @@ bool CBoxAlgorithmClassifierProcessor::uninitialize()
 bool CBoxAlgorithmClassifierProcessor::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
 	return true;
 }
 
@@ -195,77 +172,74 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Check if we have a command first
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(1); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(1); ++i)
 	{
-		m_oStimulationDecoder.decode(i);
-		if (m_oStimulationDecoder.isHeaderReceived()) { }
-		if (m_oStimulationDecoder.isBufferReceived())
+		m_stimDecoder.decode(i);
+		if (m_stimDecoder.isHeaderReceived()) { }
+		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
 			{
-				if (m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
+				if (m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
 				{
-					CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-
-					if (!loadClassifier(l_sConfigurationFilename.toASCIIString())) { return false; }
+					CString configFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+					if (!loadClassifier(configFilename.toASCIIString())) { return false; }
 				}
 			}
 		}
-		if (m_oStimulationDecoder.isEndReceived()) { }
+		if (m_stimDecoder.isEndReceived()) { }
 	}
 
 	// Classify data
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
-		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
+		const uint64_t startTime = boxContext.getInputChunkStartTime(0, i);
+		const uint64_t endTime   = boxContext.getInputChunkEndTime(0, i);
 
-		m_oFeatureVectorDecoder.decode(i);
-		if (m_oFeatureVectorDecoder.isHeaderReceived())
+		m_sampleDecoder.decode(i);
+		if (m_sampleDecoder.isHeaderReceived())
 		{
-			m_oLabelsEncoder.encodeHeader();
-			m_oHyperplaneValuesEncoder.encodeHeader();
-			m_oProbabilityValuesEncoder.encodeHeader();
+			m_labelsEncoder.encodeHeader();
+			m_hyperplanesEncoder.encodeHeader();
+			m_probabilitiesEncoder.encodeHeader();
 
-			boxContext.markOutputAsReadyToSend(0, tStart, tEnd);
-			boxContext.markOutputAsReadyToSend(1, tStart, tEnd);
-			boxContext.markOutputAsReadyToSend(2, tStart, tEnd);
+			boxContext.markOutputAsReadyToSend(0, startTime, endTime);
+			boxContext.markOutputAsReadyToSend(1, startTime, endTime);
+			boxContext.markOutputAsReadyToSend(2, startTime, endTime);
 		}
-		if (m_oFeatureVectorDecoder.isBufferReceived())
+		if (m_sampleDecoder.isBufferReceived())
 		{
-			OV_ERROR_UNLESS_KRF(
-				m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify) &&
-				m_pClassifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
-				"Classification failed",
-				OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify)
+								&& m_classifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
+								"Classification failed", OpenViBE::Kernel::ErrorType::Internal);
 
-			TParameterHandler<double> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+			TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
-			IStimulationSet* set = m_oLabelsEncoder.getInputStimulationSet();
+			IStimulationSet* set = m_labelsEncoder.getInputStimulationSet();
 
 			set->setStimulationCount(1);
-			set->setStimulationIdentifier(0, m_vStimulation[op_f64ClassificationStateClass]);
-			set->setStimulationDate(0, tEnd);
+			set->setStimulationIdentifier(0, m_stimulations[op_classificationState]);
+			set->setStimulationDate(0, endTime);
 			set->setStimulationDuration(0, 0);
 
-			m_oLabelsEncoder.encodeBuffer();
-			m_oHyperplaneValuesEncoder.encodeBuffer();
-			m_oProbabilityValuesEncoder.encodeBuffer();
+			m_labelsEncoder.encodeBuffer();
+			m_hyperplanesEncoder.encodeBuffer();
+			m_probabilitiesEncoder.encodeBuffer();
 
-			boxContext.markOutputAsReadyToSend(0, tStart, tEnd);
-			boxContext.markOutputAsReadyToSend(1, tStart, tEnd);
-			boxContext.markOutputAsReadyToSend(2, tStart, tEnd);
+			boxContext.markOutputAsReadyToSend(0, startTime, endTime);
+			boxContext.markOutputAsReadyToSend(1, startTime, endTime);
+			boxContext.markOutputAsReadyToSend(2, startTime, endTime);
 		}
 
-		if (m_oFeatureVectorDecoder.isEndReceived())
+		if (m_sampleDecoder.isEndReceived())
 		{
-			m_oLabelsEncoder.encodeEnd();
-			m_oHyperplaneValuesEncoder.encodeEnd();
-			m_oProbabilityValuesEncoder.encodeEnd();
+			m_labelsEncoder.encodeEnd();
+			m_hyperplanesEncoder.encodeEnd();
+			m_probabilitiesEncoder.encodeEnd();
 
-			boxContext.markOutputAsReadyToSend(0, tStart, tEnd);
-			boxContext.markOutputAsReadyToSend(1, tStart, tEnd);
-			boxContext.markOutputAsReadyToSend(2, tStart, tEnd);
+			boxContext.markOutputAsReadyToSend(0, startTime, endTime);
+			boxContext.markOutputAsReadyToSend(1, startTime, endTime);
+			boxContext.markOutputAsReadyToSend(2, startTime, endTime);
 		}
 	}
 

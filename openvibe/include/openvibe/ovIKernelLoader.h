@@ -31,19 +31,19 @@ namespace OpenViBE
 
 		/**
 		 * \brief Loads a kernel DLL/so file
-		 * \param sFileName [in] : the filename to load
-		 * \param pError [out] : an optional error string to get when loading fails
+		 * \param filename [in] : the filename to load
+		 * \param error [out] : an optional error string to get when loading fails
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 */
-		virtual bool load(const CString& sFileName, CString* pError = nullptr) = 0;
+		virtual bool load(const CString& filename, CString* error = nullptr) = 0;
 		/**
 		 * \brief Unloads a loaded kernel DLL/so file
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 * \warning \c load must have been called successfully before calling \c unload
 		 */
-		virtual bool unload(CString* pError = nullptr) = 0;
+		virtual bool unload(CString* error = nullptr) = 0;
 		/**
 		 * \brief Requests the kernel DLL/so file to self initialize
 		 * \return \e true on success.
@@ -57,12 +57,12 @@ namespace OpenViBE
 		virtual bool initialize() = 0;
 		/**
 		 * \brief Gets the kernel description of the loaded kernel DLL/so file
-		 * \param rpKernelDesc [out] : a pointer to the kernel description
+		 * \param desc [out] : a pointer to the kernel description
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 * \warning both \c load and \c initialize must have been called successfully before calling \c getKernelDesc
 		 */
-		virtual bool getKernelDesc(Kernel::IKernelDesc*& rpKernelDesc) = 0;
+		virtual bool getKernelDesc(Kernel::IKernelDesc*& desc) = 0;
 		/**
 		 * \brief Uninitializes a loaded and initialized kernel DLL/so file
 		 * \return \e true on success.

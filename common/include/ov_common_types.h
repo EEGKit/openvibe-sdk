@@ -42,7 +42,7 @@ OV_APPEND_TO_NAMESPACE
 	//                                                                   //
 
 	//typedef void* pointer;					///< untyped pointer
-	//typedef unsigned long int pointer_size;	///< addressing range
+	//typedef uint32_t int pointer_size;	///< addressing range
 
 	//___________________________________________________________________//
 	//                                                                   //
@@ -65,4 +65,4 @@ OV_APPEND_TO_NAMESPACE
 		_time64(const uint64_t timeValue) : timeValue(timeValue) {}
 		uint64_t timeValue = 0;
 	} time64;                                ///< Time on uint64
-} // namespace OpenViBETypeTest
+}  // namespace OV_APPEND_TO_NAMESPACE

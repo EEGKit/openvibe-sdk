@@ -63,24 +63,24 @@ namespace OpenViBEToolkit
 	protected:
 
 		// We will need the dynamic box context when trying to decode and encode, thus we keep a pointer on the underlying box.
-		T* m_pBoxAlgorithm = nullptr;
+		T* m_boxAlgorithm = nullptr;
 
 		// Every codec has an algorithm
-		OpenViBE::Kernel::IAlgorithmProxy* m_pCodec = nullptr;
-		uint32_t m_connectorIdx               = 0;//one codec per connector
+		OpenViBE::Kernel::IAlgorithmProxy* m_codec = nullptr;
+		size_t m_connectorIdx                      = 0;//one codec per connector
 
 	public:
-		TCodec() : m_pBoxAlgorithm(nullptr) { }
+		TCodec() : m_boxAlgorithm(nullptr) { }
 		virtual ~TCodec() { }
 
 		//The initialization need a reference to the underlying box
 		//it will certainly be called in the box in such manner : m_oCodec.initialize(*this);
-		bool initialize(T& rBoxAlgorithm, const uint32_t connectorIndex)
+		bool initialize(T& boxAlgorithm, const size_t connectorIdx)
 		{
-			if (m_pBoxAlgorithm == nullptr)
+			if (m_boxAlgorithm == nullptr)
 			{
-				m_pBoxAlgorithm      = &rBoxAlgorithm;
-				m_connectorIdx = connectorIndex;//TODO : can we check the box static context and verify the requested connector exist?
+				m_boxAlgorithm = &boxAlgorithm;
+				m_connectorIdx = connectorIdx;	//TODO : can we check the box static context and verify the requested connector exist?
 			}
 			else { return false; }
 			// we call the initialization process specific to each codec
@@ -95,14 +95,11 @@ namespace OpenViBEToolkit
 		// Note that this method is NOT public.
 		virtual bool initializeImpl() = 0;
 
-
 		// for easier access to algorithm functionnality, we redefine some functions:
+		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier trigger) { return m_codec->isOutputTriggerActive(trigger); }
 
-		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier oTrigger) { return m_pCodec->isOutputTriggerActive(oTrigger); }
-
-		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_pCodec->process(oTrigger); }
-
-		virtual bool process() { return m_pCodec->process(); }
+		virtual bool process(const OpenViBE::CIdentifier& trigger) { return m_codec->process(trigger); }
+		virtual bool process() { return m_codec->process(); }
 	};
 } // namespace OpenViBEToolkit
 

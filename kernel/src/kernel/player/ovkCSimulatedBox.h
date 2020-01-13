@@ -20,17 +20,13 @@ namespace OpenViBE
 
 			CChunk() { }
 
-			explicit CChunk(const CChunk& rChunk) : m_oBuffer(rChunk.m_oBuffer), m_startTime(rChunk.m_startTime), m_endTime(rChunk.m_endTime) { }
+			CChunk(const CChunk& chunk) : m_buffer(chunk.m_buffer), m_startTime(chunk.m_startTime), m_endTime(chunk.m_endTime) { }
 
-			const CBuffer& getBuffer() const { return m_oBuffer; }
-
+			const CBuffer& getBuffer() const { return m_buffer; }
 			uint64_t getStartTime() const { return m_startTime; }
-
 			uint64_t getEndTime() const { return m_endTime; }
-
 			bool isDeprecated() const { return m_isDeprecated; }
-
-			CBuffer& getBuffer() { return m_oBuffer; }
+			CBuffer& getBuffer() { return m_buffer; }
 
 			bool setStartTime(uint64_t startTime)
 			{
@@ -44,7 +40,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool markAsDeprecated(bool isDeprecated)
+			bool markAsDeprecated(const bool isDeprecated)
 			{
 				m_isDeprecated = isDeprecated;
 				return true;
@@ -52,17 +48,17 @@ namespace OpenViBE
 
 		protected:
 
-			CBuffer m_oBuffer;
+			CBuffer m_buffer;
 			uint64_t m_startTime = 0;
 			uint64_t m_endTime   = 0;
-			bool m_isDeprecated     = false;
+			bool m_isDeprecated  = false;
 		};
 
 		class CSimulatedBox final : public TKernelObject<IBoxIO>
 		{
 		public:
 
-			CSimulatedBox(const IKernelContext& ctx, CScheduler& rScheduler);
+			CSimulatedBox(const IKernelContext& ctx, CScheduler& scheduler);
 			~CSimulatedBox() override;
 
 			bool setScenarioIdentifier(const CIdentifier& scenarioID);
@@ -73,7 +69,7 @@ namespace OpenViBE
 			bool uninitialize();
 
 			bool processClock();
-			bool processInput(const size_t index, const CChunk& rChunk);
+			bool processInput(const size_t index, const CChunk& chunk);
 			bool process();
 			bool isReadyToProcess() const;
 
@@ -82,38 +78,39 @@ namespace OpenViBE
 
 			/** \name IBoxIO inputs handling */
 			//@{
-			uint32_t getInputChunkCount(const uint32_t index) const override;
-			bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& startTime, uint64_t& endTime, uint64_t& size, const uint8_t*& buffer) const override;
-			const IMemoryBuffer* getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
-			uint64_t getInputChunkStartTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
-			uint64_t getInputChunkEndTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
-			bool markInputAsDeprecated(const uint32_t inputIdx, const uint32_t chunkIdx) override;
+			size_t getInputChunkCount(const size_t index) const override;
+			bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size,
+							   const uint8_t*& buffer) const override;
+			const IMemoryBuffer* getInputChunk(const size_t inputIdx, const size_t chunkIdx) const override;
+			uint64_t getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const override;
+			uint64_t getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const override;
+			bool markInputAsDeprecated(const size_t inputIdx, const size_t chunkIdx) override;
 			//@}
 
 			/** \name IBoxIO outputs handling */
 			//@{
-			uint64_t getOutputChunkSize(const uint32_t outputIdx) const override;
-			bool setOutputChunkSize(const uint32_t outputIdx, const uint64_t size, const bool discard = true) override;
-			uint8_t* getOutputChunkBuffer(const uint32_t outputIdx) override;
-			bool appendOutputChunkData(const uint32_t outputIdx, const uint8_t* buffer, const uint64_t size) override;
-			IMemoryBuffer* getOutputChunk(const uint32_t outputIdx) override;
-			bool markOutputAsReadyToSend(const uint32_t outputIdx, const uint64_t startTime, const uint64_t endTime) override;
+			size_t getOutputChunkSize(const size_t outputIdx) const override;
+			bool setOutputChunkSize(const size_t outputIdx, const size_t size, const bool discard = true) override;
+			uint8_t* getOutputChunkBuffer(const size_t outputIdx) override;
+			bool appendOutputChunkData(const size_t outputIdx, const uint8_t* buffer, const size_t size) override;
+			IMemoryBuffer* getOutputChunk(const size_t outputIdx) override;
+			bool markOutputAsReadyToSend(const size_t outputIdx, const uint64_t startTime, const uint64_t endTime) override;
 			//@}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox)
 
-			CScheduler& getScheduler() const { return m_rScheduler; }
+			CScheduler& getScheduler() const { return m_scheduler; }
 
 		protected:
 
-			bool m_bReadyToProcess                        = false;
-			bool m_bChunkConsistencyChecking              = false;
-			ELogLevel m_eChunkConsistencyCheckingLogLevel = LogLevel_Warning;
+			bool m_readyToProcess                        = false;
+			bool m_chunkConsistencyChecking              = false;
+			ELogLevel m_chunkConsistencyCheckingLogLevel = LogLevel_Warning;
 
-			Plugins::IBoxAlgorithm* m_pBoxAlgorithm = nullptr;
+			Plugins::IBoxAlgorithm* m_boxAlgorithm = nullptr;
 			const IScenario* m_scenario            = nullptr;
-			const IBox* m_pBox                      = nullptr;
-			CScheduler& m_rScheduler;
+			const IBox* m_box                      = nullptr;
+			CScheduler& m_scheduler;
 
 			uint64_t m_lastClockActivationDate = 0;
 			uint64_t m_clockFrequency          = 0;
@@ -121,11 +118,11 @@ namespace OpenViBE
 
 		public:
 
-			std::vector<std::deque<CChunk>> m_inputs;
-			std::vector<std::deque<CChunk>> m_outputs;
-			std::vector<CChunk> m_vCurrentOutput;
-			std::vector<uint64_t> m_vLastOutputStartTime;
-			std::vector<uint64_t> m_vLastOutputEndTime;
+			std::vector<std::deque<CChunk>> m_Inputs;
+			std::vector<std::deque<CChunk>> m_Outputs;
+			std::vector<CChunk> m_CurrentOutputs;
+			std::vector<uint64_t> m_LastOutputStartTimes;
+			std::vector<uint64_t> m_LastOutputEndTimes;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

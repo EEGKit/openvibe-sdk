@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CIdentifier.h"
+#include <cstdlib>	// fix Unix compatibility
 
 namespace EBML
 {
@@ -31,7 +32,7 @@ namespace EBML
 		 * This function tells the callback object new data are ready to send in the EBML stream. This function
 		 * may be called while the user sends data to the writer.
 		 */
-		virtual void write(const void* buffer, const uint64_t size) = 0;
+		virtual void write(const void* buffer, const size_t size) = 0;
 	};
 
 	class EBML_API IWriterCallBack : public IWriterCallback { };
@@ -86,7 +87,7 @@ namespace EBML
 		 * If the currently opened node has children, it is a master node so it can't receive data. In such case, the function returns \e false. However,
 		 * it the currently opened node already has data, it returns \e false too.
 		 */
-		virtual bool setChildData(const void* buffer, const uint64_t size) = 0;
+		virtual bool setChildData(const void* buffer, const size_t size) = 0;
 		/**
 		 * \brief Closes currently opened child node
 		 * \return \e true on success.
@@ -119,9 +120,9 @@ namespace EBML
 
 	/**
 	 * \brief Instanciation function for EBML writer objects
-	 * \param rWriterCallback [in] : The callback object the writer should use
+	 * \param callback [in] : The callback object the writer should use
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
+	extern EBML_API IWriter* createWriter(IWriterCallback& callback);
 } // namespace EBML

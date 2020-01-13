@@ -31,10 +31,10 @@ namespace FS
 	{
 	public:
 
-		explicit CEntry(const string& name) : m_name(name) {}
-		const char* getName() override { return m_name.c_str(); }
+		explicit CEntry(const string& name) : m_Name(name) {}
+		const char* getName() override { return m_Name.c_str(); }
 
-		string m_name;
+		string m_Name;
 	};
 } // namespace FS
 
@@ -49,25 +49,25 @@ namespace FS
 
 		CAttributes() {}
 		~CAttributes() override {}
-		bool isFile() override { return m_isFile; }
-		bool isDirectory() override { return m_isDirectory; }
-		bool isSymbolicLink() override { return m_isSymbolicLink; }
-		bool isArchive() override { return m_isArchive; }
-		bool isReadOnly() override { return m_isReadOnly; }
-		bool isHidden() override { return m_isHidden; }
-		bool isSystem() override { return m_isSystem; }
-		bool isExecutable() override { return m_isExecutable; }
-		uint64_t getSize() override { return m_size; }
+		bool isFile() override { return m_IsFile; }
+		bool isDirectory() override { return m_IsDirectory; }
+		bool isSymbolicLink() override { return m_IsSymbolicLink; }
+		bool isArchive() override { return m_IsArchive; }
+		bool isReadOnly() override { return m_IsReadOnly; }
+		bool isHidden() override { return m_IsHidden; }
+		bool isSystem() override { return m_IsSystem; }
+		bool isExecutable() override { return m_IsExecutable; }
+		size_t getSize() override { return m_Size; }
 
-		bool m_isFile         = false;
-		bool m_isDirectory    = false;
-		bool m_isSymbolicLink = false;
-		bool m_isArchive      = false;
-		bool m_isReadOnly     = false;
-		bool m_isHidden       = false;
-		bool m_isSystem       = false;
-		bool m_isExecutable   = false;
-		uint64_t m_size    = 0;
+		bool m_IsFile         = false;
+		bool m_IsDirectory    = false;
+		bool m_IsSymbolicLink = false;
+		bool m_IsArchive      = false;
+		bool m_IsReadOnly     = false;
+		bool m_IsHidden       = false;
+		bool m_IsSystem       = false;
+		bool m_IsExecutable   = false;
+		size_t m_Size         = 0;
 	};
 }  // namespace FS
 
@@ -165,25 +165,25 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 	{
 		if(i<l_oGlobStruc.gl_pathc)
 		{
-			char* l_sName=l_oGlobStruc.gl_pathv[i];
-			CEntry l_oEntry(l_sName);
+			char* name=l_oGlobStruc.gl_pathv[i];
+			CEntry l_oEntry(name);
 			CAttributes l_oAttributes;
 
 			struct stat l_oLStat;
 			struct stat l_oStat;
-			if(!lstat(l_sName, &l_oLStat) && !stat(l_sName, &l_oStat))
+			if(!lstat(name, &l_oLStat) && !stat(name, &l_oStat))
 			{
-				l_oAttributes.m_isDirectory=S_ISDIR(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_isFile=S_ISREG(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_isSymbolicLink=S_ISLNK(l_oLStat.st_mode)?true:false;
+				l_oAttributes.m_IsDirectory=S_ISDIR(l_oStat.st_mode)?true:false;
+				l_oAttributes.m_IsFile=S_ISREG(l_oStat.st_mode)?true:false;
+				l_oAttributes.m_IsSymbolicLink=S_ISLNK(l_oLStat.st_mode)?true:false;
 
-				l_oAttributes.m_isArchive=false;
-				l_oAttributes.m_isReadOnly=l_oStat.st_mode&S_IWUSR?false:true;
-				l_oAttributes.m_isHidden=false;
-				l_oAttributes.m_isSystem=S_ISBLK(l_oStat.st_mode)|S_ISFIFO(l_oStat.st_mode)|S_ISSOCK(l_oStat.st_mode)|S_ISCHR(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_isExecutable=l_oStat.st_mode&S_IXUSR?true:false;
+				l_oAttributes.m_IsArchive=false;
+				l_oAttributes.m_IsReadOnly=l_oStat.st_mode&S_IWUSR?false:true;
+				l_oAttributes.m_IsHidden=false;
+				l_oAttributes.m_IsSystem=S_ISBLK(l_oStat.st_mode)|S_ISFIFO(l_oStat.st_mode)|S_ISSOCK(l_oStat.st_mode)|S_ISCHR(l_oStat.st_mode)?true:false;
+				l_oAttributes.m_IsExecutable=l_oStat.st_mode&S_IXUSR?true:false;
 
-				l_oAttributes.m_size=l_oStat.st_size;
+				l_oAttributes.m_Size=l_oStat.st_size;
 
 				// Sends to callback
 				if(!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
@@ -217,87 +217,87 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	// $$$ (cFileName member of WIN32_FIND_DATA structure
 	// $$$ loses the initial path !!)
 	// $$$ TODO
-	wchar_t l_sExtendedWildCard[1024];
-	wchar_t* l_sExtendedWildCardFileName = nullptr;
-	GetFullPathName(wildCardUtf16, 1024, l_sExtendedWildCard, &l_sExtendedWildCardFileName);
-	std::wstring l_sPath(wildCardUtf16, wcslen(wildCardUtf16) - (l_sExtendedWildCardFileName ? wcslen(l_sExtendedWildCardFileName) : 0));
+	wchar_t extendedWildCard[1024];
+	wchar_t* extendedWildCardFilename = nullptr;
+	GetFullPathName(wildCardUtf16, 1024, extendedWildCard, &extendedWildCardFilename);
+	std::wstring path(wildCardUtf16, wcslen(wildCardUtf16) - (extendedWildCardFilename ? wcslen(extendedWildCardFilename) : 0));
 
-	std::stack<std::wstring> l_vFoldersToEnumerate;
-	l_vFoldersToEnumerate.push(l_sPath);
+	std::stack<std::wstring> foldersToEnumerate;
+	foldersToEnumerate.push(path);
 
 	// if we need to recurse over subfolders, let's fetch all subfolders in l_vFoldersToEnumerate
 	if (bRecursive)
 	{
-		std::stack<std::wstring> l_oTemporaryFolderSearchStack;
-		l_oTemporaryFolderSearchStack.push(l_sPath);
-		std::wstring l_sCurrentSearchPath;
-		while (! l_oTemporaryFolderSearchStack.empty())
+		std::stack<std::wstring> temporaryFolderSearchStack;
+		temporaryFolderSearchStack.push(path);
+		std::wstring currentSearchPath;
+		while (! temporaryFolderSearchStack.empty())
 		{
-			l_sCurrentSearchPath = l_oTemporaryFolderSearchStack.top();
-			l_oTemporaryFolderSearchStack.pop();
+			currentSearchPath = temporaryFolderSearchStack.top();
+			temporaryFolderSearchStack.pop();
 
-			WIN32_FIND_DATA l_oFindData;
-			HANDLE l_pFileHandle;
-			l_pFileHandle = FindFirstFile((l_sCurrentSearchPath + L"*").c_str(), &l_oFindData);
-			if (l_pFileHandle != INVALID_HANDLE_VALUE)
+			WIN32_FIND_DATA findData;
+			HANDLE fileHandle;
+			fileHandle = FindFirstFile((currentSearchPath + L"*").c_str(), &findData);
+			if (fileHandle != INVALID_HANDLE_VALUE)
 			{
-				bool l_bFinished = false;
-				while (!l_bFinished)
+				bool finished = false;
+				while (!finished)
 				{
-					if (std::wstring(l_oFindData.cFileName) != L"." && std::wstring(l_oFindData.cFileName) != L"..")
+					if (std::wstring(findData.cFileName) != L"." && std::wstring(findData.cFileName) != L"..")
 					{
-						if (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+						if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 						{
-							l_vFoldersToEnumerate.push(l_sCurrentSearchPath + l_oFindData.cFileName + L"/");
-							l_oTemporaryFolderSearchStack.push(l_sCurrentSearchPath + l_oFindData.cFileName + L"/");
+							foldersToEnumerate.push(currentSearchPath + findData.cFileName + L"/");
+							temporaryFolderSearchStack.push(currentSearchPath + findData.cFileName + L"/");
 						}
 					}
 
-					if (!FindNextFile(l_pFileHandle, &l_oFindData)) { l_bFinished = true; }
+					if (!FindNextFile(fileHandle, &findData)) { finished = true; }
 				}
-				FindClose(l_pFileHandle);
+				FindClose(fileHandle);
 			}
 		}
 	}
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
-	std::wstring l_sCurrentPath;
-	while (! l_vFoldersToEnumerate.empty())
+	std::wstring currentPath;
+	while (! foldersToEnumerate.empty())
 	{
-		l_sCurrentPath = l_vFoldersToEnumerate.top();
-		l_vFoldersToEnumerate.pop();
+		currentPath = foldersToEnumerate.top();
+		foldersToEnumerate.pop();
 
-		WIN32_FIND_DATA l_oFindData;
-		HANDLE l_pFileHandle;
-		l_pFileHandle = FindFirstFile((l_sCurrentPath + l_sExtendedWildCardFileName).c_str(), &l_oFindData);
+		WIN32_FIND_DATA findData;
+		HANDLE fileHandle;
+		fileHandle = FindFirstFile((currentPath + extendedWildCardFilename).c_str(), &findData);
 
-		if (l_pFileHandle != INVALID_HANDLE_VALUE)
+		if (fileHandle != INVALID_HANDLE_VALUE)
 		{
-			bool l_bFinished = false;
-			while (!l_bFinished)
+			bool finished = false;
+			while (!finished)
 			{
-				std::string entryName = converter.to_bytes(l_sCurrentPath + l_oFindData.cFileName);
-				CEntry l_oEntry(entryName.c_str());
-				CAttributes l_oAttributes;
+				std::string entryName = converter.to_bytes(currentPath + findData.cFileName);
+				CEntry entry(entryName);
+				CAttributes attributes;
 
-				l_oAttributes.m_isDirectory    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
-				l_oAttributes.m_isFile         = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? false : true;
-				l_oAttributes.m_isSymbolicLink = false;
+				attributes.m_IsDirectory    = (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
+				attributes.m_IsFile         = (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? false : true;
+				attributes.m_IsSymbolicLink = false;
 
-				l_oAttributes.m_isArchive    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? true : false;
-				l_oAttributes.m_isReadOnly   = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
-				l_oAttributes.m_isHidden     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ? true : false;
-				l_oAttributes.m_isSystem     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? true : false;
-				l_oAttributes.m_isExecutable = false; // TODO
+				attributes.m_IsArchive    = (findData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? true : false;
+				attributes.m_IsReadOnly   = (findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
+				attributes.m_IsHidden     = (findData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ? true : false;
+				attributes.m_IsSystem     = (findData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? true : false;
+				attributes.m_IsExecutable = false; // TODO
 
-				l_oAttributes.m_size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
+				attributes.m_Size = (findData.nFileSizeHigh << 16) + findData.nFileSizeLow;
 
 				// Sends to callback
-				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes)) { l_bFinished = true; }
+				if (!m_rEntryEnumeratorCallBack.callback(entry, attributes)) { finished = true; }
 
-				if (!FindNextFile(l_pFileHandle, &l_oFindData)) { l_bFinished = true; }
+				if (!FindNextFile(fileHandle, &findData)) { finished = true; }
 			}
-			FindClose(l_pFileHandle);
+			FindClose(fileHandle);
 		}
 	}
 

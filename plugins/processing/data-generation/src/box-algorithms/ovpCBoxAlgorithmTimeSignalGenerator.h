@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 
 			void release() override;
 
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return 128LL << 32; }
 
 			bool initialize() override;
 			bool uninitialize() override;
@@ -29,10 +29,10 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_oSignalEncoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_encoder;
 
-			bool m_headerSent                       = false;
-			size_t m_samplingFrequency         = 0;
+			bool m_headerSent              = false;
+			size_t m_sampling              = 0;
 			size_t m_nGeneratedEpochSample = 0;
 			size_t m_nSentSample           = 0;
 		};
@@ -56,12 +56,12 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeSignalGenerator(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addOutput("Generated signal", OV_TypeId_Signal);
+				prototype.addOutput("Generated signal", OV_TypeId_Signal);
 
-				rPrototype.addSetting("Sampling frequency", OV_TypeId_Integer, "512");
-				rPrototype.addSetting("Generated epoch sample count", OV_TypeId_Integer, "32");
+				prototype.addSetting("Sampling frequency", OV_TypeId_Integer, "512");
+				prototype.addSetting("Generated epoch sample count", OV_TypeId_Integer, "32");
 
 				return true;
 			}

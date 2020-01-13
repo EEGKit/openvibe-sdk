@@ -9,11 +9,11 @@ namespace FS
 	class FS_API Files
 	{
 	public:
-		static FILE* open(const char* sFile, const char* sMode);
-		static FILE* popen(const char* sFile, const char* sMode);
-		static void openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode = std::ios_base::out);
-		static void openIFStream(std::ifstream& rStream, const char* sFile, std::ios_base::openmode oMode = std::ios_base::in);
-		static void openFStream(std::fstream& rStream, const char* sFile, std::ios_base::openmode oMode);
+		static FILE* open(const char* file, const char* mode);
+		static FILE* popen(const char* file, const char* mode);
+		static void openOFStream(std::ofstream& stream, const char* file, std::ios_base::openmode mode = std::ios_base::out);
+		static void openIFStream(std::ifstream& stream, const char* file, std::ios_base::openmode mode = std::ios_base::in);
+		static void openFStream(std::fstream& stream, const char* file, std::ios_base::openmode mode);
 
 		static bool equals(const char* pFile1, const char* pFile2);
 		static bool fileExists(const char* pathToCheck);
@@ -23,7 +23,7 @@ namespace FS
 		// Creates all components of a path to the filesystem except the last part (i.e. for paths including a filename in the end)
 		static bool createParentPath(const char* path);
 		// Returns a path omitting the last part of it (essentially boost::filesystem::parent_path). Output sParentPath needs to be pre-allocated.
-		static bool getParentPath(const char* path, char* sParentPath);
+		static bool getParentPath(const char* path, char* parentPath);
 		static bool getParentPath(const char* path, char* parentPath, size_t size);
 
 		/**

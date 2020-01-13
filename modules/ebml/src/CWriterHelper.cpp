@@ -2,31 +2,18 @@
 
 using namespace EBML;
 
-CWriterHelper::CWriterHelper() { m_pWriterHelperImplementation = createWriterHelper(); }
+CWriterHelper::CWriterHelper() { m_impl = createWriterHelper(); }
+CWriterHelper::~CWriterHelper() { m_impl->release(); }
 
-CWriterHelper::~CWriterHelper() { m_pWriterHelperImplementation->release(); }
+bool CWriterHelper::connect(IWriter* writer) { return m_impl->connect(writer); }
+bool CWriterHelper::disconnect() { return m_impl->disconnect(); }
 
-bool CWriterHelper::connect(IWriter* pWriter) { return m_pWriterHelperImplementation->connect(pWriter); }
+bool CWriterHelper::openChild(const CIdentifier& identifier) { return m_impl->openChild(identifier); }
+bool CWriterHelper::closeChild() { return m_impl->closeChild(); }
 
-bool CWriterHelper::disconnect() { return m_pWriterHelperImplementation->disconnect(); }
-
-bool CWriterHelper::openChild(const CIdentifier& identifier) { return m_pWriterHelperImplementation->openChild(identifier); }
-
-bool CWriterHelper::closeChild() { return m_pWriterHelperImplementation->closeChild(); }
-
-bool CWriterHelper::setSIntegerAsChildData(const int64_t iValue) { return m_pWriterHelperImplementation->setSIntegerAsChildData(iValue); }
-
-bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue) { return m_pWriterHelperImplementation->setUIntegerAsChildData(uiValue); }
-
-bool CWriterHelper::setFloat32AsChildData(const float fValue) { return m_pWriterHelperImplementation->setFloat32AsChildData(fValue); }
-
-bool CWriterHelper::setFloat64AsChildData(const double fValue) { return m_pWriterHelperImplementation->setFloat64AsChildData(fValue); }
-
-bool CWriterHelper::setBinaryAsChildData(const void* buffer, const uint64_t ui64BufferLength)
-{
-	return m_pWriterHelperImplementation->setBinaryAsChildData(buffer, ui64BufferLength);
-}
-
-bool CWriterHelper::setASCIIStringAsChildData(const char* sValue) { return m_pWriterHelperImplementation->setASCIIStringAsChildData(sValue); }
-
-void CWriterHelper::release() {}
+bool CWriterHelper::setInt(const int64_t value) { return m_impl->setInt(value); }
+bool CWriterHelper::setUInt(const uint64_t value) { return m_impl->setUInt(value); }
+bool CWriterHelper::setFloat(const float value) { return m_impl->setFloat(value); }
+bool CWriterHelper::setDouble(const double value) { return m_impl->setDouble(value); }
+bool CWriterHelper::setBinary(const void* buffer, const size_t size) { return m_impl->setBinary(buffer, size); }
+bool CWriterHelper::setStr(const char* value) { return m_impl->setStr(value); }

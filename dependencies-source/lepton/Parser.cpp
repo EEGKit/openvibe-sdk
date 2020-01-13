@@ -74,7 +74,7 @@ string Parser::trim(const string& expression)
 	return expression.substr(start, end - start + 1);
 }
 
-ParseToken Parser::getNextToken(const string& expression, int start)
+ParseToken Parser::getNextToken(const string& expression, size_t start)
 {
 	char c = expression[start];
 	if (c == '(') { return ParseToken("(", ParseToken::LeftParen); }
@@ -97,8 +97,8 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 
 		bool foundDecimal = (c == '.');
 		bool foundExp     = false;
-		size_t pos;
-		for (pos = start + 1; pos < expression.size(); ++pos)
+		size_t pos        = start + 1;
+		for (; pos < expression.size(); ++pos)
 		{
 			c = expression[pos];
 			if (Digits.find(c) != string::npos) { continue; }
@@ -110,7 +110,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 			if ((c == 'e' || c == 'E') && !foundExp)
 			{
 				foundExp = true;
-				if (pos < (int)expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+')) { pos++; }
+				if (pos < expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+')) { pos++; }
 				continue;
 			}
 			break;
@@ -172,7 +172,7 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 		string name = trim(subexpressions[i].substr(0, equalsPos));
 		if (name.empty()) { throw Exception("Parse error: subexpression does not specify a name"); }
 		vector<ParseToken> tokens = tokenize(subexpressions[i].substr(equalsPos + 1));
-		int pos                   = 0;
+		size_t pos                   = 0;
 		subexpDefs[name]          = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
 		if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of subexpression: " + tokens[pos].getText()); }
 	}
@@ -180,13 +180,13 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	// Now parse the primary expression.
 
 	vector<ParseToken> tokens = tokenize(primaryExpression);
-	int pos                   = 0;
+	size_t pos                = 0;
 	ExpressionTreeNode result = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
 	if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText()); }
 	return ParsedExpression(result);
 }
 
-ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int& pos, const map<string, CustomFunction*>& customFunctions,
+ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, size_t& pos, const map<string, CustomFunction*>& customFunctions,
 										   const map<string, ExpressionTreeNode>& subexpressionDefs, int precedence)
 {
 	if (pos == tokens.size()) { throw Exception("Parse error: unexpected end of expression"); }

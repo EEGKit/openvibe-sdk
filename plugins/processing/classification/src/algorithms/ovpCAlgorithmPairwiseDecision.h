@@ -24,9 +24,9 @@ namespace OpenViBEPlugins
 
 			virtual bool parameterize() = 0;
 
-			virtual bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) = 0;
-			virtual XML::IXMLNode* saveConfiguration() = 0;
-			virtual bool loadConfiguration(XML::IXMLNode& rNode) = 0;
+			virtual bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) = 0;
+			virtual XML::IXMLNode* saveConfig() = 0;
+			virtual bool loadConfig(XML::IXMLNode& node) = 0;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision)
@@ -35,33 +35,22 @@ namespace OpenViBEPlugins
 		class CAlgorithmPairwiseDecisionDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix, "Probability Matrix", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition, "Set repartition", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier, "Classification Algorithm",
-					OpenViBE::Kernel::ParameterType_Identifier);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs,
-													  "Classification Outputs", OpenViBE::Kernel::ParameterType_Pointer);
-				rAlgorithmPrototype.addInputParameter(
-					OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount, "Class Count", OpenViBE::Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix, "Probability Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);
+				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition, "Set repartition", OpenViBE::Kernel::ParameterType_Matrix);
+				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier, "Classification Algorithm", OpenViBE::Kernel::ParameterType_Identifier);
+				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs, "Classification Outputs", OpenViBE::Kernel::ParameterType_Pointer);
+				prototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount, "Class Count", OpenViBE::Kernel::ParameterType_UInteger);
 
+				prototype.addOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector, "Probability Vector", OpenViBE::Kernel::ParameterType_Matrix);
+				prototype.addOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);
 
-				rAlgorithmPrototype.addOutputParameter(
-					OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector, "Probability Vector", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter(
-					OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Configuration, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);
-
-
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute, "Compute");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize, "Parametrize");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration, "Save configuration");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfiguration, "Load configuration");
+				prototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute, "Compute");
+				prototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize, "Parametrize");
+				prototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig, "Save configuration");
+				prototype.addInputTrigger(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfig, "Load configuration");
 				return true;
 			}
 

@@ -55,19 +55,10 @@
  * class CWriterCallback : public EBML::IWriterCallback
  * {
  * public:
- *   CWriterCallback(char* sFileName)
- *   {
- *     m_pFile=fopen(sFileName, "wb");
- *   }
- *   virtual ~CWriterCallback()
- *   {
- *     if(m_pFile) fclose(m_pFile);
- *   }
- *   virtual void write(const void* buffer, const uint64_t size)
- *   {
- *     if(m_pFile) fwrite(buffer, size, 1, m_pFile);
- *   }
- *   FILE* m_pFile;
+ *   CWriterCallback(char* filename) { m_file=fopen(filename, "wb"); }
+ *   virtual ~CWriterCallback() { if(m_file) fclose(m_file); }
+ *   virtual void write(const void* buffer, const size_t size) { if(m_file) fwrite(buffer, size, 1, m_file); }
+ *   FILE* m_file;
  * };
  * \endcode
  *
@@ -86,10 +77,10 @@
  * \code
  * pWriterHelper->openChild(EBML_Identifier_Header);
  *   pWriterHelper->openChild(EBML_Identifier_DocType);
- *     pWriterHelper->setASCIIStringAsChildData("EBML basic sample");
+ *     pWriterHelper->setStr("EBML basic sample");
  *   pWriterHelper->closeChild();
  *   pWriterHelper->openChild(EBML_Identifier_DocTypeVersion);
- *     pWriterHelper->setUIntegerAsChildData(1);
+ *     pWriterHelper->setUInt(1);
  *   pWriterHelper->closeChild();
  * pWriterHelper->closeChild();
  * \endcode

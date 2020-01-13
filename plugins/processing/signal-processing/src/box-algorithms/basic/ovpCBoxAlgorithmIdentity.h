@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 
 			static bool check(OpenViBE::Kernel::IBox& box)
 			{
-				uint32_t i;
+				size_t i;
 				for (i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
 				for (i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
 				return true;
@@ -36,22 +36,22 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_Signal);
 				box.addOutput("", OV_TypeId_Signal, box.getUnusedInputIdentifier());
-				this->check(box);
+				check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.removeOutput(index);
-				this->check(box);
+				check(box);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
@@ -59,22 +59,22 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setOutputType(index, OV_TypeId_Signal);
 				box.addInput("", OV_TypeId_Signal, box.getUnusedOutputIdentifier());
-				this->check(box);
+				check(box);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.removeInput(index);
-				this->check(box);
+				check(box);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
@@ -104,14 +104,14 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmIdentityListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input stream", OV_TypeId_Signal);
-				rPrototype.addOutput("Output stream", OV_TypeId_Signal);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput("Input stream", OV_TypeId_Signal);
+				prototype.addOutput("Output stream", OV_TypeId_Signal);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 
