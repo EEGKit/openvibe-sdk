@@ -389,9 +389,9 @@ bool CBoxAlgorithmClassifierTrainer::process()
 							"Training failed: bailing out (from whole set training)", OpenViBE::Kernel::ErrorType::Internal);
 
 		OpenViBEToolkit::Tools::Matrix::clearContent(confusion);
-		const double l_f64TrainAccuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
+		const double accuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
 
-		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << l_f64TrainAccuracy << "% (optimistic)\n";
+		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
 
 		printConfusionMatrix(confusion);
 

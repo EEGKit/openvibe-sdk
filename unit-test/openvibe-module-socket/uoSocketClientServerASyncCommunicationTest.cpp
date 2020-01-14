@@ -126,15 +126,12 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	// transmission follows the protocol: data size transmission + data transmission
 	const std::string baseData = "Data packet index: ";
 
-	char dataBuffer[32];
 	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
-		std::string dataString = baseData + std::to_string(sendIndex);
-		std::strcpy(dataBuffer, dataString.c_str());
-		size_t dataSize = dataString.size();
-
-		sendData(client, &dataSize, sizeof(dataSize));
-		sendData(client, dataBuffer, dataSize);
+		std::string tmp = baseData + std::to_string(sendIndex);
+		size_t size = tmp.size();
+		sendData(client, &size, sizeof(size));
+		sendData(client, const_cast<char*>(tmp.c_str()), size);
 	}
 
 	serverThread.join(); // wait until the end of the thread

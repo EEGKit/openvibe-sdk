@@ -48,7 +48,7 @@ namespace OpenViBE
 			bool m_logWithHexa       = false;
 			bool m_bTimeInSeconds    = false;
 			uint64_t m_timePrecision = 0;
-			bool m_bUseColor         = false;
+			bool m_useColor         = false;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

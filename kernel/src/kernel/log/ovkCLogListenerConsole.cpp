@@ -14,7 +14,7 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
 CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)
-	: TKernelObject<ILogListener>(ctx), m_eLogColor(LogColor_Default), m_applicationName(sApplicationName), m_bTimeInSeconds(true), m_timePrecision(3), m_bUseColor(true)
+	: TKernelObject<ILogListener>(ctx), m_eLogColor(LogColor_Default), m_applicationName(sApplicationName), m_bTimeInSeconds(true), m_timePrecision(3), m_useColor(true)
 {
 #if defined TARGET_OS_Windows
 	SetConsoleOutputCP(CP_UTF8);
@@ -26,7 +26,7 @@ void CLogListenerConsole::configure(const IConfigurationManager& configManager)
 	m_bTimeInSeconds = configManager.expandAsBoolean("${Kernel_ConsoleLogTimeInSecond}", true);
 	m_logWithHexa    = configManager.expandAsBoolean("${Kernel_ConsoleLogWithHexa}", false);
 	m_timePrecision  = configManager.expandAsUInteger("${Kernel_ConsoleLogTimePrecision}", 3);
-	m_bUseColor      = configManager.expandAsBoolean("${Kernel_ConsoleLogUseColor}", true);
+	m_useColor      = configManager.expandAsBoolean("${Kernel_ConsoleLogUseColor}", true);
 }
 
 
@@ -252,7 +252,7 @@ void CLogListenerConsole::log(const ELogLevel level)
 
 void CLogListenerConsole::log(const ELogColor color)
 {
-	if (m_bUseColor)
+	if (m_useColor)
 	{
 		// Tests 'push state' bit
 		if (color & LogColor_PushStateBit) { m_vLogColor.push(m_eLogColor); }

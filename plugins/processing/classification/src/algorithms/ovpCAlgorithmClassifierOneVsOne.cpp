@@ -207,7 +207,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 
 	//	for (size_t i =0 ; i < nClass ; ++i )
 	//	{
-	//		for (size_t j = 0; j < nClass ; ++j) { std::cout << l_pProbabilityMatrix->getBuffer()[i*nClass + j] << " " ; }
+	//		for (size_t j = 0; j < nClass ; ++j) { std::cout << matrix->getBuffer()[i*nClass + j] << " " ; }
 	//		std::cout << std::endl;
 	//	}
 	//	std::cout << std::endl;

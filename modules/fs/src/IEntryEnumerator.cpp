@@ -160,8 +160,8 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 	}
 
 	size_t i=0;
-	bool l_bFinished=false;
-	while(!l_bFinished)
+	bool finished=false;
+	while(!finished)
 	{
 		if(i<l_oGlobStruc.gl_pathc)
 		{
@@ -188,14 +188,14 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 				// Sends to callback
 				if(!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
 				{
-					l_bFinished=true;
+					finished=true;
 				}
 			}
 			i++;
 		}
 		else
 		{
-			l_bFinished=true;
+			finished=true;
 		}
 	}
 
