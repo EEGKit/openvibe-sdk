@@ -49,7 +49,7 @@ namespace OpenViBE
 	{
 		std::string res;
 		res = str1.m_impl->m_Value + str2.m_impl->m_Value;
-		return CString(res.c_str());
+		return res.c_str();
 	}
 
 	bool operator==(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) == (str2.m_impl->m_Value); }

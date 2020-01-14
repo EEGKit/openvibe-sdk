@@ -23,11 +23,10 @@ namespace OpenViBE
 		uint64_t TMessage<T>::getTime() const { return m_time; }
 
 		template <class T>
-		bool TMessage<T>::setIdentifier(const CIdentifier& identifier)
+		bool TMessage<T>::setIdentifier(const CIdentifier& id)
 		{
-			if (m_id != OV_UndefinedIdentifier) { return false; }
-			if (identifier == OV_UndefinedIdentifier) { return false; }
-			m_id = identifier;
+			if (m_id != OV_UndefinedIdentifier || id == OV_UndefinedIdentifier) { return false; }
+			m_id = id;
 			return true;
 		}
 

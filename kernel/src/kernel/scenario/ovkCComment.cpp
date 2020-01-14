@@ -23,12 +23,10 @@ CIdentifier CComment::getIdentifier() const { return m_id; }
 
 CString CComment::getText() const { return m_text; }
 
-bool CComment::setIdentifier(const CIdentifier& identifier)
+bool CComment::setIdentifier(const CIdentifier& id)
 {
-	if (m_id != OV_UndefinedIdentifier) { return false; }
-	if (identifier == OV_UndefinedIdentifier) { return false; }
-	m_id = identifier;
-
+	if (m_id != OV_UndefinedIdentifier || id == OV_UndefinedIdentifier) { return false; }
+	m_id = id;
 	return true;
 }
 

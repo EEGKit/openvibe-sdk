@@ -165,7 +165,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	{
 		if (nClasses[classIdx] > 0)
 		{
-			// const double l_Label = m_labels[l_classIdx];
+			// const double label = m_labels[l_classIdx];
 			const size_t examplesInClass = nClasses[classIdx];
 
 			// Copy all the data of the class to a matrix
@@ -219,8 +219,8 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 		globalCov = covMapper;
 	}
 
-	//dumpMatrix(this->getLogManager(), l_aMean[l_classIdx], "Mean");
-	//dumpMatrix(this->getLogManager(), l_oGlobalCov, "Shrinked cov");
+	//dumpMatrix(this->getLogManager(), mean[l_classIdx], "Mean");
+	//dumpMatrix(this->getLogManager(), globalCov, "Shrinked cov");
 
 	if (diagonalCov)
 	{
@@ -242,7 +242,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	for (size_t i = 0; i < nCols; ++i) { if (eigenValues(i) >= tolerance) { eigenValues(i) = 1.0 / eigenValues(i); } }
 	const MatrixXd globalCovInv = solver.eigenvectors() * eigenValues.asDiagonal() * solver.eigenvectors().inverse();
 
-	// const MatrixXd l_oGlobalCovInv = l_oGlobalCov.inverse();
+	// const MatrixXd globalCovInv = globalCov.inverse();
 	//We send the bias and the weight of each class to ComputationHelper
 	for (size_t i = 0; i < getClassCount(); ++i)
 	{
@@ -258,7 +258,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 			this->getLogManager() << LogLevel_Debug << "Bias for " << i << " is " << bias << ", from " << examplesInClass / totalExamples
 					<< ", " << examplesInClass << "/" << totalExamples << ", int=" << inter(0, 0) << "\n";
-			// dumpMatrix(this->getLogManager(), l_oPerClassMeans[i], "Means");
+			// dumpMatrix(this->getLogManager(), perClassMeans[i], "Means");
 
 			m_discriminantFunctions[i].setWeight(weigth);
 			m_discriminantFunctions[i].setBias(bias);
@@ -288,10 +288,10 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	m_nCols = nCols;
 
 	// Debug output
-	//dumpMatrix(this->getLogManager(), l_oGlobalCov, "Global cov");
-	//dumpMatrix(this->getLogManager(), l_oEigenValues, "Eigenvalues");
-	//dumpMatrix(this->getLogManager(), l_oEigenSolver.eigenvectors(), "Eigenvectors");
-	//dumpMatrix(this->getLogManager(), l_oGlobalCovInv, "Global cov inverse");
+	//dumpMatrix(this->getLogManager(), globalCov, "Global cov");
+	//dumpMatrix(this->getLogManager(), eigenValues, "Eigenvalues");
+	//dumpMatrix(this->getLogManager(), eigenSolver.eigenvectors(), "Eigenvectors");
+	//dumpMatrix(this->getLogManager(), globalCovInv, "Global cov inverse");
 	//dumpMatrix(this->getLogManager(), m_coefficients, "Hyperplane weights");
 
 	return true;
@@ -327,7 +327,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& sample, double& cla
 		double expSum = 0.;
 		for (size_t j = 0; j < nClass; ++j) { expSum += exp(buffer[j] - buffer[i]); }
 		probabBuffer[i] = 1 / expSum;
-		// std::cout << "p " << i << " = " << l_pProbabilityValue[i] << ", v=" << l_pValueArray[i] << ", " << errno << "\n";
+		// std::cout << "p " << i << " = " << probabilityValue[i] << ", v=" << valueArray[i] << ", " << errno << "\n";
 	}
 
 	//Then we just find the highest probability and take it as a result

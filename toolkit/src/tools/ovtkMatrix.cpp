@@ -409,7 +409,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 						if (errno == ERANGE)
 						{
 							//string couldn't be converted to a double
-							// getLogManager() << LogLevel_Trace << "Couldn't convert token \"" << CString(sCurString.c_str()) << "\" to floating point value, parsing aborted\n";
+							// getLogManager() << LogLevel_Trace << "Couldn't convert token \"" << sCurString << "\" to floating point value, parsing aborted\n";
 							return false;
 						}
 #endif
@@ -519,15 +519,15 @@ bool Matrix::toString(const IMatrix& matrix, CString& sString, const size_t prec
 	size_t elementIdx = 0;
 	dumpMatrixBuffer(matrix, buffer, 0, elementIdx);
 
-	sString = CString(buffer.str().c_str());
+	sString = buffer.str().c_str();
 
 	return true;
 }
 
-bool Matrix::loadFromTextFile(IMatrix& matrix, const CString& sFilename)
+bool Matrix::loadFromTextFile(IMatrix& matrix, const CString& filename)
 {
 	std::ifstream dataFile;
-	FS::Files::openIFStream(dataFile, sFilename.toASCIIString(), std::ios_base::in);
+	FS::Files::openIFStream(dataFile, filename.toASCIIString(), std::ios_base::in);
 	if (!dataFile.is_open()) { return false; }
 
 	std::stringstream buffer;

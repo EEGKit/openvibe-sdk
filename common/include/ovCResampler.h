@@ -86,8 +86,7 @@ namespace Common
 			 */
 			bool setFractionalDelayFilterSampleCount(const int n = 6)
 			{
-				if (n < 6 || 30 < n) { return false; }
-				if (n % 2 == 1) { return false; }	// false if odd value
+				if (n < 6 || 30 < n || n % 2 == 1) { return false; }	// false if odd value
 				m_nFractionalDelayFilterSample = n;
 				return true;
 			}
@@ -140,9 +139,7 @@ namespace Common
 			 */
 			bool reset(const size_t nChannel, const size_t iSampling, const size_t oSampling)
 			{
-				if (nChannel == 0) { return false; }
-				if (iSampling == 0) { return false; }
-				if (oSampling == 0) { return false; }
+				if (nChannel == 0 || iSampling == 0 || oSampling == 0) { return false; }
 				m_iSampling = iSampling;
 				m_oSampling = oSampling;
 

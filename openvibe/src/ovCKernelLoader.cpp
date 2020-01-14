@@ -53,8 +53,7 @@ bool CKernelLoaderBase::initialize()
 
 bool CKernelLoaderBase::getKernelDesc(IKernelDesc*& desc)
 {
-	if (!isOpen()) { return false; }
-	if (!m_onGetKernelDescCB) { return false; }
+	if (!isOpen() || !m_onGetKernelDescCB) { return false; }
 	return m_onGetKernelDescCB(desc);
 }
 

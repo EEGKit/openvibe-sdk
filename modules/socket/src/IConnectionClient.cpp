@@ -30,23 +30,23 @@ namespace Socket
 			if (!open()) { return false; }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			long l_iValue;
+			long value;
 			// Sets non blocking
-			if((l_iValue=::fcntl(m_socket, F_GETFL, nullptr))<0)
+			if((value = ::fcntl(m_socket, F_GETFL, nullptr)) < 0)
 			{
 				close();
 				return false;
 			}
-			l_iValue|=O_NONBLOCK;
-			if(::fcntl(m_socket, F_SETFL, l_iValue)<0)
+			value|=O_NONBLOCK;
+			if(::fcntl(m_socket, F_SETFL, value)<0)
 			{
 				close();
 				return false;
 			}
 
 			// Looks up host name
-			struct hostent* l_pServerHostEntry=gethostbyname(sServerName);
-			if(!l_pServerHostEntry)
+			struct hostent* serverHostEntry = gethostbyname(sServerName);
+			if(!serverHostEntry)
 			{
 				close();
 				return false;
@@ -77,7 +77,7 @@ namespace Socket
 			serverAddress.sin_family = AF_INET;
 			serverAddress.sin_port   = htons(static_cast<unsigned short>(serverPort));
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			serverAddress.sin_addr=*((struct in_addr*)l_pServerHostEntry->h_addr);
+			serverAddress.sin_addr=*((struct in_addr*)serverHostEntry->h_addr);
 #elif defined TARGET_OS_Windows
 			serverAddress.sin_addr = sockaddrIPV4->sin_addr;
 			freeaddrinfo(addr);
@@ -88,7 +88,7 @@ namespace Socket
 				bool inProgress;
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-				inProgress=(errno==EINPROGRESS);
+				inProgress = (errno==EINPROGRESS);
 #elif defined TARGET_OS_Windows
 				inProgress = (WSAGetLastError() == WSAEINPROGRESS || WSAGetLastError() == WSAEWOULDBLOCK);
 #else
@@ -144,13 +144,13 @@ namespace Socket
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			// Sets back to blocking
-			if((l_iValue=::fcntl(m_socket, F_GETFL, nullptr))<0)
+			if((value=::fcntl(m_socket, F_GETFL, nullptr))<0)
 			{
 				close();
 				return false;
 			}
-			l_iValue&=~O_NONBLOCK;
-			if(::fcntl(m_socket, F_SETFL, l_iValue)<0)
+			value&=~O_NONBLOCK;
+			if(::fcntl(m_socket, F_SETFL, value)<0)
 			{
 				close();
 				return false;

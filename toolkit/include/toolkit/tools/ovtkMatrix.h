@@ -20,7 +20,7 @@ namespace OpenViBEToolkit
 			OVTK_API bool fromString(OpenViBE::IMatrix& matrix, const OpenViBE::CString& sString);
 
 			OVTK_API bool saveToTextFile(const OpenViBE::IMatrix& matrix, const OpenViBE::CString& filename, const size_t precision = 6);
-			OVTK_API bool loadFromTextFile(OpenViBE::IMatrix& matrix, const OpenViBE::CString& sFilename);
+			OVTK_API bool loadFromTextFile(OpenViBE::IMatrix& matrix, const OpenViBE::CString& filename);
 		} // namespace Matrix
 
 		namespace MatrixManipulation

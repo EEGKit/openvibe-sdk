@@ -360,10 +360,10 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 	if ((substitutionTokenID = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(substitutionTokenName)) !=
 		OV_UndefinedIdentifier)
 	{
-		CString l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(substitutionTokenID);
-		l_sSubstitutionTokenValue         = this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
+		CString value = this->getConfigurationManager().getConfigurationTokenValue(substitutionTokenID);
+		value         = this->getConfigurationManager().expand(value);
 
-		try { dstClassID = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), nullptr, 16); }
+		try { dstClassID = std::stoull(value.toASCIIString(), nullptr, 16); }
 		catch (const std::invalid_argument& exception)
 		{
 			OV_ERROR_KRN("Received exception while converting class identifier from string to number: " << exception.what(), ErrorType::BadArgument);
@@ -384,29 +384,28 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 				" (configuration token name was " << CString(substitutionTokenName) << ")\n";
 	}
 
-	IPluginObjectDesc* pluginObjectDesc = nullptr;
+	IPluginObjectDesc* pod = nullptr;
 	for (auto i = m_pluginObjectDescs.begin(); i != m_pluginObjectDescs.end(); ++i)
 	{
-		if (i->first->getCreatedClass() == CIdentifier(dstClassID)) { pluginObjectDesc = i->first; }
+		if (i->first->getCreatedClass() == CIdentifier(dstClassID)) { pod = i->first; }
 	}
 
-	OV_ERROR_UNLESS_KRN(pluginObjectDesc,
+	OV_ERROR_UNLESS_KRN(pod,
 						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(srcClassID).toString() <<
 						" in registered plugin object descriptors",
 						ErrorType::BadResourceCreation);
 
-	IPluginObject* pluginObject = pluginObjectDesc->create();
+	IPluginObject* pluginObject = pod->create();
 
 	OV_ERROR_UNLESS_KRN(pluginObject,
-						"Could not create plugin object from " << pluginObjectDesc->getName() << " plugin object descriptor",
+						"Could not create plugin object from " << pod->getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
-	IPluginObjectDescT* pluginObjectDescT = dynamic_cast<IPluginObjectDescT*>(pluginObjectDesc);
+	IPluginObjectDescT* pluginObjectDescT = dynamic_cast<IPluginObjectDescT*>(pod);
 	IPluginObjectT* pluginObjectT         = dynamic_cast<IPluginObjectT*>(pluginObject);
 
 	OV_ERROR_UNLESS_KRN(pluginObjectDescT && pluginObjectT,
-						"Could not downcast plugin object and/or plugin object descriptor for " << pluginObjectDesc->getName() <<
-						" plugin object descriptor",
+						"Could not downcast plugin object and/or plugin object descriptor for " << pod->getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
 	if (ppPluginObjectDescT) { *ppPluginObjectDescT = pluginObjectDescT; }

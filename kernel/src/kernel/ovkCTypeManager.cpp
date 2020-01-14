@@ -208,8 +208,7 @@ bool CTypeManager::isDerivedFromStream(const CIdentifier& typeID, const CIdentif
 
 	auto it             = m_streams.find(typeID);
 	const auto itParent = m_streams.find(parentTypeID);
-	if (it == m_streams.end()) { return false; }
-	if (itParent == m_streams.end()) { return false; }
+	if (it == m_streams.end() || itParent == m_streams.end()) { return false; }
 	while (it != m_streams.end())
 	{
 		if (it->first == parentTypeID) { return true; }

@@ -82,17 +82,17 @@ namespace Socket
 		bool isReadyToSend(const size_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
-			fd_set  oFileDescSet;
-			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=timeOut/1000;
-			l_oTimeout.tv_usec=(timeOut%1000)*1000;
+			fd_set  fileDescSet;
+			struct timeval time;
+			time.tv_sec  = timeOut/1000;
+			time.tv_usec = (timeOut%1000)*1000;
 
-			FD_ZERO(&oFileDescSet);
-			FD_SET(m_file, &oFileDescSet);
+			FD_ZERO(&fileDescSet);
+			FD_SET(m_file, &fileDescSet);
 
-			if(!::select(m_file+1, nullptr, &oFileDescSet, nullptr, &l_oTimeout)) { return false; }
+			if(!::select(m_file + 1, nullptr, &fileDescSet, nullptr, &time)) { return false; }
 
-			if(FD_ISSET(m_file, &oFileDescSet)) { return true; }
+			if(FD_ISSET(m_file, &fileDescSet)) { return true; }
 			return false;
 	}
 
@@ -112,17 +112,17 @@ namespace Socket
 		bool isReadyToReceive(const size_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
-			fd_set  iFileDescSet;
-			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=timeOut/1000;
-			l_oTimeout.tv_usec=(timeOut%1000)*1000;
+			fd_set  fileDescSet;
+			struct timeval time;
+			time.tv_sec=timeOut/1000;
+			time.tv_usec=(timeOut%1000)*1000;
 
-			FD_ZERO(&iFileDescSet);
-			FD_SET(m_file, &iFileDescSet);
+			FD_ZERO(&fileDescSet);
+			FD_SET(m_file, &fileDescSet);
 
-			if(!::select(m_file+1, &iFileDescSet, nullptr, nullptr, &l_oTimeout)) { return false; }
+			if(!::select(m_file+1, &fileDescSet, nullptr, nullptr, &time)) { return false; }
 
-			if(FD_ISSET(m_file, &iFileDescSet)) { return true; }
+			if(FD_ISSET(m_file, &fileDescSet)) { return true; }
 			return false;
 		}
 #endif
@@ -149,13 +149,13 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iByteCount=0;
-			if(-1 == ::ioctl(m_file, FIONREAD, &l_iByteCount))
+			int byteCount=0;
+			if(-1 == ::ioctl(m_file, FIONREAD, &byteCount))
 			{
 				m_LastError = "Failed to querry pending bytes in ioctl";
 				return 0;
 			}
-			return l_iByteCount;
+			return byteCount;
 
 #endif
 		}
@@ -199,23 +199,23 @@ namespace Socket
 			}
 
 #if defined TARGET_OS_Windows
-			DWORD l_dwWritten = 0;
+			DWORD written = 0;
 
-			if (!WriteFile(m_file, buffer, DWORD(size), &l_dwWritten, nullptr))
+			if (!WriteFile(m_file, buffer, DWORD(size), &written, nullptr))
 			{
 				m_LastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
-			if (l_dwWritten == 0)
+			if (written == 0)
 			{
 				m_LastError = "Serial port timeout when trying to write.";
 				this->close();
 				return 0;
 			}
 
-			return l_dwWritten;
+			return written;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -242,23 +242,23 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			DWORD l_dwRead = 0;
+			DWORD read = 0;
 
-			if (!ReadFile(m_file, buffer, DWORD(size), &l_dwRead, nullptr))
+			if (!ReadFile(m_file, buffer, DWORD(size), &read, nullptr))
 			{
 				m_LastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
-			if (l_dwRead == 0)
+			if (read == 0)
 			{
 				m_LastError = "Serial port timeout when trying to read.";
 				this->close();
 				return 0;
 			}
 
-			return l_dwRead;
+			return read;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -368,20 +368,20 @@ namespace Socket
 				return false;
 			}
 
-			struct termios l_oTerminalAttributes;
-			if(::tcgetattr(m_file, &l_oTerminalAttributes)!=0)
+			struct termios terminalAtt;
+			if(::tcgetattr(m_file, &terminalAtt)!=0)
 			{
 				m_LastError = "Could not get terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
 
-			l_oTerminalAttributes.c_cflag = B230400 | CS8 | CLOCAL | CREAD;
-			l_oTerminalAttributes.c_iflag = 0;
-			l_oTerminalAttributes.c_oflag = OPOST | ONLCR;
-			l_oTerminalAttributes.c_lflag = 0;
+			terminalAtt.c_cflag = B230400 | CS8 | CLOCAL | CREAD;
+			terminalAtt.c_iflag = 0;
+			terminalAtt.c_oflag = OPOST | ONLCR;
+			terminalAtt.c_lflag = 0;
 
-			if (::tcsetattr(m_file, TCSAFLUSH, &l_oTerminalAttributes) != 0)
+			if (::tcsetattr(m_file, TCSAFLUSH, &terminalAtt) != 0)
 			{
 				m_LastError = "Could not set terminal attributes in tcgetattr";
 				this->close();
@@ -397,19 +397,19 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			COMMTIMEOUTS l_Timeouts;
+			COMMTIMEOUTS timeouts;
 
-			if (!GetCommTimeouts(m_file, &l_Timeouts))
+			if (!GetCommTimeouts(m_file, &timeouts))
 			{
 				m_LastError = "Could not get communication timeouts: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
 
-			l_Timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
-			l_Timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
+			timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
+			timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
 
-			if (!SetCommTimeouts(m_file, &l_Timeouts))
+			if (!SetCommTimeouts(m_file, &timeouts))
 			{
 				m_LastError = "Could not set communication timeouts: " + this->getLastErrorFormated();
 				this->close();
@@ -418,17 +418,17 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			struct termios l_oTerminalAttributes;
-			if(::tcgetattr(m_file, &l_oTerminalAttributes)!=0)
+			struct termios terminalAtt;
+			if(::tcgetattr(m_file, &terminalAtt)!=0)
 			{
 				m_LastError = "Could not get terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
 
-			l_oTerminalAttributes.c_cc[VTIME] = decisecondsTimeout;
+			terminalAtt.c_cc[VTIME] = decisecondsTimeout;
 
-			if (::tcsetattr(m_file, TCSAFLUSH, &l_oTerminalAttributes) != 0)
+			if (::tcsetattr(m_file, TCSAFLUSH, &terminalAtt) != 0)
 			{
 				m_LastError = "Could not set terminal attributes in tcgetattr";
 				this->close();

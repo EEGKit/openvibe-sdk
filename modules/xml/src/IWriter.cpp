@@ -77,11 +77,7 @@ bool CWriter::setChildData(const char* data)
 
 bool CWriter::setAttribute(const char* name, const char* value)
 {
-	if (name == nullptr) { return false; }
-	if (value == nullptr) { return false; }
-	if (m_hasChild) { return false; }
-	if (m_hasData) { return false; }
-	if (m_hasClosedOpeningNode) { return false; }
+	if (name == nullptr || value == nullptr || m_hasChild || m_hasData || m_hasClosedOpeningNode) { return false; }
 
 	string str(value);
 	this->sanitize(str);

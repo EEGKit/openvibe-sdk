@@ -375,8 +375,7 @@ bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 // ugly hack for old boost on linux ...
 bool Files::copyFile(const char* srcFile, const char* dstPath)
 {
-	if(!srcFile || !dstPath) { return false; }
-	if (FS::Files::fileExists(dstPath)) { return false; }
+	if(!srcFile || !dstPath || FS::Files::fileExists(dstPath)) { return false; }
 	std::string command = std::string("cp '") + srcFile + "' '" + dstPath+"'";	
 	return (std::system(command.c_str()) != -1);
 }
@@ -384,8 +383,7 @@ bool Files::copyFile(const char* srcFile, const char* dstPath)
 bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 {
 
-	if(!srcDir || !srcDir) { return false; }
-	if (FS::Files::directoryExists(dstDir)) { return false; }
+	if(!srcDir || !srcDir || FS::Files::directoryExists(dstDir)) { return false; }
 	std::string command = std::string("cp -r '") + srcDir + "' '" + dstDir+"'";		
 	return (std::system(command.c_str()) != -1);	
 }

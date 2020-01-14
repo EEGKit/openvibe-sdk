@@ -386,8 +386,8 @@ void CLogListenerConsole::applyColor()
 
 			if(m_eLogColor&LogColor_ForegroundColorBit)
 			{
-				ELogColor l_eLogColor=ELogColor(m_eLogColor&(LogColor_ForegroundBit|LogColor_ForegroundColorBit|LogColor_ForegroundColorRedBit|LogColor_ForegroundColorGreenBit|LogColor_ForegroundColorBlueBit));
-				switch(l_eLogColor)
+				ELogColor color=ELogColor(m_eLogColor&(LogColor_ForegroundBit|LogColor_ForegroundColorBit|LogColor_ForegroundColorRedBit|LogColor_ForegroundColorGreenBit|LogColor_ForegroundColorBlueBit));
+				switch(color)
 				{
 					case LogColor_ForegroundBlack:    cout << _command_separator_ << "30"; break;
 					case LogColor_ForegroundRed:      cout << _command_separator_ << "31"; break;
@@ -406,8 +406,8 @@ void CLogListenerConsole::applyColor()
 		{
 			if(m_eLogColor&LogColor_BackgroundColorBit)
 			{
-				ELogColor l_eLogColor=ELogColor(m_eLogColor&(LogColor_BackgroundBit|LogColor_BackgroundColorBit|LogColor_BackgroundColorRedBit|LogColor_BackgroundColorGreenBit|LogColor_BackgroundColorBlueBit));
-				switch(l_eLogColor)
+				ELogColor color=ELogColor(m_eLogColor&(LogColor_BackgroundBit|LogColor_BackgroundColorBit|LogColor_BackgroundColorRedBit|LogColor_BackgroundColorGreenBit|LogColor_BackgroundColorBlueBit));
+				switch(color)
 				{
 					case LogColor_BackgroundBlack:    cout << _command_separator_ << "40"; break;
 					case LogColor_BackgroundRed:      cout << _command_separator_ << "41"; break;

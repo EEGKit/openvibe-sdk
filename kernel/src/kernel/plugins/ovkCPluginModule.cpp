@@ -95,8 +95,7 @@ bool CPluginModuleBase::getPluginObjectDescription(size_t index, IPluginObjectDe
 {
 	if (!m_gotDesc)
 	{
-		if (!isOpen()) { return false; }
-		if (!m_onGetPluginObjectDescCB) { return false; }
+		if (!isOpen() || !m_onGetPluginObjectDescCB) { return false; }
 
 		size_t idx             = 0;
 		IPluginObjectDesc* pod = nullptr;

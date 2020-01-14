@@ -131,8 +131,7 @@ bool CMatrixImpl::setDimensionSize(const size_t index, const size_t size)
 
 bool CMatrixImpl::setDimensionLabel(const size_t idx1, const size_t idx2, const char* label)
 {
-	if (idx1 >= m_dimensionSizes.size()) { return false; }
-	if (idx2 >= m_dimensionSizes[idx1]) { return false; }
+	if (idx1 >= m_dimensionSizes.size() || idx2 >= m_dimensionSizes[idx1]) { return false; }
 	m_dimensionLabels[idx1][idx2] = label;
 	return true;
 }

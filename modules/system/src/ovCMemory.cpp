@@ -45,8 +45,7 @@ bool Memory::compare(const void* srcBuffer1, const void* srcBuffer2, const size_
 template <typename T>
 bool BigEndianToHost(const uint8_t* buffer, T* value)
 {
-	if (!buffer) { return false; }
-	if (!value) { return false; }
+	if (!buffer || !value) { return false; }
 	memset(value, 0, sizeof(T));
 	for (size_t i = 0; i < sizeof(T); ++i) { ((uint8_t*)value)[i] = buffer[sizeof(T) - 1 - i]; }
 	return true;
@@ -55,8 +54,7 @@ bool BigEndianToHost(const uint8_t* buffer, T* value)
 template <typename T>
 bool LittleEndianToHost(const uint8_t* buffer, T* value)
 {
-	if (!buffer) { return false; }
-	if (!value) { return false; }
+	if (!buffer || !value) { return false; }
 	memset(value, 0, sizeof(T));
 	for (size_t i = 0; i < sizeof(T); ++i) { ((uint8_t*)value)[i] = buffer[i]; }
 	return true;

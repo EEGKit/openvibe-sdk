@@ -79,10 +79,10 @@ namespace FS
 	class CEntryEnumerator : public IEntryEnumerator
 	{
 	public:
-		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack) {}
+		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : m_entryEnumeratorCB(rEntryEnumeratorCallBack) {}
 		void release() override { delete this; }
 	protected:
-		IEntryEnumeratorCallBack& m_rEntryEnumeratorCallBack;
+		IEntryEnumeratorCallBack& m_entryEnumeratorCB;
 	};
 } // namespace FS
 
@@ -136,11 +136,11 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 {
 	if(!sWildCard) { return false; }
 
-	glob_t l_oGlobStruc;
-	memset(&l_oGlobStruc, GLOB_NOSORT, sizeof(l_oGlobStruc));
+	glob_t globStruc;
+	memset(&globStruc, GLOB_NOSORT, sizeof(globStruc));
 
 	// Glob can retrn
-	switch (glob(sWildCard, 0, nullptr, &l_oGlobStruc))
+	switch (glob(sWildCard, 0, nullptr, &globStruc))
 	{
 	case GLOB_NOSPACE:
 	case GLOB_ABORTED:
@@ -153,7 +153,7 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 		break;
 	}
 
-	if(l_oGlobStruc.gl_pathc<=0)
+	if(globStruc.gl_pathc<=0)
 	{
 		// Nothing found
 		return true;
@@ -163,40 +163,34 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 	bool finished=false;
 	while(!finished)
 	{
-		if(i<l_oGlobStruc.gl_pathc)
+		if(i<globStruc.gl_pathc)
 		{
-			char* name=l_oGlobStruc.gl_pathv[i];
-			CEntry l_oEntry(name);
-			CAttributes l_oAttributes;
+			char* name=globStruc.gl_pathv[i];
+			CEntry entry(name);
+			CAttributes att;
 
-			struct stat l_oLStat;
-			struct stat l_oStat;
-			if(!lstat(name, &l_oLStat) && !stat(name, &l_oStat))
+			struct stat sL;
+			struct stat s;
+			if(!lstat(name, &sL) && !stat(name, &s))
 			{
-				l_oAttributes.m_IsDirectory=S_ISDIR(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_IsFile=S_ISREG(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_IsSymbolicLink=S_ISLNK(l_oLStat.st_mode)?true:false;
+				att.m_IsDirectory    = S_ISDIR(s.st_mode) ? true : false;
+				att.m_IsFile         = S_ISREG(s.st_mode) ? true : false;
+				att.m_IsSymbolicLink = S_ISLNK(sL.st_mode) ? true : false;
 
-				l_oAttributes.m_IsArchive=false;
-				l_oAttributes.m_IsReadOnly=l_oStat.st_mode&S_IWUSR?false:true;
-				l_oAttributes.m_IsHidden=false;
-				l_oAttributes.m_IsSystem=S_ISBLK(l_oStat.st_mode)|S_ISFIFO(l_oStat.st_mode)|S_ISSOCK(l_oStat.st_mode)|S_ISCHR(l_oStat.st_mode)?true:false;
-				l_oAttributes.m_IsExecutable=l_oStat.st_mode&S_IXUSR?true:false;
+				att.m_IsArchive    = false;
+				att.m_IsReadOnly   = s.st_mode&S_IWUSR ? false : true;
+				att.m_IsHidden     = false;
+				att.m_IsSystem     = S_ISBLK(s.st_mode)|S_ISFIFO(s.st_mode)|S_ISSOCK(s.st_mode)|S_ISCHR(s.st_mode) ? true : false;
+				att.m_IsExecutable = s.st_mode&S_IXUSR ? true : false;
 
-				l_oAttributes.m_Size=l_oStat.st_size;
+				att.m_Size=s.st_size;
 
 				// Sends to callback
-				if(!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
-				{
-					finished=true;
-				}
+				if(!m_entryEnumeratorCB.callback(entry, att)) { finished=true; }
 			}
 			i++;
 		}
-		else
-		{
-			finished=true;
-		}
+		else { finished = true; }
 	}
 
 	return true;
@@ -225,7 +219,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	std::stack<std::wstring> foldersToEnumerate;
 	foldersToEnumerate.push(path);
 
-	// if we need to recurse over subfolders, let's fetch all subfolders in l_vFoldersToEnumerate
+	// if we need to recurse over subfolders, let's fetch all subfolders in foldersToEnumerate
 	if (bRecursive)
 	{
 		std::stack<std::wstring> temporaryFolderSearchStack;
@@ -293,7 +287,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 				attributes.m_Size = (findData.nFileSizeHigh << 16) + findData.nFileSizeLow;
 
 				// Sends to callback
-				if (!m_rEntryEnumeratorCallBack.callback(entry, attributes)) { finished = true; }
+				if (!m_entryEnumeratorCB.callback(entry, attributes)) { finished = true; }
 
 				if (!FindNextFile(fileHandle, &findData)) { finished = true; }
 			}
