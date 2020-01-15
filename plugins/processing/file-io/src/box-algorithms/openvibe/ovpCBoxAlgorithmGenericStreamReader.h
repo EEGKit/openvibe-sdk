@@ -48,8 +48,8 @@ namespace OpenViBEPlugins
 
 			FILE* m_file = nullptr;
 			std::stack<EBML::CIdentifier> m_nodes;
-			std::map<size_t, size_t> m_vStreamIndexToOutputIdx;
-			std::map<size_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeID;
+			std::map<size_t, size_t> m_streamIndexToOutputIdxs;
+			std::map<size_t, OpenViBE::CIdentifier> m_streamIndexToTypeIDs;
 
 		private:
 			bool initializeFile();

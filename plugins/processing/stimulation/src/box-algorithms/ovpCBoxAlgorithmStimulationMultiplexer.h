@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 			uint64_t m_lastEndTime   = 0;
 			bool m_wasHeaderSent     = false;
 
-			std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_vStimulation;
+			std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_stimulations;
 		};
 
 		class CBoxAlgorithmStimulationMultiplexerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

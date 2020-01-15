@@ -12,7 +12,7 @@ bool CBoxAlgorithmStimulationListener::initialize()
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 	for (size_t i = 0; i < nInput; ++i)
 	{
-		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
+		m_stimulationDecoders.push_back(new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
 	}
 
 	m_eLogLevel = ELogLevel(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
@@ -25,10 +25,10 @@ bool CBoxAlgorithmStimulationListener::uninitialize()
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 	for (size_t i = 0; i < nInput; ++i)
 	{
-		m_vStimulationDecoder[i]->uninitialize();
-		delete m_vStimulationDecoder[i];
+		m_stimulationDecoders[i]->uninitialize();
+		delete m_stimulationDecoders[i];
 	}
-	m_vStimulationDecoder.clear();
+	m_stimulationDecoders.clear();
 
 	return true;
 }
@@ -49,11 +49,11 @@ bool CBoxAlgorithmStimulationListener::process()
 	{
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			m_vStimulationDecoder[i]->decode(j);
-			if (m_vStimulationDecoder[i]->isHeaderReceived()) { }
-			if (m_vStimulationDecoder[i]->isBufferReceived())
+			m_stimulationDecoders[i]->decode(j);
+			if (m_stimulationDecoders[i]->isHeaderReceived()) { }
+			if (m_stimulationDecoders[i]->isBufferReceived())
 			{
-				const IStimulationSet* op_pStimulationSet = m_vStimulationDecoder[i]->getOutputStimulationSet();
+				const IStimulationSet* op_pStimulationSet = m_stimulationDecoders[i]->getOutputStimulationSet();
 
 				CString inputName;
 				staticBoxContext.getInputName(i, inputName);
@@ -75,7 +75,7 @@ bool CBoxAlgorithmStimulationListener::process()
 							.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "])");
 				}
 			}
-			if (m_vStimulationDecoder[i]->isEndReceived()) { }
+			if (m_stimulationDecoders[i]->isEndReceived()) { }
 			boxContext.markInputAsDeprecated(i, j);
 		}
 	}

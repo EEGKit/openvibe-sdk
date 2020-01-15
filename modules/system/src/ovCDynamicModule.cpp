@@ -284,7 +284,7 @@ bool CDynamicModule::unload()
 		return false;
 	}
 	
-	// If the flag m_bShouldFreeModule, set to true per default, is set to false,
+	// If the flag m_shouldFreeModule, set to true per default, is set to false,
 	// the module is not unloaded.
 	// This flag was first set for Enobio3G driver which dll freezes when unloaded
 	if (!m_ShouldFreeModule) { return true; }

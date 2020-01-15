@@ -97,9 +97,7 @@ namespace Socket
 		}
 
 		bool isReadyToSend(const size_t /*timeOut*/  = 0) const override { return this->isConnected(); }
-
 		bool isReadyToReceive(const size_t /*timeOut*/  = 0) const override { return this->isConnected(); }
-
 		size_t getPendingByteCount() const { return (this->isConnected() ? 0 : 1); }
 
 		size_t sendBuffer(const void* buffer, const size_t size = 8) override
@@ -116,7 +114,7 @@ namespace Socket
 
 			return 0;
 
-			/*if (ioctl(m_file, PPWDATA, &l_ui8Value) < 0) { return size; }*/
+			/*if (ioctl(m_file, PPWDATA, &lvalue) < 0) { return size; }*/
 
 #endif
 		}
@@ -185,7 +183,7 @@ namespace Socket
 			delete this;
 		}
 
-		bool connect(const unsigned short ui16PortNumber) override
+		bool connect(const unsigned short portNumber) override
 		{
 			if (this->isConnected()) { return false; }
 
@@ -195,7 +193,7 @@ namespace Socket
 				if (m_portOpen())
 				{
 					m_lastError     = "No error";
-					m_portNumber = ui16PortNumber;
+					m_portNumber = portNumber;
 					return true;
 				}
 				m_lastError     = "Cannot open the TVic library";
@@ -210,7 +208,7 @@ namespace Socket
 			return false;
 
 			/*
-			std::string url = "/dev/parport" + std::to_string(ui16PortNumber);
+			std::string url = "/dev/parport" + std::to_string(portNumber);
 			if ((m_file = open(url.c_str() , O_RDWR)) < 0) 
 			{
 				this->close();

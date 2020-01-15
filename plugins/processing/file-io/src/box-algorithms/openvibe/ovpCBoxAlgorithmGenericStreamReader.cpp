@@ -24,8 +24,8 @@ bool CBoxAlgorithmGenericStreamReader::initialize()
 
 	m_bPending = false;
 
-	m_vStreamIndexToOutputIdx.clear();
-	m_vStreamIndexToTypeID.clear();
+	m_streamIndexToOutputIdxs.clear();
+	m_streamIndexToTypeIDs.clear();
 
 	return true;
 }
@@ -144,8 +144,8 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& identi
 	}
 	if (top == OVP_NodeId_OpenViBEStream_Header)
 	{
-		m_vStreamIndexToOutputIdx.clear();
-		m_vStreamIndexToTypeID.clear();
+		m_streamIndexToOutputIdxs.clear();
+		m_streamIndexToTypeIDs.clear();
 	}
 }
 
@@ -163,12 +163,12 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* buffer, cons
 	{
 		if (m_oReaderHelper.getUInt(buffer, size) != 0) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
 	}
-	if (top == OVP_NodeId_OpenViBEStream_Header_StreamType) { m_vStreamIndexToTypeID[m_vStreamIndexToTypeID.size()] = m_oReaderHelper.getUInt(buffer, size); }
+	if (top == OVP_NodeId_OpenViBEStream_Header_StreamType) { m_streamIndexToTypeIDs[m_streamIndexToTypeIDs.size()] = m_oReaderHelper.getUInt(buffer, size); }
 
 	if (top == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex)
 	{
 		const size_t streamIdx = size_t(m_oReaderHelper.getUInt(buffer, size));
-		if (m_vStreamIndexToTypeID.find(streamIdx) != m_vStreamIndexToTypeID.end()) { m_outputIdx = m_vStreamIndexToOutputIdx[streamIdx]; }
+		if (m_streamIndexToTypeIDs.find(streamIdx) != m_streamIndexToTypeIDs.end()) { m_outputIdx = m_streamIndexToOutputIdxs[streamIdx]; }
 	}
 	if (top == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { m_startTime = m_oReaderHelper.getUInt(buffer, size); }
 	if (top == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { m_endTime = m_oReaderHelper.getUInt(buffer, size); }
@@ -193,7 +193,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		bool lastOutputs = false;
 
 		// Go on each stream of the file
-		for (auto it = m_vStreamIndexToTypeID.begin(); it != m_vStreamIndexToTypeID.end(); ++it)
+		for (auto it = m_streamIndexToTypeIDs.begin(); it != m_streamIndexToTypeIDs.end(); ++it)
 		{
 			CIdentifier OutputTypeID;
 			size_t index = std::numeric_limits<size_t>::max();
@@ -240,12 +240,12 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 				OV_WARNING_K("No free output connector for stream " << it->first << " of type " << it->second << " (" << typeName << ")");
 
-				m_vStreamIndexToOutputIdx[it->first] = std::numeric_limits<size_t>::max();
+				m_streamIndexToOutputIdxs[it->first] = std::numeric_limits<size_t>::max();
 				lostStreams                          = true;
 			}
 			else
 			{
-				m_vStreamIndexToOutputIdx[it->first] = index;
+				m_streamIndexToOutputIdxs[it->first] = index;
 				outputIndexToStreamIdx[index]        = it->first;
 			}
 		}
