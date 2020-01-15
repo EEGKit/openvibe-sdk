@@ -23,7 +23,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalDecoder));
 	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_SignalDecoder_InputParameterId_MemoryBufferToDecode));
+	ip_buffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_SignalDecoder_InputParameterId_MemoryBufferToDecode));
 	op_pMatrix.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SignalDecoder_OutputParameterId_Matrix));
 	op_sampling.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SignalDecoder_OutputParameterId_Sampling));
 
@@ -32,7 +32,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 
 	ip_sampling.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Sampling));
 	ip_pMatrix.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Matrix));
-	op_pMemoryBuffer.initialize(m_encoder->getOutputParameter(OVP_GD_Algorithm_SignalEncoder_OutputParameterId_EncodedMemoryBuffer));
+	op_buffer.initialize(m_encoder->getOutputParameter(OVP_GD_Algorithm_SignalEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_nChannel         = 0;
 	m_iSampleIdx       = 0;
@@ -51,7 +51,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 
 bool CBoxAlgorithmSignalDecimation::uninitialize()
 {
-	op_pMemoryBuffer.uninitialize();
+	op_buffer.uninitialize();
 	ip_pMatrix.uninitialize();
 	ip_sampling.uninitialize();
 
@@ -64,7 +64,7 @@ bool CBoxAlgorithmSignalDecimation::uninitialize()
 
 	op_sampling.uninitialize();
 	op_pMatrix.uninitialize();
-	ip_pMemoryBuffer.uninitialize();
+	ip_buffer.uninitialize();
 
 	if (m_decoder)
 	{
@@ -88,8 +88,8 @@ bool CBoxAlgorithmSignalDecimation::process()
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = boxContext.getOutputChunk(0);
+		ip_buffer = boxContext.getInputChunk(0, i);
+		op_buffer = boxContext.getOutputChunk(0);
 
 		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
 		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);

@@ -30,7 +30,7 @@
 using namespace std;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 #include <ovp_global_defines.h>
 #define OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario   	OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
@@ -575,7 +575,7 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 		}
 
 		//if the box is muted we still have to erase chunks that arrives at the input
-		map<size_t, list<CChunk>>& simulatedBoxInput = m_vSimulatedBoxInput[boxID];
+		map<size_t, list<CChunk>>& simulatedBoxInput = m_simulatedBoxInputs[boxID];
 		for (auto it1 = simulatedBoxInput.begin(); it1 != simulatedBoxInput.end(); ++it1)
 		{
 			list<CChunk>& simulatedBoxInputChunkList = it1->second;
@@ -624,7 +624,7 @@ bool CScheduler::sendInput(const CChunk& chunk, const CIdentifier& boxId, const 
 
 	// TODO: check if index does not overflow
 
-	m_vSimulatedBoxInput[boxId][index].push_back(chunk);
+	m_simulatedBoxInputs[boxId][index].push_back(chunk);
 
 	return true;
 }

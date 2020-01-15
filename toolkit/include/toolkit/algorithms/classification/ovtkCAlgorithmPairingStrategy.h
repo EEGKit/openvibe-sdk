@@ -37,7 +37,7 @@ namespace OpenViBEToolkit
 
 
 	protected:
-		//  std::vector <double> m_fClasses;
+		//  std::vector <double> m_classes;
 		//The vector will be use when the user will be able to specify class label
 		OpenViBE::CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
 	};

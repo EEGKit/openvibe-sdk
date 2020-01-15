@@ -22,8 +22,8 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimulationSet;
 
 			uint64_t m_stimulationID = 0;
 			uint64_t m_actionID      = 0;

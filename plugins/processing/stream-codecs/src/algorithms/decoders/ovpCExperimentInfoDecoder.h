@@ -28,10 +28,10 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ExperimentID;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_pExperimentDate;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_experimentDate;
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_subjectID;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_pSubjectName;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_subjectName;
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_subjectAge;
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_subjectGender;
 

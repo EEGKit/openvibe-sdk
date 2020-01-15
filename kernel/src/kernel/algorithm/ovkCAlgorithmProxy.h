@@ -58,10 +58,10 @@ namespace OpenViBE
 
 			IConfigurable* m_iConfigurable  = nullptr;
 			IConfigurable* m_oConfigurable = nullptr;
-			std::map<CIdentifier, CString> m_vInputParameterName;
-			std::map<CIdentifier, CString> m_vOutputParameterName;
-			std::map<CIdentifier, std::pair<CString, bool>> m_vInputTrigger;
-			std::map<CIdentifier, std::pair<CString, bool>> m_vOutputTrigger;
+			std::map<CIdentifier, CString> m_iParameterNames;
+			std::map<CIdentifier, CString> m_oParameterNames;
+			std::map<CIdentifier, std::pair<CString, bool>> m_iTriggers;
+			std::map<CIdentifier, std::pair<CString, bool>> m_oTriggers;
 
 			void setAllInputTriggers(bool status);
 			void setAllOutputTriggers(bool status);
@@ -70,8 +70,8 @@ namespace OpenViBE
 
 			void handleException(const char* errorHint, const std::exception& exception);
 
-			const Plugins::IAlgorithmDesc& m_rAlgorithmDesc;
-			Plugins::IAlgorithm& m_rAlgorithm;
+			const Plugins::IAlgorithmDesc& m_algorithmDesc;
+			Plugins::IAlgorithm& m_algorithm;
 			bool m_isInitialized = false;
 		};
 	} // namespace Kernel

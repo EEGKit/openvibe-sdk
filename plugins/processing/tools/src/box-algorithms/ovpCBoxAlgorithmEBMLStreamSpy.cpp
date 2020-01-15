@@ -36,7 +36,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 		m_nExpandValues = 4;
 	}
 
-	m_eLogLevel = ELogLevel(logLevel);
+	m_logLevel = ELogLevel(logLevel);
 
 	ifstream file;
 	FS::Files::openIFStream(file, fileName);
@@ -69,8 +69,8 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 		// printf("[EBML::CIdentifier(0x%08X,][0x%08X]\n", id1, id2);
 		// cout << EBML::CIdentifier(id1, id2) << endl;
 
-		m_vName[EBML::CIdentifier(id1, id2)] = name;
-		m_vType[EBML::CIdentifier(id1, id2)] = type;
+		m_names[EBML::CIdentifier(id1, id2)] = name;
+		m_types[EBML::CIdentifier(id1, id2)] = type;
 	}
 
 	return true;
@@ -89,21 +89,21 @@ bool CBoxAlgorithmEBMLStreamSpy::uninitialize()
 
 bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& identifier)
 {
-	const auto n = m_vName.find(identifier);
-	const auto t = m_vType.find(identifier);
-	if (n != m_vName.end() && t != m_vType.end()) { return (t->second == "master"); }
+	const auto n = m_names.find(identifier);
+	const auto t = m_types.find(identifier);
+	if (n != m_names.end() && t != m_types.end()) { return (t->second == "master"); }
 	return false;
 }
 
 void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& identifier)
 {
-	const auto n = m_vName.find(identifier);
+	const auto n = m_names.find(identifier);
 
-	getLogManager() << m_eLogLevel;
+	getLogManager() << m_logLevel;
 
 	for (size_t i = 0; i <= m_nodes.size(); ++i) { getLogManager() << "  "; }
 
-	getLogManager() << "Opened EBML node [id:" << identifier << "]-[name:" << (n != m_vName.end() ? n->second : "unknown") << "]";
+	getLogManager() << "Opened EBML node [id:" << identifier << "]-[name:" << (n != m_names.end() ? n->second : "unknown") << "]";
 
 	if (isMasterChild(identifier)) { getLogManager() << "\n"; }
 
@@ -121,9 +121,9 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* buffer, const si
 
 void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* buffer, const size_t size)
 {
-	const auto t = m_vType.find(m_nodes.top());
+	const auto t = m_types.find(m_nodes.top());
 
-	if (t != m_vType.end())
+	if (t != m_types.end())
 	{
 		if (t->second == "uinteger") { getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getUInt(buffer, size) << "]"; }
 		else if (t->second == "integer") { getLogManager() << "-[type:" << t->second << "]-[value:" << m_helper->getInt(buffer, size) << "]"; }
@@ -211,7 +211,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 	size_t size           = 0;
 	const uint8_t* buffer = nullptr;
 
-	getLogManager() << m_eLogLevel << "\n";
+	getLogManager() << m_logLevel << "\n";
 
 	for (size_t i = 0; i < staticBoxContext.getInputCount(); ++i)
 	{
@@ -223,14 +223,14 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 			CIdentifier inputType;
 			staticBoxContext.getInputType(i, inputType);
 
-			getLogManager() << m_eLogLevel << "For input " << inputName << " of type " << getTypeManager().getTypeName(inputType) << " :\n";
+			getLogManager() << m_logLevel << "For input " << inputName << " of type " << getTypeManager().getTypeName(inputType) << " :\n";
 
 			for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 			{
 				boxContext.getInputChunk(i, j, tStart, tEnd, size, buffer);
 				boxContext.markInputAsDeprecated(i, j);
 
-				getLogManager() << m_eLogLevel << "For chunk [id:" << j << "] at [time:" << CIdentifier(tStart) << "," << CIdentifier(tEnd)
+				getLogManager() << m_logLevel << "For chunk [id:" << j << "] at [time:" << CIdentifier(tStart) << "," << CIdentifier(tEnd)
 						<< " / " << time64(tStart) << "," << time64(tEnd) << "]\n";
 
 				m_reader->processData(buffer, size);
@@ -238,7 +238,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 		}
 	}
 
-	getLogManager() << m_eLogLevel << "\n";
+	getLogManager() << m_logLevel << "\n";
 
 	return true;
 }

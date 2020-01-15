@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimulationSet;
 
 		private:
 

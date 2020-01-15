@@ -146,13 +146,13 @@ namespace OpenViBEToolkit
 
 bool CAlgorithmScenarioImporter::process()
 {
-	TParameterHandler<IScenario*> op_pScenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
-	IScenario* scenario = op_pScenario;
+	TParameterHandler<IScenario*> op_scenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
+	IScenario* scenario = op_scenario;
 
 	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 
-	TParameterHandler<IMemoryBuffer*> ip_pMemoryBuffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
-	IMemoryBuffer* memoryBuffer = ip_pMemoryBuffer;
+	TParameterHandler<IMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
+	IMemoryBuffer* memoryBuffer = ip_buffer;
 
 	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 

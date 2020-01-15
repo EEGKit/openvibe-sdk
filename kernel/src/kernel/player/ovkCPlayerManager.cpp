@@ -10,28 +10,28 @@ using namespace std;
 bool CPlayerManager::createPlayer(CIdentifier& playerID)
 {
 	playerID            = getUnusedIdentifier();
-	m_vPlayer[playerID] = new CPlayer(getKernelContext());
+	m_players[playerID] = new CPlayer(getKernelContext());
 	return true;
 }
 
 bool CPlayerManager::releasePlayer(const CIdentifier& playerID)
 {
-	auto it = m_vPlayer.find(playerID);
+	auto it = m_players.find(playerID);
 
-	OV_ERROR_UNLESS_KRF(it != m_vPlayer.end(), "Player release failed, identifier :" << playerID.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(it != m_players.end(), "Player release failed, identifier :" << playerID.toString(), ErrorType::ResourceNotFound);
 
 	delete it->second;
-	m_vPlayer.erase(it);
+	m_players.erase(it);
 	return true;
 }
 
 IPlayer& CPlayerManager::getPlayer(const CIdentifier& playerID)
 {
-	const auto it = m_vPlayer.find(playerID);
+	const auto it = m_players.find(playerID);
 
 	// use fatal here because the signature does not allow
 	// proper checking
-	OV_FATAL_UNLESS_K(it != m_vPlayer.end(), "Trying to retrieve non existing player with id " << playerID.toString(), ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(it != m_players.end(), "Trying to retrieve non existing player with id " << playerID.toString(), ErrorType::ResourceNotFound);
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the manager implementation
@@ -49,7 +49,7 @@ CIdentifier CPlayerManager::getUnusedIdentifier() const
 	{
 		id++;
 		res = CIdentifier(id);
-		i   = m_vPlayer.find(res);
-	} while (i != m_vPlayer.end() || res == OV_UndefinedIdentifier);
+		i   = m_players.find(res);
+	} while (i != m_players.end() || res == OV_UndefinedIdentifier);
 	return res;
 }

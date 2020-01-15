@@ -340,7 +340,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 							if (nValue[curDimIdx + 1] != matrix.getDimensionSize(curDimIdx + 1))
 							{
 								//getLogManager() << LogLevel_Trace << "Found " << valuesCount[curDimIdx+1] << " values in dimension "
-								//		<< curDimensionIdx+1 << ", expected " << op_pMatrix->getDimensionSize(curDimIdx+1) << ", parsing aborted\n";
+								//		<< curDimensionIdx+1 << ", expected " << op_matrix->getDimensionSize(curDimIdx+1) << ", parsing aborted\n";
 								return false;
 							}
 							//reset values count of lower dimension to 0
@@ -444,7 +444,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 	if (nValue[0] != matrix.getDimensionSize(0))
 	{
 		//	getLogManager() << LogLevel_Trace <<
-		//		"Found " << valuesCount[0] << " values in dimension 0, expected " << op_pMatrix->getDimensionSize(0) << ", parsing aborted\n";
+		//		"Found " << valuesCount[0] << " values in dimension 0, expected " << op_matrix->getDimensionSize(0) << ", parsing aborted\n";
 		return false;
 	}
 

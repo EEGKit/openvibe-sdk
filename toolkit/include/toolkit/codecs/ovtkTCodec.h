@@ -74,7 +74,7 @@ namespace OpenViBEToolkit
 		virtual ~TCodec() { }
 
 		//The initialization need a reference to the underlying box
-		//it will certainly be called in the box in such manner : m_oCodec.initialize(*this);
+		//it will certainly be called in the box in such manner : m_codec.initialize(*this);
 		bool initialize(T& boxAlgorithm, const size_t connectorIdx)
 		{
 			if (m_boxAlgorithm == nullptr)

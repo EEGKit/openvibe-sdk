@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_decoder;
-			std::array<OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>, 7> ip_pMemoryBuffer;
+			std::array<OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>, 7> ip_buffer;
 		};
 
 		class CDecoderAlgorithmTestDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

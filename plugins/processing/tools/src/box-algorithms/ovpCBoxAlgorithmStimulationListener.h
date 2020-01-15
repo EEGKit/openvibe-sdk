@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::LogLevel_None;
+			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::LogLevel_None;
 			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>*> m_stimulationDecoders;
 		};
 

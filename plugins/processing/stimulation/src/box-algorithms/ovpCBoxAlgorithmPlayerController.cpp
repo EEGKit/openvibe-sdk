@@ -15,16 +15,16 @@ bool CBoxAlgorithmPlayerController::initialize()
 	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
 	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pStimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
+	ip_buffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
+	op_stimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
 
 	return true;
 }
 
 bool CBoxAlgorithmPlayerController::uninitialize()
 {
-	op_pStimulationSet.uninitialize();
-	ip_pMemoryBuffer.uninitialize();
+	op_stimulationSet.uninitialize();
+	ip_buffer.uninitialize();
 
 	if (m_decoder)
 	{
@@ -48,12 +48,12 @@ bool CBoxAlgorithmPlayerController::process()
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
+		ip_buffer = boxContext.getInputChunk(0, i);
 		m_decoder->process();
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			IStimulationSet* stimSet = op_pStimulationSet;
+			IStimulationSet* stimSet = op_stimulationSet;
 			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
 			{
 				if (stimSet->getStimulationIdentifier(j) == m_stimulationID)

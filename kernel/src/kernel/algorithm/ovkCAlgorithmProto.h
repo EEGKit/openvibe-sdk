@@ -24,7 +24,7 @@ namespace OpenViBE
 
 		protected:
 
-			CAlgorithmProxy& m_rAlgorithmProxy;
+			CAlgorithmProxy& m_algorithmProxy;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

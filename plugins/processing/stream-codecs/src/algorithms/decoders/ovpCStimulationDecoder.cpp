@@ -13,13 +13,13 @@ using namespace StreamCodecs;
 bool CStimulationDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
-	op_pStimulationSet.initialize(getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
+	op_stimulationSet.initialize(getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
 	return true;
 }
 
 bool CStimulationDecoder::uninitialize()
 {
-	op_pStimulationSet.uninitialize();
+	op_stimulationSet.uninitialize();
 	CEBMLBaseDecoder::uninitialize();
 	return true;
 }
@@ -66,20 +66,20 @@ void CStimulationDecoder::processChildData(const void* buffer, const size_t size
 	{
 		if (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
 		{
-			op_pStimulationSet->setStimulationCount(m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setStimulationCount(m_readerHelper->getUInt(buffer, size));
 			m_stimulationIdx = 0;
 		}
 		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID)
 		{
-			op_pStimulationSet->setStimulationIdentifier(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setStimulationIdentifier(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		{
-			op_pStimulationSet->setStimulationDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setStimulationDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
 		{
-			op_pStimulationSet->setStimulationDuration(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setStimulationDuration(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 	}
 	else { CEBMLBaseDecoder::processChildData(buffer, size); }

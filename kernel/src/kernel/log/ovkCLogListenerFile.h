@@ -41,13 +41,13 @@ namespace OpenViBE
 
 		protected:
 
-			std::map<ELogLevel, bool> m_vActiveLevel;
+			std::map<ELogLevel, bool> m_activeLevels;
 			CString m_applicationName;
 			CString m_logFilename;
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_bTimeInSeconds    = true;
+			bool m_timeInSeconds    = true;
 			bool m_logWithHexa       = false;
 			uint64_t m_timePrecision = 3;
 

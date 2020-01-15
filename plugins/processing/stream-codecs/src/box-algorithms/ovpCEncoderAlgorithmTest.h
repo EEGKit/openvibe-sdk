@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_encoders;
-			std::array<OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>, 7> op_pMemoryBuffer;
+			std::array<OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>, 7> op_buffer;
 
 			bool m_hasSentHeader = false;
 			uint64_t m_startTime = 0;

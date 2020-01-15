@@ -21,12 +21,12 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TScopeHandle(THandledType& rHandler, THandledType& rHandledValue) : m_rHandler(rHandler), m_oLastHandledValue(rHandler) { m_rHandler = rHandledValue; }
-		~TScopeHandle() { m_rHandler = m_oLastHandledValue; }
+		TScopeHandle(THandledType& rHandler, THandledType& rHandledValue) : m_handler(rHandler), m_lastHandledValue(rHandler) { m_handler = rHandledValue; }
+		~TScopeHandle() { m_handler = m_lastHandledValue; }
 
 	private:
 
-		THandledType& m_rHandler;
-		THandledType m_oLastHandledValue;
+		THandledType& m_handler;
+		THandledType m_lastHandledValue;
 	};
 } // namespace OpenViBEToolkit

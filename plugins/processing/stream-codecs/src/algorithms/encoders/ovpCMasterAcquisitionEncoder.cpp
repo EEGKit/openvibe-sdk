@@ -41,8 +41,8 @@ bool CMasterAcquisitionEncoder::initialize()
 	TParameterHandler<IStimulationSet*> ip_stimSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<uint64_t> ip_bufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration));
 	TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
-	TParameterHandler<IMatrix*> ip_pChannelLocalisationMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelLocalisation));
-	TParameterHandler<IMatrix*> ip_pChannelUnitsMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits));
+	TParameterHandler<IMatrix*> ip_channelLocalisationMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelLocalisation));
+	TParameterHandler<IMatrix*> ip_channelUnitsMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits));
 
 	// Declares parameter handlers for sub-algorithm acquisition
 
@@ -57,33 +57,33 @@ bool CMasterAcquisitionEncoder::initialize()
 	// Declares parameter handlers for sub-algorithm experiment information
 
 	// TParameterHandler < uint64_t > ip_ExperimentInfoExperimentID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID));
-	// TParameterHandler < CString* > ip_pExperimentInfoExperimentDate(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate));
+	// TParameterHandler < CString* > ip_experimentInfoExperimentDate(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate));
 	TParameterHandler<uint64_t> ip_ExperimentInfoSubjectID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID));
-	// TParameterHandler < CString* > ip_pExperimentInfoSubjectName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName));
+	// TParameterHandler < CString* > ip_experimentInfoSubjectName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName));
 	TParameterHandler<uint64_t> ip_ExperimentInfoSubjectAge(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge));
 	TParameterHandler<uint64_t> ip_ExperimentInfoSubjectGender(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender));
 	// TParameterHandler < uint64_t > ip_ExperimentInfoLaboratoryID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID));
-	// TParameterHandler < CString* > ip_pExperimentInfoLaboratoryName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName));
+	// TParameterHandler < CString* > ip_experimentInfoLaboratoryName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName));
 	// TParameterHandler < uint64_t > ip_ExperimentInfoTechnicianID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID));
-	// TParameterHandler < CString* > ip_pExperimentInfoTehnicianName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName));
-	TParameterHandler<IMemoryBuffer*> op_pExperimentInfoMemoryBuffer(m_experimentInfoStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	// TParameterHandler < CString* > ip_experimentInfoTehnicianName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName));
+	TParameterHandler<IMemoryBuffer*> op_experimentInfoMemoryBuffer(m_experimentInfoStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	// Declares parameter handlers for sub-algorithm signal
 
 	TParameterHandler<IMatrix*> ip_matrix(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<uint64_t> ip_signalSamplingRate(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling));
-	TParameterHandler<IMemoryBuffer*> op_pSignalMemoryBuffer(m_signalStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IMemoryBuffer*> op_signalMemoryBuffer(m_signalStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	// Declares parameter handlers for sub-algorithm stimulation
 
-	TParameterHandler<IStimulationSet*> ip_pStimulationStimulationSet(m_stimulationStreamEncoder->getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_pStimulationMemoryBuffer(m_stimulationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IStimulationSet*> ip_stimulationStimulationSet(m_stimulationStreamEncoder->getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	TParameterHandler<IMemoryBuffer*> op_stimulationMemoryBuffer(m_stimulationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	TParameterHandler<IMatrix*> ip_pChannelLocalisation(m_channelLocalisationStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_pChannelLocalisationMemoryBuffer(m_channelLocalisationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IMatrix*> ip_channelLocalisation(m_channelLocalisationStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<IMemoryBuffer*> op_channelLocalisationMemoryBuffer(m_channelLocalisationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	TParameterHandler<IMatrix*> ip_pUnits(m_channelUnitsStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_pChannelUnitsMemoryBuffer(m_channelUnitsStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<IMemoryBuffer*> op_channelUnitsMemoryBuffer(m_channelUnitsStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 
 
@@ -94,19 +94,19 @@ bool CMasterAcquisitionEncoder::initialize()
 	ip_ExperimentInfoSubjectGender.setReferenceTarget(ip_subjectGender);
 	ip_matrix.setReferenceTarget(ip_pMatrix);
 	ip_signalSamplingRate.setReferenceTarget(ip_sampling);
-	ip_pStimulationStimulationSet.setReferenceTarget(ip_stimSet);
+	ip_stimulationStimulationSet.setReferenceTarget(ip_stimSet);
 	ip_AcquisitionBufferDuration.setReferenceTarget(ip_bufferDuration);
 	op_buffer.setReferenceTarget(op_pAcquisitionMemoryBuffer);
-	ip_pChannelLocalisationMaster.setReferenceTarget(ip_pChannelLocalisation);
-	ip_pChannelUnitsMaster.setReferenceTarget(ip_pUnits);
+	ip_channelLocalisationMaster.setReferenceTarget(ip_channelLocalisation);
+	ip_channelUnitsMaster.setReferenceTarget(ip_pUnits);
 
 	// Manage parameter connection / referencing | sub-algorithm to sub algorithm
 
-	ip_pAcquisitionExperimentInfoMemoryBuffer.setReferenceTarget(op_pExperimentInfoMemoryBuffer);
-	ip_pAcquisitionSignalMemoryBuffer.setReferenceTarget(op_pSignalMemoryBuffer);
-	ip_pAcquisitionStimulationMemoryBuffer.setReferenceTarget(op_pStimulationMemoryBuffer);
-	ip_pAcquisitionChannelLocalisationMemoryBuffer.setReferenceTarget(op_pChannelLocalisationMemoryBuffer);
-	ip_pAcquisitionChannelUnitsMemoryBuffer.setReferenceTarget(op_pChannelUnitsMemoryBuffer);
+	ip_pAcquisitionExperimentInfoMemoryBuffer.setReferenceTarget(op_experimentInfoMemoryBuffer);
+	ip_pAcquisitionSignalMemoryBuffer.setReferenceTarget(op_signalMemoryBuffer);
+	ip_pAcquisitionStimulationMemoryBuffer.setReferenceTarget(op_stimulationMemoryBuffer);
+	ip_pAcquisitionChannelLocalisationMemoryBuffer.setReferenceTarget(op_channelLocalisationMemoryBuffer);
+	ip_pAcquisitionChannelUnitsMemoryBuffer.setReferenceTarget(op_channelUnitsMemoryBuffer);
 
 	return true;
 }

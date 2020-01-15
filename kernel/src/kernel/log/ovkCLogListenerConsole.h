@@ -40,13 +40,13 @@ namespace OpenViBE
 
 			void applyColor();
 
-			std::map<ELogLevel, bool> m_vActiveLevel;
-			std::stack<ELogColor> m_vLogColor;
-			ELogColor m_eLogColor;
+			std::map<ELogLevel, bool> m_activeLevels;
+			std::stack<ELogColor> m_colors;
+			ELogColor m_color;
 			CString m_applicationName;
 
 			bool m_logWithHexa       = false;
-			bool m_bTimeInSeconds    = false;
+			bool m_timeInSeconds    = false;
 			uint64_t m_timePrecision = 0;
 			bool m_useColor         = false;
 		};

@@ -14,7 +14,7 @@ namespace OpenViBEToolkit
 				virtual ~ISplitCallback() { }
 				virtual void beginSplit() const { }
 				virtual void endSplit() const { }
-				virtual void setToken(const char* sToken) const = 0;
+				virtual void setToken(const char* token) const = 0;
 			};
 
 			template <class TContainer>
@@ -22,13 +22,13 @@ namespace OpenViBEToolkit
 			{
 			public:
 
-				explicit TSplitCallback(TContainer& vTokenContainer) : m_pTokenContainer(&vTokenContainer) { }
+				explicit TSplitCallback(TContainer& tokenContainers) : m_tokenContainer(&tokenContainers) { }
 
-				void setToken(const char* sToken) const override { m_pTokenContainer->push_back(sToken); }
+				void setToken(const char* token) const override { m_tokenContainer->push_back(token); }
 
 			protected:
 
-				TContainer* m_pTokenContainer = nullptr;
+				TContainer* m_tokenContainer = nullptr;
 			};
 
 			OVTK_API size_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t separator);

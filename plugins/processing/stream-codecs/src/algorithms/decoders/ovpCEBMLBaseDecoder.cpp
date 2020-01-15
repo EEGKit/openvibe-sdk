@@ -15,7 +15,7 @@ CEBMLBaseDecoder::CEBMLBaseDecoder()
 
 bool CEBMLBaseDecoder::initialize()
 {
-	ip_pMemoryBufferToDecode.initialize(getInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode));
+	ip_bufferToDecode.initialize(getInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode));
 	m_readerHelper = EBML::createReaderHelper();
 	m_reader       = createReader(m_callbackProxy);
 
@@ -30,7 +30,7 @@ bool CEBMLBaseDecoder::uninitialize()
 	m_readerHelper->release();
 	m_readerHelper = nullptr;
 
-	ip_pMemoryBufferToDecode.uninitialize();
+	ip_bufferToDecode.uninitialize();
 
 	return true;
 }
@@ -40,7 +40,7 @@ bool CEBMLBaseDecoder::uninitialize()
 
 bool CEBMLBaseDecoder::process()
 {
-	m_reader->processData(ip_pMemoryBufferToDecode->getDirectPointer(), ip_pMemoryBufferToDecode->getSize());
+	m_reader->processData(ip_bufferToDecode->getDirectPointer(), ip_bufferToDecode->getSize());
 	return true;
 }
 

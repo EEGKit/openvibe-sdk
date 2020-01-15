@@ -14,7 +14,7 @@ using namespace StreamCodecs;
 
 bool CEBMLBaseEncoder::initialize()
 {
-	op_pMemoryBuffer.initialize(getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	op_buffer.initialize(getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_writer       = createWriter(m_callbackProxy);
 	m_writerHelper = EBML::createWriterHelper();
@@ -32,7 +32,7 @@ bool CEBMLBaseEncoder::uninitialize()
 	m_writer->release();
 	m_writer = nullptr;
 
-	op_pMemoryBuffer.uninitialize();
+	op_buffer.uninitialize();
 
 	return true;
 }
@@ -80,7 +80,7 @@ bool CEBMLBaseEncoder::process()
 
 void CEBMLBaseEncoder::write(const void* buffer, const size_t size)
 {
-	const size_t currentBufferSize = op_pMemoryBuffer->getSize();
-	op_pMemoryBuffer->setSize(currentBufferSize + size, false);
-	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
+	const size_t currentBufferSize = op_buffer->getSize();
+	op_buffer->setSize(currentBufferSize + size, false);
+	System::Memory::copy(op_buffer->getDirectPointer() + currentBufferSize, buffer, size);
 }

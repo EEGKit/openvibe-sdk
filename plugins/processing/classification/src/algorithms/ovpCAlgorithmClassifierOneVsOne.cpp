@@ -37,8 +37,8 @@ using namespace OpenViBEToolkit;
 
 bool CAlgorithmClassifierOneVsOne::initialize()
 {
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
-	op_pConfiguration = nullptr;
+	TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	op_configuration = nullptr;
 
 	TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
 	ip_pPairwise = OV_UndefinedIdentifier.toUInteger();

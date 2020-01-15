@@ -36,10 +36,10 @@ namespace OpenViBEPlugins
 			void processBinaryBlock(const void* buffer, size_t size);
 
 			std::stack<EBML::CIdentifier> m_nodes;
-			std::map<EBML::CIdentifier, std::string> m_vName;
-			std::map<EBML::CIdentifier, std::string> m_vType;
+			std::map<EBML::CIdentifier, std::string> m_names;
+			std::map<EBML::CIdentifier, std::string> m_types;
 			size_t m_nExpandValues                  = 0;
-			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
+			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
 			EBML::IReader* m_reader                 = nullptr;
 			EBML::IReaderHelper* m_helper           = nullptr;
 		};

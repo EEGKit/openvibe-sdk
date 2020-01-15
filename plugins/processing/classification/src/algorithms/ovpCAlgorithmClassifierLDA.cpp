@@ -79,8 +79,8 @@ bool CAlgorithmClassifierLDA::initialize()
 	TParameterHandler<bool> ip_diagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 	ip_diagonalCov = false;
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
-	op_pConfiguration = nullptr;
+	TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	op_configuration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
 }

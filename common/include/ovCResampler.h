@@ -61,8 +61,8 @@ namespace Common
 
 			void clear()
 			{
-				for (size_t j = 0; j < m_vResampler.size(); ++j) { delete m_vResampler[j]; }
-				m_vResampler.clear();
+				for (size_t j = 0; j < m_resamplers.size(); ++j) { delete m_resamplers[j]; }
+				m_resamplers.clear();
 
 				m_nChannel                     = 0;
 				m_iSampling                    = 0;
@@ -143,9 +143,9 @@ namespace Common
 				m_iSampling = iSampling;
 				m_oSampling = oSampling;
 
-				for (size_t i = 0; i < m_vResampler.size(); ++i) { delete m_vResampler[i]; }
-				m_vResampler.clear();
-				m_vResampler.resize(nChannel);
+				for (size_t i = 0; i < m_resamplers.size(); ++i) { delete m_resamplers[i]; }
+				m_resamplers.clear();
+				m_resamplers.resize(nChannel);
 
 				const double in                  = double(iSampling), out = double(oSampling);
 				const double stopBandAttenuation = m_stopBandAttenuation == 0
@@ -157,82 +157,82 @@ namespace Common
 					switch (m_nFractionalDelayFilterSample) // it defines iFractionalDelayPositionCount 
 					{
 						case 6:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 8:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 10:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 12:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 14:
 							//stopBandAttenuation = 109.56;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 16:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 18:
 							//stopBandAttenuation = 136.45;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 20:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 22:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 24:
 							//stopBandAttenuation = 180.15;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 26:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 28:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 30:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(
+							m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(
 								in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
 								r8b::EDSPFilterPhaseResponse(0), false);
 							break;
@@ -250,7 +250,7 @@ namespace Common
 			 * This value is usually zero if the DSP processor "consumes" the latency
 			 * automatically. (from CDSPProcessor.h)
 			 */
-			virtual int getLatency() const { return m_vResampler[0]->getLatency(); }
+			virtual int getLatency() const { return m_resamplers[0]->getLatency(); }
 
 			/*
 			 * Fractional latency, in samples, which is present in the output
@@ -258,7 +258,7 @@ namespace Common
 			 * With minimum-phase filters in use, this value can be non-zero even if
 			 * the getLatency() function returns zero. (from CDSPProcessor.h)
 			 */
-			virtual double getLatencyFrac() const { return m_vResampler[0]->getLatencyFrac(); }
+			virtual double getLatencyFrac() const { return m_resamplers[0]->getLatencyFrac(); }
 
 			/*
 			 * The cumulative number of samples that should be passed to *this
@@ -267,7 +267,7 @@ namespace Common
 			 * @param NextInLen The number of input samples required before the output
 			 * starts on the next resampling step. (from CDSPProcessor.h)
 			 */
-			virtual int getInLenBeforeOutStart(const int nextInLen) const { return m_vResampler[0]->getInLenBeforeOutStart(nextInLen); }
+			virtual int getInLenBeforeOutStart(const int nextInLen) const { return m_resamplers[0]->getInLenBeforeOutStart(nextInLen); }
 
 			/*
 			 * The maximal length of the output buffer required when processing
@@ -275,9 +275,9 @@ namespace Common
 			 * @param MaxInLen The number of samples planned to process at once, at
 			 * most. (from CDSPProcessor.h)
 			 */
-			virtual int getMaxOutLen(const int maxInLen) const { return m_vResampler[0]->getMaxOutLen(maxInLen); }
+			virtual int getMaxOutLen(const int maxInLen) const { return m_resamplers[0]->getMaxOutLen(maxInLen); }
 
-			double getBuiltInLatency() const { return (m_iSampling != 0) ? (1.0 * m_vResampler[0]->getInLenBeforeOutStart(0) / m_iSampling) : 0.0; }
+			double getBuiltInLatency() const { return (m_iSampling != 0) ? (1.0 * m_resamplers[0]->getInLenBeforeOutStart(0) / m_iSampling) : 0.0; }
 
 			size_t resample(const ICallback& callback, const TFloat* iSample, const size_t nInSample)
 			{
@@ -313,7 +313,7 @@ namespace Common
 					for (size_t k = 0; k < nInSample; ++k) { iBuffers[k] = double(iSample[k * m_nChannel + j]); }
 
 					double* resamplerOutputBuffer;
-					nI = m_vResampler[j]->process(&iBuffers[0], int(nInSample), resamplerOutputBuffer);
+					nI = m_resamplers[j]->process(&iBuffers[0], int(nInSample), resamplerOutputBuffer);
 
 					if (isFirstChannel)
 					{
@@ -351,7 +351,7 @@ namespace Common
 					for (size_t k = 0; k < nInSample; ++k) { iBuffers[k] = double(iSample[j * nInSample + k]); }
 
 					double* resamplerOutputBuffer;
-					nI = m_vResampler[j]->process(&iBuffers[0], int(nInSample), resamplerOutputBuffer);
+					nI = m_resamplers[j]->process(&iBuffers[0], int(nInSample), resamplerOutputBuffer);
 
 					if (isFirstChannel)
 					{
@@ -443,7 +443,7 @@ namespace Common
 			double m_transitionBandPercent     = 45;
 			double m_stopBandAttenuation       = 49;
 
-			std::vector<r8b::CDSPProcessor*> m_vResampler;
+			std::vector<r8b::CDSPProcessor*> m_resamplers;
 
 			size_t (TResampler<TFloat, TStoreMode>::*m_fpResample)(const ICallback& callback, const TFloat* iSample, const size_t nInSample);
 			size_t (TResampler<TFloat, TStoreMode>::*m_fpResampleDirect)(TFloat* oSample, const TFloat* iSample, const size_t nInSample, const size_t nOutSample);

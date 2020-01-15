@@ -29,10 +29,7 @@ namespace OpenViBE
 		protected:
 
 			CIdentifier getUnusedIdentifier() const;
-
-			using AlgorithmMap = std::map<CIdentifier, CAlgorithmProxy*>;
-			AlgorithmMap m_vAlgorithms;
-
+			std::map<CIdentifier, CAlgorithmProxy*> m_algorithms;
 			mutable std::mutex m_oMutex;
 		};
 	} // namespace Kernel

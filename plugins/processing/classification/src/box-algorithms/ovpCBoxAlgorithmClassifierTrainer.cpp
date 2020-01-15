@@ -428,11 +428,11 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 
 	OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train), "Training failed", OpenViBE::Kernel::ErrorType::Internal);
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
-	XML::IXMLNode* node = static_cast<XML::IXMLNode*>(op_pConfiguration);
+	TParameterHandler<XML::IXMLNode*> op_configuration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	XML::IXMLNode* node = static_cast<XML::IXMLNode*>(op_configuration);
 
 	if (node != nullptr) { node->release(); }
-	op_pConfiguration = nullptr;
+	op_configuration = nullptr;
 
 	return m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfig);
 }

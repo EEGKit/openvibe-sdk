@@ -26,7 +26,7 @@ bool CEncoderAlgorithmTest::initialize()
 	for (size_t i = 0; i < 7; ++i)
 	{
 		m_encoders[i]->initialize();
-		op_pMemoryBuffer[i].initialize(m_encoders[i]->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+		op_buffer[i].initialize(m_encoders[i]->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 	}
 
 	m_matrix1 = new CMatrix();
@@ -82,7 +82,7 @@ bool CEncoderAlgorithmTest::uninitialize()
 
 	for (size_t i = 0; i < 7; ++i)
 	{
-		op_pMemoryBuffer[i].uninitialize();
+		op_buffer[i].uninitialize();
 		m_encoders[i]->uninitialize();
 		getAlgorithmManager().releaseAlgorithm(*m_encoders[i]);
 		m_encoders[i] = nullptr;
@@ -109,7 +109,7 @@ bool CEncoderAlgorithmTest::process()
 		m_endTime   = 0;
 		for (size_t i = 0; i < nInput; ++i)
 		{
-			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
+			op_buffer[i] = boxContext.getOutputChunk(i);
 			m_encoders[i]->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader);
 		}
 		m_hasSentHeader = true;
@@ -118,7 +118,7 @@ bool CEncoderAlgorithmTest::process()
 	{
 		for (size_t i = 0; i < nInput; ++i)
 		{
-			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
+			op_buffer[i] = boxContext.getOutputChunk(i);
 			m_encoders[i]->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer);
 		}
 	}

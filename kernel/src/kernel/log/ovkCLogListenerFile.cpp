@@ -30,27 +30,27 @@ CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& app
 
 void CLogListenerFile::configure(const IConfigurationManager& configurationManager)
 {
-	m_bTimeInSeconds = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
+	m_timeInSeconds = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
 	m_logWithHexa    = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
 	m_timePrecision  = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
 bool CLogListenerFile::isActive(ELogLevel logLevel)
 {
-	const auto it = m_vActiveLevel.find(logLevel);
-	if (it == m_vActiveLevel.end()) { return true; }
+	const auto it = m_activeLevels.find(logLevel);
+	if (it == m_activeLevels.end()) { return true; }
 	return it->second;
 }
 
 bool CLogListenerFile::activate(ELogLevel level, bool active)
 {
-	m_vActiveLevel[level] = active;
+	m_activeLevels[level] = active;
 	return true;
 }
 
 bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_vActiveLevel[ELogLevel(i)] = active; }
+	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
 	return true;
 }
 
@@ -58,7 +58,7 @@ bool CLogListenerFile::activate(bool active) { return activate(LogLevel_First, L
 
 void CLogListenerFile::log(const time64 value)
 {
-	if (m_bTimeInSeconds)
+	if (m_timeInSeconds)
 	{
 		const double time = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;

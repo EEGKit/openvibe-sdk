@@ -23,12 +23,12 @@ namespace OpenViBEPlugins
 
 			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
 			std::vector<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_encoders;
-			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
+			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
 			uint64_t m_validityCheckerType          = 0;
 
 			std::vector<size_t> m_nTotalInterpolatedSample;
 			std::vector<size_t> m_nTotalInterpolatedChunk;
-			std::vector<std::vector<double>> m_vLastValidSample;
+			std::vector<std::vector<double>> m_lastValidSamples;
 		};
 
 		class CBoxAlgorithmMatrixValidityCheckerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

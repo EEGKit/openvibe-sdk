@@ -88,7 +88,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	if (m_headerSent == false)
 	{
 		// Connects parameters to memory buffer
-		//op_pChannelLocalisationMemoryBuffer = boxContext.getOutputChunk(0);
+		//op_channelLocalisationMemoryBuffer = boxContext.getOutputChunk(0);
 
 		//open file and load matrix dimensions
 		// m_pOVMatrixFileReader->process(OVP_Algorithm_BrainampFileReader_InputTriggerId_Open);

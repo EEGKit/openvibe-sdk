@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			EBML::IReader* m_reader             = nullptr;
 			EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_callbackProxy;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pMemoryBufferToDecode;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_bufferToDecode;
 		};
 
 		class CEBMLBaseDecoderDesc : public OpenViBE::Plugins::IAlgorithmDesc

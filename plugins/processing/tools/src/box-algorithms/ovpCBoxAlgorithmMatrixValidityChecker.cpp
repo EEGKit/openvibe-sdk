@@ -14,7 +14,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	const IBox& boxContext = this->getStaticBoxContext();
 
 	uint64_t logLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_eLogLevel           = ELogLevel(logLevel);
+	m_logLevel           = ELogLevel(logLevel);
 	m_validityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (boxContext.getSettingCount() == 1
 	)
@@ -36,8 +36,8 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 		m_encoders[i].getInputMatrix().setReferenceTarget(m_decoders[i].getOutputMatrix());
 	}
 
-	m_vLastValidSample.clear();
-	m_vLastValidSample.resize(boxContext.getInputCount());
+	m_lastValidSamples.clear();
+	m_lastValidSamples.resize(boxContext.getInputCount());
 	m_nTotalInterpolatedSample.clear();
 	m_nTotalInterpolatedSample.resize(boxContext.getInputCount());
 	m_nTotalInterpolatedChunk.clear();
@@ -88,7 +88,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					m_nTotalInterpolatedSample[i] = 0;
 					m_nTotalInterpolatedChunk[i]  = 0;
 					// for each channel, save of the last valid sample
-					m_vLastValidSample[i].resize(matrix->getDimensionSize(0));
+					m_lastValidSamples[i].resize(matrix->getDimensionSize(0));
 				}
 			}
 			if (m_decoders[i].isBufferReceived())
@@ -98,7 +98,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				{
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
+						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
 								time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
 					}
 				}
@@ -129,13 +129,13 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 							if (std::isnan(buffer[l + k * nSample]) || std::isinf(buffer[l + k * nSample]))
 							{
 								// interpolation : order 0 (easiest for online interpolation)
-								buffer[l + k * nSample] = m_vLastValidSample[i][k];
+								buffer[l + k * nSample] = m_lastValidSamples[i][k];
 								nInterpolatedSample++;
 							}
 							else
 							{
 								// save of the last valid sample of channel k
-								m_vLastValidSample[i][k] = buffer[l + k * nSample];
+								m_lastValidSamples[i][k] = buffer[l + k * nSample];
 							}
 						}
 					}
@@ -144,7 +144,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// log management
 					if (nInterpolatedSample > 0 && m_nTotalInterpolatedSample[i] == nInterpolatedSample) // beginning of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(
+						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(
 							boxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
 					}
 					if (nInterpolatedSample > 0) // update of ChunkCount during interpolation
@@ -153,7 +153,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 					if (nInterpolatedSample == 0 && m_nTotalInterpolatedSample[i] > 0) // end of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_nTotalInterpolatedSample[i] / (
+						getLogManager() << m_logLevel << "Matrix on input " << i << " contained " << 100.0 * m_nTotalInterpolatedSample[i] / (
 							m_nTotalInterpolatedChunk[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(
 							boxContext.getInputChunkStartTime(i, j)) << ".\n";
 						m_nTotalInterpolatedSample[i] = 0; // reset

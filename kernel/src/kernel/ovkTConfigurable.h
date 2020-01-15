@@ -21,8 +21,8 @@ namespace OpenViBE
 
 			~TBaseConfigurable() override
 			{
-				auto itParameter = m_vParameter.begin();
-				while (itParameter != m_vParameter.end())
+				auto itParameter = m_parameters.begin();
+				while (itParameter != m_parameters.end())
 				{
 					// @FIXME is this really as intended, test the first, delete the second?
 					if (itParameter->second.first)
@@ -36,13 +36,13 @@ namespace OpenViBE
 
 			CIdentifier getNextParameterIdentifier(const CIdentifier& previousID) const override
 			{
-				return getNextIdentifier<std::pair<bool, IParameter*>>(m_vParameter, previousID);
+				return getNextIdentifier<std::pair<bool, IParameter*>>(m_parameters, previousID);
 			}
 
 			IParameter* getParameter(const CIdentifier& parameterID) override
 			{
-				const auto it = m_vParameter.find(parameterID);
-				if (it == m_vParameter.end()) { return nullptr; }
+				const auto it = m_parameters.find(parameterID);
+				if (it == m_parameters.end()) { return nullptr; }
 				return it->second.second;
 			}
 
@@ -50,15 +50,15 @@ namespace OpenViBE
 			{
 				this->removeParameter(parameterID);
 
-				m_vParameter[parameterID] = std::pair<bool, IParameter*>(false, &parameter);
+				m_parameters[parameterID] = std::pair<bool, IParameter*>(false, &parameter);
 
 				return true;
 			}
 
 			IParameter* createParameter(const CIdentifier& parameterID, const EParameterType parameterType, const CIdentifier& subTypeID) override
 			{
-				const auto it = m_vParameter.find(parameterID);
-				if (it != m_vParameter.end()) { return nullptr; }
+				const auto it = m_parameters.find(parameterID);
+				if (it != m_parameters.end()) { return nullptr; }
 
 				IParameter* parameter = nullptr;
 				switch (parameterType)
@@ -90,18 +90,18 @@ namespace OpenViBE
 						break;
 				}
 
-				if (parameter != nullptr) { m_vParameter[parameterID] = std::pair<bool, IParameter*>(true, parameter); }
+				if (parameter != nullptr) { m_parameters[parameterID] = std::pair<bool, IParameter*>(true, parameter); }
 
 				return parameter;
 			}
 
 			bool removeParameter(const CIdentifier& rParameterIdentifier) override
 			{
-				auto itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter == m_vParameter.end()) { return false; }
+				auto itParameter = m_parameters.find(rParameterIdentifier);
+				if (itParameter == m_parameters.end()) { return false; }
 
 				if (itParameter->second.first) { delete itParameter->second.second; }
-				m_vParameter.erase(itParameter);
+				m_parameters.erase(itParameter);
 
 				return true;
 			}
@@ -110,7 +110,7 @@ namespace OpenViBE
 
 		private:
 
-			std::map<CIdentifier, std::pair<bool, IParameter*>> m_vParameter;
+			std::map<CIdentifier, std::pair<bool, IParameter*>> m_parameters;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

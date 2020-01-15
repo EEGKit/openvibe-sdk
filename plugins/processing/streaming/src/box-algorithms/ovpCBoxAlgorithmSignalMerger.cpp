@@ -97,20 +97,20 @@ bool CBoxAlgorithmSignalMerger::process()
 		{
 			m_decoders[i]->decode(c);
 
-			const IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
+			const IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
 			if (m_decoders[i]->isHeaderReceived())
 			{
 				nHeader++;
 				if (i == 0)
 				{
-					nSamplePerBlock = op_pMatrix->getDimensionSize(1);
-					nChannel        = op_pMatrix->getDimensionSize(0);
+					nSamplePerBlock = op_matrix->getDimensionSize(1);
+					nChannel        = op_matrix->getDimensionSize(0);
 				}
 				else
 				{
 					// Check that properties agree
-					OV_ERROR_UNLESS_KRF(nSamplePerBlock == op_pMatrix->getDimensionSize(1),
-										"Output matrix dimension [" << op_pMatrix->getDimensionSize(1) << "] on input [" << i
+					OV_ERROR_UNLESS_KRF(nSamplePerBlock == op_matrix->getDimensionSize(1),
+										"Output matrix dimension [" << op_matrix->getDimensionSize(1) << "] on input [" << i
 										<< "] must match sample count per block [" << nSamplePerBlock << "]",
 										OpenViBE::Kernel::ErrorType::BadInput);
 
@@ -119,7 +119,7 @@ bool CBoxAlgorithmSignalMerger::process()
 										<< "] must match the sampling rate on input 0 [" << m_decoders[0]->getOutputSamplingRate() << "]",
 										OpenViBE::Kernel::ErrorType::BadInput);
 
-					nChannel += op_pMatrix->getDimensionSize(0);
+					nChannel += op_matrix->getDimensionSize(0);
 				}
 			}
 			if (m_decoders[i]->isBufferReceived()) { nBuffer++; }
@@ -138,15 +138,15 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nHeader)
 		{
 			// We have received headers from all inputs
-			IMatrix* ip_pMatrix = m_encoder->getInputMatrix();
+			IMatrix* ip_matrix = m_encoder->getInputMatrix();
 
-			ip_pMatrix->setDimensionCount(2);
-			ip_pMatrix->setDimensionSize(0, nChannel);
-			ip_pMatrix->setDimensionSize(1, nSamplePerBlock);
+			ip_matrix->setDimensionCount(2);
+			ip_matrix->setDimensionSize(0, nChannel);
+			ip_matrix->setDimensionSize(1, nSamplePerBlock);
 			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
-				const IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
-				for (size_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++) { ip_pMatrix->setDimensionLabel(0, k, op_pMatrix->getDimensionLabel(0, j)); }
+				const IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
+				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++) { ip_matrix->setDimensionLabel(0, k, op_matrix->getDimensionLabel(0, j)); }
 			}
 			const uint64_t sampling           = m_decoders[0]->getOutputSamplingRate();
 			m_encoder->getInputSamplingRate() = sampling;
@@ -161,16 +161,16 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nBuffer)
 		{
 			// We have received one buffer from each input
-			IMatrix* ip_pMatrix = m_encoder->getInputMatrix();
+			IMatrix* ip_matrix = m_encoder->getInputMatrix();
 
-			nSamplePerBlock = ip_pMatrix->getDimensionSize(1);
+			nSamplePerBlock = ip_matrix->getDimensionSize(1);
 
 			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
-				IMatrix* op_pMatrix = m_decoders[i]->getOutputMatrix();
-				for (size_t j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
+				IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
+				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++)
 				{
-					System::Memory::copy(ip_pMatrix->getBuffer() + k * nSamplePerBlock, op_pMatrix->getBuffer() + j * nSamplePerBlock,
+					System::Memory::copy(ip_matrix->getBuffer() + k * nSamplePerBlock, op_matrix->getBuffer() + j * nSamplePerBlock,
 										 nSamplePerBlock * sizeof(double));
 				}
 			}

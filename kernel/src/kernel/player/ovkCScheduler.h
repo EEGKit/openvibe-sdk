@@ -60,7 +60,7 @@ namespace OpenViBE
 
 			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_simulatedBoxes;
 			std::map<CIdentifier, System::CChrono> m_simulatedBoxChronos;
-			std::map<CIdentifier, std::map<size_t, std::list<CChunk>>> m_vSimulatedBoxInput;
+			std::map<CIdentifier, std::map<size_t, std::list<CChunk>>> m_simulatedBoxInputs;
 
 		private:
 

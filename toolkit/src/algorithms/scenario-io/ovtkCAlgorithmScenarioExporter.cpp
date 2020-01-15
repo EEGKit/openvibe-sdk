@@ -78,15 +78,15 @@ bool CAlgorithmScenarioExporter::process()
 	// preallocates 1 Mbytes
 	tmpBuffer.reserve(1024 * 1024);
 
-	TParameterHandler<IScenario*> ip_pScenario(this->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario));
-	IScenario* scenario = ip_pScenario;
+	TParameterHandler<IScenario*> ip_scenario(this->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario));
+	IScenario* scenario = ip_scenario;
 
 	OV_ERROR_UNLESS_KRF(scenario, "Input scenario is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
-	IMemoryBuffer* memoryBuffer = op_pMemoryBuffer;
+	TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
+	IMemoryBuffer* buffer = op_buffer;
 
-	OV_ERROR_UNLESS_KRF(memoryBuffer, "Output memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
+	OV_ERROR_UNLESS_KRF(buffer, "Output memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 
 	this->exportStart(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 	this->exportString(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("2"));
@@ -153,8 +153,8 @@ bool CAlgorithmScenarioExporter::process()
 
 	this->exportStop(tmpBuffer);
 
-	memoryBuffer->setSize(0, true);
-	memoryBuffer->append(tmpBuffer);
+	buffer->setSize(0, true);
+	buffer->append(tmpBuffer);
 
 	return true;
 }

@@ -352,9 +352,9 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 
 		if (scenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
 		{
-			scenario.setAttributeValue(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_oHash.toString());
+			scenario.setAttributeValue(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_hash.toString());
 		}
-		else { scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_oHash.toString()); }
+		else { scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_hash.toString()); }
 	}
 
 	CIdentifier exporterInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioExporterAlgorithmID);

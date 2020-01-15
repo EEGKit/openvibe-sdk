@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 
 			EBML::IWriterHelper* m_writerHelper = nullptr;
 			EBML::IWriter* m_writer             = nullptr;

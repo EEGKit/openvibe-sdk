@@ -114,7 +114,7 @@ namespace Socket
 
 			return 0;
 
-			/*if (ioctl(m_file, PPWDATA, &lvalue) < 0) { return size; }*/
+			/*if (ioctl(m_file, PPWDATA, &value) < 0) { return size; }*/
 
 #endif
 		}

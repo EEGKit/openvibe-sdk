@@ -36,14 +36,14 @@ namespace OpenViBEPlugins
 			uint64_t m_lastEndTime   = 0;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_sampling;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 		};
 
 		class CBoxAlgorithmSignalDecimationDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

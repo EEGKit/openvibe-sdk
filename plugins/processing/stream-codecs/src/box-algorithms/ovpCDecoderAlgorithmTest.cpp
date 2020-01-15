@@ -57,7 +57,7 @@ bool CDecoderAlgorithmTest::initialize()
 	for (size_t i = 0; i < 7; ++i)
 	{
 		m_decoder[i]->initialize();
-		ip_pMemoryBuffer[i].initialize(m_decoder[i]->getInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode));
+		ip_buffer[i].initialize(m_decoder[i]->getInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode));
 	}
 
 	return true;
@@ -67,7 +67,7 @@ bool CDecoderAlgorithmTest::uninitialize()
 {
 	for (size_t i = 0; i < 7; ++i)
 	{
-		ip_pMemoryBuffer[i].uninitialize();
+		ip_buffer[i].uninitialize();
 		m_decoder[i]->uninitialize();
 		getAlgorithmManager().releaseAlgorithm(*m_decoder[i]);
 		m_decoder[i] = nullptr;
@@ -91,7 +91,7 @@ bool CDecoderAlgorithmTest::process()
 	{
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			ip_pMemoryBuffer[i] = boxContext.getInputChunk(i, j);
+			ip_buffer[i] = boxContext.getInputChunk(i, j);
 			m_decoder[i]->process();
 
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader))

@@ -311,14 +311,14 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 								"Invalid sample count of [" <<m_covProxies[i].nSamples << "] for condition number " << i << " (expected value > 2)",
 								OpenViBE::Kernel::ErrorType::BadProcessing);
 
-			TParameterHandler<IMatrix*> op_pCovarianceMatrix(
+			TParameterHandler<IMatrix*> op_covarianceMatrix(
 				m_covProxies[i].cov->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
 
 			// Get regularized cov
 			m_covProxies[i].cov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, true);
 			OV_ERROR_UNLESS_KRF(m_covProxies[i].cov->process(), "Failed to retrieve regularized covariance", OpenViBE::Kernel::ErrorType::Internal);
 
-			const Map<MatrixXdRowMajor> covMapper(op_pCovarianceMatrix->getBuffer(), nChannels, nChannels);
+			const Map<MatrixXdRowMajor> covMapper(op_covarianceMatrix->getBuffer(), nChannels, nChannels);
 			cov[i] = covMapper;
 
 			// Get vanilla cov

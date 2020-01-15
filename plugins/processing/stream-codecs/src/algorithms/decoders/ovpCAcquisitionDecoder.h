@@ -30,11 +30,11 @@ namespace OpenViBEPlugins
 			static void appendMemoryBuffer(OpenViBE::IMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_bufferDuration;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pExperimentInfoStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pSignalStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pStimulationStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pChannelLocalisationStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pChannelUnitsStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_experimentInfoStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_signalStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_stimulationStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_channelLocalisationStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_channelUnitsStream;
 
 		private:
 

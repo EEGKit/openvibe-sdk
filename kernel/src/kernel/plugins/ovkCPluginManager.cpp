@@ -252,7 +252,7 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const CIdentifier& classID)
 	{
 		SBoxProto prototype(getKernelContext().getTypeManager());
 		boxAlgorithmDesc->getBoxPrototype(prototype);
-		return prototype.m_oHash;
+		return prototype.m_hash;
 	}
 	return OV_UndefinedIdentifier;
 }
@@ -263,7 +263,7 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& bo
 
 	SBoxProto prototype(getKernelContext().getTypeManager());
 	boxAlgorithmDesc.getBoxPrototype(prototype);
-	return prototype.m_oHash;
+	return prototype.m_hash;
 }
 
 bool CPluginManager::isPluginObjectFlaggedAsDeprecated(const CIdentifier& classID) const

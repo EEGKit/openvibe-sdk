@@ -32,8 +32,8 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
 	m_decoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pStimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
+	ip_buffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
+	op_stimulationSet.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
 
 	m_minimumVotes      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_timeWindow        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -75,22 +75,22 @@ bool CBoxAlgorithmStimulationVoter::process()
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	TParameterHandler<IStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
-	op_pMemoryBuffer = boxContext.getOutputChunk(0);
+	TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
+	op_buffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
 	bool newStimulus = false;
 	for (size_t j = 0; j < boxContext.getInputChunkCount(0); ++j)
 	{
-		ip_pMemoryBuffer = boxContext.getInputChunk(0, j);
+		ip_buffer = boxContext.getInputChunk(0, j);
 		m_decoder->process();
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			for (size_t k = 0; k < op_pStimulationSet->getStimulationCount(); ++k)
+			for (size_t k = 0; k < op_stimulationSet->getStimulationCount(); ++k)
 			{
-				uint64_t stimulationId   = op_pStimulationSet->getStimulationIdentifier(k);
-				uint64_t stimulationDate = op_pStimulationSet->getStimulationDate(k);
+				uint64_t stimulationId   = op_stimulationSet->getStimulationIdentifier(k);
+				uint64_t stimulationDate = op_stimulationSet->getStimulationDate(k);
 				m_latestStimulusDate     = std::max(m_latestStimulusDate, stimulationDate);
 				if (TimeArithmetics::timeToSeconds(m_latestStimulusDate - stimulationDate) <= m_timeWindow)
 				{

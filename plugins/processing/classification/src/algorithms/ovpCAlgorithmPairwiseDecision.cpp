@@ -22,12 +22,12 @@ bool CAlgorithmPairwiseDecision::process()
 	}
 	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig))
 	{
-		TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config));
+		TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config));
 		XML::IXMLNode* tmp = this->saveConfig();
 
 		OV_ERROR_UNLESS_KRF(tmp != nullptr, "Invalid NULL xml node returned while saving configuration", OpenViBE::Kernel::ErrorType::Internal);
 
-		op_pConfiguration = tmp;
+		op_configuration = tmp;
 		return true;
 	}
 	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfig))

@@ -12,9 +12,9 @@ bool CExperimentInfoEncoder::initialize()
 	CEBMLBaseEncoder::initialize();
 
 	ip_ExperimentID.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID));
-	ip_pExperimentDate.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate));
+	ip_experimentDate.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate));
 	ip_subjectID.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID));
-	ip_pSubjectName.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName));
+	ip_subjectName.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName));
 	ip_subjectAge.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge));
 	ip_subjectGender.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender));
 	ip_LaboratoryID.initialize(getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID));
@@ -33,9 +33,9 @@ bool CExperimentInfoEncoder::uninitialize()
 	ip_LaboratoryID.uninitialize();
 	ip_subjectGender.uninitialize();
 	ip_subjectAge.uninitialize();
-	ip_pSubjectName.uninitialize();
+	ip_subjectName.uninitialize();
 	ip_subjectID.uninitialize();
-	ip_pExperimentDate.uninitialize();
+	ip_experimentDate.uninitialize();
 	ip_ExperimentID.uninitialize();
 
 	CEBMLBaseEncoder::uninitialize();
@@ -54,7 +54,7 @@ bool CExperimentInfoEncoder::processHeader()
 	m_writerHelper->setUInt(ip_ExperimentID);
 	m_writerHelper->closeChild();
 	m_writerHelper->openChild(OVTK_NodeId_Header_ExperimentInfo_Experiment_Date);
-	m_writerHelper->setStr(ip_pExperimentDate->toASCIIString());
+	m_writerHelper->setStr(ip_experimentDate->toASCIIString());
 	m_writerHelper->closeChild();
 	m_writerHelper->closeChild();
 	m_writerHelper->openChild(OVTK_NodeId_Header_ExperimentInfo_Subject);
@@ -62,7 +62,7 @@ bool CExperimentInfoEncoder::processHeader()
 	m_writerHelper->setUInt(ip_subjectID);
 	m_writerHelper->closeChild();
 	m_writerHelper->openChild(OVTK_NodeId_Header_ExperimentInfo_Subject_Name);
-	m_writerHelper->setStr(ip_pSubjectName->toASCIIString());
+	m_writerHelper->setStr(ip_subjectName->toASCIIString());
 	m_writerHelper->closeChild();
 	m_writerHelper->openChild(OVTK_NodeId_Header_ExperimentInfo_Subject_Age);
 	m_writerHelper->setUInt(ip_subjectAge);

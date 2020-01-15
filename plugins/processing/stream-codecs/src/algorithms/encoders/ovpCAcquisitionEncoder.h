@@ -21,11 +21,11 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_bufferDuration;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pExperimentInfoStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pSignalStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pStimulationStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pChannelLocalisationStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pChannelUnitsStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_experimentInfoStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_signalStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_stimulationStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_channelLocalisationStream;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_channelUnitsStream;
 		};
 
 		class CAcquisitionEncoderDesc final : public CEBMLBaseEncoderDesc

@@ -35,8 +35,8 @@ namespace OpenViBEPlugins
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimulationSet;
 
 			std::deque<std::pair<uint64_t, uint64_t>> m_oStimulusDeque; // <label,time>
 

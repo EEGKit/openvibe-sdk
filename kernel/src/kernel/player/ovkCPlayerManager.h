@@ -18,7 +18,7 @@ namespace OpenViBE
 			bool createPlayer(CIdentifier& playerID) override;
 			bool releasePlayer(const CIdentifier& playerID) override;
 			IPlayer& getPlayer(const CIdentifier& playerID) override;
-			CIdentifier getNextPlayerIdentifier(const CIdentifier& previousID) const override { return getNextIdentifier<CPlayer*>(m_vPlayer, previousID); }
+			CIdentifier getNextPlayerIdentifier(const CIdentifier& previousID) const override { return getNextIdentifier<CPlayer*>(m_players, previousID); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
 
@@ -26,7 +26,7 @@ namespace OpenViBE
 
 			CIdentifier getUnusedIdentifier() const;
 
-			std::map<CIdentifier, CPlayer*> m_vPlayer;
+			std::map<CIdentifier, CPlayer*> m_players;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE
