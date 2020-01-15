@@ -523,7 +523,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	ss << "  Cls vs cls ";
 	for (size_t i = 0; i < rows; ++i) { ss << setw(6) << (i + 1); }
-	this->getLogManager() << LogLevel_Info << ss.str().c_str() << "\n";
+	this->getLogManager() << LogLevel_Info << ss.str() << "\n";
 
 	ss.precision(1);
 	for (size_t i = 0; i < rows; ++i)
@@ -531,7 +531,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 		ss.str("");
 		ss << "  Target " << setw(2) << (i + 1) << ": ";
 		for (size_t j = 0; j < rows; ++j) { ss << setw(6) << tmp[i * rows + j] * 100; }
-		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << size_t(rowSum[i]) << " examples\n";
+		this->getLogManager() << LogLevel_Info << ss.str() << " %, " << size_t(rowSum[i]) << " examples\n";
 	}
 
 	return true;

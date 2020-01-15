@@ -136,7 +136,7 @@ namespace OpenViBEPlugins
 						stim.fill('0');
 						stim << "OVTK_StimulationId_Label_" << std::setw(2) << i;
 						box.addSetting(name.c_str(), OV_TypeId_Stimulation, stim.str().c_str(), 3 - 1 + getStrategySettingsCount(box) + i);
-						DEBUG_PRINT(std::cout << "Add setting (type D) " << buffer.c_str() << " " << stimulation << "\n";)
+						DEBUG_PRINT(std::cout << "Add setting (type D) " << buffer << " " << stimulation << "\n";)
 					}
 					return this->onAlgorithmClassifierChanged(box);
 				}

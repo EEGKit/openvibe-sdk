@@ -24,7 +24,7 @@ IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& classID)
 	create(classID, OV_ClassId_Kernel_Plugins_PluginModule, res, Kernel::CPluginModule);
 	create(classID, OV_ClassId_Kernel_Configurable, res, Kernel::CConfigurable);
 
-	OV_ERROR_UNLESS_KRN(res, "Unable to allocate object with class id " << classID.toString(), ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRN(res, "Unable to allocate object with class id " << classID.str(), ErrorType::BadAlloc);
 
 	return res;
 }
@@ -40,7 +40,7 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 	const auto i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 
 	OV_ERROR_UNLESS_KRF(i != m_oCreatedObjects.end(),
-						"Can not release object with final class id " << classID.toString() << " - it is not owned by this fatory",
+						"Can not release object with final class id " << classID.str() << " - it is not owned by this fatory",
 						ErrorType::ResourceNotFound);
 
 	m_oCreatedObjects.erase(i);

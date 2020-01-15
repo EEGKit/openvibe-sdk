@@ -113,19 +113,19 @@ FILE* Files::popen(const char* file, const char* mode)
 }
 
 template <class T>
-void openStream(T& stream, const char* file, std::ios_base::openmode oMode)
+void openStream(T& stream, const char* file, std::ios_base::openmode mode)
 {
 	try
 	{
 		const wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
-		stream.open(utf16FileName.c_str(), oMode);
+		stream.open(utf16FileName.c_str(), mode);
 	}
-	catch (const std::logic_error&) { stream.open(file, oMode); }
+	catch (const std::logic_error&) { stream.open(file, mode); }
 }
 
-void Files::openOFStream(std::ofstream& stream, const char* file, std::ios_base::openmode oMode) { openStream<std::ofstream>(stream, file, oMode); }
-void Files::openIFStream(std::ifstream& stream, const char* file, std::ios_base::openmode oMode) { openStream<std::ifstream>(stream, file, oMode); }
-void Files::openFStream(std::fstream& stream, const char* file, std::ios_base::openmode oMode) { openStream<std::fstream>(stream, file, oMode); }
+void Files::openOFStream(std::ofstream& stream, const char* file, const std::ios_base::openmode mode) { openStream<std::ofstream>(stream, file, mode); }
+void Files::openIFStream(std::ifstream& stream, const char* file, const std::ios_base::openmode mode) { openStream<std::ifstream>(stream, file, mode); }
+void Files::openFStream(std::fstream& stream, const char* file, const std::ios_base::openmode mode) { openStream<std::fstream>(stream, file, mode); }
 
 #endif
 
@@ -248,10 +248,10 @@ bool Files::createParentPath(const char* path)
 #endif
 }
 
-bool Files::getParentPath(const char* path, char* sParentPath)
+bool Files::getParentPath(const char* path, char* parentPath)
 {
-	if (!path || !sParentPath) { return false; }
-	strcpy(sParentPath, boost::filesystem::path(path).parent_path().string().c_str());
+	if (!path || !parentPath) { return false; }
+	strcpy(parentPath, boost::filesystem::path(path).parent_path().string().c_str());
 	return true;
 }
 

@@ -141,7 +141,7 @@ TEST(XML_Reader_Test_Case, validateReader)
 
 TEST(XML_Reader_Test_Case, validateHandlerReadJapanese)
 {
-	std::string dataFile = std::string(DATA_DIR) + "/日本語/ref_data_jp.xml";
+	const std::string dataFile = std::string(DATA_DIR) + "/日本語/ref_data_jp.xml";
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
 	XML::IXMLNode* rootNode      = xmlHandler->parseFile(dataFile.c_str());
@@ -159,7 +159,7 @@ TEST(XML_Reader_Test_Case, validateHandlerReadJapanese)
 
 TEST(XML_Reader_Test_Case, validateHandlerReadFrench)
 {
-	std::string dataFile = std::string(DATA_DIR) + "/Français/ref_data_fr.xml";
+	const std::string dataFile = std::string(DATA_DIR) + "/Français/ref_data_fr.xml";
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
 	XML::IXMLNode* rootNode      = xmlHandler->parseFile(dataFile.c_str());
@@ -177,7 +177,7 @@ TEST(XML_Reader_Test_Case, validateHandlerReadFrench)
 
 TEST(XML_Reader_Test_Case, validateHandlerReadNBSP)
 {
-	std::string dataFile = std::string(DATA_DIR) + "/NB\xC2\xA0SP/ref_data_nbsp.xml";
+	const std::string dataFile = std::string(DATA_DIR) + "/NB\xC2\xA0SP/ref_data_nbsp.xml";
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
 	XML::IXMLNode* rootNode      = xmlHandler->parseFile(dataFile.c_str());

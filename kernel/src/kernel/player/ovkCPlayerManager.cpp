@@ -18,7 +18,7 @@ bool CPlayerManager::releasePlayer(const CIdentifier& playerID)
 {
 	auto it = m_players.find(playerID);
 
-	OV_ERROR_UNLESS_KRF(it != m_players.end(), "Player release failed, identifier :" << playerID.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(it != m_players.end(), "Player release failed, identifier :" << playerID.str(), ErrorType::ResourceNotFound);
 
 	delete it->second;
 	m_players.erase(it);
@@ -31,11 +31,11 @@ IPlayer& CPlayerManager::getPlayer(const CIdentifier& playerID)
 
 	// use fatal here because the signature does not allow
 	// proper checking
-	OV_FATAL_UNLESS_K(it != m_players.end(), "Trying to retrieve non existing player with id " << playerID.toString(), ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(it != m_players.end(), "Trying to retrieve non existing player with id " << playerID.str(), ErrorType::ResourceNotFound);
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the manager implementation
-	OV_FATAL_UNLESS_K(it->second, "Null player found for id " << playerID.toString(), ErrorType::BadValue);
+	OV_FATAL_UNLESS_K(it->second, "Null player found for id " << playerID.str(), ErrorType::BadValue);
 
 	return *it->second;
 }

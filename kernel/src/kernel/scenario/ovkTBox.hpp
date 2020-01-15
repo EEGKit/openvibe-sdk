@@ -153,7 +153,7 @@ namespace OpenViBE
 				if (!(algorithmClassID == OVP_ClassId_BoxAlgorithm_Metabox || this
 																			  ->getKernelContext().getPluginManager().canCreatePluginObject(algorithmClassID)))
 				{
-					// OV_WARNING_K("Box algorithm descriptor not found " << algorithmClassID.toString());
+					// OV_WARNING_K("Box algorithm descriptor not found " << algorithmClassID.str());
 					return true;
 				}
 
@@ -208,7 +208,7 @@ namespace OpenViBE
 				if (!desc)
 				{
 					this->enableNotification();
-					OV_ERROR_KRF("Algorithm descriptor not found " << algorithmClassID.toString(), ErrorType::ResourceNotFound);
+					OV_ERROR_KRF("Algorithm descriptor not found " << algorithmClassID.str(), ErrorType::ResourceNotFound);
 				}
 
 				this->clearBox();
@@ -340,7 +340,7 @@ namespace OpenViBE
 					case Output:
 						OV_ERROR_UNLESS_KRF(this->getTypeManager().isStream(typeID),
 											"While adding " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " '" << newName << "' to box '" << this->getName()
-											<< "', unknown stream type identifier " << typeID.toString(),
+											<< "', unknown stream type identifier " << typeID.str(),
 											ErrorType::BadArgument);
 						break;
 					case Setting: break;
@@ -467,7 +467,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->getInterfacorType(interfacorType, it->second, typeID);
@@ -499,7 +499,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->getInputName(it->second, name);
@@ -522,7 +522,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(interfacorType).end(),
-									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->getInterfacorDeprecatedStatus(interfacorType, it->second, value);
@@ -558,7 +558,7 @@ namespace OpenViBE
 					case Output:
 						OV_ERROR_UNLESS_KRF(this->getTypeManager().isStream(typeID),
 											"While changing box '" << this->getName() << "' " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) <<
-											" type, unknown stream type identifier " << typeID.toString(),
+											" type, unknown stream type identifier " << typeID.str(),
 											ErrorType::BadArgument);
 						break;
 					case Setting:
@@ -596,7 +596,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
-									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorType(interfacorType, it->second, typeID);
@@ -661,7 +661,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
-									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.toString(),
+									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorName(interfacorType, it->second, newName);
@@ -683,7 +683,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx[interfacorType].end(),
-									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << "  with id " << identifier.toString(),
+									"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << "  with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorDeprecatedStatus(interfacorType, it->second, newValue);
@@ -784,7 +784,7 @@ namespace OpenViBE
 				if (toBeRemovedId != OV_UndefinedIdentifier)
 				{
 					const auto itIdent = m_interfacorIDToIdx[Input].find(toBeRemovedId);
-					OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx[Input].end(), "No input found with id " << toBeRemovedId.toString(),
+					OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx[Input].end(), "No input found with id " << toBeRemovedId.str(),
 										ErrorType::ResourceNotFound);
 					m_interfacorIDToIdx[Input].erase(itIdent);
 				}
@@ -903,7 +903,7 @@ namespace OpenViBE
 				if (toBeRemovedId != OV_UndefinedIdentifier)
 				{
 					const auto itIdent = m_interfacorIDToIdx.at(Output).find(toBeRemovedId);
-					OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx.at(Output).end(), "No output found with id " << toBeRemovedId.toString(),
+					OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx.at(Output).end(), "No output found with id " << toBeRemovedId.str(),
 										ErrorType::ResourceNotFound);
 
 					m_interfacorIDToIdx.at(Output).erase(itIdent);
@@ -1223,7 +1223,7 @@ namespace OpenViBE
 			{
 				const auto it = m_interfacorIDToIdx.at(Setting).find(identifier);
 				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(Setting).end(),
-									"Failed to find setting with id " << identifier.toString(), ErrorType::ResourceNotFound);
+									"Failed to find setting with id " << identifier.str(), ErrorType::ResourceNotFound);
 
 				return this->getSettingMod(it->second, value);
 			}
@@ -1257,7 +1257,7 @@ namespace OpenViBE
 			bool setSettingDefaultValue(const CIdentifier& identifier, const CString& defaultValue) override
 			{
 				const auto it = m_interfacorIDToIdx.at(Setting).find(identifier);
-				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(Setting).end(), "Failed to find setting with id " << identifier.toString(),
+				OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(Setting).end(), "Failed to find setting with id " << identifier.str(),
 									ErrorType::ResourceNotFound);
 
 				return this->setSettingDefaultValue(it->second, defaultValue);

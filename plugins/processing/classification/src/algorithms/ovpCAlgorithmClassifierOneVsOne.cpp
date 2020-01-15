@@ -86,7 +86,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 		OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, OVP_TypeId_ClassificationPairwiseStrategy);
 
 	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != OV_UndefinedIdentifier,
-						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.toString() << "]",
+						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.str() << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	if (m_decisionStrategyAlgorithm != nullptr)
@@ -264,7 +264,7 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 
 			OV_ERROR_UNLESS_KRF(
 				subClassifierAlgorithm != OV_UndefinedIdentifier,
-				"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.toString() << "]",
+				"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.str() << "]",
 				OpenViBE::Kernel::ErrorType::BadConfig);
 
 			IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
@@ -442,7 +442,7 @@ bool CAlgorithmClassifierOneVsOne::setSubClassifierIdentifier(const CIdentifier&
 	m_subClassifierAlgorithmID = id;
 	m_algorithmComparison      = getClassificationComparisonFunction(id);
 
-	OV_ERROR_UNLESS_KRF(m_algorithmComparison != nullptr, "No comparison function found for classifier " << m_subClassifierAlgorithmID.toString(),
+	OV_ERROR_UNLESS_KRF(m_algorithmComparison != nullptr, "No comparison function found for classifier " << m_subClassifierAlgorithmID.str(),
 						OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	return true;

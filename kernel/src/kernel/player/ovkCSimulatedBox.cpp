@@ -30,7 +30,7 @@ CSimulatedBox::~CSimulatedBox() {}
 bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioID)
 {
 	OV_ERROR_UNLESS_KRF(m_scheduler.getPlayer().getRuntimeScenarioManager().isScenario(scenarioID),
-						"Scenario with identifier " << scenarioID.toString() << " does not exist",
+						"Scenario with identifier " << scenarioID.str() << " does not exist",
 						ErrorType::ResourceNotFound);
 
 	m_scenario = &m_scheduler.getPlayer().getRuntimeScenarioManager().getScenario(scenarioID);
@@ -71,7 +71,7 @@ bool CSimulatedBox::initialize()
 
 	m_boxAlgorithm = getPluginManager().createBoxAlgorithm(m_box->getAlgorithmClassIdentifier(), nullptr);
 
-	OV_ERROR_UNLESS_KRF(m_boxAlgorithm, "Could not create box algorithm with class id " << m_box->getAlgorithmClassIdentifier().toString(),
+	OV_ERROR_UNLESS_KRF(m_boxAlgorithm, "Could not create box algorithm with class id " << m_box->getAlgorithmClassIdentifier().str(),
 						ErrorType::BadResourceCreation);
 
 	{
@@ -250,8 +250,8 @@ size_t CSimulatedBox::getInputChunkCount(const size_t index) const
 	return size_t(m_Inputs[index].size());
 }
 
-bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& rEndTime, size_t& rChunkSize,
-								  const uint8_t*& rpChunkBuffer) const
+bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size,
+								  const uint8_t*& buffer) const
 {
 	OV_ERROR_UNLESS_KRF(inputIdx < m_Inputs.size(),
 						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_Inputs.size() - 1 << "])", ErrorType::OutOfBound);
@@ -262,9 +262,9 @@ bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, 
 
 	const CChunk& chunk = m_Inputs[inputIdx][chunkIdx];
 	startTime           = chunk.getStartTime();
-	rEndTime            = chunk.getEndTime();
-	rChunkSize          = chunk.getBuffer().getSize();
-	rpChunkBuffer       = chunk.getBuffer().getDirectPointer();
+	endTime             = chunk.getEndTime();
+	size                = chunk.getBuffer().getSize();
+	buffer              = chunk.getBuffer().getDirectPointer();
 	return true;
 }
 
@@ -335,13 +335,13 @@ size_t CSimulatedBox::getOutputChunkSize(const size_t outputIdx) const
 	return m_CurrentOutputs[outputIdx].getBuffer().getSize();
 }
 
-bool CSimulatedBox::setOutputChunkSize(const size_t outputIdx, const size_t size, const bool bDiscard)
+bool CSimulatedBox::setOutputChunkSize(const size_t outputIdx, const size_t size, const bool discard)
 {
 	OV_ERROR_UNLESS_KRF(outputIdx < m_CurrentOutputs.size(),
 						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_CurrentOutputs.size() - 1 << "])",
 						ErrorType::OutOfBound);
 
-	return m_CurrentOutputs[outputIdx].getBuffer().setSize(size, bDiscard);
+	return m_CurrentOutputs[outputIdx].getBuffer().setSize(size, discard);
 }
 
 uint8_t* CSimulatedBox::getOutputChunkBuffer(const size_t outputIdx)
@@ -371,7 +371,7 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(const size_t outputIdx)
 	return &m_CurrentOutputs[outputIdx].getBuffer();
 }
 
-bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64_t StartTime, const uint64_t EndTime)
+bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64_t startTime, const uint64_t endTime)
 {
 	OV_ERROR_UNLESS_KRF(outputIdx < m_CurrentOutputs.size(),
 						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_CurrentOutputs.size() - 1 << "])",
@@ -387,20 +387,20 @@ bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64
 		m_box->getOutputType(outputIdx, type);
 		if (type == OV_TypeId_Stimulations)
 		{
-			if (m_LastOutputEndTimes[outputIdx] != StartTime)
+			if (m_LastOutputEndTimes[outputIdx] != startTime)
 			{
 				isConsistent    = false;
 				specificMessage = "'Stimulations' streams should have continuously dated chunks";
 			}
 		}
 
-		if (m_LastOutputEndTimes[outputIdx] > EndTime)
+		if (m_LastOutputEndTimes[outputIdx] > endTime)
 		{
 			isConsistent    = false;
 			specificMessage = "Current 'end time' can not be earlier than previous 'end time'";
 		}
 
-		if (m_LastOutputStartTimes[outputIdx] > StartTime)
+		if (m_LastOutputStartTimes[outputIdx] > startTime)
 		{
 			isConsistent    = false;
 			specificMessage = "Current 'start time' can not be earlier than previous 'start time'";
@@ -409,7 +409,7 @@ bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64
 		if (!isConsistent)
 		{
 			this->getLogManager() << m_chunkConsistencyCheckingLogLevel << "Box <" << m_box->getName() << "> sends inconsistent chunk dates on output [" <<
-					outputIdx << "] (current chunk dates are [" << StartTime << "," << EndTime << "] whereas previous chunk dates were [" <<
+					outputIdx << "] (current chunk dates are [" << startTime << "," << endTime << "] whereas previous chunk dates were [" <<
 					m_LastOutputStartTimes[outputIdx] << "," << m_LastOutputEndTimes[outputIdx] << "])\n";
 			if (specificMessage) { this->getLogManager() << m_chunkConsistencyCheckingLogLevel << specificMessage << "\n"; }
 			this->getLogManager() << m_chunkConsistencyCheckingLogLevel << "Please report to box author and attach your scenario\n";
@@ -418,13 +418,13 @@ bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64
 		}
 
 		// sets last times
-		m_LastOutputStartTimes[outputIdx] = StartTime;
-		m_LastOutputEndTimes[outputIdx]   = EndTime;
+		m_LastOutputStartTimes[outputIdx] = startTime;
+		m_LastOutputEndTimes[outputIdx]   = endTime;
 	}
 
 	// sets start and end time
-	m_CurrentOutputs[outputIdx].setStartTime(std::min(StartTime, EndTime));
-	m_CurrentOutputs[outputIdx].setEndTime(std::max(StartTime, EndTime));
+	m_CurrentOutputs[outputIdx].setStartTime(std::min(startTime, endTime));
+	m_CurrentOutputs[outputIdx].setEndTime(std::max(startTime, endTime));
 
 	// copies chunk
 	m_Outputs[outputIdx].push_back(m_CurrentOutputs[outputIdx]);

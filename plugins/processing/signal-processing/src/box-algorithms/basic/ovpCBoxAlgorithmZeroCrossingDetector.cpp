@@ -66,7 +66,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 		m_decoder                                                          = decoder;
 		m_encoder0                                                         = encoder;
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
 	return true;
 }

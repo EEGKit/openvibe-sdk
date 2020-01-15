@@ -145,7 +145,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 				{
 					std::string label(m_oMatrix.getDimensionLabel(0, c));
 					while (label.length() > 0 && label[label.length() - 1] == ' ') { label.erase(label.length() - 1); }
-					m_fileStream << m_separator.toASCIIString() << label.c_str();
+					m_fileStream << m_separator.toASCIIString() << label;
 				}
 
 				if (m_typeID == OV_TypeId_Signal) { m_fileStream << m_separator.toASCIIString() << "Sampling Rate"; }

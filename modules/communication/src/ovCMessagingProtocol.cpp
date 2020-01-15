@@ -142,7 +142,7 @@ std::vector<uint8_t> AuthenticationMessage::toBytes() const
 	std::vector<uint8_t> buffer(MINIMUM_SIZE + m_connectionID.size());
 	size_t bufferIndex = 0;
 
-	size_t size = m_connectionID.size();
+	const size_t size = m_connectionID.size();
 	copyTobuffer(buffer, bufferIndex, size);
 	copyTobuffer(buffer, bufferIndex, m_connectionID);
 
@@ -152,16 +152,13 @@ std::vector<uint8_t> AuthenticationMessage::toBytes() const
 bool AuthenticationMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
 	m_isValid = false;
-
 	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
 	size_t passPhraseSize;
 	if (!copyToVariable(buffer, bufferIndex + SIZE_INDEX, passPhraseSize)) { return false; }
-
 	if (!copyToString(buffer, bufferIndex + CONNECTION_ID_INDEX, passPhraseSize, m_connectionID)) { return false; }
 
 	m_isValid = true;
-
 	bufferIndex += MINIMUM_SIZE + passPhraseSize;
 
 	return true;
@@ -383,8 +380,7 @@ EMessageType BoxDescriptionMessage::getMessageType() const { return MessageType_
 
 bool BoxDescriptionMessage::addInput(const uint64_t id, const size_t type, const std::string& name)
 {
-	auto it = std::find_if(m_inputs.begin(), m_inputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
-
+	const auto it = std::find_if(m_inputs.begin(), m_inputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
 	if (it != m_inputs.end()) { return false; }
 
 	m_inputs.emplace_back(id, type, name);
@@ -393,7 +389,7 @@ bool BoxDescriptionMessage::addInput(const uint64_t id, const size_t type, const
 
 bool BoxDescriptionMessage::addOutput(const uint64_t id, const size_t type, const std::string& name)
 {
-	auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
+	const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
 
 	if (it != m_outputs.end()) { return false; }
 
@@ -403,7 +399,7 @@ bool BoxDescriptionMessage::addOutput(const uint64_t id, const size_t type, cons
 
 bool BoxDescriptionMessage::addParameter(const uint64_t id, const size_t type, const std::string& name, const std::string& value)
 {
-	auto it = std::find_if(m_parameters.begin(), m_parameters.end(), [&id](const Parameter& obj) { return obj.getId() == id; });
+	const auto it = std::find_if(m_parameters.begin(), m_parameters.end(), [&id](const Parameter& obj) { return obj.getId() == id; });
 
 	if (it != m_parameters.end()) { return false; }
 

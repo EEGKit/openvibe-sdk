@@ -110,7 +110,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_iMatrix = decoder->getOutputMatrix();
 		m_oMatrix = encoder->getInputMatrix();
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
 	m_vLookup.clear();
 	return true;

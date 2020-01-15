@@ -60,12 +60,12 @@ namespace OpenViBE
 			mutable size_t m_idx;
 			mutable size_t m_startTime;
 
-			size_t getRandom() const;
+			static size_t getRandom();
 			size_t getIndex() const;
-			CString getTime() const;
-			CString getDate() const;
+			static CString getTime();
+			static CString getDate();
 			size_t getRealTime() const;
-			size_t getProcessId() const;
+			static size_t getProcessId();
 
 			std::map<CIdentifier, config_token_t> m_ConfigTokens;
 			std::map<CString, const IConfigurationKeywordExpandCallback*> m_keywordOverrides;

@@ -83,7 +83,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 	{
 		// use a fatal here because a release failure while creation succeeded
 		// means we are in an unexpected state
-		OV_FATAL_UNLESS_K(this->releaseScenario(scenarioID), "Releasing just created scenario failed for " << scenarioID.toString(),
+		OV_FATAL_UNLESS_K(this->releaseScenario(scenarioID), "Releasing just created scenario failed for " << scenarioID.str(),
 						  ErrorType::Internal);
 		scenarioID = OV_UndefinedIdentifier;
 	};
@@ -108,7 +108,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 
 	OV_FATAL_UNLESS_K(
 		importer,
-		"Importer with id " << importerInstanceIdentifier.toString() << " not found although it has just been created",
+		"Importer with id " << importerInstanceIdentifier.str() << " not found although it has just been created",
 		ErrorType::ResourceNotFound);
 
 	const auto releaseAlgorithm = [&]()
@@ -117,7 +117,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 		// means we are in an unexpected state
 		OV_FATAL_UNLESS_K(
 			this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer),
-			"Releasing just created algorithm failed for " << importerInstanceIdentifier.toString(),
+			"Releasing just created algorithm failed for " << importerInstanceIdentifier.str(),
 			ErrorType::Internal);
 	};
 
@@ -206,13 +206,13 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& scenarioID, const CSt
 bool CScenarioManager::importScenarioFromFile(CIdentifier& scenarioID, const CIdentifier& importContext, const CString& fileName)
 {
 	OV_ERROR_UNLESS_KRF(m_importers.count(importContext),
-						"The import context " << importContext.toString() << " has no associated importers",
+						"The import context " << importContext.str() << " has no associated importers",
 						ErrorType::Internal);
 	std::vector<char> fileNameExtension;
 	fileNameExtension.resize(fileName.length() + 1);
 	FS::Files::getFilenameExtension(fileName.toASCIIString(), &fileNameExtension[0]);
 	OV_ERROR_UNLESS_KRF(m_importers[importContext].count(&fileNameExtension[0]),
-						"The import context " << importContext.toString() << " has no associated importers for extension [" << &fileNameExtension[0] << "]",
+						"The import context " << importContext.str() << " has no associated importers for extension [" << &fileNameExtension[0] << "]",
 						ErrorType::Internal);
 	return this->importScenarioFromFile(scenarioID, fileName, m_importers[importContext][&fileNameExtension[0]]);
 }
@@ -223,7 +223,7 @@ bool CScenarioManager::registerScenarioImporter(const CIdentifier& importContext
 	if (!m_importers.count(importContext)) { m_importers[importContext] = std::map<std::string, CIdentifier>(); }
 
 	OV_ERROR_UNLESS_KRF(!m_importers[importContext].count(fileNameExtension.toASCIIString()),
-						"The file name extension [" << fileNameExtension << "] already has an importer registered for context " << importContext.toString(),
+						"The file name extension [" << fileNameExtension << "] already has an importer registered for context " << importContext.str(),
 						ErrorType::Internal);
 
 	m_importers[importContext][fileNameExtension.toASCIIString()] = scenarioImporterAlgorithmIdentifier;
@@ -234,10 +234,10 @@ bool CScenarioManager::registerScenarioImporter(const CIdentifier& importContext
 bool CScenarioManager::unregisterScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension)
 {
 	OV_ERROR_UNLESS_KRF(m_importers.count(importContext),
-						"The import context " << importContext.toString() << " has no associated importers",
+						"The import context " << importContext.str() << " has no associated importers",
 						ErrorType::Internal);
 	OV_ERROR_UNLESS_KRF(m_importers[importContext].count(fileNameExtension.toASCIIString()),
-						"The import context " << importContext.toString() << " has no associated importers for extension [" << fileNameExtension << "]",
+						"The import context " << importContext.str() << " has no associated importers for extension [" << fileNameExtension << "]",
 						ErrorType::Internal);
 
 	auto& contextImporters = m_importers[importContext];
@@ -297,7 +297,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 {
 	OV_ERROR_UNLESS_KRF(
 		m_scenarios.find(scenarioID) != m_scenarios.end(),
-		"Scenario with identifier " << scenarioID.toString() << " does not exist.",
+		"Scenario with identifier " << scenarioID.str() << " does not exist.",
 		ErrorType::ResourceNotFound);
 
 	// If the scenario is a metabox, we will save its prototype hash into an attribute of the scenario
@@ -368,7 +368,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 
 	OV_FATAL_UNLESS_K(
 		exporter,
-		"Exporter with id " << exporterInstanceIdentifier.toString() << " not found although it has just been created",
+		"Exporter with id " << exporterInstanceIdentifier.str() << " not found although it has just been created",
 		ErrorType::ResourceNotFound);
 
 	const auto releaseAlgorithm = [&]()
@@ -377,7 +377,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 		// means we are in an unexpected state
 		OV_FATAL_UNLESS_K(
 			this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter),
-			"Releasing just created algorithm failed for " << exporterInstanceIdentifier.toString(),
+			"Releasing just created algorithm failed for " << exporterInstanceIdentifier.str(),
 			ErrorType::Internal);
 	};
 
@@ -461,13 +461,13 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 bool CScenarioManager::exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioID)
 {
 	OV_ERROR_UNLESS_KRF(m_exporters.count(exportContext),
-						"The export context " << exportContext.toString() << " has no associated exporters",
+						"The export context " << exportContext.str() << " has no associated exporters",
 						ErrorType::Internal);
 	std::vector<char> fileNameExtension;
 	fileNameExtension.resize(fileName.length() + 1);
 	FS::Files::getFilenameExtension(fileName.toASCIIString(), &fileNameExtension[0]);
 	OV_ERROR_UNLESS_KRF(m_exporters[exportContext].count(&fileNameExtension[0]),
-						"The export context " << exportContext.toString() << " has no associated exporters for extension [" << &fileNameExtension[0] << "]",
+						"The export context " << exportContext.str() << " has no associated exporters for extension [" << &fileNameExtension[0] << "]",
 						ErrorType::Internal);
 	return this->exportScenarioToFile(fileName, scenarioID, m_exporters[exportContext][&fileNameExtension[0]]);
 }
@@ -478,7 +478,7 @@ bool CScenarioManager::registerScenarioExporter(const CIdentifier& exportContext
 	if (!m_exporters.count(exportContext)) { m_exporters[exportContext] = std::map<std::string, CIdentifier>(); }
 
 	OV_ERROR_UNLESS_KRF(!m_exporters[exportContext].count(fileNameExtension.toASCIIString()),
-						"The file name extension [" << fileNameExtension << "] already has an exporter registered for context " << exportContext.toString(),
+						"The file name extension [" << fileNameExtension << "] already has an exporter registered for context " << exportContext.str(),
 						ErrorType::Internal);
 
 	m_exporters[exportContext][fileNameExtension.toASCIIString()] = scenarioExporterAlgorithmIdentifier;
@@ -489,10 +489,10 @@ bool CScenarioManager::registerScenarioExporter(const CIdentifier& exportContext
 bool CScenarioManager::unregisterScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension)
 {
 	OV_ERROR_UNLESS_KRF(m_exporters.count(exportContext),
-						"The export context " << exportContext.toString() << " has no associated exporters",
+						"The export context " << exportContext.str() << " has no associated exporters",
 						ErrorType::Internal);
 	OV_ERROR_UNLESS_KRF(m_exporters[exportContext].count(fileNameExtension.toASCIIString()),
-						"The export context " << exportContext.toString() << " has no associated exporters for extension [" << fileNameExtension << "]",
+						"The export context " << exportContext.str() << " has no associated exporters for extension [" << fileNameExtension << "]",
 						ErrorType::Internal);
 
 	auto& contextExporters = m_exporters[exportContext];
@@ -566,7 +566,7 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID)
 
 	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
 	// At least, here the abortion is handled!
-	OV_FATAL_UNLESS_K(itScenario != m_scenarios.end(), "Scenario " << scenarioID.toString() << " does not exist !", ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itScenario != m_scenarios.end(), "Scenario " << scenarioID.str() << " does not exist !", ErrorType::ResourceNotFound);
 
 	return *itScenario->second;
 }

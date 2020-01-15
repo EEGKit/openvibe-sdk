@@ -16,7 +16,7 @@ namespace OpenViBE
 			CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName);
 			bool isActive(ELogLevel level) override;
 			bool activate(ELogLevel level, bool active) override;
-			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) override;
+			bool activate(ELogLevel startLevel, ELogLevel endLevel, bool active) override;
 			bool activate(bool active) override;
 
 			void configure(const IConfigurationManager& configManager);

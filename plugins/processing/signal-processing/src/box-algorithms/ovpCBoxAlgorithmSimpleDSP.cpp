@@ -38,7 +38,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	boxContext.getOutputType(0, streamType);
 
 	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(streamType, OV_TypeId_StreamedMatrix),
-						"Invalid output stream [" << streamType.toString() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
+						"Invalid output stream [" << streamType.str() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
 						OpenViBE::Kernel::ErrorType::Internal);
 
 	if (streamType == OV_TypeId_StreamedMatrix)

@@ -42,19 +42,19 @@ bool CLogListenerFile::isActive(ELogLevel logLevel)
 	return it->second;
 }
 
-bool CLogListenerFile::activate(ELogLevel level, bool active)
+bool CLogListenerFile::activate(const ELogLevel level, const bool active)
 {
 	m_activeLevels[level] = active;
 	return true;
 }
 
-bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active)
+bool CLogListenerFile::activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
+	for (int i = startLevel; i <= endLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
 	return true;
 }
 
-bool CLogListenerFile::activate(bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
+bool CLogListenerFile::activate(const bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
 void CLogListenerFile::log(const time64 value)
 {

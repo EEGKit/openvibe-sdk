@@ -34,9 +34,9 @@ namespace OpenViBE
 
 			bool initialize();
 
-			const std::map<size_t, size_t>& getOriginalToUpdatedInterfacorCorrespondence(EBoxInterfacorType interfacorType) const
+			const std::map<size_t, size_t>& getOriginalToUpdatedInterfacorCorrespondence(const EBoxInterfacorType type) const
 			{
-				return m_originalToUpdatedCorrespondence.at(interfacorType);
+				return m_originalToUpdatedCorrespondence.at(type);
 			}
 
 			IBox& getUpdatedBox() const { return *m_updatedBox; }

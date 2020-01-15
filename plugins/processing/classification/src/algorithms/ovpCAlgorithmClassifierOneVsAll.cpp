@@ -200,7 +200,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 	const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != OV_UndefinedIdentifier,
-						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.toString() << "]",
+						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.str() << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);

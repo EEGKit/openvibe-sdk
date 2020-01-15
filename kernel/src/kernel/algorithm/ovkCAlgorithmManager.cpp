@@ -31,7 +31,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& algorithmClass
 	const IAlgorithmDesc* algorithmDesc = nullptr;
 	IAlgorithm* algorithm               = getKernelContext().getPluginManager().createAlgorithm(algorithmClassID, &algorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << algorithmClassID.toString(),
+	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << algorithmClassID.str(),
 						ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << algorithmClassID << "\n";
@@ -53,7 +53,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& algorithmDe
 
 	IAlgorithm* algorithm = getKernelContext().getPluginManager().createAlgorithm(algorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << algorithmDesc.getClassIdentifier().toString(),
+	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << algorithmDesc.getClassIdentifier().str(),
 						ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << algorithmDesc.getClassIdentifier() << "\n";
@@ -72,7 +72,7 @@ bool CAlgorithmManager::releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier
 	const auto itAlgorithm = m_algorithms.find(rAlgorithmIdentifier);
 
 	OV_ERROR_UNLESS_KRF(itAlgorithm != m_algorithms.end(),
-						"Algorithm release failed, identifier :" << rAlgorithmIdentifier.toString(),
+						"Algorithm release failed, identifier :" << rAlgorithmIdentifier.str(),
 						ErrorType::ResourceNotFound);
 
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";

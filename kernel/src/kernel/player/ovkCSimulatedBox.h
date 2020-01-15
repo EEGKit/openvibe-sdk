@@ -28,13 +28,13 @@ namespace OpenViBE
 			bool isDeprecated() const { return m_isDeprecated; }
 			CBuffer& getBuffer() { return m_buffer; }
 
-			bool setStartTime(uint64_t startTime)
+			bool setStartTime(const uint64_t startTime)
 			{
 				m_startTime = startTime;
 				return true;
 			}
 
-			bool setEndTime(uint64_t endTime)
+			bool setEndTime(const uint64_t endTime)
 			{
 				m_endTime = endTime;
 				return true;

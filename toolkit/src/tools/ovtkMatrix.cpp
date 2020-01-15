@@ -182,7 +182,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 					else if (!std::isspace(*it, locale))
 					{
 						return false;
-					}								// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << what.c_str() << ", parsing aborted\n";
+					}								// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << what << ", parsing aborted\n";
 					break;
 
 					//parse header

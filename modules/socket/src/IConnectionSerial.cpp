@@ -169,16 +169,12 @@ namespace Socket
 			}
 
 #if defined TARGET_OS_Windows
-
 			if (!FlushFileBuffers(m_file))
 			{
 				m_LastError = "Failed to flush serial port buffer: " + this->getLastErrorFormated();
 				return false;
 			}
 			return true;
-
-#elif defined TARGET_OS_Android
-			return false;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			if(-1 == ::tcdrain(m_file))
 			{
@@ -186,8 +182,9 @@ namespace Socket
 				return false;
 			}
 			return true;
-#endif
+#else
 			return false;
+#endif
 		}
 
 		size_t sendBuffer(const void* buffer, const size_t size) override
@@ -228,8 +225,9 @@ namespace Socket
 			}
 
 			return res;
-#endif
+#else
 			return 0;
+#endif
 		}
 
 		size_t receiveBuffer(void* buffer, const size_t size) override
@@ -271,8 +269,9 @@ namespace Socket
 			}
 
 			return res;
-#endif
+#else
 			return 0;
+#endif
 		}
 
 		bool sendBufferBlocking(const void* buffer, const size_t size) override

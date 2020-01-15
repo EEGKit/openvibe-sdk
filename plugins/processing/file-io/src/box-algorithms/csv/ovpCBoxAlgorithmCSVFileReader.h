@@ -104,7 +104,7 @@ namespace OpenViBEPlugins
 					box.setSettingName(3, "Samples per buffer");
 					box.setSettingValue(3, "32");
 
-					OV_ERROR_KRF("Unsupported stream type " << typeID.toString(), OpenViBE::Kernel::ErrorType::BadOutput);
+					OV_ERROR_KRF("Unsupported stream type " << typeID.str(), OpenViBE::Kernel::ErrorType::BadOutput);
 				}
 				return true;
 			}

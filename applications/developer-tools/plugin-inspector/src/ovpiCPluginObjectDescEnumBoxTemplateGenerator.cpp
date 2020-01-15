@@ -107,7 +107,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 	if (box.getInputCount())
 	{
-		ofs << ".. _Doc_" << fileName.c_str() << "_Inputs:\n\n" << generateRstTitle("Inputs", 1).c_str()
+		ofs << ".. _Doc_" << fileName << "_Inputs:\n\n" << generateRstTitle("Inputs", 1).c_str()
 				<< ".. todo::  Write general input description...\n\n.. csv-table::\n   :header: \"Input Name\", \"Stream Type\"\n\n";
 
 		std::vector<CString> inputNames(box.getInputCount());
@@ -155,7 +155,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 	if (box.getSettingCount())
 	{
-		ofs << ".. _Doc_" << fileName.c_str() << "_Settings:\n\n" << generateRstTitle("Settings", 1) << "\n"
+		ofs << ".. _Doc_" << fileName << "_Settings:\n\n" << generateRstTitle("Settings", 1) << "\n"
 				<< ".. todo::  Write settings general description...\n\n.. csv-table::\n   :header: \"Setting Name\", \"Type\", \"Default Value\"\n\n";
 
 		std::vector<CString> settingsNames(box.getSettingCount());

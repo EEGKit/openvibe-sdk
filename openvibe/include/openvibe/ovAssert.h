@@ -74,7 +74,7 @@ namespace OpenViBE
 
 	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	{
-		os << id.toString();
+		os << id.str();
 		return os;
 	}
 } // namespace OpenViBE

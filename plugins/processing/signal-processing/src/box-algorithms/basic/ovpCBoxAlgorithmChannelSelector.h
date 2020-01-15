@@ -46,10 +46,8 @@ namespace OpenViBEPlugins
 				}
 				box.getInputType(0, typeID);
 				box.setOutputType(0, typeID);
-
-				OV_ERROR_KRF("Invalid output type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
+				OV_ERROR_KRF("Invalid output type [" << typeID.str() << "] (expected Signal, Spectrum or Streamed Matrix)",
 							 OpenViBE::Kernel::ErrorType::BadOutput);
-				return true;
 			}
 
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
@@ -65,7 +63,7 @@ namespace OpenViBEPlugins
 				box.getOutputType(0, typeID);
 				box.setInputType(0, typeID);
 
-				OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
+				OV_ERROR_KRF("Invalid input type [" << typeID.str() << "] (expected Signal, Spectrum or Streamed Matrix)",
 							 OpenViBE::Kernel::ErrorType::BadInput);
 			}
 

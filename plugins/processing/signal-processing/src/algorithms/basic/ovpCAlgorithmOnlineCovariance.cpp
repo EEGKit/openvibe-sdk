@@ -232,7 +232,7 @@ bool CAlgorithmOnlineCovariance::process()
 			m_n = countAfter;
 		}
 #endif
-		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_UpdateMethod).toString() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
+		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_UpdateMethod).str() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
 	}
 
 	// Give output with regularization (mix prior + cov)?

@@ -119,7 +119,7 @@ namespace OpenViBE
 								// warning if base token are overwritten here
 								OV_WARNING_UNLESS(name != "Path_UserData" && name != "Path_Log" && name != "Path_Tmp"
 												  && name != "Path_Lib" && name != "Path_Bin" && name != "OperatingSystem",
-												  "Overwriting critical token " << name.c_str(), m_logManager);
+												  "Overwriting critical token " << name, m_logManager);
 
 								m_configManager.setConfigurationTokenValue(tokenID, value.c_str());
 							}
@@ -466,7 +466,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 						CString overridenValue("");
 
 						OV_ERROR_UNLESS_KRF((m_keywordOverrides.find(lowerPrefix.c_str())->second)->expand(CString(postfix.c_str()), overridenValue),
-											"Could not expand $" << lowerPrefix.c_str() << "{" << lowerPostfix << "}",
+											"Could not expand $" << lowerPrefix << "{" << lowerPostfix << "}",
 											ErrorType::BadFileParsing);
 
 						value = overridenValue;
@@ -483,7 +483,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 						if (value == sValue)
 						{
 							value = "";
-							OV_ERROR_KRF("Could not expand token with " << CString(prefix.c_str()) << " prefix while expanding " << sValue,
+							OV_ERROR_KRF("Could not expand token with " << prefix << " prefix while expanding " << sValue,
 										 ErrorType::BadFileParsing);
 						}
 					}
@@ -587,13 +587,13 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 				if (lowerPrefix == sKeyword)
 				{
 					OV_ERROR_UNLESS_KRF(m_keywordOverrides.count(lowerPrefix.c_str()),
-										"Could not expand token with " << CString(prefix.c_str()) << " prefix while expanding " << sValue,
+										"Could not expand token with " << prefix << " prefix while expanding " << sValue,
 										ErrorType::BadFileParsing);
 
 					CString overridenValue("");
 
 					OV_ERROR_UNLESS_KRF((m_keywordOverrides.find(lowerPrefix.c_str())->second)->expand(CString(postfix.c_str()), overridenValue),
-										"Could not expand $" << lowerPrefix.c_str() << "{" << lowerPostfix.c_str() << "}",
+										"Could not expand $" << lowerPrefix << "{" << lowerPostfix << "}",
 										ErrorType::BadFileParsing);
 
 					value = overridenValue;
@@ -639,25 +639,25 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 	return true;
 }
 
-bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const
+bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& name, std::string& value) const
 {
-	const CIdentifier tokenID = this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
+	const CIdentifier tokenID = this->lookUpConfigurationTokenIdentifier(name.c_str(), false);
 	if (tokenID == OV_UndefinedIdentifier)
 	{
 		OV_ERROR_UNLESS_KRF(m_parentConfigManager,
-							"Could not expand token [" << sTokenName <<
-							"]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() <<
+							"Could not expand token [" << name <<
+							"]. This token does not exist. If this is expected behavior, please add \"" << name <<
 							" = \" to your configuration file",
 							ErrorType::ResourceNotFound);
 
-		const std::string newString = std::string("${") + sTokenName + ("}");
-		sTokenValue                 = m_parentConfigManager->expand(newString.c_str());
+		const std::string str = std::string("${") + name + ("}");
+		value                 = m_parentConfigManager->expand(str.c_str());
 	}
-	else { sTokenValue = this->getConfigurationTokenValue(tokenID); }
+	else { value = this->getConfigurationTokenValue(tokenID); }
 	return true;
 }
 
-CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& expression, bool preserveBackslashes) const
+CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& expression, const bool preserveBackslashes) const
 {
 	const std::string value(expression.toASCIIString());
 	std::string res;
@@ -718,11 +718,11 @@ uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& exp
 	return fallbackValue;
 }
 
-size_t CConfigurationManager::getRandom() const { return size_t(System::Math::randomI()); }
+size_t CConfigurationManager::getRandom() { return size_t(System::Math::randomI()); }
 
 size_t CConfigurationManager::getIndex() const { return m_idx++; }
 
-CString CConfigurationManager::getTime() const
+CString CConfigurationManager::getTime()
 {
 	char res[1024];
 	time_t rawTime;
@@ -734,7 +734,7 @@ CString CConfigurationManager::getTime() const
 	return res;
 }
 
-CString CConfigurationManager::getDate() const
+CString CConfigurationManager::getDate()
 {
 	char res[1024];
 	time_t rawTime;
@@ -748,7 +748,7 @@ CString CConfigurationManager::getDate() const
 
 size_t CConfigurationManager::getRealTime() const { return System::Time::getTime() - m_startTime; }
 
-size_t CConfigurationManager::getProcessId() const
+size_t CConfigurationManager::getProcessId()
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	return size_t(getpid());

@@ -23,7 +23,7 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	CIdentifier typeID;
 	boxContext.getInputType(0, typeID);
 
-	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.toString() << "] (expected OV_TypeId_Stimulations type)",
+	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.str() << "] (expected OV_TypeId_Stimulations type)",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
 	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));

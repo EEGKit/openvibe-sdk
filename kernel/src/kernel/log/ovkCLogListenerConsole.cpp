@@ -30,26 +30,26 @@ void CLogListenerConsole::configure(const IConfigurationManager& configManager)
 }
 
 
-bool CLogListenerConsole::isActive(ELogLevel level)
+bool CLogListenerConsole::isActive(const ELogLevel level)
 {
 	const auto itLogLevel = m_activeLevels.find(level);
 	if (itLogLevel == m_activeLevels.end()) { return true; }
 	return itLogLevel->second;
 }
 
-bool CLogListenerConsole::activate(ELogLevel level, bool active)
+bool CLogListenerConsole::activate(const ELogLevel level, const bool active)
 {
 	m_activeLevels[level] = active;
 	return true;
 }
 
-bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active)
+bool CLogListenerConsole::activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
+	for (int i = startLevel; i <= endLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
 	return true;
 }
 
-bool CLogListenerConsole::activate(bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
+bool CLogListenerConsole::activate(const bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
 void CLogListenerConsole::log(const time64 value)
 {
@@ -145,7 +145,7 @@ void CLogListenerConsole::log(const CIdentifier& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << value.toString();
+	cout << value.str();
 	this->log(LogColor_PopStateBit);
 }
 

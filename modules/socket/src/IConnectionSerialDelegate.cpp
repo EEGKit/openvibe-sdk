@@ -5,7 +5,7 @@ namespace Socket
 	class CConnectionSerialDelegate final : public IConnectionSerialDelegate
 	{
 	public:
-		explicit CConnectionSerialDelegate(SConnectionSerialDelegate connectionSerialDelegate) : IConnectionSerialDelegate(connectionSerialDelegate)
+		explicit CConnectionSerialDelegate(const SConnectionSerialDelegate connectionSerialDelegate) : IConnectionSerialDelegate(connectionSerialDelegate)
 		{
 			m_connectionSerialDelegate = connectionSerialDelegate;
 		}
@@ -33,7 +33,7 @@ namespace Socket
 		override { return true; }		// return m_connectionSerialDelegate.fpSetTimeouts(m_connectionSerialDelegate.connectionDelegate.data, decisecondsTimeout);
 	};
 
-	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate connectionSerialDelegate)
+	IConnectionSerialDelegate* createConnectionSerialDelegate(const SConnectionSerialDelegate connectionSerialDelegate)
 	{
 		return new CConnectionSerialDelegate(connectionSerialDelegate);
 	}

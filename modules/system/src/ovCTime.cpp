@@ -91,7 +91,6 @@ bool System::Time::isClockSteady() { return internal_clock::is_steady; }
 bool System::Time::checkResolution(const size_t milliSeconds)
 {
 	assert(milliSeconds != 0);
-
-	auto resolution = double(internal_clock::period::num) / internal_clock::period::den;
+	const auto resolution = double(internal_clock::period::num) / internal_clock::period::den;
 	return (size_t(std::ceil(resolution * 1000)) <= milliSeconds);
 }

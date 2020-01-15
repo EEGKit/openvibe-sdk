@@ -10,7 +10,7 @@ CChrono::~CChrono()
 	delete [] m_stepOutTime;
 }
 
-bool CChrono::reset(size_t nStep)
+bool CChrono::reset(const size_t nStep)
 {
 	if (!nStep) { return false; }
 

@@ -20,7 +20,7 @@ namespace OpenViBE
 			~CComment() override;
 			CIdentifier getIdentifier() const override;
 			CString getText() const override;
-			bool setIdentifier(const CIdentifier& identifier) override;
+			bool setIdentifier(const CIdentifier& id) override;
 			bool setText(const CString& sText) override;
 			bool initializeFromExistingComment(const IComment& rExisitingComment) override;
 			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;

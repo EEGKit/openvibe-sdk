@@ -19,7 +19,7 @@ namespace OpenViBE
 			~CLogListenerFile() override { m_fsFileStream.close(); }
 			bool isActive(ELogLevel logLevel) override;
 			bool activate(ELogLevel level, bool active) override;
-			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool active) override;
+			bool activate(ELogLevel startLevel, ELogLevel endLevel, bool active) override;
 			bool activate(bool active) override;
 
 			void configure(const IConfigurationManager& configurationManager);

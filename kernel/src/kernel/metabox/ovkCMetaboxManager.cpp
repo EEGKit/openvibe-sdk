@@ -100,7 +100,7 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 		{
 			result |= entryEnumerator->enumerate((path + "*" + ext.toASCIIString()).c_str());
 		}
-		if (result) { this->getLogManager() << LogLevel_Info << "Added " << callBack.resetMetaboxCount() << " metaboxes from [" << path.c_str() << "]\n"; }
+		if (result) { this->getLogManager() << LogLevel_Info << "Added " << callBack.resetMetaboxCount() << " metaboxes from [" << path << "]\n"; }
 	}
 	entryEnumerator->release();
 

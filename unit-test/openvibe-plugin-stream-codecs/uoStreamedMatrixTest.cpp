@@ -72,22 +72,20 @@ namespace
 		ASSERT_TRUE(mat.setDimensionCount(1));
 		ASSERT_TRUE(mat.setDimensionSize(0, 0));
 
-		TParameterHandler<const IMatrix*> inputMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-		TParameterHandler<const IMemoryBuffer*> outputBuffer(
-			encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
-		TParameterHandler<const IMemoryBuffer*> inputBuffer(
-			decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-		TParameterHandler<const IMatrix*> outputMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+		TParameterHandler<const IMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+		TParameterHandler<const IMemoryBuffer*> oBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+		TParameterHandler<const IMemoryBuffer*> iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<const IMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
-		inputMatrix = &mat;
-		inputBuffer.setReferenceTarget(outputBuffer);
+		iMatrix = &mat;
+		iBuffer.setReferenceTarget(oBuffer);
 
 		encoder.process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 		decoder.process();
 
 		EXPECT_TRUE(decoder.isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedHeader));
 
-		EXPECT_EQ(mat.getDimensionCount(), outputMatrix->getDimensionCount());
+		EXPECT_EQ(mat.getDimensionCount(), oMatrix->getDimensionCount());
 
 		EXPECT_TRUE(encoder.uninitialize());
 		EXPECT_TRUE(decoder.uninitialize());
@@ -106,7 +104,7 @@ namespace
 		size_t elemCount = 1;
 		for (size_t dim = 0; dim < mat.getDimensionCount(); ++dim)
 		{
-			auto size = mat.getDimensionSize(dim);
+			const auto size = mat.getDimensionSize(dim);
 			for (size_t entry = 0; entry < size; ++entry)
 			{
 				std::string label = std::to_string(dim) + ":" + std::to_string(entry);
@@ -116,22 +114,22 @@ namespace
 		}
 		for (size_t i = 0; i < elemCount; ++i) { mat.getBuffer()[i] = double(i); }
 
-		TParameterHandler<const IMatrix*> inputMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-		TParameterHandler<const IMemoryBuffer*> outputBuffer(
+		TParameterHandler<const IMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+		TParameterHandler<const IMemoryBuffer*> oBuffer(
 			encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
-		TParameterHandler<const IMemoryBuffer*> inputBuffer(
+		TParameterHandler<const IMemoryBuffer*> iBuffer(
 			decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-		TParameterHandler<const IMatrix*> outputMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+		TParameterHandler<const IMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
-		inputMatrix = &mat;
-		inputBuffer.setReferenceTarget(outputBuffer);
+		iMatrix = &mat;
+		iBuffer.setReferenceTarget(oBuffer);
 
 		encoder.process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 		decoder.process();
 
 		EXPECT_TRUE(decoder.isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedHeader));
 
-		EXPECT_EQ(mat.getDimensionCount(), outputMatrix->getDimensionCount());
+		EXPECT_EQ(mat.getDimensionCount(), oMatrix->getDimensionCount());
 
 		EXPECT_TRUE(encoder.uninitialize());
 		EXPECT_TRUE(decoder.uninitialize());

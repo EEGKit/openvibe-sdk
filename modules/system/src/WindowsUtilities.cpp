@@ -11,7 +11,7 @@ using namespace System;
 
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
-void* WindowsUtilities::utf16CompliantLoadLibrary(const char* path, HANDLE file, DWORD flags)
+void* WindowsUtilities::utf16CompliantLoadLibrary(const char* path, const HANDLE file, const DWORD flags)
 {
 	//const HMODULE hModule = ::LoadLibraryEx(path, file, flags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
 	return ::LoadLibraryEx(path, file, flags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
@@ -22,7 +22,7 @@ BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* name, co
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
 BOOL WindowsUtilities::utf16CompliantCreateProcess(char* applicationName, char* commandLine, LPSECURITY_ATTRIBUTES processAttributes,
-												   LPSECURITY_ATTRIBUTES threadAttributes, BOOL inheritHandles, DWORD creationFlags, LPVOID environment,
+												   LPSECURITY_ATTRIBUTES threadAttributes, const BOOL inheritHandles, const DWORD creationFlags, LPVOID environment,
 												   char* currentDirectory, LPSTARTUPINFO startupInfo, LPPROCESS_INFORMATION processInformation)
 {
 	return CreateProcess(applicationName, const_cast<char*>(commandLine), processAttributes, threadAttributes,
@@ -31,7 +31,7 @@ BOOL WindowsUtilities::utf16CompliantCreateProcess(char* applicationName, char* 
 
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
-HINSTANCE WindowsUtilities::utf16CompliantShellExecute(HWND hwnd, LPCTSTR operation, LPCTSTR file, LPCTSTR parameters, LPCTSTR directory, INT nShowCmd)
+HINSTANCE WindowsUtilities::utf16CompliantShellExecute(HWND hwnd, LPCTSTR operation, LPCTSTR file, LPCTSTR parameters, LPCTSTR directory, const INT nShowCmd)
 {
 	return ShellExecute(hwnd, operation, file, parameters, directory, nShowCmd);
 }

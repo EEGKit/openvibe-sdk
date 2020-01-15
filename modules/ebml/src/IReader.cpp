@@ -146,7 +146,7 @@ bool CReader::processData(const void* buffer, const size_t size)
 
 	if (_Debug_)
 	{
-		printf("Received %i byte(s) new buffer :", int(size));
+		std::cout << "Received " << size << " byte(s) new buffer :";
 		for (int i = 0; i < int(size) /* && i<4*/; ++i) { printf("[%02X]", ((unsigned char*)buffer)[i]); }
 		std::cout << "...\n";
 	}
@@ -164,7 +164,7 @@ bool CReader::processData(const void* buffer, const size_t size)
 
 		if (_Debug_ && m_nPending)
 		{
-			printf("%i byte(s) pending : ", int(m_nPending));
+			std::cout << m_nPending << " byte(s) pending : ";
 			for (int i = 0; i < int(m_nPending); ++i) { printf("[%02X]", m_pending[i]); }
 			std::cout << "\n";
 		}
@@ -211,11 +211,10 @@ bool CReader::processData(const void* buffer, const size_t size)
 						case FillingIdentifier:
 						{
 							m_currentID = value;
-							m_status            = FillingContentSize;
+							m_status    = FillingContentSize;
 							if (_Debug_)
 							{
-								printf("Found identifier 0x%llX - Changing status to FillingContentSize...\n",
-									   static_cast<unsigned long long>(m_currentID));
+								printf("Found identifier 0x%llX - Changing status to FillingContentSize...\n", static_cast<unsigned long long>(m_currentID));
 							}
 						}
 						break;
@@ -236,7 +235,8 @@ bool CReader::processData(const void* buffer, const size_t size)
 								m_status = FillingContent;
 								if (_Debug_)
 								{
-									std::cout << "Found content size " << m_currentContentSize << " of *non* master node - Changing status to FillingContent...\n";
+									std::cout << "Found content size " << m_currentContentSize <<
+											" of *non* master node - Changing status to FillingContent...\n";
 								}
 							}
 						}
@@ -270,7 +270,8 @@ bool CReader::processData(const void* buffer, const size_t size)
 						processedBytes = m_currentNode->m_ContentSize;
 						if (_Debug_)
 						{
-							std::cout << "Optimized processing of " << m_currentNode->m_ContentSize << " byte(s) content - Changing status to FillingIdentifier...\n";
+							std::cout << "Optimized processing of " << m_currentNode->m_ContentSize <<
+									" byte(s) content - Changing status to FillingIdentifier...\n";
 						}
 						m_readerCB.processChildData(tmpBuffer, m_currentNode->m_ContentSize);
 					}
@@ -280,7 +281,7 @@ bool CReader::processData(const void* buffer, const size_t size)
 						{
 							memcpy(m_currentNode->m_Buffer + m_currentNode->m_ReadContentSize, tmpBuffer, size_t(currentSize));
 							processedBytes = currentSize;
-							finished          = true;
+							finished       = true;
 						}
 						else
 						{

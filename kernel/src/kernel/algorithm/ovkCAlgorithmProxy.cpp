@@ -40,7 +40,7 @@ bool CAlgorithmProxy::addInputParameter(const CIdentifier& parameterID, const CS
 										const CIdentifier& subTypeID)
 {
 	OV_ERROR_UNLESS_KRF(m_iConfigurable->getParameter(parameterID) == nullptr,
-						"For algorithm " << m_algorithmDesc.getName() << " : Input parameter id " << parameterID.toString() << " already exists",
+						"For algorithm " << m_algorithmDesc.getName() << " : Input parameter id " << parameterID.str() << " already exists",
 						ErrorType::BadResourceCreation);
 
 	m_iConfigurable->createParameter(parameterID, parameterType, subTypeID);
@@ -58,7 +58,7 @@ IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& parameterID)
 	IParameter* parameter = m_iConfigurable->getParameter(parameterID);
 
 	OV_ERROR_UNLESS_KRN(
-		parameter, "For algorithm " << m_algorithmDesc.getName() << " : Requested null input parameter id " << parameterID.toString(),
+		parameter, "For algorithm " << m_algorithmDesc.getName() << " : Requested null input parameter id " << parameterID.str(),
 		ErrorType::ResourceNotFound);
 
 	return parameter;
@@ -89,7 +89,7 @@ bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const C
 										 const CIdentifier& subTypeID)
 {
 	OV_ERROR_UNLESS_KRF(m_oConfigurable->getParameter(parameterID) == nullptr,
-						"For algorithm " << m_algorithmDesc.getName() << " : Output parameter id " << parameterID.toString() <<
+						"For algorithm " << m_algorithmDesc.getName() << " : Output parameter id " << parameterID.str() <<
 						" already exists",
 						ErrorType::BadResourceCreation);
 
@@ -108,7 +108,7 @@ IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& parameterID)
 	IParameter* parameter = m_oConfigurable->getParameter(parameterID);
 
 	OV_ERROR_UNLESS_KRN(
-		parameter, "For algorithm " << m_algorithmDesc.getName() << " : Requested null output parameter id " << parameterID.toString(),
+		parameter, "For algorithm " << m_algorithmDesc.getName() << " : Requested null output parameter id " << parameterID.str(),
 		ErrorType::ResourceNotFound);
 
 	return parameter;

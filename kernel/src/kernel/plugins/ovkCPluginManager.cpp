@@ -391,7 +391,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 	}
 
 	OV_ERROR_UNLESS_KRN(pod,
-						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(srcClassID).toString() <<
+						"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(srcClassID).str() <<
 						" in registered plugin object descriptors",
 						ErrorType::BadResourceCreation);
 

@@ -197,10 +197,10 @@ bool CAlgorithmScenarioImporter::process()
 				{
 					if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportOnUnknownSetting}", true))
 					{
-						OV_ERROR_KRF("The type of the setting " << s->name <<" (" << type.toString() << ") from box " << b->name << " cannot be recognized.",
+						OV_ERROR_KRF("The type of the setting " << s->name <<" (" << type.str() << ") from box " << b->name << " cannot be recognized.",
 									 OpenViBE::Kernel::ErrorType::BadSetting);
 					}
-					OV_WARNING_K("The type of the setting " << s->name <<" (" << type.toString() << ") from box " << b->name << " cannot be recognized.");
+					OV_WARNING_K("The type of the setting " << s->name <<" (" << type.str() << ") from box " << b->name << " cannot be recognized.");
 				}
 
 				box->addSetting(s->name, s->typeID, s->defaultValue, size_t(-1), s->modifiability, s->id);
@@ -343,7 +343,7 @@ bool CAlgorithmScenarioImporter::process()
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			const IBox* box = scenario->getBoxDetails(listID[i]);
-			OV_WARNING_K("Box " << box->getName() << " [" << box->getAlgorithmClassIdentifier().toString() << "] should be updated");
+			OV_WARNING_K("Box " << box->getName() << " [" << box->getAlgorithmClassIdentifier().str() << "] should be updated");
 		}
 		scenario->releaseIdentifierList(listID);
 	}
@@ -389,7 +389,7 @@ bool CAlgorithmScenarioImporterContext::processStart(const CIdentifier& identifi
 		//
 	else
 	{
-		OV_ERROR("(start) Unexpected node identifier " << identifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false,
+		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), OpenViBE::Kernel::ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -439,7 +439,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	else if (identifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_ID) { m_SymbolicScenario.attributes.back().id = value; }
 	else
 	{
-		OV_ERROR("(id) Unexpected node identifier " << identifier.toString(),
+		OV_ERROR("(id) Unexpected node identifier " << identifier.str(),
 				 OpenViBE::Kernel::ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -480,7 +480,7 @@ bool CAlgorithmScenarioImporterContext::processString(const CIdentifier& identif
 
 	else
 	{
-		OV_ERROR("(string) Unexpected node identifier " << identifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument,
+		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), OpenViBE::Kernel::ErrorType::BadArgument,
 				 false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -505,7 +505,7 @@ bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& ident
 
 	else
 	{
-		OV_ERROR("(uint) Unexpected node identifier " << identifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false,
+		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), OpenViBE::Kernel::ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;

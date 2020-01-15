@@ -82,12 +82,12 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 		CString name(tmp->getPCData());
 
 		double classID;
-		const char* data = tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
+		const char* att = tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
 
-		OV_ERROR_UNLESS_KRF(data, "Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute ["
+		OV_ERROR_UNLESS_KRF(att, "Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute ["
 							<< IDENTIFIER_ATTRIBUTE_NAME << "] not found", OpenViBE::Kernel::ErrorType::BadParsing);
 
-		std::stringstream ss(data);
+		std::stringstream ss(att);
 		ss >> classID;
 		m_stimulations[classID] = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, name);
 	}
@@ -95,7 +95,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	const CIdentifier id = this->getAlgorithmManager().createAlgorithm(algorithmClassID);
 
 	OV_ERROR_UNLESS_KRF(id != OV_UndefinedIdentifier,
-						"Invalid classifier algorithm with id [" << algorithmClassID.toString() << "] in configuration file [" << filename << "]",
+						"Invalid classifier algorithm with id [" << algorithmClassID.str() << "] in configuration file [" << filename << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_classifier = &this->getAlgorithmManager().getAlgorithm(id);

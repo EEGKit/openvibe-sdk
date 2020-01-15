@@ -254,7 +254,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 	if (m_messaging.isInErrorState())
 	{
 		const std::string errorString = Communication::MessagingServer::getErrorString(m_messaging.getLastError());
-		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.",
+		OV_ERROR_KRF("Error state connection: " << errorString << ".\n This may be due to a broken client connection.",
 					 ErrorType::BadNetworkConnection);
 	}
 
@@ -365,13 +365,13 @@ bool CBoxAlgorithmExternalProcessing::process()
 std::string CBoxAlgorithmExternalProcessing::generateConnectionID(const size_t size)
 {
 	std::default_random_engine generator{ std::random_device()() };
-	std::uniform_int_distribution<int> character(0, 34);
+	std::uniform_int_distribution<int> uni(0, 34);
 
 	std::string connectionID;
 
 	for (size_t i = 0; i < size; ++i)
 	{
-		const char c = char(character(generator));
+		const char c = char(uni(generator));
 		connectionID.push_back((c < 26) ? ('A' + c) : '1' + (c - 26));
 	}
 
@@ -486,7 +486,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	res = posix_spawn_file_actions_addclose(&fileAction, STDOUT_FILENO);
 	OV_ERROR_UNLESS_KRF(res==0, "File action 'close' could not be added. Got error [" << res << "]", ErrorType::BadCall);
 
-	this->getLogManager() << LogLevel_Info << "Run third party program [" << programPath.c_str() << "] with arguments [" << arguments.c_str() << "].\n";
+	this->getLogManager() << LogLevel_Info << "Run third party program [" << programPath << "] with arguments [" << arguments << "].\n";
 	int status = posix_spawnp(&m_extProcessId, programPath.c_str(), &fileAction, nullptr, argv.data(), environ);
 
 #ifdef TARGET_OS_Linux
@@ -614,6 +614,6 @@ void CBoxAlgorithmExternalProcessing::log()
 				break;
 		}
 
-		this->getLogManager() << loglevel << "From third party program: " << logMessage.c_str() << "\n";
+		this->getLogManager() << loglevel << "From third party program: " << logMessage << "\n";
 	}
 }

@@ -119,7 +119,7 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& memoryBuffer, con
 	else if (id == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_ID) { name = "Identifier"; }
 	else if (id == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value) { name = "Value"; }
 		//
-	else { OV_ERROR_KRF("(start) Unexpected node identifier " << id.toString(), OpenViBE::Kernel::ErrorType::BadArgument); }
+	else { OV_ERROR_KRF("(start) Unexpected node identifier " << id.str(), OpenViBE::Kernel::ErrorType::BadArgument); }
 
 	m_writer->openChild(name.toASCIIString());
 

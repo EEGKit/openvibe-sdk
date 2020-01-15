@@ -53,22 +53,19 @@ bool CBoxUpdater::initialize()
 
 		CIdentifier metaboxId;
 		metaboxId.fromString(metaboxID);
-		CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
+		const CString path(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-		OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""), "Metabox scenario is not available for " << m_sourceBox->getName(), ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(path != CString(""), "Metabox scenario is not available for " << m_sourceBox->getName(), ErrorType::BadCall);
 
 
 		// We are going to copy the template scenario, flatten it and then copy all
 		// Note that copy constructor for IScenario does not exist
-		CIdentifier metaboxScenarioTemplateIdentifier;
+		CIdentifier templateID;
+		this->getKernelContext().getScenarioManager().importScenarioFromFile(templateID, OV_ScenarioImportContext_SchedulerMetaboxImport, path);
 
-		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport,
-																			 metaboxScenarioPath);
-
-		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(
-			metaboxScenarioTemplateIdentifier)));
-		metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
-		m_kernelBox = metaboxScenarioInstance;
+		CScenario* instance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(templateID)));
+		instance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
+		m_kernelBox = instance;
 	}
 	else
 	{
@@ -274,7 +271,7 @@ bool CBoxUpdater::updateInterfacors(EBoxInterfacorType interfacorType)
 		m_updatedBox->addInterfacor(interfacorType, i.name, i.typeID, i.identifier);
 		if (interfacorType == Setting)
 		{
-			auto idx = m_updatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
+			const auto idx = m_updatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
 			m_updatedBox->setSettingDefaultValue(idx, i.defaultValue);
 			m_updatedBox->setSettingValue(idx, i.value);
 			m_updatedBox->setSettingMod(idx, i.modifiability);

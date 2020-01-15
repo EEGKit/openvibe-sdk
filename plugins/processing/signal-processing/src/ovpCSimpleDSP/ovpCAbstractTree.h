@@ -192,7 +192,7 @@ public:
 			default:	op = "UnknownOp";	break;
 		}
 
-		logManager << "(" << op.c_str() << " ";
+		logManager << "(" << op << " ";
 		for (size_t i = 0; i < m_Children.size(); ++i)
 		{
 			if (m_Children[i] == nullptr) { }

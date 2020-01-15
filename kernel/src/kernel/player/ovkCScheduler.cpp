@@ -286,7 +286,7 @@ bool CScheduler::flattenScenario()
 
 					if (metaBoxOutputID != OV_UndefinedIdentifier) { metaboxScenarioInstance.getInterfacorIndex(Output, metaBoxOutputID, metaBoxOutputIdx); }
 					OV_ERROR_UNLESS_KRF(metaBoxOutputIdx != size_t(-1),
-										"Failed to find metabox input with identifier " << metaBoxOutputID.toString(), ErrorType::ResourceNotFound);
+										"Failed to find metabox input with identifier " << metaBoxOutputID.str(), ErrorType::ResourceNotFound);
 					metaboxScenarioInstance.getScenarioOutputLink(metaBoxOutputIdx, srcBoxID, srcBoxOutputIdx);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
@@ -319,7 +319,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 
 	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_scenarioID);
 
-	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_scenarioID.toString(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
+	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_scenarioID.str(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
 
 	OV_ERROR_UNLESS_K(m_scenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
 					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
@@ -327,7 +327,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 	CBoxSettingModifierVisitor boxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
 	OV_ERROR_UNLESS_K(m_scenario->acceptVisitor(boxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id "
-					  << m_scenarioID.toString(), ErrorType::Internal, SchedulerInitialization_Failed);
+					  << m_scenarioID.str(), ErrorType::Internal, SchedulerInitialization_Failed);
 
 
 	{
@@ -379,7 +379,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 			const IBox* box         = m_scenario->getBoxDetails(boxID);
 			OV_ERROR_UNLESS_K(
 				!m_scenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
-				"Box [" << box->getName() << "] with class identifier [" << boxID.toString() << "] should be updated",
+				"Box [" << box->getName() << "] with class identifier [" << boxID.str() << "] should be updated",
 				ErrorType::Internal, SchedulerInitialization_Failed);
 
 			OV_ERROR_UNLESS_K(box->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
@@ -391,13 +391,13 @@ ESchedulerInitializationCode CScheduler::initialize()
 			OV_ERROR_UNLESS_K(
 				!(box->hasAttribute(OV_AttributeId_Box_Disabled) && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}",
 					false)),
-				"Disabled box [" << box->getName() << "] with class identifier [" << boxID.toString() << "] detected in the scenario",
+				"Disabled box [" << box->getName() << "] with class identifier [" << boxID.str() << "] detected in the scenario",
 				ErrorType::Internal, SchedulerInitialization_Failed);
 
 			if (!box->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
 				OV_ERROR_UNLESS_K(boxDesc != nullptr,
-								  "Failed to create runtime box [" << box->getName() << "] with class identifier [" << boxID.toString() << "]",
+								  "Failed to create runtime box [" << box->getName() << "] with class identifier [" << boxID.str() << "]",
 								  ErrorType::BadResourceCreation, SchedulerInitialization_Failed);
 
 				CSimulatedBox* simulatedBox = new CSimulatedBox(this->getKernelContext(), *this);
@@ -516,7 +516,7 @@ bool CScheduler::loop()
 
 		IBox* box = m_scenario->getBoxDetails(it->first.second);
 
-		OV_ERROR_UNLESS_KRF(box, "Unable to get box details for box with id " << it->first.second.toString(), ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(box, "Unable to get box details for box with id " << it->first.second.str(), ErrorType::ResourceNotFound);
 
 		simulatedBoxChrono.stepIn();
 
@@ -568,10 +568,10 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 {
 	if (simulatedBox)
 	{
-		OV_ERROR_UNLESS_KRF(simulatedBox->processClock(), "Process clock failed for box with id " << boxID.toString(), ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(simulatedBox->processClock(), "Process clock failed for box with id " << boxID.str(), ErrorType::Internal);
 		if (simulatedBox->isReadyToProcess())
 		{
-			OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxID.toString(), ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxID.str(), ErrorType::Internal);
 		}
 
 		//if the box is muted we still have to erase chunks that arrives at the input
@@ -582,12 +582,12 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 			for (auto it2 = simulatedBoxInputChunkList.begin(); it2 != simulatedBoxInputChunkList.end(); ++it2)
 			{
 				OV_ERROR_UNLESS_KRF(simulatedBox->processInput(it1->first, *it2),
-									"Process failed for box with id " << boxID.toString() << " on input " << it1->first,
+									"Process failed for box with id " << boxID.str() << " on input " << it1->first,
 									ErrorType::Internal);
 
 				if (simulatedBox->isReadyToProcess())
 				{
-					OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxID.toString(), ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxID.str(), ErrorType::Internal);
 				}
 			}
 			simulatedBoxInputChunkList.clear();
@@ -604,23 +604,23 @@ bool CScheduler::sendInput(const CChunk& chunk, const CIdentifier& boxId, const 
 {
 	IBox* box = m_scenario->getBoxDetails(boxId);
 	if (box->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
-	OV_ERROR_UNLESS_KRF(box, "Tried to send data chunk with invalid box identifier " << boxId.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(box, "Tried to send data chunk with invalid box identifier " << boxId.str(), ErrorType::ResourceNotFound);
 
 	OV_ERROR_UNLESS_KRF(index < box->getInputCount(),
-						"Tried to send data chunk with invalid input index " << index << " for box identifier" << boxId.toString(),
+						"Tried to send data chunk with invalid input index " << index << " for box identifier" << boxId.str(),
 						ErrorType::OutOfBound);
 
 	auto it = m_simulatedBoxes.begin();
 	while (it != m_simulatedBoxes.end() && it->first.second != boxId) { ++it; }
 
 	OV_ERROR_UNLESS_KRF(it != m_simulatedBoxes.end(),
-						"Tried to send data chunk with invalid simulated box identifier " << boxId.toString(),
+						"Tried to send data chunk with invalid simulated box identifier " << boxId.str(),
 						ErrorType::ResourceNotFound);
 	CSimulatedBox* simulatedBox = it->second;
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the scheduler implementation
-	OV_FATAL_UNLESS_K(simulatedBox, "Null box found for id " << boxId.toString(), ErrorType::BadValue);
+	OV_FATAL_UNLESS_K(simulatedBox, "Null box found for id " << boxId.str(), ErrorType::BadValue);
 
 	// TODO: check if index does not overflow
 

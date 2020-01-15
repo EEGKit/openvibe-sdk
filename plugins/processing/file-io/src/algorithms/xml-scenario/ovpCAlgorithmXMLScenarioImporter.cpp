@@ -88,13 +88,13 @@ namespace
 			// we just issue a trace here because the calling method
 			// implements a fallback mechanism and we don't want to populate
 			// the error manager if the importer returns gracefully.
-			m_algorithmContext.getLogManager() << LogLevel_Trace << "Failed to validate xml: error [" << xercesToString(exception.getMessage()).c_str()
+			m_algorithmContext.getLogManager() << LogLevel_Trace << "Failed to validate xml: error [" << xercesToString(exception.getMessage())
 					<< "], line number [" << size_t(exception.getLineNumber()) << "]" << "\n";
 		}
 
 		void warning(const SAXParseException& exception) override
 		{
-			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number ["
+			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()) << "], line number ["
 					   << size_t(exception.getLineNumber()) << "]", m_algorithmContext.getLogManager());
 		}
 
@@ -310,7 +310,6 @@ void CAlgorithmXMLScenarioImporter::closeChild()
 {
 	std::string& top = m_nodes.top();
 
-	if (false) { }
 	if (top == "OpenViBE-Scenario" && m_status == Status_ParsingScenario)
 	{
 		m_status = Status_ParsingNothing;
