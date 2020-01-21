@@ -7,7 +7,7 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace std;
 
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	bool ignoreMetaboxes = false;
 	vector<string> metaboxExtensionsToLoad;
 
-	for (int i = 1; i < argc; i++)
+	for (int i = 1; i < argc; ++i)
 	{
 		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
@@ -57,19 +57,18 @@ int main(int argc, char** argv)
 	cout << "[  INF  ] Created kernel loader, trying to load kernel module" << endl;
 	CString errorMsg;
 #if defined TARGET_OS_Windows
-	CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
+	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-	CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-	CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
 	if (!kernelLoader.load(kernelFile, &errorMsg)) { cout << "[ FAILED ] Error loading kernel (" << errorMsg << ")" << " from [" << kernelFile << "]\n"; }
 	else
 	{
 		cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << endl;
-		IKernelDesc* kernelDesc       = nullptr;
-		IKernelContext* ctx = nullptr;
+		IKernelDesc* kernelDesc = nullptr;
 		kernelLoader.initialize();
 		kernelLoader.getKernelDesc(kernelDesc);
 		if (!kernelDesc) { cout << "[ FAILED ] No kernel descriptor" << endl; }
@@ -77,7 +76,7 @@ int main(int argc, char** argv)
 		{
 			cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
 
-			ctx = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
+			IKernelContext* ctx = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
 			if (!ctx) { cout << "[ FAILED ] No kernel created by kernel descriptor" << endl; }
 			else
 			{
@@ -89,9 +88,9 @@ int main(int argc, char** argv)
 				if (pluginFilestoLoad.empty()) { ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}")); }
 				else
 				{
-					for (string pluginFiletoLoad : pluginFilestoLoad)
+					for (const string& file : pluginFilestoLoad)
 					{
-						ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str())));
+						ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(file.c_str())));
 					}
 				}
 

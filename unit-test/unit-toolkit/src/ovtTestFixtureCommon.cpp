@@ -28,37 +28,31 @@
 namespace OpenViBETest
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 	using namespace Plugins;
 
-	KernelFixture::KernelFixture(const std::string& configFile) : m_ConfigurationFile(configFile) { }
-
-	void KernelFixture::setConfigurationFile(const std::string& configFile) { m_ConfigurationFile = configFile; }
-
-	void KernelFixture::setUp()
+	void SKernelFixture::setUp()
 	{
-		CString kernelFile;
-
 #if defined TARGET_OS_Windows
-		kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
+		const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+		const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+		const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 		CString error;
 
-		if (!m_KernelLoader.load(kernelFile, &error))
+		if (!m_kernelLoader.load(kernelFile, &error))
 		{
 			std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
 			std::cerr << "ERROR: kernel error: " << error << std::endl;
 			return;
 		}
 
-		m_KernelLoader.initialize();
+		m_kernelLoader.initialize();
 
-		IKernelDesc* kernelDesc{ nullptr };
-		m_KernelLoader.getKernelDesc(kernelDesc);
+		IKernelDesc* kernelDesc = nullptr;
+		m_kernelLoader.getKernelDesc(kernelDesc);
 
 		if (!kernelDesc)
 		{
@@ -66,13 +60,13 @@ namespace OpenViBETest
 			return;
 		}
 
-		CString configurationFile;
+		CString configFile;
 
-		if (!m_ConfigurationFile.empty()) { configurationFile = m_ConfigurationFile.c_str(); }
-		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
+		if (!m_configFile.empty()) { configFile = m_configFile.c_str(); }
+		else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configurationFile);
+		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 		if (!ctx)
 		{
@@ -81,24 +75,22 @@ namespace OpenViBETest
 		}
 
 		ctx->initialize();
-
 		OpenViBEToolkit::initialize(*ctx);
-
 		context = ctx;
 	}
 
-	void KernelFixture::tearDown()
+	void SKernelFixture::tearDown()
 	{
 		if (context)
 		{
 			OpenViBEToolkit::uninitialize(*context);
-			IKernelDesc* kernelDesc{ nullptr };
-			m_KernelLoader.getKernelDesc(kernelDesc);
+			IKernelDesc* kernelDesc = nullptr;
+			m_kernelLoader.getKernelDesc(kernelDesc);
 			kernelDesc->releaseKernel(context);
 			context = nullptr;
 		}
 
-		m_KernelLoader.uninitialize();
-		m_KernelLoader.unload();
+		m_kernelLoader.uninitialize();
+		m_kernelLoader.unload();
 	}
 } // namespace OpenViBETest

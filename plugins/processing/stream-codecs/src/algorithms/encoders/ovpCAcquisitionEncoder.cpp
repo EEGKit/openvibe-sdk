@@ -1,7 +1,7 @@
 #include "ovpCAcquisitionEncoder.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -11,24 +11,24 @@ bool CAcquisitionEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
-	ip_ui64BufferDuration.initialize(getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_BufferDuration));
-	ip_pExperimentInformationStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ExperimentInformationStream));
-	ip_pSignalStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_SignalStream));
-	ip_pStimulationStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_StimulationStream));
-	ip_pChannelLocalisationStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelLocalisationStream));
-	ip_pChannelUnitsStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelUnitsStream));
+	ip_bufferDuration.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_BufferDuration));
+	ip_experimentInfoStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ExperimentInfoStream));
+	ip_signalStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_SignalStream));
+	ip_stimulationStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_StimulationStream));
+	ip_channelLocalisationStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ChannelLocalisationStream));
+	ip_channelUnitsStream.initialize(getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ChannelUnitsStream));
 
 	return true;
 }
 
 bool CAcquisitionEncoder::uninitialize()
 {
-	ip_pChannelUnitsStream.uninitialize();
-	ip_pChannelLocalisationStream.uninitialize();
-	ip_pStimulationStream.uninitialize();
-	ip_pSignalStream.uninitialize();
-	ip_pExperimentInformationStream.uninitialize();
-	ip_ui64BufferDuration.uninitialize();
+	ip_channelUnitsStream.uninitialize();
+	ip_channelLocalisationStream.uninitialize();
+	ip_stimulationStream.uninitialize();
+	ip_signalStream.uninitialize();
+	ip_experimentInfoStream.uninitialize();
+	ip_bufferDuration.uninitialize();
 
 	CEBMLBaseEncoder::uninitialize();
 
@@ -40,45 +40,45 @@ bool CAcquisitionEncoder::uninitialize()
 
 bool CAcquisitionEncoder::processHeader()
 {
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_BufferDuration);
-	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64BufferDuration);
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_ExperimentInformation);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pExperimentInformationStream->getDirectPointer(), ip_pExperimentInformationStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_Signal);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pSignalStream->getDirectPointer(), ip_pSignalStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_Stimulation);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pStimulationStream->getDirectPointer(), ip_pStimulationStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_ChannelLocalisation);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pChannelLocalisationStream->getDirectPointer(), ip_pChannelLocalisationStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_ChannelUnits);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pChannelUnitsStream->getDirectPointer(), ip_pChannelUnitsStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_BufferDuration);
+	m_writerHelper->setUInt(ip_bufferDuration);
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_ExperimentInfo);
+	m_writerHelper->setBinary(ip_experimentInfoStream->getDirectPointer(), ip_experimentInfoStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_Signal);
+	m_writerHelper->setBinary(ip_signalStream->getDirectPointer(), ip_signalStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_Stimulation);
+	m_writerHelper->setBinary(ip_stimulationStream->getDirectPointer(), ip_stimulationStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_ChannelLocalisation);
+	m_writerHelper->setBinary(ip_channelLocalisationStream->getDirectPointer(), ip_channelLocalisationStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Header_ChannelUnits);
+	m_writerHelper->setBinary(ip_channelUnitsStream->getDirectPointer(), ip_channelUnitsStream->getSize());
+	m_writerHelper->closeChild();
 
 	return true;
 }
 
 bool CAcquisitionEncoder::processBuffer()
 {
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ExperimentInformation);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pExperimentInformationStream->getDirectPointer(), ip_pExperimentInformationStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Buffer_Signal);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pSignalStream->getDirectPointer(), ip_pSignalStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Buffer_Stimulation);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pStimulationStream->getDirectPointer(), ip_pStimulationStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pChannelLocalisationStream->getDirectPointer(), ip_pChannelLocalisationStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
-	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ChannelUnits);
-	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pChannelUnitsStream->getDirectPointer(), ip_pChannelUnitsStream->getSize());
-	m_pEBMLWriterHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ExperimentInfo);
+	m_writerHelper->setBinary(ip_experimentInfoStream->getDirectPointer(), ip_experimentInfoStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Buffer_Signal);
+	m_writerHelper->setBinary(ip_signalStream->getDirectPointer(), ip_signalStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Buffer_Stimulation);
+	m_writerHelper->setBinary(ip_stimulationStream->getDirectPointer(), ip_stimulationStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation);
+	m_writerHelper->setBinary(ip_channelLocalisationStream->getDirectPointer(), ip_channelLocalisationStream->getSize());
+	m_writerHelper->closeChild();
+	m_writerHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ChannelUnits);
+	m_writerHelper->setBinary(ip_channelUnitsStream->getDirectPointer(), ip_channelUnitsStream->getSize());
+	m_writerHelper->closeChild();
 
 	return true;
 }

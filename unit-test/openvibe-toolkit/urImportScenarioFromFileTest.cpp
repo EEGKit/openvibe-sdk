@@ -1,23 +1,22 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <ovp_global_defines.h>
 #include "ovtAssert.h"
 #include "ovtTestFixtureCommon.h"
 #include "urSimpleTestScenarioDefinition.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 #define to_cppstring(str) std::string(str.toASCIIString())
 
 int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 {
-	const char* configurationFile = argv[1];
-	const char* dataDirectory     = argv[2];
+	const char* configFile    = argv[1];
+	const char* dataDirectory = argv[2];
 
 	{
-		OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture(configurationFile);
+		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configFile);
 		auto& context = fixture->context;
 
 #if defined TARGET_OS_Windows
@@ -25,20 +24,19 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
 		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
 #elif defined TARGET_OS_Linux
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
 #elif defined TARGET_OS_MacOS
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
 #endif
 
-		std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
+		const std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 
 		CIdentifier scenarioID;
-		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
-				   "Failed to import the scenario file");
+		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
 		OVT_ASSERT(scenarioID != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
 
 		auto& scenario = context->getScenarioManager().getScenario(scenarioID);
@@ -52,7 +50,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test settings
 		OVT_ASSERT(scenario.getSettingCount() == simpleScenarioSettings.size(), "Imported scenario does not have the correct number of settings");
 
-		for (uint32_t settingIndex = 0; settingIndex < uint32_t(simpleScenarioSettings.size()); settingIndex += 1)
+		for (size_t settingIndex = 0; settingIndex < simpleScenarioSettings.size(); settingIndex += 1)
 		{
 			CIdentifier settingTypeId;
 			OVT_ASSERT(scenario.getSettingType(settingIndex, settingTypeId), "Cannot get setting type");
@@ -84,7 +82,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test inputs
 		OVT_ASSERT(scenario.getInputCount() == simpleScenarioInputs.size(), "Imported scenario has wrong number of inputs");
 
-		for (uint32_t index = 0; index < uint32_t(simpleScenarioInputs.size()); index += 1)
+		for (size_t index = 0; index < simpleScenarioInputs.size(); index += 1)
 		{
 			CIdentifier inputTypeId;
 			OVT_ASSERT(scenario.getInputType(index, inputTypeId), "Cannot get input type");
@@ -95,7 +93,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 			OVT_ASSERT_STREQ(to_cppstring(inputName), std::get<1>(simpleScenarioInputs[index]), "Input has wrong name");
 
 			CIdentifier dstBoxID;
-			uint32_t dstBoxInputIdx;
+			size_t dstBoxInputIdx;
 			CIdentifier dstBoxInputID = OV_UndefinedIdentifier;
 			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputIdx), "Cannot get scenario input details by index");
 			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputID), "Cannot get scenario input details by identifier");
@@ -106,7 +104,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		// Test outputs
 		OVT_ASSERT(scenario.getOutputCount() == simpleScenarioOutputs.size(), "Imported scenario has wrong number of outputs");
 
-		for (uint32_t idx = 0; idx < uint32_t(simpleScenarioOutputs.size()); idx += 1)
+		for (size_t idx = 0; idx < simpleScenarioOutputs.size(); idx += 1)
 		{
 			CIdentifier outputTypeId;
 			OVT_ASSERT(scenario.getOutputType(idx, outputTypeId), "Cannot get output type");
@@ -117,7 +115,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[idx]), "Output has wrong name");
 
 			CIdentifier dstBoxID;
-			uint32_t dstBoxOutputIndex;
+			size_t dstBoxOutputIndex;
 			CIdentifier dstBoxOutputIdentifier = OV_UndefinedIdentifier;
 			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIndex), "Cannot get scenario output details by index");
 			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
@@ -132,24 +130,18 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		const ILink* clockStimulatorToStimulationListenerLink = scenario.getLinkDetails(s_ClockStimulatorToStimulationListenerLinkId);
 
 		CIdentifier linkSourceBoxId;
-		uint32_t linkSourceOutputIndex;
+		size_t linkSourceOutputIndex;
 		CIdentifier linkSourceOutputIdentifier;
-		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier),
-				   "Could not get link details");
-		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId,
-				   "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
-		OVT_ASSERT(linkSourceOutputIndex == 0,
-				   "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
+		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier), "Could not get link details");
+		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
+		OVT_ASSERT(linkSourceOutputIndex == 0, "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
 
 		CIdentifier linkTargetBoxId;
-		uint32_t linkTargetInputIndex;
+		size_t linkTargetInputIndex;
 		CIdentifier linkTargetInputIdentifier;
-		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier),
-				   "Could not get link details");
-		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId,
-				   "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");
-		OVT_ASSERT(linkTargetInputIndex == 1,
-				   "The Clock Stimulator to Stimulation Listener link does not have the second input of Stimulation Listener as the input");
+		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier), "Could not get link details");
+		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");
+		OVT_ASSERT(linkTargetInputIndex == 1, "The Clock Stimulator to Stimulation Listener link does not have the second input of Stimulation Listener as the input");
 
 		// Test comments
 
@@ -158,14 +150,13 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 
 		const IComment* simpleComment = scenario.getCommentDetails(s_SimpleCommentId);
 
-		CString simpleCommentText = simpleComment->getText();
+		const CString simpleCommentText = simpleComment->getText();
 		OVT_ASSERT_STREQ(std::string("Content of a comment"), to_cppstring(simpleCommentText), "The imported scenario comment contains a wrong text");
 
 		const IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
 
-		CString unicodeCommentText = unicodeComment->getText();
-		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText),
-						 "The imported scenario comment contains a wrong text");
+		const CString unicodeCommentText = unicodeComment->getText();
+		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText), "The imported scenario comment contains a wrong text");
 	}
 
 	return EXIT_SUCCESS;

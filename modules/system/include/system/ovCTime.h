@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include <cstdlib>	// For Unix Compatibility
 
 namespace System
 {
@@ -8,7 +9,7 @@ namespace System
 	 * \class Time
 	 * \brief Static functions to handle time within the framework
 	 *
-	 * \note Please see openvibe/ovITimeArithmetics.h for conversion routines to/from OpenViBE fixed point time
+	 * \note Please see openvibe/ovTimeArithmetics.h for conversion routines to/from OpenViBE fixed point time
 	 *
 	 */
 	class System_API Time
@@ -17,17 +18,17 @@ namespace System
 
 		/**
 		 * \brief Make the calling thread sleep 
-		 * \param ui32MilliSeconds : sleep duration in ms
+		 * \param milliSeconds : sleep duration in ms
 		 * \return Always true
 		 */
-		static bool sleep(uint32_t ui32MilliSeconds);
+		static bool sleep(const size_t milliSeconds);
 		
 		/**
 		 * \brief Make the calling thread sleep 
-		 * \param ui64Seconds : sleep duration in fixed point 32:32 seconds
+		 * \param seconds : sleep duration in fixed point 32:32 seconds
 		 * \return Always true
 		 */
-		static bool zsleep(uint64_t ui64Seconds);
+		static bool zsleep(const uint64_t seconds);
 		
 		/**
 		 * \brief Retrieve time in ms 
@@ -60,15 +61,15 @@ namespace System
 		/**
 		 * \brief Check if the internal clock used by the framework has
 		 *        a resolution higher than the required one
-		 * \param ui32MilliSeconds : Expected clock resolution (period between ticks) in ms (must be non-zero value)
+		 * \param milliSeconds : Expected clock resolution (period between ticks) in ms (must be non-zero value)
 		 * \return True if the clock meets the requirements, false otherwise
 		 * \note This is a theoretical check that queries the internal
 		 *  	 clock implementation for available services
 		 */
-		static bool checkResolution(uint32_t ui32MilliSeconds);
+		static bool checkResolution(const size_t milliSeconds);
 
 	private:
 
-		Time();
+		Time() = delete;
 	};
 } // namespace System

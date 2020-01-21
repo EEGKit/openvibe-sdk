@@ -855,7 +855,7 @@ namespace r8b
 
 		double ph1[ Count ];
 
-		for (int i = 0; i < Count; i++)
+		for (int i = 0; i < Count; ++i)
 		{
 			double re1;
 			double im1;

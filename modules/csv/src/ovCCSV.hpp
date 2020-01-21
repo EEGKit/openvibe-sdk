@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "defines.h"
 #include <ovICSV.h>
 
 #include <fstream>
@@ -38,45 +37,44 @@ namespace OpenViBE
 			/**
 			 * \brief Set lib value to default
 			 */
-			CCSVHandler();
+			CCSVHandler() : m_inputTypeID(EStreamType::StreamedMatrix), m_dimSizes({}) {}
 
 			/**
 			 * \brief Close the file if it is open.
 			 */
-			~CCSVHandler() override;
+			~CCSVHandler() override { this->closeFile(); }
 
 			/**
 			 * \brief Get the floating point precision used to write float values.
 			 *
 			 * \return the Floating point precision.
 			 */
-			uint32_t getOutputFloatPrecision() override { return m_OutputFloatPrecision; }
+			size_t getOutputFloatPrecision() override { return m_oPrecision; }
 
 			/**
 			 * \brief Set the floating point precision used to write float values.
 			 *
 			 * \param precision the floating point precision.
 			 */
-			void setOutputFloatPrecision(uint32_t precision) override { m_OutputFloatPrecision = precision; }
+			void setOutputFloatPrecision(const size_t precision) override { m_oPrecision = precision; }
 
 			void setFormatType(EStreamType typeID) override;
-			EStreamType getFormatType() override;
+			EStreamType getFormatType() override { return m_inputTypeID; }
 
-			void setLastMatrixOnlyMode(bool isActivated) override { m_LastMatrixOnly = isActivated; }
-			bool getLastMatrixOnlyMode() override { return m_LastMatrixOnly; }
+			void setLastMatrixOnlyMode(const bool isActivated) override { m_lastMatrixOnly = isActivated; }
+			bool getLastMatrixOnlyMode() override { return m_lastMatrixOnly; }
 
-			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) override;
-			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) override;
+			bool setSignalInformation(const std::vector<std::string>& channelNames, size_t sampling, size_t nSamplePerBuffer) override;
+			bool getSignalInformation(std::vector<std::string>& channelNames, size_t& sampling, size_t& nSamplePerBuffer) override;
 
-			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
-										uint32_t samplingRate) override;
-			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) override;
+			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, size_t sampling) override;
+			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& sampling) override;
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames) override;
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames) override;
 
-			bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels) override;
-			bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels) override;
+			bool setStreamedMatrixInformation(const std::vector<size_t>& dimSizes, const std::vector<std::string>& labels) override;
+			bool getStreamedMatrixInformation(std::vector<size_t>& dimSizes, std::vector<std::string>& labels) override;
 
 			/**
 			 * \brief Write the header to the file
@@ -107,14 +105,14 @@ namespace OpenViBE
 			/**
 			 * \brief Read samples and stimulations.
 			 *
-			 * \param linesToRead Maximum number of lines to read. If there is no more data in the file, the number of lines read can be lower.
+			 * \param lineNb Maximum number of lines to read. If there is no more data in the file, the number of lines read can be lower.
 			 * \param chunks[out] Valid chunks read.
 			 * \param stimulations[out] Valid stimulations read.
 			 *
-			 * \retval True in case of success, even if the number of lines is different than the linesToRead parameter.
+			 * \retval True in case of success, even if the number of lines is different than the lineNb parameter.
 			 * \retval False in case of error.
 			 */
-			bool readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations) override;
+			bool readSamplesAndEventsFromFile(size_t lineNb, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations) override;
 
 			/**
 			 * \brief Open a OV CSV file.
@@ -175,9 +173,9 @@ namespace OpenViBE
 			 */
 			bool noEventsUntilDate(double date) override;
 
-			ELogErrorCodes getLastLogError() override;
+			ELogErrorCodes getLastLogError() override { return m_logError; }
 
-			std::string getLastErrorString() override;
+			std::string getLastErrorString() override { return m_lastStringError; }
 
 			/**
 			 * \brief Check if there is still data to read in the file.
@@ -185,17 +183,17 @@ namespace OpenViBE
 			 * \retval True if there is still data to read in the file.
 			 * \retval False if there is no more data to read in the file.
 			 */
-			bool hasDataToRead() const override;
+			bool hasDataToRead() const override { return m_hasDataToRead; }
 
 		private:
 			/**
 			 * \brief Split a string into a vector of strings.
 			 *
-			 * \param input String to split.
+			 * \param in String to split.
 			 * \param delimiter Delimitor.
-			 * \param output[out] Vector of string.
+			 * \param out[out] Vector of string.
 			 */
-			void split(const std::string& input, char delimiter, std::vector<std::string>& output) const;
+			void split(const std::string& in, char delimiter, std::vector<std::string>& out) const;
 
 			/**
 			 * \brief Create a string with stimulations to add in the buffer.
@@ -273,7 +271,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, uint64_t lineNb);
+			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, size_t lineNb);
 
 			/**
 			 * \brief Read line data conerning stimulations.
@@ -285,7 +283,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, uint64_t lineNb);
+			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, size_t lineNb);
 
 			/**
 			 * \brief Update position into the matrix while reading or writing.
@@ -295,7 +293,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of browse matrix
 			 */
-			bool increasePositionIndexes(std::vector<uint32_t>& position);
+			bool increasePositionIndexes(std::vector<size_t>& position);
 
 			/**
 			 * \brief Read lines of the first epoch to found sample count per buffer.
@@ -308,50 +306,52 @@ namespace OpenViBE
 			/**
 			 * \brief Read a stream until a delimiter and provide the string before the delimiter.
 			 *
-			 * \param inputStream The stream to read.
-			 * \param outputString The string before the next delimitor.
+			 * \param in The stream to read.
+			 * \param out The string before the next delimitor.
 			 * \param delimiter The delimiter .
 			 * \param bufferHistory
 			 */
-			bool streamReader(std::istream& inputStream, std::string& outputString, char delimiter, std::string& bufferHistory) const;
+			bool streamReader(std::istream& in, std::string& out, char delimiter, std::string& bufferHistory) const;
 
-			std::fstream m_Fs;
-			std::string m_Filename;
-			std::deque<SMatrixChunk> m_Chunks;
-			std::deque<SStimulationChunk> m_Stimulations;
-			ELogErrorCodes m_LogError     = LogErrorCodes_NoError;
-			std::string m_LastStringError = "";
+			std::fstream m_fs;
+			std::string m_filename;
+			std::deque<SMatrixChunk> m_chunks;
+			std::deque<SStimulationChunk> m_stimulations;
+			ELogErrorCodes m_logError     = LogErrorCodes_NoError;
+			std::string m_lastStringError = "";
 
-			EStreamType m_InputTypeIdentifier;
+			EStreamType m_inputTypeID;
 
-			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
-			uint32_t m_DimensionCount = 0;
-			std::vector<uint32_t> m_DimensionSizes;
-			std::vector<std::string> m_DimensionLabels;
-			uint32_t m_SampleCountPerBuffer = 0;
-			double m_NoEventSince           = 0;
+			typedef std::istream& GetLine(std::istream& in, std::string& out, char delimiter);
+			size_t m_nDim = 0;
+			std::vector<size_t> m_dimSizes;
+			std::vector<std::string> m_dimLabels;
+			size_t m_nSamplePerBuffer = 0;
+			double m_noEventSince     = 0;
 
-			std::vector<double> m_FrequencyAbscissa;
+			std::vector<double> m_frequencyAbscissa;
 
-			uint32_t m_SamplingRate = 0;
-			size_t m_ColumnCount    = 0;
+			size_t m_sampling = 0;
+			size_t m_nCol     = 0;
 
-			bool m_HasInputType       = false;
-			bool m_IsFirstLineWritten = false;
-			bool m_IsHeaderRead       = false;
-			bool m_IsSetInfoCalled    = false;
-			bool m_HasEpoch           = false;
+			bool m_hasInputType       = false;
+			bool m_isFirstLineWritten = false;
+			bool m_isHeaderRead       = false;
+			bool m_isSetInfoCalled    = false;
+			bool m_hasEpoch           = false;
 
-			uint32_t m_OriginalSampleNumber = 0;
-			uint32_t m_OutputFloatPrecision = 10;
+			size_t m_nSampleOriginal = 0;
+			size_t m_oPrecision      = 10;
 
-			bool m_LastMatrixOnly = false;
+			bool m_lastMatrixOnly = false;
 
-			std::string m_BufferReadFileLine; // Buffer used to store unused read chars.
+			std::string m_bufferReadFileLine; // Buffer used to store unused read chars.
 
-			bool m_HasDataToRead = true;
+			bool m_hasDataToRead = true;
 
-			bool m_IsCRLFEOL = false; // Is a CRLF end of line
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+			bool m_isCRLFEOL = false; // Is a CRLF end of line
+#endif
 		};
 	} // namespace CSV
 } // namespace OpenViBE

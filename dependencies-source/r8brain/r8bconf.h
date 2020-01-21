@@ -57,8 +57,8 @@
 
 #define R8B_IPP 0
 
-//	#include <ippcore.h>
-//	#include <ipps.h>
+// #include <ippcore.h>
+// #include <ipps.h>
 #endif // !defined( R8B_IPP )
 
 #if !defined( R8BASSERT )

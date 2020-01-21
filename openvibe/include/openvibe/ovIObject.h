@@ -72,7 +72,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool acceptVisitor(IObjectVisitor& visitor) { return true; }
+		virtual bool acceptVisitor(IObjectVisitor& /*visitor*/) { return true; }
 
 		//@}
 

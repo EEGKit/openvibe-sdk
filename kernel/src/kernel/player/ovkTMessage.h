@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../ovk_base.h"
-
 #include <openvibe/ov_all.h>
 
 namespace OpenViBE
@@ -15,18 +13,18 @@ namespace OpenViBE
 
 			explicit TMessage(const IKernelContext& ctx);
 
-			virtual CIdentifier getIdentifier() const;
-			virtual uint64_t getTime() const;
+			CIdentifier getIdentifier() const override;
+			uint64_t getTime() const override;
 
-			virtual bool setIdentifier(const CIdentifier& identifier);
-			virtual bool setTime(uint64_t ui64Time);
+			bool setIdentifier(const CIdentifier& id) override;
+			bool setTime(const uint64_t time) override;
 
 			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
 
 		protected:
 
-			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			uint64_t m_ui64Time       = 0;
+			CIdentifier m_id = OV_UndefinedIdentifier;
+			uint64_t m_time  = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

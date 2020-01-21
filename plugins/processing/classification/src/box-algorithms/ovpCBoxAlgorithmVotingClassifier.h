@@ -6,10 +6,6 @@
 
 #include <vector>
 #include <map>
-#include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_VotingClassifier     OpenViBE::CIdentifier(0xFAF62C2B, 0x0B75D1B3)
-#define OVP_ClassId_BoxAlgorithm_VotingClassifierDesc OpenViBE::CIdentifier(0x97E3CCC5, 0xAC353ED2)
 
 namespace OpenViBEPlugins
 {
@@ -21,38 +17,38 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_VotingClassifier)
 
 		protected:
 
-			uint64_t m_ui64NumberOfRepetitions  = 0;
-			uint64_t m_ui64TargetClassLabel     = 0;
-			uint64_t m_ui64NonTargetClassLabel  = 0;
-			uint64_t m_ui64RejectClassLabel     = 0;
-			uint64_t m_ui64ResultClassLabelBase = 0;
-			bool m_bChooseOneIfExAequo;
+			size_t m_nRepetitions         = 0;
+			size_t m_targetClassLabel     = 0;
+			size_t m_nonTargetClassLabel  = 0;
+			size_t m_rejectClassLabel     = 0;
+			size_t m_resultClassLabelBase = 0;
+			bool m_chooseOneIfExAequo     = false;
 
 		private:
 
 			typedef struct
 			{
-				OpenViBEToolkit::TDecoder<CBoxAlgorithmVotingClassifier>* m_pDecoder = nullptr;
-				OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
-				OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
-				bool m_bTwoValueInput;
-				std::vector<std::pair<double, uint64_t>> m_vScore;
-			} SInput;
+				OpenViBEToolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
+				OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimSet;
+				OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
+				bool twoValueInput;
+				std::vector<std::pair<double, uint64_t>> scores;
+			} input_t;
 
-			std::map<uint32_t, SInput> m_vClassificationResults;
+			std::map<uint32_t, input_t> m_results;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_oClassificationChoiceEncoder;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_pClassificationChoiceStimulationSet;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_classificationChoiceStimSet;
 
-			uint64_t m_ui64LastTime = 0;
-			bool m_bMatrixBased;
+			uint64_t m_lastTime = 0;
+			bool m_matrixBased = false;
 		};
 
 
@@ -60,30 +56,27 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmVotingClassifierListener()
-				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
+			CBoxAlgorithmVotingClassifierListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
-				OpenViBE::CIdentifier l_oInputTypeIdentifier = OV_UndefinedIdentifier;
-				box.getInputType(index, l_oInputTypeIdentifier);
-				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
+				OpenViBE::CIdentifier id = OV_UndefinedIdentifier;
+				box.getInputType(index, id);
+				if (id == OV_TypeId_Stimulations || id == OV_TypeId_StreamedMatrix)
 				{
-					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
-					for (uint32_t i = 0; i < box.getInputCount(); i++) { box.setInputType(i, m_oInputTypeIdentifier); }
+					m_inputTypeID = id;
+					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, m_inputTypeID); }
 				}
-				else { box.setInputType(index, m_oInputTypeIdentifier); }
+				else { box.setInputType(index, m_inputTypeID); }
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
-				for (uint32_t i = 0; i < box.getInputCount(); i++)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
-					char l_sBuffer[1024];
-					sprintf(l_sBuffer, "Classification result %i", i);
-					box.setInputType(i, m_oInputTypeIdentifier);
-					box.setInputName(i, l_sBuffer);
+					box.setInputType(i, m_inputTypeID);
+					box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());
 				}
 				return true;
 			}
@@ -92,7 +85,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_inputTypeID = OV_UndefinedIdentifier;
 		};
 
 		class CBoxAlgorithmVotingClassifierDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

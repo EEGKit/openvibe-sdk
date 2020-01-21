@@ -1,14 +1,12 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <vector>
 #include <map>
 #include <algorithm>
-
-#define OVP_ClassId_BoxAlgorithm_FrequencyBandSelector     OpenViBE::CIdentifier(0x140C19C6, 0x4E6E187B)
-#define OVP_ClassId_BoxAlgorithm_FrequencyBandSelectorDesc OpenViBE::CIdentifier(0x13462C56, 0x794E3C07)
 
 namespace OpenViBEPlugins
 {
@@ -22,26 +20,26 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_FrequencyBandSelector)
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pBands;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_bands;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pFrequencyAbscissa;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_matrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_frequencyAbscissa;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 
 			OpenViBE::CMatrix m_oMatrix;
-			std::vector<BandRange> m_vSelected;
-			std::vector<double> m_vSelectionFactor;
+			std::vector<BandRange> m_selecteds;
+			std::vector<double> m_selectionFactors;
 		};
 
 		class CBoxAlgorithmFrequencyBandSelectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -54,8 +52,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CString getShortDescription() const override
 			{
-				return OpenViBE::CString(
-					"Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select");
+				return OpenViBE::CString("Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select");
 			}
 
 			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }

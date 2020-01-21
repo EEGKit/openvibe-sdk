@@ -21,14 +21,14 @@
 
 #pragma once
 
+#include "ovsp_defines.h"
+#include "ovspICommandParser.h"
 #include <string>
 #include <functional>
 #include <fstream>
 #include <vector>
 #include <map>
 
-#include "ovspICommandParser.h"
-#include "ovsp_defines.h"
 
 namespace OpenViBE
 {
@@ -66,19 +66,18 @@ namespace OpenViBE
 		* \param[in] file path to the command file
 		*
 		*/
-		explicit CommandFileParser(const std::string& file) : m_CommandFile(file) { }
+		explicit CommandFileParser(const std::string& file) : m_cmdFile(file) { }
 
 		void initialize() override;
-
 		void uninitialize() override;
 
-		std::vector<std::shared_ptr<ICommand>> getCommandList() const override { return m_CommandList; }
+		std::vector<std::shared_ptr<SCommand>> getCommandList() const override { return m_cmdList; }
 
-		PlayerReturnCode parse() override;
+		EPlayerReturnCode parse() override;
 
 	private:
 
-		using CallbackType = std::function<PlayerReturnCode(std::vector<std::string>)>;
+		using CallbackType = std::function<EPlayerReturnCode(std::vector<std::string>)>;
 		using Token = std::pair<std::string, std::string>;
 
 		static std::string trim(const std::string& str);
@@ -88,17 +87,17 @@ namespace OpenViBE
 		static std::vector<std::string> toList(const std::string& str);
 		static std::vector<Token> toTokenList(const std::string& str);
 
-		PlayerReturnCode flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent);
 
-		PlayerReturnCode initCommandCb(const std::vector<std::string>& sectionContent);
-		PlayerReturnCode resetCommandCb(const std::vector<std::string>& sectionContent);
-		PlayerReturnCode loadKernelCommandCb(const std::vector<std::string>& sectionContent);
-		PlayerReturnCode loadScenarioCommandCb(const std::vector<std::string>& sectionContent);
-		PlayerReturnCode setupScenarioCommandCb(const std::vector<std::string>& sectionContent);
-		PlayerReturnCode runScenarioCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode initCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode resetCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode loadKernelCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode loadScenarioCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode setupScenarioCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCode runScenarioCommandCb(const std::vector<std::string>& sectionContent);
 
-		std::string m_CommandFile;
-		std::vector<std::shared_ptr<ICommand>> m_CommandList;
-		std::map<std::string, CallbackType> m_CallbackList;
+		std::string m_cmdFile;
+		std::vector<std::shared_ptr<SCommand>> m_cmdList;
+		std::map<std::string, CallbackType> m_callbacks;
 	};
 } // namespace OpenViBE

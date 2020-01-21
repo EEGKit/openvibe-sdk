@@ -1,12 +1,11 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <Eigen/Eigen>
-
-#define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer                                        OpenViBE::CIdentifier(0x27542F6E, 0x14AA3548)
-#define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainerDesc                                    OpenViBE::CIdentifier(0x128A6013, 0x370B5C2C)
+#include <array>
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -21,21 +20,21 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer)
 
 		protected:
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmXDAWNTrainer> m_StimDecoder;
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer> m_SignalDecoder[2];
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_StimEncoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmXDAWNTrainer> m_stimDecoder;
+			std::array<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>, 2> m_signalDecoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_stimEncoder;
 
-			uint64_t m_TrainStimulationId = 0;
-			OpenViBE::CString m_FilterFilename;
-			uint32_t m_FilterDimension = 0;
-			bool m_SaveAsBoxConfig     = false;
+			uint64_t m_trainStimulationID = 0;
+			OpenViBE::CString m_filterFilename;
+			size_t m_filterDim     = 0;
+			bool m_saveAsBoxConfig = false;
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

@@ -6,7 +6,6 @@
 #include <iostream>
 #include <sstream>
 
-
 #include <xml/IXMLNode.h>
 #include <xml/IXMLHandler.h>
 
@@ -18,7 +17,7 @@ namespace
 
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -26,139 +25,122 @@ using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
-bool CAlgorithmPairwiseDecisionHT::initialize() { return true; }
-
-bool CAlgorithmPairwiseDecisionHT::uninitialize() { return true; }
-
 bool CAlgorithmPairwiseDecisionHT::parameterize()
 {
-	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	m_ui32ClassCount = uint32_t(ip_pClassCount);
+	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
 
 
-bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	double* l_pProbabilityMatrix                         = new double[m_ui32ClassCount * m_ui32ClassCount];
+	TParameterHandler<IMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	std::vector<double> probability(m_nClass * m_nClass);
 
 	//First we set the diagonal to 0
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pProbabilityMatrix[i * m_ui32ClassCount + i] = 0.; }
+	for (size_t i = 0; i < m_nClass; ++i) { probability[i * m_nClass + i] = 0.; }
 
 #if HT_DEBUG
-	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
+	for (size_t i = 0 ; i< m_nClass ; ++i){
 
-		for(uint32_t j = 0 ; j<m_ui32ClassCount ; ++j){
-			std::cout << l_pProbabilityMatrix[i*m_ui32ClassCount + j] << " ";
+		for (size_t j = 0 ; j<m_nClass ; ++j){
+			std::cout << probability[i*m_nClass + j] << " ";
 		}
 		std::cout << std::endl;
 	}
 #endif
 
-	for (size_t i = 0; i < pClassificationValueList.size(); ++i)
+	for (size_t i = 0; i < classifications.size(); ++i)
 	{
-		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
-		const uint32_t l_f64FirstIndex                                              = uint32_t(l_rTemp.m_f64FirstClass);
-		const uint32_t l_f64SecondIndex                                             = uint32_t(l_rTemp.m_f64SecondClass);
-		const double* l_pValues                                                     = l_rTemp.m_pClassificationValue->getBuffer();
-		l_pProbabilityMatrix[l_f64FirstIndex * m_ui32ClassCount + l_f64SecondIndex] = l_pValues[0];
-		l_pProbabilityMatrix[l_f64SecondIndex * m_ui32ClassCount + l_f64FirstIndex] = 1 - l_pValues[0];
+		classification_info_t& temp                  = classifications[i];
+		const size_t firstIdx                        = size_t(temp.firstClass);
+		const size_t secondIdx                       = size_t(temp.secondClass);
+		const double* values                         = temp.classificationValue->getBuffer();
+		probability[firstIdx * m_nClass + secondIdx] = values[0];
+		probability[secondIdx * m_nClass + firstIdx] = 1 - values[0];
 	}
 
-	double* l_pP                = new double[m_ui32ClassCount];
-	double** l_pMu              = new double*[m_ui32ClassCount];
-	uint32_t l_ui32AmountSample = 0;
+	std::vector<double> p(m_nClass);
+	std::vector<std::vector<double>> mu(m_nClass);
+	size_t amountSample = 0;
 
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pMu[i] = new double[m_ui32ClassCount]; }
+	for (size_t i = 0; i < m_nClass; ++i) { mu[i].resize(m_nClass); }
+	for (size_t i = 0; i < m_nClass; ++i) { amountSample += size_t(ip_Repartition->getBuffer()[i]); }
+	for (size_t i = 0; i < m_nClass; ++i) { p[i] = ip_Repartition->getBuffer()[i] / amountSample; }
 
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_ui32AmountSample += uint32_t(ip_pRepartitionSetVector->getBuffer()[i]); }
-
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pP[i] = ip_pRepartitionSetVector->getBuffer()[i] / l_ui32AmountSample; }
-
-	for (size_t i = 0; i < m_ui32ClassCount; ++i)
+	for (size_t i = 0; i < m_nClass; ++i)
 	{
-		for (size_t j = 0; j < m_ui32ClassCount; ++j)
+		for (size_t j = 0; j < m_nClass; ++j)
 		{
-			if (i != j) { l_pMu[i][j] = l_pP[i] / (l_pP[i] + l_pP[j]); }
-			else { l_pMu[i][i] = 0; }
+			if (i != j) { mu[i][j] = p[i] / (p[i] + p[j]); }
+			else { mu[i][i] = 0; }
 		}
 	}
 
 #if HT_DEBUG
 	std::cout << "Initial probability and Mu" << std::endl;
-	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
-			std::cout << l_pP[i] << " ";
-	}
+	for (size_t i = 0 ; i < m_nClass ; ++i) { std::cout << p[i] << " "; }
 	std::cout << std::endl << std::endl;
 
-	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
-
-		for(uint32_t j = 0 ; j<m_ui32ClassCount ; ++j){
-			std::cout << l_pMu[i][j] << " ";
-		}
+	for (size_t i = 0 ; i< m_nClass ; ++i)
+	{
+		for (size_t j = 0 ; j<m_nClass ; ++j) { std::cout << mu[i][j] << " "; }
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
 #endif
 
 
-	uint32_t l_ui32ConsecutiveAlpha = 0;
-	uint32_t l_ui32Index            = 0;
-	while (l_ui32ConsecutiveAlpha != m_ui32ClassCount)
+	size_t consecutiveAlpha = 0;
+	size_t index            = 0;
+	while (consecutiveAlpha != m_nClass)
 	{
-		double l_f64FirstSum  = 0.0;
-		double l_f64SecondSum = 0.0;
-		double l_f64Alpha     = 0.0;
+		double firstSum  = 0.0;
+		double secondSum = 0.0;
 
-		for (size_t j = 0; j < m_ui32ClassCount; ++j)
+		for (size_t j = 0; j < m_nClass; ++j)
 		{
-			if (j != l_ui32Index)
+			if (j != index)
 			{
-				const uint32_t l_ui32Temp = uint32_t(l_pProbabilityMatrix[l_ui32Index] + ip_pRepartitionSetVector->getBuffer()[j]);
+				const size_t temp = size_t(probability[index] + ip_Repartition->getBuffer()[j]);
 
-				l_f64FirstSum += l_ui32Temp * l_pProbabilityMatrix[l_ui32Index * m_ui32ClassCount + j];
-				l_f64SecondSum += l_ui32Temp * l_pMu[l_ui32Index][j];
-			}
-		}
-		if (l_f64SecondSum != 0) { l_f64Alpha = l_f64FirstSum / l_f64SecondSum; }
-		else { l_f64Alpha = 1; }
-
-		for (size_t j = 0; j < m_ui32ClassCount; ++j)
-		{
-			if (j != l_ui32Index)
-			{
-				l_pMu[l_ui32Index][j] = (l_f64Alpha * l_pMu[l_ui32Index][j]) /
-										(l_f64Alpha * l_pMu[l_ui32Index][j] + l_pMu[j][l_ui32Index]);
-				l_pMu[j][l_ui32Index] = 1 - l_pMu[l_ui32Index][j];
+				firstSum += temp * probability[index * m_nClass + j];
+				secondSum += temp * mu[index][j];
 			}
 		}
 
-		l_pP[l_ui32Index] *= l_f64Alpha;
-		if (l_f64Alpha > 1 - ALPHA_DELTA && l_f64Alpha < 1 + ALPHA_DELTA) { ++l_ui32ConsecutiveAlpha; }
-		else { l_ui32ConsecutiveAlpha = 0; }
-		l_ui32Index = (l_ui32Index + 1) % m_ui32ClassCount;
+		const double alpha = (secondSum != 0) ? firstSum / secondSum : 1;
+
+		for (size_t j = 0; j < m_nClass; ++j)
+		{
+			if (j != index)
+			{
+				mu[index][j] = (alpha * mu[index][j]) / (alpha * mu[index][j] + mu[j][index]);
+				mu[j][index] = 1 - mu[index][j];
+			}
+		}
+
+		p[index] *= alpha;
+		if (alpha > 1 - ALPHA_DELTA && alpha < 1 + ALPHA_DELTA) { ++consecutiveAlpha; }
+		else { consecutiveAlpha = 0; }
+		index = (index + 1) % m_nClass;
 
 #if HT_DEBUG
-	std::cout << "Intermediate probability, MU and alpha" << std::endl;
-	std::cout << l_f64Alpha << std::endl;
-	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
-			std::cout << l_pP[i] << " ";
-	}
+	std::cout << "Intermediate probability, MU and alpha" << std::endl << alpha << std::endl;
+	for (size_t i = 0 ; i< m_nClass ; ++i) { std::cout << p[i] << " "; }
 	std::cout << std::endl << std::endl;
 
-	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
-
-		for(uint32_t j = 0 ; j<m_ui32ClassCount ; ++j){
-			std::cout << l_pMu[i][j] << " ";
-		}
+	for (size_t i = 0 ; i< m_nClass ; ++i)
+	{
+		for (size_t j = 0 ; j<m_nClass ; ++j) { std::cout << mu[i][j] << " "; }
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
@@ -168,53 +150,48 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 #if HT_DEBUG
 	std::cout << "Result " << std::endl;
-	for(uint32_t i = 0; i<m_ui32ClassCount ; ++i) { std::cout << l_pP[i] << " "; }
+	for (size_t i = 0; i<m_nClass ; ++i) { std::cout << p[i] << " "; }
 	std::cout << std::endl << std::endl;
 #endif
 
-	pProbabilityVector->setDimensionCount(1);
-	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = l_pP[i]; }
-
-	delete[] l_pP;
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { delete[] l_pMu[i]; }
-	delete[] l_pProbabilityMatrix;
-	delete[] l_pMu;
+	probabilities->setDimensionCount(1);
+	probabilities->setDimensionSize(0, m_nClass);
+	for (size_t i = 0; i < m_nClass; ++i) { probabilities->getBuffer()[i] = p[i]; }
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
+XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
+	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
 
-	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	const uint32_t l_ui32ClassCount                      = ip_pRepartitionSetVector->getDimensionSize(0);
+	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	const size_t nClass                         = ip_repartition->getDimensionSize(0);
 
-	std::stringstream l_sRepartition;
-	for (size_t i = 0; i < l_ui32ClassCount; i++) { l_sRepartition << ip_pRepartitionSetVector->getBuffer()[i] << " "; }
-	XML::IXMLNode* l_pRepartition = XML::createNode(REPARTITION_NODE_NAME);
-	l_pRepartition->setPCData(l_sRepartition.str().c_str());
-	l_pRootNode->addChild(l_pRepartition);
+	std::stringstream ss;
+	for (size_t i = 0; i < nClass; ++i) { ss << ip_repartition->getBuffer()[i] << " "; }
+	XML::IXMLNode* repartition = XML::createNode(REPARTITION_NODE_NAME);
+	repartition->setPCData(ss.str().c_str());
+	node->addChild(repartition);
 
-	return l_pRootNode;
+	return node;
 }
 
-bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& rNode)
+bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 {
-	std::stringstream l_sData(rNode.getChildByName(REPARTITION_NODE_NAME)->getPCData());
-	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	std::stringstream ss(node.getChildByName(REPARTITION_NODE_NAME)->getPCData());
+	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 
 
-	std::vector<double> l_vRepartition;
-	while (!l_sData.eof())
+	std::vector<double> repartition;
+	while (!ss.eof())
 	{
-		uint32_t l_ui32Value;
-		l_sData >> l_ui32Value;
-		l_vRepartition.push_back(l_ui32Value);
+		size_t value;
+		ss >> value;
+		repartition.push_back(value);
 	}
 
-	ip_pRepartitionSetVector->setDimensionCount(1);
-	ip_pRepartitionSetVector->setDimensionSize(0, l_vRepartition.size());
-	for (size_t i = 0; i < l_vRepartition.size(); i++) { ip_pRepartitionSetVector->getBuffer()[i] = l_vRepartition[i]; }
+	ip_repartition->setDimensionCount(1);
+	ip_repartition->setDimensionSize(0, repartition.size());
+	for (size_t i = 0; i < repartition.size(); ++i) { ip_repartition->getBuffer()[i] = repartition[i]; }
 	return true;
 }

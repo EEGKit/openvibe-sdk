@@ -45,7 +45,7 @@ namespace OpenViBE
 
 			void pushError(ErrorType type, const char* description) override;
 
-			void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line) override;
+			void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, size_t line) override;
 
 			void releaseErrors() override;
 
@@ -61,8 +61,8 @@ namespace OpenViBE
 
 		private:
 
-			mutable std::mutex m_ManagerGuard;
-			std::unique_ptr<IError> m_TopError;
+			mutable std::mutex m_managerGuard;
+			std::unique_ptr<IError> m_topError;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

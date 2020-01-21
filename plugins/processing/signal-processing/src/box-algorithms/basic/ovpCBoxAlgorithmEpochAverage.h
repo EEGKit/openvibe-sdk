@@ -3,9 +3,6 @@
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_EpochAverage                                          OpenViBE::CIdentifier(0x21283D9F, 0xE76FF640)
-#define OVP_ClassId_BoxAlgorithm_EpochAverageDesc                                      OpenViBE::CIdentifier(0x95F5F43E, 0xBE629D82)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -16,25 +13,25 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EpochAverage)
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pMatrixAverage = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder       = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder       = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_matrixAverage = nullptr;
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64MatrixCount;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_matrixCount;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_averagingMethod;
 		};
 
 		class CBoxAlgorithmEpochAverageListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
@@ -42,7 +39,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
@@ -81,26 +78,26 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEpochAverageListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input epochs", OV_TypeId_StreamedMatrix);
-				rPrototype.addOutput("Averaged epochs", OV_TypeId_StreamedMatrix);
-				rPrototype.addSetting("Averaging type", OVP_TypeId_EpochAverageMethod, OVP_TypeId_EpochAverageMethod_MovingAverage.toString());
-				rPrototype.addSetting("Epoch count", OV_TypeId_Integer, "4");
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput("Input epochs", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Averaged epochs", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Averaging type", OVP_TypeId_EpochAverageMethod, "Moving epoch average");
+				prototype.addSetting("Epoch count", OV_TypeId_Integer, "4");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
-				rPrototype.addInputSupport(OV_TypeId_Signal);
-				rPrototype.addInputSupport(OV_TypeId_Spectrum);
-				rPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				rPrototype.addInputSupport(OV_TypeId_FeatureVector);
-				rPrototype.addInputSupport(OV_TypeId_TimeFrequency);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_FeatureVector);
+				prototype.addInputSupport(OV_TypeId_TimeFrequency);
 
-				rPrototype.addOutputSupport(OV_TypeId_Signal);
-				rPrototype.addOutputSupport(OV_TypeId_Spectrum);
-				rPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
-				rPrototype.addOutputSupport(OV_TypeId_FeatureVector);
-				rPrototype.addOutputSupport(OV_TypeId_TimeFrequency);
+				prototype.addOutputSupport(OV_TypeId_Signal);
+				prototype.addOutputSupport(OV_TypeId_Spectrum);
+				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addOutputSupport(OV_TypeId_FeatureVector);
+				prototype.addOutputSupport(OV_TypeId_TimeFrequency);
 				return true;
 			}
 

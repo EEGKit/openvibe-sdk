@@ -1,7 +1,7 @@
 #include "ovpCBoxAlgorithmStreamEndDetector.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -9,36 +9,34 @@ using namespace Stimulation;
 
 bool CBoxAlgorithmStreamEndDetector::initialize()
 {
-	m_StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), id_SettingStimulationName());
+	m_stimulationID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), settingStimulationNameID());
 
-	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(BoxInterfacorType::Input, id_InputEBML(), m_InputEBMLIndex),
-					  "Box does not have input with identifier " << id_InputEBML(),
-					  ErrorType::Internal);
-	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(BoxInterfacorType::Output, id_OutputStimulations(), m_OutputStimulationsIndex),
-					  "Box does not have output with identifier " << id_OutputStimulations(),
-					  ErrorType::Internal);
+	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(EBoxInterfacorType::Input, inputEBMLId(), m_inputEBMLIdx),
+					  "Box does not have input with identifier " << inputEBMLId(), ErrorType::Internal);
+	OV_FATAL_UNLESS_K(this->getStaticBoxContext().getInterfacorIndex(EBoxInterfacorType::Output, outputStimulationsID(), m_outputStimulationsIdx),
+					  "Box does not have output with identifier " << outputStimulationsID(), ErrorType::Internal);
 
-	m_StructureDecoder.initialize(*this, m_InputEBMLIndex);
-	m_StimulationEncoder.initialize(*this, m_OutputStimulationsIndex);
+	m_decoder.initialize(*this, m_inputEBMLIdx);
+	m_encoder.initialize(*this, m_outputStimulationsIdx);
 
-	m_IsHeaderSent        = false;
-	m_EndDate             = 0;
-	m_CurrentChunkEndDate = 0;
-	m_EndState            = EEndState::WaitingForEnd;
-	m_PreviousTime        = 0;
+	m_isHeaderSent        = false;
+	m_endDate             = 0;
+	m_currentChunkEndDate = 0;
+	m_endState            = EEndState::WaitingForEnd;
+	m_previousTime        = 0;
 
 	return true;
 }
 
 bool CBoxAlgorithmStreamEndDetector::uninitialize()
 {
-	m_StructureDecoder.uninitialize();
-	m_StimulationEncoder.uninitialize();
+	m_decoder.uninitialize();
+	m_encoder.uninitialize();
 
 	return true;
 }
 
-bool CBoxAlgorithmStreamEndDetector::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmStreamEndDetector::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -48,55 +46,53 @@ bool CBoxAlgorithmStreamEndDetector::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(m_InputEBMLIndex); chunk++)
+	for (size_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(m_inputEBMLIdx); ++chunk)
 	{
-		OV_ERROR_UNLESS_KRF(m_StructureDecoder.decode(chunk),
-							"Failed to decode chunk",
-							ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_decoder.decode(chunk), "Failed to decode chunk", ErrorType::Internal);
 
 		// We can not receive anything before this date anymore, thus we can send an empty stream
-		m_CurrentChunkEndDate = dynamicBoxContext.getInputChunkStartTime(m_InputEBMLIndex, chunk);
-		if (m_StructureDecoder.isEndReceived())
+		m_currentChunkEndDate = dynamicBoxContext.getInputChunkStartTime(m_inputEBMLIdx, chunk);
+		if (m_decoder.isEndReceived())
 		{
-			m_EndState = EEndState::EndReceived;
-			m_EndDate  = dynamicBoxContext.getInputChunkEndTime(m_InputEBMLIndex, chunk);
+			m_endState = EEndState::EndReceived;
+			m_endDate  = dynamicBoxContext.getInputChunkEndTime(m_inputEBMLIdx, chunk);
 			// As this is the last chunk, we make it so it ends at the same time as the received End chunk
-			m_CurrentChunkEndDate = dynamicBoxContext.getInputChunkEndTime(m_InputEBMLIndex, chunk);
+			m_currentChunkEndDate = dynamicBoxContext.getInputChunkEndTime(m_inputEBMLIdx, chunk);
 		}
 	}
 
-	if (!m_IsHeaderSent)
+	if (!m_isHeaderSent)
 	{
-		m_StimulationEncoder.encodeHeader();
+		m_encoder.encodeHeader();
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
-		m_IsHeaderSent = true;
+		m_isHeaderSent = true;
 	}
 
-	IStimulationSet* stimulationSet = m_StimulationEncoder.getInputStimulationSet();
+	IStimulationSet* stimulationSet = m_encoder.getInputStimulationSet();
 	stimulationSet->clear();
 
 
 	// If the timeout is reached we send the stimulation on the output 0
-	if (m_EndState == EEndState::EndReceived)
+	if (m_endState == EEndState::EndReceived)
 	{
-		stimulationSet->appendStimulation(m_StimulationIdentifier, m_EndDate, 0);
-		m_EndState = EEndState::StimulationSent;
+		stimulationSet->appendStimulation(m_stimulationID, m_endDate, 0);
+		m_endState = EEndState::StimulationSent;
 	}
 
-	if (m_EndState != EEndState::Finished && (m_EndState == EEndState::StimulationSent || m_PreviousTime != m_CurrentChunkEndDate))
+	if (m_endState != EEndState::Finished && (m_endState == EEndState::StimulationSent || m_previousTime != m_currentChunkEndDate))
 	{
 		// we need to send an empty chunk even if there's no stim
-		m_StimulationEncoder.encodeBuffer();
-		this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_PreviousTime, m_CurrentChunkEndDate);
+		m_encoder.encodeBuffer();
+		this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_previousTime, m_currentChunkEndDate);
 	}
 
-	m_PreviousTime = m_CurrentChunkEndDate;
+	m_previousTime = m_currentChunkEndDate;
 
-	if (m_EndState == EEndState::StimulationSent)
+	if (m_endState == EEndState::StimulationSent)
 	{
-		m_StimulationEncoder.encodeEnd();
-		this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_PreviousTime, m_PreviousTime);
-		m_EndState = EEndState::Finished;
+		m_encoder.encodeEnd();
+		this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_previousTime, m_previousTime);
+		m_endState = EEndState::Finished;
 	}
 
 	return true;

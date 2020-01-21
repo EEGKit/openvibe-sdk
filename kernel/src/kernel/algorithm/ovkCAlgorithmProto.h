@@ -8,12 +8,12 @@ namespace OpenViBE
 	{
 		class CAlgorithmProxy;
 
-		class CAlgorithmProto : public TKernelObject<IAlgorithmProto>
+		class CAlgorithmProto final : public TKernelObject<IAlgorithmProto>
 		{
 		public:
 
 			CAlgorithmProto(const IKernelContext& ctx, CAlgorithmProxy& rAlgorithmProxy);
-			bool addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName, EParameterType eParameterType,
+			bool addInputParameter(const CIdentifier& inputParameterID, const CString& sInputName, EParameterType eParameterType,
 								   const CIdentifier& subTypeID) override;
 			bool addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName, EParameterType eParameterType,
 									const CIdentifier& subTypeID) override;
@@ -24,7 +24,7 @@ namespace OpenViBE
 
 		protected:
 
-			CAlgorithmProxy& m_rAlgorithmProxy;
+			CAlgorithmProxy& m_algorithmProxy;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include <cstdlib>	// For Unix Compatibility
 
 namespace Socket
 {
@@ -14,14 +15,14 @@ namespace Socket
 
 		virtual bool close() = 0;
 
-		virtual bool isReadyToSend(const uint32_t ui32TimeOut = 0) const = 0;
-		virtual bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const = 0;
+		virtual bool isReadyToSend(const size_t timeOut = 0) const = 0;
+		virtual bool isReadyToReceive(const size_t timeOut = 0) const = 0;
 
-		virtual uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) = 0;
-		virtual uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) = 0;
+		virtual size_t sendBuffer(const void* buffer, const size_t size) = 0;
+		virtual size_t receiveBuffer(void* buffer, const size_t size) = 0;
 
-		virtual bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) = 0;
-		virtual bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) = 0;
+		virtual bool sendBufferBlocking(const void* buffer, const size_t size) = 0;
+		virtual bool receiveBufferBlocking(void* buffer, const size_t size) = 0;
 
 		virtual bool isConnected() const = 0;
 
@@ -29,6 +30,6 @@ namespace Socket
 
 	protected:
 
-		virtual ~IConnection();
+		virtual ~IConnection() = default;
 	};
 } // namespace Socket

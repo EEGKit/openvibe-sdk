@@ -1,43 +1,42 @@
 #include "ovbt_sg_defines.h"
-#include "ovbt_sg_file_generator_base.h"
 
 #include <fstream>
 
 using namespace std;
 
 
-string getBrutHexaCode(string l_oFormatedHexaCode)
+string getBrutHexaCode(string formatedHexaCode)
 {
-	string res = l_oFormatedHexaCode;
+	string res = formatedHexaCode;
 	res.erase(res.begin(), res.begin() + 2);
 	return res;
 }
 
-bool CMatlabGenerator::openFile(const char* sFilename)
+bool CMatlabGenerator::openFile(const char* filename)
 {
-	m_oFile.open(sFilename, ios::out | ios::trunc);
-	if (!m_oFile.is_open()) return false;
-	m_oFile << "function OV_stimulations()" << endl << endl;
+	m_file.open(filename, ios::out | ios::trunc);
+	if (!m_file.is_open()) { return false; }
+	m_file << "function OV_stimulations()" << endl << endl;
 
-	m_oFile << "global OVTK_StimulationId_LabelStart;" << endl;
-	m_oFile << "OVTK_StimulationId_LabelStart = uint64_t(hex2dec('00008100'));" << endl << endl;
-	m_oFile << "global OVTK_StimulationId_LabelEnd;" << endl;
-	m_oFile << "OVTK_StimulationId_LabelEnd = uint64_t(hex2dec('000081ff'));" << endl << endl;
+	m_file << "global OVTK_StimulationId_LabelStart;" << endl;
+	m_file << "OVTK_StimulationId_LabelStart = uint64_t(hex2dec('00008100'));" << endl << endl;
+	m_file << "global OVTK_StimulationId_LabelEnd;" << endl;
+	m_file << "OVTK_StimulationId_LabelEnd = uint64_t(hex2dec('000081ff'));" << endl << endl;
 
 	return true;
 }
 
-bool CMatlabGenerator::appendStimulation(SStimulation& rStim)
+bool CMatlabGenerator::appendStimulation(SStimulation& stim)
 {
-	m_oFile << "\tglobal " << rStim.m_Id << ";" << endl;
-	m_oFile << "\t" << rStim.m_Id << " = uint64_t(hex2dec('" << getBrutHexaCode(rStim.m_HexaCode) << "'));" << endl << endl;
+	m_file << "\tglobal " << stim.id << ";" << endl;
+	m_file << "\t" << stim.id << " = uint64_t(hex2dec('" << getBrutHexaCode(stim.hexa) << "'));" << endl << endl;
 	return true;
 }
 
 
 bool CMatlabGenerator::closeFile()
 {
-	m_oFile << "end" << endl;
-	m_oFile.close();
+	m_file << "end" << endl;
+	m_file.close();
 	return true;
 }

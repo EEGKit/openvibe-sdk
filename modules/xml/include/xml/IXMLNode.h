@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <string>
+#include <cstdlib>	// fix Unix compatibility
 
 namespace XML
 {
@@ -20,40 +21,40 @@ namespace XML
 
 		//Attribute
 		/**
-		 * @brief Add the attribute sAttributeName with value
-		 * sAttributeValue to the node.
-		 * @param sAttributeName [in] : Name of the attribute
-		 * @param sAttributeValue [in] : Value of the attribute
+		 * @brief Add the attribute name with value
+		 * value to the node.
+		 * @param name [in] : Name of the attribute
+		 * @param value [in] : Value of the attribute
 		 * @return true in success, false otherwise
 		 */
-		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue) = 0;
+		virtual bool addAttribute(const char* name, const char* value) = 0;
 
 		/**
 		 * @brief Indicate if an attribute exists or not.
-		 * @param sAttributeName [in] : Name of the attribute
+		 * @param name [in] : Name of the attribute
 		 * @return true if attribute exists, false otherwise
 		 */
-		virtual bool hasAttribute(const char* sAttributeName) const = 0;
+		virtual bool hasAttribute(const char* name) const = 0;
 
 		/**
 		 * @brief Return the value of an attribute.
-		 * @param sAttributeName [in] : Name of the attribute
+		 * @param name [in] : Name of the attribute
 		 * @return Value of the attribute
 		 */
-		virtual const char* getAttribute(const char* sAttributeName) const = 0;
+		virtual const char* getAttribute(const char* name) const = 0;
 
 		//PCDATA
 		/**
 		 * @brief Set the PCDATA of the node.
-		 * @param childData [in] : Value of the PCDATA
+		 * @param data [in] : Value of the PCDATA
 		 */
-		virtual void setPCData(const char* childData) = 0;
+		virtual void setPCData(const char* data) = 0;
 
 		/**
 		 * @brief Apppend a string to the current PCDATA of the node
-		 * @param childData [in] : Value of teh PCDATA to append
+		 * @param data [in] : Value of teh PCDATA to append
 		 */
-		virtual void appendPCData(const char* childData) = 0;
+		virtual void appendPCData(const char* data) = 0;
 
 		/**
 		 * @brief Return the PCDATA of the node.
@@ -64,16 +65,16 @@ namespace XML
 		//Child
 		/**
 		 * @brief Add a node child of the
-		 * @param ChildNode [in] : The Node that will became the new child
+		 * @param node [in] : The Node that will became the new child
 		 */
-		virtual void addChild(IXMLNode* ChildNode) = 0;
+		virtual void addChild(IXMLNode* node) = 0;
 
 		/**
 		 * @brief Return the ith child of the node.
-		 * @param iChildIndex [in] : index of the child.
+		 * @param index [in] : index of the child.
 		 * @return The ith child of the node.
 		 */
-		virtual IXMLNode* getChild(size_t iChildIndex) const = 0;
+		virtual IXMLNode* getChild(const size_t index) const = 0;
 
 		/**
 		 * @brief Return the first child with the name name.
@@ -95,7 +96,7 @@ namespace XML
 		 * @param depth [in] : Amount of indentation
 		 * @return XML string describing the node and its childs.
 		 */
-		virtual char* getXML(uint32_t depth = 0) const = 0;
+		virtual char* getXML(const size_t depth = 0) const = 0;
 
 	protected:
 		virtual ~IXMLNode() {}
@@ -107,4 +108,4 @@ namespace XML
 	 * @return New node
 	 */
 	extern XML_API IXMLNode* createNode(const char* name);
-}
+}  // namespace XML

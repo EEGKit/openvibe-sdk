@@ -10,12 +10,11 @@
 
 fft_object fft_init(int N, int sgn)
 {
-	fft_object obj = NULL;
 	// Change N/2 to N-1 for longvector case
-
 	int twi_len;
 	const int out = dividebyN(N);
 
+	fft_object obj;
 	if (out == 1)
 	{
 		obj     = (fft_object)malloc(sizeof(struct fft_set) + sizeof(fft_data) * (N - 1));
@@ -42,7 +41,7 @@ fft_object fft_init(int N, int sgn)
 	obj->N   = N;
 	obj->sgn = sgn;
 
-	if (sgn == -1) { for (int ct = 0; ct < twi_len; ct++) { (obj->twiddle + ct)->im = - (obj->twiddle + ct)->im; } }
+	if (sgn == -1) { for (int ct = 0; ct < twi_len; ++ct) { (obj->twiddle + ct)->im = - (obj->twiddle + ct)->im; } }
 
 	return obj;
 }
@@ -514,7 +513,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 		mixed_radix_dit_rec(op, ip, obj, sgn, m, ll, inc + 1);
 		mixed_radix_dit_rec(op + m, ip + l, obj, sgn, m, ll, inc + 1);
 
-		for (k = 0; k < m; k++)
+		for (k = 0; k < m; ++k)
 		{
 			ind = m - 1 + k;
 			wlr = (obj->twiddle + ind)->re;
@@ -646,7 +645,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 		op[tkm3].im = tau1i + tau3r;
 
 
-		for (k = 1; k < m; k++)
+		for (k = 1; k < m; ++k)
 		{
 			ind = m - 1 + 3 * k;
 			wlr = (obj->twiddle + ind)->re;
@@ -787,7 +786,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 		op[tkm3].re = tau6r - tau5i;
 		op[tkm3].im = tau6i + tau5r;
 
-		for (k = 1; k < m; k++)
+		for (k = 1; k < m; ++k)
 		{
 			ind = m - 1 + 4 * k;
 			wlr = (obj->twiddle + ind)->re;
@@ -1036,7 +1035,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 		op[tkm4].im = tau6i - tau7r;
 
 
-		for (k = 1; k < m; k++)
+		for (k = 1; k < m; ++k)
 		{
 			ind = m - 1 + 6 * k;
 			wlr = (obj->twiddle + ind)->re;
@@ -1201,7 +1200,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 		s1 = 0.70710678118654752440084436210485;
 
 
-		for (k = 0; k < m; k++)
+		for (k = 0; k < m; ++k)
 		{
 			ind = m - 1 + 7 * k;
 			wlr = (obj->twiddle + ind)->re;
@@ -1430,13 +1429,13 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 			op[k].re = temp1r;
 			op[k].im = temp1i;
 
-			for (u = 0; u < M; u++)
+			for (u = 0; u < M; ++u)
 			{
 				temp1r = yr[0];
 				temp1i = yi[0];
 				temp2r = 0.0;
 				temp2i = 0.0;
-				for (v = 0; v < M; v++)
+				for (v = 0; v < M; ++v)
 				{
 					//int ind2 = (u+v)%M;
 					t = (u + 1) * (v + 1);
@@ -1489,13 +1488,13 @@ static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 		while (l2 > len2) { l2 -= len2; }
 	}
 
-	for (i = len; i < M - len + 1; i++)
+	for (i = len; i < M - len + 1; ++i)
 	{
 		hl[i].re = 0.0;
 		hl[i].im = 0.0;
 	}
 
-	for (i = M - len + 1; i < M; i++)
+	for (i = M - len + 1; i < M; ++i)
 	{
 		hl[i].re = hlt[M - i].re;
 		hl[i].im = hlt[M - i].im;
@@ -1507,7 +1506,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	int M, ii, i;
 	fft_type temp;
 	obj->lt           = 0;
-	const int K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
+	const int K       = (int)pow(2.0, ceil(log10((double)N) / log10(2.0)));
 	const int def_lt  = 1;
 	const int def_sgn = obj->sgn;
 	const int def_N   = obj->N;
@@ -1537,7 +1536,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 
 	if (sgn == 1)
 	{
-		for (i = 0; i < N; i++)
+		for (i = 0; i < N; ++i)
 		{
 			tempop[i].re = data[i].re * hlt[i].re + data[i].im * hlt[i].im;
 			tempop[i].im = -data[i].re * hlt[i].im + data[i].im * hlt[i].re;
@@ -1545,14 +1544,14 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	}
 	else
 	{
-		for (i = 0; i < N; i++)
+		for (i = 0; i < N; ++i)
 		{
 			tempop[i].re = data[i].re * hlt[i].re - data[i].im * hlt[i].im;
 			tempop[i].im = data[i].re * hlt[i].im + data[i].im * hlt[i].re;
 		}
 	}
 
-	for (i = N; i < M; i++)
+	for (i = N; i < M; ++i)
 	{
 		tempop[i].re = 0.0;
 		tempop[i].im = 0.0;
@@ -1562,7 +1561,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 
 	if (sgn == 1)
 	{
-		for (i = 0; i < M; i++)
+		for (i = 0; i < M; ++i)
 		{
 			temp     = yn[i].re * hk[i].re - yn[i].im * hk[i].im;
 			yn[i].im = yn[i].re * hk[i].im + yn[i].im * hk[i].re;
@@ -1571,7 +1570,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	}
 	else
 	{
-		for (i = 0; i < M; i++)
+		for (i = 0; i < M; ++i)
 		{
 			temp     = yn[i].re * hk[i].re + yn[i].im * hk[i].im;
 			yn[i].im = -yn[i].re * hk[i].im + yn[i].im * hk[i].re;
@@ -1589,7 +1588,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 
 	if (sgn == 1)
 	{
-		for (i = 0; i < N; i++)
+		for (i = 0; i < N; ++i)
 		{
 			oup[i].re = yno[i].re * hlt[i].re + yno[i].im * hlt[i].im;
 			oup[i].im = -yno[i].re * hlt[i].im + yno[i].im * hlt[i].re;
@@ -1597,7 +1596,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	}
 	else
 	{
-		for (i = 0; i < N; i++)
+		for (i = 0; i < N; ++i)
 		{
 			oup[i].re = yno[i].re * hlt[i].re - yno[i].im * hlt[i].im;
 			oup[i].im = yno[i].re * hlt[i].im + yno[i].im * hlt[i].re;
@@ -1813,7 +1812,7 @@ void twiddle(fft_data* vec, int N, int radix)
 	vec[0].re      = 1.0;
 	vec[0].im      = 0.0;
 
-	for (int K = 1; K < KL; K++)
+	for (int K = 1; K < KL; ++K)
 	{
 		fft_type theta2 = theta * K;
 		vec[K].re       = cos(theta2);
@@ -1825,14 +1824,14 @@ void longvectorN(fft_data* sig, int N, int* array, int tx)
 {
 	int L  = 1;
 	int ct = 0;
-	for (int i = 0; i < tx; i++)
+	for (int i = 0; i < tx; ++i)
 	{
 		L              = L * array[tx - 1 - i];
 		const int Ls   = L / array[tx - 1 - i];
 		fft_type theta = -1.0 * PI2 / L;
-		for (int j = 0; j < Ls; j++)
+		for (int j = 0; j < Ls; ++j)
 		{
-			for (int k = 0; k < array[tx - 1 - i] - 1; k++)
+			for (int k = 0; k < array[tx - 1 - i] - 1; ++k)
 			{
 				sig[ct].re = cos((k + 1) * j * theta);
 				sig[ct].im = sin((k + 1) * j * theta);

@@ -27,35 +27,35 @@ namespace OpenViBE
 
 			/**
 			 * \brief Creates the kernel itself
-			 * \param rApplicationName [in] : the name of the application requesting kernel creation
+			 * \param applicationName [in] : the name of the application requesting kernel creation
 			 *                                (an configuration token will be created so the configuration
 			 *                                file can be tweaked according to the targeted application)
-			 * \param rConfigurationFilename [in] : a bootstrap configuration file
+			 * \param configFilename [in] : a bootstrap configuration file
 			 * \return the created kernel.
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) = 0;
+			virtual IKernelContext* createKernel(const CString& applicationName, const CString& configFilename) = 0;
 			/**
 			 * \brief Creates the kernel itself and make it sub kernel of a master kernel
-			 * \param rMasterKernel [in] : the master kernel
-			 * \param rApplicationName [in] : the name of the application requesting kernel creation
+			 * \param masterKernel [in] : the master kernel
+			 * \param applicationName [in] : the name of the application requesting kernel creation
 			 *                                (an configuration token will be created so the configuration
 			 *                                file can be tweaked according to the targeted application)
-			 * \param rConfigurationFilename [in] : a bootstrap configuration file
+			 * \param configFilename [in] : a bootstrap configuration file
 			 * \return the created kernel.
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernel, const CString& rApplicationName,
-												 const CString& rConfigurationFilename) = 0;
+			virtual IKernelContext* createKernel(const IKernelContext& masterKernel, const CString& applicationName,
+												 const CString& configFilename) = 0;
 			/**
 			 * \brief Releases the kernel itself
-			 * \param pKernel [in] : the kernel to release
+			 * \param kernel [in] : the kernel to release
 			 *
 			 * This method releases an existing kernel.
 			 */
-			virtual void releaseKernel(IKernelContext* pKernel) = 0;
+			virtual void releaseKernel(IKernelContext* kernel) = 0;
 
 			//@}
 			/** \name Textual plugin object description and information */

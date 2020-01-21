@@ -5,36 +5,34 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 //___________________________________________________________________//
 //                                                                   //
 
 CComment::CComment(const IKernelContext& ctx, CScenario& rOwnerScenario)
-	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_sText("") {}
+	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_text("") {}
 
 CComment::~CComment() {}
 
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CComment::getIdentifier() const { return m_oIdentifier; }
+CIdentifier CComment::getIdentifier() const { return m_id; }
 
-CString CComment::getText() const { return m_sText; }
+CString CComment::getText() const { return m_text; }
 
-bool CComment::setIdentifier(const CIdentifier& identifier)
+bool CComment::setIdentifier(const CIdentifier& id)
 {
-	if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
-	if (identifier == OV_UndefinedIdentifier) { return false; }
-	m_oIdentifier = identifier;
-
+	if (m_id != OV_UndefinedIdentifier || id == OV_UndefinedIdentifier) { return false; }
+	m_id = id;
 	return true;
 }
 
 bool CComment::setText(const CString& sText)
 {
-	m_sText = sText;
+	m_text = sText;
 	return true;
 }
 
@@ -43,13 +41,13 @@ bool CComment::setText(const CString& sText)
 
 bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
-	m_sText = rExisitingComment.getText();
+	m_text = rExisitingComment.getText();
 
-	CIdentifier l_oIdentifier = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-	while (l_oIdentifier != OV_UndefinedIdentifier)
+	CIdentifier id = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
+	while (id != OV_UndefinedIdentifier)
 	{
-		addAttribute(l_oIdentifier, rExisitingComment.getAttributeValue(l_oIdentifier));
-		l_oIdentifier = rExisitingComment.getNextAttributeIdentifier(l_oIdentifier);
+		addAttribute(id, rExisitingComment.getAttributeValue(id));
+		id = rExisitingComment.getNextAttributeIdentifier(id);
 	}
 
 	return true;
@@ -60,6 +58,6 @@ bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 
 bool CComment::acceptVisitor(IObjectVisitor& rObjectVisitor)
 {
-	CObjectVisitorContext l_oObjectVisitorContext(getKernelContext());
-	return rObjectVisitor.processBegin(l_oObjectVisitorContext, *this) && rObjectVisitor.processEnd(l_oObjectVisitorContext, *this);
+	CObjectVisitorContext context(getKernelContext());
+	return rObjectVisitor.processBegin(context, *this) && rObjectVisitor.processEnd(context, *this);
 }

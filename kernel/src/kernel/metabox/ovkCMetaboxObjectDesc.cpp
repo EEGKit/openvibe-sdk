@@ -4,72 +4,69 @@ using namespace OpenViBE;
 using namespace Metabox;
 
 CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario)
-	: m_MetaboxDescriptor(rMetaboxDescriptor)
-	  , m_Name(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
-	  , m_AuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
-	  , m_AuthorCompanyName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Company))
-	  , m_ShortDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_ShortDescription))
-	  , m_DetailedDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription))
-	  , m_Category(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Category))
-	  , m_Version(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Version))
-	  , m_StockItemName("")
-	  , m_AddedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
-	  , m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
-	  , m_MetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
+	: m_metaboxDesc(rMetaboxDescriptor)
+	  , m_name(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
+	  , m_authorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
+	  , m_authorCompanyName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Company))
+	  , m_shortDesc(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_ShortDescription))
+	  , m_detailedDesc(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription))
+	  , m_category(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Category))
+	  , m_version(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Version))
+	  , m_stockItemName("")
+	  , m_addedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
+	  , m_updatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
+	  , m_metaboxID(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID))
 {
-	for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < metaboxScenario.getInputCount(); l_ui32ScenarioInputIndex++)
+	for (size_t scenarioInputIdx = 0; scenarioInputIdx < metaboxScenario.getInputCount(); ++scenarioInputIdx)
 	{
-		CString l_sInputName;
-		CIdentifier l_oInputTypeIdentifier;
-		CIdentifier l_oInputIdentifier;
+		CString name;
+		CIdentifier typeID;
+		CIdentifier id;
 
-		metaboxScenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
-		metaboxScenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
-		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Input, l_ui32ScenarioInputIndex, l_oInputIdentifier);
+		metaboxScenario.getInputType(scenarioInputIdx, typeID);
+		metaboxScenario.getInputName(scenarioInputIdx, name);
+		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Input, scenarioInputIdx, id);
 
-		m_Inputs.push_back(SIOStream(l_sInputName, l_oInputTypeIdentifier, l_oInputIdentifier));
+		m_inputs.push_back(io_stream_t(name, typeID, id));
 	}
 
-	for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
+	for (size_t scenarioOutputIdx = 0; scenarioOutputIdx < metaboxScenario.getOutputCount(); ++scenarioOutputIdx)
 	{
-		CString l_sOutputName;
-		CIdentifier l_oOutputTypeIdentifier;
-		CIdentifier l_oOutputIdentifier;
+		CString name;
+		CIdentifier typeID;
+		CIdentifier id;
 
-		metaboxScenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
-		metaboxScenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
-		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Output, l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
+		metaboxScenario.getOutputType(scenarioOutputIdx, typeID);
+		metaboxScenario.getOutputName(scenarioOutputIdx, name);
+		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Output, scenarioOutputIdx, id);
 
-		m_Outputs.push_back(SIOStream(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier));
+		m_outputs.push_back(io_stream_t(name, typeID, id));
 	}
 
-	for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
+	for (size_t scenarioSettingIdx = 0; scenarioSettingIdx < metaboxScenario.getSettingCount(); ++scenarioSettingIdx)
 	{
-		CString l_sSettingName;
-		CIdentifier l_oSettingTypeIdentifier;
-		CString l_sSettingDefaultValue;
-		CIdentifier l_oSettingIdentifier;
+		CString name;
+		CIdentifier typeID;
+		CString defaultValue;
+		CIdentifier id;
 
-		metaboxScenario.getSettingName(l_ui32ScenarioSettingIndex, l_sSettingName);
-		metaboxScenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
-		metaboxScenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
-		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Setting, l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
+		metaboxScenario.getSettingName(scenarioSettingIdx, name);
+		metaboxScenario.getSettingType(scenarioSettingIdx, typeID);
+		metaboxScenario.getSettingDefaultValue(scenarioSettingIdx, defaultValue);
+		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Setting, scenarioSettingIdx, id);
 
 
-		m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue, l_oSettingIdentifier));
+		m_settings.push_back(setting_t(name, typeID, defaultValue, id));
 	}
 }
 
 bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& prototype) const
 {
-	for (auto& input : m_Inputs) { prototype.addInput(input.m_sName, input.m_oTypeIdentifier, input.m_oIdentifier); }
+	for (auto& input : m_inputs) { prototype.addInput(input.m_name, input.m_typeID, input.m_id); }
 
-	for (auto& output : m_Outputs) { prototype.addOutput(output.m_sName, output.m_oTypeIdentifier, output.m_oIdentifier); }
+	for (auto& output : m_outputs) { prototype.addOutput(output.m_name, output.m_typeID, output.m_id); }
 
-	for (auto& setting : m_Settings)
-	{
-		prototype.addSetting(setting.m_sName, setting.m_oTypeIdentifier, setting.m_sDefaultValue, false, setting.m_oIdentifier);
-	}
+	for (auto& setting : m_settings) { prototype.addSetting(setting.m_name, setting.m_typeID, setting.m_defaultValue, false, setting.m_id); }
 
 	return true;
 }

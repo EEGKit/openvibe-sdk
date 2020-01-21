@@ -1,10 +1,7 @@
 #pragma once
 
-#include <map>
+#include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
-
-#define OVP_ClassId_SpectralAnalysis         OpenViBE::CIdentifier(0x84218FF8, 0xA87E7995)
-#define OVP_ClassId_SpectralAnalysisDesc     OpenViBE::CIdentifier(0x0051E63C, 0x68E83AD1)
 
 namespace OpenViBEPlugins
 {
@@ -16,24 +13,24 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_SpectralAnalysis)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_SpectralAnalysis)
 
 		protected:
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_Decoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_decoder;
 
-			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_SpectrumEncoders;
-			std::vector<bool> m_IsSpectrumEncoderActive;
+			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
+			std::vector<bool> m_isSpectrumEncoderActive;
 
-			unsigned int m_ChannelCount = 0;
-			unsigned int m_SampleCount  = 0;
-			unsigned int m_SamplingRate = 0;
+			size_t m_nChannel = 0;
+			size_t m_nSample  = 0;
+			size_t m_sampling = 0;
 
-			unsigned int m_FFTSize = 0;
+			size_t m_sizeFFT = 0;
 
-			OpenViBE::IMatrix* m_FrequencyAbscissa = nullptr;
+			OpenViBE::IMatrix* m_frequencyAbscissa = nullptr;
 		};
 
 		class CBoxAlgorithmSpectralAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -54,19 +51,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_SpectralAnalysis; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSpectralAnalysis(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
 
-				rPrototype.addOutput("Amplitude", OV_TypeId_Spectrum);
-				rPrototype.addOutput("Phase", OV_TypeId_Spectrum);
-				rPrototype.addOutput("Real Part", OV_TypeId_Spectrum);
-				rPrototype.addOutput("Imaginary Part", OV_TypeId_Spectrum);
+				prototype.addOutput("Amplitude", OV_TypeId_Spectrum);
+				prototype.addOutput("Phase", OV_TypeId_Spectrum);
+				prototype.addOutput("Real Part", OV_TypeId_Spectrum);
+				prototype.addOutput("Imaginary Part", OV_TypeId_Spectrum);
 
-				rPrototype.addSetting("Amplitude", OV_TypeId_Boolean, "true");
-				rPrototype.addSetting("Phase", OV_TypeId_Boolean, "false");
-				rPrototype.addSetting("Real Part", OV_TypeId_Boolean, "false");
-				rPrototype.addSetting("Imaginary Part", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Amplitude", OV_TypeId_Boolean, "true");
+				prototype.addSetting("Phase", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Real Part", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Imaginary Part", OV_TypeId_Boolean, "false");
 
 				return true;
 			}

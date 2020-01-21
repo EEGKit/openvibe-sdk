@@ -20,7 +20,6 @@
 */
 
 #include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <cstdio>
 
@@ -36,28 +35,28 @@ class CWriterCallBack : public XML::IWriterCallBack
 {
 public:
 
-	CWriterCallBack(const char* filename) { m_File = FS::Files::open(filename, "wb"); }
+	CWriterCallBack(const char* filename) { m_file = FS::Files::open(filename, "wb"); }
 
 	~CWriterCallBack() override
 	{
-		if (m_File)
+		if (m_file)
 		{
-			std::fclose(m_File); // in case release is not called
+			std::fclose(m_file); // in case release is not called
 		}
 	}
 
-	void write(const char* outputData) override { if (m_File) { std::fputs(outputData, m_File); } }
+	void write(const char* outputData) override { if (m_file) { std::fputs(outputData, m_file); } }
 
 	// necessary thjor the test to close the stream and re-open it for inspection
 	void release()
 	{
-		std::fclose(m_File);
-		m_File = nullptr;
+		std::fclose(m_file);
+		m_file = nullptr;
 	}
 
 private:
 
-	std::FILE* m_File{ nullptr };
+	std::FILE* m_file{ nullptr };
 };
 
 TEST(XML_Writer_Test_Case, validateWriter)
@@ -75,9 +74,9 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	// to a reference.
 
 	// serializing
-	CWriterCallBack writerCallback(outputFile.c_str());
+	CWriterCallBack callback(outputFile.c_str());
 
-	XML::IWriter* writer = createWriter(writerCallback);
+	XML::IWriter* writer = createWriter(callback);
 
 	writer->openChild("Document"); //!< Document Node
 	writer->setAttribute("name", "test_reference");
@@ -111,7 +110,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	writer->closeChild(); //!< Document Node END
 
 	writer->release();
-	writerCallback.release();
+	callback.release();
 
 	// comparison part
 	std::ifstream generatedStream;
@@ -149,7 +148,7 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
 	std::string testData         = "<Document name=\"日本語\"><Node>日本語 1</Node><Node>日本語 2</Node><Node>日本語 3</Node></Document>";
-	XML::IXMLNode* rootNode      = xmlHandler->parseString(testData.c_str(), uint32_t(testData.size()));
+	XML::IXMLNode* rootNode      = xmlHandler->parseString(testData.c_str(), testData.size());
 	xmlHandler->writeXMLInFile(*rootNode, outputFile.c_str());
 
 	// comparison part

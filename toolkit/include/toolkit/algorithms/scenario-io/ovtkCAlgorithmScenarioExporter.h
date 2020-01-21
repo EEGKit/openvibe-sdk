@@ -23,6 +23,6 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ScenarioExporterDesc)
+		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmScenarioExporterDesc, OVTK_ClassId_Algorithm_ScenarioExporterDesc)
 	};
 } // namespace OpenViBEToolkit

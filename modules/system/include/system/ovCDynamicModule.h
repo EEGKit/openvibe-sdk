@@ -20,7 +20,7 @@ namespace System
 	class System_API CDynamicModule final
 	{
 	public:
-		enum ELogErrorCodes : unsigned int
+		enum ELogErrorCodes : size_t
 		{
 			LogErrorCodes_NoError = 0,
 			LogErrorCodes_ModuleAlreadyLoaded = 1,
@@ -36,20 +36,7 @@ namespace System
 		};
 
 		CDynamicModule();
-		virtual ~CDynamicModule();
-
-#if defined TARGET_OS_Windows
-		/**
-		 * \brief Load existing module that was already loaded by the process.
-		 *
-		 * \param modulePath The path to the module.
-		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
-		 *
-		 * \retval true If the module loaded successfully.
-		 * \retval false If module loading failed.
-		 */
-		bool loadFromExisting(const char* modulePath, const char* symbolNameCheck = nullptr);
-#endif
+		~CDynamicModule();
 
 		/**
 		 * \brief Load module from a path.
@@ -64,6 +51,16 @@ namespace System
 
 #if defined TARGET_OS_Windows
 		/**
+		 * \brief Load existing module that was already loaded by the process.
+		 *
+		 * \param modulePath The path to the module.
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 *
+		 * \retval true If the module loaded successfully.
+		 * \retval false If module loading failed.
+		 */
+		bool loadFromExisting(const char* modulePath, const char* symbolNameCheck = nullptr);
+		/**
 		 * \brief Load module from known path. Windows only.
 		 *
 		 * \param standardPath A CSIDL value that identifies the folder whose path is to be retrieved.
@@ -76,9 +73,7 @@ namespace System
 		 * \retval false If module loading failed.
 		 */
 		bool loadFromKnownPath(int standardPath, const char* modulePath, const char* symbolNameCheck = nullptr);
-#endif
 
-#if defined TARGET_OS_Windows
 		/**
 		 * \brief Load module from Windows environment. Windows only.
 		 *
@@ -90,9 +85,7 @@ namespace System
 		 * \retval false If module loading failed.
 		 */
 		bool loadFromEnvironment(const char* environmentPath, const char* modulePath, const char* symbolNameCheck = nullptr);
-#endif
 
-#if defined TARGET_OS_Windows
 		/**
 		 * \brief Load module from the registry. Windows only.
 		 *
@@ -108,11 +101,8 @@ namespace System
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath,
-							  const char* symbolNameCheck = nullptr);
-#endif
+		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck = nullptr);
 
-#if defined TARGET_OS_Windows
 		/**
 		 * \brief Check the module architecture. Windows only.
 		 * The architecture type of the computer. An image file can only be run on the specified computer or a system that emulates the specified computer.
@@ -167,7 +157,7 @@ namespace System
 		 *
 		 * \param errorMode
 		 */
-		void setDynamicModuleErrorMode(unsigned int errorMode);
+		void setDynamicModuleErrorMode(size_t errorMode);
 
 		/**
 		 * \brief Set if the module should, or not, be free. By default the module will be free.
@@ -183,7 +173,7 @@ namespace System
 		 *
 		 * \return The error code.
 		 */
-		unsigned int getLastError() const;
+		size_t getLastError() const;
 
 		/**
 		 * \brief Get the error message corresponding to the error code.
@@ -192,7 +182,7 @@ namespace System
 		 *
 		 * \return the message corresponding to the error code.
 		 */
-		const char* getErrorString(unsigned int errorCode) const;
+		const char* getErrorString(size_t errorCode) const;
 
 		/**
 		 * \brief Get the detailed error
@@ -210,14 +200,14 @@ namespace System
 		char m_Filename[PATH_MAX];
 #endif
 
-		unsigned int m_ErrorMode = 0;
-		bool m_ShouldFreeModule  = true;
+		size_t m_ErrorMode      = 0;
+		bool m_ShouldFreeModule = true;
 		typedef void (*symbol_t)();
 
 		char m_ErrorDetails[1024];
 		mutable ELogErrorCodes m_ErrorCode;
 
-		static const unsigned int m_ErrorModeNull = 0xffffffff;
+		static const size_t m_ErrorModeNull = 0xffffffff;
 
 		friend class CDynamicModuleSymbolLoader;
 		/**

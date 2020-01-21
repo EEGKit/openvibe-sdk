@@ -247,9 +247,9 @@ namespace Dsp
 		}
 
 		template <class Filter, typename Sample>
-		void process(int numSamples, Sample* const* arrayOfChannels, Filter& filter)
+		void process(int nSamples, Sample* const* arrayOfChannels, Filter& filter)
 		{
-			for (int i = 0; i < Channels; ++i) { filter.process(numSamples, arrayOfChannels[i], m_state[i]); }
+			for (int i = 0; i < Channels; ++i) { filter.process(nSamples, arrayOfChannels[i], m_state[i]); }
 		}
 
 	private:
@@ -266,7 +266,7 @@ namespace Dsp
 		void reset() { throw std::logic_error("attempt to reset empty ChannelState"); }
 
 		template <class FilterDesign, typename Sample>
-		void process(int /*numSamples*/, Sample* const* /*arrayOfChannels*/, FilterDesign& /*filter*/)
+		void process(int /*nSamples*/, Sample* const* /*arrayOfChannels*/, FilterDesign& /*filter*/)
 		{
 			throw std::logic_error("attempt to process empty ChannelState");
 		}

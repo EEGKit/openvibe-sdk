@@ -1,11 +1,8 @@
 #include "ovtkString.h"
 
-#include <cstdlib>
 #include <cstring>
-#include <cstdio>
 
 #include <string>
-#include <vector>
 #include <algorithm>
 #include <functional>
 #include <cctype>
@@ -22,48 +19,48 @@ namespace OpenViBEToolkit
 		{
 			namespace
 			{
-				bool isSeparator(uint8_t ui8Value, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
+				bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
 				{
-					for (uint32_t i = 0; i < ui32SeparatorCount; i++) { if (ui8Value == pSeparator[i]) { return true; } }
+					for (size_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
 					return false;
 				}
 
 				// because std::tolower has multiple signatures,
 				// it can not be easily used in std::transform
 				// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-				template <class charT>
-				charT to_lower(charT c) { return std::tolower(c); }
+				template <class TCharT>
+				TCharT ToLower(TCharT c) { return std::tolower(c); }
 			} // namespace
 		} // namespace String
 	} // namespace Tools
 } // namespace OpenViBEToolkit
 
-uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator)
+size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
 {
-	return split(rString, rSplitCallback, &ui8Separator, 1);
+	return split(rString, splitCB, &separator, 1);
 }
 
-uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
+size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
 {
-	if (ui32SeparatorCount == 0 || pSeparator == nullptr) { return 0; }
+	if (nSeparator == 0 || separator == nullptr) { return 0; }
 
-	uint32_t n = 0;
+	size_t n = 0;
 	std::string str(rString.toASCIIString());
 	size_t i = 0;
 	while (i < str.length())
 	{
 		size_t j = i;
-		while (j < str.length() && !isSeparator(str[j], pSeparator, ui32SeparatorCount)) { j++; }
+		while (j < str.length() && !isSeparator(str[j], separator, nSeparator)) { j++; }
 		//if(i!=j)
 		{
-			rSplitCallback.setToken(std::string(str, i, j - i).c_str());
+			splitCB.setToken(std::string(str, i, j - i).c_str());
 			n++;
 		}
 		i = j + 1;
 	}
-	if (str.length() != 0 && isSeparator(str[str.length() - 1], pSeparator, ui32SeparatorCount))
+	if (str.length() != 0 && isSeparator(str[str.length() - 1], separator, nSeparator))
 	{
-		rSplitCallback.setToken("");
+		splitCB.setToken("");
 		n++;
 	}
 
@@ -97,8 +94,8 @@ bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, cons
 
 	if (!bCaseSensitive)
 	{
-		std::transform(str1.begin(), str1.end(), str1.begin(), to_lower<std::string::value_type>);
-		std::transform(str2.begin(), str2.end(), str2.begin(), to_lower<std::string::value_type>);
+		std::transform(str1.begin(), str1.end(), str1.begin(), ToLower<std::string::value_type>);
+		std::transform(str2.begin(), str2.end(), str2.begin(), ToLower<std::string::value_type>);
 	}
 
 	return str1 == str2;

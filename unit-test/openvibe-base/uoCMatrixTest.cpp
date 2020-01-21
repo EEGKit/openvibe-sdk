@@ -1,10 +1,5 @@
-#include <iostream>
-
-#include "gtest/gtest.h"
-
-#include "ovtAssert.h"
-
 #include <openvibe/ovCMatrix.h>
+#include "gtest/gtest.h"
 
 using namespace OpenViBE;
 

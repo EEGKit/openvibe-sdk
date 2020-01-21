@@ -1,12 +1,9 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 
 #include <string>
-#include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_SignalAverage                                         OpenViBE::CIdentifier(0x00642C4D, 0x5DF7E50A)
-#define OVP_ClassId_BoxAlgorithm_SignalAverageDesc                                     OpenViBE::CIdentifier(0x007CDCE9, 0x16034F77)
 
 namespace OpenViBEPlugins
 {
@@ -18,20 +15,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmSignalAverage();
-			void release() override;
+			CBoxAlgorithmSignalAverage() {}
+			void release() override {}
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SignalAverage)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
-			virtual void computeAverage();
-
+		protected:
+			void computeAverage();
+			
 			// Needed to read the input and write the output
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_oSignalDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_oSignalEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_encoder;
 		};
 
 		/**
@@ -54,10 +52,10 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalAverage(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rPrototype.addOutput("Filtered signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Filtered signal", OV_TypeId_Signal);
 
 				return true;
 			}

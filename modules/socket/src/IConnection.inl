@@ -1,3 +1,4 @@
+#pragma once
 #include "IConnection.h"
 
 #include <iostream>
@@ -32,35 +33,35 @@
 
 namespace Socket
 {
-	static bool FD_ISSET_PROXY(int fd, fd_set* set) { return FD_ISSET(fd, set) ? true : false; }
+	static bool FD_ISSET_PROXY(const int fd, fd_set* set) { return FD_ISSET(fd, set) ? true : false; }
 
 	template <class T>
 	class TConnection : public T
 	{
 	public:
 
-		TConnection() : m_i32Socket(-1)
+		TConnection() : m_socket(-1)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int l_i32VersionHigh   = 2;
-			int l_i32VersionLow    = 0;
-			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
-			WSADATA l_oWSAData;
-			WSAStartup(l_oWinsockVersion, &l_oWSAData);
+			const int versionHigh     = 2;
+			const int versionLow      = 0;
+			const WORD winsockVersion = MAKEWORD(versionHigh, versionLow);
+			WSADATA wsaData;
+			WSAStartup(winsockVersion, &wsaData);
 #else
 #endif
 		}
 
-		explicit TConnection(int i32Socket) : m_i32Socket(i32Socket)
+		explicit TConnection(const int socket) : m_socket(socket)
 		{
-#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-#elif defined TARGET_OS_Windows
-			int l_i32VersionHigh   = 2;
-			int l_i32VersionLow    = 0;
-			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
-			WSADATA l_oWSAData;
-			WSAStartup(l_oWinsockVersion, &l_oWSAData);
+#if defined TARGET_OS_Windows
+			const int versionHigh     = 2;
+			const int versionLow      = 0;
+			const WORD winsockVersion = MAKEWORD(versionHigh, versionLow);
+			WSADATA wsaData;
+			WSAStartup(winsockVersion, &wsaData);
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #else
 #endif
 		}
@@ -80,8 +81,8 @@ namespace Socket
 		{
 			if (isConnected()) { return false; }
 
-			m_i32Socket = int(socket(AF_INET, SOCK_STREAM, 0));
-			if (m_i32Socket == -1) { return false; }
+			m_socket = int(socket(AF_INET, SOCK_STREAM, 0));
+			if (m_socket == size_t(-1)) { return false; }
 
 			return true;
 		}
@@ -93,101 +94,93 @@ namespace Socket
 			if (!isConnected()) { return false; }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			::shutdown(m_i32Socket, SHUT_RDWR);
-			::close(m_i32Socket);
+			::shutdown(m_socket, SHUT_RDWR);
+			::close(m_socket);
 #elif defined TARGET_OS_Windows
-			shutdown(m_i32Socket, SD_BOTH);
-			closesocket(m_i32Socket);
+			shutdown(m_socket, SD_BOTH);
+			closesocket(m_socket);
 #else
 #endif
 
-			m_i32Socket = -1;
+			m_socket = -1;
 			return true;
 		}
 
-		virtual bool isReadyToSend(const uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToSend(const size_t timeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
-			struct timeval l_oTimeVal;
-			l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);
-			l_oTimeVal.tv_usec = ((ui32TimeOut - l_oTimeVal.tv_sec * 1000) * 1000);
+			struct timeval timeVal;
+			timeVal.tv_sec  = int(timeOut / 1000);
+			timeVal.tv_usec = int((timeOut - timeVal.tv_sec * 1000) * 1000);
 
-			fd_set l_oWriteFileDescriptors;
-			FD_ZERO(&l_oWriteFileDescriptors);
-			FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
+			fd_set writeFileDesc;
+			FD_ZERO(&writeFileDesc);
+			FD_SET(m_socket, &writeFileDesc);
 
-			if (select(m_i32Socket + 1, nullptr, &l_oWriteFileDescriptors, nullptr, &l_oTimeVal) < 0) { return false; }
-			if (!FD_ISSET_PROXY(m_i32Socket, &l_oWriteFileDescriptors)) { return false; }
+			if (select(int(m_socket + 1), nullptr, &writeFileDesc, nullptr, &timeVal) < 0) { return false; }
+			if (!FD_ISSET_PROXY(int(m_socket), &writeFileDesc)) { return false; }
 			return true;
 		}
 
-		virtual bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToReceive(const size_t timeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
-			struct timeval l_oTimeVal;
-			l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);
-			l_oTimeVal.tv_usec = ((ui32TimeOut - l_oTimeVal.tv_sec * 1000) * 1000);
+			struct timeval timeVal;
+			timeVal.tv_sec  = int(timeOut / 1000);
+			timeVal.tv_usec = int((timeOut - timeVal.tv_sec * 1000) * 1000);
 
-			fd_set l_oReadFileDescriptors;
-			FD_ZERO(&l_oReadFileDescriptors);
-			FD_SET(m_i32Socket, &l_oReadFileDescriptors);
+			fd_set readFileDesc;
+			FD_ZERO(&readFileDesc);
+			FD_SET(m_socket, &readFileDesc);
 
-			if (select(m_i32Socket + 1, &l_oReadFileDescriptors, nullptr, nullptr, &l_oTimeVal) < 0) { return false; }
-			if (!(FD_ISSET_PROXY(m_i32Socket, &l_oReadFileDescriptors))) { return false; }
+			if (select(int(m_socket + 1), &readFileDesc, nullptr, nullptr, &timeVal) < 0) { return false; }
+			if (!(FD_ISSET_PROXY(int(m_socket), &readFileDesc))) { return false; }
 			return true;
 		}
 
-		virtual uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize)
+		virtual size_t sendBuffer(const void* buffer, const size_t size)
 		{
 			if (!isConnected()) { return 0; }
-#if 0
-			int l_iTrue=1;
-			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
-#endif
-			const int res = send(m_i32Socket, static_cast<const char*>(buffer), ui32BufferSize, Socket_SendFlags);
-			if (ui32BufferSize != 0 && res <= 0) { close(); }
-			return res <= 0 ? 0 : uint32_t(res);
+			const int res = send(m_socket, static_cast<const char*>(buffer), int(size), Socket_SendFlags);
+			if (size != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : size_t(res);
 		}
 
-		virtual uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize)
+		virtual size_t receiveBuffer(void* buffer, const size_t size)
 		{
-			if (!isConnected() || !ui32BufferSize) { return 0; }
-#if 0
-			int l_iTrue = 1;
-			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
-#endif
-			const int res = recv(m_i32Socket, static_cast<char *>(buffer), ui32BufferSize, Socket_ReceiveFlags);
-			if (ui32BufferSize != 0 && res <= 0) { close(); }
-			return res <= 0 ? 0 : uint32_t(res);
+			if (!isConnected() || !size) { return 0; }
+			const int res = recv(m_socket, static_cast<char *>(buffer), int(size), Socket_ReceiveFlags);
+			if (size != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : size_t(res);
 		}
 
-		virtual bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* buffer, const size_t size)
 		{
-			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			const char* tmpBuffer    = static_cast<const char*>(buffer);
+			size_t leftBytes      = size;
+			const char* tmpBuffer = static_cast<const char*>(buffer);
 			do
 			{
-				l_ui32LeftBytes -= sendBuffer(tmpBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
+				leftBytes -= sendBuffer(tmpBuffer + size - leftBytes, leftBytes);
 				if (!isConnected()) { return false; }
-			} while (l_ui32LeftBytes != 0);
+			} while (leftBytes != 0);
 			return true;
 		}
 
-		virtual bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize)
+		virtual bool receiveBufferBlocking(void* buffer, const size_t size)
 		{
-			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			char* tmpBuffer          = static_cast<char*>(buffer);
+			size_t leftBytes = size;
+			char* tmpBuffer  = static_cast<char*>(buffer);
 			do
 			{
-				l_ui32LeftBytes -= receiveBuffer(tmpBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
+				leftBytes -= receiveBuffer(tmpBuffer + size - leftBytes, leftBytes);
 				if (!isConnected()) { return false; }
-			} while (l_ui32LeftBytes != 0);
+			} while (leftBytes != 0);
 			return true;
 		}
 
-		virtual bool isConnected() const { return m_i32Socket != -1; }
+		virtual bool isConnected() const { return m_socket != size_t(-1); }
 
 		virtual void release()
 		{
@@ -197,6 +190,6 @@ namespace Socket
 
 	protected:
 
-		int m_i32Socket;
+		size_t m_socket;
 	};
 } // namespace Socket

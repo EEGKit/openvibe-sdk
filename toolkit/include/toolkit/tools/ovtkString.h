@@ -14,7 +14,7 @@ namespace OpenViBEToolkit
 				virtual ~ISplitCallback() { }
 				virtual void beginSplit() const { }
 				virtual void endSplit() const { }
-				virtual void setToken(const char* sToken) const = 0;
+				virtual void setToken(const char* token) const = 0;
 			};
 
 			template <class TContainer>
@@ -22,17 +22,17 @@ namespace OpenViBEToolkit
 			{
 			public:
 
-				TSplitCallback(TContainer& vTokenContainer) : m_pTokenContainer(&vTokenContainer) { }
+				explicit TSplitCallback(TContainer& tokenContainers) : m_tokenContainer(&tokenContainers) { }
 
-				void setToken(const char* sToken) const override { m_pTokenContainer->push_back(sToken); }
+				void setToken(const char* token) const override { m_tokenContainer->push_back(token); }
 
 			protected:
 
-				TContainer* m_pTokenContainer = nullptr;
+				TContainer* m_tokenContainer = nullptr;
 			};
 
-			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator);
-			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount);
+			OVTK_API size_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t separator);
+			OVTK_API size_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator);
 			OVTK_API bool isAlmostEqual(const OpenViBE::CString& rString1, const OpenViBE::CString& rString2, bool bCaseSensitive = true,
 										bool bRemoveStartSpaces                                                                   = true,
 										bool bRemoveEndSpaces                                                                     = true);

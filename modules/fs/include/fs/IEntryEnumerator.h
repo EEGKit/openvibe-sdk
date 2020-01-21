@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <cinttypes>
+#include <cstdlib>	// size_t for unix
 
 namespace FS
 {
@@ -24,7 +25,7 @@ namespace FS
 			virtual bool isSystem() = 0;
 			virtual bool isExecutable() = 0;
 
-			virtual uint64_t getSize() = 0;
+			virtual size_t getSize() = 0;
 		protected:
 			virtual ~IAttributes() {}
 		};
@@ -51,4 +52,4 @@ namespace FS
 	};
 
 	extern FS_API IEntryEnumerator* createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack);
-}
+} // namespace FS

@@ -24,7 +24,7 @@ namespace Communication
 		/**
 		 * \brief	Connect to a server.
 		 *
-		 * \param	URI		URI of the server.
+		 * \param	uri		URI of the server.
 		 * \param	port	The port.
 		 *
 		 * \retval True if it succeeds.
@@ -36,7 +36,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool connect(const std::string& URI, unsigned int port);
+		bool connect(const std::string& uri, const size_t port);
 
 		/**
 		 * \brief Closes the connection to the server.
@@ -49,7 +49,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		bool close();
+		bool close() const;
 
 		/**
 		 * \brief Return the number of  box information's parameters available.
@@ -58,7 +58,7 @@ namespace Communication
 		 *
 		 * \sa getParameter
 		 */
-		uint32_t getParameterCount() const;
+		size_t getParameterCount() const;
 
 		/**
 		 * \brief Return the number of box information's input available.
@@ -67,7 +67,7 @@ namespace Communication
 		 *
 		 * \sa getInput
 		 */
-		uint32_t getInputCount() const;
+		size_t getInputCount() const;
 
 		/**
 		 * \brief Return the number of output of the box information, available.
@@ -76,7 +76,7 @@ namespace Communication
 		 *
 		 * \sa getOutput
 		 */
-		uint32_t getOutputCount() const;
+		size_t getOutputCount() const;
 
 		/**
 		 * \brief Get parameter information.
@@ -90,7 +90,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the index is out of range.
 		 */
-		bool getParameter(size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const;
+		bool getParameter(size_t i, uint64_t& id, size_t& type, std::string& name, std::string& value) const;
 
 		/**
 		 * \brief Get input information.
@@ -105,7 +105,7 @@ namespace Communication
 		 *
 		 * \sa getInputCount
 		 */
-		bool getInput(size_t i, uint32_t& id, uint64_t& type, std::string& name) const;
+		bool getInput(size_t i, uint64_t& id, size_t& type, std::string& name) const;
 
 		/**
 		 * \brief Get input information.
@@ -120,7 +120,7 @@ namespace Communication
 		 *
 		 * \sa getOutputCount
 		 */
-		bool getOutput(size_t i, uint32_t& id, uint64_t& type, std::string& name) const;
+		bool getOutput(size_t i, uint64_t& id, size_t& type, std::string& name) const;
 
 		/**
 		 * \brief Get the oldest error message, if available.
@@ -146,7 +146,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False there is no available error.
 		 */
-		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
+		bool popEBML(uint64_t& packetId, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
 
 		/**
 		 * \brief	Push a log message to the server.
@@ -162,7 +162,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		bool pushLog(ELogLevel logLevel, const std::string& log);
+		bool pushLog(ELogLevel logLevel, const std::string& log) const;
 
 		/**
 		 * \brief	Pushes an ebml.
@@ -180,7 +180,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml);
+		bool pushEBML(size_t index, uint64_t startTime, uint64_t endTime, const std::shared_ptr<const std::vector<uint8_t>>& ebml) const;
 
 		/**
 		 * \brief Push Sync message to the server.
@@ -188,7 +188,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool pushSync();
+		bool pushSync() const;
 
 		/**
 		 * \brief Check if a sync message is received.
@@ -196,7 +196,7 @@ namespace Communication
 		 * \retval True if a sync message is received.
 		 * \retval False if no sync message was received.
 		 */
-		bool waitForSyncMessage();
+		bool waitForSyncMessage() override;
 
 	private:
 
@@ -211,10 +211,10 @@ namespace Communication
 		 * 			- NotConnected
 		 * 			- NotReadyToSend
 		 */
-		bool pushAuthentication(std::string connectionID);
+		bool pushAuthentication(const std::string& connectionID) const;
 
 		Socket::IConnectionClient* m_Client = nullptr;
 
 		bool m_BoxDescriptionReceived = false;
 	};
-}
+}  // namespace Communication

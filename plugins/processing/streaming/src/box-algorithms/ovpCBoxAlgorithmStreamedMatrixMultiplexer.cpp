@@ -3,7 +3,7 @@
 #include <system/ovCMemory.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -13,14 +13,14 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 {
 	m_lastStartTime = 0;
 	m_lastEndTime   = 0;
-	m_bHeaderSent   = false;
+	m_headerSent    = false;
 
 	return true;
 }
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize() { return true; }
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -28,18 +28,18 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(const uint32_t /*index
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 {
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
-	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
+	IBoxIO& boxContext  = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			const IMemoryBuffer* iBuffer = boxContext.getInputChunk(i, j);
 			const uint64_t tStart        = boxContext.getInputChunkStartTime(i, j);
 			const uint64_t tEnd          = boxContext.getInputChunkEndTime(i, j);
 
-			if ((!m_bHeaderSent && tStart == tEnd) || (m_bHeaderSent && tStart != tEnd))
+			if ((!m_headerSent && tStart == tEnd) || (m_headerSent && tStart != tEnd))
 			{
 				IMemoryBuffer* oBuffer = boxContext.getOutputChunk(0);
 				oBuffer->setSize(iBuffer->getSize(), true);
@@ -55,7 +55,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				m_lastEndTime   = tEnd;
 
 				boxContext.markOutputAsReadyToSend(0, tStart, tEnd);
-				m_bHeaderSent = true;
+				m_headerSent = true;
 			}
 
 			boxContext.markInputAsDeprecated(i, j);

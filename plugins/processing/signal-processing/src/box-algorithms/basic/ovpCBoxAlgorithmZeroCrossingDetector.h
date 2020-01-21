@@ -24,12 +24,7 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <string>
 #include <vector>
-#include <map>
-
-#define OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector     OpenViBE::CIdentifier(0x0016663F, 0x096A46A6)
-#define OVP_ClassId_BoxAlgorithm_ZeroCrossingDetectorDesc OpenViBE::CIdentifier(0x63AA73A7, 0x1F0419A2)
 
 namespace OpenViBEPlugins
 {
@@ -41,51 +36,51 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector)
 
 		protected:
 
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmZeroCrossingDetector> m_oDecoder;
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmZeroCrossingDetector> m_oEncoder0;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmZeroCrossingDetector> m_oEncoder1;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector> m_oEncoder2;
+			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmZeroCrossingDetector> m_decoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder0;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder1;
+			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder2;
 
-			std::vector<double> m_vSignalHistory;
-			std::vector<int> m_vStateHistory;
-			double m_f64HysteresisThreshold = 0;
-			uint64_t m_ui64ChunkCount       = 0;
+			std::vector<double> m_signals;
+			std::vector<int> m_states;
+			double m_hysteresis = 0;
+			uint64_t m_nChunk            = 0;
 
-			uint32_t m_ui32SamplingRate = 0;
-			double m_f64WindowTime      = 0;
-			uint32_t m_ui32WindowTime   = 0;
-			std::vector<std::vector<uint64_t>> m_vMemoryChunk;
-			std::vector<std::vector<uint32_t>> m_vMemorySample;
+			size_t m_sampling   = 0;
+			double m_windowTimeD = 0;
+			size_t m_windowTime = 0;
+			std::vector<std::vector<size_t>> m_chunks;
+			std::vector<std::vector<size_t>> m_samples;
 
-			uint64_t m_ui64StimulationId1 = 0;
-			uint64_t m_ui64StimulationId2 = 0;
+			uint64_t m_stimId1 = 0;
+			uint64_t m_stimId2 = 0;
 		};
 
 		class CBoxAlgorithmZeroCrossingDetectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
-				return this->onConnectorTypeChanged(box, index, typeID, false);
+				return onConnectorTypeChanged(box, index, typeID, false);
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
-				return this->onConnectorTypeChanged(box, index, typeID, true);
+				return onConnectorTypeChanged(box, index, typeID, true);
 			}
 
-			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index, const OpenViBE::CIdentifier& typeID, bool bOutputChanged)
+			static bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index, const OpenViBE::CIdentifier& typeID, const bool outputChanged)
 			{
 				if (index == 0)
 				{
@@ -102,18 +97,18 @@ namespace OpenViBEPlugins
 					else
 					{
 						// Invalid i/o type identifier
-						OpenViBE::CIdentifier l_oOriginalTypeIdentifier = OV_UndefinedIdentifier;
-						if (bOutputChanged)
+						OpenViBE::CIdentifier originalTypeID = OV_UndefinedIdentifier;
+						if (outputChanged)
 						{
 							// Restores output
-							box.getInputType(0, l_oOriginalTypeIdentifier);
-							box.setOutputType(0, l_oOriginalTypeIdentifier);
+							box.getInputType(0, originalTypeID);
+							box.setOutputType(0, originalTypeID);
 						}
 						else
 						{
 							// Restores input
-							box.getOutputType(0, l_oOriginalTypeIdentifier);
-							box.setInputType(0, l_oOriginalTypeIdentifier);
+							box.getOutputType(0, originalTypeID);
+							box.setInputType(0, originalTypeID);
 						}
 					}
 				}

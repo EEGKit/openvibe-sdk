@@ -1,15 +1,9 @@
 ﻿#include "ovCMessagingClient.h"
 #include "ovCMessagingImpl.hpp"
 
-#include <array>
-#include <algorithm>
-#include <iterator>
-
 using namespace Communication;
 
-MessagingClient::MessagingClient()
-	: CMessaging()
-	  , m_Client(Socket::createConnectionClient()) {}
+MessagingClient::MessagingClient() : CMessaging(), m_Client(Socket::createConnectionClient()) {}
 
 MessagingClient::~MessagingClient()
 {
@@ -17,11 +11,11 @@ MessagingClient::~MessagingClient()
 	m_Client->release();
 }
 
-bool MessagingClient::connect(const std::string& URI, const unsigned int port)
+bool MessagingClient::connect(const std::string& uri, const size_t port)
 {
 	this->reset();
 
-	if (!m_Client->connect(URI.c_str(), port))
+	if (!m_Client->connect(uri.c_str(), port))
 	{
 		this->setLastError(Socket_FailedToConnect);
 		return false;
@@ -33,7 +27,7 @@ bool MessagingClient::connect(const std::string& URI, const unsigned int port)
 	if (!this->pushAuthentication(impl->m_ConnectionID))
 	{
 		// Error set in the function
-		ELibraryError error = this->getLastError();
+		const ELibraryError error = this->getLastError();
 		this->close();
 		this->setLastError(error);
 		return false;
@@ -52,7 +46,7 @@ bool MessagingClient::connect(const std::string& URI, const unsigned int port)
 
 	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < 10)
 	{
-		if (this->popBoxDescriptions(packetId, impl->m_BoxDescription))
+		if (this->popBoxDescriptions(packetId, impl->m_BoxDesc))
 		{
 			m_BoxDescriptionReceived = true;
 			break;
@@ -70,7 +64,7 @@ bool MessagingClient::connect(const std::string& URI, const unsigned int port)
 	return true;
 }
 
-bool MessagingClient::close()
+bool MessagingClient::close() const
 {
 	this->pushMessage(EndMessage());
 
@@ -88,32 +82,32 @@ bool MessagingClient::close()
 	return true;
 }
 
-uint32_t MessagingClient::getParameterCount() const
+size_t MessagingClient::getParameterCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return uint32_t(impl->m_BoxDescription.getParameters()->size());
+	return impl->m_BoxDesc.getParameters()->size();
 }
 
-uint32_t MessagingClient::getInputCount() const
+size_t MessagingClient::getInputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return uint32_t(impl->m_BoxDescription.getInputs()->size());
+	return impl->m_BoxDesc.getInputs()->size();
 }
 
-uint32_t MessagingClient::getOutputCount() const
+size_t MessagingClient::getOutputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return uint32_t(impl->m_BoxDescription.getOutputs()->size());
+	return impl->m_BoxDesc.getOutputs()->size();
 }
 
-bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const
+bool MessagingClient::getParameter(const size_t i, uint64_t& id, size_t& type, std::string& name, std::string& value) const
 {
 	if (!m_BoxDescriptionReceived) { return false; }
 
-	const std::vector<Parameter>* parameters = impl->m_BoxDescription.getParameters();
+	const std::vector<Parameter>* parameters = impl->m_BoxDesc.getParameters();
 
 	if (parameters->size() <= i) { return false; }
 
@@ -125,11 +119,11 @@ bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type,
 	return true;
 }
 
-bool MessagingClient::getInput(const size_t i, uint32_t& id, uint64_t& type, std::string& name) const
+bool MessagingClient::getInput(const size_t i, uint64_t& id, size_t& type, std::string& name) const
 {
 	if (!m_BoxDescriptionReceived) { return false; }
 
-	const std::vector<InputOutput>* inputs = impl->m_BoxDescription.getInputs();
+	const std::vector<InputOutput>* inputs = impl->m_BoxDesc.getInputs();
 
 	if (inputs->size() <= i) { return false; }
 
@@ -140,7 +134,7 @@ bool MessagingClient::getInput(const size_t i, uint32_t& id, uint64_t& type, std
 	return true;
 }
 
-bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, std::string& name) const
+bool MessagingClient::getOutput(const size_t i, uint64_t& id, size_t& type, std::string& name) const
 {
 	if (!m_BoxDescriptionReceived)
 	{
@@ -148,7 +142,7 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 		return false;
 	}
 
-	const std::vector<InputOutput>* outputs = impl->m_BoxDescription.getOutputs();
+	const std::vector<InputOutput>* outputs = impl->m_BoxDesc.getOutputs();
 
 	if (outputs->size() <= i) { return false; }
 
@@ -161,20 +155,21 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 
 bool MessagingClient::popError(uint64_t& packetId, EError& type, uint64_t& guiltyId) { return CMessaging::popError(packetId, type, guiltyId); }
 
-bool MessagingClient::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
+bool MessagingClient::popEBML(uint64_t& packetId, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {
 	return CMessaging::popEBML(packetId, index, startTime, endTime, ebml);
 }
 
-bool MessagingClient::pushAuthentication(std::string connectionID) { return this->pushMessage(AuthenticationMessage(connectionID)); }
+bool MessagingClient::pushAuthentication(const std::string& connectionID) const { return this->pushMessage(AuthenticationMessage(connectionID)); }
 
-bool MessagingClient::pushLog(ELogLevel logLevel, const std::string& log) { return this->pushMessage(LogMessage(logLevel, log)); }
+bool MessagingClient::pushLog(const ELogLevel logLevel, const std::string& log) const { return this->pushMessage(LogMessage(logLevel, log)); }
 
-bool MessagingClient::pushEBML(const uint32_t index, const uint64_t startTime, const uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
+bool MessagingClient::pushEBML(const size_t index, const uint64_t startTime, const uint64_t endTime,
+							   const std::shared_ptr<const std::vector<uint8_t>>& ebml) const
 {
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
 }
 
-bool MessagingClient::pushSync() { return this->pushMessage(SyncMessage()); }
+bool MessagingClient::pushSync() const { return this->pushMessage(SyncMessage()); }
 
 bool MessagingClient::waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }

@@ -29,7 +29,7 @@ namespace r8b
 		fprLinearPhase = 0 ///< Linear-phase response. Features a linear-phase
 		///< high-latency response, with the latency expressed as integer
 		///< value.
-		//	fprMinPhase ///< Minimum-phase response. Features a minimal latency
+		// fprMinPhase ///< Minimum-phase response. Features a minimal latency
 		///< response, but the response's phase is non-linear. The latency is
 		///< usually expressed as non-integer value, and usually is small, but
 		///< is never equal to zero. The minimum-phase filter is transformed
@@ -366,15 +366,15 @@ namespace r8b
 				double s = 0.0;
 				int i;
 
-				for (i = 0; i < KernelLen; i++) { s += KernelBlock[i]; }
+				for (i = 0; i < KernelLen; ++i) { s += KernelBlock[i]; }
 
 				s = ffto->getInvMulConst() * ReqGain / s;
 
 				// Time-shift the filter so that zero-phase response is produced.
 				// Simultaneously multiply by "s".
 
-				for (i = 0; i <= sinc.fl2; i++) { KernelBlock[i] = KernelBlock[sinc.fl2 + i] * s; }
-				for (i = 1; i <= sinc.fl2; i++) { KernelBlock[BlockLen * 2 - i] = KernelBlock[i]; }
+				for (i = 0; i <= sinc.fl2; ++i) { KernelBlock[i] = KernelBlock[sinc.fl2 + i] * s; }
+				for (i = 1; i <= sinc.fl2; ++i) { KernelBlock[BlockLen * 2 - i] = KernelBlock[i]; }
 
 				memset(&KernelBlock[sinc.fl2 + 1], 0, (BlockLen * 2 - KernelLen) * sizeof(double));
 			}

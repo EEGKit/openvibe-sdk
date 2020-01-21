@@ -2,56 +2,52 @@
 
 using namespace OpenViBE;
 
-bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64_t ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& stimSet, const uint64_t timeShift)
 {
-	const uint64_t count = rStimulationSet.getStimulationCount();
-	for (uint64_t i = 0; i < count; i++) { rStimulationSet.setStimulationDate(i, rStimulationSet.getStimulationDate(i) + ui64TimeShift); }
+	const size_t count = stimSet.getStimulationCount();
+	for (size_t i = 0; i < count; ++i) { stimSet.setStimulationDate(i, stimSet.getStimulationDate(i) + timeShift); }
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet,
-												  const uint64_t ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
 {
-	rDestinationStimulationSet.clear();
-	return append(rDestinationStimulationSet, rSourceStimulationSet, ui64TimeShift);
+	dstStimSet.clear();
+	return append(dstStimSet, srcStimSet, timeShift);
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet,
-													const uint64_t ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
 {
-	const uint64_t count = rSourceStimulationSet.getStimulationCount();
-	for (uint64_t i = 0; i < count; i++)
+	const size_t count = srcStimSet.getStimulationCount();
+	for (size_t i = 0; i < count; ++i)
 	{
-		rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i),
-													 rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift,
-													 rSourceStimulationSet.getStimulationDuration(i));
+		dstStimSet.appendStimulation(srcStimSet.getStimulationIdentifier(i), srcStimSet.getStimulationDate(i) + timeShift,
+									 srcStimSet.getStimulationDuration(i));
 	}
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet,
-														 const uint64_t ui64SourceStartTime, const uint64_t ui64SourceEndTime, const uint64_t ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet,
+														 const uint64_t srcStartTime, const uint64_t srcEndTime, const uint64_t timeShift)
 {
-	const uint64_t count = rSourceStimulationSet.getStimulationCount();
-	for (uint64_t i = 0; i < count; i++)
+	const size_t count = srcStimSet.getStimulationCount();
+	for (size_t i = 0; i < count; ++i)
 	{
-		const uint64_t date = rSourceStimulationSet.getStimulationDate(i);
-		if (ui64SourceStartTime <= date && date < ui64SourceEndTime)
+		const uint64_t date = srcStimSet.getStimulationDate(i);
+		if (srcStartTime <= date && date < srcEndTime)
 		{
-			rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i),
-														 rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift,
-														 rSourceStimulationSet.getStimulationDuration(i));
+			dstStimSet.appendStimulation(srcStimSet.getStimulationIdentifier(i), srcStimSet.getStimulationDate(i) + timeShift,
+										 srcStimSet.getStimulationDuration(i));
 		}
 	}
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimulationSet, const uint64_t ui64StartTime, const uint64_t ui64EndTime)
+bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
 {
-	for (uint64_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
+	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
 	{
-		const uint64_t date = rStimulationSet.getStimulationDate(i);
-		if (ui64StartTime <= date && date < ui64EndTime) { rStimulationSet.removeStimulation(i--); }
+		const uint64_t date = stimSet.getStimulationDate(i);
+		if (startTime <= date && date < endTime) { stimSet.removeStimulation(i--); }
 	}
 	return true;
 }

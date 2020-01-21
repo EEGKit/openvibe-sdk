@@ -1,7 +1,7 @@
 #include "ovpCBoxAlgorithmSpectrumAverage.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -11,44 +11,43 @@ bool CBoxAlgorithmSpectrumAverage::initialize()
 {
 	m_bZeroCare = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
-	m_pStreamDecoder->initialize();
+	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumDecoder));
+	m_decoder->initialize();
 
-	m_pStreamEncoder = &this->getAlgorithmManager().getAlgorithm(
-		this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
-	m_pStreamEncoder->initialize();
+	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixEncoder));
+	m_encoder->initialize();
 
-	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pMatrix.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_Matrix));
-	ip_pMatrix.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	ip_buffer.initialize(m_decoder->getInputParameter(OVP_GD_Algorithm_SpectrumDecoder_InputParameterId_MemoryBufferToDecode));
+	op_matrix.initialize(m_decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_Matrix));
+	ip_matrix.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	op_buffer.initialize(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	return true;
 }
 
 bool CBoxAlgorithmSpectrumAverage::uninitialize()
 {
-	ip_pMatrix.uninitialize();
-	op_pMatrix.uninitialize();
+	ip_matrix.uninitialize();
+	op_matrix.uninitialize();
 
-	if (m_pStreamEncoder)
+	if (m_encoder)
 	{
-		m_pStreamEncoder->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-		m_pStreamEncoder = nullptr;
+		m_encoder->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_encoder);
+		m_encoder = nullptr;
 	}
 
-	if (m_pStreamDecoder)
+	if (m_decoder)
 	{
-		m_pStreamDecoder->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-		m_pStreamDecoder = nullptr;
+		m_decoder->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_decoder);
+		m_decoder = nullptr;
 	}
 
 	return true;
 }
 
-bool CBoxAlgorithmSpectrumAverage::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmSpectrumAverage::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -56,47 +55,45 @@ bool CBoxAlgorithmSpectrumAverage::processInput(const uint32_t /*index*/)
 
 bool CBoxAlgorithmSpectrumAverage::process()
 {
-	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = boxContext.getOutputChunk(0);
+		ip_buffer = boxContext.getInputChunk(0, i);
+		op_buffer = boxContext.getOutputChunk(0);
 
-		m_pStreamDecoder->process();
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
+		m_decoder->process();
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedHeader))
 		{
-			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
-			ip_pMatrix->setDimensionSize(1, 1);
+			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_matrix, *op_matrix);
+			ip_matrix->setDimensionSize(1, 1);
 
-			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader);
+			m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			double* l_pInputMatrix      = ip_pMatrix->getBuffer();
-			double* l_pOutputMatrix     = op_pMatrix->getBuffer();
-			uint32_t l_ui32ChannelCount = op_pMatrix->getDimensionSize(0);
-			uint32_t l_ui32BandCount    = op_pMatrix->getDimensionSize(1);
-			for (uint32_t j = 0; j < l_ui32ChannelCount; j++)
+			double* iMatrix       = ip_matrix->getBuffer();
+			double* oMatrix       = op_matrix->getBuffer();
+			const size_t nChannel = op_matrix->getDimensionSize(0);
+			const size_t nBand    = op_matrix->getDimensionSize(1);
+			for (size_t j = 0; j < nChannel; ++j)
 			{
-				double l_f64Mean     = 0;
-				uint32_t l_ui32Count = 0;
-				for (uint32_t k = 0; k < l_ui32BandCount; k++)
+				double mean = 0;
+				size_t n    = 0;
+				for (size_t k = 0; k < nBand; ++k)
 				{
-					l_f64Mean += *l_pOutputMatrix;
-					l_ui32Count += (m_bZeroCare || *l_pOutputMatrix != 0) ? 1 : 0;
-					l_pOutputMatrix++;
+					mean += *oMatrix;
+					n += (m_bZeroCare || *oMatrix != 0) ? 1 : 0;
+					oMatrix++;
 				}
-				*l_pInputMatrix = (l_ui32Count == 0 ? 0 : l_f64Mean / l_ui32Count);
-				l_pInputMatrix++;
+				*iMatrix = (n == 0 ? 0 : mean / n);
+				iMatrix++;
 			}
-
-			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
+			m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd))
+		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedEnd))
 		{
-			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd);
+			m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeEnd);
 		}
 
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));

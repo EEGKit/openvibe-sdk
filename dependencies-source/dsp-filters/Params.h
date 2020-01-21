@@ -106,10 +106,10 @@ namespace Dsp
 		// dont use this one
 		ParamInfo(); // throws std::logic_error
 
-		ParamInfo(ParamID id, const char* szLabel, const char* szName, double arg1, double arg2, double defaultNativeValue,
-				  toControlValue_t toControlValue_proc, toNativeValue_t toNativeValue_proc, toString_t toString_proc)
+		ParamInfo(ParamID id, const char* szLabel, const char* szName, const double arg1, const double arg2, const double defaultNativeValue,
+				  const toControlValue_t toControlValueProc, const toNativeValue_t toNativeValueProc, const toString_t toStringProc)
 			: m_id(id), m_szLabel(szLabel), m_szName(szName), m_arg1(arg1), m_arg2(arg2), m_defaultNativeValue(defaultNativeValue),
-			  m_toControlValue(toControlValue_proc), m_toNativeValue(toNativeValue_proc), m_toString(toString_proc) { }
+			  m_toControlValue(toControlValueProc), m_toNativeValue(toNativeValueProc), m_toString(toStringProc) { }
 
 		// Used to identify well-known parameters (like cutoff frequency)
 		ParamID getId() const { return m_id; }
@@ -183,8 +183,8 @@ namespace Dsp
 
 	private:
 		ParamID m_id;
-		const char* m_szLabel;
-		const char* m_szName;
+		const char* m_szLabel       = nullptr;
+		const char* m_szName        = nullptr;
 		double m_arg1               = 0;
 		double m_arg2               = 0;
 		double m_defaultNativeValue = 0;

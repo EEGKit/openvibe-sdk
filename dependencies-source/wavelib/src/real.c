@@ -9,8 +9,7 @@
 
 fft_real_object fft_real_init(int N, int sgn)
 {
-	fft_real_object obj = NULL;
-	obj                 = (fft_real_object)malloc(sizeof(struct fft_real_set) + sizeof(fft_data) * (N / 2));
+	fft_real_object obj = (fft_real_object)malloc(sizeof(struct fft_real_set) + sizeof(fft_data) * (N / 2));
 	obj->cobj           = fft_init(N / 2, sgn);
 
 	for (int k = 0; k < N / 2; ++k)

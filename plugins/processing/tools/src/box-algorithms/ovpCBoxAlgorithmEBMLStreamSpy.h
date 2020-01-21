@@ -8,10 +8,6 @@
 #include <stack>
 #include <map>
 #include <string>
-#include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_EBMLStreamSpy     OpenViBE::CIdentifier(0x0ED76695, 0x01A69CC3)
-#define OVP_ClassId_BoxAlgorithm_EBMLStreamSpyDesc OpenViBE::CIdentifier(0x354A6864, 0x06BC570C)
 
 namespace OpenViBEPlugins
 {
@@ -21,15 +17,15 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmEBMLStreamSpy();
-			void release() override;
+			CBoxAlgorithmEBMLStreamSpy() { }
+			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
-			void closeChild() override;
-			bool processInput(const uint32_t index) override;
+			void processChildData(const void* buffer, const size_t size) override;
+			void closeChild() override { m_nodes.pop(); }
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EBMLStreamSpy)
@@ -37,37 +33,34 @@ namespace OpenViBEPlugins
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* buffer, uint64_t size);
+			void processBinaryBlock(const void* buffer, size_t size);
 
-			std::stack<EBML::CIdentifier> m_vNodes;
-			std::map<EBML::CIdentifier, std::string> m_vName;
-			std::map<EBML::CIdentifier, std::string> m_vType;
-			uint64_t m_ui64ExpandValuesCount        = 0;
-			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
-			EBML::IReader* m_pReader                = nullptr;
-			EBML::IReaderHelper* m_pReaderHelper    = nullptr;
+			std::stack<EBML::CIdentifier> m_nodes;
+			std::map<EBML::CIdentifier, std::string> m_names;
+			std::map<EBML::CIdentifier, std::string> m_types;
+			size_t m_nExpandValues                  = 0;
+			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
+			EBML::IReader* m_reader                 = nullptr;
+			EBML::IReaderHelper* m_helper           = nullptr;
 		};
 
 		class CBoxAlgorithmEBMLStreamSpyListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				char l_sName[1024];
-
-				for (uint32_t i = 0; i < box.getInputCount(); i++)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
-					sprintf(l_sName, "Spied EBML stream %u", i + 1);
-					box.setInputName(i, l_sName);
+					box.setInputName(i, ("Spied EBML stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_EBMLStream);
 				}
 
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -96,14 +89,14 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEBMLStreamSpyListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Spied EBML stream 1", OV_TypeId_EBMLStream);
-				rPrototype.addSetting("EBML nodes description", OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
-				rPrototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
-				rPrototype.addSetting("Expand binary blocks", OV_TypeId_Boolean, "false");
-				rPrototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer, "4");
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Spied EBML stream 1", OV_TypeId_EBMLStream);
+				prototype.addSetting("EBML nodes description", OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
+				prototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
+				prototype.addSetting("Expand binary blocks", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer, "4");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 				return true;
 			}
 

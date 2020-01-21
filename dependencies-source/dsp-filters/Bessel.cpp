@@ -43,30 +43,20 @@ namespace Dsp
 	{
 
 		// returns fact(n) = n!
-		static double fact(int n)
+		static double fact(const int n)
 		{
 			if (n == 0) { return 1; }
-
-			double y = n;
-			for (double m = n; --m;) { y *= m; }
-
-			return y;
+			double res = 1;
+			for (int i = 2; i <= n; ++i) { res *= i; }
+			return res;
 		}
 
 		// returns the k-th zero based coefficient of the reverse bessel polynomial of degree n
-		static double reversebessel(int k, int n)
-		{
-			return fact(2 * n - k) /
-				   ((fact(n - k) * fact(k)) * pow(2., n - k));
-		}
+		static double reversebessel(const int k, const int n) { return fact(2 * n - k) / ((fact(n - k) * fact(k)) * pow(2., n - k)); }
 
 		//------------------------------------------------------------------------------
 
-		AnalogLowPass::AnalogLowPass()
-			: m_numPoles(-1) { setNormal(0, 1); }
-
-		void AnalogLowPass::design(int numPoles,
-								   WorkspaceBase* w)
+		void AnalogLowPass::design(const int numPoles, WorkspaceBase* w)
 		{
 			if (m_numPoles != numPoles)
 			{

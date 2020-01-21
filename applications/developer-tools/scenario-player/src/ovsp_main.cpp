@@ -31,39 +31,38 @@
 
 using namespace OpenViBE;
 
-void initializeParser(ProgramOptionParser& optionParser)
+void initializeParser(ProgramOptionParser& parser)
 {
-	std::string desc =
+	const std::string desc =
 			R"d(Usage: program options
 
 Program can be run in express mode to directly execute a scenario
 Program can be run in command mode to execute list of commands from a file
 
 )d";
-	optionParser.setGlobalDesc(desc);
+	parser.setGlobalDesc(desc);
 
-	optionParser.addSimpleOption("help", { "h", "Help" });
-	optionParser.addSimpleOption("version", { "v", "Program version" });
+	parser.addSimpleOption("help", { "h", "Help" });
+	parser.addSimpleOption("version", { "v", "Program version" });
 
-	optionParser.addValueOption<ProgramOptionsTraits::String>("mode", { "m", "Execution mode: 'x' for express, 'c' for command [mandatory]" });
+	parser.addValueOption<SProgramOptionsTraits::String>("mode", { "m", "Execution mode: 'x' for express, 'c' for command [mandatory]" });
 
 	// express mode options
-	optionParser.addValueOption<ProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("scenario-file", { "", "Path to scenario file (express mode only) [mandatory]" });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("updated-scenario-file", {
-																  "",
-																  "Enable update process instead of playing scenario. Path to the updated scenario file (express mode only)."
-															  });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", {
-																  "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]"
-															  });
-	optionParser.addValueOption<ProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
-
-	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)" });
-	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::String>("scenario-file", { "", "Path to scenario file (express mode only) [mandatory]" });
+	parser.addValueOption<SProgramOptionsTraits::String>("updated-scenario-file", {
+															 "",
+															 "Enable update process instead of playing scenario. Path to the updated scenario file (express mode only)."
+														 });
+	parser.addValueOption<SProgramOptionsTraits::String>("play-mode", {
+															 "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]"
+														 });
+	parser.addValueOption<SProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)" });
+	parser.addValueOption<SProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });
 
 	// command mode options
-	optionParser.addValueOption<ProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only) [mandatory]" });
+	parser.addValueOption<SProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only) [mandatory]" });
 }
 
 int main(int argc, char** argv)
@@ -74,24 +73,24 @@ int main(int argc, char** argv)
 	if (!optionParser.parse(argc, argv))
 	{
 		std::cerr << "ERROR: Failed to parse arguments" << std::endl;
-		return int(PlayerReturnCode::InvalidArg);
+		return int(EPlayerReturnCode::InvalidArg);
 	}
 	if (optionParser.hasOption("help"))
 	{
 		optionParser.printOptionsDesc();
-		return int(PlayerReturnCode::Success);
+		return int(EPlayerReturnCode::Success);
 	}
 	if (optionParser.hasOption("version"))
 	{
 		// PROJECT_VERSION is added to definition from cmake
 		std::cout << "version: " << PROJECT_VERSION << std::endl;
-		return int(PlayerReturnCode::Success);
+		return int(EPlayerReturnCode::Success);
 	}
 	if (optionParser.hasOption("mode") || optionParser.hasOption("updated-scenario-file"))
 	{
 		// command parser type is selected from mode
 		std::unique_ptr<ICommandParser> commandParser{ nullptr };
-		auto mode = optionParser.getOptionValue<ProgramOptionsTraits::String>("mode");
+		const auto mode = optionParser.getOptionValue<SProgramOptionsTraits::String>("mode");
 
 		if (mode == "c")
 		{
@@ -103,7 +102,7 @@ int main(int argc, char** argv)
 			else
 			{
 				std::cerr << "ERROR: mandatory option 'command-file' not set" << std::endl;
-				return int(PlayerReturnCode::MissingMandatoryArgument);
+				return int(EPlayerReturnCode::MissingMandatoryArgument);
 			}
 		}
 		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file")) { commandParser.reset(new CommandLineOptionParser(optionParser)); }
@@ -111,7 +110,7 @@ int main(int argc, char** argv)
 		{
 			std::cerr << "ERROR: unknown mode set" << std::endl;
 			std::cerr << "Mode must be 'x' or 'c'" << std::endl;
-			return int(PlayerReturnCode::InvalidArg);
+			return int(EPlayerReturnCode::InvalidArg);
 		}
 
 		commandParser->initialize();
@@ -120,15 +119,14 @@ int main(int argc, char** argv)
 		{
 			auto returnCode = commandParser->parse();
 
-			if (returnCode == PlayerReturnCode::Success)
+			if (returnCode == EPlayerReturnCode::Success)
 			{
-				KernelFacade kernel;
+				CKernelFacade kernel;
 
 				for (auto& cmd : commandParser->getCommandList())
 				{
 					returnCode = cmd->execute(kernel);
-
-					if (returnCode != PlayerReturnCode::Success) { return int(returnCode); }
+					if (returnCode != EPlayerReturnCode::Success) { return int(returnCode); }
 				}
 			}
 			else { return int(returnCode); }
@@ -136,14 +134,14 @@ int main(int argc, char** argv)
 		catch (const std::exception& e)
 		{
 			std::cerr << "ERROR: received unexpected exception: " << e.what() << std::endl;
-			return int(PlayerReturnCode::UnkownFailure);
+			return int(EPlayerReturnCode::UnkownFailure);
 		}
 	}
 	else
 	{
 		std::cerr << "ERROR: mandatory option 'mode' not set" << std::endl;
-		return int(PlayerReturnCode::MissingMandatoryArgument);
+		return int(EPlayerReturnCode::MissingMandatoryArgument);
 	}
 
-	return int(PlayerReturnCode::Success);
+	return int(EPlayerReturnCode::Success);
 }

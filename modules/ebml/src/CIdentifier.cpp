@@ -2,40 +2,18 @@
 
 using namespace EBML;
 
-CIdentifier::CIdentifier() {}
-
-CIdentifier::CIdentifier(const uint64_t ui64Identifier)
-	: m_ui64Identifier(ui64Identifier) {}
-
-CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2)
+const CIdentifier& CIdentifier::operator=(const CIdentifier& id)
 {
-	m_ui64Identifier = (uint64_t(ui32Identifier1) << 32) + ui32Identifier2;
-}
-
-CIdentifier::CIdentifier(const CIdentifier& identifier)
-	: m_ui64Identifier(identifier.m_ui64Identifier) {}
-
-const CIdentifier& CIdentifier::operator=(const CIdentifier& identifier)
-{
-	m_ui64Identifier = identifier.m_ui64Identifier;
+	m_id = id.m_id;
 	return *this;
 }
 
 namespace EBML
 {
-	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier; }
-
-	bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier != rIdentifier2.m_ui64Identifier; }
-
-	bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier <= rIdentifier2.m_ui64Identifier; }
-
-	bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier >= rIdentifier2.m_ui64Identifier; }
-
-	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier; }
-
-	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier; }
+	bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id == id2.m_id; }
+	bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id != id2.m_id; }
+	bool operator<=(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id <= id2.m_id; }
+	bool operator>=(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id >= id2.m_id; }
+	bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
+	bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
 } // namespace EBML
-
-CIdentifier::operator uint64_t() const { return this->toUInteger(); }
-
-uint64_t CIdentifier::toUInteger() const { return m_ui64Identifier; }

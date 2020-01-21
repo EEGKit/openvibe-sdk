@@ -78,7 +78,7 @@ function prototypes
             cdft(2*n, -1, a, ip, w);
         is
             cdft(2*n, 1, a, ip, w);
-            for (j = 0; j <= 2 * n - 1; j++) {
+            for (j = 0; j <= 2 * n - 1; ++j) {
                 a[j] *= 1.0 / n;
             }
         .
@@ -127,7 +127,7 @@ function prototypes
             rdft(n, 1, a, ip, w);
         is
             rdft(n, -1, a, ip, w);
-            for (j = 0; j <= n - 1; j++) {
+            for (j = 0; j <= n - 1; ++j) {
                 a[j] *= 2.0 / n;
             }
         .
@@ -166,7 +166,7 @@ function prototypes
         is
             a[0] *= 0.5;
             ddct(n, 1, a, ip, w);
-            for (j = 0; j <= n - 1; j++) {
+            for (j = 0; j <= n - 1; ++j) {
                 a[j] *= 2.0 / n;
             }
         .
@@ -213,7 +213,7 @@ function prototypes
         is
             a[0] *= 0.5;
             ddst(n, 1, a, ip, w);
-            for (j = 0; j <= n - 1; j++) {
+            for (j = 0; j <= n - 1; ++j) {
                 a[j] *= 2.0 / n;
             }
         .
@@ -249,7 +249,7 @@ function prototypes
             a[0] *= 0.5;
             a[n] *= 0.5;
             dfct(n, a, t, ip, w);
-            for (j = 0; j <= n; j++) {
+            for (j = 0; j <= n; ++j) {
                 a[j] *= 2.0 / n;
             }
         .
@@ -282,7 +282,7 @@ function prototypes
             dfst(n, a, t, ip, w);
         is
             dfst(n, a, t, ip, w);
-            for (j = 1; j <= n - 1; j++) {
+            for (j = 1; j <= n - 1; ++j) {
                 a[j] *= 2.0 / n;
             }
         .
@@ -506,7 +506,7 @@ namespace r8b
 			if (n > 2)
 			{
 				int mh = m >> 1;
-				for (j = 1; j < mh; j++)
+				for (j = 1; j < mh; ++j)
 				{
 					k         = m - j;
 					double xr = a[j] - a[n - j];
@@ -558,7 +558,7 @@ namespace r8b
 					}
 					l <<= 1;
 					mh = m >> 1;
-					for (j = 0; j < mh; j++)
+					for (j = 0; j < mh; ++j)
 					{
 						k    = m - j;
 						t[j] = t[m + k] - t[m + j];
@@ -599,7 +599,7 @@ namespace r8b
 			{
 				int m  = n >> 1;
 				int mh = m >> 1;
-				for (j = 1; j < mh; j++)
+				for (j = 1; j < mh; ++j)
 				{
 					k         = m - j;
 					double xr = a[j] + a[n - j];
@@ -652,7 +652,7 @@ namespace r8b
 					}
 					l <<= 1;
 					mh = m >> 1;
-					for (j = 1; j < mh; j++)
+					for (j = 1; j < mh; ++j)
 					{
 						k    = m - j;
 						t[j] = t[m + k] + t[m + j];
@@ -705,7 +705,7 @@ namespace r8b
 				double delta = atan(1.0) / nch;
 				c[0]         = cos(delta * nch);
 				c[nch]       = 0.5 * c[0];
-				for (int j = 1; j < nch; j++)
+				for (int j = 1; j < nch; ++j)
 				{
 					c[j]      = 0.5 * cos(delta * j);
 					c[nc - j] = 0.5 * sin(delta * j);
@@ -726,15 +726,15 @@ namespace r8b
 			while ((m << 3) < l)
 			{
 				l >>= 1;
-				for (j = 0; j < m; j++) { ip[m + j] = ip[j] + l; }
+				for (j = 0; j < m; ++j) { ip[m + j] = ip[j] + l; }
 				m <<= 1;
 			}
 			int m2 = 2 * m;
 			if ((m << 3) == l)
 			{
-				for (k = 0; k < m; k++)
+				for (k = 0; k < m; ++k)
 				{
-					for (j = 0; j < k; j++)
+					for (j = 0; j < k; ++j)
 					{
 						j1        = 2 * j + ip[k];
 						k1        = 2 * k + ip[j];
@@ -791,9 +791,9 @@ namespace r8b
 			}
 			else
 			{
-				for (k = 1; k < m; k++)
+				for (k = 1; k < m; ++k)
 				{
-					for (j = 0; j < k; j++)
+					for (j = 0; j < k; ++j)
 					{
 						j1        = 2 * j + ip[k];
 						k1        = 2 * k + ip[j];
@@ -831,15 +831,15 @@ namespace r8b
 			while ((m << 3) < l)
 			{
 				l >>= 1;
-				for (j = 0; j < m; j++) { ip[m + j] = ip[j] + l; }
+				for (j = 0; j < m; ++j) { ip[m + j] = ip[j] + l; }
 				m <<= 1;
 			}
 			int m2 = 2 * m;
 			if ((m << 3) == l)
 			{
-				for (k = 0; k < m; k++)
+				for (k = 0; k < m; ++k)
 				{
-					for (j = 0; j < k; j++)
+					for (j = 0; j < k; ++j)
 					{
 						j1        = 2 * j + ip[k];
 						k1        = 2 * k + ip[j];
@@ -902,9 +902,9 @@ namespace r8b
 			{
 				a[1]      = -a[1];
 				a[m2 + 1] = -a[m2 + 1];
-				for (k = 1; k < m; k++)
+				for (k = 1; k < m; ++k)
 				{
-					for (j = 0; j < k; j++)
+					for (j = 0; j < k; ++j)
 					{
 						j1        = 2 * j + ip[k];
 						k1        = 2 * k + ip[j];
@@ -1329,7 +1329,7 @@ namespace r8b
 			int m  = n >> 1;
 			int ks = nc / n;
 			int kk = 0;
-			for (int j = 1; j < m; j++)
+			for (int j = 1; j < m; ++j)
 			{
 				int k = n - j;
 				kk += ks;
@@ -1347,7 +1347,7 @@ namespace r8b
 			int m  = n >> 1;
 			int ks = nc / n;
 			int kk = 0;
-			for (int j = 1; j < m; j++)
+			for (int j = 1; j < m; ++j)
 			{
 				int k = n - j;
 				kk += ks;

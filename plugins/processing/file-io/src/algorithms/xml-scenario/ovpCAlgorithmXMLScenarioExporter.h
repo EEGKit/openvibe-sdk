@@ -3,13 +3,8 @@
 #include "../../ovp_defines.h"
 
 #include <openvibe/ov_all.h>
-
 #include <toolkit/ovtk_all.h>
-
 #include <xml/IWriter.h>
-
-#define OVP_ClassId_Algorithm_XMLScenarioExporter                                        OpenViBE::CIdentifier(0x53693531, 0xB136CF3F)
-#define OVP_ClassId_Algorithm_XMLScenarioExporterDesc                                    OpenViBE::CIdentifier(0x9709C9FA, 0xF126F74E)
 
 namespace OpenViBEPlugins
 {
@@ -21,19 +16,18 @@ namespace OpenViBEPlugins
 
 			CAlgorithmXMLScenarioExporter();
 			~CAlgorithmXMLScenarioExporter() override;
-			bool exportStart(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& identifier) override;
-			bool exportIdentifier(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& identifier,
-								  const OpenViBE::CIdentifier& rValue) override;
-			bool exportString(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& identifier, const OpenViBE::CString& rValue) override;
-			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& identifier, uint64_t value) override;
-			bool exportStop(OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
+			bool exportStart(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id) override;
+			bool exportIdentifier(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, const OpenViBE::CIdentifier& value) override;
+			bool exportString(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, const OpenViBE::CString& value) override;
+			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, uint64_t value) override;
+			bool exportStop(OpenViBE::IMemoryBuffer& memoryBuffer) override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporter, OVP_ClassId_Algorithm_XMLScenarioExporter)
 
 		protected:
-			void write(const char* sString) override; // XML::IWriterCallback
+			void write(const char* str) override; // XML::IWriterCallback
 
-			XML::IWriter* m_pWriter                  = nullptr;
+			XML::IWriter* m_writer                   = nullptr;
 			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 

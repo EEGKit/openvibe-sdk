@@ -5,19 +5,19 @@
 
 namespace OpenViBEToolkit
 {
-	template <class CParent>
-	class TFeatureVector final : public TVector<CParent>
+	template <class TParent>
+	class TFeatureVector final : public TVector<TParent>
 	{
 	public:
 
 		explicit TFeatureVector(OpenViBE::IMatrix& rMatrix)
-			: TVector<CParent>(rMatrix) { }
+			: TVector<TParent>(rMatrix) { }
 
-		virtual double getLabel() const { return 0; }
+		double getLabel() const override { return 0; }
 
-		virtual bool setLabel(const double /*label*/) { return false; }
+		bool setLabel(const double /*label*/) override { return false; }
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < CParent >, OV_UndefinedIdentifier)
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < TParent >, OV_UndefinedIdentifier)
 	};
 
 	typedef TFeatureVector<IFeatureVector> CFeatureVector;

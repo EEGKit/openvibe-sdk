@@ -8,19 +8,19 @@ namespace EBML
 	{
 	public:
 
-		explicit CReader(IReaderCallback& rReaderCallback);
+		explicit CReader(IReaderCallback& callback);
 		~CReader() override;
-		bool processData(const void* buffer, uint64_t size) override;
-		CIdentifier getCurrentNodeIdentifier() const override;
-		uint64_t getCurrentNodeSize() const override;
+		bool processData(const void* buffer, const size_t size) override;
+		CIdentifier getCurrentNodeID() const override;
+		size_t getCurrentNodeSize() const override;
 		void release() override;
 
 	protected:
 
-		IReader* m_pReaderImplementation = nullptr;
+		IReader* m_impl = nullptr;
 
 	private:
 
-		CReader();
+		CReader() = delete;
 	};
 } // namespace EBML

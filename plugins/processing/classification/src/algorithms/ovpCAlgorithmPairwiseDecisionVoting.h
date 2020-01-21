@@ -6,9 +6,6 @@
 
 #include "ovpCAlgorithmPairwiseDecision.h"
 
-#define OVP_ClassId_Algorithm_PairwiseDecision_Voting												OpenViBE::CIdentifier(0xA111B830, 0x4679BAFD)
-#define OVP_ClassId_Algorithm_PairwiseDecision_VotingDesc											OpenViBE::CIdentifier(0xAC5A39E8, 0x3A57822A)
-
 namespace OpenViBEPlugins
 {
 	namespace Classification
@@ -26,17 +23,17 @@ namespace OpenViBEPlugins
 
 			CAlgorithmPairwiseDecisionVoting() { }
 			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
+			bool initialize() override { return true; }
+			bool uninitialize() override { return true; }
 			bool parameterize() override;
-			bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) override;
-			XML::IXMLNode* saveConfiguration() override;
-			bool loadConfiguration(XML::IXMLNode& rNode) override;
+			bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) override;
+			XML::IXMLNode* saveConfig() override;
+			bool loadConfig(XML::IXMLNode& /*node*/) override { return true; }
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision_Voting)
+			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, OVP_ClassId_Algorithm_PairwiseDecision_Voting)
 
 		private:
-			uint32_t m_ui32ClassCount = 0;
+			size_t m_nClass = 0;
 		};
 
 		class CAlgorithmPairwiseDecisionVotingDesc final : virtual public CAlgorithmPairwiseDecisionDesc
@@ -56,13 +53,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseDecision_Voting; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmPairwiseDecisionVoting; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(prototype);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_PairwiseDecision_VotingDesc)
+			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecisionDesc, OVP_ClassId_Algorithm_PairwiseDecision_VotingDesc)
 		};
 	} // namespace Classification
 } // namespace OpenViBEPlugins

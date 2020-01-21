@@ -1,10 +1,6 @@
 #include "ovCMessagingServer.h"
 #include "ovCMessagingImpl.hpp"
 
-#include <array>
-#include <algorithm>
-#include <iterator>
-
 using namespace Communication;
 
 MessagingServer::~MessagingServer()
@@ -82,16 +78,16 @@ bool MessagingServer::accept()
 	if (!this->pushMessage(CommunicationProtocolVersionMessage(s_CommunicationProtocol_MajorVersion, s_CommunicationProtocol_MinorVersion)))
 	{
 		// Error set in the function
-		ELibraryError error = this->getLastError();
+		const ELibraryError error = this->getLastError();
 		this->close();
 		this->setLastError(error);
 		return false;
 	}
 
-	if (!this->pushMessage(impl->m_BoxDescription))
+	if (!this->pushMessage(impl->m_BoxDesc))
 	{
 		// Error set in the function
-		ELibraryError error = this->getLastError();
+		const ELibraryError error = this->getLastError();
 		this->close();
 		this->setLastError(error);
 		return false;
@@ -129,25 +125,29 @@ bool MessagingServer::close()
 	return !errorRaised;
 }
 
-bool MessagingServer::addParameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value)
+bool MessagingServer::addParameter(const uint64_t id, const size_t type, const std::string& name, const std::string& value) const
 {
-	return impl->m_BoxDescription.addParameter(id, type, name, value);
+	return impl->m_BoxDesc.addParameter(id, type, name, value);
 }
 
-bool MessagingServer::addInput(const uint32_t id, const uint64_t type, const std::string& name) { return impl->m_BoxDescription.addInput(id, type, name); }
+bool MessagingServer::addInput(const uint64_t id, const size_t type, const std::string& name) const { return impl->m_BoxDesc.addInput(id, type, name); }
 
-bool MessagingServer::addOutput(const uint32_t id, const uint64_t type, const std::string& name) { return impl->m_BoxDescription.addOutput(id, type, name); }
+bool MessagingServer::addOutput(const uint64_t id, const size_t type, const std::string& name) const
+{
+	return impl->m_BoxDesc.addOutput(id, type, name);
+}
 
 bool MessagingServer::popLog(uint64_t& packetId, ELogLevel& type, std::string& message) { return CMessaging::popLog(packetId, type, message); }
 
-bool MessagingServer::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
+bool MessagingServer::popEBML(uint64_t& packetId, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {
 	return CMessaging::popEBML(packetId, index, startTime, endTime, ebml);
 }
 
-bool MessagingServer::pushError(const EError error, const uint64_t guiltyId) { return this->pushMessage(ErrorMessage(error, guiltyId)); }
+bool MessagingServer::pushError(const EError error, const uint64_t guiltyId) const { return this->pushMessage(ErrorMessage(error, guiltyId)); }
 
-bool MessagingServer::pushEBML(const uint32_t index, const uint64_t startTime, const uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
+bool MessagingServer::pushEBML(const size_t index, const uint64_t startTime, const uint64_t endTime, 
+							   const std::shared_ptr<const std::vector<uint8_t>>& ebml) const
 {
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
 }

@@ -1,114 +1,82 @@
 #include "ovkCLogListenerFile.h"
 
-#include <cstdio>
 #include <sstream>
 #include <iostream>
 
-#include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovTimeArithmetics.h>
 
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
-CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& sApplicationName, const CString& sLogFilename)
-	: TKernelObject<ILogListener>(ctx)
-	  , m_sApplicationName(sApplicationName)
-	  , m_sLogFilename(sLogFilename)
-	  , m_bTimeInSeconds(true), m_ui64TimePrecision(3)
+CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename)
+	: TKernelObject<ILogListener>(ctx), m_applicationName(applicationName), m_logFilename(logFilename)
 {
 
 	// Create the path to the log file
-	FS::Files::createParentPath(sLogFilename.toASCIIString());
+	FS::Files::createParentPath(logFilename.toASCIIString());
 
-	FS::Files::openFStream(m_fsFileStream, sLogFilename.toASCIIString(), ios_base::out);
+	FS::Files::openFStream(m_fsFileStream, logFilename.toASCIIString(), ios_base::out);
 
 	if (!m_fsFileStream.is_open())
 	{
-		std::cout << "[  ERR  ] Error while creating FileLogListener into '" << sLogFilename << "'" << std::endl;
+		std::cout << "[  ERR  ] Error while creating FileLogListener into '" << logFilename << "'" << std::endl;
 		return;
 	}
 	m_fsFileStream << flush;
 }
 
-CLogListenerFile::~CLogListenerFile() { m_fsFileStream.close(); }
-
-void CLogListenerFile::configure(const IConfigurationManager& rConfigurationManager)
+void CLogListenerFile::configure(const IConfigurationManager& configurationManager)
 {
-	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
-	m_bLogWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
-	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
+	m_timeInSeconds = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
+	m_logWithHexa    = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
+	m_timePrecision  = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
-bool CLogListenerFile::isActive(ELogLevel eLogLevel)
+bool CLogListenerFile::isActive(ELogLevel logLevel)
 {
-	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
-	if (itLogLevel == m_vActiveLevel.end()) { return true; }
-	return itLogLevel->second;
+	const auto it = m_activeLevels.find(logLevel);
+	if (it == m_activeLevels.end()) { return true; }
+	return it->second;
 }
 
-bool CLogListenerFile::activate(ELogLevel eLogLevel, bool bActive)
+bool CLogListenerFile::activate(const ELogLevel level, const bool active)
 {
-	m_vActiveLevel[eLogLevel] = bActive;
+	m_activeLevels[level] = active;
 	return true;
 }
 
-bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
+bool CLogListenerFile::activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
+	for (int i = startLevel; i <= endLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
 	return true;
 }
 
-bool CLogListenerFile::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
+bool CLogListenerFile::activate(const bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
 void CLogListenerFile::log(const time64 value)
 {
-	if (m_bTimeInSeconds)
+	if (m_timeInSeconds)
 	{
-		double l_f64Time = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
+		const double time = TimeArithmetics::timeToSeconds(value.timeValue);
 		std::stringstream ss;
-		ss.precision(m_ui64TimePrecision);
+		ss.precision(m_timePrecision);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << l_f64Time;
+		ss << time;
 		ss << " sec";
 
-		if (m_bLogWithHexa) { ss << " (0x" << hex << value.m_ui64TimeValue << ")"; }
+		if (m_logWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
 
 		m_fsFileStream << ss.str();
 	}
-	else { logInteger(value.m_ui64TimeValue); }
+	else { logInteger(value.timeValue); }
 }
 
-void CLogListenerFile::log(const uint64_t value) { logInteger(value); }
-void CLogListenerFile::log(const uint32_t value) { logInteger(value); }
-void CLogListenerFile::log(const uint16_t value) { logInteger(value); }
-void CLogListenerFile::log(const uint8_t value) { logInteger(value); }
-void CLogListenerFile::log(const int64_t value) { logInteger(value); }
-void CLogListenerFile::log(const int value) { logInteger(value); }
-void CLogListenerFile::log(const int16_t value) { logInteger(value); }
-void CLogListenerFile::log(const int8_t value) { logInteger(value); }
-
-void CLogListenerFile::log(const float value) { m_fsFileStream << value; }
-void CLogListenerFile::log(const double value) { m_fsFileStream << value; }
-void CLogListenerFile::log(const bool value) { m_fsFileStream << (value ? "true" : "false"); }
-void CLogListenerFile::log(const CIdentifier& value) { m_fsFileStream << value.toString(); }
-
-void CLogListenerFile::log(const CString& value)
+void CLogListenerFile::log(const ELogLevel level)
 {
-	m_fsFileStream << value;
-	m_fsFileStream << flush;
-}
-
-void CLogListenerFile::log(const char* value)
-{
-	m_fsFileStream << value;
-	m_fsFileStream << flush;
-}
-
-void CLogListenerFile::log(const ELogLevel eLogLevel)
-{
-	switch (eLogLevel)
+	switch (level)
 	{
 		case LogLevel_Debug:
 			m_fsFileStream << "[ DEBUG ] ";
@@ -147,5 +115,3 @@ void CLogListenerFile::log(const ELogLevel eLogLevel)
 			break;
 	}
 }
-
-void CLogListenerFile::log(const ELogColor eLogColor) {}

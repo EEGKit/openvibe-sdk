@@ -11,14 +11,14 @@ namespace OpenViBE
 	{
 		class CAlgorithmProxy;
 
-		class CAlgorithmManager : public TKernelObject<IAlgorithmManager>
+		class CAlgorithmManager final : public TKernelObject<IAlgorithmManager>
 		{
 		public:
 
 			explicit CAlgorithmManager(const IKernelContext& ctx);
 			~CAlgorithmManager() override;
 			CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) override;
-			CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) override;
+			CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) override;
 			bool releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
 			bool releaseAlgorithm(IAlgorithmProxy& rAlgorithm) override;
 			IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
@@ -28,11 +28,8 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier() const;
-
-			using AlgorithmMap = std::map<CIdentifier, CAlgorithmProxy*>;
-			AlgorithmMap m_vAlgorithms;
-
+			CIdentifier getUnusedIdentifier() const;
+			std::map<CIdentifier, CAlgorithmProxy*> m_algorithms;
 			mutable std::mutex m_oMutex;
 		};
 	} // namespace Kernel

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CIdentifier.h"
+#include <cstdlib>	// fix Unix compatibility
 
 namespace EBML
 {
@@ -25,23 +26,23 @@ namespace EBML
 		virtual ~IReaderCallback() { }
 		/**
 		 * \brief Kind of child querry
-		 * \param identifier [in] : The identifier which type has to be known
+		 * \param id [in] : The id which type has to be known
 		 * \return \e true when the node is a master node
 		 * \return \e false when it is a simple child node.
 		 *
-		 * When called by the reader, this function should tell it whether the node identified by \c identifier is a master
+		 * When called by the reader, this function should tell it whether the node identified by \c id is a master
 		 * node (has child) or not (has data). For that, it has to return \e true when the node should have children, and \e false in other cases.
 		 */
-		virtual bool isMasterChild(const CIdentifier& identifier) = 0;
+		virtual bool isMasterChild(const CIdentifier& id) = 0;
 		/**
 		 * \brief Informs the callback object a new node parsing is starting
-		 * \param identifier [in] : The idenfier of the newly parsing node
+		 * \param id [in] : The idenfier of the newly parsing node
 		 *
 		 * This is called to notify the callback object that the parser has started a new EBML node parsing. This EBML
-		 * node is identified by \c identifier. After this call will follow whether a new \c openChild if this node is
+		 * node is identified by \c id. After this call will follow whether a new \c openChild if this node is
 		 * a master one, whher a processData if this node is a simple child one.
 		 */
-		virtual void openChild(const CIdentifier& identifier) = 0;
+		virtual void openChild(const CIdentifier& id) = 0;
 		/**
 		 * \brief Gives the callback object the data associated with the currently opened child node
 		 * \param buffer [in] : The buffer corresponding to the current simple child node
@@ -51,7 +52,7 @@ namespace EBML
 		 * object can process it. Whether the callback object knows how to process the data, whether it requests
 		 * a reader helper object to do the work... See EBML::IReaderHelper for more details on that subject.
 		 */
-		virtual void processChildData(const void* buffer, const uint64_t size) = 0;
+		virtual void processChildData(const void* buffer, const size_t size) = 0;
 		/**
 		 * \brief Informs the callback object the current node parsing is terminated
 		 *
@@ -94,17 +95,17 @@ namespace EBML
 		 * according to the EBML structure contained in the chunk and the previously parsed chunks. See
 		 * EBML::IReaderCallback for more details on the callback object.
 		 */
-		virtual bool processData(const void* buffer, uint64_t size) = 0;
+		virtual bool processData(const void* buffer, const size_t size) = 0;
 		/**
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node
 		 */
-		virtual CIdentifier getCurrentNodeIdentifier() const = 0;
+		virtual CIdentifier getCurrentNodeID() const = 0;
 		/**
 		 * \brief Gets the size of the current node
 		 * \return the size of the current node
 		 */
-		virtual uint64_t getCurrentNodeSize() const = 0;
+		virtual size_t getCurrentNodeSize() const = 0;
 		/**
 		 * \brief Tells this object it won't be used anymore
 		 *
@@ -127,9 +128,9 @@ namespace EBML
 
 	/**
 	 * \brief Instanciation function for EBML reader objects
-	 * \param rReaderCallback [in] : The callback object the reader should use
+	 * \param callback [in] : The callback object the reader should use
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API IReader* createReader(IReaderCallback& rReaderCallback);
+	extern EBML_API IReader* createReader(IReaderCallback& callback);
 } // namespace EBML

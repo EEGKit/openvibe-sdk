@@ -67,7 +67,7 @@ namespace Dsp
 				const double vsa    = ac();
 				int i               = c.m_numStages - 1;
 				out                 = (state++)->process1(out, *stage++, vsa);
-				for (; --i >= 0;) out = (state++)->process1(out, *stage++, 0);
+				for (; --i >= 0;) { out = (state++)->process1(out, *stage++, 0); }
 				//for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
 				//  out = state->process1 (out, *stage, vsa);
 				return Sample(out);
@@ -106,9 +106,9 @@ namespace Dsp
 
 		// Process a block of samples in the given form
 		template <class StateType, typename Sample>
-		void process(int numSamples, Sample* dest, StateType& state) const
+		void process(int nSamples, Sample* dest, StateType& state) const
 		{
-			while (--numSamples >= 0)
+			while (--nSamples >= 0)
 			{
 				*dest = state.process(*dest, *this);
 				++dest;
@@ -151,7 +151,7 @@ namespace Dsp
 			void reset()
 			{
 				StateType* state = m_states;
-				for (int i = MaxStages; --i >= 0; ++state) state->reset();
+				for (int i = MaxStages; --i >= 0; ++state) { state->reset(); }
 			}
 
 		private:

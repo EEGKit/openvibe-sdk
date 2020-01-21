@@ -7,7 +7,6 @@
 
 #include <system/ovCChrono.h>
 
-#include <map>
 #include <string>
 
 namespace OpenViBE
@@ -16,19 +15,19 @@ namespace OpenViBE
 	{
 		class CScenarioSettingKeywordParserCallback;
 
-		class CPlayer : public TKernelObject<IPlayer>
+		class CPlayer final : public TKernelObject<IPlayer>
 		{
 		public:
 
 			explicit CPlayer(const IKernelContext& ctx);
 			~CPlayer() override;
-			bool setScenario(const CIdentifier& scenarioID, const CNameValuePairList* pLocalConfigurationTokens) override;
+			bool setScenario(const CIdentifier& scenarioID, const CNameValuePairList* localConfigurationTokens) override;
 			IConfigurationManager& getRuntimeConfigurationManager() const override;
 			IScenarioManager& getRuntimeScenarioManager() const override;
 			CIdentifier getRuntimeScenarioIdentifier() const override;
 
 
-			virtual bool isHoldingResources() const;
+			bool isHoldingResources() const;
 			EPlayerReturnCode initialize() override;
 			bool uninitialize() override;
 			bool stop() override;
@@ -37,42 +36,42 @@ namespace OpenViBE
 			bool play() override;
 			bool forward() override;
 			EPlayerStatus getStatus() const override;
-			bool setFastForwardMaximumFactor(double f64FastForwardFactor) override;
+			bool setFastForwardMaximumFactor(double fastForwardFactor) override;
 			double getFastForwardMaximumFactor() const override;
 			double getCPUUsage() const override;
-			bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach) override;
+			bool loop(uint64_t elapsedTime, uint64_t maximumTimeToReach) override;
 			uint64_t getCurrentSimulatedTime() const override;
-			virtual uint64_t getCurrentSimulatedLateness() const;
+			uint64_t getCurrentSimulatedLateness() const;
 
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IPlayer >, OVK_ClassId_Kernel_Player_Player)
 
 		protected:
 
-			CKernelContextBridge m_oKernelContextBridge;
-			IConfigurationManager* m_pRuntimeConfigurationManager                          = nullptr;
-			IScenarioManager* m_pRuntimeScenarioManager                                    = nullptr;
-			CScenarioSettingKeywordParserCallback* m_pScenarioSettingKeywordParserCallback = nullptr;
+			CKernelContextBridge m_kernelCtxBridge;
+			IConfigurationManager* m_runtimeConfigManager                           = nullptr;
+			IScenarioManager* m_runtimeScenarioManager                              = nullptr;
+			CScenarioSettingKeywordParserCallback* m_scenarioSettingKeywordParserCB = nullptr;
 
-			CScheduler m_oScheduler;
+			CScheduler m_scheduler;
 
-			uint64_t m_ui64CurrentTimeToReach    = 0;
-			uint64_t m_ui64Lateness              = 0;
-			uint64_t m_ui64InnerLateness         = 0;
-			EPlayerStatus m_eStatus              = PlayerStatus_Stop;
-			bool m_bIsInitializing               = false;
-			double m_f64FastForwardMaximumFactor = 0;
+			uint64_t m_currentTimeToReach     = 0;
+			uint64_t m_lateness               = 0;
+			uint64_t m_innerLateness          = 0;
+			EPlayerStatus m_status            = PlayerStatus_Stop;
+			bool m_isInitializing             = false;
+			double m_fastForwardMaximumFactor = 0;
 
-			std::string m_sScenarioConfigurationFile;
-			std::string m_sWorkspaceConfigurationFile;
+			std::string m_scenarioConfigFile;
+			std::string m_workspaceConfigFile;
 
 			// Stores the identifier of the scenario that is being played
-			CIdentifier m_oScenarioIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_scenarioID = OV_UndefinedIdentifier;
 
 		private:
-			CIdentifier m_oRuntimeScenarioIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_runtimeScenarioID = OV_UndefinedIdentifier;
 
-			System::CChrono m_oBenchmarkChrono;
+			System::CChrono m_benchmarkChrono;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -6,7 +6,6 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
-#include <cfloat>
 #include <cerrno>
 
 // for save/load
@@ -33,13 +32,13 @@ bool Matrix::copyDescription(IMatrix& dst, const IMatrix& src)
 {
 	if (&dst == &src) { return true; }
 
-	const uint32_t nDim = src.getDimensionCount();
+	const size_t nDim = src.getDimensionCount();
 	if (!dst.setDimensionCount(nDim)) { return false; }
-	for (uint32_t i = 0; i < nDim; i++)
+	for (size_t i = 0; i < nDim; ++i)
 	{
-		const uint32_t dimSize = src.getDimensionSize(i);
+		const size_t dimSize = src.getDimensionSize(i);
 		if (!dst.setDimensionSize(i, dimSize)) { return false; }
-		for (uint32_t j = 0; j < dimSize; j++) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
+		for (size_t j = 0; j < dimSize; ++j) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
 	}
 	return true;
 }
@@ -48,8 +47,8 @@ bool Matrix::copyContent(IMatrix& dst, const IMatrix& src)
 {
 	if (&dst == &src) { return true; }
 
-	const uint32_t nElementIn  = src.getBufferElementCount();
-	const uint32_t nElementOut = dst.getBufferElementCount();
+	const size_t nElementIn  = src.getBufferElementCount();
+	const size_t nElementOut = dst.getBufferElementCount();
 	if (nElementOut != nElementIn) { return false; }
 	const double* bufferIn = src.getBuffer();
 	double* bufferOut      = dst.getBuffer();
@@ -57,25 +56,25 @@ bool Matrix::copyContent(IMatrix& dst, const IMatrix& src)
 	return true;
 }
 
-bool Matrix::clearContent(IMatrix& rMatrix)
+bool Matrix::clearContent(IMatrix& matrix)
 {
-	System::Memory::set(rMatrix.getBuffer(), rMatrix.getBufferElementCount() * sizeof(double), 0);
+	System::Memory::set(matrix.getBuffer(), matrix.getBufferElementCount() * sizeof(double), 0);
 	return true;
 }
 
-bool Matrix::isDescriptionSimilar(const IMatrix& src1, const IMatrix& src2, const bool bCheckLabels)
+bool Matrix::isDescriptionSimilar(const IMatrix& src1, const IMatrix& src2, const bool checkLabels)
 {
 	if (&src1 == &src2) { return true; }
 
 	if (src1.getDimensionCount() != src2.getDimensionCount()) { return false; }
 
-	for (uint32_t i = 0; i < src1.getDimensionCount(); i++) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
+	for (size_t i = 0; i < src1.getDimensionCount(); ++i) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
 
-	if (bCheckLabels)
+	if (checkLabels)
 	{
-		for (uint32_t i = 0; i < src1.getDimensionCount(); i++)
+		for (size_t i = 0; i < src1.getDimensionCount(); ++i)
 		{
-			for (uint32_t j = 0; j < src1.getDimensionSize(i); j++)
+			for (size_t j = 0; j < src1.getDimensionSize(i); ++j)
 			{
 				if (strcmp(src1.getDimensionLabel(i, j), src2.getDimensionLabel(i, j)) != 0) { return false; }
 			}
@@ -94,14 +93,14 @@ bool Matrix::isContentSimilar(const IMatrix& src1, const IMatrix& src2)
 	return memcmp(src1.getBuffer(), src2.getBuffer(), src1.getBufferElementCount() * sizeof(double)) == 0;
 }
 
-bool Matrix::isContentValid(const IMatrix& src, const bool bCheckNotANumber, const bool bCheckInfinity)
+bool Matrix::isContentValid(const IMatrix& src, const bool checkNotANumber, const bool checkInfinity)
 {
 	const double* buffer    = src.getBuffer();
 	const double* bufferEnd = src.getBuffer() + src.getBufferElementCount();
 	while (buffer != bufferEnd)
 	{
-		if (bCheckNotANumber && std::isnan(*buffer)) { return false; }
-		if (bCheckInfinity && std::isinf(*buffer)) { return false; }
+		if (checkNotANumber && std::isnan(*buffer)) { return false; }
+		if (checkInfinity && std::isinf(*buffer)) { return false; }
 		buffer++;
 	}
 	return true;
@@ -127,27 +126,25 @@ const char CONSTANT_CARRIAGE_RETURN      = '\r';
 const char CONSTANT_EOL                  = '\n';
 const char CONSTANT_SPACE                = ' ';
 
-bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
+bool Matrix::fromString(IMatrix& matrix, const CString& sString)
 {
 	std::stringstream buffer;
 
 	buffer << sString.toASCIIString();
 
-	std::locale locale("C");
+	const std::locale locale("C");
 	//current string to parse
 	std::string what;
 	//current parsing status
-	uint32_t status = Status_Nothing;
+	size_t status = Status_Nothing;
 	//current element index (incremented every time a value is stored in matrix)
-	uint32_t curElementIdx = 0;
-	//number of dimensions
-	// uint32_t l_ui32DimensionCount = dst.getDimensionCount();
+	size_t curElementIdx = 0;
 	//current dimension index
-	uint32_t curDimIdx = uint32_t(-1);
+	size_t curDimIdx = size_t(-1);
 	//vector keeping track of dimension sizes
-	std::vector<uint32_t> dimSize;
+	std::vector<size_t> dimSize;
 	//vector keeping track of number of values found in each dimension
-	std::vector<uint32_t> nValue;
+	std::vector<size_t> nValue;
 	// Dim labels
 	std::vector<std::string> labels;
 	//current quote-delimited string
@@ -162,13 +159,13 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 		if (what.length() == 0) { continue; } //skip it
 
 		//output line to be parsed in debug level
-		// getLogManager() << LogLevel_Debug << CString(l_sWhat.c_str()) << "\n";
+		// getLogManager() << LogLevel_Debug << what << "\n";
 
 		//remove ending carriage return (if any) for windows / linux compatibility
 		if (what[what.length() - 1] == CONSTANT_CARRIAGE_RETURN) { what.erase(what.length() - 1, 1); }
 
 		//start parsing current line
-		std::string::iterator it = what.begin();
+		auto it = what.begin();
 
 		//parse current line
 		while (it != what.end())
@@ -185,7 +182,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 					else if (!std::isspace(*it, locale))
 					{
 						return false;
-					}								// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << l_sWhat.c_str() << ", parsing aborted\n";
+					}								// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << what << ", parsing aborted\n";
 					break;
 
 					//parse header
@@ -208,47 +205,45 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						) { return false; } // getLogManager() << LogLevel_Trace << "End of header section reached, found 0 dimensions : parsing aborted\n";
 
 						//resize matrix
-						rMatrix.setDimensionCount(uint32_t(dimSize.size()));
-						for (size_t i = 0; i < dimSize.size(); i++) { rMatrix.setDimensionSize(uint32_t(i), dimSize[i]); }
+						matrix.setDimensionCount(dimSize.size());
+						for (size_t i = 0; i < dimSize.size(); ++i) { matrix.setDimensionSize(i, dimSize[i]); }
 
-						nValue.resize(rMatrix.getDimensionCount());
+						nValue.resize(matrix.getDimensionCount());
 
 						// set labels now that we know the matrix size
-						uint32_t l_ui32Element = 0;
-						for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
+						size_t element = 0;
+						for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
 						{
-							for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++) { rMatrix.setDimensionLabel(i, j, labels[l_ui32Element++].c_str()); }
+							for (size_t j = 0; j < matrix.getDimensionSize(i); ++j) { matrix.setDimensionLabel(i, j, labels[element++].c_str()); }
 						}
 
 						/*
 						//dump dimension count and size
-						char l_pBuf[1024]={'\0'};
-						for(size_t i=0; i<l_vDimensionSize.size(); i++)
+						char buf[1024]={'\0'};
+						for (size_t i=0; i<dimSize.size(); ++i)
 						{
 							if(i>0)
 							{
-								strcat(l_pBuf, ", ");
-								sprintf(l_pBuf+strlen(l_pBuf), "%d", l_vDimensionSize[i]);
+								strcat(buf, ", ");
+								sprintf(buf+strlen(buf), "%d", dimSize[i]);
 							}
 							else
 							{
-								sprintf(l_pBuf+strlen(l_pBuf), "%d", l_vDimensionSize[i]);
+								sprintf(buf+strlen(buf), "%d", dimSize[i]);
 							}
 						}
-						getLogManager() << LogLevel_Trace
-							<< "End of header section reached, found " << (uint32_t)l_vDimensionSize.size() << " dimensions of size ["
-							<< CString(l_pBuf) << "]\n";
+						getLogManager() << LogLevel_Trace << "End of header section reached, found " << dimSize.size() << " dimensions of size [" << CString(buf) << "]\n";
 						*/
 
 						//reset current dimension index
-						curDimIdx = uint32_t(-1);
+						curDimIdx = size_t(-1);
 
 						//update status
 						status = Status_ParsingBuffer;
 					}
 					else if (!std::isspace(*it, locale))
 					{
-						//	getLogManager() << LogLevel_Trace << "Unexpected character found on line " << CString(l_sWhat.c_str()) << ", parsing aborted\n";
+						// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << what << ", parsing aborted\n";
 						return false;
 					}
 					break;
@@ -278,7 +273,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 					}
 					else if (!std::isspace(*it, locale))
 					{
-						//	getLogManager() << LogLevel_Trace << "Unexpected character found on line " << CString(l_sWhat.c_str()) << ", parsing aborted\n";
+						// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << what << ", parsing aborted\n";
 						return false;
 					}
 					break;
@@ -292,7 +287,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						// We can only attach the label later after we know the size
 						labels.push_back(curString);
 
-						// std::cout << " lab " << l_ui32CurDimensionIndex << " " << l_vDimensionSize[l_ui32CurDimensionIndex]-1 <<  " : " << l_sCurString << "\n";
+						// std::cout << " lab " << curDimensionIdx << " " << dimSize[curDimensionIdx]-1 <<  " : " << curString << "\n";
 
 						//clear current string
 						curString.erase();
@@ -319,41 +314,40 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						curDimIdx++;
 
 						//ensure dimension count remains in allocated range
-						if (curDimIdx == rMatrix.getDimensionCount())
+						if (curDimIdx == matrix.getDimensionCount())
 						{
-							//	getLogManager() << LogLevel_Trace << "Exceeded expected number of dimensions while parsing values, parsing aborted\n";
+							// getLogManager() << LogLevel_Trace << "Exceeded expected number of dimensions while parsing values, parsing aborted\n";
 							return false;
 						}
 
 						//ensure values count remains in allocated range
-						if (nValue[curDimIdx] == rMatrix.getDimensionSize(curDimIdx))
+						if (nValue[curDimIdx] == matrix.getDimensionSize(curDimIdx))
 						{
-							//	getLogManager() << LogLevel_Trace << "Exceeded expected number of values for dimension " << l_ui32CurDimensionIndex << ", parsing aborted\n";
+							// getLogManager() << LogLevel_Trace << "Exceeded expected number of values for dimension " << curDimensionIdx << ", parsing aborted\n";
 							return false;
 						}
 
 						//increment values count for current dimension, if it is not the innermost
-						if (curDimIdx < rMatrix.getDimensionCount() - 1) { nValue[curDimIdx]++; }
+						if (curDimIdx < matrix.getDimensionCount() - 1) { nValue[curDimIdx]++; }
 					}
 						//going up one dimension
 					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
 					{
 						//if we are not in innermost dimension
-						if (curDimIdx < rMatrix.getDimensionCount() - 1)
+						if (curDimIdx < matrix.getDimensionCount() - 1)
 						{
 							//ensure the right number of values was parsed in lower dimension
-							if (nValue[curDimIdx + 1] != rMatrix.getDimensionSize(curDimIdx + 1))
+							if (nValue[curDimIdx + 1] != matrix.getDimensionSize(curDimIdx + 1))
 							{
-								//	getLogManager() << LogLevel_Trace
-								//		<< "Found " << l_vValuesCount[l_ui32CurDimensionIndex+1] << " values in dimension "
-								//		<< l_ui32CurDimensionIndex+1 << ", expected " << op_pMatrix->getDimensionSize(l_ui32CurDimensionIndex+1) << ", parsing aborted\n";
+								//getLogManager() << LogLevel_Trace << "Found " << valuesCount[curDimIdx+1] << " values in dimension "
+								//		<< curDimensionIdx+1 << ", expected " << op_matrix->getDimensionSize(curDimIdx+1) << ", parsing aborted\n";
 								return false;
 							}
 							//reset values count of lower dimension to 0
 							nValue[curDimIdx + 1] = 0;
 						}
 							//ensure dimension count is correct
-						else if (curDimIdx == uint32_t(-1))
+						else if (curDimIdx == size_t(-1))
 						{
 							// getLogManager() << LogLevel_Trace << "Found one too many closing bracket character, parsing aborted\n";
 							return false;
@@ -366,14 +360,14 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 					else if (!std::isspace(*it, locale))
 					{
 						//if we are in innermost dimension, assume a value is starting here
-						if (curDimIdx == rMatrix.getDimensionCount() - 1)
+						if (curDimIdx == matrix.getDimensionCount() - 1)
 						{
 							//ensure values parsed so far in current dimension doesn't exceed current dimension size
-							if (nValue.back() == rMatrix.getDimensionSize(curDimIdx))
+							if (nValue.back() == matrix.getDimensionSize(curDimIdx))
 							{
-								//	getLogManager() << LogLevel_Trace
-								//		<< "Found " << l_vValuesCount.back() << " values in dimension " << l_ui32CurDimensionIndex
-								//		<< ", expected " << RDestinationMatrix.getDimensionSize(l_ui32CurDimensionIndex) << ", parsing aborted\n";
+								//getLogManager() << LogLevel_Trace
+								//		<< "Found " << valuesCount.back() << " values in dimension " << curDimensionIdx
+								//		<< ", expected " << RDestinationMatrix.getDimensionSize(curDimensionIdx) << ", parsing aborted\n";
 								return false;
 							}
 
@@ -388,7 +382,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						}
 						else
 						{
-							//	getLogManager() << LogLevel_Trace << "Unexpected character found on line " << CString(l_sWhat.c_str()) << ", parsing aborted\n";
+							// getLogManager() << LogLevel_Trace << "Unexpected character found on line " << what << ", parsing aborted\n";
 							return false;
 						}
 					}
@@ -408,18 +402,19 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						}
 
 						//retrieve value
-						errno              = 0;
-						const double value = atof(curString.c_str());
+						errno = 0;
+						char* end;
+						const double value = strtod(curString.c_str(), &end);
 #if defined TARGET_OS_Windows
 						if (errno == ERANGE)
 						{
 							//string couldn't be converted to a double
-							//	getLogManager() << LogLevel_Trace << "Couldn't convert token \"" << CString(l_sCurString.c_str()) << "\" to floating point value, parsing aborted\n";
+							// getLogManager() << LogLevel_Trace << "Couldn't convert token \"" << sCurString << "\" to floating point value, parsing aborted\n";
 							return false;
 						}
 #endif
 						//store value in matrix
-						(rMatrix.getBuffer())[curElementIdx] = value;
+						(matrix.getBuffer())[curElementIdx] = value;
 
 						//update element index
 						curElementIdx++;
@@ -436,20 +431,20 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 
 				default:
 					break;
-			} // switch(l_ui32Status)
+			} // switch(status)
 
 			//increment iterator
 			++it;
-		} // while(l_oIt != l_sWhat.end()) (read each character of current line)
+		} // while(it != what.end()) (read each character of current line)
 	} while (buffer.good()); //read each line in turn
 
 	//If the file is empty or other (like directory)
 	if (nValue.empty()) { return false; }
 	//ensure the right number of values were parsed in first dimension
-	if (nValue[0] != rMatrix.getDimensionSize(0))
+	if (nValue[0] != matrix.getDimensionSize(0))
 	{
 		//	getLogManager() << LogLevel_Trace <<
-		//		"Found " << l_vValuesCount[0] << " values in dimension 0, expected " << op_pMatrix->getDimensionSize(0) << ", parsing aborted\n";
+		//		"Found " << valuesCount[0] << " values in dimension 0, expected " << op_matrix->getDimensionSize(0) << ", parsing aborted\n";
 		return false;
 	}
 
@@ -457,20 +452,17 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 }
 
 // A recursive helper function to spool matrix contents to a txt stringstream.
-bool dumpMatrixBuffer(const IMatrix& rMatrix, std::stringstream& buffer, uint32_t ui32DimensionIndex, uint32_t& ui32ElementIndex)
+bool dumpMatrixBuffer(const IMatrix& matrix, std::stringstream& buffer, const size_t index1, size_t& index2)
 {
 	//are we in innermost dimension?
-	if (ui32DimensionIndex == rMatrix.getDimensionCount() - 1)
+	if (index1 == matrix.getDimensionCount() - 1)
 	{
 		//dimension start
-		for (uint32_t j = 0; j < ui32DimensionIndex; j++) { buffer << CONSTANT_TAB; }
+		for (size_t j = 0; j < index1; ++j) { buffer << CONSTANT_TAB; }
 		buffer << CONSTANT_LEFT_SQUARE_BRACKET;
 
 		//dump current cell contents
-		for (uint32_t j = 0; j < rMatrix.getDimensionSize(ui32DimensionIndex); j++, ui32ElementIndex++)
-		{
-			buffer << CONSTANT_SPACE << rMatrix.getBuffer()[ui32ElementIndex];
-		}
+		for (size_t j = 0; j < matrix.getDimensionSize(index1); j++, index2++) { buffer << CONSTANT_SPACE << matrix.getBuffer()[index2]; }
 
 		//dimension end
 		buffer << CONSTANT_SPACE << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
@@ -478,16 +470,16 @@ bool dumpMatrixBuffer(const IMatrix& rMatrix, std::stringstream& buffer, uint32_
 	else
 	{
 		//dump all entries in current dimension
-		for (uint32_t i = 0; i < rMatrix.getDimensionSize(ui32DimensionIndex); i++)
+		for (size_t i = 0; i < matrix.getDimensionSize(index1); ++i)
 		{
 			//dimension start
-			for (uint32_t j = 0; j < ui32DimensionIndex; j++) { buffer << CONSTANT_TAB; }
+			for (size_t j = 0; j < index1; ++j) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
-			dumpMatrixBuffer(rMatrix, buffer, ui32DimensionIndex + 1, ui32ElementIndex);
+			dumpMatrixBuffer(matrix, buffer, index1 + 1, index2);
 
 			//dimension end
-			for (uint32_t j = 0; j < ui32DimensionIndex; j++) { buffer << CONSTANT_TAB; }
+			for (size_t j = 0; j < index1; ++j) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
 		}
 	}
@@ -495,12 +487,12 @@ bool dumpMatrixBuffer(const IMatrix& rMatrix, std::stringstream& buffer, uint32_
 	return true;
 }
 
-bool Matrix::toString(const IMatrix& rMatrix, CString& sString, uint32_t ui32Precision /* = 6 */)
+bool Matrix::toString(const IMatrix& matrix, CString& sString, const size_t precision /* = 6 */)
 {
 	std::stringstream buffer;
 
 	buffer << std::scientific;
-	buffer.precision(static_cast<std::streamsize>(ui32Precision));
+	buffer.precision(std::streamsize(precision));
 
 	// Dump header
 
@@ -508,13 +500,13 @@ bool Matrix::toString(const IMatrix& rMatrix, CString& sString, uint32_t ui32Pre
 	buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
 	//dump labels for each dimension
-	for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
+	for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
 	{
 		buffer << CONSTANT_TAB << CONSTANT_LEFT_SQUARE_BRACKET;
 
-		for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++)
+		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j)
 		{
-			buffer << CONSTANT_SPACE << CONSTANT_DOUBLE_QUOTE << rMatrix.getDimensionLabel(i, j) << CONSTANT_DOUBLE_QUOTE;
+			buffer << CONSTANT_SPACE << CONSTANT_DOUBLE_QUOTE << matrix.getDimensionLabel(i, j) << CONSTANT_DOUBLE_QUOTE;
 		}
 
 		buffer << CONSTANT_SPACE << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
@@ -524,42 +516,42 @@ bool Matrix::toString(const IMatrix& rMatrix, CString& sString, uint32_t ui32Pre
 	buffer << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
 
 	// Dump buffer using a recursive algorithm
-	uint32_t elementIdx = 0;
-	dumpMatrixBuffer(rMatrix, buffer, 0, elementIdx);
+	size_t elementIdx = 0;
+	dumpMatrixBuffer(matrix, buffer, 0, elementIdx);
 
-	sString = CString(buffer.str().c_str());
+	sString = buffer.str().c_str();
 
 	return true;
 }
 
-bool Matrix::loadFromTextFile(IMatrix& rMatrix, const CString& sFilename)
+bool Matrix::loadFromTextFile(IMatrix& matrix, const CString& filename)
 {
 	std::ifstream dataFile;
-	FS::Files::openIFStream(dataFile, sFilename.toASCIIString(), std::ios_base::in);
+	FS::Files::openIFStream(dataFile, filename.toASCIIString(), std::ios_base::in);
 	if (!dataFile.is_open()) { return false; }
 
 	std::stringstream buffer;
 
 	buffer << dataFile.rdbuf();
 
-	const bool l_bReturnValue = fromString(rMatrix, CString(buffer.str().c_str()));
+	const bool res = fromString(matrix, CString(buffer.str().c_str()));
 
 	dataFile.close();
 
-	return l_bReturnValue;
+	return res;
 }
 
-bool Matrix::saveToTextFile(const IMatrix& rMatrix, const CString& sFilename, uint32_t ui32Precision /* = 6 */)
+bool Matrix::saveToTextFile(const IMatrix& matrix, const CString& filename, const size_t precision /* = 6 */)
 {
 	std::ofstream dataFile;
-	FS::Files::openOFStream(dataFile, sFilename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
+	FS::Files::openOFStream(dataFile, filename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
 	if (!dataFile.is_open()) { return false; }
 
-	CString matrix;
+	CString str;
 
-	if (!toString(rMatrix, matrix, ui32Precision)) { return false; }
+	if (!toString(matrix, str, precision)) { return false; }
 
-	dataFile << matrix.toASCIIString();
+	dataFile << str.toASCIIString();
 
 	dataFile.close();
 

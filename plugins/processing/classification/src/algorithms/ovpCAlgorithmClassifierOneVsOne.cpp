@@ -4,9 +4,6 @@
 #include <map>
 #include <cmath>
 #include <sstream>
-#include <cstring>
-#include <cstdlib>
-#include <string>
 #include <utility>
 #include <iostream>
 #include <system/ovCMemory.h>
@@ -30,7 +27,7 @@ namespace
 extern const char* const CLASSIFIER_ROOT;
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -40,453 +37,413 @@ using namespace OpenViBEToolkit;
 
 bool CAlgorithmClassifierOneVsOne::initialize()
 {
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	op_pConfiguration = nullptr;
+	TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	op_configuration = nullptr;
 
 	TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
 	ip_pPairwise = OV_UndefinedIdentifier.toUInteger();
 
-	m_pDecisionStrategyAlgorithm  = nullptr;
-	m_oPairwiseDecisionIdentifier = OV_UndefinedIdentifier;
+	m_decisionStrategyAlgorithm = nullptr;
+	m_pairwiseDecisionID        = OV_UndefinedIdentifier;
 
 	return CAlgorithmPairingStrategy::initialize();
 }
 
 bool CAlgorithmClassifierOneVsOne::uninitialize()
 {
-	if (m_pDecisionStrategyAlgorithm != nullptr)
+	if (m_decisionStrategyAlgorithm != nullptr)
 	{
-		m_pDecisionStrategyAlgorithm->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
-		m_pDecisionStrategyAlgorithm = nullptr;
+		m_decisionStrategyAlgorithm->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_decisionStrategyAlgorithm);
+		m_decisionStrategyAlgorithm = nullptr;
 	}
 
-	for (auto& kv : m_oSubClassifiers)
+	for (auto& kv : m_subClassifiers)
 	{
-		IAlgorithmProxy* l_pSubClassifier = kv.second;
-		l_pSubClassifier->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*l_pSubClassifier);
+		IAlgorithmProxy* subClassifier = kv.second;
+		subClassifier->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*subClassifier);
 	}
-	this->m_oSubClassifiers.clear();
+	this->m_subClassifiers.clear();
 
 	return CAlgorithmPairingStrategy::uninitialize();
 }
 
 
-bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVectorSet)
+bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 {
-	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
-	m_ui32NumberOfClasses = uint32_t(ip_pNumberOfClasses);
+	TParameterHandler<uint64_t> ip_nClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
+	m_nClasses = size_t(ip_nClasses);
 
-	m_ui32NumberOfSubClassifiers = m_ui32NumberOfClasses * (m_ui32NumberOfClasses - 1) / 2;
+	m_nSubClassifiers = m_nClasses * (m_nClasses - 1) / 2;
 
 	createSubClassifiers();
 
 	//Create the decision strategy
-	OV_ERROR_UNLESS_KRF(
-		this->initializeExtraParameterMechanism(),
-		"Failed to initialize extra parameters",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to initialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
-	m_oPairwiseDecisionIdentifier = this->getEnumerationParameter(
+	m_pairwiseDecisionID = this->getEnumerationParameter(
 		OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, OVP_TypeId_ClassificationPairwiseStrategy);
 
-	OV_ERROR_UNLESS_KRF(
-		m_oPairwiseDecisionIdentifier != OV_UndefinedIdentifier,
-		"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.toString() << "]",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != OV_UndefinedIdentifier,
+						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.str() << "]",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	if (m_pDecisionStrategyAlgorithm != nullptr)
+	if (m_decisionStrategyAlgorithm != nullptr)
 	{
-		m_pDecisionStrategyAlgorithm->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
-		m_pDecisionStrategyAlgorithm = nullptr;
+		m_decisionStrategyAlgorithm->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_decisionStrategyAlgorithm);
+		m_decisionStrategyAlgorithm = nullptr;
 	}
-	m_pDecisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionIdentifier));
+	m_decisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_pairwiseDecisionID));
 
-	OV_ERROR_UNLESS_KRF(
-		m_pDecisionStrategyAlgorithm->initialize(),
-		"Failed to unitialize decision strategy algorithm",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->initialize(), "Failed to unitialize decision strategy algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
-	TParameterHandler<CIdentifier *> ip_pClassificationAlgorithm(
-		m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
-	ip_pClassificationAlgorithm = &m_oSubClassifierAlgorithmIdentifier;
-	TParameterHandler<uint64_t> ip_pClassCount(m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	ip_pClassCount = m_ui32NumberOfClasses;
+	TParameterHandler<CIdentifier *> ip_classificationAlgorithm(
+		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
+	ip_classificationAlgorithm = &m_subClassifierAlgorithmID;
+	TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	ip_classCount = m_nClasses;
 
-	OV_ERROR_UNLESS_KRF(
-		m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize),
-		"Failed to run decision strategy algorithm",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize),
+						"Failed to run decision strategy algorithm",
+						OpenViBE::Kernel::ErrorType::Internal);
 
-	OV_ERROR_UNLESS_KRF(
-		this->uninitializeExtraParameterMechanism(),
-		"Failed to uninitialize extra parameters",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to uninitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
 	//Calculate the amount of sample for each class
-	std::map<double, uint32_t> l_vClassLabels;
-	for (uint32_t i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); i++)
+	std::map<double, size_t> classLabels;
+	for (size_t i = 0; i < dataset.getFeatureVectorCount(); ++i)
 	{
-		if (!l_vClassLabels.count(rFeatureVectorSet[i].getLabel())) { l_vClassLabels[rFeatureVectorSet[i].getLabel()] = 0; }
-		l_vClassLabels[rFeatureVectorSet[i].getLabel()]++;
+		if (!classLabels.count(dataset[i].getLabel())) { classLabels[dataset[i].getLabel()] = 0; }
+		classLabels[dataset[i].getLabel()]++;
 	}
 
 	OV_ERROR_UNLESS_KRF(
-		l_vClassLabels.size() == m_ui32NumberOfClasses,
-		"There are samples for " << uint32_t(l_vClassLabels.size()) << " classes but expected samples for " << m_ui32NumberOfClasses << " classes.",
+		classLabels.size() == m_nClasses,
+		"There are samples for " << classLabels.size() << " classes but expected samples for " << m_nClasses << " classes.",
 		OpenViBE::Kernel::ErrorType::BadConfig);
 
 	//Now we create the corresponding repartition set
-	TParameterHandler<IMatrix*> ip_pRepartitionSet = m_pDecisionStrategyAlgorithm->getInputParameter(
+	TParameterHandler<IMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->getInputParameter(
 		OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	ip_pRepartitionSet->setDimensionCount(1);
-	ip_pRepartitionSet->setDimensionSize(0, m_ui32NumberOfClasses);
+	ip_pRepartitionSet->setDimensionSize(0, m_nClasses);
 
-	const uint32_t l_iFeatureVectorSize = rFeatureVectorSet[0].getSize();
+	const size_t size = dataset[0].getSize();
 	//Now let's train each classifier
-	for (uint32_t l_iFirstClass = 0; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
+	for (size_t i = 0; i < m_nClasses; ++i)
 	{
-		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = double(l_vClassLabels[double(l_iFirstClass)]);
+		ip_pRepartitionSet->getBuffer()[i] = double(classLabels[double(i)]);
 
-		for (uint32_t l_iSecondClass = l_iFirstClass + 1; l_iSecondClass < m_ui32NumberOfClasses; ++l_iSecondClass)
+		for (size_t j = i + 1; j < m_nClasses; ++j)
 		{
-			uint32_t l_iFeatureCount = l_vClassLabels[double(l_iFirstClass)] + l_vClassLabels[double(l_iSecondClass)];
+			const size_t nFeature          = classLabels[double(i)] + classLabels[double(j)];
+			IAlgorithmProxy* subClassifier = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
 
-			IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::pair<uint32_t, uint32_t>(l_iFirstClass, l_iSecondClass)];
+			TParameterHandler<IMatrix*> ip_dataset(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+			ip_dataset->setDimensionCount(2);
+			ip_dataset->setDimensionSize(0, nFeature);
+			ip_dataset->setDimensionSize(1, size + 1);
 
-			TParameterHandler<IMatrix*> ip_pFeatureVectorSet(l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-			ip_pFeatureVectorSet->setDimensionCount(2);
-			ip_pFeatureVectorSet->setDimensionSize(0, l_iFeatureCount);
-			ip_pFeatureVectorSet->setDimensionSize(1, l_iFeatureVectorSize + 1);
-
-			double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
-			for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
+			double* buffer = ip_dataset->getBuffer();
+			for (size_t k = 0; k < dataset.getFeatureVectorCount(); ++k)
 			{
-				const double l_f64TempClass = rFeatureVectorSet[j].getLabel();
-				if (l_f64TempClass == double(l_iFirstClass) || l_f64TempClass == double(l_iSecondClass))
+				const double tmp = dataset[k].getLabel();
+				if (tmp == double(i) || tmp == double(j))
 				{
-					System::Memory::copy(l_pFeatureVectorSetBuffer, rFeatureVectorSet[j].getBuffer(), l_iFeatureVectorSize * sizeof(double));
+					System::Memory::copy(buffer, dataset[k].getBuffer(), size * sizeof(double));
 
-					l_pFeatureVectorSetBuffer[l_iFeatureVectorSize] = size_t(l_f64TempClass) == l_iFirstClass ? 0 : 1;
-					l_pFeatureVectorSetBuffer += (l_iFeatureVectorSize + 1);
+					buffer[size] = size_t(tmp) == i ? 0 : 1;
+					buffer += (size + 1);
 				}
 			}
 
 			OV_ERROR_UNLESS_KRF(
-				l_pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
-				"Failed to train subclassifier [1st class = " << uint64_t(l_iFirstClass) << ", 2nd class = " << uint64_t(l_iSecondClass) << "]",
+				subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
+				"Failed to train subclassifier [1st class = " << i << ", 2nd class = " << j << "]",
 				OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& featureVector, double& classId, IVector& rDistanceValue, IVector& rProbabilityValue)
+bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double& classId, IVector& distance, IVector& probability)
 {
-	OV_ERROR_UNLESS_KRF(
-		m_pDecisionStrategyAlgorithm,
-		"No decision strategy algorithm set",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm, "No decision strategy algorithm set", OpenViBE::Kernel::ErrorType::BadConfig);
 
-	const uint32_t l_ui32FeatureVectorSize = featureVector.getSize();
-	std::vector<SClassificationInfo> l_oClassificationList;
+	const size_t size = sample.getSize();
+	std::vector<classification_info_t> classificationList;
 
-	TParameterHandler<IMatrix*> ip_pProbabilityMatrix = m_pDecisionStrategyAlgorithm->getInputParameter(
-		OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
-	IMatrix* l_pProbabilityMatrix = (IMatrix*)ip_pProbabilityMatrix;
+	TParameterHandler<IMatrix*> ip_proba = m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
+	IMatrix* matrix                      = static_cast<IMatrix*>(ip_proba);
 
-	l_pProbabilityMatrix->setDimensionCount(2);
-	l_pProbabilityMatrix->setDimensionSize(0, m_ui32NumberOfClasses);
-	l_pProbabilityMatrix->setDimensionSize(1, m_ui32NumberOfClasses);
+	matrix->setDimensionCount(2);
+	matrix->setDimensionSize(0, m_nClasses);
+	matrix->setDimensionSize(1, m_nClasses);
 
-	for (uint32_t i = 0; i < l_pProbabilityMatrix->getBufferElementCount(); ++i) { l_pProbabilityMatrix->getBuffer()[i] = 0.0; }
+	for (size_t i = 0; i < matrix->getBufferElementCount(); ++i) { matrix->getBuffer()[i] = 0.0; }
 
 	//Let's generate the matrix of confidence score
-	for (uint32_t i = 0; i < m_ui32NumberOfClasses; ++i)
+	for (size_t i = 0; i < m_nClasses; ++i)
 	{
-		for (uint32_t j = i + 1; j < m_ui32NumberOfClasses; ++j)
+		for (size_t j = i + 1; j < m_nClasses; ++j)
 		{
-			IAlgorithmProxy* l_pTempProxy = m_oSubClassifiers[std::pair<uint32_t, uint32_t>(i, j)];
-			TParameterHandler<IMatrix*> ip_pFeatureVector(l_pTempProxy->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-			TParameterHandler<IMatrix*> op_pClassificationValues(
-				l_pTempProxy->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-			TParameterHandler<double> op_pClassificationLabel(l_pTempProxy->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-			ip_pFeatureVector->setDimensionCount(1);
-			ip_pFeatureVector->setDimensionSize(0, l_ui32FeatureVectorSize);
+			IAlgorithmProxy* tmp = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
+			TParameterHandler<IMatrix*> ip_sample(tmp->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+			TParameterHandler<IMatrix*> op_values(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+			TParameterHandler<double> op_label(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+			ip_sample->setDimensionCount(1);
+			ip_sample->setDimensionSize(0, size);
 
-			double* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
-			System::Memory::copy(l_pFeatureVectorBuffer, featureVector.getBuffer(), l_ui32FeatureVectorSize * sizeof(double));
-			l_pTempProxy->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
+			double* buffer = ip_sample->getBuffer();
+			System::Memory::copy(buffer, sample.getBuffer(), size * sizeof(double));
+			tmp->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
-			SClassificationInfo l_oClassificationInfo = { (double)i, (double)j, op_pClassificationLabel, op_pClassificationValues };
-			l_oClassificationList.push_back(l_oClassificationInfo);
+			classification_info_t classificationInfo = { double(i), double(j), op_label, op_values };
+			classificationList.push_back(classificationInfo);
 		}
 	}
 
-	//	for(size_t i =0 ; i < l_ui32ClassCount ; ++i )
+	//	for (size_t i =0 ; i < nClass ; ++i )
 	//	{
-	//		for(size_t j = 0; j < l_ui32ClassCount ; ++j)
-	//		{
-	//			std::cout << l_pProbabilityMatrix->getBuffer()[i*l_ui32ClassCount + j] << " " ;
-	//		}
+	//		for (size_t j = 0; j < nClass ; ++j) { std::cout << matrix->getBuffer()[i*nClass + j] << " " ; }
 	//		std::cout << std::endl;
 	//	}
 	//	std::cout << std::endl;
 
-	TParameterHandler<std::vector<SClassificationInfo> *> ip_pClassificationInfos(
-		m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs));
-	ip_pClassificationInfos = &l_oClassificationList;
+	TParameterHandler<std::vector<classification_info_t> *> ip_infos(
+		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs));
+	ip_infos = &classificationList;
 
 	//Then ask to the strategy to make the decision
-	OV_ERROR_UNLESS_KRF(
-		m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute),
-		"Failed to compute decision strategy",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute), "Failed to compute decision strategy",
+						OpenViBE::Kernel::ErrorType::Internal);
 
-	TParameterHandler<IMatrix*> op_pProbabilityVector = m_pDecisionStrategyAlgorithm->getOutputParameter(
+	TParameterHandler<IMatrix*> op_proba = m_decisionStrategyAlgorithm->getOutputParameter(
 		OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
-	double l_f64MaxProb         = -1;
-	int l_i32IndexSelectedClass = -1;
+	double maxProb       = -1;
+	int selectedClassIdx = -1;
 
-	rDistanceValue.setSize(0);
-	rProbabilityValue.setSize(m_ui32NumberOfClasses);
+	distance.setSize(0);
+	probability.setSize(m_nClasses);
 
 	//We just have to take the most relevant now.
-	for (uint32_t i = 0; i < m_ui32NumberOfClasses; ++i)
+	for (size_t i = 0; i < m_nClasses; ++i)
 	{
-		const double l_f64TempProb = op_pProbabilityVector->getBuffer()[i];
-		if (l_f64TempProb > l_f64MaxProb)
+		const double tmp = op_proba->getBuffer()[i];
+		if (tmp > maxProb)
 		{
-			l_i32IndexSelectedClass = i;
-			l_f64MaxProb            = l_f64TempProb;
+			selectedClassIdx = i;
+			maxProb          = tmp;
 		}
-		rProbabilityValue[i] = l_f64TempProb;
+		probability[i] = tmp;
 	}
 
-	classId = double(l_i32IndexSelectedClass);
+	classId = double(selectedClassIdx);
 	return true;
 }
 
 bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 {
 	// Clear any previous ones
-	for (auto& kv : m_oSubClassifiers)
+	for (auto& kv : m_subClassifiers)
 	{
-		IAlgorithmProxy* l_pSubClassifier = kv.second;
-		l_pSubClassifier->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*l_pSubClassifier);
+		IAlgorithmProxy* subClassifier = kv.second;
+		subClassifier->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*subClassifier);
 	}
-	this->m_oSubClassifiers.clear();
+	this->m_subClassifiers.clear();
 
 	//Now let's instantiate all the sub classifiers
-	for (uint32_t l_iFirstClass = 0; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
+	for (size_t firstClass = 0; firstClass < m_nClasses; ++firstClass)
 	{
-		for (uint32_t l_iSecondClass = l_iFirstClass + 1; l_iSecondClass < m_ui32NumberOfClasses; ++l_iSecondClass)
+		for (size_t secondClass = firstClass + 1; secondClass < m_nClasses; ++secondClass)
 		{
-			const CIdentifier l_oSubClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
+			const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 			OV_ERROR_UNLESS_KRF(
-				l_oSubClassifierAlgorithm != OV_UndefinedIdentifier,
-				"Unable to instantiate classifier for class [" << this->m_oSubClassifierAlgorithmIdentifier.toString() << "]",
+				subClassifierAlgorithm != OV_UndefinedIdentifier,
+				"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.str() << "]",
 				OpenViBE::Kernel::ErrorType::BadConfig);
 
-			IAlgorithmProxy* l_pSubClassifier = &this->getAlgorithmManager().getAlgorithm(l_oSubClassifierAlgorithm);
-			l_pSubClassifier->initialize();
+			IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
+			subClassifier->initialize();
 
-			TParameterHandler<uint64_t> ip_pNumberOfClasses(l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
-			ip_pNumberOfClasses = 2;
+			TParameterHandler<uint64_t> ip_pNClasses(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
+			ip_pNClasses = 2;
 
 			//Set a references to the extra parameters input of the pairing strategy
-			TParameterHandler<std::map<CString, CString>*> ip_pExtraParameters(
-				l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
-			ip_pExtraParameters.setReferenceTarget(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+			TParameterHandler<std::map<CString, CString>*> ip_params(
+				subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+			ip_params.setReferenceTarget(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 
-			m_oSubClassifiers[std::pair<uint32_t, uint32_t>(l_iFirstClass, l_iSecondClass)] = l_pSubClassifier;
+			m_subClassifiers[std::pair<size_t, size_t>(firstClass, secondClass)] = subClassifier;
 		}
 	}
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::designArchitecture(const CIdentifier& rId, uint32_t rClassCount)
+bool CAlgorithmClassifierOneVsOne::designArchitecture(const CIdentifier& id, const size_t classCount)
 {
-	if (!setSubClassifierIdentifier(rId)) { return false; }
-
-	m_ui32NumberOfClasses = rClassCount;
-
-
+	if (!setSubClassifierIdentifier(id)) { return false; }
+	m_nClasses = classCount;
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfiguration(double f64FirstClass, double f64SecondClass, IAlgorithmProxy* pSubClassifier)
+XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfig(const double firstClass, const double secondClass, IAlgorithmProxy* subClassifier)
 {
-	XML::IXMLNode* l_pRes = XML::createNode(SUB_CLASSIFIER_NODE_NAME);
+	XML::IXMLNode* res = XML::createNode(SUB_CLASSIFIER_NODE_NAME);
 
-	std::stringstream l_sFirstClass, l_sSecondClass;
-	l_sFirstClass << f64FirstClass;
-	l_sSecondClass << f64SecondClass;
-	l_pRes->addAttribute(FIRST_CLASS_ATRRIBUTE_NAME, l_sFirstClass.str().c_str());
-	l_pRes->addAttribute(SECOND_CLASS_ATTRIBUTE_NAME, l_sSecondClass.str().c_str());
+	std::stringstream ssFirstClass, ssSecondClass;
+	ssFirstClass << firstClass;
+	ssSecondClass << secondClass;
+	res->addAttribute(FIRST_CLASS_ATRRIBUTE_NAME, ssFirstClass.str().c_str());
+	res->addAttribute(SECOND_CLASS_ATTRIBUTE_NAME, ssSecondClass.str().c_str());
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(pSubClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
-	l_pRes->addChild((XML::IXMLNode*)op_pConfiguration);
+	TParameterHandler<XML::IXMLNode*> op_config(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfig);
+	res->addChild(static_cast<XML::IXMLNode*>(op_config));
 
-	return l_pRes;
+	return res;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration()
+XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration() const
 {
-	if (!m_pDecisionStrategyAlgorithm) { return nullptr; }
+	if (!m_decisionStrategyAlgorithm) { return nullptr; }
 
-	XML::IXMLNode* l_pTempNode = XML::createNode(PAIRWISE_DECISION_NAME);
+	XML::IXMLNode* tmp = XML::createNode(PAIRWISE_DECISION_NAME);
 
-	TParameterHandler<XML::IXMLNode*> op_pConfiguration(
-		m_pDecisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Configuration));
-	m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfiguration);
-	l_pTempNode->addChild((XML::IXMLNode*)op_pConfiguration);
+	TParameterHandler<XML::IXMLNode*> op_config(m_decisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config));
+	m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig);
+	tmp->addChild(static_cast<XML::IXMLNode*>(op_config));
 
-	l_pTempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_oPairwiseDecisionIdentifier.toString());
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_pairwiseDecisionID.toString());
 
-	return l_pTempNode;
+	return tmp;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfiguration()
+XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfig()
 {
-	std::stringstream l_sClassifierCount;
-	l_sClassifierCount << m_ui32NumberOfSubClassifiers;
+	std::stringstream nClassifier;
+	nClassifier << m_nSubClassifiers;
 
-	XML::IXMLNode* l_pOneVsOneNode = XML::createNode(TYPE_NODE_NAME);
+	XML::IXMLNode* oneVsOneNode = XML::createNode(TYPE_NODE_NAME);
 
-	XML::IXMLNode* l_pTempNode = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
-	l_pTempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_oSubClassifierAlgorithmIdentifier.toString());
-	l_pTempNode->setPCData(
-		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_oSubClassifierAlgorithmIdentifier.toUInteger()).
+	XML::IXMLNode* tmp = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.toString());
+	tmp->setPCData(
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.toUInteger()).
 			  toASCIIString());
-	l_pOneVsOneNode->addChild(l_pTempNode);
+	oneVsOneNode->addChild(tmp);
 
-	l_pTempNode = XML::createNode(SUB_CLASSIFIER_COUNT_NODE_NAME);
-	l_pTempNode->setPCData(l_sClassifierCount.str().c_str());
-	l_pOneVsOneNode->addChild(l_pTempNode);
+	tmp = XML::createNode(SUB_CLASSIFIER_COUNT_NODE_NAME);
+	tmp->setPCData(nClassifier.str().c_str());
+	oneVsOneNode->addChild(tmp);
 
-	l_pOneVsOneNode->addChild(this->getPairwiseDecisionConfiguration());
+	oneVsOneNode->addChild(this->getPairwiseDecisionConfiguration());
 
-	XML::IXMLNode* l_pSubClassifersNode = XML::createNode(SUB_CLASSIFIERS_NODE_NAME);
+	XML::IXMLNode* subClassifersNode = XML::createNode(SUB_CLASSIFIERS_NODE_NAME);
 
-	for (auto& kv : m_oSubClassifiers) { l_pSubClassifersNode->addChild(getClassifierConfiguration(kv.first.first, kv.first.second, kv.second)); }
-	l_pOneVsOneNode->addChild(l_pSubClassifersNode);
+	for (auto& kv : m_subClassifiers) { subClassifersNode->addChild(getClassifierConfig(kv.first.first, kv.first.second, kv.second)); }
+	oneVsOneNode->addChild(subClassifersNode);
 
-	return l_pOneVsOneNode;
+	return oneVsOneNode;
 }
 
-bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurationNode)
+bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 {
-	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
+	XML::IXMLNode* tempNode = configNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 
-	CIdentifier l_pAlgorithmIdentifier;
-	l_pAlgorithmIdentifier.fromString(l_pTempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
+	CIdentifier algorithmID;
+	algorithmID.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
 
-	if (!this->setSubClassifierIdentifier(l_pAlgorithmIdentifier))
+	if (!this->setSubClassifierIdentifier(algorithmID))
 	{
 		//if the sub classifier doesn't have comparison function it is an error
 		return false;
 	}
 
-	l_pTempNode = pConfigurationNode->getChildByName(PAIRWISE_DECISION_NAME);
-	CIdentifier l_pPairwiseIdentifier;
-	l_pPairwiseIdentifier.fromString(l_pTempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
-	if (l_pPairwiseIdentifier != m_oPairwiseDecisionIdentifier)
+	tempNode = configNode->getChildByName(PAIRWISE_DECISION_NAME);
+	CIdentifier pairwiseID;
+	pairwiseID.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
+	if (pairwiseID != m_pairwiseDecisionID)
 	{
-		if (m_pDecisionStrategyAlgorithm != nullptr)
+		if (m_decisionStrategyAlgorithm != nullptr)
 		{
-			m_pDecisionStrategyAlgorithm->uninitialize();
-			this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
-			m_pDecisionStrategyAlgorithm = nullptr;
+			m_decisionStrategyAlgorithm->uninitialize();
+			this->getAlgorithmManager().releaseAlgorithm(*m_decisionStrategyAlgorithm);
+			m_decisionStrategyAlgorithm = nullptr;
 		}
-		m_oPairwiseDecisionIdentifier = l_pPairwiseIdentifier;
-		m_pDecisionStrategyAlgorithm  = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionIdentifier));
-		m_pDecisionStrategyAlgorithm->initialize();
+		m_pairwiseDecisionID        = pairwiseID;
+		m_decisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_pairwiseDecisionID));
+		m_decisionStrategyAlgorithm->initialize();
 	}
-	TParameterHandler<XML::IXMLNode*> ip_pConfiguration(
-		m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration));
-	ip_pConfiguration = l_pTempNode->getChild(0);
+	TParameterHandler<XML::IXMLNode*> ip_config(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config));
+	ip_config = tempNode->getChild(0);
 
-	TParameterHandler<CIdentifier *> ip_pClassificationAlgorithm(
-		m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
-	ip_pClassificationAlgorithm = &l_pAlgorithmIdentifier;
+	TParameterHandler<CIdentifier *> ip_algorithm(
+		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
+	ip_algorithm = &algorithmID;
 
-	l_pTempNode = pConfigurationNode->getChildByName(SUB_CLASSIFIER_COUNT_NODE_NAME);
-	std::stringstream l_sCountData(l_pTempNode->getPCData());
-	l_sCountData >> m_ui32NumberOfSubClassifiers;
+	tempNode = configNode->getChildByName(SUB_CLASSIFIER_COUNT_NODE_NAME);
+	std::stringstream ss(tempNode->getPCData());
+	ss >> m_nSubClassifiers;
 
 	// Invert the class count from subCls = numClass*(numClass-1)/2.
-	const uint32_t l_ui32DeltaCarre = 1 + 8 * m_ui32NumberOfSubClassifiers;
-	m_ui32NumberOfClasses           = uint32_t((1 + sqrt(double(l_ui32DeltaCarre))) / 2);
+	const size_t deltaCarre = 1 + 8 * m_nSubClassifiers;
+	m_nClasses              = size_t((1 + sqrt(double(deltaCarre))) / 2);
 
-	TParameterHandler<uint64_t> ip_pClassCount(m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	ip_pClassCount = m_ui32NumberOfClasses;
+	TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	ip_classCount = m_nClasses;
 
-	OV_ERROR_UNLESS_KRF(
-		m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfiguration),
-		"Loading decision strategy configuration failed",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfig),
+						"Loading decision strategy configuration failed", OpenViBE::Kernel::ErrorType::Internal);
 
-	OV_ERROR_UNLESS_KRF(
-		m_pDecisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize),
-		"Parameterizing decision strategy failed",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize),
+						"Parameterizing decision strategy failed", OpenViBE::Kernel::ErrorType::Internal);
 
-	return loadSubClassifierConfiguration(pConfigurationNode->getChildByName(SUB_CLASSIFIERS_NODE_NAME));
+	return loadSubClassifierConfig(configNode->getChildByName(SUB_CLASSIFIERS_NODE_NAME));
 }
 
-uint32_t CAlgorithmClassifierOneVsOne::getOutputProbabilityVectorLength() { return uint32_t(m_ui32NumberOfClasses); }
-
-uint32_t CAlgorithmClassifierOneVsOne::getOutputDistanceVectorLength() { return 0; }
-
-bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode)
+bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfig(XML::IXMLNode* node)
 {
 	createSubClassifiers();
 
-	for (uint32_t i = 0; i < pSubClassifiersNode->getChildCount(); ++i)
+	for (size_t i = 0; i < node->getChildCount(); ++i)
 	{
-		double l_f64FirstClass, l_f64SecondClass;
+		double firstClass, secondClass;
 
 		//Now we have to restore class indexes
-		XML::IXMLNode* l_pSubClassifierNode = pSubClassifiersNode->getChild(i);
-		std::stringstream l_sFirstClass(l_pSubClassifierNode->getAttribute(FIRST_CLASS_ATRRIBUTE_NAME));
-		l_sFirstClass >> l_f64FirstClass;
-		std::stringstream l_sSecondClass(l_pSubClassifierNode->getAttribute(SECOND_CLASS_ATTRIBUTE_NAME));
-		l_sSecondClass >> l_f64SecondClass;
+		XML::IXMLNode* subClassifierNode = node->getChild(i);
+		std::stringstream ss1(subClassifierNode->getAttribute(FIRST_CLASS_ATRRIBUTE_NAME));
+		ss1 >> firstClass;
+		std::stringstream ss2(subClassifierNode->getAttribute(SECOND_CLASS_ATTRIBUTE_NAME));
+		ss2 >> secondClass;
 
-		IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::make_pair(uint32_t(l_f64FirstClass), uint32_t(l_f64SecondClass))];
+		IAlgorithmProxy* subClassifier = m_subClassifiers[std::make_pair(size_t(firstClass), size_t(secondClass))];
 
-		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
-		ip_pConfiguration = l_pSubClassifierNode->getChild(0);
+		TParameterHandler<XML::IXMLNode*> ip_config(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
+		ip_config = subClassifierNode->getChild(0);
 
-		OV_ERROR_UNLESS_KRF(
-			l_pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
-			"Unable to load the configuration for the sub-classifier " << uint64_t(i+1),
-			OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig),
+							"Unable to load the configuration for the sub-classifier " << i + 1, OpenViBE::Kernel::ErrorType::Internal);
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		m_oSubClassifiers.size() == m_ui32NumberOfSubClassifiers,
-		"Invalid number of loaded classifiers [" << uint64_t(m_oSubClassifiers.size()) << "] (expected = " << m_ui32NumberOfSubClassifiers << ")",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_subClassifiers.size() == m_nSubClassifiers,
+						"Invalid number of loaded classifiers [" << m_subClassifiers.size() << "] (expected = " << m_nSubClassifiers << ")",
+						OpenViBE::Kernel::ErrorType::Internal);
 
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::setSubClassifierIdentifier(const CIdentifier& rId)
+bool CAlgorithmClassifierOneVsOne::setSubClassifierIdentifier(const CIdentifier& id)
 {
-	m_oSubClassifierAlgorithmIdentifier = rId;
-	m_fAlgorithmComparison              = getClassificationComparisonFunction(rId);
+	m_subClassifierAlgorithmID = id;
+	m_algorithmComparison      = getClassificationComparisonFunction(id);
 
-	OV_ERROR_UNLESS_KRF(
-		m_fAlgorithmComparison != nullptr,
-		"No comparison function found for classifier " << m_oSubClassifierAlgorithmIdentifier.toString(),
-		OpenViBE::Kernel::ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(m_algorithmComparison != nullptr, "No comparison function found for classifier " << m_subClassifierAlgorithmID.str(),
+						OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	return true;
 }

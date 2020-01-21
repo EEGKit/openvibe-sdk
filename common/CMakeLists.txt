@@ -5,11 +5,11 @@ SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
 SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE source_files src/*.h src/*.cpp include/*.h include/*.hpp)
+FILE(GLOB_RECURSE SRC_FILES src/*.h src/*.cpp include/*.h include/*.hpp)
 INCLUDE_DIRECTORIES(include)
 
 # A headers-only project, the executable is a NOP having some static asserts, not to be installed.
-ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 INCLUDE("FindThirdPartyBoost")
 	
 # ---------------------------------

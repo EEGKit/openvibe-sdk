@@ -9,275 +9,274 @@
 #include <openvibe/ovExceptionHandler.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace std;
 
-CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
-	: TKernelObject<IAlgorithmProxy>(ctx), m_rAlgorithmDesc(rAlgorithmDesc)
-	  , m_rAlgorithm(rAlgorithm)
+CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& algorithmDesc)
+	: TKernelObject<IAlgorithmProxy>(ctx), m_algorithmDesc(algorithmDesc), m_algorithm(rAlgorithm)
 {
-	m_pInputConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
-	m_pOutputConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_iConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_oConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 
 	// FIXME
 	CAlgorithmProto algorithmProto(ctx, *this);
-	rAlgorithmDesc.getAlgorithmPrototype(algorithmProto);
+	algorithmDesc.getAlgorithmPrototype(algorithmProto);
 }
 
 CAlgorithmProxy::~CAlgorithmProxy()
 {
-	getKernelContext().getKernelObjectFactory().releaseObject(m_pOutputConfigurable);
-	getKernelContext().getKernelObjectFactory().releaseObject(m_pInputConfigurable);
+	getKernelContext().getKernelObjectFactory().releaseObject(m_oConfigurable);
+	getKernelContext().getKernelObjectFactory().releaseObject(m_iConfigurable);
 }
 
-IAlgorithm& CAlgorithmProxy::getAlgorithm() { return m_rAlgorithm; }
+IAlgorithm& CAlgorithmProxy::getAlgorithm() { return m_algorithm; }
 
-const IAlgorithm& CAlgorithmProxy::getAlgorithm() const { return m_rAlgorithm; }
+const IAlgorithm& CAlgorithmProxy::getAlgorithm() const { return m_algorithm; }
 
-const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const { return m_rAlgorithmDesc; }
+const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const { return m_algorithmDesc; }
 
-bool CAlgorithmProxy::addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName, const EParameterType eParameterType,
+bool CAlgorithmProxy::addInputParameter(const CIdentifier& parameterID, const CString& name, const EParameterType parameterType,
 										const CIdentifier& subTypeID)
 {
-	OV_ERROR_UNLESS_KRF(m_pInputConfigurable->getParameter(InputParameterID) == nullptr,
-						"For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << InputParameterID.toString() << " already exists",
+	OV_ERROR_UNLESS_KRF(m_iConfigurable->getParameter(parameterID) == nullptr,
+						"For algorithm " << m_algorithmDesc.getName() << " : Input parameter id " << parameterID.str() << " already exists",
 						ErrorType::BadResourceCreation);
 
-	m_pInputConfigurable->createParameter(InputParameterID, eParameterType, subTypeID);
-	m_vInputParameterName[InputParameterID] = sInputName;
+	m_iConfigurable->createParameter(parameterID, parameterType, subTypeID);
+	m_iParameterNames[parameterID] = name;
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const
+CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& parameterID) const
 {
-	return m_pInputConfigurable->getNextParameterIdentifier(rPreviousInputParameterIdentifier);
+	return m_iConfigurable->getNextParameterIdentifier(parameterID);
 }
 
-IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& InputParameterID)
+IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& parameterID)
 {
-	IParameter* parameter = m_pInputConfigurable->getParameter(InputParameterID);
+	IParameter* parameter = m_iConfigurable->getParameter(parameterID);
 
 	OV_ERROR_UNLESS_KRN(
-		parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << InputParameterID.toString(),
+		parameter, "For algorithm " << m_algorithmDesc.getName() << " : Requested null input parameter id " << parameterID.str(),
 		ErrorType::ResourceNotFound);
 
 	return parameter;
 }
 
-EParameterType CAlgorithmProxy::getInputParameterType(const CIdentifier& InputParameterID) const
+EParameterType CAlgorithmProxy::getInputParameterType(const CIdentifier& parameterID) const
 {
-	IParameter* parameter = m_pInputConfigurable->getParameter(InputParameterID);
+	IParameter* parameter = m_iConfigurable->getParameter(parameterID);
 	if (!parameter) { return ParameterType_None; }
 	return parameter->getType();
 }
 
-CString CAlgorithmProxy::getInputParameterName(const CIdentifier& InputParameterID) const
+CString CAlgorithmProxy::getInputParameterName(const CIdentifier& parameterID) const
 {
-	const auto itName = m_vInputParameterName.find(InputParameterID);
-	if (itName == m_vInputParameterName.end()) { return ""; }
+	const auto itName = m_iParameterNames.find(parameterID);
+	if (itName == m_iParameterNames.end()) { return ""; }
 	return itName->second;
 }
 
-bool CAlgorithmProxy::removeInputParameter(const CIdentifier& InputParameterID)
+bool CAlgorithmProxy::removeInputParameter(const CIdentifier& parameterID)
 {
-	if (!m_pInputConfigurable->removeParameter(InputParameterID)) { return false; }
-	m_vInputParameterName.erase(m_vInputParameterName.find(InputParameterID));
+	if (!m_iConfigurable->removeParameter(parameterID)) { return false; }
+	m_iParameterNames.erase(m_iParameterNames.find(parameterID));
 	return true;
 }
 
-bool CAlgorithmProxy::addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName, const EParameterType eParameterType,
+bool CAlgorithmProxy::addOutputParameter(const CIdentifier& parameterID, const CString& name, const EParameterType parameterType,
 										 const CIdentifier& subTypeID)
 {
-	OV_ERROR_UNLESS_KRF(m_pOutputConfigurable->getParameter(outputParameterID) == nullptr,
-						"For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << outputParameterID.toString() <<
+	OV_ERROR_UNLESS_KRF(m_oConfigurable->getParameter(parameterID) == nullptr,
+						"For algorithm " << m_algorithmDesc.getName() << " : Output parameter id " << parameterID.str() <<
 						" already exists",
 						ErrorType::BadResourceCreation);
 
-	m_pOutputConfigurable->createParameter(outputParameterID, eParameterType, subTypeID);
-	m_vOutputParameterName[outputParameterID] = sOutputName;
+	m_oConfigurable->createParameter(parameterID, parameterType, subTypeID);
+	m_oParameterNames[parameterID] = name;
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const
+CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& parameterID) const
 {
-	return m_pOutputConfigurable->getNextParameterIdentifier(rPreviousOutputParameterIdentifier);
+	return m_oConfigurable->getNextParameterIdentifier(parameterID);
 }
 
-IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& outputParameterID)
+IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& parameterID)
 {
-	IParameter* parameter = m_pOutputConfigurable->getParameter(outputParameterID);
+	IParameter* parameter = m_oConfigurable->getParameter(parameterID);
 
 	OV_ERROR_UNLESS_KRN(
-		parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << outputParameterID.toString(),
+		parameter, "For algorithm " << m_algorithmDesc.getName() << " : Requested null output parameter id " << parameterID.str(),
 		ErrorType::ResourceNotFound);
 
 	return parameter;
 }
 
-EParameterType CAlgorithmProxy::getOutputParameterType(const CIdentifier& outputParameterID) const
+EParameterType CAlgorithmProxy::getOutputParameterType(const CIdentifier& parameterID) const
 {
-	IParameter* parameter = m_pOutputConfigurable->getParameter(outputParameterID);
+	IParameter* parameter = m_oConfigurable->getParameter(parameterID);
 	if (!parameter) { return ParameterType_None; }
 	return parameter->getType();
 }
 
-CString CAlgorithmProxy::getOutputParameterName(const CIdentifier& outputParameterID) const
+CString CAlgorithmProxy::getOutputParameterName(const CIdentifier& parameterID) const
 {
-	const auto itName = m_vOutputParameterName.find(outputParameterID);
-	if (itName == m_vOutputParameterName.end()) { return ""; }
+	const auto itName = m_oParameterNames.find(parameterID);
+	if (itName == m_oParameterNames.end()) { return ""; }
 	return itName->second;
 }
 
-bool CAlgorithmProxy::removeOutputParameter(const CIdentifier& outputParameterID)
+bool CAlgorithmProxy::removeOutputParameter(const CIdentifier& parameterID)
 {
-	if (!m_pOutputConfigurable->removeParameter(outputParameterID)) { return false; }
-	m_vOutputParameterName.erase(m_vOutputParameterName.find(outputParameterID));
+	if (!m_oConfigurable->removeParameter(parameterID)) { return false; }
+	m_oParameterNames.erase(m_oParameterNames.find(parameterID));
 	return true;
 }
 
-bool CAlgorithmProxy::addInputTrigger(const CIdentifier& inputTriggerID, const CString& rInputTriggerName)
+bool CAlgorithmProxy::addInputTrigger(const CIdentifier& triggerID, const CString& name)
 {
-	if (m_vInputTrigger.find(inputTriggerID) != m_vInputTrigger.end()) { return false; }
-	m_vInputTrigger[inputTriggerID].first  = rInputTriggerName;
-	m_vInputTrigger[inputTriggerID].second = false;
+	if (m_iTriggers.find(triggerID) != m_iTriggers.end()) { return false; }
+	m_iTriggers[triggerID].first  = name;
+	m_iTriggers[triggerID].second = false;
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextInputTriggerIdentifier(const CIdentifier& rPreviousInputTriggerIdentifier) const
+CIdentifier CAlgorithmProxy::getNextInputTriggerIdentifier(const CIdentifier& triggerID) const
 {
-	return getNextIdentifier<pair<CString, bool>>(m_vInputTrigger, rPreviousInputTriggerIdentifier);
+	return getNextIdentifier<pair<CString, bool>>(m_iTriggers, triggerID);
 }
 
-CString CAlgorithmProxy::getInputTriggerName(const CIdentifier& inputTriggerID) const
+CString CAlgorithmProxy::getInputTriggerName(const CIdentifier& triggerID) const
 {
-	const auto itTrigger = m_vInputTrigger.find(inputTriggerID);
-	if (itTrigger == m_vInputTrigger.end()) { return ""; }
+	const auto itTrigger = m_iTriggers.find(triggerID);
+	if (itTrigger == m_iTriggers.end()) { return ""; }
 	return itTrigger->second.first;
 }
 
-bool CAlgorithmProxy::isInputTriggerActive(const CIdentifier& inputTriggerID) const
+bool CAlgorithmProxy::isInputTriggerActive(const CIdentifier& triggerID) const
 {
-	map<CIdentifier, pair<CString, bool>>::const_iterator itTrigger = m_vInputTrigger.find(inputTriggerID);
-	if (itTrigger == m_vInputTrigger.end()) { return false; }
+	const auto itTrigger = m_iTriggers.find(triggerID);
+	if (itTrigger == m_iTriggers.end()) { return false; }
 	return itTrigger->second.second;
 }
 
-bool CAlgorithmProxy::activateInputTrigger(const CIdentifier& inputTriggerID, const bool /*bTriggerState*/)
+bool CAlgorithmProxy::activateInputTrigger(const CIdentifier& triggerID, const bool /*triggerState*/)
 {
-	const auto itTrigger = m_vInputTrigger.find(inputTriggerID);
-	if (itTrigger == m_vInputTrigger.end()) { return false; }
+	const auto itTrigger = m_iTriggers.find(triggerID);
+	if (itTrigger == m_iTriggers.end()) { return false; }
 	itTrigger->second.second = true;
 	return true;
 }
 
-bool CAlgorithmProxy::removeInputTrigger(const CIdentifier& inputTriggerID)
+bool CAlgorithmProxy::removeInputTrigger(const CIdentifier& triggerID)
 {
-	const auto itTrigger = m_vInputTrigger.find(inputTriggerID);
-	if (itTrigger == m_vInputTrigger.end()) { return false; }
-	m_vInputTrigger.erase(itTrigger);
+	const auto itTrigger = m_iTriggers.find(triggerID);
+	if (itTrigger == m_iTriggers.end()) { return false; }
+	m_iTriggers.erase(itTrigger);
 	return true;
 }
 
-bool CAlgorithmProxy::addOutputTrigger(const CIdentifier& outputTriggerID, const CString& rOutputTriggerName)
+bool CAlgorithmProxy::addOutputTrigger(const CIdentifier& triggerID, const CString& name)
 {
-	if (m_vOutputTrigger.find(outputTriggerID) != m_vOutputTrigger.end()) { return false; }
-	m_vOutputTrigger[outputTriggerID].first  = rOutputTriggerName;
-	m_vOutputTrigger[outputTriggerID].second = false;
+	if (m_oTriggers.find(triggerID) != m_oTriggers.end()) { return false; }
+	m_oTriggers[triggerID].first  = name;
+	m_oTriggers[triggerID].second = false;
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextOutputTriggerIdentifier(const CIdentifier& rPreviousOutputTriggerIdentifier) const
+CIdentifier CAlgorithmProxy::getNextOutputTriggerIdentifier(const CIdentifier& triggerID) const
 {
-	return getNextIdentifier<pair<CString, bool>>(m_vOutputTrigger, rPreviousOutputTriggerIdentifier);
+	return getNextIdentifier<pair<CString, bool>>(m_oTriggers, triggerID);
 }
 
-CString CAlgorithmProxy::getOutputTriggerName(const CIdentifier& outputTriggerID) const
+CString CAlgorithmProxy::getOutputTriggerName(const CIdentifier& triggerID) const
 {
-	const auto itTrigger = m_vOutputTrigger.find(outputTriggerID);
-	if (itTrigger == m_vOutputTrigger.end()) { return ""; }
+	const auto itTrigger = m_oTriggers.find(triggerID);
+	if (itTrigger == m_oTriggers.end()) { return ""; }
 	return itTrigger->second.first;
 }
 
-bool CAlgorithmProxy::isOutputTriggerActive(const CIdentifier& outputTriggerID) const
+bool CAlgorithmProxy::isOutputTriggerActive(const CIdentifier& triggerID) const
 {
-	const auto itTrigger = m_vOutputTrigger.find(outputTriggerID);
-	if (itTrigger == m_vOutputTrigger.end()) { return false; }
+	const auto itTrigger = m_oTriggers.find(triggerID);
+	if (itTrigger == m_oTriggers.end()) { return false; }
 	return itTrigger->second.second;
 }
 
-bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& outputTriggerID, const bool /*bTriggerState*/)
+bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& triggerID, const bool /*state*/)
 {
-	const auto itTrigger = m_vOutputTrigger.find(outputTriggerID);
-	if (itTrigger == m_vOutputTrigger.end()) { return false; }
+	const auto itTrigger = m_oTriggers.find(triggerID);
+	if (itTrigger == m_oTriggers.end()) { return false; }
 	itTrigger->second.second = true;
 	return true;
 }
 
-bool CAlgorithmProxy::removeOutputTrigger(const CIdentifier& outputTriggerID)
+bool CAlgorithmProxy::removeOutputTrigger(const CIdentifier& triggerID)
 {
-	const auto itTrigger = m_vOutputTrigger.find(outputTriggerID);
-	if (itTrigger == m_vOutputTrigger.end()) { return false; }
-	m_vOutputTrigger.erase(itTrigger);
+	const auto itTrigger = m_oTriggers.find(triggerID);
+	if (itTrigger == m_oTriggers.end()) { return false; }
+	m_oTriggers.erase(itTrigger);
 	return true;
 }
 
 
 bool CAlgorithmProxy::initialize()
 {
-	assert(!m_bIsInitialized);
+	assert(!m_isInitialized);
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  CAlgorithmContext context(getKernelContext(), *this, m_algorithmDesc);
 								  // The dual state initialized or not does not take into account
 								  // a partially initialized state. Thus, we have to trust algorithms to implement
 								  // their initialization routine as a rollback transaction mechanism
-								  m_bIsInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
-								  return m_bIsInitialized;
+								  m_isInitialized = m_algorithm.initialize(context);
+								  return m_isInitialized;
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1));
 }
 
 bool CAlgorithmProxy::uninitialize()
 {
-	assert(m_bIsInitialized);
+	assert(m_isInitialized);
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-								  return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
+								  CAlgorithmContext context(getKernelContext(), *this, m_algorithmDesc);
+								  return m_algorithm.uninitialize(context);
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm uninitialization", std::placeholders::_1));
 }
 
 bool CAlgorithmProxy::process()
 {
-	assert(m_bIsInitialized);
+	assert(m_isInitialized);
 
 	return translateException([&]()
 							  {
-								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  CAlgorithmContext context(getKernelContext(), *this, m_algorithmDesc);
 								  this->setAllOutputTriggers(false);
-								  const bool result = m_rAlgorithm.process(l_oAlgorithmContext);
+								  const bool result = m_algorithm.process(context);
 								  this->setAllInputTriggers(false);
 								  return result;
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm processing", std::placeholders::_1));
 }
 
-bool CAlgorithmProxy::process(const CIdentifier& rTriggerIdentifier)
+bool CAlgorithmProxy::process(const CIdentifier& triggerID)
 {
-	assert(m_bIsInitialized);
-	if (!this->activateInputTrigger(rTriggerIdentifier, true)) { return false; }
+	assert(m_isInitialized);
+	if (!this->activateInputTrigger(triggerID, true)) { return false; }
 	return this->process();
 }
 
-void CAlgorithmProxy::setAllInputTriggers(const bool bTriggerStatus) { for (auto& trigger : m_vInputTrigger) { trigger.second.second = bTriggerStatus; } }
+void CAlgorithmProxy::setAllInputTriggers(const bool status) { for (auto& trigger : m_iTriggers) { trigger.second.second = status; } }
 
-void CAlgorithmProxy::setAllOutputTriggers(const bool bTriggerStatus) { for (auto& trigger : m_vOutputTrigger) { trigger.second.second = bTriggerStatus; } }
+void CAlgorithmProxy::setAllOutputTriggers(const bool status) { for (auto& trigger : m_oTriggers) { trigger.second.second = status; } }
 
-bool CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier) { return m_rAlgorithm.isDerivedFromClass(rClassIdentifier); }
+bool CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& classID) { return m_algorithm.isDerivedFromClass(classID); }
 
 void CAlgorithmProxy::handleException(const char* errorHint, const std::exception& exception)
 {

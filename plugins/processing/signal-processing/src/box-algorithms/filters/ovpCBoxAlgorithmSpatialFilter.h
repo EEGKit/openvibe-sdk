@@ -1,12 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-#include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_SpatialFilter     OpenViBE::CIdentifier(0xDD332C6C, 0x195B4FD4)
-#define OVP_ClassId_BoxAlgorithm_SpatialFilterDesc OpenViBE::CIdentifier(0x72A01C92, 0xF8C1FA24)
 
 namespace OpenViBEPlugins
 {
@@ -18,27 +14,27 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpatialFilter)
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_pStreamDecoder = nullptr;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_pStreamEncoder = nullptr;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_decoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_encoder = nullptr;
 
 			OpenViBE::CMatrix m_oFilterBank;
 
 		private:
 			// Loads the m_vCoefficient vector (representing a matrix) from the given string. c1 and c2 are separator characters between floats.
-			uint32_t loadCoefficients(const OpenViBE::CString& rCoefficients, char c1, char c2, uint32_t nRows, uint32_t nCols);
+			size_t loadCoefs(const OpenViBE::CString& coefs, char c1, char c2, size_t nRows, size_t nCols);
 		};
 
 		class CBoxAlgorithmSpatialFilterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(0, typeID);
@@ -46,7 +42,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(0, typeID);

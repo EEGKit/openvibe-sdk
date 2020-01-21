@@ -1,11 +1,9 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_SpectrumAverage     OpenViBE::CIdentifier(0x0C092665, 0x61B82641)
-#define OVP_ClassId_BoxAlgorithm_SpectrumAverageDesc OpenViBE::CIdentifier(0x24663D96, 0x71EA7295)
 
 namespace OpenViBEPlugins
 {
@@ -22,7 +20,7 @@ namespace OpenViBEPlugins
 			// virtual bool processEvent(OpenViBE::CMessageEvent& messageEvent);
 			// virtual bool processSignal(OpenViBE::CMessageSignal& messageSignal);
 			// virtual bool processClock(OpenViBE::CMessageClock& messageClock);
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpectrumAverage)
@@ -31,16 +29,16 @@ namespace OpenViBEPlugins
 
 			bool m_bZeroCare = false;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_matrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
 
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 
-			std::vector<uint32_t> m_vSelectedIndices;
+			std::vector<size_t> m_selectedIndices;
 		};
 
 		class CBoxAlgorithmSpectrumAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

@@ -1,9 +1,7 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include "ovpCEBMLBaseDecoder.h"
-
-#define OVP_ClassId_Algorithm_StreamStructureStreamDecoder     OpenViBE::CIdentifier(0xA7EF3E8B, 0x4CF70B74)
-#define OVP_ClassId_Algorithm_StreamStructureStreamDecoderDesc OpenViBE::CIdentifier(0x2E361099, 0xCBE828A7)
 
 namespace OpenViBEPlugins
 {
@@ -18,12 +16,12 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StreamStructureStreamDecoder)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StreamStructureDecoder)
 
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, uint64_t size) override;
+			void processChildData(const void* buffer, const size_t size) override;
 			void closeChild() override;
 		};
 
@@ -41,16 +39,16 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
 			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("2.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamStructureStreamDecoder; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamStructureDecoder; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CStreamStructureDecoder(); }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseDecoderDesc::getAlgorithmPrototype(prototype);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_StreamStructureStreamDecoderDesc)
+			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_StreamStructureDecoderDesc)
 		};
 	} // namespace StreamCodecs
 } // namespace OpenViBEPlugins

@@ -19,360 +19,351 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <cstdio>
-#include <map>
-#include <limits>
-#include <cassert>
-
-#include <system/ovCTime.h>
-#include <openvibe/ovITimeArithmetics.h>
 
 #include "ovspCCommand.h"
 #include "ovsp_base.h"
 #include "ovspCKernelFacade.h"
 
-namespace OpenViBE
+#include <system/ovCTime.h>
+#include <openvibe/ovTimeArithmetics.h>
+
+#include <cstdio>
+#include <map>
+#include <limits>
+#include <cassert>
+
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Kernel;
+using namespace Plugins;
+
+using TokenList = std::vector<std::pair<std::string, std::string>>;
+
+namespace
 {
-	using namespace Kernel;
-	using namespace Plugins;
-	using TokenList = std::vector<std::pair<std::string, std::string>>;
-
-	namespace
+	void setConfigTokens(IConfigurationManager& configsManager, const TokenList& tokens)
 	{
-		void setConfigurationTokenList(IConfigurationManager& configurationManager, const TokenList& tokenList)
-		{
-			for (auto& token : tokenList) { configurationManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
-		}
-	} // namespace
-
-	struct KernelFacade::KernelFacadeImpl
-	{
-		CKernelLoader kernelLoader;
-		IKernelContext* ctx = nullptr;
-		std::map<std::string, CIdentifier> scenarioMap;
-		std::map<std::string, TokenList> scenarioTokenMap;
-	};
-
-	KernelFacade::KernelFacade() : m_Pimpl(new KernelFacadeImpl()) { }
-
-	// The destructor is needed in the .cpp file to implement pimpl idiom
-	// with unique_ptr. This is due to the fact that Kernel facade dtor
-	// has to call unique_ptr<KernelFacadeImpl> deleter function that calls the detete function
-	// on KernelFacadeImpl. Therefore it needs to know KernelFacadeImpl implementation.
-	KernelFacade::~KernelFacade()
-	{
-		this->unloadKernel();
-		this->uninitialize();
+		for (auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 	}
+} // namespace
 
-	PlayerReturnCode KernelFacade::initialize(const InitCommand& /*command*/) { return PlayerReturnCode::Success; }
+struct CKernelFacade::SKernelFacadeImpl
+{
+	CKernelLoader loader;
+	IKernelContext* ctx = nullptr;
+	std::map<std::string, CIdentifier> scenarios;
+	std::map<std::string, TokenList> scenarioTokens;
+};
 
-	PlayerReturnCode KernelFacade::uninitialize() { return PlayerReturnCode::Success; }
+CKernelFacade::CKernelFacade() : m_impl(new SKernelFacadeImpl()) { }
 
-	PlayerReturnCode KernelFacade::loadKernel(const LoadKernelCommand& command)
+// The destructor is needed in the .cpp file to implement pimpl idiom
+// with unique_ptr. This is due to the fact that Kernel facade dtor
+// has to call unique_ptr<KernelFacadeImpl> deleter function that calls the detete function
+// on KernelFacadeImpl. Therefore it needs to know KernelFacadeImpl implementation.
+CKernelFacade::~CKernelFacade()
+{
+	this->unloadKernel();
+	uninitialize();
+}
+
+OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
+{
+	if (m_impl->ctx)
 	{
-		if (m_Pimpl->ctx)
-		{
-			std::cout << "WARNING: The kernel is already loaded" << std::endl;
-			return PlayerReturnCode::Success;
-		}
-
-		CString kernelFile;
+		std::cout << "WARNING: The kernel is already loaded" << std::endl;
+		return EPlayerReturnCode::Success;
+	}
 
 #if defined TARGET_OS_Windows
-		kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
+	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
-		CKernelLoader& kernelLoader = m_Pimpl->kernelLoader;
-		CString error;
+	CKernelLoader& kernelLoader = m_impl->loader;
+	CString error;
 
-		if (!kernelLoader.load(kernelFile, &error))
-		{
-			std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
-			return PlayerReturnCode::KernelLoadingFailure;
-		}
+	if (!kernelLoader.load(kernelFile, &error))
+	{
+		std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
+		return EPlayerReturnCode::KernelLoadingFailure;
+	}
 
-		kernelLoader.initialize();
+	kernelLoader.initialize();
 
+	IKernelDesc* kernelDesc = nullptr;
+	kernelLoader.getKernelDesc(kernelDesc);
+
+	if (!kernelDesc)
+	{
+		std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
+		return EPlayerReturnCode::KernelInvalidDesc;
+	}
+
+	CString configFile;
+
+	if (command.configFile && !command.configFile.get().empty()) { configFile = command.configFile.get().c_str(); }
+	else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
+
+
+	IKernelContext* ctx = kernelDesc->createKernel("scenario-player", configFile);
+
+	if (!ctx)
+	{
+		std::cerr << "ERROR: impossible to create kernel context " << std::endl;
+		return EPlayerReturnCode::KernelInvalidDesc;
+	}
+
+	ctx->initialize();
+	m_impl->ctx = ctx;
+	OpenViBEToolkit::initialize(*ctx);
+
+	IConfigurationManager& configurationManager = ctx->getConfigurationManager();
+	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
+	ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
+
+	return EPlayerReturnCode::Success;
+}
+
+OpenViBE::EPlayerReturnCode CKernelFacade::unloadKernel() const
+{
+	if (m_impl->ctx)
+	{
+		// not releasing the scenario before releasing the kernel
+		// causes a segfault on linux
+		auto& scenarioManager = m_impl->ctx->getScenarioManager();
+		for (auto& scenarioPair : m_impl->scenarios) { scenarioManager.releaseScenario(scenarioPair.second); }
+
+
+		OpenViBEToolkit::uninitialize(*m_impl->ctx);
+		// m_impl->ctx->uninitialize();
 		IKernelDesc* kernelDesc = nullptr;
-		kernelLoader.getKernelDesc(kernelDesc);
-
-		if (!kernelDesc)
-		{
-			std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
-			return PlayerReturnCode::KernelInvalidDesc;
-		}
-
-		CString configurationFile;
-
-		if (command.configurationFile && !command.configurationFile.get().empty()) { configurationFile = command.configurationFile.get().c_str(); }
-		else { configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
-
-
-		IKernelContext* ctx = kernelDesc->createKernel("scenario-player", configurationFile);
-
-		if (!ctx)
-		{
-			std::cerr << "ERROR: impossible to create kernel context " << std::endl;
-			return PlayerReturnCode::KernelInvalidDesc;
-		}
-
-		ctx->initialize();
-		m_Pimpl->ctx = ctx;
-		OpenViBEToolkit::initialize(*ctx);
-
-		IConfigurationManager& configurationManager = ctx->getConfigurationManager();
-		ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
-		ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
-
-		return PlayerReturnCode::Success;
+		m_impl->loader.getKernelDesc(kernelDesc);
+		kernelDesc->releaseKernel(m_impl->ctx);
+		m_impl->ctx = nullptr;
 	}
 
-	PlayerReturnCode KernelFacade::unloadKernel()
+	m_impl->loader.uninitialize();
+	m_impl->loader.unload();
+
+	return EPlayerReturnCode::Success;
+}
+
+OpenViBE::EPlayerReturnCode CKernelFacade::loadScenario(const SLoadScenarioCmd& command) const
+{
+	assert(command.scenarioFile && command.scenarioName);
+
+	if (!m_impl->ctx)
 	{
-		if (m_Pimpl->ctx)
-		{
-			// not releasing the scenario before releasing the kernel
-			// causes a segfault on linux
-			auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
-			for (auto& scenarioPair : m_Pimpl->scenarioMap) { scenarioManager.releaseScenario(scenarioPair.second); }
-
-
-			OpenViBEToolkit::uninitialize(*m_Pimpl->ctx);
-			// m_Pimpl->ctx->uninitialize();
-			IKernelDesc* kernelDesc = nullptr;
-			m_Pimpl->kernelLoader.getKernelDesc(kernelDesc);
-			kernelDesc->releaseKernel(m_Pimpl->ctx);
-			m_Pimpl->ctx = nullptr;
-		}
-
-		m_Pimpl->kernelLoader.uninitialize();
-		m_Pimpl->kernelLoader.unload();
-
-		return PlayerReturnCode::Success;
+		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+		return EPlayerReturnCode::KernelInternalFailure;
 	}
 
-	PlayerReturnCode KernelFacade::loadScenario(const LoadScenarioCommand& command)
+	const std::string scenarioFile = command.scenarioFile.get();
+	const std::string scenarioName = command.scenarioName.get();
+
+	CIdentifier scenarioID;
+	auto& scenarioManager = m_impl->ctx->getScenarioManager();
+
+	if (!scenarioManager.importScenarioFromFile(scenarioID, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 	{
-		assert(command.scenarioFile && command.scenarioName);
-
-		if (!m_Pimpl->ctx)
-		{
-			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
-			return PlayerReturnCode::KernelInternalFailure;
-		}
-
-		std::string scenarioFile = command.scenarioFile.get();
-		std::string scenarioName = command.scenarioName.get();
-
-		CIdentifier scenarioID;
-		auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
-
-		if (!scenarioManager.importScenarioFromFile(scenarioID, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
-		{
-			std::cerr << "ERROR: failed to create scenario " << std::endl;
-			return PlayerReturnCode::KernelInternalFailure;
-		}
-
-		scenarioManager.getScenario(scenarioID).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
-
-		auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
-		if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end()) { scenarioManager.releaseScenario(scenarioToReleaseIt->second); }
-
-		m_Pimpl->scenarioMap[scenarioName] = scenarioID;
-
-		return PlayerReturnCode::Success;
+		std::cerr << "ERROR: failed to create scenario " << std::endl;
+		return EPlayerReturnCode::KernelInternalFailure;
 	}
 
-	PlayerReturnCode KernelFacade::updateScenario(const UpdateScenarioCommand& command)
+	scenarioManager.getScenario(scenarioID).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
+
+	const auto it = m_impl->scenarios.find(scenarioName);
+	if (it != m_impl->scenarios.end()) { scenarioManager.releaseScenario(it->second); }
+
+	m_impl->scenarios[scenarioName] = scenarioID;
+
+	return EPlayerReturnCode::Success;
+}
+
+OpenViBE::EPlayerReturnCode CKernelFacade::updateScenario(const SUpdateScenarioCmd& command) const
+{
+	assert(command.scenarioFile && command.scenarioName);
+
+	auto& scenarioManager = m_impl->ctx->getScenarioManager();
+
+	const auto scenarioName = command.scenarioName.get();
+	const auto scenarioFile = command.scenarioFile.get();
+
+	if (m_impl->scenarios.find(scenarioName) == m_impl->scenarios.end())
 	{
-		assert(command.scenarioFile && command.scenarioName);
-
-		auto& scenarioManager = m_Pimpl->ctx->getScenarioManager();
-
-		auto scenarioName = command.scenarioName.get();
-		auto scenarioFile = command.scenarioFile.get();
-
-		if (m_Pimpl->scenarioMap.find(scenarioName) == m_Pimpl->scenarioMap.end())
-		{
-			std::cerr << "ERROR: Trying to update a not loaded scenario " << scenarioName << std::endl;
-			return PlayerReturnCode::ScenarioNotLoaded;
-		}
-
-		auto& scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
-
-		// check for boxes to be updated
-		//		scenario.checkBoxesRequiringUpdate();
-
-		// update boxes to be updated
-		CIdentifier* listID = nullptr;
-		size_t elemCount    = 0;
-		scenario.getOutdatedBoxIdentifierList(&listID, &elemCount);
-		for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(listID[i]); }
-
-		// export scenario to the destination file
-		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
-		{
-			std::cerr << "ERROR: failed to create scenario " << std::endl;
-			return PlayerReturnCode::KernelInternalFailure;
-		}
-
-		return PlayerReturnCode::Success;
+		std::cerr << "ERROR: Trying to update a not loaded scenario " << scenarioName << std::endl;
+		return EPlayerReturnCode::ScenarioNotLoaded;
 	}
 
-	PlayerReturnCode KernelFacade::setupScenario(const SetupScenarioCommand& command)
+	auto& scenario = scenarioManager.getScenario(m_impl->scenarios[scenarioName]);
+
+	// check for boxes to be updated
+	// scenario.checkBoxesRequiringUpdate();
+
+	// update boxes to be updated
+	CIdentifier* listID = nullptr;
+	size_t elemCount    = 0;
+	scenario.getOutdatedBoxIdentifierList(&listID, &elemCount);
+	for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(listID[i]); }
+
+	// export scenario to the destination file
+	if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_impl->scenarios[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
 	{
-		if (!m_Pimpl->ctx)
-		{
-			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
-			return PlayerReturnCode::KernelInternalFailure;
-		}
-
-		if (!command.scenarioName)
-		{
-			std::cerr << "ERROR: Missing scenario name for setup" << std::endl;
-			return PlayerReturnCode::KernelInternalFailure;
-		}
-
-		auto scenarioName = command.scenarioName.get();
-
-		if (m_Pimpl->scenarioMap.find(scenarioName) == m_Pimpl->scenarioMap.end())
-		{
-			std::cerr << "ERROR: Trying to configure not loaded scenario " << scenarioName << std::endl;
-			return PlayerReturnCode::ScenarioNotLoaded;
-		}
-
-		// token list is just stored at this step for further use at runtime
-		// current token list overwrites the previous one
-		if (command.tokenList) { m_Pimpl->scenarioTokenMap[scenarioName] = command.tokenList.get(); }
-
-		return PlayerReturnCode::Success;
+		std::cerr << "ERROR: failed to create scenario " << std::endl;
+		return EPlayerReturnCode::KernelInternalFailure;
 	}
 
-	PlayerReturnCode KernelFacade::runScenarioList(const RunScenarioCommand& command)
+	return EPlayerReturnCode::Success;
+}
+
+OpenViBE::EPlayerReturnCode CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
+{
+	if (!m_impl->ctx)
 	{
-		assert(command.scenarioList);
+		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+		return EPlayerReturnCode::KernelInternalFailure;
+	}
 
-		if (!m_Pimpl->ctx)
+	if (!command.scenarioName)
+	{
+		std::cerr << "ERROR: Missing scenario name for setup" << std::endl;
+		return EPlayerReturnCode::KernelInternalFailure;
+	}
+
+	const auto name = command.scenarioName.get();
+
+	if (m_impl->scenarios.find(name) == m_impl->scenarios.end())
+	{
+		std::cerr << "ERROR: Trying to configure not loaded scenario " << name << std::endl;
+		return EPlayerReturnCode::ScenarioNotLoaded;
+	}
+
+	// token list is just stored at this step for further use at runtime
+	// current token list overwrites the previous one
+	if (command.tokenList) { m_impl->scenarioTokens[name] = command.tokenList.get(); }
+
+	return EPlayerReturnCode::Success;
+}
+
+OpenViBE::EPlayerReturnCode CKernelFacade::runScenarioList(const SRunScenarioCmd& command) const
+{
+	assert(command.scenarioList);
+
+	if (!m_impl->ctx)
+	{
+		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+		return EPlayerReturnCode::KernelInternalFailure;
+	}
+
+	auto scenarios = command.scenarioList.get();
+
+	// use of returnCode to store error and achive an RAII-like
+	// behavior by releasing all players at the end
+	EPlayerReturnCode returnCode = EPlayerReturnCode::Success;
+
+	// set up global token
+	if (command.tokenList) { setConfigTokens(m_impl->ctx->getConfigurationManager(), command.tokenList.get()); }
+
+	auto& playerManager = m_impl->ctx->getPlayerManager();
+
+	// Keep 2 different containers because identifier information is
+	// not relevant during the performance sensitive loop task.
+	// This might be premature optimization...
+	std::vector<IPlayer*> players;
+	std::vector<CIdentifier> playerIDs;
+
+	// attach players to scenario
+	for (auto& pair : m_impl->scenarios)
+	{
+		auto name = pair.first;
+		if (std::find(scenarios.begin(), scenarios.end(), name) == scenarios.end()) { continue; } // not in the list of scenario to run 
+
+		CIdentifier id;
+		if (!playerManager.createPlayer(id) || id == OV_UndefinedIdentifier)
 		{
-			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
-			return PlayerReturnCode::KernelInternalFailure;
+			std::cerr << "ERROR: impossible to create player" << std::endl;
+			returnCode = EPlayerReturnCode::KernelInternalFailure;
+			break;
 		}
 
-		auto scenarioList = command.scenarioList.get();
+		IPlayer* player = &playerManager.getPlayer(id);
 
-		// use of returnCode to store error and achive an RAII-like
-		// behavior by releasing all players at the end
-		PlayerReturnCode returnCode = PlayerReturnCode::Success;
+		// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
+		playerIDs.push_back(id);
 
-		// set up global token
-		if (command.tokenList) { setConfigurationTokenList(m_Pimpl->ctx->getConfigurationManager(), command.tokenList.get()); }
+		CNameValuePairList configTokens;
+		for (auto& token : m_impl->scenarioTokens[name]) { configTokens.setValue(token.first.c_str(), token.second.c_str()); }
 
-		auto& playerManager = m_Pimpl->ctx->getPlayerManager();
-
-		// Keep 2 different containers because identifier information is
-		// not relevant during the performance sensitive loop task.
-		// This might be premature optimization...
-		std::vector<IPlayer*> playerList;
-		std::vector<CIdentifier> playerIdentifiersList;
-
-		// attach players to scenario
-		for (auto& scenarioPair : m_Pimpl->scenarioMap)
+		// Scenario attachment with setup of local token
+		if (!player->setScenario(pair.second, &configTokens))
 		{
-			auto scenarioName = scenarioPair.first;
-			if (std::find(scenarioList.begin(), scenarioList.end(), scenarioName) ==
-				scenarioList.end()) { continue; } // not in the list of scenario to run 
-
-			CIdentifier playerIdentifier;
-			if (!playerManager.createPlayer(playerIdentifier) || playerIdentifier == OV_UndefinedIdentifier)
-			{
-				std::cerr << "ERROR: impossible to create player" << std::endl;
-				returnCode = PlayerReturnCode::KernelInternalFailure;
-				break;
-			}
-
-			IPlayer* player = &playerManager.getPlayer(playerIdentifier);
-
-			// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
-			playerIdentifiersList.push_back(playerIdentifier);
-
-			CNameValuePairList configurationTokensMap;
-			for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName]) { configurationTokensMap.setValue(token.first.c_str(), token.second.c_str()); }
-
-			// Scenario attachment with setup of local token
-			if (!player->setScenario(scenarioPair.second, &configurationTokensMap))
-			{
-				std::cerr << "ERROR: impossible to set player scenario " << scenarioName << std::endl;
-				returnCode = PlayerReturnCode::KernelInternalFailure;
-				break;
-			}
-
-			if (player->initialize() == PlayerReturnCode_Sucess)
-			{
-				if (command.playMode && command.playMode.get() == PlayerPlayMode::Fastfoward) { player->forward(); }
-				else { player->play(); }
-
-				playerList.push_back(player);
-			}
-			else
-			{
-				std::cerr << "ERROR: impossible to initialize player for scenario " << scenarioName << std::endl;
-				returnCode = PlayerReturnCode::KernelInternalFailure;
-				break;
-			}
+			std::cerr << "ERROR: impossible to set player scenario " << name << std::endl;
+			returnCode = EPlayerReturnCode::KernelInternalFailure;
+			break;
 		}
 
-		if (returnCode == PlayerReturnCode::Success)
+		if (player->initialize() == PlayerReturnCode_Sucess)
 		{
-			// loop until timeout
-			uint64_t startTime    = System::Time::zgetTime();
-			uint64_t lastLoopTime = startTime;
+			if (command.playMode && command.playMode.get() == EPlayerPlayMode::Fastfoward) { player->forward(); }
+			else { player->play(); }
 
-			// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
-			// because it could overflow
-			double boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
+			players.push_back(player);
+		}
+		else
+		{
+			std::cerr << "ERROR: impossible to initialize player for scenario " << name << std::endl;
+			returnCode = EPlayerReturnCode::KernelInternalFailure;
+			break;
+		}
+	}
 
-			uint64_t maxExecutionTimeInFixedPoint;
-			if (command.maximumExecutionTime &&
-				command.maximumExecutionTime.get() > 0 &&
-				command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
+	if (returnCode == EPlayerReturnCode::Success)
+	{
+		// loop until timeout
+		const uint64_t startTime = System::Time::zgetTime();
+		uint64_t lastLoopTime    = startTime;
+
+		// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
+		// because it could overflow
+		const double boundedMaxExecutionTimeInS = TimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
+
+		uint64_t maxExecutionTimeInFixedPoint;
+		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
+		{
+			maxExecutionTimeInFixedPoint = TimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
+		}
+		else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
+
+		bool allStopped{ false };
+		while (!allStopped) // negative condition here because it is easier to reason about it
+		{
+			const uint64_t currentTime = System::Time::zgetTime();
+			allStopped                 = true;
+			for (auto p : players)
 			{
-				maxExecutionTimeInFixedPoint = ITimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
-			}
-			else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
-
-			bool allStopped{ false };
-			while (!allStopped) // negative condition here because it is easier to reason about it
-			{
-				uint64_t currentTime = System::Time::zgetTime();
-				allStopped           = true;
-				for (auto p : playerList)
+				if (p->getStatus() != PlayerStatus_Stop)
 				{
-					if (p->getStatus() != PlayerStatus_Stop)
-					{
-						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = PlayerReturnCode::KernelInternalFailure; }
-					}
-
-					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
-
-					allStopped &= (p->getStatus() == PlayerStatus_Stop);
+					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCode::KernelInternalFailure; }
 				}
 
-				lastLoopTime = currentTime;
+				if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
+
+				allStopped &= (p->getStatus() == PlayerStatus_Stop);
 			}
-		}
 
-		// release players
-		for (auto& id : playerIdentifiersList)
-		{
-			playerManager.getPlayer(id).uninitialize();
-			playerManager.releasePlayer(id);
+			lastLoopTime = currentTime;
 		}
-
-		return returnCode;
 	}
+
+	// release players
+	for (auto& id : playerIDs)
+	{
+		playerManager.getPlayer(id).uninitialize();
+		playerManager.releasePlayer(id);
+	}
+
+	return returnCode;
 }

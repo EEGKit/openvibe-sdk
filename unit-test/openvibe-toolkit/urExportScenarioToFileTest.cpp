@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <tuple>
 #include <ovp_global_defines.h>
@@ -7,24 +6,24 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 int urImportScenarioFromFileTest(int argc, char* argv[]);
 
-#define OVP_ClassId_BoxAlgorithm_ClockStimulator OpenViBE::CIdentifier(0x4F756D3F, 0x29FF0B96)
-#define OVP_ClassId_BoxAlgorithm_ClockStimulatorDesc OpenViBE::CIdentifier(0x4FD067E9, 0x740D2AF0)
-#define OVP_ClassId_BoxAlgorithm_StimulationListener OpenViBE::CIdentifier(0x65731E1D, 0x47DE5276)
+#define OVP_ClassId_BoxAlgorithm_ClockStimulator 		OpenViBE::CIdentifier(0x4F756D3F, 0x29FF0B96)
+#define OVP_ClassId_BoxAlgorithm_ClockStimulatorDesc	OpenViBE::CIdentifier(0x4FD067E9, 0x740D2AF0)
+#define OVP_ClassId_BoxAlgorithm_StimulationListener	OpenViBE::CIdentifier(0x65731E1D, 0x47DE5276)
 
 
 #include "urSimpleTestScenarioDefinition.h"
 
-int urExportScenarioToFileTest(int argc, char* argv[])
+int urExportScenarioToFileTest(const int argc, char* argv[])
 {
-	const char* configurationFile  = argv[1];
+	const char* configFile         = argv[1];
 	const char* temporaryDirectory = argv[2];
 
 	{
-		OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture(configurationFile);
+		OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture(configFile);
 
 		auto& context = fixture->context;
 
@@ -65,7 +64,7 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		// Test scenario attributes
 		for (auto& attribute : simpleScenarioAttributes) { scenario.addAttribute(std::get<0>(attribute), std::get<1>(attribute).c_str()); }
 
-		unsigned int settingIndex = 0;
+		size_t settingIndex = 0;
 		for (auto& setting : simpleScenarioSettings)
 		{
 			scenario.addSetting(std::get<1>(setting).c_str(), std::get<0>(setting), std::get<2>(setting).c_str());

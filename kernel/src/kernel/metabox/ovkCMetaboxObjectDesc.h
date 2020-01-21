@@ -3,7 +3,6 @@
 #include "../ovkTKernelObject.h"
 
 #include <vector>
-#include <map>
 
 namespace OpenViBE
 {
@@ -19,24 +18,24 @@ namespace OpenViBE
 		 *
 		 * Variables such as name, author etc are pulled from scenario information.
 		 */
-		class CMetaboxObjectDesc : virtual public IMetaboxObjectDesc
+		class CMetaboxObjectDesc final : virtual public IMetaboxObjectDesc
 		{
 		public:
 			CMetaboxObjectDesc() { }
 
 			CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario);
 			void release() override { }
-			CString getMetaboxDescriptor() const override { return m_MetaboxDescriptor; }
-			CString getName() const override { return m_Name; }
-			CString getAuthorName() const override { return m_AuthorName; }
-			CString getAuthorCompanyName() const override { return m_AuthorCompanyName; }
-			CString getShortDescription() const override { return m_ShortDescription; }
-			CString getDetailedDescription() const override { return m_DetailedDescription; }
-			CString getCategory() const override { return m_Category; }
-			CString getVersion() const override { return m_Version; }
-			CString getStockItemName() const override { return m_StockItemName; }
-			CString getAddedSoftwareVersion() const override { return m_AddedSoftwareVersion; }
-			CString getUpdatedSoftwareVersion() const override { return m_UpdatedSoftwareVersion; }
+			CString getMetaboxDescriptor() const override { return m_metaboxDesc; }
+			CString getName() const override { return m_name; }
+			CString getAuthorName() const override { return m_authorName; }
+			CString getAuthorCompanyName() const override { return m_authorCompanyName; }
+			CString getShortDescription() const override { return m_shortDesc; }
+			CString getDetailedDescription() const override { return m_detailedDesc; }
+			CString getCategory() const override { return m_category; }
+			CString getVersion() const override { return m_version; }
+			CString getStockItemName() const override { return m_stockItemName; }
+			CString getAddedSoftwareVersion() const override { return m_addedSoftwareVersion; }
+			CString getUpdatedSoftwareVersion() const override { return m_updatedSoftwareVersion; }
 			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Metabox; }
 			Plugins::IPluginObject* create() override { return nullptr; }
 
@@ -44,65 +43,54 @@ namespace OpenViBE
 
 			// Since we have to construct a prototype on the fly, the special Metabox descriptor
 			// will also hold the information about the settings, inputs and outputs of the box
-			typedef struct _SIOStream
+			typedef struct SStream
 			{
-				_SIOStream()
-					: m_sName(""),
-					  m_oTypeIdentifier(OV_UndefinedIdentifier),
-					  m_oIdentifier(OV_UndefinedIdentifier) {}
+				SStream() : m_name(""), m_typeID(OV_UndefinedIdentifier), m_id(OV_UndefinedIdentifier) {}
 
-				_SIOStream(const CString& rName, const CIdentifier& typeID, const CIdentifier& identifier)
-					: m_sName(rName),
-					  m_oTypeIdentifier(typeID),
-					  m_oIdentifier(identifier) {}
+				SStream(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier)
+					: m_name(name), m_typeID(typeID), m_id(identifier) {}
 
-				CString m_sName;
-				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-				CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
-			} SIOStream;
+				CString m_name;
+				CIdentifier m_typeID = OV_UndefinedIdentifier;
+				CIdentifier m_id     = OV_UndefinedIdentifier;
+			} io_stream_t;
 
-			typedef struct _SSetting
+			typedef struct SSetting
 			{
-				_SSetting()
-					: m_sName(""),
-					  m_oTypeIdentifier(OV_UndefinedIdentifier),
-					  m_sDefaultValue(""),
-					  m_oIdentifier(OV_UndefinedIdentifier) {}
+				SSetting()
+					: m_name(""), m_typeID(OV_UndefinedIdentifier), m_defaultValue(""), m_id(OV_UndefinedIdentifier) {}
 
-				_SSetting(const CString& rName, const CIdentifier& typeID, const CString& rDefaultValue, const CIdentifier& identifier)
-					: m_sName(rName),
-					  m_oTypeIdentifier(typeID),
-					  m_sDefaultValue(rDefaultValue),
-					  m_oIdentifier(identifier) {}
+				SSetting(const CString& name, const CIdentifier& typeID, const CString& value, const CIdentifier& id)
+					: m_name(name), m_typeID(typeID), m_defaultValue(value), m_id(id) { }
 
-				CString m_sName;
-				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-				CString m_sDefaultValue;
-				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
-			} SSetting;
+				CString m_name;
+				CIdentifier m_typeID = OV_UndefinedIdentifier;
+				CString m_defaultValue;
+				CIdentifier m_id = OV_UndefinedIdentifier;
+			} setting_t;
 
 			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
+			_IsDerivedFromClass_Final_(IMetaboxObjectDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 
 		private:
-			CString m_MetaboxDescriptor;
+			CString m_metaboxDesc;
 
-			CString m_Name;
-			CString m_AuthorName;
-			CString m_AuthorCompanyName;
-			CString m_ShortDescription;
-			CString m_DetailedDescription;
-			CString m_Category;
-			CString m_Version;
-			CString m_StockItemName;
-			CString m_AddedSoftwareVersion;
-			CString m_UpdatedSoftwareVersion;
-			CString m_MetaboxIdentifier;
+			CString m_name;
+			CString m_authorName;
+			CString m_authorCompanyName;
+			CString m_shortDesc;
+			CString m_detailedDesc;
+			CString m_category;
+			CString m_version;
+			CString m_stockItemName;
+			CString m_addedSoftwareVersion;
+			CString m_updatedSoftwareVersion;
+			CString m_metaboxID;
 
-			std::vector<SIOStream> m_Inputs;
-			std::vector<SIOStream> m_Outputs;
-			std::vector<SSetting> m_Settings;
+			std::vector<io_stream_t> m_inputs;
+			std::vector<io_stream_t> m_outputs;
+			std::vector<setting_t> m_settings;
 		};
 	} // namespace Metabox
 } // namespace OpenViBE

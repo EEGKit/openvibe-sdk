@@ -5,8 +5,8 @@
 #include "../algorithm/ovIAlgorithmProto.h"
 #include "../../ovIMemoryBuffer.h"
 
-#define OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario    OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
-#define OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer OpenViBE::CIdentifier(0x600463A3, 0x474B7F66)
+#define OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario   		OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
+#define OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer		OpenViBE::CIdentifier(0x600463A3, 0x474B7F66)
 
 namespace OpenViBE
 {
@@ -16,10 +16,10 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual bool processStart(const CIdentifier& identifier) = 0;
-			virtual bool processIdentifier(const CIdentifier& identifier, const CIdentifier& rValue) = 0;
-			virtual bool processString(const CIdentifier& identifier, const CString& rValue) = 0;
-			virtual bool processUInteger(const CIdentifier& identifier, uint64_t ui64Value) = 0;
+			virtual bool processStart(const CIdentifier& id) = 0;
+			virtual bool processIdentifier(const CIdentifier& id, const CIdentifier& value) = 0;
+			virtual bool processString(const CIdentifier& id, const CString& value) = 0;
+			virtual bool processUInteger(const CIdentifier& id, uint64_t value) = 0;
 			virtual bool processStop() = 0;
 
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_UndefinedIdentifier)
@@ -28,17 +28,16 @@ namespace OpenViBE
 		class OV_API IAlgorithmScenarioImporter : public IAlgorithm
 		{
 		public:
-			virtual bool import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& rMemoryBuffer) = 0;
+			virtual bool import(IAlgorithmScenarioImporterContext& ctx, const IMemoryBuffer& buffer) = 0;
 		};
 
 
 		class OV_API IAlgorithmScenarioImporterDesc : public IAlgorithmDesc
 		{
-			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
-				rAlgorithmPrototype.addOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario, "Scenario", Kernel::ParameterType_Object);
-				rAlgorithmPrototype.addInputParameter(
-					OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer, "Memory buffer", Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario, "Scenario", Kernel::ParameterType_Object);
+				prototype.addInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer, "Memory buffer", Kernel::ParameterType_MemoryBuffer);
 				return true;
 			}
 		};

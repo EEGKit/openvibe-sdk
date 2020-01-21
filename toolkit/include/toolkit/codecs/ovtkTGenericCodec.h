@@ -44,10 +44,10 @@ namespace OpenViBEToolkit
 	//
 
 #define decoder_return_impl(what) \
-		if(m_pSignalDecoder) { return m_pSignalDecoder->what; } \
-		if(m_pSpectrumDecoder) { return m_pSpectrumDecoder->what; } \
-		if(m_pFeatureVectorDecoder) { return m_pFeatureVectorDecoder->what; } \
-		return m_pStreamedMatrixDecoder->what;
+		if(m_signalDecoder) { return m_signalDecoder->what; } \
+		if(m_spectrumDecoder) { return m_spectrumDecoder->what; } \
+		if(m_featureVectorDecoder) { return m_featureVectorDecoder->what; } \
+		return m_streamedMatrixDecoder->what;
 
 	template <class T>
 	class TGenericDecoder
@@ -56,46 +56,46 @@ namespace OpenViBEToolkit
 
 		void reset()
 		{
-			m_pStreamedMatrixDecoder = nullptr;
-			m_pSignalDecoder         = nullptr;
-			m_pSpectrumDecoder       = nullptr;
-			m_pFeatureVectorDecoder  = nullptr;
+			m_streamedMatrixDecoder = nullptr;
+			m_signalDecoder         = nullptr;
+			m_spectrumDecoder       = nullptr;
+			m_featureVectorDecoder  = nullptr;
 		}
 
 	public:
 
-		TGenericDecoder() : m_pStreamedMatrixDecoder(nullptr), m_pSignalDecoder(nullptr), m_pSpectrumDecoder(nullptr), m_pFeatureVectorDecoder(nullptr)
+		TGenericDecoder() : m_streamedMatrixDecoder(nullptr), m_signalDecoder(nullptr), m_spectrumDecoder(nullptr), m_featureVectorDecoder(nullptr)
 		{
 			this->reset();
 		}
 
 		~TGenericDecoder() { this->uninitialize(); }
 
-		TGenericDecoder<T>& operator=(TStreamedMatrixDecoder<T>* pDecoder)
+		TGenericDecoder<T>& operator=(TStreamedMatrixDecoder<T>* decoder)
 		{
 			this->reset();
-			m_pStreamedMatrixDecoder = pDecoder;
+			m_streamedMatrixDecoder = decoder;
 			return *this;
 		}
 
-		TGenericDecoder<T>& operator=(TSignalDecoder<T>* pDecoder)
+		TGenericDecoder<T>& operator=(TSignalDecoder<T>* decoder)
 		{
 			this->reset();
-			m_pSignalDecoder = pDecoder;
+			m_signalDecoder = decoder;
 			return *this;
 		}
 
-		TGenericDecoder<T>& operator=(TSpectrumDecoder<T>* pDecoder)
+		TGenericDecoder<T>& operator=(TSpectrumDecoder<T>* decoder)
 		{
 			this->reset();
-			m_pSpectrumDecoder = pDecoder;
+			m_spectrumDecoder = decoder;
 			return *this;
 		}
 
-		TGenericDecoder<T>& operator=(TFeatureVectorDecoder<T>* pDecoder)
+		TGenericDecoder<T>& operator=(TFeatureVectorDecoder<T>* decoder)
 		{
 			this->reset();
-			m_pFeatureVectorDecoder = pDecoder;
+			m_featureVectorDecoder = decoder;
 			return *this;
 		}
 
@@ -108,16 +108,16 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
 		{
-			if (m_pSignalDecoder) { return m_pSignalDecoder->getOutputSamplingRate(); }
-			return m_pSpectrumDecoder->getOutputSamplingRate();
+			if (m_signalDecoder) { return m_signalDecoder->getOutputSamplingRate(); }
+			return m_spectrumDecoder->getOutputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbcissa() { return m_pSpectrumDecoder->getOutputFrequencyAbscissa(); }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
 
-		bool decode(int, int)                   = delete;
-		bool decode(unsigned int, unsigned int) = delete;
+		bool decode(int, int)       = delete;
+		bool decode(size_t, size_t) = delete;
 
-		bool decode(uint32_t chunkIdx, bool bMarkInputAsDeprecated = true)
+		bool decode(const size_t chunkIdx, bool bMarkInputAsDeprecated = true)
 		{
 			decoder_return_impl(decode(chunkIdx, bMarkInputAsDeprecated));
 		}
@@ -139,10 +139,10 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		TStreamedMatrixDecoder<T>* m_pStreamedMatrixDecoder = nullptr;
-		TSignalDecoder<T>* m_pSignalDecoder                 = nullptr;
-		TSpectrumDecoder<T>* m_pSpectrumDecoder             = nullptr;
-		TFeatureVectorDecoder<T>* m_pFeatureVectorDecoder   = nullptr;
+		TStreamedMatrixDecoder<T>* m_streamedMatrixDecoder = nullptr;
+		TSignalDecoder<T>* m_signalDecoder                 = nullptr;
+		TSpectrumDecoder<T>* m_spectrumDecoder             = nullptr;
+		TFeatureVectorDecoder<T>* m_featureVectorDecoder   = nullptr;
 	};
 
 	// ______________________________________________________________________________________________________________________________________________________________________________
@@ -150,10 +150,10 @@ namespace OpenViBEToolkit
 	//
 
 #define encoder_return_impl(what) \
-		if(m_pSignalEncoder) { return m_pSignalEncoder->what; } \
-		if(m_pSpectrumEncoder) { return m_pSpectrumEncoder->what; } \
-		if(m_pFeatureVectorEncoder) { return m_pFeatureVectorEncoder->what; } \
-		return m_pStreamedMatrixEncoder->what;
+		if(m_signalEncoder) { return m_signalEncoder->what; } \
+		if(m_spectrumEncoder) { return m_spectrumEncoder->what; } \
+		if(m_featureVectorEncoder) { return m_featureVectorEncoder->what; } \
+		return m_streamedMatrixDecoder->what;
 
 	template <class T>
 	class TGenericEncoder
@@ -162,15 +162,15 @@ namespace OpenViBEToolkit
 
 		void reset()
 		{
-			m_pStreamedMatrixEncoder = nullptr;
-			m_pSignalEncoder         = nullptr;
-			m_pSpectrumEncoder       = nullptr;
-			m_pFeatureVectorEncoder  = nullptr;
+			m_streamedMatrixDecoder = nullptr;
+			m_signalEncoder         = nullptr;
+			m_spectrumEncoder       = nullptr;
+			m_featureVectorEncoder  = nullptr;
 		}
 
 	public:
 
-		TGenericEncoder() : m_pStreamedMatrixEncoder(nullptr), m_pSignalEncoder(nullptr), m_pSpectrumEncoder(nullptr), m_pFeatureVectorEncoder(nullptr)
+		TGenericEncoder() : m_streamedMatrixDecoder(nullptr), m_signalEncoder(nullptr), m_spectrumEncoder(nullptr), m_featureVectorEncoder(nullptr)
 		{
 			this->reset();
 		}
@@ -180,28 +180,28 @@ namespace OpenViBEToolkit
 		TGenericEncoder<T>& operator=(TStreamedMatrixEncoder<T>* pEncoder)
 		{
 			this->reset();
-			m_pStreamedMatrixEncoder = pEncoder;
+			m_streamedMatrixDecoder = pEncoder;
 			return *this;
 		}
 
 		TGenericEncoder<T>& operator=(TSignalEncoder<T>* pEncoder)
 		{
 			this->reset();
-			m_pSignalEncoder = pEncoder;
+			m_signalEncoder = pEncoder;
 			return *this;
 		}
 
 		TGenericEncoder<T>& operator=(TSpectrumEncoder<T>* pEncoder)
 		{
 			this->reset();
-			m_pSpectrumEncoder = pEncoder;
+			m_spectrumEncoder = pEncoder;
 			return *this;
 		}
 
 		TGenericEncoder<T>& operator=(TFeatureVectorEncoder<T>* pEncoder)
 		{
 			this->reset();
-			m_pFeatureVectorEncoder = pEncoder;
+			m_featureVectorEncoder = pEncoder;
 			return *this;
 		}
 
@@ -214,11 +214,11 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
 		{
-			if (m_pSignalEncoder) { return m_pSignalEncoder->getInputSamplingRate(); }
-			return m_pSpectrumEncoder->getInputSamplingRate();
+			if (m_signalEncoder) { return m_signalEncoder->getInputSamplingRate(); }
+			return m_spectrumEncoder->getInputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbcissa() { return m_pSpectrumEncoder->getInputFrequencyAbscissa(); }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
 
 		bool encodeHeader()
 		{
@@ -237,10 +237,10 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		TStreamedMatrixEncoder<T>* m_pStreamedMatrixEncoder = nullptr;
-		TSignalEncoder<T>* m_pSignalEncoder                 = nullptr;
-		TSpectrumEncoder<T>* m_pSpectrumEncoder             = nullptr;
-		TFeatureVectorEncoder<T>* m_pFeatureVectorEncoder   = nullptr;
+		TStreamedMatrixEncoder<T>* m_streamedMatrixDecoder = nullptr;
+		TSignalEncoder<T>* m_signalEncoder                 = nullptr;
+		TSpectrumEncoder<T>* m_spectrumEncoder             = nullptr;
+		TFeatureVectorEncoder<T>* m_featureVectorEncoder   = nullptr;
 	};
 
 	// ______________________________________________________________________________________________________________________________________________________________________________
@@ -262,21 +262,21 @@ namespace OpenViBEToolkit
 			Type_All = 0xffffffff,
 		} EType;
 
-		explicit TGenericListener(const uint32_t typeFlag = Type_All)
+		explicit TGenericListener(const size_t typeFlag = Type_All)
 		{
-			if (typeFlag & Type_StreamedMatrix) m_vAllowedTypeIdentifier[OV_TypeId_StreamedMatrix] = true;
-			if (typeFlag & Type_Signal) m_vAllowedTypeIdentifier[OV_TypeId_Signal] = true;
-			if (typeFlag & Type_Spectrum) m_vAllowedTypeIdentifier[OV_TypeId_Spectrum] = true;
-			if (typeFlag & Type_Covariance) m_vAllowedTypeIdentifier[OV_TypeId_CovarianceMatrix] = true;
+			if (typeFlag & Type_StreamedMatrix) m_allowedTypeIDs[OV_TypeId_StreamedMatrix] = true;
+			if (typeFlag & Type_Signal) m_allowedTypeIDs[OV_TypeId_Signal] = true;
+			if (typeFlag & Type_Spectrum) m_allowedTypeIDs[OV_TypeId_Spectrum] = true;
+			if (typeFlag & Type_Covariance) m_allowedTypeIDs[OV_TypeId_CovarianceMatrix] = true;
 		}
 
-		bool isValidInputType(const OpenViBE::CIdentifier& typeID, uint32_t /*index*/)
+		bool isValidInputType(const OpenViBE::CIdentifier& typeID, size_t /*index*/)
 		{
-			return m_vAllowedTypeIdentifier[typeID];
+			return m_allowedTypeIDs[typeID];
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index)
 		{
 			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 			box.getInputType(index, typeID);
@@ -289,13 +289,13 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		bool isValidOutputType(const OpenViBE::CIdentifier& typeID, uint32_t /*index*/)
+		bool isValidOutputType(const OpenViBE::CIdentifier& typeID, size_t /*index*/)
 		{
-			return m_vAllowedTypeIdentifier[typeID];
+			return m_allowedTypeIDs[typeID];
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index)
 		{
 			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 			box.getOutputType(index, typeID);
@@ -312,6 +312,6 @@ namespace OpenViBEToolkit
 
 	private:
 
-		std::map<OpenViBE::CIdentifier, bool> m_vAllowedTypeIdentifier;
+		std::map<OpenViBE::CIdentifier, bool> m_allowedTypeIDs;
 	};
 } // namespace OpenViBEToolkit

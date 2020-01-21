@@ -1,9 +1,7 @@
 #include "ovkCBoxSettingModifierVisitor.h"
 
-#include "ovkCSimulatedBox.h"
 #include "ovkCPlayer.h"
 
-#include <openvibe/ovIObjectVisitor.h>
 #include <xml/IReader.h>
 #include <fs/Files.h>
 #include "../../tools/ovk_setting_checker.h"
@@ -11,134 +9,127 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <limits>
 
-#define OVD_AttributeId_SettingOverrideFilename             OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
-#define OV_AttributeId_Box_Disabled                         OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
+#define OVD_AttributeId_SettingOverrideFilename     		OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
+#define OV_AttributeId_Box_Disabled                 		OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
 
 //___________________________________________________________________//
 //                                                                   //
 
 using namespace std;
 using namespace OpenViBE;
-using namespace Kernel;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
-void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, uint64_t /*nAttribute*/)
+void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, const size_t /*nAttribute*/)
 {
-	if (!m_bIsParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_bIsParsingSettingOverride = true; } }
-	else if (string(name) == string("SettingValue")) { m_bIsParsingSettingValue = true; }
-	else { m_bIsParsingSettingValue = false; }
+	if (!m_IsParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_IsParsingSettingOverride = true; } }
+	else if (string(name) == string("SettingValue")) { m_IsParsingSettingValue = true; }
+	else { m_IsParsingSettingValue = false; }
 }
 
-void CBoxSettingModifierVisitor::processChildData(const char* sData)
+void CBoxSettingModifierVisitor::processChildData(const char* data)
 {
-	if (m_bIsParsingSettingValue)
+	if (m_IsParsingSettingValue)
 	{
-		m_pObjectVisitorContext->getLogManager() << LogLevel_Debug << "Using [" << CString(sData) << "] as setting " << m_ui32SettingIndex << "...\n";
-		m_pBox->setSettingValue(m_ui32SettingIndex, sData);
+		m_ObjectVisitorCtx->getLogManager() << LogLevel_Debug << "Using [" << CString(data) << "] as setting " << m_SettingIdx << "...\n";
+		m_Box->setSettingValue(m_SettingIdx, data);
 	}
 }
 
 void CBoxSettingModifierVisitor::closeChild()
 {
 	//We need to count it here because we need to take in account the empty value
-	if (m_bIsParsingSettingValue) { m_ui32SettingIndex++; }
-	m_bIsParsingSettingValue = false;
+	if (m_IsParsingSettingValue) { m_SettingIdx++; }
+	m_IsParsingSettingValue = false;
 }
 
-bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& box)
+bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& visitorCtx, IBox& box)
 {
-	m_pObjectVisitorContext = &rObjectVisitorContext;
+	m_ObjectVisitorCtx = &visitorCtx;
 
 	// checks if this box should override
 	// settings from external file
 	if (box.hasAttribute(OVD_AttributeId_SettingOverrideFilename))
 	{
-		CString l_sSettingOverrideFilename = box.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
-		CString l_sSettingOverrideFilenameFinal;
-		if (m_pConfigurationManager == nullptr)
-		{
-			l_sSettingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
-		}
-		else { l_sSettingOverrideFilenameFinal = m_pConfigurationManager->expand(l_sSettingOverrideFilename); }
+		const CString settingOverrideFilename = box.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
+		CString settingOverrideFilenameFinal;
+		if (m_ConfigManager == nullptr) { settingOverrideFilenameFinal = visitorCtx.getConfigurationManager().expand(settingOverrideFilename); }
+		else { settingOverrideFilenameFinal = m_ConfigManager->expand(settingOverrideFilename); }
 
 		// message
-		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
-				l_sSettingOverrideFilename << " which expands to " << l_sSettingOverrideFilenameFinal << "] !\n";
+		visitorCtx.getLogManager() << LogLevel_Trace << "Trying to override [" << box.getName() << "] box settings with file [" <<
+				settingOverrideFilename << " which expands to " << settingOverrideFilenameFinal << "] !\n";
 
 		// creates XML reader
-		XML::IReader* l_pReader = createReader(*this);
+		XML::IReader* reader = createReader(*this);
 
 		// adds new box settings
-		m_pBox                      = &box;
-		m_ui32SettingIndex          = 0;
-		m_bIsParsingSettingValue    = false;
-		m_bIsParsingSettingOverride = false;
+		m_Box                      = &box;
+		m_SettingIdx               = 0;
+		m_IsParsingSettingValue    = false;
+		m_IsParsingSettingOverride = false;
 
 		auto cleanup = [&]()
 		{
 			// cleans up internal state
-			m_pBox                      = nullptr;
-			m_ui32SettingIndex          = 0;
-			m_bIsParsingSettingValue    = false;
-			m_bIsParsingSettingOverride = false;
+			m_Box                      = nullptr;
+			m_SettingIdx               = 0;
+			m_IsParsingSettingValue    = false;
+			m_IsParsingSettingOverride = false;
 
 			// releases XML reader
-			l_pReader->release();
-			l_pReader = nullptr;
+			reader->release();
+			reader = nullptr;
 		};
 
 		// 1. Open settings file (binary because read would conflict with tellg for text files)
 		// 2. Loop until end of file, reading it
 		//    and sending what is read to the XML parser
 		// 3. Close the settings file
-		ifstream l_oFile;
-		FS::Files::openIFStream(l_oFile, l_sSettingOverrideFilenameFinal.toASCIIString(), ios::binary);
-		if (l_oFile.is_open())
+		ifstream file;
+		FS::Files::openIFStream(file, settingOverrideFilenameFinal.toASCIIString(), ios::binary);
+		if (file.is_open())
 		{
-			char l_sBuffer[1024];
-			std::streamoff l_iBufferLen = 0;
-			bool l_bStatusOk            = true;
-			l_oFile.seekg(0, ios::end);
-			std::streamoff l_iFileLen = l_oFile.tellg();
-			l_oFile.seekg(0, ios::beg);
-			while (l_iFileLen && l_bStatusOk)
+			char buffer[1024];
+			bool statusOk = true;
+			file.seekg(0, ios::end);
+			std::streamoff fileLen = file.tellg();
+			file.seekg(0, ios::beg);
+			while (fileLen && statusOk)
 			{
 				// File length is always positive so this is safe
-				l_iBufferLen = (unsigned(l_iFileLen) > sizeof(l_sBuffer) ? sizeof(l_sBuffer) : l_iFileLen);
-				l_oFile.read(l_sBuffer, l_iBufferLen);
-				l_iFileLen -= l_iBufferLen;
-				l_bStatusOk = l_pReader->processData(l_sBuffer, l_iBufferLen);
+				const std::streamoff bufferLen = (unsigned(fileLen) > sizeof(buffer) ? sizeof(buffer) : fileLen);
+				file.read(buffer, bufferLen);
+				fileLen -= bufferLen;
+				statusOk = reader->processData(buffer, size_t(bufferLen));
 			}
-			l_oFile.close();
+			file.close();
 
 			// message
-			if (m_ui32SettingIndex == box.getSettingCount())
+			if (m_SettingIdx == box.getSettingCount())
 			{
-				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_ui32SettingIndex << " setting(s) with this configuration file...\n";
+				visitorCtx.getLogManager() << LogLevel_Trace << "Overrode " << m_SettingIdx << " setting(s) with this configuration file...\n";
 
-				for (uint32_t i = 0; i < m_ui32SettingIndex; i++)
+				for (size_t i = 0; i < m_SettingIdx; ++i)
 				{
-					CString l_sSettingName     = "";
-					CString l_sRawSettingValue = "";
+					CString settingName     = "";
+					CString rawSettingvalue = "";
 
-					box.getSettingName(i, l_sSettingName);
-					box.getSettingValue(i, l_sRawSettingValue);
-					CString l_sSettingValue = l_sRawSettingValue;
-					l_sSettingValue         = m_pConfigurationManager->expand(l_sSettingValue);
+					box.getSettingName(i, settingName);
+					box.getSettingValue(i, rawSettingvalue);
+					CString value = rawSettingvalue;
+					value         = m_ConfigManager->expand(value);
 					CIdentifier settingType;
 					box.getSettingType(i, settingType);
-					if (!checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))
+					if (!checkSettingValue(value, settingType, visitorCtx.getTypeManager()))
 					{
-						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
+						const auto settingTypeName = visitorCtx.getTypeManager().getTypeName(settingType);
 						cleanup();
-						OV_ERROR(
-							"<" << box.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue <<
-							"] given as setting is not a valid [" << settingTypeName << "] value.",
-							ErrorType::BadArgument, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
+						OV_ERROR("<" << box.getName() << "> The following value: [" << rawSettingvalue << "] expanded as [" << value
+								 << "] given as setting is not a valid [" << settingTypeName << "] value.",
+								 ErrorType::BadArgument, false, m_ObjectVisitorCtx->getErrorManager(), m_ObjectVisitorCtx->getLogManager());
 					}
 				}
 			}
@@ -146,9 +137,9 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			{
 				cleanup();
 				OV_ERROR(
-					"Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal <<
+					"Overrode " << m_SettingIdx << " setting(s) with configuration file [" << settingOverrideFilenameFinal <<
 					"]. That does not match the box setting count " << box.getSettingCount(),
-					ErrorType::OutOfBound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
+					ErrorType::OutOfBound, false, m_ObjectVisitorCtx->getErrorManager(), m_ObjectVisitorCtx->getLogManager());
 			}
 		}
 		else
@@ -161,9 +152,9 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			{
 				cleanup();
 				OV_ERROR(
-					"Could not override [" << box.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal <<
+					"Could not override [" << box.getName() << "] settings because configuration file [" << settingOverrideFilenameFinal <<
 					"] could not be opened",
-					ErrorType::ResourceNotFound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
+					ErrorType::ResourceNotFound, false, m_ObjectVisitorCtx->getErrorManager(), m_ObjectVisitorCtx->getLogManager());
 			}
 		}
 
@@ -173,8 +164,8 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 	return true;
 }
 
-bool CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& rObjectVisitorContext, IBox& /*box*/)
+bool CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& visitorCtx, IBox& /*box*/)
 {
-	m_pObjectVisitorContext = &rObjectVisitorContext;
+	m_ObjectVisitorCtx = &visitorCtx;
 	return true;
 }

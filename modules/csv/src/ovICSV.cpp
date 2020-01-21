@@ -5,7 +5,7 @@
 using namespace OpenViBE::CSV;
 namespace
 {
-	const std::map<ELogErrorCodes, std::string> s_ErrorMap =
+	const std::map<ELogErrorCodes, std::string> ERROR_MAP =
 	{
 		{ LogErrorCodes_ErrorWhileClosing, "Error while closing the file" },
 		{ LogErrorCodes_NoFileDefined, "No file defined yet" },
@@ -39,10 +39,10 @@ namespace
 		{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s)" },
 		{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
 	};
-}
+}	// namespace 
 
 std::string ICSVHandler::getLogError(ELogErrorCodes code)
 {
-	if (s_ErrorMap.count(code) != 0) { return s_ErrorMap.at(code); }
+	if (ERROR_MAP.count(code) != 0) { return ERROR_MAP.at(code); }
 	return "Unknow error";
 }

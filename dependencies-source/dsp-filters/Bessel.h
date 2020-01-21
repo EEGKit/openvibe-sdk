@@ -84,7 +84,7 @@ namespace Dsp
 		class AnalogLowPass : public LayoutBase
 		{
 		public:
-			AnalogLowPass();
+			AnalogLowPass() : m_numPoles(-1) { setNormal(0, 1); }
 
 			void design(int numPoles, WorkspaceBase* w);
 

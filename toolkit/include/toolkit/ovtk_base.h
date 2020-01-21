@@ -16,17 +16,17 @@ namespace EBML
 
 namespace OpenViBEToolkit
 {
-	template <class CHandledType>
+	template <class THandledType>
 	class TScopeHandle
 	{
 	public:
 
-		TScopeHandle(CHandledType& rHandler, CHandledType& rHandledValue) : m_rHandler(rHandler), m_oLastHandledValue(rHandler) { m_rHandler = rHandledValue; }
-		~TScopeHandle() { m_rHandler = m_oLastHandledValue; }
+		TScopeHandle(THandledType& rHandler, THandledType& rHandledValue) : m_handler(rHandler), m_lastHandledValue(rHandler) { m_handler = rHandledValue; }
+		~TScopeHandle() { m_handler = m_lastHandledValue; }
 
 	private:
 
-		CHandledType& m_rHandler;
-		CHandledType m_oLastHandledValue;
+		THandledType& m_handler;
+		THandledType m_lastHandledValue;
 	};
 } // namespace OpenViBEToolkit

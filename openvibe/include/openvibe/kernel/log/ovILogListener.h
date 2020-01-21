@@ -113,35 +113,35 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tests whether a log level is active or not
-			 * \param eLogLevel [in] : the log level which has to be tested
+			 * \param level [in] : the log level which has to be tested
 			 * \return \e true if this log level is active.
 			 * \return \e false if this log level is not active.
 			 */
-			virtual bool isActive(ELogLevel eLogLevel) = 0;
+			virtual bool isActive(ELogLevel level) = 0;
 			/**
 			 * \brief Changes the activation status of a specific log level
-			 * \param eLogLevel [in] : the log level which status has to be changed
-			 * \param bActive [in] : a boolean telling whether this level should be active or not
+			 * \param level [in] : the log level which status has to be changed
+			 * \param active [in] : a boolean telling whether this level should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(ELogLevel eLogLevel, bool bActive) = 0;
+			virtual bool activate(ELogLevel level, bool active) = 0;
 			/**
 			 * \brief Changes the activation status of a specific range of log level
-			 * \param eStartLogLevel [in] : the first log level which status has to be changed
-			 * \param eEndLogLevel [in] : the last log level which status has to be changed
-			 * \param bActive [in] : a boolean telling whether these levels should be active or not
+			 * \param startLogLevel [in] : the first log level which status has to be changed
+			 * \param endLogLevel [in] : the last log level which status has to be changed
+			 * \param active [in] : a boolean telling whether these levels should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) = 0;
+			virtual bool activate(ELogLevel startLogLevel, ELogLevel endLogLevel, bool active) = 0;
 			/**
 			 * \brief Changes the activation status of all log levels at once
-			 * \param bActive [in] : a boolean telling whether the levels should be active or not
+			 * \param active [in] : a boolean telling whether the levels should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(bool bActive) = 0;
+			virtual bool activate(bool active) = 0;
 
 			//@}
 			/** \name Logging function */
@@ -163,16 +163,6 @@ namespace OpenViBE
 			 */
 			virtual void log(const uint32_t value) = 0;
 			/**
-			 * \brief Logs a 16 bits unsigned integer
-			 * \param value [in] : the value that should be logged
-			 */
-			virtual void log(const uint16_t value) = 0;
-			/**
-			 * \brief Logs a 8 bits unsigned integer
-			 * \param value [in] : the value that should be logged
-			 */
-			virtual void log(const uint8_t value) = 0;
-			/**
 			 * \brief Logs a 64 bits signed integer
 			 * \param value [in] : the value that should be logged
 			 */
@@ -183,26 +173,10 @@ namespace OpenViBE
 			 */
 			virtual void log(const int value) = 0;
 			/**
-			 * \brief Logs a 16 bits signed integer
-			 * \param value [in] : the value that should be logged
-			 */
-			virtual void log(const int16_t value) = 0;
-			/**
-			 * \brief Logs a 8 bits signed integer
-			 * \param value [in] : the value that should be logged
-			 */
-			virtual void log(const int8_t value) = 0;
-
-			/**
 			 * \brief Logs a 64 bits floating point value
 			 * \param value [in] : the value that should be logged
 			 */
 			virtual void log(const double value) = 0;
-			/**
-			 * \brief Logs a 32 bits floating point value
-			 * \param value [in] : the value that should be logged
-			 */
-			virtual void log(const float value) = 0;
 			/**
 			 * \brief Logs a boolean value
 			 * \param value [in] : the value that should be logged
@@ -219,6 +193,11 @@ namespace OpenViBE
 			 */
 			virtual void log(const CString& value) = 0;
 			/**
+			 * \brief Logs a string
+			 * \param value [in] : the value that should be logged
+			 */
+			virtual void log(const std::string& value) = 0;
+			/**
 			 * \brief Logs an ASCII string value
 			 * \param value [in] : the value that should be logged
 			 */
@@ -230,9 +209,9 @@ namespace OpenViBE
 
 			/**
 			 * \brief Changes the log level
-			 * \param Level [in] : the new log level
+			 * \param level [in] : the new log level
 			 */
-			virtual void log(const ELogLevel Level) = 0;
+			virtual void log(const ELogLevel level) = 0;
 			/**
 			 * \brief Changes the log color
 			 * \param color [in] : the new log color

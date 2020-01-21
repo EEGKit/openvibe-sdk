@@ -6,8 +6,6 @@
 
 #include <map>
 
-#define OVP_ClassId_BoxAlgorithm_ClassifierProcessor       OpenViBE::CIdentifier(0x5FE23D17, 0x95B0452C)
-#define OVP_ClassId_BoxAlgorithm_ClassifierProcessorDesc   OpenViBE::CIdentifier(0x29B66B00, 0xB4683D49)
 
 namespace OpenViBEPlugins
 {
@@ -19,26 +17,26 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
 
 		protected:
-			virtual bool loadClassifier(const char* sFilename);
+			bool loadClassifier(const char* filename);
 
 		private:
 
-			OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_oFeatureVectorDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_oStimulationDecoder;
+			OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_sampleDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_stimDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_oLabelsEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_oHyperplaneValuesEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_oProbabilityValuesEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_labelsEncoder;
+			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_hyperplanesEncoder;
+			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_probabilitiesEncoder;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_classifier = nullptr;
 
-			std::map<double, uint64_t> m_vStimulation;
+			std::map<double, uint64_t> m_stimulations;
 		};
 
 		class CBoxAlgorithmClassifierProcessorDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

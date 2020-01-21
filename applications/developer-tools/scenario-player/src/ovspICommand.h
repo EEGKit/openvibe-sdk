@@ -21,16 +21,14 @@
 
 #pragma once
 
-#include <iostream>
-
 #include "ovsp_defines.h"
 
 namespace OpenViBE
 {
-	class KernelFacade;
+	class CKernelFacade;
 
 	/**
-	* \struct ICommand
+	* \struct SCommand
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Base abstract struct for commands
@@ -41,18 +39,18 @@ namespace OpenViBE
 	* and a list of properties.
 	*
 	*/
-	struct ICommand
+	struct SCommand
 	{
-		ICommand()          = default;
-		virtual ~ICommand() = default;
+		SCommand()          = default;
+		virtual ~SCommand() = default;
 
-		friend std::ostream& operator<<(std::ostream& os, const ICommand& cmd);
+		friend std::ostream& operator<<(std::ostream& os, const SCommand& cmd);
 
 		/**
 		* \brief Execute the command
 		* \param[in] kernelFacade the kernel facade that gives access to kernel features
 		*/
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const = 0;
+		virtual EPlayerReturnCode execute(CKernelFacade& kernelFacade) const = 0;
 
 	protected:
 
@@ -63,13 +61,13 @@ namespace OpenViBE
 
 		// disable copy and assignment because it is not meant to used
 		// as a value class
-		ICommand(const ICommand&)            = delete;
-		ICommand& operator=(const ICommand&) = delete;
+		SCommand(const SCommand&)            = delete;
+		SCommand& operator=(const SCommand&) = delete;
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const ICommand& cmd)
+	inline std::ostream& operator<<(std::ostream& os, const SCommand& cmd)
 	{
 		cmd.doPrint(os);
 		return os;
 	}
-}
+}	// namespace OpenViBE

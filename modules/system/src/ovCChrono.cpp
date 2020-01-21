@@ -2,21 +2,20 @@
 #include "system/ovCTime.h"
 
 using namespace System;
-
-CChrono::CChrono() {}
+using namespace std;
 
 CChrono::~CChrono()
 {
-	delete [] m_pStepInTime;
-	delete [] m_pStepOutTime;
+	delete [] m_stepInTime;
+	delete [] m_stepOutTime;
 }
 
-bool CChrono::reset(uint32_t ui32StepCount)
+bool CChrono::reset(const size_t nStep)
 {
-	if (!ui32StepCount) { return false; }
+	if (!nStep) { return false; }
 
-	uint64_t* stepInTime  = new uint64_t[ui32StepCount + 1];
-	uint64_t* stepOutTime = new uint64_t[ui32StepCount + 1];
+	uint64_t* stepInTime  = new uint64_t[nStep + 1];
+	uint64_t* stepOutTime = new uint64_t[nStep + 1];
 	if (!stepInTime || !stepOutTime)
 	{
 		delete [] stepInTime;
@@ -24,72 +23,72 @@ bool CChrono::reset(uint32_t ui32StepCount)
 		return false;
 	}
 
-	for (uint32_t i = 0; i <= ui32StepCount; i++)
+	for (size_t i = 0; i <= nStep; ++i)
 	{
 		stepInTime[i]  = 0;
 		stepOutTime[i] = 0;
 	}
 
-	delete [] m_pStepInTime;
-	delete [] m_pStepOutTime;
-	m_pStepInTime  = stepInTime;
-	m_pStepOutTime = stepOutTime;
+	delete [] m_stepInTime;
+	delete [] m_stepOutTime;
+	m_stepInTime  = stepInTime;
+	m_stepOutTime = stepOutTime;
 
-	m_ui32StepCount     = ui32StepCount;
-	m_ui32StepIndex     = 0;
-	m_bIsInStep         = false;
-	m_bHasNewEstimation = false;
+	m_nStep            = nStep;
+	m_stepIdx          = 0;
+	m_isInStep         = false;
+	m_hasNewEstimation = false;
 
-	m_ui64TotalStepInTime  = 0;
-	m_ui64TotalStepOutTime = 0;
+	m_totalStepInTime  = 0;
+	m_totalStepOutTime = 0;
 
 	return true;
 }
 
 bool CChrono::stepIn()
 {
-	if (m_bIsInStep || !m_ui32StepCount) { return false; }
+	if (m_isInStep || !m_nStep) { return false; }
 
-	m_bIsInStep = !m_bIsInStep;
+	m_isInStep = !m_isInStep;
 
-	m_pStepInTime[m_ui32StepIndex] = Time::zgetTime();
-	if (m_ui32StepIndex == m_ui32StepCount)
+	m_stepInTime[m_stepIdx] = Time::zgetTime();
+	if (m_stepIdx == m_nStep)
 	{
-		m_ui64TotalStepInTime  = 0;
-		m_ui64TotalStepOutTime = 0;
-		for (uint32_t i = 0; i < m_ui32StepCount; i++)
+		m_totalStepInTime  = 0;
+		m_totalStepOutTime = 0;
+		for (size_t i = 0; i < m_nStep; ++i)
 		{
-			m_ui64TotalStepInTime += m_pStepOutTime[i] - m_pStepInTime[i];
-			m_ui64TotalStepOutTime += m_pStepInTime[i + 1] - m_pStepOutTime[i];
+			m_totalStepInTime += m_stepOutTime[i] - m_stepInTime[i];
+			m_totalStepOutTime += m_stepInTime[i + 1] - m_stepOutTime[i];
 		}
-		m_pStepInTime[0]    = m_pStepInTime[m_ui32StepCount];
-		m_ui32StepIndex     = 0;
-		m_bHasNewEstimation = true;
+		m_stepInTime[0]    = m_stepInTime[m_nStep];
+		m_stepIdx          = 0;
+		m_hasNewEstimation = true;
 	}
-	else { m_bHasNewEstimation = false; }
+	else { m_hasNewEstimation = false; }
 
 	return true;
 }
 
 bool CChrono::stepOut()
 {
-	if (!m_bIsInStep || !m_ui32StepCount) { return false; }
+	if (!m_isInStep || !m_nStep) { return false; }
 
-	m_bIsInStep = !m_bIsInStep;
+	m_isInStep = !m_isInStep;
 
-	m_pStepOutTime[m_ui32StepIndex] = Time::zgetTime();
-	m_ui32StepIndex++;
+	m_stepOutTime[m_stepIdx] = Time::zgetTime();
+	m_stepIdx++;
 
 	return true;
 }
 
-uint64_t CChrono::getTotalStepInDuration() const { return m_ui64TotalStepInTime; }
+uint64_t CChrono::getTotalStepInDuration() const { return m_totalStepInTime; }
 
-uint64_t CChrono::getTotalStepOutDuration() const { return m_ui64TotalStepOutTime; }
+uint64_t CChrono::getTotalStepOutDuration() const { return m_totalStepOutTime; }
 
-uint64_t CChrono::getAverageStepInDuration() const { return m_ui32StepCount ? this->getTotalStepInDuration() / m_ui32StepCount : 0; }
+uint64_t CChrono::getAverageStepInDuration() const { return m_nStep ? this->getTotalStepInDuration() / m_nStep : 0; }
 
-uint64_t CChrono::getAverageStepOutDuration() const { return m_ui32StepCount ? this->getTotalStepOutDuration() / m_ui32StepCount : 0; }
+uint64_t CChrono::getAverageStepOutDuration() const { return m_nStep ? this->getTotalStepOutDuration() / m_nStep : 0; }
 
 double CChrono::getStepInPercentage() const
 {
@@ -103,4 +102,4 @@ double CChrono::getStepOutPercentage() const
 	return totalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / totalStepDuration : 0;
 }
 
-bool CChrono::hasNewEstimation() { return m_bHasNewEstimation; }
+bool CChrono::hasNewEstimation() { return m_hasNewEstimation; }

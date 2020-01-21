@@ -34,17 +34,17 @@ namespace OpenViBE
 		CNameValuePairList();
 		/**
 		 * \brief Copy constructor
-		 * \param rNameValuePairList [in] : The list to copy
+		 * \param pairs [in] : The list to copy
 		 *
-		 * Copies the contents of \c rNameValuePairList into the new list.
+		 * Copies the contents of \c pairs into the new list.
 		 */
-		CNameValuePairList(const CNameValuePairList& rNameValuePairList);
+		CNameValuePairList(const CNameValuePairList& pairs);
 		/**
 		 * \brief Destructor
 		 *
 		 * The destructor releases the std::map implementation !
 		 */
-		virtual ~CNameValuePairList();
+		~CNameValuePairList();
 
 		//@}
 		/** \name Operators */
@@ -52,88 +52,88 @@ namespace OpenViBE
 
 		/**
 		 * \brief Affectation operator (copy)
-		 * \param rNameValuePairList [in] : The list to copy
+		 * \param pairs [in] : The list to copy
 		 * \return This list.
 		 */
-		CNameValuePairList& operator=(const CNameValuePairList& rNameValuePairList);
+		CNameValuePairList& operator=(const CNameValuePairList& pairs);
 		//@}
 
 		/**
 		 * \brief Insert a name/value pair
-		 * \param [in] rName Name to add to the list
-		 * \param [in] rValue Value to associate with the name
+		 * \param [in] name Name to add to the list
+		 * \param [in] value Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, const CString& rValue);
+		bool setValue(const CString& name, const CString& value) const;
 
 		/**
 		 * \brief Insert a name/value pair
-		 * \param [in] rName Name to add to the list
-		 * \param [in] pValue Value to associate with the name
+		 * \param [in] name Name to add to the list
+		 * \param [in] value Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, const char* pValue);
+		bool setValue(const CString& name, const char* value) const;
 
 		/**
 		 * \brief Insert a name/value pair where value is a double
-		 * \param [in] rName Name to add to the list
-		 * \param [in] rValue Float64 value to associate with the name
+		 * \param [in] name Name to add to the list
+		 * \param [in] value Float64 value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, const double& rValue);
+		bool setValue(const CString& name, const double& value) const;
 
 		/**
 		 * \brief Insert a name/value pair where value is a boolean
-		 * \param [in] rName Name to add to the list
-		 * \param [in] bValue Boolean value to associate with the name
+		 * \param [in] name Name to add to the list
+		 * \param [in] value Boolean value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(const CString& rName, bool bValue);
+		bool setValue(const CString& name, bool value) const;
 
 		/**
 		 * \brief Retrieve a value from the list
-		 * \param [in] rName Name whose value is to be retrieved
-		 * \param [out] rValue Value to be retrieved from the list
+		 * \param [in] name Name whose value is to be retrieved
+		 * \param [out] value Value to be retrieved from the list
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(const CString& rName, CString& rValue) const;
+		bool getValue(const CString& name, CString& value) const;
 
 		/**
 		 * \brief Retrieve a double value from the list
-		 * \param [in] rName Name whose value is to be retrieved
-		 * \param [out] rValue Float64 value to be retrieved
+		 * \param [in] name Name whose value is to be retrieved
+		 * \param [out] value Float64 value to be retrieved
 		 * \return True if a double value could be retrieved, false otherwise
 		 */
-		bool getValue(const CString& rName, double& rValue) const;
+		bool getValue(const CString& name, double& value) const;
 
 		/**
 		 * \brief Retrieve a boolean value from the list
 		 * In the current implementation a value evaluates to true if its string
 		 * equals "1" and to false if it equals "0".
-		 * \param rName
-		 * \param rValue String to evaluate
+		 * \param name
+		 * \param value String to evaluate
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */
-		bool getValue(const CString& rName, bool& rValue) const;
+		bool getValue(const CString& name, bool& value) const;
 
 		/**
 		 * \brief Retrieve a value from the list
-		 * \param [in] rIndex Index whose value is to be retrieved
-		 * \param [out] rName Name of the value stored in rIndex
-		 * \param [out] rValue Value stored in rIndex
+		 * \param [in] index Index whose value is to be retrieved
+		 * \param [out] name Name of the value stored in rIndex
+		 * \param [out] value Value stored in rIndex
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(uint32_t rIndex, CString& rName, CString& rValue) const;
+		bool getValue(const size_t index, CString& name, CString& value) const;
 
 		
 		/**
 		 * \brief Retrieve the number of stored elements 
 		 * \return the number of stored elements
 		 */
-		uint32_t getSize() const;
+		size_t getSize() const;
 
 	protected:
 
-		CNameValuePairListImpl* m_pNameValuePairListImpl = nullptr; ///< The list implementation
+		CNameValuePairListImpl* m_impl = nullptr; ///< The list implementation
 	};
 } // namespace OpenViBE

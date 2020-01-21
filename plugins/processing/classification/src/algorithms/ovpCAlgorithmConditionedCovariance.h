@@ -8,15 +8,6 @@
 
 #include <Eigen/Dense>
 
-#define OVP_ClassId_Algorithm_ConditionedCovariance                                           OpenViBE::CIdentifier(0x0F3B77A6, 0x0301518A)
-#define OVP_ClassId_Algorithm_ConditionedCovarianceDesc                                       OpenViBE::CIdentifier(0x18D15C41, 0x70545A66)
-
-#define OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage                        OpenViBE::CIdentifier(0x54B90EA7, 0x600A4ACC)
-#define OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet                 OpenViBE::CIdentifier(0x2CF30E42, 0x051F3996)
-
-#define OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean                            OpenViBE::CIdentifier(0x0C671FB7, 0x550B01B3)
-#define OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix                OpenViBE::CIdentifier(0x19F07FB4, 0x084E273B)
-
 namespace OpenViBEPlugins
 {
 	namespace Classification
@@ -28,14 +19,14 @@ namespace OpenViBEPlugins
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
-			bool uninitialize() override;
+			bool uninitialize() override { return true; }
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_ConditionedCovariance)
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
-			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
+			static void dumpMatrix(OpenViBE::Kernel::ILogManager& mgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 		};
 
 		class CAlgorithmConditionedCovarianceDesc final : virtual public OpenViBE::Plugins::IAlgorithmDesc
@@ -61,17 +52,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ConditionedCovariance; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmConditionedCovariance; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
 			{
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage, "Shrinkage (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(
+				prototype.addInputParameter(
 					OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet, "Feature vectors", OpenViBE::Kernel::ParameterType_Matrix);
 
 				// The algorithm returns these outputs
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter(
+				prototype.addOutputParameter(
 					OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
 				return true;

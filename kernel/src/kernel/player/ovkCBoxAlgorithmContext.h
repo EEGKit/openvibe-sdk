@@ -9,20 +9,20 @@ namespace OpenViBE
 	{
 		class CSimulatedBox;
 
-		class CBoxAlgorithmContext : public TKernelObject<IBoxAlgorithmContext>
+		class CBoxAlgorithmCtx final : public TKernelObject<IBoxAlgorithmContext>
 		{
 		public:
 
-			CBoxAlgorithmContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox, const IBox* pBox);
-			~CBoxAlgorithmContext() override;
-			const IBox* getStaticBoxContext() override;
-			IBoxIO* getDynamicBoxContext() override;
-			IPlayerContext* getPlayerContext() override;
+			CBoxAlgorithmCtx(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox, const IBox* pBox);
+			~CBoxAlgorithmCtx() override {}
+			const IBox* getStaticBoxContext() override { return m_pStaticBoxContext; }
+			IBoxIO* getDynamicBoxContext() override { return m_pDynamicBoxContext; }
+			IPlayerContext* getPlayerContext() override { return &m_oPlayerContext; }
 			bool markAlgorithmAsReadyToProcess() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
 
-			virtual bool isAlgorithmReadyToProcess();
+			bool isAlgorithmReadyToProcess() const { return m_bReadyToProcess; }
 
 		protected:
 

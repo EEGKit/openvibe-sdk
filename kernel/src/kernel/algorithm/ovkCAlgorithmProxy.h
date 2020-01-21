@@ -8,73 +8,71 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithmProxy : public TKernelObject<IAlgorithmProxy>
+		class CAlgorithmProxy final : public TKernelObject<IAlgorithmProxy>
 		{
 		public:
 
-			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& rAlgorithmDesc);
+			CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& algorithmDesc);
 			~CAlgorithmProxy() override;
 
-			virtual Plugins::IAlgorithm& getAlgorithm();
-			virtual const Plugins::IAlgorithm& getAlgorithm() const;
-			virtual const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
+			Plugins::IAlgorithm& getAlgorithm();
+			const Plugins::IAlgorithm& getAlgorithm() const;
+			const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
 
-			virtual bool addInputParameter(const CIdentifier& InputParameterID, const CString& sInputName, EParameterType eParameterType,
-										   const CIdentifier& subTypeID);
-			CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const override;
-			IParameter* getInputParameter(const CIdentifier& InputParameterID) override;
-			virtual EParameterType getInputParameterType(const CIdentifier& InputParameterID) const;
-			CString getInputParameterName(const CIdentifier& InputParameterID) const override;
-			virtual bool removeInputParameter(const CIdentifier& InputParameterID);
+			bool addInputParameter(const CIdentifier& parameterID, const CString& name, EParameterType parameterType, const CIdentifier& subTypeID);
+			CIdentifier getNextInputParameterIdentifier(const CIdentifier& parameterID) const override;
+			IParameter* getInputParameter(const CIdentifier& parameterID) override;
+			EParameterType getInputParameterType(const CIdentifier& parameterID) const;
+			CString getInputParameterName(const CIdentifier& parameterID) const override;
+			bool removeInputParameter(const CIdentifier& parameterID);
 
-			virtual bool addOutputParameter(const CIdentifier& outputParameterID, const CString& sOutputName, EParameterType eParameterType,
-											const CIdentifier& subTypeID);
-			CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const override;
-			IParameter* getOutputParameter(const CIdentifier& outputParameterID) override;
-			virtual EParameterType getOutputParameterType(const CIdentifier& outputParameterID) const;
-			CString getOutputParameterName(const CIdentifier& outputParameterID) const override;
-			virtual bool removeOutputParameter(const CIdentifier& outputParameterID);
+			bool addOutputParameter(const CIdentifier& parameterID, const CString& name, EParameterType parameterType, const CIdentifier& subTypeID);
+			CIdentifier getNextOutputParameterIdentifier(const CIdentifier& parameterID) const override;
+			IParameter* getOutputParameter(const CIdentifier& parameterID) override;
+			EParameterType getOutputParameterType(const CIdentifier& parameterID) const;
+			CString getOutputParameterName(const CIdentifier& parameterID) const override;
+			bool removeOutputParameter(const CIdentifier& parameterID);
 
-			virtual bool addInputTrigger(const CIdentifier& inputTriggerID, const CString& rInputTriggerName);
-			CIdentifier getNextInputTriggerIdentifier(const CIdentifier& rPreviousInputTriggerIdentifier) const override;
-			CString getInputTriggerName(const CIdentifier& inputTriggerID) const override;
-			virtual bool isInputTriggerActive(const CIdentifier& inputTriggerID) const;
-			bool activateInputTrigger(const CIdentifier& inputTriggerID, bool bTriggerState) override;
-			virtual bool removeInputTrigger(const CIdentifier& inputTriggerID);
+			bool addInputTrigger(const CIdentifier& triggerID, const CString& name);
+			CIdentifier getNextInputTriggerIdentifier(const CIdentifier& triggerID) const override;
+			CString getInputTriggerName(const CIdentifier& triggerID) const override;
+			bool isInputTriggerActive(const CIdentifier& triggerID) const;
+			bool activateInputTrigger(const CIdentifier& triggerID, bool triggerState) override;
+			bool removeInputTrigger(const CIdentifier& triggerID);
 
-			virtual bool addOutputTrigger(const CIdentifier& outputTriggerID, const CString& rOutputTriggerName);
-			CIdentifier getNextOutputTriggerIdentifier(const CIdentifier& rPreviousOutputTriggerIdentifier) const override;
-			CString getOutputTriggerName(const CIdentifier& outputTriggerID) const override;
-			bool isOutputTriggerActive(const CIdentifier& outputTriggerID) const override;
-			virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, bool bTriggerState);
-			virtual bool removeOutputTrigger(const CIdentifier& outputTriggerID);
+			bool addOutputTrigger(const CIdentifier& triggerID, const CString& name);
+			CIdentifier getNextOutputTriggerIdentifier(const CIdentifier& triggerID) const override;
+			CString getOutputTriggerName(const CIdentifier& triggerID) const override;
+			bool isOutputTriggerActive(const CIdentifier& triggerID) const override;
+			bool activateOutputTrigger(const CIdentifier& triggerID, const bool triggerState);
+			bool removeOutputTrigger(const CIdentifier& triggerID);
 			bool initialize() override;
 			bool uninitialize() override;
 			bool process() override;
-			bool process(const CIdentifier& rTriggerIdentifier) override;
-			bool isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier) override;
+			bool process(const CIdentifier& triggerID) override;
+			bool isAlgorithmDerivedFrom(const CIdentifier& classID) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy)
 
 		protected:
 
-			IConfigurable* m_pInputConfigurable  = nullptr;
-			IConfigurable* m_pOutputConfigurable = nullptr;
-			std::map<CIdentifier, CString> m_vInputParameterName;
-			std::map<CIdentifier, CString> m_vOutputParameterName;
-			std::map<CIdentifier, std::pair<CString, bool>> m_vInputTrigger;
-			std::map<CIdentifier, std::pair<CString, bool>> m_vOutputTrigger;
+			IConfigurable* m_iConfigurable  = nullptr;
+			IConfigurable* m_oConfigurable = nullptr;
+			std::map<CIdentifier, CString> m_iParameterNames;
+			std::map<CIdentifier, CString> m_oParameterNames;
+			std::map<CIdentifier, std::pair<CString, bool>> m_iTriggers;
+			std::map<CIdentifier, std::pair<CString, bool>> m_oTriggers;
 
-			void setAllInputTriggers(bool bTriggerStatus);
-			void setAllOutputTriggers(bool bTriggerStatus);
+			void setAllInputTriggers(bool status);
+			void setAllOutputTriggers(bool status);
 
 		private:
 
 			void handleException(const char* errorHint, const std::exception& exception);
 
-			const Plugins::IAlgorithmDesc& m_rAlgorithmDesc;
-			Plugins::IAlgorithm& m_rAlgorithm;
-			bool m_bIsInitialized = false;
+			const Plugins::IAlgorithmDesc& m_algorithmDesc;
+			Plugins::IAlgorithm& m_algorithm;
+			bool m_isInitialized = false;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

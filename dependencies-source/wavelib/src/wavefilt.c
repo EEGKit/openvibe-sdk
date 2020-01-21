@@ -3102,17 +3102,14 @@ static const double hm6_68[18] = {
 
 int filtlength(const char* name)
 {
-	int len       = strlen(name);
-	int i         = 0;
-	char* new_str = NULL;
-	int N         = 0;
+	const size_t len = strlen(name);
 	if (!strcmp(name, "haar") || !strcmp(name, "db1")) { return 2; }
 	if (len > 2 && strstr(name, "db") != NULL)
 	{
-		new_str = (char*)malloc(sizeof(char) * (len - 2 + 1));
-		for (i = 2; i < len + 1; i++) { new_str[i - 2] = name[i]; }
+		char* new_str = (char*)malloc(sizeof(char) * (len - 2 + 1));
+		for (size_t i = 2; i < len + 1; ++i) { new_str[i - 2] = name[i]; }
 
-		N = atoi(new_str);
+		const int N = atoi(new_str);
 		free(new_str);
 		if (N > 38)
 		{
@@ -3154,10 +3151,10 @@ int filtlength(const char* name)
 	if (!strcmp(name, "rbior6.8")) { return 18; }
 	if (len > 4 && strstr(name, "coif") != NULL)
 	{
-		new_str = (char*)malloc(sizeof(char) * (len - 4 + 1));
-		for (i = 4; i < len + 1; i++) { new_str[i - 4] = name[i]; }
+		char* new_str = (char*)malloc(sizeof(char) * (len - 4 + 1));
+		for (size_t i = 4; i < len + 1; ++i) { new_str[i - 4] = name[i]; }
 
-		N = atoi(new_str);
+		const int N = atoi(new_str);
 		free(new_str);
 		if (N > 17)
 		{
@@ -3169,10 +3166,10 @@ int filtlength(const char* name)
 	}
 	if (len > 3 && strstr(name, "sym") != NULL)
 	{
-		new_str = (char*)malloc(sizeof(char) * (len - 3 + 1));
-		for (i = 3; i < len + 1; i++) { new_str[i - 3] = name[i]; }
+		char* new_str = (char*)malloc(sizeof(char) * (len - 3 + 1));
+		for (size_t i = 3; i < len + 1; ++i) { new_str[i - 3] = name[i]; }
 
-		N = atoi(new_str);
+		const int N = atoi(new_str);
 		free(new_str);
 		if (N > 20 || N < 2)
 		{
@@ -3186,13 +3183,9 @@ int filtlength(const char* name)
 	return -1;
 }
 
-void copy_reverse(const double* in, int N, double* out)
-{
-	int count = 0;
-	for (count = 0; count < N; count++) { out[count] = in[N - count - 1]; }
-}
+void copy_reverse(const double* in, const int N, double* out) { for (int count = 0; count < N; ++count) { out[count] = in[N - count - 1]; } }
 
-void qmf_wrev(const double* in, int N, double* out)
+void qmf_wrev(const double* in, const int N, double* out)
 {
 	double* sigOutTemp = (double*)malloc(N * sizeof(double));
 
@@ -3201,26 +3194,20 @@ void qmf_wrev(const double* in, int N, double* out)
 	free(sigOutTemp);
 }
 
-void qmf_even(const double* in, int N, double* out)
+void qmf_even(const double* in, const int N, double* out)
 {
-	int count = 0;
-	for (count = 0; count < N; count++)
+	for (int count = 0; count < N; ++count)
 	{
 		out[count] = in[N - count - 1];
 		if (count % 2 != 0) { out[count] = -1 * out[count]; }
 	}
 }
 
-void copy(const double* in, int N, double* out)
-{
-	int count = 0;
-	for (count = 0; count < N; count++) { out[count] = in[count]; }
-}
+void copy(const double* in, const int N, double* out) { for (int count = 0; count < N; ++count) { out[count] = in[count]; } }
 
 int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp2)
 {
-	int i = 0;
-	int N = filtlength(name);
+	const int N = filtlength(name);
 	if (!strcmp(name, "haar") || !strcmp(name, "db1"))
 	{
 		copy_reverse(db1, N, lp1);
@@ -3807,7 +3794,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif1, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3822,7 +3809,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif2, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3837,7 +3824,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif3, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3852,7 +3839,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif4, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3867,7 +3854,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif5, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3882,7 +3869,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif6, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3897,7 +3884,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif7, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3912,7 +3899,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif8, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3927,7 +3914,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif9, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3942,7 +3929,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif10, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3957,7 +3944,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif11, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3972,7 +3959,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif12, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -3987,7 +3974,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif13, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -4002,7 +3989,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif14, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -4017,7 +4004,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif15, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -4032,7 +4019,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif16, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -4047,7 +4034,7 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		double* coeffTemp = (double*)malloc(N * sizeof(double));
 
 		copy(coif17, N, coeffTemp);
-		for (i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
+		for (int i = 0; i < N; ++i) { coeffTemp[i] *= M_SQRT2; }
 
 		copy_reverse(coeffTemp, N, lp1);
 		qmf_wrev(coeffTemp, N, hp1);
@@ -4211,6 +4198,4 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 	}
 	printf("\n Filter Not in Database \n");
 	return -1;
-
-	return 0;
 }

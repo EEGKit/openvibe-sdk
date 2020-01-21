@@ -6,17 +6,8 @@
 
 wave_object wave_init(char* wname)
 {
-	wave_object obj = NULL;
-	int retval      = 0;
-
-	if (wname != NULL)
-	{
-		retval = filtlength(wname);
-		//obj->filtlength = retval;
-		//strcopy(obj->wname, wname);
-	}
-
-	obj = (wave_object)malloc(sizeof(struct wave_set) + sizeof(double) * 4 * retval);
+	const int retval = (wname != NULL) ? filtlength(wname) : 0;
+	wave_object obj  = (wave_object)malloc(sizeof(struct wave_set) + sizeof(double) * 4 * retval);
 
 	obj->filtlength = retval;
 	obj->lpd_len    = obj->hpd_len = obj->lpr_len = obj->hpr_len = obj->filtlength;
@@ -31,14 +22,13 @@ wave_object wave_init(char* wname)
 
 wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 {
-	wt_object obj  = NULL;
-	const int size = wave->filtlength;
 	if (J > 100)
 	{
 		printf("\n The Decomposition Iterations Cannot Exceed 100. Exiting \n");
 		exit(-1);
 	}
 
+	const int size    = wave->filtlength;
 	const int MaxIter = wmaxiter(siglength, size);
 
 	if (J > MaxIter)
@@ -47,6 +37,7 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 		exit(-1);
 	}
 
+	wt_object obj = NULL;
 	if (method == NULL)
 	{
 		obj            = (wt_object)malloc(sizeof(struct wt_set) + sizeof(double) * (siglength + 2 * J * (size + 1)));
@@ -117,18 +108,15 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 
 wtree_object wtree_init(wave_object wave, int siglength, int J)
 {
-	wtree_object obj = NULL;
-
-	const int size = wave->filtlength;
-
 	if (J > 100)
 	{
 		printf("\n The Decomposition Iterations Cannot Exceed 100. Exiting \n");
 		exit(-1);
 	}
 
-
+	const int size    = wave->filtlength;
 	const int MaxIter = wmaxiter(siglength, size);
+
 	if (J > MaxIter)
 	{
 		printf("\n Error - The Signal Can only be iterated %d times using this wavelet. Exiting\n", MaxIter);
@@ -145,8 +133,8 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 		elength += temp2;
 	}
 
-	obj            = (wtree_object)malloc(sizeof(struct wtree_set) + sizeof(double) * (siglength * (J + 1) + elength + nodes + J + 1));
-	obj->outlength = siglength * (J + 1) + elength;
+	wtree_object obj = (wtree_object)malloc(sizeof(struct wtree_set) + sizeof(double) * (siglength * (J + 1) + elength + nodes + J + 1));
+	obj->outlength   = siglength * (J + 1) + elength;
 	strcpy(obj->ext, "sym");
 
 	obj->wave      = wave;
@@ -176,17 +164,13 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 
 wpt_object wpt_init(wave_object wave, int siglength, int J)
 {
-	wpt_object obj = NULL;
-
-	const int size = wave->filtlength;
-
 	if (J > 100)
 	{
 		printf("\n The Decomposition Iterations Cannot Exceed 100. Exiting \n");
 		exit(-1);
 	}
 
-
+	const int size    = wave->filtlength;
 	const int MaxIter = wmaxiter(siglength, size);
 	if (J > MaxIter)
 	{
@@ -216,7 +200,7 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 	}
 	//printf("elength %d", elength);
 
-	obj            = (wpt_object)malloc(sizeof(struct wpt_set) + sizeof(double) * (elength + 4 * nodes + 2 * J + 6));
+	wpt_object obj = (wpt_object)malloc(sizeof(struct wpt_set) + sizeof(double) * (elength + 4 * nodes + 2 * J + 6));
 	obj->outlength = siglength + 2 * (J + 1) * (size + 1);
 	strcpy(obj->ext, "sym");
 	strcpy(obj->entropy, "shannon");
@@ -250,7 +234,6 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 
 cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 {
-	cwt_object obj = NULL;
 	int mother     = 0;
 	double s0      = 0, dj = 0;
 	char* pdefault = "pow";
@@ -259,9 +242,9 @@ cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 	int odd     = 1;
 	if (2 * (m / 2) == m) { odd = 0; }
 
-	const int N   = siglength;
-	const int nj2 = 2 * N * J;
-	obj           = (cwt_object)malloc(sizeof(struct cwt_set) + sizeof(double) * (nj2 + 2 * J + N));
+	const int N    = siglength;
+	const int nj2  = 2 * N * J;
+	cwt_object obj = (cwt_object)malloc(sizeof(struct cwt_set) + sizeof(double) * (nj2 + 2 * J + N));
 
 	if (!strcmp(wave, "morlet") || !strcmp(wave, "morl"))
 	{
@@ -835,7 +818,7 @@ void wtree(wtree_object wt, double* inp)
 
 	int N        = temp_len;
 	const int lp = wt->wave->lpd_len;
-	int p2       = 1;
+	int p2;
 
 	if (!strcmp(wt->ext, "per"))
 	{
@@ -1174,36 +1157,26 @@ void dwpt(wpt_object wt, double* inp)
 
 int getWTREENodelength(wtree_object wt, int X)
 {
-	int N = -1;
-	/*
-	X - Level. All Nodes at any level have the same length
-	*/
+	// X - Level. All Nodes at any level have the same length
 	if (X <= 0 || X > wt->J)
 	{
 		printf("X co-ordinate must be >= 1 and <= %d", wt->J);
 		exit(-1);
 	}
 
-	N = wt->length[wt->J - X + 1];
-
-	return N;
+	return wt->length[wt->J - X + 1];
 }
 
 int getDWPTNodelength(wpt_object wt, int X)
 {
-	int N = -1;
-	/*
-	X - Level. All Nodes at any level have the same length
-	*/
+	//X - Level. All Nodes at any level have the same length
 	if (X <= 0 || X > wt->J)
 	{
 		printf("X co-ordinate must be >= 1 and <= %d", wt->J);
 		exit(-1);
 	}
 
-	N = wt->length[wt->J - X + 1];
-
-	return N;
+	return wt->length[wt->J - X + 1];
 }
 
 void getWTREECoeffs(wtree_object wt, int X, int Y, double* coeffs, int N)
@@ -2231,7 +2204,7 @@ void iswt(wt_object wt, double* swtop)
 
 		int value = (int)pow(2.0, (double)(J - 1 - iter));
 
-		for (int count = 0; count < value; count++)
+		for (int count = 0; count < value; ++count)
 		{
 			int len = 0;
 			for (index = count; index < N; index += value)
@@ -2348,7 +2321,7 @@ static void modwt_per(wt_object wt, int M, double* inp, int N, double* cA, int l
 		int t = i;
 		cA[i] = filt[0] * inp[t];
 		cD[i] = filt[len_avg] * inp[t];
-		for (int l = 1; l < len_avg; l++)
+		for (int l = 1; l < len_avg; ++l)
 		{
 			t -= M;
 			while (t >= len_cA) { t -= len_cA; }
@@ -2429,7 +2402,7 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 	{
 		int t = i;
 		X[i]  = (filt[0] * cA[t]) + (filt[len_avg] * cD[t]);
-		for (int l = 1; l < len_avg; l++)
+		for (int l = 1; l < len_avg; ++l)
 		{
 			t += M;
 			while (t >= len_cA) { t -= len_cA; }

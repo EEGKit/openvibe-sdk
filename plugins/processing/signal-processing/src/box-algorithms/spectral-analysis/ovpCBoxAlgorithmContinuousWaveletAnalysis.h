@@ -3,9 +3,7 @@
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 #include <wavelib/header/wavelib.h>
-
-#define OVP_ClassId_ContinuousWaveletAnalysis         OpenViBE::CIdentifier(0x0A43133D, 0x6EAF25A7)
-#define OVP_ClassId_ContinuousWaveletAnalysisDesc     OpenViBE::CIdentifier(0x5B397A82, 0x76AE6F81)
+#include <array>
 
 namespace OpenViBEPlugins
 {
@@ -17,27 +15,27 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_ContinuousWaveletAnalysis)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_ContinuousWaveletAnalysis)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_oDecoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis> m_vEncoder[4];
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_decoder;
+			std::array<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis>, 4> m_encoders;
 
-			const char* m_pWaveletType;
-			double m_dWaveletParameter = 0;
-			int m_iScaleCount_J        = 0;
-			double m_dHighestFrequency = 0;
-			double m_dSmallestScale_s0 = 0;
-			double m_dScaleSpacing_dj  = 0;
+			const char* m_waveletType = nullptr;
+			double m_waveletParam     = 0;
+			size_t m_nScaleJ          = 0;
+			double m_highestFreq      = 0;
+			double m_smallestScaleS0  = 0;
+			double m_scaleSpacingDj   = 0;
 
-			const char* m_pScaleType;
-			int m_iScalePowerBase_a0       = 0;
-			double m_dSamplingPeriod_dt    = 0;
-			cwt_object m_oWaveletTransform = nullptr;
+			const char* m_scaleType       = nullptr;
+			int m_scalePowerBaseA0        = 0;
+			double m_samplingPeriodDt     = 0;
+			cwt_object m_waveletTransform = nullptr;
 		};
 
 		class CBoxAlgorithmContinuousWaveletAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -63,20 +61,20 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_ContinuousWaveletAnalysis; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmContinuousWaveletAnalysis(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
 
-				rPrototype.addOutput("Amplitude", OV_TypeId_TimeFrequency);
-				rPrototype.addOutput("Phase", OV_TypeId_TimeFrequency);
-				rPrototype.addOutput("Real Part", OV_TypeId_TimeFrequency);
-				rPrototype.addOutput("Imaginary Part", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Amplitude", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Phase", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Real Part", OV_TypeId_TimeFrequency);
+				prototype.addOutput("Imaginary Part", OV_TypeId_TimeFrequency);
 
-				rPrototype.addSetting("Wavelet type", OVP_TypeId_ContinuousWaveletType, OVP_TypeId_ContinuousWaveletType_Morlet.toString());
-				rPrototype.addSetting("Wavelet parameter", OV_TypeId_Float, "4");
-				rPrototype.addSetting("Number of frequencies", OV_TypeId_Integer, "60");
-				rPrototype.addSetting("Highest frequency", OV_TypeId_Float, "35");
-				rPrototype.addSetting("Frequency spacing", OV_TypeId_Float, "12.5");
+				prototype.addSetting("Wavelet type", OVP_TypeId_ContinuousWaveletType, "Morlet wavelet");
+				prototype.addSetting("Wavelet parameter", OV_TypeId_Float, "4");
+				prototype.addSetting("Number of frequencies", OV_TypeId_Integer, "60");
+				prototype.addSetting("Highest frequency", OV_TypeId_Float, "35");
+				prototype.addSetting("Frequency spacing", OV_TypeId_Float, "12.5");
 
 				return true;
 			}

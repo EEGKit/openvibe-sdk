@@ -22,13 +22,12 @@
 #pragma once
 
 #include <string>
-#include <sstream>
 
 namespace OpenViBETest
 {
-	void printError(const char* expression, const char* message, const char* file, int line);
-	void printError(const char* expression, const std::string& message, const char* file, int line);
-	void printError(const char* expression, const std::ostream& message, const char* file, int line);
+	void printError(const char* expression, const char* message, const char* file, const int line);
+	void printError(const char* expression, const std::string& message, const char* file, const int line);
+	void printError(const char* expression, const std::ostream& message, const char* file, const int line);
 	void printExpressionPair(const char* str1, const char* str2);
 	std::string buildExpressionFromPair(const char* str1, const char* str2);
 }

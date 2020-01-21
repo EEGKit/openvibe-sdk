@@ -32,9 +32,9 @@ namespace Socket
 	public:
 
 #if defined TARGET_OS_Windows
-		CConnectionSerial() : m_pFile(nullptr) { }
+		CConnectionSerial() : m_file(nullptr) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		CConnectionSerial() : m_iFile(0) { }
+		CConnectionSerial() : m_file(0) { }
 #endif
 
 
@@ -44,24 +44,24 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			if (m_pFile != nullptr)
+			if (m_file != nullptr)
 			{
-				if (!CloseHandle(m_pFile))
+				if (!CloseHandle(m_file))
 				{
-					m_sLastError = "Failed to close the serial port:" + this->getLastErrorFormated();
-					m_pFile      = nullptr;
+					m_LastError = "Failed to close the serial port:" + this->getLastErrorFormated();
+					m_file     = nullptr;
 					return false;
 				}
 
-				m_pFile = nullptr;
+				m_file = nullptr;
 			}
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			if(m_iFile != -1)
+			if(m_file != -1)
 			{
-				::close(m_iFile);
-				m_iFile=-1;
+				::close(m_file);
+				m_file=-1;
 			}
 
 #endif
@@ -72,90 +72,90 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-		bool isReadyToSend(const uint32_t /*timeOut*/) const override
+		bool isReadyToSend(const size_t /*timeOut*/) const override
 		{
 			if (!this->isConnected()) { return false; }
 			return true;
 		}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-		bool isReadyToSend(const uint32_t timeOut) const override
+		bool isReadyToSend(const size_t timeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
-			fd_set  l_oOutputFileDescriptorSet;
-			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=timeOut/1000;
-			l_oTimeout.tv_usec=(timeOut%1000)*1000;
+			fd_set  fileDescSet;
+			struct timeval time;
+			time.tv_sec  = timeOut/1000;
+			time.tv_usec = (timeOut%1000)*1000;
 
-			FD_ZERO(&l_oOutputFileDescriptorSet);
-			FD_SET(m_iFile, &l_oOutputFileDescriptorSet);
+			FD_ZERO(&fileDescSet);
+			FD_SET(m_file, &fileDescSet);
 
-			if(!::select(m_iFile+1, nullptr, &l_oOutputFileDescriptorSet, nullptr, &l_oTimeout)) { return false; }
+			if(!::select(m_file + 1, nullptr, &fileDescSet, nullptr, &time)) { return false; }
 
-			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
+			if(FD_ISSET(m_file, &fileDescSet)) { return true; }
 			return false;
 	}
 
 #endif
 
-		bool isReadyToReceive(const uint32_t timeOut) const override
+#if defined TARGET_OS_Windows
+		bool isReadyToReceive(const size_t /*timeOut*/) const override
 		{
 			if (!this->isConnected()) { return false; }
+			struct _COMSTAT status;
+			DWORD state;
 
-#if defined TARGET_OS_Windows
-
-			struct _COMSTAT l_oStatus;
-			DWORD l_dwState;
-
-			if (ClearCommError(m_pFile, &l_dwState, &l_oStatus) != 0) { return l_oStatus.cbInQue != 0; }
-			return false;
-
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-			fd_set  l_oInputFileDescriptorSet;
-			struct timeval l_oTimeout;
-			l_oTimeout.tv_sec=timeOut/1000;
-			l_oTimeout.tv_usec=(timeOut%1000)*1000;
-
-			FD_ZERO(&l_oInputFileDescriptorSet);
-			FD_SET(m_iFile, &l_oInputFileDescriptorSet);
-
-			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, nullptr, nullptr, &l_oTimeout)) { return false; }
-
-			if(FD_ISSET(m_iFile, &l_oInputFileDescriptorSet)) { return true; }
-#endif
+			if (ClearCommError(m_file, &state, &status) != 0) { return status.cbInQue != 0; }
 			return false;
 		}
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+		bool isReadyToReceive(const size_t timeOut) const override
+		{
+			if (!this->isConnected()) { return false; }
+			fd_set  fileDescSet;
+			struct timeval time;
+			time.tv_sec=timeOut/1000;
+			time.tv_usec=(timeOut%1000)*1000;
 
-		uint32_t getPendingByteCount() override
+			FD_ZERO(&fileDescSet);
+			FD_SET(m_file, &fileDescSet);
+
+			if(!::select(m_file+1, &fileDescSet, nullptr, nullptr, &time)) { return false; }
+
+			if(FD_ISSET(m_file, &fileDescSet)) { return true; }
+			return false;
+		}
+#endif
+
+		size_t getPendingByteCount() override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return 0;
 			}
 
 #if defined TARGET_OS_Windows
 
-			struct _COMSTAT l_oStatus;
-			DWORD l_dwState;
+			struct _COMSTAT status;
+			DWORD state;
 
-			if (ClearCommError(m_pFile, &l_dwState, &l_oStatus) == 0)
+			if (ClearCommError(m_file, &state, &status) == 0)
 			{
-				m_sLastError = "Failed to clear the serial port communication error: " + this->getLastErrorFormated();
+				m_LastError = "Failed to clear the serial port communication error: " + this->getLastErrorFormated();
 				return 0;
 			}
-			return l_oStatus.cbInQue;
+			return status.cbInQue;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iByteCount=0;
-			if(-1 == ::ioctl(m_iFile, FIONREAD, &l_iByteCount))
+			int byteCount=0;
+			if(-1 == ::ioctl(m_file, FIONREAD, &byteCount))
 			{
-				m_sLastError = "Failed to querry pending bytes in ioctl";
+				m_LastError = "Failed to querry pending bytes in ioctl";
 				return 0;
 			}
-			return l_iByteCount;
+			return byteCount;
 
 #endif
 		}
@@ -164,196 +164,195 @@ namespace Socket
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return false;
 			}
 
 #if defined TARGET_OS_Windows
-
-			if (!FlushFileBuffers(m_pFile))
+			if (!FlushFileBuffers(m_file))
 			{
-				m_sLastError = "Failed to flush serial port buffer: " + this->getLastErrorFormated();
-				return false;
-			}
-			return true;
-
-#elif defined TARGET_OS_Android
-			return false;
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			if(-1 == ::tcdrain(m_iFile))
-			{
-				m_sLastError = "Could not flush connection in tcdrain";
+				m_LastError = "Failed to flush serial port buffer: " + this->getLastErrorFormated();
 				return false;
 			}
 			return true;
-#endif
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+			if(-1 == ::tcdrain(m_file))
+			{
+				m_LastError = "Could not flush connection in tcdrain";
+				return false;
+			}
+			return true;
+#else
 			return false;
+#endif
 		}
 
-		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) override
+		size_t sendBuffer(const void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return 0;
 			}
 
 #if defined TARGET_OS_Windows
-			DWORD l_dwWritten = 0;
+			DWORD written = 0;
 
-			if (!WriteFile(m_pFile, buffer, ui32BufferSize, &l_dwWritten, nullptr))
+			if (!WriteFile(m_file, buffer, DWORD(size), &written, nullptr))
 			{
-				m_sLastError = "Failed to write on serial port: " + this->getLastErrorFormated();
+				m_LastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
-			if (l_dwWritten == 0)
+			if (written == 0)
 			{
-				m_sLastError = "Serial port timeout when trying to write.";
+				m_LastError = "Serial port timeout when trying to write.";
 				this->close();
 				return 0;
 			}
 
-			return l_dwWritten;
+			return written;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::write(m_iFile, buffer, ui32BufferSize);
-			if(l_iResult < 0)
+			int res = ::write(m_file, buffer, size);
+			if(res < 0)
 			{
-				m_sLastError = "Could not write on connection";
+				m_LastError = "Could not write on connection";
 				this->close();
 				return 0;
 			}
 
-			return l_iResult;
-#endif
+			return res;
+#else
 			return 0;
+#endif
 		}
 
-		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) override
+		size_t receiveBuffer(void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Serial port not connected.";
+				m_LastError = "Serial port not connected.";
 				return 0;
 			}
 
 #if defined TARGET_OS_Windows
 
-			DWORD l_dwRead = 0;
+			DWORD read = 0;
 
-			if (!ReadFile(m_pFile, buffer, ui32BufferSize, &l_dwRead, nullptr))
+			if (!ReadFile(m_file, buffer, DWORD(size), &read, nullptr))
 			{
-				m_sLastError = "Failed to read on serial port: " + this->getLastErrorFormated();
+				m_LastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
-			if (l_dwRead == 0)
+			if (read == 0)
 			{
-				m_sLastError = "Serial port timeout when trying to read.";
+				m_LastError = "Serial port timeout when trying to read.";
 				this->close();
 				return 0;
 			}
 
-			return l_dwRead;
+			return read;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
-			if (l_iResult < 0)
+			int res = ::read(m_file, buffer, size);
+			if (res < 0)
 			{
-				m_sLastError = "Could not read from connection";
+				m_LastError = "Could not read from connection";
 				this->close();
 				return 0;
 			}
 
-			return l_iResult;
-#endif
+			return res;
+#else
 			return 0;
+#endif
 		}
 
-		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const size_t size) override
 		{
-			const char* p            = reinterpret_cast<const char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			const char* p    = reinterpret_cast<const char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
+			while (bytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				bytesLeft -= this->sendBuffer(p + size - bytesLeft, bytesLeft);
 				if (this->isErrorRaised()) { return false; }
 			}
 
-			return l_ui32BytesLeft == 0;
+			return bytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const size_t size) override
 		{
-			char* p                  = reinterpret_cast<char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			char* p          = reinterpret_cast<char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
+			while (bytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				bytesLeft -= this->receiveBuffer(p + size - bytesLeft, bytesLeft);
 				if (this->isErrorRaised()) { return false; }
 			}
-			return l_ui32BytesLeft == 0;
+			return bytesLeft == 0;
 		}
 
 		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
-			return ((m_pFile != nullptr) && (m_pFile != INVALID_HANDLE_VALUE));
+			return ((m_file != nullptr) && (m_file != INVALID_HANDLE_VALUE));
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			return m_iFile != 0;
+			return m_file != 0;
 #endif
 		}
 
 		void release() override { delete this; }
 
-		bool connect(const char* sURL, unsigned long ul32BaudRate) override
+		bool connect(const char* sURL, const size_t baudrate) override
 		{
-			m_sLastError.clear();
+			m_LastError.clear();
 
 			if (this->isConnected())
 			{
-				m_sLastError = "Serial port already connected";
+				m_LastError = "Serial port already connected";
 				return false;
 			}
 
 #if defined TARGET_OS_Windows
 
-			m_pFile = ::CreateFile(sURL, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+			m_file = ::CreateFile(sURL, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-			if (m_pFile == INVALID_HANDLE_VALUE || m_pFile == nullptr)
+			if (m_file == INVALID_HANDLE_VALUE || m_file == nullptr)
 			{
-				m_sLastError = "Failed to open serial port: " + this->getLastErrorFormated();
-				m_pFile      = nullptr;
+				m_LastError = "Failed to open serial port: " + this->getLastErrorFormated();
+				m_file     = nullptr;
 				return false;
 			}
 
-			DCB l_oDCB = { 0 };
+			DCB dcb = { 0 };
 
-			if (!GetCommState(m_pFile, &l_oDCB))
+			if (!GetCommState(m_file, &dcb))
 			{
-				m_sLastError = "Failed to get communication state: " + this->getLastErrorFormated();
+				m_LastError = "Failed to get communication state: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
 
-			l_oDCB.DCBlength = sizeof(l_oDCB);
-			l_oDCB.BaudRate  = ul32BaudRate;
-			l_oDCB.ByteSize  = 8;
-			l_oDCB.Parity    = NOPARITY;
-			l_oDCB.StopBits  = ONESTOPBIT;
+			dcb.DCBlength = sizeof(dcb);
+			dcb.BaudRate  = DWORD(baudrate);
+			dcb.ByteSize  = 8;
+			dcb.Parity    = NOPARITY;
+			dcb.StopBits  = ONESTOPBIT;
 
-			ClearCommError(m_pFile, nullptr, nullptr);
+			ClearCommError(m_file, nullptr, nullptr);
 
-			if (!SetCommState(m_pFile, &l_oDCB))
+			if (!SetCommState(m_file, &dcb))
 			{
-				m_sLastError = "Could not set communication state: " + this->getLastErrorFormated();
+				m_LastError = "Could not set communication state: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
@@ -361,29 +360,29 @@ namespace Socket
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			/* $$$ BAUD RATE PARAMETER IS NOT CONSIDERED ON LINUX, MIGHT BE NECESSARY TO CHANGE THIS $$$ */
-			assert(ul32BaudRate == 230400);
-			if ((m_iFile = ::open(sURL, O_RDWR)) == -1)
+			assert(baudrate == 230400);
+			if ((m_file = ::open(sURL, O_RDWR)) == -1)
 			{
-				m_sLastError = "Failed to open serial port.";
+				m_LastError = "Failed to open serial port.";
 				return false;
 			}
 
-			struct termios l_oTerminalAttributes;
-			if(::tcgetattr(m_iFile, &l_oTerminalAttributes)!=0)
+			struct termios terminalAtt;
+			if(::tcgetattr(m_file, &terminalAtt)!=0)
 			{
-				m_sLastError = "Could not get terminal attributes in tcgetattr";
+				m_LastError = "Could not get terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
 
-			l_oTerminalAttributes.c_cflag = B230400 | CS8 | CLOCAL | CREAD;
-			l_oTerminalAttributes.c_iflag = 0;
-			l_oTerminalAttributes.c_oflag = OPOST | ONLCR;
-			l_oTerminalAttributes.c_lflag = 0;
+			terminalAtt.c_cflag = B230400 | CS8 | CLOCAL | CREAD;
+			terminalAtt.c_iflag = 0;
+			terminalAtt.c_oflag = OPOST | ONLCR;
+			terminalAtt.c_lflag = 0;
 
-			if (::tcsetattr(m_iFile, TCSAFLUSH, &l_oTerminalAttributes) != 0)
+			if (::tcsetattr(m_file, TCSAFLUSH, &terminalAtt) != 0)
 			{
-				m_sLastError = "Could not set terminal attributes in tcgetattr";
+				m_LastError = "Could not set terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
@@ -391,46 +390,46 @@ namespace Socket
 			return true;
 		}
 
-		bool setTimeouts(const uint32_t decisecondsTimeout) override
+		bool setTimeouts(const size_t decisecondsTimeout) override
 		{
 			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
-			COMMTIMEOUTS l_Timeouts;
+			COMMTIMEOUTS timeouts;
 
-			if (!GetCommTimeouts(m_pFile, &l_Timeouts))
+			if (!GetCommTimeouts(m_file, &timeouts))
 			{
-				m_sLastError = "Could not get communication timeouts: " + this->getLastErrorFormated();
+				m_LastError = "Could not get communication timeouts: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
 
-			l_Timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
-			l_Timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
+			timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
+			timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
 
-			if (!SetCommTimeouts(m_pFile, &l_Timeouts))
+			if (!SetCommTimeouts(m_file, &timeouts))
 			{
-				m_sLastError = "Could not set communication timeouts: " + this->getLastErrorFormated();
+				m_LastError = "Could not set communication timeouts: " + this->getLastErrorFormated();
 				this->close();
 				return false;
 			}
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			struct termios l_oTerminalAttributes;
-			if(::tcgetattr(m_iFile, &l_oTerminalAttributes)!=0)
+			struct termios terminalAtt;
+			if(::tcgetattr(m_file, &terminalAtt)!=0)
 			{
-				m_sLastError = "Could not get terminal attributes in tcgetattr";
+				m_LastError = "Could not get terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
 
-			l_oTerminalAttributes.c_cc[VTIME] = decisecondsTimeout;
+			terminalAtt.c_cc[VTIME] = decisecondsTimeout;
 
-			if (::tcsetattr(m_iFile, TCSAFLUSH, &l_oTerminalAttributes) != 0)
+			if (::tcsetattr(m_file, TCSAFLUSH, &terminalAtt) != 0)
 			{
-				m_sLastError = "Could not set terminal attributes in tcgetattr";
+				m_LastError = "Could not set terminal attributes in tcgetattr";
 				this->close();
 				return false;
 			}
@@ -439,12 +438,12 @@ namespace Socket
 			return true;
 		}
 
-		const char* getLastError() override { return m_sLastError.c_str(); }
+		const char* getLastError() override { return m_LastError.c_str(); }
 
 		std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
-			LPTSTR l_sErrorText;
+			LPTSTR errorText;
 			const DWORD error = GetLastError();
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                  // use system message tables to retrieve error text
 						  FORMAT_MESSAGE_ALLOCATE_BUFFER |              // allocate buffer on local heap for error text
@@ -452,24 +451,24 @@ namespace Socket
 						  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
 						  error,
 						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-						  LPTSTR(&l_sErrorText),                       // output
+						  LPTSTR(&errorText),                       // output
 						  0,                                           // minimum size for output buffer
 						  nullptr);                                       // arguments - see note
-			return l_sErrorText;
+			return errorText;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return ""; // TODO
 #endif
 		}
 
-		bool isErrorRaised() override { return !m_sLastError.empty(); }
-		void clearError() override { m_sLastError.clear(); }
+		bool isErrorRaised() override { return !m_LastError.empty(); }
+		void clearError() override { m_LastError.clear(); }
 
-		std::string m_sLastError;
+		std::string m_LastError;
 
 #if defined TARGET_OS_Windows
-		void* m_pFile;
+		void* m_file;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		int m_iFile;
+		int m_file;
 #endif
 	};
 

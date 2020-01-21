@@ -1,3 +1,4 @@
+#pragma once
 #include "ovkTMessage.h"
 
 namespace OpenViBE
@@ -10,30 +11,29 @@ namespace OpenViBE
 
 		template <class T>
 		TMessage<T>::TMessage(const IKernelContext& ctx)
-			: T(ctx), m_oIdentifier(OV_UndefinedIdentifier) {}
+			: T(ctx), m_id(OV_UndefinedIdentifier) {}
 
 		//___________________________________________________________________//
 		//                                                                   //
 
 		template <class T>
-		CIdentifier TMessage<T>::getIdentifier() const { return m_oIdentifier; }
+		CIdentifier TMessage<T>::getIdentifier() const { return m_id; }
 
 		template <class T>
-		uint64_t TMessage<T>::getTime() const { return m_ui64Time; }
+		uint64_t TMessage<T>::getTime() const { return m_time; }
 
 		template <class T>
-		bool TMessage<T>::setIdentifier(const CIdentifier& identifier)
+		bool TMessage<T>::setIdentifier(const CIdentifier& id)
 		{
-			if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
-			if (identifier == OV_UndefinedIdentifier) { return false; }
-			m_oIdentifier = identifier;
+			if (m_id != OV_UndefinedIdentifier || id == OV_UndefinedIdentifier) { return false; }
+			m_id = id;
 			return true;
 		}
 
 		template <class T>
-		bool TMessage<T>::setTime(const uint64_t ui64Time)
+		bool TMessage<T>::setTime(const uint64_t time)
 		{
-			m_ui64Time = ui64Time;
+			m_time = time;
 			return true;
 		}
 

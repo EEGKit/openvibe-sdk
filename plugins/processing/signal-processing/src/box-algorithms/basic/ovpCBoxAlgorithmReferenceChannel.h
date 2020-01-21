@@ -4,9 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_ReferenceChannel     OpenViBE::CIdentifier(0x444721AD, 0x78342CF5)
-#define OVP_ClassId_BoxAlgorithm_ReferenceChannelDesc OpenViBE::CIdentifier(0x42856103, 0x45B125AD)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -17,16 +14,16 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ReferenceChannel)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_oDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_oEncoder;
-			uint32_t m_ui32ReferenceChannelIndex = 0;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_encoder;
+			size_t m_referenceChannelIdx = 0;
 		};
 
 		class CBoxAlgorithmReferenceChannelDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -61,7 +58,7 @@ namespace OpenViBEPlugins
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
 				prototype.addSetting("Channel", OV_TypeId_String, "Ref_Nose");
-				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
+				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, "Smart");
 				return true;
 			}
 

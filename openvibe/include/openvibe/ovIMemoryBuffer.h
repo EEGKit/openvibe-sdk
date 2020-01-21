@@ -23,7 +23,7 @@ namespace OpenViBE
 
 		/**
 		 * \brief Reserves some memory for this memory buffer
-		 * \param ui64Size [in] : the amount of memory to reserve
+		 * \param size [in] : the amount of memory to reserve
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 *
@@ -31,28 +31,28 @@ namespace OpenViBE
 		 * affect the actual size of the buffer but allows later calls to \c append
 		 * not to reallocate the whole buffer.
 		 *
-		 * \note if \c ui64Size is lower than the actual buffer size
+		 * \note if \c size is lower than the actual buffer size
 		 *       then \e true is returned and nothing is done.
 		 */
-		virtual bool reserve(const uint64_t ui64Size) = 0;
+		virtual bool reserve(const size_t size) = 0;
 		/**
 		 * \brief Changes the size of this memory buffer
-		 * \param ui64Size [in] : the new size to give to the buffer
-		 * \param bDiscard [in] : tells the reallocation process whether it should presever currently stored data or not
+		 * \param size [in] : the new size to give to the buffer
+		 * \param discard [in] : tells the reallocation process whether it should presever currently stored data or not
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 * \note On error, the buffer is left unchanged.
-		 * \note If the new size if lower than the current size and \c bDiscard is true, the
-		 *       buffer is simply truncated to the \c ui64Size first bytes.
+		 * \note If the new size if lower than the current size and \c discard is true, the
+		 *       buffer is simply truncated to the \c size first bytes.
 		 * \sa getSize
 		 */
-		virtual bool setSize(const uint64_t ui64Size, const bool bDiscard) = 0;
+		virtual bool setSize(const size_t size, const bool discard) = 0;
 		/**
 		 * \brief Gets the current size of this memory buffer
 		 * \return the current size of this memory buffer
 		 * \sa setSize
 		 */
-		virtual uint64_t getSize() const = 0;
+		virtual size_t getSize() const = 0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read/write access
 		 * \return a direct pointer to the byte array for read/write access
@@ -72,18 +72,18 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool append(const uint8_t* buffer, const uint64_t size) = 0;
+		virtual bool append(const uint8_t* buffer, const size_t size) = 0;
 		/**
 		 * \brief Appends data to this memory buffer
-		 * \param rMemoryBuffer [in] : the memory buffer containing data that should be appended
+		 * \param buffer [in] : the memory buffer containing data that should be appended
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool append(const IMemoryBuffer& rMemoryBuffer) { return this->append(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize()); }
+		virtual bool append(const IMemoryBuffer& buffer) { return this->append(buffer.getDirectPointer(), buffer.getSize()); }
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer)
 
-		const uint8_t& operator [](const uint64_t ui64Index) const { return this->getDirectPointer()[ui64Index]; }
-		uint8_t& operator [](const uint64_t ui64Index) { return this->getDirectPointer()[ui64Index]; }
+		const uint8_t& operator [](const size_t index) const { return this->getDirectPointer()[index]; }
+		uint8_t& operator [](const size_t index) { return this->getDirectPointer()[index]; }
 	};
 } // namespace OpenViBE

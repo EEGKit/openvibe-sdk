@@ -1,7 +1,7 @@
 #include "ovpCSignalDecoder.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -14,14 +14,14 @@ bool CSignalDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_ui64SamplingRate.initialize(getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+	op_sampling.initialize(getOutputParameter(OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling));
 
 	return true;
 }
 
 bool CSignalDecoder::uninitialize()
 {
-	op_ui64SamplingRate.uninitialize();
+	op_sampling.uninitialize();
 
 	CStreamedMatrixDecoder::uninitialize();
 
@@ -34,40 +34,40 @@ bool CSignalDecoder::uninitialize()
 bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 {
 	if (identifier == OVTK_NodeId_Header_Signal) { return true; }
-	if (identifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }
+	if (identifier == OVTK_NodeId_Header_Signal_Sampling) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(identifier);
 }
 
 void CSignalDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	m_vNodes.push(identifier);
+	m_nodes.push(identifier);
 
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
+	if ((top == OVTK_NodeId_Header_Signal)
+		|| (top == OVTK_NodeId_Header_Signal_Sampling)) { }
 	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
-void CSignalDecoder::processChildData(const void* buffer, const uint64_t size)
+void CSignalDecoder::processChildData(const void* buffer, const size_t size)
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate))
+	if ((top == OVTK_NodeId_Header_Signal)
+		|| (top == OVTK_NodeId_Header_Signal_Sampling))
 	{
-		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate) { op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (top == OVTK_NodeId_Header_Signal_Sampling) { op_sampling = m_readerHelper->getUInt(buffer, size); }
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }
 }
 
 void CSignalDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop = m_vNodes.top();
+	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_Signal)
-		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
+	if ((top == OVTK_NodeId_Header_Signal)
+		|| (top == OVTK_NodeId_Header_Signal_Sampling)) { }
 	else { CStreamedMatrixDecoder::closeChild(); }
 
-	m_vNodes.pop();
+	m_nodes.pop();
 }

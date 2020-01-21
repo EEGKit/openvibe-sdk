@@ -1,15 +1,13 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <cstdlib>
 #include <cstdio>
 #include <iostream>
 #include <fstream>
 
-#define OVP_ClassId_BoxAlgorithm_CSVFileWriter     							   OpenViBE::CIdentifier(0x2C9312F1, 0x2D6613E5)
-#define OVP_ClassId_BoxAlgorithm_CSVFileWriterDesc 							   OpenViBE::CIdentifier(0x65075FF7, 0x2B555E97)
 
 namespace OpenViBEPlugins
 {
@@ -23,11 +21,11 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
-			bool process_streamedMatrix();
-			bool process_stimulation();
+			bool processStreamedMatrix();
+			bool processStimulation();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileWriter)
 
@@ -35,19 +33,19 @@ namespace OpenViBEPlugins
 		protected:
 			bool initializeFile();
 
-			std::ofstream m_oFileStream;
+			std::ofstream m_fileStream;
 
-			OpenViBE::CString m_sSeparator;
-			OpenViBE::CIdentifier m_oTypeIdentifier               = OV_UndefinedIdentifier;
-			bool m_bFirstBuffer                                   = false;
-			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)() = nullptr;
+			OpenViBE::CString m_separator;
+			OpenViBE::CIdentifier m_typeID                      = OV_UndefinedIdentifier;
+			bool m_firstBuffer                                  = false;
+			bool (CBoxAlgorithmCSVFileWriter::*m_realProcess)() = nullptr;
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder = nullptr;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_decoder = nullptr;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
-			uint64_t m_ui64SampleCount = 0;
+			uint64_t m_nSample = 0;
 
-			bool m_bHeaderReceived = false;
+			bool m_headerReceived = false;
 		};
 
 		class CBoxAlgorithmCSVFileWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

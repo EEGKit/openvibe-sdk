@@ -3,9 +3,7 @@
 
 #include <iostream>
 
-
 #include <xml/IXMLNode.h>
-#include <xml/IXMLHandler.h>
 
 namespace
 {
@@ -13,7 +11,7 @@ namespace
 }
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -21,67 +19,57 @@ using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
-bool CAlgorithmPairwiseDecisionVoting::initialize() { return true; }
-
-bool CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
-
 bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
-	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	m_ui32ClassCount = uint32_t(ip_pClassCount);
+	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
 
-bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
 #if VOTING_DEBUG
-	std::cout << pClassificationValueList.size() << std::endl;
+	std::cout << classifications.size() << std::endl;
 
-	for(uint32_t i = 0 ; i< pClassificationValueList.size() ; ++i){
-		std::cout << pClassificationValueList[i].m_f64FirstClass << " " << pClassificationValueList[i].m_f64SecondClass << std::endl;
-		std::cout << pClassificationValueList[i].m_f64ClassLabel;
-		std::cout << std::endl;
+	for (size_t i = 0 ; i < classifications.size() ; ++i)
+	{
+		std::cout << classifications[i].firstClass << " " << classifications[i].secondClass << std::endl;
+		std::cout << classifications[i].classLabel << std::endl;
 	}
 #endif
 
-	uint32_t* l_pWinCount = new uint32_t[m_ui32ClassCount];
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pWinCount[i] = 0; }
+	std::vector<size_t> win(m_nClass);
+	for (size_t i = 0; i < m_nClass; ++i) { win[i] = 0; }
 
-	for (uint32_t i = 0; i < pClassificationValueList.size(); ++i)
+	for (size_t i = 0; i < classifications.size(); ++i)
 	{
-		SClassificationInfo& l_rTemp = pClassificationValueList[i];
-		if (l_rTemp.m_f64ClassLabel == 0) { ++(l_pWinCount[uint32_t(l_rTemp.m_f64FirstClass)]); }
-		else { ++(l_pWinCount[uint32_t(l_rTemp.m_f64SecondClass)]); }
+		classification_info_t& temp = classifications[i];
+		if (temp.classLabel == 0) { ++(win[size_t(temp.firstClass)]); }
+		else { ++(win[size_t(temp.secondClass)]); }
 	}
 
 #if VOTING_DEBUG
-	for(size_t i = 0; i < m_ui32ClassCount ;  ++i)
-	{
-		std::cout << ((double)l_pWinCount[i])/pClassificationValueList.size() <<  " ";
-	}
+	for (size_t i = 0; i < m_nClass ;  ++i) { std::cout << (double(win[i])/ classifications.size() <<  " "; }
 	std::cout << std::endl;
 #endif
 
-	pProbabilityVector->setDimensionCount(1);
-	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
+	probabilities->setDimensionCount(1);
+	probabilities->setDimensionSize(0, m_nClass);
 
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = ((double)l_pWinCount[i]) / pClassificationValueList.size(); }
+	for (size_t i = 0; i < m_nClass; ++i) { probabilities->getBuffer()[i] = double(win[i]) / classifications.size(); }
 
-	delete[] l_pWinCount;
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfiguration()
+XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfig()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
-	return l_pRootNode;
+	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
+	return node;
 }
-
-bool CAlgorithmPairwiseDecisionVoting::loadConfiguration(XML::IXMLNode& rNode) { return true; }

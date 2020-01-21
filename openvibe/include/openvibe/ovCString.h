@@ -6,7 +6,7 @@
 
 namespace OpenViBE
 {
-	typedef struct CStringImpl CStringImpl;
+	typedef struct SStringImpl SStringImpl;
 
 	/**
 	 * \class CString
@@ -36,24 +36,24 @@ namespace OpenViBE
 		CString();
 		/**
 		 * \brief Copy constructor
-		 * \param rString [in] : The string to copy
+		 * \param str [in] : The string to copy
 		 *
-		 * Copies the content of \c rString into the new string.
+		 * Copies the content of \c str into the new string.
 		 */
-		CString(const CString& rString);
+		CString(const CString& str);
 		/**
 		 * \brief Constructor based on ASCII strings
-		 * \param pString [in] : The string to copy
+		 * \param str [in] : The string to copy
 		 *
-		 * Copies the content of \c pString into the new string.
+		 * Copies the content of \c str into the new string.
 		 */
-		CString(const char* pString);
+		CString(const char* str);
 		/**
 		 * \brief Destructor
 		 *
 		 * The destructor releases the std::string implementation !
 		 */
-		virtual ~CString();
+		~CString();
 
 		//@}
 		/** \name Operators */
@@ -68,89 +68,89 @@ namespace OpenViBE
 		operator const char*() const;
 		/**
 		 * \brief Affectation operator (copy)
-		 * \param rString [in] : The string to copy
+		 * \param str [in] : The string to copy
 		 * \return This string.
 		 */
-		CString& operator=(const CString& rString);
+		CString& operator=(const CString& str);
 
 		/**
 		 * \brief Addition assignment operator
-		 * \param rString [in] : The string to append
+		 * \param str [in] : The string to append
 		 * \return This string.
 		 */
-		CString& operator+=(const CString& rString);
+		CString& operator+=(const CString& str);
 
 		/**
 		 * \brief Addition operator
-		 * \param rString1 [in] : The first part of the resulting string
-		 * \param rString2 [in] : The second part of the resulting string
-		 * \return The concatenation of \c rString1 and \c rString2.
+		 * \param str1 [in] : The first part of the resulting string
+		 * \param str2 [in] : The second part of the resulting string
+		 * \return The concatenation of \c str1 and \c str2.
 		 */
-		friend OV_API const CString operator+(const CString& rString1, const CString& rString2);
+		friend OV_API CString operator+(const CString& str1, const CString& str2);
 		/**
 		 * \brief Equality comparison operator
-		 * \param rString1 [in] : The first part of the resulting string
-		 * \param rString2 [in] : The second part of the resulting string
-		 * \return \e true is \c rString1 is exactly rString2.
+		 * \param str1 [in] : The first part of the resulting string
+		 * \param str2 [in] : The second part of the resulting string
+		 * \return \e true is \c str1 is exactly str2.
 		 * \return \e false in other case.
 		 * \note This is case sensitive !
 		 */
-		friend OV_API bool operator==(const CString& rString1, const CString& rString2);
+		friend OV_API bool operator==(const CString& str1, const CString& str2);
 		/**
 		 * \brief Inequality comparison operator
-		 * \param rString1 [in] : The first part of the resulting string
-		 * \param rString2 [in] : The second part of the resulting string
-		 * \return \e false is \c rString1 is exactly rString2.
+		 * \param str1 [in] : The first part of the resulting string
+		 * \param str2 [in] : The second part of the resulting string
+		 * \return \e false is \c str1 is exactly str2.
 		 * \return \e true in other case.
 		 * \note This is case sensitive !
 		 */
-		friend OV_API bool operator!=(const CString& rString1, const CString& rString2);
+		friend OV_API bool operator!=(const CString& str1, const CString& str2);
 
 		/**
 		 * \brief Array subscription operator
 		 * \param idx [in] : Index in the array
 		 */
-		char& operator[](std::size_t idx);
+		char& operator[](size_t idx) const;
 
 		/**
 		 * \brief Order comparison operator (necessary to use CString as a key in a stl map)
-		 * \param rString1 [in] : The first part of the resulting string
-		 * \param rString2 [in] : The second part of the resulting string
-		 * \return \e false is \c rString1 is exactly rString2.
+		 * \param str1 [in] : The first part of the resulting string
+		 * \param str2 [in] : The second part of the resulting string
+		 * \return \e false is \c str1 is exactly str2.
 		 * \return \e true in other case.
 		 * \note This is case sensitive !
 		 */
-		friend OV_API bool operator<(const CString& rString1, const CString& rString2);
+		friend OV_API bool operator<(const CString& str1, const CString& str2);
 		//@}
 
 		/**
 		 * \brief Initializes this string from another OpenViBE string
-		 * \param rString [in] : the OpenViBE string to initialize this string from
+		 * \param str [in] : the OpenViBE string to initialize this string from
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool set(const CString& rString);
+		bool set(const CString& str) const;
 		/**
 		 * \brief Initializes this string from an ANSI/ASCII string
-		 * \param pString [in] : the ANSI/ASCII string to initialize this string from
+		 * \param str [in] : the ANSI/ASCII string to initialize this string from
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool set(const char* pString);
+		bool set(const char* str) const;
 		/**
 		 * \brief Converts this string to an ANSI/ASCII string
 		 * \return the ANSI/ASCII converted string.
 		 */
-		virtual const char* toASCIIString() const;
+		const char* toASCIIString() const;
 
 		/**
 		 * \brief Returns length of the string
 		 * \return Length of the string
 		 */
-		virtual std::size_t length() const;
+		size_t length() const;
 
 	protected:
 
-		CStringImpl* m_pStringImpl = nullptr; ///< The string implementation
+		SStringImpl* m_impl = nullptr; ///< The string implementation
 	};
 } // namespace OpenViBE

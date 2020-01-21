@@ -13,22 +13,22 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> m_pInputMemoryBuffer;
+		OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> m_iBuffer;
 
 
-		using T::m_pCodec;
-		using T::m_pBoxAlgorithm;
-		using T::m_ui32ConnectorIndex;
+		using T::m_codec;
+		using T::m_boxAlgorithm;
+		using T::m_connectorIdx;
 
-		virtual void setInputChunk(const OpenViBE::IMemoryBuffer* pInputChunkMemoryBuffer) { m_pInputMemoryBuffer = pInputChunkMemoryBuffer; }
+		virtual void setInputChunk(const OpenViBE::IMemoryBuffer* pInputChunkMemoryBuffer) { m_iBuffer = pInputChunkMemoryBuffer; }
 
-		virtual OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>& getInputMemoryBuffer() { return m_pInputMemoryBuffer; }
+		virtual OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>& getInputMemoryBuffer() { return m_iBuffer; }
 
-		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier oTrigger) { return m_pCodec->isOutputTriggerActive(oTrigger); }
+		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier oTrigger) { return m_codec->isOutputTriggerActive(oTrigger); }
 
-		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_pCodec->process(oTrigger); }
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_codec->process(oTrigger); }
 
-		virtual bool process() { return m_pCodec->process(); }
+		virtual bool process() { return m_codec->process(); }
 
 	public:
 		// We make visible the initialize methods of the superclass (should be TCodec), in the same scope (public)
@@ -40,19 +40,19 @@ namespace OpenViBEToolkit
 		- decode it (specific for each decoder)
 		- mark input as deprecated
 		*/
-		virtual bool decode(uint32_t chunkIdx, bool bMarkInputAsDeprecated = true)
+		virtual bool decode(const size_t chunkIdx, const bool markInputAsDeprecated = true)
 		{
-			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, chunkIdx));
-			if (! m_pCodec->process()) return false;
-			if (bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, chunkIdx);
+			this->setInputChunk(m_boxAlgorithm->getDynamicBoxContext().getInputChunk(m_connectorIdx, chunkIdx));
+			if (! m_codec->process()) return false;
+			if (markInputAsDeprecated) m_boxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_connectorIdx, chunkIdx);
 			return true;
 		}
 
 		// We explicitly delete the decode function taking two integers as parameters
 		// in order to raise errors in plugins using the older API
 #ifndef TARGET_OS_MacOS // Current clang has a bug which fails to link these
-		virtual bool decode(int, int)                   = delete;
-		virtual bool decode(unsigned int, unsigned int) = delete;
+		virtual bool decode(int, int)       = delete;
+		virtual bool decode(size_t, size_t) = delete;
 #endif
 
 		// The functions that need to be specified by the decoders (specific Trigger ID)

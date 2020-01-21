@@ -3,13 +3,10 @@
 
 #include "ovpCBoxAlgorithmContinuousWaveletAnalysis.h"
 
-#include <sstream>
-#include <cstdio>
 #include <string.h>
-#include <iomanip>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
@@ -18,86 +15,66 @@ using namespace OpenViBEToolkit;
 
 namespace SigProSTD
 {
-	double wavelet_FourierFactor(char* waveletType, const double waveletParameter)
+	double WaveletFourierFactor(const char* type, const double param)
 	{
 		double factor = -1;
-		if (strcmp(waveletType, "morlet") == 0) { factor = 4.0 * M_PI / (waveletParameter + std::sqrt(2 + waveletParameter * waveletParameter)); }
-		else if (strcmp(waveletType, "paul") == 0) { factor = 4.0 * M_PI / (2 * waveletParameter + 1); }
-		else if (strcmp(waveletType, "dog") == 0) { factor = 2.0 * M_PI / std::sqrt(waveletParameter + 0.5); }
+		if (strcmp(type, "morlet") == 0) { factor = 4.0 * M_PI / (param + std::sqrt(2 + param * param)); }
+		else if (strcmp(type, "paul") == 0) { factor = 4.0 * M_PI / (2 * param + 1); }
+		else if (strcmp(type, "dog") == 0) { factor = 2.0 * M_PI / std::sqrt(param + 0.5); }
 		return factor;
 	}
 
-	double wavelet_scale2period(char* waveletType, const double waveletParameter, const double scale)
-	{
-		const double fourierFactor = wavelet_FourierFactor(waveletType, waveletParameter);
-
-		return fourierFactor * scale;
-	}
-
-	double wavelet_scale2freq(char* waveletType, const double waveletParameter, const double scale)
-	{
-		const double fourierFactor = wavelet_FourierFactor(waveletType, waveletParameter);
-
-		return 1.0 / (fourierFactor * scale);
-	}
-
-	double wavelet_freq2scale(char* waveletType, const double waveletParameter, const double frequency)
-	{
-		const double fourierFactor = wavelet_FourierFactor(waveletType, waveletParameter);
-
-		return 1.0 / (fourierFactor * frequency);
-	}
+	double WaveletScale2Period(const char* type, const double param, const double scale) { return WaveletFourierFactor(type, param) * scale; }
+	double WaveletScale2Freq(const char* type, const double param, const double scale) { return 1.0 / (WaveletFourierFactor(type, param) * scale); }
+	double WaveletFreq2Scale(const char* type, const double param, const double frequency) { return 1.0 / (WaveletFourierFactor(type, param) * frequency); }
 } // namespace SigProSTD
 
 bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 {
-	m_oDecoder.initialize(*this, 0);
-	m_vEncoder[0].initialize(*this, 0);
-	m_vEncoder[1].initialize(*this, 1);
-	m_vEncoder[2].initialize(*this, 2);
-	m_vEncoder[3].initialize(*this, 3);
+	m_decoder.initialize(*this, 0);
+	for (size_t i = 0; i < 4; ++i) { m_encoders[i].initialize(*this, i); }
 
 	const uint64_t waveletType    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_dWaveletParameter           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_iScaleCount_J               = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_dHighestFrequency           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_waveletParam                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_nScaleJ                     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_highestFreq                 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	const double frequencySpacing = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	if (waveletType == OVP_TypeId_ContinuousWaveletType_Morlet.toUInteger())
+	if (waveletType == Morlet)
 	{
-		m_pWaveletType = "morlet";
+		m_waveletType = "morlet";
 
-		if (m_dWaveletParameter < 0)
+		if (m_waveletParam < 0)
 		{
 			this->getLogManager() << LogLevel_Error << "Morlet wavelet parameter should be positive.\n";
 			return false;
 		}
 	}
-	else if (waveletType == OVP_TypeId_ContinuousWaveletType_Paul.toUInteger())
+	else if (waveletType == Paul)
 	{
-		m_pWaveletType = "paul";
+		m_waveletType = "paul";
 
-		if (m_dWaveletParameter <= 0 || m_dWaveletParameter > 20)
+		if (m_waveletParam <= 0 || m_waveletParam > 20)
 		{
 			this->getLogManager() << LogLevel_Error << "Paul wavelet parameter should be included in ]0,20].\n";
 			return false;
 		}
-		if (std::ceil(m_dWaveletParameter) != m_dWaveletParameter)
+		if (std::ceil(m_waveletParam) != m_waveletParam)
 		{
 			this->getLogManager() << LogLevel_Error << "Paul wavelet parameter should be an integer.\n";
 			return false;
 		}
 	}
-	else if (waveletType == OVP_TypeId_ContinuousWaveletType_DOG.toUInteger())
+	else if (waveletType == DOG)
 	{
-		m_pWaveletType = "dog";
+		m_waveletType = "dog";
 
-		if (m_dWaveletParameter <= 0 || uint32_t(m_dWaveletParameter) % 2 == 1)
+		if (m_waveletParam <= 0 || size_t(m_waveletParam) % 2 == 1)
 		{
 			this->getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be strictly positive and even.\n";
 			return false;
 		}
-		if (std::ceil(m_dWaveletParameter) != m_dWaveletParameter)
+		if (std::ceil(m_waveletParam) != m_waveletParam)
 		{
 			this->getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be an integer.\n";
 			return false;
@@ -109,12 +86,12 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 		return false;
 	}
 
-	if (m_iScaleCount_J <= 0)
+	if (m_nScaleJ <= 0)
 	{
 		this->getLogManager() << LogLevel_Error << "Number of frequencies can not be negative.\n";
 		return false;
 	}
-	if (m_dHighestFrequency <= 0)
+	if (m_highestFreq <= 0)
 	{
 		this->getLogManager() << LogLevel_Error << "Highest frequency can not be negative.\n";
 		return false;
@@ -125,30 +102,27 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 		return false;
 	}
 
-	m_dSmallestScale_s0 = SigProSTD::wavelet_freq2scale(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, m_dHighestFrequency);
-	m_dScaleSpacing_dj  = SigProSTD::wavelet_freq2scale(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, frequencySpacing);
+	m_smallestScaleS0 = SigProSTD::WaveletFreq2Scale(m_waveletType, m_waveletParam, m_highestFreq);
+	m_scaleSpacingDj  = SigProSTD::WaveletFreq2Scale(m_waveletType, m_waveletParam, frequencySpacing);
 
-	m_pScaleType         = "pow";
-	m_iScalePowerBase_a0 = 2; // base of power if ScaleType = "pow"
+	m_scaleType        = "pow";
+	m_scalePowerBaseA0 = 2; // base of power if ScaleType = "pow"
 
 	return true;
 }
 
 bool CBoxAlgorithmContinuousWaveletAnalysis::uninitialize()
 {
-	m_oDecoder.uninitialize();
-	m_vEncoder[0].uninitialize();
-	m_vEncoder[1].uninitialize();
-	m_vEncoder[2].uninitialize();
-	m_vEncoder[3].uninitialize();
+	m_decoder.uninitialize();
+	for (auto& e : m_encoders) { e.uninitialize(); }
 
-	cwt_free(m_oWaveletTransform);
-	m_oWaveletTransform = nullptr;
+	cwt_free(m_waveletTransform);
+	m_waveletTransform = nullptr;
 
 	return true;
 }
 
-bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(const size_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -164,110 +138,104 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		m_oDecoder.decode(i);
-		IMatrix* iMatrix  = m_oDecoder.getOutputMatrix();
-		uint32_t nChannel = iMatrix->getDimensionSize(0);
-		int nSample       = iMatrix->getDimensionSize(1);
+		m_decoder.decode(i);
+		IMatrix* iMatrix = m_decoder.getOutputMatrix();
+		size_t nChannel  = iMatrix->getDimensionSize(0);
+		size_t nSample   = iMatrix->getDimensionSize(1);
 
-		if (m_oDecoder.isHeaderReceived())
+		if (m_decoder.isHeaderReceived())
 		{
-			uint64_t samplingRate = m_oDecoder.getOutputSamplingRate();
-			this->getLogManager() << LogLevel_Trace << "Input signal is [" << nChannel << " x " << nSample << "] @ " << samplingRate << "Hz.\n";
-			if (samplingRate == 0)
+			size_t sampling = m_decoder.getOutputSamplingRate();
+			this->getLogManager() << LogLevel_Trace << "Input signal is [" << nChannel << " x " << nSample << "] @ " << sampling << "Hz.\n";
+			if (sampling == 0)
 			{
 				this->getLogManager() << LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.\n";
 				return false;
 			}
-			m_dSamplingPeriod_dt = 1.0 / samplingRate;
+			m_samplingPeriodDt = 1.0 / sampling;
 
-			if (m_dHighestFrequency > 0.5 * samplingRate)
+			if (m_highestFreq > 0.5 * sampling)
 			{
-				this->getLogManager() << LogLevel_Error << "Highest frequency (" << m_dHighestFrequency << " Hz) is above Nyquist criterion (sampling rate is "
-						<< samplingRate << " Hz), can not proceed!\n";
+				this->getLogManager() << LogLevel_Error << "Highest frequency (" << m_highestFreq << " Hz) is above Nyquist criterion (sampling rate is "
+						<< sampling << " Hz), can not proceed!\n";
 				return false;
 			}
 
-			const int nScaleLimit = int(std::log2(nSample * m_dSamplingPeriod_dt / m_dSmallestScale_s0) / m_dScaleSpacing_dj); // Eq.(10)
-			if (m_iScaleCount_J > nScaleLimit)
+			const int nScaleLimit = int(std::log2(nSample * m_samplingPeriodDt / m_smallestScaleS0) / m_scaleSpacingDj); // Eq.(10)
+			if (int(m_nScaleJ) > nScaleLimit)
 			{
-				this->getLogManager() << LogLevel_Error << "Frequency count [" << m_iScaleCount_J << "] is superior to the limit [" << nScaleLimit << "].\n";
+				this->getLogManager() << LogLevel_Error << "Frequency count [" << m_nScaleJ << "] is superior to the limit [" << nScaleLimit << "].\n";
 				return false;
 			}
 
 			// initialize CWT
-			m_oWaveletTransform = cwt_init(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, nSample, m_dSamplingPeriod_dt, m_iScaleCount_J);
-			if (!m_oWaveletTransform)
+			m_waveletTransform = cwt_init(const_cast<char *>(m_waveletType), m_waveletParam, int(nSample), m_samplingPeriodDt, int(m_nScaleJ));
+			if (!m_waveletTransform)
 			{
 				this->getLogManager() << LogLevel_Error << "Error during CWT initialization.\n";
 				return false;
 			}
 
 			// define scales of CWT
-			if (setCWTScales(m_oWaveletTransform, m_dSmallestScale_s0, m_dScaleSpacing_dj, const_cast<char*>(m_pScaleType), m_iScalePowerBase_a0) != 0)
+			if (setCWTScales(m_waveletTransform, m_smallestScaleS0, m_scaleSpacingDj, const_cast<char*>(m_scaleType), m_scalePowerBaseA0) != 0)
 			{
 				this->getLogManager() << LogLevel_Error << "Error during CWT scales definition.\n";
 				return false;
 			}
-			//cwt_summary(m_oWaveletTransform); // FOR DEBUG
+			//cwt_summary(m_waveletTransform); // FOR DEBUG
 
-			for (uint32_t encoderIdx = 0; encoderIdx < 4; ++encoderIdx)
+			for (size_t j = 0; j < 4; ++j)
 			{
-				IMatrix* oMatrix = m_vEncoder[encoderIdx].getInputMatrix();
+				IMatrix* oMatrix = m_encoders[j].getInputMatrix();
 				oMatrix->setDimensionCount(3);
 				oMatrix->setDimensionSize(0, nChannel);
-				oMatrix->setDimensionSize(1, uint32_t(m_iScaleCount_J));
-				oMatrix->setDimensionSize(2, uint32_t(nSample));
+				oMatrix->setDimensionSize(1, m_nScaleJ);
+				oMatrix->setDimensionSize(2, nSample);
 
-				for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < nChannel; ++l_ui32ChannelIndex)
+				for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
+				for (size_t scaleIndex = 0; scaleIndex < m_nScaleJ; ++scaleIndex)
 				{
-					oMatrix->setDimensionLabel(0, l_ui32ChannelIndex, iMatrix->getDimensionLabel(0, l_ui32ChannelIndex));
-				}
-				double frequencyValue = -1;
-				for (int scaleIndex = 0; scaleIndex < m_iScaleCount_J; ++scaleIndex)
-				{
-					const double scaleValue = m_oWaveletTransform->scale[scaleIndex];
-					frequencyValue          = SigProSTD::wavelet_scale2freq(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, scaleValue);
+					const double scaleValue     = m_waveletTransform->scale[scaleIndex];
+					const double frequencyValue = SigProSTD::WaveletScale2Freq(m_waveletType, m_waveletParam, scaleValue);
 
 					std::string frequencyString = std::to_string(frequencyValue);
 					oMatrix->setDimensionLabel(1, scaleIndex, frequencyString.c_str());
 				}
-				for (int sampleIdx = 0; sampleIdx < nSample; ++sampleIdx)
+				for (size_t sampleIdx = 0; sampleIdx < nSample; ++sampleIdx)
 				{
-					std::string sampleString = std::to_string(sampleIdx * m_dSamplingPeriod_dt);
+					std::string sampleString = std::to_string(sampleIdx * m_samplingPeriodDt);
 					oMatrix->setDimensionLabel(2, sampleIdx, sampleString.c_str());
 				}
-				m_vEncoder[encoderIdx].encodeHeader();
+				m_encoders[j].encodeHeader();
 			}
 		}
-		if (m_oDecoder.isBufferReceived())
+		if (m_decoder.isBufferReceived())
 		{
 			double* ibuffer          = iMatrix->getBuffer();
-			double* oAmplitudeBuffer = m_vEncoder[0].getInputMatrix()->getBuffer();
-			double* oPhaseBuffer     = m_vEncoder[1].getInputMatrix()->getBuffer();
-			double* oRealPartBuffer  = m_vEncoder[2].getInputMatrix()->getBuffer();
-			double* oImagPartBuffer  = m_vEncoder[3].getInputMatrix()->getBuffer();
+			double* oAmplitudeBuffer = m_encoders[0].getInputMatrix()->getBuffer();
+			double* oPhaseBuffer     = m_encoders[1].getInputMatrix()->getBuffer();
+			double* oRealPartBuffer  = m_encoders[2].getInputMatrix()->getBuffer();
+			double* oImagPartBuffer  = m_encoders[3].getInputMatrix()->getBuffer();
 
-			for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < nChannel; l_ui32ChannelIndex++)
+			for (size_t c = 0; c < nChannel; ++c)
 			{
 				// compute CWT
-				if (cwt(m_oWaveletTransform, ibuffer) != 0)
+				if (cwt(m_waveletTransform, ibuffer) != 0)
 				{
 					this->getLogManager() << LogLevel_Error << "Error during CWT computation.\n";
 					return false;
 				}
 
-				// format of m_oWaveletTransform->output: dimensions = m_iScaleCount_J * l_iSampleCount, stored in row major format
-				for (int scaleIdx = 0; scaleIdx < m_iScaleCount_J; scaleIdx++)
+				// format of m_waveletTransform->output: dimensions = m_nScaleJ * nSample, stored in row major format
+				for (size_t scaleIdx = 0; scaleIdx < m_nScaleJ; ++scaleIdx)
 				{
-					for (int sampleIdx = 0; sampleIdx < nSample; sampleIdx++)
+					for (size_t sampleIdx = 0; sampleIdx < nSample; ++sampleIdx)
 					{
-						const double real = m_oWaveletTransform->output[sampleIdx + scaleIdx * nSample].re;
-						const double imag = m_oWaveletTransform->output[sampleIdx + scaleIdx * nSample].im;
-
-						const int outputIdx = sampleIdx + (m_iScaleCount_J - scaleIdx - 1) * nSample + l_ui32ChannelIndex * nSample *
-											  m_iScaleCount_J; // t+f*T+c*T*F
+						const double real      = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].re;
+						const double imag      = m_waveletTransform->output[sampleIdx + scaleIdx * nSample].im;
+						const size_t outputIdx = sampleIdx + (m_nScaleJ - scaleIdx - 1) * nSample + c * nSample * m_nScaleJ; // t+f*T+c*T*F
 
 						oAmplitudeBuffer[outputIdx] = std::sqrt(real * real + imag * imag);
 						oPhaseBuffer[outputIdx]     = std::atan2(imag, real);
@@ -278,18 +246,9 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				ibuffer += nSample;
 			}
 
-			m_vEncoder[0].encodeBuffer();
-			m_vEncoder[1].encodeBuffer();
-			m_vEncoder[2].encodeBuffer();
-			m_vEncoder[3].encodeBuffer();
+			for (auto& e : m_encoders) { e.encodeBuffer(); }
 		}
-		if (m_oDecoder.isEndReceived())
-		{
-			m_vEncoder[0].encodeEnd();
-			m_vEncoder[1].encodeEnd();
-			m_vEncoder[2].encodeEnd();
-			m_vEncoder[3].encodeEnd();
-		}
+		if (m_decoder.isEndReceived()) { for (auto& e : m_encoders) { e.encodeEnd(); } }
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		boxContext.markOutputAsReadyToSend(1, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		boxContext.markOutputAsReadyToSend(2, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));

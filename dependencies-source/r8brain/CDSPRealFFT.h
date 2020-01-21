@@ -537,7 +537,7 @@ namespace r8b
 		ip2[Len2] = ip[1];
 		ip[1]     = log(fabs(ip[1]) + 1e-50);
 
-		for (i = 1; i < Len2; i++)
+		for (i = 1; i < Len2; ++i)
 		{
 			ip2[i] = sqrt(ip[i * 2] * ip[i * 2] +
 						  ip[i * 2 + 1] * ip[i * 2 + 1]);
@@ -552,11 +552,11 @@ namespace r8b
 
 		ip[0] = 0.0;
 
-		for (i = 1; i < Len2; i++) { ip[i] *= ffto->getInvMulConst(); }
+		for (i = 1; i < Len2; ++i) { ip[i] *= ffto->getInvMulConst(); }
 
 		ip[Len2] = 0.0;
 
-		for (i = Len2 + 1; i < Len; i++) { ip[i] *= -ffto->getInvMulConst(); }
+		for (i = Len2 + 1; i < Len; ++i) { ip[i] *= -ffto->getInvMulConst(); }
 
 		// Convert Hilbert-transformed cepstrum back to the "log |c|" spectrum and
 		// perform its exponentiation, multiplied by the power spectrum previously
@@ -567,7 +567,7 @@ namespace r8b
 		ip[0] = ip2[0];
 		ip[1] = ip2[Len2];
 
-		for (i = 1; i < Len2; i++)
+		for (i = 1; i < Len2; ++i)
 		{
 			const double p = ip2[i];
 			ip[i * 2 + 0]  = cos(ip[i * 2 + 1]) * p;
@@ -576,7 +576,7 @@ namespace r8b
 
 		ffto->inverse(ip);
 
-		if (DoFinalMul) { for (i = 0; i < KernelLen; i++) { Kernel[i] = ip[i] * ffto->getInvMulConst(); } }
+		if (DoFinalMul) { for (i = 0; i < KernelLen; ++i) { Kernel[i] = ip[i] * ffto->getInvMulConst(); } }
 		else { memcpy(&Kernel[0], &ip[0], KernelLen * sizeof(double)); }
 
 		if (DCGroupDelay != nullptr)

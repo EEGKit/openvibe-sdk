@@ -8,34 +8,34 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass>
+	template <class TOwnerClass>
 	class TWriterCallbackProxy1 final : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy1(COwnerClass& rOwnerObject, void (COwnerClass::*mfpWrite)(const char* sString)) : m_rOwnerObject(rOwnerObject),
-																											   m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy1(TOwnerClass& ownerObject, void (TOwnerClass::*mfpWrite)(const char* str))
+			: m_ownerObject(ownerObject), m_mfpWrite(mfpWrite) { }
 
-		void write(const char* sString) override { if (m_mfpWrite) { m_rOwnerObject.m_mfpWrite(sString); } }
+		void write(const char* str) override { if (m_mfpWrite) { m_ownerObject.m_mfpWrite(str); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpWrite)(const char* sString);
+		TOwnerClass& m_ownerObject;
+		void (TOwnerClass::*m_mfpWrite)(const char* str);
 	};
 
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpWrite)(const char* sString)>
+	template <class TOwnerClass, void (TOwnerClass::*TMfpWrite)(const char* str)>
 	class TWriterCallbackProxy2 final : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy2(COwnerClass rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy2(TOwnerClass ownerObject) : m_ownerObject(ownerObject), m_mfpWrite(TMfpWrite) { }
 
-		void write(const char* sString) override { if (mfpWrite) { m_rOwnerObject.mfpWrite(sString); } }
+		void write(const char* str) override { if (TMfpWrite) { m_ownerObject.mfpWrite(str); } }
 
 	protected:
-		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpWrite)(const char* sString);
+		TOwnerClass& m_ownerObject;
+		void (TOwnerClass::*m_mfpWrite)(const char* str);
 	};
 
 	// ________________________________________________________________________________________________________________

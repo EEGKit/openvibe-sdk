@@ -86,12 +86,12 @@ namespace Dsp
 
 			if (n == 2) { return; }
 
-			for (i = 0; i <= n; i++) { m_aa[i] = m_bb[i] = 0.0; }
+			for (i = 0; i <= n; ++i) { m_aa[i] = m_bb[i] = 0.0; }
 			m_bb[1] = 1.0;
 
-			for (i = 3; i <= n; i++)
+			for (i = 3; i <= n; ++i)
 			{
-				for (j = 0; j <= i; j++)
+				for (j = 0; j <= i; ++j)
 				{
 					m_aa[j] = m_bb[j];
 					m_bb[j] = p[j];
@@ -131,15 +131,15 @@ namespace Dsp
 			//
 			if (n & 1)
 			{                // odd
-				for (i = 0; i <= k; i++) { m_a[i] = (2.0 * i + 1.0) / (m_sqrt2() * (k + 1.0)); }
+				for (i = 0; i <= k; ++i) { m_a[i] = (2.0 * i + 1.0) / (m_sqrt2() * (k + 1.0)); }
 			}                           // even
 			else
 			{
-				for (i = 0; i < k + 1; i++) { m_a[i] = 0.0; }
+				for (i = 0; i < k + 1; ++i) { m_a[i] = 0.0; }
 				if (k & 1) { for (i = 1; i <= k; i += 2) { m_a[i] = (2 * i + 1) / sqrt(double((k + 1) * (k + 2))); } }
 				else { for (i = 0; i <= k; i += 2) { m_a[i] = (2 * i + 1) / sqrt(double((k + 1) * (k + 2))); } }
 			}
-			for (i = 0; i <= n; i++)
+			for (i = 0; i <= n; ++i)
 			{
 				m_s[i] = 0.0;
 				m_w[i] = 0.0;
@@ -149,16 +149,16 @@ namespace Dsp
 			//
 			m_s[0] = m_a[0];
 			m_s[1] = m_a[1];
-			for (i = 2; i <= k; i++)
+			for (i = 2; i <= k; ++i)
 			{
 				legendre(m_p, i);
-				for (j = 0; j <= i; j++) { m_s[j] += m_a[i] * m_p[j]; }
+				for (j = 0; j <= i; ++j) { m_s[j] += m_a[i] * m_p[j]; }
 			}
 			//
 			//  form v[] = square of s[]
 			//
-			for (i = 0; i <= 2 * k + 2; i++) { m_v[i] = 0.0; }
-			for (i = 0; i <= k; i++) { for (j = 0; j <= k; j++) { m_v[i + j] += m_s[i] * m_s[j]; } }
+			for (i = 0; i <= 2 * k + 2; ++i) { m_v[i] = 0.0; }
+			for (i = 0; i <= k; ++i) { for (j = 0; j <= k; ++j) { m_v[i + j] += m_s[i] * m_s[j]; } }
 			//
 			//  modify integrand for even 'n'
 			//
@@ -172,18 +172,18 @@ namespace Dsp
 			//
 			// clear s[] for use in computing definite integral
 			//
-			for (i = 0; i < (n + 2); i++) { m_s[i] = 0.0; }
+			for (i = 0; i < (n + 2); ++i) { m_s[i] = 0.0; }
 			m_s[0] = -1.0;
 			m_s[1] = 2.0;
 			//
 			//  calculate definite integral
 			//
-			for (i = 1; i <= n; i++)
+			for (i = 1; i <= n; ++i)
 			{
 				if (i > 1)
 				{
 					double c0 = -m_s[0];
-					for (j = 1; j < i + 1; j++)
+					for (j = 1; j < i + 1; ++j)
 					{
 						c1         = -m_s[j] + 2.0 * m_s[j - 1];
 						m_s[j - 1] = c0;

@@ -3,24 +3,24 @@
 #include "../algorithms/ovpCAlgorithmOVMatrixFileReader.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { return ((uint64_t)1LL) << 32; }
+uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { return uint64_t(1LL) << 32; }
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 {
-	m_bHeaderSent = false;
-	m_bBufferSent = false;
+	m_headerSent = false;
+	m_bufferSent = false;
 
 	// Creates algorithms
-	m_pOVMatrixFileReader               = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OVMatrixFileReader));
-	m_pChannelLocalisationStreamEncoder = new OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>;
+	m_pOVMatrixFileReader = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OVMatrixFileReader));
+	m_encoder             = new OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>;
 	m_pOVMatrixFileReader->initialize();
-	m_pChannelLocalisationStreamEncoder->initialize(*this, 0);
+	m_encoder->initialize(*this, 0);
 
 	//*
 	// OVMatrix file reader parameters
@@ -28,8 +28,8 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 	/*
 	TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
 		// Channel localisation parameters
-		TParameterHandler<bool> ip_bDynamic(m_pChannelLocalisationStreamEncoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Dynamic));
-		TParameterHandler<IMatrix*> ip_pMatrix(m_pChannelLocalisationStreamEncoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Matrix));
+		TParameterHandler<bool> ip_bDynamic(m_encoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Dynamic));
+		TParameterHandler<IMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Matrix));
 	
 		// Configure parameters
 	
@@ -37,7 +37,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 		ip_pMatrix.setReferenceTarget(op_pMatrix);
 	//*/
 
-	m_pChannelLocalisationStreamEncoder->getInputDynamic() = false;
+	m_encoder->getInputDynamic() = false;
 
 	// Configures settings according to box
 	m_sFilename   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -54,16 +54,16 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize()
 	m_pOVMatrixFileReader->uninitialize();
 	getAlgorithmManager().releaseAlgorithm(*m_pOVMatrixFileReader);
 
-	if (m_pChannelLocalisationStreamEncoder)
+	if (m_encoder)
 	{
-		m_pChannelLocalisationStreamEncoder->uninitialize();
-		delete m_pChannelLocalisationStreamEncoder;
+		m_encoder->uninitialize();
+		delete m_encoder;
 	}
 
 	return true;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& messageClock)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& /*messageClock*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -71,7 +71,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& m
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 {
-	if (m_bHeaderSent == true && m_bBufferSent == true) { return true; }
+	if (m_headerSent == true && m_bufferSent == true) { return true; }
 
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
@@ -85,40 +85,40 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 						"Wrong format for electrode localisation matrix loaded from file " << m_sFilename,
 						OpenViBE::Kernel::ErrorType::BadParsing);
 
-	if (m_bHeaderSent == false)
+	if (m_headerSent == false)
 	{
 		// Connects parameters to memory buffer
-		//op_pChannelLocalisationMemoryBuffer = boxContext.getOutputChunk(0);
+		//op_channelLocalisationMemoryBuffer = boxContext.getOutputChunk(0);
 
 		//open file and load matrix dimensions
 		// m_pOVMatrixFileReader->process(OVP_Algorithm_BrainampFileReader_InputTriggerId_Open);
 
 		// Produces header
-		IMatrix* l_pInputMatrix = m_pChannelLocalisationStreamEncoder->getInputMatrix();
-		OpenViBEToolkit::Tools::Matrix::copy(*l_pInputMatrix, *op_pMatrix);
+		IMatrix* iMatrix = m_encoder->getInputMatrix();
+		OpenViBEToolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
 
-		m_pChannelLocalisationStreamEncoder->encodeHeader();
+		m_encoder->encodeHeader();
 
 		// Sends header
 		boxContext.markOutputAsReadyToSend(0, 0, 0);
 
-		m_bHeaderSent = true;
+		m_headerSent = true;
 	}
 
-	if (m_bBufferSent == false /*&&
+	if (m_bufferSent == false /*&&
 		m_pOVMatrixFileReader->isOutputTriggerActive(OVP_Algorithm_OVMatrixFileReader_OutputTriggerId_DataProduced)*/)
 	{
 		// Connects parameters to memory buffer
-		IMatrix* l_pInputMatrix = m_pChannelLocalisationStreamEncoder->getInputMatrix();
-		OpenViBEToolkit::Tools::Matrix::copy(*l_pInputMatrix, *op_pMatrix);
+		IMatrix* iMatrix = m_encoder->getInputMatrix();
+		OpenViBEToolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer
-		m_pChannelLocalisationStreamEncoder->encodeBuffer();
+		m_encoder->encodeBuffer();
 
 		// Sends buffer
-		boxContext.markOutputAsReadyToSend(0, 0/*op_ui64CurrentStartTime*/, 0/*op_ui64CurrentEndTime*/);
+		boxContext.markOutputAsReadyToSend(0, 0/*op_CurrentStartTime*/, 0/*op_CurrentEndTime*/);
 
-		m_bBufferSent = true;
+		m_bufferSent = true;
 	}
 
 	return true;

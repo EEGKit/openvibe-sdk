@@ -35,9 +35,8 @@
 * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 */
+#include <array>
 #if defined TARGET_OS_Windows
-#include <stdio.h>
-#include <string>
 #include <iostream>
 #include "WindowsDateParser.h"
 
@@ -49,33 +48,20 @@ using namespace DateParser;
 */
 #define ALT_E			0x01
 #define ALT_O			0x02
-#define	LEGAL_ALT(x)		{ if (alt_format & ~(x)) return (0); }
+#define	LEGAL_ALT(x)	if (alt_format & ~(x)) { return 0; }
 
-#define	EPOCH_YEAR	1970
-#define	SECSPERHOUR	3600
-#define	SECSPERDAY	86400
+#define	EPOCH_YEAR		1970
+#define	SECSPERHOUR		3600
+#define	SECSPERDAY		86400
 #define	TM_YEAR_BASE	1900
 
-static int conv_num(const char**, int*, int, int);
+static int ConvNum(const char** buf, int* dest, const int llim, const int ulim);
 
-static const char* day[7] = {
-	"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-	"Friday", "Saturday"
-};
-static const char* abday[7] = {
-	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-};
-static const char* mon[12] = {
-	"January", "February", "March", "April", "May", "June", "July",
-	"August", "September", "October", "November", "December"
-};
-static const char* abmon[12] = {
-	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
-static const char* am_pm[2] = {
-	"AM", "PM"
-};
+static const std::array<const std::string, 7> DAY = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+static const std::array<const std::string, 7> AB_DAY = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static const std::array<const std::string, 12> MON = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+static const std::array<const std::string, 12> AB_MON = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+static const std::array<const std::string, 2> AM_PM = { "AM", "PM" };
 
 
 Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, struct tm* tmParsed)
@@ -95,20 +81,19 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 		/* Eat up white-space. */
 		if (isspace(c))
 		{
-			while (isspace(*bp)) bp++;
-
+			while (isspace(*bp)) { bp++; }
 			fmt++;
 			continue;
 		}
 
-		if ((c = *fmt++) != '%') goto literal;
+		if ((c = *fmt++) != '%') { goto literal; }
 
 
 	again: switch (c = *fmt++)
 		{
 			case '%':	/* "%%" is converted to "%". */
 			literal :
-				if (c != *bp++) return (nullptr);
+				if (c != *bp++) { return (nullptr); }
 				break;
 
 				/*
@@ -116,12 +101,12 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				* and start over again.
 				*/
 			case 'E':	/* "%E?" alternative conversion modifier. */
-			LEGAL_ALT(0);
+				LEGAL_ALT(0);
 				alt_format |= ALT_E;
 				goto again;
 
 			case 'O':	/* "%O?" alternative conversion modifier. */
-			LEGAL_ALT(0);
+				LEGAL_ALT(0);
 				alt_format |= ALT_O;
 				goto again;
 
@@ -129,38 +114,38 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				* "Complex" conversion rules, implemented through recursion.
 				*/
 			case 'c':	/* Date and time, using the locale's format. */
-			LEGAL_ALT(ALT_E);
-				if (!(bp = windowsStrptime(bp, "%x %X", tmParsed))) return (nullptr);
+				LEGAL_ALT(ALT_E);
+				if (!((bp = windowsStrptime(bp, "%x %X", tmParsed)))) { return nullptr; }
 				break;
 
 			case 'D':	/* The date as "%m/%d/%y". */
-			LEGAL_ALT(0);
-				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed))) return (nullptr);
+				LEGAL_ALT(0);
+				if (!((bp = windowsStrptime(bp, "%m/%d/%y", tmParsed)))) { return nullptr; }
 				break;
 
 			case 'R':	/* The time as "%H:%M". */
-			LEGAL_ALT(0);
-				if (!(bp = windowsStrptime(bp, "%H:%M", tmParsed))) return (nullptr);
+				LEGAL_ALT(0);
+				if (!((bp = windowsStrptime(bp, "%H:%M", tmParsed)))) { return nullptr; }
 				break;
 
 			case 'r':	/* The time in 12-hour clock representation. */
-			LEGAL_ALT(0);
-				if (!(bp = windowsStrptime(bp, "%I:%M:%S %p", tmParsed))) return (nullptr);
+				LEGAL_ALT(0);
+				if (!((bp = windowsStrptime(bp, "%I:%M:%S %p", tmParsed)))) { return nullptr; }
 				break;
 
 			case 'T':	/* The time as "%H:%M:%S". */
-			LEGAL_ALT(0);
-				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed))) return (nullptr);
+				LEGAL_ALT(0);
+				if (!((bp = windowsStrptime(bp, "%H:%M:%S", tmParsed)))) { return nullptr; }
 				break;
 
 			case 'X':	/* The time, using the locale's format. */
-			LEGAL_ALT(ALT_E);
-				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed))) return (nullptr);
+				LEGAL_ALT(ALT_E);
+				if (!((bp = windowsStrptime(bp, "%H:%M:%S", tmParsed)))) { return nullptr; }
 				break;
 
 			case 'x':	/* The date, using the locale's format. */
-			LEGAL_ALT(ALT_E);
-				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed))) return (nullptr);
+				LEGAL_ALT(ALT_E);
+				if (!((bp = windowsStrptime(bp, "%m/%d/%y", tmParsed)))) { return nullptr; }
 				break;
 
 				/*
@@ -168,20 +153,20 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				*/
 			case 'A':	/* The day of week, using the locale's form. */
 			case 'a':
-			LEGAL_ALT(0);
-				for (i = 0; i < 7; i++)
+				LEGAL_ALT(0);
+				for (i = 0; i < 7; ++i)
 				{
 					/* Full name. */
-					len = strlen(day[i]);
-					if (strncmp(day[i], bp, len) == 0) break;
+					len = DAY[i].size();
+					if (strncmp(DAY[i].c_str(), bp, len) == 0) { break; }
 
 					/* Abbreviated name. */
-					len = strlen(abday[i]);
-					if (strncmp(abday[i], bp, len) == 0) break;
+					len = AB_DAY[i].size();
+					if (strncmp(AB_DAY[i].c_str(), bp, len) == 0) { break; }
 				}
 
 				/* Nothing matched. */
-				if (i == 7) return (nullptr);
+				if (i == 7) { return nullptr; }
 
 				tmParsed->tm_wday = i;
 				bp += len;
@@ -190,28 +175,28 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'B':	/* The month, using the locale's form. */
 			case 'b':
 			case 'h':
-			LEGAL_ALT(0);
-				for (i = 0; i < 12; i++)
+				LEGAL_ALT(0);
+				for (i = 0; i < 12; ++i)
 				{
 					/* Full name. */
-					len = strlen(mon[i]);
-					if (strncmp(mon[i], bp, len) == 0) break;
+					len = MON[i].size();
+					if (strncmp(MON[i].c_str(), bp, len) == 0) { break; }
 
 					/* Abbreviated name. */
-					len = strlen(abmon[i]);
-					if (strncmp(abmon[i], bp, len) == 0) break;
+					len = AB_MON[i].size();
+					if (strncmp(AB_MON[i].c_str(), bp, len) == 0) { break; }
 				}
 
 				/* Nothing matched. */
-				if (i == 12) return (nullptr);
+				if (i == 12) { return (nullptr); }
 
 				tmParsed->tm_mon = i;
 				bp += len;
 				break;
 
 			case 'C':	/* The century number. */
-			LEGAL_ALT(ALT_E);
-				if (!(conv_num(&bp, &i, 0, 99))) return (nullptr);
+				LEGAL_ALT(ALT_E);
+				if (!(ConvNum(&bp, &i, 0, 99))) { return (nullptr); }
 
 				if (split_year) { tmParsed->tm_year = (tmParsed->tm_year % 100) + (i * 100); }
 				else
@@ -223,59 +208,59 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 
 			case 'd':	/* The day of month. */
 			case 'e':
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_mday, 1, 31))) return (nullptr);
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &tmParsed->tm_mday, 1, 31))) { return (nullptr); }
 				break;
 
 			case 'k':	/* The hour (24-hour clock representation). */
-			LEGAL_ALT(0);
+				LEGAL_ALT(0);
 				/* FALLTHROUGH */
 			case 'H':
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_hour, 0, 23))) return (nullptr);
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &tmParsed->tm_hour, 0, 23))) { return (nullptr); }
 				break;
 
 			case 'l':	/* The hour (12-hour clock representation). */
-			LEGAL_ALT(0);
+				LEGAL_ALT(0);
 				/* FALLTHROUGH */
 			case 'I':
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_hour, 1, 12))) return (nullptr);
-				if (tmParsed->tm_hour == 12) tmParsed->tm_hour = 0;
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &tmParsed->tm_hour, 1, 12))) { return (nullptr); }
+				if (tmParsed->tm_hour == 12) { tmParsed->tm_hour = 0; }
 				break;
 
 			case 'j':	/* The day of year. */
-			LEGAL_ALT(0);
-				if (!(conv_num(&bp, &i, 1, 366))) return (nullptr);
+				LEGAL_ALT(0);
+				if (!(ConvNum(&bp, &i, 1, 366))) { return (nullptr); }
 				tmParsed->tm_yday = i - 1;
 				break;
 
 			case 'M':	/* The minute. */
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_min, 0, 59))) return (nullptr);
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &tmParsed->tm_min, 0, 59))) { return (nullptr); }
 				break;
 
 			case 'm':	/* The month. */
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &i, 1, 12))) return (nullptr);
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &i, 1, 12))) { return (nullptr); }
 				tmParsed->tm_mon = i - 1;
 				break;
 
 			case 'p':	/* The locale's equivalent of AM/PM. */
-			LEGAL_ALT(0);
+				LEGAL_ALT(0);
 				/* AM? */
-				if (strcmp(am_pm[0], bp) == 0)
+				if (strcmp(AM_PM[0].c_str(), bp) == 0)
 				{
-					if (tmParsed->tm_hour > 11) return (nullptr);
-					bp += strlen(am_pm[0]);
+					if (tmParsed->tm_hour > 11) { return (nullptr); }
+					bp += AM_PM[0].size();
 					break;
 				}
 				/* PM? */
-				if (strcmp(am_pm[1], bp) == 0)
+				if (strcmp(AM_PM[1].c_str(), bp) == 0)
 				{
-					if (tmParsed->tm_hour > 11) return (nullptr);
+					if (tmParsed->tm_hour > 11) { return (nullptr); }
 					tmParsed->tm_hour += 12;
-					bp += strlen(am_pm[1]);
+					bp += AM_PM[1].size();
 					break;
 				}
 
@@ -283,37 +268,37 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				return nullptr;
 
 			case 'S':	/* The seconds. */
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_sec, 0, 61))) return (nullptr);
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &tmParsed->tm_sec, 0, 61))) { return (nullptr); }
 				break;
 
 			case 'U':	/* The week of year, beginning on sunday. */
 			case 'W':	/* The week of year, beginning on monday. */
-			LEGAL_ALT(ALT_O);
+				LEGAL_ALT(ALT_O);
 				/*
 				* XXX This is bogus, as we can not assume any valid
 				* information present in the tm structure at this
 				* point to calculate a real value, so just check the
 				* range for now.
 				*/
-				if (!(conv_num(&bp, &i, 0, 53))) return (nullptr);
+				if (!(ConvNum(&bp, &i, 0, 53))) { return (nullptr); }
 				break;
 
 			case 'w':	/* The day of week, beginning on sunday. */
-			LEGAL_ALT(ALT_O);
-				if (!(conv_num(&bp, &tmParsed->tm_wday, 0, 6))) return (nullptr);
+				LEGAL_ALT(ALT_O);
+				if (!(ConvNum(&bp, &tmParsed->tm_wday, 0, 6))) { return (nullptr); }
 				break;
 
 			case 'Y':	/* The year. */
-			LEGAL_ALT(ALT_E);
-				if (!(conv_num(&bp, &i, 0, 9999))) return (nullptr);
+				LEGAL_ALT(ALT_E);
+				if (!(ConvNum(&bp, &i, 0, 9999))) { return (nullptr); }
 
 				tmParsed->tm_year = i - TM_YEAR_BASE;
 				break;
 
 			case 'y':	/* The year within 100 years of the epoch. */
-			LEGAL_ALT(ALT_E | ALT_O);
-				if (!(conv_num(&bp, &i, 0, 99))) return (nullptr);
+				LEGAL_ALT(ALT_E | ALT_O);
+				if (!(ConvNum(&bp, &i, 0, 99))) { return (nullptr); }
 
 				if (split_year)
 				{
@@ -321,8 +306,8 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 					break;
 				}
 				split_year = 1;
-				if (i <= 68) tmParsed->tm_year = i + 2000 - TM_YEAR_BASE;
-				else tmParsed->tm_year         = i + 1900 - TM_YEAR_BASE;
+				if (i <= 68) { tmParsed->tm_year = i + 2000 - TM_YEAR_BASE; }
+				else { tmParsed->tm_year = i + 1900 - TM_YEAR_BASE; }
 				break;
 
 				/*
@@ -330,8 +315,8 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				*/
 			case 'n':	/* Any kind of white-space. */
 			case 't':
-			LEGAL_ALT(0);
-				while (isspace(*bp)) bp++;
+				LEGAL_ALT(0);
+				while (isspace(*bp)) { bp++; }
 				break;
 
 
@@ -344,14 +329,14 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 }
 
 
-static int conv_num(const char** buf, int* dest, int llim, int ulim)
+static int ConvNum(const char** buf, int* dest, const int llim, const int ulim)
 {
 	int result = 0;
 
 	/* The limit also determines the number of valid digits. */
 	int rulim = ulim;
 
-	if (**buf < '0' || **buf > '9') return (0);
+	if (**buf < '0' || **buf > '9') { return (0); }
 
 	do
 	{
@@ -360,7 +345,7 @@ static int conv_num(const char** buf, int* dest, int llim, int ulim)
 		rulim /= 10;
 	} while ((result * 10 <= ulim) && rulim && **buf >= '0' && **buf <= '9');
 
-	if (result < llim || result > ulim) return 0;
+	if (result < llim || result > ulim) { return 0; }
 
 	*dest = result;
 	return 1;

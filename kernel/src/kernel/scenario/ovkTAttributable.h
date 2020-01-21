@@ -1,12 +1,10 @@
 #pragma once
 
-#include "../../ovk_base.h"
 #include "../../ovk_tools.h"
 
 #include <openvibe/ov_all.h>
 
 #include <map>
-#include <iostream>
 
 namespace OpenViBE
 {
@@ -17,69 +15,68 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TAttributable(const IKernelContext& ctx)
-				: T(ctx) { }
+			explicit TAttributable(const IKernelContext& ctx) : T(ctx) { }
 
-			virtual bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue)
+			bool addAttribute(const CIdentifier& attributeID, const CString& sAttributeValue) override
 			{
-				const std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(attributeID);
-				if (itAttribute != m_vAttribute.end()) { return false; }
-				m_vAttribute[attributeID] = sAttributeValue;
+				const auto itAttribute = m_attributes.find(attributeID);
+				if (itAttribute != m_attributes.end()) { return false; }
+				m_attributes[attributeID] = sAttributeValue;
 				return true;
 			}
 
-			virtual bool removeAttribute(const CIdentifier& attributeID)
+			bool removeAttribute(const CIdentifier& attributeID) override
 			{
-				const std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(attributeID);
-				if (itAttribute == m_vAttribute.end()) { return false; }
-				m_vAttribute.erase(itAttribute);
+				const auto itAttribute = m_attributes.find(attributeID);
+				if (itAttribute == m_attributes.end()) { return false; }
+				m_attributes.erase(itAttribute);
 				return true;
 			}
 
-			virtual bool removeAllAttributes()
+			bool removeAllAttributes() override
 			{
-				m_vAttribute.clear();
+				m_attributes.clear();
 				return true;
 			}
 
-			virtual CString getAttributeValue(const CIdentifier& attributeID) const
+			CString getAttributeValue(const CIdentifier& attributeID) const override
 			{
-				const std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(attributeID);
-				if (itAttribute == m_vAttribute.end()) { return CString(""); }
+				const auto itAttribute = m_attributes.find(attributeID);
+				if (itAttribute == m_attributes.end()) { return CString(""); }
 				return itAttribute->second;
 			}
 
-			virtual bool setAttributeValue(const CIdentifier& attributeID, const CString& sAttributeValue)
+			bool setAttributeValue(const CIdentifier& attributeID, const CString& value) override
 			{
-				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(attributeID);
-				if (itAttribute == m_vAttribute.end())
+				auto itAttribute = m_attributes.find(attributeID);
+				if (itAttribute == m_attributes.end())
 				{
-					m_vAttribute[attributeID] = sAttributeValue;
+					m_attributes[attributeID] = value;
 					return true;
 				}
-				itAttribute->second = sAttributeValue;
+				itAttribute->second = value;
 				return true;
 			}
 
-			virtual bool hasAttribute(const CIdentifier& attributeID) const
+			bool hasAttribute(const CIdentifier& attributeID) const override
 			{
-				const std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(attributeID);
-				if (itAttribute == m_vAttribute.end()) { return false; }
+				const auto itAttribute = m_attributes.find(attributeID);
+				if (itAttribute == m_attributes.end()) { return false; }
 				return true;
 			}
 
-			virtual bool hasAttributes() const { return !m_vAttribute.empty(); }
+			bool hasAttributes() const override { return !m_attributes.empty(); }
 
-			virtual CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const
+			CIdentifier getNextAttributeIdentifier(const CIdentifier& previousID) const override
 			{
-				return getNextIdentifier<CString>(m_vAttribute, previousID);
+				return getNextIdentifier<CString>(m_attributes, previousID);
 			}
 
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT)
 
 		protected:
 
-			std::map<CIdentifier, CString> m_vAttribute;
+			std::map<CIdentifier, CString> m_attributes;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

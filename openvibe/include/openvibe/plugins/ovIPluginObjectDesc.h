@@ -200,11 +200,11 @@ namespace OpenViBE
 			virtual CString getUpdatedSoftwareVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Tests whether the plugin has a given functionality
-			 * \param ePF [in] : functionality of interest
+			 * \param functionality [in] : functionality of interest
 			 * \return \e true in case plugin has this functionality.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasFunctionality(Kernel::EPluginFunctionality /*ePF*/) const { return false; }
+			virtual bool hasFunctionality(Kernel::EPluginFunctionality functionality) const { return false; }
 
 			/**
 			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
@@ -212,10 +212,10 @@ namespace OpenViBE
 			 * \retval true If the plugin has the demanded functionality.
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
-			virtual bool hasFunctionality(const CIdentifier /*functionality*/) const { return false; }
+			virtual bool hasFunctionality(const CIdentifier& functionality) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
-			 * \param eLT [in] : the licence type that this plugin may have
+			 * \param license [in] : the licence type that this plugin may have
 			 * \return \e true in case this plugin accepts the specified licence.
 			 * \return \e false in other case
 			 *
@@ -227,7 +227,7 @@ namespace OpenViBE
 			 *
 			 * A plugin may be used under different licences. For this reason, the OpenViBE kernel will loop on this function for each licence type to request.
 			 */
-			virtual bool hasLicenceType(Kernel::ELicenseType /*eLT*/) const { return false; }
+			virtual bool hasLicenceType(Kernel::ELicenseType license) const { return false; }
 
 			//@}
 

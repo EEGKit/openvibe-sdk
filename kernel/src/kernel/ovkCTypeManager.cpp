@@ -6,325 +6,313 @@
 #include <algorithm>
 #include <functional>
 #include <cctype>
-#include <cstdio>
 #include <algorithm>
 
-#define OV_TRACE_K(message) \
-this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
-
-#define OV_DEBUG_K(message) \
-this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
-
-#define OV_DEBUG_UNLESS_K(expression, message) \
-if (!(expression)) \
-{ \
-	 OV_DEBUG_K(message); \
-}
+#define OV_TRACE_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
+#define OV_DEBUG_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
+#define OV_DEBUG_UNLESS_K(expression, message) if (!(expression)) { OV_DEBUG_K(message); }
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 namespace
 {
 	// because std::tolower has multiple signatures,
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class charT>
-	charT to_lower(charT c) { return std::tolower(c); }
+	template <class TCharT>
+	TCharT ToLower(TCharT c) { return std::tolower(c); }
 
-	struct a_inf_b
+	struct SAInfB
 	{
-		bool operator()(std::pair<CIdentifier, CString> a, std::pair<CIdentifier, CString> b) { return a.second < b.second; }
+		bool operator()(const std::pair<CIdentifier, CString> a, const std::pair<CIdentifier, CString>& b) const { return a.second < b.second; }
 	};
 } // namespace
 
 CTypeManager::CTypeManager(const IKernelContext& ctx)
 	: TKernelObject<ITypeManager>(ctx)
 {
-	m_vName[OV_UndefinedIdentifier] = "undefined";
+	m_names[OV_UndefinedIdentifier] = "undefined";
 	this->registerEnumerationType(OV_TypeId_BoxAlgorithmFlag, "BoxFlags");
 }
 
 CIdentifier CTypeManager::getNextTypeIdentifier(const CIdentifier& previousID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	return getNextIdentifier<CString>(m_vName, previousID);
+	return getNextIdentifier<CString>(m_names, previousID);
 }
 
 std::vector<std::pair<CIdentifier, CString>> CTypeManager::getSortedTypes() const
 {
-	std::vector<std::pair<CIdentifier, CString>> l_oSorted;
+	std::vector<std::pair<CIdentifier, CString>> sorted;
 
-	for (auto element : m_vName) { l_oSorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second)); }
-	std::sort(l_oSorted.begin(), l_oSorted.end(), a_inf_b());
+	for (const auto& element : m_names) { sorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second)); }
+	std::sort(sorted.begin(), sorted.end(), SAInfB());
 
-	return l_oSorted;
+	return sorted;
 }
 
-bool CTypeManager::registerType(const CIdentifier& typeID, const CString& sTypeName)
+bool CTypeManager::registerType(const CIdentifier& typeID, const CString& name)
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register type " << typeID.toString() << " that already exists.",
+	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register type " << typeID.str() << " that already exists.",
 						OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_DEBUG_UNLESS_K(m_TakenNames.find(sTypeName) == m_TakenNames.end(),
-					  "Trying to register type " << typeID << " with a name that already exists ( " << sTypeName << ")");
+	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
+					  "Trying to register type " << typeID << " with a name that already exists ( " << name << ")");
 
-	m_vName[typeID] = sTypeName;
-	OV_TRACE_K("Registered type id " << typeID << " - " << sTypeName);
+	m_names[typeID] = name;
+	OV_TRACE_K("Registered type id " << typeID << " - " << name);
 	return true;
 }
 
-bool CTypeManager::registerStreamType(const CIdentifier& typeID, const CString& sTypeName, const CIdentifier& rParentTypeIdentifier)
+bool CTypeManager::registerStreamType(const CIdentifier& typeID, const CString& name, const CIdentifier& parentTypeID)
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register stream type " << typeID.toString() << " that already exists.",
+	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register stream type " << typeID.str() << " that already exists.",
 						OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_DEBUG_UNLESS_K(m_TakenNames.find(sTypeName) == m_TakenNames.end(),
-					  "Trying to register stream type " << typeID << " with a name that already exists ( " << sTypeName << ")");
+	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
+					  "Trying to register stream type " << typeID << " with a name that already exists ( " << name << ")");
 
-	OV_ERROR_UNLESS_KRF(rParentTypeIdentifier == OV_UndefinedIdentifier || isStream(rParentTypeIdentifier),
-						"Trying to register an invalid stream type [" << sTypeName << "] " << typeID.toString() << ", parent : " << rParentTypeIdentifier.
-						toString() << ".",
+	OV_ERROR_UNLESS_KRF(parentTypeID == OV_UndefinedIdentifier || isStream(parentTypeID),
+						"Trying to register an invalid stream type [" << name << "] " << typeID.str() << ", parent : " << parentTypeID.str() << ".",
 						OpenViBE::Kernel::ErrorType::BadArgument);
 
-	m_vName[typeID] = sTypeName;
-	m_TakenNames.insert(sTypeName);
-	m_vStream[typeID] = rParentTypeIdentifier;
-	OV_TRACE_K("Registered stream type id " << typeID << "::" << rParentTypeIdentifier << " - " << sTypeName);
+	m_names[typeID] = name;
+	m_takenNames.insert(name);
+	m_streams[typeID] = parentTypeID;
+	OV_TRACE_K("Registered stream type id " << typeID << "::" << parentTypeID << " - " << name);
 	return true;
 }
 
-bool CTypeManager::registerEnumerationType(const CIdentifier& typeID, const CString& sTypeName)
+bool CTypeManager::registerEnumerationType(const CIdentifier& typeID, const CString& name)
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	if (isRegistered(typeID))
 	{
-		if (m_vName[typeID] != sTypeName)
+		if (m_names[typeID] != name)
 		{
 			OV_ERROR_KRF(
-				"Trying to register enum type " << typeID.toString() << " that already exists with different value (" << m_vName[typeID] << " != " << sTypeName
-				<< ")",
+				"Trying to register enum type " << typeID.str() << " that already exists with different value (" << m_names[typeID] << " != " << name <<
+				")",
 				OpenViBE::Kernel::ErrorType::BadArgument);
 		}
-		OV_DEBUG_K("Trying to register enum type " << typeID.toString() << " that already exists.");
+		OV_DEBUG_K("Trying to register enum type " << typeID.str() << " that already exists.");
 	}
 
-	OV_DEBUG_UNLESS_K(m_TakenNames.find(sTypeName) == m_TakenNames.end(),
-					  "Trying to register enum type " << typeID << " with a name that already exists ( " << sTypeName << ")");
+	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
+					  "Trying to register enum type " << typeID << " with a name that already exists ( " << name << ")");
 
-	m_vName[typeID] = sTypeName;
-	m_TakenNames.insert(sTypeName);
-	m_vEnumeration[typeID];
-	OV_TRACE_K("Registered enumeration type id " << typeID << " - " << sTypeName);
+	m_names[typeID] = name;
+	m_takenNames.insert(name);
+	m_enumerations[typeID];
+	OV_TRACE_K("Registered enumeration type id " << typeID << " - " << name);
 	return true;
 }
 
-bool CTypeManager::registerEnumerationEntry(const CIdentifier& typeID, const CString& sEntryName, const uint64_t ui64EntryValue)
+bool CTypeManager::registerEnumerationEntry(const CIdentifier& typeID, const CString& name, const uint64_t value)
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	auto itEnumeration = m_vEnumeration.find(typeID);
+	auto itEnumeration = m_enumerations.find(typeID);
 
-	OV_ERROR_UNLESS_KRF(itEnumeration != m_vEnumeration.end(), "Enumeration type [" << typeID.toString() << "] does not exist." << sEntryName,
+	OV_ERROR_UNLESS_KRF(itEnumeration != m_enumerations.end(), "Enumeration type [" << typeID.str() << "] does not exist." << name,
 						OpenViBE::Kernel::ErrorType::BadArgument);
 
-	auto itElem = itEnumeration->second.find(ui64EntryValue);
+	const auto itElem = itEnumeration->second.find(value);
 	if (itElem != itEnumeration->second.end())
 	{
-		if (std::string(itElem->second) != std::string(sEntryName))
+		if (std::string(itElem->second) != std::string(name))
 		{
 			OV_WARNING_K(
-				"Enumeration type [" << typeID.toString() << "] already has element [" << ui64EntryValue << "]. Value will be overriden : " << itElem->second <<
-				" => " << sEntryName);
+				"Enumeration type [" << typeID.str() << "] already has element [" << value << "]. Value will be overriden : " << itElem->second <<
+				" => " << name);
 		}
-		else { OV_DEBUG_K("Enumeration type [" << typeID.toString() << "] already has element [" << ui64EntryValue << "]."); }
+		else { OV_DEBUG_K("Enumeration type [" << typeID.str() << "] already has element [" << value << "]."); }
 	}
 
-	itEnumeration->second[ui64EntryValue] = sEntryName;
+	itEnumeration->second[value] = name;
 	return true;
 }
 
-bool CTypeManager::registerBitMaskType(const CIdentifier& typeID, const CString& sTypeName)
+bool CTypeManager::registerBitMaskType(const CIdentifier& typeID, const CString& name)
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register bitmask type " << typeID.toString() << " that already exists.",
+	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register bitmask type " << typeID.str() << " that already exists.",
 						OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_DEBUG_UNLESS_K(m_TakenNames.find(sTypeName) == m_TakenNames.end(),
-					  "Trying to register bitmask type " << typeID << " with a name that already exists ( " << sTypeName << ")");
+	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
+					  "Trying to register bitmask type " << typeID << " with a name that already exists ( " << name << ")");
 
-	m_vName[typeID] = sTypeName;
-	m_vBitMask[typeID];
-	OV_TRACE_K("Registered bitmask type id " << typeID << " - " << sTypeName);
+	m_names[typeID] = name;
+	m_bitMasks[typeID];
+	OV_TRACE_K("Registered bitmask type id " << typeID << " - " << name);
 	return true;
 }
 
-bool CTypeManager::registerBitMaskEntry(const CIdentifier& typeID, const CString& sEntryName, const uint64_t ui64EntryValue)
+bool CTypeManager::registerBitMaskEntry(const CIdentifier& typeID, const CString& name, const uint64_t value)
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	auto itBitMask = m_vBitMask.find(typeID);
-	OV_ERROR_UNLESS_KRF(itBitMask != m_vBitMask.end(), "Bitmask type [" << typeID.toString() << "] does not exist.", OpenViBE::Kernel::ErrorType::BadArgument);
+	auto itBitMask = m_bitMasks.find(typeID);
+	OV_ERROR_UNLESS_KRF(itBitMask != m_bitMasks.end(), "Bitmask type [" << typeID.str() << "] does not exist.", OpenViBE::Kernel::ErrorType::BadArgument);
 
-	auto itElem = itBitMask->second.find(ui64EntryValue);
+	const auto itElem = itBitMask->second.find(value);
 	if (itElem != itBitMask->second.end())
 	{
-		if (std::string(itElem->second) != std::string(sEntryName))
+		if (std::string(itElem->second) != std::string(name))
 		{
 			OV_WARNING_K(
-				"Bitmask type [" << typeID.toString() << "] already has element [" << ui64EntryValue << "]. Value will be overriden : " << itElem->second <<
-				" => " << sEntryName);
+				"Bitmask type [" << typeID.str() << "] already has element [" << value << "]. Value will be overriden : " << itElem->second <<
+				" => " << name);
 		}
-		else { OV_DEBUG_K("Bitmask type [" << typeID.toString() << "] already has element [" << ui64EntryValue << "]."); }
+		else { OV_DEBUG_K("Bitmask type [" << typeID.str() << "] already has element [" << value << "]."); }
 	}
 
-	for (uint32_t l_ui32BitCount = 0, i = 0; i < 64; i++)
+	for (size_t nBit = 0, i = 0; i < 64; ++i)
 	{
-		if (ui64EntryValue & (1LL << i))
+		if (value & (1LL << i))
 		{
-			l_ui32BitCount++;
-			OV_ERROR_UNLESS_KRF(l_ui32BitCount <= 1,
-								"Discarded bitmask entry (" << m_vName[typeID] << ":" << sEntryName << ") because value " << ui64EntryValue <<
-								" contains more than one bit",
+			nBit++;
+			OV_ERROR_UNLESS_KRF(nBit <= 1,
+								"Discarded bitmask entry (" << m_names[typeID] << ":" << name << ") because value " << value << " contains more than one bit",
 								ErrorType::Overflow);
 		}
 	}
-	itBitMask->second[ui64EntryValue] = sEntryName;
+	itBitMask->second[value] = name;
 	return true;
 }
 
 bool CTypeManager::isRegistered(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	return m_vName.find(typeID) != m_vName.end();
+	return m_names.find(typeID) != m_names.end();
 }
 
 bool CTypeManager::isStream(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
-	return m_vStream.find(typeID) != m_vStream.end();
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
+	return m_streams.find(typeID) != m_streams.end();
 }
 
-bool CTypeManager::isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& rParentTypeIdentifier) const
+bool CTypeManager::isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& parentTypeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	auto it             = m_vStream.find(typeID);
-	const auto itParent = m_vStream.find(rParentTypeIdentifier);
-	if (it == m_vStream.end()) { return false; }
-	if (itParent == m_vStream.end()) { return false; }
-	while (it != m_vStream.end())
+	auto it             = m_streams.find(typeID);
+	const auto itParent = m_streams.find(parentTypeID);
+	if (it == m_streams.end() || itParent == m_streams.end()) { return false; }
+	while (it != m_streams.end())
 	{
-		if (it->first == rParentTypeIdentifier) { return true; }
-		it = m_vStream.find(it->second);
+		if (it->first == parentTypeID) { return true; }
+		it = m_streams.find(it->second);
 	}
 	return false;
 }
 
 bool CTypeManager::isEnumeration(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	return m_vEnumeration.find(typeID) != m_vEnumeration.end();
+	return m_enumerations.find(typeID) != m_enumerations.end();
 }
 
 bool CTypeManager::isBitMask(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	return m_vBitMask.find(typeID) != m_vBitMask.end();
+	return m_bitMasks.find(typeID) != m_bitMasks.end();
 }
 
 CString CTypeManager::getTypeName(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	if (!isRegistered(typeID)) { return CString(""); }
-	return m_vName.find(typeID)->second;
+	return m_names.find(typeID)->second;
 }
 
 CIdentifier CTypeManager::getStreamParentType(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	if (!isStream(typeID)) { return OV_UndefinedIdentifier; }
-	return m_vStream.find(typeID)->second;
+	return m_streams.find(typeID)->second;
 }
 
-uint64_t CTypeManager::getEnumerationEntryCount(const CIdentifier& typeID) const
+size_t CTypeManager::getEnumerationEntryCount(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itEnumeration = m_vEnumeration.find(typeID);
-	if (itEnumeration == m_vEnumeration.end()) { return 0; }
+	const auto itEnumeration = m_enumerations.find(typeID);
+	if (itEnumeration == m_enumerations.end()) { return 0; }
 	return itEnumeration->second.size();
 }
 
-bool CTypeManager::getEnumerationEntry(const CIdentifier& typeID, const uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const
+bool CTypeManager::getEnumerationEntry(const CIdentifier& typeID, const uint64_t index, CString& name, uint64_t& value) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itEnumeration = m_vEnumeration.find(typeID);
-	if (itEnumeration == m_vEnumeration.end()) { return false; }
+	const auto it = m_enumerations.find(typeID);
+	if (it == m_enumerations.end()) { return false; }
 
-	if (ui64EntryIndex >= itEnumeration->second.size()) { return false; }
+	if (index >= it->second.size()) { return false; }
 
-	auto itEnumerationEntry = itEnumeration->second.begin();
-	for (uint64_t i = 0; i < ui64EntryIndex && itEnumerationEntry != itEnumeration->second.end(); i++, ++itEnumerationEntry) { }
+	auto itEntry = it->second.begin();
+	for (size_t i = 0; i < index && itEntry != it->second.end(); i++, ++itEntry) { }
 
-	rEntryValue = itEnumerationEntry->first;
-	sEntryName  = itEnumerationEntry->second;
+	value = itEntry->first;
+	name  = itEntry->second;
 	return true;
 }
 
-CString CTypeManager::getEnumerationEntryNameFromValue(const CIdentifier& typeID, const uint64_t ui64EntryValue) const
+CString CTypeManager::getEnumerationEntryNameFromValue(const CIdentifier& typeID, const uint64_t value) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itEnumeration = m_vEnumeration.find(typeID);
-	if (itEnumeration == m_vEnumeration.end()) { return ""; }
-	const auto itEnumerationEntry = itEnumeration->second.find(ui64EntryValue);
-	if (itEnumerationEntry == itEnumeration->second.end()) { return ""; }
-	return itEnumeration->second.find(ui64EntryValue)->second;
+	const auto it = m_enumerations.find(typeID);
+	if (it == m_enumerations.end()) { return ""; }
+	const auto itEntry = it->second.find(value);
+	if (itEntry == it->second.end()) { return ""; }
+	return it->second.find(value)->second;
 }
 
-uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& typeID, const CString& rEntryName) const
+uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& typeID, const CString& name) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itEnumeration = m_vEnumeration.find(typeID);
-	if (itEnumeration == m_vEnumeration.end()) { return OV_IncorrectStimulation; }
+	const auto it = m_enumerations.find(typeID);
+	if (it == m_enumerations.end()) { return OV_IncorrectStimulation; }
 
 	// first looks at the exact std::string match
-	for (const auto& entry : itEnumeration->second) { if (entry.second == rEntryName) { return entry.first; } }
+	for (const auto& entry : it->second) { if (entry.second == name) { return entry.first; } }
 
 	// then looks at the caseless std::string match
-	std::string l_sEntryNameLower = rEntryName.toASCIIString();
-	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-	for (const auto& entry : itEnumeration->second)
+	std::string nameLower = name.toASCIIString();
+	std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::ToLower<std::string::value_type>);
+	for (const auto& entry : it->second)
 	{
-		std::string l_sItEntryNameLower = entry.second.toASCIIString();
-		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-		if (l_sItEntryNameLower == l_sEntryNameLower) { return entry.first; }
+		std::string tmp = entry.second.toASCIIString();
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::ToLower<std::string::value_type>);
+		if (tmp == nameLower) { return entry.first; }
 	}
 
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64_t l_ui64Value = std::stoull((const char*)rEntryName);
+		const uint64_t value = std::stoull(name.toASCIIString());
 
-		if ((itEnumeration->second.find(l_ui64Value) != itEnumeration->second.end()) ||
+		if ((it->second.find(value) != it->second.end()) ||
 			(typeID == OV_TypeId_Stimulation && this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers")))
 		{
-			return l_ui64Value;
+			return value;
 		}
 	}
 	catch (const std::exception&) { return OV_IncorrectStimulation; }
@@ -332,145 +320,144 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& typeI
 	return OV_IncorrectStimulation;
 }
 
-uint64_t CTypeManager::getBitMaskEntryCount(const CIdentifier& typeID) const
+size_t CTypeManager::getBitMaskEntryCount(const CIdentifier& typeID) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_vBitMask.find(typeID);
-	if (itBitMask == m_vBitMask.end()) { return 0; }
+	const auto itBitMask = m_bitMasks.find(typeID);
+	if (itBitMask == m_bitMasks.end()) { return 0; }
 	return itBitMask->second.size();
 }
 
-bool CTypeManager::getBitMaskEntry(const CIdentifier& typeID, const uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const
+bool CTypeManager::getBitMaskEntry(const CIdentifier& typeID, const uint64_t index, CString& name, uint64_t& value) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_vBitMask.find(typeID);
-	if (itBitMask == m_vBitMask.end()) { return false; }
+	const auto itBitMask = m_bitMasks.find(typeID);
+	if (itBitMask == m_bitMasks.end()) { return false; }
 
-	if (ui64EntryIndex >= itBitMask->second.size()) { return false; }
+	if (index >= itBitMask->second.size()) { return false; }
 
 	auto itBitMaskEntry = itBitMask->second.begin();
-	for (uint64_t i = 0; i < ui64EntryIndex && itBitMaskEntry != itBitMask->second.end(); i++, ++itBitMaskEntry) { }
+	for (size_t i = 0; i < index && itBitMaskEntry != itBitMask->second.end(); i++, ++itBitMaskEntry) { }
 
-	rEntryValue = itBitMaskEntry->first;
-	sEntryName  = itBitMaskEntry->second;
+	value = itBitMaskEntry->first;
+	name  = itBitMaskEntry->second;
 	return true;
 }
 
-CString CTypeManager::getBitMaskEntryNameFromValue(const CIdentifier& typeID, const uint64_t ui64EntryValue) const
+CString CTypeManager::getBitMaskEntryNameFromValue(const CIdentifier& typeID, const uint64_t value) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_vBitMask.find(typeID);
-	if (itBitMask == m_vBitMask.end()) { return ""; }
-	const auto itBitMaskEntry = itBitMask->second.find(ui64EntryValue);
+	const auto itBitMask = m_bitMasks.find(typeID);
+	if (itBitMask == m_bitMasks.end()) { return ""; }
+	const auto itBitMaskEntry = itBitMask->second.find(value);
 	if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
-	return itBitMask->second.find(ui64EntryValue)->second;
+	return itBitMask->second.find(value)->second;
 }
 
-uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, const CString& rEntryName) const
+uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, const CString& name) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_vBitMask.find(typeID);
-	if (itBitMask == m_vBitMask.end()) { return 0xffffffffffffffffLL; }
+	const auto itBitMask = m_bitMasks.find(typeID);
+	if (itBitMask == m_bitMasks.end()) { return 0xffffffffffffffffLL; }
 
 	// first looks at the exact std::string match
-	for (const auto& mask : itBitMask->second) { if (mask.second == rEntryName) { return mask.first; } }
+	for (const auto& mask : itBitMask->second) { if (mask.second == name) { return mask.first; } }
 
 	// then looks at the caseless std::string match
-	std::string l_sEntryNameLower = rEntryName.toASCIIString();
-	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
+	std::string entryNameLower = name.toASCIIString();
+	std::transform(entryNameLower.begin(), entryNameLower.end(), entryNameLower.begin(), ::ToLower<std::string::value_type>);
 	for (const auto& mask : itBitMask->second)
 	{
-		std::string l_sItEntryNameLower = mask.second.toASCIIString();
-		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-		if (l_sItEntryNameLower == l_sEntryNameLower) { return mask.first; }
+		std::string itEntryNameLower = mask.second.toASCIIString();
+		std::transform(itEntryNameLower.begin(), itEntryNameLower.end(), itEntryNameLower.begin(), ::ToLower<std::string::value_type>);
+		if (itEntryNameLower == entryNameLower) { return mask.first; }
 	}
 
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64_t l_ui64Value = std::stoll((const char*)rEntryName);
-
-		if (itBitMask->second.find(l_ui64Value) != itBitMask->second.end()) { return l_ui64Value; }
+		const uint64_t value = std::stoll(name.toASCIIString());
+		if (itBitMask->second.find(value) != itBitMask->second.end()) { return value; }
 	}
 	catch (const std::exception&) { return 0xffffffffffffffffLL; }
 
 	return 0xffffffffffffffffLL;
 }
 
-CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, const uint64_t ui64EntryCompositionValue) const
+CString CTypeManager::getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, const uint64_t value) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_vBitMask.find(typeID);
-	if (itBitMask == m_vBitMask.end()) { return ""; }
+	const auto itBitMask = m_bitMasks.find(typeID);
+	if (itBitMask == m_bitMasks.end()) { return ""; }
 
-	std::string l_sResult;
-	for (uint32_t i = 0; i < 64; i++)
+	std::string res;
+	for (size_t i = 0; i < 64; ++i)
 	{
-		if (ui64EntryCompositionValue & (1LL << i))
+		if (value & (1LL << i))
 		{
-			const auto itBitMaskEntry = itBitMask->second.find(ui64EntryCompositionValue & (1LL << i));
+			const auto itBitMaskEntry = itBitMask->second.find(value & (1LL << i));
 			if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
-			if (l_sResult == "") { l_sResult = itBitMaskEntry->second.toASCIIString(); }
+			if (res.empty()) { res = itBitMaskEntry->second.toASCIIString(); }
 			else
 			{
-				l_sResult += std::string(1, OV_Value_EnumeratedStringSeparator);
-				l_sResult += itBitMaskEntry->second.toASCIIString();
+				res += std::string(1, OV_Value_EnumeratedStringSeparator);
+				res += itBitMaskEntry->second.toASCIIString();
 			}
 		}
 	}
-	return CString(l_sResult.c_str());
+	return CString(res.c_str());
 }
 
-uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& rEntryCompositionName) const
+uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& name) const
 {
-	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	const auto itBitMask = m_vBitMask.find(typeID);
-	if (itBitMask == m_vBitMask.end()) { return 0; }
+	const auto it = m_bitMasks.find(typeID);
+	if (it == m_bitMasks.end()) { return 0; }
 
-	uint64_t l_ui64Result               = 0;
-	std::string l_sEntryCompositionName = rEntryCompositionName.toASCIIString();
-	size_t i                            = 0;
-	size_t j                            = 0;
+	uint64_t res                           = 0;
+	const std::string entryCompositionName = name.toASCIIString();
+	size_t i                               = 0;
+	size_t j                               = 0;
 	do
 	{
-		i = l_sEntryCompositionName.find(OV_Value_EnumeratedStringSeparator, i);
-		if (i == std::string::npos) { i = l_sEntryCompositionName.length(); }
+		i = entryCompositionName.find(OV_Value_EnumeratedStringSeparator, i);
+		if (i == std::string::npos) { i = entryCompositionName.length(); }
 
 		if (i != j)
 		{
-			std::string l_sEntryName;
-			l_sEntryName.assign(l_sEntryCompositionName, j, i - j);
+			std::string entryName;
+			entryName.assign(entryCompositionName, j, i - j);
 
-			bool l_bFound = false;
-			for (const auto& mask : itBitMask->second)
+			bool found = false;
+			for (const auto& mask : it->second)
 			{
-				if (mask.second == CString(l_sEntryName.c_str()))
+				if (mask.second == CString(entryName.c_str()))
 				{
-					l_ui64Result |= mask.first;
-					l_bFound = true;
+					res |= mask.first;
+					found = true;
 				}
 			}
 
-			if (!l_bFound) { return 0; }
+			if (!found) { return 0; }
 		}
 
 		i++;
 		j = i;
-	} while (i < l_sEntryCompositionName.length());
+	} while (i < entryCompositionName.length());
 
-	return l_ui64Result;
+	return res;
 }
 
-bool CTypeManager::evaluateSettingValue(const CString settingValue, double& numericResult) const
+bool CTypeManager::evaluateSettingValue(const CString value, double& result) const
 {
 	// parse and expression with no variables or functions
-	try { numericResult = Lepton::Parser::parse(settingValue.toASCIIString()).evaluate(); }
+	try { result = Lepton::Parser::parse(value.toASCIIString()).evaluate(); }
 	catch (...) { return false; }
 	return true;
 }

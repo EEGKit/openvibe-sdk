@@ -1,14 +1,11 @@
 #pragma once
 
 #include "../ovp_defines.h"
-#include "../algorithms/ovpCAlgorithmClassifierOneVsOne.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <cstdio>
-#include <cstring>
-#include <cstdlib>
-#include <vector>
 #include <iostream>
+#include <iomanip>
 
 //#define OV_DEBUG_CLASSIFIER_LISTENER
 
@@ -26,107 +23,100 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			explicit CBoxAlgorithmCommonClassifierListener(const uint32_t ui32CustomSettingBase)
-				: m_oClassifierClassIdentifier(OV_UndefinedIdentifier),
-				  m_oStrategyClassIdentifier(
-					  0x0),//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
-				  m_ui32CustomSettingBase(ui32CustomSettingBase) { }
+			explicit CBoxAlgorithmCommonClassifierListener(const size_t customSettingBase) : m_customSettingBase(customSettingBase) { }
 
 			bool initialize() override
 			{
 				//Even if everything should have been set in constructor, we still set everything in initialize (in case of)
-				m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
-				m_pClassifier                = nullptr;
+				m_classifierClassID = OV_UndefinedIdentifier;
+				m_classifier        = nullptr;
 
 				//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
-				m_oStrategyClassIdentifier = 0x0;
-				m_pStrategy                = nullptr;
+				m_strategyClassID = 0x0;
+				m_strategy        = nullptr;
 
 				//This value means that we need to calculate it
-				m_i32StrategyAmountSettings = -1;
+				m_strategyAmountSettings = -1;
 				return true;
 			}
 
 			bool uninitialize() override
 			{
-				if (m_pClassifier)
+				if (m_classifier)
 				{
-					m_pClassifier->uninitialize();
-					this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-					m_pClassifier = nullptr;
+					m_classifier->uninitialize();
+					this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
+					m_classifier = nullptr;
 				}
-				if (m_pStrategy)
+				if (m_strategy)
 				{
-					m_pStrategy->uninitialize();
-					this->getAlgorithmManager().releaseAlgorithm(*m_pStrategy);
-					m_pStrategy = nullptr;
+					m_strategy->uninitialize();
+					this->getAlgorithmManager().releaseAlgorithm(*m_strategy);
+					m_strategy = nullptr;
 				}
 				return true;
 			}
 
-			virtual bool initializedStrategy(OpenViBE::Kernel::IBox& box)
+			bool initializedStrategy(OpenViBE::Kernel::IBox& box)
 			{
-				OpenViBE::CString strategyName;
-				box.getSettingName(getStrategyIndex() + 1, strategyName);
-				if (strategyName == OpenViBE::CString(PAIRWISE_STRATEGY_ENUMERATION_NAME)) { m_i32StrategyAmountSettings = 1; }
-				else { m_i32StrategyAmountSettings = 0; }
+				OpenViBE::CString name;
+				box.getSettingName(getStrategyIndex() + 1, name);
+				if (name == OpenViBE::CString(PAIRWISE_STRATEGY_ENUMERATION_NAME)) { m_strategyAmountSettings = 1; }
+				else { m_strategyAmountSettings = 0; }
 				return true;
 			}
 
-			//			virtual bool onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox &box)
-			//			{
-			//				this->initializedStrategy(box);
-			//				return true;
-			//			}
+			//virtual bool onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox &box)
+			//{
+			//this->initializedStrategy(box);
+			//return true;
+			//}
 
-			virtual int getStrategySettingsCount(OpenViBE::Kernel::IBox& box)
+			int getStrategySettingsCount(OpenViBE::Kernel::IBox& box)
 			{
-				if (m_i32StrategyAmountSettings < 0) { initializedStrategy(box); }	//The value have never been initialized
-				return m_i32StrategyAmountSettings;
+				if (m_strategyAmountSettings < 0) { initializedStrategy(box); }	//The value have never been initialized
+				return m_strategyAmountSettings;
 			}
 
-			virtual bool onInputAddedOrRemoved(OpenViBE::Kernel::IBox& box)
+			static bool onInputAddedOrRemoved(OpenViBE::Kernel::IBox& box)
 			{
 				box.setInputType(0, OV_TypeId_Stimulations);
 				box.setInputName(0, "Stimulations");
-				for (uint32_t i = 1; i < box.getInputCount(); i++)
+				for (size_t i = 1; i < box.getInputCount(); ++i)
 				{
-					char buffer[1024];
-					sprintf(buffer, "Features for class %i", i);
-					box.setInputName(i, buffer);
+					box.setInputName(i, ("Features for class " + std::to_string(i)).c_str());
 					box.setInputType(i, OV_TypeId_FeatureVector);
 				}
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				//index represent the number of the class (because of rejected offset)
-				char buffer[64];
-				sprintf(buffer, "Class %d label", index);
-				char stimulation[64];
-				sprintf(stimulation, "OVTK_StimulationId_Label_%02X", index);
-				box.addSetting(buffer, OV_TypeId_Stimulation, stimulation, 3 - 1 + getStrategySettingsCount(box) + index);
+				const std::string name = "Class " + std::to_string(index) + " label";
+				std::stringstream stim;
+				stim.fill('0');
+				stim << "OVTK_StimulationId_Label_" << std::setw(2) << index;
+				box.addSetting(name.c_str(), OV_TypeId_Stimulation, stim.str().c_str(), 3 - 1 + getStrategySettingsCount(box) + index);
 
 				//Rename input
-				return this->onInputAddedOrRemoved(box);
+				return onInputAddedOrRemoved(box);
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				//First remove the removed input from settings
 				box.removeSetting(3 - 1 + getStrategySettingsCount(box) + index);
 
 				//Then rename the remains inputs in settings
-				for (uint32_t i = 1; i < box.getInputCount(); ++i)
+				for (size_t i = 1; i < box.getInputCount(); ++i)
 				{
-					char buffer[64];
-					sprintf(buffer, "Class %d label", i);
-					box.setSettingName(3 - 1 + getStrategySettingsCount(box) + i, buffer);
+					const std::string name = "Class " + std::to_string(i) + " label";
+					box.setSettingName(3 - 1 + getStrategySettingsCount(box) + i, name.c_str());
 				}
 
 				//Then rename input
-				return this->onInputAddedOrRemoved(box);
+				return onInputAddedOrRemoved(box);
 			}
 
 			bool onInitialized(OpenViBE::Kernel::IBox& box) override
@@ -139,13 +129,13 @@ namespace OpenViBEPlugins
 				if (settingName.find("Class ") == std::string::npos)//We haven't initialized the box so let's do it
 				{
 					//Now added Settings for classes
-					for (uint32_t i = 1; i < box.getInputCount(); ++i)
+					for (size_t i = 1; i < box.getInputCount(); ++i)
 					{
-						char buffer[64];
-						sprintf(buffer, "Class %d label", i);
-						char stimulation[64];
-						sprintf(stimulation, "OVTK_StimulationId_Label_%02X", i);
-						box.addSetting(buffer, OV_TypeId_Stimulation, stimulation, 3 - 1 + getStrategySettingsCount(box) + i);
+						const std::string name = "Class " + std::to_string(i) + " label";
+						std::stringstream stim;
+						stim.fill('0');
+						stim << "OVTK_StimulationId_Label_" << std::setw(2) << i;
+						box.addSetting(name.c_str(), OV_TypeId_Stimulation, stim.str().c_str(), 3 - 1 + getStrategySettingsCount(box) + i);
 						DEBUG_PRINT(std::cout << "Add setting (type D) " << buffer << " " << stimulation << "\n";)
 					}
 					return this->onAlgorithmClassifierChanged(box);
@@ -155,12 +145,12 @@ namespace OpenViBEPlugins
 			}
 
 			//Return the index of the combo box used to select the strategy (native/ OnevsOne...)
-			virtual uint32_t getStrategyIndex() { return 2; }
+			static size_t getStrategyIndex() { return 2; }
 
 			//Return the index of the combo box used to select the classification algorithm
-			virtual uint32_t getClassifierIndex(OpenViBE::Kernel::IBox& box) { return getStrategySettingsCount(box) + 3 + box.getInputCount() - 1; }
+			size_t getClassifierIndex(OpenViBE::Kernel::IBox& box) { return getStrategySettingsCount(box) + 3 + box.getInputCount() - 1; }
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				if (index == getClassifierIndex(box)) { return this->onAlgorithmClassifierChanged(box); }
 				if (index == getStrategyIndex()) { return this->onStrategyChanged(box); }
@@ -168,189 +158,183 @@ namespace OpenViBEPlugins
 			}
 
 
-			virtual bool updateDecision(OpenViBE::Kernel::IBox& box)
+			bool updateDecision(OpenViBE::Kernel::IBox& box)
 			{
-				uint32_t i = getStrategyIndex() + 1;
-				if (m_oStrategyClassIdentifier == OVP_ClassId_Algorithm_ClassifierOneVsOne)
+				const size_t i = getStrategyIndex() + 1;
+				if (m_strategyClassID == OVP_ClassId_Algorithm_ClassifierOneVsOne)
 				{
 					OpenViBE::CString classifierName = "Unknown";
 					box.getSettingValue(getClassifierIndex(box), classifierName);
-					const OpenViBE::CIdentifier entry = this->getTypeManager().getEnumerationEntryValueFromName(
+					const OpenViBE::CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(
 						OVP_TypeId_OneVsOne_DecisionAlgorithms, classifierName);
 
-					OV_ERROR_UNLESS_KRF(entry != OV_UndefinedIdentifier,
-										"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "] (" <<
-										classifierName.toASCIIString() << ")",
+					OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
+										"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "] (" << classifierName << ")",
 										OpenViBE::Kernel::ErrorType::BadConfig);
 
-					OpenViBE::Kernel::IParameter* param = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
-					OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(param);
+					OpenViBE::Kernel::IParameter* param = m_strategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
+					OpenViBE::Kernel::TParameterHandler<uint64_t> ip_parameter(param);
 
-					const OpenViBE::CString enumTypeEntry = this->getTypeManager().getTypeName(entry);
-					uint64_t value                        = ip_ui64Parameter;
-					uint64_t enumIdx;
-					OpenViBE::CString enumValue;
+					const OpenViBE::CString entry = this->getTypeManager().getTypeName(typeID);
+					uint64_t value                = ip_parameter;
+					uint64_t idx;
+					OpenViBE::CString name;
 
-					box.getSettingValue(i, enumValue);
+					box.getSettingValue(i, name);
 
-					const uint64_t oldId = this->getTypeManager().getEnumerationEntryValueFromName(entry, enumValue);
-					if (oldId == OV_UndefinedIdentifier
-					) { enumIdx = 0; }	//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
-					else { enumIdx = oldId; }
+					const uint64_t oldID = this->getTypeManager().getEnumerationEntryValueFromName(typeID, name);
+					if (oldID == OV_UndefinedIdentifier
+					) { idx = 0; }	//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
+					else { idx = oldID; }
 
-					this->getTypeManager().getEnumerationEntry(entry, enumIdx, enumValue, value);
-					ip_ui64Parameter = value;
+					this->getTypeManager().getEnumerationEntry(typeID, idx, name, value);
+					ip_parameter = value;
 
-					box.setSettingType(i, entry);
-					box.setSettingName(i, enumTypeEntry);
-					box.setSettingValue(i, enumValue);
+					box.setSettingType(i, typeID);
+					box.setSettingName(i, entry);
+					box.setSettingValue(i, name);
 				}
 				return true;
 			}
 
-			virtual bool onStrategyChanged(OpenViBE::Kernel::IBox& box)
+			bool onStrategyChanged(OpenViBE::Kernel::IBox& box)
 			{
-				OpenViBE::CString strategyName;
+				OpenViBE::CString name;
 
-				box.getSettingValue(getStrategyIndex(), strategyName);
+				box.getSettingValue(getStrategyIndex(), name);
 
-				const OpenViBE::CIdentifier strategyId = this->getTypeManager().getEnumerationEntryValueFromName(
-					OVTK_TypeId_ClassificationStrategy, strategyName);
-				if (strategyId != m_oStrategyClassIdentifier)
+				const OpenViBE::CIdentifier id = this->getTypeManager().getEnumerationEntryValueFromName(
+					OVTK_TypeId_ClassificationStrategy, name);
+				if (id != m_strategyClassID)
 				{
-					if (m_pStrategy)
+					if (m_strategy)
 					{
-						m_pStrategy->uninitialize();
-						this->getAlgorithmManager().releaseAlgorithm(*m_pStrategy);
-						m_pStrategy                = nullptr;
-						m_oStrategyClassIdentifier = OV_UndefinedIdentifier;
+						m_strategy->uninitialize();
+						this->getAlgorithmManager().releaseAlgorithm(*m_strategy);
+						m_strategy        = nullptr;
+						m_strategyClassID = OV_UndefinedIdentifier;
 					}
-					if (strategyId != OV_UndefinedIdentifier)
+					if (id != OV_UndefinedIdentifier)
 					{
-						m_pStrategy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(strategyId));
-						m_pStrategy->initialize();
-						m_oStrategyClassIdentifier = strategyId;
+						m_strategy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(id));
+						m_strategy->initialize();
+						m_strategyClassID = id;
 					}
 
-					for (uint32_t i = getStrategyIndex() + getStrategySettingsCount(box); i > getStrategyIndex(); --i)
+					for (size_t i = getStrategyIndex() + getStrategySettingsCount(box); i > getStrategyIndex(); --i)
 					{
 						DEBUG_PRINT(std::cout << "Remove pairing strategy setting at idx " << i-1 << "\n";)
 						box.removeSetting(i);
 					}
-					m_i32StrategyAmountSettings = 0;
+					m_strategyAmountSettings = 0;
 				}
 				else { return true; }	//If we don't change the strategy we just have to return
 
-				if (m_pStrategy)
+				if (m_strategy)
 				{
-					OpenViBE::CString classifierName;
-					box.getSettingValue(getClassifierIndex(box), classifierName);
-					const uint32_t i = getStrategyIndex() + 1;
-					if (m_oStrategyClassIdentifier == OVP_ClassId_Algorithm_ClassifierOneVsOne)
+					box.getSettingValue(getClassifierIndex(box), name);
+					const size_t i = getStrategyIndex() + 1;
+					if (m_strategyClassID == OVP_ClassId_Algorithm_ClassifierOneVsOne)
 					{
-						const OpenViBE::CIdentifier entry = this->getTypeManager().getEnumerationEntryValueFromName(
-							OVP_TypeId_OneVsOne_DecisionAlgorithms, classifierName);
-						OV_ERROR_UNLESS_KRF(entry != OV_UndefinedIdentifier,
-											"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "]",
+						const OpenViBE::CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(
+							OVP_TypeId_OneVsOne_DecisionAlgorithms, name);
+						OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
+											"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "]",
 											OpenViBE::Kernel::ErrorType::BadConfig);
 
 						//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
-						OpenViBE::Kernel::IParameter* parameter = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
-						const OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(parameter);
-						const uint64_t enumValue         = ip_ui64Parameter;
-						const OpenViBE::CString enumName = this->getTypeManager().getEnumerationEntryNameFromValue(entry, enumValue);
+						OpenViBE::Kernel::IParameter* param = m_strategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
+						const OpenViBE::Kernel::TParameterHandler<uint64_t> ip_param(param);
+						const uint64_t value = ip_param;
+						name                 = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, value);
 
-						const OpenViBE::CString parameterName = this->getTypeManager().getTypeName(entry);
+						const OpenViBE::CString paramName = this->getTypeManager().getTypeName(typeID);
 
-						DEBUG_PRINT(std::cout << "Adding setting (case C) " << parameterName << " : '" << enumName << "' to index " << i << "\n";)
-						box.addSetting(parameterName, entry, enumName, i);
+						DEBUG_PRINT(std::cout << "Adding setting (case C) " << paramName << " : '" << name << "' to index " << i << "\n";)
+						box.addSetting(paramName, typeID, name, i);
 
-						m_i32StrategyAmountSettings = 1;
+						m_strategyAmountSettings = 1;
 					}
 				}
 
 				return true;
 			}
 
-			virtual bool onAlgorithmClassifierChanged(OpenViBE::Kernel::IBox& box)
+			bool onAlgorithmClassifierChanged(OpenViBE::Kernel::IBox& box)
 			{
-				OpenViBE::CString classifierName;
-				OpenViBE::CIdentifier id;
-
-				box.getSettingValue(getClassifierIndex(box), classifierName);
-				OpenViBE::CIdentifier classifierId = this->getTypeManager().getEnumerationEntryValueFromName(
-					OVTK_TypeId_ClassificationAlgorithm, classifierName);
-				if (classifierId != m_oClassifierClassIdentifier)
+				OpenViBE::CString name;
+				box.getSettingValue(getClassifierIndex(box), name);
+				OpenViBE::CIdentifier id = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, name);
+				if (id != m_classifierClassID)
 				{
-					if (m_pClassifier)
+					if (m_classifier)
 					{
-						m_pClassifier->uninitialize();
-						this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-						m_pClassifier                = nullptr;
-						m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
+						m_classifier->uninitialize();
+						this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
+						m_classifier        = nullptr;
+						m_classifierClassID = OV_UndefinedIdentifier;
 					}
-					if (classifierId != OV_UndefinedIdentifier)
+					if (id != OV_UndefinedIdentifier)
 					{
-						m_pClassifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(classifierId));
-						m_pClassifier->initialize();
-						m_oClassifierClassIdentifier = classifierId;
+						m_classifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(id));
+						m_classifier->initialize();
+						m_classifierClassID = id;
 					}
 
 					//Disable the graphical refresh to avoid abusive redraw (not really a problem)
-					while (box.getSettingCount() >= m_ui32CustomSettingBase + box.getInputCount() + getStrategySettingsCount(box))
+					while (box.getSettingCount() >= m_customSettingBase + box.getInputCount() + getStrategySettingsCount(box))
 					{
 						box.removeSetting(getClassifierIndex(box) + 1);
 					}
 				}
 				else { return true; }//If we don't change the algorithm we just have to return
 
-				if (m_pClassifier)
+				if (m_classifier)
 				{
-					uint32_t i = getClassifierIndex(box) + 1;
-					while ((id = m_pClassifier->getNextInputParameterIdentifier(id)) != OV_UndefinedIdentifier)
+					size_t i = getClassifierIndex(box) + 1;
+					while ((id = m_classifier->getNextInputParameterIdentifier(id)) != OV_UndefinedIdentifier)
 					{
 						if ((id != OVTK_Algorithm_Classifier_InputParameterId_FeatureVector)
 							&& (id != OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet)
-							&& (id != OVTK_Algorithm_Classifier_InputParameterId_Configuration)
-							&& (id != OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses)
+							&& (id != OVTK_Algorithm_Classifier_InputParameterId_Config)
+							&& (id != OVTK_Algorithm_Classifier_InputParameterId_NClasses)
 							&& (id != OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter))
 						{
 							OpenViBE::CIdentifier typeID;
-							OpenViBE::CString paramName         = m_pClassifier->getInputParameterName(id);
-							OpenViBE::Kernel::IParameter* param = m_pClassifier->getInputParameter(id);
-							OpenViBE::Kernel::TParameterHandler<int64_t> ip_i64Parameter(param);
-							OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(param);
-							OpenViBE::Kernel::TParameterHandler<double> ip_f64Parameter(param);
+							OpenViBE::CString paramName         = m_classifier->getInputParameterName(id);
+							OpenViBE::Kernel::IParameter* param = m_classifier->getInputParameter(id);
+							OpenViBE::Kernel::TParameterHandler<int64_t> ip_iParameter(param);
+							OpenViBE::Kernel::TParameterHandler<uint64_t> ip_uiParameter(param);
+							OpenViBE::Kernel::TParameterHandler<double> ip_dParameter(param);
 							OpenViBE::Kernel::TParameterHandler<bool> ip_bParameter(param);
 							OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_sParameter(param);
-							char buffer[1024];
+							std::string buffer;
 							bool valid = true;
 							switch (param->getType())
 							{
 								case OpenViBE::Kernel::ParameterType_Enumeration:
-									strcpy(buffer,
-										   this->getTypeManager().getEnumerationEntryNameFromValue(param->getSubTypeIdentifier(), ip_ui64Parameter).
-												 toASCIIString());
+									buffer = this->getTypeManager().getEnumerationEntryNameFromValue(param->getSubTypeIdentifier(), ip_uiParameter).
+												   toASCIIString();
 									typeID = param->getSubTypeIdentifier();
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Integer:
 								case OpenViBE::Kernel::ParameterType_UInteger:
-									sprintf(buffer, "%li", int64_t(ip_i64Parameter));
+									buffer = std::to_string(int64_t(ip_iParameter));
 									typeID = OV_TypeId_Integer;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Boolean:
-									sprintf(buffer, "%s", (bool(ip_bParameter)) ? "true" : "false");
+									buffer = (bool(ip_bParameter)) ? "true" : "false";
 									typeID = OV_TypeId_Boolean;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Float:
-									sprintf(buffer, "%lf", double(ip_f64Parameter));
+									buffer = std::to_string(double(ip_dParameter));
 									typeID = OV_TypeId_Float;
 									break;
 								case OpenViBE::Kernel::ParameterType_String:
-									sprintf(buffer, "%s", (static_cast<OpenViBE::CString*>(ip_sParameter))->toASCIIString());
+									buffer = static_cast<OpenViBE::CString*>(ip_sParameter)->toASCIIString();
 									typeID = OV_TypeId_String;
 									break;
 								default:
@@ -362,19 +346,17 @@ namespace OpenViBEPlugins
 							if (valid)
 							{
 								// @FIXME argh, the -2 is a hard coding that the classifier trainer has 2 settings after the classifier setting... ouch
-								DEBUG_PRINT(
-									std::cout << "Adding setting (case A) " << paramName << " : " << buffer << " to slot " << box.getSettingCount()-2 << "\n";)
-								box.addSetting(paramName, typeID, buffer, box.getSettingCount() - 2);
+								DEBUG_PRINT(std::cout << "Adding setting (case A) " << paramName << " : " << buffer << " to slot "
+									<< box.getSettingCount() - 2 << "\n";)
+								box.addSetting(paramName, typeID, buffer.c_str(), box.getSettingCount() - 2);
 								i++;
 							}
 						}
 					}
 				}
-
 				// This changes the pairwise strategy decision voting type of the box settings allowing
 				// designer to list the correct choices in the combo box.
 				updateDecision(box);
-
 				return true;
 			}
 
@@ -382,12 +364,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CIdentifier m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
-			OpenViBE::CIdentifier m_oStrategyClassIdentifier   = OV_UndefinedIdentifier;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier   = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStrategy     = nullptr;
-			const uint32_t m_ui32CustomSettingBase             = 0;
-			int m_i32StrategyAmountSettings                    = -1;
+			OpenViBE::CIdentifier m_classifierClassID       = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_strategyClassID         = 0x0;	// OV_UndefinedIdentifier is already use, We initialize to an unused identifier in the strategy list
+			OpenViBE::Kernel::IAlgorithmProxy* m_classifier = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_strategy   = nullptr;
+			const size_t m_customSettingBase                = 0;
+			int m_strategyAmountSettings                    = -1;
 		};
 	} // namespace Classification
 } // namespace OpenViBEPlugins

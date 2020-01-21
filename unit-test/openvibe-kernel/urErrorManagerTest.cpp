@@ -6,19 +6,19 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
-// DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> variable here
+// DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before the kernel context.
-IKernelContext* g_context = nullptr;
+IKernelContext* context = nullptr;
 
 TEST(error_manager_test_case, test_init)
 {
 	// here we use assert because we want to fail directly
 	// in order to avoid a segfault
-	ASSERT_TRUE(g_context != nullptr);
+	ASSERT_TRUE(context != nullptr);
 
-	auto& errorManager = g_context->getErrorManager();
+	auto& errorManager = context->getErrorManager();
 
 	// check manager is correctly initialized
 	EXPECT_FALSE(errorManager.hasError());
@@ -33,9 +33,9 @@ TEST(error_manager_test_case, test_push)
 {
 	// here we use assert because we want to fail directly
 	// in order to avoid a segfault
-	ASSERT_TRUE(g_context != nullptr);
+	ASSERT_TRUE(context != nullptr);
 
-	auto& errorManager = g_context->getErrorManager();
+	auto& errorManager = context->getErrorManager();
 
 	// push an error
 	errorManager.pushError(ErrorType::Overflow, "An integer overflow error occurred");
@@ -78,9 +78,9 @@ TEST(error_manager_test_case, test_release)
 {
 	// here we use assert because we want to fail directly
 	// in order to avoid a segfault
-	ASSERT_TRUE(g_context != nullptr);
+	ASSERT_TRUE(context != nullptr);
 
-	auto& errorManager = g_context->getErrorManager();
+	auto& errorManager = context->getErrorManager();
 	errorManager.releaseErrors();
 
 	// check manager is correctly released
@@ -109,16 +109,16 @@ TEST(error_manager_test_case, test_stress_push)
 {
 	// here we use assert because we want to fail directly
 	// in order to avoid a segfault
-	ASSERT_TRUE(g_context != nullptr);
+	ASSERT_TRUE(context != nullptr);
 
-	auto& errorManager = g_context->getErrorManager();
+	auto& errorManager = context->getErrorManager();
 
 	errorManager.releaseErrors();
-	unsigned int expectedErrorCount = 10;
-	for (unsigned int i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
+	const size_t expectedErrorCount = 10;
+	for (size_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
 
-	unsigned int errorCount = 0;
-	auto error              = errorManager.getLastError();
+	size_t errorCount = 0;
+	auto error        = errorManager.getLastError();
 	while (error)
 	{
 		errorCount++;
@@ -132,10 +132,10 @@ int urErrorManagerTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc >= 2, "Failure retrieve test parameters");
 
-	OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture;
-	fixture->setConfigurationFile(argv[1]);
+	OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture;
+	fixture->setConfigFile(argv[1]);
 
-	g_context = fixture->context;
+	context = fixture->context;
 
 	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "error_manager_test_case.*";

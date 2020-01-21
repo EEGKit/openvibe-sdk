@@ -1,11 +1,8 @@
 #define PKPD_DEBUG 0
 #include "ovpCAlgorithmPairwiseStrategyPKPD.h"
+#include <xml/IXMLNode.h>
 
 #include <iostream>
-
-
-#include <xml/IXMLNode.h>
-#include <xml/IXMLHandler.h>
 
 namespace
 {
@@ -14,7 +11,7 @@ namespace
 
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -22,85 +19,75 @@ using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
-bool CAlgorithmPairwiseStrategyPKPD::initialize() { return true; }
-
-bool CAlgorithmPairwiseStrategyPKPD::uninitialize() { return true; }
-
 bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 {
-	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	m_ui32ClassCount = uint32_t(ip_pClassCount);
+	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
 
-bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
-	double* l_pProbabilityMatrix = new double[m_ui32ClassCount * m_ui32ClassCount];
+	std::vector<double> matrix(m_nClass * m_nClass);
 
 	//First we set the diagonal to 0
-	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pProbabilityMatrix[i * m_ui32ClassCount + i] = 0.; }
+	for (size_t i = 0; i < m_nClass; ++i) { matrix[i * m_nClass + i] = 0.; }
 
-	for (size_t i = 0; i < pClassificationValueList.size(); ++i)
+	for (size_t i = 0; i < classifications.size(); ++i)
 	{
-		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
-		const uint32_t l_f64FirstIndex                                              = uint32_t(l_rTemp.m_f64FirstClass);
-		const uint32_t l_f64SecondIndex                                             = uint32_t(l_rTemp.m_f64SecondClass);
-		const double* l_pValues                                                     = l_rTemp.m_pClassificationValue->getBuffer();
-		l_pProbabilityMatrix[l_f64FirstIndex * m_ui32ClassCount + l_f64SecondIndex] = l_pValues[0];
-		l_pProbabilityMatrix[l_f64SecondIndex * m_ui32ClassCount + l_f64FirstIndex] = 1 - l_pValues[0];
+		classification_info_t& temp             = classifications[i];
+		const size_t firstIdx                   = size_t(temp.firstClass);
+		const size_t secondIdx                  = size_t(temp.secondClass);
+		const double* values                    = temp.classificationValue->getBuffer();
+		matrix[firstIdx * m_nClass + secondIdx] = values[0];
+		matrix[secondIdx * m_nClass + firstIdx] = 1 - values[0];
 	}
 
 #if PKPD_DEBUG
-	for(uint32_t i = 0 ; i< m_ui32ClassCount ; ++i){
-
-		for(uint32_t j = 0 ; j<m_ui32ClassCount ; ++j){
-			std::cout << l_pProbabilityMatrix[i*m_ui32ClassCount + j] << " ";
-		}
+	for (size_t i = 0 ; i < m_nClass ; ++i)
+	{
+		for (size_t j = 0 ; j < m_nClass ; ++j) { std::cout << matrix[i * m_nClass + j] << " "; }
 		std::cout << std::endl;
 	}
 #endif
 
-	double* l_pProbVector   = new double[m_ui32ClassCount];
-	double l_pProbVectorSum = 0;
-	for (uint32_t l_ui32ClassIndex = 0; l_ui32ClassIndex < m_ui32ClassCount; ++l_ui32ClassIndex)
+	std::vector<double> probVector(m_nClass);
+	double sum = 0;
+	for (size_t classIdx = 0; classIdx < m_nClass; ++classIdx)
 	{
-		double l_pTempSum = 0;
-		for (uint32_t l_ui32SecondClass = 0; l_ui32SecondClass < m_ui32ClassCount; ++l_ui32SecondClass)
+		double tmpSum = 0;
+		for (size_t secondClass = 0; secondClass < m_nClass; ++secondClass)
 		{
-			if (l_ui32SecondClass != l_ui32ClassIndex) { l_pTempSum += 1 / l_pProbabilityMatrix[m_ui32ClassCount * l_ui32ClassIndex + l_ui32SecondClass]; }
+			if (secondClass != classIdx) { tmpSum += 1 / matrix[m_nClass * classIdx + secondClass]; }
 		}
-		l_pProbVector[l_ui32ClassIndex] = 1 / (l_pTempSum - (m_ui32ClassCount - 2));
-		l_pProbVectorSum += l_pProbVector[l_ui32ClassIndex];
+		probVector[classIdx] = 1 / (tmpSum - (m_nClass - 2));
+		sum += probVector[classIdx];
 	}
 
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { l_pProbVector[i] /= l_pProbVectorSum; }
+	for (size_t i = 0; i < m_nClass; ++i) { probVector[i] /= sum; }
 
 #if PKPD_DEBUG
-	for(uint32_t i = 0; i<m_ui32ClassCount ; ++i) { std::cout << l_pProbVector[i] << " "; }
+	for (size_t i = 0; i < m_nClass ; ++i) { std::cout << probVector[i] << " "; }
 	std::cout << std::endl;
 #endif
 
-	pProbabilityVector->setDimensionCount(1);
-	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
+	probabilities->setDimensionCount(1);
+	probabilities->setDimensionSize(0, m_nClass);
 
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { pProbabilityVector->getBuffer()[i] = l_pProbVector[i]; }
+	for (size_t i = 0; i < m_nClass; ++i) { probabilities->getBuffer()[i] = probVector[i]; }
 
-	delete[] l_pProbabilityMatrix;
-	delete[] l_pProbVector;
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfiguration()
+XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfig()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
-	return l_pRootNode;
+	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
+	return node;
 }
-
-bool CAlgorithmPairwiseStrategyPKPD::loadConfiguration(XML::IXMLNode& rNode) { return true; }

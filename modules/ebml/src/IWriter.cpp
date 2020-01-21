@@ -1,7 +1,6 @@
 #include "ebml/IWriter.h"
 
 #include <vector>
-#include <cstdlib>
 #include <cstring>
 
 using namespace EBML;
@@ -10,41 +9,38 @@ using namespace std;
 // ________________________________________________________________________________________________________________
 //
 
-inline size_t getCodedSizeLength(const uint64_t uiValue)
+inline size_t getCodedSizeLength(const uint64_t value)
 {
-	size_t codeSizeLength;
-	if (uiValue < 0x000000000000007fLL) { codeSizeLength = 1; }
-	else if (uiValue < 0x0000000000003fffLL) { codeSizeLength = 2; }
-	else if (uiValue < 0x00000000001fffffLL) { codeSizeLength = 3; }
-	else if (uiValue < 0x000000000fffffffLL) { codeSizeLength = 4; }
-	else if (uiValue < 0x00000007ffffffffLL) { codeSizeLength = 5; }
-	else if (uiValue < 0x000003ffffffffffLL) { codeSizeLength = 6; }
-	else if (uiValue < 0x0001ffffffffffffLL) { codeSizeLength = 7; }
-	else if (uiValue < 0x00ffffffffffffffLL) { codeSizeLength = 8; }
-	else if (uiValue < 0x7fffffffffffffffLL) { codeSizeLength = 9; }
-	else { codeSizeLength = 10; }
-
-	return codeSizeLength;
+	if (value < 0x000000000000007fLL) { return 1; }
+	if (value < 0x0000000000003fffLL) { return 2; }
+	if (value < 0x00000000001fffffLL) { return 3; }
+	if (value < 0x000000000fffffffLL) { return 4; }
+	if (value < 0x00000007ffffffffLL) { return 5; }
+	if (value < 0x000003ffffffffffLL) { return 6; }
+	if (value < 0x0001ffffffffffffLL) { return 7; }
+	if (value < 0x00ffffffffffffffLL) { return 8; }
+	if (value < 0x7fffffffffffffffLL) { return 9; }
+	return 10;
 }
 
-inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* buffer, uint64_t* pBufferLength)
+inline bool getCodedBuffer(const uint64_t value, unsigned char* buffer, size_t* size)
 {
-	const size_t codeSizeLength = getCodedSizeLength(uiValue);
+	const size_t length = getCodedSizeLength(value);
 
-	if (codeSizeLength > *pBufferLength) { return false; }
+	if (length > *size) { return false; }
 
-	size_t l_ulIthBit = codeSizeLength;
-	for (size_t i = 0; i < codeSizeLength; i++)
+	size_t bit = length;
+	for (size_t i = 0; i < length; ++i)
 	{
-		const size_t l_ulByteShift = codeSizeLength - i - 1;
-		size_t l_ulByte            = (l_ulByteShift >= 8 ? 0 : static_cast<unsigned char>((uiValue >> (l_ulByteShift * 8)) & 0xff));
-		l_ulByte |= (l_ulIthBit > 0 && l_ulIthBit <= 8 ? (1 << (8 - l_ulIthBit)) : 0);
-		l_ulIthBit -= 8;
+		const size_t byteShift = length - i - 1;
+		size_t byte            = (byteShift >= 8 ? 0 : static_cast<unsigned char>((value >> (byteShift * 8)) & 0xff));
+		byte |= (bit > 0 && bit <= 8 ? (1 << (8 - bit)) : 0);
+		bit -= 8;
 
-		buffer[i] = static_cast<unsigned char>(l_ulByte);
+		buffer[i] = static_cast<unsigned char>(byte);
 	}
 
-	*pBufferLength = codeSizeLength;
+	*size = length;
 	return true;
 }
 
@@ -59,26 +55,26 @@ namespace EBML
 		{
 		public:
 
-			CWriterNode(const CIdentifier& identifier, CWriterNode* pParentNode);
+			CWriterNode(const CIdentifier& identifier, CWriterNode* parentNode) : m_ID(identifier), m_ParentNode(parentNode) {}
 			~CWriterNode();
-			void process(IWriterCallback& rWriterCallback);
+			void process(IWriterCallback& callback);
 
 		protected:
 
-			uint64_t getTotalContentSize(bool bCountIdentifierAndSize);
+			size_t getTotalContentSize(bool identifierAndSize);
 
 		private:
 
-			CWriterNode();
+			CWriterNode() = delete;
 
 		public:
 
-			CIdentifier m_oIdentifier;
-			CWriterNode* m_pParentNode;
-			uint64_t m_ui64BufferLength = 0;
-			unsigned char* m_pBuffer    = nullptr;
-			bool m_bBuffered            = false;
-			vector<CWriterNode*> m_vChildren;
+			CIdentifier m_ID;
+			CWriterNode* m_ParentNode = nullptr;
+			size_t m_BufferLength     = 0;
+			unsigned char* m_Buffer   = nullptr;
+			bool m_Buffered           = false;
+			vector<CWriterNode*> m_Childrens;
 		};
 	} // namespace
 } // namespace EBML
@@ -86,59 +82,49 @@ namespace EBML
 // ________________________________________________________________________________________________________________
 //
 
-CWriterNode::CWriterNode(const CIdentifier& identifier, CWriterNode* pParentNode)
-	: m_oIdentifier(identifier), m_pParentNode(pParentNode) {}
-
 CWriterNode::~CWriterNode()
 {
-	for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { delete (*i); }
+	for (auto i = m_Childrens.begin(); i != m_Childrens.end(); ++i) { delete (*i); }
 
-	if (m_pBuffer)
+	if (m_Buffer)
 	{
-		delete [] m_pBuffer;
-		m_pBuffer = nullptr;
+		delete [] m_Buffer;
+		m_Buffer = nullptr;
 	}
 }
 
-void CWriterNode::process(IWriterCallback& rWriterCallback)
+void CWriterNode::process(IWriterCallback& callback)
 {
 	unsigned char id[10];
 	unsigned char pContentSize[10];
-	uint64_t contentSizeLength = sizeof(pContentSize);
-	uint64_t identifierLength  = sizeof(id);
-	const uint64_t contentSize = getTotalContentSize(false);
+	size_t contentSizeLength = sizeof(pContentSize);
+	size_t identifierLength  = sizeof(id);
+	const size_t contentSize = getTotalContentSize(false);
 
-	if (!getCodedBuffer(contentSize, pContentSize, &contentSizeLength))
-	{
-		// SHOULD NEVER HAPPEN
-	}
+	if (!getCodedBuffer(contentSize, pContentSize, &contentSizeLength)) { }	// SHOULD NEVER HAPPEN
+	if (!getCodedBuffer(m_ID, id, &identifierLength)) { }	// SHOULD NEVER HAPPEN
 
-	if (!getCodedBuffer(m_oIdentifier, id, &identifierLength))
-	{
-		// SHOULD NEVER HAPPEN
-	}
+	callback.write(id, identifierLength);
+	callback.write(pContentSize, contentSizeLength);
 
-	rWriterCallback.write(id, identifierLength);
-	rWriterCallback.write(pContentSize, contentSizeLength);
-
-	if (m_vChildren.empty()) { rWriterCallback.write(m_pBuffer, m_ui64BufferLength); }
-	else { for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); } }
+	if (m_Childrens.empty()) { callback.write(m_Buffer, m_BufferLength); }
+	else { for (auto i = m_Childrens.begin(); i != m_Childrens.end(); ++i) { (*i)->process(callback); } }
 }
 
-uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
+size_t CWriterNode::getTotalContentSize(bool identifierAndSize)
 {
-	uint64_t contentSize = 0;
-	if (m_vChildren.empty()) { contentSize = m_ui64BufferLength; }
-	else { for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
+	size_t contentSize = 0;
+	if (m_Childrens.empty()) { contentSize = m_BufferLength; }
+	else { for (auto i = m_Childrens.begin(); i != m_Childrens.end(); ++i) { contentSize += (*i)->getTotalContentSize(true); } }
 
-	uint64_t l_ui64Result = contentSize;
-	if (bCountIdentifierAndSize)
+	size_t res = contentSize;
+	if (identifierAndSize)
 	{
-		l_ui64Result += getCodedSizeLength(m_oIdentifier);
-		l_ui64Result += getCodedSizeLength(contentSize);
+		res += getCodedSizeLength(m_ID);
+		res += getCodedSizeLength(contentSize);
 	}
 
-	return l_ui64Result;
+	return res;
 }
 
 // ________________________________________________________________________________________________________________
@@ -152,16 +138,16 @@ namespace EBML
 		{
 		public:
 
-			explicit CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
+			explicit CWriter(IWriterCallback& callback) : m_callback(callback) {}
 			bool openChild(const CIdentifier& identifier) override;
-			bool setChildData(const void* buffer, const uint64_t size) override;
+			bool setChildData(const void* buffer, const size_t size) override;
 			bool closeChild() override;
 			void release() override;
 
 		protected:
 
-			CWriterNode* m_pCurrentNode = nullptr;
-			IWriterCallback& m_rWriterCallback;
+			CWriterNode* m_node = nullptr;
+			IWriterCallback& m_callback;
 
 		private:
 			CWriter() = delete;
@@ -174,66 +160,66 @@ namespace EBML
 
 bool CWriter::openChild(const CIdentifier& identifier)
 {
-	if (m_pCurrentNode) { if (m_pCurrentNode->m_bBuffered) { return false; } }
+	if (m_node) { if (m_node->m_Buffered) { return false; } }
 
-	CWriterNode* pResult = new CWriterNode(identifier, m_pCurrentNode);
-	if (m_pCurrentNode) { m_pCurrentNode->m_vChildren.push_back(pResult); }
-	m_pCurrentNode = pResult;
+	CWriterNode* pResult = new CWriterNode(identifier, m_node);
+	if (m_node) { m_node->m_Childrens.push_back(pResult); }
+	m_node = pResult;
 	return true;
 }
 
-bool CWriter::setChildData(const void* buffer, const uint64_t size)
+bool CWriter::setChildData(const void* buffer, const size_t size)
 {
-	if (!m_pCurrentNode) { return false; }
+	if (!m_node) { return false; }
 
-	if (!m_pCurrentNode->m_vChildren.empty()) { return false; }
+	if (!m_node->m_Childrens.empty()) { return false; }
 
 	unsigned char* bufferCopy = nullptr;
 	if (size)
 	{
 		if (!buffer) { return false; }
-		bufferCopy = new unsigned char[static_cast<unsigned int>(size)];
+		bufferCopy = new unsigned char[size];
 		if (!bufferCopy) { return false; }
-		memcpy(bufferCopy, buffer, size_t(size));
+		memcpy(bufferCopy, buffer, size);
 	}
 
-	delete [] m_pCurrentNode->m_pBuffer;
+	delete [] m_node->m_Buffer;
 
-	m_pCurrentNode->m_ui64BufferLength = size;
-	m_pCurrentNode->m_pBuffer          = bufferCopy;
-	m_pCurrentNode->m_bBuffered        = true;
+	m_node->m_BufferLength = size;
+	m_node->m_Buffer       = bufferCopy;
+	m_node->m_Buffered     = true;
 	return true;
 }
 
 bool CWriter::closeChild()
 {
-	if (!m_pCurrentNode) { return false; }
+	if (!m_node) { return false; }
 
-	if ((!m_pCurrentNode->m_bBuffered) && (!m_pCurrentNode->m_vChildren.size()))
+	if ((!m_node->m_Buffered) && (m_node->m_Childrens.empty()))
 	{
-		m_pCurrentNode->m_ui64BufferLength = 0;
-		m_pCurrentNode->m_pBuffer          = nullptr;
-		m_pCurrentNode->m_bBuffered        = true;
+		m_node->m_BufferLength = 0;
+		m_node->m_Buffer       = nullptr;
+		m_node->m_Buffered     = true;
 	}
 
-	CWriterNode* l_pParentNode = m_pCurrentNode->m_pParentNode;
-	if (!l_pParentNode)
+	CWriterNode* parent = m_node->m_ParentNode;
+	if (!parent)
 	{
-		m_pCurrentNode->process(m_rWriterCallback);
-		delete m_pCurrentNode;
+		m_node->process(m_callback);
+		delete m_node;
 	}
 
-	m_pCurrentNode = l_pParentNode;
+	m_node = parent;
 	return true;
 }
 
 void CWriter::release()
 {
-	while (m_pCurrentNode) { closeChild(); }
+	while (m_node) { closeChild(); }
 	delete this;
 }
 
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IWriter* EBML::createWriter(IWriterCallback& rWriterCallback) { return new CWriter(rWriterCallback); }
+EBML_API IWriter* EBML::createWriter(IWriterCallback& callback) { return new CWriter(callback); }

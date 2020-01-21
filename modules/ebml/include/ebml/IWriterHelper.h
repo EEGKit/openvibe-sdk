@@ -34,7 +34,7 @@ namespace EBML
 		//@{
 		/**
 		 * \brief Connects an EBML writer to this helper
-		 * \param pWriter [in] : The writer to connect
+		 * \param writer [in] : The writer to connect
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 *
@@ -49,7 +49,7 @@ namespace EBML
 		 * thanks to the \c disconnect function. It must be done
 		 * before calling \c connect again.
 		 */
-		virtual bool connect(IWriter* pWriter) = 0;
+		virtual bool connect(IWriter* writer) = 0;
 		/**
 		 * \brief Disconnects the currently connected EBML writer
 		 * \return \e true on success.
@@ -104,40 +104,40 @@ namespace EBML
 		//@{
 		/**
 		 * \brief Sets a signed integer as child data
-		 * \param iValue [in] : The integer value to set
+		 * \param value [in] : The integer value to set
 		 */
-		virtual bool setSIntegerAsChildData(int64_t iValue) = 0;
+		virtual bool setInt(const int64_t value) = 0;
 		/**
 		 * \brief Sets an unsigned integer as child data
-		 * \param uiValue [in] : The integer value to set
+		 * \param value [in] : The integer value to set
 		 */
-		virtual bool setUIntegerAsChildData(uint64_t uiValue) = 0;
+		virtual bool setUInt(const uint64_t value) = 0;
 		/**
 		 * \brief Sets a 32 bits float value as child data
-		 * \param fValue [in] : The 32 bits float value to set
+		 * \param value [in] : The 32 bits float value to set
 		 */
-		virtual bool setFloat32AsChildData(float fValue) = 0;
+		virtual bool setFloat(const float value) = 0;
 		/**
 		 * \brief Sets a 64 bits float value as child data
-		 * \param fValue [in] : The 64 bits float value to set
+		 * \param value [in] : The 64 bits float value to set
 		 */
-		virtual bool setFloat64AsChildData(double fValue) = 0;
+		virtual bool setDouble(const double value) = 0;
 		// virtual bool setFloat80AsChildData( ??? value)=0;
 		// virtual bool setDateAsChildData( ??? value)=0;
 		/**
 		 * \brief Sets a buffer as child data
 		 * \param buffer [in] : The buffer to send to the writer
-		 * \param ui64BufferLength [in] : The buffer size in bytes
+		 * \param size [in] : The buffer size in bytes
 		 * \note This function simply calls the basic
 		 *       EBML::IWriter::setChildData function with the
 		 *       same two parameters.
 		 */
-		virtual bool setBinaryAsChildData(const void* buffer, uint64_t ui64BufferLength) = 0;
+		virtual bool setBinary(const void* buffer, const size_t size) = 0;
 		/**
 		 * \brief Sets an ASCII string as child data
-		 * \param sValue [in] : The ASCII string value to set
+		 * \param value [in] : The ASCII string value to set
 		 */
-		virtual bool setASCIIStringAsChildData(const char* sValue) = 0;
+		virtual bool setStr(const char* value) = 0;
 		// virtual bool setUTF8StringAsChildData( ??? value)=0;
 		//@}
 

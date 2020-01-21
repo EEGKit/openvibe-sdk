@@ -1,17 +1,13 @@
 #pragma once
 
-#include <iostream>
+#include "../../ovp_defines.h"
 #include <cstdio>
-#include <cstdlib>
 #include <memory>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include "csv/ovICSV.h"
-
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileReaderDesc 							   OpenViBE::CIdentifier(0x584E1948, 0x65E91650)
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileReader     							   OpenViBE::CIdentifier(0x336A3D9A, 0x753F1BA4)
 
 namespace OpenViBEPlugins
 {
@@ -21,9 +17,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmOVCSVFileReader();
+			CBoxAlgorithmOVCSVFileReader() : m_readerLib(OpenViBE::CSV::createCSVHandler(), OpenViBE::CSV::releaseCSVHandler) { }
 			void release() override { delete this; }
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return 128LL << 32; }
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
@@ -32,49 +28,44 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileReader)
 
 		private:
-			bool initializeFile();
 			bool processStimulation(double startTime, double endTime);
 
-			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_ReaderLib;
+			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_readerLib;
 
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_AlgorithmEncoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_StimulationEncoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_algorithmEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimEncoder;
 
-			std::deque<OpenViBE::CSV::SMatrixChunk> m_SavedChunks;
-			std::deque<OpenViBE::CSV::SStimulationChunk> m_SavedStimulations;
+			std::deque<OpenViBE::CSV::SMatrixChunk> m_savedChunks;
+			std::deque<OpenViBE::CSV::SStimulationChunk> m_savedStimulations;
 
-			uint64_t m_LastStimulationDate = 0;
+			uint64_t m_lastStimulationDate = 0;
 
-			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
-			std::vector<std::string> m_ChannelNames;
-			std::vector<uint32_t> m_DimensionSizes;
-			uint32_t m_SamplingRate         = 0;
-			uint32_t m_SampleCountPerBuffer = 0;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
+			std::vector<std::string> m_channelNames;
+			std::vector<size_t> m_dimSizes;
+			size_t m_sampling         = 0;
+			size_t m_nSamplePerBuffer = 0;
 
-			bool m_IsHeaderSent;
-			bool m_IsStimulationHeaderSent;
-			std::vector<double> m_FrequencyAbscissa;
+			bool m_isHeaderSent            = false;
+			bool m_isStimulationHeaderSent = false;
+			std::vector<double> m_frequencyAbscissa;
 		};
 
 		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
 
 				if (index == 0 && typeID == OV_TypeId_Stimulations)
 				{
-					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal),
-										"Failed to reset output type to signal",
-										OpenViBE::Kernel::ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal), "Failed to reset output type to signal", OpenViBE::Kernel::ErrorType::Internal);
 				}
 				else if (index == 1 && typeID != OV_TypeId_Stimulations)
 				{
-					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations),
-										"Failed to reset output type to stimulations",
-										OpenViBE::Kernel::ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations), "Failed to reset output type to stimulations", OpenViBE::Kernel::ErrorType::Internal);
 				}
 				else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal); }
 

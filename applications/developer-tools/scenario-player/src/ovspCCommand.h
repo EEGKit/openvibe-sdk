@@ -21,42 +21,37 @@
 
 #pragma once
 
-#include <string>
-
-#include <boost/optional.hpp>
-
 #include "ovspICommand.h"
+#include <boost/optional.hpp>
+#include <string>
 
 namespace OpenViBE
 {
 	/**
-	* \struct InitCommand
+	* \struct SInitCmd
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Command that drives the initialization of the tool
 	* \ingroup ScenarioPlayer
 	*
 	* InitCommand class contains the following properties:
-	* - Benchmark: Flag to enable benchmark on execute command (optional)
-	* .
+	* - Benchmark: Flag to enable benchmark on execute command (optional).
 	*
 	*/
-	struct InitCommand final : ICommand
+	struct SInitCmd final : SCommand
 	{
 		// List of properties
 		boost::optional<bool> benchmark;
 
-
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
-
 		void doPrint(std::ostream& os) const override;
 	};
 
 
 	/**
-	* \struct LoadKernelCommand
+	* \struct SLoadKernelCmd
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Command that drives kernel loading
@@ -67,12 +62,12 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct LoadKernelCommand final : ICommand
+	struct SLoadKernelCmd final : SCommand
 	{
 		// List of properties
-		boost::optional<std::string> configurationFile;
+		boost::optional<std::string> configFile;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -80,7 +75,7 @@ namespace OpenViBE
 	};
 
 	/**
-	* \struct LoadScenarioCommand
+	* \struct SLoadScenarioCmd
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Command that drives scenario loading
@@ -92,13 +87,13 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct LoadScenarioCommand final : ICommand
+	struct SLoadScenarioCmd final : SCommand
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -106,7 +101,7 @@ namespace OpenViBE
 	};
 	
 	/**
-	* \struct UpdateScenarioCommand
+	* \struct SUpdateScenarioCmd
 	* \author criou (INRIA)
 	* \date 2018-04-16
 	* \brief Command that drives scenario update and export
@@ -117,13 +112,13 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct UpdateScenarioCommand final : ICommand
+	struct SUpdateScenarioCmd final : SCommand
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -131,15 +126,15 @@ namespace OpenViBE
 	};
 
 	/**
-	* \struct ResetCommand
+	* \struct SResetCmd
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Command that drives tool reset to its initial state
 	* \ingroup ScenarioPlayer
 	*/
-	struct ResetCommand final : ICommand
+	struct SResetCmd final : SCommand
 	{
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -147,13 +142,13 @@ namespace OpenViBE
 	};
 
 	/**
-	* \struct RunScenarioCommand
+	* \struct SRunScenarioCmd
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Command that drives the execution of a list of scenarios
 	* \ingroup ScenarioPlayer
 	*
-	* RunScenarioCommand contains the following properties:
+	* SRunScenarioCmd contains the following properties:
 	* - ScenarioList: Names of scenario that must be executed (mandatory)
 	* - PlayMode: 0 for standard, 1 for fastforward (optional)
 	* - MaximumExecutionTime: Scenarios playing execution time limit (optional)
@@ -161,17 +156,17 @@ namespace OpenViBE
 	* .
 	*
 	*/
-	struct RunScenarioCommand final : ICommand
+	struct SRunScenarioCmd final : SCommand
 	{
 		using Token = std::pair<std::string, std::string>;
 
 		// List of properties
 		boost::optional<std::vector<std::string>> scenarioList;
-		boost::optional<PlayerPlayMode> playMode;
+		boost::optional<EPlayerPlayMode> playMode;
 		boost::optional<double> maximumExecutionTime;
 		boost::optional<std::vector<Token>> tokenList;
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -179,13 +174,13 @@ namespace OpenViBE
 	};
 
 	/**
-	* \struct SetupScenarioCommand
+	* \struct SSetupScenarioCmd
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Command that drives the setup of a scenario
 	* \ingroup ScenarioPlayer
 	*
-	* SetupScenarioCommand contains the following properties:
+	* SSetupScenarioCmd contains the following properties:
 	* - ScenarioName: name of the scenario to setup (mandatory)
 	* - TokenList: List of scenario specific tokens (optional)
 	* .
@@ -194,7 +189,7 @@ namespace OpenViBE
 	* called on the same scenario (note that an empty token list is allowed).
 	*
 	*/
-	struct SetupScenarioCommand final : ICommand
+	struct SSetupScenarioCmd final : SCommand
 	{
 		using Token = std::pair<std::string, std::string>;
 
@@ -203,10 +198,10 @@ namespace OpenViBE
 		boost::optional<std::vector<Token>> tokenList;
 
 
-		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
 		void doPrint(std::ostream& os) const override;
 	};
-}
+}	// namespace OpenViBE

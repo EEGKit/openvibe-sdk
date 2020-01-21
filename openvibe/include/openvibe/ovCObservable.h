@@ -64,8 +64,8 @@ namespace OpenViBE
 		virtual void notifyObservers(void* data = nullptr);
 
 	private:
-		struct ObserverList;
-		ObserverList* m_pObserverList = nullptr;
-		bool m_bHasChanged            = false;
+		struct SObserverList;
+		SObserverList* m_observers = nullptr;
+		bool m_hasChanged          = false;
 	};
 } // namespace OpenViBE

@@ -1,14 +1,12 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <iostream>
 #include <cstdio>
-#include <cstdlib>
 
-#define OVP_ClassId_BoxAlgorithm_CSVFileReaderDesc 							   OpenViBE::CIdentifier(0x193F22E9, 0x26A67233)
-#define OVP_ClassId_BoxAlgorithm_CSVFileReader     							   OpenViBE::CIdentifier(0x641D0717, 0x02884107)
 
 namespace OpenViBEPlugins
 {
@@ -18,20 +16,20 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmCSVFileReader();
+			CBoxAlgorithmCSVFileReader() {}
 			void release() override { delete this; }
-			uint64_t getClockFrequency() override;
+			uint64_t getClockFrequency() override { return 128LL << 32; } // the box clock frequency
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
-			bool process_streamedMatrix();
-			bool process_stimulation();
-			bool process_signal();
-			bool process_channelLocalisation();
-			bool process_featureVector();
-			bool process_spectrum();
+			bool processStreamedMatrix();
+			bool processStimulation();
+			bool processSignal();
+			bool processChannelLocalisation();
+			bool processFeatureVector();
+			bool processSpectrum();
 			bool convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader)
@@ -40,38 +38,38 @@ namespace OpenViBEPlugins
 		protected:
 			bool initializeFile();
 
-			FILE* m_pFile = nullptr;
-			std::string m_sSeparator;
-			bool m_bDoNotUseFileTime = false;
-			OpenViBE::CString m_sFilename;
+			FILE* m_file = nullptr;
+			std::string m_separator;
+			bool m_doNotUseFileTime = false;
+			OpenViBE::CString m_filename;
 
-			OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-			uint32_t m_ui32ColumnCount              = 0;
-			uint64_t m_ui64SamplingRate             = 0;
-			uint32_t m_ui32SamplesPerBuffer         = 0;
-			uint32_t m_ui32ChannelNumberPerBuffer   = 0;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
+			size_t m_nCol                  = 0;
+			size_t m_sampling              = 0;
+			size_t m_samplesPerBuffer      = 0;
+			size_t m_channelsPerBuffer     = 0;
 
-			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)();
+			bool (CBoxAlgorithmCSVFileReader::*m_realProcess)() = nullptr;
 
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_pAlgorithmEncoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
-			bool m_bHeaderSent = false;
-			std::vector<std::string> m_vLastLineSplit;
-			std::vector<std::string> m_vHeaderFile;
-			std::vector<std::vector<std::string>> m_vDataMatrix;
+			bool m_headerSent = false;
+			std::vector<std::string> m_lastLineSplits;
+			std::vector<std::string> m_headerFiles;
+			std::vector<std::vector<std::string>> m_dataMatrices;
 
-			double m_f64NextTime = 0;
+			double m_nextTime = 0;
 
-			uint64_t m_ui64ChunkStartTime = 0;
-			uint64_t m_ui64ChunkEndTime   = 0;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
 
-			static const uint32_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
+			static const size_t BUFFER_LEN = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
 		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
@@ -106,7 +104,7 @@ namespace OpenViBEPlugins
 					box.setSettingName(3, "Samples per buffer");
 					box.setSettingValue(3, "32");
 
-					OV_ERROR_KRF("Unsupported stream type " << typeID.toString(), OpenViBE::Kernel::ErrorType::BadOutput);
+					OV_ERROR_KRF("Unsupported stream type " << typeID.str(), OpenViBE::Kernel::ErrorType::BadOutput);
 				}
 				return true;
 			}

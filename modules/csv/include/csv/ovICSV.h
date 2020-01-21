@@ -26,7 +26,6 @@
 #include <queue>
 #include <string>
 #include <vector>
-#include <array>
 #include <cstdint>
 
 namespace OpenViBE
@@ -40,23 +39,17 @@ namespace OpenViBE
 			std::vector<double> matrix;
 			uint64_t epoch;
 
-			SMatrixChunk(double startTime, double endTime, const std::vector<double>& matrix, uint64_t epoch)
-				: startTime(startTime)
-				  , endTime(endTime)
-				  , matrix(matrix)
-				  , epoch(epoch) { }
+			SMatrixChunk(const double startTime, const double endTime, const std::vector<double>& matrix, const uint64_t epoch)
+				: startTime(startTime), endTime(endTime), matrix(matrix), epoch(epoch) { }
 		};
 
 		struct SStimulationChunk
 		{
-			uint64_t stimulationIdentifier;
-			double stimulationDate;
-			double stimulationDuration;
-
-			SStimulationChunk(uint64_t stimulationIdentifier, double stimulationDate, double stimulationDuration)
-				: stimulationIdentifier(stimulationIdentifier)
-				  , stimulationDate(stimulationDate)
-				  , stimulationDuration(stimulationDuration) { }
+			uint64_t id;
+			double date;
+			double duration;
+			SStimulationChunk(const uint64_t id, const double date, const double duration)
+				: id(id), date(date), duration(duration) { }
 		};
 
 		enum class EStreamType
@@ -118,16 +111,16 @@ namespace OpenViBE
 			/**
 			 * \brief Return the number of digit of float numbers in output file.
 			 *
-			 * \return unsigned int number of digits
+			 * \return size_t number of digits
 			 */
-			virtual unsigned int getOutputFloatPrecision() = 0;
+			virtual size_t getOutputFloatPrecision() = 0;
 
 			/**
 			 * \brief Set the number of digits of float numbers in output file.
 			 *
 			 * \param precision number of digits
 			 */
-			virtual void setOutputFloatPrecision(unsigned int precision) = 0;
+			virtual void setOutputFloatPrecision(size_t precision) = 0;
 
 			/**
 			 * \brief Set the format type that will be written or read.
@@ -162,50 +155,49 @@ namespace OpenViBE
 			 * \brief Set informations to read or write signal data
 			 *
 			 * \param channelNames all channels names for the matrix
-			 * \param samplingFrequency sampling frequency
-			 * \param sampleCountPerBuffer number of sample per buffer
+			 * \param sampling sampling frequency
+			 * \param nSamplePerBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) = 0;
+			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, size_t sampling, size_t nSamplePerBuffer) = 0;
 
 			/**
 			 * \brief Get signal information in file
 			 *
 			 * \param channelNames reference to fill with file channel names
-			 * \param samplingFrequency sampling frequency
-			 * \param sampleCountPerBuffer number of sample per buffer
+			 * \param sampling sampling frequency
+			 * \param nSamplePerBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, uint32_t& sampleCountPerBuffer) = 0;
+			virtual bool getSignalInformation(std::vector<std::string>& channelNames, size_t& sampling, size_t& nSamplePerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write spectrum data
 			 *
 			 * \param channelNames Channels names of the matrix
 			 * \param frequencyAbscissa Frequencies abscissa of the measurements
-			 * \param samplingRate Sampling rate of the original measurements
+			 * \param sampling Sampling rate of the original measurements
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa,
-												uint32_t samplingRate) = 0;
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, size_t sampling) = 0;
 
 			/**
 			 * \brief get spectrum information in file
 			 *
 			 * \param channelNames Channels names of the matrix
 			 * \param frequencyAbscissa Frequencies abscissa of the measurements
-			 * \param samplingRate Sampling rate of the original measurements
+			 * \param sampling Sampling rate of the original measurements
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) = 0;
+			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, size_t& sampling) = 0;
 
 			/**
 			 * \brief Set informations to read or write vector data
@@ -236,7 +228,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels) = 0;
+			virtual bool setStreamedMatrixInformation(const std::vector<size_t>& dimensionSizes, const std::vector<std::string>& labels) = 0;
 
 			/**
 			 * \brief Get streamed or covariance matrix information in file
@@ -247,7 +239,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error
 			 */
-			virtual bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels) = 0;
+			virtual bool getStreamedMatrixInformation(std::vector<size_t>& dimensionSizes, std::vector<std::string>& labels) = 0;
 
 			/**
 			 * \brief Write the header if available in the file
@@ -387,5 +379,5 @@ namespace OpenViBE
 		extern CSV_API ICSVHandler* createCSVHandler();
 
 		extern CSV_API void releaseCSVHandler(ICSVHandler* object);
-	}
-}
+	}	// namespace CSV
+}	// namespace OpenViBE

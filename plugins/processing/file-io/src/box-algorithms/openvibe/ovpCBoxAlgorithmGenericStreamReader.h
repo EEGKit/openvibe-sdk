@@ -11,14 +11,6 @@
 #include <map>
 
 #include <cstdio>
-#include <cstdlib>
-
-// TODO:
-// - please move the identifier definitions in ovp_defines.h
-// - please include your desciptor in ovp_main.cpp
-
-#define OVP_ClassId_BoxAlgorithm_GenericStreamReader     OpenViBE::CIdentifier(0x6468099F, 0x0370095A)
-#define OVP_ClassId_BoxAlgorithm_GenericStreamReaderDesc OpenViBE::CIdentifier(0x1F1E3A53, 0x6CA07237)
 
 namespace OpenViBEPlugins
 {
@@ -48,22 +40,22 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			OpenViBE::CMemoryBuffer m_oPendingChunk;
-			uint64_t m_ui64StartTime   = 0;
-			uint64_t m_ui64EndTime     = 0;
-			uint32_t m_ui32OutputIndex = 0;
-			bool m_bPending            = false;
-			bool m_bHasEBMLHeader      = false;
+			uint64_t m_startTime = 0;
+			uint64_t m_endTime   = 0;
+			size_t m_outputIdx   = 0;
+			bool m_bPending      = false;
+			bool m_hasEBMLHeader = false;
 
-			FILE* m_pFile = nullptr;
-			std::stack<EBML::CIdentifier> m_vNodes;
-			std::map<uint32_t, uint32_t> m_vStreamIndexToOutputIndex;
-			std::map<uint32_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeIdentifier;
+			FILE* m_file = nullptr;
+			std::stack<EBML::CIdentifier> m_nodes;
+			std::map<size_t, size_t> m_streamIndexToOutputIdxs;
+			std::map<size_t, OpenViBE::CIdentifier> m_streamIndexToTypeIDs;
 
 		private:
 			bool initializeFile();
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
 			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const size_t size) override;
 			void closeChild() override;
 		};
 
@@ -73,12 +65,7 @@ namespace OpenViBEPlugins
 
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
-				for (uint32_t i = 0; i < box.getOutputCount(); i++)
-				{
-					sprintf(l_sName, "Output stream %u", i + 1);
-					box.setOutputName(i, l_sName);
-				}
+				for (size_t i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 
@@ -90,20 +77,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setOutputType(index, OV_TypeId_EBMLStream);
 				this->check(box);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				this->check(box);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
 			{
 				this->check(box);
 				return true;

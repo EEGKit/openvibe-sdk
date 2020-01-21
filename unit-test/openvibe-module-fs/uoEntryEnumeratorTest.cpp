@@ -19,7 +19,6 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -33,14 +32,14 @@ public:
 
 	bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 	{
-		if (rAttributes.isFile()) { files.push_back(rEntry.getName()); }
+		if (rAttributes.isFile()) { m_files.push_back(rEntry.getName()); }
 
 		return true;
 	}
 
-	void release() { files.clear(); }
+	void release() { m_files.clear(); }
 
-	std::vector<std::string> files;
+	std::vector<std::string> m_files;
 };
 
 int uoEntryEnumeratorTest(int /*argc*/, char* argv[])
@@ -51,44 +50,44 @@ int uoEntryEnumeratorTest(int /*argc*/, char* argv[])
 	FS::IEntryEnumerator* enumerator = createEntryEnumerator(cb);
 	enumerator->enumerate((dataDirectory + "*.txt").c_str());
 
-	OVT_ASSERT(cb.files.size() == 2, "Failure to enumerate with wildcard prefix");
+	OVT_ASSERT(cb.m_files.size() == 2, "Failure to enumerate with wildcard prefix");
 
 	cb.release();
 
 	// test wildcard after
 	enumerator->enumerate((dataDirectory + "test*").c_str());
 
-	OVT_ASSERT(cb.files.size() == 2, "Failure to enumerate with wildcard suffix");
+	OVT_ASSERT(cb.m_files.size() == 2, "Failure to enumerate with wildcard suffix");
 
 	cb.release();
 
 	// test wildcard after
 	enumerator->enumerate((dataDirectory + "t*").c_str());
 
-	OVT_ASSERT(cb.files.size() == 3, "Failure to enumerate with single letter");
+	OVT_ASSERT(cb.m_files.size() == 3, "Failure to enumerate with single letter");
 
 	cb.release();
 
 	// test wildcard before and after
 	enumerator->enumerate((dataDirectory + "*oto*").c_str());
 
-	OVT_ASSERT(cb.files.size() == 1, "Failure to enumerate with englobing wildcards");
-	OVT_ASSERT_STREQ(cb.files[0], std::string(dataDirectory + "toto.md"), "Failure to enumerate with englobing wildcards");
+	OVT_ASSERT(cb.m_files.size() == 1, "Failure to enumerate with englobing wildcards");
+	OVT_ASSERT_STREQ(cb.m_files[0], std::string(dataDirectory + "toto.md"), "Failure to enumerate with englobing wildcards");
 
 	cb.release();
 
 	// test wildcard in middle
 	enumerator->enumerate((dataDirectory + "test1*xt").c_str());
 
-	OVT_ASSERT(cb.files.size() == 1, "Failure to enumerate with middle wildcard");
-	OVT_ASSERT_STREQ(cb.files[0], std::string(dataDirectory + "test1.txt"), "Failure to enumerate with middle wildcard");
+	OVT_ASSERT(cb.m_files.size() == 1, "Failure to enumerate with middle wildcard");
+	OVT_ASSERT_STREQ(cb.m_files[0], std::string(dataDirectory + "test1.txt"), "Failure to enumerate with middle wildcard");
 
 	cb.release();
 
 	// error case: no wildcard
 	enumerator->enumerate((dataDirectory + "t").c_str());
 
-	OVT_ASSERT(cb.files.size() == 0, "Failure to enumerate with no wildcard");
+	OVT_ASSERT(cb.m_files.empty(), "Failure to enumerate with no wildcard");
 
 	cb.release();
 

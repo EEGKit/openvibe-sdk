@@ -4,7 +4,6 @@
 
 #include "plugins/ovkCPluginModule.h"
 
-#include <string>
 #include <algorithm>
 
 using namespace std;
@@ -17,22 +16,17 @@ using namespace OpenViBE;
 		if(sptr) { m_oCreatedObjects.push_back(sptr); } \
 	}
 
-Kernel::CKernelObjectFactory::CKernelObjectFactory(const IKernelContext& ctx)
-	: TKernelObject<IKernelObjectFactory>(ctx) {}
-
-IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIdentifier)
+IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& classID)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
+	IObject* res = nullptr;
 
-	IObject* l_pResult = nullptr;
+	create(classID, OV_ClassId_Kernel_Plugins_PluginModule, res, Kernel::CPluginModule);
+	create(classID, OV_ClassId_Kernel_Configurable, res, Kernel::CConfigurable);
 
-	create(rClassIdentifier, OV_ClassId_Kernel_Plugins_PluginModule, l_pResult, Kernel::CPluginModule);
+	OV_ERROR_UNLESS_KRN(res, "Unable to allocate object with class id " << classID.str(), ErrorType::BadAlloc);
 
-	create(rClassIdentifier, OV_ClassId_Kernel_Configurable, l_pResult, Kernel::CConfigurable);
-
-	OV_ERROR_UNLESS_KRN(l_pResult, "Unable to allocate object with class id " << rClassIdentifier.toString(), ErrorType::BadAlloc);
-
-	return l_pResult;
+	return res;
 }
 
 bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
@@ -41,18 +35,18 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 
 	if (!pObject) { return true; }
 
-	CIdentifier l_rClassIdentifier = pObject->getClassIdentifier();
+	const CIdentifier classID = pObject->getClassIdentifier();
 
-	vector<IObject*>::iterator i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
+	const auto i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 
 	OV_ERROR_UNLESS_KRF(i != m_oCreatedObjects.end(),
-						"Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory",
+						"Can not release object with final class id " << classID.str() << " - it is not owned by this fatory",
 						ErrorType::ResourceNotFound);
 
 	m_oCreatedObjects.erase(i);
 	delete pObject;
 
-	this->getLogManager() << LogLevel_Debug << "Released object with final class id " << l_rClassIdentifier << "\n";
+	this->getLogManager() << LogLevel_Debug << "Released object with final class id " << classID << "\n";
 
 	return true;
 }

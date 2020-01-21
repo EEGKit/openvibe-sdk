@@ -1,7 +1,7 @@
 #include "ovpCBoxAlgorithmStimulationMultiplexer.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -13,35 +13,35 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize()
 {
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 
-	m_StimulationDecoders.resize(staticBoxContext.getInputCount());
-	unsigned int index = 0;
-	for (auto& stimulationDecoder : m_StimulationDecoders)
+	m_decoders.resize(staticBoxContext.getInputCount());
+	size_t index = 0;
+	for (auto& stimulationDecoder : m_decoders)
 	{
 		stimulationDecoder.initialize(*this, index);
 		index += 1;
 	}
 
-	m_StimulationEncoder.initialize(*this, 0);
+	m_encoder.initialize(*this, 0);
 
-	m_StreamDecoderEndTimes = std::vector<uint64_t>(staticBoxContext.getInputCount(), 0ULL);
+	m_decoderEndTimes = std::vector<uint64_t>(staticBoxContext.getInputCount(), 0ULL);
 
-	m_LastStartTime = 0;
-	m_LastEndTime   = 0;
-	m_WasHeaderSent = false;
+	m_lastStartTime = 0;
+	m_lastEndTime   = 0;
+	m_wasHeaderSent = false;
 
 	return true;
 }
 
 bool CBoxAlgorithmStimulationMultiplexer::uninitialize()
 {
-	for (auto& stimulationDecoder : m_StimulationDecoders) { stimulationDecoder.uninitialize(); }
+	for (auto& stimulationDecoder : m_decoders) { stimulationDecoder.uninitialize(); }
 
-	m_StimulationEncoder.uninitialize();
+	m_encoder.uninitialize();
 
 	return true;
 }
 
-bool CBoxAlgorithmStimulationMultiplexer::processInput(const uint32_t)
+bool CBoxAlgorithmStimulationMultiplexer::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -52,60 +52,59 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 	IBoxIO& dynamicBoxContext    = this->getDynamicBoxContext();
 
-	if (!m_WasHeaderSent)
+	if (!m_wasHeaderSent)
 	{
-		m_StimulationEncoder.encodeHeader();
-		dynamicBoxContext.markOutputAsReadyToSend(0, m_LastEndTime, m_LastEndTime);
-		m_WasHeaderSent = true;
+		m_encoder.encodeHeader();
+		dynamicBoxContext.markOutputAsReadyToSend(0, m_lastEndTime, m_lastEndTime);
+		m_wasHeaderSent = true;
 	}
 
 	uint64_t earliestReceivedChunkEndTime = 0xffffffffffffffffULL;
 
-	for (uint32_t input = 0; input < staticBoxContext.getInputCount(); ++input)
+	for (size_t input = 0; input < staticBoxContext.getInputCount(); ++input)
 	{
-		for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
+		for (size_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
 		{
-			m_StimulationDecoders[input].decode(chunk);
+			m_decoders[input].decode(chunk);
 
-			if (m_StimulationDecoders[input].isBufferReceived())
+			if (m_decoders[input].isBufferReceived())
 			{
-				for (uint32_t stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+				for (size_t stimulation = 0; stimulation < m_decoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 				{
-					m_vStimulation.insert(std::make_pair(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+					m_stimulations.insert(std::make_pair(m_decoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
 														 std::make_tuple(
-															 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
-															 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-															 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
+															 m_decoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
+															 m_decoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+															 m_decoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
 				}
 			}
 
-			m_StreamDecoderEndTimes[input] = dynamicBoxContext.getInputChunkEndTime(input, chunk);
+			m_decoderEndTimes[input] = dynamicBoxContext.getInputChunkEndTime(input, chunk);
 		}
 
-		if (earliestReceivedChunkEndTime > m_StreamDecoderEndTimes[input]) { earliestReceivedChunkEndTime = m_StreamDecoderEndTimes[input]; }
+		if (earliestReceivedChunkEndTime > m_decoderEndTimes[input]) { earliestReceivedChunkEndTime = m_decoderEndTimes[input]; }
 	}
 
-	if (earliestReceivedChunkEndTime >= m_LastEndTime)
+	if (earliestReceivedChunkEndTime >= m_lastEndTime)
 	{
-		m_StimulationEncoder.getInputStimulationSet()->clear();
+		m_encoder.getInputStimulationSet()->clear();
 
-		for (auto stimulation = m_vStimulation.begin(); stimulation != m_vStimulation.end();)
+		for (auto stimulation = m_stimulations.begin(); stimulation != m_stimulations.end();)
 		{
 			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				m_StimulationEncoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
-																				 std::get<2>(stimulation->second));
-				stimulation = m_vStimulation.erase(stimulation);
+				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second), std::get<2>(stimulation->second));
+				stimulation = m_stimulations.erase(stimulation);
 			}
 			else { ++stimulation; }
 		}
 
-		m_StimulationEncoder.encodeBuffer();
+		m_encoder.encodeBuffer();
 
-		dynamicBoxContext.markOutputAsReadyToSend(0, m_LastEndTime, earliestReceivedChunkEndTime);
+		dynamicBoxContext.markOutputAsReadyToSend(0, m_lastEndTime, earliestReceivedChunkEndTime);
 
-		m_LastStartTime = m_LastEndTime;
-		m_LastEndTime   = earliestReceivedChunkEndTime;
+		m_lastStartTime = m_lastEndTime;
+		m_lastEndTime   = earliestReceivedChunkEndTime;
 	}
 
 	return true;

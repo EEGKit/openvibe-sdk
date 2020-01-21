@@ -5,9 +5,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_Timeout OpenViBE::CIdentifier(0x24FCD292, 0x5C8F6AA8)
-#define OVP_ClassId_BoxAlgorithm_TimeoutDesc OpenViBE::CIdentifier(0xB3D90844, 0x79A4CF6D)
-
 namespace OpenViBEPlugins
 {
 	namespace Stimulation
@@ -26,30 +23,30 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			uint64_t getClockFrequency() override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
 		protected:
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_StimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
 
 		private:
 			enum ETimeoutState
 			{
-				ETimeout_No,
-				ETimeout_Occurred,
-				ETimeout_Sent
+				Timeout_No,
+				Timeout_Occurred,
+				Timeout_Sent
 			};
 
-			ETimeoutState m_TimeoutState;
-			bool m_IsHeaderSent = false;
+			ETimeoutState m_timeoutState = Timeout_No;
+			bool m_isHeaderSent          = false;
 
-			uint64_t m_Timeout           = 0;
-			uint64_t m_LastTimePolled    = 0;
-			uint64_t m_PreviousTime      = 0;
-			uint64_t m_StimulationToSend = 0;
+			uint64_t m_timeout           = 0;
+			uint64_t m_lastTimePolled    = 0;
+			uint64_t m_previousTime      = 0;
+			uint64_t m_stimulationToSend = 0;
 		};
 
 		/**

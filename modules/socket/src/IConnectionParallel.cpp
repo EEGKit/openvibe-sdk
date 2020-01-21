@@ -27,35 +27,35 @@ namespace Socket
 	class CConnectionParallel final : public IConnectionParallel
 	{
 	protected:
-		unsigned short m_ui16PortNumber;
-		std::string m_sLastError;
+		unsigned short m_portNumber;
+		std::string m_lastError;
 	public:
 
 		CConnectionParallel()
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			:m_iFile(0)
+			:m_file(0)
 #endif
 		{
 #if defined TARGET_OS_Windows
 
-			m_ui16PortNumber = 0;
-			m_hmodTVicPort   = LoadLibrary(TEXT("TVicPort.dll"));
+			m_portNumber = 0;
+			m_port   = LoadLibrary(TEXT("TVicPort.dll"));
 
-			if (m_hmodTVicPort != nullptr)
+			if (m_port != nullptr)
 			{
-				m_lpfnTVicIsDriverOpened = LPFNTVICPORTISDRIVEROPENED(GetProcAddress(m_hmodTVicPort, "IsDriverOpened"));
-				m_lpfnTVicPortOpen       = LPFNTVICPORTOPEN(GetProcAddress(m_hmodTVicPort, "OpenTVicPort"));
-				m_lpfnTVicPortClose      = LPFNTVICPORTCLOSE(GetProcAddress(m_hmodTVicPort, "CloseTVicPort"));
-				m_lpfnTVicPortWrite      = LPFNTVICPORTWRITE(GetProcAddress(m_hmodTVicPort, "WritePort"));
+				m_isDriverOpened = port_is_driver_opened_t(GetProcAddress(m_port, "IsDriverOpened"));
+				m_portOpen       = port_open_t(GetProcAddress(m_port, "OpenTVicPort"));
+				m_portClose      = port_close_t(GetProcAddress(m_port, "CloseTVicPort"));
+				m_portWrite      = port_write_t(GetProcAddress(m_port, "WritePort"));
 
-				if (!m_lpfnTVicIsDriverOpened || !m_lpfnTVicPortOpen || !m_lpfnTVicPortClose || !m_lpfnTVicPortWrite)
+				if (!m_isDriverOpened || !m_portOpen || !m_portClose || !m_portWrite)
 				{
-					m_sLastError = "Cannot load function from TVicPort.dll: " + this->getLastErrorFormated();
+					m_lastError = "Cannot load function from TVicPort.dll: " + this->getLastErrorFormated();
 					this->release();
 				}
 			}
-			else { m_sLastError = "Cannot found or open TVicPort.dll: " + this->getLastErrorFormated(); }
+			else { m_lastError = "Cannot found or open TVicPort.dll: " + this->getLastErrorFormated(); }
 #endif
 		}
 
@@ -69,15 +69,15 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			if (m_hmodTVicPort != nullptr)
+			if (m_port != nullptr)
 			{
-				if (m_lpfnTVicIsDriverOpened())
+				if (m_isDriverOpened())
 				{
-					m_ui16PortNumber = 0;
-					m_lpfnTVicPortClose();
+					m_portNumber = 0;
+					m_portClose();
 					return true;
 				}
-				m_sLastError = "Cannot close the TVicPort library because it is not opened.";
+				m_lastError = "Cannot close the TVicPort library because it is not opened.";
 				return false;
 			}
 			return false;
@@ -88,157 +88,146 @@ namespace Socket
 
 			/*if (ioctl(fd, PPRELEASE) < 0)  { return false; }
 
-			if (close(m_iFile) < 0) { return false; }
+			if (close(m_file) < 0) { return false; }
 			else
 			{
-				m_iFile = -1;
+				m_file = -1;
 			}*/
 #endif
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
+		bool isReadyToSend(const size_t /*timeOut*/  = 0) const override { return this->isConnected(); }
+		bool isReadyToReceive(const size_t /*timeOut*/  = 0) const override { return this->isConnected(); }
+		size_t getPendingByteCount() const { return (this->isConnected() ? 0 : 1); }
 
-		bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
-
-		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
-
-		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize = 8) override
+		size_t sendBuffer(const void* buffer, const size_t size = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
-			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(buffer));
+			const uint8_t value = *(static_cast<const uint8_t*>(buffer));
 
-			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
-			return ui32BufferSize;
+			m_portWrite(m_portNumber, value);
+			return size;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			return 0;
 
-			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) { return ui32BufferSize; }*/
+			/*if (ioctl(m_file, PPWDATA, &value) < 0) { return size; }*/
 
 #endif
 		}
 
-		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize = 8) override
+		size_t receiveBuffer(void* /*buffer*/, const size_t /*size*/ = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
 
-
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			/*unsigned char valin;
+			/*
+			unsigned char valin;
 			int dirin=1;
 			int dirout=0;
 
-			if (ioctl (fd, PPDATADIR, &dirin)  < 0) 
-			{
-				
-				return 0;
-			}
+			if (ioctl (fd, PPDATADIR, &dirin)  < 0) { return 0; }
+			if (ioctl(fd, PPRDATA, &valin) < 0) { return 0; }
 
-			if (ioctl(fd, PPRDATA, &valin) < 0) {
-				return 0;
-			}
-
-			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
-			if(l_iResult < 0)
+			int res = ::read(m_file, buffer, size);
+			if(res < 0)
 			{
 				this->close();
 				return 0;
 			}
 
-			return l_iResult;*/
+			return res;
+			*/
 
 #endif
-
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const size_t size) override
 		{
-			const char* p            = reinterpret_cast<const char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			const char* p    = reinterpret_cast<const char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected()) { l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft); }
+			while (bytesLeft != 0 && this->isConnected()) { bytesLeft -= this->sendBuffer(p + size - bytesLeft, bytesLeft); }
 
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const size_t size) override
 		{
-			char* p                  = reinterpret_cast<char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			char* p          = reinterpret_cast<char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
-			{
-				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-			}
+			while (bytesLeft != 0 && this->isConnected()) { bytesLeft -= this->receiveBuffer(p + size - bytesLeft, bytesLeft); }
 
 			return this->isConnected();
 		}
 
 #if defined TARGET_OS_Windows
-		bool isConnected() const override { return m_ui16PortNumber != 0; }
+		bool isConnected() const override { return m_portNumber != 0; }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		bool isConnected() const override { return m_iFile != 0; }
+		bool isConnected() const override { return m_file != 0; }
 #endif
 
 		void release() override
 		{
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != nullptr && !FreeLibrary(m_hmodTVicPort)) { m_sLastError = getLastErrorFormated(); }
+			if (m_port != nullptr && !FreeLibrary(m_port)) { m_lastError = getLastErrorFormated(); }
 #endif
 			delete this;
 		}
 
-		bool connect(unsigned short ui16PortNumber) override
+		bool connect(const unsigned short portNumber) override
 		{
 			if (this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != nullptr)
+			if (m_port != nullptr)
 			{
-				if (m_lpfnTVicPortOpen())
+				if (m_portOpen())
 				{
-					m_sLastError     = "No error";
-					m_ui16PortNumber = ui16PortNumber;
+					m_lastError     = "No error";
+					m_portNumber = portNumber;
 					return true;
 				}
-				m_sLastError     = "Cannot open the TVic library";
-				m_ui16PortNumber = 0;
+				m_lastError     = "Cannot open the TVic library";
+				m_portNumber = 0;
 				return false;
 			}
-			m_sLastError = "TVicPort library is not loaded.";
+			m_lastError = "TVicPort library is not loaded.";
 			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			return false;
 
-			/*std::string l_sUrl = "/dev/parport" + std::to_string(ui16PortNumber);
-
-			if ((m_iFile = open(l_sUrl.c_str() , O_RDWR)) < 0) 
+			/*
+			std::string url = "/dev/parport" + std::to_string(portNumber);
+			if ((m_file = open(url.c_str() , O_RDWR)) < 0) 
 			{
 				this->close();
 				return false;
 			}
 			else
 			{
-				if (ioctl(m_iFile, PPCLAIM) < 0)
+				if (ioctl(m_file, PPCLAIM) < 0)
 				{
 					this->close();
 					return false;
 				}
-			}*/
+			}
+			*/
 
 #endif
 		}
 
-		std::string getLastError() override { return m_sLastError; }
+		std::string getLastError() override { return m_lastError; }
 
 		std::string getLastErrorFormated()
 		{
@@ -257,7 +246,7 @@ namespace Socket
 						  0,											// minimum size for output buffer
 						  nullptr);										// arguments - see note
 
-			return errorText + std::to_string(static_cast<unsigned long long>(error));
+			return errorText + std::to_string(static_cast<uint64_t>(error));
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return "Not implemented.";
@@ -265,7 +254,7 @@ namespace Socket
 		}
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	int m_iFile;
+	int m_file;
 #endif
 	};
 

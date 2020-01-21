@@ -1,18 +1,23 @@
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
+#include <cstdint>
+#include <random>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+
 
 int main(int /*argc*/, char** /*argv*/)
 {
-	srand(static_cast<unsigned int>(time(nullptr)));
-	for (int i = 0; i < 16; i++)
+	std::random_device rd;
+	std::default_random_engine rng(rd());
+	std::uniform_int_distribution<size_t> uni(0, std::numeric_limits<size_t>::max() - 1);
+	std::stringstream ss;
+	ss.fill('0');
+
+	for (int i = 0; i < 16; ++i)
 	{
-		const unsigned short int value1 = (rand() & 0xffff);
-		const unsigned short int value2 = (rand() & 0xffff);
-		const unsigned short int value3 = (rand() & 0xffff);
-		const unsigned short int value4 = (rand() & 0xffff);
-		printf("#define OV_ClassId_                                        OpenViBE::CIdentifier(0x%04X%04X, 0x%04X%04X)\n", int(value1), int(value2), int(value3), int(value4));
+		const size_t v1 = uni(rng), v2 = uni(rng);
+		ss << "(0x" << std::setw(8) << std::hex << v1 << ", 0x" << std::setw(8) << std::hex << v2 << ")";
+		std::cout << "#define OV_ClassId_\t\t\tOpenViBE::CIdentifier" << ss.str() << std::endl;
 	}
 
 	return 0;

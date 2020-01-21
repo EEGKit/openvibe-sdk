@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-#define OVP_ClassId_BoxAlgorithm_SignalDecimation     OpenViBE::CIdentifier(0x012F4BEA, 0x3BE37C66)
-#define OVP_ClassId_BoxAlgorithm_SignalDecimationDesc OpenViBE::CIdentifier(0x1C5F1356, 0x1E685777)
 
 namespace OpenViBEPlugins
 {
@@ -16,36 +14,36 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalDecimation)
 
 		protected:
 
-			int64_t m_i64DecimationFactor                = 0;
-			uint32_t m_ui32ChannelCount                  = 0;
-			uint32_t m_ui32InputSampleIndex              = 0;
-			uint32_t m_ui32InputSampleCountPerSentBlock  = 0;
-			uint64_t m_ui64InputSamplingFrequency        = 0;
-			uint32_t m_ui32OutputSampleIndex             = 0;
-			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
-			uint64_t m_ui64OutputSamplingFrequency       = 0;
+			size_t m_decimationFactor = 0;
+			size_t m_nChannel         = 0;
+			size_t m_iSampleIdx       = 0;
+			size_t m_iNSamplePerBlock = 0;
+			size_t m_iSampling        = 0;
+			size_t m_oSampleIdx       = 0;
+			size_t m_oNSamplePerBlock = 0;
+			size_t m_oSampling        = 0;
 
-			uint64_t m_ui64TotalSampleCount = 0;
-			uint64_t m_ui64StartTimeBase    = 0;
-			uint64_t m_ui64LastStartTime    = 0;
-			uint64_t m_ui64LastEndTime      = 0;
+			size_t m_nTotalSample    = 0;
+			uint64_t m_startTimeBase = 0;
+			uint64_t m_lastStartTime = 0;
+			uint64_t m_lastEndTime   = 0;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SamplingRate;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SamplingRate;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_sampling;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
 		};
 
 		class CBoxAlgorithmSignalDecimationDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

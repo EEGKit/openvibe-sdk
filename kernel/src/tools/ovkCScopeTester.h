@@ -8,19 +8,19 @@ namespace OpenViBE
 {
 	namespace Tools
 	{
-		class CScopeTester : public IObject
+		class CScopeTester final : public IObject
 		{
 		public:
 
-			CScopeTester(const Kernel::IKernelContext& ctx, const CString& sPrefix);
+			CScopeTester(const Kernel::IKernelContext& ctx, const CString& prefix);
 			~CScopeTester() override;
 
 			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester)
 
 		protected:
 
-			CString m_sPrefix;
-			const Kernel::IKernelContext& m_kernelContext;
+			CString m_prefix;
+			const Kernel::IKernelContext& m_kernelCtx;
 		};
 	} // namespace Tools
 } // namespace OpenViBE

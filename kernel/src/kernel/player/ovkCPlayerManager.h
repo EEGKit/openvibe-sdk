@@ -10,23 +10,23 @@ namespace OpenViBE
 	{
 		class CPlayer;
 
-		class CPlayerManager : public TKernelObject<IPlayerManager>
+		class CPlayerManager final : public TKernelObject<IPlayerManager>
 		{
 		public:
 
-			explicit CPlayerManager(const IKernelContext& ctx);
-			bool createPlayer(CIdentifier& rPlayerIdentifier) override;
-			bool releasePlayer(const CIdentifier& rPlayerIdentifier) override;
-			IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier) override;
-			CIdentifier getNextPlayerIdentifier(const CIdentifier& previousID) const override;
+			explicit CPlayerManager(const IKernelContext& ctx) : TKernelObject<IPlayerManager>(ctx) {}
+			bool createPlayer(CIdentifier& playerID) override;
+			bool releasePlayer(const CIdentifier& playerID) override;
+			IPlayer& getPlayer(const CIdentifier& playerID) override;
+			CIdentifier getNextPlayerIdentifier(const CIdentifier& previousID) const override { return getNextIdentifier<CPlayer*>(m_players, previousID); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier() const;
+			CIdentifier getUnusedIdentifier() const;
 
-			std::map<CIdentifier, CPlayer*> m_vPlayer;
+			std::map<CIdentifier, CPlayer*> m_players;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -36,34 +36,34 @@ namespace OpenViBE
 			virtual CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) = 0;
 			/**
 			  * \brief Creates a new algorithm
-			  * \param rAlgorithmDesc [in] : the algorithm descriptor of
+			  * \param algorithmDesc [in] : the algorithm descriptor of
 			  *        the algorithm to create
 			  * \return \e identifier of the created algorithm
 			  * \return \e OV_UndefinedIdentifier
 			  */
-			virtual CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
+			virtual CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) = 0;
 
 			/**
 			 * \brief Releases an existing algorithm
-			 * \param rAlgorithmIdentifier [in] : the existing algorithm identifier
+			 * \param id [in] : the existing algorithm identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier) = 0;
+			virtual bool releaseAlgorithm(const CIdentifier& id) = 0;
 			/**
 			 * \brief Releases an existing algorithm
-			 * \param rAlgorithm [in] : the existing algorithm
+			 * \param algorithm [in] : the existing algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool releaseAlgorithm(IAlgorithmProxy& rAlgorithm) = 0;
+			virtual bool releaseAlgorithm(IAlgorithmProxy& algorithm) = 0;
 			/**
 			 * \brief Gets details on a specific algorithm
-			 * \param rAlgorithmIdentifier [in] : the algorithm identifier which details should be returned
+			 * \param id [in] : the algorithm identifier which details should be returned
 			 * \return the corresponding algorithm reference.
 			 * \warning Calling this function with a bad identifier causes a crash
 			 */
-			virtual IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier) = 0;
+			virtual IAlgorithmProxy& getAlgorithm(const CIdentifier& id) = 0;
 			/**
 			 * \brief Gets next algorithm identifier
 			 * \param previousID [in] : The identifier

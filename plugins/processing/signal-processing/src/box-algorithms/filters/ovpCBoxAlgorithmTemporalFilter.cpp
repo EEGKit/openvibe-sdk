@@ -1,7 +1,7 @@
 #include "ovpCBoxAlgorithmTemporalFilter.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -9,47 +9,42 @@ using namespace SignalProcessing;
 
 namespace
 {
-#define FilterType_BandPass 0x19E89DDBD1FF7FF5
-#define FilterType_BandStop 0x41C34DD7F70E4043
-#define FilterType_HighPass 0x2F6771959F9F15B9
-#define FilterType_LowPass  0x0C33A568E2BD46D2
-
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandPass<32>, 1, Dsp::DirectFormII> CButterworthBandPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandStop<32>, 1, Dsp::DirectFormII> CButterworthBandStop;
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::HighPass<32>, 1, Dsp::DirectFormII> CButterworthHighPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::LowPass<32>, 1, Dsp::DirectFormII> CButterworthLowPass;
 
-	std::shared_ptr<Dsp::Filter> createButterworthFilter(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount)
+	std::shared_ptr<Dsp::Filter> createButterworthFilter(const size_t type, const size_t nSmooth)
 	{
-		switch (ui64FilterType)
+		switch (type)
 		{
-			case FilterType_BandPass: return std::shared_ptr<Dsp::Filter>(new CButterworthBandPass(int(ui64SmoothingSampleCount)));
-			case FilterType_BandStop: return std::shared_ptr<Dsp::Filter>(new CButterworthBandStop(int(ui64SmoothingSampleCount)));
-			case FilterType_HighPass: return std::shared_ptr<Dsp::Filter>(new CButterworthHighPass(int(ui64SmoothingSampleCount)));
-			case FilterType_LowPass: return std::shared_ptr<Dsp::Filter>(new CButterworthLowPass(int(ui64SmoothingSampleCount)));
+			case BandPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandPass>(int(nSmooth)));
+			case BandStop: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandStop>(int(nSmooth)));
+			case HighPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthHighPass>(int(nSmooth)));
+			case LowPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthLowPass>(int(nSmooth)));
 			default:
 				break;
 		}
-		return NULL;
+		return nullptr;
 	}
 
-	bool getButterworthParameters(Dsp::Params& rParameters, uint64_t ui64SamplingRate, uint64_t ui64FilterType, uint64_t ui64Order, double f64LowCutFrequency,
-								  double f64HighCutFrequency, double f64BandPassRipple)
+	bool getButterworthParameters(Dsp::Params& parameters, const size_t frequency, const size_t type, const size_t order,
+								  const double lowCut, const double highCut, const double /*ripple*/)
 	{
-		rParameters[0] = double(ui64SamplingRate);
-		rParameters[1] = double(ui64Order);
-		switch (ui64FilterType)
+		parameters[0] = double(frequency);
+		parameters[1] = double(order);
+		switch (type)
 		{
-			case FilterType_BandPass:
-			case FilterType_BandStop:
-				rParameters[2] = .5 * (f64HighCutFrequency + f64LowCutFrequency);
-				rParameters[3] = 1. * (f64HighCutFrequency - f64LowCutFrequency);
+			case BandPass:
+			case BandStop:
+				parameters[2] = .5 * (highCut + lowCut);
+				parameters[3] = 1. * (highCut - lowCut);
 				break;
-			case FilterType_HighPass:
-				rParameters[2] = f64LowCutFrequency;
+			case HighPass:
+				parameters[2] = lowCut;
 				break;
-			case FilterType_LowPass:
-				rParameters[2] = f64HighCutFrequency;
+			case LowPass:
+				parameters[2] = highCut;
 				break;
 			default:
 				return false;
@@ -62,39 +57,39 @@ namespace
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandStop<4>, 1, Dsp::DirectFormII> CChebyshevBandStop;
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::HighPass<4>, 1, Dsp::DirectFormII> CChebyshevHighPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::LowPass<4>, 1, Dsp::DirectFormII> CChebyshevLowPass;
-		std::shared_ptr < Dsp::Filter > createChebishevFilter(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount)
+		std::shared_ptr < Dsp::Filter > createChebishevFilter(size_t type, size_t nSmooth)
 		{
-			switch(ui64FilterType)
+			switch(type)
 			{
-				case FilterType_BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(int(ui64SmoothingSampleCount)));
-				case FilterType_BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(int(ui64SmoothingSampleCount)));
-				case FilterType_HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(int(ui64SmoothingSampleCount)));
-				case FilterType_LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(int(ui64SmoothingSampleCount)));
+				case EFilterType::BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(int(nSmooth)));
+				case EFilterType::BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(int(nSmooth)));
+				case EFilterType::HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(int(nSmooth)));
+				case EFilterType::LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(int(nSmooth)));
 				default:
 					break;
 			}
 			return NULL;
 		}
 	
-		bool getChebishevParameters(Dsp::Params& rParameters, uint64_t ui64FilterType, uint64_t ui64SamplingRate, uint64_t ui64Order, double f64LowCutFrequency, double f64HighCutFrequency, double f64BandPassRipple)
+		bool getChebishevParameters(Dsp::Params& params, size_t type, size_t sampling, size_t order, double lowCut, double highCut, double ripple)
 		{
-			rParameters[0]=int(ui64SamplingRate);
-			rParameters[1]=int(ui64Order);
-			switch(ui64FilterType)
+			params[0]=int(sampling);
+			params[1]=int(order);
+			switch(type)
 			{
-				case FilterType_BandPass:
-				case FilterType_BandStop:
-					rParameters[2]=.5*(f64HighCutFrequency+f64LowCutFrequency);
-					rParameters[3]=1.*(f64HighCutFrequency-f64LowCutFrequency);
-					rParameters[4]=f64BandPassRipple;
+				case EFilterType::BandPass:
+				case EFilterType::BandStop:
+					params[2]=.5*(highCut+lowCut);
+					params[3]=1.*(highCut-lowCut);
+					params[4]=ripple;
 					break;
-				case FilterType_HighPass:
-					rParameters[2]=f64HighCutFrequency; // TO CHECK : f64LowCutFrequency ?
-					rParameters[3]=f64BandPassRipple;
+				case EFilterType::HighPass:
+					params[2]=highCut; // TO CHECK : lowCut ?
+					params[3]=ripple;
 					break;
-				case FilterType_LowPass:
-					rParameters[2]=f64HighCutFrequency;
-					rParameters[3]=f64LowCutFrequency;  // TO CHECK : f64BandPassRipple ?
+				case EFilterType::LowPass:
+					params[2]=highCut;
+					params[3]=lowCut;  // TO CHECK : ripple ?
 					break;
 				default:
 					return false;
@@ -103,65 +98,58 @@ namespace
 		}
 		*/
 
-	typedef bool (*fpGetParameters_t)(Dsp::Params& rParameters, uint64_t ui64FilterType, uint64_t ui64SamplingRate, uint64_t ui64Order,
-									  double f64LowCutFrequency, double f64HighCutFrequency, double f64BandPassRipple);
-	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount);
+	typedef bool (*fpGetParameters_t)(Dsp::Params& params, size_t type, size_t sampling, size_t order, double lowCut, double highCut, double ripple);
+	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(size_t type, size_t nSmooth);
 }  // namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
 {
-	m_ui64FilterMethod         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64FilterType           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	const int64_t fildterOrder = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_f64LowCutFrequency       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	m_f64HighCutFrequency      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_method            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_type              = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	const int64_t order = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_lowCut            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_highCut           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	OV_ERROR_UNLESS_KRF(fildterOrder >= 1, "Invalid filter order [" << fildterOrder << "] (expected value >= 1)", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(order >= 1, "Invalid filter order [" << order << "] (expected value >= 1)", ErrorType::BadSetting);
 
-	m_ui64FilterOrder = uint64_t(fildterOrder);
+	m_order = size_t(order);
 
-	if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass)
+	if (m_type == LowPass)
 	{
-		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > 0, "Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
-							OpenViBE::Kernel::ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", ErrorType::BadSetting);
 	}
-	else if (m_ui64FilterType == OVP_TypeId_FilterType_HighPass)
+	else if (m_type == HighPass)
 	{
-		OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency > 0, "Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value > 0)",
-							OpenViBE::Kernel::ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_lowCut > 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value > 0)", ErrorType::BadSetting);
 	}
-	else if (m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == FilterType_BandStop)
+	else if (m_type == BandPass || m_type == BandStop)
 	{
-		OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency >= 0, "Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value >= 0)",
-							OpenViBE::Kernel::ErrorType::BadSetting);
-
-		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > 0, "Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
-							OpenViBE::Kernel::ErrorType::BadSetting);
-
-		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > m_f64LowCutFrequency,
-							"Invalid cut-off frequencies [" << m_f64LowCutFrequency << "," << m_f64HighCutFrequency <<
-							"] (expected low frequency < high frequency)", OpenViBE::Kernel::ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_lowCut >= 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value >= 0)", ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_highCut > m_lowCut,
+							"Invalid cut-off frequencies [" << m_lowCut << "," << m_highCut << "] (expected low frequency < high frequency)",
+							ErrorType::BadSetting);
 	}
-	else { OV_ERROR_KRF("Invalid filter type [" << m_ui64FilterType << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
+	else { OV_ERROR_KRF("Invalid filter type [" << m_type << "]", ErrorType::BadSetting); }
 
-	m_oDecoder.initialize(*this, 0);
-	m_oEncoder.initialize(*this, 0);
+	m_decoder.initialize(*this, 0);
+	m_encoder.initialize(*this, 0);
 
-	m_oEncoder.getInputSamplingRate().setReferenceTarget(m_oDecoder.getOutputSamplingRate());
-	m_oEncoder.getInputMatrix().setReferenceTarget(m_oDecoder.getOutputMatrix());
+	m_encoder.getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate());
+	m_encoder.getInputMatrix().setReferenceTarget(m_decoder.getOutputMatrix());
 
 	return true;
 }
 
 bool CBoxAlgorithmTemporalFilter::uninitialize()
 {
-	m_oDecoder.uninitialize();
-	m_oEncoder.uninitialize();
+	m_decoder.uninitialize();
+	m_encoder.uninitialize();
 
 	return true;
 }
 
-bool CBoxAlgorithmTemporalFilter::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmTemporalFilter::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -169,190 +157,179 @@ bool CBoxAlgorithmTemporalFilter::processInput(const uint32_t /*index*/)
 
 bool CBoxAlgorithmTemporalFilter::process()
 {
-	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	uint32_t j;
+	size_t j;
 
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		m_oDecoder.decode(i);
+		m_decoder.decode(i);
 
-		uint32_t l_ui32ChannelCount = m_oDecoder.getOutputMatrix()->getDimensionSize(0);
-		uint32_t l_ui32SampleCount  = m_oDecoder.getOutputMatrix()->getDimensionSize(1);
+		const size_t nChannel = m_decoder.getOutputMatrix()->getDimensionSize(0);
+		const size_t nSample  = m_decoder.getOutputMatrix()->getDimensionSize(1);
 
-		if (m_oDecoder.isHeaderReceived())
+		if (m_decoder.isHeaderReceived())
 		{
-			if (m_ui64FilterType != OVP_TypeId_FilterType_LowPass) // verification for high-pass, band-pass and band-stop filters
+			if (m_type != LowPass) // verification for high-pass, band-pass and band-stop filters
 			{
-				OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
-									"Invalid low cut-off frequency [" << m_f64LowCutFrequency <<
-									"] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
-									OpenViBE::Kernel::ErrorType::BadConfig);
+				OV_ERROR_UNLESS_KRF(m_lowCut <= m_decoder.getOutputSamplingRate()*.5,
+									"Invalid low cut-off frequency [" << m_lowCut << "] (expected value must meet nyquist criteria for sampling rate "
+									<< m_decoder.getOutputSamplingRate() << ")", ErrorType::BadConfig);
 			}
-			if (m_ui64FilterType != OVP_TypeId_FilterType_HighPass) // verification for low-pass, band-pass and band-stop filters
+			if (m_type != HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
-				OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
-									"Invalid high cut-off frequency [" << m_f64HighCutFrequency <<
-									"] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
-									OpenViBE::Kernel::ErrorType::BadConfig);
+				OV_ERROR_UNLESS_KRF(m_highCut <= m_decoder.getOutputSamplingRate()*.5,
+									"Invalid high cut-off frequency [" << m_highCut << "] (expected value must meet nyquist criteria for sampling rate "
+									<< m_decoder.getOutputSamplingRate() << ")", ErrorType::BadConfig);
 			}
 
-			m_vFilter.clear();
+			m_filters.clear();
 			//m_vFilter2.clear();
 
-			fpGetParameters_t fpGetParameters = NULL;
-			fpCreateFilter_t fpCreateFilter   = NULL;
-			if (m_ui64FilterMethod == OVP_TypeId_FilterMethod_Butterworth.toUInteger()) // Butterworth
+			fpGetParameters_t fpGetParameters;
+			fpCreateFilter_t fpCreateFilter;
+			if (m_method == Butterworth) // Butterworth
 			{
 				fpGetParameters = getButterworthParameters;
 				fpCreateFilter  = createButterworthFilter;
 			}
-			else if (m_ui64FilterMethod == OVP_TypeId_FilterMethod_Chebyshev.toUInteger()) // Chebyshev
+			else if (m_method == Chebyshev) // Chebyshev
 			{
-#if 1
-				OV_ERROR_KRF("Chebyshev method not implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
-#else
-				fpGetParameters = getChebishevParameters;
-				fpCreateFilter = createChebishevFilter;
-#endif
+				OV_ERROR_KRF("Chebyshev method not implemented", ErrorType::NotImplemented);
+				//fpGetParameters = getChebishevParameters;
+				//fpCreateFilter = createChebishevFilter;
 			}
-			else if (m_ui64FilterMethod == OVP_TypeId_FilterMethod_YuleWalker.toUInteger()) // YuleWalker
+			else if (m_method == YuleWalker) // YuleWalker
 			{
-#if 1
-				OV_ERROR_KRF("YuleWalker method not implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
-				return false;
-#else
-				fpGetParameters = getYuleWalkerParameters;
-				fpCreateFilter = createYuleWalkerFilter;
-#endif
+				OV_ERROR_KRF("YuleWalker method not implemented", ErrorType::NotImplemented);
+				//fpGetParameters = getYuleWalkerParameters;
+				//fpCreateFilter = createYuleWalkerFilter;
 			}
-			else { OV_ERROR_KRF("Invalid filter method [" << m_ui64FilterMethod << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("Invalid filter method [" << m_method << "]", ErrorType::BadSetting); }
 
-			if (m_ui64FilterType == OVP_TypeId_FilterType_HighPass.toUInteger())
+			if (m_type == HighPass)
 			{
-				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_f64LowCutFrequency << "Hz\n";
+				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
 			}
-			if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass.toUInteger())
+			if (m_type == LowPass)
 			{
-				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_f64HighCutFrequency << "Hz\n";
+				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
 			}
 
-			uint64_t l_ui64SamplingRate         = m_oDecoder.getOutputSamplingRate();
-			uint64_t l_ui64SmoothingSampleCount = 100 * l_ui64SamplingRate;
-			Dsp::Params l_oFilterParameters;
-			(*fpGetParameters)(l_oFilterParameters, l_ui64SamplingRate, m_ui64FilterType, m_ui64FilterOrder, m_f64LowCutFrequency, m_f64HighCutFrequency,
-							   m_f64BandPassRipple);
+			const size_t frequency = m_decoder.getOutputSamplingRate();
+			const size_t nSmooth   = 100 * frequency;
+			Dsp::Params params;
+			(*fpGetParameters)(params, frequency, m_type, m_order, m_lowCut, m_highCut, m_ripple);
 
-			for (j = 0; j < l_ui32ChannelCount; j++)
+			for (j = 0; j < nChannel; ++j)
 			{
-				std::shared_ptr<Dsp::Filter> l_pFilter = (*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
-				l_pFilter->setParams(l_oFilterParameters);
-				m_vFilter.push_back(l_pFilter);
-				/*std::shared_ptr < Dsp::Filter > l_pFilter2=(*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
-				l_pFilter2->setParams(l_oFilterParameters);
-				m_vFilter2.push_back(l_pFilter2);*/
+				std::shared_ptr<Dsp::Filter> filter = (*fpCreateFilter)(m_type, nSmooth);
+				filter->setParams(params);
+				m_filters.push_back(filter);
+				/*std::shared_ptr < Dsp::Filter > filter2=(*fpCreateFilter)(m_type, nSmoothingSample);
+				l_pFilter2->setParams(filterParameters);
+				m_vFilter2.push_back(filter2);*/
 			}
 
-			m_oEncoder.encodeHeader();
+			m_encoder.encodeHeader();
 		}
-		if (m_oDecoder.isBufferReceived())
+		if (m_decoder.isBufferReceived())
 		{
-			double* buffer = m_oDecoder.getOutputMatrix()->getBuffer();
+			double* buffer = m_decoder.getOutputMatrix()->getBuffer();
 
 			//"french cook" to reduce transient for bandpass and highpass filters
-			if (m_vFirstSample.size() == 0)
+			if (m_firstSamples.empty())
 			{
-				m_vFirstSample.resize(l_ui32ChannelCount, 0); //initialization to 0
-				if (m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == OVP_TypeId_FilterType_HighPass)
+				m_firstSamples.resize(nChannel, 0); //initialization to 0
+				if (m_type == BandPass || m_type == HighPass)
 				{
-					for (j = 0; j < l_ui32ChannelCount; j++)
+					for (j = 0; j < nChannel; ++j)
 					{
-						m_vFirstSample[j] = buffer[j * l_ui32SampleCount]; //first value of the signal = DC offset
+						m_firstSamples[j] = buffer[j * nSample]; //first value of the signal = DC offset
 					}
 				}
 			}
 
-			for (j = 0; j < l_ui32ChannelCount; j++)
+			for (j = 0; j < nChannel; ++j)
 			{
-				//for bandpass and highpass filters, suppression of the value m_vFirstSample = DC offset
-				//otherwise, no treatment, since m_vFirstSample = 0
-				for (uint32_t k = 0; k < l_ui32SampleCount; k++) { buffer[k] -= m_vFirstSample[j]; }
+				//for bandpass and highpass filters, suppression of the value m_firstSamples = DC offset
+				//otherwise, no treatment, since m_firstSamples = 0
+				for (size_t k = 0; k < nSample; ++k) { buffer[k] -= m_firstSamples[j]; }
 
-				if (m_vFilter[j]) { m_vFilter[j]->process(l_ui32SampleCount, &buffer); }
-				buffer += l_ui32SampleCount;
+				if (m_filters[j]) { m_filters[j]->process(int(nSample), &buffer); }
+				buffer += nSample;
 			}
-			m_oEncoder.encodeBuffer();
+			m_encoder.encodeBuffer();
 		}
-		if (m_oDecoder.isEndReceived()) { m_oEncoder.encodeEnd(); }
+		if (m_decoder.isEndReceived()) { m_encoder.encodeEnd(); }
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 
 	return true;
 }
 
-#if 0
+/*
 //zero-phase filtering, with two different filters
-void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFilter1, std::shared_ptr < Dsp::Filter > pFilter2, uint32_t SampleCount, double* buffer)
+void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFilter1, std::shared_ptr < Dsp::Filter > pFilter2, size_t SampleCount, double* buffer)
 {
-	uint32_t j;
+	size_t j;
 
 	//1rst filtering
 	pFilter1->process(SampleCount, &buffer);
 
 	//reversal of the buffer
-	for(j=0; j<SampleCount/2; j++)
+	for (j=0; j<SampleCount/2; ++j)
 	{
-		double l_f64TemporalVar = buffer[j];
+		double temporalVar = buffer[j];
 		buffer[j] = buffer[SampleCount-1-j];
-		buffer[SampleCount-1-j] = l_f64TemporalVar;
+		buffer[SampleCount-1-j] = temporalVar;
 	}
 
 	//2nd filtering
 	pFilter2->process(SampleCount, &buffer);
 
 	//reversal of the buffer
-	for(j=0; j<SampleCount/2; j++)
+	for (j=0; j<SampleCount/2; ++j)
 	{
-		double l_f64TemporalVar = buffer[j];
+		double temporalVar = buffer[j];
 		buffer[j] = buffer[SampleCount-1-j];
-		buffer[SampleCount-1-j] = l_f64TemporalVar;
+		buffer[SampleCount-1-j] = temporalVar;
 	}
 }
 
 //zero-phase filtering, with mirror signals on the edges
-void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, uint32_t SampleCount, double* buffer)
+void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, size_t SampleCount, double* buffer)
 {
-	uint32_t j;
+	size_t j;
 
 	//construction of mirror signals
-	uint32_t l_ui32TransientLength = std::min( 3*(pFilter1->getPoleZeros().size()-1) , SampleCount/2 );
-	std::vector<double> l_vBuffer;
-	l_vBuffer.resize(SampleCount+2*l_ui32TransientLength);
+	size_t transientLength = std::min( 3*(pFilter1->getPoleZeros().size()-1), SampleCount/2 );
+	std::vector<double> tmp;
+	tmp.resize(SampleCount+2*transientLength);
 
-	for(j=0; j<l_ui32TransientLength; j++)
+	for (j=0; j<transientLength; ++j)
 	{
-		l_vBuffer[j] = 2*buffer[0]-buffer[l_ui32TransientLength-j];
+		tmp[j] = 2*buffer[0]-buffer[transientLength-j];
 	}
-	for(j=0; j<SampleCount; j++)
+	for (j=0; j<SampleCount; ++j)
 	{
-		l_vBuffer[j+l_ui32TransientLength] = buffer[j];
+		tmp[j+transientLength] = buffer[j];
 	}
-	for(j=0; j<l_ui32TransientLength; j++)
+	for (j=0; j<transientLength; ++j)
 	{
-		l_vBuffer[j+l_ui32TransientLength+SampleCount] = 2*buffer[SampleCount-1]-buffer[SampleCount-1-j-1];
+		tmp[j+transientLength+SampleCount] = 2*buffer[SampleCount-1]-buffer[SampleCount-1-j-1];
 	}
-	SampleCount+=2*l_ui32TransientLength;
+	SampleCount+=2*transientLength;
 
-	double* pBufferTemp;
-	pBufferTemp = &l_vBuffer[0];
+	double* res;
+	res = &tmp[0];
 
 	//zero-phase filtering
-	filtfilt2 (pFilter1, pFilter2, SampleCount, pBufferTemp);
+	filtfilt2 (pFilter1, pFilter2, SampleCount, res);
 
 	//central part of the buffer
-	for(j=0; j<SampleCount-2*l_ui32TransientLength; j++)
+	for (j=0; j<SampleCount-2*transientLength; ++j)
 	{
-		buffer[j] = pBufferTemp[j+l_ui32TransientLength];
+		buffer[j] = res[j+transientLength];
 	}
 }
-#endif
+*/

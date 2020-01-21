@@ -1,12 +1,9 @@
 #pragma once
 
+#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>
-#include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_SignalMerger     OpenViBE::CIdentifier(0x4BF9326F, 0x75603102)
-#define OVP_ClassId_BoxAlgorithm_SignalMergerDesc OpenViBE::CIdentifier(0x7A684C44, 0x23BA70A5)
 
 namespace OpenViBEPlugins
 {
@@ -18,25 +15,23 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalMerger)
 
 		protected:
 
-			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_vStreamDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_pStreamEncoder = nullptr;
+			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_decoders;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_encoder = nullptr;
 		};
 
 		class CBoxAlgorithmSignalMergerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
-				char l_sInputName[1024];
-				sprintf(l_sInputName, "Input %i", index + 1);
-				box.setInputName(index, l_sInputName);
+				box.setInputName(index, ("Input " + std::to_string(index + 1)).c_str());
 				box.setInputType(index, OV_TypeId_Signal);
 				return true;
 			}

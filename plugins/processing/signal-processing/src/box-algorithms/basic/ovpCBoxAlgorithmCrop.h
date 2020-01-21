@@ -4,9 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_Crop                                                  OpenViBE::CIdentifier(0x7F1A3002, 0x358117BA)
-#define OVP_ClassId_BoxAlgorithm_CropDesc                                              OpenViBE::CIdentifier(0x64D619D7, 0x26CC42C9)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -17,25 +14,25 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Crop)
 
 		protected:
 
-			OpenViBE::IMatrix* m_pMatrix                        = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			double m_f64MinCropValue                            = 0;
-			double m_f64MaxCropValue                            = 0;
-			uint64_t m_ui64CropMethod                           = 0;
+			OpenViBE::IMatrix* m_matrix                  = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			double m_minCropValue                        = 0;
+			double m_maxCropValue                        = 0;
+			uint64_t m_cropMethod                        = 0;
 		};
 
 		class CBoxAlgorithmCropListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
@@ -43,7 +40,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
@@ -77,7 +74,7 @@ namespace OpenViBEPlugins
 			{
 				prototype.addInput("Input matrix", OV_TypeId_StreamedMatrix);
 				prototype.addOutput("Output matrix", OV_TypeId_StreamedMatrix);
-				prototype.addSetting("Crop method", OVP_TypeId_CropMethod, OVP_TypeId_CropMethod_MinMax.toString());
+				prototype.addSetting("Crop method", OVP_TypeId_CropMethod, "MinMax");
 				prototype.addSetting("Min crop value", OV_TypeId_Float, "-1");
 				prototype.addSetting("Max crop value", OV_TypeId_Float, "1");
 				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);

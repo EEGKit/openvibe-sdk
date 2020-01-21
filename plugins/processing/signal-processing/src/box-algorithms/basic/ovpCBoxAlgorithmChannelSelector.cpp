@@ -2,11 +2,10 @@
 
 #include <system/ovCMemory.h>
 
-#include <cstdio>
-#include <limits>
+#include <climits>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -16,37 +15,37 @@ using namespace OpenViBEToolkit;
 
 namespace
 {
-	uint32_t _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
+	size_t FindChannel(const IMatrix& matrix, const CString& channel, const CIdentifier& matchMethodID, const size_t start = 0)
 	{
-		uint32_t result         = std::numeric_limits<uint32_t>::max();
-		const uint32_t nChannel = rMatrix.getDimensionSize(0);
+		size_t result         = std::numeric_limits<size_t>::max();
+		const size_t nChannel = matrix.getDimensionSize(0);
 
-		if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Name)
+		if (matchMethodID == Name)
 		{
-			for (uint32_t i = uiStart; i < rMatrix.getDimensionSize(0); i++)
+			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
-				if (Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false)) { result = i; }
+				if (Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
 			}
 		}
-		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Index)
+		else if (matchMethodID == Index)
 		{
 			try
 			{
-				const int value = std::stoi(rChannel.toASCIIString());
+				const int value = std::stoi(channel.toASCIIString());
 
 				if (value < 0)
 				{
-					uint32_t index = uint32_t(- value - 1); // => makes it 0-indexed !
-					if (index < nChannel)
+					size_t idx = size_t(- value - 1); // => makes it 0-indexed !
+					if (idx < nChannel)
 					{
-						index = nChannel - index - 1; // => reverses index
-						if (uiStart <= index) { result = index; }
+						idx = nChannel - idx - 1; // => reverses index
+						if (start <= idx) { result = idx; }
 					}
 				}
 				if (value > 0)
 				{
-					const uint32_t index = uint32_t(value - 1); // => makes it 0-indexed !
-					if (index < nChannel) { if (uiStart <= index) { result = index; } }
+					const size_t index = size_t(value - 1); // => makes it 0-indexed !
+					if (index < nChannel) { if (start <= index) { result = index; } }
 				}
 			}
 			catch (const std::exception&)
@@ -54,10 +53,10 @@ namespace
 				// catch block intentionnaly left blank
 			}
 		}
-		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
+		else if (matchMethodID == Smart)
 		{
-			if (result == std::numeric_limits<uint32_t>::max()) { result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart); }
-			if (result == std::numeric_limits<uint32_t>::max()) { result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart); }
+			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, Name, start); }
+			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, Index, start); }
 		}
 
 		return result;
@@ -71,47 +70,47 @@ bool CBoxAlgorithmChannelSelector::initialize()
 	CIdentifier typeID;
 	boxContext.getOutputType(0, typeID);
 
-	m_pDecoder = nullptr;
-	m_pEncoder = nullptr;
+	m_decoder = nullptr;
+	m_encoder = nullptr;
 
 	if (typeID == OV_TypeId_Signal)
 	{
-		TSignalEncoder<CBoxAlgorithmChannelSelector>* l_pEncoder = new TSignalEncoder<CBoxAlgorithmChannelSelector>;
-		TSignalDecoder<CBoxAlgorithmChannelSelector>* l_pDecoder = new TSignalDecoder<CBoxAlgorithmChannelSelector>;
-		l_pEncoder->initialize(*this, 0);
-		l_pDecoder->initialize(*this, 0);
-		l_pEncoder->getInputSamplingRate().setReferenceTarget(l_pDecoder->getOutputSamplingRate());
-		m_pDecoder      = l_pDecoder;
-		m_pEncoder      = l_pEncoder;
-		m_pInputMatrix  = l_pDecoder->getOutputMatrix();
-		m_pOutputMatrix = l_pEncoder->getInputMatrix();
+		TSignalEncoder<CBoxAlgorithmChannelSelector>* encoder = new TSignalEncoder<CBoxAlgorithmChannelSelector>;
+		TSignalDecoder<CBoxAlgorithmChannelSelector>* decoder = new TSignalDecoder<CBoxAlgorithmChannelSelector>;
+		encoder->initialize(*this, 0);
+		decoder->initialize(*this, 0);
+		encoder->getInputSamplingRate().setReferenceTarget(decoder->getOutputSamplingRate());
+		m_decoder = decoder;
+		m_encoder = encoder;
+		m_iMatrix = decoder->getOutputMatrix();
+		m_oMatrix = encoder->getInputMatrix();
 	}
 	else if (typeID == OV_TypeId_Spectrum)
 	{
-		TSpectrumEncoder<CBoxAlgorithmChannelSelector>* l_pEncoder = new TSpectrumEncoder<CBoxAlgorithmChannelSelector>;
-		TSpectrumDecoder<CBoxAlgorithmChannelSelector>* l_pDecoder = new TSpectrumDecoder<CBoxAlgorithmChannelSelector>;
-		l_pEncoder->initialize(*this, 0);
-		l_pDecoder->initialize(*this, 0);
-		l_pEncoder->getInputFrequencyAbscissa().setReferenceTarget(l_pDecoder->getOutputFrequencyAbscissa());
-		l_pEncoder->getInputSamplingRate().setReferenceTarget(l_pDecoder->getOutputSamplingRate());
+		TSpectrumEncoder<CBoxAlgorithmChannelSelector>* encoder = new TSpectrumEncoder<CBoxAlgorithmChannelSelector>;
+		TSpectrumDecoder<CBoxAlgorithmChannelSelector>* decoder = new TSpectrumDecoder<CBoxAlgorithmChannelSelector>;
+		encoder->initialize(*this, 0);
+		decoder->initialize(*this, 0);
+		encoder->getInputFrequencyAbscissa().setReferenceTarget(decoder->getOutputFrequencyAbscissa());
+		encoder->getInputSamplingRate().setReferenceTarget(decoder->getOutputSamplingRate());
 
-		m_pDecoder      = l_pDecoder;
-		m_pEncoder      = l_pEncoder;
-		m_pInputMatrix  = l_pDecoder->getOutputMatrix();
-		m_pOutputMatrix = l_pEncoder->getInputMatrix();
+		m_decoder = decoder;
+		m_encoder = encoder;
+		m_iMatrix = decoder->getOutputMatrix();
+		m_oMatrix = encoder->getInputMatrix();
 	}
 	else if (typeID == OV_TypeId_StreamedMatrix)
 	{
-		TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>* l_pEncoder = new TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>;
-		TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>* l_pDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>;
-		l_pEncoder->initialize(*this, 0);
-		l_pDecoder->initialize(*this, 0);
-		m_pDecoder      = l_pDecoder;
-		m_pEncoder      = l_pEncoder;
-		m_pInputMatrix  = l_pDecoder->getOutputMatrix();
-		m_pOutputMatrix = l_pEncoder->getInputMatrix();
+		TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>* encoder = new TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>;
+		TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>* decoder = new TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>;
+		encoder->initialize(*this, 0);
+		decoder->initialize(*this, 0);
+		m_decoder = decoder;
+		m_encoder = encoder;
+		m_iMatrix = decoder->getOutputMatrix();
+		m_oMatrix = encoder->getInputMatrix();
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
 	m_vLookup.clear();
 	return true;
@@ -119,21 +118,21 @@ bool CBoxAlgorithmChannelSelector::initialize()
 
 bool CBoxAlgorithmChannelSelector::uninitialize()
 {
-	if (m_pDecoder)
+	if (m_decoder)
 	{
-		m_pDecoder->uninitialize();
-		delete m_pDecoder;
+		m_decoder->uninitialize();
+		delete m_decoder;
 	}
-	if (m_pEncoder)
+	if (m_encoder)
 	{
-		m_pEncoder->uninitialize();
-		delete m_pEncoder;
+		m_encoder->uninitialize();
+		delete m_encoder;
 	}
 
 	return true;
 }
 
-bool CBoxAlgorithmChannelSelector::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmChannelSelector::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -142,16 +141,16 @@ bool CBoxAlgorithmChannelSelector::processInput(const uint32_t /*index*/)
 bool CBoxAlgorithmChannelSelector::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		m_pDecoder->decode(i);
-		if (m_pDecoder->isHeaderReceived())
+		m_decoder->decode(i);
+		if (m_decoder->isHeaderReceived())
 		{
 			CString settingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			const uint64_t selectionMethodID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 			const uint64_t matchMethodID     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-			if (selectionMethodID == OVP_TypeId_SelectionMethod_Select_EEG)
+			if (selectionMethodID == Select_EEG)
 			{
 				// ______________________________________________________________________________________________________________________________________________________
 				//
@@ -162,14 +161,14 @@ bool CBoxAlgorithmChannelSelector::process()
 				CString eegChannelNames = this->getConfigurationManager().expand("${Box_ChannelSelector_EEGChannelNames}");
 
 				std::vector<CString> token;
-				const uint32_t nToken = split(eegChannelNames, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(token),
-											  OV_Value_EnumeratedStringSeparator);
+				const size_t nToken = split(eegChannelNames, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(token),
+											OV_Value_EnumeratedStringSeparator);
 
-				for (uint32_t j = 0; j < m_pInputMatrix->getDimensionSize(0); j++)
+				for (size_t j = 0; j < m_iMatrix->getDimensionSize(0); ++j)
 				{
-					for (uint32_t k = 0; k < nToken; k++)
+					for (size_t k = 0; k < nToken; ++k)
 					{
-						if (Tools::String::isAlmostEqual(m_pInputMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
+						if (Tools::String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
 					}
 				}
 			}
@@ -183,38 +182,34 @@ bool CBoxAlgorithmChannelSelector::process()
 				// ______________________________________________________________________________________________________________________________________________________
 				//
 
-				std::vector<CString> l_sToken;
-				const uint32_t nToken = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sToken),
-											  OV_Value_EnumeratedStringSeparator);
-				for (uint32_t j = 0; j < nToken; j++)
+				std::vector<CString> tokens;
+				const size_t nToken = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
+											OV_Value_EnumeratedStringSeparator);
+				for (size_t j = 0; j < nToken; ++j)
 				{
-					std::vector<CString> l_sSubToken;
+					std::vector<CString> subTokens;
 
 					// Checks if the token is a range
-					if (split(l_sToken[j], OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sSubToken),
+					if (split(tokens[j], OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(subTokens),
 							  OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)
-						uint32_t rangeStartIdx = _find_channel_(*m_pInputMatrix, l_sSubToken[0], OVP_TypeId_MatchMethod_Index);
-						uint32_t rangeEndIdx   = _find_channel_(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
+						size_t startIdx = FindChannel(*m_iMatrix, subTokens[0], Index);
+						size_t endIdx   = FindChannel(*m_iMatrix, subTokens[1], Index);
 
 						// When first or second part is not found but associated token is empty, don't consider this as an error
-						if (rangeStartIdx == std::numeric_limits<uint32_t>::max() && l_sSubToken[0] == CString("")) { rangeStartIdx = 0; }
-						if (rangeEndIdx == std::numeric_limits<uint32_t>::max() && l_sSubToken[1] == CString(""))
-						{
-							rangeEndIdx = m_pInputMatrix->getDimensionSize(0) - 1;
-						}
+						if (startIdx == std::numeric_limits<size_t>::max() && subTokens[0] == CString("")) { startIdx = 0; }
+						if (endIdx == std::numeric_limits<size_t>::max() && subTokens[1] == CString("")) { endIdx = m_iMatrix->getDimensionSize(0) - 1; }
 
 						// After these corections, if either first or second token were not found, or if start index is greater than start index, consider this an error and invalid range
 						OV_ERROR_UNLESS_KRF(
-							rangeStartIdx != std::numeric_limits<uint32_t>::max() && rangeEndIdx != std::numeric_limits<uint32_t>::max() && rangeStartIdx <=
-							rangeEndIdx,
-							"Invalid channel range [" << l_sToken[j] << "] - splitted as [" << l_sSubToken[0] << "][" << l_sSubToken[1] << "]",
+							startIdx != std::numeric_limits<size_t>::max() && endIdx != std::numeric_limits<size_t>::max() && startIdx <= endIdx,
+							"Invalid channel range [" << tokens[j] << "] - splitted as [" << subTokens[0] << "][" << subTokens[1] << "]",
 							OpenViBE::Kernel::ErrorType::BadSetting);
 
 						// The range is valid so selects all the channels in this range
-						this->getLogManager() << LogLevel_Debug << "For range [" << l_sToken[j] << "] :\n";
-						for (uint32_t k = rangeStartIdx; k <= rangeEndIdx; k++)
+						this->getLogManager() << LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
+						for (size_t k = startIdx; k <= endIdx; ++k)
 						{
 							m_vLookup.push_back(k);
 							this->getLogManager() << LogLevel_Debug << "  Selected channel [" << k + 1 << "]\n";
@@ -223,18 +218,18 @@ bool CBoxAlgorithmChannelSelector::process()
 					else
 					{
 						// This is not a range, so we can consider the whole token as a single token name
-						uint32_t found = false;
-						uint32_t index = std::numeric_limits<uint32_t>::max();
+						size_t found = false;
+						size_t index = std::numeric_limits<size_t>::max();
 
 						// Looks for all the channels with this name
-						while ((index = _find_channel_(*m_pInputMatrix, l_sToken[j], matchMethodID, index + 1)) != std::numeric_limits<uint32_t>::max())
+						while ((index = FindChannel(*m_iMatrix, tokens[j], matchMethodID, index + 1)) != std::numeric_limits<size_t>::max())
 						{
 							found = true;
 							m_vLookup.push_back(index);
 							this->getLogManager() << LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
 						}
 
-						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << l_sToken[j] << "]", OpenViBE::Kernel::ErrorType::BadSetting);
+						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", OpenViBE::Kernel::ErrorType::BadSetting);
 					}
 				}
 
@@ -245,13 +240,13 @@ bool CBoxAlgorithmChannelSelector::process()
 				// ______________________________________________________________________________________________________________________________________________________
 				//
 
-				if (selectionMethodID == OVP_TypeId_SelectionMethod_Reject)
+				if (selectionMethodID == Reject)
 				{
-					std::vector<uint32_t> inversedLookup;
-					for (uint32_t j = 0; j < m_pInputMatrix->getDimensionSize(0); j++)
+					std::vector<size_t> inversedLookup;
+					for (size_t j = 0; j < m_iMatrix->getDimensionSize(0); ++j)
 					{
 						bool selected = false;
-						for (uint32_t k = 0; k < m_vLookup.size(); k++) { selected |= (m_vLookup[k] == j); }
+						for (size_t k = 0; k < m_vLookup.size(); ++k) { selected |= (m_vLookup[k] == j); }
 						if (!selected) { inversedLookup.push_back(j); }
 					}
 					m_vLookup = inversedLookup;
@@ -266,27 +261,21 @@ bool CBoxAlgorithmChannelSelector::process()
 
 			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", OpenViBE::Kernel::ErrorType::BadConfig);
 
-			m_pOutputMatrix->setDimensionCount(2);
-			m_pOutputMatrix->setDimensionSize(0, uint32_t(m_vLookup.size()));
-			m_pOutputMatrix->setDimensionSize(1, m_pInputMatrix->getDimensionSize(1));
-			Tools::Matrix::clearContent(*m_pOutputMatrix);
-			for (uint32_t j = 0; j < m_vLookup.size(); j++)
+			m_oMatrix->setDimensionCount(2);
+			m_oMatrix->setDimensionSize(0, m_vLookup.size());
+			m_oMatrix->setDimensionSize(1, m_iMatrix->getDimensionSize(1));
+			Tools::Matrix::clearContent(*m_oMatrix);
+			for (size_t j = 0; j < m_vLookup.size(); ++j)
 			{
-				if (m_vLookup[j] < m_pInputMatrix->getDimensionSize(0))
-				{
-					m_pOutputMatrix->setDimensionLabel(0, j, m_pInputMatrix->getDimensionLabel(0, m_vLookup[j]));
-				}
-				else { m_pOutputMatrix->setDimensionLabel(0, j, "Missing channel"); }
+				if (m_vLookup[j] < m_iMatrix->getDimensionSize(0)) { m_oMatrix->setDimensionLabel(0, j, m_iMatrix->getDimensionLabel(0, m_vLookup[j])); }
+				else { m_oMatrix->setDimensionLabel(0, j, "Missing channel"); }
 			}
-			for (uint32_t j = 0; j < m_pInputMatrix->getDimensionSize(1); j++)
-			{
-				m_pOutputMatrix->setDimensionLabel(1, j, m_pInputMatrix->getDimensionLabel(1, j));
-			}
+			for (size_t j = 0; j < m_iMatrix->getDimensionSize(1); ++j) { m_oMatrix->setDimensionLabel(1, j, m_iMatrix->getDimensionLabel(1, j)); }
 
-			m_pEncoder->encodeHeader();
+			m_encoder->encodeHeader();
 		}
 
-		if (m_pDecoder->isBufferReceived())
+		if (m_decoder->isBufferReceived())
 		{
 			// ______________________________________________________________________________________________________________________________________________________
 			//
@@ -294,18 +283,17 @@ bool CBoxAlgorithmChannelSelector::process()
 			// ______________________________________________________________________________________________________________________________________________________
 			//
 
-			const uint32_t nSample = m_pOutputMatrix->getDimensionSize(1);
-			for (uint32_t j = 0; j < m_vLookup.size(); j++)
+			const size_t nSample = m_oMatrix->getDimensionSize(1);
+			for (size_t j = 0; j < m_vLookup.size(); ++j)
 			{
-				if (m_vLookup[j] < m_pInputMatrix->getDimensionSize(0))
+				if (m_vLookup[j] < m_iMatrix->getDimensionSize(0))
 				{
-					System::Memory::copy(m_pOutputMatrix->getBuffer() + j * nSample, m_pInputMatrix->getBuffer() + m_vLookup[j] * nSample,
-										 nSample * sizeof(double));
+					System::Memory::copy(m_oMatrix->getBuffer() + j * nSample, m_iMatrix->getBuffer() + m_vLookup[j] * nSample, nSample * sizeof(double));
 				}
 			}
-			m_pEncoder->encodeBuffer();
+			m_encoder->encodeBuffer();
 		}
-		if (m_pDecoder->isEndReceived()) { m_pEncoder->encodeEnd(); }
+		if (m_decoder->isEndReceived()) { m_encoder->encodeEnd(); }
 		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 

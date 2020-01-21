@@ -1,13 +1,11 @@
 #pragma once
 
+#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <string>
 #include <vector>
-
-#define OVP_ClassId_BoxAlgorithm_ChannelRename     OpenViBE::CIdentifier(0x1FE50479, 0x39040F40)
-#define OVP_ClassId_BoxAlgorithm_ChannelRenameDesc OpenViBE::CIdentifier(0x20EA1F00, 0x7AED5645)
 
 namespace OpenViBEPlugins
 {
@@ -19,28 +17,28 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelRename)
 
 		protected:
 
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_StreamDecoder;
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_StreamEncoder;
+			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_decoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_encoder;
 
-			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_Matrix;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_Matrix;
 
-			std::vector<std::string> m_ChannelNames;
+			std::vector<std::string> m_names;
 		};
 
 		class CBoxAlgorithmChannelRenameListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
@@ -48,7 +46,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);

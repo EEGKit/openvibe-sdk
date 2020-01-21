@@ -11,10 +11,6 @@
 #include <vector>
 #include <cstdint>
 
-
-#define OVP_ClassId_BoxAlgorithm_ExternalProcessing     OpenViBE::CIdentifier(0x15422959, 0x16304449)
-#define OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc OpenViBE::CIdentifier(0x63386942, 0x61D42502)
-
 namespace OpenViBEPlugins
 {
 	namespace Tools
@@ -22,31 +18,28 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmExternalProcessing final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			CBoxAlgorithmExternalProcessing();
+			CBoxAlgorithmExternalProcessing() : m_acceptTimeout(10ULL << 32) {}
 			void release() override { delete this; }
 			uint64_t getClockFrequency() override;
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ExternalProcessing)
 
 		private:
 
-			struct Packet
+			struct SPacket
 			{
 				uint64_t startTime;
 				uint64_t endTime;
-				uint32_t index;
+				size_t index;
 				std::shared_ptr<std::vector<uint8_t>> EBML;
 
-				Packet(uint64_t startTime, uint64_t endTime, uint32_t index, std::shared_ptr<std::vector<uint8_t>> EBML)
-					: startTime(startTime)
-					  , endTime(endTime)
-					  , index(index)
-					  , EBML(EBML) { }
+				SPacket(const uint64_t startTime, const uint64_t endTime, const size_t index, const std::shared_ptr<std::vector<uint8_t>>& ebml)
+					: startTime(startTime), endTime(endTime), index(index), EBML(ebml) { }
 			};
 
 			/**
@@ -56,7 +49,7 @@ namespace OpenViBEPlugins
 			 *
 			 * \return A string composed of size characters in the A-Z,0-9 range
 			 */
-			static std::string generateConnectionID(size_t size);
+			static std::string generateConnectionID(const size_t size);
 
 			/**
 			 * \brief Launch a third party program
@@ -74,23 +67,23 @@ namespace OpenViBEPlugins
 			 */
 			void log();
 
-			Communication::MessagingServer m_Messaging;
-			uint32_t m_Port = 0;
-			std::string m_ConnectionID;
-			std::string m_ProgramPath;
-			bool m_IsGenerator = false;
+			Communication::MessagingServer m_messaging;
+			size_t m_port = 0;
+			std::string m_connectionID;
+			std::string m_programPath;
+			bool m_isGenerator = false;
 
-			int m_ThirdPartyProgramProcessId = 0;
+			int m_extProcessId = 0;
 
-			uint64_t m_AcceptTimeout     = 0;
-			bool m_ShouldLaunchProgram   = false;
-			bool m_HasReceivedEndMessage = false;
+			uint64_t m_acceptTimeout     = 0;
+			bool m_shouldLaunchProgram   = false;
+			bool m_hasReceivedEndMessage = false;
 			// Synchronization timeout, and save time of last synchronization
-			uint64_t m_SyncTimeout  = 0;
-			uint64_t m_LastSyncTime = 0;
+			uint64_t m_syncTimeout  = 0;
+			uint64_t m_lastSyncTime = 0;
 
-			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;
-			std::queue<Packet> m_PacketHistory;
+			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_decoders;
+			std::queue<SPacket> m_packetHistory;
 		};
 
 		class CBoxAlgorithmExternalProcessingListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

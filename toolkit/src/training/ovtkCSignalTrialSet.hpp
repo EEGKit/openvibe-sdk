@@ -11,14 +11,14 @@ namespace OpenViBEToolkit
 	public:
 		bool addSignalTrial(ISignalTrial& rSignalTrial) override;
 		bool clear() override;
-		uint32_t getSignalTrialCount() const override;
-		ISignalTrial& getSignalTrial(uint32_t index) const override;
+		size_t getSignalTrialCount() const override { return m_signalTrials.size(); }
+		ISignalTrial& getSignalTrial(const size_t index) const override { return *m_signalTrials[index]; }
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_)
 
 	protected:
 
-		mutable std::vector<ISignalTrial*> m_vSignalTrial;
+		mutable std::vector<ISignalTrial*> m_signalTrials;
 	};
 
 	extern OVTK_API ISignalTrialSet* createSignalTrialSet();

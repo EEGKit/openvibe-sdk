@@ -24,12 +24,10 @@
 #include <vector>
 #include <cmath>
 #include <tuple>
-#include <numeric>
-#include <algorithm>
 #include <chrono>
 
 #include "system/ovCTime.h"
-#include "openvibe/ovITimeArithmetics.h"
+#include "openvibe/ovTimeArithmetics.h"
 
 #include "ovtAssert.h"
 
@@ -43,10 +41,10 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
+uint64_t calibrateSleep(const size_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t maxTime = 0;
-	for (size_t i = 0; i < sampleCount; ++i)
+	for (size_t i = 0; i < nSample; ++i)
 	{
 		const uint64_t preTime = timeFunction();
 		sleepFunction(0);
@@ -75,19 +73,17 @@ std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*
 // \brief Return a warning count that is incremented when sleep function did not meet following requirements:
 //       - sleep enough time
 //       - sleep less than the expected time + delta
-unsigned int assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
-								   const std::vector<uint64_t>& resultTimes,
-								   uint64_t delta, uint64_t epsilon)
+size_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes, const std::vector<uint64_t>& resultTimes, const uint64_t delta, const uint64_t epsilon)
 {
-	unsigned int warningCount = 0;
+	size_t warningCount = 0;
 	for (size_t i = 0; i < expectedTimes.size(); ++i)
 	{
 		if (resultTimes[i] + epsilon < expectedTimes[i]
 			|| resultTimes[i] > (expectedTimes[i] + delta + epsilon))
 		{
 			std::cerr << "WARNING: Failure to sleep the right amount of time: [expected|result] = "
-					<< OpenViBE::ITimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
-					<< OpenViBE::ITimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
+					<< OpenViBE::TimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
+					<< OpenViBE::TimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
 			warningCount++;
 		}
 	}
@@ -98,7 +94,7 @@ unsigned int assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
 // \brief Record clock function data (spin test taken from OpenViBE). Return a tuple with:
 //       - bool = monotonic state
 //       - std::vector<uint64_t> = all the cumulative steps
-std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigned sampleCountGuess, uint64_t (*timeFunction)())
+std::tuple<bool, std::vector<uint64_t>> testClock(const uint64_t samplePeriod, const unsigned sampleCountGuess, uint64_t (*timeFunction)())
 {
 	std::vector<uint64_t> cumulativeSteps;
 	cumulativeSteps.reserve(sampleCountGuess);
@@ -137,7 +133,7 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds                         = uint32_t(data >> 32);
+		auto seconds                         = data >> 32;
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
@@ -148,7 +144,7 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds                         = uint32_t(data >> 32);
+		auto seconds                         = data >> 32;
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
@@ -174,7 +170,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	OVT_ASSERT(Time::checkResolution(1), "Failure to check for resolution");
 
 	// A stress test to check no overflow happens
-	OVT_ASSERT(Time::checkResolution(std::numeric_limits<uint32_t >::max()), "Failure to check for resolution");
+	OVT_ASSERT(Time::checkResolution(std::numeric_limits<size_t >::max()), "Failure to check for resolution");
 
 	//
 	// zSleep() function test
@@ -190,14 +186,13 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	// calibrate sleep function
 	const auto deltaTime = calibrateSleep(1000, Time::zsleep, Time::zgetTime);
 
-	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::ITimeArithmetics::timeToSeconds(deltaTime) << std::endl;
+	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::TimeArithmetics::timeToSeconds(deltaTime) << std::endl;
 
 	const auto resultSleepData = testSleep(expectedSleepData, Time::zsleep, Time::zgetTime);
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
-	const unsigned int warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime,
-															OpenViBE::ITimeArithmetics::secondsToTime(0.005));
+	const size_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime, OpenViBE::TimeArithmetics::secondsToTime(0.005));
 
 	// relax this threshold in case there is some recurrent problems
 	// according to the runtime environment
@@ -208,7 +203,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	//
 
 	// the sample count guess was found in an empiric way
-	auto resultGetTimeData = testClock(OpenViBE::ITimeArithmetics::secondsToTime(0.5), 500000, Time::zgetTime);
+	auto resultGetTimeData = testClock(OpenViBE::TimeArithmetics::secondsToTime(0.5), 500000, Time::zgetTime);
 
 	OVT_ASSERT(std::get<0>(resultGetTimeData), "Failure in zgetTime() test: the clock is not monotonic");
 

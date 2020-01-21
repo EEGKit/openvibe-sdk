@@ -1,6 +1,6 @@
 #include "wavefunc.h"
 
-void meyer(int N, double lb, double ub, double* phi, double* psi, double* tgrid)
+void meyer(const int N, const double lb, const double ub, double* phi, double* psi, double* tgrid)
 {
 	int i;
 	double theta, x, x2, x3, x4, v, cs;

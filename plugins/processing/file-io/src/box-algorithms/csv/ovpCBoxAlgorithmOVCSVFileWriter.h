@@ -1,18 +1,13 @@
 #pragma once
 
-#include <cstdlib>
+#include "../../ovp_defines.h"
 #include <cstdio>
-#include <iostream>
-#include <fstream>
 #include <memory>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include "csv/ovICSV.h"
-
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileWriter     							   OpenViBE::CIdentifier(0x428375E8, 0x325F2DB9)
-#define OVP_ClassId_BoxAlgorithm_OVCSVFileWriterDesc 							   OpenViBE::CIdentifier(0x4B5C1D8F, 0x570E45FD)
 
 namespace OpenViBEPlugins
 {
@@ -27,7 +22,7 @@ namespace OpenViBEPlugins
 
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter)
@@ -36,26 +31,26 @@ namespace OpenViBEPlugins
 			bool processStreamedMatrix();
 			bool processStimulation();
 
-			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_WriterLib;
+			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_writerLib;
 
-			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_StreamDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_StimulationDecoder;
+			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
 
-			unsigned long long m_Epoch = 0;
+			uint64_t m_epoch = 0;
 
-			bool m_IsHeaderReceived = false;
-			bool m_IsFileOpen       = false;
-			bool m_AppendData       = false;
-			bool m_LastMatrixOnly   = false;
-			bool m_WriteHeader      = true;
+			bool m_isHeaderReceived = false;
+			bool m_isFileOpen       = false;
+			bool m_appendData       = false;
+			bool m_lastMatrixOnly   = false;
+			bool m_writeHeader      = true;
 		};
 
 		class CBoxAlgorithmOVCSVFileWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				if (index == 1)
 				{
@@ -93,21 +88,21 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileWriterListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const override { delete boxListener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				boxAlgorithmPrototype.addInput("Input stream", OV_TypeId_Signal);
-				boxAlgorithmPrototype.addInput("Stimulations stream", OV_TypeId_Stimulations);
-				boxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
-				boxAlgorithmPrototype.addSetting("Precision", OV_TypeId_Integer, "10");
-				boxAlgorithmPrototype.addSetting("Append data", OV_TypeId_Boolean, "false");
-				boxAlgorithmPrototype.addSetting("Only last matrix", OV_TypeId_Boolean, "false");
-				boxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput("Input stream", OV_TypeId_Signal);
+				prototype.addInput("Stimulations stream", OV_TypeId_Stimulations);
+				prototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
+				prototype.addSetting("Precision", OV_TypeId_Integer, "10");
+				prototype.addSetting("Append data", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Only last matrix", OV_TypeId_Boolean, "false");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_CovarianceMatrix);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_FeatureVector);
+				prototype.addInputSupport(OV_TypeId_CovarianceMatrix);
 
 				return true;
 			}

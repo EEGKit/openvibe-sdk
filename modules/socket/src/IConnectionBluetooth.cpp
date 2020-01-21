@@ -24,9 +24,7 @@
 #endif
 
 #include <assert.h>
-#include <iostream>
 #include <vector>
-#include <algorithm>
 
 namespace Socket
 {
@@ -35,29 +33,28 @@ namespace Socket
 	public:
 
 #if defined TARGET_OS_Windows
-		CConnectionBluetooth() : m_oSocket(INVALID_SOCKET) { }
+		CConnectionBluetooth() : m_Socket(INVALID_SOCKET) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		CConnectionBluetooth() : m_sLastError() { }
+		CConnectionBluetooth() : m_LastError() { }
 #endif
 
 #if defined TARGET_OS_Windows
 		bool initialize()
 		{
-			WSADATA l_oWSAData;
+			WSADATA wsaData;
 
 			// Ask for Winsock version.
-			if (_WINSOCK2API_::WSAStartup(MAKEWORD(m_ui8WinSocketMajorVersion, m_ui8WinSocketMinorVersion), &l_oWSAData) != 0)
+			if (_WINSOCK2API_::WSAStartup(MAKEWORD(WIN_SOCKET_MAJOR_VERSION, WIN_SOCKET_MINOR_VERSION), &wsaData) != 0)
 			{
-				m_sLastError = "Failed to start Winsock " + std::to_string(m_ui8WinSocketMajorVersion) + "." + std::to_string(m_ui8WinSocketMinorVersion) + ": "
-							   + this->getLastErrorFormated();
+				m_LastError = "Failed to start Winsock " + std::to_string(WIN_SOCKET_MAJOR_VERSION) + "." + std::to_string(WIN_SOCKET_MINOR_VERSION) + ": " + this->getLastErrorFormated();
 				return false;
 			}
 
 			// Confirm that the WinSock DLL supports version requested.
 			// Note that if the DLL supports versions greater than the version requested, in addition to the version requested, it will still return the version requested in wVersion.
-			if (LOBYTE(l_oWSAData.wVersion) != m_ui8WinSocketMajorVersion || HIBYTE(l_oWSAData.wVersion) != m_ui8WinSocketMinorVersion)
+			if (LOBYTE(wsaData.wVersion) != WIN_SOCKET_MAJOR_VERSION || HIBYTE(wsaData.wVersion) != WIN_SOCKET_MINOR_VERSION)
 			{
-				m_sLastError = "Could not find a usable version of Winsock.dll.";
+				m_LastError = "Could not find a usable version of Winsock.dll.";
 				_WINSOCK2API_::WSACleanup();
 				return false;
 			}
@@ -73,57 +70,56 @@ namespace Socket
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Bluetooth device is not connected.";
+				m_LastError = "Bluetooth device is not connected.";
 				return false;
 			}
 
 #if defined TARGET_OS_Windows
 
-			bool l_bIsSuccess = true;
-			if (m_oSocket != INVALID_SOCKET)
+			bool isSuccess = true;
+			if (m_Socket != INVALID_SOCKET)
 			{
 				// shutdown the connection since no more data will be sent or received
-				if (_WINSOCK2API_::shutdown(m_oSocket, SD_BOTH) == SOCKET_ERROR)
+				if (_WINSOCK2API_::shutdown(m_Socket, SD_BOTH) == SOCKET_ERROR)
 				{
-					m_sLastError = "Failed to shutdown the bluetooth socket:" + this->getLastErrorFormated();
-					l_bIsSuccess = false;
+					m_LastError = "Failed to shutdown the bluetooth socket:" + this->getLastErrorFormated();
+					isSuccess   = false;
 				}
 
-				if (_WINSOCK2API_::closesocket(m_oSocket) == SOCKET_ERROR)
+				if (_WINSOCK2API_::closesocket(m_Socket) == SOCKET_ERROR)
 				{
-					m_sLastError = "Failed to close the bluetooth socket:" + this->getLastErrorFormated();
-					l_bIsSuccess = false;
+					m_LastError = "Failed to close the bluetooth socket:" + this->getLastErrorFormated();
+					isSuccess   = false;
 				}
 
 				if (_WINSOCK2API_::WSACleanup() == SOCKET_ERROR)
 				{
-					m_sLastError = "Failed to cleanup the bluetooth socket:" + this->getLastErrorFormated();
-					l_bIsSuccess = false;
+					m_LastError = "Failed to cleanup the bluetooth socket:" + this->getLastErrorFormated();
+					isSuccess   = false;
 				}
 
-				m_oSocket = INVALID_SOCKET;
+				m_Socket = INVALID_SOCKET;
 			}
 
-			return l_bIsSuccess;
+			return isSuccess;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return false;
 #endif
 		}
 
-		bool isReadyToSend(const uint32_t /*timeOut*/) const override { return this->isConnected(); }
+		bool isReadyToSend(const size_t /*timeOut*/) const override { return this->isConnected(); }
 
-		bool isReadyToReceive(const uint32_t /*timeOut*/) const override
+		bool isReadyToReceive(const size_t /*timeOut*/) const override
 		{
 			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
-
 			unsigned long nPendingBytes = 0;
 
-			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
+			if (_WINSOCK2API_::ioctlsocket(m_Socket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
 			{
-				//m_sLastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
+				//m_LastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
 				return false;
 			}
 
@@ -134,11 +130,11 @@ namespace Socket
 #endif
 		}
 
-		uint32_t getPendingByteCount() override
+		size_t getPendingByteCount() override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Bluetooth device not connected.";
+				m_LastError = "Bluetooth device not connected.";
 				return 0;
 			}
 
@@ -146,9 +142,9 @@ namespace Socket
 
 			unsigned long nPendingBytes = 0;
 
-			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
+			if (_WINSOCK2API_::ioctlsocket(m_Socket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
+				m_LastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
 				return 0;
 			}
 
@@ -159,107 +155,107 @@ namespace Socket
 #endif
 		}
 
-		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) override
+		size_t sendBuffer(const void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Bluetooth device is not connected.";
+				m_LastError = "Bluetooth device is not connected.";
 				return 0;
 			}
 
 #if defined TARGET_OS_Windows
 
-			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, (char *)buffer, ui32BufferSize, 0);
+			const int nBytesSent = _WINSOCK2API_::send(m_Socket, reinterpret_cast<const char*>(buffer), int(size), 0);
 
 			if (nBytesSent == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to write on the bluetooth port: " + getLastErrorFormated();
+				m_LastError = "Failed to write on the bluetooth port: " + getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
-			return uint32_t(nBytesSent);
+			return size_t(nBytesSent);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
 #endif
 		}
 
-		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) override
+		size_t receiveBuffer(void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Bluetooth device is not connected.";
+				m_LastError = "Bluetooth device is not connected.";
 				return 0;
 			}
 
 #if defined TARGET_OS_Windows
 
 
-			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, static_cast<char *>(buffer), ui32BufferSize, 0);
+			const int nBytesReceived = _WINSOCK2API_::recv(m_Socket, static_cast<char *>(buffer), int(size), 0);
 
 			if (nBytesReceived == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to receive data from bluetooth: " + getLastErrorFormated();
+				m_LastError = "Failed to receive data from bluetooth: " + getLastErrorFormated();
 
 				this->close();
 				return 0;
 			}
 
-			return uint32_t(nBytesReceived);
+			return size_t(nBytesReceived);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
 #endif
 		}
 
-		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Bluetooth device is not connected.";
+				m_LastError = "Bluetooth device is not connected.";
 				return false;
 			}
 
-			const char* p            = reinterpret_cast<const char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			const char* p    = reinterpret_cast<const char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
+			while (bytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				bytesLeft -= this->sendBuffer(p + size - bytesLeft, bytesLeft);
 
 				if (this->isErrorRaised()) { return false; }
 			}
 
-			return l_ui32BytesLeft == 0;
+			return bytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const size_t size) override
 		{
 			if (!this->isConnected())
 			{
-				m_sLastError = "Bluetooth device is not connected.";
+				m_LastError = "Bluetooth device is not connected.";
 				return false;
 			}
 
-			char* p                  = reinterpret_cast<char*>(buffer);
-			uint32_t l_ui32BytesLeft = ui32BufferSize;
+			char* p          = reinterpret_cast<char*>(buffer);
+			size_t bytesLeft = size;
 
-			while (l_ui32BytesLeft != 0 && this->isConnected())
+			while (bytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				bytesLeft -= this->receiveBuffer(p + size - bytesLeft, bytesLeft);
 
 				if (this->isErrorRaised()) { return false; }
 			}
 
-			return l_ui32BytesLeft == 0;
+			return bytesLeft == 0;
 		}
 
 		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
 
-			return m_oSocket != INVALID_SOCKET;
+			return m_Socket != INVALID_SOCKET;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return false;
@@ -268,13 +264,13 @@ namespace Socket
 
 		void release() override { delete this; }
 
-		bool connect(unsigned long long u64BluetoothAddress) override
+		bool connect(const uint64_t u64BluetoothAddress) override
 		{
-			m_sLastError.clear();
+			m_LastError.clear();
 
 			if (this->isConnected())
 			{
-				m_sLastError = "Bluetooth device is already connected";
+				m_LastError = "Bluetooth device is already connected";
 				return false;
 			}
 
@@ -282,30 +278,30 @@ namespace Socket
 
 			if (!this->initialize()) { return false; }
 
-			m_oSocket = _WINSOCK2API_::socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
+			m_Socket = _WINSOCK2API_::socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
 
-			if (m_oSocket == INVALID_SOCKET)
+			if (m_Socket == INVALID_SOCKET)
 			{
-				m_sLastError = "Failed to create bluetooth socket: " + getLastErrorFormated();
+				m_LastError = "Failed to create bluetooth socket: " + getLastErrorFormated();
 				_WINSOCK2API_::WSACleanup();
 				return false;
 			}
 
-			SOCKADDR_BTH l_oSockAddressBlutoothServer;
-			l_oSockAddressBlutoothServer.btAddr         = u64BluetoothAddress;
-			l_oSockAddressBlutoothServer.addressFamily  = AF_BTH;
-			l_oSockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
-			l_oSockAddressBlutoothServer.port           = BT_PORT_ANY;
+			SOCKADDR_BTH sockAddressBlutoothServer;
+			sockAddressBlutoothServer.btAddr         = u64BluetoothAddress;
+			sockAddressBlutoothServer.addressFamily  = AF_BTH;
+			sockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
+			sockAddressBlutoothServer.port           = BT_PORT_ANY;
 
-			if (_WINSOCK2API_::connect(m_oSocket, reinterpret_cast<SOCKADDR*>(&l_oSockAddressBlutoothServer), sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
+			if (_WINSOCK2API_::connect(m_Socket, reinterpret_cast<SOCKADDR*>(&sockAddressBlutoothServer), sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(l_oSockAddressBlutoothServer.btAddr) + "]: " +
-							   getLastErrorFormated();
+				m_LastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(sockAddressBlutoothServer.btAddr) + "]: " +
+							  getLastErrorFormated();
 
-				_WINSOCK2API_::closesocket(m_oSocket); // Returned code not checked.
+				_WINSOCK2API_::closesocket(m_Socket); // Returned code not checked.
 				_WINSOCK2API_::WSACleanup(); // Returned code not checked.
 
-				m_oSocket = INVALID_SOCKET;
+				m_Socket = INVALID_SOCKET;
 				return false;
 			}
 
@@ -316,112 +312,112 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised() { return !m_sLastError.empty(); }
+		bool isErrorRaised() { return !m_LastError.empty(); }
 
-		const char* getLastError() const override { return m_sLastError.c_str(); }
+		const char* getLastError() const override { return m_LastError.c_str(); }
 
 		std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
 
-			LPTSTR l_sErrorText;
-			DWORD l_ui64Error = GetLastError();
+			LPTSTR text;
+			const DWORD errCode = GetLastError();
 
-			size_t size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
-										FORMAT_MESSAGE_ALLOCATE_BUFFER |  // allocate buffer on local heap for error text
-										FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-										nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
-										l_ui64Error, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
-										LPTSTR(&l_sErrorText), // output
-										0, // minimum size for output buffer
-										nullptr);
+			const size_t size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
+											  FORMAT_MESSAGE_ALLOCATE_BUFFER |  // allocate buffer on local heap for error text
+											  FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+											  nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
+											  errCode, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
+											  LPTSTR(&text), // output
+											  0, // minimum size for output buffer
+											  nullptr);
 
 			// Converts std::wstring to std::string and returns it. 
-			std::wstring l_sErrorMessage(l_sErrorText, size);
-			LocalFree(l_sErrorText);
-			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> l_oConverter;
-			return l_oConverter.to_bytes(l_sErrorMessage);
+			const std::wstring message(text, size);
+			LocalFree(text);
+			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+			return converter.to_bytes(message);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return "";
 #endif
 		}
 
-		void clearError() override { m_sLastError.clear(); }
+		void clearError() override { m_LastError.clear(); }
 
-		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses) override
+		bool listPairedBluetoothDevices(size_t* nPairedBluetoothDevices, char** names, uint64_t** addresses) override
 		{
-			std::vector<std::string> bluetoothDevicesName;
-			std::vector<unsigned long long> bluetoothDevicesAddress;
+			std::vector<std::string> devicesNames;
+			std::vector<uint64_t> devicesAddresses;
 
 #if defined TARGET_OS_Windows
 
-			HANDLE l_pHandle;
-			WSAQUERYSET l_oWSAQuerySet;
+			HANDLE handle;
+			WSAQUERYSET wsaQuerySet;
 
-			memset((void *)&l_oWSAQuerySet, 0, sizeof(l_oWSAQuerySet));
-			l_oWSAQuerySet.dwSize      = sizeof(l_oWSAQuerySet);
-			l_oWSAQuerySet.dwNameSpace = NS_BTH;
-			l_oWSAQuerySet.lpcsaBuffer = nullptr;
+			memset((void *)&wsaQuerySet, 0, sizeof(wsaQuerySet));
+			wsaQuerySet.dwSize      = sizeof(wsaQuerySet);
+			wsaQuerySet.dwNameSpace = NS_BTH;
+			wsaQuerySet.lpcsaBuffer = nullptr;
 
-			if (_WINSOCK2API_::WSALookupServiceBegin(&l_oWSAQuerySet, LUP_CONTAINERS | LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_pHandle) == SOCKET_ERROR)
+			if (_WINSOCK2API_::WSALookupServiceBegin(&wsaQuerySet, LUP_CONTAINERS | LUP_RETURN_NAME | LUP_RETURN_ADDR, &handle) == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to start the Bluetooth lookup service: " + getLastErrorFormated();
+				m_LastError = "Failed to start the Bluetooth lookup service: " + getLastErrorFormated();
 				return false;
 			}
 
-			char l_vBuffer[5000];
-			const LPWSAQUERYSET l_sWSAQuerySet = LPWSAQUERYSET(l_vBuffer);
-			DWORD l_ui32dwSize                 = sizeof(l_vBuffer);
+			char buffer[5000];
+			const LPWSAQUERYSET wsaQuerySetW = LPWSAQUERYSET(buffer);
+			DWORD size                       = sizeof(buffer);
 
-			memset((void *)l_sWSAQuerySet, 0, sizeof(WSAQUERYSET));
-			l_sWSAQuerySet->dwSize      = sizeof(WSAQUERYSET);
-			l_sWSAQuerySet->dwNameSpace = NS_BTH;
-			l_sWSAQuerySet->lpBlob      = nullptr;
+			memset((void *)wsaQuerySetW, 0, sizeof(WSAQUERYSET));
+			wsaQuerySetW->dwSize      = sizeof(WSAQUERYSET);
+			wsaQuerySetW->dwNameSpace = NS_BTH;
+			wsaQuerySetW->lpBlob      = nullptr;
 
-			bool l_bLookup = true;
+			bool lookup = true;
 
-			while (l_bLookup)
+			while (lookup)
 			{
 				// Check next bluetooth device
-				const int l_i32Result = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
+				const int res = _WINSOCK2API_::WSALookupServiceNext(handle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &size, wsaQuerySetW);
 
-				if (l_i32Result == SOCKET_ERROR)
+				if (res == SOCKET_ERROR)
 				{
 					// If it is a "real" error, we trace it and return false.
 					if (_WINSOCK2API_::WSAGetLastError() != WSA_E_NO_MORE)
 					{
-						m_sLastError = "Lookup service next operation failed: " + getLastErrorFormated();
+						m_LastError = "Lookup service next operation failed: " + getLastErrorFormated();
 						return false;
 					}
 
 					// Else, it is because there is no more Bluetooth devices available.
-					l_bLookup = false;
+					lookup = false;
 					break;
 				}
 				// Get bluetooth MAC address and name
-				bluetoothDevicesAddress.push_back(reinterpret_cast<SOCKADDR_BTH *>(l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
+				devicesAddresses.push_back(reinterpret_cast<SOCKADDR_BTH *>(wsaQuerySetW->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
 
 				std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converterX;
-				bluetoothDevicesName.push_back(converterX.to_bytes(l_sWSAQuerySet->lpszServiceInstanceName));
+				devicesNames.push_back(converterX.to_bytes(wsaQuerySetW->lpszServiceInstanceName));
 			}
 
-			if (_WINSOCK2API_::WSALookupServiceEnd(l_pHandle) == SOCKET_ERROR)
+			if (_WINSOCK2API_::WSALookupServiceEnd(handle) == SOCKET_ERROR)
 			{
-				m_sLastError = "Failed to stop the Bluetooth lookup service: " + getLastErrorFormated();
+				m_LastError = "Failed to stop the Bluetooth lookup service: " + getLastErrorFormated();
 				return false;
 			}
 
-			*pairedBluetoothDevicesCount = static_cast<unsigned int>(bluetoothDevicesAddress.size());
-			strarray                     = new char*[*pairedBluetoothDevicesCount];
+			*nPairedBluetoothDevices = devicesAddresses.size();
+			names                     = new char*[*nPairedBluetoothDevices];
 
-			for (unsigned int i = 0; i < *pairedBluetoothDevicesCount; ++i)
+			for (size_t i = 0; i < *nPairedBluetoothDevices; ++i)
 			{
-				strarray[i] = new char[bluetoothDevicesName[i].size() + 1];
-				std::strcpy(strarray[i], bluetoothDevicesName[i].c_str());
+				names[i] = new char[devicesNames[i].size() + 1];
+				std::strcpy(names[i], devicesNames[i].c_str());
 			}
 
-			bluetoothAddresses = new unsigned long long*[*pairedBluetoothDevicesCount];
+			addresses = new uint64_t*[*nPairedBluetoothDevices];
 
 			return true;
 
@@ -430,11 +426,11 @@ namespace Socket
 #endif
 		}
 
-		std::string m_sLastError;
+		std::string m_LastError;
 
 #if defined TARGET_OS_Windows
 
-		SOCKET m_oSocket;
+		SOCKET m_Socket;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 

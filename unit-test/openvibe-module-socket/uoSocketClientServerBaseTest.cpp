@@ -30,8 +30,9 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: server_name port_number");
 
-	std::string serverName = argv[1];
-	uint32_t portNumber    = std::atoi(argv[2]);
+	const std::string name = argv[1];
+	char* end;
+	const size_t port = strtol(argv[2], &end, 10);
 	
 	// basic tests on server and clients
 
@@ -39,53 +40,33 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 	Socket::IConnectionClient* client = Socket::createConnectionClient();
 
 	OVT_ASSERT(!server->isConnected(), "Failure to check for connection state before connection happens");
-
-	OVT_ASSERT(server->listen(portNumber) && server->isConnected(), "Failure to make socket listening for input connections");
-
-	OVT_ASSERT(!server->listen(portNumber), "Failure to generate connection error if the socket is already connected");
-
+	OVT_ASSERT(server->listen(port) && server->isConnected(), "Failure to make socket listening for input connections");
+	OVT_ASSERT(!server->listen(port), "Failure to generate connection error if the socket is already connected");
 	OVT_ASSERT(!server->isReadyToReceive(), "Failure to check for readyness to receive when no client is connected");
-
 	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
-
 	OVT_ASSERT(!client->isConnected(), "Failure to check for connection state before connection happens");
-
-	OVT_ASSERT(!client->connect(serverName.c_str(), portNumber) && !client->isConnected(),
-			   "Failure to generate connection error due to no server currently running");
-
-	OVT_ASSERT(server->listen(portNumber), "Failure to make socket listening for input connections after a disconnection");
-
-	OVT_ASSERT(!client->connect("bad_server_name", portNumber) && !client->isConnected(),
-			   "Failure to generate connection error caused by wrong server name");
-
-	OVT_ASSERT(!client->connect(serverName.c_str(), 0) && !client->isConnected(),
-			   "Failure to generate connection error caused by wrong port number");
-
-	OVT_ASSERT(client->connect(serverName.c_str(), portNumber) && client->isConnected(),
-			   "Failure to connect to server");
-
+	OVT_ASSERT(!client->connect(name.c_str(), port) && !client->isConnected(), "Failure to generate connection error due to no server currently running");
+	OVT_ASSERT(server->listen(port), "Failure to make socket listening for input connections after a disconnection");
+	OVT_ASSERT(!client->connect("bad_server_name", port) && !client->isConnected(), "Failure to generate connection error caused by wrong server name");
+	OVT_ASSERT(!client->connect(name.c_str(), 0) && !client->isConnected(), "Failure to generate connection error caused by wrong port number");
+	OVT_ASSERT(client->connect(name.c_str(), port) && client->isConnected(), "Failure to connect to server");
 	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
 
 	// Test method getSocketPort
 
-	uint32_t guessedPort;
+	size_t guessedPort;
 	OVT_ASSERT(server->getSocketPort(guessedPort), "Failure to get socket informations");
-	OVT_ASSERT(guessedPort == portNumber, "Get Socket information should return server port.");
-
-	OVT_ASSERT(client->connect(serverName.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
+	OVT_ASSERT(guessedPort == port, "Get Socket information should return server port.");
+	OVT_ASSERT(client->connect(name.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
 	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
-
 	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
 
 	// Test to connect using port 0
 
 	OVT_ASSERT(server->listen(0) && server->isConnected(), "Failure to make socket listening for input connections");
 	OVT_ASSERT(server->getSocketPort(guessedPort), "Failure to get socket informations");
-
-	OVT_ASSERT(client->connect(serverName.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
-
+	OVT_ASSERT(client->connect(name.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
 	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
-
 	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
 	
 	// Release ressources

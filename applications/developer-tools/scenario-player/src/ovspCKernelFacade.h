@@ -21,22 +21,21 @@
 
 #pragma once
 
-#include <memory>
-
 #include "ovsp_defines.h"
+#include <memory>
 
 namespace OpenViBE
 {
-	struct InitCommand;
-	struct ResetCommand;
-	struct LoadKernelCommand;
-	struct LoadScenarioCommand;
-	struct UpdateScenarioCommand;
-	struct SetupScenarioCommand;
-	struct RunScenarioCommand;
+	struct SInitCmd;
+	struct SResetCmd;
+	struct SLoadKernelCmd;
+	struct SLoadScenarioCmd;
+	struct SUpdateScenarioCmd;
+	struct SSetupScenarioCmd;
+	struct SRunScenarioCmd;
 
 	/**
-	* \class KernelFacade
+	* \class CKernelFacade
 	* \author cgarraud (INRIA)
 	* \date 2016-01-26
 	* \brief Wrapper class used to access Kernel features
@@ -46,68 +45,66 @@ namespace OpenViBE
 	* to access a subset of Kernel features.
 	*
 	*/
-	class KernelFacade final
+	class CKernelFacade final
 	{
 	public:
 
-		KernelFacade();
-		~KernelFacade();
+		CKernelFacade();
+		~CKernelFacade();
 
 		/**
 		* \brief Initialize session parameters
-		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode initialize(const InitCommand& command);
-
+		static EPlayerReturnCode initialize() { return EPlayerReturnCode::Success; }
 
 		/**
 		* \brief Reset session parameters
 		*/
-		PlayerReturnCode uninitialize();
+		static EPlayerReturnCode uninitialize() { return EPlayerReturnCode::Success; }
 
 		/**
 		* \brief Load kernel
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode loadKernel(const LoadKernelCommand& command);
+		EPlayerReturnCode loadKernel(const SLoadKernelCmd& command) const;
 
 		/**
 		* \brief Unload kernel
 		*/
-		PlayerReturnCode unloadKernel();
+		EPlayerReturnCode unloadKernel() const;
 
 		/**
 		* \brief Load scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode loadScenario(const LoadScenarioCommand& command);
+		EPlayerReturnCode loadScenario(const SLoadScenarioCmd& command) const;
 		
 		/**
 		* \brief Update scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode updateScenario(const UpdateScenarioCommand& command);
+		EPlayerReturnCode updateScenario(const SUpdateScenarioCmd& command) const;
 
 		/**
 		* \brief Configure scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode setupScenario(const SetupScenarioCommand& command);
+		EPlayerReturnCode setupScenario(const SSetupScenarioCmd& command) const;
 
 		/**
 		* \brief Run one or multiple scenarios
 		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode runScenarioList(const RunScenarioCommand& command);
+		EPlayerReturnCode runScenarioList(const SRunScenarioCmd& command) const;
 
 	private:
 
 		// disable copy and assignment because it is not meant to used
 		// as a value class event if it is not inheritable
-		KernelFacade(const KernelFacade&)            = delete;
-		KernelFacade& operator=(const KernelFacade&) = delete;
+		CKernelFacade(const CKernelFacade&)            = delete;
+		CKernelFacade& operator=(const CKernelFacade&) = delete;
 
-		struct KernelFacadeImpl;
-		std::unique_ptr<KernelFacadeImpl> m_Pimpl;
+		struct SKernelFacadeImpl;
+		std::unique_ptr<SKernelFacadeImpl> m_impl;
 	};
-}
+}	// namespace OpenViBE

@@ -4,10 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>
-#include <cstdio>
-
-#define OVP_ClassId_BoxAlgorithm_StimulationListener     OpenViBE::CIdentifier(0x65731E1D, 0x47DE5276)
-#define OVP_ClassId_BoxAlgorithm_StimulationListenerDesc OpenViBE::CIdentifier(0x0EC013FD, 0x5DD23E44)
 
 namespace OpenViBEPlugins
 {
@@ -19,37 +15,34 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationListener)
 
 		protected:
 
-			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::LogLevel_None;
-			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>*> m_vStimulationDecoder;
+			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::LogLevel_None;
+			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>*> m_stimulationDecoders;
 		};
 
 		class CBoxAlgorithmStimulationListenerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				char l_sName[1024];
-
-				for (uint32_t i = 0; i < box.getInputCount(); i++)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
-					sprintf(l_sName, "Stimulation stream %u", i + 1);
-					box.setInputName(i, l_sName);
+					box.setInputName(i, ("Stimulation stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_Stimulations);
 				}
 
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};

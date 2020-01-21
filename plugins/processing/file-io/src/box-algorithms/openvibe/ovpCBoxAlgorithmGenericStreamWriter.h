@@ -6,18 +6,10 @@
 
 #include <ebml/CWriter.h>
 #include <ebml/CWriterHelper.h>
-#include <ebml/CReader.h>
 
 #include <cstdio>
 
 #include <fstream>
-
-// TODO:
-// - please move the identifier definitions in ovp_defines.h
-// - please include your desciptor in ovp_main.cpp
-
-#define OVP_ClassId_BoxAlgorithm_GenericStreamWriter     OpenViBE::CIdentifier(0x09C92218, 0x7C1216F8)
-#define OVP_ClassId_BoxAlgorithm_GenericStreamWriterDesc OpenViBE::CIdentifier(0x50AB506A, 0x54804437)
 
 namespace OpenViBEPlugins
 {
@@ -31,7 +23,7 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			bool generateFileHeader();
@@ -40,16 +32,16 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			bool m_bIsHeaderGenerate = false;
+			bool m_isHeaderGenerate = false;
 			OpenViBE::CString m_sFilename;
 			EBML::CWriter m_oWriter;
 			EBML::CWriterHelper m_oWriterHelper;
 
 		private:
-			void write(const void* buffer, const uint64_t size) override;
+			void write(const void* buffer, const size_t size) override;
 
 			OpenViBE::CMemoryBuffer m_oSwap;
-			std::ofstream m_oFile;
+			std::ofstream m_file;
 		};
 
 		class CBoxAlgorithmGenericStreamWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -61,18 +53,10 @@ namespace OpenViBEPlugins
 			//the check is unnecessary when removing/changing inputs and on already named inputs
 			bool check(OpenViBE::Kernel::IBox& box)
 			{
-				char l_sName[1024];
-				uint32_t i = box.getInputCount() - 1;
+				const size_t i = box.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
-				sprintf(l_sName, "Input stream %u", i + 1);
-				box.setInputName(i, l_sName);
-				/*
-				for(i=0; i<box.getInputCount(); i++)
-				{
-					sprintf(l_sName, "Input stream %u", i+1);
-					box.setInputName(i, l_sName);
-				}
-				//*/
+				box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
+				//for (i=0; i<box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
 				return true;
 			}
 
@@ -84,20 +68,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_EBMLStream);
 				this->check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;

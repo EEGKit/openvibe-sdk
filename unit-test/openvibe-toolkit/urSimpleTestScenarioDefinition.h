@@ -30,12 +30,12 @@ static std::vector<std::tuple<CIdentifier, std::string, std::string, std::string
 	std::make_tuple(OV_TypeId_String, "String Setting", "Default string value", "Modified string value")
 };
 
-static std::vector<std::tuple<CIdentifier, std::string, CIdentifier, uint32_t>> simpleScenarioInputs = {
+static std::vector<std::tuple<CIdentifier, std::string, CIdentifier, size_t>> simpleScenarioInputs = {
 	std::make_tuple(OV_TypeId_Stimulations, "Stimulation Input", s_StimulationListenerBoxId, 0),
 	std::make_tuple(OV_TypeId_StreamedMatrix, "Disconnected Matrix Input", OV_UndefinedIdentifier, 0),
 };
 
-static std::vector<std::tuple<CIdentifier, std::string, CIdentifier, uint32_t>> simpleScenarioOutputs = {
+static std::vector<std::tuple<CIdentifier, std::string, CIdentifier, size_t>> simpleScenarioOutputs = {
 	std::make_tuple(OV_TypeId_Stimulations, "Stimulation Output", s_ClockStimulatorBoxId, 0),
 	std::make_tuple(OV_TypeId_StreamedMatrix, "Disconnected Matrix Output", OV_UndefinedIdentifier, 0),
 };

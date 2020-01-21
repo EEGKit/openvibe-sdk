@@ -8,11 +8,6 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <cstdio>
-
-
-#define OVP_ClassId_BoxAlgorithm_FeatureAggregatorDesc                             OpenViBE::CIdentifier(0x00B5B638, 0x25821BAF)
-#define OVP_ClassId_BoxAlgorithm_FeatureAggregator                                 OpenViBE::CIdentifier(0x00682417, 0x453635F9)
 
 namespace OpenViBEPlugins
 {
@@ -30,62 +25,52 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
 
+		protected:
 			//codecs
-			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_pFeatureVectorEncoder = nullptr;
-			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_pStreamedMatrixDecoder;
+			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_encoder = nullptr;
+			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_decoder;
 
 			// contains the labels for each dimension for each input
-			std::vector<std::vector<std::vector<std::string>>> m_oFeatureNames;
+			std::vector<std::vector<std::vector<std::string>>> m_featureNames;
 
 			// contains the dimension size for each dimension of each input
-			std::vector<std::vector<uint32_t>> m_oDimensionSize;
+			std::vector<std::vector<size_t>> m_dimSize;
 
 			// contains the input buffer's total size for each input
-			std::vector<uint64_t> m_oInputBufferSizes;
+			std::vector<size_t> m_iBufferSizes;
 
 			//start time and end time of the last arrived chunk
-			uint64_t m_ui64LastChunkStartTime = 0;
-			uint64_t m_ui64LastChunkEndTime   = 0;
+			uint64_t m_lastChunkStartTime = 0;
+			uint64_t m_lastChunkEndTime   = 0;
 
 			// number of inputs
-			uint32_t m_ui32NumberOfInput = 0;
+			size_t m_nInput = 0;
 
-			// current input (usesful in the EBML callbacks)
-			uint32_t m_ui32CurrentInput = 0;
-
-			// the feature vector
-			double* m_pVectorBuffer = nullptr;
-			// the feature vector size
-			uint32_t m_ui32VectorSize = 0;
-
-			bool m_bHeaderSent = false;
+			bool m_headerSent = false;
 		};
 
 		class CBoxAlgorithmFeatureAggregatorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
-				char l_sName[1024];
-
-				for (uint32_t i = 0; i < box.getInputCount(); i++)
+				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
-					sprintf(l_sName, "Input stream %u", i + 1);
-					box.setInputName(i, l_sName);
+					box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
 					box.setInputType(i, OV_TypeId_StreamedMatrix);
 				}
 
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -117,12 +102,12 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmFeatureAggregatorListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rPrototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
-				// rPrototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
-				rPrototype.addOutput("Feature vector stream", OV_TypeId_FeatureVector);
-				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
+				// prototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Feature vector stream", OV_TypeId_FeatureVector);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}

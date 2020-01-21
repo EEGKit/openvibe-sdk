@@ -6,23 +6,23 @@
 namespace
 {
 	using namespace OpenViBE;
-	using namespace Kernel;
+	using namespace /*OpenViBE::*/Kernel;
 
-	struct SBoxProto : IBoxProto
+	struct SBoxProto final : IBoxProto
 	{
 		SBoxProto(ITypeManager& typeManager) : m_TypeManager(typeManager) { }
 
 		bool addInput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64InputCountHash);
-			swap_byte(m_ui64InputCountHash, 0x7936A0F3BD12D936LL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_inputCountHash);
+			swap_byte(m_inputCountHash, 0x7936A0F3BD12D936LL);
+			m_hash = m_hash.toUInteger() ^ v;
 			if (id != OV_UndefinedIdentifier)
 			{
 				v = id.toUInteger();
 				swap_byte(v, 0x2BD1D158F340014D);
-				m_oHash = m_oHash.toUInteger() ^ v;
+				m_hash = m_hash.toUInteger() ^ v;
 			}
 			return true;
 		}
@@ -30,14 +30,14 @@ namespace
 		bool addOutput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
+			m_hash = m_hash.toUInteger() ^ v;
 			if (id != OV_UndefinedIdentifier)
 			{
 				v = id.toUInteger();
 				swap_byte(v, 0x87CA0F5EFC4FAC68);
-				m_oHash = m_oHash.toUInteger() ^ v;
+				m_hash = m_hash.toUInteger() ^ v;
 			}
 			return true;
 		}
@@ -46,14 +46,14 @@ namespace
 						const bool /*notify*/) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64SettingCountHash);
-			swap_byte(m_ui64SettingCountHash, 0x3C87F3AAE9F8303BLL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_settingCountHash);
+			swap_byte(m_settingCountHash, 0x3C87F3AAE9F8303BLL);
+			m_hash = m_hash.toUInteger() ^ v;
 			if (id != OV_UndefinedIdentifier)
 			{
 				v = id.toUInteger();
 				swap_byte(v, 0x17185F7CDA63A9FA);
-				m_oHash = m_oHash.toUInteger() ^ v;
+				m_hash = m_hash.toUInteger() ^ v;
 			}
 			return true;
 		}
@@ -61,36 +61,36 @@ namespace
 		bool addInputSupport(const CIdentifier& typeID) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
+			m_hash = m_hash.toUInteger() ^ v;
 			return true;
 		}
 
 		bool addInputAndDerivedSupport(const CIdentifier& typeID)
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
+			m_hash = m_hash.toUInteger() ^ v;
 			return true;
 		}
 
 		bool addOutputSupport(const CIdentifier& typeID) override
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
+			m_hash = m_hash.toUInteger() ^ v;
 			return true;
 		}
 
 		bool addOutputAndDerivedSupport(const CIdentifier& typeID)
 		{
 			uint64_t v = typeID.toUInteger();
-			swap_byte(v, m_ui64OutputCountHash);
-			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
-			m_oHash = m_oHash.toUInteger() ^ v;
+			swap_byte(v, m_outputCountHash);
+			swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
+			m_hash = m_hash.toUInteger() ^ v;
 			return true;
 		}
 
@@ -98,19 +98,19 @@ namespace
 		{
 			switch (flag)
 			{
-				case BoxFlag_CanAddInput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x07507AC8, 0xEB643ACE).toUInteger();
+				case BoxFlag_CanAddInput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x07507AC8, 0xEB643ACE).toUInteger();
 					break;
-				case BoxFlag_CanModifyInput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x5C985376, 0x8D74CDB8).toUInteger();
+				case BoxFlag_CanModifyInput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x5C985376, 0x8D74CDB8).toUInteger();
 					break;
-				case BoxFlag_CanAddOutput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x58DEA69B, 0x12411365).toUInteger();
+				case BoxFlag_CanAddOutput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x58DEA69B, 0x12411365).toUInteger();
 					break;
-				case BoxFlag_CanModifyOutput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x6E162C01, 0xAC979F22).toUInteger();
+				case BoxFlag_CanModifyOutput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x6E162C01, 0xAC979F22).toUInteger();
 					break;
-				case BoxFlag_CanAddSetting: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0xFA7A50DC, 0x2140C013).toUInteger();
+				case BoxFlag_CanAddSetting: m_hash = m_hash.toUInteger() ^ CIdentifier(0xFA7A50DC, 0x2140C013).toUInteger();
 					break;
-				case BoxFlag_CanModifySetting: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x624D7661, 0xD8DDEA0A).toUInteger();
+				case BoxFlag_CanModifySetting: m_hash = m_hash.toUInteger() ^ CIdentifier(0x624D7661, 0xD8DDEA0A).toUInteger();
 					break;
-				case BoxFlag_IsDeprecated: m_bIsDeprecated = true;
+				case BoxFlag_IsDeprecated: m_isDeprecated = true;
 					break;
 				default:
 					return false;
@@ -120,37 +120,37 @@ namespace
 
 		bool addFlag(const CIdentifier& flagId) override
 		{
-			const uint64_t flagValue = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, flagId.toString());
-			if (flagValue == OV_UndefinedIdentifier) { return false; }
+			const uint64_t value = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, flagId.toString());
+			if (value == OV_UndefinedIdentifier) { return false; }
 			// Flags do not modify internal hash
-			//m_oHash=m_oHash.toUInteger() ^ flagId.toUInteger();
+			//m_hash=m_hash.toUInteger() ^ flagId.toUInteger();
 			return true;
 		}
 
 		void swap_byte(uint64_t& v, const uint64_t s)
 		{
-			uint8_t V[sizeof(v)];
-			uint8_t S[sizeof(s)];
-			System::Memory::hostToLittleEndian(v, V);
-			System::Memory::hostToLittleEndian(s, S);
-			for (uint32_t i = 0; i < sizeof(s); i += 2)
+			uint8_t v2[sizeof(v)];
+			uint8_t s2[sizeof(s)];
+			System::Memory::hostToLittleEndian(v, v2);
+			System::Memory::hostToLittleEndian(s, s2);
+			for (size_t i = 0; i < sizeof(s); i += 2)
 			{
-				uint32_t j = S[i] % sizeof(v);
-				uint32_t k = S[i + 1] % sizeof(v);
-				uint8_t t  = V[j];
-				V[j]       = V[k];
-				V[k]       = t;
+				const size_t j  = s2[i] % sizeof(v);
+				const size_t k  = s2[i + 1] % sizeof(v);
+				const uint8_t t = v2[j];
+				v2[j]           = v2[k];
+				v2[k]           = t;
 			}
-			System::Memory::littleEndianToHost(V, &v);
+			System::Memory::littleEndianToHost(v2, &v);
 		}
 
 		_IsDerivedFromClass_Final_(IBoxProto, OV_UndefinedIdentifier)
 
-		CIdentifier m_oHash             = OV_UndefinedIdentifier;
-		bool m_bIsDeprecated            = false;
-		uint64_t m_ui64InputCountHash   = 0x64AC3CB54A35888CLL;
-		uint64_t m_ui64OutputCountHash  = 0x21E0FAAFE5CAF1E1LL;
-		uint64_t m_ui64SettingCountHash = 0x6BDFB15B54B09F63LL;
+		CIdentifier m_hash          = OV_UndefinedIdentifier;
+		bool m_isDeprecated         = false;
+		uint64_t m_inputCountHash   = 0x64AC3CB54A35888CLL;
+		uint64_t m_outputCountHash  = 0x21E0FAAFE5CAF1E1LL;
+		uint64_t m_settingCountHash = 0x6BDFB15B54B09F63LL;
 		ITypeManager& m_TypeManager;
 	};
 } // namespace

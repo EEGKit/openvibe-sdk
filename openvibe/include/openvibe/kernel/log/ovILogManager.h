@@ -25,24 +25,24 @@ namespace OpenViBE
 
 			/**
 			 * \brief Registers a new log listener
-			 * \param pListener [in] : the new listener to register
+			 * \param listener [in] : the new listener to register
 			 * \return \e true in case of success. \e false in case of error.
 			 */
-			virtual bool addListener(ILogListener* pListener) = 0;
+			virtual bool addListener(ILogListener* listener) = 0;
 			/**
 			 * \brief Removes a registered listener
-			 * \param pListener [in] : the listener to unregister
+			 * \param listener [in] : the listener to unregister
 			 * \return \e true in case of success. \e false in case of error.
 			 */
-			virtual bool removeListener(ILogListener* pListener) = 0;
+			virtual bool removeListener(ILogListener* listener) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogManager)
+			_IsDerivedFromClass_(ILogListener, OV_ClassId_Kernel_Log_LogManager)
 		};
 
 		/**
 		 * \brief Stream output operator
-		 * \param rLogManager [in] : the log manager that takes the object
-		 * \param rObject [in] : the object to log
+		 * \param logManager [in] : the log manager that takes the object
+		 * \param object [in] : the object to log
 		 * \return The log manager itself
 		 * \sa OpenViBE::Kernel::ILogManager
 		 *
@@ -51,10 +51,10 @@ namespace OpenViBE
 		 * ostream object.
 		 */
 		template <class T>
-		ILogManager& operator <<(ILogManager& rLogManager, const T& rObject)
+		ILogManager& operator <<(ILogManager& logManager, const T& object)
 		{
-			rLogManager.log(rObject);
-			return rLogManager;
+			logManager.log(object);
+			return logManager;
 		}
 	} // namespace Kernel
 } // namespace OpenViBE

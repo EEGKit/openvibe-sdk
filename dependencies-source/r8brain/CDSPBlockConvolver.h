@@ -448,7 +448,7 @@ namespace r8b
 				{
 					op[0] = *ip;
 
-					for (int j = 1; j < UpFactor; j++) { op[j] = 0.0; }
+					for (int j = 1; j < UpFactor; ++j) { op[j] = 0.0; }
 
 					ip++;
 					op += UpFactor;
@@ -587,7 +587,7 @@ namespace r8b
 			CurInput[bl1 + 1] = 0.0;
 			CurInput[1]       = CurInput[0];
 
-			for (i = 1; i < UpShift; i++)
+			for (i = 1; i < UpShift; ++i)
 			{
 				const int z = bl1 << i;
 				memcpy(&CurInput[z], CurInput, z * sizeof(double));

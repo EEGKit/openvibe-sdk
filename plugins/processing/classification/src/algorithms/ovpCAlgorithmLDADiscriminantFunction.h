@@ -25,10 +25,10 @@ namespace OpenViBEPlugins
 
 			//Return the class membership of the feature vector
 			double getValue(const Eigen::VectorXd& featureVector) { return (m_weight.transpose() * featureVector)(0) + m_bias; }
-			uint32_t getWeightVectorSize() const { return uint32_t(m_weight.size()); }
+			size_t getNWeight() const { return m_weight.size(); }
 
 
-			bool loadConfiguration(const XML::IXMLNode* configuration);
+			bool loadConfig(const XML::IXMLNode* configuration);
 			XML::IXMLNode* getConfiguration();
 
 			const Eigen::VectorXd& getWeight() const { return m_weight; }

@@ -1,109 +1,82 @@
 #include "ovkCLogManager.h"
 
-#include <iostream>
-
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
-CLogManager::CLogManager(const IKernelContext& ctx)
-	: TKernelObject<ILogManager>(ctx)
-	  , m_eCurrentLogLevel(LogLevel_Info) {}
-
-bool CLogManager::isActive(ELogLevel eLogLevel)
+bool CLogManager::isActive(const ELogLevel level)
 {
-	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
-	if (itLogLevel == m_vActiveLevel.end()) { return true; }
-	return itLogLevel->second;
+	const auto it = m_activeLevels.find(level);
+	if (it == m_activeLevels.end()) { return true; }
+	return it->second;
 }
 
-bool CLogManager::activate(ELogLevel eLogLevel, bool bActive)
+bool CLogManager::activate(const ELogLevel level, const bool active)
 {
-	m_vActiveLevel[eLogLevel] = bActive;
+	m_activeLevels[level] = active;
 	return true;
 }
 
-bool CLogManager::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
+bool CLogManager::activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
+	for (int i = startLevel; i <= endLevel; ++i) { m_activeLevels[ELogLevel(i)] = active; }
 	return true;
 }
-
-bool CLogManager::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
-
-void CLogManager::log(const time64 value) { logForEach<const time64>(value); }
-void CLogManager::log(const uint64_t value) { logForEach<const uint64_t>(value); }
-void CLogManager::log(const uint32_t value) { logForEach<const uint32_t>(value); }
-void CLogManager::log(const uint16_t value) { logForEach<const uint16_t>(value); }
-void CLogManager::log(const uint8_t value) { logForEach<const uint8_t>(value); }
-void CLogManager::log(const int64_t value) { logForEach<const int64_t>(value); }
-void CLogManager::log(const int value) { logForEach<const int>(value); }
-void CLogManager::log(const int16_t value) { logForEach<const int16_t>(value); }
-void CLogManager::log(const int8_t value) { logForEach<const int8_t>(value); }
-void CLogManager::log(const double value) { logForEach<const double>(value); }
-void CLogManager::log(const float value) { logForEach<const float>(value); }
-void CLogManager::log(const bool value) { logForEach<const bool>(value); }
-void CLogManager::log(const CIdentifier& value) { logForEach<const CIdentifier&>(value); }
-void CLogManager::log(const CString& value) { log(value.toASCIIString()); }
 
 void CLogManager::log(const char* value)
 {
 	logForEach<const char*>(value);
-
 	{
 		GRAB_OWNERSHIP;
 
-		std::string l_sCopy(value);
-		if (l_sCopy.length() > 0 && l_sCopy[l_sCopy.length() - 1] == '\n')
+		std::string copy(value);
+		if (copy.length() > 0 && copy[copy.length() - 1] == '\n')
 		{
 			// we are done, release
-			m_oOwner = std::thread::id();
-			m_oCondition.notify_one();
+			m_owner = std::thread::id();
+			m_condition.notify_one();
 		}
 	}
 }
 
-void CLogManager::log(const ELogLevel eLogLevel)
+void CLogManager::log(const ELogLevel level)
 {
 	{
 		GRAB_OWNERSHIP;
-
-		m_eCurrentLogLevel = eLogLevel;
+		m_currentLogLevel = level;
 	}
 
-	logForEach<ELogLevel>(eLogLevel);
+	logForEach<ELogLevel>(level);
 }
 
-void CLogManager::log(const ELogColor eLogColor) { logForEach<ELogColor>(eLogColor); }
-
-bool CLogManager::addListener(ILogListener* pListener)
+bool CLogManager::addListener(ILogListener* listener)
 {
-	std::unique_lock<std::mutex> lock(m_oMutex);
+	std::unique_lock<std::mutex> lock(m_mutex);
 
-	if (pListener == nullptr) { return false; }
+	if (listener == nullptr) { return false; }
 
-	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
-	while (itLogListener != m_vListener.end())
+	auto itLogListener = m_listeners.begin();
+	while (itLogListener != m_listeners.end())
 	{
-		if ((*itLogListener) == pListener) { return false; }
+		if ((*itLogListener) == listener) { return false; }
 		++itLogListener;
 	}
 
-	m_vListener.push_back(pListener);
+	m_listeners.push_back(listener);
 	return true;
 }
 
-bool CLogManager::removeListener(ILogListener* pListener)
+bool CLogManager::removeListener(ILogListener* listener)
 {
-	std::unique_lock<std::mutex> lock(m_oMutex);
+	std::unique_lock<std::mutex> lock(m_mutex);
 
-	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
-	while (itLogListener != m_vListener.end())
+	auto itLogListener = m_listeners.begin();
+	while (itLogListener != m_listeners.end())
 	{
-		if ((*itLogListener) == pListener)
+		if ((*itLogListener) == listener)
 		{
-			m_vListener.erase(itLogListener);
-			return true;	// due to constraint in addListener(), pListener can be in the array only once, so we can return
+			m_listeners.erase(itLogListener);
+			return true;	// due to constraint in addListener(), listener can be in the array only once, so we can return
 		}
 		++itLogListener;
 	}

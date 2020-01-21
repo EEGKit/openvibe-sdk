@@ -1,6 +1,5 @@
 #pragma once
 
-#include <fstream>
 #include <vector>
 
 namespace Common
@@ -9,7 +8,7 @@ namespace Common
 	{
 #if defined TARGET_OS_Windows
 		// Returns the wstring (ie the utf16 formatted string) version of an utf8 string
-		static std::wstring utf8_to_utf16(const std::string& utf8)
+		static std::wstring Utf8ToUtf16(const std::string& utf8)
 		{
 			std::vector<unsigned long> unicode;
 			size_t i = 0;
@@ -42,14 +41,14 @@ namespace Common
 				else { throw std::logic_error("not a UTF-8 string"); }
 				for (size_t j = 0; j < todo; ++j)
 				{
-					if (i == utf8.size()) throw std::logic_error("not a UTF-8 string");
+					if (i == utf8.size()) { throw std::logic_error("not a UTF-8 string"); }
 					ch = utf8[i++];
-					if (ch < 0x80 || ch > 0xBF) throw std::logic_error("not a UTF-8 string");
+					if (ch < 0x80 || ch > 0xBF) { throw std::logic_error("not a UTF-8 string"); }
 					uni <<= 6;
 					uni += ch & 0x3F;
 				}
-				if (uni >= 0xD800 && uni <= 0xDFFF) throw std::logic_error("not a UTF-8 string");
-				if (uni > 0x10FFFF) throw std::logic_error("not a UTF-8 string");
+				if (uni >= 0xD800 && uni <= 0xDFFF) { throw std::logic_error("not a UTF-8 string"); }
+				if (uni > 0x10FFFF) { throw std::logic_error("not a UTF-8 string"); }
 				unicode.push_back(uni);
 			}
 			std::wstring utf16;

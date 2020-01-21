@@ -17,24 +17,24 @@ namespace Socket
 	{
 	public:
 
-		virtual bool connect(unsigned short ui16PortNumber) = 0;
+		virtual bool connect(const unsigned short port) = 0;
 
 		virtual std::string getLastError() = 0;
 
 	protected:
 
 #if defined TARGET_OS_Windows
-		typedef bool (CALLBACK * LPFNTVICPORTOPEN)();
-		typedef void (CALLBACK * LPFNTVICPORTCLOSE)();
-		typedef bool (CALLBACK * LPFNTVICPORTISDRIVEROPENED)();
-		typedef bool (CALLBACK * LPFNTVICPORTWRITE)(unsigned short, unsigned char);
+		typedef bool (CALLBACK * port_open_t)();
+		typedef void (CALLBACK * port_close_t)();
+		typedef bool (CALLBACK * port_is_driver_opened_t)();
+		typedef bool (CALLBACK * port_write_t)(unsigned short, unsigned char);
 
-		HMODULE m_hmodTVicPort;
+		HMODULE m_port = nullptr;
 
-		LPFNTVICPORTOPEN m_lpfnTVicPortOpen;
-		LPFNTVICPORTCLOSE m_lpfnTVicPortClose;
-		LPFNTVICPORTISDRIVEROPENED m_lpfnTVicIsDriverOpened;
-		LPFNTVICPORTWRITE m_lpfnTVicPortWrite;
+		port_open_t m_portOpen                   = nullptr;
+		port_close_t m_portClose                 = nullptr;
+		port_is_driver_opened_t m_isDriverOpened = nullptr;
+		port_write_t m_portWrite                 = nullptr;
 #endif
 	};
 

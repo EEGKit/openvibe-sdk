@@ -83,7 +83,7 @@ namespace
 
 		return true;
 	}
-}
+}	// namespace 
 
 /******************************************************************************
 *
@@ -91,42 +91,42 @@ namespace
 *
 ******************************************************************************/
 
-Header::Header() : m_Type(MessageType_Unknown), m_Id(std::numeric_limits<decltype(m_Id)>::max()) { m_IsValid = false; }
+Header::Header() : m_type(MessageType_Unknown), m_id(std::numeric_limits<decltype(m_id)>::max()) { m_isValid = false; }
 
-Header::Header(const EMessageType type, const uint64_t id, const uint64_t size) : m_Type(type), m_Id(id), m_Size(size) { m_IsValid = true; }
+Header::Header(const EMessageType type, const uint64_t id, const size_t size) : m_type(type), m_id(id), m_size(size) { m_isValid = true; }
 
 std::vector<uint8_t> Header::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize);
+	std::vector<uint8_t> buffer(MINIMUM_SIZE);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, m_Id);
-	copyTobuffer(buffer, bufferIndex, m_Size);
+	copyTobuffer(buffer, bufferIndex, m_type);
+	copyTobuffer(buffer, bufferIndex, m_id);
+	copyTobuffer(buffer, bufferIndex, m_size);
 
 	return buffer;
 }
 
 bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
 	uint8_t typeInt;
 
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + TYPE_INDEX, typeInt)) { return false; }
 
-	if (typeInt >= MessageType_MAX) { return false; }
+	if (typeInt >= MessageType_Max) { return false; }
 
-	m_Type = EMessageType(typeInt);
+	m_type = EMessageType(typeInt);
 
-	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, m_Size)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + ID_INDEX, m_id)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + SIZE_INDEX, m_size)) { return false; }
 
-	bufferIndex += s_MinimumSize;
+	bufferIndex += MINIMUM_SIZE;
 
-	m_IsValid = true;
+	m_isValid = true;
 
 	return true;
 }
@@ -139,30 +139,27 @@ bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 
 std::vector<uint8_t> AuthenticationMessage::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize + m_ConnectionID.size());
+	std::vector<uint8_t> buffer(MINIMUM_SIZE + m_connectionID.size());
 	size_t bufferIndex = 0;
 
-	uint64_t size = m_ConnectionID.size();
+	const size_t size = m_connectionID.size();
 	copyTobuffer(buffer, bufferIndex, size);
-	copyTobuffer(buffer, bufferIndex, m_ConnectionID);
+	copyTobuffer(buffer, bufferIndex, m_connectionID);
 
 	return buffer;
 }
 
 bool AuthenticationMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
-
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	m_isValid = false;
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
 	size_t passPhraseSize;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, passPhraseSize)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + SIZE_INDEX, passPhraseSize)) { return false; }
+	if (!copyToString(buffer, bufferIndex + CONNECTION_ID_INDEX, passPhraseSize, m_connectionID)) { return false; }
 
-	if (!copyToString(buffer, bufferIndex + s_ConnectionIDIndex, passPhraseSize, m_ConnectionID)) { return false; }
-
-	m_IsValid = true;
-
-	bufferIndex += s_MinimumSize + passPhraseSize;
+	m_isValid = true;
+	bufferIndex += MINIMUM_SIZE + passPhraseSize;
 
 	return true;
 }
@@ -176,27 +173,27 @@ bool AuthenticationMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t
 
 std::vector<uint8_t> CommunicationProtocolVersionMessage::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize);
+	std::vector<uint8_t> buffer(MINIMUM_SIZE);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_MajorVersion);
-	copyTobuffer(buffer, bufferIndex, m_MinorVersion);
+	copyTobuffer(buffer, bufferIndex, m_majorVersion);
+	copyTobuffer(buffer, bufferIndex, m_minorVersion);
 
 	return buffer;
 }
 
 bool CommunicationProtocolVersionMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_MajorIndex, m_MajorVersion)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_MinorIndex, m_MinorVersion)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + MAJOR_INDEX, m_majorVersion)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + MINOR_INDEX, m_minorVersion)) { return false; }
 
-	m_IsValid = true;
+	m_isValid = true;
 
-	bufferIndex += s_MinimumSize;
+	bufferIndex += MINIMUM_SIZE;
 
 	return true;
 }
@@ -208,39 +205,39 @@ bool CommunicationProtocolVersionMessage::fromBytes(const std::vector<uint8_t>& 
 ******************************************************************************/
 
 InputOutput::InputOutput()
-	: m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string()) { m_IsValid = false; }
+	: m_id(std::numeric_limits<decltype(m_id)>::max()), m_type(std::numeric_limits<decltype(m_type)>::max()), m_name(std::string()) { m_isValid = false; }
 
-InputOutput::InputOutput(const uint32_t id, const uint64_t type, const std::string& name) : m_Id(id), m_Type(type), m_Name(name) { m_IsValid = true; }
+InputOutput::InputOutput(const uint64_t id, const size_t type, const std::string& name) : m_id(id), m_type(type), m_name(name) { m_isValid = true; }
 
 std::vector<uint8_t> InputOutput::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize + m_Name.size());
+	std::vector<uint8_t> buffer(MINIMUM_SIZE + m_name.size());
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_Id);
-	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Name.size()));
-	copyTobuffer(buffer, bufferIndex, m_Name);
+	copyTobuffer(buffer, bufferIndex, m_id);
+	copyTobuffer(buffer, bufferIndex, m_type);
+	copyTobuffer(buffer, bufferIndex, m_name.size());
+	copyTobuffer(buffer, bufferIndex, m_name);
 
 	return buffer;
 }
 
 bool InputOutput::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + ID_INDEX, m_id)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + TYPE_INDEX, m_type)) { return false; }
 
-	uint32_t nameSize;
-	if (!copyToVariable(buffer, bufferIndex + s_NameSizeIndex, nameSize)) { return false; }
-	if (!copyToString(buffer, bufferIndex + s_NameIndex, nameSize, m_Name)) { return false; }
+	size_t nameSize;
+	if (!copyToVariable(buffer, bufferIndex + NAME_SIZE_INDEX, nameSize)) { return false; }
+	if (!copyToString(buffer, bufferIndex + NAME_INDEX, nameSize, m_name)) { return false; }
 
-	m_IsValid = true;
+	m_isValid = true;
 
-	bufferIndex += s_MinimumSize + nameSize;
+	bufferIndex += MINIMUM_SIZE + nameSize;
 
 	return true;
 }
@@ -252,47 +249,47 @@ bool InputOutput::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 ******************************************************************************/
 
 Parameter::Parameter()
-	: m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string()), m_Value(std::string())
+	: m_id(std::numeric_limits<decltype(m_id)>::max()), m_type(std::numeric_limits<decltype(m_type)>::max()), m_name(std::string()), m_value(std::string())
 {
-	m_IsValid = false;
+	m_isValid = false;
 }
 
-Parameter::Parameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value)
-	: m_Id(id), m_Type(type), m_Name(name), m_Value(value) { m_IsValid = true; }
+Parameter::Parameter(const uint64_t id, const size_t type, const std::string& name, const std::string& value)
+	: m_id(id), m_type(type), m_name(name), m_value(value) { m_isValid = true; }
 
 std::vector<uint8_t> Parameter::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize + m_Name.size() + m_Value.size());
+	std::vector<uint8_t> buffer(MINIMUM_SIZE + m_name.size() + m_value.size());
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_Id);
-	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Name.size()));
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Value.size()));
-	copyTobuffer(buffer, bufferIndex, m_Name);
-	copyTobuffer(buffer, bufferIndex, m_Value);
+	copyTobuffer(buffer, bufferIndex, m_id);
+	copyTobuffer(buffer, bufferIndex, m_type);
+	copyTobuffer(buffer, bufferIndex, m_name.size());
+	copyTobuffer(buffer, bufferIndex, m_value.size());
+	copyTobuffer(buffer, bufferIndex, m_name);
+	copyTobuffer(buffer, bufferIndex, m_value);
 
 	return buffer;
 }
 
 bool Parameter::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + ID_INDEX, m_id)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + TYPE_INDEX, m_type)) { return false; }
 
-	uint32_t nameSize;
-	if (!copyToVariable(buffer, bufferIndex + s_NameSizeIndex, nameSize)) { return false; }
+	size_t nameSize;
+	if (!copyToVariable(buffer, bufferIndex + NAME_SIZE_INDEX, nameSize)) { return false; }
 
-	uint32_t valueSize;
-	if (!copyToVariable(buffer, bufferIndex + s_ValueSizeIndex, valueSize)) { return false; }
-	if (!copyToString(buffer, bufferIndex + s_NameIndex, nameSize, m_Name)) { return false; }
-	if (!copyToString(buffer, bufferIndex + s_NameIndex + nameSize, valueSize, m_Value)) { return false; }
+	size_t valueSize;
+	if (!copyToVariable(buffer, bufferIndex + VALUE_SIZE_INDEX, valueSize)) { return false; }
+	if (!copyToString(buffer, bufferIndex + NAME_INDEX, nameSize, m_name)) { return false; }
+	if (!copyToString(buffer, bufferIndex + NAME_INDEX + nameSize, valueSize, m_value)) { return false; }
 
-	bufferIndex += s_MinimumSize + nameSize + valueSize;
+	bufferIndex += MINIMUM_SIZE + nameSize + valueSize;
 
 	return true;
 }
@@ -305,26 +302,26 @@ bool Parameter::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInde
 
 std::vector<uint8_t> BoxDescriptionMessage::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize);
+	std::vector<uint8_t> buffer(MINIMUM_SIZE);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Inputs.size()));
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Outputs.size()));
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Parameters.size()));
+	copyTobuffer(buffer, bufferIndex, m_inputs.size());
+	copyTobuffer(buffer, bufferIndex, m_outputs.size());
+	copyTobuffer(buffer, bufferIndex, m_parameters.size());
 
-	for (const InputOutput& input : m_Inputs)
+	for (const InputOutput& input : m_inputs)
 	{
 		std::vector<uint8_t> inputBuffer = input.toBytes();
 		buffer.insert(buffer.end(), inputBuffer.begin(), inputBuffer.end());
 	}
 
-	for (const InputOutput& output : m_Outputs)
+	for (const InputOutput& output : m_outputs)
 	{
 		std::vector<uint8_t> outputBuffer = output.toBytes();
 		buffer.insert(buffer.end(), outputBuffer.begin(), outputBuffer.end());
 	}
 
-	for (const Parameter& parameter : m_Parameters)
+	for (const Parameter& parameter : m_parameters)
 	{
 		std::vector<uint8_t> parameterBuffer = parameter.toBytes();
 		buffer.insert(buffer.end(), parameterBuffer.begin(), parameterBuffer.end());
@@ -335,79 +332,78 @@ std::vector<uint8_t> BoxDescriptionMessage::toBytes() const
 
 bool BoxDescriptionMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	uint32_t inputCount;
-	uint32_t outputCount;
-	uint32_t parameterCount;
+	size_t inputCount;
+	size_t outputCount;
+	size_t parameterCount;
 
-	if (!copyToVariable(buffer, bufferIndex + s_InputCountIndex, inputCount)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_OutputCountIndex, outputCount)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_ParameterCountIndex, parameterCount)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + N_INPUT_INDEX, inputCount)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + N_OUTPUT_INDEX, outputCount)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + N_PARAMETER_INDEX, parameterCount)) { return false; }
 
-	bufferIndex += s_MinimumSize;
+	bufferIndex += MINIMUM_SIZE;
 
-	m_Inputs.clear();
-	m_Outputs.clear();
-	m_Parameters.clear();
+	m_inputs.clear();
+	m_outputs.clear();
+	m_parameters.clear();
 
-	for (uint32_t i = 0; i < inputCount; i++)
+	for (size_t i = 0; i < inputCount; ++i)
 	{
 		InputOutput input;
 		if (!input.fromBytes(buffer, bufferIndex)) { return false; }
-		m_Inputs.push_back(input);
+		m_inputs.push_back(input);
 	}
 
-	for (uint32_t i = 0; i < outputCount; i++)
+	for (size_t i = 0; i < outputCount; ++i)
 	{
 		InputOutput output;
 		if (!output.fromBytes(buffer, bufferIndex)) { return false; }
-		m_Outputs.push_back(output);
+		m_outputs.push_back(output);
 	}
 
-	for (uint32_t i = 0; i < parameterCount; i++)
+	for (size_t i = 0; i < parameterCount; ++i)
 	{
 		Parameter parameter;
 		if (!parameter.fromBytes(buffer, bufferIndex)) { return false; }
-		m_Parameters.push_back(parameter);
+		m_parameters.push_back(parameter);
 	}
 
-	m_IsValid = true;
+	m_isValid = true;
 
 	return true;
 }
 
 EMessageType BoxDescriptionMessage::getMessageType() const { return MessageType_BoxInformation; }
 
-bool BoxDescriptionMessage::addInput(const uint32_t id, const uint64_t type, const std::string& name)
+bool BoxDescriptionMessage::addInput(const uint64_t id, const size_t type, const std::string& name)
 {
-	auto it = std::find_if(m_Inputs.begin(), m_Inputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
+	const auto it = std::find_if(m_inputs.begin(), m_inputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
+	if (it != m_inputs.end()) { return false; }
 
-	if (it != m_Inputs.end()) { return false; }
-
-	m_Inputs.emplace_back(id, type, name);
+	m_inputs.emplace_back(id, type, name);
 	return true;
 }
 
-bool BoxDescriptionMessage::addOutput(const uint32_t id, const uint64_t type, const std::string& name)
+bool BoxDescriptionMessage::addOutput(const uint64_t id, const size_t type, const std::string& name)
 {
-	auto it = std::find_if(m_Outputs.begin(), m_Outputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
+	const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
 
-	if (it != m_Outputs.end()) { return false; }
+	if (it != m_outputs.end()) { return false; }
 
-	m_Outputs.emplace_back(id, type, name);
+	m_outputs.emplace_back(id, type, name);
 	return true;
 }
 
-bool BoxDescriptionMessage::addParameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value)
+bool BoxDescriptionMessage::addParameter(const uint64_t id, const size_t type, const std::string& name, const std::string& value)
 {
-	auto it = std::find_if(m_Parameters.begin(), m_Parameters.end(), [&id](const Parameter& obj) { return obj.getId() == id; });
+	const auto it = std::find_if(m_parameters.begin(), m_parameters.end(), [&id](const Parameter& obj) { return obj.getId() == id; });
 
-	if (it != m_Parameters.end()) { return false; }
+	if (it != m_parameters.end()) { return false; }
 
-	m_Parameters.emplace_back(id, type, name, value);
+	m_parameters.emplace_back(id, type, name, value);
 	return true;
 }
 
@@ -423,45 +419,45 @@ bool BoxDescriptionMessage::addParameter(const uint32_t id, const uint64_t type,
 *
 ******************************************************************************/
 
-LogMessage::LogMessage() : m_Type(LogLevel_Unknown) { m_IsValid = false; }
+LogMessage::LogMessage() : m_type(LogLevel_Unknown) { m_isValid = false; }
 
-LogMessage::LogMessage(const ELogLevel type, const std::string& message) : m_Type(type), m_Message(message) { m_IsValid = true; }
+LogMessage::LogMessage(const ELogLevel type, const std::string& message) : m_type(type), m_message(message) { m_isValid = true; }
 
 std::vector<uint8_t> LogMessage::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize + m_Message.size());
+	std::vector<uint8_t> buffer(MINIMUM_SIZE + m_message.size());
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_Message.size()));
-	copyTobuffer(buffer, bufferIndex, m_Message);
+	copyTobuffer(buffer, bufferIndex, m_type);
+	copyTobuffer(buffer, bufferIndex, m_message.size());
+	copyTobuffer(buffer, bufferIndex, m_message);
 
 	return buffer;
 }
 
 bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
 	// Type
 	uint8_t typeInt;
 
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + TYPE_INDEX, typeInt)) { return false; }
 
-	if (typeInt >= LogLevel_MAX) { return false; }
+	if (typeInt >= LogLevel_Max) { return false; }
 
-	m_Type = ELogLevel(typeInt);
+	m_type = ELogLevel(typeInt);
 
 	// Message size
-	uint32_t messageSize;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, messageSize)) { return false; }
-	if (!copyToString(buffer, bufferIndex + s_NameIndex, messageSize, m_Message)) { return false; }
+	size_t messageSize;
+	if (!copyToVariable(buffer, bufferIndex + SIZE_INDEX, messageSize)) { return false; }
+	if (!copyToString(buffer, bufferIndex + NAME_INDEX, messageSize, m_message)) { return false; }
 
-	bufferIndex += s_MinimumSize + messageSize;
+	bufferIndex += MINIMUM_SIZE + messageSize;
 
-	m_IsValid = true;
+	m_isValid = true;
 
 	return true;
 }
@@ -473,23 +469,23 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 ******************************************************************************/
 
 EBMLMessage::EBMLMessage()
-	: m_IOIndex(std::numeric_limits<decltype(m_IOIndex)>::max()), m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max()),
-	  m_EndTime(std::numeric_limits<decltype(m_EndTime)>::max()) { m_IsValid = false; }
+	: m_ioIdx(std::numeric_limits<decltype(m_ioIdx)>::max()), m_startTime(std::numeric_limits<decltype(m_startTime)>::max()),
+	  m_endTime(std::numeric_limits<decltype(m_endTime)>::max()) { m_isValid = false; }
 
-EBMLMessage::EBMLMessage(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
-	: m_IOIndex(index), m_StartTime(startTime), m_EndTime(endTime), m_EBML(ebml) { m_IsValid = true; }
+EBMLMessage::EBMLMessage(const size_t index, const uint64_t startTime, const uint64_t endTime, const std::shared_ptr<const std::vector<uint8_t>>& ebml)
+	: m_ioIdx(index), m_startTime(startTime), m_endTime(endTime), m_EBML(ebml) { m_isValid = true; }
 
 std::vector<uint8_t> EBMLMessage::toBytes() const
 {
-	if (!m_IsValid) { return std::vector<uint8_t>(); }
+	if (!m_isValid) { return std::vector<uint8_t>(); }
 
-	std::vector<uint8_t> buffer(s_MinimumSize);
+	std::vector<uint8_t> buffer(MINIMUM_SIZE);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_IOIndex);
-	copyTobuffer(buffer, bufferIndex, m_StartTime);
-	copyTobuffer(buffer, bufferIndex, m_EndTime);
-	copyTobuffer(buffer, bufferIndex, uint32_t(m_EBML->size()));
+	copyTobuffer(buffer, bufferIndex, m_ioIdx);
+	copyTobuffer(buffer, bufferIndex, m_startTime);
+	copyTobuffer(buffer, bufferIndex, m_endTime);
+	copyTobuffer(buffer, bufferIndex, size_t(m_EBML->size()));
 
 	if (!m_EBML->empty()) { buffer.insert(buffer.end(), m_EBML->begin(), m_EBML->end()); }
 
@@ -498,25 +494,25 @@ std::vector<uint8_t> EBMLMessage::toBytes() const
 
 bool EBMLMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IOIndexIndex, m_IOIndex)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_StartTimeIndex, m_StartTime)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_EndTimeIndex, m_EndTime)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + IO_INDEX_INDEX, m_ioIdx)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + START_TIME_INDEX, m_startTime)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + END_TIME_INDEX, m_endTime)) { return false; }
 
-	uint32_t EBMLsize;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, EBMLsize)) { return false; }
+	size_t EBMLsize;
+	if (!copyToVariable(buffer, bufferIndex + SIZE_INDEX, EBMLsize)) { return false; }
 
-	if (buffer.size() < bufferIndex + s_EBMLIndex + EBMLsize) { return false; }
+	if (buffer.size() < bufferIndex + EBML_INDEX + EBMLsize) { return false; }
 
-	m_EBML.reset(new std::vector<uint8_t>(buffer.begin() + static_cast<const long>(bufferIndex) + s_EBMLIndex,
-										  buffer.begin() + static_cast<const long>(bufferIndex) + s_EBMLIndex + EBMLsize));
+	m_EBML.reset(new std::vector<uint8_t>(buffer.begin() + static_cast<const long>(bufferIndex) + EBML_INDEX,
+										  buffer.begin() + static_cast<const long>(bufferIndex) + EBML_INDEX + EBMLsize));
 
-	bufferIndex += s_MinimumSize + EBMLsize;
+	bufferIndex += MINIMUM_SIZE + EBMLsize;
 
-	m_IsValid = true;
+	m_isValid = true;
 
 	return true;
 }
@@ -529,27 +525,27 @@ bool EBMLMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 std::vector<uint8_t> ErrorMessage::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize);
+	std::vector<uint8_t> buffer(MINIMUM_SIZE);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, m_GuiltyId);
+	copyTobuffer(buffer, bufferIndex, m_type);
+	copyTobuffer(buffer, bufferIndex, m_guiltyId);
 
 	return buffer;
 }
 
 bool ErrorMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) { return false; }
-	if (!copyToVariable(buffer, bufferIndex + s_GuiltyIdIndex, m_GuiltyId)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + TYPE_INDEX, m_type)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + GUILTY_ID_INDEX, m_guiltyId)) { return false; }
 
-	bufferIndex += s_MinimumSize;
+	bufferIndex += MINIMUM_SIZE;
 
-	m_IsValid = true;
+	m_isValid = true;
 
 	return true;
 }
@@ -562,25 +558,25 @@ bool ErrorMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferI
 
 std::vector<uint8_t> TimeMessage::toBytes() const
 {
-	std::vector<uint8_t> buffer(s_MinimumSize);
+	std::vector<uint8_t> buffer(MINIMUM_SIZE);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, m_Time);
+	copyTobuffer(buffer, bufferIndex, m_time);
 
 	return buffer;
 }
 
 bool TimeMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
-	m_IsValid = false;
+	m_isValid = false;
 
-	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
+	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_TimeIndex, m_Time)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + TIME_INDEX, m_time)) { return false; }
 
-	bufferIndex += s_MinimumSize;
+	bufferIndex += MINIMUM_SIZE;
 
-	m_IsValid = true;
+	m_isValid = true;
 
 	return true;
 }

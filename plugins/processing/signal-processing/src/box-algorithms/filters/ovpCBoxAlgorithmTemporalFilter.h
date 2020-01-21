@@ -7,9 +7,6 @@
 #include <memory>
 #include <dsp-filters/Dsp.h>
 
-#define OVP_ClassId_BoxAlgorithm_TemporalFilter     OpenViBE::CIdentifier(0xB4F9D042, 0x9D79F2E5)
-#define OVP_ClassId_BoxAlgorithm_TemporalFilterDesc OpenViBE::CIdentifier(0x7BF6BA62, 0xAF829A37)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -20,28 +17,29 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_TemporalFilter)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_oDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_oEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
 
-			uint64_t m_ui64FilterMethod = 0;
-			uint64_t m_ui64FilterType   = 0;
-			uint64_t m_ui64FilterOrder  = 0;
 
-			double m_f64LowCutFrequency  = 0;
-			double m_f64HighCutFrequency = 0;
-			double m_f64BandPassRipple   = 0; // for Chebyshev
+			size_t m_method = 0;
+			size_t m_type   = 0;
+			size_t m_order  = 0;
 
-			std::vector<std::shared_ptr<Dsp::Filter>> m_vFilter;
-			//std::vector < std::shared_ptr < Dsp::Filter > > m_vFilter2;
+			double m_lowCut  = 0;
+			double m_highCut = 0;
+			double m_ripple  = 0; // for Chebyshev
 
-			std::vector<double> m_vFirstSample;
+			std::vector<std::shared_ptr<Dsp::Filter>> m_filters;
+			//std::vector < std::shared_ptr < Dsp::Filter > > m_filters;
+
+			std::vector<double> m_firstSamples;
 		};
 
 		class CBoxAlgorithmTemporalFilterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -74,8 +72,8 @@ namespace OpenViBEPlugins
 			{
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
-				prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, OVP_TypeId_FilterMethod_Butterworth.toString());
-				prototype.addSetting("Filter Type", OVP_TypeId_FilterType, OVP_TypeId_FilterType_BandPass.toString());
+				prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, "Butterworth");
+				prototype.addSetting("Filter Type", OVP_TypeId_FilterType, "Band Pass");
 				prototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
 				prototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
 				prototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");

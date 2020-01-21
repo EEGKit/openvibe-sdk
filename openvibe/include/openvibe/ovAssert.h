@@ -22,12 +22,9 @@
 #pragma once
 
 #include <sstream>
-#include <cassert>
-#include <csignal>
 
 #include "ovCIdentifier.h"
-#include "ov_common_types.h"
-#include "ovITimeArithmetics.h"
+#include "ovTimeArithmetics.h"
 
 namespace OpenViBE
 {
@@ -66,20 +63,18 @@ namespace OpenViBE
 		std::stringstream ss;
 		ss.precision(3);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
-		ss << " sec";
+		ss << TimeArithmetics::timeToSeconds(time.timeValue) << " sec";
 
 		os << ss.str();
 
 		return os;
 	}
 
-#define HAS_ImbuedOStreamWithCIdentifier
+#define HAS_IMBUED_OSTREAM_WITH_C_IDENTIFIER
 
 	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	{
-		os << id.toString();
-
+		os << id.str();
 		return os;
 	}
 } // namespace OpenViBE
@@ -90,10 +85,7 @@ namespace OpenViBE
  * Log a warning \a message using the provided \a logManager.
  * Should not be used directly (use OV_WARNING* instead)
  */
-#define OV_WARNING_LOG(message, logManager) \
-do { \
-	logManager << OpenViBE::Kernel::LogLevel_Warning << message << "\n"; \
-} while(0)
+#define OV_WARNING_LOG(message, logManager) do { logManager << OpenViBE::Kernel::LogLevel_Warning << message << "\n"; } while(0)
 
 /**
  * \def OV_WARNING(message, logManager)
@@ -110,13 +102,7 @@ do { \
  * Use this macro to trigger a warning unless the condition expressed by
  * \a expression is true.
  */
-#define OV_WARNING_UNLESS(expression, message, logManager) \
-do { \
-	if (!(expression)) \
-	{ \
-		OV_WARNING(message, logManager); \
-	} \
-} while(0)
+#define OV_WARNING_UNLESS(expression, message, logManager) do { if (!(expression)) { OV_WARNING(message, logManager); } } while(0)
 
 /**
  * \def OV_WARNING_K(message)
@@ -153,14 +139,9 @@ do { \
  */
 #define OV_ERROR_LOG(description, type, file, line, logManager) \
 do { \
-	logManager << OpenViBE::Kernel::LogLevel_Error \
-			   << "{Error description} : {" \
-			   << description \
-			   << "}, {Error type} : {" \
-			   << convertErrorTypeToString(type) \
-			   << " (code " \
-			   << static_cast<unsigned int>((type)) \
-			   << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
+	logManager << OpenViBE::Kernel::LogLevel_Error << "{Error description} : {" << description \
+			   << "}, {Error type} : {" << convertErrorTypeToString(type) << " (code " \
+			   << size_t((type)) << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
 } while(0)
 
 /**
@@ -357,14 +338,8 @@ do { \
  */
 #define OV_FATAL(description, type, logManager) \
 do { \
-	logManager << OpenViBE::Kernel::LogLevel_Fatal \
-			   << "{Error description} : {" \
-			   << description \
-			   << "}, {Error type} : {" \
-			   << convertErrorTypeToString(type) \
-			   << " (code " \
-			   << static_cast<unsigned int>((type)) \
-			   << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
+	logManager << OpenViBE::Kernel::LogLevel_Fatal << "{Error description} : {" << description << "}, {Error type} : {" \
+			   << convertErrorTypeToString(type) << " (code " << size_t((type)) << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
 	std::abort(); \
 } while(0)
 
@@ -375,13 +350,7 @@ do { \
  * Use this macro to handle fatal errors unless the condition expressed by
  * \a expression is true.
  */
-#define OV_FATAL_UNLESS(expression, description, type, logManager) \
-do { \
-	if (!(expression)) \
-	{ \
-		OV_FATAL(description, type, logManager); \
-	} \
-} while(0)
+#define OV_FATAL_UNLESS(expression, description, type, logManager) do { if (!(expression)) { OV_FATAL(description, type, logManager); } } while(0)
 
 /**
  * \def OV_FATAL_K(description, type)

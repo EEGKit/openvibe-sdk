@@ -12,46 +12,42 @@ namespace OpenViBE
 		{
 		public:
 			CBoxAlgorithmLogManager(const IPlayerContext& playerContext, ILogManager& logManager, CSimulatedBox& simulatedBox)
-				: m_PlayerContext(playerContext), m_LogManager(logManager), m_SimulatedBox(simulatedBox) {}
+				: m_playerCtx(playerContext), m_logManager(logManager), m_simulatedBox(simulatedBox) {}
 
-			bool isActive(ELogLevel eLogLevel) override { return m_LogManager.isActive(eLogLevel); }
+			bool isActive(ELogLevel level) override { return m_logManager.isActive(level); }
 
-			bool activate(ELogLevel eLogLevel, bool bActive) override { return m_LogManager.activate(eLogLevel, bActive); }
+			bool activate(const ELogLevel level, const bool active) override { return m_logManager.activate(level, active); }
 
-			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override
+			bool activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active) override
 			{
-				return m_LogManager.activate(eStartLogLevel, eEndLogLevel, bActive);
+				return m_logManager.activate(startLevel, endLevel, active);
 			}
 
-			bool activate(bool bActive) override { return m_LogManager.activate(bActive); }
+			bool activate(const bool active) override { return m_logManager.activate(active); }
 
-			bool addListener(ILogListener* listener) override { return m_LogManager.addListener(listener); }
-			bool removeListener(ILogListener* listener) override { return m_LogManager.removeListener(listener); }
+			bool addListener(ILogListener* listener) override { return m_logManager.addListener(listener); }
+			bool removeListener(ILogListener* listener) override { return m_logManager.removeListener(listener); }
 
-			void log(const time64 value) override { m_LogManager.log(value); }
-			void log(const uint64_t value) override { m_LogManager.log(value); }
-			void log(const uint32_t value) override { m_LogManager.log(value); }
-			void log(const uint16_t value) override { m_LogManager.log(value); }
-			void log(const uint8_t value) override { m_LogManager.log(value); }
-			void log(const int64_t value) override { m_LogManager.log(value); }
-			void log(const int value) override { m_LogManager.log(value); }
-			void log(const int16_t value) override { m_LogManager.log(value); }
-			void log(const int8_t value) override { m_LogManager.log(value); }
-			void log(const float value) override { m_LogManager.log(value); }
-			void log(const double value) override { m_LogManager.log(value); }
-			void log(const bool value) override { m_LogManager.log(value); }
-			void log(const CString& value) override { m_LogManager.log(value); }
-			void log(const char* value) override { m_LogManager.log(value); }
-			void log(const CIdentifier& value) override { m_LogManager.log(value); }
-			void log(const ELogColor value) override { m_LogManager.log(value); }
+			void log(const time64 value) override { m_logManager.log(value); }
+			void log(const uint64_t value) override { m_logManager.log(value); }
+			void log(const uint32_t value) override { m_logManager.log(value); }
+			void log(const int64_t value) override { m_logManager.log(value); }
+			void log(const int value) override { m_logManager.log(value); }
+			void log(const double value) override { m_logManager.log(value); }
+			void log(const bool value) override { m_logManager.log(value); }
+			void log(const CString& value) override { m_logManager.log(value); }
+			void log(const std::string& value) override { m_logManager.log(value); }
+			void log(const char* value) override { m_logManager.log(value); }
+			void log(const CIdentifier& value) override { m_logManager.log(value); }
+			void log(const ELogColor value) override { m_logManager.log(value); }
 			void log(const ELogLevel logLevel) override;
 
 			CIdentifier getClassIdentifier() const override { return CIdentifier(); }
 
 		private:
-			const IPlayerContext& m_PlayerContext;
-			ILogManager& m_LogManager;
-			CSimulatedBox& m_SimulatedBox;
+			const IPlayerContext& m_playerCtx;
+			ILogManager& m_logManager;
+			CSimulatedBox& m_simulatedBox;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

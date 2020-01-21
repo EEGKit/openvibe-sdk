@@ -4,9 +4,7 @@
 #include <cstdint>
 #include <thread>
 #include <mutex>
-#include <algorithm>
 #include <memory>
-#include <cstring>
 #include <map>
 
 #include "ovCMessaging.h"
@@ -17,7 +15,7 @@ using namespace Communication;
 
 namespace
 {
-	const std::map<CMessaging::ELibraryError, std::string> m_ErrorsString =
+	const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
 	{
 		{ CMessaging::NoError, "No error" },
 		{ CMessaging::Socket_NotConnected, "Not connected" },
@@ -47,12 +45,12 @@ namespace
 		{ CMessaging::NoAuthenticationReceived, "No authentication received before the timeout" },
 		{ CMessaging::ThreadJoinFailed, "Failed to terminate the thread" }
 	};
-}
+}	// namespace 
 
 CMessaging::CMessaging()
 {
-	impl                         = new MessagingImplementation();
-	impl->m_MessageCount         = 0;
+	impl                         = new SMessagingImpl();
+	impl->m_nMessage             = 0;
 	impl->m_Connection           = nullptr;
 	impl->m_LastLibraryError     = NoError;
 	impl->m_IsStopRequested      = false;
@@ -66,11 +64,11 @@ CMessaging::~CMessaging()
 	delete impl;
 }
 
-void CMessaging::reset()
+void CMessaging::reset() const
 {
 	this->stopSyncing();
 
-	impl->m_MessageCount     = 0;
+	impl->m_nMessage         = 0;
 	impl->m_IsInErrorState   = false;
 	impl->m_IsStopRequested  = false;
 	impl->m_LastLibraryError = NoError;
@@ -91,14 +89,14 @@ void CMessaging::reset()
 
 CMessaging::ELibraryError CMessaging::getLastError() const { return impl->m_LastLibraryError; }
 
-void CMessaging::setLastError(const ELibraryError libraryError) { impl->m_LastLibraryError = libraryError; }
+void CMessaging::setLastError(const ELibraryError libraryError) const { impl->m_LastLibraryError = libraryError; }
 
-bool CMessaging::push()
+bool CMessaging::push() const
 {
 	if (!impl->m_SendBuffer.empty() && impl->m_Connection->isReadyToSend(1))
 	{
 		std::lock_guard<std::mutex> lock(impl->m_SendBufferMutex);
-		uint_fast32_t result = impl->m_Connection->sendBufferBlocking(impl->m_SendBuffer.data(), static_cast<unsigned int>(impl->m_SendBuffer.size()));
+		const uint_fast32_t result = impl->m_Connection->sendBufferBlocking(impl->m_SendBuffer.data(), impl->m_SendBuffer.size());
 
 		if (result == 0)
 		{
@@ -112,7 +110,7 @@ bool CMessaging::push()
 	return true;
 }
 
-bool CMessaging::pull()
+bool CMessaging::pull() const
 {
 	if (impl->m_Connection == nullptr)
 	{
@@ -122,8 +120,7 @@ bool CMessaging::pull()
 
 	while (impl->m_Connection->isReadyToReceive(1))
 	{
-		uint_fast32_t bytesReceived = impl->m_Connection->receiveBuffer(impl->m_TemporaryRcvBuffer.data(),
-																		static_cast<unsigned int>(impl->m_TemporaryRcvBuffer.size()));
+		const uint_fast32_t bytesReceived = uint_fast32_t(impl->m_Connection->receiveBuffer(impl->m_TempRcvBuffer.data(), impl->m_TempRcvBuffer.size()));
 
 		if (bytesReceived == 0)
 		{
@@ -131,13 +128,13 @@ bool CMessaging::pull()
 			return false;
 		}
 
-		impl->m_RcvBuffer.insert(impl->m_RcvBuffer.end(), impl->m_TemporaryRcvBuffer.cbegin(), impl->m_TemporaryRcvBuffer.cbegin() + int(bytesReceived));
+		impl->m_RcvBuffer.insert(impl->m_RcvBuffer.end(), impl->m_TempRcvBuffer.cbegin(), impl->m_TempRcvBuffer.cbegin() + int(bytesReceived));
 	}
 
 	return true;
 }
 
-bool CMessaging::processIncomingMessages()
+bool CMessaging::processIncomingMessages() const
 {
 	size_t byteRead = 0;
 
@@ -162,7 +159,7 @@ bool CMessaging::processIncomingMessages()
 	return true;
 }
 
-bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteRead)
+bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteRead) const
 {
 	byteRead = 0;
 
@@ -246,7 +243,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 				return false;
 			}
 
-			if (ebml.getIndex() >= impl->m_BoxDescription.getOutputs()->size()) { this->pushMessage(ErrorMessage(Error_InvalidOutputIndex, header.getId())); }
+			if (ebml.getIndex() >= impl->m_BoxDesc.getOutputs()->size()) { this->pushMessage(ErrorMessage(Error_InvalidOutputIndex, header.getId())); }
 
 			std::lock_guard<std::mutex> lock(impl->m_IncEBMLMutex);
 			impl->m_IncomingEBMLs.emplace(header.getId(), ebml);
@@ -307,7 +304,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		break;
 
 		case MessageType_Unknown:
-		case MessageType_MAX:
+		case MessageType_Max:
 			this->pushMessage(ErrorMessage(Error_InvalidMessageType, header.getId()));
 			this->setLastError(Deserialize_MessageTypeNotSupported);
 			return false;
@@ -322,12 +319,12 @@ bool CMessaging::isEndReceived() { return impl->m_IsEndMessageReceived; }
 
 uint64_t CMessaging::getTime() { return impl->m_Time; }
 
-bool CMessaging::pushMessage(const Message& message)
+bool CMessaging::pushMessage(const Message& message) const
 {
 	if (this->isInErrorState()) { return false; }
 
 	std::vector<uint8_t> messageBuffer = message.toBytes();
-	Header header(message.getMessageType(), impl->m_MessageCount++, messageBuffer.size());
+	const Header header(message.getMessageType(), impl->m_nMessage++, messageBuffer.size());
 	std::vector<uint8_t> headerBuffer = header.toBytes();
 
 	std::lock_guard<std::mutex> lock(impl->m_SendBufferMutex);
@@ -337,16 +334,16 @@ bool CMessaging::pushMessage(const Message& message)
 	return true;
 }
 
-std::string CMessaging::getErrorString(ELibraryError error) { return m_ErrorsString.at(error); }
+std::string CMessaging::getErrorString(ELibraryError error) { return ERRORS_STRING.at(error); }
 
-bool CMessaging::isConnected()
+bool CMessaging::isConnected() const
 {
 	if (impl->m_Connection == nullptr) { return false; }
 
 	return impl->m_Connection->isConnected();
 }
 
-void CMessaging::sync()
+void CMessaging::sync() const
 {
 	while (true)
 	{
@@ -378,7 +375,7 @@ void CMessaging::sync()
 	}
 }
 
-void CMessaging::setConnection(Socket::IConnection* connection) { impl->m_Connection = connection; }
+void CMessaging::setConnection(Socket::IConnection* connection) const { impl->m_Connection = connection; }
 
 bool CMessaging::startSyncing()
 {
@@ -388,7 +385,7 @@ bool CMessaging::startSyncing()
 	return true;
 }
 
-bool CMessaging::stopSyncing()
+bool CMessaging::stopSyncing() const
 {
 	impl->m_IsStopRequested = true;
 
@@ -462,7 +459,7 @@ bool CMessaging::popError(uint64_t& id, EError& type, uint64_t& guiltyId)
 	return true;
 }
 
-bool CMessaging::popEBML(uint64_t& id, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
+bool CMessaging::popEBML(uint64_t& id, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {
 	std::lock_guard<std::mutex> lock(impl->m_IncEBMLMutex);
 
@@ -488,7 +485,7 @@ bool CMessaging::popEnd(uint64_t& id)
 	return true;
 }
 
-void CMessaging::setConnectionID(const std::string& connectionID) { impl->m_ConnectionID = connectionID; }
+void CMessaging::setConnectionID(const std::string& connectionID) const { impl->m_ConnectionID = connectionID; }
 
 bool CMessaging::waitForSyncMessage()
 {

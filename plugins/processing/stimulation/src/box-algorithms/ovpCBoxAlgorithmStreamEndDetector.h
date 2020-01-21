@@ -4,9 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#define OVP_ClassId_BoxAlgorithm_StreamEndDetector     OpenViBE::CIdentifier(0x44F2725A, 0x8E922233)
-#define OVP_ClassId_BoxAlgorithm_StreamEndDetectorDesc OpenViBE::CIdentifier(0x6DD8B6EA, 0xC581B3FC)
-
 namespace OpenViBEPlugins
 {
 	namespace Stimulation
@@ -14,24 +11,24 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmStreamEndDetector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			static OpenViBE::CIdentifier id_InputEBML() { return OpenViBE::CIdentifier(0x0, 0x1); }
-			static OpenViBE::CIdentifier id_OutputStimulations() { return OpenViBE::CIdentifier(0x1, 0x1); }
-			static OpenViBE::CIdentifier id_SettingStimulationName() { return OpenViBE::CIdentifier(0x2, 0x1); }
+			static OpenViBE::CIdentifier inputEBMLId() { return OpenViBE::CIdentifier(0x0, 0x1); }
+			static OpenViBE::CIdentifier outputStimulationsID() { return OpenViBE::CIdentifier(0x1, 0x1); }
+			static OpenViBE::CIdentifier settingStimulationNameID() { return OpenViBE::CIdentifier(0x2, 0x1); }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t index) override;
+			bool processInput(const size_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StreamEndDetector)
 
 		protected:
 
-			OpenViBEToolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_StructureDecoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_StimulationEncoder;
+			OpenViBEToolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_decoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_encoder;
 
-			uint64_t m_StimulationIdentifier = 0;
-			uint64_t m_ActionIdentifier      = 0;
+			uint64_t m_stimulationID = 0;
+			uint64_t m_actionID      = 0;
 
 		private:
 			enum class EEndState
@@ -42,13 +39,13 @@ namespace OpenViBEPlugins
 				Finished
 			};
 
-			uint64_t m_EndDate                 = 0;
-			uint64_t m_CurrentChunkEndDate     = 0;
-			uint64_t m_PreviousTime            = 0;
-			uint32_t m_InputEBMLIndex          = 0;
-			uint32_t m_OutputStimulationsIndex = 0;
-			bool m_IsHeaderSent                = false;
-			EEndState m_EndState               = EEndState::WaitingForEnd;
+			uint64_t m_endDate             = 0;
+			uint64_t m_currentChunkEndDate = 0;
+			uint64_t m_previousTime        = 0;
+			size_t m_inputEBMLIdx          = 0;
+			size_t m_outputStimulationsIdx = 0;
+			bool m_isHeaderSent            = false;
+			EEndState m_endState           = EEndState::WaitingForEnd;
 		};
 
 		class CBoxAlgorithmStreamEndDetectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -70,10 +67,10 @@ namespace OpenViBEPlugins
 
 			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				prototype.addInput("EBML Stream", OV_TypeId_EBMLStream, CBoxAlgorithmStreamEndDetector::id_InputEBML());
-				prototype.addOutput("Output Stimulations", OV_TypeId_Stimulations, CBoxAlgorithmStreamEndDetector::id_OutputStimulations());
+				prototype.addInput("EBML Stream", OV_TypeId_EBMLStream, CBoxAlgorithmStreamEndDetector::inputEBMLId());
+				prototype.addOutput("Output Stimulations", OV_TypeId_Stimulations, CBoxAlgorithmStreamEndDetector::outputStimulationsID());
 				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false,
-									 CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
+									 CBoxAlgorithmStreamEndDetector::settingStimulationNameID());
 
 				return true;
 			}

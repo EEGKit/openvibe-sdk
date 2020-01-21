@@ -193,7 +193,7 @@ namespace r8b
 					ConvBufCapacities[1] = 0;
 					ConvCount            = UseConvCount;
 
-					for (int i = 1; i < UseConvCount; i++)
+					for (int i = 1; i < UseConvCount; ++i)
 					{
 						const double tb = (i >= 2 ? 45.0 : 34.0);
 
@@ -296,7 +296,7 @@ namespace r8b
 		 */
 		void clear() override
 		{
-			for (int i = 0; i < ConvCount; i++) { Convs[i]->clear(); }
+			for (int i = 0; i < ConvCount; ++i) { Convs[i]->clear(); }
 
 			if (Interp != nullptr) { Interp->clear(); }
 		}
@@ -341,7 +341,7 @@ namespace r8b
 			double* ip = ip0;
 			double* op = nullptr;
 
-			for (int i = 0; i < ConvCount; i++)
+			for (int i = 0; i < ConvCount; ++i)
 			{
 				op = (ConvBufs[i & 1] == nullptr ? ip0 : ConvBufs[i & 1]);
 				l  = Convs[i]->process(ip, l, op);

@@ -51,9 +51,9 @@ double ParsedExpression::evaluate(const map<string, double>& variables) const { 
 
 double ParsedExpression::evaluate(const ExpressionTreeNode& node, const map<string, double>& variables)
 {
-	int numArgs = (int)node.getChildren().size();
-	vector<double> args(max(numArgs, 1));
-	for (int i = 0; i < numArgs; i++) args[i] = evaluate(node.getChildren()[i], variables);
+	size_t numArgs = node.getChildren().size();
+	vector<double> args(max(numArgs, size_t(1)));
+	for (size_t i = 0; i < numArgs; ++i) { args[i] = evaluate(node.getChildren()[i], variables); }
 	return node.getOperation().evaluate(&args[0], variables);
 }
 
@@ -63,7 +63,7 @@ ParsedExpression ParsedExpression::optimize() const
 	while (true)
 	{
 		ExpressionTreeNode simplified = substituteSimplerExpression(result);
-		if (simplified == result) break;
+		if (simplified == result) { break; }
 		result = simplified;
 	}
 	return ParsedExpression(result);
@@ -76,7 +76,7 @@ ParsedExpression ParsedExpression::optimize(const map<string, double>& variables
 	while (true)
 	{
 		ExpressionTreeNode simplified = substituteSimplerExpression(result);
-		if (simplified == result) break;
+		if (simplified == result) { break; }
 		result = simplified;
 	}
 	return ParsedExpression(result);
@@ -86,30 +86,30 @@ ExpressionTreeNode ParsedExpression::preevaluateVariables(const ExpressionTreeNo
 {
 	if (node.getOperation().getId() == Operation::VARIABLE)
 	{
-		const Operation::Variable& var           = dynamic_cast<const Operation::Variable&>(node.getOperation());
-		map<string, double>::const_iterator iter = variables.find(var.getName());
-		if (iter == variables.end()) return node;
+		const Operation::Variable& var = dynamic_cast<const Operation::Variable&>(node.getOperation());
+		auto iter                      = variables.find(var.getName());
+		if (iter == variables.end()) { return node; }
 		return ExpressionTreeNode(new Operation::Constant(iter->second));
 	}
 	vector<ExpressionTreeNode> children(node.getChildren().size());
-	for (int i = 0; i < (int)children.size(); i++) children[i] = preevaluateVariables(node.getChildren()[i], variables);
+	for (size_t i = 0; i < children.size(); ++i) { children[i] = preevaluateVariables(node.getChildren()[i], variables); }
 	return ExpressionTreeNode(node.getOperation().clone(), children);
 }
 
 ExpressionTreeNode ParsedExpression::precalculateConstantSubexpressions(const ExpressionTreeNode& node)
 {
 	vector<ExpressionTreeNode> children(node.getChildren().size());
-	for (int i = 0; i < (int)children.size(); i++) children[i] = precalculateConstantSubexpressions(node.getChildren()[i]);
+	for (size_t i = 0; i < children.size(); ++i) { children[i] = precalculateConstantSubexpressions(node.getChildren()[i]); }
 	ExpressionTreeNode result = ExpressionTreeNode(node.getOperation().clone(), children);
-	if (node.getOperation().getId() == Operation::VARIABLE) return result;
-	for (int i = 0; i < (int)children.size(); i++) { if (children[i].getOperation().getId() != Operation::CONSTANT) return result; }
+	if (node.getOperation().getId() == Operation::VARIABLE) { return result; }
+	for (size_t i = 0; i < children.size(); ++i) { if (children[i].getOperation().getId() != Operation::CONSTANT) { return result; } }
 	return ExpressionTreeNode(new Operation::Constant(evaluate(result, map<string, double>())));
 }
 
 ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const ExpressionTreeNode& node)
 {
 	vector<ExpressionTreeNode> children(node.getChildren().size());
-	for (int i = 0; i < int(children.size()); i++) children[i] = substituteSimplerExpression(node.getChildren()[i]);
+	for (size_t i = 0; i < children.size(); ++i) { children[i] = substituteSimplerExpression(node.getChildren()[i]); }
 	switch (node.getOperation().getId())
 	{
 		case Operation::ADD:
@@ -132,21 +132,12 @@ ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const Expressio
 		}
 		case Operation::SUBTRACT:
 		{
-			if (children[0] == children[1]) return ExpressionTreeNode(new Operation::Constant(0.0)); // Subtracting anything from itself is 0
+			if (children[0] == children[1]) { return ExpressionTreeNode(new Operation::Constant(0.0)); }	// Subtracting anything from itself is 0
 			const double first = getConstantValue(children[0]);
-			if (first == 0.0)
-			{ // Subtract from 0
-				return ExpressionTreeNode(new Operation::Negate(), children[1]);
-			}
+			if (first == 0.0) { return ExpressionTreeNode(new Operation::Negate(), children[1]); }// Subtract from 0
 			const double second = getConstantValue(children[1]);
-			if (second == 0.0)
-			{ // Subtract 0
-				return children[0];
-			}
-			if (second == second)
-			{ // Subtract a constant
-				return ExpressionTreeNode(new Operation::AddConstant(-second), children[0]);
-			}
+			if (second == 0.0) { return children[0]; }	// Subtract 0
+			if (second == second) { return ExpressionTreeNode(new Operation::AddConstant(-second), children[0]); }	// Subtract a constant
 			if (children[1].getOperation().getId() == Operation::NEGATE)
 			{ // a-(-b) = a+b
 				return ExpressionTreeNode(new Operation::Add(), children[0], children[1].getChildren()[0]);
@@ -225,7 +216,7 @@ ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const Expressio
 			{ // (1/a)*b = b/a
 				return ExpressionTreeNode(new Operation::Divide(), children[1], children[0].getChildren()[0]);
 			}
-			if (children[0] == children[1]) return ExpressionTreeNode(new Operation::Square(), children[0]); // x*x = square(x)
+			if (children[0] == children[1]) { return ExpressionTreeNode(new Operation::Square(), children[0]); } // x*x = square(x)
 			if (children[0].getOperation().getId() == Operation::SQUARE && children[0].getChildren()[0] == children[1]) return ExpressionTreeNode(
 				new Operation::Cube(), children[1]); // x*x*x = cube(x)
 			if (children[1].getOperation().getId() == Operation::SQUARE && children[1].getChildren()[0] == children[0]) return ExpressionTreeNode(
@@ -234,29 +225,19 @@ ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const Expressio
 		}
 		case Operation::DIVIDE:
 		{
-			if (children[0] == children[1]) return ExpressionTreeNode(new Operation::Constant(1.0)); // Dividing anything from itself is 0
-			double numerator = getConstantValue(children[0]);
-			if (numerator == 0.0)
-			{ // 0 divided by something
-				return ExpressionTreeNode(new Operation::Constant(0.0));
-			}
-			if (numerator == 1.0)
-			{ // 1 divided by something
-				return ExpressionTreeNode(new Operation::Reciprocal(), children[1]);
-			}
-			double denominator = getConstantValue(children[1]);
-			if (denominator == 1.0)
-			{ // Divide by 1
-				return children[0];
-			}
+			if (children[0] == children[1]) { return ExpressionTreeNode(new Operation::Constant(1.0)); } // Dividing anything from itself is 0 
+			const double numerator = getConstantValue(children[0]);
+			if (numerator == 0.0) { return ExpressionTreeNode(new Operation::Constant(0.0)); } // 0 divided by something
+			if (numerator == 1.0) { return ExpressionTreeNode(new Operation::Reciprocal(), children[1]); } // 1 divided by something
+			const double denominator = getConstantValue(children[1]);
+			if (denominator == 1.0) { return children[0]; } // Divide by 1
 			if (children[1].getOperation().getId() == Operation::CONSTANT)
 			{
 				if (children[0].getOperation().getId() == Operation::MULTIPLY_CONSTANT)
 				{ // Combine a multiply and a divide into one multiply
-					return ExpressionTreeNode(
-						new Operation::MultiplyConstant
-						(dynamic_cast<const Operation::MultiplyConstant*>(&children[0].getOperation())->getValue() / denominator),
-						children[0].getChildren()[0]);
+					return ExpressionTreeNode(new Operation::MultiplyConstant
+											  (dynamic_cast<const Operation::MultiplyConstant*>(&children[0].getOperation())->getValue() / denominator),
+											  children[0].getChildren()[0]);
 				}
 				return ExpressionTreeNode(new Operation::MultiplyConstant(1.0 / denominator), children[0]); // Replace a divide with a multiply
 			}
@@ -266,8 +247,7 @@ ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const Expressio
 			}
 			if (children[1].getOperation().getId() == Operation::NEGATE && children[0].getOperation().getId() == Operation::MULTIPLY_CONSTANT)
 			{ // Negate the constant
-				return ExpressionTreeNode(new Operation::Divide(),
-										  ExpressionTreeNode(
+				return ExpressionTreeNode(new Operation::Divide(), ExpressionTreeNode(
 											  new Operation::MultiplyConstant(
 												  -dynamic_cast<const Operation::MultiplyConstant*>(&children[0].getOperation())->getValue()),
 											  children[0].getChildren()[0]), children[1].getChildren()[0]);
@@ -383,13 +363,13 @@ ParsedExpression ParsedExpression::differentiate(const string& variable) const {
 ExpressionTreeNode ParsedExpression::differentiate(const ExpressionTreeNode& node, const string& variable)
 {
 	vector<ExpressionTreeNode> childDerivs(node.getChildren().size());
-	for (int i = 0; i < (int)childDerivs.size(); i++) { childDerivs[i] = differentiate(node.getChildren()[i], variable); }
+	for (size_t i = 0; i < childDerivs.size(); ++i) { childDerivs[i] = differentiate(node.getChildren()[i], variable); }
 	return node.getOperation().differentiate(node.getChildren(), childDerivs, variable);
 }
 
 double ParsedExpression::getConstantValue(const ExpressionTreeNode& node)
 {
-	if (node.getOperation().getId() == Operation::CONSTANT) return dynamic_cast<const Operation::Constant&>(node.getOperation()).getValue();
+	if (node.getOperation().getId() == Operation::CONSTANT) { return dynamic_cast<const Operation::Constant&>(node.getOperation()).getValue(); }
 	return numeric_limits<double>::quiet_NaN();
 }
 
@@ -406,11 +386,11 @@ ExpressionTreeNode ParsedExpression::renameNodeVariables(const ExpressionTreeNod
 {
 	if (node.getOperation().getId() == Operation::VARIABLE)
 	{
-		map<string, string>::const_iterator replace = replacements.find(node.getOperation().getName());
-		if (replace != replacements.end()) return ExpressionTreeNode(new Operation::Variable(replace->second));
+		auto replace = replacements.find(node.getOperation().getName());
+		if (replace != replacements.end()) { return ExpressionTreeNode(new Operation::Variable(replace->second)); }
 	}
 	vector<ExpressionTreeNode> children;
-	for (int i = 0; i < (int)node.getChildren().size(); i++) children.push_back(renameNodeVariables(node.getChildren()[i], replacements));
+	for (size_t i = 0; i < node.getChildren().size(); ++i) { children.push_back(renameNodeVariables(node.getChildren()[i], replacements)); }
 	return ExpressionTreeNode(node.getOperation().clone(), children);
 }
 
@@ -427,12 +407,12 @@ ostream& Lepton::operator<<(ostream& out, const ExpressionTreeNode& node)
 	else
 	{
 		out << node.getOperation().getName();
-		if (node.getChildren().size() > 0)
+		if (!node.getChildren().empty())
 		{
 			out << "(";
-			for (int i = 0; i < (int)node.getChildren().size(); i++)
+			for (size_t i = 0; i < node.getChildren().size(); ++i)
 			{
-				if (i > 0) out << ", ";
+				if (i > 0) { out << ", "; }
 				out << node.getChildren()[i];
 			}
 			out << ")";

@@ -8,7 +8,7 @@
 #include <algorithm>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEPlugins;
@@ -18,46 +18,44 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	m_oClassificationChoiceEncoder.initialize(*this, 0);
+	m_classificationChoiceEncoder.initialize(*this, 0);
 
 	CIdentifier typeID;
 	boxContext.getInputType(0, typeID);
-	m_bMatrixBased = (typeID == OV_TypeId_StreamedMatrix);
+	m_matrixBased = (typeID == OV_TypeId_StreamedMatrix);
 
-	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
+	for (size_t i = 0; i < boxContext.getInputCount(); ++i)
 	{
-		SInput& input = m_vClassificationResults[i];
-		if (m_bMatrixBased)
+		input_t& input = m_results[i];
+		if (m_matrixBased)
 		{
-			OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<
-				CBoxAlgorithmVotingClassifier>();
+			auto* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
-			input.m_pDecoder       = decoder;
-			input.op_pMatrix       = decoder->getOutputMatrix();
-			input.m_bTwoValueInput = false;
+			input.decoder       = decoder;
+			input.op_matrix     = decoder->getOutputMatrix();
+			input.twoValueInput = false;
 		}
 		else
 		{
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>* decoder = new OpenViBEToolkit::TStimulationDecoder<
-				CBoxAlgorithmVotingClassifier>();
+			auto* decoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
-			input.m_pDecoder         = decoder;
-			input.op_pStimulationSet = decoder->getOutputStimulationSet();
-			input.m_bTwoValueInput   = false;
+			input.decoder       = decoder;
+			input.op_stimSet    = decoder->getOutputStimulationSet();
+			input.twoValueInput = false;
 		}
 	}
 
-	m_ui64NumberOfRepetitions  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64TargetClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_ui64NonTargetClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_ui64RejectClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	m_ui64ResultClassLabelBase = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
-	m_bChooseOneIfExAequo      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
+	m_nRepetitions         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_targetClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_nonTargetClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_rejectClassLabel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_resultClassLabelBase = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_chooseOneIfExAequo   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
 
-	m_ui64LastTime = 0;
+	m_lastTime = 0;
 
-	m_oClassificationChoiceEncoder.encodeHeader();
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
+	m_classificationChoiceEncoder.encodeHeader();
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());
 
 	return true;
 }
@@ -66,19 +64,19 @@ bool CBoxAlgorithmVotingClassifier::uninitialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < nInput; i++)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		SInput& input = m_vClassificationResults[i];
-		input.m_pDecoder->uninitialize();
-		delete input.m_pDecoder;
+		input_t& input = m_results[i];
+		input.decoder->uninitialize();
+		delete input.decoder;
 	}
 
-	m_oClassificationChoiceEncoder.uninitialize();
+	m_classificationChoiceEncoder.uninitialize();
 
 	return true;
 }
 
-bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t /*index*/)
+bool CBoxAlgorithmVotingClassifier::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -91,112 +89,110 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 	bool canChoose = true;
 
-	for (size_t i = 0; i < nInput; i++)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		SInput& input = m_vClassificationResults[i];
-		for (size_t j = 0; j < boxContext.getInputChunkCount(i); j++)
+		input_t& input = m_results[i];
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			input.m_pDecoder->decode(j);
+			input.decoder->decode(j);
 
-			if (input.m_pDecoder->isHeaderReceived())
+			if (input.decoder->isHeaderReceived())
 			{
-				if (m_bMatrixBased)
+				if (m_matrixBased)
 				{
-					if (input.op_pMatrix->getBufferElementCount() != 1)
+					if (input.op_matrix->getBufferElementCount() != 1)
 					{
-						OV_ERROR_UNLESS_KRF(input.op_pMatrix->getBufferElementCount() == 2,
-											"Invalid input matrix with [" << input.op_pMatrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
+						OV_ERROR_UNLESS_KRF(input.op_matrix->getBufferElementCount() == 2,
+											"Invalid input matrix with [" << input.op_matrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
 											OpenViBE::Kernel::ErrorType::BadInput);
 
 						this->getLogManager() << LogLevel_Debug <<
 								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";
-						input.m_bTwoValueInput = true;
+						input.twoValueInput = true;
 					}
 				}
 			}
-			if (input.m_pDecoder->isBufferReceived())
+			if (input.decoder->isBufferReceived())
 			{
-				if (m_bMatrixBased)
+				if (m_matrixBased)
 				{
 					double value;
-					if (input.m_bTwoValueInput) { value = input.op_pMatrix->getBuffer()[1] - input.op_pMatrix->getBuffer()[0]; }
-					else { value = input.op_pMatrix->getBuffer()[0]; }
-					input.m_vScore.push_back(std::pair<double, uint64_t>(-value, boxContext.getInputChunkEndTime(i, j)));
+					if (input.twoValueInput) { value = input.op_matrix->getBuffer()[1] - input.op_matrix->getBuffer()[0]; }
+					else { value = input.op_matrix->getBuffer()[0]; }
+					input.scores.push_back(std::pair<double, uint64_t>(-value, boxContext.getInputChunkEndTime(i, j)));
 				}
 				else
 				{
-					for (uint32_t k = 0; k < input.op_pStimulationSet->getStimulationCount(); k++)
+					for (size_t k = 0; k < input.op_stimSet->getStimulationCount(); ++k)
 					{
-						const uint64_t stimulationId = input.op_pStimulationSet->getStimulationIdentifier(k);
-						if (stimulationId == m_ui64TargetClassLabel || stimulationId == m_ui64NonTargetClassLabel || stimulationId == m_ui64RejectClassLabel)
+						const uint64_t id = input.op_stimSet->getStimulationIdentifier(k);
+						if (id == m_targetClassLabel || id == m_nonTargetClassLabel || id == m_rejectClassLabel)
 						{
-							input.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_ui64TargetClassLabel ? 1 : 0,
-																				 input.op_pStimulationSet->getStimulationDate(k)));
+							input.scores.push_back(std::pair<double, uint64_t>(id == m_targetClassLabel ? 1 : 0, input.op_stimSet->getStimulationDate(k)));
 						}
 					}
 				}
 			}
-			if (input.m_pDecoder->isEndReceived())
+			if (input.decoder->isEndReceived())
 			{
-				m_oClassificationChoiceEncoder.encodeEnd();
-				boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
+				m_classificationChoiceEncoder.encodeEnd();
+				boxContext.markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());
 			}
 		}
 
-		if (input.m_vScore.size() < m_ui64NumberOfRepetitions) { canChoose = false; }
+		if (input.scores.size() < m_nRepetitions) { canChoose = false; }
 	}
 
 	if (canChoose)
 	{
-		double resultScore        = -1E100;
-		uint64_t resultClassLabel = m_ui64RejectClassLabel;
-		uint64_t time             = 0;
+		double score        = -1E100;
+		uint64_t classLabel = m_rejectClassLabel;
+		uint64_t time       = 0;
 
-		std::map<uint32_t, double> score;
-		for (size_t i = 0; i < nInput; i++)
+		std::map<uint32_t, double> scores;
+		for (size_t i = 0; i < nInput; ++i)
 		{
-			SInput& input = m_vClassificationResults[i];
-			score[i]      = 0;
-			for (size_t j = 0; j < m_ui64NumberOfRepetitions; j++) { score[i] += input.m_vScore[j].first; }
+			input_t& input = m_results[i];
+			scores[i]      = 0;
+			for (size_t j = 0; j < m_nRepetitions; ++j) { scores[i] += input.scores[j].first; }
 
-			if (score[i] > resultScore)
+			if (scores[i] > score)
 			{
-				resultScore      = score[i];
-				resultClassLabel = m_ui64ResultClassLabelBase + i;
-				time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
+				score      = scores[i];
+				classLabel = m_resultClassLabelBase + i;
+				time       = input.scores[size_t(m_nRepetitions - 1)].second;
 			}
-			else if (score[i] == resultScore)
+			else if (scores[i] == score)
 			{
-				if (!m_bChooseOneIfExAequo)
+				if (!m_chooseOneIfExAequo)
 				{
-					resultScore      = score[i];
-					resultClassLabel = m_ui64RejectClassLabel;
-					time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
+					score      = scores[i];
+					classLabel = m_rejectClassLabel;
+					time       = input.scores[size_t(m_nRepetitions - 1)].second;
 				}
 			}
 
-			input.m_vScore.erase(input.m_vScore.begin(), input.m_vScore.begin() + int(m_ui64NumberOfRepetitions));
+			input.scores.erase(input.scores.begin(), input.scores.begin() + int(m_nRepetitions));
 
-			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << score[i] << "\n";
+			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << scores[i] << "\n";
 		}
 
-		if (resultClassLabel != m_ui64RejectClassLabel)
+		if (classLabel != m_rejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen " << this
-																	->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel)
-					<< " with score " << resultScore << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel)
+					<< " with score " << score << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(
-				OV_TypeId_Stimulation, resultClassLabel) << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen rejection "
+					<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel) << "\n";
 		}
-		m_oClassificationChoiceEncoder.getInputStimulationSet()->clear();
-		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(resultClassLabel, time, 0);
+		m_classificationChoiceEncoder.getInputStimulationSet()->clear();
+		m_classificationChoiceEncoder.getInputStimulationSet()->appendStimulation(classLabel, time, 0);
 
-		m_oClassificationChoiceEncoder.encodeBuffer();
-		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, time);
-		m_ui64LastTime = time;
+		m_classificationChoiceEncoder.encodeBuffer();
+		boxContext.markOutputAsReadyToSend(0, m_lastTime, time);
+		m_lastTime = time;
 	}
 
 	return true;

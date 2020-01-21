@@ -15,25 +15,24 @@ namespace OpenViBEToolkit
 		// the feature vector stream is just a streamed matrix with some constraint (dimension = 2).
 		// no specific parameter.
 
-		using T::m_pCodec;
-		using T::m_pBoxAlgorithm;
-		using T::m_pOutputMemoryBuffer;
-		using T::m_pInputMatrix;
+		using T::m_codec;
+		using T::m_boxAlgorithm;
+		using T::m_buffer;
+		using T::m_iMatrix;
 
 		bool initializeImpl()
 		{
-			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(
-				m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamEncoder));
-			m_pCodec->initialize();
-			m_pInputMatrix.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputParameterId_Matrix));
-			m_pOutputMemoryBuffer.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorEncoder));
+			m_codec->initialize();
+			m_iMatrix.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_InputParameterId_Matrix));
+			m_buffer.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 			return true;
 		}
 
-		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeHeader); }
-		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeBuffer); }
-		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeEnd); }
+		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_codec->process(OVP_GD_Algorithm_FeatureVectorEncoder_InputTriggerId_EncodeEnd); }
 
 	public:
 		using T::initialize;
@@ -43,16 +42,16 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TFeatureVectorEncoder : public TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
-		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
+		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_boxAlgorithm;
 	public:
 		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
 		TFeatureVectorEncoder() { }
 
-		TFeatureVectorEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
+		TFeatureVectorEncoder(T& boxAlgorithm, size_t index)
 		{
-			m_pBoxAlgorithm = NULL;
-			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
+			m_boxAlgorithm = NULL;
+			this->initialize(boxAlgorithm, index);
 		}
 
 		virtual ~TFeatureVectorEncoder() { this->uninitialize(); }

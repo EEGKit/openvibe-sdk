@@ -4,38 +4,34 @@
 #include <map>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 
 using namespace OpenViBEToolkit;
 
-static std::map<uint64_t, fClassifierComparison> mComparisionFunctionMap;
+static std::map<uint64_t, fClassifierComparison> comparisionFunctions;
 
-void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
+void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& classID, const fClassifierComparison comparision)
 {
-	mComparisionFunctionMap[rClassIdentifier.toUInteger()] = pComparision;
+	comparisionFunctions[classID.toUInteger()] = comparision;
 }
 
-fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& rClassIdentifier)
+fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& classID)
 {
-	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0) return nullptr;
-	return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
+	if (comparisionFunctions.count(classID.toUInteger()) == 0) { return nullptr; }
+	return comparisionFunctions[classID.toUInteger()];
 }
 
 bool CAlgorithmPairingStrategy::process()
 {
 	if (this->isInputTriggerActive(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture))
 	{
-		TParameterHandler<CIdentifier*> ip_pClassifierIdentifier(
-			this->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
-		TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
+		TParameterHandler<CIdentifier*> ip_classifierID(this->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
+		TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
 
-		const uint64_t l_ui64ClassCount           = (uint64_t)ip_pClassCount;
-		const CIdentifier l_oClassifierIdentifier = *((CIdentifier*)ip_pClassifierIdentifier);
-		if (this->designArchitecture(l_oClassifierIdentifier, uint32_t(l_ui64ClassCount)))
-		{
-			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
-		}
+		const uint64_t nClass          = uint64_t(ip_nClass);
+		const CIdentifier classifierID = *static_cast<CIdentifier*>(ip_classifierID);
+		if (this->designArchitecture(classifierID, size_t(nClass))) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);

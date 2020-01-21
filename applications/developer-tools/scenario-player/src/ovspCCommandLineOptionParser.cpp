@@ -24,19 +24,14 @@
 
 namespace OpenViBE
 {
-	CommandLineOptionParser::CommandLineOptionParser(ProgramOptionParser& parser)
-		: m_OptionParser(parser) { }
+	CommandLineOptionParser::CommandLineOptionParser(ProgramOptionParser& parser) : m_parser(parser) { }
 
-	void CommandLineOptionParser::initialize()
-	{
-		// nothing to do
-	}
+	void CommandLineOptionParser::initialize() { }	// nothing to do
+	void CommandLineOptionParser::uninitialize() { m_cmdList.clear(); }
 
-	void CommandLineOptionParser::uninitialize() { m_CommandList.clear(); }
+	std::vector<std::shared_ptr<SCommand>> CommandLineOptionParser::getCommandList() const { return m_cmdList; }
 
-	std::vector<std::shared_ptr<ICommand>> CommandLineOptionParser::getCommandList() const { return m_CommandList; }
-
-	PlayerReturnCode CommandLineOptionParser::parse()
+	EPlayerReturnCode CommandLineOptionParser::parse()
 	{
 		// parsing consists of building a straightfoward command workflow according to command-line
 		// options.
@@ -47,25 +42,25 @@ namespace OpenViBE
 		std::string scenarioName = "express-scenario";
 
 		// an init command is always needed
-		m_CommandList.push_back(std::make_shared<InitCommand>());
+		m_cmdList.push_back(std::make_shared<SInitCmd>());
 
 
 		// workflow must at least load the kernel
-		std::shared_ptr<LoadKernelCommand> kernelCmd = std::make_shared<LoadKernelCommand>();
+		std::shared_ptr<SLoadKernelCmd> kernelCmd = std::make_shared<SLoadKernelCmd>();
 
-		if (m_OptionParser.hasOption("config-file")) // optional
+		if (m_parser.hasOption("config-file")) // optional
 		{
-			kernelCmd->configurationFile = m_OptionParser.getOptionValue<std::string>("config-file");
+			kernelCmd->configFile = m_parser.getOptionValue<std::string>("config-file");
 		}
 
-		m_CommandList.push_back(kernelCmd);
+		m_cmdList.push_back(kernelCmd);
 
 		// scenario loading is a mandatory step
-		std::shared_ptr<LoadScenarioCommand> scenarioCmd = std::make_shared<LoadScenarioCommand>();
+		std::shared_ptr<SLoadScenarioCmd> scenarioCmd = std::make_shared<SLoadScenarioCmd>();
 
-		if (m_OptionParser.hasOption("scenario-file")) // mandatory option
+		if (m_parser.hasOption("scenario-file")) // mandatory option
 		{
-			scenarioCmd->scenarioFile = m_OptionParser.getOptionValue<std::string>("scenario-file");
+			scenarioCmd->scenarioFile = m_parser.getOptionValue<std::string>("scenario-file");
 
 			// set dumb name as it used to recognize scenario in the application
 			scenarioCmd->scenarioName = scenarioName;
@@ -73,63 +68,62 @@ namespace OpenViBE
 		else
 		{
 			std::cerr << "ERROR: mandatory option 'scenario-file' not set" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArgument;
+			return EPlayerReturnCode::MissingMandatoryArgument;
 		}
 
-		m_CommandList.push_back(scenarioCmd);
+		m_cmdList.push_back(scenarioCmd);
 
 		
 		// scenario update option
-		std::shared_ptr<UpdateScenarioCommand> updateScenarioCmd = std::make_shared<UpdateScenarioCommand>();
+		std::shared_ptr<SUpdateScenarioCmd> updateScenarioCmd = std::make_shared<SUpdateScenarioCmd>();
 
-		if (m_OptionParser.hasOption("updated-scenario-file"))
+		if (m_parser.hasOption("updated-scenario-file"))
 		{
 			// do not play scenario, just update it.
-			updateScenarioCmd->scenarioFile = m_OptionParser.getOptionValue<std::string>("updated-scenario-file");			
+			updateScenarioCmd->scenarioFile = m_parser.getOptionValue<std::string>("updated-scenario-file");			
 			
 			// set dumb name as it used to recognize scenario in the application
 			updateScenarioCmd->scenarioName = scenarioName;
 
-			m_CommandList.push_back(updateScenarioCmd);
+			m_cmdList.push_back(updateScenarioCmd);
 		}
 		else
 		{
 			// check if some scenario setup information has been set
-			if (m_OptionParser.hasOption("ds"))
+			if (m_parser.hasOption("ds"))
 			{
-				std::shared_ptr<SetupScenarioCommand> setupCmd = std::make_shared<SetupScenarioCommand>();
-				setupCmd->scenarioName                         = scenarioName;
-				setupCmd->tokenList                            = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("ds");
+				std::shared_ptr<SSetupScenarioCmd> setupCmd = std::make_shared<SSetupScenarioCmd>();
+				setupCmd->scenarioName                      = scenarioName;
+				setupCmd->tokenList                         = m_parser.getOptionValue<std::vector<SSetupScenarioCmd::Token>>("ds");
 
-				m_CommandList.push_back(setupCmd);
+				m_cmdList.push_back(setupCmd);
 			}
 			
 			// last command in the workflow is the run command
-			std::shared_ptr<RunScenarioCommand> runCmd = std::make_shared<RunScenarioCommand>();
-			runCmd->scenarioList                       = std::vector<std::string>{ scenarioName };
+			std::shared_ptr<SRunScenarioCmd> runCmd = std::make_shared<SRunScenarioCmd>();
+			runCmd->scenarioList                    = std::vector<std::string>{ scenarioName };
 
-			if (m_OptionParser.hasOption("play-mode"))
+			if (m_parser.hasOption("play-mode"))
 			{
-				auto playMode = m_OptionParser.getOptionValue<std::string>("play-mode");
+				const auto playMode = m_parser.getOptionValue<std::string>("play-mode");
 
 				if (playMode != "ff" && playMode != "std")
 				{
 					std::cerr << "ERROR: option 'play-mode' must be ff or std" << std::endl;
-					return PlayerReturnCode::BadArg;
+					return EPlayerReturnCode::BadArg;
 				}
 				
 				// permissive code here
 				// any other entry than ff leads to standard mode...
-				runCmd->playMode = ((playMode == "ff") ? PlayerPlayMode::Fastfoward : PlayerPlayMode::Standard);
+				runCmd->playMode = ((playMode == "ff") ? EPlayerPlayMode::Fastfoward : EPlayerPlayMode::Standard);
 			}
 
-			if (m_OptionParser.hasOption("max-time")) { runCmd->maximumExecutionTime = m_OptionParser.getOptionValue<double>("max-time"); }
+			if (m_parser.hasOption("max-time")) { runCmd->maximumExecutionTime = m_parser.getOptionValue<double>("max-time"); }
+			if (m_parser.hasOption("dg")) { runCmd->tokenList = m_parser.getOptionValue<std::vector<SSetupScenarioCmd::Token>>("dg"); }
 
-			if (m_OptionParser.hasOption("dg")) { runCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg"); }
-
-			m_CommandList.push_back(runCmd);
+			m_cmdList.push_back(runCmd);
 		}
 
-		return PlayerReturnCode::Success;
+		return EPlayerReturnCode::Success;
 	}
-}
+}	// namespace OpenViBE

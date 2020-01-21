@@ -55,6 +55,6 @@ Examples
 
 This box could be used in order to quickly switch between acquisition or file reading mode.
 At the very top of the scenario, you would put an identity box with four connectors of type
-:ref:`Doc_Streams_ExperimentInformation`, :ref:`Doc_Streams_Signal`, :ref:`Doc_Streams_Stimulation` and
+:ref:`Doc_Streams_ExperimentInfo`, :ref:`Doc_Streams_Signal`, :ref:`Doc_Streams_Stimulation` and
 :ref:`Doc_Streams_ChannelLocalization`.
 

@@ -6,7 +6,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CObjectVisitorContext : public TKernelObject<IObjectVisitorContext>
+		class CObjectVisitorContext final : public TKernelObject<IObjectVisitorContext>
 		{
 		public:
 

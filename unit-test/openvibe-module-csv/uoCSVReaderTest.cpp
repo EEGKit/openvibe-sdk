@@ -28,19 +28,19 @@
 
 using namespace OpenViBE::CSV;
 
-struct SignalFile
+struct SSignalFile
 {
-	std::vector<std::string> channelNames;
-	unsigned int samplingRate;
-	unsigned int sampleCountPerBuffer;
-	std::vector<std::pair<std::pair<double, double>, std::vector<double>>> data;
+	std::vector<std::string> m_ChannelNames;
+	size_t m_Sampling;
+	size_t m_nSamplePerBuffer;
+	std::vector<std::pair<std::pair<double, double>, std::vector<double>>> m_data;
 };
 
 namespace
 {
 	std::string dataDirectory = "";
 
-	const struct SignalFile simpleSignalFile = {
+	const struct SSignalFile SIMPLE_SIGNAL_FILE = {
 		{ "Time Signal" },
 		32,
 		8,
@@ -60,14 +60,14 @@ namespace
 		}
 	};
 
-	void compareChunks(std::pair<std::pair<double, double>, std::vector<double>> expected, SMatrixChunk actual)
+	void compareChunks(const std::pair<std::pair<double, double>, std::vector<double>>& expected, const SMatrixChunk& actual)
 	{
 		ASSERT_EQ(expected.first.first, actual.startTime);
 		ASSERT_EQ(expected.first.second, actual.endTime);
 		ASSERT_EQ(expected.second.size(), actual.matrix.size());
-		for (size_t sample = 0; sample < expected.second.size(); sample++) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
+		for (size_t sample = 0; sample < expected.second.size(); ++sample) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
 	}
-}
+} // namespace
 
 TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 {
@@ -77,19 +77,19 @@ TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
 	csv->setFormatType(EStreamType::Signal);
 	std::vector<std::string> channelNames;
-	unsigned int samplingRate;
-	unsigned int sampleCountPerBuffer;
+	size_t sampling;
+	size_t nSamplePerBuffer;
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
 
-	ASSERT_TRUE(csv->getSignalInformation(channelNames, samplingRate, sampleCountPerBuffer));
+	ASSERT_TRUE(csv->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(1, chunks, stimulations));
 	ASSERT_EQ(1, chunks.size());
-	compareChunks(simpleSignalFile.data[0], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[0], chunks[0]);
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(2, chunks, stimulations));
 	ASSERT_EQ(2, chunks.size());
-	compareChunks(simpleSignalFile.data[1], chunks[0]);
-	compareChunks(simpleSignalFile.data[2], chunks[1]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[1], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[2], chunks[1]);
 
 	ASSERT_TRUE(csv->closeFile());
 	releaseCSVHandler(csv);
@@ -103,19 +103,19 @@ TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
 	csv->setFormatType(EStreamType::Signal);
 	std::vector<std::string> channelNames;
-	unsigned int samplingRate;
-	unsigned int sampleCountPerBuffer;
+	size_t sampling;
+	size_t nSamplePerBuffer;
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
 
-	ASSERT_TRUE(csv->getSignalInformation(channelNames, samplingRate, sampleCountPerBuffer));
+	ASSERT_TRUE(csv->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(1, chunks, stimulations));
 	ASSERT_EQ(1, chunks.size());
-	compareChunks(simpleSignalFile.data[0], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[0], chunks[0]);
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(2, chunks, stimulations));
 	ASSERT_EQ(2, chunks.size());
-	compareChunks(simpleSignalFile.data[1], chunks[0]);
-	compareChunks(simpleSignalFile.data[2], chunks[1]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[1], chunks[0]);
+	compareChunks(SIMPLE_SIGNAL_FILE.m_data[2], chunks[1]);
 
 	ASSERT_TRUE(csv->closeFile());
 	releaseCSVHandler(csv);
@@ -132,18 +132,18 @@ TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
 	const std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
-	unsigned int samplingFrequency;
-	unsigned int sampleCountPerBuffer;
+	size_t sampling;
+	size_t nSamplePerBuffer;
 
-	ASSERT_TRUE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
+	ASSERT_TRUE(signalReaderTest->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 	ASSERT_TRUE(signalReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations));
 	ASSERT_EQ(chunks.size(), 3);
 
 	ASSERT_TRUE(!chunks.empty());
 	ASSERT_TRUE(!stimulations.empty());
 	ASSERT_EQ(channelNames, expectedChannels);
-	ASSERT_EQ(samplingFrequency, 8U);
-	ASSERT_EQ(sampleCountPerBuffer, 4);
+	ASSERT_EQ(sampling, 8U);
+	ASSERT_EQ(nSamplePerBuffer, 4);
 	ASSERT_TRUE(signalReaderTest->closeFile());
 	releaseCSVHandler(signalReaderTest);
 }
@@ -159,17 +159,17 @@ TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 	std::vector<SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
 	const std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
-	unsigned int samplingFrequency;
-	unsigned int sampleCountPerBuffer;
+	size_t sampling;
+	size_t nSamplePerBuffer;
 
-	ASSERT_TRUE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
+	ASSERT_TRUE(signalReaderTest->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 
 	ASSERT_TRUE(signalReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations));
 	ASSERT_EQ(chunks.size(), size_t(3));
 	ASSERT_EQ(stimulations.size(), size_t(3));
 	ASSERT_EQ(channelNames, expectedChannels);
-	ASSERT_EQ(samplingFrequency, 8U);
-	ASSERT_EQ(sampleCountPerBuffer, 4);
+	ASSERT_EQ(sampling, 8U);
+	ASSERT_EQ(nSamplePerBuffer, 4);
 	ASSERT_TRUE(signalReaderTest->closeFile());
 	releaseCSVHandler(signalReaderTest);
 }
@@ -189,9 +189,9 @@ TEST(CSV_Reader_Test_Case, SignalReaderWrongHeader)
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	signalReaderTest->setFormatType(EStreamType::Signal);
 	std::vector<std::string> channelNames;
-	unsigned int samplingFrequency;
-	unsigned int sampleCountPerBuffer;
-	ASSERT_FALSE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
+	size_t sampling;
+	size_t nSamplePerBuffer;
+	ASSERT_FALSE(signalReaderTest->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 
 	ASSERT_TRUE(signalReaderTest->closeFile());
 	releaseCSVHandler(signalReaderTest);
@@ -212,9 +212,9 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
 	std::iota(expectedData.begin() + 64, expectedData.end(), 0);
 
 	std::vector<double> frequencyAbscissa;
-	unsigned int originalSampleRate;
+	size_t originalSampling;
 
-	ASSERT_TRUE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampleRate));
+	ASSERT_TRUE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampling));
 
 	ASSERT_TRUE(spectrumReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations));
 	ASSERT_EQ(chunks.size(), 3);
@@ -230,7 +230,7 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
 
 	ASSERT_TRUE(!chunks.empty());
 	ASSERT_EQ(channelNames, expectedChannels);
-	ASSERT_EQ(originalSampleRate, 128);
+	ASSERT_EQ(originalSampling, 128);
 	ASSERT_TRUE(spectrumReaderTest->closeFile());
 	releaseCSVHandler(spectrumReaderTest);
 }
@@ -246,16 +246,16 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
 	std::vector<std::string> channelNames;
 	const std::vector<std::string> expectedChannels = { "O1", "O2" };
 	std::vector<double> frequencyAbscissa;
-	unsigned int originalSampleRate;
+	size_t originalSampling;
 
-	ASSERT_TRUE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampleRate));
+	ASSERT_TRUE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampling));
 
 	ASSERT_TRUE(spectrumReaderTest->readSamplesAndEventsFromFile(13, chunks, stimulations));
 	ASSERT_NE(chunks.size(), 13);
 
 	ASSERT_TRUE(!chunks.empty());
 	ASSERT_EQ(channelNames, expectedChannels);
-	ASSERT_EQ(originalSampleRate, 128);
+	ASSERT_EQ(originalSampling, 128);
 	ASSERT_NE(4, chunks.size());
 	ASSERT_TRUE(spectrumReaderTest->closeFile());
 	releaseCSVHandler(spectrumReaderTest);
@@ -269,8 +269,8 @@ TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
 	spectrumReaderTest->setFormatType(EStreamType::Spectrum);
 	std::vector<std::string> channelNames;
 	std::vector<double> frequencyAbscissa;
-	unsigned int originalSampleRate;
-	ASSERT_FALSE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampleRate));
+	size_t originalSampling;
+	ASSERT_FALSE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampling));
 
 	ASSERT_TRUE(spectrumReaderTest->closeFile());
 	releaseCSVHandler(spectrumReaderTest);
@@ -285,10 +285,10 @@ TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
-	const std::vector<std::string> expectedLabels       = { "", "", "", "", "", "" };
-	const std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 2 };
+	const std::vector<std::string> expectedLabels = { "", "", "", "", "", "" };
+	const std::vector<size_t> goodDimensionsSizes = { 2, 2, 2 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(10, chunks, stimulations));
@@ -309,7 +309,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongHeader)
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
@@ -324,7 +324,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
@@ -339,7 +339,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
 
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
@@ -362,10 +362,10 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 
 	std::vector<SMatrixChunk> chunks;
 	std::vector<SStimulationChunk> stimulations;
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
-	const std::vector<std::string> expectedLabels       = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
-	const std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 5 };
+	const std::vector<std::string> expectedLabels = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
+	const std::vector<size_t> goodDimensionsSizes = { 2, 2, 5 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations)) << matrixReaderTest->getLastLogError() << ".Details: " <<
@@ -387,7 +387,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
 
 	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
 
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
@@ -402,7 +402,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
 	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
 
-	std::vector<unsigned int> dimensionSizes;
+	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 

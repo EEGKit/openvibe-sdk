@@ -6,12 +6,12 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CBoxListenerContext : public TKernelObject<IBoxListenerContext>
+		class CBoxListenerContext final : public TKernelObject<IBoxListenerContext>
 		{
 		public:
 
-			CBoxListenerContext(const IKernelContext& ctx, IBox& box, uint32_t index) : TKernelObject<IBoxListenerContext>(ctx),
-																								   m_rBox(box), m_ui32Index(index) { }
+			CBoxListenerContext(const IKernelContext& ctx, IBox& box, const size_t index)
+				: TKernelObject<IBoxListenerContext>(ctx), m_box(box), m_idx(index) { }
 
 			IAlgorithmManager& getAlgorithmManager() const override { return this->getKernelContext().getAlgorithmManager(); }
 			IPlayerManager& getPlayerManager() const override { return this->getKernelContext().getPlayerManager(); }
@@ -22,7 +22,7 @@ namespace OpenViBE
 			ILogManager& getLogManager() const override { return this->getKernelContext().getLogManager(); }
 			IErrorManager& getErrorManager() const override { return this->getKernelContext().getErrorManager(); }
 			IConfigurationManager& getConfigurationManager() const override { return this->getKernelContext().getConfigurationManager(); }
-			IBox& getBox() const override { return m_rBox; }
+			IBox& getBox() const override { return m_box; }
 
 			IScenario& getScenario() const override
 			{
@@ -30,14 +30,14 @@ namespace OpenViBE
 						 this->getKernelContext().getLogManager());
 			}
 
-			uint32_t getIndex() const override { return m_ui32Index; }
+			size_t getIndex() const override { return m_idx; }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObject, OVK_ClassId_Kernel_Scenario_BoxListenerContext)
+			_IsDerivedFromClass_Final_(TKernelObject<IBoxListenerContext>, OVK_ClassId_Kernel_Scenario_BoxListenerContext)
 
 		private:
 
-			IBox& m_rBox;
-			uint32_t m_ui32Index = 0;
+			IBox& m_box;
+			size_t m_idx = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

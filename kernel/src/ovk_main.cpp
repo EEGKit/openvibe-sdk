@@ -3,13 +3,13 @@
 #include <openvibe/ov_all.h>
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 
 namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CKernelDesc : public IKernelDesc
+		class CKernelDesc final : public IKernelDesc
 		{
 		public:
 			IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) override
@@ -17,8 +17,8 @@ namespace OpenViBE
 				return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
 			}
 
-			IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename)
-			override { return new CKernelContext(&rMasterKernelContext, rApplicationName, rConfigurationFilename); }
+			IKernelContext* createKernel(const IKernelContext& masterKernelCtx, const CString& applicationName, const CString& configFilename)
+			override { return new CKernelContext(&masterKernelCtx, applicationName, configFilename); }
 
 			void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
 			CString getName() const override { return CString("OpenViBE Kernel Implementation"); }
@@ -33,7 +33,7 @@ namespace OpenViBE
 	} // namespace Kernel
 } // namespace OpenViBE
 
-static CKernelDesc gst_oKernelDesc;
+static CKernelDesc gKernelDesc;
 
 #include <system/ovCTime.h>
 
@@ -43,7 +43,7 @@ OVK_API bool onInitialize() { return true; }
 
 OVK_API bool onGetKernelDesc(IKernelDesc*& rpKernelDesc)
 {
-	rpKernelDesc = &gst_oKernelDesc;
+	rpKernelDesc = &gKernelDesc;
 	return true;
 }
 

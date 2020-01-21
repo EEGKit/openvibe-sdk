@@ -9,13 +9,13 @@ namespace Socket
 	{
 	public:
 
-		virtual bool connect(const char* sURL, const unsigned long ui32BaudRate) = 0;
+		virtual bool connect(const char* url, const size_t baudRate) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.
 		 * \return The number of pending byte.
 		 */
-		virtual uint32_t getPendingByteCount() = 0;
+		virtual size_t getPendingByteCount() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.
@@ -31,7 +31,7 @@ namespace Socket
 
 		/**
 		 * \brief Checks if an error raised.
-		 * \return True if the m_sLastError is not empty, else false.
+		 * \return True if the m_LastError is not empty, else false.
 		 */
 		virtual bool isErrorRaised() = 0;
 
@@ -42,10 +42,10 @@ namespace Socket
 
 		/**
 		 * \brief Set tiemouts for read and write function.
-		 * \param decisecondsTimeout [in] Timeout in deciseconds.
+		 * \param timeout [in] Timeout in deciseconds.
 		 * \return True if succeed, else false.
 		 */
-		virtual bool setTimeouts(const uint32_t decisecondsTimeout) = 0;
+		virtual bool setTimeouts(const size_t timeout) = 0;
 
 	protected:
 		void saveLastError();

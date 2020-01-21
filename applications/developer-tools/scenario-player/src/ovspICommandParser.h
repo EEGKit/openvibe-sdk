@@ -21,14 +21,13 @@
 
 #pragma once
 
+#include "ovsp_defines.h"
 #include <vector>
 #include <memory>
 
-#include "ovsp_defines.h"
-
 namespace OpenViBE
 {
-	struct ICommand;
+	struct SCommand;
 
 	/**
 	* \class ICommandParser
@@ -53,7 +52,6 @@ namespace OpenViBE
 		*/
 		virtual void initialize() = 0;
 
-
 		/**
 		* \brief Unitialize parser
 		*
@@ -65,7 +63,7 @@ namespace OpenViBE
 		* \pre This method should be called after the parse() method
 		*
 		*/
-		virtual std::vector<std::shared_ptr<ICommand>> getCommandList() const = 0;
+		virtual std::vector<std::shared_ptr<SCommand>> getCommandList() const = 0;
 
 
 		/**
@@ -73,7 +71,7 @@ namespace OpenViBE
 		* \pre This method should be called after the initialize() method
 		*
 		*/
-		virtual PlayerReturnCode parse() = 0;
+		virtual EPlayerReturnCode parse() = 0;
 
 	private:
 
@@ -82,4 +80,4 @@ namespace OpenViBE
 		ICommandParser(const ICommandParser&)            = delete;
 		ICommandParser& operator=(const ICommandParser&) = delete;
 	};
-}
+}	// namespace OpenViBE

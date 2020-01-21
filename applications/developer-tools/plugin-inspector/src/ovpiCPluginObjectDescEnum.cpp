@@ -1,56 +1,49 @@
 #include "ovpiCPluginObjectDescEnum.h"
 
 using namespace OpenViBE;
-using namespace Kernel;
+using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace std;
-
-CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& ctx)
-	: m_KernelContext(ctx) {}
-
-CPluginObjectDescEnum::~CPluginObjectDescEnum() {}
 
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pluginDescriptors)
 {
-	for (auto plugin : pluginDescriptors) { this->callback(*plugin); }
+	for (auto* plugin : pluginDescriptors) { this->callback(*plugin); }
 	return true;
 }
 
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(const CIdentifier& parentClassIdentifier)
 {
-	CIdentifier identifier;
-	while ((identifier = m_KernelContext.getPluginManager().getNextPluginObjectDescIdentifier(identifier, parentClassIdentifier)) != OV_UndefinedIdentifier)
+	CIdentifier id;
+	while ((id = m_kernelCtx.getPluginManager().getNextPluginObjectDescIdentifier(id, parentClassIdentifier)) != OV_UndefinedIdentifier)
 	{
-		this->callback(*m_KernelContext.getPluginManager().getPluginObjectDesc(identifier));
+		this->callback(*m_kernelCtx.getPluginManager().getPluginObjectDesc(id));
 	}
 	return true;
 }
 
-std::string CPluginObjectDescEnum::transform(const std::string& sInput, const bool bRemoveSlash)
+std::string CPluginObjectDescEnum::transform(const std::string& in, const bool removeSlash)
 {
-	std::string input(sInput);
-	std::string output;
+	std::string out;
 	bool wasLastASeparator = true;
 
-	for (size_t i = 0; i < input.length(); i++)
+	for (size_t i = 0; i < in.length(); ++i)
 	{
-		if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= '0' && input[i] <= '9') || (
-				!bRemoveSlash && input[i] == '/'))
+		if ((in[i] >= 'a' && in[i] <= 'z') || (in[i] >= 'A' && in[i] <= 'Z') || (in[i] >= '0' && in[i] <= '9') || (!removeSlash && in[i] == '/'))
 		{
-			if (input[i] == '/') { output += "_"; }
+			if (in[i] == '/') { out += "_"; }
 			else
 			{
 				if (wasLastASeparator)
 				{
-					if ('a' <= input[i] && input[i] <= 'z') { output += input[i] + 'A' - 'a'; }
-					else { output += input[i]; }
+					if ('a' <= in[i] && in[i] <= 'z') { out += in[i] + 'A' - 'a'; }
+					else { out += in[i]; }
 				}
-				else { output += input[i]; }
+				else { out += in[i]; }
 			}
 			wasLastASeparator = false;
 		}
 		else { wasLastASeparator = true; }
 	}
-	return output;
+	return out;
 }

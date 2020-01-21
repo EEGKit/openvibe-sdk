@@ -33,6 +33,7 @@
 #include "Operation.h"
 #include "ParsedExpression.h"
 #include <utility>
+#include <cstdint>
 
 using namespace Lepton;
 using namespace std;
@@ -46,7 +47,7 @@ CompiledExpression::CompiledExpression(const ParsedExpression& expression)
 	compileExpression(expr.getRootNode(), temps);
 }
 
-CompiledExpression::~CompiledExpression() { for (int i = 0; i < (int)operation.size(); i++) if (operation[i] != nullptr) delete operation[i]; }
+CompiledExpression::~CompiledExpression() { for (size_t i = 0; i < operation.size(); ++i) if (operation[i] != nullptr) delete operation[i]; }
 
 CompiledExpression::CompiledExpression(const CompiledExpression& expression) { *this = expression; }
 
@@ -59,18 +60,18 @@ CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expr
 	workspace.resize(expression.workspace.size());
 	argValues.resize(expression.argValues.size());
 	operation.resize(expression.operation.size());
-	for (int i = 0; i < (int)operation.size(); i++) { operation[i] = expression.operation[i]->clone(); }
+	for (size_t i = 0; i < operation.size(); ++i) { operation[i] = expression.operation[i]->clone(); }
 	return *this;
 }
 
 void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
 {
-	if (findTempIndex(node, temps) != -1) return; // We have already processed a node identical to this one.
+	if (findTempIndex(node, temps) != -1) { return; }	// We have already processed a node identical to this one. 
 
 	// Process the child nodes.
 
 	vector<int> args;
-	for (int i = 0; i < node.getChildren().size(); i++)
+	for (size_t i = 0; i < node.getChildren().size(); ++i)
 	{
 		compileExpression(node.getChildren()[i], temps);
 		args.push_back(findTempIndex(node.getChildren()[i], temps));
@@ -80,14 +81,14 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 
 	if (node.getOperation().getId() == Operation::VARIABLE)
 	{
-		variableIndices[node.getOperation().getName()] = (int)workspace.size();
+		variableIndices[node.getOperation().getName()] = int(workspace.size());
 		variableNames.insert(node.getOperation().getName());
 	}
 	else
 	{
-		int stepIndex = (int)arguments.size();
+		int stepIndex = int(arguments.size());
 		arguments.push_back(vector<int>());
-		target.push_back((int)workspace.size());
+		target.push_back(int(workspace.size()));
 		operation.push_back(node.getOperation().clone());
 		if (args.size() == 0) arguments[stepIndex].push_back(0); // The value won't actually be used.  We just need something there.
 		else
@@ -95,7 +96,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 			// If the arguments are sequential, we can just pass a pointer to the first one.
 
 			bool sequential = true;
-			for (unsigned int i = 1; i < args.size(); i++) if (args[i] != args[i - 1] + 1) sequential = false;
+			for (size_t i = 1; i < args.size(); ++i) if (args[i] != args[i - 1] + 1) sequential = false;
 			if (sequential) arguments[stepIndex].push_back(args[0]);
 			else
 			{
@@ -110,7 +111,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 
 int CompiledExpression::findTempIndex(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
 {
-	for (int i = 0; i < (int)temps.size(); i++) if (temps[i].first == node) return i;
+	for (size_t i = 0; i < temps.size(); ++i) { if (temps[i].first == node) { return int(i); } }
 	return -1;
 }
 
@@ -118,7 +119,7 @@ const set<string>& CompiledExpression::getVariables() const { return variableNam
 
 double& CompiledExpression::getVariableReference(const string& name)
 {
-	map<string, int>::iterator index = variableIndices.find(name);
+	auto index = variableIndices.find(name);
 	if (index == variableIndices.end()) throw Exception("getVariableReference: Unknown variable '" + name + "'");
 	return workspace[index->second];
 }
@@ -127,13 +128,13 @@ double CompiledExpression::evaluate() const
 {
 	// Loop over the operations and evaluate each one.
 
-	for (unsigned int step = 0; step < operation.size(); step++)
+	for (size_t step = 0; step < operation.size(); ++step)
 	{
 		const vector<int>& args = arguments[step];
 		if (args.size() == 1) workspace[target[step]] = operation[step]->evaluate(&workspace[args[0]], dummyVariables);
 		else
 		{
-			for (int i = 0; i < args.size(); i++) argValues[i] = workspace[args[i]];
+			for (size_t i = 0; i < args.size(); ++i) argValues[i] = workspace[args[i]];
 			workspace[target[step]] = operation[step]->evaluate(&argValues[0], dummyVariables);
 		}
 	}
