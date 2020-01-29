@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSimpleDSP final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSimpleDSP final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 			bool process() override;
 			void evaluate();
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
 		protected:
 			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_decoders;
@@ -39,7 +39,7 @@ namespace OpenViBEPlugins
 			bool m_checkDates = false;
 		};
 
-		class CBoxAlgorithmSimpleDSPListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmSimpleDSPListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
@@ -71,7 +71,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmSimpleDSPDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

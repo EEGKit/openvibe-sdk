@@ -7,7 +7,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
@@ -116,7 +116,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 			for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i)
 			{
-				OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
+				OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
 
 				IMatrix* matrix       = decoder.getOutputMatrix();
@@ -269,7 +269,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		}
 		else
 		{
-			OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
+			OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
 								"Unable to save to [" << m_filterFilename << "]\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}
 

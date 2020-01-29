@@ -6,25 +6,27 @@
 
 #include "ovtkTEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TExperimentInfoEncoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_experimentID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_experimentDate;
+		Kernel::TParameterHandler<uint64_t> m_experimentID;
+		Kernel::TParameterHandler<CString*> m_experimentDate;
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_subjectID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_subjectName;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_subjectAge;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_subjectGender;
+		Kernel::TParameterHandler<uint64_t> m_subjectID;
+		Kernel::TParameterHandler<CString*> m_subjectName;
+		Kernel::TParameterHandler<uint64_t> m_subjectAge;
+		Kernel::TParameterHandler<uint64_t> m_subjectGender;
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_laboratoryID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_laboratoryName;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_technicianID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_technicianName;
+		Kernel::TParameterHandler<uint64_t> m_laboratoryID;
+		Kernel::TParameterHandler<CString*> m_laboratoryName;
+		Kernel::TParameterHandler<uint64_t> m_technicianID;
+		Kernel::TParameterHandler<CString*> m_technicianName;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -78,16 +80,16 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputExperimentID() { return m_experimentID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getInputExperimentDate() { return m_experimentDate; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSubjectID() { return m_subjectID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getInputSubjectName() { return m_subjectName; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSubjectAge() { return m_subjectAge; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSubjectGender() { return m_subjectGender; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputLaboratoryID() { return m_laboratoryID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getInputLaboratoryName() { return m_laboratoryName; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputTechnicianID() { return m_technicianID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getInputTechnicianName() { return m_technicianName; }
+		Kernel::TParameterHandler<uint64_t>& getInputExperimentID() { return m_experimentID; }
+		Kernel::TParameterHandler<CString*>& getInputExperimentDate() { return m_experimentDate; }
+		Kernel::TParameterHandler<uint64_t>& getInputSubjectID() { return m_subjectID; }
+		Kernel::TParameterHandler<CString*>& getInputSubjectName() { return m_subjectName; }
+		Kernel::TParameterHandler<uint64_t>& getInputSubjectAge() { return m_subjectAge; }
+		Kernel::TParameterHandler<uint64_t>& getInputSubjectGender() { return m_subjectGender; }
+		Kernel::TParameterHandler<uint64_t>& getInputLaboratoryID() { return m_laboratoryID; }
+		Kernel::TParameterHandler<CString*>& getInputLaboratoryName() { return m_laboratoryName; }
+		Kernel::TParameterHandler<uint64_t>& getInputTechnicianID() { return m_technicianID; }
+		Kernel::TParameterHandler<CString*>& getInputTechnicianName() { return m_technicianName; }
 
 	protected:
 		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_ExperimentInfoEncoder_InputTriggerId_EncodeHeader); }
@@ -113,6 +115,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TExperimentInfoEncoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

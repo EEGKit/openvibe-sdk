@@ -25,21 +25,21 @@ namespace OpenViBEPlugins
 		} classification_info_t;
 
 
-		class CAlgorithmClassifierOneVsOne final : public OpenViBEToolkit::CAlgorithmPairingStrategy
+		class CAlgorithmClassifierOneVsOne final : public OpenViBE::Toolkit::CAlgorithmPairingStrategy
 		{
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& dataset) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& sample, double& classId, OpenViBEToolkit::IVector& distance,
-						  OpenViBEToolkit::IVector& probability) override;
+			bool train(const OpenViBE::Toolkit::IFeatureVectorSet& dataset) override;
+			bool classify(const OpenViBE::Toolkit::IFeatureVector& sample, double& classId, OpenViBE::Toolkit::IVector& distance,
+						  OpenViBE::Toolkit::IVector& probability) override;
 			bool designArchitecture(const OpenViBE::CIdentifier& id, const size_t classCount) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode* configNode) override;
 			size_t getNProbabilities() override { return m_nClasses; }
 			size_t getNDistances() override { return 0; }
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
 
 		protected:
 
@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& id);
 		};
 
-		class CAlgorithmClassifierOneVsOneDesc final : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
+		class CAlgorithmClassifierOneVsOneDesc final : public OpenViBE::Toolkit::CAlgorithmPairingStrategyDesc
 		{
 		public:
 			void release() override { }

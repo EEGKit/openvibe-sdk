@@ -30,7 +30,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmZeroCrossingDetector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmZeroCrossingDetector final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -39,14 +39,14 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector)
 
 		protected:
 
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmZeroCrossingDetector> m_decoder;
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder0;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder1;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder2;
+			OpenViBE::Toolkit::TGenericDecoder<CBoxAlgorithmZeroCrossingDetector> m_decoder;
+			OpenViBE::Toolkit::TGenericEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder0;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder1;
+			OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector> m_encoder2;
 
 			std::vector<double> m_signals;
 			std::vector<int> m_states;
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 			uint64_t m_stimId2 = 0;
 		};
 
-		class CBoxAlgorithmZeroCrossingDetectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmZeroCrossingDetectorListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
@@ -118,7 +118,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmZeroCrossingDetectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

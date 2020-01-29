@@ -1,9 +1,11 @@
 #pragma once
 
-#include "ovtkIObject.h"
+#include "ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	class IFeatureVector;
 
 	class OVTK_API IFeatureVectorSet : public IObject
@@ -18,10 +20,11 @@ namespace OpenViBEToolkit
 		virtual const IFeatureVector& getFeatureVector(const size_t index) const = 0;
 		virtual size_t getLabelCount() const = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVectorSet)
+		_IsDerivedFromClass_(IObject, OVTK_ClassId_FeatureVectorSet)
 
 		const IFeatureVector& operator [](const size_t index) const { return this->getFeatureVector(index); }
 
 		IFeatureVector& operator [](const size_t index) { return this->getFeatureVector(index); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

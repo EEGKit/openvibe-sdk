@@ -3,10 +3,10 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 using namespace std;
 
 void CBoxAlgorithmSignalAverage::computeAverage()

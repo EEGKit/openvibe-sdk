@@ -8,7 +8,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace std;
 
 int main(int argc, char** argv)
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 			else
 			{
 				ctx->initialize();
-				OpenViBEToolkit::initialize(*ctx);
+				OpenViBE::Toolkit::initialize(*ctx);
 
 				IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 				}
 				ctx->getLogManager() << LogLevel_Info << "Application terminated, releasing allocated objects \n";
 
-				OpenViBEToolkit::uninitialize(*ctx);
+				OpenViBE::Toolkit::uninitialize(*ctx);
 
 				kernelDesc->releaseKernel(ctx);
 			}

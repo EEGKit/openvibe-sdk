@@ -8,7 +8,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpatialFilter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpatialFilter final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -17,12 +17,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpatialFilter)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpatialFilter)
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_decoder = nullptr;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_encoder = nullptr;
+			OpenViBE::Toolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_decoder = nullptr;
+			OpenViBE::Toolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_encoder = nullptr;
 
 			OpenViBE::CMatrix m_oFilterBank;
 
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			size_t loadCoefs(const OpenViBE::CString& coefs, char c1, char c2, size_t nRows, size_t nCols);
 		};
 
-		class CBoxAlgorithmSpatialFilterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmSpatialFilterListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmSpatialFilterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

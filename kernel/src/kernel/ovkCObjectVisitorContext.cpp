@@ -2,7 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& ctx)
 	: TKernelObject<IObjectVisitorContext>(ctx) {}

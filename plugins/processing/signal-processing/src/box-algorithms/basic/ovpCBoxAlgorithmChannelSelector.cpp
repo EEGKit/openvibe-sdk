@@ -6,12 +6,12 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 namespace
 {
@@ -161,7 +161,7 @@ bool CBoxAlgorithmChannelSelector::process()
 				CString eegChannelNames = this->getConfigurationManager().expand("${Box_ChannelSelector_EEGChannelNames}");
 
 				std::vector<CString> token;
-				const size_t nToken = split(eegChannelNames, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(token),
+				const size_t nToken = split(eegChannelNames, OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(token),
 											OV_Value_EnumeratedStringSeparator);
 
 				for (size_t j = 0; j < m_iMatrix->getDimensionSize(0); ++j)
@@ -183,14 +183,14 @@ bool CBoxAlgorithmChannelSelector::process()
 				//
 
 				std::vector<CString> tokens;
-				const size_t nToken = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
+				const size_t nToken = split(settingValue, OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
 											OV_Value_EnumeratedStringSeparator);
 				for (size_t j = 0; j < nToken; ++j)
 				{
 					std::vector<CString> subTokens;
 
 					// Checks if the token is a range
-					if (split(tokens[j], OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(subTokens),
+					if (split(tokens[j], OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(subTokens),
 							  OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)

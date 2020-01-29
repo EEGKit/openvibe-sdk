@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmXMLScenarioExporter final : public OpenViBEToolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
+		class CAlgorithmXMLScenarioExporter final : public OpenViBE::Toolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
 		{
 		public:
 
@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, uint64_t value) override;
 			bool exportStop(OpenViBE::IMemoryBuffer& memoryBuffer) override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporter, OVP_ClassId_Algorithm_XMLScenarioExporter)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::CAlgorithmScenarioExporter, OVP_ClassId_Algorithm_XMLScenarioExporter)
 
 		protected:
 			void write(const char* str) override; // XML::IWriterCallback
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 
-		class CAlgorithmXMLScenarioExporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioExporterDesc
+		class CAlgorithmXMLScenarioExporterDesc final : public OpenViBE::Toolkit::CAlgorithmScenarioExporterDesc
 		{
 		public:
 			void release() override { }
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioExporter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmXMLScenarioExporter(); }
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporterDesc, OVP_ClassId_Algorithm_XMLScenarioExporterDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::CAlgorithmScenarioExporterDesc, OVP_ClassId_Algorithm_XMLScenarioExporterDesc)
 		};
 	} // namespace FileIO
 } // namespace OpenViBEPlugins

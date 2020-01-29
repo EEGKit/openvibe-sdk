@@ -10,8 +10,10 @@
 #include <vector>
 #include <climits>
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class TBoxAlgorithmParentClass>
 	class TTrainingBoxAlgorithm : public TBoxAlgorithm<TBoxAlgorithmParentClass>
 	{
@@ -32,14 +34,14 @@ namespace OpenViBEToolkit
 		virtual void setStimulation(const size_t index, uint64_t identifier, uint64_t date);
 
 		// What should be implemented by the derived class
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialStart() = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialEnd() = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeStart() = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeEnd() = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain() = 0;
+		virtual CIdentifier getStimulationIdentifierTrialStart() = 0;
+		virtual CIdentifier getStimulationIdentifierTrialEnd() = 0;
+		virtual CIdentifier getStimulationIdentifierTrialLabelRangeStart() = 0;
+		virtual CIdentifier getStimulationIdentifierTrialLabelRangeEnd() = 0;
+		virtual CIdentifier getStimulationIdentifierTrain() = 0;
 		virtual bool train(ISignalTrialSet& trialSet) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<TBoxAlgorithmParentClass>, OVTK_ClassId_)
+		_IsDerivedFromClass_(TBoxAlgorithm<TBoxAlgorithmParentClass>, OVTK_ClassId_)
 
 	private:
 
@@ -48,17 +50,20 @@ namespace OpenViBEToolkit
 		uint64_t m_trialStartTime          = 0;
 		uint64_t m_trialEndTime            = 0;
 		size_t m_nSamplePerBuffer          = 0;
-		OpenViBE::CIdentifier m_trialLabel = OV_UndefinedIdentifier;
+		CIdentifier m_trialLabel = OV_UndefinedIdentifier;
 
 		std::vector<ISignalTrial*> m_signalTrials;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 
 	// ________________________________________________________________________________________________________________
 	//
@@ -87,7 +92,7 @@ namespace OpenViBEToolkit
 	{
 		insertBufferSamples(*m_pendingSignal, m_pendingSignal->getSampleCount(), m_nSamplePerBuffer, buffer, m_pendingSignal);
 
-		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Debug
+		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Debug
 				<< "Appended " << m_nSamplePerBuffer << " bytes resulting in " << (m_pendingSignal->getDuration() >> 32) << " seconds of signal\n";
 	}
 
@@ -103,56 +108,56 @@ namespace OpenViBEToolkit
 		if (identifier == this->getStimulationIdentifierTrain())
 		{
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-					<< OpenViBE::Kernel::LogLevel_Trace
+					<< Kernel::LogLevel_Trace
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
 			ISignalTrialSet* signalTrialSet = createSignalTrialSet();
 			for (auto it = m_signalTrials.begin(); it != m_signalTrials.end(); ++it) { signalTrialSet->addSignalTrial(**it); }
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "Calling train function...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Info << "Calling train function...\n";
 
 			this->train(*signalTrialSet);
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
 					<< "Training done... will clear signal trials and signal trial set now...\n";
 
 			for (auto it = m_signalTrials.begin(); it != m_signalTrials.end(); ++it) { releaseSignalTrial(*it); }
 			releaseSignalTrialSet(signalTrialSet);
 			m_signalTrials.clear();
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "Training phase finished !\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Info << "Training phase finished !\n";
 		}
 		else if (identifier == this->getStimulationIdentifierTrialStart())
 		{
 			m_trialStartTime = date;
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
-					<< "Saved trial start time " << OpenViBE::time64(m_trialStartTime) << "...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
+					<< "Saved trial start time " << time64(m_trialStartTime) << "...\n";
 		}
 		else if (identifier == this->getStimulationIdentifierTrialEnd())
 		{
 			m_trialEndTime = date;
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
-					<< "Saved trial end time " << OpenViBE::time64(m_trialEndTime) << "...\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
+					<< "Saved trial end time " << time64(m_trialEndTime) << "...\n";
 		}
-		else if (this->getStimulationIdentifierTrialLabelRangeStart() <= OpenViBE::CIdentifier(identifier) && OpenViBE::CIdentifier(identifier) <= this->
+		else if (this->getStimulationIdentifierTrialLabelRangeStart() <= CIdentifier(identifier) && CIdentifier(identifier) <= this->
 				 getStimulationIdentifierTrialLabelRangeEnd())
 		{
 			m_trialLabel = identifier;
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
 					<< "Labeled trial " << m_trialLabel << "...\n";
 		}
 		else
 		{
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Debug
-					<< "Unhandled stimulation " << OpenViBE::CIdentifier(identifier) << " at time " << OpenViBE::time64(date) << "\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Debug
+					<< "Unhandled stimulation " << CIdentifier(identifier) << " at time " << time64(date) << "\n";
 		}
 
 		if (m_trialEndTime != ULLONG_MAX && m_trialStartTime != ULLONG_MAX && m_trialEndTime > m_trialStartTime)
 		{
 			size_t nSample = size_t(((m_trialEndTime - m_trialStartTime) * m_pendingSignal->getSamplingRate()) >> 32);
 
-			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << OpenViBE::Kernel::LogLevel_Trace
-					<< "Created trial " << OpenViBE::time64(m_trialStartTime) << "-" << OpenViBE::time64(m_trialEndTime) << " with " << nSample << " samples\n";
+			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
+					<< "Created trial " << time64(m_trialStartTime) << "-" << time64(m_trialEndTime) << " with " << nSample << " samples\n";
 
 			ISignalTrial* signalTrial = createSignalTrial();
 			copyHeader(*signalTrial, m_pendingSignal);
@@ -169,4 +174,5 @@ namespace OpenViBEToolkit
 
 	// ________________________________________________________________________________________________________________
 	//
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

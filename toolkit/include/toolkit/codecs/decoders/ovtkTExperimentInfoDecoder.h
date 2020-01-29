@@ -6,25 +6,27 @@
 
 #include "ovtkTDecoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TExperimentInfoDecoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_experimentID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_experimentDate;
+		Kernel::TParameterHandler<uint64_t> m_experimentID;
+		Kernel::TParameterHandler<CString*> m_experimentDate;
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_subjectID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_subjectName;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_subjectAge;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_subjectGender;
+		Kernel::TParameterHandler<uint64_t> m_subjectID;
+		Kernel::TParameterHandler<CString*> m_subjectName;
+		Kernel::TParameterHandler<uint64_t> m_subjectAge;
+		Kernel::TParameterHandler<uint64_t> m_subjectGender;
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_laboratoryID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_laboratoryName;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_technicianID;
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_technicianName;
+		Kernel::TParameterHandler<uint64_t> m_laboratoryID;
+		Kernel::TParameterHandler<CString*> m_laboratoryName;
+		Kernel::TParameterHandler<uint64_t> m_technicianID;
+		Kernel::TParameterHandler<CString*> m_technicianName;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -79,16 +81,16 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputExperimentID() { return m_experimentID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputExperimentDate() { return m_experimentDate; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectID() { return m_subjectID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputSubjectName() { return m_subjectName; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectAge() { return m_subjectAge; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectGender() { return m_subjectGender; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputLaboratoryID() { return m_laboratoryID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputLaboratoryName() { return m_laboratoryName; }
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputTechnicianID() { return m_technicianID; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputTechnicianName() { return m_technicianName; }
+		Kernel::TParameterHandler<uint64_t>& getOutputExperimentID() { return m_experimentID; }
+		Kernel::TParameterHandler<CString*>& getOutputExperimentDate() { return m_experimentDate; }
+		Kernel::TParameterHandler<uint64_t>& getOutputSubjectID() { return m_subjectID; }
+		Kernel::TParameterHandler<CString*>& getOutputSubjectName() { return m_subjectName; }
+		Kernel::TParameterHandler<uint64_t>& getOutputSubjectAge() { return m_subjectAge; }
+		Kernel::TParameterHandler<uint64_t>& getOutputSubjectGender() { return m_subjectGender; }
+		Kernel::TParameterHandler<uint64_t>& getOutputLaboratoryID() { return m_laboratoryID; }
+		Kernel::TParameterHandler<CString*>& getOutputLaboratoryName() { return m_laboratoryName; }
+		Kernel::TParameterHandler<uint64_t>& getOutputTechnicianID() { return m_technicianID; }
+		Kernel::TParameterHandler<CString*>& getOutputTechnicianName() { return m_technicianName; }
 
 		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInfoDecoder_OutputTriggerId_ReceivedHeader); }
 		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInfoDecoder_OutputTriggerId_ReceivedBuffer); }
@@ -113,6 +115,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TExperimentInfoDecoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

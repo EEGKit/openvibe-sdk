@@ -4,14 +4,16 @@
 
 #include "ovtkTStreamedMatrixDecoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TChannelUnitsDecoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<bool> m_oDynamic;
+		Kernel::TParameterHandler<bool> m_oDynamic;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -48,12 +50,10 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_oDynamic; }
+		Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_oDynamic; }
 
 		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedHeader); }
-
 		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedBuffer); }
-
 		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
@@ -74,6 +74,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TChannelUnitsDecoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

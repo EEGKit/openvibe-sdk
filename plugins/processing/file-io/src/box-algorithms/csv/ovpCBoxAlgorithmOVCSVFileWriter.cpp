@@ -8,7 +8,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace FileIO;
@@ -26,22 +26,22 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 	if (m_typeID == OV_TypeId_Signal)
 	{
 		m_writerLib->setFormatType(CSV::EStreamType::Signal);
-		m_streamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		m_streamDecoder = new OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 	{
 		m_writerLib->setFormatType(CSV::EStreamType::StreamedMatrix);
-		m_streamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		m_streamDecoder = new OpenViBE::Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else if (m_typeID == OV_TypeId_FeatureVector)
 	{
 		m_writerLib->setFormatType(CSV::EStreamType::FeatureVector);
-		m_streamDecoder = new OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		m_streamDecoder = new OpenViBE::Toolkit::TFeatureVectorDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else if (m_typeID == OV_TypeId_Spectrum)
 	{
 		m_writerLib->setFormatType(CSV::EStreamType::Spectrum);
-		m_streamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		m_streamDecoder = new OpenViBE::Toolkit::TSpectrumDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else { OV_ERROR_KRF("Input is a type derived from matrix that the box doesn't recognize", ErrorType::BadInput); }
 

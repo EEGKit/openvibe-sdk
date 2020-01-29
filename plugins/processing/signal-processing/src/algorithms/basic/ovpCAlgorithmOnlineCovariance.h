@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CAlgorithmOnlineCovariance final : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmOnlineCovariance final : virtual public OpenViBE::Toolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_OnlineCovariance)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_OnlineCovariance)
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.

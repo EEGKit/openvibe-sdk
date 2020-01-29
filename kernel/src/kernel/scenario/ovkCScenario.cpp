@@ -20,7 +20,7 @@
 using namespace std;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 // The following is a hack, can be removed once there is a copy constructor for scenarios, boxes, etc
 #include <ovp_global_defines.h>

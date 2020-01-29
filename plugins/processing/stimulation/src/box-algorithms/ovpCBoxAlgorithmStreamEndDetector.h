@@ -8,7 +8,7 @@ namespace OpenViBEPlugins
 {
 	namespace Stimulation
 	{
-		class CBoxAlgorithmStreamEndDetector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmStreamEndDetector final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			static OpenViBE::CIdentifier inputEBMLId() { return OpenViBE::CIdentifier(0x0, 0x1); }
@@ -20,12 +20,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StreamEndDetector)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StreamEndDetector)
 
 		protected:
 
-			OpenViBEToolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_decoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_encoder;
+			OpenViBE::Toolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_decoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_encoder;
 
 			uint64_t m_stimulationID = 0;
 			uint64_t m_actionID      = 0;

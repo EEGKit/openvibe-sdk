@@ -4,7 +4,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace Tools;
@@ -96,7 +96,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
-					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
+					if (!OpenViBE::Toolkit::Tools::Matrix::isContentValid(*matrix))
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
 								time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
@@ -105,7 +105,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// stop player
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
-					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
+					if (!OpenViBE::Toolkit::Tools::Matrix::isContentValid(*matrix))
 					{
 						this->getPlayerContext().stop();
 						OV_ERROR_KRF(

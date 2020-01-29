@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 	{
 		/**
 		*/
-		class CBoxAlgorithmSignalAverage final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSignalAverage final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -22,14 +22,14 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalAverage)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
 		protected:
 			void computeAverage();
 			
 			// Needed to read the input and write the output
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_encoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_decoder;
+			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_encoder;
 		};
 
 		/**

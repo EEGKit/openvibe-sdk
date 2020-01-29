@@ -11,15 +11,15 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CAlgorithmClassifierNULL final : public OpenViBEToolkit::CAlgorithmClassifier
+		class CAlgorithmClassifierNULL final : public OpenViBE::Toolkit::CAlgorithmClassifier
 		{
 		public:
 
 			CAlgorithmClassifierNULL() { }
 			bool initialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& distance,
-						  OpenViBEToolkit::IVector& probability) override;
+			bool train(const OpenViBE::Toolkit::IFeatureVectorSet& featureVectorSet) override;
+			bool classify(const OpenViBE::Toolkit::IFeatureVector& featureVector, double& classId, OpenViBE::Toolkit::IVector& distance,
+						  OpenViBE::Toolkit::IVector& probability) override;
 			XML::IXMLNode* saveConfig() override { return nullptr; }
 			bool loadConfig(XML::IXMLNode* /*configurationNode*/) override { return true; }
 			size_t getNProbabilities() override { return 1; }
@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL)
 		};
 
-		class CAlgorithmClassifierNULLDesc final : public OpenViBEToolkit::CAlgorithmClassifierDesc
+		class CAlgorithmClassifierNULLDesc final : public OpenViBE::Toolkit::CAlgorithmClassifierDesc
 		{
 		public:
 			void release() override { }

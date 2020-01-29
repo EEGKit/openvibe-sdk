@@ -1,7 +1,7 @@
 #include "ovtkCSignalTrialSet.hpp"
 
 using namespace OpenViBE;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 using namespace std;
 
 bool CSignalTrialSet::addSignalTrial(ISignalTrial& rSignalTrial)
@@ -17,6 +17,6 @@ bool CSignalTrialSet::clear()
 }
 
 
-ISignalTrialSet* OpenViBEToolkit::createSignalTrialSet() { return new CSignalTrialSet(); }
+ISignalTrialSet* OpenViBE::Toolkit::createSignalTrialSet() { return new CSignalTrialSet(); }
 
-void OpenViBEToolkit::releaseSignalTrialSet(ISignalTrialSet* signalTrialSet) { delete signalTrialSet; }
+void OpenViBE::Toolkit::releaseSignalTrialSet(ISignalTrialSet* signalTrialSet) { delete signalTrialSet; }

@@ -6,14 +6,16 @@
 
 #include "ovtkTDecoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TStreamedMatrixDecoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_oMatrix;
+		Kernel::TParameterHandler<IMatrix*> m_oMatrix;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -45,7 +47,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputMatrix() { return m_oMatrix; }
+		virtual Kernel::TParameterHandler<IMatrix*>& getOutputMatrix() { return m_oMatrix; }
 
 		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedHeader); }
 		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedBuffer); }
@@ -69,6 +71,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TStreamedMatrixDecoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

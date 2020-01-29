@@ -6,14 +6,16 @@
 
 #include "ovtkTDecoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TStimulationDecoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> m_oStimulationSet;
+		Kernel::TParameterHandler<IStimulationSet*> m_oStimulationSet;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -45,7 +47,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*>& getOutputStimulationSet() { return m_oStimulationSet; }
+		Kernel::TParameterHandler<IStimulationSet*>& getOutputStimulationSet() { return m_oStimulationSet; }
 
 		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader); }
 		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer); }
@@ -69,6 +71,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TStimulationDecoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

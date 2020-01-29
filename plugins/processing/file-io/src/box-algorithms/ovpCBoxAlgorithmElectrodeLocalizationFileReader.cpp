@@ -4,7 +4,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace FileIO;
@@ -18,7 +18,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 
 	// Creates algorithms
 	m_pOVMatrixFileReader = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OVMatrixFileReader));
-	m_encoder             = new OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>;
+	m_encoder             = new OpenViBE::Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>;
 	m_pOVMatrixFileReader->initialize();
 	m_encoder->initialize(*this, 0);
 
@@ -95,7 +95,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 
 		// Produces header
 		IMatrix* iMatrix = m_encoder->getInputMatrix();
-		OpenViBEToolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
+		OpenViBE::Toolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		m_encoder->encodeHeader();
 
@@ -110,7 +110,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	{
 		// Connects parameters to memory buffer
 		IMatrix* iMatrix = m_encoder->getInputMatrix();
-		OpenViBEToolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
+		OpenViBE::Toolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer
 		m_encoder->encodeBuffer();

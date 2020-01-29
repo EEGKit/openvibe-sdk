@@ -2,7 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace FileIO;
@@ -25,7 +25,7 @@ bool CAlgorithmOVMatrixFileWriter::uninitialize()
 
 bool CAlgorithmOVMatrixFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
+	OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
 						"Writing matrix file " << *ip_sFilename << " failed", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 	return true;

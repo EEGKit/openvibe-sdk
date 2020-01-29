@@ -9,7 +9,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmWindowing final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmWindowing final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -18,11 +18,11 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_Windowing)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_Windowing)
 
 		protected:
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_encoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_decoder;
+			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_encoder;
 
 			uint64_t m_windowMethod = 0;
 			std::vector<double> m_windowCoefs;

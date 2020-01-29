@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 		 * \brief The class CBoxAlgorithmTimeout describes the box Timeout.
 		 *
 		 */
-		class CBoxAlgorithmTimeout final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeout final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -27,10 +27,10 @@ namespace OpenViBEPlugins
 			uint64_t getClockFrequency() override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
 		protected:
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
 
 		private:
 			enum ETimeoutState

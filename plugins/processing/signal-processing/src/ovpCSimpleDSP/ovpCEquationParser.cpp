@@ -12,8 +12,8 @@ using namespace boost::spirit;
 using namespace /*boost::spirit::*/classic;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 #define _EQ_PARSER_DEBUG_LOG_(level, message) m_parentPlugin.getLogManager() << level << message << "\n";
 #define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_parentPlugin.getLogManager() << level; m_tree->printTree(m_parentPlugin.getLogManager()); m_parentPlugin.getLogManager() << "\n"; }

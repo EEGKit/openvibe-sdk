@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmCSVFileReader final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmCSVFileReader final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			bool processSpectrum();
 			bool convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader)
 
 
 		protected:
@@ -51,7 +51,7 @@ namespace OpenViBEPlugins
 
 			bool (CBoxAlgorithmCSVFileReader::*m_realProcess)() = nullptr;
 
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
+			OpenViBE::Toolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
 			bool m_headerSent = false;
 			std::vector<std::string> m_lastLineSplits;
@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 			static const size_t BUFFER_LEN = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
-		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
@@ -109,7 +109,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmCSVFileReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

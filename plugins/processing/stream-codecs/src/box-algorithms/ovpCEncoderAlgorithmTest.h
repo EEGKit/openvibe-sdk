@@ -8,7 +8,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CEncoderAlgorithmTest : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CEncoderAlgorithmTest : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -18,7 +18,7 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::Kernel::IMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest)
 
 		protected:
 

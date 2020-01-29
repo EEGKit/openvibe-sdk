@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 		 * @brief The CAlgorithmPairwiseDecision class
 		 * This is the default class for every decision usable with the One Vs One pairwise strategy.
 		 */
-		class CAlgorithmPairwiseDecision : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmPairwiseDecision : virtual public OpenViBE::Toolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			virtual bool loadConfig(XML::IXMLNode& node) = 0;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision)
 		};
 
 		class CAlgorithmPairwiseDecisionDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc

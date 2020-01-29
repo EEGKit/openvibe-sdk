@@ -8,7 +8,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmMatrixValidityChecker final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmMatrixValidityChecker final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -17,12 +17,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker)
 
 		protected:
 
-			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
-			std::vector<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_encoders;
+			std::vector<OpenViBE::Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
+			std::vector<OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_encoders;
 			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
 			uint64_t m_validityCheckerType          = 0;
 
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			std::vector<std::vector<double>> m_lastValidSamples;
 		};
 
-		class CBoxAlgorithmMatrixValidityCheckerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmMatrixValidityCheckerListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmMatrixValidityCheckerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

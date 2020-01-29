@@ -11,8 +11,10 @@
 
 using namespace OpenViBE;
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	namespace Tools
 	{
 		namespace String
@@ -33,14 +35,15 @@ namespace OpenViBEToolkit
 			} // namespace
 		} // namespace String
 	} // namespace Tools
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
-size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
+size_t OpenViBE::Toolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
 {
 	return split(rString, splitCB, &separator, 1);
 }
 
-size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
+size_t OpenViBE::Toolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
 {
 	if (nSeparator == 0 || separator == nullptr) { return 0; }
 
@@ -68,7 +71,7 @@ size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISpli
 }
 
 
-bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces,
+bool OpenViBE::Toolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces,
 												   const bool bRemoveEndSpaces)
 {
 	const char* str1Start = rString1.toASCIIString();

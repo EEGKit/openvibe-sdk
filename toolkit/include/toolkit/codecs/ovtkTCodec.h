@@ -55,8 +55,10 @@ The Codec Toolkit reference page may also be useful.
 GL&HF
 */
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TCodec
 	{
@@ -66,7 +68,7 @@ namespace OpenViBEToolkit
 		T* m_boxAlgorithm = nullptr;
 
 		// Every codec has an algorithm
-		OpenViBE::Kernel::IAlgorithmProxy* m_codec = nullptr;
+		Kernel::IAlgorithmProxy* m_codec = nullptr;
 		size_t m_connectorIdx                      = 0;//one codec per connector
 
 	public:
@@ -96,11 +98,12 @@ namespace OpenViBEToolkit
 		virtual bool initializeImpl() = 0;
 
 		// for easier access to algorithm functionnality, we redefine some functions:
-		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier trigger) { return m_codec->isOutputTriggerActive(trigger); }
+		virtual bool isOutputTriggerActive(const CIdentifier trigger) { return m_codec->isOutputTriggerActive(trigger); }
 
-		virtual bool process(const OpenViBE::CIdentifier& trigger) { return m_codec->process(trigger); }
+		virtual bool process(const CIdentifier& trigger) { return m_codec->process(trigger); }
 		virtual bool process() { return m_codec->process(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

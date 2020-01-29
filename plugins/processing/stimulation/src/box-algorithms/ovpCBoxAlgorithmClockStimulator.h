@@ -8,7 +8,7 @@ namespace OpenViBEPlugins
 {
 	namespace Stimulation
 	{
-		class CBoxAlgorithmClockStimulator final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClockStimulator final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -18,11 +18,11 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClockStimulator)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClockStimulator)
 
 		protected:
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_encoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_encoder;
 			uint64_t m_stimulationID       = 0;
 			uint64_t m_lastStimulationDate = 0;
 			uint64_t m_lastEndTime         = 0;

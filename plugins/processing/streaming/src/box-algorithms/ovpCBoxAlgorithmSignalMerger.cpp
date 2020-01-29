@@ -4,7 +4,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace Streaming;
@@ -13,9 +13,9 @@ bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (size_t i = 0; i < nInput; ++i) { m_decoders.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
+	for (size_t i = 0; i < nInput; ++i) { m_decoders.push_back(new OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
 
-	m_encoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
+	m_encoder = new OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
 
 	return true;
 }

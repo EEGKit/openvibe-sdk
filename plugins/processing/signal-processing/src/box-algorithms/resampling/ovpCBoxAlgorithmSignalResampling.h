@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 	{
 		typedef Common::Resampler::CResamplerSd CResampler;
 
-		class CBoxAlgorithmSignalResampling final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, CResampler::ICallback
+		class CBoxAlgorithmSignalResampling final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, CResampler::ICallback
 		{
 		public:
 			void release() override { delete this; }
@@ -46,12 +46,12 @@ namespace OpenViBEPlugins
 			// implementation for TResampler::ICallback
 			void processResampler(const double* sample, const size_t nChannel) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_decoder;
-			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_encoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_decoder;
+			mutable OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_encoder;
 
 			size_t m_oSampling = 0;
 			size_t m_oNSample  = 0;

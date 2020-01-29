@@ -36,8 +36,10 @@
 #include "encoders/ovtkTSpectrumEncoder.h"
 #include "encoders/ovtkTFeatureVectorEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 
 	// ______________________________________________________________________________________________________________________________________________________________________________
 	// ______________________________________________________________________________________________________________________________________________________________________________
@@ -101,18 +103,18 @@ namespace OpenViBEToolkit
 
 		void uninitialize() { this->reset(); }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputMatrix()
+		Kernel::TParameterHandler<IMatrix*>& getOutputMatrix()
 		{
 			decoder_return_impl(getOutputMatrix());
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
+		Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
 		{
 			if (m_signalDecoder) { return m_signalDecoder->getOutputSamplingRate(); }
 			return m_spectrumDecoder->getOutputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
+		Kernel::TParameterHandler<IMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
 
 		bool decode(int, int)       = delete;
 		bool decode(size_t, size_t) = delete;
@@ -207,18 +209,18 @@ namespace OpenViBEToolkit
 
 		void uninitialize() { this->reset(); }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputMatrix()
+		Kernel::TParameterHandler<IMatrix*>& getInputMatrix()
 		{
 			encoder_return_impl(getInputMatrix());
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
+		Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
 		{
 			if (m_signalEncoder) { return m_signalEncoder->getInputSamplingRate(); }
 			return m_spectrumEncoder->getInputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
+		Kernel::TParameterHandler<IMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
 
 		bool encodeHeader()
 		{
@@ -270,15 +272,15 @@ namespace OpenViBEToolkit
 			if (typeFlag & Type_Covariance) m_allowedTypeIDs[OV_TypeId_CovarianceMatrix] = true;
 		}
 
-		bool isValidInputType(const OpenViBE::CIdentifier& typeID, size_t /*index*/)
+		bool isValidInputType(const CIdentifier& typeID, size_t /*index*/)
 		{
 			return m_allowedTypeIDs[typeID];
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index)
+		virtual bool onInputTypeChanged(Kernel::IBox& box, const size_t index)
 		{
-			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+			CIdentifier typeID = OV_UndefinedIdentifier;
 			box.getInputType(index, typeID);
 			if (this->isValidInputType(typeID, index)) { box.setOutputType(index, typeID); }
 			else
@@ -289,15 +291,15 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		bool isValidOutputType(const OpenViBE::CIdentifier& typeID, size_t /*index*/)
+		bool isValidOutputType(const CIdentifier& typeID, size_t /*index*/)
 		{
 			return m_allowedTypeIDs[typeID];
 			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index)
+		virtual bool onOutputTypeChanged(Kernel::IBox& box, const size_t index)
 		{
-			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+			CIdentifier typeID = OV_UndefinedIdentifier;
 			box.getOutputType(index, typeID);
 			if (this->isValidOutputType(typeID, index)) { box.setInputType(index, typeID); }
 			else
@@ -312,6 +314,7 @@ namespace OpenViBEToolkit
 
 	private:
 
-		std::map<OpenViBE::CIdentifier, bool> m_allowedTypeIDs;
+		std::map<CIdentifier, bool> m_allowedTypeIDs;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

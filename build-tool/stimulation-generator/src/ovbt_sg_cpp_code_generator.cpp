@@ -12,9 +12,9 @@ bool CCppCodeGenerator::openFile(const char* filename)
 
 	m_file << "using namespace OpenViBE;" << endl;
 	m_file << "using namespace OpenViBE::Kernel;" << endl;
-	m_file << "using namespace OpenViBEToolkit;" << endl << endl << endl;
+	m_file << "using namespace /*OpenViBE::*/Toolkit;" << endl << endl << endl;
 
-	m_file << "bool OpenViBEToolkit::initializeStimulationList(const IKernelContext& ctx)" << endl;
+	m_file << "bool OpenViBE::Toolkit::initializeStimulationList(const IKernelContext& ctx)" << endl;
 	m_file << "{" << endl;
 	m_file << "\tITypeManager& typeManager=ctx.getTypeManager();" << endl << endl;
 	return true;

@@ -8,7 +8,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmReferenceChannel final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmReferenceChannel final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -17,12 +17,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ReferenceChannel)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ReferenceChannel)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_encoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_decoder;
+			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_encoder;
 			size_t m_referenceChannelIdx = 0;
 		};
 

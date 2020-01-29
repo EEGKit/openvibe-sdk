@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmRegularizedCSPTrainer final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmRegularizedCSPTrainer final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmRegularizedCSPTrainer();
@@ -33,9 +33,9 @@ namespace OpenViBEPlugins
 			bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
 							std::vector<Eigen::VectorXd>& sortedEigenValues);
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_stimDecoder;
-			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>> m_signalDecoders;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_encoder;
+			OpenViBE::Toolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_stimDecoder;
+			std::vector<OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>> m_signalDecoders;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_encoder;
 
 			uint64_t m_stimID = 0;
 			OpenViBE::CString m_configFilename;
@@ -56,10 +56,10 @@ namespace OpenViBEPlugins
 
 			size_t m_nClasses = 0;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
 		};
 
-		class CBoxAlgorithmRegularizedCSPTrainerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmRegularizedCSPTrainerListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
@@ -68,7 +68,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmRegularizedCSPTrainerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

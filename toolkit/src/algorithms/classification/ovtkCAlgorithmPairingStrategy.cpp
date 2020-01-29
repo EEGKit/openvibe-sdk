@@ -5,18 +5,17 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 static std::map<uint64_t, fClassifierComparison> comparisionFunctions;
 
-void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& classID, const fClassifierComparison comparision)
+void OpenViBE::Toolkit::registerClassificationComparisonFunction(const CIdentifier& classID, const fClassifierComparison comparision)
 {
 	comparisionFunctions[classID.toUInteger()] = comparision;
 }
 
-fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& classID)
+fClassifierComparison OpenViBE::Toolkit::getClassificationComparisonFunction(const CIdentifier& classID)
 {
 	if (comparisionFunctions.count(classID.toUInteger()) == 0) { return nullptr; }
 	return comparisionFunctions[classID.toUInteger()];

@@ -6,14 +6,16 @@
 
 #include "ovtkTStreamedMatrixEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TSignalEncoderLocal : public T
 	{
 	protected:
 		//The signal stream is a streamed matrix plus a sampling rate
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_iSampling;
+		Kernel::TParameterHandler<uint64_t> m_iSampling;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -49,7 +51,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
+		Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
 
 	protected:
 
@@ -82,6 +84,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TSignalEncoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

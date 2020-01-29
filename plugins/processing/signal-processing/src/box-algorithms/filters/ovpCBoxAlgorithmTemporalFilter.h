@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmTemporalFilter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTemporalFilter final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -20,12 +20,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_TemporalFilter)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_TemporalFilter)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;
+			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
 
 
 			size_t m_method = 0;

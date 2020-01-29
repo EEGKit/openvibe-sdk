@@ -34,7 +34,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
@@ -118,7 +118,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 
 	ctx->initialize();
 	m_impl->ctx = ctx;
-	OpenViBEToolkit::initialize(*ctx);
+	OpenViBE::Toolkit::initialize(*ctx);
 
 	IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
@@ -137,7 +137,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::unloadKernel() const
 		for (auto& scenarioPair : m_impl->scenarios) { scenarioManager.releaseScenario(scenarioPair.second); }
 
 
-		OpenViBEToolkit::uninitialize(*m_impl->ctx);
+		OpenViBE::Toolkit::uninitialize(*m_impl->ctx);
 		// m_impl->ctx->uninitialize();
 		IKernelDesc* kernelDesc = nullptr;
 		m_impl->loader.getKernelDesc(kernelDesc);

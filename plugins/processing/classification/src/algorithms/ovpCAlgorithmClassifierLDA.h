@@ -23,14 +23,14 @@ namespace OpenViBEPlugins
 
 		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
-		class CAlgorithmClassifierLDA final : public OpenViBEToolkit::CAlgorithmClassifier
+		class CAlgorithmClassifierLDA final : public OpenViBE::Toolkit::CAlgorithmClassifier
 		{
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& dataset) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& sample, double& classId, OpenViBEToolkit::IVector& distance,
-						  OpenViBEToolkit::IVector& probability) override;
+			bool train(const OpenViBE::Toolkit::IFeatureVectorSet& dataset) override;
+			bool classify(const OpenViBE::Toolkit::IFeatureVector& sample, double& classId, OpenViBE::Toolkit::IVector& distance,
+						  OpenViBE::Toolkit::IVector& probability) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode* configNode) override;
 			size_t getNProbabilities() override { return m_discriminantFunctions.size(); }
@@ -62,7 +62,7 @@ namespace OpenViBEPlugins
 			size_t getClassCount() const { return m_nClasses; }
 		};
 
-		class CAlgorithmClassifierLDADesc final : public OpenViBEToolkit::CAlgorithmClassifierDesc
+		class CAlgorithmClassifierLDADesc final : public OpenViBE::Toolkit::CAlgorithmClassifierDesc
 		{
 		public:
 			void release() override { }

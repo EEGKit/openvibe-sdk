@@ -8,21 +8,24 @@
 #define OVTK_ClassId_Algorithm_ScenarioExporter     OpenViBE::CIdentifier(0x7C281FEA, 0x40B66277)
 #define OVTK_ClassId_Algorithm_ScenarioExporterDesc OpenViBE::CIdentifier(0x49A9778E, 0x7BB377F9)
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	class OVTK_API CAlgorithmScenarioExporter : public TAlgorithm<OpenViBE::Plugins::IAlgorithmScenarioExporter>
+	namespace Toolkit
+	{
+	class OVTK_API CAlgorithmScenarioExporter : public TAlgorithm<Plugins::IAlgorithmScenarioExporter>
 	{
 	public:
 		void release() override { delete this; }
 		bool process() override;
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioExporter >, OVTK_ClassId_Algorithm_ScenarioExporter)
+		_IsDerivedFromClass_Final_(TAlgorithm < Plugins::IAlgorithmScenarioExporter >, OVTK_ClassId_Algorithm_ScenarioExporter)
 	};
 
-	class OVTK_API CAlgorithmScenarioExporterDesc : public OpenViBE::Plugins::IAlgorithmScenarioExporterDesc
+	class OVTK_API CAlgorithmScenarioExporterDesc : public Plugins::IAlgorithmScenarioExporterDesc
 	{
 	public:
 
-		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmScenarioExporterDesc, OVTK_ClassId_Algorithm_ScenarioExporterDesc)
+		_IsDerivedFromClass_(Plugins::IAlgorithmScenarioExporterDesc, OVTK_ClassId_Algorithm_ScenarioExporterDesc)
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

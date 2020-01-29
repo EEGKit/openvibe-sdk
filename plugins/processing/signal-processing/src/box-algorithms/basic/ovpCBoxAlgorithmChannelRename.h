@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmChannelRename final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmChannelRename final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -20,12 +20,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelRename)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelRename)
 
 		protected:
 
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_decoder;
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_encoder;
+			OpenViBE::Toolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_decoder;
+			OpenViBE::Toolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_encoder;
 
 			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
 
@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 			std::vector<std::string> m_names;
 		};
 
-		class CBoxAlgorithmChannelRenameListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmChannelRenameListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
@@ -55,7 +55,7 @@ namespace OpenViBEPlugins
 			}
 
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmChannelRenameDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

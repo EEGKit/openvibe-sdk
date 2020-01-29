@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmClassifierProcessor final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClassifierProcessor final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -20,19 +20,19 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
 
 		protected:
 			bool loadClassifier(const char* filename);
 
 		private:
 
-			OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_sampleDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_stimDecoder;
+			OpenViBE::Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_sampleDecoder;
+			OpenViBE::Toolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_stimDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_labelsEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_hyperplanesEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_probabilitiesEncoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_labelsEncoder;
+			OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_hyperplanesEncoder;
+			OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_probabilitiesEncoder;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_classifier = nullptr;
 

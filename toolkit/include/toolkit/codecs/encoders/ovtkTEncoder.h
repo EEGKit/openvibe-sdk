@@ -6,27 +6,29 @@
 
 #include "../ovtkTCodec.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TEncoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> m_buffer;
+		Kernel::TParameterHandler<IMemoryBuffer*> m_buffer;
 
 		using T::initialize;
 		using T::m_codec;
 		using T::m_boxAlgorithm;
 		using T::m_connectorIdx;
 
-		virtual void setOutputChunk(OpenViBE::IMemoryBuffer* pOutputChunkMemoryBuffer) { m_buffer = pOutputChunkMemoryBuffer; }
+		virtual void setOutputChunk(IMemoryBuffer* pOutputChunkMemoryBuffer) { m_buffer = pOutputChunkMemoryBuffer; }
 
-		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getOutputMemoryBuffer() { return m_buffer; }
+		virtual Kernel::TParameterHandler<IMemoryBuffer*>& getOutputMemoryBuffer() { return m_buffer; }
 
-		virtual bool isOutputTriggerActive(const OpenViBE::CIdentifier oTrigger) { return m_codec->isOutputTriggerActive(oTrigger); }
+		virtual bool isOutputTriggerActive(const CIdentifier oTrigger) { return m_codec->isOutputTriggerActive(oTrigger); }
 
-		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_codec->process(oTrigger); }
+		virtual bool process(const CIdentifier& oTrigger) { return m_codec->process(oTrigger); }
 
 		virtual bool process() { return m_codec->process(); }
 
@@ -80,6 +82,7 @@ namespace OpenViBEToolkit
 		// constructor is protected, ensuring we can't instanciate a TEncoder
 		TEncoder() { }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

@@ -2,7 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 // ********************************************************************************************************************
 //                                                                                                                    *
@@ -12,7 +12,7 @@ using namespace OpenViBEToolkit;
 //                                                                                                                    *
 // ********************************************************************************************************************
 
-bool OpenViBEToolkit::initialize(const IKernelContext& ctx)
+bool OpenViBE::Toolkit::initialize(const IKernelContext& ctx)
 {
 	ITypeManager& typeManager = ctx.getTypeManager();
 
@@ -255,4 +255,4 @@ bool OpenViBEToolkit::initialize(const IKernelContext& ctx)
 	return true;
 }
 
-bool OpenViBEToolkit::uninitialize(const IKernelContext& /*ctx*/) { return true; }
+bool OpenViBE::Toolkit::uninitialize(const IKernelContext& /*ctx*/) { return true; }

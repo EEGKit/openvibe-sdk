@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmXDAWNTrainer final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmXDAWNTrainer final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmXDAWNTrainer();
@@ -23,13 +23,13 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer)
 
 		protected:
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmXDAWNTrainer> m_stimDecoder;
-			std::array<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>, 2> m_signalDecoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_stimEncoder;
+			OpenViBE::Toolkit::TStimulationDecoder<CBoxAlgorithmXDAWNTrainer> m_stimDecoder;
+			std::array<OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>, 2> m_signalDecoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_stimEncoder;
 
 			uint64_t m_trainStimulationID = 0;
 			OpenViBE::CString m_filterFilename;

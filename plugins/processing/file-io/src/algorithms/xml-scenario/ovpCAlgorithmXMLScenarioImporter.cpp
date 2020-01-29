@@ -16,10 +16,10 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 enum
 {

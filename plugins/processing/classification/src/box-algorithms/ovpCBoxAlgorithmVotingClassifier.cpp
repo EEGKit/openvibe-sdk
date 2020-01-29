@@ -9,7 +9,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace Classification;
@@ -29,7 +29,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 		input_t& input = m_results[i];
 		if (m_matrixBased)
 		{
-			auto* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
+			auto* decoder = new OpenViBE::Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
 			input.decoder       = decoder;
 			input.op_matrix     = decoder->getOutputMatrix();
@@ -37,7 +37,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 		}
 		else
 		{
-			auto* decoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
+			auto* decoder = new OpenViBE::Toolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
 			input.decoder       = decoder;
 			input.op_stimSet    = decoder->getOutputStimulationSet();

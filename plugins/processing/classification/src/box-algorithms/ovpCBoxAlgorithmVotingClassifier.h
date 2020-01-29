@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmVotingClassifier final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmVotingClassifier final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_VotingClassifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_VotingClassifier)
 
 		protected:
 
@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 
 			typedef struct
 			{
-				OpenViBEToolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
+				OpenViBE::Toolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
 				OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimSet;
 				OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
 				bool twoValueInput;
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 
 			std::map<uint32_t, input_t> m_results;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_classificationChoiceStimSet;
 
 			uint64_t m_lastTime = 0;
@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CBoxAlgorithmVotingClassifierListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmVotingClassifierListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 
 		protected:
 

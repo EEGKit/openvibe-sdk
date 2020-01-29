@@ -7,7 +7,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectralAnalysis final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpectralAnalysis final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -16,12 +16,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_SpectralAnalysis)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_SpectralAnalysis)
 
 		protected:
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_decoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_decoder;
 
-			std::vector<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
+			std::vector<OpenViBE::Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
 			std::vector<bool> m_isSpectrumEncoderActive;
 
 			size_t m_nChannel = 0;

@@ -77,7 +77,7 @@ protected:
 	//! Optional parameter in case of a special tree
 	double m_treeParameter = 0;
 
-	OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& m_parentPlugin;
+	OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& m_parentPlugin;
 
 public:
 
@@ -87,7 +87,7 @@ public:
 	* \param variable Pointer to the data known as X in the equation.
 	* \param nVariable
 	*/
-	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, const size_t nVariable)
+	CEquationParser(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, const size_t nVariable)
 		: m_variable(variable), m_nVariable(nVariable), m_parentPlugin(plugin) {}
 
 	//! Destructor.

@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 		 * Main plugin class of the feature aggregator plugins.
 		 * Aggregates the features received in a feature vector then outputs it.
 		 * */
-		class CBoxAlgorithmFeatureAggregator final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmFeatureAggregator final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -28,12 +28,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
 
 		protected:
 			//codecs
-			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_encoder = nullptr;
-			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_decoder;
+			OpenViBE::Toolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_encoder = nullptr;
+			std::vector<OpenViBE::Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_decoder;
 
 			// contains the labels for each dimension for each input
 			std::vector<std::vector<std::vector<std::string>>> m_featureNames;
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			bool m_headerSent = false;
 		};
 
-		class CBoxAlgorithmFeatureAggregatorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmFeatureAggregatorListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		/**

@@ -5,8 +5,10 @@
 
 #include <map>
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	class CInternalFeatureVector final : public IFeatureVector
 	{
 	public:
@@ -21,9 +23,9 @@ namespace OpenViBEToolkit
 		double getLabel() const override { return m_Buffer[m_Size]; }
 		bool setLabel(const double /*label*/) override { return false; }
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
+		_IsDerivedFromClass_Final_(IFeatureVector, OV_UndefinedIdentifier)
 
-		const OpenViBE::IMatrix* m_Matrix = nullptr;
+		const IMatrix* m_Matrix = nullptr;
 		uint32_t m_DimensionIdx           = 0;
 		uint32_t m_Size                   = 0;
 		const double* m_Buffer            = nullptr;
@@ -33,7 +35,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		explicit CFeatureVectorSet(const OpenViBE::IMatrix& matrix);
+		explicit CFeatureVectorSet(const IMatrix& matrix);
 		size_t getFeatureVectorCount() const override { return m_matrix.getDimensionSize(0); }
 		bool setFeatureVectorCount(const size_t /*nFeatureVector*/) override { return false; }
 		bool addFeatureVector(const IFeatureVector& /*featureVector*/) override { return false; }
@@ -41,11 +43,12 @@ namespace OpenViBEToolkit
 		const IFeatureVector& getFeatureVector(const size_t index) const override;
 		size_t getLabelCount() const override;
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier)
+		_IsDerivedFromClass_Final_(IFeatureVectorSet, OV_UndefinedIdentifier)
 
 	protected:
 
-		const OpenViBE::IMatrix& m_matrix;
+		const IMatrix& m_matrix;
 		std::map<uint32_t, CInternalFeatureVector> m_features;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

@@ -4,8 +4,10 @@
 
 #include <vector>
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	class CSignalTrialSet final : public ISignalTrialSet
 	{
 	public:
@@ -14,7 +16,7 @@ namespace OpenViBEToolkit
 		size_t getSignalTrialCount() const override { return m_signalTrials.size(); }
 		ISignalTrial& getSignalTrial(const size_t index) const override { return *m_signalTrials[index]; }
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_)
+		_IsDerivedFromClass_Final_(OpenViBE::Toolkit::ISignalTrialSet, OVTK_ClassId_)
 
 	protected:
 
@@ -22,4 +24,5 @@ namespace OpenViBEToolkit
 	};
 
 	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

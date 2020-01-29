@@ -2,20 +2,20 @@
 
 using namespace OpenViBE;
 
-bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& stimSet, const uint64_t timeShift)
+bool OpenViBE::Toolkit::Tools::StimulationSet::shift(IStimulationSet& stimSet, const uint64_t timeShift)
 {
 	const size_t count = stimSet.getStimulationCount();
 	for (size_t i = 0; i < count; ++i) { stimSet.setStimulationDate(i, stimSet.getStimulationDate(i) + timeShift); }
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
+bool OpenViBE::Toolkit::Tools::StimulationSet::copy(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
 {
 	dstStimSet.clear();
 	return append(dstStimSet, srcStimSet, timeShift);
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
+bool OpenViBE::Toolkit::Tools::StimulationSet::append(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
 {
 	const size_t count = srcStimSet.getStimulationCount();
 	for (size_t i = 0; i < count; ++i)
@@ -26,7 +26,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& dstStimSet,
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet,
+bool OpenViBE::Toolkit::Tools::StimulationSet::appendRange(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet,
 														 const uint64_t srcStartTime, const uint64_t srcEndTime, const uint64_t timeShift)
 {
 	const size_t count = srcStimSet.getStimulationCount();
@@ -42,7 +42,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& dstSti
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
+bool OpenViBE::Toolkit::Tools::StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
 {
 	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
 	{

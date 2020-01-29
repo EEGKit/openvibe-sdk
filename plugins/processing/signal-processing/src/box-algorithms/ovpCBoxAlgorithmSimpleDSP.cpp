@@ -7,7 +7,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 using namespace std;
@@ -202,7 +202,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 
 	if (nHeader)
 	{
-		OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
+		OpenViBE::Toolkit::Tools::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
 		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 	}
 	if (nBuffer)

@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../ovtkIObject.h"
+#include "../ovtk_base.h"
 #include <limits>
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class TBoxAlgorithmParentClass>
 	class TBoxAlgorithm : public TBoxAlgorithmParentClass
 	{
@@ -16,51 +18,51 @@ namespace OpenViBEToolkit
 
 	private:
 
-		virtual uint64_t getClockFrequency(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx)
+		virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& ctx)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return getClockFrequency();
 		}
 
-		virtual bool initialize(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx)
+		virtual bool initialize(Kernel::IBoxAlgorithmContext& ctx)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return initialize();
 		}
 
-		virtual bool uninitialize(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx)
+		virtual bool uninitialize(Kernel::IBoxAlgorithmContext& ctx)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return uninitialize();
 		}
 
-		virtual bool processEvent(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, OpenViBE::CMessageEvent& messageEvent)
+		virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessageEvent& messageEvent)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return processEvent(messageEvent);
 		}
 
-		virtual bool processSignal(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, OpenViBE::CMessageSignal& messageSignal)
+		virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessageSignal& messageSignal)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return processSignal(messageSignal);
 		}
 
-		virtual bool processClock(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, OpenViBE::CMessageClock& messageClock)
+		virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessageClock& messageClock)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return processClock(messageClock);
 		}
 
-		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, const size_t index)
+		virtual bool processInput(Kernel::IBoxAlgorithmContext& ctx, const size_t index)
 		{
-			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return processInput(index);
 		}
 
-		virtual bool process(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx)
+		virtual bool process(Kernel::IBoxAlgorithmContext& ctx)
 		{
-			CScopedBoxAlgorithm oScopedBoxAlgorithm(m_boxAlgorithmCtx, &boxAlgorithmCtx);
+			CScopedBoxAlgorithm oScopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
 			return process();
 		}
 
@@ -71,44 +73,44 @@ namespace OpenViBEToolkit
 		virtual uint64_t getClockFrequency() { return 0; }
 		virtual bool initialize() { return true; }
 		virtual bool uninitialize() { return true; }
-		virtual bool processEvent(OpenViBE::CMessageEvent& /*messageEvent*/) { return false; }
-		virtual bool processSignal(OpenViBE::CMessageSignal& /*messageSignal*/) { return false; }
-		virtual bool processClock(OpenViBE::CMessageClock& /*messageClock*/) { return false; }
+		virtual bool processEvent(CMessageEvent& /*messageEvent*/) { return false; }
+		virtual bool processSignal(CMessageSignal& /*messageSignal*/) { return false; }
+		virtual bool processClock(CMessageClock& /*messageClock*/) { return false; }
 		virtual bool processInput(const size_t /*index*/) { return false; }
 		virtual bool process() = 0;
 
 		// ====================================================================================================================================
 
-		virtual OpenViBE::Kernel::IBoxAlgorithmContext* getBoxAlgorithmContext() { return m_boxAlgorithmCtx; }
-		// virtual OpenViBE::Kernel::IBoxAlgorithmContext& getBoxAlgorithmContext() { return *m_boxAlgorithmCtx; } this one should replace !
-		virtual const OpenViBE::Kernel::IBox& getStaticBoxContext() { return *m_boxAlgorithmCtx->getStaticBoxContext(); }
-		virtual OpenViBE::Kernel::IBoxIO& getDynamicBoxContext() { return *m_boxAlgorithmCtx->getDynamicBoxContext(); }
-		virtual OpenViBE::Kernel::IPlayerContext& getPlayerContext() { return *m_boxAlgorithmCtx->getPlayerContext(); }
+		virtual Kernel::IBoxAlgorithmContext* getBoxAlgorithmContext() { return m_boxAlgorithmCtx; }
+		// virtual Kernel::IBoxAlgorithmContext& getBoxAlgorithmContext() { return *m_boxAlgorithmCtx; } this one should replace !
+		virtual const Kernel::IBox& getStaticBoxContext() { return *m_boxAlgorithmCtx->getStaticBoxContext(); }
+		virtual Kernel::IBoxIO& getDynamicBoxContext() { return *m_boxAlgorithmCtx->getDynamicBoxContext(); }
+		virtual Kernel::IPlayerContext& getPlayerContext() { return *m_boxAlgorithmCtx->getPlayerContext(); }
 
-		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager() { return getPlayerContext().getAlgorithmManager(); }
-		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager() { return getPlayerContext().getConfigurationManager(); }
-		virtual OpenViBE::Kernel::ILogManager& getLogManager() { return getPlayerContext().getLogManager(); }
-		virtual OpenViBE::Kernel::IErrorManager& getErrorManager() { return getPlayerContext().getErrorManager(); }
-		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager() { return getPlayerContext().getScenarioManager(); }
-		virtual OpenViBE::Kernel::ITypeManager& getTypeManager() { return getPlayerContext().getTypeManager(); }
+		virtual Kernel::IAlgorithmManager& getAlgorithmManager() { return getPlayerContext().getAlgorithmManager(); }
+		virtual Kernel::IConfigurationManager& getConfigurationManager() { return getPlayerContext().getConfigurationManager(); }
+		virtual Kernel::ILogManager& getLogManager() { return getPlayerContext().getLogManager(); }
+		virtual Kernel::IErrorManager& getErrorManager() { return getPlayerContext().getErrorManager(); }
+		virtual Kernel::IScenarioManager& getScenarioManager() { return getPlayerContext().getScenarioManager(); }
+		virtual Kernel::ITypeManager& getTypeManager() { return getPlayerContext().getTypeManager(); }
 
-		virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginID) { return getPlayerContext().canCreatePluginObject(pluginID); }
+		virtual bool canCreatePluginObject(const CIdentifier& pluginID) { return getPlayerContext().canCreatePluginObject(pluginID); }
 
-		virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginID)
+		virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginID)
 		{
 			return getPlayerContext().createPluginObject(pluginID);
 		}
 
-		virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) { return getPlayerContext().releasePluginObject(pluginObject); }
+		virtual bool releasePluginObject(Plugins::IPluginObject* pluginObject) { return getPlayerContext().releasePluginObject(pluginObject); }
 
 		// ====================================================================================================================================
 
 		virtual void appendOutputChunkData(const size_t outputIdx, const void* buffer, const size_t size)
 		{
-			OpenViBE::Kernel::IBoxAlgorithmContext* context = this->getBoxAlgorithmContext();
+			Kernel::IBoxAlgorithmContext* context = this->getBoxAlgorithmContext();
 			if (context)
 			{
-				OpenViBE::Kernel::IBoxIO* boxContext = context->getDynamicBoxContext();
+				Kernel::IBoxIO* boxContext = context->getDynamicBoxContext();
 				if (boxContext) { boxContext->appendOutputChunkData(outputIdx, static_cast<const uint8_t*>(buffer), size); }
 			}
 		}
@@ -123,7 +125,7 @@ namespace OpenViBEToolkit
 		class FSettingValueAutoCast
 		{
 		public:
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& ctx, const size_t index)
+			FSettingValueAutoCast(Kernel::IBoxAlgorithmContext& ctx, const size_t index)
 				: m_logManager(ctx.getPlayerContext()->getLogManager()),
 				  m_errorManager(ctx.getPlayerContext()->getErrorManager()),
 				  m_typeManager(ctx.getPlayerContext()->getTypeManager()),
@@ -133,34 +135,34 @@ namespace OpenViBEToolkit
 				ctx.getStaticBoxContext()->getSettingType(index, m_settingType);
 			}
 
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& ctx, const OpenViBE::CString& name)
+			FSettingValueAutoCast(Kernel::IBoxAlgorithmContext& ctx, const CString& name)
 				: m_logManager(ctx.getPlayerContext()->getLogManager()),
 				  m_errorManager(ctx.getPlayerContext()->getErrorManager()),
 				  m_typeManager(ctx.getPlayerContext()->getTypeManager()),
 				  m_configManager(ctx.getPlayerContext()->getConfigurationManager())
 			{
 				ctx.getStaticBoxContext()->getSettingValue(name, m_settingValue);
-				ctx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, name, m_settingType);
+				ctx.getStaticBoxContext()->getInterfacorType(Kernel::EBoxInterfacorType::Setting, name, m_settingType);
 			}
 
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& ctx, const OpenViBE::CIdentifier& identifier)
+			FSettingValueAutoCast(Kernel::IBoxAlgorithmContext& ctx, const CIdentifier& identifier)
 				: m_logManager(ctx.getPlayerContext()->getLogManager()),
 				  m_errorManager(ctx.getPlayerContext()->getErrorManager()),
 				  m_typeManager(ctx.getPlayerContext()->getTypeManager()),
 				  m_configManager(ctx.getPlayerContext()->getConfigurationManager())
 			{
 				ctx.getStaticBoxContext()->getSettingValue(identifier, m_settingValue);
-				ctx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, identifier, m_settingType);
+				ctx.getStaticBoxContext()->getInterfacorType(Kernel::EBoxInterfacorType::Setting, identifier, m_settingType);
 			}
 
 			operator uint32_t() const
 			{
 				double result;
-				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
+				const CString value = m_configManager.expand(m_settingValue);
 
 				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, result),
 								"Could not expand numeric expression [" << m_settingValue << "] to unsigned integer 32bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint32_t>::max(), m_errorManager, m_logManager);
+								Kernel::ErrorType::BadParsing, std::numeric_limits<uint32_t>::max(), m_errorManager, m_logManager);
 
 				return uint32_t(result);
 			}
@@ -168,7 +170,7 @@ namespace OpenViBEToolkit
 			operator uint64_t() const
 			{
 				uint64_t stimId               = std::numeric_limits<uint64_t>::max();
-				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
+				const CString value = m_configManager.expand(m_settingValue);
 				double result;
 				if (m_typeManager.isEnumeration(m_settingType))
 				{
@@ -176,7 +178,7 @@ namespace OpenViBEToolkit
 
 					OV_ERROR_UNLESS(stimId != std::numeric_limits<uint64_t>::max(),
 									"Did not find an enumeration value for [" << m_typeManager.getTypeName(m_settingType) << "] = [" << m_settingValue << "]",
-									OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
+									Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
 				}
 				else if (m_typeManager.evaluateSettingValue(value, result)) { return uint64_t(result); }
 
@@ -185,7 +187,7 @@ namespace OpenViBEToolkit
 				// setting should be an integer.
 				OV_ERROR_UNLESS(stimId != std::numeric_limits<uint64_t>::max() || m_settingType != OV_TypeId_Integer,
 								"Could not expand numeric expression [" << m_settingValue << "] to unsigned integer 64bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
+								Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
 
 				return stimId;
 			}
@@ -193,11 +195,11 @@ namespace OpenViBEToolkit
 			operator int() const
 			{
 				double res;
-				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
+				const CString value = m_configManager.expand(m_settingValue);
 
 				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, res),
 								"Could not expand numeric expression [" << m_settingValue << "] to integer 32bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int>::max(), m_errorManager, m_logManager);
+								Kernel::ErrorType::BadParsing, std::numeric_limits<int>::max(), m_errorManager, m_logManager);
 
 				return int(res);
 			}
@@ -205,11 +207,11 @@ namespace OpenViBEToolkit
 			operator int64_t() const
 			{
 				double res;
-				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
+				const CString value = m_configManager.expand(m_settingValue);
 
 				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, res),
 								"Could not expand numeric expression [" << m_settingValue << "] to integer 64bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_errorManager, m_logManager);
+								Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_errorManager, m_logManager);
 
 				return int64_t(res);
 			}
@@ -217,26 +219,26 @@ namespace OpenViBEToolkit
 			operator double() const
 			{
 				double res;
-				const OpenViBE::CString value = m_configManager.expand(m_settingValue);
+				const CString value = m_configManager.expand(m_settingValue);
 
 				OV_ERROR_UNLESS(m_typeManager.evaluateSettingValue(value, res),
 								"Could not expand numeric expression [" << m_settingValue << "] to double.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_errorManager, m_logManager);
+								Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_errorManager, m_logManager);
 
 				return double(res);
 			}
 
 			operator bool() const { return m_configManager.expandAsBoolean(m_settingValue); }
 
-			operator OpenViBE::CString() const { return m_configManager.expand(m_settingValue); }
+			operator CString() const { return m_configManager.expand(m_settingValue); }
 
 		private:
-			OpenViBE::Kernel::ILogManager& m_logManager;
-			OpenViBE::Kernel::IErrorManager& m_errorManager;
-			OpenViBE::Kernel::ITypeManager& m_typeManager;
-			OpenViBE::Kernel::IConfigurationManager& m_configManager;
-			OpenViBE::CString m_settingValue;
-			OpenViBE::CIdentifier m_settingType = OV_UndefinedIdentifier;
+			Kernel::ILogManager& m_logManager;
+			Kernel::IErrorManager& m_errorManager;
+			Kernel::ITypeManager& m_typeManager;
+			Kernel::IConfigurationManager& m_configManager;
+			CString m_settingValue;
+			CIdentifier m_settingType = OV_UndefinedIdentifier;
 		};
 
 	private:
@@ -244,16 +246,16 @@ namespace OpenViBEToolkit
 		class CScopedBoxAlgorithm final
 		{
 		public:
-			CScopedBoxAlgorithm(OpenViBE::Kernel::IBoxAlgorithmContext*& ctxRef, OpenViBE::Kernel::IBoxAlgorithmContext* ctx)
+			CScopedBoxAlgorithm(Kernel::IBoxAlgorithmContext*& ctxRef, Kernel::IBoxAlgorithmContext* ctx)
 				: m_boxAlgorithmCtx(ctxRef) { m_boxAlgorithmCtx = ctx; }
 
 			~CScopedBoxAlgorithm() { m_boxAlgorithmCtx = nullptr; }
 
 		protected:
-			OpenViBE::Kernel::IBoxAlgorithmContext*& m_boxAlgorithmCtx;
+			Kernel::IBoxAlgorithmContext*& m_boxAlgorithmCtx;
 		};
 
-		OpenViBE::Kernel::IBoxAlgorithmContext* m_boxAlgorithmCtx = nullptr;
+		Kernel::IBoxAlgorithmContext* m_boxAlgorithmCtx = nullptr;
 	};
 
 	template <class TBoxListenerParentClass>
@@ -265,47 +267,47 @@ namespace OpenViBEToolkit
 
 	private:
 
-		virtual bool initialize(OpenViBE::Kernel::IBoxListenerContext& ctx)
+		virtual bool initialize(Kernel::IBoxListenerContext& ctx)
 		{
 			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 			return initialize();
 		}
 
-		virtual bool uninitialize(OpenViBE::Kernel::IBoxListenerContext& ctx)
+		virtual bool uninitialize(Kernel::IBoxListenerContext& ctx)
 		{
 			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 			return uninitialize();
 		}
 
-		virtual bool process(OpenViBE::Kernel::IBoxListenerContext& ctx, const OpenViBE::Kernel::EBoxModification eBoxModificationType)
+		virtual bool process(Kernel::IBoxListenerContext& ctx, const Kernel::EBoxModification eBoxModificationType)
 		{
 			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 			switch (eBoxModificationType)
 			{
-				case OpenViBE::Kernel::BoxModification_Initialized: return this->onInitialized(m_boxListenerCtx->getBox());
-				case OpenViBE::Kernel::BoxModification_DefaultInitialized: return this->onDefaultInitialized(m_boxListenerCtx->getBox());
-				case OpenViBE::Kernel::BoxModification_NameChanged: return this->onNameChanged(m_boxListenerCtx->getBox());
-				case OpenViBE::Kernel::BoxModification_IdentifierChanged: return this->onIdentifierChanged(m_boxListenerCtx->getBox());
-				case OpenViBE::Kernel::BoxModification_AlgorithmClassIdentifierChanged: return this->onAlgorithmClassIdentifierChanged(m_boxListenerCtx->getBox());
-				case OpenViBE::Kernel::BoxModification_InputConnected: return this->onInputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputDisconnected: return this->onInputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputAdded: return this->onInputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputRemoved: return this->onInputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputTypeChanged: return this->onInputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_InputNameChanged: return this->onInputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputConnected: return this->onOutputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputDisconnected: return this->onOutputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputAdded: return this->onOutputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputRemoved: return this->onOutputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputTypeChanged: return this->onOutputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_OutputNameChanged: return this->onOutputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingAdded: return this->onSettingAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingRemoved: return this->onSettingRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingTypeChanged: return this->onSettingTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				case OpenViBE::Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-				default: OV_ERROR_KRF("Unhandled box modification type " << size_t(eBoxModificationType), OpenViBE::Kernel::ErrorType::BadArgument);
+				case Kernel::BoxModification_Initialized: return this->onInitialized(m_boxListenerCtx->getBox());
+				case Kernel::BoxModification_DefaultInitialized: return this->onDefaultInitialized(m_boxListenerCtx->getBox());
+				case Kernel::BoxModification_NameChanged: return this->onNameChanged(m_boxListenerCtx->getBox());
+				case Kernel::BoxModification_IdentifierChanged: return this->onIdentifierChanged(m_boxListenerCtx->getBox());
+				case Kernel::BoxModification_AlgorithmClassIdentifierChanged: return this->onAlgorithmClassIdentifierChanged(m_boxListenerCtx->getBox());
+				case Kernel::BoxModification_InputConnected: return this->onInputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_InputDisconnected: return this->onInputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_InputAdded: return this->onInputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_InputRemoved: return this->onInputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_InputTypeChanged: return this->onInputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_InputNameChanged: return this->onInputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_OutputConnected: return this->onOutputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_OutputDisconnected: return this->onOutputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_OutputAdded: return this->onOutputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_OutputRemoved: return this->onOutputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_OutputTypeChanged: return this->onOutputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_OutputNameChanged: return this->onOutputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_SettingAdded: return this->onSettingAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_SettingRemoved: return this->onSettingRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_SettingTypeChanged: return this->onSettingTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				case Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+				default: OV_ERROR_KRF("Unhandled box modification type " << size_t(eBoxModificationType), Kernel::ErrorType::BadArgument);
 			}
 			//return false;
 		}
@@ -316,43 +318,43 @@ namespace OpenViBEToolkit
 
 		virtual bool initialize() { return true; }
 		virtual bool uninitialize() { return true; }
-		virtual bool onInitialized(OpenViBE::Kernel::IBox& /*box*/) { return true; }
-		virtual bool onDefaultInitialized(OpenViBE::Kernel::IBox& /*box*/) { return true; }
-		virtual bool onNameChanged(OpenViBE::Kernel::IBox& /*box*/) { return true; }
-		virtual bool onIdentifierChanged(OpenViBE::Kernel::IBox& /*box*/) { return true; }
-		virtual bool onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox& /*box*/) { return true; }
-		virtual bool onInputConnected(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onInputDisconnected(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onInputAdded(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onInputNameChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onOutputConnected(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onOutputDisconnected(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onOutputAdded(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onOutputNameChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onSettingAdded(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onSettingRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onSettingTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onSettingNameChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
-		virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onInitialized(Kernel::IBox& /*box*/) { return true; }
+		virtual bool onDefaultInitialized(Kernel::IBox& /*box*/) { return true; }
+		virtual bool onNameChanged(Kernel::IBox& /*box*/) { return true; }
+		virtual bool onIdentifierChanged(Kernel::IBox& /*box*/) { return true; }
+		virtual bool onAlgorithmClassIdentifierChanged(Kernel::IBox& /*box*/) { return true; }
+		virtual bool onInputConnected(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onInputDisconnected(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onInputAdded(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onInputRemoved(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onInputTypeChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onInputNameChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onOutputConnected(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onOutputDisconnected(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onOutputAdded(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onOutputRemoved(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onOutputTypeChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onOutputNameChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onSettingAdded(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onSettingRemoved(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onSettingTypeChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onSettingNameChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onSettingDefaultValueChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
+		virtual bool onSettingValueChanged(Kernel::IBox& /*box*/, const size_t /*index*/) { return true; }
 
 		// ====================================================================================================================================
 
-		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager() const { return m_boxListenerCtx->getAlgorithmManager(); }
-		virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager() const { return m_boxListenerCtx->getPlayerManager(); }
-		virtual OpenViBE::Kernel::IPluginManager& getPluginManager() const { return m_boxListenerCtx->getPluginManager(); }
-		virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager() const { return m_boxListenerCtx->getMetaboxManager(); }
-		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager() const { return m_boxListenerCtx->getScenarioManager(); }
-		virtual OpenViBE::Kernel::ITypeManager& getTypeManager() const { return m_boxListenerCtx->getTypeManager(); }
-		virtual OpenViBE::Kernel::ILogManager& getLogManager() const { return m_boxListenerCtx->getLogManager(); }
-		virtual OpenViBE::Kernel::IErrorManager& getErrorManager() const { return m_boxListenerCtx->getErrorManager(); }
-		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager() const { return m_boxListenerCtx->getConfigurationManager(); }
+		virtual Kernel::IAlgorithmManager& getAlgorithmManager() const { return m_boxListenerCtx->getAlgorithmManager(); }
+		virtual Kernel::IPlayerManager& getPlayerManager() const { return m_boxListenerCtx->getPlayerManager(); }
+		virtual Kernel::IPluginManager& getPluginManager() const { return m_boxListenerCtx->getPluginManager(); }
+		virtual Kernel::IMetaboxManager& getMetaboxManager() const { return m_boxListenerCtx->getMetaboxManager(); }
+		virtual Kernel::IScenarioManager& getScenarioManager() const { return m_boxListenerCtx->getScenarioManager(); }
+		virtual Kernel::ITypeManager& getTypeManager() const { return m_boxListenerCtx->getTypeManager(); }
+		virtual Kernel::ILogManager& getLogManager() const { return m_boxListenerCtx->getLogManager(); }
+		virtual Kernel::IErrorManager& getErrorManager() const { return m_boxListenerCtx->getErrorManager(); }
+		virtual Kernel::IConfigurationManager& getConfigurationManager() const { return m_boxListenerCtx->getConfigurationManager(); }
 
-		virtual OpenViBE::Kernel::IScenario& getScenario() const { return m_boxListenerCtx->getScenario(); }
+		virtual Kernel::IScenario& getScenario() const { return m_boxListenerCtx->getScenario(); }
 
 		// ====================================================================================================================================
 
@@ -363,15 +365,16 @@ namespace OpenViBEToolkit
 		class CScopedBoxListener final
 		{
 		public:
-			CScopedBoxListener(OpenViBE::Kernel::IBoxListenerContext*& ctxRef, OpenViBE::Kernel::IBoxListenerContext* ctx)
+			CScopedBoxListener(Kernel::IBoxListenerContext*& ctxRef, Kernel::IBoxListenerContext* ctx)
 				: m_boxListenerCtx(ctxRef) { m_boxListenerCtx = ctx; }
 
 			~CScopedBoxListener() { m_boxListenerCtx = nullptr; }
 
 		protected:
-			OpenViBE::Kernel::IBoxListenerContext*& m_boxListenerCtx;
+			Kernel::IBoxListenerContext*& m_boxListenerCtx;
 		};
 
-		OpenViBE::Kernel::IBoxListenerContext* m_boxListenerCtx = nullptr;
+		Kernel::IBoxListenerContext* m_boxListenerCtx = nullptr;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

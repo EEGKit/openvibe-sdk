@@ -5,15 +5,17 @@
 #include "../../ovtk_base.h"
 #include "ovtkTStreamedMatrixEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TSpectrumEncoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_iFrequencyAbscissa;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_iSampling;
+		Kernel::TParameterHandler<IMatrix*> m_iFrequencyAbscissa;
+		Kernel::TParameterHandler<uint64_t> m_iSampling;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -51,8 +53,8 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbscissa() { return m_iFrequencyAbscissa; }
+		Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
+		Kernel::TParameterHandler<IMatrix*>& getInputFrequencyAbscissa() { return m_iFrequencyAbscissa; }
 
 		size_t getInputFrequencyAbscissaCount() { return m_iFrequencyAbscissa->getDimensionSize(0); }
 
@@ -80,6 +82,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TSpectrumEncoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

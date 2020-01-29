@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmCSVFileWriter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmCSVFileWriter final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			bool processStreamedMatrix();
 			bool processStimulation();
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileWriter)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileWriter)
 
 
 		protected:
@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 			bool m_firstBuffer                                  = false;
 			bool (CBoxAlgorithmCSVFileWriter::*m_realProcess)() = nullptr;
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_decoder = nullptr;
+			OpenViBE::Toolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_decoder = nullptr;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
 			uint64_t m_nSample = 0;
@@ -48,11 +48,11 @@ namespace OpenViBEPlugins
 			bool m_headerReceived = false;
 		};
 
-		class CBoxAlgorithmCSVFileWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmCSVFileWriterListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmCSVFileWriterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

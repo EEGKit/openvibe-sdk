@@ -3,14 +3,16 @@
 #include "../../ovtk_base.h"
 #include "../../ovtkIVector.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class TParent>
 	class TVector : public TParent
 	{
 	public:
 
-		explicit TVector(OpenViBE::IMatrix& matrix) : m_matrix(matrix) { }
+		explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
 
 		uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
 
@@ -35,8 +37,9 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		OpenViBE::IMatrix& m_matrix;
+		IMatrix& m_matrix;
 	};
 
 	typedef TVector<IVector> CVector;
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

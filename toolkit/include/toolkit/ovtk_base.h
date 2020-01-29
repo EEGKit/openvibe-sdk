@@ -14,8 +14,10 @@ namespace EBML
 	class IReaderHelper;
 } // namespace EBML
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class THandledType>
 	class TScopeHandle
 	{
@@ -29,4 +31,5 @@ namespace OpenViBEToolkit
 		THandledType& m_handler;
 		THandledType m_lastHandledValue;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

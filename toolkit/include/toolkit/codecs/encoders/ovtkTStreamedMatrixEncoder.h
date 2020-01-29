@@ -6,14 +6,16 @@
 
 #include "ovtkTEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TStreamedMatrixEncoderLocal : public T
 	{
 	protected:
 		//specific attribute : a matrix handler
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_iMatrix;
+		Kernel::TParameterHandler<IMatrix*> m_iMatrix;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -46,7 +48,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputMatrix() { return m_iMatrix; }
+		Kernel::TParameterHandler<IMatrix*>& getInputMatrix() { return m_iMatrix; }
 
 	protected:
 
@@ -79,6 +81,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TStreamedMatrixEncoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

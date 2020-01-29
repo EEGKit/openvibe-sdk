@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 		const char* const FOLD_SETTING_NAME                = "Number of partitions for k-fold cross-validation test";
 		const char* const BALANCE_SETTING_NAME             = "Balance classes";
 
-		class CBoxAlgorithmClassifierTrainer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClassifierTrainer final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierTrainer)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierTrainer)
 
 		protected:
 
@@ -59,10 +59,10 @@ namespace OpenViBEPlugins
 			uint64_t m_trainStimulation                     = 0;
 			size_t m_nPartition                             = 0;
 
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimDecoder;
-			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_sampleDecoder;
+			OpenViBE::Toolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_stimDecoder;
+			std::vector<OpenViBE::Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_sampleDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_encoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_encoder;
 
 			std::map<OpenViBE::CString, OpenViBE::CString>* m_parameter = nullptr;
 

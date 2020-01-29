@@ -6,8 +6,10 @@
 #include <map>
 #include <string>
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	class CSignalTrial final : public ISignalTrial
 	{
 	public:
@@ -27,7 +29,7 @@ namespace OpenViBEToolkit
 		uint64_t getDuration() const override { return (m_sampling ? OpenViBE::TimeArithmetics::sampleCountToTime(m_sampling, m_nSample) : 0); }
 		double* getChannelSampleBuffer(size_t index) const override;
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrial, OVTK_ClassId_)
+		_IsDerivedFromClass_Final_(OpenViBE::Toolkit::ISignalTrial, OVTK_ClassId_)
 
 	protected:
 
@@ -39,4 +41,5 @@ namespace OpenViBEToolkit
 		size_t m_sampling               = 0;
 		OpenViBE::CIdentifier m_labelID = OV_UndefinedIdentifier;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

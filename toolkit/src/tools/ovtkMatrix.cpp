@@ -16,8 +16,8 @@
 #include <sstream>
 
 using namespace OpenViBE;
-using namespace OpenViBEToolkit;
-using namespace Tools;
+using namespace /*OpenViBE::*/Toolkit;
+using namespace /*OpenViBE::*/Tools; // ambiguous /*OpenViBE::*/ or /*OpenViBE::Toolkit::*/
 
 bool Matrix::copy(IMatrix& dst, const IMatrix& src)
 {

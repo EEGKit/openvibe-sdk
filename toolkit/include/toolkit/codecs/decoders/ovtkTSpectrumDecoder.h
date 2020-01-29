@@ -6,15 +6,17 @@
 
 #include "ovtkTStreamedMatrixDecoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TSpectrumDecoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_frequencyAbscissa;
-		OpenViBE::Kernel::TParameterHandler<uint64_t> m_sampling;
+		Kernel::TParameterHandler<IMatrix*> m_frequencyAbscissa;
+		Kernel::TParameterHandler<uint64_t> m_sampling;
 
 
 		using T::m_codec;
@@ -52,14 +54,11 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate() { return m_sampling; }
-
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbscissa() { return m_frequencyAbscissa; }
+		Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate() { return m_sampling; }
+		Kernel::TParameterHandler<IMatrix*>& getOutputFrequencyAbscissa() { return m_frequencyAbscissa; }
 
 		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedHeader); }
-
 		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedBuffer); }
-
 		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
@@ -80,6 +79,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TSpectrumDecoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

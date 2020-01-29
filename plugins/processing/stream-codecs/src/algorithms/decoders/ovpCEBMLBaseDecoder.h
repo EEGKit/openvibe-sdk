@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CEBMLBaseDecoder : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CEBMLBaseDecoder : public OpenViBE::Toolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 
@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseDecoder)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseDecoder)
 
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& identifier);

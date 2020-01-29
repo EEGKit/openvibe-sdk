@@ -2,12 +2,8 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEToolkit;
-
-// ____________________________________________________________________________________________________________________________________
-//
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 CFeatureVectorSet::CFeatureVectorSet(const IMatrix& matrix) : m_matrix(matrix)
 {
@@ -24,20 +20,17 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& matrix) : m_matrix(matrix)
 
 IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index)
 {
-	auto itFeatureVector = m_features.find(index);
-	return itFeatureVector->second;
+	return m_features.find(index)->second;
 }
 
 const IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index) const
 {
-	const auto itFeatureVector = m_features.find(index);
-	return itFeatureVector->second;
+	return m_features.find(index)->second;
 }
 
 size_t CFeatureVectorSet::getLabelCount() const
 {
 	std::map<double, bool> labels;
-	for (auto itFeatureVector = m_features.begin(); itFeatureVector != m_features.end(); ++
-		 itFeatureVector) { labels[itFeatureVector->second.getLabel()] = true; }
+	for (auto it = m_features.begin(); it != m_features.end(); ++it) { labels[it->second.getLabel()] = true; }
 	return labels.size();
 }

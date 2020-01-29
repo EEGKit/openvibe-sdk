@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmXMLScenarioImporter final : public OpenViBEToolkit::CAlgorithmScenarioImporter, public XML::IReaderCallback
+		class CAlgorithmXMLScenarioImporter final : public OpenViBE::Toolkit::CAlgorithmScenarioImporter, public XML::IReaderCallback
 		{
 		public:
 
@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 			void processChildData(const char* data) override; // XML::IReaderCallback
 			void closeChild() override; // XML::IReaderCallback
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporter, OVP_ClassId_Algorithm_XMLScenarioImporter)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::CAlgorithmScenarioImporter, OVP_ClassId_Algorithm_XMLScenarioImporter)
 
 		protected:
 
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			std::stack<std::string> m_nodes;
 		};
 
-		class CAlgorithmXMLScenarioImporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc
+		class CAlgorithmXMLScenarioImporterDesc final : public OpenViBE::Toolkit::CAlgorithmScenarioImporterDesc
 		{
 		public:
 			void release() override { }
@@ -59,7 +59,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioImporter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmXMLScenarioImporter(); }
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_XMLScenarioImporterDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::CAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_XMLScenarioImporterDesc)
 		};
 	} // namespace FileIO
 } // namespace OpenViBEPlugins

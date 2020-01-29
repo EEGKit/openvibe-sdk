@@ -1,9 +1,11 @@
 #pragma once
 
-#include "ovtkIObject.h"
+#include "ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	class OVTK_API IVector : public IObject
 	{
 	public:
@@ -15,9 +17,10 @@ namespace OpenViBEToolkit
 		virtual const char* getElementLabel(const uint32_t index) const = 0;
 		virtual bool setElementLabel(const uint32_t index, const char* sElementLabel) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_Vector)
+		_IsDerivedFromClass_(IObject, OVTK_ClassId_Vector)
 
 		const double& operator [](const uint32_t index) const { return this->getBuffer()[index]; }
 		double& operator [](const uint32_t index) { return this->getBuffer()[index]; }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

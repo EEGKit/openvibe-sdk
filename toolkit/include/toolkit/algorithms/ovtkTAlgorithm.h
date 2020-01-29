@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../ovtkIObject.h"
+#include "../ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class TAlgorithmParentClass>
 	class TAlgorithm : public TAlgorithmParentClass
 	{
@@ -11,19 +13,19 @@ namespace OpenViBEToolkit
 
 		TAlgorithm() { }
 
-		bool initialize(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx) override
+		bool initialize(Kernel::IAlgorithmContext& algorithmCtx) override
 		{
 			CScopedAlgorithm scopedAlgorithm(m_algorithmCtx, &algorithmCtx);
 			return initialize();
 		}
 
-		bool uninitialize(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx) override
+		bool uninitialize(Kernel::IAlgorithmContext& algorithmCtx) override
 		{
 			CScopedAlgorithm scopedAlgorithm(m_algorithmCtx, &algorithmCtx);
 			return uninitialize();
 		}
 
-		bool process(OpenViBE::Kernel::IAlgorithmContext& algorithmCtx) override
+		bool process(Kernel::IAlgorithmContext& algorithmCtx) override
 		{
 			CScopedAlgorithm scopedAlgorithm(m_algorithmCtx, &algorithmCtx);
 			return process();
@@ -37,61 +39,61 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		virtual OpenViBE::Kernel::IAlgorithmContext& getAlgorithmContext()
+		virtual Kernel::IAlgorithmContext& getAlgorithmContext()
 		{
 			return *m_algorithmCtx; // should never be null
 		}
 
 	protected:
 
-		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager()
+		virtual Kernel::IConfigurationManager& getConfigurationManager()
 		{
 			return m_algorithmCtx->getConfigurationManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager()
+		virtual Kernel::IAlgorithmManager& getAlgorithmManager()
 		{
 			return m_algorithmCtx->getAlgorithmManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::ILogManager& getLogManager()
+		virtual Kernel::ILogManager& getLogManager()
 		{
 			return m_algorithmCtx->getLogManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::IErrorManager& getErrorManager()
+		virtual Kernel::IErrorManager& getErrorManager()
 		{
 			return m_algorithmCtx->getErrorManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::ITypeManager& getTypeManager()
+		virtual Kernel::ITypeManager& getTypeManager()
 		{
 			return m_algorithmCtx->getTypeManager(); // should never be null
 		}
 
-		virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const
+		virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const
 		{
 			return m_algorithmCtx->getNextInputParameterIdentifier(rPreviousInputParameterIdentifier);
 		}
 
-		virtual OpenViBE::Kernel::IParameter* getInputParameter(const OpenViBE::CIdentifier& InputParameterID)
+		virtual Kernel::IParameter* getInputParameter(const CIdentifier& InputParameterID)
 		{
 			return m_algorithmCtx->getInputParameter(InputParameterID);
 		}
 
-		virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const
+		virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const
 		{
 			return m_algorithmCtx->getNextOutputParameterIdentifier(rPreviousOutputParameterIdentifier);
 		}
 
-		virtual OpenViBE::Kernel::IParameter* getOutputParameter(const OpenViBE::CIdentifier& outputParameterID)
+		virtual Kernel::IParameter* getOutputParameter(const CIdentifier& outputParameterID)
 		{
 			return m_algorithmCtx->getOutputParameter(outputParameterID);
 		}
 
-		virtual bool isInputTriggerActive(const OpenViBE::CIdentifier& inputTriggerID) const { return m_algorithmCtx->isInputTriggerActive(inputTriggerID); }
+		virtual bool isInputTriggerActive(const CIdentifier& inputTriggerID) const { return m_algorithmCtx->isInputTriggerActive(inputTriggerID); }
 
-		virtual bool activateOutputTrigger(const OpenViBE::CIdentifier& outputTriggerID, const bool bTriggerState)
+		virtual bool activateOutputTrigger(const CIdentifier& outputTriggerID, const bool bTriggerState)
 		{
 			return m_algorithmCtx->activateOutputTrigger(outputTriggerID, bTriggerState);
 		}
@@ -106,16 +108,17 @@ namespace OpenViBEToolkit
 		{
 		public:
 
-			CScopedAlgorithm(OpenViBE::Kernel::IAlgorithmContext*& algorithmCtxRef, OpenViBE::Kernel::IAlgorithmContext* algorithmCtx)
+			CScopedAlgorithm(Kernel::IAlgorithmContext*& algorithmCtxRef, Kernel::IAlgorithmContext* algorithmCtx)
 				: m_algorithmCtx(algorithmCtxRef) { m_algorithmCtx = algorithmCtx; }
 
 			~CScopedAlgorithm() { m_algorithmCtx = nullptr; }
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmContext*& m_algorithmCtx;
+			Kernel::IAlgorithmContext*& m_algorithmCtx;
 		};
 
-		OpenViBE::Kernel::IAlgorithmContext* m_algorithmCtx = nullptr;
+		Kernel::IAlgorithmContext* m_algorithmCtx = nullptr;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

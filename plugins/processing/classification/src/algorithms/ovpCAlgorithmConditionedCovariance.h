@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CAlgorithmConditionedCovariance final : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmConditionedCovariance final : virtual public OpenViBE::Toolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override { return true; }
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_ConditionedCovariance)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_ConditionedCovariance)
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.

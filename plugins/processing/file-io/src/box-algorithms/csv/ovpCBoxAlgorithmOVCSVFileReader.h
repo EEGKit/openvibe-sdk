@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmOVCSVFileReader final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmOVCSVFileReader final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -25,15 +25,15 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileReader)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileReader)
 
 		private:
 			bool processStimulation(double startTime, double endTime);
 
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_readerLib;
 
-			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_algorithmEncoder;
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimEncoder;
+			OpenViBE::Toolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_algorithmEncoder;
+			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_stimEncoder;
 
 			std::deque<OpenViBE::CSV::SMatrixChunk> m_savedChunks;
 			std::deque<OpenViBE::CSV::SStimulationChunk> m_savedStimulations;
@@ -51,7 +51,7 @@ namespace OpenViBEPlugins
 			std::vector<double> m_frequencyAbscissa;
 		};
 
-		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

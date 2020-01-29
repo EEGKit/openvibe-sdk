@@ -29,7 +29,7 @@ namespace OpenViBETest
 {
 	using namespace OpenViBE;
 	using namespace /*OpenViBE::*/Kernel;
-	using namespace Plugins;
+	using namespace /*OpenViBE::*/Plugins;
 
 	void SKernelFixture::setUp()
 	{
@@ -75,7 +75,7 @@ namespace OpenViBETest
 		}
 
 		ctx->initialize();
-		OpenViBEToolkit::initialize(*ctx);
+		OpenViBE::Toolkit::initialize(*ctx);
 		context = ctx;
 	}
 
@@ -83,7 +83,7 @@ namespace OpenViBETest
 	{
 		if (context)
 		{
-			OpenViBEToolkit::uninitialize(*context);
+			OpenViBE::Toolkit::uninitialize(*context);
 			IKernelDesc* kernelDesc = nullptr;
 			m_kernelLoader.getKernelDesc(kernelDesc);
 			kernelDesc->releaseKernel(context);

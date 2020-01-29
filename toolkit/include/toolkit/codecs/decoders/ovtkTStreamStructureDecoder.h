@@ -4,8 +4,10 @@
 
 #include "../../ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TStreamStructureDecoderLocal : public T
 	{
@@ -61,6 +63,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TStreamStructureDecoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

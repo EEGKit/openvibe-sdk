@@ -14,10 +14,12 @@
 
 typedef int (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	extern OVTK_API void registerClassificationComparisonFunction(const OpenViBE::CIdentifier& classID, fClassifierComparison comparision);
-	extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const OpenViBE::CIdentifier& classID);
+	namespace Toolkit
+	{
+	extern OVTK_API void registerClassificationComparisonFunction(const CIdentifier& classID, fClassifierComparison comparision);
+	extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const CIdentifier& classID);
 
 
 	class OVTK_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
@@ -26,7 +28,7 @@ namespace OpenViBEToolkit
 		bool process() override;
 		void release() override { delete this; }
 
-		virtual bool designArchitecture(const OpenViBE::CIdentifier& id, const size_t nClass) = 0;
+		virtual bool designArchitecture(const CIdentifier& id, const size_t nClass) = 0;
 		bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
 		bool classify(const IFeatureVector& rFeatureVector, double& classId, IVector& distance, IVector& probability) override = 0;
 		XML::IXMLNode* saveConfig() override = 0;
@@ -39,20 +41,21 @@ namespace OpenViBEToolkit
 	protected:
 		//  std::vector <double> m_classes;
 		//The vector will be use when the user will be able to specify class label
-		OpenViBE::CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
+		CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
 	};
 
 	class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
 	{
 	public:
-		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+		bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 		{
 			CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
-			prototype.addInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", OpenViBE::Kernel::ParameterType_Identifier);
+			prototype.addInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", Kernel::ParameterType_Identifier);
 			prototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
 			return true;
 		}
 
-		_IsDerivedFromClass_(OpenViBEToolkit::CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
+		_IsDerivedFromClass_(CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

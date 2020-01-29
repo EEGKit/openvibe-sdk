@@ -4,14 +4,16 @@
 
 #include "ovtkTStreamedMatrixEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TChannelLocalisationEncoderLocal : public T
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<bool> m_iDynamic;
+		Kernel::TParameterHandler<bool> m_iDynamic;
 
 		using T::m_codec;
 		using T::m_boxAlgorithm;
@@ -46,7 +48,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<bool>& getInputDynamic() { return m_iDynamic; }
+		Kernel::TParameterHandler<bool>& getInputDynamic() { return m_iDynamic; }
 
 	protected:
 		bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputTriggerId_EncodeHeader); }
@@ -71,6 +73,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TChannelLocalisationEncoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

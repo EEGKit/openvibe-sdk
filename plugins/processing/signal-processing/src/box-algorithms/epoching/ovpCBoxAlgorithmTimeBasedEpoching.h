@@ -7,7 +7,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmTimeBasedEpoching final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeBasedEpoching final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -16,12 +16,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
 
 		private:
 
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_decoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_encoder;
+			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_decoder;
+			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_encoder;
 
 			double m_duration = 0;
 			double m_interval = 0;

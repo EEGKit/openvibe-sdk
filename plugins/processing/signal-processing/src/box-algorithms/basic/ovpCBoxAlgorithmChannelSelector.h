@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmChannelSelector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmChannelSelector final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -19,12 +19,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelSelector)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelSelector)
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
+			OpenViBE::Toolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
+			OpenViBE::Toolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
 
 			OpenViBE::IMatrix* m_iMatrix = nullptr;
 			OpenViBE::IMatrix* m_oMatrix = nullptr;
@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			std::vector<size_t> m_vLookup;
 		};
 
-		class CBoxAlgorithmChannelSelectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmChannelSelectorListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
@@ -112,7 +112,7 @@ namespace OpenViBEPlugins
 		private:
 			bool m_hasUserSetName = false;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmChannelSelectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

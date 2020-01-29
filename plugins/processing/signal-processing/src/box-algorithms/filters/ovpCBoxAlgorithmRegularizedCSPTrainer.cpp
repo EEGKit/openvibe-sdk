@@ -10,7 +10,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
@@ -112,7 +112,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const size_t index)
 	SIncrementalCovarianceProxy& curCovProxy(m_covProxies[index]);
 	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(index + 1); ++i)
 	{
-		OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>* decoder = &m_signalDecoders[index];
+		OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>* decoder = &m_signalDecoders[index];
 		const IMatrix* inputSignal                                                   = decoder->getOutputMatrix();
 
 		decoder->decode(i);
@@ -392,7 +392,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 				selectedVectors.setDimensionLabel(0, i, label.str().c_str());
 			}
 
-			OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(selectedVectors, m_configFilename, 10),
+			OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(selectedVectors, m_configFilename, 10),
 								"Failed to save file to location [" << m_configFilename << "]",
 								OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}

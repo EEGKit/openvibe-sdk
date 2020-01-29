@@ -9,7 +9,7 @@ namespace OpenViBEPlugins
 {
 	namespace DataGeneration
 	{
-		class CBoxAlgorithmTimeSignalGenerator final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeSignalGenerator final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -25,11 +25,11 @@ namespace OpenViBEPlugins
 			bool processClock(OpenViBE::Kernel::IMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeSignalGenerator)
+			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeSignalGenerator)
 
 		protected:
 
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_encoder;
+			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_encoder;
 
 			bool m_headerSent              = false;
 			size_t m_sampling              = 0;

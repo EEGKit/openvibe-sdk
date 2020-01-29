@@ -7,12 +7,14 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
-using namespace OpenViBEToolkit;
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	namespace
 	{
 		typedef struct SScenarioInput
@@ -142,7 +144,8 @@ namespace OpenViBEToolkit
 		IAlgorithmContext& m_AlgorithmContext;
 		scenario_t m_SymbolicScenario;
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 bool CAlgorithmScenarioImporter::process()
 {

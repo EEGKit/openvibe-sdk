@@ -2,8 +2,10 @@
 
 #include "ovtkIVector.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	class OVTK_API IFeatureVector : public IVector
 	{
 	public:
@@ -11,6 +13,7 @@ namespace OpenViBEToolkit
 		virtual double getLabel() const = 0;
 		virtual bool setLabel(const double label) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IVector, OVTK_ClassId_FeatureVector)
+		_IsDerivedFromClass_(IVector, OVTK_ClassId_FeatureVector)
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

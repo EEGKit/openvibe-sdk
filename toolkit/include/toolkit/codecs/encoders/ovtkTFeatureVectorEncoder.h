@@ -6,8 +6,10 @@
 
 #include "ovtkTStreamedMatrixEncoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	template <class T>
 	class TFeatureVectorEncoderLocal : public T
 	{
@@ -56,6 +58,7 @@ namespace OpenViBEToolkit
 
 		virtual ~TFeatureVectorEncoder() { this->uninitialize(); }
 	};
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

@@ -2,7 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 bool CBoxProto::addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id, const bool notify)
 {

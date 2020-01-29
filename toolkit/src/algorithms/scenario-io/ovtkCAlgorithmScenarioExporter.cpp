@@ -4,12 +4,13 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
-using namespace OpenViBEToolkit;
-
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
+	namespace Toolkit
+	{
 	namespace
 	{
 		class CAlgorithmScenarioExporterHelper
@@ -35,7 +36,8 @@ namespace OpenViBEToolkit
 			CAlgorithmScenarioExporter& m_parent;
 		};
 	} // namespace
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #define exportAttributesMacro(exporter, attributable, memoryBuffer, AttributableName) \
 	do { \
