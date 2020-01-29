@@ -150,7 +150,7 @@ bool CBoxUpdater::checkForSupportedIOSAttributesToBeUpdated() const
 	return false;
 }
 
-bool CBoxUpdater::updateInterfacors(EBoxInterfacorType interfacorType)
+bool CBoxUpdater::updateInterfacors(const EBoxInterfacorType interfacorType)
 {
 	std::vector<InterfacorRequest> interfacors;
 
@@ -285,15 +285,11 @@ bool CBoxUpdater::updateInterfacors(EBoxInterfacorType interfacorType)
 	return updated;
 }
 
-size_t CBoxUpdater::getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
-									   const CString& name)
+size_t CBoxUpdater::getInterfacorIndex(const EBoxInterfacorType type, const IBox& box, const CIdentifier& typeID, const CIdentifier& id, const CString& name)
 {
 	size_t index = size_t(-1);
-	if (identifier != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(interfacorType, identifier))
-	{
-		box.getInterfacorIndex(interfacorType, identifier, index);
-	}
-	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeID)) { box.getInterfacorIndex(interfacorType, name, index); }
+	if (id != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(type, id)) { box.getInterfacorIndex(type, id, index); }
+	else if (box.hasInterfacorWithNameAndType(type, name, typeID)) { box.getInterfacorIndex(type, name, index); }
 
 	return index;
 }

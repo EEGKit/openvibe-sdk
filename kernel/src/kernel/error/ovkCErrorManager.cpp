@@ -69,12 +69,12 @@ namespace OpenViBE
 
 		CErrorManager::~CErrorManager() { this->releaseErrors(); }
 
-		void CErrorManager::pushError(ErrorType type, const char* description) { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
+		void CErrorManager::pushError(const ErrorType type, const char* description) { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
 
-		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, size_t line)
+		void CErrorManager::pushErrorAtLocation(const ErrorType type, const char* description, const char* filename, const size_t line)
 		{
 			std::lock_guard<std::mutex> lock(m_managerGuard);
-			auto lastTopError = m_topError.release();
+			const auto lastTopError = m_topError.release();
 			m_topError.reset(new CError(type, description, lastTopError, filename, line));
 		}
 

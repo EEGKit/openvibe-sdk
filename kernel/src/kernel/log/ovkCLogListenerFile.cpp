@@ -35,9 +35,9 @@ void CLogListenerFile::configure(const IConfigurationManager& configurationManag
 	m_timePrecision  = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
-bool CLogListenerFile::isActive(ELogLevel logLevel)
+bool CLogListenerFile::isActive(const ELogLevel level)
 {
-	const auto it = m_activeLevels.find(logLevel);
+	const auto it = m_activeLevels.find(level);
 	if (it == m_activeLevels.end()) { return true; }
 	return it->second;
 }

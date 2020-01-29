@@ -196,7 +196,7 @@ bool CScenario::removeScenarioOutput(const size_t index)
 	return true;
 }
 
-bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool shouldPreserveIDs)
+bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, const bool mergeSettings, const bool shouldPreserveIDs)
 {
 	map<CIdentifier, CIdentifier> oldToNewIdMap;
 
@@ -885,7 +885,7 @@ bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const 
 }
 
 
-bool CScenario::disconnect(const CIdentifier& srcBoxID, size_t srcBoxOutputIdx, const CIdentifier& dstBoxID, const size_t dstBoxInputIdx)
+bool CScenario::disconnect(const CIdentifier& srcBoxID, const size_t srcBoxOutputIdx, const CIdentifier& dstBoxID, const size_t dstBoxInputIdx)
 {
 	// Looks for any link with the same signature
 	for (auto itLink = m_links.begin(); itLink != m_links.end(); ++itLink)

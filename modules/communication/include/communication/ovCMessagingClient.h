@@ -90,7 +90,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the index is out of range.
 		 */
-		bool getParameter(size_t i, uint64_t& id, size_t& type, std::string& name, std::string& value) const;
+		bool getParameter(size_t i, uint64_t& id, uint64_t& type, std::string& name, std::string& value) const;
 
 		/**
 		 * \brief Get input information.
@@ -105,7 +105,7 @@ namespace Communication
 		 *
 		 * \sa getInputCount
 		 */
-		bool getInput(size_t i, uint64_t& id, size_t& type, std::string& name) const;
+		bool getInput(size_t i, uint64_t& id, uint64_t& type, std::string& name) const;
 
 		/**
 		 * \brief Get input information.
@@ -120,7 +120,7 @@ namespace Communication
 		 *
 		 * \sa getOutputCount
 		 */
-		bool getOutput(size_t i, uint64_t& id, size_t& type, std::string& name) const;
+		bool getOutput(size_t i, uint64_t& id, uint64_t& type, std::string& name) const;
 
 		/**
 		 * \brief Get the oldest error message, if available.

@@ -22,8 +22,10 @@ namespace OpenViBE
 		class CPluginModuleBase : public TKernelObject<IPluginModule>
 		{
 		public:
-			explicit CPluginModuleBase(const IKernelContext& ctx);
-			~CPluginModuleBase() override;
+			explicit CPluginModuleBase(const IKernelContext& ctx)
+				: TKernelObject<IPluginModule>(ctx), m_onInitializeCB(nullptr), m_onGetPluginObjectDescCB(nullptr), m_onUninitializeCB(nullptr) {}
+
+			~CPluginModuleBase() override { }
 			bool initialize() override;
 			bool getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc) override;
 			bool uninitialize() override;
@@ -37,7 +39,7 @@ namespace OpenViBE
 
 			vector<IPluginObjectDesc*> m_pluginObjectDescs;
 			CString m_filename;
-			bool m_gotDesc;
+			bool m_gotDesc = false;
 
 			bool (*m_onInitializeCB)(const IPluginModuleContext&);
 			bool (*m_onGetPluginObjectDescCB)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&);
@@ -79,11 +81,6 @@ namespace OpenViBE
 //___________________________________________________________________//
 //                                                                   //
 
-CPluginModuleBase::CPluginModuleBase(const IKernelContext& ctx)
-	: TKernelObject<IPluginModule>(ctx), m_gotDesc(false), m_onInitializeCB(nullptr), m_onGetPluginObjectDescCB(nullptr), m_onUninitializeCB(nullptr) {}
-
-CPluginModuleBase::~CPluginModuleBase() { }
-
 bool CPluginModuleBase::initialize()
 {
 	if (!isOpen()) { return false; }
@@ -91,7 +88,7 @@ bool CPluginModuleBase::initialize()
 	return m_onInitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-bool CPluginModuleBase::getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc)
+bool CPluginModuleBase::getPluginObjectDescription(const size_t index, IPluginObjectDesc*& pluginObjectDesc)
 {
 	if (!m_gotDesc)
 	{
@@ -173,13 +170,13 @@ namespace OpenViBE
 			bool unload(CString* pError) override;
 
 		protected:
-			bool isOpen() const override;
+			bool isOpen() const override { return m_fileHandle != nullptr; }
 
 			HMODULE m_fileHandle;
 
 		private:
 
-			CString getLastErrorMessageString();
+			static CString getLastErrorMessageString();
 		};
 	} // namespace Kernel
 } // namespace OpenViBE
@@ -327,8 +324,6 @@ bool CPluginModuleWindows::unload(CString* pError)
 	m_onUninitializeCB        = nullptr;
 	return true;
 }
-
-bool CPluginModuleWindows::isOpen() const { return m_fileHandle != nullptr; }
 
 CString CPluginModuleWindows::getLastErrorMessageString()
 {

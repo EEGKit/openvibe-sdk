@@ -111,7 +111,7 @@ void CWriterNode::process(IWriterCallback& callback)
 	else { for (auto i = m_Childrens.begin(); i != m_Childrens.end(); ++i) { (*i)->process(callback); } }
 }
 
-size_t CWriterNode::getTotalContentSize(bool identifierAndSize)
+size_t CWriterNode::getTotalContentSize(const bool identifierAndSize)
 {
 	size_t contentSize = 0;
 	if (m_Childrens.empty()) { contentSize = m_BufferLength; }

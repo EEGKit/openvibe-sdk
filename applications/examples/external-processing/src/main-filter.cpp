@@ -59,7 +59,7 @@ int main(const int argc, char** argv)
 	for (size_t i = 0; i < client.getInputCount(); ++i)
 	{
 		uint64_t id;
-		size_t type;
+		uint64_t type;
 		std::string name;
 
 		if (client.getInput(i, id, type, name)) { std::cout << "Input:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
@@ -68,7 +68,7 @@ int main(const int argc, char** argv)
 	for (size_t i = 0; i < client.getOutputCount(); ++i)
 	{
 		uint64_t id;
-		size_t type;
+		uint64_t type;
 		std::string name;
 
 		if (client.getOutput(i, id, type, name)) { std::cout << "Output:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
@@ -77,7 +77,7 @@ int main(const int argc, char** argv)
 	for (size_t i = 0; i < client.getParameterCount(); ++i)
 	{
 		uint64_t id;
-		size_t type;
+		uint64_t type;
 		std::string name;
 		std::string value;
 

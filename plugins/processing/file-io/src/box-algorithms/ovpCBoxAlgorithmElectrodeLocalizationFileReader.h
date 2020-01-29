@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pOVMatrixFileReader                                              = nullptr;
 			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_encoder = nullptr;
 
-			OpenViBE::CString m_sFilename;
+			OpenViBE::CString m_filename;
 			bool m_headerSent = false;
 			bool m_bufferSent = false;
 		};

@@ -14,7 +14,7 @@ namespace OpenViBE
 			CBoxAlgorithmLogManager(const IPlayerContext& playerContext, ILogManager& logManager, CSimulatedBox& simulatedBox)
 				: m_playerCtx(playerContext), m_logManager(logManager), m_simulatedBox(simulatedBox) {}
 
-			bool isActive(ELogLevel level) override { return m_logManager.isActive(level); }
+			bool isActive(const ELogLevel level) override { return m_logManager.isActive(level); }
 
 			bool activate(const ELogLevel level, const bool active) override { return m_logManager.activate(level, active); }
 

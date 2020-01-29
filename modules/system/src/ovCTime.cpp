@@ -54,15 +54,7 @@ bool System::Time::zsleep(const uint64_t seconds)
 	return true;
 }
 
-uint32_t System::Time::getTime()
-{
-	// turn the 32:32 fixed point seconds to milliseconds
-	return uint32_t((zgetTime() * 1000) >> 32);
-}
-
-uint64_t System::Time::zgetTime() { return zgetTimeRaw(true); }
-
-uint64_t System::Time::zgetTimeRaw(bool sinceFirstCall)
+uint64_t System::Time::zgetTimeRaw(const bool sinceFirstCall)
 {
 	static bool initialized = false;
 	static internal_clock::time_point start;

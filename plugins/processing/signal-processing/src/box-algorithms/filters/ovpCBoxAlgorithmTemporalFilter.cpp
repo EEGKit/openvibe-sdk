@@ -104,8 +104,8 @@ namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
 {
-	m_method            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_type              = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_method            = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));	// cast Needed for x32
+	m_type              = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));	// cast Needed for x32
 	const int64_t order = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_lowCut            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	m_highCut           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);

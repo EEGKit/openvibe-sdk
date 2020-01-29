@@ -9,7 +9,7 @@ namespace XML
 	{
 	public:
 		virtual ~IReaderCallback() { }
-		virtual void openChild(const char* name, const char** attributeName, const char** attributeValue,  const size_t nAttribute) = 0;
+		virtual void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) = 0;
 		virtual void processChildData(const char* data) = 0;
 		virtual void closeChild() = 0;
 	};

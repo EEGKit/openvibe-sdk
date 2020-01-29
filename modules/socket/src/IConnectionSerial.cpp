@@ -440,20 +440,20 @@ namespace Socket
 
 		const char* getLastError() override { return m_LastError.c_str(); }
 
-		std::string getLastErrorFormated()
+		static std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
 			LPTSTR errorText;
 			const DWORD error = GetLastError();
-			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                  // use system message tables to retrieve error text
-						  FORMAT_MESSAGE_ALLOCATE_BUFFER |              // allocate buffer on local heap for error text
-						  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-						  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |			// use system message tables to retrieve error text
+						  FORMAT_MESSAGE_ALLOCATE_BUFFER |		// allocate buffer on local heap for error text
+						  FORMAT_MESSAGE_IGNORE_INSERTS,		// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+						  nullptr,								// unused with FORMAT_MESSAGE_FROM_SYSTEM
 						  error,
 						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-						  LPTSTR(&errorText),                       // output
-						  0,                                           // minimum size for output buffer
-						  nullptr);                                       // arguments - see note
+						  LPTSTR(&errorText),					// output
+						  0,									// minimum size for output buffer
+						  nullptr);								// arguments - see note
 			return errorText;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return ""; // TODO

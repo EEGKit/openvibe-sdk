@@ -269,7 +269,7 @@ bool Files::getFilename(const char* path, char* filename)
 	return true;
 }
 
-bool Files::getFilename(const char* path, char* filename, size_t size)
+bool Files::getFilename(const char* path, char* filename, const size_t size)
 {
 	if (!path || !filename) { return false; }
 	strncpy(filename, boost::filesystem::path(path).filename().string().c_str(), size);
@@ -283,7 +283,7 @@ bool Files::getFilenameWithoutExtension(const char* path, char* filename)
 	return true;
 }
 
-bool Files::getFilenameWithoutExtension(const char* path, char* filename, size_t size)
+bool Files::getFilenameWithoutExtension(const char* path, char* filename, const size_t size)
 {
 	if (!path || !filename) { return false; }
 	strncpy(filename, boost::filesystem::path(path).filename().replace_extension("").string().c_str(), size);
@@ -297,10 +297,10 @@ bool Files::getFilenameExtension(const char* path, char* fileNameExtension)
 	return true;
 }
 
-bool Files::getFilenameExtension(const char* path, char* fileNameExtension, size_t size)
+bool Files::getFilenameExtension(const char* path, char* extension, const size_t size)
 {
-	if (!path || !fileNameExtension) { return false; }
-	strncpy(fileNameExtension, boost::filesystem::path(path).extension().string().c_str(), size);
+	if (!path || !extension) { return false; }
+	strncpy(extension, boost::filesystem::path(path).extension().string().c_str(), size);
 	return true;
 }
 

@@ -142,14 +142,14 @@ namespace System
 		 * \sa unload
 		 * \sa setShouldFreeModule
 		 */
-		bool isLoaded() const;
+		bool isLoaded() const { return m_Handle != nullptr; }
 
 		/**
 		 * \brief Get the filename of the module.
 		 *
 		 * \return the file name of the module.
 		 */
-		const char* getFilename() const;
+		const char* getFilename() const { return m_Filename; }
 
 		/**
 		 * \brief Should be used to avoid the warning "Missing dll" when loading acquisition server
@@ -157,7 +157,7 @@ namespace System
 		 *
 		 * \param errorMode
 		 */
-		void setDynamicModuleErrorMode(size_t errorMode);
+		void setDynamicModuleErrorMode(const size_t errorMode) { m_ErrorMode = errorMode; }
 
 		/**
 		 * \brief Set if the module should, or not, be free. By default the module will be free.
@@ -166,7 +166,7 @@ namespace System
 		 *
 		 * \sa unload
 		 */
-		void setShouldFreeModule(bool shouldFreeModule);
+		void setShouldFreeModule(const bool shouldFreeModule) { m_ShouldFreeModule = shouldFreeModule; }
 
 		/** 
 		 * \brief Get the last error code.
@@ -182,7 +182,7 @@ namespace System
 		 *
 		 * \return the message corresponding to the error code.
 		 */
-		const char* getErrorString(size_t errorCode) const;
+		static const char* getErrorString(size_t errorCode);
 
 		/**
 		 * \brief Get the detailed error

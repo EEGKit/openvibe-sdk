@@ -62,7 +62,7 @@ namespace OpenViBE
 
 		private:
 
-			static size_t getInterfacorIndex(EBoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier,
+			static size_t getInterfacorIndex(EBoxInterfacorType type, const IBox& box, const CIdentifier& typeID, const CIdentifier& id,
 											 const CString& name);
 			bool updateInterfacors(EBoxInterfacorType interfacorType);
 

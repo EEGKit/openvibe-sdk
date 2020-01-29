@@ -374,7 +374,7 @@ namespace OpenViBE
 		for (int i = 1; i < argc; ++i)
 		{
 			std::string arg     = args[i];
-			const auto argSplit = arg.find_first_of("=");		// = is the separator for value option
+			const auto argSplit = arg.find_first_of('=');		// = is the separator for value option
 			std::string key;
 
 			if (argSplit == std::string::npos) { key = arg; }	// simple option
@@ -446,7 +446,7 @@ namespace OpenViBE
 	template <typename TFirst, typename... TTypes>
 	SProgramOptionsTraits::TokenPair ProgramOptions<TFirst, TTypes...>::OptionVisitor::parsePair(const std::string& str)
 	{
-		const auto split = str.find_first_of(":");
+		const auto split = str.find_first_of(':');
 		const auto size  = str.size();
 
 		// (a:b) pattern expected

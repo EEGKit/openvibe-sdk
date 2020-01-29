@@ -312,11 +312,11 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised() { return !m_LastError.empty(); }
+		bool isErrorRaised() const { return !m_LastError.empty(); }
 
 		const char* getLastError() const override { return m_LastError.c_str(); }
 
-		std::string getLastErrorFormated()
+		static std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
 

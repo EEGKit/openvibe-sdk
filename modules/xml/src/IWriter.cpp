@@ -112,7 +112,7 @@ void CWriter::release()
 	delete this;
 }
 
-void CWriter::sanitize(string& str, bool escapeQuotes)
+void CWriter::sanitize(string& str, const bool escapeQuotes)
 {
 	string::size_type i;
 	if (str.length() != 0)

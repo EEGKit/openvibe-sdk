@@ -10,9 +10,10 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Tools;
+using namespace OpenViBEPlugins::Tools;	//Ambiguous without OpenViBEPlugins
 using namespace OpenViBEToolkit;
 using namespace std;
+
 
 bool CBoxAlgorithmEBMLStreamSpy::initialize()
 {

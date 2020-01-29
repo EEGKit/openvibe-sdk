@@ -1059,10 +1059,7 @@ bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& c
 	)
 	{
 		// Signal data must be written as sampleCounterPerBuffer th lines;
-		if (m_inputTypeID == EStreamType::Signal
-			&& canWriteAll == false
-			&& linesWritten != 0
-			&& linesWritten % m_nSamplePerBuffer == 0) { break; }
+		if (m_inputTypeID == EStreamType::Signal && canWriteAll == false && linesWritten != 0 && linesWritten % m_nSamplePerBuffer == 0) { break; }
 		// check line size
 
 		if ((m_inputTypeID == EStreamType::Signal || m_inputTypeID == EStreamType::Spectrum)
@@ -1073,9 +1070,7 @@ bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& c
 			return false;
 		}
 
-		if (m_inputTypeID == EStreamType::FeatureVector
-			|| m_inputTypeID == EStreamType::CovarianceMatrix
-			|| m_inputTypeID == EStreamType::StreamedMatrix)
+		if (m_inputTypeID == EStreamType::FeatureVector || m_inputTypeID == EStreamType::CovarianceMatrix || m_inputTypeID == EStreamType::StreamedMatrix)
 		{
 			size_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
 			columnstoHave += N_PRE_DATA_COL + N_POST_DATA_COL;

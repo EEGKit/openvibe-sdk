@@ -33,14 +33,14 @@ namespace OpenViBEPlugins
 		protected:
 
 			bool m_isHeaderGenerate = false;
-			OpenViBE::CString m_sFilename;
-			EBML::CWriter m_oWriter;
-			EBML::CWriterHelper m_oWriterHelper;
+			OpenViBE::CString m_filename;
+			EBML::CWriter m_writer;
+			EBML::CWriterHelper m_writerHelper;
 
 		private:
 			void write(const void* buffer, const size_t size) override;
 
-			OpenViBE::CMemoryBuffer m_oSwap;
+			OpenViBE::CMemoryBuffer m_swap;
 			std::ofstream m_file;
 		};
 

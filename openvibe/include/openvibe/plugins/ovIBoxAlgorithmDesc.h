@@ -94,7 +94,7 @@ namespace OpenViBE
 			 * can be freed safely, no more call will be done on this
 			 * box listener.
 			 */
-			virtual void releaseBoxListener(IBoxListener* /*listener*/) const { }
+			virtual void releaseBoxListener(IBoxListener* listener) const { }
 
 			//@}
 

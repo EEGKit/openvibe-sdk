@@ -48,8 +48,7 @@ namespace OpenViBE
 			uint64_t id;
 			double date;
 			double duration;
-			SStimulationChunk(const uint64_t id, const double date, const double duration)
-				: id(id), date(date), duration(duration) { }
+			SStimulationChunk(const uint64_t id, const double date, const double duration) : id(id), date(date), duration(duration) { }
 		};
 
 		enum class EStreamType

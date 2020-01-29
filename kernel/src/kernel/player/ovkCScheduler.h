@@ -39,7 +39,7 @@ namespace OpenViBE
 			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, size_t index);
 			uint64_t getCurrentTime() const { return m_currentTime; }
 			uint64_t getCurrentLateness() const;
-			size_t getFrequency() const { return m_frequency; }
+			uint64_t getFrequency() const { return m_frequency; }
 			uint64_t getStepDuration() const { return m_stepDuration; }
 			double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
 			double getFastForwardMaximumFactor() const;
@@ -54,7 +54,7 @@ namespace OpenViBE
 			CIdentifier m_scenarioID = OV_UndefinedIdentifier;
 			IScenario* m_scenario    = nullptr;
 			size_t m_steps           = 0;
-			size_t m_frequency       = 0;
+			uint64_t m_frequency     = 0;
 			uint64_t m_stepDuration  = 0;
 			uint64_t m_currentTime   = 0;
 

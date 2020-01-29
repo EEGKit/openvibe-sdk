@@ -103,7 +103,7 @@ size_t MessagingClient::getOutputCount() const
 	return impl->m_BoxDesc.getOutputs()->size();
 }
 
-bool MessagingClient::getParameter(const size_t i, uint64_t& id, size_t& type, std::string& name, std::string& value) const
+bool MessagingClient::getParameter(const size_t i, uint64_t& id, uint64_t& type, std::string& name, std::string& value) const
 {
 	if (!m_BoxDescriptionReceived) { return false; }
 
@@ -119,7 +119,7 @@ bool MessagingClient::getParameter(const size_t i, uint64_t& id, size_t& type, s
 	return true;
 }
 
-bool MessagingClient::getInput(const size_t i, uint64_t& id, size_t& type, std::string& name) const
+bool MessagingClient::getInput(const size_t i, uint64_t& id, uint64_t& type, std::string& name) const
 {
 	if (!m_BoxDescriptionReceived) { return false; }
 
@@ -134,7 +134,7 @@ bool MessagingClient::getInput(const size_t i, uint64_t& id, size_t& type, std::
 	return true;
 }
 
-bool MessagingClient::getOutput(const size_t i, uint64_t& id, size_t& type, std::string& name) const
+bool MessagingClient::getOutput(const size_t i, uint64_t& id, uint64_t& type, std::string& name) const
 {
 	if (!m_BoxDescriptionReceived)
 	{

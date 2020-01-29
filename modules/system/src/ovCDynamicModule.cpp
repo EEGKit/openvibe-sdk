@@ -43,7 +43,7 @@ namespace
 		return result;
 	}
 
-	std::string formatWindowsError(DWORD code)
+	std::string formatWindowsError(const DWORD code)
 	{
 		LPTSTR text;
 
@@ -62,7 +62,7 @@ namespace
 #endif
 } // namespace
 
-const char* CDynamicModule::getErrorString(size_t errorCode) const
+const char* CDynamicModule::getErrorString(size_t errorCode)
 {
 	if (ERROR_MAP.count(ELogErrorCodes(errorCode)) == 0) { return "Invalid error code"; }
 	return ERROR_MAP.at(ELogErrorCodes(errorCode)).c_str();
@@ -190,7 +190,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 }
 
 #if defined TARGET_OS_Windows
-bool CDynamicModule::loadFromKnownPath(int standardPath, const char* modulePath, const char* symbolNameCheck)
+bool CDynamicModule::loadFromKnownPath(const int standardPath, const char* modulePath, const char* symbolNameCheck)
 {
 	if (m_Handle)
 	{
@@ -266,7 +266,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 	return false;
 }
 
-bool CDynamicModule::isModuleCompatible(const char* filePath, int architecture)
+bool CDynamicModule::isModuleCompatible(const char* filePath, const int architecture)
 {
 	IMAGE_NT_HEADERS headers;
 	if (!getImageFileHeaders(filePath, headers)) { return false; } // Error set in the getImageFileHeaders function
@@ -311,11 +311,6 @@ bool CDynamicModule::unload()
 
 	return true;
 }
-
-bool CDynamicModule::isLoaded() const { return m_Handle != nullptr; }
-const char* CDynamicModule::getFilename() const { return m_Filename; }
-void CDynamicModule::setDynamicModuleErrorMode(size_t errorMode) { m_ErrorMode = errorMode; }
-void CDynamicModule::setShouldFreeModule(bool shouldFreeModule) { m_ShouldFreeModule = shouldFreeModule; }
 
 CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
 {
@@ -397,7 +392,7 @@ bool CDynamicModule::getImageFileHeaders(const char* filename, IMAGE_NT_HEADERS&
 }
 #endif
 
-void CDynamicModule::setError(ELogErrorCodes errorCode, const std::string& details)
+void CDynamicModule::setError(const ELogErrorCodes errorCode, const std::string& details)
 {
 	m_ErrorCode = errorCode;
 	strcpy(m_ErrorDetails, details.c_str());

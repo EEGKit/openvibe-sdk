@@ -523,8 +523,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 		else { iFrequencyAbscissa->getBuffer()[0] = 0; }
 
 		static_cast<OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputSamplingRate() = uint64_t(
-			m_dataMatrices.size() / (stod(m_dataMatrices[m_dataMatrices.size() - 1][m_nCol]) - stod(m_dataMatrices[0][m_nCol])
-			));
+			m_dataMatrices.size() / (stod(m_dataMatrices[m_dataMatrices.size() - 1][m_nCol]) - stod(m_dataMatrices[0][m_nCol])));
 		m_headerSent = true;
 		m_encoder->encodeHeader();
 

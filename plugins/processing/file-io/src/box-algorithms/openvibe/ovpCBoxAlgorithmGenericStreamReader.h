@@ -33,23 +33,23 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CString m_sFilename;
+			OpenViBE::CString m_filename;
 
-			EBML::CReader m_oReader;
-			EBML::CReaderHelper m_oReaderHelper;
+			EBML::CReader m_reader;
+			EBML::CReaderHelper m_readerHelper;
 
-			OpenViBE::CMemoryBuffer m_oSwap;
-			OpenViBE::CMemoryBuffer m_oPendingChunk;
+			OpenViBE::CMemoryBuffer m_swap;
+			OpenViBE::CMemoryBuffer m_pendingChunk;
 			uint64_t m_startTime = 0;
 			uint64_t m_endTime   = 0;
 			size_t m_outputIdx   = 0;
-			bool m_bPending      = false;
+			bool m_pending      = false;
 			bool m_hasEBMLHeader = false;
 
 			FILE* m_file = nullptr;
 			std::stack<EBML::CIdentifier> m_nodes;
-			std::map<size_t, size_t> m_streamIndexToOutputIdxs;
-			std::map<size_t, OpenViBE::CIdentifier> m_streamIndexToTypeIDs;
+			std::map<size_t, size_t> m_streamIdxToOutputIdxs;
+			std::map<size_t, OpenViBE::CIdentifier> m_streamIdxToTypeIDs;
 
 		private:
 			bool initializeFile();
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(OpenViBE::Kernel::IBox& box) const
 			{
 				for (size_t i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
 				return true;

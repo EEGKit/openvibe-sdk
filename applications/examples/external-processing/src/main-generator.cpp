@@ -103,7 +103,7 @@ int main(const int argc, char** argv)
 	for (size_t i = 0; i < client.getOutputCount(); ++i)
 	{
 		uint64_t id;
-		size_t type;
+		uint64_t type;
 		string name;
 
 		if (client.getOutput(i, id, type, name)) { cout << "Output:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
@@ -114,7 +114,7 @@ int main(const int argc, char** argv)
 	for (size_t i = 0; i < client.getParameterCount(); ++i)
 	{
 		uint64_t id;
-		size_t type;
+		uint64_t type;
 		string name;
 		string value;
 

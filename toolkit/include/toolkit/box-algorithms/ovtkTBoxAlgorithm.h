@@ -123,34 +123,34 @@ namespace OpenViBEToolkit
 		class FSettingValueAutoCast
 		{
 		public:
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, const size_t index)
-				: m_logManager(boxAlgorithmCtx.getPlayerContext()->getLogManager()),
-				  m_errorManager(boxAlgorithmCtx.getPlayerContext()->getErrorManager()),
-				  m_typeManager(boxAlgorithmCtx.getPlayerContext()->getTypeManager()),
-				  m_configManager(boxAlgorithmCtx.getPlayerContext()->getConfigurationManager())
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& ctx, const size_t index)
+				: m_logManager(ctx.getPlayerContext()->getLogManager()),
+				  m_errorManager(ctx.getPlayerContext()->getErrorManager()),
+				  m_typeManager(ctx.getPlayerContext()->getTypeManager()),
+				  m_configManager(ctx.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmCtx.getStaticBoxContext()->getSettingValue(index, m_settingValue);
-				boxAlgorithmCtx.getStaticBoxContext()->getSettingType(index, m_settingType);
+				ctx.getStaticBoxContext()->getSettingValue(index, m_settingValue);
+				ctx.getStaticBoxContext()->getSettingType(index, m_settingType);
 			}
 
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, const OpenViBE::CString& name)
-				: m_logManager(boxAlgorithmCtx.getPlayerContext()->getLogManager()),
-				  m_errorManager(boxAlgorithmCtx.getPlayerContext()->getErrorManager()),
-				  m_typeManager(boxAlgorithmCtx.getPlayerContext()->getTypeManager()),
-				  m_configManager(boxAlgorithmCtx.getPlayerContext()->getConfigurationManager())
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& ctx, const OpenViBE::CString& name)
+				: m_logManager(ctx.getPlayerContext()->getLogManager()),
+				  m_errorManager(ctx.getPlayerContext()->getErrorManager()),
+				  m_typeManager(ctx.getPlayerContext()->getTypeManager()),
+				  m_configManager(ctx.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmCtx.getStaticBoxContext()->getSettingValue(name, m_settingValue);
-				boxAlgorithmCtx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, name, m_settingType);
+				ctx.getStaticBoxContext()->getSettingValue(name, m_settingValue);
+				ctx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, name, m_settingType);
 			}
 
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& boxAlgorithmCtx, const OpenViBE::CIdentifier& identifier)
-				: m_logManager(boxAlgorithmCtx.getPlayerContext()->getLogManager()),
-				  m_errorManager(boxAlgorithmCtx.getPlayerContext()->getErrorManager()),
-				  m_typeManager(boxAlgorithmCtx.getPlayerContext()->getTypeManager()),
-				  m_configManager(boxAlgorithmCtx.getPlayerContext()->getConfigurationManager())
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& ctx, const OpenViBE::CIdentifier& identifier)
+				: m_logManager(ctx.getPlayerContext()->getLogManager()),
+				  m_errorManager(ctx.getPlayerContext()->getErrorManager()),
+				  m_typeManager(ctx.getPlayerContext()->getTypeManager()),
+				  m_configManager(ctx.getPlayerContext()->getConfigurationManager())
 			{
-				boxAlgorithmCtx.getStaticBoxContext()->getSettingValue(identifier, m_settingValue);
-				boxAlgorithmCtx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, identifier, m_settingType);
+				ctx.getStaticBoxContext()->getSettingValue(identifier, m_settingValue);
+				ctx.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::EBoxInterfacorType::Setting, identifier, m_settingType);
 			}
 
 			operator uint32_t() const
@@ -244,8 +244,8 @@ namespace OpenViBEToolkit
 		class CScopedBoxAlgorithm final
 		{
 		public:
-			CScopedBoxAlgorithm(OpenViBE::Kernel::IBoxAlgorithmContext*& rBoxAlgorithmCtx, OpenViBE::Kernel::IBoxAlgorithmContext* boxAlgorithmCtx)
-				: m_boxAlgorithmCtx(rBoxAlgorithmCtx) { m_boxAlgorithmCtx = boxAlgorithmCtx; }
+			CScopedBoxAlgorithm(OpenViBE::Kernel::IBoxAlgorithmContext*& ctxRef, OpenViBE::Kernel::IBoxAlgorithmContext* ctx)
+				: m_boxAlgorithmCtx(ctxRef) { m_boxAlgorithmCtx = ctx; }
 
 			~CScopedBoxAlgorithm() { m_boxAlgorithmCtx = nullptr; }
 
@@ -265,21 +265,21 @@ namespace OpenViBEToolkit
 
 	private:
 
-		virtual bool initialize(OpenViBE::Kernel::IBoxListenerContext& boxListenerCtx)
+		virtual bool initialize(OpenViBE::Kernel::IBoxListenerContext& ctx)
 		{
-			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &boxListenerCtx);
+			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 			return initialize();
 		}
 
-		virtual bool uninitialize(OpenViBE::Kernel::IBoxListenerContext& boxListenerCtx)
+		virtual bool uninitialize(OpenViBE::Kernel::IBoxListenerContext& ctx)
 		{
-			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &boxListenerCtx);
+			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 			return uninitialize();
 		}
 
-		virtual bool process(OpenViBE::Kernel::IBoxListenerContext& boxListenerCtx, const OpenViBE::Kernel::EBoxModification eBoxModificationType)
+		virtual bool process(OpenViBE::Kernel::IBoxListenerContext& ctx, const OpenViBE::Kernel::EBoxModification eBoxModificationType)
 		{
-			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &boxListenerCtx);
+			CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 			switch (eBoxModificationType)
 			{
 				case OpenViBE::Kernel::BoxModification_Initialized: return this->onInitialized(m_boxListenerCtx->getBox());
@@ -363,8 +363,8 @@ namespace OpenViBEToolkit
 		class CScopedBoxListener final
 		{
 		public:
-			CScopedBoxListener(OpenViBE::Kernel::IBoxListenerContext*& rBoxListenerCtx, OpenViBE::Kernel::IBoxListenerContext* boxListenerCtx)
-				: m_boxListenerCtx(rBoxListenerCtx) { m_boxListenerCtx = boxListenerCtx; }
+			CScopedBoxListener(OpenViBE::Kernel::IBoxListenerContext*& ctxRef, OpenViBE::Kernel::IBoxListenerContext* ctx)
+				: m_boxListenerCtx(ctxRef) { m_boxListenerCtx = ctx; }
 
 			~CScopedBoxListener() { m_boxListenerCtx = nullptr; }
 

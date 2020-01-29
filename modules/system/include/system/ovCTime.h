@@ -31,16 +31,16 @@ namespace System
 		static bool zsleep(const uint64_t seconds);
 		
 		/**
-		 * \brief Retrieve time in ms 
+		 * \brief Retrieve time in ms (turn the 32:32 fixed point seconds to milliseconds).
 		 * \return Elapsed time in ms since the first call to this function or zgetTime functions
 		 */
-		static uint32_t getTime(); 
+		static uint32_t getTime() { return uint32_t((zgetTime() * 1000) >> 32); }
 
 		/**
 		 * \brief Retrieve time in fixed point 32:32 seconds 
 		 * \return Elapsed time since the first call to the zgetTime functions or getTime.
 		 */
-		static uint64_t zgetTime();
+		static uint64_t zgetTime() { return zgetTimeRaw(true); }
 
 		/**
 		 * \brief Retrieve time in fixed point 32:32 seconds 

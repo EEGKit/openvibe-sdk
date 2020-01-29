@@ -334,7 +334,7 @@ bool CMessaging::pushMessage(const Message& message) const
 	return true;
 }
 
-std::string CMessaging::getErrorString(ELibraryError error) { return ERRORS_STRING.at(error); }
+std::string CMessaging::getErrorString(const ELibraryError error) { return ERRORS_STRING.at(error); }
 
 bool CMessaging::isConnected() const
 {

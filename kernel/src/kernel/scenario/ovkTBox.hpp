@@ -332,7 +332,7 @@ namespace OpenViBE
 
 
 			bool addInterfacor(const EBoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier,
-							   bool shouldNotify) override
+							   const bool shouldNotify) override
 			{
 				switch (interfacorType)
 				{

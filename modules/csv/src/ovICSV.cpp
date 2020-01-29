@@ -41,7 +41,7 @@ namespace
 	};
 }	// namespace 
 
-std::string ICSVHandler::getLogError(ELogErrorCodes code)
+std::string ICSVHandler::getLogError(const ELogErrorCodes code)
 {
 	if (ERROR_MAP.count(code) != 0) { return ERROR_MAP.at(code); }
 	return "Unknow error";

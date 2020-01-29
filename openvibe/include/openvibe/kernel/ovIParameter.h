@@ -72,7 +72,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getReferenceTarget(IParameter*& /*value*/) const { return false; }
+			virtual bool getReferenceTarget(IParameter*& value) const { return false; }
 			/**
 			 * \brief Sets the parameter reference target for this parameter
 			 * \param value [in] : the new reference target to use
@@ -86,14 +86,14 @@ namespace OpenViBE
 			 * handled by this parameter won't be affected anymore until the reference target is
 			 * cleared.
 			 */
-			virtual bool setReferenceTarget(IParameter* /*value*/) { return false; }
+			virtual bool setReferenceTarget(IParameter* value) { return false; }
 			/**
 			 * \brief Gets the value reference target
 			 * \param value [out] : a pointer to the value target parameter if existing, \c NULL if not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getReferenceTarget(void* /*value*/) const { return false; }
+			virtual bool getReferenceTarget(void* value) const { return false; }
 			/**
 			 * \brief Sets the value reference target for this parameter
 			 * \param value [in] : the new reference target to use
@@ -107,7 +107,7 @@ namespace OpenViBE
 			 * handled by this parameter won't be affected anymore until the reference target is
 			 * cleared.
 			 */
-			virtual bool setReferenceTarget(const void* /*value*/) { return false; }
+			virtual bool setReferenceTarget(const void* value) { return false; }
 
 			//@}
 			/** \name Value access */
@@ -125,7 +125,7 @@ namespace OpenViBE
 			 *       the value target is directly copied
 			 * \sa getParameterSize
 			 */
-			virtual bool getValue(void* /*value*/) const { return false; }
+			virtual bool getValue(void* value) const { return false; }
 			/**
 			 * \brief Sets the value for this parameter
 			 * \param value [in] : a pointer from where the value should be copied
@@ -133,7 +133,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa getParameterSize
 			 */
-			virtual bool setValue(const void* /*value*/) { return false; }
+			virtual bool setValue(const void* value) { return false; }
 
 			//@}
 

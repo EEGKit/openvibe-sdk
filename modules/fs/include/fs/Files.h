@@ -49,7 +49,7 @@ namespace FS
 		static bool getFilenameWithoutExtension(const char* path, char* filename, size_t size);
 		// Returns the extension component of a path
 		static bool getFilenameExtension(const char* path, char* fileNameExtension);
-		static bool getFilenameExtension(const char* path, char* fileNameExtension, size_t size);
+		static bool getFilenameExtension(const char* path, char* extension, size_t size);
 
 		static bool copyFile(const char* srcFile, const char* dstPath);
 		static bool copyDirectory(const char* srcDir, const char* dstDir);

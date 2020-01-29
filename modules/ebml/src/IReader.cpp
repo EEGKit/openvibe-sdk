@@ -356,7 +356,7 @@ bool CReader::processData(const void* buffer, const size_t size)
 }
 
 CIdentifier CReader::getCurrentNodeID() const { return m_currentNode ? m_currentNode->m_Id : CIdentifier(); }
-uint64_t CReader::getCurrentNodeSize() const { return m_currentNode ? m_currentNode->m_ContentSize : 0; }
+size_t CReader::getCurrentNodeSize() const { return m_currentNode ? m_currentNode->m_ContentSize : 0; }
 
 void CReader::release() { delete this; }
 

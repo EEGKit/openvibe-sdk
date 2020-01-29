@@ -43,7 +43,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool initialize(Kernel::IAlgorithmContext& /*algorithmCtx*/) { return true; }
+			virtual bool initialize(Kernel::IAlgorithmContext& algorithmCtx) { return true; }
 			/**
 			 * \brief Unitializes this algorithm
 			 * \param algorithmCtx [in] : the extecution context for this algorithm
@@ -51,7 +51,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \exception this method must be noexcept
 			 */
-			virtual bool uninitialize(Kernel::IAlgorithmContext& /*algorithmCtx*/) { return true; }
+			virtual bool uninitialize(Kernel::IAlgorithmContext& algorithmCtx) { return true; }
 			/**
 			 * \brief Effectively executes this algorithm
 			 * \param algorithmCtx [in] : the extecution context for this algorithm
