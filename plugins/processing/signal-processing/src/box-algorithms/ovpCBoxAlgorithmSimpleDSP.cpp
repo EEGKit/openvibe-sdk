@@ -202,7 +202,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 
 	if (nHeader)
 	{
-		OpenViBE::Toolkit::Tools::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
+		OpenViBE::Toolkit::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
 		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 	}
 	if (nBuffer)

@@ -16,7 +16,7 @@ namespace OpenViBE
 		size_t getSignalTrialCount() const override { return m_signalTrials.size(); }
 		ISignalTrial& getSignalTrial(const size_t index) const override { return *m_signalTrials[index]; }
 
-		_IsDerivedFromClass_Final_(OpenViBE::Toolkit::ISignalTrialSet, OVTK_ClassId_)
+		_IsDerivedFromClass_Final_(ISignalTrialSet, OVTK_ClassId_)
 
 	protected:
 

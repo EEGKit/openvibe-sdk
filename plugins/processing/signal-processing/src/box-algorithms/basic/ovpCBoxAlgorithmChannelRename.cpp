@@ -11,7 +11,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 {
 	std::vector<CString> tokens;
 	const CString setting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	const size_t nToken   = split(setting, OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
+	const size_t nToken   = split(setting, OpenViBE::Toolkit::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_names.clear();
 	for (size_t i = 0; i < nToken; ++i) { m_names.push_back(tokens[i].toASCIIString()); }
@@ -74,7 +74,7 @@ bool CBoxAlgorithmChannelRename::process()
 		m_decoder.decode(chunk);
 		if (m_decoder.isHeaderReceived())
 		{
-			OpenViBE::Toolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
+			OpenViBE::Toolkit::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
 			for (size_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
 			{
 				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());

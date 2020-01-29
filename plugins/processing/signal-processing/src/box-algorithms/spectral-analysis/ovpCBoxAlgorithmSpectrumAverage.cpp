@@ -65,7 +65,7 @@ bool CBoxAlgorithmSpectrumAverage::process()
 		m_decoder->process();
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedHeader))
 		{
-			OpenViBE::Toolkit::Tools::Matrix::copyDescription(*ip_matrix, *op_matrix);
+			OpenViBE::Toolkit::Matrix::copyDescription(*ip_matrix, *op_matrix);
 			ip_matrix->setDimensionSize(1, 1);
 
 			m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);

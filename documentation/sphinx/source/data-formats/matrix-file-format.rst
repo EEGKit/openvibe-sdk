@@ -13,8 +13,8 @@ be used, or more straightforwardly via the toolkit functions,
 
 .. code::
 
-   OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(...)
-   OpenViBE::Toolkit::Tools::Matrix::loadFromTextFile(...)
+   OpenViBE::Toolkit::Matrix::saveToTextFile(...)
+   OpenViBE::Toolkit::Matrix::loadFromTextFile(...)
 
 On disk, this format follows a very simple text syntax for maximum portability.
 

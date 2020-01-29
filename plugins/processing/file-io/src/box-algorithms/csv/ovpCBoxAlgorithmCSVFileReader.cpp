@@ -231,7 +231,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 		{
 			// Last chunk will be partial, zero the whole output matrix...
 			IMatrix* iMatrix = static_cast<OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
-			OpenViBE::Toolkit::Tools::Matrix::clearContent(*iMatrix);
+			OpenViBE::Toolkit::Matrix::clearContent(*iMatrix);
 		}
 	}
 

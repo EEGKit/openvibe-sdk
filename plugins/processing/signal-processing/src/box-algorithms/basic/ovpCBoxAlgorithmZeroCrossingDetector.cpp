@@ -101,7 +101,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 
 		if (m_decoder.isHeaderReceived())
 		{
-			Tools::Matrix::copyDescription(*m_encoder0.getInputMatrix(), *m_decoder.getOutputMatrix());
+			Matrix::copyDescription(*m_encoder0.getInputMatrix(), *m_decoder.getOutputMatrix());
 			IMatrix* o2Matrix = m_encoder2.getInputMatrix();
 			o2Matrix->setDimensionCount(2);
 			o2Matrix->setDimensionSize(0, nChannel);

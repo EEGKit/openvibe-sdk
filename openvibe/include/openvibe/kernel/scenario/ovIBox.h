@@ -146,7 +146,7 @@ namespace OpenViBE
 			virtual bool initializeFromExistingBox(const IBox& existingBox) = 0;
 
 
-			virtual bool addInterfacor(const EBoxInterfacorType type, const CString& name, const CIdentifier& typeID, const CIdentifier& id, bool notify = true) = 0;
+			virtual bool addInterfacor(const EBoxInterfacorType type, const CString& name, const CIdentifier& typeID, const CIdentifier& id, const bool notify = true) = 0;
 			virtual bool removeInterfacor(const EBoxInterfacorType type, const size_t index, const bool notify = true) = 0;
 
 			virtual size_t getInterfacorCount(const EBoxInterfacorType type) const = 0;

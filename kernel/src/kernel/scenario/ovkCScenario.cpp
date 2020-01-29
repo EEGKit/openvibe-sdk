@@ -196,7 +196,7 @@ bool CScenario::removeScenarioOutput(const size_t index)
 	return true;
 }
 
-bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, const bool mergeSettings, const bool shouldPreserveIDs)
+bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, const bool mergeSettings, const bool preserveIDs)
 {
 	map<CIdentifier, CIdentifier> oldToNewIdMap;
 
@@ -210,7 +210,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CIdentifier boxID = listID[i];
 			const IBox* box   = scenario.getBoxDetails(boxID);
 			CIdentifier newID;
-			CIdentifier suggestedNewID = shouldPreserveIDs ? box->getIdentifier() : OV_UndefinedIdentifier;
+			CIdentifier suggestedNewID = preserveIDs ? box->getIdentifier() : OV_UndefinedIdentifier;
 			this->addBox(newID, *box, suggestedNewID);
 			oldToNewIdMap[boxID] = newID;
 
@@ -252,7 +252,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CIdentifier metadataID    = listID[i];
 			const IMetadata* metadata = scenario.getMetadataDetails(metadataID);
 			CIdentifier newID;
-			CIdentifier suggestedNewID = shouldPreserveIDs ? metadataID : OV_UndefinedIdentifier;
+			CIdentifier suggestedNewID = preserveIDs ? metadataID : OV_UndefinedIdentifier;
 			this->addMetadata(newID, suggestedNewID);
 			IMetadata* newMetadata = this->getMetadataDetails(newID);
 			newMetadata->initializeFromExistingMetadata(*metadata);

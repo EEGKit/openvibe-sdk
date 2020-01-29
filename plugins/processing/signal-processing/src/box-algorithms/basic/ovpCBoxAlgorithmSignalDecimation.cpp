@@ -126,11 +126,11 @@ bool CBoxAlgorithmSignalDecimation::process()
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
 
-			OpenViBE::Toolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
+			OpenViBE::Toolkit::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
 			ip_pMatrix->setDimensionSize(1, m_oNSamplePerBlock);
 			ip_sampling = m_oSampling;
 			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader);
-			OpenViBE::Toolkit::Tools::Matrix::clearContent(*ip_pMatrix);
+			OpenViBE::Toolkit::Matrix::clearContent(*ip_pMatrix);
 
 			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
@@ -173,7 +173,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_oNSamplePerBlock;
 
-						OpenViBE::Toolkit::Tools::Matrix::clearContent(*ip_pMatrix);
+						OpenViBE::Toolkit::Matrix::clearContent(*ip_pMatrix);
 					}
 				}
 

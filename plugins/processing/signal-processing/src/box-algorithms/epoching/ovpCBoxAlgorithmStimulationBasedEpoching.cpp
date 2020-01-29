@@ -108,7 +108,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								ErrorType::Internal);
 			// Cache the signal data
 			m_cachedChunks.emplace_back(inputChunkStartTime, inputChunkEndTime, new CMatrix());
-			OpenViBE::Toolkit::Tools::Matrix::copy(*m_cachedChunks.back().matrix, *inputMatrix);
+			OpenViBE::Toolkit::Matrix::copy(*m_cachedChunks.back().matrix, *inputMatrix);
 
 			m_lastSignalChunkEndTime = inputChunkEndTime;
 		}

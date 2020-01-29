@@ -1,48 +1,47 @@
 #include "ovtkStimulationSet.h"
 
 using namespace OpenViBE;
+using namespace /*OpenViBE::*/Toolkit;
 
-bool OpenViBE::Toolkit::Tools::StimulationSet::shift(IStimulationSet& stimSet, const uint64_t timeShift)
+bool StimulationSet::shift(IStimulationSet& stimSet, const uint64_t timeShift)
 {
 	const size_t count = stimSet.getStimulationCount();
 	for (size_t i = 0; i < count; ++i) { stimSet.setStimulationDate(i, stimSet.getStimulationDate(i) + timeShift); }
 	return true;
 }
 
-bool OpenViBE::Toolkit::Tools::StimulationSet::copy(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
+bool StimulationSet::copy(IStimulationSet& dst, const IStimulationSet& src, const uint64_t timeShift)
 {
-	dstStimSet.clear();
-	return append(dstStimSet, srcStimSet, timeShift);
+	dst.clear();
+	return append(dst, src, timeShift);
 }
 
-bool OpenViBE::Toolkit::Tools::StimulationSet::append(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet, const uint64_t timeShift)
+bool StimulationSet::append(IStimulationSet& dst, const IStimulationSet& src, const uint64_t timeShift)
 {
-	const size_t count = srcStimSet.getStimulationCount();
+	const size_t count = src.getStimulationCount();
 	for (size_t i = 0; i < count; ++i)
 	{
-		dstStimSet.appendStimulation(srcStimSet.getStimulationIdentifier(i), srcStimSet.getStimulationDate(i) + timeShift,
-									 srcStimSet.getStimulationDuration(i));
+		dst.appendStimulation(src.getStimulationIdentifier(i), src.getStimulationDate(i) + timeShift, src.getStimulationDuration(i));
 	}
 	return true;
 }
 
-bool OpenViBE::Toolkit::Tools::StimulationSet::appendRange(IStimulationSet& dstStimSet, const IStimulationSet& srcStimSet,
-														 const uint64_t srcStartTime, const uint64_t srcEndTime, const uint64_t timeShift)
+bool StimulationSet::appendRange(IStimulationSet& dst, const IStimulationSet& src, const uint64_t srcStartTime, const uint64_t srcEndTime,
+								 const uint64_t timeShift)
 {
-	const size_t count = srcStimSet.getStimulationCount();
+	const size_t count = src.getStimulationCount();
 	for (size_t i = 0; i < count; ++i)
 	{
-		const uint64_t date = srcStimSet.getStimulationDate(i);
+		const uint64_t date = src.getStimulationDate(i);
 		if (srcStartTime <= date && date < srcEndTime)
 		{
-			dstStimSet.appendStimulation(srcStimSet.getStimulationIdentifier(i), srcStimSet.getStimulationDate(i) + timeShift,
-										 srcStimSet.getStimulationDuration(i));
+			dst.appendStimulation(src.getStimulationIdentifier(i), src.getStimulationDate(i) + timeShift, src.getStimulationDuration(i));
 		}
 	}
 	return true;
 }
 
-bool OpenViBE::Toolkit::Tools::StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
+bool StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
 {
 	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
 	{

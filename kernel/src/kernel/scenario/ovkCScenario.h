@@ -25,7 +25,7 @@ namespace OpenViBE
 			~CScenario() override;
 
 			bool clear() override;
-			bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool shouldPreserveIDs) override;
+			bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool preserveIDs) override;
 
 			CIdentifier getNextBoxIdentifier(const CIdentifier& previousID) const override;
 			bool isBox(const CIdentifier& boxID) const override;

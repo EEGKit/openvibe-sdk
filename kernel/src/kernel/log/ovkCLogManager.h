@@ -18,9 +18,9 @@ namespace OpenViBE
 		public:
 
 			explicit CLogManager(const IKernelContext& ctx) : TKernelObject<ILogManager>(ctx) {}
-			bool isActive(ELogLevel level) override;
-			bool activate(ELogLevel level, bool active) override;
-			bool activate(ELogLevel startLevel, ELogLevel endLevel, bool active) override;
+			bool isActive(const ELogLevel level) override;
+			bool activate(const ELogLevel level, bool active) override;
+			bool activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active) override;
 			bool activate(const bool active) override { return activate(LogLevel_First, LogLevel_Last, active); }
 			void log(const time64 value) override { logForEach<const time64>(value); }
 			void log(const uint64_t value) override { logForEach<const uint64_t>(value); }

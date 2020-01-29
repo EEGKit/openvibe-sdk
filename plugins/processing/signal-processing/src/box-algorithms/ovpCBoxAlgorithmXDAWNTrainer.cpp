@@ -269,7 +269,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		}
 		else
 		{
-			OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
+			OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
 								"Unable to save to [" << m_filterFilename << "]\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}
 

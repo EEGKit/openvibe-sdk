@@ -123,7 +123,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 	const CString filterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	if (filterFile != CString(""))
 	{
-		OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Tools::Matrix::loadFromTextFile(m_oFilterBank, filterFile),
+		OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Matrix::loadFromTextFile(m_oFilterBank, filterFile),
 							"Failed to load filter parameters from file at location [" << filterFile << "]",
 							OpenViBE::Kernel::ErrorType::BadFileRead);
 
@@ -133,7 +133,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 							OpenViBE::Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
-		OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
+		OpenViBE::Toolkit::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
 #endif
 	}
 	else
@@ -149,7 +149,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 							<< " coefficients)", OpenViBE::Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
-		OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
+		OpenViBE::Toolkit::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
 #endif
 	}
 

@@ -392,7 +392,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 				selectedVectors.setDimensionLabel(0, i, label.str().c_str());
 			}
 
-			OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(selectedVectors, m_configFilename, 10),
+			OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Matrix::saveToTextFile(selectedVectors, m_configFilename, 10),
 								"Failed to save file to location [" << m_configFilename << "]",
 								OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}

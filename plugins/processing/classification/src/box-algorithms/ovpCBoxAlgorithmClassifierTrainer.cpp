@@ -30,6 +30,7 @@ const char* const CLASSIFICATION_BOX_ROOT        = "OpenViBE-Classifier-Box";
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 using namespace OpenViBEPlugins;
 using namespace Classification;
@@ -92,7 +93,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	m_stimDecoder.initialize(*this, 0);
 	for (size_t i = 1; i < boxContext.getInputCount(); ++i)
 	{
-		m_sampleDecoder.push_back(new OpenViBE::Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
+		m_sampleDecoder.push_back(new TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
 		m_sampleDecoder.back()->initialize(*this, i);
 	}
 
@@ -285,7 +286,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				sample.endTime      = boxContext.getInputChunkEndTime(i, j);
 				sample.inputIdx     = i - 1;
 
-				OpenViBE::Toolkit::Tools::Matrix::copy(*sample.sampleMatrix, *sampleMatrix);
+				Matrix::copy(*sample.sampleMatrix, *sampleMatrix);
 				m_datasets.push_back(sample);
 				m_nFeatures[i]++;
 			}
@@ -340,7 +341,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			double partitionAccuracy = 0;
 			double finalAccuracy     = 0;
 
-			OpenViBE::Toolkit::Tools::Matrix::clearContent(confusion);
+			Matrix::clearContent(confusion);
 
 			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (size_t i = 0; i < m_nPartition; ++i)
@@ -388,7 +389,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, 0, 0),
 							"Training failed: bailing out (from whole set training)", OpenViBE::Kernel::ErrorType::Internal);
 
-		OpenViBE::Toolkit::Tools::Matrix::clearContent(confusion);
+		Matrix::clearContent(confusion);
 		const double accuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
 
 		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
@@ -507,10 +508,10 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	// Normalize
 	CMatrix tmp, rowSum;
-	OpenViBE::Toolkit::Tools::Matrix::copy(tmp, oMatrix);
+	Matrix::copy(tmp, oMatrix);
 	rowSum.setDimensionCount(1);
 	rowSum.setDimensionSize(0, rows);
-	OpenViBE::Toolkit::Tools::Matrix::clearContent(rowSum);
+	Matrix::clearContent(rowSum);
 
 	for (size_t i = 0; i < rows; ++i)
 	{

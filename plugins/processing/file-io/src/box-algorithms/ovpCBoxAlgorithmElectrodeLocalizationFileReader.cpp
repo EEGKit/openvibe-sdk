@@ -95,7 +95,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 
 		// Produces header
 		IMatrix* iMatrix = m_encoder->getInputMatrix();
-		OpenViBE::Toolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
+		OpenViBE::Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		m_encoder->encodeHeader();
 
@@ -110,7 +110,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	{
 		// Connects parameters to memory buffer
 		IMatrix* iMatrix = m_encoder->getInputMatrix();
-		OpenViBE::Toolkit::Tools::Matrix::copy(*iMatrix, *op_pMatrix);
+		OpenViBE::Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer
 		m_encoder->encodeBuffer();

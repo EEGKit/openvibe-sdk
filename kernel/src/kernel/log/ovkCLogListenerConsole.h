@@ -14,10 +14,10 @@ namespace OpenViBE
 		public:
 
 			CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName);
-			bool isActive(ELogLevel level) override;
-			bool activate(ELogLevel level, bool active) override;
-			bool activate(ELogLevel startLevel, ELogLevel endLevel, bool active) override;
-			bool activate(bool active) override;
+			bool isActive(const ELogLevel level) override;
+			bool activate(const ELogLevel level, const bool active) override;
+			bool activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active) override;
+			bool activate(const bool active) override;
 
 			void configure(const IConfigurationManager& configManager);
 			void log(const time64 value) override;

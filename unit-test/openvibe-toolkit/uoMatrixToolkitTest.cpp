@@ -27,6 +27,7 @@
 #include "ovtAssert.h"
 
 using namespace OpenViBE;
+using namespace /*OpenViBE::*/Toolkit;
 
 void fillMatrix(CMatrix& matrix)
 {
@@ -54,7 +55,7 @@ bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, const size
 
 	fillMatrix(expectedMatrix);
 
-	if (!OpenViBE::Toolkit::Tools::Matrix::saveToTextFile(expectedMatrix, textFile.c_str(), precision))
+	if (!Matrix::saveToTextFile(expectedMatrix, textFile.c_str(), precision))
 	{
 		std::cerr << "Error: saving matrix to file " << textFile << "\n";
 		return false;
@@ -62,13 +63,13 @@ bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, const size
 
 	CMatrix resultMatrix;
 
-	if (!OpenViBE::Toolkit::Tools::Matrix::loadFromTextFile(resultMatrix, textFile.c_str()))
+	if (!Matrix::loadFromTextFile(resultMatrix, textFile.c_str()))
 	{
 		std::cerr << "Error: loading matrix from file " << textFile << "\n";
 		return false;
 	}
 
-	if (!OpenViBE::Toolkit::Tools::Matrix::isDescriptionSimilar(expectedMatrix, resultMatrix))
+	if (!Matrix::isDescriptionSimilar(expectedMatrix, resultMatrix))
 	{
 		std::cerr << "Error: Descriptions differ between expected matrix and result matrix after save/load\n";
 		return false;

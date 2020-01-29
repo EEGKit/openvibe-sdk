@@ -53,7 +53,7 @@ bool CAlgorithmMatrixAverage::process()
 
 		m_history.clear();
 
-		OpenViBE::Toolkit::Tools::Matrix::copyDescription(*oMatrix, *iMatrix);
+		OpenViBE::Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
 	}
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
@@ -70,10 +70,10 @@ bool CAlgorithmMatrixAverage::process()
 			else
 			{
 				swapMatrix = new CMatrix();
-				OpenViBE::Toolkit::Tools::Matrix::copyDescription(*swapMatrix, *iMatrix);
+				OpenViBE::Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
 			}
 
-			OpenViBE::Toolkit::Tools::Matrix::copyContent(*swapMatrix, *iMatrix);
+			OpenViBE::Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
@@ -90,10 +90,10 @@ bool CAlgorithmMatrixAverage::process()
 			else
 			{
 				swapMatrix = new CMatrix();
-				OpenViBE::Toolkit::Tools::Matrix::copyDescription(*swapMatrix, *iMatrix);
+				OpenViBE::Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
 			}
 
-			OpenViBE::Toolkit::Tools::Matrix::copyContent(*swapMatrix, *iMatrix);
+			OpenViBE::Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (!m_history.empty());
@@ -108,8 +108,8 @@ bool CAlgorithmMatrixAverage::process()
 				m_history.clear();
 			}
 
-			OpenViBE::Toolkit::Tools::Matrix::copyDescription(*swapMatrix, *iMatrix);
-			OpenViBE::Toolkit::Tools::Matrix::copyContent(*swapMatrix, *iMatrix);
+			OpenViBE::Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
+			OpenViBE::Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
@@ -124,7 +124,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (shouldPerformAverage)
 	{
-		OpenViBE::Toolkit::Tools::Matrix::clearContent(*oMatrix);
+		OpenViBE::Toolkit::Matrix::clearContent(*oMatrix);
 
 		if (ip_averagingMethod == Cumulative)
 		{

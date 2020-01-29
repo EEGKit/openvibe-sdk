@@ -19,7 +19,7 @@ namespace
 		{
 			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
-				if (OpenViBE::Toolkit::Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
+				if (OpenViBE::Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
 			}
 		}
 		else if (matchMethodID == Index)

@@ -7,11 +7,11 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-using namespace /*OpenViBE::*/Toolkit;
 
 namespace
 {
@@ -24,7 +24,7 @@ namespace
 		{
 			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
-				if (Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
+				if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
 			}
 		}
 		else if (matchMethodID == Index)
@@ -161,14 +161,14 @@ bool CBoxAlgorithmChannelSelector::process()
 				CString eegChannelNames = this->getConfigurationManager().expand("${Box_ChannelSelector_EEGChannelNames}");
 
 				std::vector<CString> token;
-				const size_t nToken = split(eegChannelNames, OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(token),
+				const size_t nToken = split(eegChannelNames, OpenViBE::Toolkit::String::TSplitCallback<std::vector<CString>>(token),
 											OV_Value_EnumeratedStringSeparator);
 
 				for (size_t j = 0; j < m_iMatrix->getDimensionSize(0); ++j)
 				{
 					for (size_t k = 0; k < nToken; ++k)
 					{
-						if (Tools::String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
+						if (String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
 					}
 				}
 			}
@@ -183,14 +183,14 @@ bool CBoxAlgorithmChannelSelector::process()
 				//
 
 				std::vector<CString> tokens;
-				const size_t nToken = split(settingValue, OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
+				const size_t nToken = split(settingValue, OpenViBE::Toolkit::String::TSplitCallback<std::vector<CString>>(tokens),
 											OV_Value_EnumeratedStringSeparator);
 				for (size_t j = 0; j < nToken; ++j)
 				{
 					std::vector<CString> subTokens;
 
 					// Checks if the token is a range
-					if (split(tokens[j], OpenViBE::Toolkit::Tools::String::TSplitCallback<std::vector<CString>>(subTokens),
+					if (split(tokens[j], OpenViBE::Toolkit::String::TSplitCallback<std::vector<CString>>(subTokens),
 							  OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)
@@ -264,7 +264,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			m_oMatrix->setDimensionCount(2);
 			m_oMatrix->setDimensionSize(0, m_vLookup.size());
 			m_oMatrix->setDimensionSize(1, m_iMatrix->getDimensionSize(1));
-			Tools::Matrix::clearContent(*m_oMatrix);
+			Matrix::clearContent(*m_oMatrix);
 			for (size_t j = 0; j < m_vLookup.size(); ++j)
 			{
 				if (m_vLookup[j] < m_iMatrix->getDimensionSize(0)) { m_oMatrix->setDimensionLabel(0, j, m_iMatrix->getDimensionLabel(0, m_vLookup[j])); }
