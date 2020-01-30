@@ -84,5 +84,5 @@ double* CSignalTrial::getChannelSampleBuffer(const size_t index) const
 // ________________________________________________________________________________________________________________
 //
 
-ISignalTrial* OpenViBE::Toolkit::createSignalTrial() { return new CSignalTrial(); }
-void OpenViBE::Toolkit::releaseSignalTrial(ISignalTrial* trial) { delete trial; }
+ISignalTrial* Toolkit::createSignalTrial() { return new CSignalTrial(); }
+void Toolkit::releaseSignalTrial(ISignalTrial* trial) { delete trial; }

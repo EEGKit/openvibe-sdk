@@ -16,5 +16,5 @@ bool CSignalTrialSet::clear()
 	return true;
 }
 
-ISignalTrialSet* OpenViBE::Toolkit::createSignalTrialSet() { return new CSignalTrialSet(); }
-void OpenViBE::Toolkit::releaseSignalTrialSet(ISignalTrialSet* signalTrialSet) { delete signalTrialSet; }
+ISignalTrialSet* Toolkit::createSignalTrialSet() { return new CSignalTrialSet(); }
+void Toolkit::releaseSignalTrialSet(ISignalTrialSet* signalTrialSet) { delete signalTrialSet; }

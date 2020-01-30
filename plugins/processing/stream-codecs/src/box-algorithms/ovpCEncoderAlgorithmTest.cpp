@@ -33,12 +33,12 @@ bool CEncoderAlgorithmTest::initialize()
 	m_matrix1->setDimensionCount(2);
 	m_matrix1->setDimensionSize(0, 16);
 	m_matrix1->setDimensionSize(1, 16);
-	OpenViBE::Toolkit::Matrix::clearContent(*m_matrix1);
+	Toolkit::Matrix::clearContent(*m_matrix1);
 
 	m_matrix2 = new CMatrix();
 	m_matrix2->setDimensionCount(1);
 	m_matrix2->setDimensionSize(0, 16);
-	OpenViBE::Toolkit::Matrix::clearContent(*m_matrix2);
+	Toolkit::Matrix::clearContent(*m_matrix2);
 
 	m_matrix3 = new CMatrix();
 	m_matrix3->setDimensionCount(2);
@@ -51,7 +51,7 @@ bool CEncoderAlgorithmTest::initialize()
 	m_matrix3->setDimensionLabel(1, 0, "x");
 	m_matrix3->setDimensionLabel(1, 1, "y");
 	m_matrix3->setDimensionLabel(1, 2, "z");
-	OpenViBE::Toolkit::Matrix::clearContent(*m_matrix3);
+	Toolkit::Matrix::clearContent(*m_matrix3);
 
 	m_stimSet = new CStimulationSet();
 

@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Toolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_decoder = nullptr;
 			OpenViBE::Toolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_encoder = nullptr;
 
-			OpenViBE::CMatrix m_oFilterBank;
+			OpenViBE::CMatrix m_filterBank;
 
 		private:
 			// Loads the m_vCoefficient vector (representing a matrix) from the given string. c1 and c2 are separator characters between floats.

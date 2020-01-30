@@ -75,7 +75,7 @@ namespace OpenViBETest
 		}
 
 		ctx->initialize();
-		OpenViBE::Toolkit::initialize(*ctx);
+		Toolkit::initialize(*ctx);
 		context = ctx;
 	}
 
@@ -83,7 +83,7 @@ namespace OpenViBETest
 	{
 		if (context)
 		{
-			OpenViBE::Toolkit::uninitialize(*context);
+			Toolkit::uninitialize(*context);
 			IKernelDesc* kernelDesc = nullptr;
 			m_kernelLoader.getKernelDesc(kernelDesc);
 			kernelDesc->releaseKernel(context);

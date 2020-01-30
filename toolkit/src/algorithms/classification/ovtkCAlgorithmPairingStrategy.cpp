@@ -10,12 +10,12 @@ using namespace /*OpenViBE::*/Toolkit;
 
 static std::map<uint64_t, fClassifierComparison> comparisionFunctions;
 
-void OpenViBE::Toolkit::registerClassificationComparisonFunction(const CIdentifier& classID, const fClassifierComparison comparision)
+void Toolkit::registerClassificationComparisonFunction(const CIdentifier& classID, const fClassifierComparison comparision)
 {
 	comparisionFunctions[classID.toUInteger()] = comparision;
 }
 
-fClassifierComparison OpenViBE::Toolkit::getClassificationComparisonFunction(const CIdentifier& classID)
+fClassifierComparison Toolkit::getClassificationComparisonFunction(const CIdentifier& classID)
 {
 	if (comparisionFunctions.count(classID.toUInteger()) == 0) { return nullptr; }
 	return comparisionFunctions[classID.toUInteger()];
@@ -34,7 +34,7 @@ bool CAlgorithmPairingStrategy::process()
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Designing architecture failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Designing architecture failed", Kernel::ErrorType::Internal);
 		}
 	}
 	else { return CAlgorithmClassifier::process(); }

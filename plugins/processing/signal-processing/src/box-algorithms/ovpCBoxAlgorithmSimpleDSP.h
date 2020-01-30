@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmSimpleDSP();
+			CBoxAlgorithmSimpleDSP() { }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
@@ -32,9 +32,9 @@ namespace OpenViBEPlugins
 
 			CEquationParser* m_parser = nullptr;
 
-			uint64_t m_equationType       = OP_USERDEF;
-			double m_equationParam = 0;
-			double** m_variables           = nullptr;
+			uint64_t m_equationType = OP_USERDEF;
+			double m_equationParam  = 0;
+			double** m_variables    = nullptr;
 
 			bool m_checkDates = false;
 		};

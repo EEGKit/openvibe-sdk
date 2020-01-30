@@ -12,8 +12,6 @@ using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 using namespace std;
 
-CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP() {}
-
 bool CBoxAlgorithmSimpleDSP::initialize()
 {
 	const IBox& boxContext = this->getStaticBoxContext();

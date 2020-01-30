@@ -118,7 +118,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 
 	ctx->initialize();
 	m_impl->ctx = ctx;
-	OpenViBE::Toolkit::initialize(*ctx);
+	Toolkit::initialize(*ctx);
 
 	IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
@@ -137,7 +137,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::unloadKernel() const
 		for (auto& scenarioPair : m_impl->scenarios) { scenarioManager.releaseScenario(scenarioPair.second); }
 
 
-		OpenViBE::Toolkit::uninitialize(*m_impl->ctx);
+		Toolkit::uninitialize(*m_impl->ctx);
 		// m_impl->ctx->uninitialize();
 		IKernelDesc* kernelDesc = nullptr;
 		m_impl->loader.getKernelDesc(kernelDesc);
