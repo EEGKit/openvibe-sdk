@@ -12,7 +12,7 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 
-// DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> variable here
+// DO NOT USE a global OpenViBE::Test::ScopedTest<OpenViBE::Test::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before
 // the kernel context.
 IKernelContext* context = nullptr;
@@ -289,7 +289,7 @@ int urValidateScenarioTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc >= 3, "Failure retrieve test parameters");
 
-	OpenViBETest::ScopedTest<OpenViBETest::SKernelFixture> fixture;
+	OpenViBE::Test::ScopedTest<OpenViBE::Test::SKernelFixture> fixture;
 	fixture->setConfigFile(argv[1]);
 
 	g_dataDirectory = argv[2];

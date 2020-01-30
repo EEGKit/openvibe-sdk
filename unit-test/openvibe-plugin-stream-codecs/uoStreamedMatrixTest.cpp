@@ -49,7 +49,7 @@ namespace
 
 		CIdentifier m_decoderId;
 		CIdentifier m_encoderId;
-		OpenViBETest::ctx m_kernelCtx;
+		OpenViBE::Test::ctx m_kernelCtx;
 	};
 
 	TEST_F(StreamedMatrixTest, test_init)

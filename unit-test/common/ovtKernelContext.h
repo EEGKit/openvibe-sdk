@@ -25,21 +25,24 @@
 
 #include <openvibe/ov_all.h>
 
-namespace OpenViBETest
+namespace OpenViBE
 {
-	class ctx final
+	namespace Test
 	{
-	public:
-		ctx() = default;
-		~ctx() = default;
+		class ctx final
+		{
+		public:
+			ctx() = default;
+			~ctx() = default;
 
-		bool initialize();
-		bool uninitialize();
+			bool initialize();
+			bool uninitialize();
 
-		OpenViBE::Kernel::IKernelContext* operator->() { return m_Context; }
+			Kernel::IKernelContext* operator->() { return m_Context; }
 
-	private:
-		OpenViBE::Kernel::IKernelContext* m_Context{nullptr};
-		OpenViBE::CKernelLoader m_KernelLoader;
-	};
-}
+		private:
+			Kernel::IKernelContext* m_Context{nullptr};
+			CKernelLoader m_KernelLoader;
+		};
+	}  // namespace Test
+}  // namespace OpenViBE

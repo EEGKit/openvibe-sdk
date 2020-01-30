@@ -28,8 +28,10 @@
 #include "ovtTestFixture.h"
 
 // \note: This file contains fixture implementation shared by many unit tests
-namespace OpenViBETest
+namespace OpenViBE
 {
+	namespace Test
+	{
 	struct SKernelFixture final : TestFixture
 	{
 		SKernelFixture() = default;
@@ -46,4 +48,5 @@ namespace OpenViBETest
 		std::string m_configFile;
 		OpenViBE::CKernelLoader m_kernelLoader;
 	};
-} // namespace OpenViBETest
+	} // namespace Test
+} // namespace OpenViBE

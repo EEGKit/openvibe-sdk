@@ -23,12 +23,14 @@
 
 #include "ovtKernelContext.h"
 
-namespace OpenViBETest
-{
-	using namespace OpenViBE;
-	using namespace /*OpenViBE::*/Kernel;
-	using namespace /*OpenViBE::*/Plugins;
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Kernel;
+using namespace /*OpenViBE::*/Plugins;
 
+namespace OpenViBE
+{
+	namespace Test
+	{
 	bool ctx::initialize()
 	{
 #if defined TARGET_OS_Windows
@@ -90,4 +92,5 @@ namespace OpenViBETest
 
 		return true;
 	}
-}  // namespace OpenViBETest
+}  // namespace Test
+}  // namespace OpenViBE

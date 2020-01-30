@@ -23,8 +23,10 @@
 
 #include <memory>
 
-namespace OpenViBETest
+namespace OpenViBE
 {
+	namespace Test
+	{
 	/**
 	* \struct TestFixture
 	* \author cgarraud (INRIA)
@@ -77,4 +79,5 @@ namespace OpenViBETest
 
 		std::unique_ptr<T> fixture;
 	};
-} // namespace OpenViBETest
+	} // namespace Test
+} // namespace OpenViBE

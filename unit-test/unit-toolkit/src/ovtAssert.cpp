@@ -23,8 +23,10 @@
 
 #include "ovtAssert.h"
 
-namespace OpenViBETest
+namespace OpenViBE
 {
+	namespace Test
+	{
 	static void printErrorCore(const char* expression, const char* file, const int line)
 	{
 		std::cerr << "Failed to evaluate: " << expression << std::endl;
@@ -60,4 +62,5 @@ namespace OpenViBETest
 
 		return expression;
 	}
-} // namespace OpenViBETest
+	} // namespace Test
+} // namespace OpenViBE
