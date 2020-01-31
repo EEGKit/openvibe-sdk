@@ -7,7 +7,7 @@ namespace OpenViBE
 	namespace Plugins
 	{
 		class IAlgorithmDesc;
-	}
+	}  // namespace Plugins
 
 	namespace Kernel
 	{
@@ -20,7 +20,7 @@ namespace OpenViBE
 		 * \brief Manager for all kind of plugin algorithms
 		 * \ingroup Group_Algorithm
 		 * \ingroup Group_Kernel
-		 * \sa OpenViBE::Plugins::IAlgorithm
+		 * \sa Plugins::IAlgorithm
 		 */
 		class OV_API IAlgorithmManager : public IKernelObject
 		{
@@ -76,7 +76,7 @@ namespace OpenViBE
 			 */
 			virtual CIdentifier getNextAlgorithmIdentifier(const CIdentifier& previousID) const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmManager)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmManager)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

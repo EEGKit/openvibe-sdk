@@ -5,11 +5,13 @@
 
 #include <vector>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmWindowing final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmWindowing final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -18,35 +20,35 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_Windowing)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_Windowing)
 
 		protected:
-			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_decoder;
-			OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_encoder;
+			Toolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_decoder;
+			Toolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_encoder;
 
 			uint64_t m_windowMethod = 0;
 			std::vector<double> m_windowCoefs;
 		};
 
-		class CBoxAlgorithmWindowingDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmWindowingDesc final : virtual public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Windowing"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Laurent Bonnet"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Applies a windowing function to the signal."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Applies a windowing function to the signal."); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getStockItemName() const override { return OpenViBE::CString("gtk-execute"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Windowing; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmWindowing(); }
+			CString getName() const override { return CString("Windowing"); }
+			CString getAuthorName() const override { return CString("Laurent Bonnet"); }
+			CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+			CString getShortDescription() const override { return CString("Applies a windowing function to the signal."); }
+			CString getDetailedDescription() const override { return CString("Applies a windowing function to the signal."); }
+			CString getCategory() const override { return CString("Signal processing/Temporal Filtering"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getStockItemName() const override { return CString("gtk-execute"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_Windowing; }
+			IPluginObject* create() override { return new CBoxAlgorithmWindowing(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
@@ -54,7 +56,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_WindowingDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_WindowingDesc)
 		};
 	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

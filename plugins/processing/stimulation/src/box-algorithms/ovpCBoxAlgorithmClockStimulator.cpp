@@ -3,8 +3,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
 bool CBoxAlgorithmClockStimulator::initialize()
@@ -14,7 +12,7 @@ bool CBoxAlgorithmClockStimulator::initialize()
 	const double minInterstimulationInterval = 0.0001;
 	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval),
 						"Invalid stimulation interval [" << interstimulationInterval << "] (expected value > " << minInterstimulationInterval << ")",
-						OpenViBE::Kernel::ErrorType::BadSetting);
+						ErrorType::BadSetting);
 
 	m_stimulationInterval = interstimulationInterval;
 	m_nSentStimulation    = 0;

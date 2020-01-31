@@ -34,7 +34,7 @@ namespace OpenViBE
 			void log(const ELogLevel level) override;
 			void log(const ELogColor color) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole)
+			_IsDerivedFromClass_Final_(TKernelObject<ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole)
 
 		protected:
 

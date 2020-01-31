@@ -10,8 +10,10 @@
 #include "ovpCAlgorithmClassifierLDA.h"
 #include <xml/IXMLNode.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace Classification
 	{
 		//The purpose of this class is to compute the "membership" of a vector
@@ -39,6 +41,7 @@ namespace OpenViBEPlugins
 			Eigen::VectorXd m_weight;
 		};
 	} // namespace Classification
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE
 
 #endif

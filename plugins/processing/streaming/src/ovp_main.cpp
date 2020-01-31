@@ -5,7 +5,10 @@
 
 #include <vector>
 
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Plugins;
+
 OVP_Declare_Begin()
-	OVP_Declare_New(OpenViBEPlugins::Streaming::CBoxAlgorithmStreamedMatrixMultiplexerDesc);
-	OVP_Declare_New(OpenViBEPlugins::Streaming::CBoxAlgorithmSignalMergerDesc);
+	OVP_Declare_New(Streaming::CBoxAlgorithmStreamedMatrixMultiplexerDesc);
+	OVP_Declare_New(Streaming::CBoxAlgorithmSignalMergerDesc);
 OVP_Declare_End()

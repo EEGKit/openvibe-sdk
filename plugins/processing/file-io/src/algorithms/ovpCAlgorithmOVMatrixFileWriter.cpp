@@ -3,8 +3,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 bool CAlgorithmOVMatrixFileWriter::initialize()
@@ -25,8 +23,8 @@ bool CAlgorithmOVMatrixFileWriter::uninitialize()
 
 bool CAlgorithmOVMatrixFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(OpenViBE::Toolkit::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
-						"Writing matrix file " << *ip_sFilename << " failed", OpenViBE::Kernel::ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
+						"Writing matrix file " << *ip_sFilename << " failed", ErrorType::BadFileWrite);
 
 	return true;
 }

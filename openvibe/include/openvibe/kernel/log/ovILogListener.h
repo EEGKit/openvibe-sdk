@@ -220,7 +220,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogListener)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Log_LogListener)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

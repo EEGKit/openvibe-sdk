@@ -9,6 +9,9 @@
 #include "box-algorithms/ovpCBoxAlgorithmStreamEndDetector.h"
 #include "box-algorithms/ovpCBoxAlgorithmTimeout.h"
 
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Plugins;
+
 OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationType(OV_TypeId_PlayerAction, "Player Action");
 	context.getTypeManager().registerEnumerationEntry(OV_TypeId_PlayerAction, "Play", OV_TypeId_PlayerAction_Play.toUInteger());
@@ -16,14 +19,14 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OV_TypeId_PlayerAction, "Pause", OV_TypeId_PlayerAction_Pause.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OV_TypeId_PlayerAction, "Forward", OV_TypeId_PlayerAction_Forward.toUInteger());
 
-	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmClockStimulatorDesc);
-	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmPlayerControllerDesc);
-	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationMultiplexerDesc);
+	OVP_Declare_New(Stimulation::CBoxAlgorithmClockStimulatorDesc);
+	OVP_Declare_New(Stimulation::CBoxAlgorithmPlayerControllerDesc);
+	OVP_Declare_New(Stimulation::CBoxAlgorithmStimulationMultiplexerDesc);
 
-	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmStreamEndDetectorDesc);
-	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmTimeoutDesc);
+	OVP_Declare_New(Stimulation::CBoxAlgorithmStreamEndDetectorDesc);
+	OVP_Declare_New(Stimulation::CBoxAlgorithmTimeoutDesc);
 
-	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationVoterDesc);
+	OVP_Declare_New(Stimulation::CBoxAlgorithmStimulationVoterDesc);
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_Voting_ClearVotes, "Clear votes");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_ClearVotes, "When expires", OVP_TypeId_Voting_ClearVotes_WhenExpires.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_ClearVotes, "After output", OVP_TypeId_Voting_ClearVotes_AfterOutput.toUInteger());

@@ -32,7 +32,7 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
 
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 bool CBoxAlgorithmZeroCrossingDetector::initialize()
@@ -43,7 +43,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	m_hysteresis  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_windowTimeD = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(m_windowTimeD > 0, "Invalid negative number for window length", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_windowTimeD > 0, "Invalid negative number for window length", ErrorType::BadSetting);
 
 	m_stimId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_stimId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -66,7 +66,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 		m_decoder                                                          = decoder;
 		m_encoder0                                                         = encoder;
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", ErrorType::BadInput); }
 
 	return true;
 }

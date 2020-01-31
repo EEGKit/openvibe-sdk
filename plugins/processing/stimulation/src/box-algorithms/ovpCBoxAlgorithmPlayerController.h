@@ -4,11 +4,13 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace Stimulation
 	{
-		class CBoxAlgorithmPlayerController final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmPlayerController final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -17,41 +19,41 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_PlayerController)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_PlayerController)
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimulationSet;
+			Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+			Kernel::TParameterHandler<IStimulationSet*> op_stimulationSet;
 
 			uint64_t m_stimulationID = 0;
 			uint64_t m_actionID      = 0;
 		};
 
-		class CBoxAlgorithmPlayerControllerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmPlayerControllerDesc final : public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Player Controller"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Controls the player execution"); }
+			CString getName() const override { return CString("Player Controller"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA"); }
+			CString getShortDescription() const override { return CString("Controls the player execution"); }
 
-			OpenViBE::CString getDetailedDescription() const override
+			CString getDetailedDescription() const override
 			{
-				return OpenViBE::CString("Add some settings to configure the way you want to control the player");
+				return CString("Add some settings to configure the way you want to control the player");
 			}
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_PlayerController; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmPlayerController; }
+			CString getCategory() const override { return CString("Stimulation"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_PlayerController; }
+			IPluginObject* create() override { return new CBoxAlgorithmPlayerController; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Stimulations", OV_TypeId_Stimulations);
 				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
@@ -60,7 +62,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_PlayerControllerDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_PlayerControllerDesc)
 		};
 	} // namespace Stimulation
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

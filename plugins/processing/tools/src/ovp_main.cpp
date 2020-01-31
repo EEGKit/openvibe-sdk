@@ -2,10 +2,11 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmEBMLStreamSpy.h"
 #include "box-algorithms/ovpCBoxAlgorithmStimulationListener.h"
-
 #include "box-algorithms/ovpCBoxAlgorithmMatrixValidityChecker.h"
-
 #include "box-algorithms/ovpCBoxAlgorithmExternalProcessing.h"
+
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Plugins;
 
 OVP_Declare_Begin()
 
@@ -15,9 +16,9 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ValidityCheckerType, "Stop player", OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ValidityCheckerType, "Interpolate", OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger());
 
-	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmStimulationListenerDesc);
-	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmEBMLStreamSpyDesc);
-	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmMatrixValidityCheckerDesc);
-	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmExternalProcessingDesc);
+	OVP_Declare_New(Tools::CBoxAlgorithmStimulationListenerDesc);
+	OVP_Declare_New(Tools::CBoxAlgorithmEBMLStreamSpyDesc);
+	OVP_Declare_New(Tools::CBoxAlgorithmMatrixValidityCheckerDesc);
+	OVP_Declare_New(Tools::CBoxAlgorithmExternalProcessingDesc);
 
 OVP_Declare_End()

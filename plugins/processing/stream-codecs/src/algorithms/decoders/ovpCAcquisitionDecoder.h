@@ -4,8 +4,10 @@
 #include "ovpCEBMLBaseDecoder.h"
 #include <stack>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace StreamCodecs
 	{
 		class CAcquisitionDecoder final : public CEBMLBaseDecoder
@@ -17,7 +19,7 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_AcquisitionDecoder)
+			_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_AcquisitionDecoder)
 
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -27,14 +29,14 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			static void appendMemoryBuffer(OpenViBE::IMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
+			static void appendMemoryBuffer(IMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_bufferDuration;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_experimentInfoStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_signalStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_stimulationStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_channelLocalisationStream;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_channelUnitsStream;
+			Kernel::TParameterHandler<uint64_t> op_bufferDuration;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_experimentInfoStream;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_signalStream;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_stimulationStream;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_channelLocalisationStream;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_channelUnitsStream;
 
 		private:
 
@@ -45,34 +47,35 @@ namespace OpenViBEPlugins
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Acquisition stream decoder"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stream codecs/Decoders"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_AcquisitionDecoder; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CAcquisitionDecoder(); }
+			CString getName() const override { return CString("Acquisition stream decoder"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+			CString getShortDescription() const override { return CString(""); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("Stream codecs/Decoders"); }
+			CString getVersion() const override { return CString("1.1"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_AcquisitionDecoder; }
+			IPluginObject* create() override { return new CAcquisitionDecoder(); }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
 				CEBMLBaseDecoderDesc::getAlgorithmPrototype(prototype);
 
-				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ExperimentInfoStream, "Experiment information stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_SignalStream, "Signal stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_StimulationStream, "Stimulation stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelLocalisationStream, "Channel localisation stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
-				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelUnitsStream, "Channel units stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_BufferDuration, "Buffer duration", Kernel::ParameterType_UInteger);
+				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ExperimentInfoStream, "Experiment information stream", Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_SignalStream, "Signal stream", Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_StimulationStream, "Stimulation stream", Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelLocalisationStream, "Channel localisation stream", Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelUnitsStream, "Channel units stream", Kernel::ParameterType_MemoryBuffer);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_AcquisitionDecoderDesc)
+			_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_AcquisitionDecoderDesc)
 		};
 	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

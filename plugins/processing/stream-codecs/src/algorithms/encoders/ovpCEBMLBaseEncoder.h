@@ -8,11 +8,13 @@
 #include <ebml/IWriterHelper.h>
 #include <ebml/TWriterCallbackProxy.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace StreamCodecs
 	{
-		class CEBMLBaseEncoder : public OpenViBE::Toolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CEBMLBaseEncoder : public Toolkit::TAlgorithm<IAlgorithm>
 		{
 		public:
 
@@ -25,26 +27,26 @@ namespace OpenViBEPlugins
 			virtual bool processBuffer() { return true; }
 			virtual bool processEnd() { return true; }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseEncoder)
+			_IsDerivedFromClass_Final_(Toolkit::TAlgorithm < IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseEncoder)
 
 			// ebml callbacks
 			virtual void write(const void* buffer, size_t size);
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
 
 			EBML::IWriterHelper* m_writerHelper = nullptr;
 			EBML::IWriter* m_writer             = nullptr;
 			EBML::TWriterCallbackProxy1<CEBMLBaseEncoder> m_callbackProxy;
 		};
 
-		class CEBMLBaseEncoderDesc : public OpenViBE::Plugins::IAlgorithmDesc
+		class CEBMLBaseEncoderDesc : public IAlgorithmDesc
 		{
 		public:
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
-				prototype.addOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				prototype.addOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", Kernel::ParameterType_MemoryBuffer);
 				prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader, "Encode header");
 				prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer, "Encode buffer");
 				prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeEnd, "Encode end");
@@ -52,7 +54,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseEncoderDesc)
+			_IsDerivedFromClass_(IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseEncoderDesc)
 		};
 	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

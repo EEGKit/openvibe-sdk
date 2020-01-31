@@ -43,7 +43,7 @@ namespace OpenViBE
 			 */
 			virtual bool setTime(const uint64_t time) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Message)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Player_Message)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

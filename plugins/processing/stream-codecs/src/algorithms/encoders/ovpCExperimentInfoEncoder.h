@@ -3,8 +3,10 @@
 #include "../../ovp_defines.h"
 #include "ovpCEBMLBaseEncoder.h"
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace StreamCodecs
 	{
 		class CExperimentInfoEncoder final : public CEBMLBaseEncoder
@@ -15,60 +17,61 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool processHeader() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_ExperimentInfoEncoder)
+			_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_ExperimentInfoEncoder)
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ExperimentID;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_experimentDate;
+			Kernel::TParameterHandler<uint64_t> ip_ExperimentID;
+			Kernel::TParameterHandler<CString*> ip_experimentDate;
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_subjectID;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_subjectName;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_subjectAge;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_subjectGender;
+			Kernel::TParameterHandler<uint64_t> ip_subjectID;
+			Kernel::TParameterHandler<CString*> ip_subjectName;
+			Kernel::TParameterHandler<uint64_t> ip_subjectAge;
+			Kernel::TParameterHandler<uint64_t> ip_subjectGender;
 
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_LaboratoryID;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pLaboratoryName;
-			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_TechnicianID;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pTechnicianName;
+			Kernel::TParameterHandler<uint64_t> ip_LaboratoryID;
+			Kernel::TParameterHandler<CString*> ip_pLaboratoryName;
+			Kernel::TParameterHandler<uint64_t> ip_TechnicianID;
+			Kernel::TParameterHandler<CString*> ip_pTechnicianName;
 		};
 
 		class CExperimentInfoEncoderDesc final : public CEBMLBaseEncoderDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Experiment information stream encoder"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stream codecs/Encoders"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ExperimentInfoEncoder; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CExperimentInfoEncoder(); }
+			CString getName() const override { return CString("Experiment information stream encoder"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+			CString getShortDescription() const override { return CString(""); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("Stream codecs/Encoders"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ExperimentInfoEncoder; }
+			IPluginObject* create() override { return new CExperimentInfoEncoder(); }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
 				CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
 
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID, "Experiment identifier", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate, "Experiment date", OpenViBE::Kernel::ParameterType_String);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID, "Subject identifier", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName, "Subject name", OpenViBE::Kernel::ParameterType_String);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge, "Subject age", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender, "Subject gender", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID, "Laboratory identifier", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName, "Laboratory name", OpenViBE::Kernel::ParameterType_String);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID, "Technician identifier", OpenViBE::Kernel::ParameterType_UInteger);
-				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName, "Technician name", OpenViBE::Kernel::ParameterType_String);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID, "Experiment identifier", Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate, "Experiment date", Kernel::ParameterType_String);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName, "Subject name", Kernel::ParameterType_String);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID, "Laboratory identifier", Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName, "Laboratory name", Kernel::ParameterType_String);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID, "Technician identifier", Kernel::ParameterType_UInteger);
+				prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName, "Technician name", Kernel::ParameterType_String);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_ExperimentInfoEncoderDesc)
+			_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_ExperimentInfoEncoderDesc)
 		};
 	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

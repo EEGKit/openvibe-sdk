@@ -11,10 +11,10 @@ namespace OpenViBE
 	 * \brief Basic standalone OpenViBE memory buffer implementation
 	 * \ingroup Group_Base
 	 *
-	 * This class offers a basic standalone impementation of the OpenViBE::IMemoryBuffer
+	 * This class offers a basic standalone impementation of the IMemoryBuffer
 	 * interface. This class can be directly instanciated and used.
 	 *
-	 * Instances of this class use an internal implementation of the OpenViBE::IMemoryBuffer
+	 * Instances of this class use an internal implementation of the IMemoryBuffer
 	 * interface and redirect their calls to this implementation.
 	 */
 
@@ -61,7 +61,7 @@ namespace OpenViBE
 		bool append(const uint8_t* buffer, const size_t size) override;
 		bool append(const IMemoryBuffer& buffer) override;
 
-		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
+		_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
 
 	protected:
 

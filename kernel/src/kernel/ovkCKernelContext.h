@@ -30,7 +30,7 @@ namespace OpenViBE
 			ILogManager& getLogManager() const override;
 			IErrorManager& getErrorManager() const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelContext, OVK_ClassId_Kernel_KernelContext)
+			_IsDerivedFromClass_Final_(IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
 		protected:
 
@@ -100,7 +100,7 @@ namespace OpenViBE
 			ILogManager& getLogManager() const override { return m_logManager ? *m_logManager : m_kernelCtx.getLogManager(); }
 			IErrorManager& getErrorManager() const override { return m_errorManager ? *m_errorManager : m_kernelCtx.getErrorManager(); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelContext, OVK_ClassId_Kernel_KernelContext)
+			_IsDerivedFromClass_Final_(IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
 		protected:
 

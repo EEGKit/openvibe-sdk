@@ -176,7 +176,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProxy)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProxy)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

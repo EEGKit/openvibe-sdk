@@ -29,6 +29,9 @@
 #include "box-algorithms/ovpCBoxAlgorithmWindowing.h"
 #include "box-algorithms/ovpCBoxAlgorithmXDAWNTrainer.h"
 
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Plugins;
+
 OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_EpochAverageMethod, "Epoch Average method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average", Moving);
@@ -64,39 +67,39 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Pass", BandPass);
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Stop", BandStop);
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CAlgorithmMatrixAverageDesc)
+	OVP_Declare_New(SignalProcessing::CAlgorithmMatrixAverageDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmIdentityDesc);
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpochingDesc);
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmChannelRenameDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmChannelSelectorDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmReferenceChannelDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmEpochAverageDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmCropDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalDecimationDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmZeroCrossingDetectorDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmStimulationBasedEpochingDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmCommonAverageReferenceDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmIdentityDesc);
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmTimeBasedEpochingDesc);
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmChannelRenameDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmChannelSelectorDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmReferenceChannelDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmEpochAverageDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmCropDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSignalDecimationDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmZeroCrossingDetectorDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmStimulationBasedEpochingDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmCommonAverageReferenceDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpatialFilterDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTemporalFilterDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSpatialFilterDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmTemporalFilterDesc)
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average", ChunkAverage);
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample",Incremental);
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmRegularizedCSPTrainerDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovarianceDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmRegularizedCSPTrainerDesc)
+	OVP_Declare_New(SignalProcessing::CAlgorithmOnlineCovarianceDesc)
 
 #endif
 
 #if defined TARGET_HAS_R8BRAIN
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalResamplingDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSignalResamplingDesc)
 #endif
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSPDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CSignalAverageDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSimpleDSPDesc)
+	OVP_Declare_New(SignalProcessing::CSignalAverageDesc)
 
 	// Wavelet Type
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_ContinuousWaveletType, "Continuous Wavelet Type");
@@ -104,13 +107,13 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Paul wavelet", Paul);
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet", DOG);
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmContinuousWaveletAnalysisDesc);
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmContinuousWaveletAnalysisDesc);
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmFrequencyBandSelectorDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectrumAverageDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmFrequencyBandSelectorDesc)
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSpectrumAverageDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectralAnalysisDesc);
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmWindowingDesc);
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSpectralAnalysisDesc);
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmWindowingDesc);
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_WindowMethod, "Window method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "None", None);
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hamming", Hamming);
@@ -120,6 +123,6 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Triangular", Triangular);
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Square root", SquareRoot);
 
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmXDAWNTrainerDesc);
+	OVP_Declare_New(SignalProcessing::CBoxAlgorithmXDAWNTrainerDesc);
 
 OVP_Declare_End()

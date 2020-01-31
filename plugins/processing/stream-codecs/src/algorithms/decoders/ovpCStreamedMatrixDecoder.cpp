@@ -7,8 +7,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
 namespace
@@ -25,7 +23,6 @@ namespace
 		dst[src2 - src1] = '\0';
 	}
 } // namespace
-CStreamedMatrixDecoder::CStreamedMatrixDecoder() {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -47,21 +44,21 @@ bool CStreamedMatrixDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& identifier)
+bool CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& id)
 {
-	if (identifier == OVTK_NodeId_Header_StreamedMatrix) { return true; }
-	if (identifier == OVTK_NodeId_Header_StreamedMatrix_Dimension) { return true; }
-	if (identifier == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { return false; }
-	if (identifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { return false; }
-	if (identifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label) { return false; }
-	if (identifier == OVTK_NodeId_Buffer_StreamedMatrix) { return true; }
-	if (identifier == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { return false; }
-	return CEBMLBaseDecoder::isMasterChild(identifier);
+	if (id == OVTK_NodeId_Header_StreamedMatrix) { return true; }
+	if (id == OVTK_NodeId_Header_StreamedMatrix_Dimension) { return true; }
+	if (id == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { return false; }
+	if (id == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { return false; }
+	if (id == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label) { return false; }
+	if (id == OVTK_NodeId_Buffer_StreamedMatrix) { return true; }
+	if (id == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { return false; }
+	return CEBMLBaseDecoder::isMasterChild(id);
 }
 
-void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& identifier)
+void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& id)
 {
-	m_nodes.push(identifier);
+	m_nodes.push(id);
 
 	EBML::CIdentifier& top = m_nodes.top();
 
@@ -85,7 +82,7 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& identifier)
 		}
 		else if (top == OVTK_NodeId_Buffer_StreamedMatrix && m_status == Status_ParsingNothing) { m_status = Status_ParsingBuffer; }
 	}
-	else { CEBMLBaseDecoder::openChild(identifier); }
+	else { CEBMLBaseDecoder::openChild(id); }
 }
 
 void CStreamedMatrixDecoder::processChildData(const void* buffer, const size_t size)
@@ -132,7 +129,7 @@ void CStreamedMatrixDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_StreamedMatrix)
+	if ((top == OVTK_NodeId_Header_StreamedMatrix) 
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)

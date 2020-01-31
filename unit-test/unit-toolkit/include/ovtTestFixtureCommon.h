@@ -42,11 +42,11 @@ namespace OpenViBE
 		void setUp() override;
 		void tearDown() override;
 
-		OpenViBE::Kernel::IKernelContext* context{ nullptr };
+		Kernel::IKernelContext* context{ nullptr };
 
 	private:
 		std::string m_configFile;
-		OpenViBE::CKernelLoader m_kernelLoader;
+		CKernelLoader m_kernelLoader;
 	};
 	} // namespace Test
 } // namespace OpenViBE

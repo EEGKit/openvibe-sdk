@@ -8,7 +8,7 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 using namespace /*OpenViBE::*/Toolkit;

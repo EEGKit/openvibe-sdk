@@ -9,8 +9,6 @@ using namespace OpenViBE;
 using namespace CSV;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace FileIO;
 using namespace TimeArithmetics;
 
@@ -31,22 +29,22 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 
 	if (m_typeID == OV_TypeId_Signal)
 	{
-		m_algorithmEncoder = new OpenViBE::Toolkit::TSignalEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_algorithmEncoder = new Toolkit::TSignalEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_readerLib->setFormatType(EStreamType::Signal);
 	}
 	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 	{
-		m_algorithmEncoder = new OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_algorithmEncoder = new Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_readerLib->setFormatType(EStreamType::StreamedMatrix);
 	}
 	else if (m_typeID == OV_TypeId_FeatureVector)
 	{
-		m_algorithmEncoder = new OpenViBE::Toolkit::TFeatureVectorEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_algorithmEncoder = new Toolkit::TFeatureVectorEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_readerLib->setFormatType(EStreamType::FeatureVector);
 	}
 	else if (m_typeID == OV_TypeId_Spectrum)
 	{
-		m_algorithmEncoder = new OpenViBE::Toolkit::TSpectrumEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_algorithmEncoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_readerLib->setFormatType(EStreamType::Spectrum);
 	}
 	else { OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput); }

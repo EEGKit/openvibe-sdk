@@ -675,7 +675,7 @@ namespace OpenViBE
 			 */
 			virtual void clearInputSupportTypes() = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Box)
+			_IsDerivedFromClass_(IAttributable, OV_ClassId_Kernel_Scenario_Box)
 		};
 
 		typedef IBox IStaticBoxContext;

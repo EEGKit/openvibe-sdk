@@ -15,7 +15,7 @@ namespace OpenViBE
 			bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) override;
 			bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) override;
 
-			//virtual bool addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& value); 
+			//virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value); 
 			bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const bool modifiable = false, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) override;
 			bool addFlag(const EBoxFlag boxFlag) override;
 			bool addFlag(const CIdentifier& flagID) override;

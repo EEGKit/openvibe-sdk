@@ -7,11 +7,13 @@
 #include <vector>
 #include <cstdio>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSimpleDSP final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSimpleDSP final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 
@@ -23,12 +25,12 @@ namespace OpenViBEPlugins
 			bool process() override;
 			void evaluate();
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
 		protected:
-			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_decoders;
-			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
-			std::vector<OpenViBE::IMatrix*> m_matrices;
+			std::vector<Kernel::IAlgorithmProxy*> m_decoders;
+			Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			std::vector<IMatrix*> m_matrices;
 
 			CEquationParser* m_parser = nullptr;
 
@@ -39,69 +41,69 @@ namespace OpenViBEPlugins
 			bool m_checkDates = false;
 		};
 
-		class CBoxAlgorithmSimpleDSPListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmSimpleDSPListener final : public Toolkit::TBoxListener<IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onInputAdded(Kernel::IBox& box, const size_t index) override
 			{
 				char name[1024];
 				sprintf(name, "Input - %c", char('A' + index));
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(0, typeID);
 				box.setInputType(index, typeID);
 				box.setInputName(index, name);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(index, typeID);
 				box.setOutputType(0, typeID);
 				for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
 				box.setOutputType(0, typeID);
 				for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxListener < IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmSimpleDSPDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSimpleDSPDesc final : public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Simple DSP"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Bruno Renier / Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA / IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Apply mathematical formulaes to matrices."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Basic"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSimpleDSP(); }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSimpleDSPListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+			CString getName() const override { return CString("Simple DSP"); }
+			CString getAuthorName() const override { return CString("Bruno Renier / Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA / IRISA"); }
+			CString getShortDescription() const override { return CString("Apply mathematical formulaes to matrices."); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("Signal processing/Basic"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
+			IPluginObject* create() override { return new CBoxAlgorithmSimpleDSP(); }
+			IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSimpleDSPListener; }
+			void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input - A", OV_TypeId_Signal);
 				prototype.addOutput("Output", OV_TypeId_Signal);
 				prototype.addSetting("Equation", OV_TypeId_String, "x");
 
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
 
 				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
 				prototype.addInputSupport(OV_TypeId_FeatureVector);
@@ -116,7 +118,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SimpleDSPDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SimpleDSPDesc)
 		};
 	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

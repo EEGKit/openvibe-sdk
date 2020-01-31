@@ -44,7 +44,7 @@ namespace OpenViBE
 			double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
 			double getFastForwardMaximumFactor() const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler)
+			_IsDerivedFromClass_Final_(TKernelObject < IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler)
 
 			CPlayer& getPlayer() const { return m_rPlayer; }
 

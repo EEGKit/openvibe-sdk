@@ -89,7 +89,7 @@ namespace OpenViBE
 			 */
 			virtual void setMetaboxHash(const CIdentifier& id, const CIdentifier& hash) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Metabox_MetaboxManager)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Metabox_MetaboxManager)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

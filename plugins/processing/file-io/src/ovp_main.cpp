@@ -18,23 +18,26 @@
 #include "box-algorithms/csv/ovpCBoxAlgorithmOVCSVFileWriter.h"
 #include "box-algorithms/csv/ovpCBoxAlgorithmOVCSVFileReader.h"
 
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Plugins;
+
 OVP_Declare_Begin()
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmOVMatrixFileReaderDesc)
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmOVMatrixFileWriterDesc)
+	OVP_Declare_New(FileIO::CAlgorithmOVMatrixFileReaderDesc)
+	OVP_Declare_New(FileIO::CAlgorithmOVMatrixFileWriterDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmXMLScenarioExporterDesc)
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmXMLScenarioImporterDesc)
+	OVP_Declare_New(FileIO::CAlgorithmXMLScenarioExporterDesc)
+	OVP_Declare_New(FileIO::CAlgorithmXMLScenarioImporterDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileWriterDesc)
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReaderDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmCSVFileWriterDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmCSVFileReaderDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamReaderDesc)
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamWriterDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmGenericStreamReaderDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmGenericStreamWriterDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmElectrodeLocalisationFileReaderDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmElectrodeLocalisationFileReaderDesc)
 
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmOVCSVFileWriterDesc)
-	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmOVCSVFileReaderDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmOVCSVFileWriterDesc)
+	OVP_Declare_New(FileIO::CBoxAlgorithmOVCSVFileReaderDesc)
 
 	context.getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_SchedulerMetaboxImport, ".mxb", OVP_ClassId_Algorithm_XMLScenarioImporter);
 	context.getConfigurationManager().createConfigurationToken("ScenarioFileNameExtension.xml", "OpenViBE XML Scenario");

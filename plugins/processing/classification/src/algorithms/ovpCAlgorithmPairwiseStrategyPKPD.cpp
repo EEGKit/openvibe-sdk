@@ -13,8 +13,6 @@ namespace
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace Classification;
 
 using namespace /*OpenViBE::*/Toolkit;
@@ -25,7 +23,7 @@ bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 	m_nClass = size_t(ip_nClass);
 
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	return true;
 }
@@ -33,7 +31,7 @@ bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	std::vector<double> matrix(m_nClass * m_nClass);
 

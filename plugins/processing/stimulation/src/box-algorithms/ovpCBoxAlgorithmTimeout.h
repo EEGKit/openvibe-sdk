@@ -5,8 +5,10 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace Stimulation
 	{
 		/**
@@ -16,21 +18,21 @@ namespace OpenViBEPlugins
 		 * \brief The class CBoxAlgorithmTimeout describes the box Timeout.
 		 *
 		 */
-		class CBoxAlgorithmTimeout final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeout final : virtual public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::CMessageClock& messageClock) override;
+			bool processClock(CMessageClock& messageClock) override;
 			bool processInput(const size_t index) override;
 			uint64_t getClockFrequency() override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
 		protected:
-			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
+			Toolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
 
 		private:
 			enum ETimeoutState
@@ -56,34 +58,34 @@ namespace OpenViBEPlugins
 		 * \brief Descriptor of the box Timeout.
 		 *
 		 */
-		class CBoxAlgorithmTimeoutDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmTimeoutDesc final : virtual public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Timeout"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legény"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
+			CString getName() const override { return CString("Timeout"); }
+			CString getAuthorName() const override { return CString("Jozef Legény"); }
+			CString getAuthorCompanyName() const override { return CString("Inria"); }
 
-			OpenViBE::CString getShortDescription() const override
+			CString getShortDescription() const override
 			{
-				return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal");
+				return CString("Sends a stimulation after a period of time without receiving signal");
 			}
 
-			OpenViBE::CString getDetailedDescription() const override
+			CString getDetailedDescription() const override
 			{
-				return OpenViBE::CString(
+				return CString(
 					"Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection.");
 			}
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Timeout; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeout; }
+			CString getCategory() const override { return CString("Stimulation"); }
+			CString getVersion() const override { return CString("1.1"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Timeout; }
+			IPluginObject* create() override { return new CBoxAlgorithmTimeout; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
 
@@ -95,7 +97,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc)
 		};
 	} // namespace Stimulation
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

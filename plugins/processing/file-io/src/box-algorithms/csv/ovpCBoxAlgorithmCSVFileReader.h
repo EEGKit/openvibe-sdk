@@ -8,11 +8,13 @@
 #include <cstdio>
 
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace FileIO
 	{
-		class CBoxAlgorithmCSVFileReader final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmCSVFileReader final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 
@@ -21,7 +23,7 @@ namespace OpenViBEPlugins
 			uint64_t getClockFrequency() override { return 128LL << 32; } // the box clock frequency
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::CMessageClock& messageClock) override;
+			bool processClock(CMessageClock& messageClock) override;
 			bool process() override;
 
 			bool processStreamedMatrix();
@@ -30,9 +32,9 @@ namespace OpenViBEPlugins
 			bool processChannelLocalisation();
 			bool processFeatureVector();
 			bool processSpectrum();
-			bool convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
+			bool convertVectorDataToMatrix(IMatrix* matrix);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader)
 
 
 		protected:
@@ -41,9 +43,9 @@ namespace OpenViBEPlugins
 			FILE* m_file = nullptr;
 			std::string m_separator;
 			bool m_doNotUseFileTime = false;
-			OpenViBE::CString m_filename;
+			CString m_filename;
 
-			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
+			CIdentifier m_typeID = OV_UndefinedIdentifier;
 			size_t m_nCol                  = 0;
 			size_t m_sampling              = 0;
 			size_t m_samplesPerBuffer      = 0;
@@ -51,7 +53,7 @@ namespace OpenViBEPlugins
 
 			bool (CBoxAlgorithmCSVFileReader::*m_realProcess)() = nullptr;
 
-			OpenViBE::Toolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
+			Toolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_encoder = nullptr;
 
 			bool m_headerSent = false;
 			std::vector<std::string> m_lastLineSplits;
@@ -66,12 +68,12 @@ namespace OpenViBEPlugins
 			static const size_t BUFFER_LEN = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
-		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmCSVFileReaderListener final : public Toolkit::TBoxListener<IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeID);
 				if (typeID == OV_TypeId_Spectrum)
 				{
@@ -104,34 +106,34 @@ namespace OpenViBEPlugins
 					box.setSettingName(3, "Samples per buffer");
 					box.setSettingValue(3, "32");
 
-					OV_ERROR_KRF("Unsupported stream type " << typeID.str(), OpenViBE::Kernel::ErrorType::BadOutput);
+					OV_ERROR_KRF("Unsupported stream type " << typeID.str(), Kernel::ErrorType::BadOutput);
 				}
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxListener < IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmCSVFileReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmCSVFileReaderDesc final : virtual public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("CSV File Reader (Deprecated)"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Baptiste Payan"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Read signal in a CSV (text based) file"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/CSV"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmCSVFileReader; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCSVFileReaderListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+			CString getName() const override { return CString("CSV File Reader (Deprecated)"); }
+			CString getAuthorName() const override { return CString("Baptiste Payan"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA"); }
+			CString getShortDescription() const override { return CString("Read signal in a CSV (text based) file"); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("File reading and writing/CSV"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
+			IPluginObject* create() override { return new CBoxAlgorithmCSVFileReader; }
+			IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCSVFileReaderListener; }
+			void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addOutput("Output stream", OV_TypeId_Signal);
 				prototype.addSetting("Filename", OV_TypeId_Filename, "");
@@ -139,7 +141,7 @@ namespace OpenViBEPlugins
 				prototype.addSetting("Don't use the file time",OV_TypeId_Boolean, "false");
 				prototype.addSetting("Samples per buffer", OV_TypeId_Integer, "32");
 
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
 
 				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
 				prototype.addOutputSupport(OV_TypeId_FeatureVector);
@@ -150,7 +152,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CSVFileReaderDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CSVFileReaderDesc)
 		};
 	} // namespace FileIO
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

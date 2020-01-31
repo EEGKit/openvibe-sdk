@@ -33,13 +33,13 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 
 #include <ovp_global_defines.h>
-#define OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario   	OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
-#define OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer	OpenViBE::CIdentifier(0x600463A3, 0x474B7F66)
+#define OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario   	CIdentifier(0x29574C87, 0x7BA77780)
+#define OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer	CIdentifier(0x600463A3, 0x474B7F66)
 
 //___________________________________________________________________//
 //                                                                   //
 
-#define OV_AttributeId_Box_Disabled              						OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
+#define OV_AttributeId_Box_Disabled              						CIdentifier(0x341D3912, 0x1478DE86)
 
 //___________________________________________________________________//
 //                                                                   //

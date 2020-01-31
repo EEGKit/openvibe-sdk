@@ -146,7 +146,7 @@ bool CEquationParser::compileEquation(const char* equation)
 		error += "^--Here\n";
 	}
 
-	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error, OpenViBE::Kernel::ErrorType::BadParsing, false,
+	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error, ErrorType::BadParsing, false,
 			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
 			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 }

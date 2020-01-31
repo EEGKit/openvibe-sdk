@@ -7,7 +7,7 @@ namespace OpenViBE
 	namespace Plugins
 	{
 		class IPluginObjectDesc;
-	}
+	}  // namespace Plugins
 
 	namespace Kernel
 	{
@@ -86,7 +86,7 @@ namespace OpenViBE
 			 */
 			virtual bool uninitialize() = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModule)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Plugins_PluginModule)
 		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	}  // namespace Kernel
+}  // namespace OpenViBE

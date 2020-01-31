@@ -8,13 +8,15 @@
 #include <map>
 #include <algorithm>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace SignalProcessing
 	{
 		typedef std::pair<double, double> BandRange;
 
-		class CBoxAlgorithmFrequencyBandSelector final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmFrequencyBandSelector final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -23,48 +25,48 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_FrequencyBandSelector)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_FrequencyBandSelector)
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_decoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_buffer;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_bands;
+			Kernel::IAlgorithmProxy* m_decoder = nullptr;
+			Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+			Kernel::TParameterHandler<IMatrix*> op_matrix;
+			Kernel::TParameterHandler<IMatrix*> op_bands;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_encoder = nullptr;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_matrix;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_frequencyAbscissa;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_buffer;
+			Kernel::IAlgorithmProxy* m_encoder = nullptr;
+			Kernel::TParameterHandler<IMatrix*> ip_matrix;
+			Kernel::TParameterHandler<IMatrix*> ip_frequencyAbscissa;
+			Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
 
-			OpenViBE::CMatrix m_oMatrix;
+			CMatrix m_oMatrix;
 			std::vector<BandRange> m_selecteds;
 			std::vector<double> m_selectionFactors;
 		};
 
-		class CBoxAlgorithmFrequencyBandSelectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmFrequencyBandSelectorDesc final : public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Frequency Band Selector"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
+			CString getName() const override { return CString("Frequency Band Selector"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA"); }
 
-			OpenViBE::CString getShortDescription() const override
+			CString getShortDescription() const override
 			{
-				return OpenViBE::CString("Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select");
+				return CString("Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select");
 			}
 
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_FrequencyBandSelector; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmFrequencyBandSelector; }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("Signal processing/Spectral Analysis"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_FrequencyBandSelector; }
+			IPluginObject* create() override { return new CBoxAlgorithmFrequencyBandSelector; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input spectrum", OV_TypeId_Spectrum);
 				prototype.addOutput("Output spectrum", OV_TypeId_Spectrum);
@@ -74,7 +76,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_FrequencyBandSelectorDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_FrequencyBandSelectorDesc)
 		};
 	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

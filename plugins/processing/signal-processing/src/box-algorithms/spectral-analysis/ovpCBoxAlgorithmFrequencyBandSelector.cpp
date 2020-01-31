@@ -3,8 +3,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 using namespace std;
 
@@ -87,7 +85,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	ip_matrix = &m_oMatrix;
 	op_matrix = &m_oMatrix;
 
-	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, ErrorType::BadSetting);
 
 	return true;
 }

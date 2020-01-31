@@ -10,25 +10,31 @@
 
 #define OVD_AttributeId_SettingOverrideFilename			OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
 
-class CBoxSettingModifierVisitor final : public OpenViBE::IObjectVisitor, public XML::IReaderCallback
+namespace OpenViBE
 {
-public:
+	namespace Kernel
+	{
+		class CBoxSettingModifierVisitor final : public IObjectVisitor, public XML::IReaderCallback
+		{
+		public:
 
-	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr)
-		: IObjectVisitor(), m_ConfigManager(pConfigurationManager) {}
+			explicit CBoxSettingModifierVisitor(IConfigurationManager* pConfigurationManager = nullptr)
+				: IObjectVisitor(), m_ConfigManager(pConfigurationManager) {}
 
-	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute) override;
-	void processChildData(const char* data) override;
-	void closeChild() override;
-	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& visitorCtx, OpenViBE::Kernel::IBox& box) override;
-	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& visitorCtx, OpenViBE::Kernel::IBox& box) override;
+			void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute) override;
+			void processChildData(const char* data) override;
+			void closeChild() override;
+			bool processBegin(IObjectVisitorContext& visitorCtx, IBox& box) override;
+			bool processEnd(IObjectVisitorContext& visitorCtx, IBox& box) override;
 
-	OpenViBE::Kernel::IObjectVisitorContext* m_ObjectVisitorCtx = nullptr;
-	OpenViBE::Kernel::IBox* m_Box                               = nullptr;
-	size_t m_SettingIdx                                         = 0;
-	bool m_IsParsingSettingValue                                = false;
-	bool m_IsParsingSettingOverride                             = false;
-	OpenViBE::Kernel::IConfigurationManager* m_ConfigManager    = nullptr;
+			IObjectVisitorContext* m_ObjectVisitorCtx = nullptr;
+			IBox* m_Box                               = nullptr;
+			size_t m_SettingIdx                                         = 0;
+			bool m_IsParsingSettingValue                                = false;
+			bool m_IsParsingSettingOverride                             = false;
+			IConfigurationManager* m_ConfigManager    = nullptr;
 
-	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier)
-};
+			_IsDerivedFromClass_Final_(IObjectVisitor, OV_UndefinedIdentifier)
+		};
+	}  //namespace Kernel
+}  //namespace OpenViBE

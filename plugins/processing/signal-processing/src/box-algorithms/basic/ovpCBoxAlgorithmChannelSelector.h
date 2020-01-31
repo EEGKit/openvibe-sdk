@@ -6,11 +6,13 @@
 
 #include <string>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmChannelSelector final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmChannelSelector final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -19,25 +21,25 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelSelector)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ChannelSelector)
 
 		protected:
 
-			OpenViBE::Toolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
-			OpenViBE::Toolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
+			Toolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
+			Toolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
 
-			OpenViBE::IMatrix* m_iMatrix = nullptr;
-			OpenViBE::IMatrix* m_oMatrix = nullptr;
+			IMatrix* m_iMatrix = nullptr;
+			IMatrix* m_oMatrix = nullptr;
 
 			std::vector<size_t> m_vLookup;
 		};
 
-		class CBoxAlgorithmChannelSelectorListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmChannelSelectorListener final : public Toolkit::TBoxListener<IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
+			bool onOutputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getOutputType(0, typeID);
 				if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix)
 				{
@@ -47,12 +49,12 @@ namespace OpenViBEPlugins
 				box.getInputType(0, typeID);
 				box.setOutputType(0, typeID);
 				OV_ERROR_KRF("Invalid output type [" << typeID.str() << "] (expected Signal, Spectrum or Streamed Matrix)",
-							 OpenViBE::Kernel::ErrorType::BadOutput);
+							 Kernel::ErrorType::BadOutput);
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
+			bool onInputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				CIdentifier typeID = OV_UndefinedIdentifier;
 				box.getInputType(0, typeID);
 				if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum
 					|| typeID == OV_TypeId_StreamedMatrix)
@@ -64,37 +66,37 @@ namespace OpenViBEPlugins
 				box.setInputType(0, typeID);
 
 				OV_ERROR_KRF("Invalid input type [" << typeID.str() << "] (expected Signal, Spectrum or Streamed Matrix)",
-							 OpenViBE::Kernel::ErrorType::BadInput);
+							 Kernel::ErrorType::BadInput);
 			}
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onSettingValueChanged(Kernel::IBox& box, const size_t index) override
 			{
 				//we are only interested in the setting 0 and the type changes (select or reject)
 				if ((index == 0 || index == 1) && (!m_hasUserSetName))
 				{
-					OpenViBE::CString channels;
+					CString channels;
 					box.getSettingValue(0, channels);
 
-					OpenViBE::CString method;
-					OpenViBE::CIdentifier enumID = OV_UndefinedIdentifier;
+					CString method;
+					CIdentifier enumID = OV_UndefinedIdentifier;
 					box.getSettingValue(1, method);
 					box.getSettingType(1, enumID);
 
-					const OpenViBE::CIdentifier methodID = this->getTypeManager().getEnumerationEntryValueFromName(enumID, method);
+					const CIdentifier methodID = this->getTypeManager().getEnumerationEntryValueFromName(enumID, method);
 
-					if (methodID == Reject) { channels = OpenViBE::CString("!") + channels; }
+					if (methodID == Reject) { channels = CString("!") + channels; }
 					box.setName(channels);
 				}
 				return true;
 			}
 
-			bool onNameChanged(OpenViBE::Kernel::IBox& box) override
+			bool onNameChanged(Kernel::IBox& box) override
 			//when user set box name manually
 			{
 				if (m_hasUserSetName)
 				{
-					const OpenViBE::CString rename = box.getName();
-					if (rename == OpenViBE::CString("Channel Selector"))
+					const CString rename = box.getName();
+					if (rename == CString("Channel Selector"))
 					{//default name, we switch back to default behaviour
 						m_hasUserSetName = false;
 					}
@@ -112,34 +114,34 @@ namespace OpenViBEPlugins
 		private:
 			bool m_hasUserSetName = false;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxListener < IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmChannelSelectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmChannelSelectorDesc final : public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Channel Selector"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Select a subset of signal channels"); }
+			CString getName() const override { return CString("Channel Selector"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA"); }
+			CString getShortDescription() const override { return CString("Select a subset of signal channels"); }
 
-			OpenViBE::CString getDetailedDescription() const override
+			CString getDetailedDescription() const override
 			{
-				return OpenViBE::CString("Selection can be based on channel name (case-sensitive) or index starting from 0");
+				return CString("Selection can be based on channel name (case-sensitive) or index starting from 0");
 			}
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Channels"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ChannelSelector; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmChannelSelector; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmChannelSelectorListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+			CString getCategory() const override { return CString("Signal processing/Channels"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ChannelSelector; }
+			IPluginObject* create() override { return new CBoxAlgorithmChannelSelector; }
+			IBoxListener* createBoxListener() const override { return new CBoxAlgorithmChannelSelectorListener; }
+			void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 				prototype.addOutput("Output signal", OV_TypeId_Signal);
@@ -147,8 +149,8 @@ namespace OpenViBEPlugins
 				prototype.addSetting("Action", OVP_TypeId_SelectionMethod, "Select");
 				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, "Smart");
 
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
 
 				prototype.addInputSupport(OV_TypeId_Signal);
 				prototype.addInputSupport(OV_TypeId_Spectrum);
@@ -160,7 +162,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ChannelSelectorDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ChannelSelectorDesc)
 		};
 	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

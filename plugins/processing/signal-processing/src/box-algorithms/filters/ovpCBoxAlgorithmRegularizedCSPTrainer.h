@@ -12,11 +12,13 @@
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmRegularizedCSPTrainer final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmRegularizedCSPTrainer final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmRegularizedCSPTrainer();
@@ -33,12 +35,12 @@ namespace OpenViBEPlugins
 			bool computeCSP(const std::vector<Eigen::MatrixXd>& cov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
 							std::vector<Eigen::VectorXd>& sortedEigenValues);
 
-			OpenViBE::Toolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_stimDecoder;
-			std::vector<OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>> m_signalDecoders;
-			OpenViBE::Toolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_encoder;
+			Toolkit::TStimulationDecoder<CBoxAlgorithmRegularizedCSPTrainer> m_stimDecoder;
+			std::vector<Toolkit::TSignalDecoder<CBoxAlgorithmRegularizedCSPTrainer>> m_signalDecoders;
+			Toolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_encoder;
 
 			uint64_t m_stimID = 0;
-			OpenViBE::CString m_configFilename;
+			CString m_configFilename;
 			size_t m_filtersPerClass  = 0;
 			bool m_saveAsBoxConf      = false;
 			bool m_hasBeenInitialized = false;
@@ -47,7 +49,7 @@ namespace OpenViBEPlugins
 
 			struct SIncrementalCovarianceProxy
 			{
-				OpenViBE::Kernel::IAlgorithmProxy* cov = nullptr;
+				Kernel::IAlgorithmProxy* cov = nullptr;
 				size_t nBuffers                        = 0;
 				size_t nSamples                        = 0;
 			};
@@ -56,40 +58,40 @@ namespace OpenViBEPlugins
 
 			size_t m_nClasses = 0;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
 		};
 
-		class CBoxAlgorithmRegularizedCSPTrainerListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmRegularizedCSPTrainerListener final : public Toolkit::TBoxListener<IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onInputAdded(Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputName(index, ("Signal condition " + std::to_string(index)).c_str());
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxListener < IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmRegularizedCSPTrainerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmRegularizedCSPTrainerDesc final : public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Regularized CSP Trainer"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes Common Spatial Pattern filters with regularization"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Filtering"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmRegularizedCSPTrainer; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmRegularizedCSPTrainerListener; }
+			CString getName() const override { return CString("Regularized CSP Trainer"); }
+			CString getAuthorName() const override { return CString("Jussi T. Lindgren"); }
+			CString getAuthorCompanyName() const override { return CString("Inria"); }
+			CString getShortDescription() const override { return CString("Computes Common Spatial Pattern filters with regularization"); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("Signal processing/Filtering"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer; }
+			IPluginObject* create() override { return new CBoxAlgorithmRegularizedCSPTrainer; }
+			IBoxListener* createBoxListener() const override { return new CBoxAlgorithmRegularizedCSPTrainerListener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Stimulations", OV_TypeId_Stimulations);
 				prototype.addInput("Signal condition 1", OV_TypeId_Signal);
@@ -111,14 +113,15 @@ namespace OpenViBEPlugins
 
 				prototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
 
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainerDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainerDesc)
 		};
 	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

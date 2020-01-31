@@ -4,8 +4,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace Classification;
 
 using namespace /*OpenViBE::*/Toolkit;
@@ -25,7 +23,7 @@ bool CAlgorithmPairwiseDecision::process()
 		TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config));
 		XML::IXMLNode* tmp = this->saveConfig();
 
-		OV_ERROR_UNLESS_KRF(tmp != nullptr, "Invalid NULL xml node returned while saving configuration", OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(tmp != nullptr, "Invalid NULL xml node returned while saving configuration", ErrorType::Internal);
 
 		op_configuration = tmp;
 		return true;
@@ -35,7 +33,7 @@ bool CAlgorithmPairwiseDecision::process()
 		TParameterHandler<XML::IXMLNode*> op_config(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config));
 		XML::IXMLNode* tmp = static_cast<XML::IXMLNode*>(op_config);
 
-		OV_ERROR_UNLESS_KRF(tmp != nullptr, "Invalid NULL xml node to load configuration in", OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(tmp != nullptr, "Invalid NULL xml node to load configuration in", ErrorType::BadInput);
 
 		return this->loadConfig(*tmp);
 	}

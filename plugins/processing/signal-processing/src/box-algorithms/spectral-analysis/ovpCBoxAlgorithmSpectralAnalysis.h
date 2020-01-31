@@ -3,11 +3,13 @@
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectralAnalysis final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpectralAnalysis final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -16,12 +18,12 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_SpectralAnalysis)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_SpectralAnalysis)
 
 		protected:
-			OpenViBE::Toolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_decoder;
+			Toolkit::TSignalDecoder<CBoxAlgorithmSpectralAnalysis> m_decoder;
 
-			std::vector<OpenViBE::Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
+			std::vector<Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis> *> m_spectrumEncoders;
 			std::vector<bool> m_isSpectrumEncoderActive;
 
 			size_t m_nChannel = 0;
@@ -30,28 +32,28 @@ namespace OpenViBEPlugins
 
 			size_t m_sizeFFT = 0;
 
-			OpenViBE::IMatrix* m_frequencyAbscissa = nullptr;
+			IMatrix* m_frequencyAbscissa = nullptr;
 		};
 
-		class CBoxAlgorithmSpectralAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSpectralAnalysisDesc final : virtual public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Spectral Analysis"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Laurent Bonnet / Quentin Barthelemy"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs a Spectral Analysis using FFT."); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Performs a Spectral Analysis using FFT."); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.2"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.1.0"); }
-			OpenViBE::CString getStockItemName() const override { return OpenViBE::CString("gtk-execute"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_SpectralAnalysis; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSpectralAnalysis(); }
+			CString getName() const override { return CString("Spectral Analysis"); }
+			CString getAuthorName() const override { return CString("Laurent Bonnet / Quentin Barthelemy"); }
+			CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+			CString getShortDescription() const override { return CString("Performs a Spectral Analysis using FFT."); }
+			CString getDetailedDescription() const override { return CString("Performs a Spectral Analysis using FFT."); }
+			CString getCategory() const override { return CString("Signal processing/Spectral Analysis"); }
+			CString getVersion() const override { return CString("1.2"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+			CString getStockItemName() const override { return CString("gtk-execute"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_SpectralAnalysis; }
+			IPluginObject* create() override { return new CBoxAlgorithmSpectralAnalysis(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input signal", OV_TypeId_Signal);
 
@@ -68,7 +70,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_SpectralAnalysisDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_SpectralAnalysisDesc)
 		};
 	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

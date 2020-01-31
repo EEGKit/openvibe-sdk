@@ -10,39 +10,39 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
+using namespace std;
 
-ILogManager& operator <<(ILogManager& rLogManager, IMatrix& rMatrix)
+static stringstream print(IMatrix& matrix)
 {
-	rLogManager << "Matrix :\n";
-	rLogManager << " | Dimension count : " << rMatrix.getDimensionCount() << "\n";
-	for (size_t i = 0; i < rMatrix.getDimensionCount(); ++i)
+	stringstream ss;
+	ss << "Matrix :\n";
+	ss << " | Dimension count : " << matrix.getDimensionCount() << "\n";
+	for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
 	{
-		rLogManager << " |   Dimension size " << i << " : " << rMatrix.getDimensionSize(i) << "\n";
-		for (size_t j = 0; j < rMatrix.getDimensionSize(i); ++j)
+		ss << " |   Dimension size " << i << " : " << matrix.getDimensionSize(i) << "\n";
+		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j)
 		{
-			rLogManager << " |     Dimension label " << i << " " << j << " : " << rMatrix.getDimensionLabel(i, j) << "\n";
+			ss << " |     Dimension label " << i << " " << j << " : " << matrix.getDimensionLabel(i, j) << "\n";
 		}
 	}
-	return rLogManager;
+	return ss;
 }
 
-
-ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulationSet)
+static stringstream print(IStimulationSet& stimSet)
 {
-	rLogManager << "Stimulation set :\n";
-	rLogManager << " | Number of elements : " << rStimulationSet.getStimulationCount() << "\n";
-	for (size_t i = 0; i < rStimulationSet.getStimulationCount(); ++i)
+	stringstream ss;
+	ss << "Stimulation set :\n";
+	ss << " | Number of elements : " << stimSet.getStimulationCount() << "\n";
+	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
 	{
-		rLogManager << " |   Stimulation " << i << " : "
-				<< "id=" << rStimulationSet.getStimulationIdentifier(i) << " "
-				<< "date=" << rStimulationSet.getStimulationDate(i) << " "
-				<< "duration=" << rStimulationSet.getStimulationDuration(i) << "\n";
+		ss << " |   Stimulation " << i << " : "
+				<< "id = " << stimSet.getStimulationIdentifier(i) << " "
+				<< "date = " << stimSet.getStimulationDate(i) << " "
+				<< "duration = " << stimSet.getStimulationDuration(i) << "\n";
 	}
-	return rLogManager;
+	return ss;
 }
-
 
 bool CDecoderAlgorithmTest::initialize()
 {
@@ -98,12 +98,12 @@ bool CDecoderAlgorithmTest::process()
 			{
 				{
 					TParameterHandler<IMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
-					if (handler.exists()) { OV_WARNING_K(*handler); }
+					if (handler.exists()) { OV_WARNING_K(print(*handler).str()); }
 				}
 
 				{
 					TParameterHandler<IMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
-					if (handler.exists()) { OV_WARNING_K(*handler); }
+					if (handler.exists()) { OV_WARNING_K(print(*handler).str()); }
 				}
 
 				{
@@ -115,8 +115,9 @@ bool CDecoderAlgorithmTest::process()
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer))
 			{
 				{
-					TParameterHandler<IStimulationSet*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
-					if (handler.exists()) { getLogManager() << LogLevel_Warning << *handler << "\n"; }
+					TParameterHandler<IStimulationSet*>
+							handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
+					if (handler.exists()) { getLogManager() << LogLevel_Warning << print(*handler).str() << "\n"; }
 				}
 			}
 

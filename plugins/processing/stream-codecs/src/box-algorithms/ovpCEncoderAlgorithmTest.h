@@ -4,52 +4,54 @@
 #include <toolkit/ovtk_all.h>
 #include <array>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace StreamCodecs
 	{
-		class CEncoderAlgorithmTest : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CEncoderAlgorithmTest : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
 			uint64_t getClockFrequency() override { return 1LL << 32; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::Kernel::IMessageClock& messageClock) override;
+			bool processClock(Kernel::IMessageClock& messageClock) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest)
 
 		protected:
 
-			std::array<OpenViBE::Kernel::IAlgorithmProxy*, 7> m_encoders;
-			std::array<OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>, 7> op_buffer;
+			std::array<Kernel::IAlgorithmProxy*, 7> m_encoders;
+			std::array<Kernel::TParameterHandler<IMemoryBuffer*>, 7> op_buffer;
 
 			bool m_hasSentHeader = false;
 			uint64_t m_startTime = 0;
 			uint64_t m_endTime   = 0;
 
-			OpenViBE::CMatrix* m_matrix1         = nullptr;
-			OpenViBE::CMatrix* m_matrix2         = nullptr;
-			OpenViBE::CMatrix* m_matrix3         = nullptr;
-			OpenViBE::CStimulationSet* m_stimSet = nullptr;
+			CMatrix* m_matrix1         = nullptr;
+			CMatrix* m_matrix2         = nullptr;
+			CMatrix* m_matrix3         = nullptr;
+			CStimulationSet* m_stimSet = nullptr;
 		};
 
-		class CEncoderAlgorithmTestDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CEncoderAlgorithmTestDesc final : public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Encoder algorithm test"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Setups various streams and outputs them"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Note: Data sent in the streams does not change over time"); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tests/Algorithms"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CEncoderAlgorithmTest(); }
+			CString getName() const override { return CString("Encoder algorithm test"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+			CString getShortDescription() const override { return CString("Setups various streams and outputs them"); }
+			CString getDetailedDescription() const override { return CString("Note: Data sent in the streams does not change over time"); }
+			CString getCategory() const override { return CString("Tests/Algorithms"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest; }
+			IPluginObject* create() override { return new CEncoderAlgorithmTest(); }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addOutput("Experiment information", OV_TypeId_ExperimentInfo);
 				prototype.addOutput("Feature vector", OV_TypeId_FeatureVector);
@@ -62,7 +64,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTestDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTestDesc)
 		};
 	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

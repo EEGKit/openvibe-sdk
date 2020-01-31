@@ -36,9 +36,9 @@ namespace OpenViBE
 #if defined TARGET_OS_Windows
 		const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-		const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+		const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-		const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+		const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 		CString error;
 

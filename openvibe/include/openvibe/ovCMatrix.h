@@ -11,10 +11,10 @@ namespace OpenViBE
 	 * \brief Basic standalone OpenViBE matrix implementation
 	 * \ingroup Group_Base
 	 *
-	 * This class offers a basic standalone impementation of the OpenViBE::IMatrix
+	 * This class offers a basic standalone impementation of the IMatrix
 	 * interface. This class can be directly instanciated and used.
 	 *
-	 * Instances of this class use an internal implementation of the OpenViBE::IMatrix
+	 * Instances of this class use an internal implementation of the IMatrix
 	 * interface and redirect their calls to this implementation.
 	 */
 	class OV_API CMatrix final : public IMatrix
@@ -53,7 +53,7 @@ namespace OpenViBE
 		bool setDimensionLabel(const size_t index1, const size_t index2, const char* label) override;
 		double* getBuffer() override;
 
-		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge)
+		_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixBridge)
 
 	private:
 

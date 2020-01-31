@@ -26,8 +26,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
 namespace SigProSTD
@@ -63,8 +61,8 @@ bool CBoxAlgorithmSignalResampling::initialize()
 	const int64_t oSampling  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSampling);
 	const int64_t nOutSample = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
 
-	OV_ERROR_UNLESS_KRF(oSampling > 0, "Invalid output sampling rate [" << oSampling << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadSetting);
-	OV_ERROR_UNLESS_KRF(nOutSample > 0, "Invalid sample count per buffer [" << nOutSample << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(oSampling > 0, "Invalid output sampling rate [" << oSampling << "] (expected value > 0)", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(nOutSample > 0, "Invalid sample count per buffer [" << nOutSample << "] (expected value > 0)", ErrorType::BadSetting);
 
 	m_oSampling = size_t(oSampling);
 	m_oNSample  = size_t(nOutSample);
@@ -112,7 +110,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			m_iSampling = size_t(m_decoder.getOutputSamplingRate());
 
 			OV_ERROR_UNLESS_KRF(m_iSampling > 0, "Invalid input sampling rate [" << m_iSampling << "] (expected value > 0)",
-								OpenViBE::Kernel::ErrorType::BadInput);
+								ErrorType::BadInput);
 
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_iSampling << "] Hz to [" << m_oSampling << "] Hz.\n";
 
@@ -144,7 +142,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			}
 			else if (0.5 < builtInLatency) { OV_WARNING_K("Latency induced by the resampling is [" << builtInLatency << "] s."); }
 
-			OpenViBE::Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
+			Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
 			oMatrix->setDimensionSize(1, m_oNSample);
 
 			m_oTotalSample = 0;

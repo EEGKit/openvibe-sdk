@@ -13,8 +13,8 @@ namespace OpenViBE
 		 * \brief Exectution context for box algorithm descriptors
 		 * \ingroup Group_Kernel
 		 * \ingroup Group_Extend
-		 * \sa OpenViBE::Plugins::IBoxAlgorithmDesc
-		 * \sa OpenViBE::Plugins::IBoxAlgorithm
+		 * \sa Plugins::IBoxAlgorithmDesc
+		 * \sa Plugins::IBoxAlgorithm
 		 */
 		class OV_API IBoxListenerContext : public IKernelObject
 		{
@@ -92,7 +92,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxListenerContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Scenario_BoxListenerContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

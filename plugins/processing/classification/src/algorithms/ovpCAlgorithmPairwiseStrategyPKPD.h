@@ -7,8 +7,10 @@
 #include "ovpCAlgorithmPairwiseDecision.h"
 
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace Classification
 	{
 		/**
@@ -26,7 +28,7 @@ namespace OpenViBEPlugins
 			bool initialize() override { return true; }
 			bool uninitialize() override { return true; }
 			bool parameterize() override;
-			bool compute(std::vector<classification_info_t>& classifications, OpenViBE::IMatrix* probabilities) override;
+			bool compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities) override;
 			XML::IXMLNode* saveConfig() override;
 			bool loadConfig(XML::IXMLNode& /*node*/) override { return true; }
 
@@ -40,29 +42,29 @@ namespace OpenViBEPlugins
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Pairwise decision strategy based on PKPD"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Serrière Guillaume"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("."); }
+			CString getName() const override { return CString("Pairwise decision strategy based on PKPD"); }
+			CString getAuthorName() const override { return CString("Serrière Guillaume"); }
+			CString getAuthorCompanyName() const override { return CString("Inria"); }
+			CString getShortDescription() const override { return CString("."); }
 
-			OpenViBE::CString getDetailedDescription() const override
+			CString getDetailedDescription() const override
 			{
-				return OpenViBE::CString("Price, S. Knerr, L. Personnaz, and G. Dreyfus."
+				return CString("Price, S. Knerr, L. Personnaz, and G. Dreyfus."
 					"Pairwise neural network classifiers with probabilistic outputs."
 					" In G. Tesauro, D. Touretzky, and T. Leen (eds.)"
 					"Advances in Neural Information Processing Systems 7 (NIPS-94), pp."
 					" 1109-1116. MIT Press, 1995.");
 			}
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.1"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmPairwiseStrategyPKPD; }
+			CString getCategory() const override { return CString(""); }
+			CString getVersion() const override { return CString("0.1"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
+			IPluginObject* create() override { return new CAlgorithmPairwiseStrategyPKPD; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
 				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(prototype);
 				return true;
@@ -71,4 +73,5 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecisionDesc, OVP_ClassId_Algorithm_PairwiseStrategy_PKPDDesc)
 		};
 	} // namespace Classification
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

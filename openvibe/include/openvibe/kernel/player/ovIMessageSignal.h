@@ -18,7 +18,7 @@ namespace OpenViBE
 		{
 		public:
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IMessage, OV_ClassId_Kernel_Player_MessageSignal)
+			_IsDerivedFromClass_(IMessage, OV_ClassId_Kernel_Player_MessageSignal)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

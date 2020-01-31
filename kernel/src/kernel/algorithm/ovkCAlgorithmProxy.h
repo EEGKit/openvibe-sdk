@@ -52,7 +52,7 @@ namespace OpenViBE
 			bool process(const CIdentifier& triggerID) override;
 			bool isAlgorithmDerivedFrom(const CIdentifier& classID) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy)
+			_IsDerivedFromClass_Final_(TKernelObject<IAlgorithmProxy>, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy)
 
 		protected:
 

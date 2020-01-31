@@ -111,7 +111,7 @@ namespace OpenViBE
 			 */
 			virtual ErrorType getLastErrorType() const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_ErrorManager)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Error_ErrorManager)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

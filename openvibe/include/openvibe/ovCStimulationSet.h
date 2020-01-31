@@ -11,10 +11,10 @@ namespace OpenViBE
 	 * \brief Basic standalone OpenViBE stimulation set implementation
 	 * \ingroup Group_Base
 	 *
-	 * This class offers a basic standalone impementation of the OpenViBE::IStimulationSet
+	 * This class offers a basic standalone impementation of the IStimulationSet
 	 * interface. This class can be directly instanciated and used.
 	 *
-	 * Instances of this class use an internal implementation of the OpenViBE::IStimulationSet
+	 * Instances of this class use an internal implementation of the IStimulationSet
 	 * interface and redirect their calls to this implementation.
 	 */
 	class OV_API CStimulationSet final : public IStimulationSet
@@ -51,7 +51,7 @@ namespace OpenViBE
 		size_t insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration) override { return m_stimSet->insertStimulation(index, id, date, duration); }
 		bool removeStimulation(const size_t index) override { return m_stimSet->removeStimulation(index); }
 
-		_IsDerivedFromClass_Final_(OpenViBE::IStimulationSet, OV_ClassId_StimulationSetBridge)
+		_IsDerivedFromClass_Final_(IStimulationSet, OV_ClassId_StimulationSetBridge)
 
 	private:
 

@@ -12,7 +12,7 @@ namespace OpenViBE
 
 		/**
 		 * \brief This enum lists all the way a box can be modified
-		 * \sa OpenViBE::Plugins::IBoxListener::process
+		 * \sa Plugins::IBoxListener::process
 		 */
 		enum EBoxModification
 		{
@@ -40,7 +40,7 @@ namespace OpenViBE
 			BoxModification_SettingDefaultValueChanged,
 			BoxModification_SettingValueChanged
 		};
-	} // namespace Kernel
+	}  // namespace Kernel
 
 	// for backward compatibility
 	typedef Kernel::IMessageClock CMessageClock;
@@ -73,7 +73,7 @@ namespace OpenViBE
 		 * This is the heart of the extension mechanism of the
 		 * OpenViBE platform.
 		 *
-		 * \sa OpenViBE::Kernel::IBoxAlgorithmDesc
+		 * \sa Kernel::IBoxAlgorithmDesc
 		 *
 		 * \todo details about building new plugins
 		 */
@@ -159,7 +159,7 @@ namespace OpenViBE
 			 * msgEvent parameter and can be interpreted by this
 			 * algorithm.
 			 *
-			 * \sa OpenViBE::IBoxAlgorithmContext
+			 * \sa IBoxAlgorithmContext
 			 */
 			virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageEvent& msgEvent) { return false; }
 			/**
@@ -177,7 +177,7 @@ namespace OpenViBE
 			 * processing, stop processing, load a new scenario
 			 * and so on...
 			 *
-			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
+			 * \sa Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageSignal& msgSignal) { return false; }
 			/**
@@ -197,7 +197,7 @@ namespace OpenViBE
 			 * sends periodically, thus needing a moving
 			 * 'viewed-window' on lastly received data.
 			 *
-			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
+			 * \sa Kernel::IBoxAlgorithmContext
 			 * \sa getClockFrequency
 			 */
 			virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageClock& msgClock) { return false; }
@@ -214,7 +214,7 @@ namespace OpenViBE
 			 * algorithm to decide to call the process function and
 			 * eventually to the received data.
 			 *
-			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
+			 * \sa Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool processInput(Kernel::IBoxAlgorithmContext& ctx, const size_t index) { return false; }
 
@@ -239,13 +239,13 @@ namespace OpenViBE
 			 * the provided context in order to perform rendering
 			 * tasks !
 			 *
-			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
+			 * \sa Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool process(Kernel::IBoxAlgorithmContext& ctx) = 0;
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_BoxAlgorithm)
+			_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxAlgorithm)
 		};
 
 		class OV_API IBoxListener : public IPluginObject
@@ -275,15 +275,15 @@ namespace OpenViBE
 			 * is then allowed to examine and check box status validity
 			 * and to adpat the box itself according to this validity.
 			 *
-			 * \sa OpenViBE::Plugins::IBoxProto
-			 * \sa OpenViBE::Plugins::IBoxListenerContext
-			 * \sa OpenViBE::Plugins::EBoxModification
+			 * \sa IBoxProto
+			 * \sa IBoxListenerContext
+			 * \sa EBoxModification
 			 */
 			virtual bool process(Kernel::IBoxListenerContext& boxListenerCtx, const Kernel::EBoxModification boxModificationType) = 0;
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_BoxListener)
+			_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxListener)
 		};
 	} // namespace Plugins
 } // namespace OpenViBE

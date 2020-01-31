@@ -41,7 +41,7 @@ namespace OpenViBE
 			bool releaseScenario(const CIdentifier& scenarioID) override;
 			IScenario& getScenario(const CIdentifier& scenarioID) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IScenarioManager>, OVK_ClassId_Kernel_Scenario_ScenarioManager)
+			_IsDerivedFromClass_Final_(TKernelObject<IScenarioManager>, OVK_ClassId_Kernel_Scenario_ScenarioManager)
 
 		protected:
 

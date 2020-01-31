@@ -21,7 +21,7 @@ namespace OpenViBE
 			virtual bool exportUInteger(IMemoryBuffer& buffer, const CIdentifier& id, uint64_t value) = 0;
 			virtual bool exportStop(IMemoryBuffer& buffer) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithm, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_(IAlgorithm, OV_UndefinedIdentifier)
 		};
 
 		class OV_API IAlgorithmScenarioExporterDesc : public IAlgorithmDesc
@@ -34,7 +34,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_(IAlgorithmDesc, OV_UndefinedIdentifier)
 		};
 	} // namespace Plugins
 } // namespace OpenViBE

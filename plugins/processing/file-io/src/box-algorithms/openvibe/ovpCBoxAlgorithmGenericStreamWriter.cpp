@@ -5,8 +5,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter() : m_writer(*this) {}
@@ -67,7 +65,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 
 	FS::Files::openOFStream(m_file, m_filename.toASCIIString(), std::ios::binary | std::ios::trunc);
 
-	OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", ErrorType::BadFileWrite);
 
 	m_file.write(reinterpret_cast<const char*>(m_swap.getDirectPointer()), std::streamsize(m_swap.getSize()));
 
@@ -117,7 +115,7 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	if (m_swap.getSize() != 0)
 	{
 		m_file.write(reinterpret_cast<const char*>(m_swap.getDirectPointer()), std::streamsize(m_swap.getSize()));
-		OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", ErrorType::BadFileWrite);
 	}
 
 	return true;

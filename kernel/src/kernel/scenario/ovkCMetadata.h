@@ -27,7 +27,7 @@ namespace OpenViBE
 
 			bool acceptVisitor(IObjectVisitor& objectVisitor) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMetadata>, OVK_ClassId_Kernel_Scenario_Metadata)
+			_IsDerivedFromClass_Final_(TKernelObject<IMetadata>, OVK_ClassId_Kernel_Scenario_Metadata)
 
 		private:
 

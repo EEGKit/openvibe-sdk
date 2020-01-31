@@ -17,7 +17,7 @@ namespace OpenViBE
 		 * This class should be derived by any plugin developer in
 		 * order to describe a specific OpenViBE algorithm.
 		 *
-		 * \sa OpenViBE::Plugins::IAlgorithm
+		 * \sa IAlgorithm
 		 *
 		 * \todo details about building new plugins
 		 */
@@ -36,11 +36,11 @@ namespace OpenViBE
 			 * what the algorithm should look like
 			 * (inputs/outputs/triggers).
 			 *
-			 * \sa OpenViBE::Plugins::IAlgorithmProto
+			 * \sa IAlgorithmProto
 			 */
 			virtual bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_AlgorithmDesc)
+			_IsDerivedFromClass_(IPluginObjectDesc, OV_ClassId_Plugins_AlgorithmDesc)
 		};
 	} // namespace Plugins
 } // namespace OpenViBE

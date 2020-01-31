@@ -49,7 +49,7 @@ namespace OpenViBE
 			virtual void release() = 0;
 
 			//@}
-			_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Plugins_PluginObject)
+			_IsDerivedFromClass_(IObject, OV_ClassId_Plugins_PluginObject)
 		};
 	} // namespace Plugins
 } // namespace OpenViBE

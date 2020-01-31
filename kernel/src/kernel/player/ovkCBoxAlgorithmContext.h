@@ -20,7 +20,7 @@ namespace OpenViBE
 			IPlayerContext* getPlayerContext() override { return &m_oPlayerContext; }
 			bool markAlgorithmAsReadyToProcess() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
+			_IsDerivedFromClass_Final_(TKernelObject<IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
 
 			bool isAlgorithmReadyToProcess() const { return m_bReadyToProcess; }
 

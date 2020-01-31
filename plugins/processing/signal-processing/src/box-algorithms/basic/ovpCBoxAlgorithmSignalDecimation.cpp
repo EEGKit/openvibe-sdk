@@ -7,8 +7,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
 bool CBoxAlgorithmSignalDecimation::initialize()
@@ -18,7 +16,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 
 	m_decimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_decimationFactor > 1, "Invalid decimation factor [" << m_decimationFactor << "] (expected value > 1)",
-						OpenViBE::Kernel::ErrorType::BadSetting);
+						ErrorType::BadSetting);
 
 	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalDecoder));
 	m_decoder->initialize();
@@ -114,23 +112,23 @@ bool CBoxAlgorithmSignalDecimation::process()
 
 			OV_ERROR_UNLESS_KRF(m_iSampling%m_decimationFactor == 0,
 								"Failed to decimate: input sampling frequency [" << m_iSampling << "] not multiple of decimation factor [" <<
-								m_decimationFactor << "]", OpenViBE::Kernel::ErrorType::BadSetting);
+								m_decimationFactor << "]", ErrorType::BadSetting);
 
 			m_oSampleIdx       = 0;
 			m_oNSamplePerBlock = size_t(m_iNSamplePerBlock / m_decimationFactor);
 			m_oNSamplePerBlock = (m_oNSamplePerBlock ? m_oNSamplePerBlock : 1);
 			m_oSampling        = op_sampling / m_decimationFactor;
 
-			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", OpenViBE::Kernel::ErrorType::BadOutput);
+			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", ErrorType::BadOutput);
 
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
 
-			OpenViBE::Toolkit::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
+			Toolkit::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
 			ip_pMatrix->setDimensionSize(1, m_oNSamplePerBlock);
 			ip_sampling = m_oSampling;
 			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader);
-			OpenViBE::Toolkit::Matrix::clearContent(*ip_pMatrix);
+			Toolkit::Matrix::clearContent(*ip_pMatrix);
 
 			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
@@ -173,7 +171,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_oNSamplePerBlock;
 
-						OpenViBE::Toolkit::Matrix::clearContent(*ip_pMatrix);
+						Toolkit::Matrix::clearContent(*ip_pMatrix);
 					}
 				}
 

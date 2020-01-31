@@ -11,11 +11,13 @@
 
 #include <fstream>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace FileIO
 	{
-		class CBoxAlgorithmGenericStreamWriter final : public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IWriterCallback
+		class CBoxAlgorithmGenericStreamWriter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>, public EBML::IWriterCallback
 		{
 		public:
 
@@ -28,30 +30,30 @@ namespace OpenViBEPlugins
 
 			bool generateFileHeader();
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamWriter)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamWriter)
 
 		protected:
 
 			bool m_isHeaderGenerate = false;
-			OpenViBE::CString m_filename;
+			CString m_filename;
 			EBML::CWriter m_writer;
 			EBML::CWriterHelper m_writerHelper;
 
 		private:
 			void write(const void* buffer, const size_t size) override;
 
-			OpenViBE::CMemoryBuffer m_swap;
+			CMemoryBuffer m_swap;
 			std::ofstream m_file;
 		};
 
-		class CBoxAlgorithmGenericStreamWriterListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmGenericStreamWriterListener final : public Toolkit::TBoxListener<IBoxListener>
 		{
 		public:
 
 			//it seems the only purpose of the check was to give a name when adding an input
 			//without it, the input configuration dialog display random characters in the name field
 			//the check is unnecessary when removing/changing inputs and on already named inputs
-			bool check(OpenViBE::Kernel::IBox& box)
+			bool check(Kernel::IBox& box)
 			{
 				const size_t i = box.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
@@ -60,7 +62,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onDefaultInitialized(OpenViBE::Kernel::IBox& box) override
+			bool onDefaultInitialized(Kernel::IBox& box) override
 			{
 				box.setInputName(0, "Input Signal");
 				box.setInputType(0, OV_TypeId_Signal);
@@ -68,58 +70,59 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onInputAdded(Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_EBMLStream);
 				this->check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
+			bool onInputRemoved(Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const size_t /*index*/) override
+			bool onInputTypeChanged(Kernel::IBox& /*box*/, const size_t /*index*/) override
 			{
 				//this->check(box);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxListener < IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmGenericStreamWriterDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmGenericStreamWriterDesc final : virtual public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Generic stream writer"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Writes any number of streams into an .ov file"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/OpenViBE"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_GenericStreamWriter; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmGenericStreamWriter; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmGenericStreamWriterListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+			CString getName() const override { return CString("Generic stream writer"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA"); }
+			CString getShortDescription() const override { return CString("Writes any number of streams into an .ov file"); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("File reading and writing/OpenViBE"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_GenericStreamWriter; }
+			IPluginObject* create() override { return new CBoxAlgorithmGenericStreamWriter; }
+			IBoxListener* createBoxListener() const override { return new CBoxAlgorithmGenericStreamWriterListener; }
+			void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Input stream 1", OV_TypeId_EBMLStream);
 				prototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].ov");
 				prototype.addSetting("Use compression", OV_TypeId_Boolean, "false");
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_GenericStreamWriterDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_GenericStreamWriterDesc)
 		};
 	} // namespace FileIO
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

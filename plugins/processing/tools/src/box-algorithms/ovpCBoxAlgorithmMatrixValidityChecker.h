@@ -4,11 +4,13 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace Tools
 	{
-		class CBoxAlgorithmMatrixValidityChecker final : virtual public OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmMatrixValidityChecker final : virtual public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -17,13 +19,13 @@ namespace OpenViBEPlugins
 			bool processInput(const size_t index) override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker)
 
 		protected:
 
-			std::vector<OpenViBE::Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
-			std::vector<OpenViBE::Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_encoders;
-			OpenViBE::Kernel::ELogLevel m_logLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
+			std::vector<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
+			std::vector<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_encoders;
+			Kernel::ELogLevel m_logLevel = Kernel::ELogLevel::LogLevel_None;
 			uint64_t m_validityCheckerType          = 0;
 
 			std::vector<size_t> m_nTotalInterpolatedSample;
@@ -31,11 +33,11 @@ namespace OpenViBEPlugins
 			std::vector<std::vector<double>> m_lastValidSamples;
 		};
 
-		class CBoxAlgorithmMatrixValidityCheckerListener final : public OpenViBE::Toolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmMatrixValidityCheckerListener final : public Toolkit::TBoxListener<IBoxListener>
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& box) const
+			bool check(Kernel::IBox& box) const
 			{
 				for (size_t i = 0; i < box.getInputCount(); ++i)
 				{
@@ -51,7 +53,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onInputAdded(Kernel::IBox& box, const size_t index) override
 			{
 				box.setInputType(index, OV_TypeId_StreamedMatrix);
 				if (box.getSettingCount() > 1) { box.addOutput("", OV_TypeId_StreamedMatrix); }
@@ -59,14 +61,14 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onInputRemoved(Kernel::IBox& box, const size_t index) override
 			{
 				box.removeOutput(index);
 				this->check(box);
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onOutputAdded(Kernel::IBox& box, const size_t index) override
 			{
 				box.setOutputType(index, OV_TypeId_StreamedMatrix);
 				box.addInput("", OV_TypeId_StreamedMatrix);
@@ -74,58 +76,59 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
+			bool onOutputRemoved(Kernel::IBox& box, const size_t index) override
 			{
 				box.removeInput(index);
 				this->check(box);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(Toolkit::TBoxListener < IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmMatrixValidityCheckerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmMatrixValidityCheckerDesc final : virtual public IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Matrix validity checker"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			CString getName() const override { return CString("Matrix validity checker"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
 
-			OpenViBE::CString getShortDescription() const override
+			CString getShortDescription() const override
 			{
-				return OpenViBE::CString("Checks if a matrix contains \"not a number\" or \"infinity\" elements");
+				return CString("Checks if a matrix contains \"not a number\" or \"infinity\" elements");
 			}
 
-			OpenViBE::CString getDetailedDescription() const override
+			CString getDetailedDescription() const override
 			{
-				return OpenViBE::CString(
+				return CString(
 					"This box is for debugging purposes and allows an author to check the validity of a streamed matrix and derived stream. This box can log a message, stop the player or interpolate data.");
 			}
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tools"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_MatrixValidityChecker; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmMatrixValidityChecker; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmMatrixValidityCheckerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+			CString getCategory() const override { return CString("Tools"); }
+			CString getVersion() const override { return CString("1.0"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_MatrixValidityChecker; }
+			IPluginObject* create() override { return new CBoxAlgorithmMatrixValidityChecker; }
+			IBoxListener* createBoxListener() const override { return new CBoxAlgorithmMatrixValidityCheckerListener; }
+			void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 			{
 				prototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
 				prototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
 				prototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
 				prototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
+				prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(Kernel::BoxFlag_CanAddOutput);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MatrixValidityCheckerDesc)
+			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MatrixValidityCheckerDesc)
 		};
 	} // namespace Tools
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

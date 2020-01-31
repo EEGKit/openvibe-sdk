@@ -48,7 +48,7 @@ namespace OpenViBE
 
 			const IError* getNestedError() const override { return m_nestedError.get(); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IError, OVK_ClassId_Kernel_Error_Error)
+			_IsDerivedFromClass_Final_(IError, OVK_ClassId_Kernel_Error_Error)
 
 		private:
 

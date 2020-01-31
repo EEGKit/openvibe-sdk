@@ -5,11 +5,13 @@
 #include <toolkit/ovtk_all.h>
 
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace FileIO
 	{
-		class CAlgorithmOVMatrixFileReader final : public OpenViBE::Toolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmOVMatrixFileReader final : public Toolkit::TAlgorithm<IAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -17,41 +19,42 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Toolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_OVMatrixFileReader)
+			_IsDerivedFromClass_Final_(Toolkit::TAlgorithm < IAlgorithm >, OVP_ClassId_Algorithm_OVMatrixFileReader)
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_sFilename;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
+			Kernel::TParameterHandler<CString*> ip_sFilename;
+			Kernel::TParameterHandler<IMatrix*> op_pMatrix;
 		};
 
-		class CAlgorithmOVMatrixFileReaderDesc final : public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmOVMatrixFileReaderDesc final : public IAlgorithmDesc
 		{
 		public:
 			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("OpenViBE Matrix file reader"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Vincent Delannoy"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_OVMatrixFileReader; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmOVMatrixFileReader; }
+			CString getName() const override { return CString("OpenViBE Matrix file reader"); }
+			CString getAuthorName() const override { return CString("Vincent Delannoy"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+			CString getShortDescription() const override { return CString(""); }
+			CString getDetailedDescription() const override { return CString(""); }
+			CString getCategory() const override { return CString("File reading and writing"); }
+			CString getVersion() const override { return CString("1.1"); }
+			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_OVMatrixFileReader; }
+			IPluginObject* create() override { return new CAlgorithmOVMatrixFileReader; }
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 			{
 				prototype.addInputParameter(
-					OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename, "Filename", OpenViBE::Kernel::ParameterType_String);
+					OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename, "Filename", Kernel::ParameterType_String);
 				prototype.addOutputParameter(
-					OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+					OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix, "Matrix", Kernel::ParameterType_Matrix);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_OVMatrixFileReaderDesc)
+			_IsDerivedFromClass_Final_(IAlgorithmDesc, OVP_ClassId_Algorithm_OVMatrixFileReaderDesc)
 		};
 	} // namespace FileIO
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

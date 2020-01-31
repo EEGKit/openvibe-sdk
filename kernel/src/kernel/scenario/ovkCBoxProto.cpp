@@ -41,7 +41,7 @@ bool CBoxProto::addSetting(const CString& name, const CIdentifier& typeID, const
 	return true;
 }
 /*
-size_t CBoxProto::addSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue, const bool bModifiable)
+size_t CBoxProto::addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue, const bool bModifiable)
 {
 	addSetting(name, typeID, sDefaultValue);
 	size_t  lastSetting = m_box.getSettingCount();

@@ -8,7 +8,7 @@ namespace OpenViBE
 	{
 		/**
 		 * \brief This enum lists all the flags a box can be have
-		 * \sa OpenViBE::Kernel::IBoxProto::addFlag
+		 * \sa IBoxProto::addFlag
 		 */
 		enum EBoxFlag
 		{
@@ -36,7 +36,7 @@ namespace OpenViBE
 		 * box looks like. It declares several things, like
 		 * it input types, output types and settings.
 		 *
-		 * \sa OpenViBE::Kernel::IBoxAlgorithmDesc
+		 * \sa IBoxAlgorithmDesc
 		 */
 		class OV_API IBoxProto : public IKernelObject
 		{
@@ -106,7 +106,7 @@ namespace OpenViBE
 			  */
 			virtual bool addOutputSupport(const CIdentifier& typeID) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

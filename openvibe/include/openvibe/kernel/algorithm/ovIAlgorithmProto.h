@@ -14,8 +14,8 @@ namespace OpenViBE
 		 * \ingroup Group_Algorithm
 		 * \ingroup Group_Kernel
 		 * \ingroup Group_Extend
-		 * \sa OpenViBE::Plugins::IAlgorithm
-		 * \sa OpenViBE::Plugins::IAlgorithmDesc
+		 * \sa Plugins::IAlgorithm
+		 * \sa Plugins::IAlgorithmDesc
 		 */
 		class OV_API IAlgorithmProto : public IKernelObject
 		{

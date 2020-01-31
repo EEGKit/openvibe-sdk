@@ -17,7 +17,6 @@ XERCES_CPP_NAMESPACE_USE
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace OpenViBEPlugins;
 using namespace FileIO;
 using namespace /*OpenViBE::*/Toolkit;
 
@@ -441,7 +440,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 		return false;
 	}
 
-	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation);
+	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", ErrorType::BadXMLSchemaValidation);
 }
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, const size_t size)

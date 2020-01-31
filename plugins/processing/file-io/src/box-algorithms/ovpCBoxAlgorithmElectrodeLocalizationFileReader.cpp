@@ -5,8 +5,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { return uint64_t(1LL) << 32; }
@@ -18,7 +16,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 
 	// Creates algorithms
 	m_pOVMatrixFileReader = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OVMatrixFileReader));
-	m_encoder             = new OpenViBE::Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>;
+	m_encoder             = new Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>;
 	m_pOVMatrixFileReader->initialize();
 	m_encoder->initialize(*this, 0);
 
@@ -83,7 +81,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	//ensure matrix is 2 dimensional and that dimension sizes are correct
 	OV_ERROR_UNLESS_KRF(op_pMatrix->getDimensionCount() == 2 && op_pMatrix->getDimensionSize(1) == 3,
 						"Wrong format for electrode localisation matrix loaded from file " << m_filename,
-						OpenViBE::Kernel::ErrorType::BadParsing);
+						ErrorType::BadParsing);
 
 	if (m_headerSent == false)
 	{
@@ -95,7 +93,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 
 		// Produces header
 		IMatrix* iMatrix = m_encoder->getInputMatrix();
-		OpenViBE::Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
+		Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		m_encoder->encodeHeader();
 
@@ -110,7 +108,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	{
 		// Connects parameters to memory buffer
 		IMatrix* iMatrix = m_encoder->getInputMatrix();
-		OpenViBE::Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
+		Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer
 		m_encoder->encodeBuffer();

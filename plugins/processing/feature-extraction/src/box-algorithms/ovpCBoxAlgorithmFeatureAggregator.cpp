@@ -7,15 +7,17 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Kernel;
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace FeatureExtraction;
 
 using namespace /*OpenViBE::*/Toolkit;
 
 using namespace std;
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
+	namespace Plugins
+	{
 	namespace FeatureExtraction
 	{
 		bool CBoxAlgorithmFeatureAggregator::initialize()
@@ -99,7 +101,7 @@ namespace OpenViBEPlugins
 						}
 
 						//readyToProcess = false;
-						OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", OpenViBE::Kernel::ErrorType::BadInput);
+						OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", ErrorType::BadInput);
 					}
 				}
 				else { readyToProcess = false; }
@@ -165,4 +167,5 @@ namespace OpenViBEPlugins
 			return true;
 		}
 	} // namespace FeatureExtraction
-} // namespace OpenViBEPlugins
+	}  // namespace Plugins
+}  // namespace OpenViBE

@@ -9,7 +9,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
 using namespace /*OpenViBE::*/Toolkit;
 
 bool CAlgorithmClassifier::initialize()
@@ -47,14 +46,14 @@ bool CAlgorithmClassifier::process()
 		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_KRF("Feature vector set is NULL", ErrorType::BadInput);
 		}
 		const CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
 		if (this->train(featureVectorSetAdapter)) { this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Training failed", ErrorType::Internal);
 		}
 	}
 
@@ -67,7 +66,7 @@ bool CAlgorithmClassifier::process()
 		if (!featureVector || !classificationValues || !probabilityValues)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Classifying failed", (!featureVector) ? OpenViBE::Kernel::ErrorType::BadInput : OpenViBE::Kernel::ErrorType::BadOutput);
+			OV_ERROR_KRF("Classifying failed", (!featureVector) ? ErrorType::BadInput : ErrorType::BadOutput);
 		}
 		double estimatedClass = 0;
 		const CFeatureVector featureVectorAdapter(*featureVector);
@@ -82,7 +81,7 @@ bool CAlgorithmClassifier::process()
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Classifying failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Classifying failed", ErrorType::Internal);
 		}
 	}
 
@@ -94,7 +93,7 @@ bool CAlgorithmClassifier::process()
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Saving configuration failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Saving configuration failed", ErrorType::Internal);
 		}
 	}
 
@@ -104,7 +103,7 @@ bool CAlgorithmClassifier::process()
 		if (!rootNode)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Configuration XML node is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_KRF("Configuration XML node is NULL", ErrorType::BadInput);
 		}
 		if (this->loadConfig(rootNode))
 		{
@@ -116,7 +115,7 @@ bool CAlgorithmClassifier::process()
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Loading configuration failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Loading configuration failed", ErrorType::Internal);
 		}
 	}
 
@@ -130,14 +129,14 @@ bool CAlgorithmClassifier::initializeExtraParameterMechanism()
 
 	m_AlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
 
-	OV_ERROR_UNLESS_KRF(m_AlgorithmProxy->initialize(), "Failed to initialize algorithm", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_AlgorithmProxy->initialize(), "Failed to initialize algorithm", ErrorType::Internal);
 
 	return true;
 }
 
 bool CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 {
-	OV_ERROR_UNLESS_KRF(m_AlgorithmProxy->uninitialize(), "Failed to uninitialize algorithm", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_AlgorithmProxy->uninitialize(), "Failed to uninitialize algorithm", ErrorType::Internal);
 
 	this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);
 

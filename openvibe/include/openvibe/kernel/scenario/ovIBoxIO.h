@@ -185,7 +185,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxIO)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Scenario_BoxIO)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

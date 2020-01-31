@@ -101,7 +101,7 @@ namespace OpenViBE
 			// backward compatibility
 			virtual IKernelObjectFactory& getObjectFactory() const { return getKernelObjectFactory(); }
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_KernelContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

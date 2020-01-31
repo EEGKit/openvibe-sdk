@@ -9,7 +9,7 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace /*OpenViBE::Plugins::*/Classification;
 using namespace /*OpenViBE::*/Toolkit;
 using namespace Eigen;
 

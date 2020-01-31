@@ -19,8 +19,6 @@ namespace
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace Classification;
 
 using namespace /*OpenViBE::*/Toolkit;
@@ -31,7 +29,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 	m_nClass = size_t(ip_nClass);
 
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	return true;
 }
@@ -40,7 +38,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
-						OpenViBE::Kernel::ErrorType::BadConfig);
+						ErrorType::BadConfig);
 
 	TParameterHandler<IMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	std::vector<double> probability(m_nClass * m_nClass);

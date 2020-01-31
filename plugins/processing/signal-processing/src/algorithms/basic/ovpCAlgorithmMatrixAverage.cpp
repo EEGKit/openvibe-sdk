@@ -5,8 +5,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
-using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
 // ________________________________________________________________________________________________________________
@@ -53,7 +51,7 @@ bool CAlgorithmMatrixAverage::process()
 
 		m_history.clear();
 
-		OpenViBE::Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
+		Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
 	}
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
@@ -70,10 +68,10 @@ bool CAlgorithmMatrixAverage::process()
 			else
 			{
 				swapMatrix = new CMatrix();
-				OpenViBE::Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
+				Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
 			}
 
-			OpenViBE::Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
+			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
@@ -90,10 +88,10 @@ bool CAlgorithmMatrixAverage::process()
 			else
 			{
 				swapMatrix = new CMatrix();
-				OpenViBE::Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
+				Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
 			}
 
-			OpenViBE::Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
+			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (!m_history.empty());
@@ -108,8 +106,8 @@ bool CAlgorithmMatrixAverage::process()
 				m_history.clear();
 			}
 
-			OpenViBE::Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
-			OpenViBE::Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
+			Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
+			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
@@ -124,7 +122,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (shouldPerformAverage)
 	{
-		OpenViBE::Toolkit::Matrix::clearContent(*oMatrix);
+		Toolkit::Matrix::clearContent(*oMatrix);
 
 		if (ip_averagingMethod == Cumulative)
 		{

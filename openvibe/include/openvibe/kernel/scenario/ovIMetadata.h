@@ -71,7 +71,7 @@ namespace OpenViBE
 			 */
 			virtual bool initializeFromExistingMetadata(const IMetadata& metadata) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_Metadata)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Scenario_Metadata)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

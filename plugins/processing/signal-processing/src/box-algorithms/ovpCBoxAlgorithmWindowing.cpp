@@ -5,7 +5,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 using namespace /*OpenViBE::*/Toolkit;
 
@@ -17,7 +17,7 @@ bool CBoxAlgorithmWindowing::initialize()
 	if (m_windowMethod != None && m_windowMethod != Hamming && m_windowMethod != Hanning && m_windowMethod != Hann 
 		&& m_windowMethod != Blackman && m_windowMethod != Triangular && m_windowMethod != SquareRoot)
 	{
-		OV_ERROR_KRF("No valid windowing method set.\n", OpenViBE::Kernel::ErrorType::BadSetting);
+		OV_ERROR_KRF("No valid windowing method set.\n", ErrorType::BadSetting);
 	}
 
 	m_decoder.initialize(*this, 0);
@@ -109,7 +109,7 @@ bool CBoxAlgorithmWindowing::process()
 				}
 			}
 			else if (m_windowMethod == None) { for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 1; } }
-			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", OpenViBE::Kernel::ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", ErrorType::BadSetting); }
 
 			m_encoder.encodeHeader();
 		}

@@ -59,9 +59,9 @@ int main(int argc, char** argv)
 #if defined TARGET_OS_Windows
 	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
 	if (!kernelLoader.load(kernelFile, &errorMsg)) { cout << "[ FAILED ] Error loading kernel (" << errorMsg << ")" << " from [" << kernelFile << "]\n"; }
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 			else
 			{
 				ctx->initialize();
-				OpenViBE::Toolkit::initialize(*ctx);
+				Toolkit::initialize(*ctx);
 
 				IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 				}
 				ctx->getLogManager() << LogLevel_Info << "Application terminated, releasing allocated objects \n";
 
-				OpenViBE::Toolkit::uninitialize(*ctx);
+				Toolkit::uninitialize(*ctx);
 
 				kernelDesc->releaseKernel(ctx);
 			}

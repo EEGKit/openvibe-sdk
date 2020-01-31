@@ -18,7 +18,7 @@ namespace OpenViBE
 			CLogListenerFile(const IKernelContext& ctx, const CString& applicationName, const CString& logFilename);
 			~CLogListenerFile() override { m_fsFileStream.close(); }
 			bool isActive(const ELogLevel level) override;
-			bool activate(const ELogLevel level, bool active) override;
+			bool activate(const ELogLevel level, const bool active) override;
 			bool activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active) override;
 			bool activate(const bool active) override;
 
@@ -37,7 +37,7 @@ namespace OpenViBE
 			void log(const ELogLevel level) override;
 			void log(const ELogColor /*color*/) override { }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerFile)
+			_IsDerivedFromClass_Final_(TKernelObject<ILogListener>, OVK_ClassId_Kernel_Log_LogListenerFile)
 
 		protected:
 

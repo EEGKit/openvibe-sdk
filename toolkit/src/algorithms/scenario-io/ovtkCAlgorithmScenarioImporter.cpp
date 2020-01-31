@@ -10,160 +10,154 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
 
-
-namespace OpenViBE
+namespace
 {
-	namespace Toolkit
+	typedef struct SScenarioInput
 	{
-	namespace
+		CIdentifier id     = OV_UndefinedIdentifier;
+		CIdentifier typeID = OV_UndefinedIdentifier;
+		CString name;
+		CIdentifier linkedBoxID      = OV_UndefinedIdentifier;
+		size_t linkedBoxInputIdx     = size_t(-1);
+		CIdentifier linkedBoxInputID = OV_UndefinedIdentifier;
+	} scenario_input_t;
+
+	typedef struct SScenarioOutput
 	{
-		typedef struct SScenarioInput
-		{
-			CIdentifier id     = OV_UndefinedIdentifier;
-			CIdentifier typeID = OV_UndefinedIdentifier;
-			CString name;
-			CIdentifier linkedBoxID      = OV_UndefinedIdentifier;
-			size_t linkedBoxInputIdx     = size_t(-1);
-			CIdentifier linkedBoxInputID = OV_UndefinedIdentifier;
-		} scenario_input_t;
+		CIdentifier id     = OV_UndefinedIdentifier;
+		CIdentifier typeID = OV_UndefinedIdentifier;
+		CString name;
+		CIdentifier linkedBoxID       = OV_UndefinedIdentifier;
+		size_t linkedBoxOutputIdx     = size_t(-1);
+		CIdentifier linkedBoxOutputID = OV_UndefinedIdentifier;
+	} scenario_output_t;
 
-		typedef struct SScenarioOutput
-		{
-			CIdentifier id     = OV_UndefinedIdentifier;
-			CIdentifier typeID = OV_UndefinedIdentifier;
-			CString name;
-			CIdentifier linkedBoxID       = OV_UndefinedIdentifier;
-			size_t linkedBoxOutputIdx     = size_t(-1);
-			CIdentifier linkedBoxOutputID = OV_UndefinedIdentifier;
-		} scenario_output_t;
-
-		typedef struct SInput
-		{
-			CIdentifier id     = OV_UndefinedIdentifier;
-			CIdentifier typeID = OV_UndefinedIdentifier;
-			CString name;
-		} input_t;
-
-		typedef struct SOutput
-		{
-			CIdentifier id     = OV_UndefinedIdentifier;
-			CIdentifier typeID = OV_UndefinedIdentifier;
-			CString name;
-		} output_t;
-
-		typedef struct SSetting
-		{
-			CIdentifier typeID = OV_UndefinedIdentifier;
-			CString name;
-			CString defaultValue;
-			CString value;
-			bool modifiability = false;
-			CIdentifier id     = OV_UndefinedIdentifier;
-		} setting_t;
-
-		typedef struct SAttribute
-		{
-			CIdentifier id = OV_UndefinedIdentifier;
-			CString value;
-		} attribute_t;
-
-		typedef struct SBox
-		{
-			CIdentifier id               = OV_UndefinedIdentifier;
-			CIdentifier algorithmClassID = OV_UndefinedIdentifier;
-			CString name;
-			std::vector<input_t> inputs;
-			std::vector<output_t> outputs;
-			std::vector<setting_t> settings;
-			std::vector<attribute_t> attributes;
-		} box_t;
-
-		typedef struct SComment
-		{
-			CIdentifier id;
-			CString text;
-			std::vector<attribute_t> attributes;
-		} comment_t;
-
-		typedef struct SMetadata
-		{
-			CIdentifier identifier;
-			CIdentifier type;
-			CString data;
-		} metadata_t;
-
-		typedef struct SLinkSrc
-		{
-			CIdentifier boxID;
-			size_t boxOutputIdx     = size_t(-1);
-			CIdentifier boxOutputID = OV_UndefinedIdentifier;
-		} link_src_t;
-
-		typedef struct SLinkDst
-		{
-			CIdentifier boxID;
-			size_t boxInputIdx     = size_t(-1);
-			CIdentifier boxInputID = OV_UndefinedIdentifier;
-		} link_dst_t;
-
-		typedef struct SLink
-		{
-			CIdentifier id;
-			link_src_t linkSrc;
-			link_dst_t linkDst;
-			std::vector<attribute_t> attributes;
-		} link_t;
-
-		typedef struct SScenario
-		{
-			std::vector<setting_t> settings;
-			std::vector<scenario_input_t> iScenarios;
-			std::vector<scenario_output_t> oScenarios;
-			std::vector<box_t> boxes;
-			std::vector<comment_t> comments;
-			std::vector<metadata_t> metadata;
-			std::vector<link_t> links;
-			std::vector<attribute_t> attributes;
-		} scenario_t;
-	} // namespace
-
-	class CAlgorithmScenarioImporterContext final : public IAlgorithmScenarioImporterContext
+	typedef struct SInput
 	{
-	public:
+		CIdentifier id     = OV_UndefinedIdentifier;
+		CIdentifier typeID = OV_UndefinedIdentifier;
+		CString name;
+	} input_t;
 
-		explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& algorithmCtx) : m_AlgorithmContext(algorithmCtx) { }
+	typedef struct SOutput
+	{
+		CIdentifier id     = OV_UndefinedIdentifier;
+		CIdentifier typeID = OV_UndefinedIdentifier;
+		CString name;
+	} output_t;
 
-		bool processStart(const CIdentifier& identifier) override;
-		bool processIdentifier(const CIdentifier& identifier, const CIdentifier& value) override;
-		bool processString(const CIdentifier& identifier, const CString& value) override;
-		bool processUInteger(const CIdentifier& identifier, uint64_t value) override;
-		bool processStop() override;
+	typedef struct SSetting
+	{
+		CIdentifier typeID = OV_UndefinedIdentifier;
+		CString name;
+		CString defaultValue;
+		CString value;
+		bool modifiability = false;
+		CIdentifier id     = OV_UndefinedIdentifier;
+	} setting_t;
 
-		_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier)
+	typedef struct SAttribute
+	{
+		CIdentifier id = OV_UndefinedIdentifier;
+		CString value;
+	} attribute_t;
 
-		IAlgorithmContext& m_AlgorithmContext;
-		scenario_t m_SymbolicScenario;
-	};
-	}  // namespace Toolkit
-}  // namespace OpenViBE
+	typedef struct SBox
+	{
+		CIdentifier id               = OV_UndefinedIdentifier;
+		CIdentifier algorithmClassID = OV_UndefinedIdentifier;
+		CString name;
+		std::vector<input_t> inputs;
+		std::vector<output_t> outputs;
+		std::vector<setting_t> settings;
+		std::vector<attribute_t> attributes;
+	} box_t;
+
+	typedef struct SComment
+	{
+		CIdentifier id;
+		CString text;
+		std::vector<attribute_t> attributes;
+	} comment_t;
+
+	typedef struct SMetadata
+	{
+		CIdentifier identifier;
+		CIdentifier type;
+		CString data;
+	} metadata_t;
+
+	typedef struct SLinkSrc
+	{
+		CIdentifier boxID;
+		size_t boxOutputIdx     = size_t(-1);
+		CIdentifier boxOutputID = OV_UndefinedIdentifier;
+	} link_src_t;
+
+	typedef struct SLinkDst
+	{
+		CIdentifier boxID;
+		size_t boxInputIdx     = size_t(-1);
+		CIdentifier boxInputID = OV_UndefinedIdentifier;
+	} link_dst_t;
+
+	typedef struct SLink
+	{
+		CIdentifier id;
+		link_src_t linkSrc;
+		link_dst_t linkDst;
+		std::vector<attribute_t> attributes;
+	} link_t;
+
+	typedef struct SScenario
+	{
+		std::vector<setting_t> settings;
+		std::vector<scenario_input_t> iScenarios;
+		std::vector<scenario_output_t> oScenarios;
+		std::vector<box_t> boxes;
+		std::vector<comment_t> comments;
+		std::vector<metadata_t> metadata;
+		std::vector<link_t> links;
+		std::vector<attribute_t> attributes;
+	} scenario_t;
+} // namespace
+
+class CAlgorithmScenarioImporterContext final : public IAlgorithmScenarioImporterContext
+{
+public:
+
+	explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& algorithmCtx) : m_AlgorithmContext(algorithmCtx) { }
+
+	bool processStart(const CIdentifier& identifier) override;
+	bool processIdentifier(const CIdentifier& identifier, const CIdentifier& value) override;
+	bool processString(const CIdentifier& identifier, const CString& value) override;
+	bool processUInteger(const CIdentifier& identifier, uint64_t value) override;
+	bool processStop() override;
+
+	_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier)
+
+	IAlgorithmContext& m_AlgorithmContext;
+	scenario_t m_SymbolicScenario;
+};
+
 
 bool CAlgorithmScenarioImporter::process()
 {
 	TParameterHandler<IScenario*> op_scenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 	IScenario* scenario = op_scenario;
 
-	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
+	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", ErrorType::BadOutput);
 
 	TParameterHandler<IMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
 	IMemoryBuffer* memoryBuffer = ip_buffer;
 
-	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", ErrorType::BadInput);
 
 	std::map<CIdentifier, CIdentifier> boxIdMapping;
 
 	CAlgorithmScenarioImporterContext context(this->getAlgorithmContext());
 
-	OV_ERROR_UNLESS_KRF(this->import(context, *memoryBuffer), "Import failed", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->import(context, *memoryBuffer), "Import failed", ErrorType::Internal);
 
 	scenario_t& symbolicScenario = context.m_SymbolicScenario;
 
@@ -198,12 +192,14 @@ bool CAlgorithmScenarioImporter::process()
 				const CIdentifier& type = s->typeID;
 				if (!this->getTypeManager().isRegistered(type) && !(this->getTypeManager().isEnumeration(type)) && (!this->getTypeManager().isBitMask(type)))
 				{
+					const std::string msg = std::string("The type of the setting ") + s->name.toASCIIString() + " (" + type.str() + ") from box "
+											+ b->name.toASCIIString() + " cannot be recognized.";
+
 					if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportOnUnknownSetting}", true))
 					{
-						OV_ERROR_KRF("The type of the setting " << s->name <<" (" << type.str() << ") from box " << b->name << " cannot be recognized.",
-									 OpenViBE::Kernel::ErrorType::BadSetting);
+						OV_ERROR_KRF(msg, ErrorType::BadSetting);
 					}
-					OV_WARNING_K("The type of the setting " << s->name <<" (" << type.str() << ") from box " << b->name << " cannot be recognized.");
+					OV_WARNING_K(msg);
 				}
 
 				box->addSetting(s->name, s->typeID, s->defaultValue, size_t(-1), s->modifiability, s->id);
@@ -259,12 +255,12 @@ bool CAlgorithmScenarioImporter::process()
 		if (srcBoxOutputID != OV_UndefinedIdentifier) { scenario->getSourceBoxOutputIndex(boxIdMapping[l->linkSrc.boxID], srcBoxOutputID, srcBoxOutputIdx); }
 
 		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found",
-							OpenViBE::Kernel::ErrorType::BadOutput);
+							ErrorType::BadOutput);
 
 		if (dstBoxInputID != OV_UndefinedIdentifier) { scenario->getTargetBoxInputIndex(boxIdMapping[l->linkDst.boxID], dstBoxInputID, dstBoxInputIdx); }
 
 		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found",
-							OpenViBE::Kernel::ErrorType::BadOutput);
+							ErrorType::BadOutput);
 
 		scenario->connect(newLinkID, boxIdMapping[l->linkSrc.boxID], srcBoxOutputIdx, boxIdMapping[l->linkDst.boxID], dstBoxInputIdx, l->id);
 
@@ -296,7 +292,7 @@ bool CAlgorithmScenarioImporter::process()
 				}
 
 				OV_ERROR_UNLESS_KRF(linkedBoxInputIndex != size_t(-1), "Input index of the target box could not be found",
-									OpenViBE::Kernel::ErrorType::BadOutput);
+									ErrorType::BadOutput);
 
 				scenario->setScenarioInputLink(scenarioInputIdx, symbolicScenarioInput.linkedBoxID, linkedBoxInputIndex);
 			}
@@ -329,7 +325,7 @@ bool CAlgorithmScenarioImporter::process()
 				}
 
 				OV_ERROR_UNLESS_KRF(linkedBoxOutputIndex != size_t(-1), "Output index of the target box could not be found",
-									OpenViBE::Kernel::ErrorType::BadOutput);
+									ErrorType::BadOutput);
 				scenario->setScenarioOutputLink(scenarioOutputIdx, symbolicScenarioOutput.linkedBoxID, linkedBoxOutputIndex);
 			}
 		}
@@ -345,8 +341,8 @@ bool CAlgorithmScenarioImporter::process()
 		scenario->getOutdatedBoxIdentifierList(&listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const IBox* box = scenario->getBoxDetails(listID[i]);
-			OV_WARNING_K("Box " << box->getName() << " [" << box->getAlgorithmClassIdentifier().str() << "] should be updated");
+			const IBox* box       = scenario->getBoxDetails(listID[i]);
+			OV_WARNING_K(std::string("Box ") + box->getName().toASCIIString() + " [" + box->getAlgorithmClassIdentifier().str() + "] should be updated");
 		}
 		scenario->releaseIdentifierList(listID);
 	}
@@ -392,7 +388,7 @@ bool CAlgorithmScenarioImporterContext::processStart(const CIdentifier& identifi
 		//
 	else
 	{
-		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), OpenViBE::Kernel::ErrorType::BadArgument, false,
+		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -443,7 +439,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	else
 	{
 		OV_ERROR("(id) Unexpected node identifier " << identifier.str(),
-				 OpenViBE::Kernel::ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
+				 ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
 }
@@ -483,7 +479,7 @@ bool CAlgorithmScenarioImporterContext::processString(const CIdentifier& identif
 
 	else
 	{
-		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), OpenViBE::Kernel::ErrorType::BadArgument,
+		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument,
 				 false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -508,7 +504,7 @@ bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& ident
 
 	else
 	{
-		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), OpenViBE::Kernel::ErrorType::BadArgument, false,
+		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
