@@ -14,7 +14,7 @@ bool CBoxAlgorithmWindowing::initialize()
 	//reads the plugin settings
 	m_windowMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	if (m_windowMethod != None && m_windowMethod != Hamming && m_windowMethod != Hanning && m_windowMethod != Hann 
+	if (m_windowMethod != None && m_windowMethod != Hamming && m_windowMethod != Hanning && m_windowMethod != Hann
 		&& m_windowMethod != Blackman && m_windowMethod != Triangular && m_windowMethod != SquareRoot)
 	{
 		OV_ERROR_KRF("No valid windowing method set.\n", ErrorType::BadSetting);

@@ -172,7 +172,7 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 		string name = trim(subexpressions[i].substr(0, equalsPos));
 		if (name.empty()) { throw Exception("Parse error: subexpression does not specify a name"); }
 		vector<ParseToken> tokens = tokenize(subexpressions[i].substr(equalsPos + 1));
-		size_t pos                   = 0;
+		size_t pos                = 0;
 		subexpDefs[name]          = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
 		if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of subexpression: " + tokens[pos].getText()); }
 	}

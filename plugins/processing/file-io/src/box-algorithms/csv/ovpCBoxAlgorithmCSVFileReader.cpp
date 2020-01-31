@@ -322,10 +322,11 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 
 	for (size_t i = 0; i < m_dataMatrices.size(); ++i)
 	{
-		OV_ERROR_UNLESS_KRF(m_dataMatrices[i].size() == 3, "Invalid data row length: must be 3 for stimulation date, index and duration", ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(m_dataMatrices[i].size() == 3, "Invalid data row length: must be 3 for stimulation date, index and duration",
+							ErrorType::BadParsing);
 
-		const uint64_t date = TimeArithmetics::secondsToTime(atof(m_dataMatrices[i][0].c_str()));
-		const uint64_t id = uint64_t(atof(m_dataMatrices[i][1].c_str()));
+		const uint64_t date     = TimeArithmetics::secondsToTime(atof(m_dataMatrices[i][0].c_str()));
+		const uint64_t id       = uint64_t(atof(m_dataMatrices[i][1].c_str()));
 		const uint64_t duration = TimeArithmetics::secondsToTime(atof(m_dataMatrices[i][2].c_str()));
 
 		ip_stimSet->appendStimulation(id, date, duration);

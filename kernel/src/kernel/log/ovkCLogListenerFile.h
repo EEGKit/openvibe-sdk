@@ -47,7 +47,7 @@ namespace OpenViBE
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_timeInSeconds    = true;
+			bool m_timeInSeconds     = true;
 			bool m_logWithHexa       = false;
 			uint64_t m_timePrecision = 3;
 

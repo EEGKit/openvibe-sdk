@@ -284,17 +284,32 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* data)
 			if (top == "TypeIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeID, _AutoBind_(data)); }
 			if (top == "Name") { m_ctx->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name, _AutoBind_(data)); }
 			if (top == "LinkedBoxIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxID, _AutoBind_(data)); }
-			if (top == "LinkedBoxInputIndex") { m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdx, _AutoBind_(data)); }
-			if (top == "LinkedBoxInputIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputID, _AutoBind_(data)); }
+			if (top == "LinkedBoxInputIndex")
+			{
+				m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdx, _AutoBind_(data));
+			}
+			if (top == "LinkedBoxInputIdentifier")
+			{
+				m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputID, _AutoBind_(data));
+			}
 			break;
 
 		case Status_ParsingScenarioOutput:
 			if (top == "Identifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_ID, _AutoBind_(data)); }
 			if (top == "TypeIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeID, _AutoBind_(data)); }
 			if (top == "Name") { m_ctx->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, _AutoBind_(data)); }
-			if (top == "LinkedBoxIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxID, _AutoBind_(data)); }
-			if (top == "LinkedBoxOutputIndex") { m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdx, _AutoBind_(data)); }
-			if (top == "LinkedBoxOutputIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputID, _AutoBind_(data)); }
+			if (top == "LinkedBoxIdentifier")
+			{
+				m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxID, _AutoBind_(data));
+			}
+			if (top == "LinkedBoxOutputIndex")
+			{
+				m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdx, _AutoBind_(data));
+			}
+			if (top == "LinkedBoxOutputIdentifier")
+			{
+				m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputID, _AutoBind_(data));
+			}
 			break;
 
 		case Status_ParsingScenarioAttribute:

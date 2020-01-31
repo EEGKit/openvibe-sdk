@@ -362,7 +362,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			ofstream file;
 			file.open(m_configFilename.toASCIIString(), std::ofstream::binary);
 			OV_ERROR_UNLESS_KRF(file.is_open(), "Failed to open file located at [" << m_configFilename << "]", ErrorType::BadFileRead);
-			
+
 			file << "<OpenViBE-SettingsOverride>\n";
 			file << "\t<SettingValue>";
 			const size_t n = m_filtersPerClass * m_nClasses * nChannels;

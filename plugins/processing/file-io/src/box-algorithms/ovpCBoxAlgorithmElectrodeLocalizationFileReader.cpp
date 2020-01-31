@@ -38,7 +38,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 	m_encoder->getInputDynamic() = false;
 
 	// Configures settings according to box
-	m_filename   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_filename    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	*ip_sFilename = m_filename;
 
 	return true;

@@ -120,7 +120,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 		TParameterHandler<bool> ip_diagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 		ip_diagonalCov = false;
-		diagonalCov     = false;
+		diagonalCov    = false;
 	}
 
 	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", ErrorType::Internal);
@@ -160,7 +160,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 	// Per-class means and a global covariance are used to form the LDA model
 	std::vector<MatrixXd> classMeans(m_nClasses);
-	MatrixXd globalCov   = MatrixXd::Zero(nCols, nCols);
+	MatrixXd globalCov = MatrixXd::Zero(nCols, nCols);
 
 	// We need the means per class
 	for (size_t classIdx = 0; classIdx < m_nClasses; classIdx++)

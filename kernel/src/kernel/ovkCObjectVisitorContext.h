@@ -18,7 +18,7 @@ namespace OpenViBE
 			ILogManager& getLogManager() const override;
 			IErrorManager& getErrorManager() const override;
 
-			_IsDerivedFromClass_Final_(TKernelObject < IObjectVisitorContext >, OVK_ClassId_Kernel_ObjectVisitorContext)
+			_IsDerivedFromClass_Final_(TKernelObject<IObjectVisitorContext>, OVK_ClassId_Kernel_ObjectVisitorContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

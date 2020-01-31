@@ -163,7 +163,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
 
 	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	const size_t nClass                         = ip_repartition->getDimensionSize(0);
+	const size_t nClass                        = ip_repartition->getDimensionSize(0);
 
 	std::stringstream ss;
 	for (size_t i = 0; i < nClass; ++i) { ss << ip_repartition->getBuffer()[i] << " "; }

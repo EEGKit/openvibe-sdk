@@ -341,7 +341,7 @@ bool CAlgorithmScenarioImporter::process()
 		scenario->getOutdatedBoxIdentifierList(&listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const IBox* box       = scenario->getBoxDetails(listID[i]);
+			const IBox* box = scenario->getBoxDetails(listID[i]);
 			OV_WARNING_K(std::string("Box ") + box->getName().toASCIIString() + " [" + box->getAlgorithmClassIdentifier().str() + "] should be updated");
 		}
 		scenario->releaseIdentifierList(listID);

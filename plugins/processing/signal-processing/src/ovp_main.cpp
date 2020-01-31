@@ -87,7 +87,7 @@ OVP_Declare_Begin()
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average", ChunkAverage);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample",Incremental);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample", Incremental);
 
 	OVP_Declare_New(SignalProcessing::CBoxAlgorithmRegularizedCSPTrainerDesc)
 	OVP_Declare_New(SignalProcessing::CAlgorithmOnlineCovarianceDesc)

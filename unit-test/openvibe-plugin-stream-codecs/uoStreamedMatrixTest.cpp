@@ -73,8 +73,10 @@ namespace
 		ASSERT_TRUE(mat.setDimensionSize(0, 0));
 
 		TParameterHandler<const IMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-		TParameterHandler<const IMemoryBuffer*> oBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
-		TParameterHandler<const IMemoryBuffer*> iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
+		TParameterHandler<const IMemoryBuffer*> oBuffer(
+			encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+		TParameterHandler<const IMemoryBuffer*>
+				iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<const IMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
 		iMatrix = &mat;

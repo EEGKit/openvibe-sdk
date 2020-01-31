@@ -346,7 +346,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
 			OV_ERROR_UNLESS_KRF(
 				m_writerLib->noEventsUntilDate(timeToSeconds(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1)))),
-				(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: " + m_writerLib->getLastErrorString())).c_str(),
+				(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: " + m_writerLib->
+					getLastErrorString())).c_str(),
 				ErrorType::Internal);
 		}
 

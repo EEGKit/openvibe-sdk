@@ -139,8 +139,8 @@ bool CAlgorithmOnlineCovariance::process()
 			if (m_n == 0)
 			{
 				m_mean = sampleChunk.row(0);
-				start              = 1;
-				m_n                = 1;
+				start  = 1;
+				m_n    = 1;
 			}
 
 			MatrixXd chunkContribution;

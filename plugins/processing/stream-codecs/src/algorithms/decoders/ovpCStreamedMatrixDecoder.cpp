@@ -129,7 +129,7 @@ void CStreamedMatrixDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_StreamedMatrix) 
+	if ((top == OVTK_NodeId_Header_StreamedMatrix)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)

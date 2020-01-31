@@ -105,7 +105,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(TKernelObject < IObject >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
 
 		protected:
 
@@ -126,7 +126,7 @@ CPluginManager::~CPluginManager()
 		for (auto& pluginObject : pluginObjectVector.second)
 		{
 			OV_WARNING_K(
-				"Trying to release plugin object with class id " + pluginObject->getClassIdentifier().str() + " and plugin object descriptor " 
+				"Trying to release plugin object with class id " + pluginObject->getClassIdentifier().str() + " and plugin object descriptor "
 				+ pluginObjectVector.first->getName().toASCIIString() + " at plugin manager destruction time");
 			pluginObject->release();
 		}
@@ -138,7 +138,8 @@ CPluginManager::~CPluginManager()
 
 	for (auto k = m_pluginModules.begin(); k != m_pluginModules.end(); ++k)
 	{
-		this->TKernelObject<IPluginManager>::getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
+		this->TKernelObject<IPluginManager>::getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() <<
+				"\n";
 		(*k)->uninitialize();
 		delete (*k);
 	}

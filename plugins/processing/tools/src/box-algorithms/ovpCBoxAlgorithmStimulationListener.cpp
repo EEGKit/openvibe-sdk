@@ -8,10 +8,7 @@ using namespace Tools;
 bool CBoxAlgorithmStimulationListener::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
-	for (size_t i = 0; i < nInput; ++i)
-	{
-		m_stimulationDecoders.push_back(new Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
-	}
+	for (size_t i = 0; i < nInput; ++i) { m_stimulationDecoders.push_back(new Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i)); }
 
 	m_logLevel = ELogLevel(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
 

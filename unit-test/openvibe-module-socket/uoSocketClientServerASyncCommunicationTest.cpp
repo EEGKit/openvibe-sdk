@@ -129,7 +129,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string tmp = baseData + std::to_string(sendIndex);
-		size_t size = tmp.size();
+		size_t size     = tmp.size();
 		sendData(client, &size, sizeof(size));
 		sendData(client, const_cast<char*>(tmp.c_str()), size);
 	}
@@ -143,7 +143,10 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	// do the assertion on the main thread
 	OVT_ASSERT(gReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex) { OVT_ASSERT_STREQ(gReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet"); }
+	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
+	{
+		OVT_ASSERT_STREQ(gReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
+	}
 
 	return EXIT_SUCCESS;
 }

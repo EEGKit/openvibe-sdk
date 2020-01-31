@@ -46,9 +46,9 @@ namespace OpenViBE
 			CString m_applicationName;
 
 			bool m_logWithHexa       = false;
-			bool m_timeInSeconds    = false;
+			bool m_timeInSeconds     = false;
 			uint64_t m_timePrecision = 0;
-			bool m_useColor         = false;
+			bool m_useColor          = false;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -141,7 +141,8 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 				if (decoder.isBufferReceived())
 				{
-					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(matrix->getBuffer(), nChannel, nSample);
+					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
+						matrix->getBuffer(), nChannel, nSample);
 
 					switch (j)
 					{

@@ -8,66 +8,66 @@ namespace OpenViBE
 {
 	namespace Plugins
 	{
-	namespace SignalProcessing
-	{
-		class CBoxAlgorithmCommonAverageReference final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
+		namespace SignalProcessing
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CommonAverageReference)
-
-		protected:
-
-			Kernel::IAlgorithmProxy* m_decoder = nullptr;
-			Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
-			Kernel::TParameterHandler<IMatrix*> op_matrix;
-			Kernel::TParameterHandler<uint64_t> op_sampling;
-
-			Kernel::IAlgorithmProxy* m_encoder = nullptr;
-			Kernel::TParameterHandler<IMatrix*> ip_matrix;
-			Kernel::TParameterHandler<uint64_t> ip_sampling;
-			Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
-
-			CMatrix m_oMatrix;
-		};
-
-		class CBoxAlgorithmCommonAverageReferenceDesc final : public IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			CString getName() const override { return CString("Common Average Reference"); }
-			CString getAuthorName() const override { return CString("Yann Renard"); }
-			CString getAuthorCompanyName() const override { return CString("INRIA"); }
-			CString getShortDescription() const override { return CString("Re-reference the signal to common average reference"); }
-
-			CString getDetailedDescription() const override
+			class CBoxAlgorithmCommonAverageReference final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				return CString(
-					"Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time");
-			}
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			CString getCategory() const override { return CString("Signal processing/Spatial Filtering"); }
-			CString getVersion() const override { return CString("1.0"); }
-			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
-			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CommonAverageReference; }
-			IPluginObject* create() override { return new CBoxAlgorithmCommonAverageReference; }
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_CommonAverageReference)
 
-			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+			protected:
+
+				Kernel::IAlgorithmProxy* m_decoder = nullptr;
+				Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+				Kernel::TParameterHandler<IMatrix*> op_matrix;
+				Kernel::TParameterHandler<uint64_t> op_sampling;
+
+				Kernel::IAlgorithmProxy* m_encoder = nullptr;
+				Kernel::TParameterHandler<IMatrix*> ip_matrix;
+				Kernel::TParameterHandler<uint64_t> ip_sampling;
+				Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+
+				CMatrix m_oMatrix;
+			};
+
+			class CBoxAlgorithmCommonAverageReferenceDesc final : public IBoxAlgorithmDesc
 			{
-				prototype.addInput("Input signal", OV_TypeId_Signal);
-				prototype.addOutput("Output signal", OV_TypeId_Signal);
-				return true;
-			}
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Common Average Reference"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA"); }
+				CString getShortDescription() const override { return CString("Re-reference the signal to common average reference"); }
 
-			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CommonAverageReferenceDesc)
-		};
-	} // namespace SignalProcessing
+				CString getDetailedDescription() const override
+				{
+					return CString(
+						"Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time");
+				}
+
+				CString getCategory() const override { return CString("Signal processing/Spatial Filtering"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CommonAverageReference; }
+				IPluginObject* create() override { return new CBoxAlgorithmCommonAverageReference; }
+
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input signal", OV_TypeId_Signal);
+					prototype.addOutput("Output signal", OV_TypeId_Signal);
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CommonAverageReferenceDesc)
+			};
+		} // namespace SignalProcessing
 	}  // namespace Plugins
 }  // namespace OpenViBE

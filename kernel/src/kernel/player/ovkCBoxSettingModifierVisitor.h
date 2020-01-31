@@ -29,9 +29,9 @@ namespace OpenViBE
 
 			IObjectVisitorContext* m_ObjectVisitorCtx = nullptr;
 			IBox* m_Box                               = nullptr;
-			size_t m_SettingIdx                                         = 0;
-			bool m_IsParsingSettingValue                                = false;
-			bool m_IsParsingSettingOverride                             = false;
+			size_t m_SettingIdx                       = 0;
+			bool m_IsParsingSettingValue              = false;
+			bool m_IsParsingSettingOverride           = false;
 			IConfigurationManager* m_ConfigManager    = nullptr;
 
 			_IsDerivedFromClass_Final_(IObjectVisitor, OV_UndefinedIdentifier)

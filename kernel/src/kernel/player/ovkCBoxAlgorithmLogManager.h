@@ -16,10 +16,12 @@ namespace OpenViBE
 
 			bool isActive(const ELogLevel level) override { return m_logManager.isActive(level); }
 			bool activate(const ELogLevel level, const bool active) override { return m_logManager.activate(level, active); }
+
 			bool activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active) override
 			{
 				return m_logManager.activate(startLevel, endLevel, active);
 			}
+
 			bool activate(const bool active) override { return m_logManager.activate(active); }
 
 			bool addListener(ILogListener* listener) override { return m_logManager.addListener(listener); }

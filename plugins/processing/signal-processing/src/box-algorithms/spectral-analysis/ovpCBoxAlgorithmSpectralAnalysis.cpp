@@ -21,7 +21,8 @@ namespace
 {
 	double amplitude(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
 	{
-		return sqrt(matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
+		return sqrt(
+			matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
 	}
 
 	double phase(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
@@ -66,7 +67,7 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 			<< (m_isSpectrumEncoderActive[0] ? CString("AMP ") : "")
 			<< (m_isSpectrumEncoderActive[1] ? CString("PHASE ") : "")
 			<< (m_isSpectrumEncoderActive[2] ? CString("REAL ") : "")
-			<< (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "") 
+			<< (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "")
 			<< "]\n";
 
 	return true;

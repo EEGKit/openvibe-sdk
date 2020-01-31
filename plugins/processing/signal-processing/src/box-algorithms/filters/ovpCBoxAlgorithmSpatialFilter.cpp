@@ -103,7 +103,8 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		m_encoder = new Toolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 
 		static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputSamplingRate().setReferenceTarget(
-			static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputSamplingRate());
+			static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*>(
+				m_decoder)->getOutputSamplingRate());
 	}
 	else if (id == OV_TypeId_Spectrum)
 	{
@@ -111,9 +112,11 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		m_encoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 
 		static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputFrequencyAbscissa().setReferenceTarget(
-			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputFrequencyAbscissa());
+			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(
+				m_decoder)->getOutputFrequencyAbscissa());
 		static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputSamplingRate().setReferenceTarget(
-			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputSamplingRate());
+			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(
+				m_decoder)->getOutputSamplingRate());
 	}
 	else { OV_ERROR_KRF("Invalid input stream type [" << id.str() << "]", ErrorType::BadInput); }
 
@@ -139,7 +142,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		// The double cast is needed until FSettingValueAutoCast supports size_t.
 		const size_t nOChannels = size_t(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
 		const size_t nIChannels = size_t(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2)));
-		const size_t nCoefs         = loadCoefs(coefs, ' ', OV_Value_EnumeratedStringSeparator, nOChannels, nIChannels);
+		const size_t nCoefs     = loadCoefs(coefs, ' ', OV_Value_EnumeratedStringSeparator, nOChannels, nIChannels);
 
 		OV_ERROR_UNLESS_KRF(nCoefs == nOChannels * nIChannels,
 							"Invalid number of coefficients [" << nCoefs << "] (expected "<< nOChannels * nIChannels

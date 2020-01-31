@@ -97,7 +97,7 @@ namespace OpenViBE
 			bool markOutputAsReadyToSend(const size_t outputIdx, const uint64_t startTime, const uint64_t endTime) override;
 			//@}
 
-			_IsDerivedFromClass_Final_(TKernelObject < IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox)
+			_IsDerivedFromClass_Final_(TKernelObject<IBoxIO>, OVK_ClassId_Kernel_Player_SimulatedBox)
 
 			CScheduler& getScheduler() const { return m_scheduler; }
 

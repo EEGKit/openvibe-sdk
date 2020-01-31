@@ -56,7 +56,7 @@ namespace OpenViBE
 
 		protected:
 
-			IConfigurable* m_iConfigurable  = nullptr;
+			IConfigurable* m_iConfigurable = nullptr;
 			IConfigurable* m_oConfigurable = nullptr;
 			std::map<CIdentifier, CString> m_iParameterNames;
 			std::map<CIdentifier, CString> m_oParameterNames;

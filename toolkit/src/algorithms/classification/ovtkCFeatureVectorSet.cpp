@@ -18,15 +18,9 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& matrix) : m_matrix(matrix)
 	}
 }
 
-IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index)
-{
-	return m_features.find(index)->second;
-}
+IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index) { return m_features.find(index)->second; }
 
-const IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index) const
-{
-	return m_features.find(index)->second;
-}
+const IFeatureVector& CFeatureVectorSet::getFeatureVector(const size_t index) const { return m_features.find(index)->second; }
 
 size_t CFeatureVectorSet::getLabelCount() const
 {

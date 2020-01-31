@@ -451,7 +451,7 @@ namespace OpenViBE
 			bool getInterfacorType(const EBoxInterfacorType interfacorType, const size_t index, CIdentifier& typeID) const override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" 
+									INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = ["
 									<< m_interfacors.at(interfacorType).size() - 1 << "])", ErrorType::OutOfBound);
 
 				typeID = m_interfacors.at(interfacorType)[index]->m_TypeID;
@@ -1476,7 +1476,7 @@ namespace OpenViBE
 
 			void notify(const EBoxModification boxModification) { this->notify(boxModification, 0xffffffff); }
 
-			_IsDerivedFromClass_Final_(TAttributable< TKernelObject <T> >, OVK_ClassId_Kernel_Scenario_Box)
+			_IsDerivedFromClass_Final_(TAttributable<TKernelObject<T>>, OVK_ClassId_Kernel_Scenario_Box)
 
 			CString getUnusedName(const std::map<CString, size_t>& nameToIndex, const CString& suggestedName) const
 			{

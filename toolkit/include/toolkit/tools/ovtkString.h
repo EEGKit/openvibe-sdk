@@ -33,7 +33,8 @@ namespace OpenViBE
 
 			OVTK_API size_t split(const CString& str, const ISplitCallback& splitCB, uint8_t separator);
 			OVTK_API size_t split(const CString& str, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator);
-			OVTK_API bool isAlmostEqual(const CString& str1, const CString& str2, bool caseSensitive = true,bool removeStartSpaces = true, bool removeEndSpaces = true);
+			OVTK_API bool isAlmostEqual(const CString& str1, const CString& str2, bool caseSensitive = true, bool removeStartSpaces = true,
+										bool removeEndSpaces                                         = true);
 		} // namespace String
 	}  // namespace Toolkit
 }  // namespace OpenViBE

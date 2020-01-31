@@ -157,7 +157,10 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 {
 	if (i->value.id() == SEquationGrammar::expressionID)
 	{
-		if (*i->value.begin() == '+') { return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true); }
+		if (*i->value.begin() == '+')
+		{
+			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
+		}
 		//replaces (- X Y) by (+ X (-Y)) (in fact (+ X (* -1 Y)) )
 		if (*i->value.begin() == '-')
 		{
@@ -168,7 +171,10 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 	}
 	else if (i->value.id() == SEquationGrammar::termID)
 	{
-		if (*i->value.begin() == '*') { return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true); }
+		if (*i->value.begin() == '*')
+		{
+			return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
+		}
 		if (*i->value.begin() == '/') { return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1)); }
 	}
 	else if (i->value.id() == SEquationGrammar::factorID)
@@ -234,7 +240,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 	}
 	else if (i->value.id() == SEquationGrammar::ifthenID)
 	{
-		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1), createNode(i->children.begin() + 2), false);
+		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1),
+										   createNode(i->children.begin() + 2), false);
 	}
 	else if (i->value.id() == SEquationGrammar::comparisonID)
 	{

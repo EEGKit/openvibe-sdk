@@ -127,7 +127,7 @@ namespace OpenViBE
 
 			bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxID) override;
 
-			_IsDerivedFromClass_Final_(TBox< IScenario >, OVK_ClassId_Kernel_Scenario_Scenario)
+			_IsDerivedFromClass_Final_(TBox<IScenario>, OVK_ClassId_Kernel_Scenario_Scenario)
 
 		private:
 			CIdentifier getUnusedIdentifier(const CIdentifier& suggestedID) const;

@@ -204,14 +204,8 @@ bool CBoxAlgorithmTemporalFilter::process()
 			}
 			else { OV_ERROR_KRF("Invalid filter method [" << m_method << "]", ErrorType::BadSetting); }
 
-			if (m_type == HighPass)
-			{
-				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
-			}
-			if (m_type == LowPass)
-			{
-				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
-			}
+			if (m_type == HighPass) { this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n"; }
+			if (m_type == LowPass) { this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n"; }
 
 			const size_t frequency = m_decoder.getOutputSamplingRate();
 			const size_t nSmooth   = 100 * frequency;

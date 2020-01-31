@@ -11,20 +11,20 @@ namespace OpenViBE
 {
 	namespace Toolkit
 	{
-	class OVTK_API CAlgorithmScenarioImporter : public TAlgorithm<Plugins::IAlgorithmScenarioImporter>
-	{
-	public:
-		void release() override { delete this; }
-		bool process() override;
+		class OVTK_API CAlgorithmScenarioImporter : public TAlgorithm<Plugins::IAlgorithmScenarioImporter>
+		{
+		public:
+			void release() override { delete this; }
+			bool process() override;
 
-		_IsDerivedFromClass_(TAlgorithm<Plugins::IAlgorithmScenarioImporter>, OVP_ClassId_Algorithm_ScenarioImporter)
-	};
+			_IsDerivedFromClass_(TAlgorithm<Plugins::IAlgorithmScenarioImporter>, OVP_ClassId_Algorithm_ScenarioImporter)
+		};
 
-	class OVTK_API CAlgorithmScenarioImporterDesc : public Plugins::IAlgorithmScenarioImporterDesc
-	{
-	public:
+		class OVTK_API CAlgorithmScenarioImporterDesc : public Plugins::IAlgorithmScenarioImporterDesc
+		{
+		public:
 
-		_IsDerivedFromClass_(Plugins::IAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_ScenarioImporterDesc)
-	};
+			_IsDerivedFromClass_(Plugins::IAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_ScenarioImporterDesc)
+		};
 	}  // namespace Toolkit
 }  // namespace OpenViBE

@@ -60,7 +60,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& algorithmDe
 
 	CIdentifier algorithmId         = getUnusedIdentifier();
 	CAlgorithmProxy* algorithmProxy = new CAlgorithmProxy(getKernelContext(), *algorithm, algorithmDesc);
-	m_algorithms[algorithmId]      = algorithmProxy;
+	m_algorithms[algorithmId]       = algorithmProxy;
 	return algorithmId;
 }
 

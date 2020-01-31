@@ -7,39 +7,39 @@ namespace OpenViBE
 {
 	namespace Toolkit
 	{
-	template <class TParent>
-	class TVector : public TParent
-	{
-	public:
-
-		explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
-
-		uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
-
-		bool setSize(const uint32_t size) override
+		template <class TParent>
+		class TVector : public TParent
 		{
-			m_matrix.setDimensionCount(1);
-			m_matrix.setDimensionSize(0, size);
-			return true;
-		}
+		public:
 
-		double* getBuffer() override { return m_matrix.getBuffer(); }
-		const double* getBuffer() const override { return m_matrix.getBuffer(); }
-		const char* getElementLabel(const uint32_t index) const override { return m_matrix.getDimensionLabel(0, index); }
+			explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
 
-		bool setElementLabel(const uint32_t index, const char* label) override
-		{
-			m_matrix.setDimensionLabel(0, index, label);
-			return true;
-		}
+			uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
 
-		_IsDerivedFromClass_Final_(TParent, OV_UndefinedIdentifier)
+			bool setSize(const uint32_t size) override
+			{
+				m_matrix.setDimensionCount(1);
+				m_matrix.setDimensionSize(0, size);
+				return true;
+			}
 
-	protected:
+			double* getBuffer() override { return m_matrix.getBuffer(); }
+			const double* getBuffer() const override { return m_matrix.getBuffer(); }
+			const char* getElementLabel(const uint32_t index) const override { return m_matrix.getDimensionLabel(0, index); }
 
-		IMatrix& m_matrix;
-	};
+			bool setElementLabel(const uint32_t index, const char* label) override
+			{
+				m_matrix.setDimensionLabel(0, index, label);
+				return true;
+			}
 
-	typedef TVector<IVector> CVector;
+			_IsDerivedFromClass_Final_(TParent, OV_UndefinedIdentifier)
+
+		protected:
+
+			IMatrix& m_matrix;
+		};
+
+		typedef TVector<IVector> CVector;
 	}  // namespace Toolkit
 }  // namespace OpenViBE

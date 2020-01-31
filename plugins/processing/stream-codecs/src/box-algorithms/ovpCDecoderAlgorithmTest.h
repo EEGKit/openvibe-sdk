@@ -8,65 +8,65 @@ namespace OpenViBE
 {
 	namespace Plugins
 	{
-	namespace StreamCodecs
-	{
-		class CDecoderAlgorithmTest final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
+		namespace StreamCodecs
 		{
-		public:
-
-			CDecoderAlgorithmTest() { }
-			~CDecoderAlgorithmTest() override { }
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest)
-
-		protected:
-
-			std::array<Kernel::IAlgorithmProxy*, 7> m_decoder;
-			std::array<Kernel::TParameterHandler<const IMemoryBuffer*>, 7> ip_buffer;
-		};
-
-		class CDecoderAlgorithmTestDesc final : public IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			CString getName() const override { return CString("Decoder algorithm test"); }
-			CString getAuthorName() const override { return CString("Yann Renard"); }
-			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-
-			CString getShortDescription() const override
+			class CDecoderAlgorithmTest final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				return CString("Decodes various types of streams and outputs some of the content parameters the log");
-			}
+			public:
 
-			CString getDetailedDescription() const override
+				CDecoderAlgorithmTest() { }
+				~CDecoderAlgorithmTest() override { }
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
+
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest)
+
+			protected:
+
+				std::array<Kernel::IAlgorithmProxy*, 7> m_decoder;
+				std::array<Kernel::TParameterHandler<const IMemoryBuffer*>, 7> ip_buffer;
+			};
+
+			class CDecoderAlgorithmTestDesc final : public IBoxAlgorithmDesc
 			{
-				return CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain.");
-			}
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Decoder algorithm test"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
 
-			CString getCategory() const override { return CString("Tests/Algorithms"); }
-			CString getVersion() const override { return CString("1.0"); }
-			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest; }
-			IPluginObject* create() override { return new CDecoderAlgorithmTest(); }
+				CString getShortDescription() const override
+				{
+					return CString("Decodes various types of streams and outputs some of the content parameters the log");
+				}
 
-			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
-			{
-				prototype.addInput("Experiment information", OV_TypeId_ExperimentInfo);
-				prototype.addInput("Feature vector", OV_TypeId_FeatureVector);
-				prototype.addInput("Signal", OV_TypeId_Signal);
-				prototype.addInput("Spectrum", OV_TypeId_Spectrum);
-				prototype.addInput("Stimulation", OV_TypeId_Stimulations);
-				prototype.addInput("Streamed matrix", OV_TypeId_StreamedMatrix);
-				prototype.addInput("Channel localisation", OV_TypeId_ChannelLocalisation);
-				return true;
-			}
+				CString getDetailedDescription() const override
+				{
+					return CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain.");
+				}
 
-			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTestDesc)
-		};
-	} // namespace StreamCodecs
+				CString getCategory() const override { return CString("Tests/Algorithms"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest; }
+				IPluginObject* create() override { return new CDecoderAlgorithmTest(); }
+
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Experiment information", OV_TypeId_ExperimentInfo);
+					prototype.addInput("Feature vector", OV_TypeId_FeatureVector);
+					prototype.addInput("Signal", OV_TypeId_Signal);
+					prototype.addInput("Spectrum", OV_TypeId_Spectrum);
+					prototype.addInput("Stimulation", OV_TypeId_Stimulations);
+					prototype.addInput("Streamed matrix", OV_TypeId_StreamedMatrix);
+					prototype.addInput("Channel localisation", OV_TypeId_ChannelLocalisation);
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTestDesc)
+			};
+		} // namespace StreamCodecs
 	}  // namespace Plugins
 }  // namespace OpenViBE

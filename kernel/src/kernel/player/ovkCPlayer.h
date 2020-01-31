@@ -44,7 +44,7 @@ namespace OpenViBE
 			uint64_t getCurrentSimulatedLateness() const;
 
 
-			_IsDerivedFromClass_Final_(TKernelObject < IPlayer >, OVK_ClassId_Kernel_Player_Player)
+			_IsDerivedFromClass_Final_(TKernelObject<IPlayer>, OVK_ClassId_Kernel_Player_Player)
 
 		protected:
 

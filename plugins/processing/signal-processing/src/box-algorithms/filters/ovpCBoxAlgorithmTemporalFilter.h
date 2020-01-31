@@ -11,81 +11,78 @@ namespace OpenViBE
 {
 	namespace Plugins
 	{
-	namespace SignalProcessing
-	{
-		class CBoxAlgorithmTemporalFilter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
+		namespace SignalProcessing
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm < IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_TemporalFilter)
-
-		protected:
-
-			Toolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;
-			Toolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
-
-
-			size_t m_method = 0;
-			size_t m_type   = 0;
-			size_t m_order  = 0;
-
-			double m_lowCut  = 0;
-			double m_highCut = 0;
-			double m_ripple  = 0; // for Chebyshev
-
-			std::vector<std::shared_ptr<Dsp::Filter>> m_filters;
-			//std::vector < std::shared_ptr < Dsp::Filter > > m_filters;
-
-			std::vector<double> m_firstSamples;
-		};
-
-		class CBoxAlgorithmTemporalFilterDesc final : public IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			CString getName() const override { return CString("Temporal Filter"); }
-			CString getAuthorName() const override { return CString("Yann Renard & Laurent Bonnet"); }
-			CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
-
-			CString getShortDescription() const override
+			class CBoxAlgorithmTemporalFilter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				return CString("Temporal filtering based on various one-way IIR filter designs");
-			}
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			CString getDetailedDescription() const override
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TemporalFilter)
+
+			protected:
+
+				Toolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;
+				Toolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
+
+
+				size_t m_method = 0;
+				size_t m_type   = 0;
+				size_t m_order  = 0;
+
+				double m_lowCut  = 0;
+				double m_highCut = 0;
+				double m_ripple  = 0; // for Chebyshev
+
+				std::vector<std::shared_ptr<Dsp::Filter>> m_filters;
+				//std::vector < std::shared_ptr < Dsp::Filter > > m_filters;
+
+				std::vector<double> m_firstSamples;
+			};
+
+			class CBoxAlgorithmTemporalFilterDesc final : public IBoxAlgorithmDesc
 			{
-				return CString("Applies a temporal filter, based on various one-way IIR filter designs, to the input stream.");
-			}
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Temporal Filter"); }
+				CString getAuthorName() const override { return CString("Yann Renard & Laurent Bonnet"); }
+				CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
 
-			CString getCategory() const override { return CString("Signal processing/Temporal Filtering"); }
-			CString getVersion() const override { return CString("1.1"); }
-			CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-			CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-			CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
-			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TemporalFilter; }
-			IPluginObject* create() override { return new CBoxAlgorithmTemporalFilter; }
+				CString getShortDescription() const override { return CString("Temporal filtering based on various one-way IIR filter designs"); }
 
-			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
-			{
-				prototype.addInput("Input signal", OV_TypeId_Signal);
-				prototype.addOutput("Output signal", OV_TypeId_Signal);
-				prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, "Butterworth");
-				prototype.addSetting("Filter Type", OVP_TypeId_FilterType, "Band Pass");
-				prototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
-				prototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
-				prototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");
-				prototype.addSetting("Band Pass Ripple (dB)", OV_TypeId_Float, "0.5");
+				CString getDetailedDescription() const override
+				{
+					return CString("Applies a temporal filter, based on various one-way IIR filter designs, to the input stream.");
+				}
 
-				return true;
-			}
+				CString getCategory() const override { return CString("Signal processing/Temporal Filtering"); }
+				CString getVersion() const override { return CString("1.1"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TemporalFilter; }
+				IPluginObject* create() override { return new CBoxAlgorithmTemporalFilter; }
 
-			_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TemporalFilterDesc)
-		};
-	} // namespace SignalProcessing
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input signal", OV_TypeId_Signal);
+					prototype.addOutput("Output signal", OV_TypeId_Signal);
+					prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, "Butterworth");
+					prototype.addSetting("Filter Type", OVP_TypeId_FilterType, "Band Pass");
+					prototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
+					prototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
+					prototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");
+					prototype.addSetting("Band Pass Ripple (dB)", OV_TypeId_Float, "0.5");
+
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TemporalFilterDesc)
+			};
+		} // namespace SignalProcessing
 	}  // namespace Plugins
 }  // namespace OpenViBE

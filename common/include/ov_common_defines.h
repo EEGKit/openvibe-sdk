@@ -106,8 +106,8 @@
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OVP_Shared
 #if defined TARGET_OS_Windows
-		#define OVP_API_Export __declspec(dllexport)
-		#define OVP_API_Import __declspec(dllimport)
+#define OVP_API_Export __declspec(dllexport)
+#define OVP_API_Import __declspec(dllimport)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		#define OVP_API_Export __attribute__((visibility("default")))
 		#define OPV_API_Import __attribute__((visibility("default")))
@@ -121,7 +121,7 @@
 #endif
 
 #if defined OVP_Exports
-	#define OVP_API OVP_API_Export
+#define OVP_API OVP_API_Export
 #else
 #define OVP_API OVP_API_Import
 #endif

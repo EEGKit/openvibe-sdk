@@ -197,7 +197,8 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			{
 				case OP_DIV:
 				{
-					const double total = reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue() / reinterpret_cast<CAbstractTreeValueNode*>(m_Children[1])->getValue();
+					const double total = reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue() / reinterpret_cast<CAbstractTreeValueNode*>(
+											 m_Children[1])->getValue();
 
 					//delete the old value nodes
 					delete m_Children[0];
@@ -212,7 +213,8 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 				}
 				case OP_POW:
 				{
-					const double total = pow(reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue(), reinterpret_cast<CAbstractTreeValueNode*>(m_Children[1])->getValue());
+					const double total = pow(reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue(),
+											 reinterpret_cast<CAbstractTreeValueNode*>(m_Children[1])->getValue());
 
 					//delete the old value nodes
 					delete m_Children[0];

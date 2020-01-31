@@ -65,7 +65,8 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
-		const uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_sampling), uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		const uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_sampling),
+																		 uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
 		while (m_nSentSample + m_nGeneratedEpochSample < nextStepDate)
 		{
 			double* buffer = m_encoder.getInputMatrix()->getBuffer();

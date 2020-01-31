@@ -36,7 +36,8 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		const std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 
 		CIdentifier scenarioID;
-		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
+		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
+				   "Failed to import the scenario file");
 		OVT_ASSERT(scenarioID != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
 
 		auto& scenario = context->getScenarioManager().getScenario(scenarioID);
@@ -132,16 +133,22 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		CIdentifier linkSourceBoxId;
 		size_t linkSourceOutputIndex;
 		CIdentifier linkSourceOutputIdentifier;
-		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier), "Could not get link details");
-		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
-		OVT_ASSERT(linkSourceOutputIndex == 0, "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
+		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier),
+				   "Could not get link details");
+		OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId,
+				   "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
+		OVT_ASSERT(linkSourceOutputIndex == 0,
+				   "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
 
 		CIdentifier linkTargetBoxId;
 		size_t linkTargetInputIndex;
 		CIdentifier linkTargetInputIdentifier;
-		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier), "Could not get link details");
-		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");
-		OVT_ASSERT(linkTargetInputIndex == 1, "The Clock Stimulator to Stimulation Listener link does not have the second input of Stimulation Listener as the input");
+		OVT_ASSERT(clockStimulatorToStimulationListenerLink->getTarget(linkTargetBoxId, linkTargetInputIndex, linkTargetInputIdentifier),
+				   "Could not get link details");
+		OVT_ASSERT(linkTargetBoxId == s_StimulationListenerBoxId,
+				   "The Clock Stimulator to Stimulation Listener link does not have the Stimulation Listener as the target");
+		OVT_ASSERT(linkTargetInputIndex == 1,
+				   "The Clock Stimulator to Stimulation Listener link does not have the second input of Stimulation Listener as the input");
 
 		// Test comments
 
@@ -156,7 +163,8 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		const IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
 
 		const CString unicodeCommentText = unicodeComment->getText();
-		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText), "The imported scenario comment contains a wrong text");
+		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText),
+						 "The imported scenario comment contains a wrong text");
 	}
 
 	return EXIT_SUCCESS;

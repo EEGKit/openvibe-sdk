@@ -85,7 +85,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			const uint64_t tEnd   = boxContext->getInputChunkEndTime(0, i);
 
 			computeAverage();
-			
+
 			m_encoder.encodeBuffer();
 			getBoxAlgorithmContext()->getDynamicBoxContext()->markOutputAsReadyToSend(0, tStart, tEnd);
 		}
