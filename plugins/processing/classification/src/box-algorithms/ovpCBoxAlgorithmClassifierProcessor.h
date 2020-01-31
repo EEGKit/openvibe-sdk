@@ -7,77 +7,80 @@
 #include <map>
 
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace Classification
+	namespace Plugins
 	{
-		class CBoxAlgorithmClassifierProcessor final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace Classification
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
-
-		protected:
-			bool loadClassifier(const char* filename);
-
-		private:
-
-			OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_sampleDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_stimDecoder;
-
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_labelsEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_hyperplanesEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_probabilitiesEncoder;
-
-			OpenViBE::Kernel::IAlgorithmProxy* m_classifier = nullptr;
-
-			std::map<double, uint64_t> m_stimulations;
-		};
-
-		class CBoxAlgorithmClassifierProcessorDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Classifier processor"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Generic classification, relying on several box algorithms"); }
-
-			OpenViBE::CString getDetailedDescription() const override
+			class CBoxAlgorithmClassifierProcessor final : virtual public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				return OpenViBE::CString("Classifies incoming feature vectors using a previously learned classifier.");
-			}
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Classification"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.1"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.1.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmClassifierProcessor; }
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			protected:
+				bool loadClassifier(const char* filename);
+
+			private:
+
+				Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_sampleDecoder;
+				Toolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_stimDecoder;
+
+				Toolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_labelsEncoder;
+				Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_hyperplanesEncoder;
+				Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_probabilitiesEncoder;
+
+				Kernel::IAlgorithmProxy* m_classifier = nullptr;
+
+				std::map<double, uint64_t> m_stimulations;
+			};
+
+			class CBoxAlgorithmClassifierProcessorDesc final : virtual public IBoxAlgorithmDesc
 			{
-				prototype.addInput("Features", OV_TypeId_FeatureVector);
-				prototype.addInput("Commands", OV_TypeId_Stimulations);
-				prototype.addOutput("Labels", OV_TypeId_Stimulations);
-				prototype.addOutput("Hyperplane distance", OV_TypeId_StreamedMatrix);
-				prototype.addOutput("Probability values", OV_TypeId_StreamedMatrix);
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Classifier processor"); }
+				CString getAuthorName() const override { return CString("Yann Renard, Guillaume Serriere"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+				CString getShortDescription() const override { return CString("Generic classification, relying on several box algorithms"); }
 
-				//We load everything in the save filed
-				prototype.addSetting("Filename to load configuration from", OV_TypeId_Filename, "");
-				return true;
-			}
+				CString getDetailedDescription() const override
+				{
+					return CString("Classifies incoming feature vectors using a previously learned classifier.");
+				}
 
-			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmCommonClassifierListener(5); }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+				CString getCategory() const override { return CString("Classification"); }
+				CString getVersion() const override { return CString("2.1"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
+				IPluginObject* create() override { return new CBoxAlgorithmClassifierProcessor; }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierProcessorDesc)
-		};
-	} // namespace Classification
-} // namespace OpenViBEPlugins
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Features", OV_TypeId_FeatureVector);
+					prototype.addInput("Commands", OV_TypeId_Stimulations);
+					prototype.addOutput("Labels", OV_TypeId_Stimulations);
+					prototype.addOutput("Hyperplane distance", OV_TypeId_StreamedMatrix);
+					prototype.addOutput("Probability values", OV_TypeId_StreamedMatrix);
+
+					//We load everything in the save filed
+					prototype.addSetting("Filename to load configuration from", OV_TypeId_Filename, "");
+					return true;
+				}
+
+				// virtual IBoxListener* createBoxListener() const { return new CBoxAlgorithmCommonClassifierListener(5); }
+				void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierProcessorDesc)
+			};
+		} // namespace Classification
+	}  // namespace Plugins
+}  // namespace OpenViBE

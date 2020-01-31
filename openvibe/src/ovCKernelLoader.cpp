@@ -69,58 +69,50 @@ void CKernelLoaderBase::release() { delete this; }
 //___________________________________________________________________//
 //                                                                   //
 
-#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
 namespace OpenViBE
 {
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	class CKernelLoaderLinux : public CKernelLoaderBase
 	{
 	public:
 
-		CKernelLoaderLinux();
+		CKernelLoaderLinux() : m_fileHandle(NULL) { }
 
-		virtual bool load(const CString& filename, CString* error);
-		virtual bool unload(CString* error);
-
-	protected:
-
-		virtual bool isOpen();
-
-		void* m_fileHandle;
-	};
-};
-
-#elif defined TARGET_OS_Windows
-
-namespace OpenViBE
-{
-	class CKernelLoaderWindows final : public CKernelLoaderBase
-	{
-	public:
-		CKernelLoaderWindows();
 		bool load(const CString& filename, CString* error) override;
 		bool unload(CString* error) override;
 
 	protected:
-		bool isOpen() override;
+
+		bool isOpen() override{ return m_fileHandle != nullptr; }
+
+		void* m_fileHandle;
+	};
+
+#elif defined TARGET_OS_Windows
+	class CKernelLoaderWindows final : public CKernelLoaderBase
+	{
+	public:
+		CKernelLoaderWindows() : m_fileHandle(nullptr) { }
+		bool load(const CString& filename, CString* error) override;
+		bool unload(CString* error) override;
+
+	protected:
+		bool isOpen() override { return m_fileHandle != nullptr; }
 
 		HMODULE m_fileHandle;
 	};
-} // namespace OpenViBE
 
 #else
 
 #endif
+} // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CKernelLoaderLinux::CKernelLoaderLinux() : m_fileHandle(NULL) { }
-
-bool CKernelLoaderLinux::load(const CString& filename,
-	CString* error)
+bool CKernelLoaderLinux::load(const CString& filename, CString* error)
 {
 	if(m_fileHandle)
 	{
@@ -168,14 +160,7 @@ bool CKernelLoaderLinux::unload(CString* error)
 	return true;
 }
 
-bool CKernelLoaderLinux::isOpen()
-{
-	return m_fileHandle != nullptr;
-}
-
 #elif defined TARGET_OS_Windows
-
-CKernelLoaderWindows::CKernelLoaderWindows() : m_fileHandle(nullptr) {}
 
 bool CKernelLoaderWindows::load(const CString& filename, CString* error)
 {
@@ -241,8 +226,6 @@ bool CKernelLoaderWindows::unload(CString* error)
 	return true;
 }
 
-bool CKernelLoaderWindows::isOpen() { return m_fileHandle != nullptr; }
-
 #else
 
 #endif
@@ -253,7 +236,7 @@ bool CKernelLoaderWindows::isOpen() { return m_fileHandle != nullptr; }
 CKernelLoader::CKernelLoader()
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	m_impl=new CKernelLoaderLinux();
+	m_impl = new CKernelLoaderLinux();
 #elif defined TARGET_OS_Windows
 	m_impl = new CKernelLoaderWindows();
 #else

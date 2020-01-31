@@ -3,10 +3,9 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace Plugins;
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 using namespace std;
 
 void CBoxAlgorithmSignalAverage::computeAverage()
@@ -86,7 +85,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			const uint64_t tEnd   = boxContext->getInputChunkEndTime(0, i);
 
 			computeAverage();
-			
+
 			m_encoder.encodeBuffer();
 			getBoxAlgorithmContext()->getDynamicBoxContext()->markOutputAsReadyToSend(0, tStart, tEnd);
 		}

@@ -13,7 +13,7 @@
 using namespace std;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 namespace OpenViBE
 {
@@ -234,7 +234,7 @@ bool CPluginModuleLinux::load(const CString& filename, CString* pError)
 
 	m_onInitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_fileHandle, "onInitialize");
 	m_onUninitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_fileHandle, "onUninitialize");
-	m_onGetPluginObjectDescCB=(bool (*)(const IPluginModuleContext&, size_t, Plugins::IPluginObjectDesc*&))dlsym(m_fileHandle, "onGetPluginObjectDescription");
+	m_onGetPluginObjectDescCB=(bool (*)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&))dlsym(m_fileHandle, "onGetPluginObjectDescription");
 
 	if(!m_onGetPluginObjectDescCB)
 	{

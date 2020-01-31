@@ -68,7 +68,7 @@ namespace OpenViBE
 				return res;
 			}
 
-			_IsDerivedFromClass_Final_(TKernelObject < IObject >, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
 		protected:
 			CMetaboxManager& m_manager;
 			size_t m_n;

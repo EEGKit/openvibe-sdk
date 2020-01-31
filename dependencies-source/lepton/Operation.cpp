@@ -275,9 +275,11 @@ ExpressionTreeNode Operation::Erfc::differentiate(const std::vector<ExpressionTr
 							  childDerivs[0]);
 }
 
-ExpressionTreeNode Operation::Step::differentiate(const std::vector<ExpressionTreeNode>& /*children*/, const std::vector<ExpressionTreeNode>& /*childDerivs*/, const std::string& /*variable*/) const { return ExpressionTreeNode(new Constant(0.0)); }
+ExpressionTreeNode Operation::Step::differentiate(const std::vector<ExpressionTreeNode>& /*children*/, const std::vector<ExpressionTreeNode>& /*childDerivs*/,
+												  const std::string& /*variable*/) const { return ExpressionTreeNode(new Constant(0.0)); }
 
-ExpressionTreeNode Operation::Delta::differentiate(const std::vector<ExpressionTreeNode>& /*children*/, const std::vector<ExpressionTreeNode>& /*childDerivs*/, const std::string& /*variable*/) const { return ExpressionTreeNode(new Constant(0.0)); }
+ExpressionTreeNode Operation::Delta::differentiate(const std::vector<ExpressionTreeNode>& /*children*/, const std::vector<ExpressionTreeNode>& /*childDerivs*/,
+												   const std::string& /*variable*/) const { return ExpressionTreeNode(new Constant(0.0)); }
 
 ExpressionTreeNode Operation::Square::differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs,
 													const std::string& /*variable*/) const

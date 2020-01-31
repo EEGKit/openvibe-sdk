@@ -21,7 +21,7 @@ namespace OpenViBE
 		  * This class contains accessors to data structures made available by
 		  * the driver running in the Acquisition Server during the acquisition.
 		  *
-		  * \sa OpenViBE::Plugins::IServerExtension
+		  * \sa Plugins::IServerExtension
 		  */
 
 		class OV_API IServerExtensionDynamicContext : public IKernelObject

@@ -14,7 +14,7 @@ namespace OpenViBE
 
 		class IAlgorithm;
 		class IAlgorithmDesc;
-	} // namespace Plugins
+	}  // namespace Plugins
 
 	namespace Kernel
 	{
@@ -115,7 +115,7 @@ namespace OpenViBE
 			 *
 			 * \note The method used to compute the hash code is specific to the class
 			 *       of plugin that is considered (for example, for box algorithms, the
-			 *       hash code is based on what OpenViBE::Kernel::IBoxProto receives at
+			 *       hash code is based on what IBoxProto receives at
 			 *       description stage)
 			 */
 			virtual CIdentifier getPluginObjectHashValue(const CIdentifier& classID) const = 0;
@@ -194,7 +194,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginManager)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Plugins_PluginManager)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

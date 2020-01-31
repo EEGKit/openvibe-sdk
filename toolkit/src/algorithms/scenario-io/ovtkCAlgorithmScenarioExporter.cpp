@@ -4,38 +4,40 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
-using namespace OpenViBEToolkit;
-
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	namespace
+	namespace Toolkit
 	{
-		class CAlgorithmScenarioExporterHelper
+		namespace
 		{
-			friend class CAlgorithmScenarioExporter;
-		public:
+			class CAlgorithmScenarioExporterHelper
+			{
+				friend class CAlgorithmScenarioExporter;
+			public:
 
-			CAlgorithmScenarioExporterHelper(IAlgorithmContext& context, CAlgorithmScenarioExporter& parent);
-			bool exportBox(IMemoryBuffer& buffer, const IBox& box) const;
-			bool exportComment(IMemoryBuffer& buffer, const IComment& comment) const;
-			bool exportMetadata(IMemoryBuffer& buffer, const IMetadata& metadata) const;
-			bool exportSetting(IMemoryBuffer& buffer, const IScenario& scenario, const size_t index) const;
-			bool exportInput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
-			bool exportOutput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
-			bool exportLink(IMemoryBuffer& buffer, const ILink& rLink) const;
-			void exportAttributes(const IAttributable& attributable, IMemoryBuffer& buffer, const CIdentifier& idAttributes,
-								  const CIdentifier& idAttribute, const CIdentifier& idAttributeID, const CIdentifier& idAttributeValue) const;
+				CAlgorithmScenarioExporterHelper(IAlgorithmContext& context, CAlgorithmScenarioExporter& parent);
+				bool exportBox(IMemoryBuffer& buffer, const IBox& box) const;
+				bool exportComment(IMemoryBuffer& buffer, const IComment& comment) const;
+				bool exportMetadata(IMemoryBuffer& buffer, const IMetadata& metadata) const;
+				bool exportSetting(IMemoryBuffer& buffer, const IScenario& scenario, const size_t index) const;
+				bool exportInput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
+				bool exportOutput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
+				bool exportLink(IMemoryBuffer& buffer, const ILink& rLink) const;
+				void exportAttributes(const IAttributable& attributable, IMemoryBuffer& buffer, const CIdentifier& idAttributes,
+									  const CIdentifier& idAttribute, const CIdentifier& idAttributeID, const CIdentifier& idAttributeValue) const;
 
 
-		protected:
+			protected:
 
-			IAlgorithmContext& m_algorithmContext;
-			CAlgorithmScenarioExporter& m_parent;
-		};
-	} // namespace
-} // namespace OpenViBEToolkit
+				IAlgorithmContext& m_algorithmContext;
+				CAlgorithmScenarioExporter& m_parent;
+			};
+		} // namespace
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #define exportAttributesMacro(exporter, attributable, memoryBuffer, AttributableName) \
 	do { \
@@ -81,12 +83,12 @@ bool CAlgorithmScenarioExporter::process()
 	TParameterHandler<IScenario*> ip_scenario(this->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario));
 	IScenario* scenario = ip_scenario;
 
-	OV_ERROR_UNLESS_KRF(scenario, "Input scenario is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(scenario, "Input scenario is NULL", ErrorType::BadInput);
 
 	TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
 	IMemoryBuffer* buffer = op_buffer;
 
-	OV_ERROR_UNLESS_KRF(buffer, "Output memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
+	OV_ERROR_UNLESS_KRF(buffer, "Output memory buffer is NULL", ErrorType::BadOutput);
 
 	this->exportStart(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 	this->exportString(tmpBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("2"));

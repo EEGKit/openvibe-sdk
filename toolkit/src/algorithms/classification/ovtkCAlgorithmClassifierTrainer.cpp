@@ -3,8 +3,8 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 bool CAlgorithmClassifierTrainer::process()
 {
@@ -17,14 +17,14 @@ bool CAlgorithmClassifierTrainer::process()
 		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_KRF("Feature vector set is NULL", ErrorType::BadInput);
 		}
 		const CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
 		if (this->train(featureVectorSetAdapter)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Training failed", ErrorType::Internal);
 		}
 	}
 
@@ -34,14 +34,14 @@ bool CAlgorithmClassifierTrainer::process()
 		if (!config)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Configuration memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
+			OV_ERROR_KRF("Configuration memory buffer is NULL", ErrorType::BadOutput);
 		}
 		config->setSize(0, true);
 		if (this->saveConfig(*config)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Saving configuration failed", OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_KRF("Saving configuration failed", ErrorType::Internal);
 		}
 	}
 

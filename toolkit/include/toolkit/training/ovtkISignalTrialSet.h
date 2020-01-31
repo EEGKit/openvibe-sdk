@@ -1,24 +1,27 @@
 #pragma once
 
-#include "../ovtkIObject.h"
+#include "../ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	class ISignalTrial;
-
-	class OVTK_API ISignalTrialSet : public IObject
+	namespace Toolkit
 	{
-	public:
+		class ISignalTrial;
 
-		virtual bool addSignalTrial(ISignalTrial& signalTrial) = 0;
-		virtual bool clear() = 0;
+		class OVTK_API ISignalTrialSet : public IObject
+		{
+		public:
 
-		virtual size_t getSignalTrialCount() const = 0;
-		virtual ISignalTrial& getSignalTrial(const size_t index) const = 0;
+			virtual bool addSignalTrial(ISignalTrial& signalTrial) = 0;
+			virtual bool clear() = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_)
-	};
+			virtual size_t getSignalTrialCount() const = 0;
+			virtual ISignalTrial& getSignalTrial(const size_t index) const = 0;
 
-	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
-	extern OVTK_API void releaseSignalTrialSet(ISignalTrialSet* signalTrialSet);
-} // namespace OpenViBEToolkit
+			_IsDerivedFromClass_(IObject, OVTK_ClassId_)
+		};
+
+		extern OVTK_API ISignalTrialSet* createSignalTrialSet();
+		extern OVTK_API void releaseSignalTrialSet(ISignalTrialSet* signalTrialSet);
+	}  // namespace Toolkit
+}  // namespace OpenViBE

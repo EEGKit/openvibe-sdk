@@ -7,7 +7,7 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class IKernelDesc;
-	}
+	}  // namespace Kernel
 
 	/**
 	 * \class IKernelLoader
@@ -21,8 +21,8 @@ namespace OpenViBE
 	 * to use. The kernel DLL/so file should be freed thanks to the unintialization
 	 * and unload methods.
 	 *
-	 * \sa OpenViBE::Kernel::IKernel
-	 * \sa OpenViBE::Kernel::IKernelDesc
+	 * \sa Kernel::IKernel
+	 * \sa Kernel::IKernelDesc
 	 *
 	 */
 	class OV_API IKernelLoader : public IObject
@@ -71,6 +71,6 @@ namespace OpenViBE
 		 */
 		virtual bool uninitialize() = 0;
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_KernelLoader)
+		_IsDerivedFromClass_(IObject, OV_ClassId_KernelLoader)
 	};
 } // namespace OpenViBE

@@ -15,7 +15,7 @@ namespace OpenViBE
 		  * \ingroup Group_Server
 		  * \ingroup Group_Kernel
 		  * \ingroup Group_Extend
-		  * \sa OpenViBE::Plugins::IServerExtension
+		  * \sa Plugins::IServerExtension
 		  */
 		class OV_API IServerExtensionContext : public IKernelObject
 		{

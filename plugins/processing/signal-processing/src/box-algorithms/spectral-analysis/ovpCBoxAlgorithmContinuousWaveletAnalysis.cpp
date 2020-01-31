@@ -8,10 +8,10 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 namespace SigProSTD
 {

@@ -15,7 +15,7 @@ namespace OpenViBE
 	 * reallocation. Implementations for this interface may provide optimisations for such
 	 * operations.
 	 *
-	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CMemoryBuffer
+	 * OpenViBE provides an standalone implementation of this interface in CMemoryBuffer
 	 */
 	class OV_API IMemoryBuffer : public IObject
 	{
@@ -81,7 +81,7 @@ namespace OpenViBE
 		 */
 		virtual bool append(const IMemoryBuffer& buffer) { return this->append(buffer.getDirectPointer(), buffer.getSize()); }
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer)
+		_IsDerivedFromClass_(IObject, OV_ClassId_MemoryBuffer)
 
 		const uint8_t& operator [](const size_t index) const { return this->getDirectPointer()[index]; }
 		uint8_t& operator [](const size_t index) { return this->getDirectPointer()[index]; }

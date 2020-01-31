@@ -6,12 +6,12 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
-using namespace OpenViBEToolkit;
 
 namespace
 {
@@ -24,7 +24,7 @@ namespace
 		{
 			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
-				if (Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
+				if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
 			}
 		}
 		else if (matchMethodID == Index)
@@ -110,7 +110,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_iMatrix = decoder->getOutputMatrix();
 		m_oMatrix = encoder->getInputMatrix();
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", ErrorType::BadInput); }
 
 	m_vLookup.clear();
 	return true;
@@ -161,14 +161,14 @@ bool CBoxAlgorithmChannelSelector::process()
 				CString eegChannelNames = this->getConfigurationManager().expand("${Box_ChannelSelector_EEGChannelNames}");
 
 				std::vector<CString> token;
-				const size_t nToken = split(eegChannelNames, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(token),
+				const size_t nToken = split(eegChannelNames, Toolkit::String::TSplitCallback<std::vector<CString>>(token),
 											OV_Value_EnumeratedStringSeparator);
 
 				for (size_t j = 0; j < m_iMatrix->getDimensionSize(0); ++j)
 				{
 					for (size_t k = 0; k < nToken; ++k)
 					{
-						if (Tools::String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
+						if (String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
 					}
 				}
 			}
@@ -183,14 +183,14 @@ bool CBoxAlgorithmChannelSelector::process()
 				//
 
 				std::vector<CString> tokens;
-				const size_t nToken = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens),
+				const size_t nToken = split(settingValue, Toolkit::String::TSplitCallback<std::vector<CString>>(tokens),
 											OV_Value_EnumeratedStringSeparator);
 				for (size_t j = 0; j < nToken; ++j)
 				{
 					std::vector<CString> subTokens;
 
 					// Checks if the token is a range
-					if (split(tokens[j], OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(subTokens),
+					if (split(tokens[j], Toolkit::String::TSplitCallback<std::vector<CString>>(subTokens),
 							  OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)
@@ -205,7 +205,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						OV_ERROR_UNLESS_KRF(
 							startIdx != std::numeric_limits<size_t>::max() && endIdx != std::numeric_limits<size_t>::max() && startIdx <= endIdx,
 							"Invalid channel range [" << tokens[j] << "] - splitted as [" << subTokens[0] << "][" << subTokens[1] << "]",
-							OpenViBE::Kernel::ErrorType::BadSetting);
+							ErrorType::BadSetting);
 
 						// The range is valid so selects all the channels in this range
 						this->getLogManager() << LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
@@ -229,7 +229,7 @@ bool CBoxAlgorithmChannelSelector::process()
 							this->getLogManager() << LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
 						}
 
-						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", OpenViBE::Kernel::ErrorType::BadSetting);
+						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", ErrorType::BadSetting);
 					}
 				}
 
@@ -259,12 +259,12 @@ bool CBoxAlgorithmChannelSelector::process()
 			// ______________________________________________________________________________________________________________________________________________________
 			//
 
-			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", OpenViBE::Kernel::ErrorType::BadConfig);
+			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", ErrorType::BadConfig);
 
 			m_oMatrix->setDimensionCount(2);
 			m_oMatrix->setDimensionSize(0, m_vLookup.size());
 			m_oMatrix->setDimensionSize(1, m_iMatrix->getDimensionSize(1));
-			Tools::Matrix::clearContent(*m_oMatrix);
+			Matrix::clearContent(*m_oMatrix);
 			for (size_t j = 0; j < m_vLookup.size(); ++j)
 			{
 				if (m_vLookup[j] < m_iMatrix->getDimensionSize(0)) { m_oMatrix->setDimensionLabel(0, j, m_iMatrix->getDimensionLabel(0, m_vLookup[j])); }

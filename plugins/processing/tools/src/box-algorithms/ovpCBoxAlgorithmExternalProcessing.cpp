@@ -25,9 +25,7 @@ extern char **environ;
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Tools;
 
 uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()

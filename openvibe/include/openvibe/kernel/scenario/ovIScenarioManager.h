@@ -127,7 +127,8 @@ namespace OpenViBE
 
 			virtual bool importScenarioFromFile(CIdentifier& newScenarioID, const CIdentifier& importContext, const CString& fileName) = 0;
 
-			virtual bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension, const CIdentifier& scenarioImporterAlgorithmID) = 0;
+			virtual bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension,
+												  const CIdentifier& scenarioImporterAlgorithmID) = 0;
 
 			virtual bool unregisterScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) = 0;
 
@@ -137,7 +138,8 @@ namespace OpenViBE
 
 			virtual bool exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioID) = 0;
 
-			virtual bool registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension, const CIdentifier& scenarioExporterAlgorithmID) = 0;
+			virtual bool registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension,
+												  const CIdentifier& scenarioExporterAlgorithmID) = 0;
 
 			virtual bool unregisterScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension) = 0;
 
@@ -147,7 +149,7 @@ namespace OpenViBE
 
 			/** @} */
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_ScenarioManager)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Scenario_ScenarioManager)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

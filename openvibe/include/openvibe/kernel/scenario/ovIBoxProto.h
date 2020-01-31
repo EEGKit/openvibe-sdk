@@ -8,7 +8,7 @@ namespace OpenViBE
 	{
 		/**
 		 * \brief This enum lists all the flags a box can be have
-		 * \sa OpenViBE::Kernel::IBoxProto::addFlag
+		 * \sa IBoxProto::addFlag
 		 */
 		enum EBoxFlag
 		{
@@ -36,7 +36,7 @@ namespace OpenViBE
 		 * box looks like. It declares several things, like
 		 * it input types, output types and settings.
 		 *
-		 * \sa OpenViBE::Kernel::IBoxAlgorithmDesc
+		 * \sa IBoxAlgorithmDesc
 		 */
 		class OV_API IBoxProto : public IKernelObject
 		{
@@ -60,7 +60,8 @@ namespace OpenViBE
 			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier,
+								   const bool notify                                                     = true) = 0;
 				
 			/**
 			 * \brief Add an setting to the box
@@ -74,7 +75,8 @@ namespace OpenViBE
 			 * \return true if successful
 			 */
 			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const bool modifiable = false,
-									const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+									const CIdentifier& id                                                                       = OV_UndefinedIdentifier,
+									const bool notify                                                                           = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param flag [in] : the flag to add to the box
@@ -106,7 +108,7 @@ namespace OpenViBE
 			  */
 			virtual bool addOutputSupport(const CIdentifier& typeID) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

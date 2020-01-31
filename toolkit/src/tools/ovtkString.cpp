@@ -10,10 +10,11 @@
 #include <cstring>
 
 using namespace OpenViBE;
+using namespace /*OpenViBE::*/Toolkit;
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	namespace Tools
+	namespace Toolkit
 	{
 		namespace String
 		{
@@ -32,33 +33,30 @@ namespace OpenViBEToolkit
 				TCharT ToLower(TCharT c) { return std::tolower(c); }
 			} // namespace
 		} // namespace String
-	} // namespace Tools
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
-size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t separator)
-{
-	return split(rString, splitCB, &separator, 1);
-}
+size_t String::split(const CString& str, const ISplitCallback& splitCB, uint8_t separator) { return split(str, splitCB, &separator, 1); }
 
-size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
+size_t String::split(const CString& str, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
 {
 	if (nSeparator == 0 || separator == nullptr) { return 0; }
 
 	size_t n = 0;
-	std::string str(rString.toASCIIString());
+	std::string tmp(str.toASCIIString());
 	size_t i = 0;
-	while (i < str.length())
+	while (i < tmp.length())
 	{
 		size_t j = i;
-		while (j < str.length() && !isSeparator(str[j], separator, nSeparator)) { j++; }
+		while (j < tmp.length() && !isSeparator(tmp[j], separator, nSeparator)) { j++; }
 		//if(i!=j)
 		{
-			splitCB.setToken(std::string(str, i, j - i).c_str());
+			splitCB.setToken(std::string(tmp, i, j - i).c_str());
 			n++;
 		}
 		i = j + 1;
 	}
-	if (str.length() != 0 && isSeparator(str[str.length() - 1], separator, nSeparator))
+	if (tmp.length() != 0 && isSeparator(tmp[tmp.length() - 1], separator, nSeparator))
 	{
 		splitCB.setToken("");
 		n++;
@@ -68,35 +66,34 @@ size_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISpli
 }
 
 
-bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces,
-												   const bool bRemoveEndSpaces)
+bool String::isAlmostEqual(const CString& str1, const CString& str2, const bool caseSensitive, const bool removeStartSpaces, const bool removeEndSpaces)
 {
-	const char* str1Start = rString1.toASCIIString();
+	const char* str1Start = str1.toASCIIString();
 	const char* str1End   = str1Start + strlen(str1Start) - 1;
 
-	const char* str2Start = rString2.toASCIIString();
+	const char* str2Start = str2.toASCIIString();
 	const char* str2End   = str2Start + strlen(str2Start) - 1;
 
-	if (bRemoveStartSpaces)
+	if (removeStartSpaces)
 	{
 		while (*str1Start == ' ') { str1Start++; }
 		while (*str2Start == ' ') { str2Start++; }
 	}
 
-	if (bRemoveEndSpaces)
+	if (removeEndSpaces)
 	{
 		while (str1Start < str1End && *str1End == ' ') { str1End--; }
 		while (str2Start < str2End && *str2End == ' ') { str2End--; }
 	}
 
-	std::string str1(str1Start, str1End - str1Start + 1);
-	std::string str2(str2Start, str2End - str2Start + 1);
+	std::string tmp1(str1Start, str1End - str1Start + 1);
+	std::string tmp2(str2Start, str2End - str2Start + 1);
 
-	if (!bCaseSensitive)
+	if (!caseSensitive)
 	{
-		std::transform(str1.begin(), str1.end(), str1.begin(), ToLower<std::string::value_type>);
-		std::transform(str2.begin(), str2.end(), str2.begin(), ToLower<std::string::value_type>);
+		std::transform(tmp1.begin(), tmp1.end(), tmp1.begin(), ToLower<std::string::value_type>);
+		std::transform(tmp2.begin(), tmp2.end(), tmp2.begin(), ToLower<std::string::value_type>);
 	}
 
-	return str1 == str2;
+	return tmp1 == tmp2;
 }

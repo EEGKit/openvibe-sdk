@@ -332,7 +332,7 @@ namespace OpenViBE
 
 
 			bool addInterfacor(const EBoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeID, const CIdentifier& identifier,
-							   const bool shouldNotify) override
+							   const bool notify) override
 			{
 				switch (interfacorType)
 				{
@@ -370,7 +370,7 @@ namespace OpenViBE
 				OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx[interfacorType].size() == m_interfacors[interfacorType].size(),
 									"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
 
-				if (shouldNotify)
+				if (notify)
 				{
 					auto newCount = this->getInterfacorCount(interfacorType) - 1;
 					switch (interfacorType)
@@ -394,15 +394,11 @@ namespace OpenViBE
 			{
 				switch (interfacorType)
 				{
-					case Input:
-						return this->removeInput(index, shouldNotify);
-					case Output:
-						return this->removeOutput(index, shouldNotify);
-					case Setting:
-						return this->removeSetting(index, shouldNotify);
-					default: break;
+					case Input: return this->removeInput(index, shouldNotify);
+					case Output: return this->removeOutput(index, shouldNotify);
+					case Setting: return this->removeSetting(index, shouldNotify);
+					default: return false;
 				}
-				return false;
 			}
 
 			size_t getInterfacorCount(const EBoxInterfacorType interfacorType) const override
@@ -455,9 +451,8 @@ namespace OpenViBE
 			bool getInterfacorType(const EBoxInterfacorType interfacorType, const size_t index, CIdentifier& typeID) const override
 			{
 				OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
-									INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << m_interfacors.
-									at(
-										interfacorType).size() - 1 << "])", ErrorType::OutOfBound);
+									INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = ["
+									<< m_interfacors.at(interfacorType).size() - 1 << "])", ErrorType::OutOfBound);
 
 				typeID = m_interfacors.at(interfacorType)[index]->m_TypeID;
 				return true;
@@ -1481,7 +1476,7 @@ namespace OpenViBE
 
 			void notify(const EBoxModification boxModification) { this->notify(boxModification, 0xffffffff); }
 
-			_IsDerivedFromClass_Final_(TAttributable< TKernelObject <T> >, OVK_ClassId_Kernel_Scenario_Box)
+			_IsDerivedFromClass_Final_(TAttributable<TKernelObject<T>>, OVK_ClassId_Kernel_Scenario_Box)
 
 			CString getUnusedName(const std::map<CString, size_t>& nameToIndex, const CString& suggestedName) const
 			{

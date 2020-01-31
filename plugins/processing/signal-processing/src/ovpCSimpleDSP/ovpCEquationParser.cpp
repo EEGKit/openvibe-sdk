@@ -12,8 +12,8 @@ using namespace boost::spirit;
 using namespace /*boost::spirit::*/classic;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
 #define _EQ_PARSER_DEBUG_LOG_(level, message) m_parentPlugin.getLogManager() << level << message << "\n";
 #define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_parentPlugin.getLogManager() << level; m_tree->printTree(m_parentPlugin.getLogManager()); m_parentPlugin.getLogManager() << "\n"; }
@@ -146,7 +146,7 @@ bool CEquationParser::compileEquation(const char* equation)
 		error += "^--Here\n";
 	}
 
-	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error, OpenViBE::Kernel::ErrorType::BadParsing, false,
+	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error, ErrorType::BadParsing, false,
 			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
 			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 }
@@ -157,7 +157,10 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 {
 	if (i->value.id() == SEquationGrammar::expressionID)
 	{
-		if (*i->value.begin() == '+') { return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true); }
+		if (*i->value.begin() == '+')
+		{
+			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
+		}
 		//replaces (- X Y) by (+ X (-Y)) (in fact (+ X (* -1 Y)) )
 		if (*i->value.begin() == '-')
 		{
@@ -168,7 +171,10 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 	}
 	else if (i->value.id() == SEquationGrammar::termID)
 	{
-		if (*i->value.begin() == '*') { return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true); }
+		if (*i->value.begin() == '*')
+		{
+			return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
+		}
 		if (*i->value.begin() == '/') { return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1)); }
 	}
 	else if (i->value.id() == SEquationGrammar::factorID)
@@ -234,7 +240,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 	}
 	else if (i->value.id() == SEquationGrammar::ifthenID)
 	{
-		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1), createNode(i->children.begin() + 2), false);
+		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1),
+										   createNode(i->children.begin() + 2), false);
 	}
 	else if (i->value.id() == SEquationGrammar::comparisonID)
 	{

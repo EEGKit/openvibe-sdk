@@ -58,7 +58,7 @@ bool CTypeManager::registerType(const CIdentifier& typeID, const CString& name)
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register type " << typeID.str() << " that already exists.",
-						OpenViBE::Kernel::ErrorType::BadArgument);
+						ErrorType::BadArgument);
 
 	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
 					  "Trying to register type " << typeID << " with a name that already exists ( " << name << ")");
@@ -73,14 +73,14 @@ bool CTypeManager::registerStreamType(const CIdentifier& typeID, const CString& 
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register stream type " << typeID.str() << " that already exists.",
-						OpenViBE::Kernel::ErrorType::BadArgument);
+						ErrorType::BadArgument);
 
 	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
 					  "Trying to register stream type " << typeID << " with a name that already exists ( " << name << ")");
 
 	OV_ERROR_UNLESS_KRF(parentTypeID == OV_UndefinedIdentifier || isStream(parentTypeID),
 						"Trying to register an invalid stream type [" << name << "] " << typeID.str() << ", parent : " << parentTypeID.str() << ".",
-						OpenViBE::Kernel::ErrorType::BadArgument);
+						ErrorType::BadArgument);
 
 	m_names[typeID] = name;
 	m_takenNames.insert(name);
@@ -100,7 +100,7 @@ bool CTypeManager::registerEnumerationType(const CIdentifier& typeID, const CStr
 			OV_ERROR_KRF(
 				"Trying to register enum type " << typeID.str() << " that already exists with different value (" << m_names[typeID] << " != " << name <<
 				")",
-				OpenViBE::Kernel::ErrorType::BadArgument);
+				ErrorType::BadArgument);
 		}
 		OV_DEBUG_K("Trying to register enum type " << typeID.str() << " that already exists.");
 	}
@@ -122,7 +122,7 @@ bool CTypeManager::registerEnumerationEntry(const CIdentifier& typeID, const CSt
 	auto itEnumeration = m_enumerations.find(typeID);
 
 	OV_ERROR_UNLESS_KRF(itEnumeration != m_enumerations.end(), "Enumeration type [" << typeID.str() << "] does not exist." << name,
-						OpenViBE::Kernel::ErrorType::BadArgument);
+						ErrorType::BadArgument);
 
 	const auto itElem = itEnumeration->second.find(value);
 	if (itElem != itEnumeration->second.end())
@@ -130,8 +130,8 @@ bool CTypeManager::registerEnumerationEntry(const CIdentifier& typeID, const CSt
 		if (std::string(itElem->second) != std::string(name))
 		{
 			OV_WARNING_K(
-				"Enumeration type [" << typeID.str() << "] already has element [" << value << "]. Value will be overriden : " << itElem->second <<
-				" => " << name);
+				"Enumeration type [" + typeID.str() + "] already has element [" + std::to_string(value) + "]. Value will be overriden : "
+				+ itElem->second.toASCIIString() + " => " + name.toASCIIString());
 		}
 		else { OV_DEBUG_K("Enumeration type [" << typeID.str() << "] already has element [" << value << "]."); }
 	}
@@ -145,7 +145,7 @@ bool CTypeManager::registerBitMaskType(const CIdentifier& typeID, const CString&
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	OV_ERROR_UNLESS_KRF(!isRegistered(typeID), "Trying to register bitmask type " << typeID.str() << " that already exists.",
-						OpenViBE::Kernel::ErrorType::BadArgument);
+						ErrorType::BadArgument);
 
 	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
 					  "Trying to register bitmask type " << typeID << " with a name that already exists ( " << name << ")");
@@ -161,7 +161,7 @@ bool CTypeManager::registerBitMaskEntry(const CIdentifier& typeID, const CString
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	auto itBitMask = m_bitMasks.find(typeID);
-	OV_ERROR_UNLESS_KRF(itBitMask != m_bitMasks.end(), "Bitmask type [" << typeID.str() << "] does not exist.", OpenViBE::Kernel::ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(itBitMask != m_bitMasks.end(), "Bitmask type [" << typeID.str() << "] does not exist.", ErrorType::BadArgument);
 
 	const auto itElem = itBitMask->second.find(value);
 	if (itElem != itBitMask->second.end())
@@ -169,8 +169,8 @@ bool CTypeManager::registerBitMaskEntry(const CIdentifier& typeID, const CString
 		if (std::string(itElem->second) != std::string(name))
 		{
 			OV_WARNING_K(
-				"Bitmask type [" << typeID.str() << "] already has element [" << value << "]. Value will be overriden : " << itElem->second <<
-				" => " << name);
+				"Bitmask type [" + typeID.str() + "] already has element [" + std::to_string(value) + "]. Value will be overriden : "
+				+ itElem->second.toASCIIString() + " => " + name.toASCIIString());
 		}
 		else { OV_DEBUG_K("Bitmask type [" << typeID.str() << "] already has element [" << value << "]."); }
 	}

@@ -16,7 +16,7 @@ namespace OpenViBE
 		bool getKernelDesc(Kernel::IKernelDesc*& desc) override;
 		bool uninitialize() override;
 
-		_IsDerivedFromClass_Final_(OpenViBE::IKernelLoader, OV_ClassId_KernelLoaderBridge)
+		_IsDerivedFromClass_Final_(IKernelLoader, OV_ClassId_KernelLoaderBridge)
 
 	private:
 

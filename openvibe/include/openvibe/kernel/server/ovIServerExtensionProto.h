@@ -13,15 +13,15 @@ namespace OpenViBE
 		  * \ingroup Group_Server
 		  * \ingroup Group_Kernel
 		  * \ingroup Group_Extend
-		  * \sa OpenViBE::Plugins::IServerExtension
-		  * \sa OpenViBE::Plugins::IServerExtensionDesc
+		  * \sa Plugins::IServerExtension
+		  * \sa Plugins::IServerExtensionDesc
 		  */
 
 		class OV_API IServerExtensionProto : public IKernelObject
 		{
 		public:
 			virtual size_t addSetting(const CString& name, const CIdentifier& typeID, const CString& value) = 0;
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Server_ServerExtensionProto)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Server_ServerExtensionProto)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -20,7 +20,7 @@ namespace OpenViBE
 			IPlayer& getPlayer(const CIdentifier& playerID) override;
 			CIdentifier getNextPlayerIdentifier(const CIdentifier& previousID) const override { return getNextIdentifier<CPlayer*>(m_players, previousID); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
+			_IsDerivedFromClass_Final_(TKernelObject<IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
 
 		protected:
 

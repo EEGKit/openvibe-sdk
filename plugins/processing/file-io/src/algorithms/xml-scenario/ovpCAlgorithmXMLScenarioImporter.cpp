@@ -16,10 +16,9 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 enum
 {
@@ -285,17 +284,32 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* data)
 			if (top == "TypeIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeID, _AutoBind_(data)); }
 			if (top == "Name") { m_ctx->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name, _AutoBind_(data)); }
 			if (top == "LinkedBoxIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxID, _AutoBind_(data)); }
-			if (top == "LinkedBoxInputIndex") { m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdx, _AutoBind_(data)); }
-			if (top == "LinkedBoxInputIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputID, _AutoBind_(data)); }
+			if (top == "LinkedBoxInputIndex")
+			{
+				m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdx, _AutoBind_(data));
+			}
+			if (top == "LinkedBoxInputIdentifier")
+			{
+				m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputID, _AutoBind_(data));
+			}
 			break;
 
 		case Status_ParsingScenarioOutput:
 			if (top == "Identifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_ID, _AutoBind_(data)); }
 			if (top == "TypeIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeID, _AutoBind_(data)); }
 			if (top == "Name") { m_ctx->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, _AutoBind_(data)); }
-			if (top == "LinkedBoxIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxID, _AutoBind_(data)); }
-			if (top == "LinkedBoxOutputIndex") { m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdx, _AutoBind_(data)); }
-			if (top == "LinkedBoxOutputIdentifier") { m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputID, _AutoBind_(data)); }
+			if (top == "LinkedBoxIdentifier")
+			{
+				m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxID, _AutoBind_(data));
+			}
+			if (top == "LinkedBoxOutputIndex")
+			{
+				m_ctx->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdx, _AutoBind_(data));
+			}
+			if (top == "LinkedBoxOutputIdentifier")
+			{
+				m_ctx->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputID, _AutoBind_(data));
+			}
 			break;
 
 		case Status_ParsingScenarioAttribute:
@@ -441,7 +455,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 		return false;
 	}
 
-	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation);
+	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", ErrorType::BadXMLSchemaValidation);
 }
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, const size_t size)

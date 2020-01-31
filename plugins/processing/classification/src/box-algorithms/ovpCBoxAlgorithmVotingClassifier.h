@@ -7,130 +7,133 @@
 #include <vector>
 #include <map>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace Classification
+	namespace Plugins
 	{
-		class CBoxAlgorithmVotingClassifier final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace Classification
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_VotingClassifier)
-
-		protected:
-
-			size_t m_nRepetitions         = 0;
-			size_t m_targetClassLabel     = 0;
-			size_t m_nonTargetClassLabel  = 0;
-			size_t m_rejectClassLabel     = 0;
-			size_t m_resultClassLabelBase = 0;
-			bool m_chooseOneIfExAequo     = false;
-
-		private:
-
-			typedef struct
+			class CBoxAlgorithmVotingClassifier final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				OpenViBEToolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
-				OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_stimSet;
-				OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_matrix;
-				bool twoValueInput;
-				std::vector<std::pair<double, uint64_t>> scores;
-			} input_t;
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			std::map<uint32_t, input_t> m_results;
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_VotingClassifier)
 
-			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
-			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_classificationChoiceStimSet;
+			protected:
 
-			uint64_t m_lastTime = 0;
-			bool m_matrixBased = false;
-		};
+				size_t m_nRepetitions         = 0;
+				size_t m_targetClassLabel     = 0;
+				size_t m_nonTargetClassLabel  = 0;
+				size_t m_rejectClassLabel     = 0;
+				size_t m_resultClassLabelBase = 0;
+				bool m_chooseOneIfExAequo     = false;
 
+			private:
 
-		class CBoxAlgorithmVotingClassifierListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
-		{
-		public:
-
-			CBoxAlgorithmVotingClassifierListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
-
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				OpenViBE::CIdentifier id = OV_UndefinedIdentifier;
-				box.getInputType(index, id);
-				if (id == OV_TypeId_Stimulations || id == OV_TypeId_StreamedMatrix)
+				typedef struct
 				{
-					m_inputTypeID = id;
-					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, m_inputTypeID); }
-				}
-				else { box.setInputType(index, m_inputTypeID); }
-				return true;
-			}
+					Toolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
+					Kernel::TParameterHandler<IStimulationSet*> op_stimSet;
+					Kernel::TParameterHandler<IMatrix*> op_matrix;
+					bool twoValueInput;
+					std::vector<std::pair<double, uint64_t>> scores;
+				} input_t;
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
+				std::map<uint32_t, input_t> m_results;
+
+				Toolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
+				Kernel::TParameterHandler<const IStimulationSet*> ip_classificationChoiceStimSet;
+
+				uint64_t m_lastTime = 0;
+				bool m_matrixBased  = false;
+			};
+
+
+			class CBoxAlgorithmVotingClassifierListener final : public Toolkit::TBoxListener<IBoxListener>
 			{
-				for (size_t i = 0; i < box.getInputCount(); ++i)
+			public:
+
+				CBoxAlgorithmVotingClassifierListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
+
+				bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 				{
-					box.setInputType(i, m_inputTypeID);
-					box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());
+					CIdentifier id = OV_UndefinedIdentifier;
+					box.getInputType(index, id);
+					if (id == OV_TypeId_Stimulations || id == OV_TypeId_StreamedMatrix)
+					{
+						m_inputTypeID = id;
+						for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, m_inputTypeID); }
+					}
+					else { box.setInputType(index, m_inputTypeID); }
+					return true;
 				}
-				return true;
-			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
+				bool onInputAdded(Kernel::IBox& box, const size_t /*index*/) override
+				{
+					for (size_t i = 0; i < box.getInputCount(); ++i)
+					{
+						box.setInputType(i, m_inputTypeID);
+						box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());
+					}
+					return true;
+				}
 
-		protected:
+				_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
 
-			OpenViBE::CIdentifier m_inputTypeID = OV_UndefinedIdentifier;
-		};
+			protected:
 
-		class CBoxAlgorithmVotingClassifierDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Voting Classifier"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Majority voting classifier. Returns the chosen class."); }
+				CIdentifier m_inputTypeID = OV_UndefinedIdentifier;
+			};
 
-			OpenViBE::CString getDetailedDescription() const override
+			class CBoxAlgorithmVotingClassifierDesc final : public IBoxAlgorithmDesc
 			{
-				return OpenViBE::CString(
-					"Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.");
-			}
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Voting Classifier"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA"); }
+				CString getShortDescription() const override { return CString("Majority voting classifier. Returns the chosen class."); }
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Classification"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmVotingClassifier; }
+				CString getDetailedDescription() const override
+				{
+					return CString(
+						"Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.");
+				}
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
-			{
-				prototype.addInput("Classification result 1", OV_TypeId_Stimulations);
-				prototype.addInput("Classification result 2", OV_TypeId_Stimulations);
-				prototype.addOutput("Classification choice", OV_TypeId_Stimulations);
-				prototype.addSetting("Number of repetitions", OV_TypeId_Integer, "12");
-				prototype.addSetting("Target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Target");
-				prototype.addSetting("Non target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_NonTarget");
-				prototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
-				prototype.addSetting("Result class label base", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_01");
-				prototype.addSetting("Choose one if ex-aequo", OV_TypeId_Boolean, "false");
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				return true;
-			}
+				CString getCategory() const override { return CString("Classification"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
+				IPluginObject* create() override { return new CBoxAlgorithmVotingClassifier; }
 
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmVotingClassifierListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Classification result 1", OV_TypeId_Stimulations);
+					prototype.addInput("Classification result 2", OV_TypeId_Stimulations);
+					prototype.addOutput("Classification choice", OV_TypeId_Stimulations);
+					prototype.addSetting("Number of repetitions", OV_TypeId_Integer, "12");
+					prototype.addSetting("Target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Target");
+					prototype.addSetting("Non target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_NonTarget");
+					prototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+					prototype.addSetting("Result class label base", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_01");
+					prototype.addSetting("Choose one if ex-aequo", OV_TypeId_Boolean, "false");
+					prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+					prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
+					return true;
+				}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_VotingClassifierDesc)
-		};
-	} // namespace Classification
-} // namespace OpenViBEPlugins
+				IBoxListener* createBoxListener() const override { return new CBoxAlgorithmVotingClassifierListener; }
+				void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_VotingClassifierDesc)
+			};
+		} // namespace Classification
+	}  // namespace Plugins
+}  // namespace OpenViBE

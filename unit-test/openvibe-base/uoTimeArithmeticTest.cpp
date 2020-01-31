@@ -52,7 +52,8 @@ namespace
 	// time values to test in fixed point format
 	std::vector<uint64_t> timesToTestInFixedPoint =
 	{
-		1LL << 8, 1LL << 16, 1L << 19, 1LL << 22, 1LL << 27, 1L << 30, 1LL << 32, 10LL << 32, 100LL << 32, 123LL << 32, 500LL << 32, 512LL << 32, 1000LL << 32, 1024LL << 32, 2001LL << 32, 5000LL << 32
+		1LL << 8, 1LL << 16, 1L << 19, 1LL << 22, 1LL << 27, 1L << 30, 1LL << 32, 10LL << 32, 100LL << 32, 123LL << 32, 500LL << 32, 512LL << 32, 1000LL << 32,
+		1024LL << 32, 2001LL << 32, 5000LL << 32
 	};
 
 	// sampling rates to test
@@ -100,7 +101,9 @@ TEST(time_arithmetic_test_case, time_to_fixed_to_samples_to_fixed)
 			auto testTimeInFixedPoint = TimeArithmetics::secondsToTime(testTimeInSecond);
 			// If the sample count would overflow an uint64_t we skip the test
 			if (std::log2(testSamplingRate) + std::log2(testTimeInFixedPoint) >= 64) { continue; }
-			const auto computedTimeInFixedPoint = TimeArithmetics::sampleCountToTime(testSamplingRate, TimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint));
+			const auto computedTimeInFixedPoint = TimeArithmetics::sampleCountToTime(testSamplingRate,
+																					 TimeArithmetics::timeToSampleCount(
+																						 testSamplingRate, testTimeInFixedPoint));
 
 			const uint64_t timeDifference = uint64_t(std::abs(int64_t(computedTimeInFixedPoint) - int64_t(testTimeInFixedPoint)));
 			EXPECT_LT(TimeArithmetics::timeToSeconds(timeDifference), (1.0 / double(testSamplingRate)))
@@ -117,7 +120,8 @@ TEST(time_arithmetic_test_case, samples_to_time_to_samples)
 	{
 		for (auto testSample : samplesToTest)
 		{
-			const auto computedSampleCount = TimeArithmetics::timeToSampleCount(testSamplingRate, TimeArithmetics::sampleCountToTime(testSamplingRate, testSample));
+			const auto computedSampleCount = TimeArithmetics::timeToSampleCount(testSamplingRate,
+																				TimeArithmetics::sampleCountToTime(testSamplingRate, testSample));
 			EXPECT_EQ(testSample, computedSampleCount);
 		}
 	}

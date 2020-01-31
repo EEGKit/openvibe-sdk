@@ -284,7 +284,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_TypeManager)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_TypeManager)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -15,7 +15,7 @@ namespace OpenViBE
 	 * to memory manipulation. This is basically an unified way for storing matrices
 	 * content in OpenViBE
 	 *
-	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CMatrix
+	 * OpenViBE provides an standalone implementation of this interface in CMatrix
 	 */
 	class OV_API IMatrix : public IObject
 	{
@@ -126,7 +126,7 @@ namespace OpenViBE
 
 		//@}
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix)
+		_IsDerivedFromClass_(IObject, OV_ClassId_Matrix)
 
 		const double& operator [](const size_t index) const { return this->getBuffer()[index]; }
 		double& operator [](const size_t index) { return this->getBuffer()[index]; }

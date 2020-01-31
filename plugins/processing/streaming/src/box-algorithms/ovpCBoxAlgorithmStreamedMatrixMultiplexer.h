@@ -4,135 +4,138 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace Streaming
+	namespace Plugins
 	{
-		class CBoxAlgorithmStreamedMatrixMultiplexer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace Streaming
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer)
-
-		protected:
-
-			uint64_t m_lastStartTime = 0;
-			uint64_t m_lastEndTime   = 0;
-			bool m_headerSent        = false;
-		};
-
-		class CBoxAlgorithmStreamedMatrixMultiplexerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
-		{
-		public:
-
-			bool check(OpenViBE::Kernel::IBox& box) const
+			class CBoxAlgorithmStreamedMatrixMultiplexer final : virtual public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
-				return true;
-			}
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer)
+
+			protected:
+
+				uint64_t m_lastStartTime = 0;
+				uint64_t m_lastEndTime   = 0;
+				bool m_headerSent        = false;
+			};
+
+			class CBoxAlgorithmStreamedMatrixMultiplexerListener final : public Toolkit::TBoxListener<IBoxListener>
 			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-				box.getOutputType(0, typeID);
-				box.setInputType(index, typeID);
-				return this->check(box);
-			}
+			public:
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
-			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-				box.getOutputType(0, typeID);
-
-				while (box.getInputCount() < 2) { box.addInput("", typeID); }
-
-				return this->check(box);
-			}
-
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-				box.getInputType(index, typeID);
-
-				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
+				bool check(Kernel::IBox& box) const
 				{
-					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
-
-					box.setOutputType(0, typeID);
+					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
+					return true;
 				}
-				else
+
+				bool onInputAdded(Kernel::IBox& box, const size_t index) override
 				{
+					CIdentifier typeID = OV_UndefinedIdentifier;
 					box.getOutputType(0, typeID);
 					box.setInputType(index, typeID);
+					return this->check(box);
 				}
 
-				return true;
-			}
-
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t /*index*/) override
-			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-				box.getOutputType(0, typeID);
-
-				if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
+				bool onInputRemoved(Kernel::IBox& box, const size_t /*index*/) override
 				{
-					for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
+					CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getOutputType(0, typeID);
+
+					while (box.getInputCount() < 2) { box.addInput("", typeID); }
+
+					return this->check(box);
 				}
-				else
+
+				bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 				{
-					box.getInputType(0, typeID);
-					box.setOutputType(0, typeID);
+					CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getInputType(index, typeID);
+
+					if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
+					{
+						for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
+
+						box.setOutputType(0, typeID);
+					}
+					else
+					{
+						box.getOutputType(0, typeID);
+						box.setInputType(index, typeID);
+					}
+
+					return true;
 				}
 
-				return true;
-			}
+				bool onOutputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
+				{
+					CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getOutputType(0, typeID);
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
-		};
+					if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
+					{
+						for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
+					}
+					else
+					{
+						box.getInputType(0, typeID);
+						box.setOutputType(0, typeID);
+					}
 
-		class CBoxAlgorithmStreamedMatrixMultiplexerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Streamed matrix multiplexer"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Multiplexes streamed matrix buffers in a new stream"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Streaming"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStreamedMatrixMultiplexer; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStreamedMatrixMultiplexerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+					return true;
+				}
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+				_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+			};
+
+			class CBoxAlgorithmStreamedMatrixMultiplexerDesc final : virtual public IBoxAlgorithmDesc
 			{
-				prototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
-				prototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
-				prototype.addOutput("Multiplexed streamed matrix", OV_TypeId_StreamedMatrix);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Streamed matrix multiplexer"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+				CString getShortDescription() const override { return CString("Multiplexes streamed matrix buffers in a new stream"); }
+				CString getDetailedDescription() const override { return CString(""); }
+				CString getCategory() const override { return CString("Streaming"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer; }
+				IPluginObject* create() override { return new CBoxAlgorithmStreamedMatrixMultiplexer; }
+				IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStreamedMatrixMultiplexerListener; }
+				void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				prototype.addInputSupport(OV_TypeId_ChannelLocalisation);
-				prototype.addInputSupport(OV_TypeId_FeatureVector);
-				prototype.addInputSupport(OV_TypeId_Signal);
-				prototype.addInputSupport(OV_TypeId_Spectrum);
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
+					prototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
+					prototype.addOutput("Multiplexed streamed matrix", OV_TypeId_StreamedMatrix);
+					prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+					prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
+					prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
 
-				return true;
-			}
+					prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+					prototype.addInputSupport(OV_TypeId_ChannelLocalisation);
+					prototype.addInputSupport(OV_TypeId_FeatureVector);
+					prototype.addInputSupport(OV_TypeId_Signal);
+					prototype.addInputSupport(OV_TypeId_Spectrum);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexerDesc)
-		};
-	} // namespace Streaming
-} // namespace OpenViBEPlugins
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexerDesc)
+			};
+		} // namespace Streaming
+	}  // namespace Plugins
+}  // namespace OpenViBE

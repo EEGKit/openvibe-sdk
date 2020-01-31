@@ -5,81 +5,81 @@
 #include <wavelib/header/wavelib.h>
 #include <array>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace SignalProcessing
+	namespace Plugins
 	{
-		class CBoxAlgorithmContinuousWaveletAnalysis final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace SignalProcessing
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_ContinuousWaveletAnalysis)
-
-		protected:
-
-			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_decoder;
-			std::array<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis>, 4> m_encoders;
-
-			const char* m_waveletType = nullptr;
-			double m_waveletParam     = 0;
-			size_t m_nScaleJ          = 0;
-			double m_highestFreq      = 0;
-			double m_smallestScaleS0  = 0;
-			double m_scaleSpacingDj   = 0;
-
-			const char* m_scaleType       = nullptr;
-			int m_scalePowerBaseA0        = 0;
-			double m_samplingPeriodDt     = 0;
-			cwt_object m_waveletTransform = nullptr;
-		};
-
-		class CBoxAlgorithmContinuousWaveletAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Continuous Wavelet Analysis"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Performs a Time-Frequency Analysis using CWT."); }
-
-			OpenViBE::CString getDetailedDescription() const override
+			class CBoxAlgorithmContinuousWaveletAnalysis final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform.");
-			}
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("1.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("1.0.0"); }
-			OpenViBE::CString getStockItemName() const override { return OpenViBE::CString("gtk-execute"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_ContinuousWaveletAnalysis; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmContinuousWaveletAnalysis(); }
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_ContinuousWaveletAnalysis)
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			protected:
+
+				Toolkit::TSignalDecoder<CBoxAlgorithmContinuousWaveletAnalysis> m_decoder;
+				std::array<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmContinuousWaveletAnalysis>, 4> m_encoders;
+
+				const char* m_waveletType = nullptr;
+				double m_waveletParam     = 0;
+				size_t m_nScaleJ          = 0;
+				double m_highestFreq      = 0;
+				double m_smallestScaleS0  = 0;
+				double m_scaleSpacingDj   = 0;
+
+				const char* m_scaleType       = nullptr;
+				int m_scalePowerBaseA0        = 0;
+				double m_samplingPeriodDt     = 0;
+				cwt_object m_waveletTransform = nullptr;
+			};
+
+			class CBoxAlgorithmContinuousWaveletAnalysisDesc final : virtual public IBoxAlgorithmDesc
 			{
-				prototype.addInput("Input signal", OV_TypeId_Signal);
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Continuous Wavelet Analysis"); }
+				CString getAuthorName() const override { return CString("Quentin Barthelemy"); }
+				CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+				CString getShortDescription() const override { return CString("Performs a Time-Frequency Analysis using CWT."); }
 
-				prototype.addOutput("Amplitude", OV_TypeId_TimeFrequency);
-				prototype.addOutput("Phase", OV_TypeId_TimeFrequency);
-				prototype.addOutput("Real Part", OV_TypeId_TimeFrequency);
-				prototype.addOutput("Imaginary Part", OV_TypeId_TimeFrequency);
+				CString getDetailedDescription() const override { return CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
 
-				prototype.addSetting("Wavelet type", OVP_TypeId_ContinuousWaveletType, "Morlet wavelet");
-				prototype.addSetting("Wavelet parameter", OV_TypeId_Float, "4");
-				prototype.addSetting("Number of frequencies", OV_TypeId_Integer, "60");
-				prototype.addSetting("Highest frequency", OV_TypeId_Float, "35");
-				prototype.addSetting("Frequency spacing", OV_TypeId_Float, "12.5");
+				CString getCategory() const override { return CString("Signal processing/Spectral Analysis"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("1.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("1.0.0"); }
+				CString getStockItemName() const override { return CString("gtk-execute"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_ContinuousWaveletAnalysis; }
+				IPluginObject* create() override { return new CBoxAlgorithmContinuousWaveletAnalysis(); }
 
-				return true;
-			}
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input signal", OV_TypeId_Signal);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_ContinuousWaveletAnalysisDesc)
-		};
-	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+					prototype.addOutput("Amplitude", OV_TypeId_TimeFrequency);
+					prototype.addOutput("Phase", OV_TypeId_TimeFrequency);
+					prototype.addOutput("Real Part", OV_TypeId_TimeFrequency);
+					prototype.addOutput("Imaginary Part", OV_TypeId_TimeFrequency);
+
+					prototype.addSetting("Wavelet type", OVP_TypeId_ContinuousWaveletType, "Morlet wavelet");
+					prototype.addSetting("Wavelet parameter", OV_TypeId_Float, "4");
+					prototype.addSetting("Number of frequencies", OV_TypeId_Integer, "60");
+					prototype.addSetting("Highest frequency", OV_TypeId_Float, "35");
+					prototype.addSetting("Frequency spacing", OV_TypeId_Float, "12.5");
+
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_ContinuousWaveletAnalysisDesc)
+			};
+		} // namespace SignalProcessing
+	}  // namespace Plugins
+}  // namespace OpenViBE

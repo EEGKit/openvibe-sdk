@@ -108,7 +108,8 @@ public:
 		m_Children.push_back(rightChild);
 	}
 
-	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* testChild, CAbstractTreeNode* ifChild, CAbstractTreeNode* thenChild, const bool isAssociative = false)
+	CAbstractTreeParentNode(const uint64_t nodeId, CAbstractTreeNode* testChild, CAbstractTreeNode* ifChild, CAbstractTreeNode* thenChild,
+							const bool isAssociative = false)
 		: CAbstractTreeNode(false, false), m_ID(nodeId), m_IsAssociative(isAssociative)
 	{
 		m_Children.push_back(testChild);
@@ -149,47 +150,82 @@ public:
 		std::string op;
 		switch (m_ID)
 		{
-			case OP_NEG: op = "-";	break;
-			case OP_ADD: op = "+";	break;
-			case OP_SUB: op = "-";	break;
-			case OP_MUL: op = "*";	break;
-			case OP_DIV: op = "/";	break;
+			case OP_NEG: op = "-";
+				break;
+			case OP_ADD: op = "+";
+				break;
+			case OP_SUB: op = "-";
+				break;
+			case OP_MUL: op = "*";
+				break;
+			case OP_DIV: op = "/";
+				break;
 
-			case OP_ABS:	op = "abs";		break;
-			case OP_ACOS:	op = "cos";		break;
-			case OP_ASIN:	op = "sin";		break;
-			case OP_ATAN:	op = "atan";	break;
-			case OP_CEIL:	op = "ceil";	break;
-			case OP_COS:	op = "cos";		break;
-			case OP_EXP:	op = "exp";		break;
-			case OP_FLOOR:	op = "floor";	break;
-			case OP_LOG:	op = "log";		break;
-			case OP_LOG10:	op = "log10";	break;
-			case OP_POW:	op = "pow";		break;
-			case OP_RAND:	op = "rand";	break;
-			case OP_SIN:	op = "sin";		break;
-			case OP_SQRT:	op = "sqrt";	break;
-			case OP_TAN:	op = "tan";		break;
+			case OP_ABS: op = "abs";
+				break;
+			case OP_ACOS: op = "cos";
+				break;
+			case OP_ASIN: op = "sin";
+				break;
+			case OP_ATAN: op = "atan";
+				break;
+			case OP_CEIL: op = "ceil";
+				break;
+			case OP_COS: op = "cos";
+				break;
+			case OP_EXP: op = "exp";
+				break;
+			case OP_FLOOR: op = "floor";
+				break;
+			case OP_LOG: op = "log";
+				break;
+			case OP_LOG10: op = "log10";
+				break;
+			case OP_POW: op = "pow";
+				break;
+			case OP_RAND: op = "rand";
+				break;
+			case OP_SIN: op = "sin";
+				break;
+			case OP_SQRT: op = "sqrt";
+				break;
+			case OP_TAN: op = "tan";
+				break;
 
-			case OP_IF_THEN_ELSE: op = "?:";	break;
+			case OP_IF_THEN_ELSE: op = "?:";
+				break;
 
-			case OP_CMP_L:	op = "<";	break;
-			case OP_CMP_G:	op = ">";	break;
-			case OP_CMP_LE:	op = "<=";	break;
-			case OP_CMP_GE:	op = ">=";	break;
-			case OP_CMP_E:	op = "==";	break;
-			case OP_CMP_NE:	op = "!=";	break;
+			case OP_CMP_L: op = "<";
+				break;
+			case OP_CMP_G: op = ">";
+				break;
+			case OP_CMP_LE: op = "<=";
+				break;
+			case OP_CMP_GE: op = ">=";
+				break;
+			case OP_CMP_E: op = "==";
+				break;
+			case OP_CMP_NE: op = "!=";
+				break;
 
-			case OP_BOOL_AND:	op = "&";	break;
-			case OP_BOOL_OR:	op = "|";	break;
-			case OP_BOOL_NOT:	op = "!";	break;
-			case OP_BOOL_XOR:	op = "^";	break;
+			case OP_BOOL_AND: op = "&";
+				break;
+			case OP_BOOL_OR: op = "|";
+				break;
+			case OP_BOOL_NOT: op = "!";
+				break;
+			case OP_BOOL_XOR: op = "^";
+				break;
 
-			case OP_USERDEF:	op = "UserDefined";	break;
-			case OP_NONE:		op = "None";		break;
-			case OP_X2:			op = "X^2";			break;
+			case OP_USERDEF: op = "UserDefined";
+				break;
+			case OP_NONE: op = "None";
+				break;
+			case OP_X2: op = "X^2";
+				break;
 
-			default:	op = "UnknownOp";	break;
+			default: op = "UnknownOp";
+				break;
 		}
 
 		logManager << "(" << op << " ";

@@ -12,12 +12,10 @@ namespace
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Classification;
 
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
@@ -25,7 +23,7 @@ bool CAlgorithmPairwiseDecisionVoting::parameterize()
 	m_nClass = size_t(ip_nClass);
 
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	return true;
 }
@@ -33,7 +31,7 @@ bool CAlgorithmPairwiseDecisionVoting::parameterize()
 bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 #if VOTING_DEBUG
 	std::cout << classifications.size() << std::endl;

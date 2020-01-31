@@ -20,7 +20,7 @@ namespace OpenViBE
 			bool addInputTrigger(const CIdentifier& inputTriggerID, const CString& rInputTriggerName) override;
 			bool addOutputTrigger(const CIdentifier& outputTriggerID, const CString& rOutputTriggerName) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProto >, OVK_ClassId_Kernel_Algorithm_AlgorithmProto)
+			_IsDerivedFromClass_Final_(TKernelObject<IAlgorithmProto>, OVK_ClassId_Kernel_Algorithm_AlgorithmProto)
 
 		protected:
 

@@ -3,119 +3,122 @@
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace SignalProcessing
+	namespace Plugins
 	{
-		class CBoxAlgorithmIdentity final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace SignalProcessing
 		{
-		public:
-			void release() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_Identity)
-		};
-
-		class CBoxAlgorithmIdentityListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
-		{
-		public:
-
-			static bool check(OpenViBE::Kernel::IBox& box)
+			class CBoxAlgorithmIdentity final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				size_t i;
-				for (i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
-				for (i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
-				return true;
-			}
+			public:
+				void release() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			bool onDefaultInitialized(OpenViBE::Kernel::IBox& box) override
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_Identity)
+			};
+
+			class CBoxAlgorithmIdentityListener final : public Toolkit::TBoxListener<IBoxListener>
 			{
-				box.setInputType(0, OV_TypeId_Signal);
-				box.setOutputType(0, OV_TypeId_Signal);
-				return true;
-			}
+			public:
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+				static bool check(Kernel::IBox& box)
+				{
+					size_t i;
+					for (i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
+					for (i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
+					return true;
+				}
+
+				bool onDefaultInitialized(Kernel::IBox& box) override
+				{
+					box.setInputType(0, OV_TypeId_Signal);
+					box.setOutputType(0, OV_TypeId_Signal);
+					return true;
+				}
+
+				bool onInputAdded(Kernel::IBox& box, const size_t index) override
+				{
+					box.setInputType(index, OV_TypeId_Signal);
+					box.addOutput("", OV_TypeId_Signal, box.getUnusedInputIdentifier());
+					check(box);
+					return true;
+				}
+
+				bool onInputRemoved(Kernel::IBox& box, const size_t index) override
+				{
+					box.removeOutput(index);
+					check(box);
+					return true;
+				}
+
+				bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
+				{
+					CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getInputType(index, typeID);
+					box.setOutputType(index, typeID);
+					return true;
+				}
+
+				bool onOutputAdded(Kernel::IBox& box, const size_t index) override
+				{
+					box.setOutputType(index, OV_TypeId_Signal);
+					box.addInput("", OV_TypeId_Signal, box.getUnusedOutputIdentifier());
+					check(box);
+					return true;
+				}
+
+				bool onOutputRemoved(Kernel::IBox& box, const size_t index) override
+				{
+					box.removeInput(index);
+					check(box);
+					return true;
+				}
+
+				bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
+				{
+					CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getOutputType(index, typeID);
+					box.setInputType(index, typeID);
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+			};
+
+			class CBoxAlgorithmIdentityDesc final : public IBoxAlgorithmDesc
 			{
-				box.setInputType(index, OV_TypeId_Signal);
-				box.addOutput("", OV_TypeId_Signal, box.getUnusedInputIdentifier());
-				check(box);
-				return true;
-			}
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Identity"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+				CString getShortDescription() const override { return CString("Duplicates input to output"); }
+				CString getDetailedDescription() const override { return CString("This simply duplicates intput on its output"); }
+				CString getCategory() const override { return CString("Signal processing/Basic"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Identity; }
+				IPluginObject* create() override { return new CBoxAlgorithmIdentity(); }
+				IBoxListener* createBoxListener() const override { return new CBoxAlgorithmIdentityListener; }
+				void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				box.removeOutput(index);
-				check(box);
-				return true;
-			}
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input stream", OV_TypeId_Signal);
+					prototype.addOutput("Output stream", OV_TypeId_Signal);
+					prototype.addFlag(Kernel::BoxFlag_CanAddOutput);
+					prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
+					prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+					prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
+					return true;
+				}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-				box.getInputType(index, typeID);
-				box.setOutputType(index, typeID);
-				return true;
-			}
-
-			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				box.setOutputType(index, OV_TypeId_Signal);
-				box.addInput("", OV_TypeId_Signal, box.getUnusedOutputIdentifier());
-				check(box);
-				return true;
-			}
-
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				box.removeInput(index);
-				check(box);
-				return true;
-			}
-
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
-			{
-				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-				box.getOutputType(index, typeID);
-				box.setInputType(index, typeID);
-				return true;
-			}
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
-		};
-
-		class CBoxAlgorithmIdentityDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Identity"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Duplicates input to output"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This simply duplicates intput on its output"); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Basic"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Identity; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmIdentity(); }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmIdentityListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
-
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
-			{
-				prototype.addInput("Input stream", OV_TypeId_Signal);
-				prototype.addOutput("Output stream", OV_TypeId_Signal);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				return true;
-			}
-
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_IdentityDesc)
-		};
-	} // namespace SignalProcessing
-} // namespace OpenViBEPlugins
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_IdentityDesc)
+			};
+		} // namespace SignalProcessing
+	}  // namespace Plugins
+}  // namespace OpenViBE

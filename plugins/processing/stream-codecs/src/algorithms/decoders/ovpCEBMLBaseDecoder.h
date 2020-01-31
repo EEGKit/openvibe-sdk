@@ -8,54 +8,57 @@
 #include <ebml/IReaderHelper.h>
 #include <ebml/TReaderCallbackProxy.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace StreamCodecs
+	namespace Plugins
 	{
-		class CEBMLBaseDecoder : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		namespace StreamCodecs
 		{
-		public:
-
-			CEBMLBaseDecoder();
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseDecoder)
-
-			// ebml callbacks
-			virtual bool isMasterChild(const EBML::CIdentifier& identifier);
-			virtual void openChild(const EBML::CIdentifier& identifier);
-			virtual void processChildData(const void* /*buffer*/, const size_t /*size*/) { }
-			virtual void closeChild() { }
-
-		protected:
-
-			EBML::IReaderHelper* m_readerHelper = nullptr;
-			EBML::IReader* m_reader             = nullptr;
-			EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_callbackProxy;
-
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_bufferToDecode;
-		};
-
-		class CEBMLBaseDecoderDesc : public OpenViBE::Plugins::IAlgorithmDesc
-		{
-		public:
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			class CEBMLBaseDecoder : public Toolkit::TAlgorithm<IAlgorithm>
 			{
-				prototype.addInputParameter(
-					OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
-					OpenViBE::Kernel::ParameterType_MemoryBuffer);
+			public:
 
-				prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader, "Received header");
-				prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");
-				prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, "Received end");
+				CEBMLBaseDecoder();
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool process() override;
 
-				return true;
-			}
+				_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, OVP_ClassId_Algorithm_EBMLBaseDecoder)
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseDecoderDesc)
-		};
-	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+				// ebml callbacks
+				virtual bool isMasterChild(const EBML::CIdentifier& identifier);
+				virtual void openChild(const EBML::CIdentifier& identifier);
+				virtual void processChildData(const void* /*buffer*/, const size_t /*size*/) { }
+				virtual void closeChild() { }
+
+			protected:
+
+				EBML::IReaderHelper* m_readerHelper = nullptr;
+				EBML::IReader* m_reader             = nullptr;
+				EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_callbackProxy;
+
+				Kernel::TParameterHandler<IMemoryBuffer*> ip_bufferToDecode;
+			};
+
+			class CEBMLBaseDecoderDesc : public IAlgorithmDesc
+			{
+			public:
+				bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
+				{
+					prototype.addInputParameter(
+						OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
+						Kernel::ParameterType_MemoryBuffer);
+
+					prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader, "Received header");
+					prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");
+					prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, "Received end");
+
+					return true;
+				}
+
+				_IsDerivedFromClass_(IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseDecoderDesc)
+			};
+		} // namespace StreamCodecs
+	}  // namespace Plugins
+}  // namespace OpenViBE

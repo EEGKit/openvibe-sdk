@@ -36,9 +36,12 @@ namespace OpenViBE
 			IParameter* getOutputParameter(const CIdentifier& identifier) override { return m_algorithmProxy.getOutputParameter(identifier); }
 			bool isInputTriggerActive(const CIdentifier& identifier) const override { return m_algorithmProxy.isInputTriggerActive(identifier); }
 
-			bool activateOutputTrigger(const CIdentifier& identifier, const bool state) override { return m_algorithmProxy.activateOutputTrigger(identifier, state); }
+			bool activateOutputTrigger(const CIdentifier& identifier, const bool state) override
+			{
+				return m_algorithmProxy.activateOutputTrigger(identifier, state);
+			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
+			_IsDerivedFromClass_Final_(TKernelObject<IAlgorithmContext>, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
 
 		protected:
 

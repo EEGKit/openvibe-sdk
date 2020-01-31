@@ -28,7 +28,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 namespace
 {
@@ -119,7 +119,7 @@ namespace OpenViBE
 								// warning if base token are overwritten here
 								OV_WARNING_UNLESS(name != "Path_UserData" && name != "Path_Log" && name != "Path_Tmp"
 												  && name != "Path_Lib" && name != "Path_Bin" && name != "OperatingSystem",
-												  "Overwriting critical token " << name, m_logManager);
+												  "Overwriting critical token " + name, m_logManager);
 
 								m_configManager.setConfigurationTokenValue(tokenID, value.c_str());
 							}

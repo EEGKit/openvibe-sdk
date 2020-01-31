@@ -4,9 +4,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 namespace
@@ -19,7 +17,7 @@ namespace
 		{
 			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
-				if (OpenViBEToolkit::Tools::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
+				if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
 			}
 		}
 		else if (matchMethodID == Index)
@@ -81,7 +79,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 
 			OV_ERROR_UNLESS_KRF(iMatrix.getDimensionSize(0) >= 2,
 								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
-								OpenViBE::Kernel::ErrorType::BadInput);
+								ErrorType::BadInput);
 
 			CString channel            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			const uint64_t matchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -89,7 +87,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 			m_referenceChannelIdx = FindChannel(iMatrix, channel, matchMethod, 0);
 
 			OV_ERROR_UNLESS_KRF(m_referenceChannelIdx != std::numeric_limits<size_t>::max(), "Invalid channel [" << channel << "]: channel not found",
-								OpenViBE::Kernel::ErrorType::BadSetting);
+								ErrorType::BadSetting);
 
 			if (FindChannel(*m_decoder.getOutputMatrix(), channel, matchMethod, m_referenceChannelIdx + 1) != std::numeric_limits<size_t>::max())
 			{

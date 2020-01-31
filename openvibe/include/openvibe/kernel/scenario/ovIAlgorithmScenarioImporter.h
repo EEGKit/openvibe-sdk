@@ -22,7 +22,7 @@ namespace OpenViBE
 			virtual bool processUInteger(const CIdentifier& id, uint64_t value) = 0;
 			virtual bool processStop() = 0;
 
-			_IsDerivedFromClass_(OpenViBE::IObject, OV_UndefinedIdentifier)
+			_IsDerivedFromClass_(IObject, OV_UndefinedIdentifier)
 		};
 
 		class OV_API IAlgorithmScenarioImporter : public IAlgorithm

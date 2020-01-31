@@ -117,7 +117,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	helper.closeChild();
 
 	helper.openChild(0x8765);
-	helper.setFloat(M_PI);
+	helper.setFloat(float(M_PI));
 	helper.closeChild();
 	writer->release();
 	callback.release();

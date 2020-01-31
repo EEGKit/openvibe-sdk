@@ -4,9 +4,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Streaming;
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
@@ -49,7 +47,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				OV_ERROR_UNLESS_KRF(tStart >= m_lastStartTime && tEnd >= m_lastEndTime,
 									"Invalid chunk times with start = [" << tStart << "] and end = [" << tEnd << "] while last chunk has start = [" <<
 									m_lastStartTime << "] and end = [" << m_lastEndTime << "]",
-									OpenViBE::Kernel::ErrorType::BadInput);
+									ErrorType::BadInput);
 
 				m_lastStartTime = tStart;
 				m_lastEndTime   = tEnd;

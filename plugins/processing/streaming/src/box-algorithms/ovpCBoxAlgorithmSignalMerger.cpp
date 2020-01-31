@@ -4,18 +4,16 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Streaming;
 
 bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (size_t i = 0; i < nInput; ++i) { m_decoders.push_back(new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
+	for (size_t i = 0; i < nInput; ++i) { m_decoders.push_back(new Toolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
 
-	m_encoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
+	m_encoder = new Toolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
 
 	return true;
 }
@@ -53,12 +51,12 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 		OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0),
 							"Invalid start time [" << boxContext.getInputChunkStartTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match start time on input 0 [" << tStart << "])",
-							OpenViBE::Kernel::ErrorType::BadInput);
+							ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(tEnd == boxContext.getInputChunkEndTime(i, 0),
 							"Invalid end time [" << boxContext.getInputChunkEndTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match end time on input 0 [" << tEnd << "])",
-							OpenViBE::Kernel::ErrorType::BadInput);
+							ErrorType::BadInput);
 	}
 
 	if (index == nInput - 1)
@@ -68,7 +66,7 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 			OV_ERROR_UNLESS_KRF(boxContext.getInputChunkCount(0) >= boxContext.getInputChunkCount(i),
 								"Invalid input chunk count [" << boxContext.getInputChunkCount(i) << "] on input [" << i
 								<< "] (expected value must be <= to chunk count on input 0 [" << boxContext.getInputChunkCount(0) << "])",
-								OpenViBE::Kernel::ErrorType::BadInput);
+								ErrorType::BadInput);
 		}
 	}
 
@@ -112,12 +110,12 @@ bool CBoxAlgorithmSignalMerger::process()
 					OV_ERROR_UNLESS_KRF(nSamplePerBlock == op_matrix->getDimensionSize(1),
 										"Output matrix dimension [" << op_matrix->getDimensionSize(1) << "] on input [" << i
 										<< "] must match sample count per block [" << nSamplePerBlock << "]",
-										OpenViBE::Kernel::ErrorType::BadInput);
+										ErrorType::BadInput);
 
 					OV_ERROR_UNLESS_KRF(m_decoders[0]->getOutputSamplingRate() == m_decoders[i]->getOutputSamplingRate(),
 										"Output sampling rate [" << m_decoders[i]->getOutputSamplingRate() << "] on input [" << i
 										<< "] must match the sampling rate on input 0 [" << m_decoders[0]->getOutputSamplingRate() << "]",
-										OpenViBE::Kernel::ErrorType::BadInput);
+										ErrorType::BadInput);
 
 					nChannel += op_matrix->getDimensionSize(0);
 				}
@@ -127,13 +125,13 @@ bool CBoxAlgorithmSignalMerger::process()
 		}
 
 		OV_ERROR_UNLESS_KRF(!nHeader || nHeader == nInput,
-							"Received [" << nHeader << "] headers for [" << nInput << "] declared inputs", OpenViBE::Kernel::ErrorType::BadInput);
+							"Received [" << nHeader << "] headers for [" << nInput << "] declared inputs", ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!nBuffer || nBuffer == nInput,
-							"Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", OpenViBE::Kernel::ErrorType::BadInput);
+							"Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!nEnd || nEnd == nInput,
-							"Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", OpenViBE::Kernel::ErrorType::BadInput);
+							"Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", ErrorType::BadInput);
 
 		if (nHeader)
 		{

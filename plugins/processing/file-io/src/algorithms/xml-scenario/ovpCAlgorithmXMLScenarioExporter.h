@@ -6,55 +6,55 @@
 #include <toolkit/ovtk_all.h>
 #include <xml/IWriter.h>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace FileIO
+	namespace Plugins
 	{
-		class CAlgorithmXMLScenarioExporter final : public OpenViBEToolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
+		namespace FileIO
 		{
-		public:
-
-			CAlgorithmXMLScenarioExporter();
-			~CAlgorithmXMLScenarioExporter() override;
-			bool exportStart(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id) override;
-			bool exportIdentifier(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, const OpenViBE::CIdentifier& value) override;
-			bool exportString(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, const OpenViBE::CString& value) override;
-			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& id, uint64_t value) override;
-			bool exportStop(OpenViBE::IMemoryBuffer& memoryBuffer) override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporter, OVP_ClassId_Algorithm_XMLScenarioExporter)
-
-		protected:
-			void write(const char* str) override; // XML::IWriterCallback
-
-			XML::IWriter* m_writer                   = nullptr;
-			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
-		};
-
-		class CAlgorithmXMLScenarioExporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioExporterDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("XML Scenario exporter"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("A sample XML scenario exporter"); }
-
-			OpenViBE::CString getDetailedDescription() const override
+			class CAlgorithmXMLScenarioExporter final : public Toolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
 			{
-				return OpenViBE::CString("This scenario exporter uses simple XML format to output the scenario");
-			}
+			public:
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/XML Scenario"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			// virtual OpenViBE::CString getFileExtension() const       { return OpenViBE::CString("xml;XML"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioExporter; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmXMLScenarioExporter(); }
+				CAlgorithmXMLScenarioExporter();
+				~CAlgorithmXMLScenarioExporter() override;
+				bool exportStart(IMemoryBuffer& memoryBuffer, const CIdentifier& id) override;
+				bool exportIdentifier(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const CIdentifier& value) override;
+				bool exportString(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const CString& value) override;
+				bool exportUInteger(IMemoryBuffer& memoryBuffer, const CIdentifier& id, uint64_t value) override;
+				bool exportStop(IMemoryBuffer& memoryBuffer) override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporterDesc, OVP_ClassId_Algorithm_XMLScenarioExporterDesc)
-		};
-	} // namespace FileIO
-} // namespace OpenViBEPlugins
+				_IsDerivedFromClass_Final_(Toolkit::CAlgorithmScenarioExporter, OVP_ClassId_Algorithm_XMLScenarioExporter)
+
+			protected:
+				void write(const char* str) override; // XML::IWriterCallback
+
+				XML::IWriter* m_writer         = nullptr;
+				IMemoryBuffer* m_pMemoryBuffer = nullptr;
+			};
+
+			class CAlgorithmXMLScenarioExporterDesc final : public Toolkit::CAlgorithmScenarioExporterDesc
+			{
+			public:
+				void release() override { }
+				CString getName() const override { return CString("XML Scenario exporter"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+				CString getShortDescription() const override { return CString("A sample XML scenario exporter"); }
+
+				CString getDetailedDescription() const override { return CString("This scenario exporter uses simple XML format to output the scenario"); }
+
+				CString getCategory() const override { return CString("File reading and writing/XML Scenario"); }
+				CString getVersion() const override { return CString("1.0"); }
+				// virtual CString getFileExtension() const       { return CString("xml;XML"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioExporter; }
+				IPluginObject* create() override { return new CAlgorithmXMLScenarioExporter(); }
+
+				_IsDerivedFromClass_Final_(Toolkit::CAlgorithmScenarioExporterDesc, OVP_ClassId_Algorithm_XMLScenarioExporterDesc)
+			};
+		} // namespace FileIO
+	}  // namespace Plugins
+}  // namespace OpenViBE

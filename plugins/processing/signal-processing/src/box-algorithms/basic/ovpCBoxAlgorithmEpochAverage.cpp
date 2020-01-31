@@ -4,9 +4,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 bool CBoxAlgorithmEpochAverage::initialize()
@@ -66,7 +64,7 @@ bool CBoxAlgorithmEpochAverage::initialize()
 	m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)->setReferenceTarget(
 		m_matrixAverage->getOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix));
 
-	OV_ERROR_UNLESS_KRF(ip_matrixCount > 0, "Invalid number of epochs (expected value > 0)", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(ip_matrixCount > 0, "Invalid number of epochs (expected value > 0)", ErrorType::BadSetting);
 
 	return true;
 }

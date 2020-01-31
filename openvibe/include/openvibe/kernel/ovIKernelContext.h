@@ -38,7 +38,7 @@ namespace OpenViBE
 			 * \return \e true in case of success
 			 * \return \e false in case of error
 			 */
-			virtual bool initialize(const char* const* /*tokenList*/ = nullptr, size_t /*tokenCount*/ = 0) { return true; }
+			virtual bool initialize(const char* const* /*tokenList*/ = nullptr, size_t /*tokenCount*/  = 0) { return true; }
 			/**
 			 * \brief Uninitializes the kernel context
 			 * \return \e true in case of success
@@ -101,7 +101,7 @@ namespace OpenViBE
 			// backward compatibility
 			virtual IKernelObjectFactory& getObjectFactory() const { return getKernelObjectFactory(); }
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_KernelContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

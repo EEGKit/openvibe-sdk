@@ -5,70 +5,73 @@
 #include <toolkit/ovtk_all.h>
 #include <vector>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace Streaming
+	namespace Plugins
 	{
-		class CBoxAlgorithmSignalMerger final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace Streaming
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalMerger)
-
-		protected:
-
-			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_decoders;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_encoder = nullptr;
-		};
-
-		class CBoxAlgorithmSignalMergerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
-		{
-		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& box, const size_t index) override
+			class CBoxAlgorithmSignalMerger final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				box.setInputName(index, ("Input " + std::to_string(index + 1)).c_str());
-				box.setInputType(index, OV_TypeId_Signal);
-				return true;
-			}
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
-		};
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalMerger)
 
-		class CBoxAlgorithmSignalMergerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Signal Merger"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Merges several input streams into a single output stream"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Streaming"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalMerger; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalMerger; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSignalMergerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
+			protected:
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+				std::vector<Toolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_decoders;
+				Toolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_encoder = nullptr;
+			};
+
+			class CBoxAlgorithmSignalMergerListener final : public Toolkit::TBoxListener<IBoxListener>
 			{
-				prototype.addInput("Input 1", OV_TypeId_Signal);
-				prototype.addInput("Input 2", OV_TypeId_Signal);
-				prototype.addOutput("Merged", OV_TypeId_Signal);
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+			public:
+				bool onInputAdded(Kernel::IBox& box, const size_t index) override
+				{
+					box.setInputName(index, ("Input " + std::to_string(index + 1)).c_str());
+					box.setInputType(index, OV_TypeId_Signal);
+					return true;
+				}
 
-				return true;
-			}
+				_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+			};
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalMergerDesc)
-		};
-	} // namespace Streaming
-} // namespace OpenViBEPlugins
+			class CBoxAlgorithmSignalMergerDesc final : public IBoxAlgorithmDesc
+			{
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Signal Merger"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA"); }
+				CString getShortDescription() const override { return CString("Merges several input streams into a single output stream"); }
+				CString getDetailedDescription() const override { return CString(""); }
+				CString getCategory() const override { return CString("Streaming"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalMerger; }
+				IPluginObject* create() override { return new CBoxAlgorithmSignalMerger; }
+				IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSignalMergerListener; }
+				void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
+
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input 1", OV_TypeId_Signal);
+					prototype.addInput("Input 2", OV_TypeId_Signal);
+					prototype.addOutput("Merged", OV_TypeId_Signal);
+					prototype.addFlag(Kernel::BoxFlag_CanAddInput);
+
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalMergerDesc)
+			};
+		} // namespace Streaming
+	}  // namespace Plugins
+}  // namespace OpenViBE

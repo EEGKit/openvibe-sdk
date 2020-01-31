@@ -9,105 +9,108 @@
 
 #include "csv/ovICSV.h"
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace FileIO
+	namespace Plugins
 	{
-		class CBoxAlgorithmOVCSVFileWriter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		namespace FileIO
 		{
-		public:
-
-			CBoxAlgorithmOVCSVFileWriter();
-			void release() override { delete this; }
-
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processInput(const size_t index) override;
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter)
-
-		private:
-			bool processStreamedMatrix();
-			bool processStimulation();
-
-			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_writerLib;
-
-			OpenViBE::CIdentifier m_typeID = OV_UndefinedIdentifier;
-
-			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
-			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
-
-			uint64_t m_epoch = 0;
-
-			bool m_isHeaderReceived = false;
-			bool m_isFileOpen       = false;
-			bool m_appendData       = false;
-			bool m_lastMatrixOnly   = false;
-			bool m_writeHeader      = true;
-		};
-
-		class CBoxAlgorithmOVCSVFileWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
-		{
-		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const size_t index) override
+			class CBoxAlgorithmOVCSVFileWriter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
-				if (index == 1)
+			public:
+
+				CBoxAlgorithmOVCSVFileWriter();
+				void release() override { delete this; }
+
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processInput(const size_t index) override;
+				bool process() override;
+
+				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter)
+
+			private:
+				bool processStreamedMatrix();
+				bool processStimulation();
+
+				std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_writerLib;
+
+				CIdentifier m_typeID = OV_UndefinedIdentifier;
+
+				Toolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
+				Toolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
+
+				uint64_t m_epoch = 0;
+
+				bool m_isHeaderReceived = false;
+				bool m_isFileOpen       = false;
+				bool m_appendData       = false;
+				bool m_lastMatrixOnly   = false;
+				bool m_writeHeader      = true;
+			};
+
+			class CBoxAlgorithmOVCSVFileWriterListener final : public Toolkit::TBoxListener<IBoxListener>
+			{
+			public:
+				bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 				{
-					OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-					box.getInputType(1, typeID);
-					if (typeID != OV_TypeId_Stimulations)
+					if (index == 1)
 					{
-						box.setInputType(1, OV_TypeId_Stimulations);
-						return true;
+						CIdentifier typeID = OV_UndefinedIdentifier;
+						box.getInputType(1, typeID);
+						if (typeID != OV_TypeId_Stimulations)
+						{
+							box.setInputType(1, OV_TypeId_Stimulations);
+							return true;
+						}
 					}
+
+					return true;
 				}
 
-				return true;
-			}
+				_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+			};
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
-		};
-
-		class CBoxAlgorithmOVCSVFileWriterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("CSV File Writer"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Victor Herlin"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Writes signal in a CSV (text based) file"); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/CSV"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.1.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.1.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileWriter; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileWriterListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const override { delete boxListener; }
-
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
+			class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc
 			{
-				prototype.addInput("Input stream", OV_TypeId_Signal);
-				prototype.addInput("Stimulations stream", OV_TypeId_Stimulations);
-				prototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
-				prototype.addSetting("Precision", OV_TypeId_Integer, "10");
-				prototype.addSetting("Append data", OV_TypeId_Boolean, "false");
-				prototype.addSetting("Only last matrix", OV_TypeId_Boolean, "false");
-				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+			public:
+				void release() override { }
+				CString getName() const override { return CString("CSV File Writer"); }
+				CString getAuthorName() const override { return CString("Victor Herlin"); }
+				CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+				CString getShortDescription() const override { return CString("Writes signal in a CSV (text based) file"); }
+				CString getDetailedDescription() const override { return CString(""); }
+				CString getCategory() const override { return CString("File reading and writing/CSV"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.1.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
+				IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileWriter; }
+				IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileWriterListener; }
+				void releaseBoxListener(IBoxListener* boxListener) const override { delete boxListener; }
 
-				prototype.addInputSupport(OV_TypeId_Signal);
-				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				prototype.addInputSupport(OV_TypeId_Spectrum);
-				prototype.addInputSupport(OV_TypeId_FeatureVector);
-				prototype.addInputSupport(OV_TypeId_CovarianceMatrix);
+				bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
+				{
+					prototype.addInput("Input stream", OV_TypeId_Signal);
+					prototype.addInput("Stimulations stream", OV_TypeId_Stimulations);
+					prototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
+					prototype.addSetting("Precision", OV_TypeId_Integer, "10");
+					prototype.addSetting("Append data", OV_TypeId_Boolean, "false");
+					prototype.addSetting("Only last matrix", OV_TypeId_Boolean, "false");
+					prototype.addFlag(Kernel::BoxFlag_CanModifyInput);
 
-				return true;
-			}
+					prototype.addInputSupport(OV_TypeId_Signal);
+					prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+					prototype.addInputSupport(OV_TypeId_Spectrum);
+					prototype.addInputSupport(OV_TypeId_FeatureVector);
+					prototype.addInputSupport(OV_TypeId_CovarianceMatrix);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_OVCSVFileWriterDesc)
-		};
-	} // namespace FileIO
-} // namespace OpenViBEPlugins
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_OVCSVFileWriterDesc)
+			};
+		} // namespace FileIO
+	}  // namespace Plugins
+}  // namespace OpenViBE

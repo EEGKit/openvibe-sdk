@@ -6,9 +6,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 namespace
@@ -108,7 +106,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								ErrorType::Internal);
 			// Cache the signal data
 			m_cachedChunks.emplace_back(inputChunkStartTime, inputChunkEndTime, new CMatrix());
-			OpenViBEToolkit::Tools::Matrix::copy(*m_cachedChunks.back().matrix, *inputMatrix);
+			Toolkit::Matrix::copy(*m_cachedChunks.back().matrix, *inputMatrix);
 
 			m_lastSignalChunkEndTime = inputChunkEndTime;
 		}

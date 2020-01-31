@@ -51,7 +51,7 @@ namespace OpenViBE
 			 */
 			virtual IConfigurationManager& getConfigurationManager() const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModuleContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Plugins_PluginModuleContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

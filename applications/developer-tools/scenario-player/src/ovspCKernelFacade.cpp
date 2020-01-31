@@ -34,7 +34,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
@@ -77,9 +77,9 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 #if defined TARGET_OS_Windows
 	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-	const CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
 	CKernelLoader& kernelLoader = m_impl->loader;
@@ -118,7 +118,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 
 	ctx->initialize();
 	m_impl->ctx = ctx;
-	OpenViBEToolkit::initialize(*ctx);
+	Toolkit::initialize(*ctx);
 
 	IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
@@ -137,7 +137,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::unloadKernel() const
 		for (auto& scenarioPair : m_impl->scenarios) { scenarioManager.releaseScenario(scenarioPair.second); }
 
 
-		OpenViBEToolkit::uninitialize(*m_impl->ctx);
+		Toolkit::uninitialize(*m_impl->ctx);
 		// m_impl->ctx->uninitialize();
 		IKernelDesc* kernelDesc = nullptr;
 		m_impl->loader.getKernelDesc(kernelDesc);

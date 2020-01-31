@@ -2,9 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace StreamCodecs;
 
 CExperimentInfoDecoder::CExperimentInfoDecoder() {}

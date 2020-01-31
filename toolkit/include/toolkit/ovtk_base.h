@@ -14,19 +14,22 @@ namespace EBML
 	class IReaderHelper;
 } // namespace EBML
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	template <class THandledType>
-	class TScopeHandle
+	namespace Toolkit
 	{
-	public:
+		template <class THandledType>
+		class TScopeHandle
+		{
+		public:
 
-		TScopeHandle(THandledType& rHandler, THandledType& rHandledValue) : m_handler(rHandler), m_lastHandledValue(rHandler) { m_handler = rHandledValue; }
-		~TScopeHandle() { m_handler = m_lastHandledValue; }
+			TScopeHandle(THandledType& rHandler, THandledType& rHandledValue) : m_handler(rHandler), m_lastHandledValue(rHandler) { m_handler = rHandledValue; }
+			~TScopeHandle() { m_handler = m_lastHandledValue; }
 
-	private:
+		private:
 
-		THandledType& m_handler;
-		THandledType m_lastHandledValue;
-	};
-} // namespace OpenViBEToolkit
+			THandledType& m_handler;
+			THandledType m_lastHandledValue;
+		};
+	}  // namespace Toolkit
+}  // namespace OpenViBE

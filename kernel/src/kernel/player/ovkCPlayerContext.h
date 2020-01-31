@@ -39,7 +39,7 @@ namespace OpenViBE
 			Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginID) const override { return m_pluginManager.createPluginObject(pluginID); }
 			bool releasePluginObject(Plugins::IPluginObject* pluginObject) const override { return m_pluginManager.releasePluginObject(pluginObject); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerContext>, OVK_ClassId_Kernel_Player_PlayerContext)
+			_IsDerivedFromClass_Final_(TKernelObject<IPlayerContext>, OVK_ClassId_Kernel_Player_PlayerContext)
 
 		private:
 

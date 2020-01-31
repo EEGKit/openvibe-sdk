@@ -98,7 +98,7 @@ namespace OpenViBE
 			 */
 			virtual const IBox* getBoxDetails(const CIdentifier& boxID) const = 0;
 
-			/// \copydoc getBoxDetails(const OpenViBE::CIdentifier&)const
+			/// \copydoc getBoxDetails(const CIdentifier&)const
 			virtual IBox* getBoxDetails(const CIdentifier& boxID) = 0;
 
 			/**
@@ -219,7 +219,7 @@ namespace OpenViBE
 			 */
 			virtual const ILink* getLinkDetails(const CIdentifier& id) const = 0;
 
-			/// \copydoc getLinkDetails(const OpenViBE::CIdentifier&)const
+			/// \copydoc getLinkDetails(const CIdentifier&)const
 			virtual ILink* getLinkDetails(const CIdentifier& id) = 0;
 
 			/**
@@ -373,7 +373,7 @@ namespace OpenViBE
 			 */
 			virtual const IComment* getCommentDetails(const CIdentifier& commentID) const = 0;
 
-			/// \copydoc getCommentDetails(const OpenViBE::CIdentifier&)const
+			/// \copydoc getCommentDetails(const CIdentifier&)const
 			virtual IComment* getCommentDetails(const CIdentifier& commentID) = 0;
 
 			/**
@@ -435,7 +435,7 @@ namespace OpenViBE
 			 */
 			virtual const IMetadata* getMetadataDetails(const CIdentifier& metadataID) const = 0;
 
-			/// \copydoc getMetadataDetails(const OpenViBE::CIdentifier&)const
+			/// \copydoc getMetadataDetails(const CIdentifier&)const
 			virtual IMetadata* getMetadataDetails(const CIdentifier& metadataID) = 0;
 
 			/**

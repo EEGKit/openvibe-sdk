@@ -3,11 +3,8 @@
 #include <system/ovCMemory.h>
 
 using namespace OpenViBE;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 using namespace std;
-
-// ________________________________________________________________________________________________________________
-//
 
 bool CSignalTrial::setSamplingRate(const size_t sampling)
 {
@@ -87,6 +84,5 @@ double* CSignalTrial::getChannelSampleBuffer(const size_t index) const
 // ________________________________________________________________________________________________________________
 //
 
-ISignalTrial* OpenViBEToolkit::createSignalTrial() { return new CSignalTrial(); }
-
-void OpenViBEToolkit::releaseSignalTrial(ISignalTrial* trial) { delete trial; }
+ISignalTrial* Toolkit::createSignalTrial() { return new CSignalTrial(); }
+void Toolkit::releaseSignalTrial(ISignalTrial* trial) { delete trial; }

@@ -14,7 +14,7 @@ namespace OpenViBE
 	 * This collection basicaly consists in a list of stimulation information. Each stimulation
 	 * has three information : an identifier, a date and a duration.
 	 *
-	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CStimulationSet
+	 * OpenViBE provides an standalone implementation of this interface in CStimulationSet
 	 */
 
 	class OV_API IStimulationSet : public IObject
@@ -115,6 +115,6 @@ namespace OpenViBE
 		 */
 		virtual bool removeStimulation(const size_t index) = 0;
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet)
+		_IsDerivedFromClass_(IObject, OV_ClassId_StimulationSet)
 	};
 } // namespace OpenViBE

@@ -25,12 +25,12 @@ namespace OpenViBE
 		 *  - for \c ParameterType_UInteger : \c uint64_t
 		 *  - for \c ParameterType_Boolean : \c bool
 		 *  - for \c ParameterType_Float : \c double
-		 *  - for \c ParameterType_String : \c OpenViBE::CString
-		 *  - for \c ParameterType_Identifier : \c OpenViBE::CIdentifier
-		 *  - for \c ParameterType_Matrix : \c OpenViBE::IMatrix*
-		 *  - for \c ParameterType_StimulationSet : \c OpenViBE::IStimulationSet*
-		 *  - for \c ParameterType_MemoryBuffer : \c OpenViBE::IMemoryBuffer*
-		 *  - for \c ParameterType_Object : \c OpenViBE::IObject*
+		 *  - for \c ParameterType_String : \c CString
+		 *  - for \c ParameterType_Identifier : \c CIdentifier
+		 *  - for \c ParameterType_Matrix : \c IMatrix*
+		 *  - for \c ParameterType_StimulationSet : \c IStimulationSet*
+		 *  - for \c ParameterType_MemoryBuffer : \c IMemoryBuffer*
+		 *  - for \c ParameterType_Object : \c IObject*
 		 *  - for \c ParameterType_Pointer : \c uint8_t*
 		 *
 		 * The idea is to connect the handler to the corresponding IParameter object

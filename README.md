@@ -75,7 +75,7 @@ updated version, pleaser refer to OpenViBE Coding Rules.
 
  - CMake project and target name: openvibe-test-*mytool* (e.g. *openvibe-test-accuracy*)
  - File name: ovt + OpenViBE naming rules
- - Main namespace: OpenViBETest
+ - Main namespace: OpenViBE::Test
  - Macro naming: OVT_MYMACRO
 
 #### Unit Tests

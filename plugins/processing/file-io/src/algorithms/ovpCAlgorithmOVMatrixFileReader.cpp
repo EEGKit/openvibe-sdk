@@ -2,9 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
 
 bool CAlgorithmOVMatrixFileReader::initialize()
@@ -27,9 +25,9 @@ bool CAlgorithmOVMatrixFileReader::uninitialize()
 
 bool CAlgorithmOVMatrixFileReader::process()
 {
-	OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
+	OV_ERROR_UNLESS_KRF(Toolkit::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
 						"Reading matrix file " << *ip_sFilename << " failed",
-						OpenViBE::Kernel::ErrorType::BadFileRead);
+						ErrorType::BadFileRead);
 
 	return true;
 }

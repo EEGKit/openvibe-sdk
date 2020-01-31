@@ -11,18 +11,16 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Classification;
 
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 using namespace Eigen;
 
 #define COV_DEBUG 0
 #if COV_DEBUG
-void CAlgorithmConditionedCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &mgr, const MatrixXdRowMajor &mat, const CString &desc)
+void CAlgorithmConditionedCovariance::dumpMatrix(Kernel::ILogManager &mgr, const MatrixXdRowMajor &mat, const CString &desc)
 {
 	mgr << LogLevel_Info << desc << "\n";
 	for (int i = 0 ; i < mat.rows() ; i++)
@@ -55,24 +53,24 @@ bool CAlgorithmConditionedCovariance::process()
 	double shrinkage = ip_shrinkage;
 
 	OV_ERROR_UNLESS_KRF(shrinkage <= 1.0, "Invalid shrinkage value " << shrinkage << "(expected value <= 1.0)",
-						OpenViBE::Kernel::ErrorType::BadConfig);
+						ErrorType::BadConfig);
 
 
 	OV_ERROR_UNLESS_KRF(ip_sample->getDimensionCount() == 2,
 						"Invalid dimension count for vector set " << ip_sample->getDimensionCount() << "(expected value = 2)",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	const size_t nRows = ip_sample->getDimensionSize(0);
 	const size_t nCols = ip_sample->getDimensionSize(1);
 
 	OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1,
 						"Invalid input matrix [" << nRows << "x" << nCols << "] (expected at least 1x1 size)",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	const double* buffer = ip_sample->getBuffer();
 
 
-	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", ErrorType::BadInput);
 
 	// Set the output buffers so we can write the results to them without copy
 	op_mean->setDimensionCount(2);

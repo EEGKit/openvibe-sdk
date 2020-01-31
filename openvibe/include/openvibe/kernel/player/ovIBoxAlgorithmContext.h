@@ -25,8 +25,8 @@ namespace OpenViBE
 		 * could be defined and used more generically (such as the
 		 * box interface or a global player interface for example).
 		 *
-		 * \sa OpenViBE::Kernel::IBoxAlgorithm
-		 * \sa OpenViBE::Kernel::IPlayerContext
+		 * \sa IBoxAlgorithm
+		 * \sa IPlayerContext
 		 */
 		class OV_API IBoxAlgorithmContext : public IKernelObject
 		{
@@ -41,7 +41,7 @@ namespace OpenViBE
 			 *
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
-			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext::getDynamicBoxContext
+			 * \sa IBoxAlgorithmContext::getDynamicBoxContext
 			 */
 			virtual const IBox* getStaticBoxContext() = 0;
 			/**
@@ -53,7 +53,7 @@ namespace OpenViBE
 			 *
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
-			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext::getStaticBoxContext
+			 * \sa IBoxAlgorithmContext::getStaticBoxContext
 			 */
 			virtual IBoxIO* getDynamicBoxContext() = 0;
 			/**
@@ -82,7 +82,7 @@ namespace OpenViBE
 			 */
 			virtual bool markAlgorithmAsReadyToProcess() = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_BoxAlgorithmContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Player_BoxAlgorithmContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

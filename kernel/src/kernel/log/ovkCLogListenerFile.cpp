@@ -31,8 +31,8 @@ CLogListenerFile::CLogListenerFile(const IKernelContext& ctx, const CString& app
 void CLogListenerFile::configure(const IConfigurationManager& configurationManager)
 {
 	m_timeInSeconds = configurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
-	m_logWithHexa    = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
-	m_timePrecision  = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
+	m_logWithHexa   = configurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
+	m_timePrecision = configurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
 bool CLogListenerFile::isActive(const ELogLevel level)

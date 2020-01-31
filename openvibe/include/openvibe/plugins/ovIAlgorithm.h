@@ -7,7 +7,7 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class IAlgorithmContext;
-	}
+	}   // namespace Kernel
 
 	namespace Plugins
 	{
@@ -28,8 +28,8 @@ namespace OpenViBE
 		 * This is the heart of the extension mechanism of the
 		 * OpenViBE platform.
 		 *
-		 * \sa OpenViBE::Kernel::IAlgorithmDesc
-		 * \sa OpenViBE::Kernel::IAlgorithmContext
+		 * \sa Kernel::IAlgorithmDesc
+		 * \sa Kernel::IAlgorithmContext
 		 *
 		 * \todo details about building new plugins
 		 */
@@ -39,31 +39,31 @@ namespace OpenViBE
 
 			/**
 			 * \brief Initializes this algorithm
-			 * \param algorithmCtx [in] : the execution context for this algorithm
+			 * \param ctx [in] : the execution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool initialize(Kernel::IAlgorithmContext& algorithmCtx) { return true; }
+			virtual bool initialize(Kernel::IAlgorithmContext& ctx) { return true; }
 			/**
 			 * \brief Unitializes this algorithm
-			 * \param algorithmCtx [in] : the extecution context for this algorithm
+			 * \param ctx [in] : the extecution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \exception this method must be noexcept
 			 */
-			virtual bool uninitialize(Kernel::IAlgorithmContext& algorithmCtx) { return true; }
+			virtual bool uninitialize(Kernel::IAlgorithmContext& ctx) { return true; }
 			/**
 			 * \brief Effectively executes this algorithm
-			 * \param algorithmCtx [in] : the extecution context for this algorithm
+			 * \param ctx [in] : the extecution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
 			 * When called, this function should get its "input" parameters, do stuffs with them
 			 * and finally produce "output" parameters.
 			 */
-			virtual bool process(Kernel::IAlgorithmContext& algorithmCtx) = 0;
+			virtual bool process(Kernel::IAlgorithmContext& ctx) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
+			_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};
 	} // namespace Plugins
 } // namespace OpenViBE

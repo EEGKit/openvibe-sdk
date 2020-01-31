@@ -4,62 +4,65 @@
 #include "ovpCStreamedMatrixDecoder.h"
 #include <stack>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace StreamCodecs
+	namespace Plugins
 	{
-		class CSignalDecoder final : public CStreamedMatrixDecoder
+		namespace StreamCodecs
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_SignalDecoder)
-
-			// ebml callbacks
-			bool isMasterChild(const EBML::CIdentifier& identifier) override;
-			void openChild(const EBML::CIdentifier& identifier) override;
-			void processChildData(const void* buffer, const size_t size) override;
-			void closeChild() override;
-
-		protected:
-
-			OpenViBE::Kernel::TParameterHandler<uint64_t> op_sampling;
-
-		private:
-
-			std::stack<EBML::CIdentifier> m_nodes;
-		};
-
-		class CSignalDecoderDesc final : public CStreamedMatrixDecoderDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Signal stream decoder"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stream codecs/Decoders"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalDecoder; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CSignalDecoder(); }
-
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			class CSignalDecoder final : public CStreamedMatrixDecoder
 			{
-				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
 
-				prototype.addOutputParameter(
-					OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
+				_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_SignalDecoder)
 
-				return true;
-			}
+				// ebml callbacks
+				bool isMasterChild(const EBML::CIdentifier& identifier) override;
+				void openChild(const EBML::CIdentifier& identifier) override;
+				void processChildData(const void* buffer, const size_t size) override;
+				void closeChild() override;
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_SignalDecoderDesc)
-		};
-	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+			protected:
+
+				Kernel::TParameterHandler<uint64_t> op_sampling;
+
+			private:
+
+				std::stack<EBML::CIdentifier> m_nodes;
+			};
+
+			class CSignalDecoderDesc final : public CStreamedMatrixDecoderDesc
+			{
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Signal stream decoder"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+				CString getShortDescription() const override { return CString(""); }
+				CString getDetailedDescription() const override { return CString(""); }
+				CString getCategory() const override { return CString("Stream codecs/Decoders"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalDecoder; }
+				IPluginObject* create() override { return new CSignalDecoder(); }
+
+				bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
+				{
+					CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
+
+					prototype.addOutputParameter(
+						OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
+
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_SignalDecoderDesc)
+			};
+		} // namespace StreamCodecs
+	}  // namespace Plugins
+}  // namespace OpenViBE

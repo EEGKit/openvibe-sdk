@@ -2,9 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Stimulation;
 
 using namespace std;
@@ -93,7 +91,8 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 		{
 			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second), std::get<2>(stimulation->second));
+				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
+																	  std::get<2>(stimulation->second));
 				stimulation = m_stimulations.erase(stimulation);
 			}
 			else { ++stimulation; }

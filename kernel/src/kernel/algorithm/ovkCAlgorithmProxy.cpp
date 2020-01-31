@@ -10,13 +10,13 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace std;
 
 CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& algorithmDesc)
 	: TKernelObject<IAlgorithmProxy>(ctx), m_algorithmDesc(algorithmDesc), m_algorithm(rAlgorithm)
 {
-	m_iConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_iConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 	m_oConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 
 	// FIXME

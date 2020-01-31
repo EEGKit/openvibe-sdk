@@ -117,7 +117,7 @@ namespace OpenViBE
 			 * \return \e true if this log level is active.
 			 * \return \e false if this log level is not active.
 			 */
-			virtual bool isActive(ELogLevel level) = 0;
+			virtual bool isActive(const ELogLevel level) = 0;
 			/**
 			 * \brief Changes the activation status of a specific log level
 			 * \param level [in] : the log level which status has to be changed
@@ -125,7 +125,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(ELogLevel level, bool active) = 0;
+			virtual bool activate(const ELogLevel level, const bool active) = 0;
 			/**
 			 * \brief Changes the activation status of a specific range of log level
 			 * \param startLogLevel [in] : the first log level which status has to be changed
@@ -134,14 +134,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(ELogLevel startLogLevel, ELogLevel endLogLevel, bool active) = 0;
+			virtual bool activate(const ELogLevel startLogLevel, const ELogLevel endLogLevel, const bool active) = 0;
 			/**
 			 * \brief Changes the activation status of all log levels at once
 			 * \param active [in] : a boolean telling whether the levels should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(bool active) = 0;
+			virtual bool activate(const bool active) = 0;
 
 			//@}
 			/** \name Logging function */
@@ -220,7 +220,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogListener)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Log_LogListener)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

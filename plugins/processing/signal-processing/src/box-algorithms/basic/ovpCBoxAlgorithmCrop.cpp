@@ -2,9 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 bool CBoxAlgorithmCrop::initialize()
@@ -61,7 +59,7 @@ bool CBoxAlgorithmCrop::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_minCropValue < m_maxCropValue,
 						"Invalid crop values: minimum crop value [" << m_minCropValue << "] should be lower than the maximum crop value ["
-						<< m_maxCropValue << "]", OpenViBE::Kernel::ErrorType::BadSetting);
+						<< m_maxCropValue << "]", ErrorType::BadSetting);
 
 	return true;
 }

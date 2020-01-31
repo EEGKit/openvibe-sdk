@@ -2,9 +2,9 @@
 
 #include "../ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	namespace Tools
+	namespace Toolkit
 	{
 		namespace String
 		{
@@ -31,11 +31,10 @@ namespace OpenViBEToolkit
 				TContainer* m_tokenContainer = nullptr;
 			};
 
-			OVTK_API size_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t separator);
-			OVTK_API size_t split(const OpenViBE::CString& rString, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator);
-			OVTK_API bool isAlmostEqual(const OpenViBE::CString& rString1, const OpenViBE::CString& rString2, bool bCaseSensitive = true,
-										bool bRemoveStartSpaces                                                                   = true,
-										bool bRemoveEndSpaces                                                                     = true);
+			OVTK_API size_t split(const CString& str, const ISplitCallback& splitCB, uint8_t separator);
+			OVTK_API size_t split(const CString& str, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator);
+			OVTK_API bool isAlmostEqual(const CString& str1, const CString& str2, bool caseSensitive = true, bool removeStartSpaces = true,
+										bool removeEndSpaces                                         = true);
 		} // namespace String
-	} // namespace Tools
-} // namespace OpenViBEToolkit
+	}  // namespace Toolkit
+}  // namespace OpenViBE

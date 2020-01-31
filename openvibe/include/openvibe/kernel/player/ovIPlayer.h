@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * The use of this features includes the loading of a delayed configuration file
 			 * for instance. The reference should be valid up to the duration of the player itself.
 			 *
-			 * \sa OpenViBE::Kernel::IConfigurationManager
+			 * \sa IConfigurationManager
 			 */
 			virtual IConfigurationManager& getRuntimeConfigurationManager() const = 0;
 
@@ -80,7 +80,7 @@ namespace OpenViBE
 			 * runtime scenario manager. This function allows getting the 
 			 * runtime scenario manager that contains the current executed scenario.
 			 *
-			 * \sa OpenViBE::Kernel::IScenarioManager
+			 * \sa IScenarioManager
 			 */
 			virtual IScenarioManager& getRuntimeScenarioManager() const = 0;
 
@@ -91,7 +91,7 @@ namespace OpenViBE
 			 * When initialized, a player copy the scenario in the runtime configuration manager
 			 * this method allows getting the identifier of said copied scenario
 			 *
-			 * \sa OpenViBE::CIdentifier
+			 * \sa CIdentifier
 			 */
 			virtual CIdentifier getRuntimeScenarioIdentifier() const = 0;
 
@@ -180,7 +180,7 @@ namespace OpenViBE
 
 			virtual uint64_t getCurrentSimulatedTime() const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Player)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Player_Player)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

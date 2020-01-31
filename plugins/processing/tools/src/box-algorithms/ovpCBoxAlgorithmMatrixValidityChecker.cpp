@@ -4,9 +4,10 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Tools;
 
 bool CBoxAlgorithmMatrixValidityChecker::initialize()
@@ -14,7 +15,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	const IBox& boxContext = this->getStaticBoxContext();
 
 	uint64_t logLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_logLevel           = ELogLevel(logLevel);
+	m_logLevel            = ELogLevel(logLevel);
 	m_validityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (boxContext.getSettingCount() == 1
 	)
@@ -25,7 +26,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	OV_ERROR_UNLESS_KRF(boxContext.getSettingCount() <= 1 || boxContext.getInputCount() == boxContext.getOutputCount(),
 						"Invalid input count [" << boxContext.getInputCount() << "] (expected same value as output count [" << boxContext.getOutputCount() <<
 						"])",
-						OpenViBE::Kernel::ErrorType::BadConfig);
+						ErrorType::BadConfig);
 
 	m_decoders.resize(boxContext.getInputCount());
 	m_encoders.resize(boxContext.getInputCount());
@@ -96,7 +97,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
-					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
+					if (!Matrix::isContentValid(*matrix))
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
 								time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
@@ -105,13 +106,13 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// stop player
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
-					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*matrix))
+					if (!Matrix::isContentValid(*matrix))
 					{
 						this->getPlayerContext().stop();
 						OV_ERROR_KRF(
 							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(boxContext.
 								getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "]",
-							OpenViBE::Kernel::ErrorType::BadInput);
+							ErrorType::BadInput);
 					}
 				}
 					// interpolate

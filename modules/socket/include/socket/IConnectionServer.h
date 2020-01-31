@@ -14,7 +14,7 @@ namespace Socket
 		*                   when set to '0', the socket wil start on 
 		*                   an available port.
 		*/
-		virtual bool listen(size_t port) = 0;
+		virtual bool listen(const size_t port) = 0;
 
 		virtual IConnection* accept() = 0;
 

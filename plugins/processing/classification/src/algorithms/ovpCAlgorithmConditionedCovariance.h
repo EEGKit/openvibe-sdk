@@ -8,70 +8,73 @@
 
 #include <Eigen/Dense>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace Classification
+	namespace Plugins
 	{
-		class CAlgorithmConditionedCovariance final : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		namespace Classification
 		{
-			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
-
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override { return true; }
-			bool process() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_ConditionedCovariance)
-
-		protected:
-			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
-			static void dumpMatrix(OpenViBE::Kernel::ILogManager& mgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
-		};
-
-		class CAlgorithmConditionedCovarianceDesc final : virtual public OpenViBE::Plugins::IAlgorithmDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Conditioned Covariance"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes covariance with shrinkage."); }
-
-			OpenViBE::CString getDetailedDescription() const override
+			class CAlgorithmConditionedCovariance final : virtual public Toolkit::TAlgorithm<IAlgorithm>
 			{
-				return OpenViBE::CString(
-					"Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular.");
-			}
+				typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ConditionedCovariance; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmConditionedCovariance; }
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override { return true; }
+				bool process() override;
 
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+				_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, OVP_ClassId_Algorithm_ConditionedCovariance)
+
+			protected:
+				// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
+				static void dumpMatrix(Kernel::ILogManager& mgr, const MatrixXdRowMajor& mat, const CString& desc);
+			};
+
+			class CAlgorithmConditionedCovarianceDesc final : virtual public IAlgorithmDesc
 			{
-				prototype.addInputParameter(
-					OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage, "Shrinkage (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
-				prototype.addInputParameter(
-					OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet, "Feature vectors", OpenViBE::Kernel::ParameterType_Matrix);
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Conditioned Covariance"); }
+				CString getAuthorName() const override { return CString("Jussi T. Lindgren"); }
+				CString getAuthorCompanyName() const override { return CString("Inria"); }
+				CString getShortDescription() const override { return CString("Computes covariance with shrinkage."); }
 
-				// The algorithm returns these outputs
-				prototype.addOutputParameter(
-					OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
-				prototype.addOutputParameter(
-					OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				CString getDetailedDescription() const override
+				{
+					return CString(
+						"Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular.");
+				}
 
-				return true;
-			}
+				CString getCategory() const override { return CString(""); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ConditionedCovariance; }
+				IPluginObject* create() override { return new CAlgorithmConditionedCovariance; }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_ConditionedCovarianceDesc)
-		};
-	} // namespace Classification
-} // namespace OpenViBEPlugins
+				bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
+				{
+					prototype.addInputParameter(
+						OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage, "Shrinkage (-1 == auto)", Kernel::ParameterType_Float);
+					prototype.addInputParameter(
+						OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet, "Feature vectors", Kernel::ParameterType_Matrix);
+
+					// The algorithm returns these outputs
+					prototype.addOutputParameter(
+						OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean, "Mean vector", Kernel::ParameterType_Matrix);
+					prototype.addOutputParameter(
+						OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", Kernel::ParameterType_Matrix);
+
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(IAlgorithmDesc, OVP_ClassId_Algorithm_ConditionedCovarianceDesc)
+			};
+		} // namespace Classification
+	}  // namespace Plugins
+}  // namespace OpenViBE
 
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

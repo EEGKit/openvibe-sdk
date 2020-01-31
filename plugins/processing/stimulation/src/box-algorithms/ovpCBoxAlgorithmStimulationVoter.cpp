@@ -8,9 +8,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Stimulation;
 
 bool CBoxAlgorithmStimulationVoter::initialize()
@@ -18,13 +16,13 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	const IBox& boxContext = this->getStaticBoxContext();
 
 	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() == 1, "Invalid number of inputs [" << boxContext.getInputCount() << "] (expected 1 single input)",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	CIdentifier typeID;
 	boxContext.getInputType(0, typeID);
 
 	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.str() << "] (expected OV_TypeId_Stimulations type)",
-						OpenViBE::Kernel::ErrorType::BadInput);
+						ErrorType::BadInput);
 
 	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));
 	m_encoder->initialize();

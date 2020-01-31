@@ -9,9 +9,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Classification;
 
 bool CBoxAlgorithmVotingClassifier::initialize()
@@ -29,7 +27,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 		input_t& input = m_results[i];
 		if (m_matrixBased)
 		{
-			auto* decoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
+			auto* decoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
 			input.decoder       = decoder;
 			input.op_matrix     = decoder->getOutputMatrix();
@@ -37,7 +35,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 		}
 		else
 		{
-			auto* decoder = new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
+			auto* decoder = new Toolkit::TStimulationDecoder<CBoxAlgorithmVotingClassifier>();
 			decoder->initialize(*this, i);
 			input.decoder       = decoder;
 			input.op_stimSet    = decoder->getOutputStimulationSet();
@@ -104,7 +102,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 					{
 						OV_ERROR_UNLESS_KRF(input.op_matrix->getBufferElementCount() == 2,
 											"Invalid input matrix with [" << input.op_matrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
-											OpenViBE::Kernel::ErrorType::BadInput);
+											ErrorType::BadInput);
 
 						this->getLogManager() << LogLevel_Debug <<
 								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";

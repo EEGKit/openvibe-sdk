@@ -23,13 +23,16 @@
 
 #include <string>
 
-namespace OpenViBETest
+namespace OpenViBE
 {
-	void printError(const char* expression, const char* message, const char* file, const int line);
-	void printError(const char* expression, const std::string& message, const char* file, const int line);
-	void printError(const char* expression, const std::ostream& message, const char* file, const int line);
-	void printExpressionPair(const char* str1, const char* str2);
-	std::string buildExpressionFromPair(const char* str1, const char* str2);
+	namespace Test
+	{
+		void printError(const char* expression, const char* message, const char* file, const int line);
+		void printError(const char* expression, const std::string& message, const char* file, const int line);
+		void printError(const char* expression, const std::ostream& message, const char* file, const int line);
+		void printExpressionPair(const char* str1, const char* str2);
+		std::string buildExpressionFromPair(const char* str1, const char* str2);
+	}
 }
 
 /**
@@ -44,7 +47,7 @@ namespace OpenViBETest
 do {                                                                   \
 	if (!(expr))                                                       \
 	{                                                                  \
-		OpenViBETest::printError(#origin, (msg), __FILE__, __LINE__);  \
+		OpenViBE::Test::printError(#origin, (msg), __FILE__, __LINE__);  \
 		return EXIT_FAILURE;                                           \
 	}                                                                  \
 } while (0)
@@ -66,8 +69,8 @@ do {                                                                   \
 do {                                                                     \
 	if (!((str1) == (str2)))                                             \
 	{                                                                    \
-		OpenViBETest::printError(OpenViBETest::buildExpressionFromPair(#str1, #str2).c_str(),(msg), __FILE__, __LINE__);	\
-		OpenViBETest::printExpressionPair((str1).c_str(),(str2).c_str());\
+		OpenViBE::Test::printError(OpenViBE::Test::buildExpressionFromPair(#str1, #str2).c_str(),(msg), __FILE__, __LINE__);	\
+		OpenViBE::Test::printExpressionPair((str1).c_str(),(str2).c_str());\
 		return EXIT_FAILURE;                                             \
 	}                                                                    \
 } while (0)

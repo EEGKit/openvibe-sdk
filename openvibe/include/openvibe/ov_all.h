@@ -139,10 +139,7 @@ namespace OpenViBE
 #define OVP_Declare_End() \
 			return true; \
 		} \
-		OVP_API bool onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& context) \
-		{ \
-			return true; \
-		} \
+		OVP_API bool onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& context) { return true; } \
 		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& context, size_t index, OpenViBE::Plugins::IPluginObjectDesc*& pluginObjectDesc) \
 		{ \
 			if(index>=g_descriptors.size()) \

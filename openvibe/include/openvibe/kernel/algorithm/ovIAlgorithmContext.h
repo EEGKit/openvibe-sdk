@@ -16,7 +16,7 @@ namespace OpenViBE
 		 * \ingroup Group_Algorithm
 		 * \ingroup Group_Kernel
 		 * \ingroup Group_Extend
-		 * \sa OpenViBE::Plugins::IAlgorithm
+		 * \sa Plugins::IAlgorithm
 		 */
 		class OV_API IAlgorithmContext : public IKernelObject
 		{
@@ -124,7 +124,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmContext)
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

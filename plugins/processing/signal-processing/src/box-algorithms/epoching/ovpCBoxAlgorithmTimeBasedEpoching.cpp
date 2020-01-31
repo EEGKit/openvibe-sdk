@@ -8,12 +8,10 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 bool CBoxAlgorithmTimeBasedEpoching::initialize()
 {
@@ -128,7 +126,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					{
 						// Calculates start and end time of output
 						const uint64_t oTStart = m_referenceTime + TimeArithmetics::sampleCountToTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch);
-						const uint64_t oTEnd   = m_referenceTime + TimeArithmetics::sampleCountToTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample);
+						const uint64_t oTEnd   = m_referenceTime + TimeArithmetics::sampleCountToTime(
+													 m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample);
 						m_oChunkIdx++;
 
 						// Writes epoch

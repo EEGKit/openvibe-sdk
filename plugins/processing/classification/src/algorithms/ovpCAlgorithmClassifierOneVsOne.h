@@ -8,90 +8,93 @@
 
 #include <map>
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace Classification
+	namespace Plugins
 	{
-		//The aim of this structure is to record informations returned by the sub-classifier. They will be used by
-		// pairwise decision algorithms to compute probability vector.
-		// Should be use only by OneVsOne and pairwise decision algorithm
-		typedef struct
+		namespace Classification
 		{
-			double firstClass;
-			double secondClass;
-			double classLabel;
-			//This output is probabilist
-			OpenViBE::IMatrix* classificationValue;
-		} classification_info_t;
-
-
-		class CAlgorithmClassifierOneVsOne final : public OpenViBEToolkit::CAlgorithmPairingStrategy
-		{
-		public:
-			bool initialize() override;
-			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& dataset) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& sample, double& classId, OpenViBEToolkit::IVector& distance,
-						  OpenViBEToolkit::IVector& probability) override;
-			bool designArchitecture(const OpenViBE::CIdentifier& id, const size_t classCount) override;
-			XML::IXMLNode* saveConfig() override;
-			bool loadConfig(XML::IXMLNode* configNode) override;
-			size_t getNProbabilities() override { return m_nClasses; }
-			size_t getNDistances() override { return 0; }
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
-
-		protected:
-
-			bool createSubClassifiers();
-
-		private:
-			size_t m_nClasses        = 0;
-			size_t m_nSubClassifiers = 0;
-
-			std::map<std::pair<size_t, size_t>, OpenViBE::Kernel::IAlgorithmProxy*> m_subClassifiers;
-			fClassifierComparison m_algorithmComparison = nullptr;
-
-			OpenViBE::Kernel::IAlgorithmProxy* m_decisionStrategyAlgorithm = nullptr;
-			OpenViBE::CIdentifier m_pairwiseDecisionID                     = OV_UndefinedIdentifier;
-
-			static XML::IXMLNode* getClassifierConfig(double firstClass, double secondClass, OpenViBE::Kernel::IAlgorithmProxy* subClassifier);
-			XML::IXMLNode* getPairwiseDecisionConfiguration() const;
-
-			// size_t getClassCount() const;
-
-			bool loadSubClassifierConfig(XML::IXMLNode* node);
-
-			// SSubClassifierDescriptor& getSubClassifierDescriptor(const size_t FirstClass, const size_t SecondClass);
-			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& id);
-		};
-
-		class CAlgorithmClassifierOneVsOneDesc final : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("OneVsOne pairing classifier"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Guillaume Serriere"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/Loria"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.2"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmClassifierOneVsOne; }
-
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			//The aim of this structure is to record informations returned by the sub-classifier. They will be used by
+			// pairwise decision algorithms to compute probability vector.
+			// Should be use only by OneVsOne and pairwise decision algorithm
+			typedef struct
 			{
-				CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(prototype);
-				prototype.addInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, "Pairwise Decision Strategy",
-											OpenViBE::Kernel::ParameterType_Enumeration, OVP_TypeId_ClassificationPairwiseStrategy);
-				return true;
-			}
+				double firstClass;
+				double secondClass;
+				double classLabel;
+				//This output is probabilist
+				IMatrix* classificationValue;
+			} classification_info_t;
 
-			_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, OVP_ClassId_Algorithm_ClassifierOneVsOneDesc)
-		};
-	} // namespace Classification
-} // namespace OpenViBEPlugins
+
+			class CAlgorithmClassifierOneVsOne final : public Toolkit::CAlgorithmPairingStrategy
+			{
+			public:
+				bool initialize() override;
+				bool uninitialize() override;
+				bool train(const Toolkit::IFeatureVectorSet& dataset) override;
+				bool classify(const Toolkit::IFeatureVector& sample, double& classId, Toolkit::IVector& distance,
+							  Toolkit::IVector& probability) override;
+				bool designArchitecture(const CIdentifier& id, const size_t classCount) override;
+				XML::IXMLNode* saveConfig() override;
+				bool loadConfig(XML::IXMLNode* configNode) override;
+				size_t getNProbabilities() override { return m_nClasses; }
+				size_t getNDistances() override { return 0; }
+
+				_IsDerivedFromClass_Final_(Toolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
+
+			protected:
+
+				bool createSubClassifiers();
+
+			private:
+				size_t m_nClasses        = 0;
+				size_t m_nSubClassifiers = 0;
+
+				std::map<std::pair<size_t, size_t>, Kernel::IAlgorithmProxy*> m_subClassifiers;
+				fClassifierComparison m_algorithmComparison = nullptr;
+
+				Kernel::IAlgorithmProxy* m_decisionStrategyAlgorithm = nullptr;
+				CIdentifier m_pairwiseDecisionID                     = OV_UndefinedIdentifier;
+
+				static XML::IXMLNode* getClassifierConfig(double firstClass, double secondClass, Kernel::IAlgorithmProxy* subClassifier);
+				XML::IXMLNode* getPairwiseDecisionConfiguration() const;
+
+				// size_t getClassCount() const;
+
+				bool loadSubClassifierConfig(XML::IXMLNode* node);
+
+				// SSubClassifierDescriptor& getSubClassifierDescriptor(const size_t FirstClass, const size_t SecondClass);
+				bool setSubClassifierIdentifier(const CIdentifier& id);
+			};
+
+			class CAlgorithmClassifierOneVsOneDesc final : public Toolkit::CAlgorithmPairingStrategyDesc
+			{
+			public:
+				void release() override { }
+				CString getName() const override { return CString("OneVsOne pairing classifier"); }
+				CString getAuthorName() const override { return CString("Guillaume Serriere"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/Loria"); }
+				CString getShortDescription() const override { return CString(""); }
+				CString getDetailedDescription() const override { return CString(""); }
+				CString getCategory() const override { return CString(""); }
+				CString getVersion() const override { return CString("0.2"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
+				IPluginObject* create() override { return new CAlgorithmClassifierOneVsOne; }
+
+				bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
+				{
+					CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(prototype);
+					prototype.addInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, "Pairwise Decision Strategy",
+												Kernel::ParameterType_Enumeration, OVP_TypeId_ClassificationPairwiseStrategy);
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, OVP_ClassId_Algorithm_ClassifierOneVsOneDesc)
+			};
+		} // namespace Classification
+	}  // namespace Plugins
+}  // namespace OpenViBE

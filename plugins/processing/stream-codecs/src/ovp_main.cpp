@@ -21,29 +21,31 @@
 #include "algorithms/encoders/ovpCStreamedMatrixEncoder.h"
 #include "algorithms/encoders/ovpCMasterAcquisitionEncoder.h"
 
+using namespace OpenViBE;
+using namespace /*OpenViBE::*/Plugins;
 
 OVP_Declare_Begin()
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CAcquisitionDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStreamStructureDecoderDesc);
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInfoDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelLocalisationDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelUnitsDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CFeatureVectorDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CSignalDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CSpectrumDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStimulationDecoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc)
-	// OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CMasterAcquisitionDecoderDesc);
+	OVP_Declare_New(StreamCodecs::CAcquisitionDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CStreamStructureDecoderDesc);
+	OVP_Declare_New(StreamCodecs::CExperimentInfoDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CChannelLocalisationDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CChannelUnitsDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CFeatureVectorDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CSignalDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CSpectrumDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CStimulationDecoderDesc)
+	OVP_Declare_New(StreamCodecs::CStreamedMatrixDecoderDesc)
+	// OVP_Declare_New(StreamCodecs::CMasterAcquisitionDecoderDesc);
 
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CAcquisitionEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInfoEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelLocalisationEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelUnitsEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CFeatureVectorEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CSignalEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CSpectrumEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStimulationEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc)
-	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CMasterAcquisitionEncoderDesc);
+	OVP_Declare_New(StreamCodecs::CAcquisitionEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CExperimentInfoEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CChannelLocalisationEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CChannelUnitsEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CFeatureVectorEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CSignalEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CSpectrumEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CStimulationEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CStreamedMatrixEncoderDesc)
+	OVP_Declare_New(StreamCodecs::CMasterAcquisitionEncoderDesc);
 
 OVP_Declare_End()

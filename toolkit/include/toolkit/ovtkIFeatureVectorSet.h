@@ -1,27 +1,30 @@
 #pragma once
 
-#include "ovtkIObject.h"
+#include "ovtk_base.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	class IFeatureVector;
-
-	class OVTK_API IFeatureVectorSet : public IObject
+	namespace Toolkit
 	{
-	public:
+		class IFeatureVector;
 
-		virtual size_t getFeatureVectorCount() const = 0;
-		virtual bool setFeatureVectorCount(const size_t featureVector) = 0;
-		virtual bool addFeatureVector(const IFeatureVector& featureVector) = 0;
+		class OVTK_API IFeatureVectorSet : public IObject
+		{
+		public:
 
-		virtual IFeatureVector& getFeatureVector(const size_t index) = 0;
-		virtual const IFeatureVector& getFeatureVector(const size_t index) const = 0;
-		virtual size_t getLabelCount() const = 0;
+			virtual size_t getFeatureVectorCount() const = 0;
+			virtual bool setFeatureVectorCount(const size_t featureVector) = 0;
+			virtual bool addFeatureVector(const IFeatureVector& featureVector) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVectorSet)
+			virtual IFeatureVector& getFeatureVector(const size_t index) = 0;
+			virtual const IFeatureVector& getFeatureVector(const size_t index) const = 0;
+			virtual size_t getLabelCount() const = 0;
 
-		const IFeatureVector& operator [](const size_t index) const { return this->getFeatureVector(index); }
+			_IsDerivedFromClass_(IObject, OVTK_ClassId_FeatureVectorSet)
 
-		IFeatureVector& operator [](const size_t index) { return this->getFeatureVector(index); }
-	};
-} // namespace OpenViBEToolkit
+			const IFeatureVector& operator [](const size_t index) const { return this->getFeatureVector(index); }
+
+			IFeatureVector& operator [](const size_t index) { return this->getFeatureVector(index); }
+		};
+	}  // namespace Toolkit
+}  // namespace OpenViBE

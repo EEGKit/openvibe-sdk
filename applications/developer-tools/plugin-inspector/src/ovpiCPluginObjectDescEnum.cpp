@@ -2,7 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace std;
 
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes

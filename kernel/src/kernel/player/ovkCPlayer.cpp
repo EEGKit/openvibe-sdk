@@ -23,7 +23,7 @@ using namespace std;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 
 const uint64_t SCHEDULER_DEFAULT_FREQUENCY      = 128;
@@ -38,9 +38,9 @@ CPlayer::CPlayer(const IKernelContext& ctx)
 	uint64_t schedulerFrequency = this->TKernelObject<IPlayer>::getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
 	if (schedulerFrequency == 0)
 	{
-		OV_WARNING_K("Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "="
-			<< this->TKernelObject<IPlayer>::getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " <<
-			SCHEDULER_DEFAULT_FREQUENCY);
+		OV_WARNING_K(std::string("Invalid frequency configuration Kernel_PlayerFrequency = ")
+			+ this->TKernelObject<IPlayer>::getConfigurationManager().expand("${Kernel_PlayerFrequency}").toASCIIString() + " restored to default "
+			+ std::to_string(SCHEDULER_DEFAULT_FREQUENCY));
 		schedulerFrequency = SCHEDULER_DEFAULT_FREQUENCY;
 	}
 	else { TKernelObject<IPlayer>::getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n"; }
@@ -350,9 +350,10 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 
 	const uint64_t latenessSec     = lateness >> 32;
 	const uint64_t prevlatenessSec = m_lateness >> 32;
-	OV_WARNING_UNLESS_K(latenessSec == prevlatenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue
-						<< "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit << LogColor_ForegroundBlue
-						<< "can not reach realtime" << LogColor_PopStateBit << "> " << latenessSec << " second(s) late...\n");
+	stringstream ss;
+	ss << "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit
+			<< LogColor_ForegroundBlue << "can not reach realtime" << LogColor_PopStateBit << "> " << latenessSec << " second(s) late...\n";
+	OV_WARNING_UNLESS_K(latenessSec == prevlatenessSec, ss.str());
 
 	return true;
 }

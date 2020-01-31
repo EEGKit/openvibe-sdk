@@ -5,7 +5,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace std;
 
 CAlgorithmManager::CAlgorithmManager(const IKernelContext& ctx) : TKernelObject<IAlgorithmManager>(ctx) {}
@@ -60,7 +60,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& algorithmDe
 
 	CIdentifier algorithmId         = getUnusedIdentifier();
 	CAlgorithmProxy* algorithmProxy = new CAlgorithmProxy(getKernelContext(), *algorithm, algorithmDesc);
-	m_algorithms[algorithmId]      = algorithmProxy;
+	m_algorithms[algorithmId]       = algorithmProxy;
 	return algorithmId;
 }
 

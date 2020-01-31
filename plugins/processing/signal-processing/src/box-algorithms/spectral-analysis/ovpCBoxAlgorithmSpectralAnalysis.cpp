@@ -13,15 +13,16 @@ using namespace Eigen;
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
-using namespace OpenViBEToolkit;
+using namespace /*OpenViBE::*/Toolkit;
 
 namespace
 {
 	double amplitude(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
 	{
-		return sqrt(matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
+		return sqrt(
+			matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
 	}
 
 	double phase(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
@@ -66,7 +67,7 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 			<< (m_isSpectrumEncoderActive[0] ? CString("AMP ") : "")
 			<< (m_isSpectrumEncoderActive[1] ? CString("PHASE ") : "")
 			<< (m_isSpectrumEncoderActive[2] ? CString("REAL ") : "")
-			<< (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "") 
+			<< (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "")
 			<< "]\n";
 
 	return true;
@@ -110,11 +111,11 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_nChannel = matrix->getDimensionSize(0);
 			m_nSample  = matrix->getDimensionSize(1);
 
-			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", ErrorType::BadInput);
 
 			m_sampling = size_t(m_decoder.getOutputSamplingRate());
 
-			OV_ERROR_UNLESS_KRF(m_sampling > 0, "Invalid sampling rate [" << m_sampling << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_sampling > 0, "Invalid sampling rate [" << m_sampling << "] (expected value > 0)", ErrorType::BadInput);
 
 			// size of the spectrum
 			m_sizeFFT = m_nSample / 2 + 1;
@@ -215,7 +216,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 							break;
 
 						default:
-							OV_ERROR_KRF("Invalid decoder output.\n", OpenViBE::Kernel::ErrorType::BadProcessing);
+							OV_ERROR_KRF("Invalid decoder output.\n", ErrorType::BadProcessing);
 					}
 
 					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();

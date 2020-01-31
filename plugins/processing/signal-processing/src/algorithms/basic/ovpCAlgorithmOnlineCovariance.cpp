@@ -6,18 +6,16 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
+using namespace /*OpenViBE::*/Toolkit;
 using namespace SignalProcessing;
 
-using namespace OpenViBEToolkit;
 
 using namespace Eigen;
 
 #define COV_DEBUG 0
 #if COV_DEBUG
-void CAlgorithmOnlineCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr, const MatrixXdRowMajor &mat, const CString &desc)
+void CAlgorithmOnlineCovariance::dumpMatrix(Kernel::ILogManager &rMgr, const MatrixXdRowMajor &mat, const CString &desc)
 {
 	rMgr << LogLevel_Info << desc << "\n";
 	for (int i = 0 ; i < mat.rows() ; i++) 
@@ -53,18 +51,18 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		OV_ERROR_UNLESS_KRF(ip_Shrinkage >= 0.0 && ip_Shrinkage <= 1.0,
 							"Invalid shrinkage parameter (expected value between 0 and 1)",
-							OpenViBE::Kernel::ErrorType::BadInput);
+							ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(ip_FeatureVectorSet->getDimensionCount() == 2,
 							"Invalid feature vector with " << ip_FeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
-							OpenViBE::Kernel::ErrorType::BadInput);
+							ErrorType::BadInput);
 
 		const size_t nRows = ip_FeatureVectorSet->getDimensionSize(0);
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1,
 							"Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)",
-							OpenViBE::Kernel::ErrorType::BadInput);
+							ErrorType::BadInput);
 
 		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_Shrinkage << " ...\n";
 		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_TraceNormalization ? "[on]" : "[off]") << "\n";
@@ -95,7 +93,7 @@ bool CAlgorithmOnlineCovariance::process()
 
 		const double* buffer = ip_FeatureVectorSet->getBuffer();
 
-		OV_ERROR_UNLESS_KRF(buffer, "Input buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(buffer, "Input buffer is NULL", ErrorType::BadInput);
 
 		// Cast our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
 		const Map<MatrixXdRowMajor> sampleChunk(const_cast<double*>(buffer), nRows, nCols);
@@ -141,8 +139,8 @@ bool CAlgorithmOnlineCovariance::process()
 			if (m_n == 0)
 			{
 				m_mean = sampleChunk.row(0);
-				start              = 1;
-				m_n                = 1;
+				start  = 1;
+				m_n    = 1;
 			}
 
 			MatrixXd chunkContribution;
@@ -232,7 +230,7 @@ bool CAlgorithmOnlineCovariance::process()
 			m_n = countAfter;
 		}
 #endif
-		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_UpdateMethod).str() << "]", OpenViBE::Kernel::ErrorType::BadSetting); }
+		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_UpdateMethod).str() << "]", ErrorType::BadSetting); }
 	}
 
 	// Give output with regularization (mix prior + cov)?
@@ -240,7 +238,7 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", ErrorType::BadConfig);
 
 		// Converters to CMatrix
 		Map<MatrixXdRowMajor> outputMean(op_Mean->getBuffer(), 1, nCols);
@@ -267,7 +265,7 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", ErrorType::BadConfig);
 
 		// Converters to CMatrix
 		Map<MatrixXdRowMajor> outputMean(op_Mean->getBuffer(), 1, nCols);

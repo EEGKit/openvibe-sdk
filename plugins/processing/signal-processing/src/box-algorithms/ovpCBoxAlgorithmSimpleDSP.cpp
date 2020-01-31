@@ -7,12 +7,9 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 using namespace std;
-
-CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP() {}
 
 bool CBoxAlgorithmSimpleDSP::initialize()
 {
@@ -21,15 +18,15 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	m_variables = new double*[boxContext.getInputCount()];
 
 	OV_ERROR_UNLESS_KRF(m_variables, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs",
-						OpenViBE::Kernel::ErrorType::BadAlloc);
+						ErrorType::BadAlloc);
 
 	const CString equation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_parser               = new CEquationParser(*this, m_variables, boxContext.getInputCount());
 
-	OV_ERROR_UNLESS_KRF(m_parser, "Failed to create equation parser", OpenViBE::Kernel::ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_parser, "Failed to create equation parser", ErrorType::BadAlloc);
 
 	OV_ERROR_UNLESS_KRF(m_parser->compileEquation(equation.toASCIIString()), "Failed to compile equation [" << equation << "]",
-						OpenViBE::Kernel::ErrorType::Internal);
+						ErrorType::Internal);
 
 	m_equationType  = m_parser->getTreeCategory();
 	m_equationParam = m_parser->getTreeParameter();
@@ -39,7 +36,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(streamType, OV_TypeId_StreamedMatrix),
 						"Invalid output stream [" << streamType.str() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
-						OpenViBE::Kernel::ErrorType::Internal);
+						ErrorType::Internal);
 
 	if (streamType == OV_TypeId_StreamedMatrix)
 	{
@@ -100,7 +97,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	else
 	{
 		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(streamType) << ":id=" << streamType.str() << "] not yet implemented",
-					 OpenViBE::Kernel::ErrorType::NotImplemented);
+					 ErrorType::NotImplemented);
 	}
 
 	m_checkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
@@ -150,7 +147,7 @@ bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 		{
 			OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0) || tEnd == boxContext.getInputChunkEndTime(i, 0),
 								"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",
-								OpenViBE::Kernel::ErrorType::BadInput);
+								ErrorType::BadInput);
 		}
 	}
 
@@ -187,7 +184,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 			{
 				OV_ERROR_UNLESS_KRF(m_matrices[0]->getBufferElementCount() == op_matrix->getBufferElementCount(),
 									"Invalid matrix dimension [" << m_matrices[0]->getBufferElementCount() << "] (expected value = "
-									<< op_matrix->getBufferElementCount() <<")", OpenViBE::Kernel::ErrorType::BadValue);
+									<< op_matrix->getBufferElementCount() <<")", ErrorType::BadValue);
 			}
 			nHeader++;
 		}
@@ -198,11 +195,11 @@ bool CBoxAlgorithmSimpleDSP::process()
 	}
 
 	OV_ERROR_UNLESS_KRF((!nHeader || nHeader == nInput) && (!nBuffer || nBuffer == nInput) && (!nEnd || nEnd == nInput),
-						"Invalid stream structure", OpenViBE::Kernel::ErrorType::BadValue);
+						"Invalid stream structure", ErrorType::BadValue);
 
 	if (nHeader)
 	{
-		OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
+		Toolkit::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
 		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 	}
 	if (nBuffer)

@@ -3,22 +3,25 @@
 #include "ovtkCVector.hpp"
 #include "../../ovtkIFeatureVector.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	template <class TParent>
-	class TFeatureVector final : public TVector<TParent>
+	namespace Toolkit
 	{
-	public:
+		template <class TParent>
+		class TFeatureVector final : public TVector<TParent>
+		{
+		public:
 
-		explicit TFeatureVector(OpenViBE::IMatrix& rMatrix)
-			: TVector<TParent>(rMatrix) { }
+			explicit TFeatureVector(IMatrix& rMatrix)
+				: TVector<TParent>(rMatrix) { }
 
-		double getLabel() const override { return 0; }
+			double getLabel() const override { return 0; }
 
-		bool setLabel(const double /*label*/) override { return false; }
+			bool setLabel(const double /*label*/) override { return false; }
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < TParent >, OV_UndefinedIdentifier)
-	};
+			_IsDerivedFromClass_Final_(TVector<TParent>, OV_UndefinedIdentifier)
+		};
 
-	typedef TFeatureVector<IFeatureVector> CFeatureVector;
-} // namespace OpenViBEToolkit
+		typedef TFeatureVector<IFeatureVector> CFeatureVector;
+	}  // namespace Toolkit
+}  // namespace OpenViBE

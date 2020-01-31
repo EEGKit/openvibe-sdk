@@ -59,12 +59,33 @@ public:
 	{
 		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
 		if (m_CurrentID == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_helper.getStr(buffer, size) << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_EBMLVersion) { g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_EBMLIdLength) { g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_DocTypeVersion) { g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_DocTypeReadVersion) { g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML::CIdentifier(0x1234)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
-		else if (m_CurrentID == EBML::CIdentifier(0xffffffffffffffffLL)) { g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n"; }
+		else if (m_CurrentID == EBML_Identifier_EBMLVersion)
+		{
+			g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n";
+		}
+		else if (m_CurrentID == EBML_Identifier_EBMLIdLength)
+		{
+			g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec <<
+					"]\n";
+		}
+		else if (m_CurrentID == EBML_Identifier_DocTypeVersion)
+		{
+			g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec <<
+					"]\n";
+		}
+		else if (m_CurrentID == EBML_Identifier_DocTypeReadVersion)
+		{
+			g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec
+					<< "]\n";
+		}
+		else if (m_CurrentID == EBML::CIdentifier(0x1234))
+		{
+			g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n";
+		}
+		else if (m_CurrentID == EBML::CIdentifier(0xffffffffffffffffLL))
+		{
+			g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n";
+		}
 		else if (m_CurrentID == EBML::CIdentifier(0x4321)) { g_OutputStream << "Got double : [" << m_helper.getDouble(buffer, size) << "]\n"; }
 		else if (m_CurrentID == EBML::CIdentifier(0x8765)) { g_OutputStream << "Got float : [" << m_helper.getDouble(buffer, size) << "]\n"; }
 		else { g_OutputStream << "Got " << size << " data bytes, node id not known\n"; }

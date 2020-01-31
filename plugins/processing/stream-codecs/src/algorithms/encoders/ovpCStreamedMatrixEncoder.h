@@ -3,58 +3,61 @@
 #include "../../ovp_defines.h"
 #include "ovpCEBMLBaseEncoder.h"
 
-namespace OpenViBEPlugins
+namespace OpenViBE
 {
-	namespace StreamCodecs
+	namespace Plugins
 	{
-		class CStreamedMatrixEncoder : public CEBMLBaseEncoder
+		namespace StreamCodecs
 		{
-		public:
-			void release() override { delete this; }
-			bool initialize() override;
-			bool uninitialize() override;
-			bool processHeader() override;
-			bool processBuffer() override;
-
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StreamedMatrixEncoder)
-
-		protected:
-
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
-
-		private:
-
-			size_t m_size = 0;
-		};
-
-		class CStreamedMatrixEncoderDesc : public CEBMLBaseEncoderDesc
-		{
-		public:
-			void release() override { }
-			OpenViBE::CString getName() const override { return OpenViBE::CString("Streamed matrix stream encoder"); }
-			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stream codecs/Encoders"); }
-			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
-			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamedMatrixEncoder; }
-			OpenViBE::Plugins::IPluginObject* create() override { return new CStreamedMatrixEncoder(); }
-
-			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& prototype) const override
+			class CStreamedMatrixEncoder : public CEBMLBaseEncoder
 			{
-				CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
+			public:
+				void release() override { delete this; }
+				bool initialize() override;
+				bool uninitialize() override;
+				bool processHeader() override;
+				bool processBuffer() override;
 
-				prototype.addInputParameter(
-					OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StreamedMatrixEncoder)
 
-				return true;
-			}
+			protected:
 
-			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StreamedMatrixEncoderDesc)
-		};
-	} // namespace StreamCodecs
-} // namespace OpenViBEPlugins
+				Kernel::TParameterHandler<IMatrix*> ip_pMatrix;
+
+			private:
+
+				size_t m_size = 0;
+			};
+
+			class CStreamedMatrixEncoderDesc : public CEBMLBaseEncoderDesc
+			{
+			public:
+				void release() override { }
+				CString getName() const override { return CString("Streamed matrix stream encoder"); }
+				CString getAuthorName() const override { return CString("Yann Renard"); }
+				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+				CString getShortDescription() const override { return CString(""); }
+				CString getDetailedDescription() const override { return CString(""); }
+				CString getCategory() const override { return CString("Stream codecs/Encoders"); }
+				CString getVersion() const override { return CString("1.0"); }
+				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+				CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamedMatrixEncoder; }
+				IPluginObject* create() override { return new CStreamedMatrixEncoder(); }
+
+				bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
+				{
+					CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
+
+					prototype.addInputParameter(
+						OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix, "Matrix", Kernel::ParameterType_Matrix);
+
+					return true;
+				}
+
+				_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StreamedMatrixEncoderDesc)
+			};
+		} // namespace StreamCodecs
+	}  // namespace Plugins
+}  // namespace OpenViBE

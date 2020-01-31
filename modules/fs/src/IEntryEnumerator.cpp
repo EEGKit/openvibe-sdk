@@ -84,48 +84,35 @@ namespace FS
 	protected:
 		IEntryEnumeratorCallBack& m_entryEnumeratorCB;
 	};
-} // namespace FS
 
 // ________________________________________________________________________________________________________________
 //
-
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-namespace FS
-{
 	class CEntryEnumeratorLinux final : public CEntryEnumerator
 	{
 	public:
 		CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) { }
 		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
 	};
-};
 
 #elif defined TARGET_OS_Windows
-
-namespace FS
-{
 	class CEntryEnumeratorWindows final : public CEntryEnumerator
 	{
 	public:
 		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) {}
 		bool enumerate(const char* sWildCard, bool bRecursive = false) override;
 	};
-} // namespace FS
 
 #else
-
-namespace FS
-{
 	class CEntryEnumeratorDummy : public CEntryEnumerator
 	{
 	public:
 		explicit CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) { }
 		virtual bool enumerate(const char* sWildCard, bool bRecursive=false) { return !sWildCard ? false : true; }
 	};
-} // namespace FS
 
 #endif
+} // namespace FS
 
 // ________________________________________________________________________________________________________________
 //

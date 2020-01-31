@@ -44,7 +44,7 @@ namespace OpenViBE
 		 * \param logManager [in] : the log manager that takes the object
 		 * \param object [in] : the object to log
 		 * \return The log manager itself
-		 * \sa OpenViBE::Kernel::ILogManager
+		 * \sa ILogManager
 		 *
 		 * This function helps in logging different objects thanks to the
 		 * stream operator. The log manager can almost be used as any std

@@ -73,7 +73,7 @@ CIdentifier CLink::getSourceBoxOutputIdentifier() const { return m_srcBoxOutputI
 bool CLink::getTarget(CIdentifier& dstBoxID, size_t& boxInputIndex, CIdentifier& dstBoxInputID) const
 {
 	dstBoxID      = m_dstBoxID;
-	boxInputIndex         = m_dstInputIdx;
+	boxInputIndex = m_dstInputIdx;
 	dstBoxInputID = m_dstBoxInputID;
 	return true;
 }

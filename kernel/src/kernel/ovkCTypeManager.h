@@ -43,7 +43,7 @@ namespace OpenViBE
 			uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& name) const override;
 			bool evaluateSettingValue(CString value, double& result) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager)
+			_IsDerivedFromClass_Final_(TKernelObject<ITypeManager>, OVK_ClassId_Kernel_TypeManager)
 
 		protected:
 

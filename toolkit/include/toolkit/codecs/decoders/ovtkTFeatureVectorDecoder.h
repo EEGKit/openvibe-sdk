@@ -6,54 +6,58 @@
 
 #include "ovtkTStreamedMatrixDecoder.h"
 
-namespace OpenViBEToolkit
+namespace OpenViBE
 {
-	template <class T>
-	class TFeatureVectorDecoderLocal : public T
+	namespace Toolkit
 	{
-	protected:
-
-		using T::m_codec;
-		using T::m_boxAlgorithm;
-		using T::m_iBuffer;
-		using T::m_oMatrix;
-
-		bool initializeImpl()
+		template <class T>
+		class TFeatureVectorDecoderLocal : public T
 		{
-			m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorDecoder));
-			m_codec->initialize();
-			m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorDecoder_InputParameterId_MemoryBufferToDecode));
-			m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorDecoder_OutputParameterId_Matrix));
+		protected:
 
-			return true;
-		}
+			using T::m_codec;
+			using T::m_boxAlgorithm;
+			using T::m_iBuffer;
+			using T::m_oMatrix;
 
-	public:
-		using T::initialize;
-		using T::uninitialize;
+			bool initializeImpl()
+			{
+				m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(
+					m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorDecoder));
+				m_codec->initialize();
+				m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_FeatureVectorDecoder_InputParameterId_MemoryBufferToDecode));
+				m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_FeatureVectorDecoder_OutputParameterId_Matrix));
 
-		virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedHeader); }
-		virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedBuffer); }
-		virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedEnd); }
-	};
+				return true;
+			}
 
-	template <class T>
-	class TFeatureVectorDecoder : public TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
-	{
-		using TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_boxAlgorithm;
-	public:
-		using TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
+		public:
+			using T::initialize;
+			using T::uninitialize;
 
-		TFeatureVectorDecoder() { }
+			virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedHeader); }
+			virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedBuffer); }
+			virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorDecoder_OutputTriggerId_ReceivedEnd); }
+		};
 
-		TFeatureVectorDecoder(T& boxAlgorithm, size_t index)
+		template <class T>
+		class TFeatureVectorDecoder : public TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 		{
-			m_boxAlgorithm = NULL;
-			this->initialize(boxAlgorithm, index);
-		}
+			using TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_boxAlgorithm;
+		public:
+			using TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-		virtual ~TFeatureVectorDecoder() { this->uninitialize(); }
-	};
-} // namespace OpenViBEToolkit
+			TFeatureVectorDecoder() { }
+
+			TFeatureVectorDecoder(T& boxAlgorithm, size_t index)
+			{
+				m_boxAlgorithm = NULL;
+				this->initialize(boxAlgorithm, index);
+			}
+
+			virtual ~TFeatureVectorDecoder() { this->uninitialize(); }
+		};
+	}  // namespace Toolkit
+}  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

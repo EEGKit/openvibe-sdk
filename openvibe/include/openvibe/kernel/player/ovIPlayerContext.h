@@ -7,7 +7,8 @@ namespace OpenViBE
 	namespace Plugins
 	{
 		class IPluginObject;
-	}
+	}  // namespace Plugins
+
 	namespace Kernel
 	{
 		class IConfigurationManager;
@@ -183,7 +184,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_PlayerContext)
+			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Player_PlayerContext)
 		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	}  // namespace Kernel
+}  // namespace OpenViBE

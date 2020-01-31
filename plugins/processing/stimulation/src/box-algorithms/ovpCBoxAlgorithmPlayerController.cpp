@@ -2,9 +2,7 @@
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
-
-using namespace OpenViBEPlugins;
+using namespace /*OpenViBE::*/Plugins;
 using namespace Stimulation;
 
 bool CBoxAlgorithmPlayerController::initialize()
@@ -70,8 +68,9 @@ bool CBoxAlgorithmPlayerController::process()
 					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = this->getPlayerContext().forward(); }
 
 					OV_ERROR_UNLESS_KRF(res,
-										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]",
-										OpenViBE::Kernel::ErrorType::BadConfig);
+										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
+											m_actionID) << "]",
+										ErrorType::BadConfig);
 				}
 			}
 		}

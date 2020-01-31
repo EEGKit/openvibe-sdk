@@ -15,7 +15,6 @@ namespace OpenViBE
 				: m_playerCtx(playerContext), m_logManager(logManager), m_simulatedBox(simulatedBox) {}
 
 			bool isActive(const ELogLevel level) override { return m_logManager.isActive(level); }
-
 			bool activate(const ELogLevel level, const bool active) override { return m_logManager.activate(level, active); }
 
 			bool activate(const ELogLevel startLevel, const ELogLevel endLevel, const bool active) override

@@ -8,7 +8,7 @@ namespace OpenViBE
 	{
 		class IBoxProto;
 		class IBoxAlgorithmContext;
-	}
+	}  //namespace Kernel
 
 	namespace Plugins
 	{
@@ -24,7 +24,7 @@ namespace OpenViBE
 		 * This class should be derived by any plugin developer in
 		 * order to describe a specific OpenViBE box algorithm.
 		 *
-		 * \sa OpenViBE::Plugins::IBoxAlgorithm
+		 * \sa IBoxAlgorithm
 		 *
 		 * \todo details about building new plugins
 		 */
@@ -46,7 +46,7 @@ namespace OpenViBE
 			 * what the corresponding box should look like
 			 * (inputs/outputs/settings).
 			 *
-			 * \sa OpenViBE::Plugins::IBoxProto
+			 * \sa IBoxProto
 			 */
 			virtual bool getBoxPrototype(Kernel::IBoxProto& prototype) const = 0;
 			/**
@@ -80,8 +80,8 @@ namespace OpenViBE
 			 * is created if any modification flag is set in its prototype.
 			 * This box listener will be notified each time the box is modified.
 			 *
-			 * \sa OpenViBE::Kernel::IBoxProto
-			 * \sa OpenViBE::Plugins::IBoxListener
+			 * \sa Kernel::IBoxProto
+			 * \sa IBoxListener
 			 */
 			virtual IBoxListener* createBoxListener() const { return nullptr; }
 			/**
@@ -98,7 +98,7 @@ namespace OpenViBE
 
 			//@}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_BoxAlgorithmDesc)
+			_IsDerivedFromClass_(IPluginObjectDesc, OV_ClassId_Plugins_BoxAlgorithmDesc)
 		};
 	} // namespace Plugins
 } // namespace OpenViBE

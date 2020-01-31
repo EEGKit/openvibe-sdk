@@ -30,8 +30,7 @@ namespace OpenViBE
 			CIdentifier getTargetBoxInputIdentifier() const override;
 			bool acceptVisitor(IObjectVisitor& visitor) override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILink>>,
-									   OVK_ClassId_Kernel_Scenario_Link)
+			_IsDerivedFromClass_Final_(TAttributable<TKernelObject<ILink>>, OVK_ClassId_Kernel_Scenario_Link)
 
 		protected:
 

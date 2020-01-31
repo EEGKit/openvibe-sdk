@@ -10,7 +10,7 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class CKernelObjectFactory;
-	}
+	}  // namespace Kernel
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
 	bool isDerivedFromClass(  const OpenViBE::CIdentifier& classId) const override { return ((classId==(_ClassIdentifier_)) || _SuperClassName_::isDerivedFromClass(classId)); }
@@ -57,8 +57,8 @@ namespace OpenViBE
 		 *         overloads the class with given class identifier) and \e false when this object is not compatible.
 		 *
 		 * This method should be used to check object compatibility with super classes and interfaces. For any concrete class
-		 * instance derived from OpenViBE::IObject, one can check if plugin functions are implemented and so on... see
-		 * OpenViBE::Plugins::IPluginObject for an example...
+		 * instance derived from IObject, one can check if plugin functions are implemented and so on... see
+		 * Plugins::IPluginObject for an example...
 		 */
 		virtual bool isDerivedFromClass(const CIdentifier& classId) const { return (classId == OV_ClassId_Object); }
 
@@ -80,14 +80,11 @@ namespace OpenViBE
 
 		virtual ~IObject() { }
 	};
-} // namespace OpenViBE
 
-namespace OpenViBE
-{
 	class CNullObject final : public IObject
 	{
 	public:
 
-		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object)
+		_IsDerivedFromClass_Final_(IObject, OV_ClassId_Object)
 	};
-} // namespace OpenViBE
+}  // namespace OpenViBE

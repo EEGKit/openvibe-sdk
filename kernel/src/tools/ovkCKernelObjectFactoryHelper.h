@@ -25,7 +25,7 @@ namespace OpenViBE
 			template <class T>
 			bool releaseObject(T tObject) { return m_rKernelObjectFactory.releaseObject(tObject); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper)
+			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper)
 
 		protected:
 

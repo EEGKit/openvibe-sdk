@@ -146,7 +146,8 @@ namespace OpenViBE
 			virtual bool initializeFromExistingBox(const IBox& existingBox) = 0;
 
 
-			virtual bool addInterfacor(const EBoxInterfacorType type, const CString& name, const CIdentifier& typeID, const CIdentifier& id, bool notify = true) = 0;
+			virtual bool addInterfacor(const EBoxInterfacorType type, const CString& name, const CIdentifier& typeID, const CIdentifier& id,
+									   const bool notify = true) = 0;
 			virtual bool removeInterfacor(const EBoxInterfacorType type, const size_t index, const bool notify = true) = 0;
 
 			virtual size_t getInterfacorCount(const EBoxInterfacorType type) const = 0;
@@ -279,7 +280,8 @@ namespace OpenViBE
 			 * The output is always added after the last
 			 * already existing output.
 			 */
-			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier,
+								   const bool notify                                                     = true) = 0;
 
 			/**
 			 * \brief Removes an output for this box
@@ -363,7 +365,8 @@ namespace OpenViBE
 			 * will be add to the end.
 			 */
 			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const size_t index = size_t(-1),
-									const bool modifiability = false, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+									const bool modifiability                                                                 = false,
+									const CIdentifier& id                                                                    = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**
 			 * \brief Removes a setting for this box
@@ -675,7 +678,7 @@ namespace OpenViBE
 			 */
 			virtual void clearInputSupportTypes() = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Box)
+			_IsDerivedFromClass_(IAttributable, OV_ClassId_Kernel_Scenario_Box)
 		};
 
 		typedef IBox IStaticBoxContext;

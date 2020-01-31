@@ -12,7 +12,7 @@
 using namespace std;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace Plugins;
+using namespace /*OpenViBE::*/Plugins;
 
 namespace
 {
@@ -48,7 +48,8 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 		return false;
 	}
 
-	ofBoxIdx << ".. _Doc_BoxAlgorithms:\n\n" << generateRstTitle("Boxes list", 0) << "\nAvailable box algorithms are :\n\n" << generateRstIndex(m_categories) << " \n";
+	ofBoxIdx << ".. _Doc_BoxAlgorithms:\n\n" << generateRstTitle("Boxes list", 0) << "\nAvailable box algorithms are :\n\n" << generateRstIndex(m_categories) <<
+			" \n";
 
 	if (!m_deprecatedBoxesCategories.empty())
 	{
