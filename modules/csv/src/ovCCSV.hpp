@@ -58,7 +58,7 @@ namespace OpenViBE
 			 */
 			void setOutputFloatPrecision(const size_t precision) override { m_oPrecision = precision; }
 
-			void setFormatType(EStreamType typeID) override;
+			void setFormatType(const EStreamType typeID) override;
 			EStreamType getFormatType() override { return m_inputTypeID; }
 
 			void setLastMatrixOnlyMode(const bool isActivated) override { m_lastMatrixOnly = isActivated; }

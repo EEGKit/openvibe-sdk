@@ -119,14 +119,14 @@ namespace OpenViBE
 			 *
 			 * \param precision number of digits
 			 */
-			virtual void setOutputFloatPrecision(size_t precision) = 0;
+			virtual void setOutputFloatPrecision(const size_t precision) = 0;
 
 			/**
 			 * \brief Set the format type that will be written or read.
 			 *
 			 * \param typeID Could be Streamed Matrix, Signal, Covariance Matrix, etc ...
 			 */
-			virtual void setFormatType(EStreamType typeID) = 0;
+			virtual void setFormatType(const EStreamType typeID) = 0;
 
 			/**
 			 * \brief Return the format type
@@ -140,7 +140,7 @@ namespace OpenViBE
 			 *
 			 * \param isActivated bool setting it to true will activate the LastMatrixOnly mode, false will disable it.
 			 */
-			virtual void setLastMatrixOnlyMode(bool isActivated) = 0;
+			virtual void setLastMatrixOnlyMode(const bool isActivated) = 0;
 
 			/**
 			 * \brief Return the state of the LastMatrixOnly mode
