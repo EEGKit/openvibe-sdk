@@ -80,6 +80,8 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& ctx) : TKernelObject<IMet
 {
 	this->TKernelObject<IMetaboxManager>::getScenarioManager().registerScenarioImporter(
 		OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
+	this->TKernelObject<IMetaboxManager>::getScenarioManager().registerScenarioImporter(
+		OV_ScenarioImportContext_OnLoadMetaboxImport, ".xml", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
 CMetaboxManager::~CMetaboxManager() { for (auto& desc : m_objectDesc) { delete desc.second; } }

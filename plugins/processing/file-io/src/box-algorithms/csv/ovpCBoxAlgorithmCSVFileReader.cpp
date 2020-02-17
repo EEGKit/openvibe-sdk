@@ -207,7 +207,6 @@ bool CBoxAlgorithmCSVFileReader::process()
 	//line buffer
 	char line[BUFFER_LEN];
 	const double currentTime = TimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
-	//IBoxIO& boxContext=this->getDynamicBoxContext();
 
 	//if no line was read, read the first data line.
 	if (m_lastLineSplits.empty())

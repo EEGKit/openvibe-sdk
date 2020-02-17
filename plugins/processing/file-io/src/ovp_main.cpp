@@ -40,6 +40,7 @@ OVP_Declare_Begin()
 	OVP_Declare_New(FileIO::CBoxAlgorithmOVCSVFileReaderDesc)
 
 	context.getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_SchedulerMetaboxImport, ".mxb", OVP_ClassId_Algorithm_XMLScenarioImporter);
+	context.getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_SchedulerMetaboxImport, ".xml", OVP_ClassId_Algorithm_XMLScenarioImporter);
 	context.getConfigurationManager().createConfigurationToken("ScenarioFileNameExtension.xml", "OpenViBE XML Scenario");
 	context.getConfigurationManager().createConfigurationToken("ScenarioFileNameExtension.mxs", "Mensia XML Scenario");
 	context.getConfigurationManager().createConfigurationToken("ScenarioFileNameExtension.mxb", "Mensia XML Component");

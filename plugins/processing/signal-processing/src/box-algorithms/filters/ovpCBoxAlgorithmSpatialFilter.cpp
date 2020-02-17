@@ -183,7 +183,6 @@ bool CBoxAlgorithmSpatialFilter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSpatialFilter::process()
 {
-	// IBox& boxContext=this->getStaticBoxContext();
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
