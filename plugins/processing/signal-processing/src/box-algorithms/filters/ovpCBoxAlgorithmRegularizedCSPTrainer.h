@@ -21,7 +21,6 @@ namespace OpenViBE
 			class CBoxAlgorithmRegularizedCSPTrainer final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 			{
 			public:
-				CBoxAlgorithmRegularizedCSPTrainer();
 				void release() override { delete this; }
 				bool initialize() override;
 				bool uninitialize() override;
@@ -45,7 +44,7 @@ namespace OpenViBE
 				bool m_saveAsBoxConf      = false;
 				bool m_hasBeenInitialized = false;
 
-				double m_tikhonov = 0;
+				double m_tikhonov = 0.0;
 
 				struct SIncrementalCovarianceProxy
 				{
