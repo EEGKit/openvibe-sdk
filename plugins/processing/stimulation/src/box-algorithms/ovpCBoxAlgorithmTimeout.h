@@ -35,14 +35,9 @@ namespace OpenViBE
 				Toolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_encoder;
 
 			private:
-				enum ETimeoutState
-				{
-					Timeout_No,
-					Timeout_Occurred,
-					Timeout_Sent
-				};
+				enum class ETimeoutState { No, Occurred, Sent };
 
-				ETimeoutState m_timeoutState = Timeout_No;
+				ETimeoutState m_timeoutState = ETimeoutState::No;
 				bool m_isHeaderSent          = false;
 
 				uint64_t m_timeout           = 0;

@@ -9,17 +9,13 @@ using namespace Stimulation;
 
 bool CBoxAlgorithmTimeout::initialize()
 {
-	m_timeoutState = Timeout_No;
+	m_timeoutState = ETimeoutState::No;
 
 	m_encoder.initialize(*this, 0);
 
 	const double timeout = double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
-	OV_ERROR_UNLESS_KRF(timeout > 0,
-						"Timeout delay value must be positive and non-zero",
-						ErrorType::BadSetting);
-	OV_ERROR_UNLESS_KRF(timeout == std::floor(timeout),
-						"Timeout delay value is not an integer",
-						ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(timeout > 0, "Timeout delay value must be positive and non-zero", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(timeout == std::floor(timeout), "Timeout delay value is not an integer", ErrorType::BadSetting);
 
 	m_timeout           = uint64_t(timeout) << 32;
 	m_stimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -45,10 +41,10 @@ bool CBoxAlgorithmTimeout::processClock(IMessageClock& /*messageClock*/)
 {
 	// if there was nothing received on the input for a period of time we raise the
 	// timeout flag and let the box send a stimulation
-	if (m_timeoutState == Timeout_No && getPlayerContext().getCurrentTime() > m_lastTimePolled + m_timeout)
+	if (m_timeoutState == ETimeoutState::No && getPlayerContext().getCurrentTime() > m_lastTimePolled + m_timeout)
 	{
 		this->getLogManager() << LogLevel_Trace << "Timeout reached at time " << time64(this->getPlayerContext().getCurrentTime()) << "\n";
-		m_timeoutState = Timeout_Occurred;
+		m_timeoutState = ETimeoutState::Occurred;
 	}
 
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
@@ -97,10 +93,10 @@ bool CBoxAlgorithmTimeout::process()
 	const uint64_t stimulationDate = this->getPlayerContext().getCurrentTime();
 
 	// If the timeout is reached we send the stimulation on the output 0
-	if (m_timeoutState == Timeout_Occurred)
+	if (m_timeoutState == ETimeoutState::Occurred)
 	{
 		stimulationSet->appendStimulation(m_stimulationToSend, stimulationDate, 0);
-		m_timeoutState = Timeout_Sent;
+		m_timeoutState = ETimeoutState::Sent;
 	}
 
 	// we need to send an empty chunk even if there's no stim
