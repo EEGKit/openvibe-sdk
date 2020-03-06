@@ -14,31 +14,13 @@ namespace OpenViBE
 		 * \brief This enum lists all the way a box can be modified
 		 * \sa Plugins::IBoxListener::process
 		 */
-		enum EBoxModification
+		enum class EBoxModification
 		{
-			BoxModification_Initialized,
-			BoxModification_DefaultInitialized,
-			BoxModification_NameChanged,
-			BoxModification_IdentifierChanged,
-			BoxModification_AlgorithmClassIdentifierChanged,
-			BoxModification_InputConnected,
-			BoxModification_InputDisconnected,
-			BoxModification_InputAdded,
-			BoxModification_InputRemoved,
-			BoxModification_InputTypeChanged,
-			BoxModification_InputNameChanged,
-			BoxModification_OutputConnected,
-			BoxModification_OutputDisconnected,
-			BoxModification_OutputAdded,
-			BoxModification_OutputRemoved,
-			BoxModification_OutputTypeChanged,
-			BoxModification_OutputNameChanged,
-			BoxModification_SettingAdded,
-			BoxModification_SettingRemoved,
-			BoxModification_SettingTypeChanged,
-			BoxModification_SettingNameChanged,
-			BoxModification_SettingDefaultValueChanged,
-			BoxModification_SettingValueChanged
+			Initialized, DefaultInitialized,
+			NameChanged, IdentifierChanged, AlgorithmClassIdentifierChanged,
+			InputConnected, InputDisconnected, InputAdded, InputRemoved, InputTypeChanged, InputNameChanged,
+			OutputConnected, OutputDisconnected, OutputAdded, OutputRemoved, OutputTypeChanged, OutputNameChanged,
+			SettingAdded, SettingRemoved, SettingTypeChanged, SettingNameChanged, SettingDefaultValueChanged, SettingValueChanged
 		};
 	}  // namespace Kernel
 

@@ -132,7 +132,7 @@ namespace OpenViBE
 				OV_ERROR_UNLESS_KRF(identifier != OV_UndefinedIdentifier, "Trying to set an undefined identifier", ErrorType::BadArgument);
 
 				m_identifier = identifier;
-				this->notify(BoxModification_IdentifierChanged);
+				this->notify(EBoxModification::IdentifierChanged);
 
 				return true;
 			}
@@ -140,7 +140,7 @@ namespace OpenViBE
 			bool setName(const CString& name) override
 			{
 				m_name = name;
-				this->notify(BoxModification_NameChanged);
+				this->notify(EBoxModification::NameChanged);
 				return true;
 			}
 
@@ -184,7 +184,7 @@ namespace OpenViBE
 					m_boxAlgorithmDesc->getBoxPrototype(oTempProto);
 				}
 
-				this->notify(BoxModification_AlgorithmClassIdentifierChanged);
+				this->notify(EBoxModification::AlgorithmClassIdentifierChanged);
 
 				return true;
 			}
@@ -193,8 +193,8 @@ namespace OpenViBE
 			{
 				if (!this->initializeFromAlgorithmClassIdentifierNoInit(algorithmClassID)) { return false; }
 
-				this->notify(BoxModification_Initialized);
-				this->notify(BoxModification_DefaultInitialized);
+				this->notify(EBoxModification::Initialized);
+				this->notify(EBoxModification::DefaultInitialized);
 				return true;
 			}
 
@@ -256,8 +256,8 @@ namespace OpenViBE
 
 				this->enableNotification();
 
-				this->notify(BoxModification_Initialized);
-				this->notify(BoxModification_DefaultInitialized);
+				this->notify(EBoxModification::Initialized);
+				this->notify(EBoxModification::DefaultInitialized);
 				return true;
 			}
 
@@ -322,7 +322,7 @@ namespace OpenViBE
 
 				this->enableNotification();
 
-				this->notify(BoxModification_Initialized);
+				this->notify(EBoxModification::Initialized);
 
 				return true;
 			}
@@ -376,13 +376,13 @@ namespace OpenViBE
 					switch (interfacorType)
 					{
 						case Input:
-							this->notify(BoxModification_InputAdded, newCount);
+							this->notify(EBoxModification::InputAdded, newCount);
 							break;
 						case Output:
-							this->notify(BoxModification_OutputAdded, newCount);
+							this->notify(EBoxModification::OutputAdded, newCount);
 							break;
 						case Setting:
-							this->notify(BoxModification_SettingAdded, newCount);
+							this->notify(EBoxModification::SettingAdded, newCount);
 							break;
 						default: break;
 					}
@@ -573,13 +573,13 @@ namespace OpenViBE
 				switch (interfacorType)
 				{
 					case Input:
-						this->notify(BoxModification_InputTypeChanged, index);
+						this->notify(EBoxModification::InputTypeChanged, index);
 						break;
 					case Output:
-						this->notify(BoxModification_OutputTypeChanged, index);
+						this->notify(EBoxModification::OutputTypeChanged, index);
 						break;
 					case Setting:
-						this->notify(BoxModification_SettingTypeChanged, index);
+						this->notify(EBoxModification::SettingTypeChanged, index);
 						this->notifySettingChange(SettingChange, int(index));
 						break;
 				}
@@ -639,13 +639,13 @@ namespace OpenViBE
 				switch (interfacorType)
 				{
 					case Input:
-						this->notify(BoxModification_InputNameChanged, index);
+						this->notify(EBoxModification::InputNameChanged, index);
 						break;
 					case Output:
-						this->notify(BoxModification_OutputNameChanged, index);
+						this->notify(EBoxModification::OutputNameChanged, index);
 						break;
 					case Setting:
-						this->notify(BoxModification_SettingNameChanged, index);
+						this->notify(EBoxModification::SettingNameChanged, index);
 						break;
 				}
 
@@ -784,7 +784,7 @@ namespace OpenViBE
 					m_interfacorIDToIdx[Input].erase(itIdent);
 				}
 
-				if (notify) { this->notify(BoxModification_InputRemoved, index); }
+				if (notify) { this->notify(EBoxModification::InputRemoved, index); }
 
 				return true;
 			}
@@ -904,7 +904,7 @@ namespace OpenViBE
 					m_interfacorIDToIdx.at(Output).erase(itIdent);
 				}
 
-				if (notify) { this->notify(BoxModification_OutputRemoved, index); }
+				if (notify) { this->notify(EBoxModification::OutputRemoved, index); }
 
 				return true;
 			}
@@ -1085,7 +1085,7 @@ namespace OpenViBE
 
 				if (notify)
 				{
-					this->notify(BoxModification_SettingAdded, insertLocation);
+					this->notify(EBoxModification::SettingAdded, insertLocation);
 					this->notifySettingChange(SettingAdd, int(insertLocation));
 				}
 
@@ -1130,7 +1130,7 @@ namespace OpenViBE
 
 				if (notify)
 				{
-					this->notify(BoxModification_SettingRemoved, index);
+					this->notify(EBoxModification::SettingRemoved, index);
 					this->notifySettingChange(SettingDelete, int(index));
 				}
 
@@ -1244,7 +1244,7 @@ namespace OpenViBE
 
 				std::static_pointer_cast<CSetting>(m_interfacors[Setting][index])->m_DefaultValue = defaultValue;
 
-				this->notify(BoxModification_SettingDefaultValueChanged, index);
+				this->notify(EBoxModification::SettingDefaultValueChanged, index);
 
 				return true;
 			}
@@ -1279,7 +1279,7 @@ namespace OpenViBE
 
 					if (notify)
 					{
-						this->notify(BoxModification_SettingValueChanged, index);
+						this->notify(EBoxModification::SettingValueChanged, index);
 						this->notifySettingChange(SettingValueUpdate, int(index));
 					}
 				}
@@ -1312,7 +1312,7 @@ namespace OpenViBE
 
 				std::static_pointer_cast<CSetting>(m_interfacors[Setting][index])->m_Mod = value;
 
-				//this->notify(BoxModification_SettingNameChanged, index);
+				//this->notify(EBoxModification::SettingNameChanged, index);
 				return true;
 			}
 
