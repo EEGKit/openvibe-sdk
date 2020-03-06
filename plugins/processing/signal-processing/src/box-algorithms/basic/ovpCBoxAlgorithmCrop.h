@@ -28,7 +28,7 @@ namespace OpenViBE
 				Kernel::IAlgorithmProxy* m_encoder = nullptr;
 				double m_minCropValue              = 0;
 				double m_maxCropValue              = 0;
-				uint64_t m_cropMethod              = 0;
+				ECropMethod m_cropMethod           = ECropMethod::MinMax;
 			};
 
 			class CBoxAlgorithmCropListener final : public Toolkit::TBoxListener<IBoxListener>

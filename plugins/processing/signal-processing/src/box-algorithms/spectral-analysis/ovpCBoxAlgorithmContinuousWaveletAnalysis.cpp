@@ -34,13 +34,13 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	m_decoder.initialize(*this, 0);
 	for (size_t i = 0; i < 4; ++i) { m_encoders[i].initialize(*this, i); }
 
-	const uint64_t waveletType    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_waveletParam                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_nScaleJ                     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_highestFreq                 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	const double frequencySpacing = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	const EContinuousWaveletType type = EContinuousWaveletType(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
+	m_waveletParam                    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_nScaleJ                         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_highestFreq                     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	const double frequencySpacing     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	if (waveletType == Morlet)
+	if (type == EContinuousWaveletType::Morlet)
 	{
 		m_waveletType = "morlet";
 
@@ -50,7 +50,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 			return false;
 		}
 	}
-	else if (waveletType == Paul)
+	else if (type == EContinuousWaveletType::Paul)
 	{
 		m_waveletType = "paul";
 
@@ -65,7 +65,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 			return false;
 		}
 	}
-	else if (waveletType == DOG)
+	else if (type == EContinuousWaveletType::DOG)
 	{
 		m_waveletType = "dog";
 
@@ -82,7 +82,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Error << "Unknown wavelet type [" << waveletType << "].\n";
+		this->getLogManager() << LogLevel_Error << "Unknown wavelet type.\n";
 		return false;
 	}
 
@@ -194,7 +194,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				oMatrix->setDimensionSize(1, m_nScaleJ);
 				oMatrix->setDimensionSize(2, nSample);
 
-				for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
+				for (size_t c          = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 				for (size_t scaleIndex = 0; scaleIndex < m_nScaleJ; ++scaleIndex)
 				{
 					const double scaleValue     = m_waveletTransform->scale[scaleIndex];

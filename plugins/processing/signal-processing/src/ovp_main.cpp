@@ -34,38 +34,38 @@ using namespace /*OpenViBE::*/Plugins;
 
 OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_EpochAverageMethod, "Epoch Average method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average", Moving);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average (Immediate)", MovingImmediate);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Epoch block average", Block);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Cumulative average", Cumulative);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average", size_t(EEpochAverageMethod::Moving));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average (Immediate)", size_t(EEpochAverageMethod::MovingImmediate));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Epoch block average", size_t(EEpochAverageMethod::Block));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Cumulative average", size_t(EEpochAverageMethod::Cumulative));
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_CropMethod, "Crop method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Min", Min);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Max", Max);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Min/Max", MinMax);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Min", size_t(ECropMethod::Min));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Max", size_t(ECropMethod::Max));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_CropMethod, "Min/Max", size_t(ECropMethod::MinMax));
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_SelectionMethod, "Selection method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_SelectionMethod, "Select", Select);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_SelectionMethod, "Reject", Reject);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_SelectionMethod, "Select EEG", Select_EEG);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_SelectionMethod, "Select", size_t(ESelectionMethod::Select));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_SelectionMethod, "Reject", size_t(ESelectionMethod::Reject));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_SelectionMethod, "Select EEG", size_t(ESelectionMethod::Select_EEG));
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_MatchMethod, "Match method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_MatchMethod, "Name", Name);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_MatchMethod, "Index", Index);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_MatchMethod, "Smart", Smart);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_MatchMethod, "Name", size_t(EMatchMethod::Name));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_MatchMethod, "Index", size_t(EMatchMethod::Index));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_MatchMethod, "Smart", size_t(EMatchMethod::Smart));
 
 
 	// Temporal filter
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_FilterMethod, "Filter method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Butterworth", Butterworth);
-	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Chebishev", EFilterMethod::Chebyshev);
-	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Yule Walked", EFilterMethod::YuleWalker);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Butterworth", size_t(EFilterMethod::Butterworth));
+	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Chebishev", size_t(EFilterMethod::Chebyshev));
+	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Yule Walked", size_t(EFilterMethod::YuleWalker));
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_FilterType, "Filter type");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Low Pass", LowPass);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "High Pass", HighPass);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Pass", BandPass);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Stop", BandStop);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Low Pass", size_t(EFilterType::LowPass));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "High Pass", size_t(EFilterType::HighPass));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Pass", size_t(EFilterType::BandPass));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Stop", size_t(EFilterType::BandStop));
 
 	OVP_Declare_New(SignalProcessing::CAlgorithmMatrixAverageDesc)
 
@@ -86,8 +86,8 @@ OVP_Declare_Begin()
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average", ChunkAverage);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample", Incremental);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average", size_t(EUpdateMethod::ChunkAverage));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample", size_t(EUpdateMethod::Incremental));
 
 	OVP_Declare_New(SignalProcessing::CBoxAlgorithmRegularizedCSPTrainerDesc)
 	OVP_Declare_New(SignalProcessing::CAlgorithmOnlineCovarianceDesc)
@@ -103,9 +103,9 @@ OVP_Declare_Begin()
 
 	// Wavelet Type
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_ContinuousWaveletType, "Continuous Wavelet Type");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Morlet wavelet", Morlet);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Paul wavelet", Paul);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet", DOG);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Morlet wavelet", size_t(EContinuousWaveletType::Morlet));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Paul wavelet", size_t(EContinuousWaveletType::Paul));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet", size_t(EContinuousWaveletType::DOG));
 
 	OVP_Declare_New(SignalProcessing::CBoxAlgorithmContinuousWaveletAnalysisDesc);
 
@@ -115,13 +115,13 @@ OVP_Declare_Begin()
 	OVP_Declare_New(SignalProcessing::CBoxAlgorithmSpectralAnalysisDesc);
 	OVP_Declare_New(SignalProcessing::CBoxAlgorithmWindowingDesc);
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_WindowMethod, "Window method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "None", None);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hamming", Hamming);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hanning", Hanning);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hann", Hann);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Blackman", Blackman);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Triangular", Triangular);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Square root", SquareRoot);
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "None", size_t(EWindowMethod::None));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hamming", size_t(EWindowMethod::Hamming));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hanning", size_t(EWindowMethod::Hanning));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hann", size_t(EWindowMethod::Hann));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Blackman", size_t(EWindowMethod::Blackman));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Triangular", size_t(EWindowMethod::Triangular));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Square root", size_t(EWindowMethod::SquareRoot));
 
 	OVP_Declare_New(SignalProcessing::CBoxAlgorithmXDAWNTrainerDesc);
 

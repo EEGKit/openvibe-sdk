@@ -56,7 +56,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
 	{
-		if (ip_averagingMethod == Moving)
+		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Moving))
 		{
 			IMatrix* swapMatrix;
 
@@ -76,7 +76,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
-		else if (ip_averagingMethod == MovingImmediate)
+		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::MovingImmediate))
 		{
 			IMatrix* swapMatrix;
 
@@ -96,7 +96,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (!m_history.empty());
 		}
-		else if (ip_averagingMethod == Block)
+		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Block))
 		{
 			IMatrix* swapMatrix = new CMatrix();
 
@@ -112,7 +112,7 @@ bool CAlgorithmMatrixAverage::process()
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
-		else if (ip_averagingMethod == Cumulative)
+		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
 			m_history.push_back(iMatrix);
 			shouldPerformAverage = true;
@@ -124,7 +124,7 @@ bool CAlgorithmMatrixAverage::process()
 	{
 		Toolkit::Matrix::clearContent(*oMatrix);
 
-		if (ip_averagingMethod == Cumulative)
+		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
 			IMatrix* matrix = m_history.at(0);
 

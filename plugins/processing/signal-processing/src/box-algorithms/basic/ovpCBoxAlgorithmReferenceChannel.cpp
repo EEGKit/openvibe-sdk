@@ -9,18 +9,18 @@ using namespace SignalProcessing;
 
 namespace
 {
-	size_t FindChannel(const IMatrix& matrix, const CString& channel, const CIdentifier& matchMethodID, const size_t start = 0)
+	size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 	{
 		size_t res = std::numeric_limits<size_t>::max();
 
-		if (matchMethodID == Name)
+		if (matchMethod == EMatchMethod::Name)
 		{
 			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
 				if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
 			}
 		}
-		else if (matchMethodID == Index)
+		else if (matchMethod == EMatchMethod::Index)
 		{
 			try
 			{
@@ -34,10 +34,10 @@ namespace
 				// catch block intentionnaly left blank
 			}
 		}
-		else if (matchMethodID == Smart)
+		else if (matchMethod == EMatchMethod::Smart)
 		{
-			if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, Name, start); }
-			if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, Index, start); }
+			if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, EMatchMethod::Name, start); }
+			if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, EMatchMethod::Index, start); }
 		}
 
 		return res;
@@ -81,15 +81,15 @@ bool CBoxAlgorithmReferenceChannel::process()
 								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
 								ErrorType::BadInput);
 
-			CString channel            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-			const uint64_t matchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+			CString channel                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+			const EMatchMethod method = EMatchMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
 
-			m_referenceChannelIdx = FindChannel(iMatrix, channel, matchMethod, 0);
+			m_referenceChannelIdx = FindChannel(iMatrix, channel, method, 0);
 
 			OV_ERROR_UNLESS_KRF(m_referenceChannelIdx != std::numeric_limits<size_t>::max(), "Invalid channel [" << channel << "]: channel not found",
 								ErrorType::BadSetting);
 
-			if (FindChannel(*m_decoder.getOutputMatrix(), channel, matchMethod, m_referenceChannelIdx + 1) != std::numeric_limits<size_t>::max())
+			if (FindChannel(*m_decoder.getOutputMatrix(), channel, method, m_referenceChannelIdx + 1) != std::numeric_limits<size_t>::max())
 			{
 				OV_WARNING_K("Multiple channels match for setting [" << channel << "]. Selecting [" << m_referenceChannelIdx << "]");
 			}
