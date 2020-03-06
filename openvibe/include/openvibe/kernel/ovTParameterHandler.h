@@ -211,7 +211,7 @@ namespace OpenViBE
 
 		protected:
 
-			IParameter* m_parameter = nullptr; //!< Handled parameter
+			IParameter* m_parameter = nullptr; ///< Handled parameter
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

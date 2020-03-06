@@ -15,19 +15,19 @@ namespace OpenViBE
 		 */
 		enum EParameterType
 		{
-			ParameterType_None,           //!< No parameter
-			ParameterType_Integer,        //!< Integer parameter, 64bit
-			ParameterType_UInteger,       //!< Unsigned integer parameter, 64bit
-			ParameterType_Enumeration,    //!< Enumeration integer parameter
-			ParameterType_Boolean,        //!< Boolean parameter
-			ParameterType_Float,          //!< Float parameter, 64bit
-			ParameterType_String,         //!< String parameter
-			ParameterType_Identifier,     //!< Identifier parameter
-			ParameterType_Matrix,         //!< Matrix pointer parameter
-			ParameterType_StimulationSet, //!< Stimulation set pointer parameter
-			ParameterType_MemoryBuffer,   //!< Memory buffer pointer parameter
-			ParameterType_Object,         //!< Object pointer parameter
-			ParameterType_Pointer,        //!< Raw pointer parameter
+			ParameterType_None,           ///< No parameter
+			ParameterType_Integer,        ///< Integer parameter, 64bit
+			ParameterType_UInteger,       ///< Unsigned integer parameter, 64bit
+			ParameterType_Enumeration,    ///< Enumeration integer parameter
+			ParameterType_Boolean,        ///< Boolean parameter
+			ParameterType_Float,          ///< Float parameter, 64bit
+			ParameterType_String,         ///< String parameter
+			ParameterType_Identifier,     ///< Identifier parameter
+			ParameterType_Matrix,         ///< Matrix pointer parameter
+			ParameterType_StimulationSet, ///< Stimulation set pointer parameter
+			ParameterType_MemoryBuffer,   ///< Memory buffer pointer parameter
+			ParameterType_Object,         ///< Object pointer parameter
+			ParameterType_Pointer,        ///< Raw pointer parameter
 		};
 
 		/**

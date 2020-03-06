@@ -18,41 +18,41 @@ namespace OpenViBE
 		/**
 		 * \brief License type enumeration in order to know what software license a plugin can be released with
 		 */
-		enum ELicenseType
+		enum class ELicenseType
 		{
-			LicenseType_Unspecified,  //!< Generic for unspecified license type
-			LicenseType_Commercial,   //!< Generic for commercial software
-			LicenseType_AFL,          //!< Academic Free License
-			LicenseType_AL20,         //!< Apache License, Version 2.0
-			LicenseType_ASL,          //!< Apache Software License
-			LicenseType_APSL,         //!< Apple Public Source Licenses
-			LicenseType_BSD,          //!< BSD License
-			LicenseType_CPL,          //!< Common Public License
-			LicenseType_CeCILL,       //!< Licence CEA CNRS INRIA Logiciel Libre
-			LicenseType_CeCILLB,      //!< Licence CEA CNRS INRIA Logiciel Libre B
-			LicenseType_CeCILLC,      //!< Licence CEA CNRS INRIA Logiciel Libre C
-			LicenseType_EFL2,         //!< Eiffel Forum License Version 2.0
-			LicenseType_GPL,          //!< GNU General Public License
-			LicenseType_LGPL,         //!< GNU Lesser General Public License
-			LicenseType_IBMPL,        //!< IBM Public License
-			LicenseType_IOSL,         //!< Intel Open Source License
-			LicenseType_MPL10,        //!< Mozilla Public License Version 1.0
-			LicenseType_MPL11,        //!< Mozilla Public License Version 1.1
-			LicenseType_NPL10,        //!< Netscape Public License Version 1.0
-			LicenseType_NPL11,        //!< Netscape Public License Version 1.1
-			LicenseType_OSL,          //!< Open Software License
-			LicenseType_PHPL,         //!< PHP License
-			LicenseType_PAL,          //!< Perl Artistic License
-			LicenseType_CNRIPL,       //!< Python License (CNRI Python License)
-			LicenseType_PSFL,         //!< Python Software Foundation License
-			LicenseType_QPL,          //!< Q Public Licence (QT)
-			LicenseType_SL,           //!< Sleepycat Software Product License
-			LicenseType_SISSL,        //!< Sun Industry Standards Source License
-			LicenseType_SPL,          //!< Sun Public License
-			LicenseType_W3C,          //!< W3C Software License
-			LicenseType_WXWLL,        //!< wxWindows Library License
-			LicenseType_ZLL,          //!< zlib/libpng License
-			LicenseType_ZPL,          //!< Zope Public License
+			Unspecified,	///< Generic for unspecified license type
+			Commercial,		///< Generic for commercial software
+			AFL,			///< Academic Free License
+			AL20,			///< Apache License, Version 2.0
+			ASL,			///< Apache Software License
+			APSL,			///< Apple Public Source Licenses
+			BSD,			///< BSD License
+			CPL,			///< Common Public License
+			CeCILL,			///< Licence CEA CNRS INRIA Logiciel Libre
+			CeCILLB,		///< Licence CEA CNRS INRIA Logiciel Libre B
+			CeCILLC,		///< Licence CEA CNRS INRIA Logiciel Libre C
+			EFL2,			///< Eiffel Forum License Version 2.0
+			GPL,			///< GNU General Public License
+			LGPL,			///< GNU Lesser General Public License
+			IBMPL,			///< IBM Public License
+			IOSL,			///< Intel Open Source License
+			MPL10,			///< Mozilla Public License Version 1.0
+			MPL11,			///< Mozilla Public License Version 1.1
+			NPL10,			///< Netscape Public License Version 1.0
+			NPL11,			///< Netscape Public License Version 1.1
+			OSL,			///< Open Software License
+			PHPL,			///< PHP License
+			PAL,			///< Perl Artistic License
+			CNRIPL,			///< Python License (CNRI Python License)
+			PSFL,			///< Python Software Foundation License
+			QPL,			///< Q Public Licence (QT)
+			SL,				///< Sleepycat Software Product License
+			SISSL,			///< Sun Industry Standards Source License
+			SPL,			///< Sun Public License
+			W3C,			///< W3C Software License
+			WXWLL,			///< wxWindows Library License
+			ZLL,			///< zlib/libpng License
+			ZPL,			///< Zope Public License
 		};
 	}  // namespace Kernel
 
@@ -213,22 +213,6 @@ namespace OpenViBE
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
 			virtual bool hasFunctionality(const CIdentifier& functionality) const { return false; }
-			/**
-			 * \brief Tests the licence type for this plugin
-			 * \param license [in] : the licence type that this plugin may have
-			 * \return \e true in case this plugin accepts the specified licence.
-			 * \return \e false in other case
-			 *
-			 * Default implementation returns \c false .
-			 *
-			 * This function should return the licence which can be used to distribute the plugin. The aim of this functionnality is to
-			 * be able to quickly warn the user if the usage he is doing for the software is incompatible with the licence the plugin uses.
-			 * for example, a GPL plugin should not be used in a commercial context.
-			 *
-			 * A plugin may be used under different licences. For this reason, the OpenViBE kernel will loop on this function for each licence type to request.
-			 */
-			virtual bool hasLicenceType(Kernel::ELicenseType license) const { return false; }
-
 			//@}
 
 			_IsDerivedFromClass_(IObject, OV_ClassId_Plugins_PluginObjectDesc)

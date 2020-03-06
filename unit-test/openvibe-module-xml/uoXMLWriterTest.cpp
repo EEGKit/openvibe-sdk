@@ -78,10 +78,10 @@ TEST(XML_Writer_Test_Case, validateWriter)
 
 	XML::IWriter* writer = createWriter(callback);
 
-	writer->openChild("Document"); //!< Document Node
+	writer->openChild("Document"); ///< Document Node
 	writer->setAttribute("name", "test_reference");
 
-	writer->openChild("NodeWithChildren"); //!< NodeWithChildren Node
+	writer->openChild("NodeWithChildren"); ///< NodeWithChildren Node
 
 	writer->openChild("ChildNodeWithData");
 	writer->setChildData("child node data with more than 10 alphanumeric characters");
@@ -95,7 +95,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	writer->closeChild();
 	writer->closeChild();
 
-	writer->closeChild(); //!< NodeWithChildren END
+	writer->closeChild(); ///< NodeWithChildren END
 
 	writer->openChild("NodeWithData");
 	writer->setAttribute("status", "hasData");
@@ -107,7 +107,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	writer->setAttribute("ref", "test");
 	writer->closeChild();
 
-	writer->closeChild(); //!< Document Node END
+	writer->closeChild(); ///< Document Node END
 
 	writer->release();
 	callback.release();
