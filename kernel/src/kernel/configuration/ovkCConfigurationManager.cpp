@@ -380,7 +380,7 @@ CIdentifier CConfigurationManager::getUnusedIdentifier() const
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-static enum class ENodeType { Value, NamePrefix, NamePostfix, };
+enum class ENodeType { Value, NamePrefix, NamePostfix, };
 
 bool CConfigurationManager::internalExpand(const std::string& sValue, std::string& result) const
 {
