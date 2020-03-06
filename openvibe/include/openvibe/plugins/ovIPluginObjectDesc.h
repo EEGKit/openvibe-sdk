@@ -4,60 +4,11 @@
 
 namespace OpenViBE
 {
-	namespace Kernel
-	{
-		/**
-		 * \brief Functionality enumeration in order to know what a plugin is capable of
-		 */
-		enum EPluginFunctionality
-		{
-			PluginFunctionality_Undefined,
-			PluginFunctionality_Processing,
-		};
-
-		/**
-		 * \brief License type enumeration in order to know what software license a plugin can be released with
-		 */
-		enum class ELicenseType
-		{
-			Unspecified,	///< Generic for unspecified license type
-			Commercial,		///< Generic for commercial software
-			AFL,			///< Academic Free License
-			AL20,			///< Apache License, Version 2.0
-			ASL,			///< Apache Software License
-			APSL,			///< Apple Public Source Licenses
-			BSD,			///< BSD License
-			CPL,			///< Common Public License
-			CeCILL,			///< Licence CEA CNRS INRIA Logiciel Libre
-			CeCILLB,		///< Licence CEA CNRS INRIA Logiciel Libre B
-			CeCILLC,		///< Licence CEA CNRS INRIA Logiciel Libre C
-			EFL2,			///< Eiffel Forum License Version 2.0
-			GPL,			///< GNU General Public License
-			LGPL,			///< GNU Lesser General Public License
-			IBMPL,			///< IBM Public License
-			IOSL,			///< Intel Open Source License
-			MPL10,			///< Mozilla Public License Version 1.0
-			MPL11,			///< Mozilla Public License Version 1.1
-			NPL10,			///< Netscape Public License Version 1.0
-			NPL11,			///< Netscape Public License Version 1.1
-			OSL,			///< Open Software License
-			PHPL,			///< PHP License
-			PAL,			///< Perl Artistic License
-			CNRIPL,			///< Python License (CNRI Python License)
-			PSFL,			///< Python Software Foundation License
-			QPL,			///< Q Public Licence (QT)
-			SL,				///< Sleepycat Software Product License
-			SISSL,			///< Sun Industry Standards Source License
-			SPL,			///< Sun Public License
-			W3C,			///< W3C Software License
-			WXWLL,			///< wxWindows Library License
-			ZLL,			///< zlib/libpng License
-			ZPL,			///< Zope Public License
-		};
-	}  // namespace Kernel
-
 	namespace Plugins
 	{
+		/// <summary> Functionality enumeration in order to know what a plugin is capable of </summary>
+		enum class EPluginFunctionality { Undefined, Processing, Visualization };
+
 		class IPluginObject;
 
 		/**
@@ -204,15 +155,8 @@ namespace OpenViBE
 			 * \return \e true in case plugin has this functionality.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasFunctionality(Kernel::EPluginFunctionality functionality) const { return false; }
+			virtual bool hasFunctionality(const EPluginFunctionality functionality) const { return false; }
 
-			/**
-			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
-			 * \param functionality The identifier of the functionality to poll
-			 * \retval true If the plugin has the demanded functionality.
-			 * \retval false If the plugin does not have the demanded functionality.
-			 */
-			virtual bool hasFunctionality(const CIdentifier& functionality) const { return false; }
 			//@}
 
 			_IsDerivedFromClass_(IObject, OV_ClassId_Plugins_PluginObjectDesc)
