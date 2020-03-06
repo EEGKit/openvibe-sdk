@@ -156,10 +156,10 @@ EPlayerReturnCode CPlayer::initialize()
 	// 'global' one. Now lets change the config manager in the bridge to point to the local manager in order to load configurations into the local manager.
 	m_kernelCtxBridge.setConfigurationManager(m_runtimeConfigManager);
 
-	const ESchedulerInitializationCode code = m_scheduler.initialize();
+	const ESchedulerInitialization code = m_scheduler.initialize();
 
-	if (code == SchedulerInitialization_Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed); }
-	if (code == SchedulerInitialization_BoxInitializationFailed)
+	if (code == ESchedulerInitialization::Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed); }
+	if (code == ESchedulerInitialization::BoxInitializationFailed)
 	{
 		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
 	}

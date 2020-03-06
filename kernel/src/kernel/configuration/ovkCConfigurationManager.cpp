@@ -242,12 +242,12 @@ bool CConfigurationManager::setConfigurationTokenName(const CIdentifier& identif
 	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == OV_UndefinedIdentifier,
 						"Configuration token name " << name << " already exists", ErrorType::BadResourceCreation);
 
-	auto itConfigurationToken = m_ConfigTokens.find(identifier);
+	auto it = m_ConfigTokens.find(identifier);
 
-	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_ConfigTokens.end(), "Configuration token " << identifier.str() << " does not exist",
+	OV_ERROR_UNLESS_KRF(it != m_ConfigTokens.end(), "Configuration token " << identifier.str() << " does not exist",
 						ErrorType::BadResourceCreation);
 
-	itConfigurationToken->second.name = name;
+	it->second.name = name;
 	return true;
 }
 
@@ -277,11 +277,11 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(const CStr
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	auto itConfigurationToken = m_ConfigTokens.begin();
-	while (itConfigurationToken != m_ConfigTokens.end())
+	auto it = m_ConfigTokens.begin();
+	while (it != m_ConfigTokens.end())
 	{
-		if (itConfigurationToken->second.name == name) { return itConfigurationToken->first; }
-		++itConfigurationToken;
+		if (it->second.name == name) { return it->first; }
+		++it;
 	}
 	if (recursive && m_parentConfigManager) { return m_parentConfigManager->lookUpConfigurationTokenIdentifier(name, recursive); }
 	return OV_UndefinedIdentifier;
@@ -380,20 +380,12 @@ CIdentifier CConfigurationManager::getUnusedIdentifier() const
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-namespace
-{
-	enum ENodeType
-	{
-		NodeType_Value,
-		NodeType_NamePrefix,
-		NodeType_NamePostfix,
-	};
-} // namespace
+static enum class ENodeType { Value, NamePrefix, NamePostfix, };
 
 bool CConfigurationManager::internalExpand(const std::string& sValue, std::string& result) const
 {
 	std::stack<std::pair<ENodeType, std::string>> children;
-	children.push(std::make_pair(NodeType_Value, std::string()));
+	children.push(std::make_pair(ENodeType::Value, std::string()));
 
 	std::string prefix;
 	std::string postfix;
@@ -409,17 +401,17 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 		switch (sValue[i])
 		{
 			case '$':
-				children.push(std::make_pair(NodeType_NamePrefix, std::string()));
+				children.push(std::make_pair(ENodeType::NamePrefix, std::string()));
 				break;
 
 			case '{':
-				OV_ERROR_UNLESS_KRF(children.top().first == NodeType_NamePrefix,
+				OV_ERROR_UNLESS_KRF(children.top().first == ENodeType::NamePrefix,
 									"Could not expand token with syntax error while expanding " << sValue, ErrorType::BadFileParsing);
-				children.push(std::make_pair(NodeType_NamePostfix, std::string()));
+				children.push(std::make_pair(ENodeType::NamePostfix, std::string()));
 				break;
 
 			case '}':
-				OV_ERROR_UNLESS_KRF(children.top().first == NodeType_NamePostfix,
+				OV_ERROR_UNLESS_KRF(children.top().first == ENodeType::NamePostfix,
 									"Could not expand token with syntax error while expanding " << sValue, ErrorType::BadFileParsing);
 				postfix = children.top().second;
 				lowerPostfix.resize(postfix.size());
@@ -513,15 +505,15 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 	}
 
 	/* This will merge all NamePrefix Node on top of the pile into the first which isn't.
-	 * In case of handling an UNC path, pile should look like this, eventually with multiple NodeType_NamePrefix :
-	 * NodeType_NamePrefix, value2
-	 * NodeType_Value, value1
+	 * In case of handling an UNC path, pile should look like this, eventually with multiple ENodeType::NamePrefix :
+	 * ENodeType::NamePrefix, value2
+	 * ENodeType::Value, value1
 	 * 
 	 * This will merge all of them into the Node below, like this :
-	 * NodeType_Value, value1 + '$' + value2 + ( '$' + value3 ...)
+	 * ENodeType::Value, value1 + '$' + value2 + ( '$' + value3 ...)
 	 * Using this method, tokens are not reinterpreted, which reduce risks introduced by introducing parser leniency.
 	 */
-	while (children.top().first == NodeType_NamePrefix && children.size() > 1)
+	while (children.top().first == ENodeType::NamePrefix && children.size() > 1)
 	{
 		const std::string topVal = children.top().second;
 		children.pop();
@@ -540,7 +532,7 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 													  bool preserveBackslashes = false) const
 {
 	std::stack<std::pair<ENodeType, std::string>> childrens;
-	childrens.push(std::make_pair(NodeType_Value, std::string()));
+	childrens.push(std::make_pair(ENodeType::Value, std::string()));
 
 	std::string prefix;
 	std::string postfix;
@@ -556,18 +548,18 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 		switch (sValue[i])
 		{
 			case '$':
-				childrens.push(std::make_pair(NodeType_NamePrefix, std::string()));
+				childrens.push(std::make_pair(ENodeType::NamePrefix, std::string()));
 				break;
 
 			case '{':
-				OV_ERROR_UNLESS_KRF(childrens.top().first == NodeType_NamePrefix,
+				OV_ERROR_UNLESS_KRF(childrens.top().first == ENodeType::NamePrefix,
 									"Could not expand token with syntax error while expanding " << sValue,
 									ErrorType::BadFileParsing);
-				childrens.push(std::make_pair(NodeType_NamePostfix, std::string()));
+				childrens.push(std::make_pair(ENodeType::NamePostfix, std::string()));
 				break;
 
 			case '}':
-				OV_ERROR_UNLESS_KRF(childrens.top().first == NodeType_NamePostfix,
+				OV_ERROR_UNLESS_KRF(childrens.top().first == ENodeType::NamePostfix,
 									"Could not expand token with syntax error while expanding " << sValue,
 									ErrorType::BadFileParsing);
 
