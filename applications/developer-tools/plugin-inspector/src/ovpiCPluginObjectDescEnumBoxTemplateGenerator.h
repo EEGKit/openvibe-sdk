@@ -14,8 +14,10 @@ class CPluginObjectDescEnumBoxTemplateGenerator final : public CPluginObjectDesc
 {
 public:
 
-	CPluginObjectDescEnumBoxTemplateGenerator(const OpenViBE::Kernel::IKernelContext& ctx, const OpenViBE::CString& docTemplateDirectory);
-	bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc) override;
+	CPluginObjectDescEnumBoxTemplateGenerator(const OpenViBE::Kernel::IKernelContext& ctx, const std::string& docTemplateDir)
+		: CPluginObjectDescEnum(ctx), m_docTemplateDirectory(docTemplateDir) {}
+
+	bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pod) override;
 	bool initialize();
 	bool uninitialize();
 

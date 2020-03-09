@@ -9,21 +9,33 @@ namespace OpenViBE
 		class IScenario;
 		class IConfigurationManager;
 
-		enum EPlayerStatus
-		{
-			PlayerStatus_Stop,
-			PlayerStatus_Pause,
-			PlayerStatus_Step,
-			PlayerStatus_Play,
-			PlayerStatus_Forward,
-		};
+		enum class EPlayerStatus { Stop, Pause, Step, Play, Forward };
 
-		enum EPlayerReturnCode
+		enum class EPlayerReturnCodes { Success, Failed, BoxInitializationFailed };
+
+		inline std::string toString(const EPlayerStatus status)
 		{
-			PlayerReturnCode_Sucess,
-			PlayerReturnCode_Failed,
-			PlayerReturnCode_BoxInitializationFailed
-		};
+			switch (status)
+			{
+				case EPlayerStatus::Stop: return "Stop";
+				case EPlayerStatus::Pause: return "Pause";
+				case EPlayerStatus::Step: return "Step";
+				case EPlayerStatus::Play: return "Play";
+				case EPlayerStatus::Forward: return "Forward";
+				default: return "Invalid Status";
+			}
+		}
+
+		inline std::string toString(const EPlayerReturnCodes code)
+		{
+			switch (code)
+			{
+				case EPlayerReturnCodes::Success: return "Success";
+				case EPlayerReturnCodes::Failed: return "Failed";
+				case EPlayerReturnCodes::BoxInitializationFailed: return "Box Initialization Failed";
+				default: return "Invalid Code";
+			}
+		}
 
 		/**
 		 * \class IPlayer
@@ -100,7 +112,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual EPlayerReturnCode initialize() = 0;
+			virtual EPlayerReturnCodes initialize() = 0;
 			/**
 			 * \brief Uninitializes this player
 			 * \return \e true in case of success.
@@ -146,7 +158,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Sets maximum fast forward factor coefficient
-			 * \param factor : the maximum speed multiplier to be applied when playing in PlayerStatus_Forward mode
+			 * \param factor : the maximum speed multiplier to be applied when playing in EPlayerStatus::Forward mode
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \note If a negative value is passed, it is turned back to 0

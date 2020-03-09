@@ -156,14 +156,14 @@ namespace OpenViBE
 		m_cmdList.clear();
 	}
 
-	EPlayerReturnCode CommandFileParser::parse()
+	EPlayerReturnCodes CommandFileParser::parse()
 	{
 		std::ifstream fileStream(m_cmdFile);
 
 		if (!fileStream.is_open())
 		{
 			std::cerr << "ERROR: impossible to open file at location: " << m_cmdFile << std::endl;
-			return EPlayerReturnCode::OpeningFileFailure;
+			return EPlayerReturnCodes::OpeningFileFailure;
 		}
 
 		std::string line;
@@ -184,7 +184,7 @@ namespace OpenViBE
 				if (isFillingSection) // flush the section that was beeing filled
 				{
 					const auto errorCode = this->flush(sectionTag, sectionContent);
-					if (errorCode != EPlayerReturnCode::Success) { return errorCode; }
+					if (errorCode != EPlayerReturnCodes::Success) { return errorCode; }
 				}
 
 				// use of regex to be confident on tag structure
@@ -195,7 +195,7 @@ namespace OpenViBE
 				if (m_callbacks.find(sectionTag) == m_callbacks.end())
 				{
 					std::cerr << "ERROR: Unknown command = " << sectionTag << std::endl;
-					return EPlayerReturnCode::ParsingCommandFailure;
+					return EPlayerReturnCodes::ParsingCommandFailure;
 				}
 
 				isFillingSection = true;
@@ -207,28 +207,28 @@ namespace OpenViBE
 		if (isFillingSection)
 		{
 			const auto errorCode = this->flush(sectionTag, sectionContent);
-			if (errorCode != EPlayerReturnCode::Success) { return errorCode; }
+			if (errorCode != EPlayerReturnCodes::Success) { return errorCode; }
 		}
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent)
+	EPlayerReturnCodes CommandFileParser::flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent)
 	{
 		try // try block here as some conversions are made with the stl in the callback and might throw
 		{
 			const auto returnCode = m_callbacks[sectionTag](sectionContent);
-			if (returnCode != EPlayerReturnCode::Success) { return returnCode; }
+			if (returnCode != EPlayerReturnCodes::Success) { return returnCode; }
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << "ERROR: Caught exception while parsing command = " << sectionTag << std::endl;
 			std::cerr << "ERROR: Exception: " << e.what() << std::endl;
-			return EPlayerReturnCode::ParsingCommandFailure;
+			return EPlayerReturnCodes::ParsingCommandFailure;
 		}
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::initCommandCb(const std::vector<std::string>& sectionContent)
+	EPlayerReturnCodes CommandFileParser::initCommandCb(const std::vector<std::string>& sectionContent)
 	{
 		std::shared_ptr<SInitCmd> command = std::make_shared<SInitCmd>();
 
@@ -246,17 +246,17 @@ namespace OpenViBE
 			}
 		}
 		m_cmdList.push_back(command);
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::resetCommandCb(const std::vector<std::string>& /*sectionContent*/)
+	EPlayerReturnCodes CommandFileParser::resetCommandCb(const std::vector<std::string>& /*sectionContent*/)
 	{
 		const std::shared_ptr<SResetCmd> command = std::make_shared<SResetCmd>();
 		m_cmdList.push_back(command);
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::loadKernelCommandCb(const std::vector<std::string>& sectionContent)
+	EPlayerReturnCodes CommandFileParser::loadKernelCommandCb(const std::vector<std::string>& sectionContent)
 	{
 		std::shared_ptr<SLoadKernelCmd> command = std::make_shared<SLoadKernelCmd>();
 
@@ -271,10 +271,10 @@ namespace OpenViBE
 			}
 		}
 		m_cmdList.push_back(command);
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::loadScenarioCommandCb(const std::vector<std::string>& sectionContent)
+	EPlayerReturnCodes CommandFileParser::loadScenarioCommandCb(const std::vector<std::string>& sectionContent)
 	{
 		std::shared_ptr<SLoadScenarioCmd> command = std::make_shared<SLoadScenarioCmd>();
 
@@ -291,10 +291,10 @@ namespace OpenViBE
 			}
 		}
 		m_cmdList.push_back(command);
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::setupScenarioCommandCb(const std::vector<std::string>& sectionContent)
+	EPlayerReturnCodes CommandFileParser::setupScenarioCommandCb(const std::vector<std::string>& sectionContent)
 	{
 		std::shared_ptr<SSetupScenarioCmd> command = std::make_shared<SSetupScenarioCmd>();
 
@@ -311,10 +311,10 @@ namespace OpenViBE
 			}
 		}
 		m_cmdList.push_back(command);
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
-	EPlayerReturnCode CommandFileParser::runScenarioCommandCb(const std::vector<std::string>& sectionContent)
+	EPlayerReturnCodes CommandFileParser::runScenarioCommandCb(const std::vector<std::string>& sectionContent)
 	{
 		std::shared_ptr<SRunScenarioCmd> command = std::make_shared<SRunScenarioCmd>();
 
@@ -333,6 +333,6 @@ namespace OpenViBE
 			}
 		}
 		m_cmdList.push_back(command);
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 }	// namespace OpenViBE

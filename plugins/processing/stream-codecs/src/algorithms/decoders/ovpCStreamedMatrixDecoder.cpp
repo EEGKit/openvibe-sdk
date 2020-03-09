@@ -67,20 +67,20 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& id)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
-		|| (top == OVTK_NodeId_Buffer_StreamedMatrix)
+		|| (top == OVTK_NodeId_Buffer_StreamedMatrix) 
 		|| (top == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer))
 	{
-		if (top == OVTK_NodeId_Header_StreamedMatrix && m_status == Status_ParsingNothing)
+		if (top == OVTK_NodeId_Header_StreamedMatrix && m_status == EParsingStatus::Nothing)
 		{
-			m_status       = Status_ParsingHeader;
+			m_status       = EParsingStatus::Header;
 			m_dimensionIdx = 0;
 		}
-		else if (top == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_status == Status_ParsingHeader)
+		else if (top == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_status == EParsingStatus::Header)
 		{
-			m_status            = Status_ParsingDimension;
+			m_status            = EParsingStatus::Dimension;
 			m_dimensionEntryIdx = 0;
 		}
-		else if (top == OVTK_NodeId_Buffer_StreamedMatrix && m_status == Status_ParsingNothing) { m_status = Status_ParsingBuffer; }
+		else if (top == OVTK_NodeId_Buffer_StreamedMatrix && m_status == EParsingStatus::Nothing) { m_status = EParsingStatus::Buffer; }
 	}
 	else { CEBMLBaseDecoder::openChild(id); }
 }
@@ -99,11 +99,11 @@ void CStreamedMatrixDecoder::processChildData(const void* buffer, const size_t s
 	{
 		switch (m_status)
 		{
-			case Status_ParsingHeader:
+			case EParsingStatus::Header:
 				if (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(size_t(m_readerHelper->getUInt(buffer, size))); }
 				break;
 
-			case Status_ParsingDimension:
+			case EParsingStatus::Dimension:
 				if (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)
 				{
 					op_pMatrix->setDimensionSize(m_dimensionIdx, size_t(m_readerHelper->getUInt(buffer, size)));
@@ -116,7 +116,7 @@ void CStreamedMatrixDecoder::processChildData(const void* buffer, const size_t s
 				}
 				break;
 
-			case Status_ParsingBuffer:
+			case EParsingStatus::Buffer:
 				if (top == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), buffer, m_size * sizeof(double)); }
 				break;
 			default: break;
@@ -137,15 +137,15 @@ void CStreamedMatrixDecoder::closeChild()
 		|| (top == OVTK_NodeId_Buffer_StreamedMatrix)
 		|| (top == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer))
 	{
-		if (top == OVTK_NodeId_Buffer_StreamedMatrix && m_status == Status_ParsingBuffer) { m_status = Status_ParsingNothing; }
-		else if (top == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_status == Status_ParsingDimension)
+		if (top == OVTK_NodeId_Buffer_StreamedMatrix && m_status == EParsingStatus::Buffer) { m_status = EParsingStatus::Nothing; }
+		else if (top == OVTK_NodeId_Header_StreamedMatrix_Dimension && m_status == EParsingStatus::Dimension)
 		{
-			m_status = Status_ParsingHeader;
+			m_status = EParsingStatus::Header;
 			m_dimensionIdx++;
 		}
-		else if (top == OVTK_NodeId_Header_StreamedMatrix && m_status == Status_ParsingHeader)
+		else if (top == OVTK_NodeId_Header_StreamedMatrix && m_status == EParsingStatus::Header)
 		{
-			m_status = Status_ParsingNothing;
+			m_status = EParsingStatus::Nothing;
 
 			if (op_pMatrix->getDimensionCount() == 0) { m_size = 0; }
 			else

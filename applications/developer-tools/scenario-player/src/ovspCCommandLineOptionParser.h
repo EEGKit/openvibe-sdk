@@ -54,7 +54,7 @@ namespace OpenViBE
 
 		std::vector<std::shared_ptr<SCommand>> getCommandList() const override;
 
-		EPlayerReturnCode parse() override;
+		EPlayerReturnCodes parse() override;
 
 	private:
 

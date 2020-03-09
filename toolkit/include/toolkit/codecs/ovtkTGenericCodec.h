@@ -257,11 +257,11 @@ namespace OpenViBE
 			typedef enum
 			{
 				Type_None = 0x00000000,
-				Type_StreamedMatrix = 0x01,
-				Type_Signal = 0x02,
-				Type_Spectrum = 0x04,
-				Type_Covariance = 0x08,
-				Type_All = 0xffffffff,
+				Type_StreamedMatrix = 0x00000001,
+				Type_Signal = 0x00000002,
+				Type_Spectrum = 0x00000004,
+				Type_Covariance = 0x00000008,
+				Type_All = 0xffffffff
 			} EType;
 
 			explicit TGenericListener(const size_t typeFlag = Type_All)

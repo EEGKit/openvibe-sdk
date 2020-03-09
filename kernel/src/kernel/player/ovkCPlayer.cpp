@@ -145,9 +145,9 @@ IConfigurationManager& CPlayer::getRuntimeConfigurationManager() const { return 
 IScenarioManager& CPlayer::getRuntimeScenarioManager() const { return *m_runtimeScenarioManager; }
 CIdentifier CPlayer::getRuntimeScenarioIdentifier() const { return m_runtimeScenarioID; }
 
-EPlayerReturnCode CPlayer::initialize()
+EPlayerReturnCodes CPlayer::initialize()
 {
-	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall, PlayerReturnCode_Failed);
+	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall, EPlayerReturnCodes::Failed);
 
 	this->getLogManager() << LogLevel_Trace << "Player initialized.\n";
 
@@ -158,10 +158,10 @@ EPlayerReturnCode CPlayer::initialize()
 
 	const ESchedulerInitialization code = m_scheduler.initialize();
 
-	if (code == ESchedulerInitialization::Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed); }
+	if (code == ESchedulerInitialization::Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, EPlayerReturnCodes::Failed); }
 	if (code == ESchedulerInitialization::BoxInitializationFailed)
 	{
-		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
+		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, EPlayerReturnCodes::BoxInitializationFailed);
 	}
 
 	m_benchmarkChrono.reset(size_t(m_scheduler.getFrequency()));
@@ -170,8 +170,8 @@ EPlayerReturnCode CPlayer::initialize()
 	m_lateness           = 0;
 	m_innerLateness      = 0;
 
-	m_status = PlayerStatus_Stop;
-	return PlayerReturnCode_Sucess;
+	m_status = EPlayerStatus::Stop;
+	return EPlayerReturnCodes::Success;
 }
 
 bool CPlayer::uninitialize()
@@ -196,7 +196,7 @@ bool CPlayer::stop()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player stop\n";
-	m_status = PlayerStatus_Stop;
+	m_status = EPlayerStatus::Stop;
 	return true;
 }
 
@@ -204,7 +204,7 @@ bool CPlayer::pause()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player pause\n";
-	m_status = PlayerStatus_Pause;
+	m_status = EPlayerStatus::Pause;
 	return true;
 }
 
@@ -212,7 +212,7 @@ bool CPlayer::step()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player step\n";
-	m_status = PlayerStatus_Step;
+	m_status = EPlayerStatus::Step;
 	return true;
 }
 
@@ -220,7 +220,7 @@ bool CPlayer::play()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player play\n";
-	m_status = PlayerStatus_Play;
+	m_status = EPlayerStatus::Play;
 	return true;
 }
 
@@ -228,7 +228,7 @@ bool CPlayer::forward()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player forward\n";
-	m_status = PlayerStatus_Forward;
+	m_status = EPlayerStatus::Forward;
 	return true;
 }
 
@@ -250,20 +250,20 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
-	if (m_status == PlayerStatus_Stop) { return true; }
+	if (m_status == EPlayerStatus::Stop) { return true; }
 
 	bool hasTimeToReach = false;
 	switch (m_status)
 	{
 			// Calls a single controller loop and goes back to pause state
-		case PlayerStatus_Step:
+		case EPlayerStatus::Step:
 			m_currentTimeToReach += TimeArithmetics::sampleCountToTime(m_scheduler.getFrequency(), 1LL);
 			hasTimeToReach = true;
-			m_status       = PlayerStatus_Pause;
+			m_status       = EPlayerStatus::Pause;
 			break;
 
 			// Calls multiple controller loops
-		case PlayerStatus_Forward:
+		case EPlayerStatus::Forward:
 			// We can't know what m_currentTimeToReach should be in advance
 			// We will try to do as many scheduler loops as possible until
 			// SCHEDULER_MAXIMUM_LOOPS_DURATION seconds elapsed
@@ -275,7 +275,7 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 			break;
 
 			// Simply updates time according to delta time
-		case PlayerStatus_Play:
+		case EPlayerStatus::Play:
 			m_currentTimeToReach += elapsedTime;
 			hasTimeToReach = true;
 			break;
@@ -300,10 +300,10 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 #if defined CPlayer_Debug_Time
 ::printf("    Next time : %llx\n", nextSchedulerTime);
 #endif // CPlayer_Debug_Time
-		if (m_status == PlayerStatus_Stop) { finished = true; }
+		if (m_status == EPlayerStatus::Stop) { finished = true; }
 
 		if ((hasTimeToReach && (nextSchedulerTime > m_currentTimeToReach)) || (
-				(m_status == PlayerStatus_Forward || hasTimeToReach) && (m_scheduler.getCurrentTime() >= maximumTimeToReach)))
+				(m_status == EPlayerStatus::Forward || hasTimeToReach) && (m_scheduler.getCurrentTime() >= maximumTimeToReach)))
 		{
 			finished = true;
 #if defined CPlayer_Debug_Time
@@ -317,13 +317,13 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 
 			if (!m_scheduler.loop())
 			{
-				m_status = PlayerStatus_Stop;
+				m_status = EPlayerStatus::Stop;
 				this->getLogManager() << LogLevel_Error << "Scheduler loop failed.\n";
 				return false;
 			}
 
 #if defined CPlayer_Debug_Time
-::printf("Iterates (%f / %f - %s)\n", (m_scheduler.getCurrentTime()>>22)/1024., (maximumTimeToReach>>22)/1024., (m_status==PlayerStatus_Forward?"true":"false"));
+::printf("Iterates (%f / %f - %s)\n", (m_scheduler.getCurrentTime()>>22)/1024., (maximumTimeToReach>>22)/1024., (m_status==EPlayerStatus::Forward?"true":"false"));
 #endif // CPlayer_Debug_Time
 		}
 		if (System::Time::zgetTime() > tStart + SCHEDULER_MAXIMUM_LOOPS_DURATION)
@@ -335,7 +335,7 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 		}
 	}
 
-	if ((m_status == PlayerStatus_Forward && m_currentTimeToReach > m_scheduler.getCurrentTime() + schedulerStepDuration) || !hasTimeToReach)
+	if ((m_status == EPlayerStatus::Forward && m_currentTimeToReach > m_scheduler.getCurrentTime() + schedulerStepDuration) || !hasTimeToReach)
 	{
 		m_currentTimeToReach = m_scheduler.getCurrentTime();
 	}

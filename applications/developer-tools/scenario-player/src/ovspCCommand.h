@@ -43,7 +43,7 @@ namespace OpenViBE
 		// List of properties
 		boost::optional<bool> benchmark;
 
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 		void doPrint(std::ostream& os) const override;
@@ -67,7 +67,7 @@ namespace OpenViBE
 		// List of properties
 		boost::optional<std::string> configFile;
 
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -93,7 +93,7 @@ namespace OpenViBE
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -118,7 +118,7 @@ namespace OpenViBE
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -134,7 +134,7 @@ namespace OpenViBE
 	*/
 	struct SResetCmd final : SCommand
 	{
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -166,7 +166,7 @@ namespace OpenViBE
 		boost::optional<double> maximumExecutionTime;
 		boost::optional<std::vector<Token>> tokenList;
 
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 
@@ -198,7 +198,7 @@ namespace OpenViBE
 		boost::optional<std::vector<Token>> tokenList;
 
 
-		EPlayerReturnCode execute(CKernelFacade& kernelFacade) const override;
+		EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const override;
 
 	protected:
 

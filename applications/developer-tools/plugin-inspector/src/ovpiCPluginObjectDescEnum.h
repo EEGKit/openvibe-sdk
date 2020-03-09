@@ -13,10 +13,10 @@ public:
 	explicit CPluginObjectDescEnum(const OpenViBE::Kernel::IKernelContext& ctx) : m_kernelCtx(ctx) { }
 	virtual ~CPluginObjectDescEnum() { }
 
-	virtual bool enumeratePluginObjectDesc(std::vector<const OpenViBE::Plugins::IPluginObjectDesc*>& pluginDescriptors);
-	virtual bool enumeratePluginObjectDesc(const OpenViBE::CIdentifier& parentClassIdentifier);
+	virtual bool enumeratePluginObjectDesc(std::vector<const OpenViBE::Plugins::IPluginObjectDesc*>& pod);
+	virtual bool enumeratePluginObjectDesc(const OpenViBE::CIdentifier& parentClassID);
 
-	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc) = 0;
+	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pod) = 0;
 
 	static std::string transform(const std::string& in, bool removeSlash = false);
 

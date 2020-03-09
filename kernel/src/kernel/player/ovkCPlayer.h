@@ -28,7 +28,7 @@ namespace OpenViBE
 
 
 			bool isHoldingResources() const;
-			EPlayerReturnCode initialize() override;
+			EPlayerReturnCodes initialize() override;
 			bool uninitialize() override;
 			bool stop() override;
 			bool pause() override;
@@ -58,7 +58,7 @@ namespace OpenViBE
 			uint64_t m_currentTimeToReach     = 0;
 			uint64_t m_lateness               = 0;
 			uint64_t m_innerLateness          = 0;
-			EPlayerStatus m_status            = PlayerStatus_Stop;
+			EPlayerStatus m_status            = EPlayerStatus::Stop;
 			bool m_isInitializing             = false;
 			double m_fastForwardMaximumFactor = 0;
 

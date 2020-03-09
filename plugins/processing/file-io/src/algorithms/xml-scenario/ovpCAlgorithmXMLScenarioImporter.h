@@ -29,12 +29,21 @@ namespace OpenViBE
 				_IsDerivedFromClass_Final_(Toolkit::CAlgorithmScenarioImporter, OVP_ClassId_Algorithm_XMLScenarioImporter)
 
 			protected:
+				enum class EParsingStatus
+				{
+					Nothing,
+					Scenario, ScenarioAttribute, ScenarioInput, ScenarioOutput, ScenarioSetting,
+					Box, BoxInput, BoxOutput, BoxSetting, BoxAttribute,
+					Comment, CommentAttribute,
+					MetadataEntry,
+					Link, LinkSource, LinkTarget, LinkAttribute
+				};
 
 				bool validateXML(const unsigned char* buffer, size_t size);
 				bool validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, size_t size);
 
 				IAlgorithmScenarioImporterContext* m_ctx = nullptr;
-				size_t m_status                          = 0;
+				EParsingStatus m_status                          = EParsingStatus::Nothing;
 				XML::IReader* m_reader                   = nullptr;
 				std::stack<std::string> m_nodes;
 			};
