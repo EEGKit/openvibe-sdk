@@ -6,7 +6,6 @@
 #include <iostream>
 #include <algorithm>
 
-#include <system/ovCMemory.h>
 #include <xml/IXMLHandler.h>
 
 #include <Eigen/Eigenvalues>
@@ -180,7 +179,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 			{
 				if (dataset[i].getLabel() == classIdx)
 				{
-					System::Memory::copy(buffer, dataset[i].getBuffer(), nCols * sizeof(double));
+					memcpy(buffer, dataset[i].getBuffer(), nCols * sizeof(double));
 					buffer += nCols;
 				}
 			}
@@ -209,7 +208,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 		// Insert all data as the input of the cov algorithm
 		for (size_t i = 0; i < nRows; ++i)
 		{
-			System::Memory::copy(buffer, dataset[i].getBuffer(), nCols * sizeof(double));
+			memcpy(buffer, dataset[i].getBuffer(), nCols * sizeof(double));
 			buffer += nCols;
 		}
 
@@ -259,13 +258,13 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 			const double bias     = inter(0, 0) + std::log(examplesInClass / totalExamples);
 
 			this->getLogManager() << LogLevel_Debug << "Bias for " << i << " is " << bias << ", from " << examplesInClass / totalExamples
-					<< ", " << examplesInClass << "/" << totalExamples << ", int=" << inter(0, 0) << "\n";
+					<< ", " << examplesInClass << "/" << totalExamples << ", int = " << inter(0, 0) << "\n";
 			// dumpMatrix(this->getLogManager(), perClassMeans[i], "Means");
 
 			m_discriminantFunctions[i].setWeight(weigth);
 			m_discriminantFunctions[i].setBias(bias);
 		}
-		else { this->getLogManager() << LogLevel_Debug << "Class " << static_cast<const uint64_t>(i) << " has no examples\n"; }
+		else { this->getLogManager() << LogLevel_Debug << "Class " << i << " has no examples\n"; }
 	}
 
 	// Hack for classes with zero examples, give them valid models but such that will always lose
@@ -378,7 +377,6 @@ double getFloatFromNode(XML::IXMLNode* pNode)
 	std::stringstream ss(pNode->getPCData());
 	double res;
 	ss >> res;
-
 	return res;
 }
 

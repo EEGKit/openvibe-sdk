@@ -1,7 +1,5 @@
 #include "ovpCBoxAlgorithmVotingClassifier.h"
 
-#include <system/ovCMemory.h>
-
 #include <list>
 #include <vector>
 #include <string>

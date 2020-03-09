@@ -1,7 +1,4 @@
 #include "ovpCBoxAlgorithmFeatureAggregator.h"
-
-#include <system/ovCMemory.h>
-
 #include <iostream>
 
 using namespace OpenViBE;

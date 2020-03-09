@@ -115,7 +115,7 @@ bool CTypeManager::registerEnumerationType(const CIdentifier& typeID, const CStr
 	return true;
 }
 
-bool CTypeManager::registerEnumerationEntry(const CIdentifier& typeID, const CString& name, const size_t value)
+bool CTypeManager::registerEnumerationEntry(const CIdentifier& typeID, const CString& name, const uint64_t value)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 

@@ -4,44 +4,8 @@
 
 using namespace System;
 
-bool Memory::copy(void* dstBuffer, const void* srcBuffer, const size_t size)
-{
-	// TODO take 64bits size into consideration
-	if (size == 0) { return true; }
-
-	memcpy(dstBuffer, srcBuffer, size_t(size));
-
-	return true;
-}
-
-bool Memory::move(void* dstBuffer, const void* srcBuffer, const size_t size)
-{
-	// $$$ TODO take 64bits size into consideration
-	if (size == 0) { return true; }
-
-	memmove(dstBuffer, srcBuffer, size_t(size));
-
-	return true;
-}
-
-bool Memory::set(void* dstBuffer, const size_t size, const uint8_t value)
-{
-	if (size == 0) { return true; }
-	// $$$ TODO take 64bits size into consideration
-	memset(dstBuffer, value, size_t(size));
-	return true;
-}
-
-bool Memory::compare(const void* srcBuffer1, const void* srcBuffer2, const size_t size)
-{
-	if (size == 0) { return true; }
-	// $$$ TODO take 64bits size into consideration
-	return memcmp(srcBuffer1, srcBuffer2, size_t(size)) == 0;
-}
-
 // ________________________________________________________________________________________________________________
 //
-
 template <typename T>
 bool BigEndianToHost(const uint8_t* buffer, T* value)
 {

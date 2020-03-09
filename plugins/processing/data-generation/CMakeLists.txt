@@ -13,11 +13,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
 
+# ---------------------------------
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEToolkit")
 INCLUDE("FindOpenViBEModuleEBML")
-INCLUDE("FindOpenViBEModuleSystem")
 INCLUDE("FindOpenViBEModuleXML")
 
 # ---------------------------------

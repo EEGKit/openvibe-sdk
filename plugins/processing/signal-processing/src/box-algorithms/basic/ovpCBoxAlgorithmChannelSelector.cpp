@@ -1,16 +1,11 @@
 #include "ovpCBoxAlgorithmChannelSelector.h"
-
-#include <system/ovCMemory.h>
-
-#include <climits>
+#include <limits>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
-
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 
 namespace
@@ -288,7 +283,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			{
 				if (m_vLookup[j] < m_iMatrix->getDimensionSize(0))
 				{
-					System::Memory::copy(m_oMatrix->getBuffer() + j * nSample, m_iMatrix->getBuffer() + m_vLookup[j] * nSample, nSample * sizeof(double));
+					memcpy(m_oMatrix->getBuffer() + j * nSample, m_iMatrix->getBuffer() + m_vLookup[j] * nSample, nSample * sizeof(double));
 				}
 			}
 			m_encoder->encodeBuffer();

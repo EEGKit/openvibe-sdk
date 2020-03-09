@@ -52,11 +52,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	COMPILE_FLAGS "-DOVTK_Exports -DOVTK_Shared")
 
+# ---------------------------------
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleEBML")
 INCLUDE("FindOpenViBEModuleXML")
-INCLUDE("FindOpenViBEModuleSystem")
 INCLUDE("FindOpenViBEModuleFS")
 INCLUDE("FindThirdPartyBoost_FileSystem")
 

@@ -1,11 +1,9 @@
 #include "ovpCChannelUnitsDecoder.h"
 
-#include <system/ovCMemory.h>
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+using namespace /*OpenViBE::Plugins::*/StreamCodecs;
 
 // ________________________________________________________________________________________________________________
 //
@@ -13,18 +11,14 @@ using namespace StreamCodecs;
 bool CChannelUnitsDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
-
 	op_bDynamic.initialize(getOutputParameter(OVP_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic));
-
 	return true;
 }
 
 bool CChannelUnitsDecoder::uninitialize()
 {
 	op_bDynamic.uninitialize();
-
 	CStreamedMatrixDecoder::uninitialize();
-
 	return true;
 }
 

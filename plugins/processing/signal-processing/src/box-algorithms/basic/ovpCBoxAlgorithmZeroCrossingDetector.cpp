@@ -20,8 +20,6 @@
  */
 
 #include "ovpCBoxAlgorithmZeroCrossingDetector.h"
-
-#include <system/ovCMemory.h>
 #include <openvibe/ovTimeArithmetics.h>
 
 #include <vector>
@@ -31,9 +29,7 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
-
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 bool CBoxAlgorithmZeroCrossingDetector::initialize()
 {

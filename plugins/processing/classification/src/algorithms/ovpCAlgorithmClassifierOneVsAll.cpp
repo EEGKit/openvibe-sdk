@@ -4,7 +4,6 @@
 #include <sstream>
 #include <utility>
 #include <iostream>
-#include <system/ovCMemory.h>
 
 namespace
 {
@@ -65,7 +64,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& dataset)
 	double* buffer = reference->getBuffer();
 	for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j)
 	{
-		System::Memory::copy(buffer, dataset[j].getBuffer(), size * sizeof(double));
+		memcpy(buffer, dataset[j].getBuffer(), size * sizeof(double));
 		//We let the space for the label
 		buffer += (size + 1);
 	}
@@ -108,7 +107,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 		ip_sample->setDimensionSize(0, size);
 
 		double* buffer = ip_sample->getBuffer();
-		System::Memory::copy(buffer, sample.getBuffer(), size * sizeof(double));
+		memcpy(buffer, sample.getBuffer(), size * sizeof(double));
 		subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
 		IMatrix* probabilities = static_cast<IMatrix*>(op_probabilities);
@@ -177,7 +176,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 	TParameterHandler<IMatrix*> op_winnerValues(winner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	IMatrix* tmpMatrix = static_cast<IMatrix*>(op_winnerValues);
 	distance.setSize(tmpMatrix->getBufferElementCount());
-	System::Memory::copy(distance.getBuffer(), tmpMatrix->getBuffer(), tmpMatrix->getBufferElementCount() * sizeof(double));
+	memcpy(distance.getBuffer(), tmpMatrix->getBuffer(), tmpMatrix->getBufferElementCount() * sizeof(double));
 
 	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
 	double sum = 0;

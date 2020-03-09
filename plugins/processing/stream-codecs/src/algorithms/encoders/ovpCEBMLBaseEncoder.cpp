@@ -1,11 +1,9 @@
 #include "ovpCEBMLBaseEncoder.h"
 
-#include <system/ovCMemory.h>
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+using namespace /*OpenViBE::Plugins::*/StreamCodecs;
 
 // ________________________________________________________________________________________________________________
 //
@@ -80,5 +78,5 @@ void CEBMLBaseEncoder::write(const void* buffer, const size_t size)
 {
 	const size_t currentBufferSize = op_buffer->getSize();
 	op_buffer->setSize(currentBufferSize + size, false);
-	System::Memory::copy(op_buffer->getDirectPointer() + currentBufferSize, buffer, size);
+	memcpy(op_buffer->getDirectPointer() + currentBufferSize, buffer, size);
 }

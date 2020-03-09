@@ -1,7 +1,4 @@
 #include "ovpCBoxAlgorithmTimeBasedEpoching.h"
-
-#include <system/ovCMemory.h>
-
 #include <openvibe/ovTimeArithmetics.h>
 #include <iostream>
 #include <algorithm>
@@ -9,9 +6,8 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-
 using namespace /*OpenViBE::*/Toolkit;
+using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 bool CBoxAlgorithmTimeBasedEpoching::initialize()
 {
@@ -117,7 +113,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					const size_t sampleToFill = std::min(m_oNSample - m_oSampleIdx, nISample - sampleProcessed);
 					for (size_t c = 0; c < nChannel; ++c)
 					{
-						System::Memory::copy(oBuffer + c * m_oNSample + m_oSampleIdx, iBuffer + c * nISample + sampleProcessed, sampleToFill * sizeof(double));
+						memcpy(oBuffer + c * m_oNSample + m_oSampleIdx, iBuffer + c * nISample + sampleProcessed, sampleToFill * sizeof(double));
 					}
 					m_oSampleIdx += sampleToFill;
 					sampleProcessed += sampleToFill;
@@ -140,8 +136,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 							const size_t samplesToSave = m_oNSample - m_oNSampleBetweenEpoch;
 							for (size_t c = 0; c < nChannel; ++c)
 							{
-								System::Memory::move(oBuffer + c * m_oNSample, oBuffer + c * m_oNSample + m_oNSample - samplesToSave,
-													 samplesToSave * sizeof(double));
+								memmove(oBuffer + c * m_oNSample, oBuffer + c * m_oNSample + m_oNSample - samplesToSave, samplesToSave * sizeof(double));
 							}
 
 							// The counter can be reset

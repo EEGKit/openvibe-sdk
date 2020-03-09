@@ -1,11 +1,9 @@
 #include "ovpCBoxAlgorithmStreamedMatrixMultiplexer.h"
 
-#include <system/ovCMemory.h>
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace Streaming;
+using namespace /*OpenViBE::Plugins::*/Streaming;
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 {
@@ -42,7 +40,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				IMemoryBuffer* oBuffer = boxContext.getOutputChunk(0);
 				oBuffer->setSize(iBuffer->getSize(), true);
 
-				System::Memory::copy(oBuffer->getDirectPointer(), iBuffer->getDirectPointer(), iBuffer->getSize());
+				memcpy(oBuffer->getDirectPointer(), iBuffer->getDirectPointer(), iBuffer->getSize());
 
 				OV_ERROR_UNLESS_KRF(tStart >= m_lastStartTime && tEnd >= m_lastEndTime,
 									"Invalid chunk times with start = [" << tStart << "] and end = [" << tEnd << "] while last chunk has start = [" <<

@@ -7,14 +7,13 @@
 #include "ovkCBoxProto.h"
 #include <openvibe/plugins/ovIPluginObjectDesc.h>
 #include "../ovkCObjectVisitorContext.h"
-
 #include <openvibe/ov_defines.h>
+#include <system/ovCMath.h>
+
 #include <algorithm>
 #include <vector>
 #include <string>
 #include <iostream>
-#include <system/ovCMath.h>
-#include <system/ovCMemory.h>
 #include <memory>
 
 

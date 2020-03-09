@@ -1,6 +1,5 @@
 #include "ovtkMatrix.h"
 
-#include <system/ovCMemory.h>
 #include <fs/Files.h>
 
 #include <cstring>
@@ -51,13 +50,13 @@ bool Matrix::copyContent(IMatrix& dst, const IMatrix& src)
 	if (nElementOut != nElementIn) { return false; }
 	const double* bufferIn = src.getBuffer();
 	double* bufferOut      = dst.getBuffer();
-	System::Memory::copy(bufferOut, bufferIn, nElementIn * sizeof(double));
+	memcpy(bufferOut, bufferIn, nElementIn * sizeof(double));
 	return true;
 }
 
 bool Matrix::clearContent(IMatrix& matrix)
 {
-	System::Memory::set(matrix.getBuffer(), matrix.getBufferElementCount() * sizeof(double), 0);
+	memset(matrix.getBuffer(), 0, matrix.getBufferElementCount() * sizeof(double));
 	return true;
 }
 

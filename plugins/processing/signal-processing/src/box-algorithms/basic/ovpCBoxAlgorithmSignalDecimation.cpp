@@ -1,13 +1,10 @@
 #include "ovpCBoxAlgorithmSignalDecimation.h"
-
-#include <system/ovCMemory.h>
-
 #include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 bool CBoxAlgorithmSignalDecimation::initialize()
 {

@@ -21,7 +21,7 @@ namespace OpenViBE
 			bool registerType(const CIdentifier& typeID, const CString& name) override;
 			bool registerStreamType(const CIdentifier& typeID, const CString& name, const CIdentifier& parentTypeID) override;
 			bool registerEnumerationType(const CIdentifier& typeID, const CString& name) override;
-			bool registerEnumerationEntry(const CIdentifier& typeID, const CString& name, size_t value) override;
+			bool registerEnumerationEntry(const CIdentifier& typeID, const CString& name, uint64_t value) override;
 			bool registerBitMaskType(const CIdentifier& typeID, const CString& name) override;
 			bool registerBitMaskEntry(const CIdentifier& typeID, const CString& name, uint64_t value) override;
 			bool isRegistered(const CIdentifier& typeID) const override;

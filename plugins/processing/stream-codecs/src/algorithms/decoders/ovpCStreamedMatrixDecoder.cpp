@@ -1,13 +1,11 @@
 #include "ovpCStreamedMatrixDecoder.h"
 
-#include <system/ovCMemory.h>
-
-#include <cstring>
+#include <string>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+using namespace /*OpenViBE::Plugins::*/StreamCodecs;
 
 namespace
 {
@@ -117,7 +115,7 @@ void CStreamedMatrixDecoder::processChildData(const void* buffer, const size_t s
 				break;
 
 			case EParsingStatus::Buffer:
-				if (top == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), buffer, m_size * sizeof(double)); }
+				if (top == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { memcpy(op_pMatrix->getBuffer(), buffer, m_size * sizeof(double)); }
 				break;
 			default: break;
 		}
