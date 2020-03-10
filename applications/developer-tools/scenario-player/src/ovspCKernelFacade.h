@@ -55,47 +55,47 @@ namespace OpenViBE
 		/**
 		* \brief Initialize session parameters
 		*/
-		static EPlayerReturnCode initialize() { return EPlayerReturnCode::Success; }
+		static EPlayerReturnCodes initialize() { return EPlayerReturnCodes::Success; }
 
 		/**
 		* \brief Reset session parameters
 		*/
-		static EPlayerReturnCode uninitialize() { return EPlayerReturnCode::Success; }
+		static EPlayerReturnCodes uninitialize() { return EPlayerReturnCodes::Success; }
 
 		/**
 		* \brief Load kernel
 		* \param[in] command command containing all mandatory properties
 		*/
-		EPlayerReturnCode loadKernel(const SLoadKernelCmd& command) const;
+		EPlayerReturnCodes loadKernel(const SLoadKernelCmd& command) const;
 
 		/**
 		* \brief Unload kernel
 		*/
-		EPlayerReturnCode unloadKernel() const;
+		EPlayerReturnCodes unloadKernel() const;
 
 		/**
 		* \brief Load scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		EPlayerReturnCode loadScenario(const SLoadScenarioCmd& command) const;
+		EPlayerReturnCodes loadScenario(const SLoadScenarioCmd& command) const;
 		
 		/**
 		* \brief Update scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		EPlayerReturnCode updateScenario(const SUpdateScenarioCmd& command) const;
+		EPlayerReturnCodes updateScenario(const SUpdateScenarioCmd& command) const;
 
 		/**
 		* \brief Configure scenario
 		* \param[in] command command containing all mandatory properties
 		*/
-		EPlayerReturnCode setupScenario(const SSetupScenarioCmd& command) const;
+		EPlayerReturnCodes setupScenario(const SSetupScenarioCmd& command) const;
 
 		/**
 		* \brief Run one or multiple scenarios
 		* \param[in] command command containing all mandatory properties
 		*/
-		EPlayerReturnCode runScenarioList(const SRunScenarioCmd& command) const;
+		EPlayerReturnCodes runScenarioList(const SRunScenarioCmd& command) const;
 
 	private:
 

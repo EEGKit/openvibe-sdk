@@ -1,6 +1,5 @@
 #include "ovtkMatrix.h"
 
-#include <system/ovCMemory.h>
 #include <fs/Files.h>
 
 #include <cstring>
@@ -51,13 +50,13 @@ bool Matrix::copyContent(IMatrix& dst, const IMatrix& src)
 	if (nElementOut != nElementIn) { return false; }
 	const double* bufferIn = src.getBuffer();
 	double* bufferOut      = dst.getBuffer();
-	System::Memory::copy(bufferOut, bufferIn, nElementIn * sizeof(double));
+	memcpy(bufferOut, bufferIn, nElementIn * sizeof(double));
 	return true;
 }
 
 bool Matrix::clearContent(IMatrix& matrix)
 {
-	System::Memory::set(matrix.getBuffer(), matrix.getBufferElementCount() * sizeof(double), 0);
+	memset(matrix.getBuffer(), 0, matrix.getBufferElementCount() * sizeof(double));
 	return true;
 }
 
@@ -105,15 +104,7 @@ bool Matrix::isContentValid(const IMatrix& src, const bool checkNotANumber, cons
 	return true;
 }
 
-enum EStatus
-{
-	Status_Nothing,
-	Status_ParsingHeader,
-	Status_ParsingHeaderDimension,
-	Status_ParsingHeaderLabel,
-	Status_ParsingBuffer,
-	Status_ParsingBufferValue
-};
+enum class EParsingStatus { Nothing, ParsingHeader, ParsingHeaderDimension, ParsingHeaderLabel, ParsingBuffer, ParsingBufferValue };
 
 // tokens in the ascii matrix format
 const char CONSTANT_LEFT_SQUARE_BRACKET  = '[';
@@ -135,7 +126,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 	//current string to parse
 	std::string what;
 	//current parsing status
-	size_t status = Status_Nothing;
+	EParsingStatus status = EParsingStatus::Nothing;
 	//current element index (incremented every time a value is stored in matrix)
 	size_t curElementIdx = 0;
 	//current dimension index
@@ -172,17 +163,17 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 			switch (status)
 			{
 					//initial parsing status
-				case Status_Nothing:
+				case EParsingStatus::Nothing:
 
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }								// ignore rest of line by skipping to last character
 						//header starting
-					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET) { status = Status_ParsingHeader; }	// update status
+					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET) { status = EParsingStatus::ParsingHeader; }	// update status
 					else if (!std::isspace(*it, locale)) { return false; }
 					break;
 
 					//parse header
-				case Status_ParsingHeader:
+				case EParsingStatus::ParsingHeader:
 
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }	//ignore rest of line by skipping to last character
@@ -191,7 +182,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 					{
 						dimSize.resize(dimSize.size() + 1);			//increment dimension count
 						curDimIdx++;								//update current dimension index
-						status = Status_ParsingHeaderDimension;		//update status
+						status = EParsingStatus::ParsingHeaderDimension;		//update status
 					}
 						//finished parsing header
 					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
@@ -215,12 +206,12 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						//reset current dimension index
 						curDimIdx = size_t(-1);
 						//update status
-						status = Status_ParsingBuffer;
+						status = EParsingStatus::ParsingBuffer;
 					}
 					else if (!std::isspace(*it, locale)) { return false; }
 					break;
 
-				case Status_ParsingHeaderDimension:
+				case EParsingStatus::ParsingHeaderDimension:
 
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }	//ignore rest of line by skipping to last character
@@ -230,15 +221,15 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						//new element found in current dimension
 						dimSize[curDimIdx]++;
 						//update status
-						status = Status_ParsingHeaderLabel;
+						status = EParsingStatus::ParsingHeaderLabel;
 					}
 						//finished parsing current dimension header
-					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET) { status = Status_ParsingHeader; }	//update status
+					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET) { status = EParsingStatus::ParsingHeader; }	//update status
 					else if (!std::isspace(*it, locale)) { return false; }
 					break;
 
 					//look for end of label (first '"' char not preceded by the '\' escape char)
-				case Status_ParsingHeaderLabel:
+				case EParsingStatus::ParsingHeaderLabel:
 
 					//found '"' char not preceded by escape char : end of label reached
 					if (*it == CONSTANT_DOUBLE_QUOTE && *(it - 1) != '\\')
@@ -252,13 +243,13 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						curString.erase();
 
 						//update status
-						status = Status_ParsingHeaderDimension;
+						status = EParsingStatus::ParsingHeaderDimension;
 					}
 						//otherwise, keep parsing current label
 					else { curString.append(1, *it); }
 					break;
 
-				case Status_ParsingBuffer:
+				case EParsingStatus::ParsingBuffer:
 
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }	//ignore rest of line by skipping to last character
@@ -307,14 +298,14 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 							curString.append(1, *it);
 
 							//update status
-							status = Status_ParsingBufferValue;
+							status = EParsingStatus::ParsingBufferValue;
 						}
 						else { return false; }
 					}
 					break;
 
 					//look for end of value (first '"' char not preceded by the '\' escape char)
-				case Status_ParsingBufferValue:
+				case EParsingStatus::ParsingBufferValue:
 
 					//values end at first whitespace character or ']' character
 					if (std::isspace(*it, locale) == true || *it == CONSTANT_RIGHT_SQUARE_BRACKET)
@@ -322,7 +313,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						//if dimension closing bracket is found
 						if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
 						{
-							//move back iterator by one character so that closing bracket is taken into account in Status_ParsingBuffer case
+							//move back iterator by one character so that closing bracket is taken into account in EParsingStatus::ParsingBuffer case
 							--it;
 						}
 
@@ -341,14 +332,13 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						//reset current string
 						curString.erase();
 						//update status
-						status = Status_ParsingBuffer;
+						status = EParsingStatus::ParsingBuffer;
 					}
 						//otherwise, append current character to current string
 					else { curString.append(1, *it); }
 					break;
 
-				default:
-					break;
+				default: break;
 			} // switch(status)
 
 			//increment iterator

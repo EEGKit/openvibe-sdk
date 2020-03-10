@@ -25,9 +25,6 @@ namespace
 // ------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGenerator(const IKernelContext& ctx, const CString& docTemplateDirectory)
-	: CPluginObjectDescEnum(ctx), m_docTemplateDirectory(docTemplateDirectory) {}
-
 bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {
 	if (!m_kernelCtx.getScenarioManager().createScenario(m_scenarioID)) { return false; }
@@ -63,21 +60,21 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 	return true;
 }
 
-bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc& pluginObjectDesc)
+bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc& pod)
 {
-	const string fileName = "BoxAlgorithm_" + transform(pluginObjectDesc.getName().toASCIIString());
+	const string fileName = "BoxAlgorithm_" + transform(pod.getName().toASCIIString());
 	CIdentifier boxID;
 
-	if (pluginObjectDesc.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
+	if (pod.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_scenario->addBox(boxID, dynamic_cast<const IBoxAlgorithmDesc&>(pluginObjectDesc), OV_UndefinedIdentifier))
+		if (!m_scenario->addBox(boxID, dynamic_cast<const IBoxAlgorithmDesc&>(pod), OV_UndefinedIdentifier))
 		{
 			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
-	else if (!m_scenario->addBox(boxID, pluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
+	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
 	{
 		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 		return true;
@@ -100,9 +97,9 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		return false;
 	}
 
-	ofs << ".. _Doc_" << fileName << ":\n\n" << generateRstTitle(pluginObjectDesc.getName().toASCIIString(), 0)
-			<< "\n.. container:: attribution\n\n   :Author:\n      " << pluginObjectDesc.getAuthorName().toASCIIString() << "\n"
-			<< "   :Company:\n      " << pluginObjectDesc.getAuthorCompanyName().toASCIIString() << "\n\n\n"
+	ofs << ".. _Doc_" << fileName << ":\n\n" << generateRstTitle(pod.getName().toASCIIString(), 0)
+			<< "\n.. container:: attribution\n\n   :Author:\n      " << pod.getAuthorName().toASCIIString() << "\n"
+			<< "   :Company:\n      " << pod.getAuthorCompanyName().toASCIIString() << "\n\n\n"
 			<< ".. todo::  Write general box description...\n\n\n";
 
 
@@ -192,9 +189,9 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	// should remain available if needed but not be listed
 	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier()))
 	{
-		m_deprecatedBoxesCategories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString()));
+		m_deprecatedBoxesCategories.push_back(pair<string, string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString()));
 	}
-	else { m_categories.push_back(pair<string, string>(pluginObjectDesc.getCategory().toASCIIString(), pluginObjectDesc.getName().toASCIIString())); }
+	else { m_categories.push_back(pair<string, string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
 
 	return true;
 }

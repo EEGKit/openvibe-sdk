@@ -66,12 +66,12 @@ CKernelFacade::~CKernelFacade()
 	uninitialize();
 }
 
-OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
+OpenViBE::EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
 {
 	if (m_impl->ctx)
 	{
 		std::cout << "WARNING: The kernel is already loaded" << std::endl;
-		return EPlayerReturnCode::Success;
+		return EPlayerReturnCodes::Success;
 	}
 
 #if defined TARGET_OS_Windows
@@ -88,7 +88,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 	if (!kernelLoader.load(kernelFile, &error))
 	{
 		std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
-		return EPlayerReturnCode::KernelLoadingFailure;
+		return EPlayerReturnCodes::KernelLoadingFailure;
 	}
 
 	kernelLoader.initialize();
@@ -99,7 +99,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 	if (!kernelDesc)
 	{
 		std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
-		return EPlayerReturnCode::KernelInvalidDesc;
+		return EPlayerReturnCodes::KernelInvalidDesc;
 	}
 
 	CString configFile;
@@ -113,7 +113,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 	if (!ctx)
 	{
 		std::cerr << "ERROR: impossible to create kernel context " << std::endl;
-		return EPlayerReturnCode::KernelInvalidDesc;
+		return EPlayerReturnCodes::KernelInvalidDesc;
 	}
 
 	ctx->initialize();
@@ -124,10 +124,10 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadKernel(const SLoadKernelCmd& comm
 	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
 	ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
-	return EPlayerReturnCode::Success;
+	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCode CKernelFacade::unloadKernel() const
+OpenViBE::EPlayerReturnCodes CKernelFacade::unloadKernel() const
 {
 	if (m_impl->ctx)
 	{
@@ -148,17 +148,17 @@ OpenViBE::EPlayerReturnCode CKernelFacade::unloadKernel() const
 	m_impl->loader.uninitialize();
 	m_impl->loader.unload();
 
-	return EPlayerReturnCode::Success;
+	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCode CKernelFacade::loadScenario(const SLoadScenarioCmd& command) const
+OpenViBE::EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) const
 {
 	assert(command.scenarioFile && command.scenarioName);
 
 	if (!m_impl->ctx)
 	{
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
-		return EPlayerReturnCode::KernelInternalFailure;
+		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
 	const std::string scenarioFile = command.scenarioFile.get();
@@ -170,7 +170,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadScenario(const SLoadScenarioCmd& 
 	if (!scenarioManager.importScenarioFromFile(scenarioID, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 	{
 		std::cerr << "ERROR: failed to create scenario " << std::endl;
-		return EPlayerReturnCode::KernelInternalFailure;
+		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
 	scenarioManager.getScenario(scenarioID).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
@@ -180,10 +180,10 @@ OpenViBE::EPlayerReturnCode CKernelFacade::loadScenario(const SLoadScenarioCmd& 
 
 	m_impl->scenarios[scenarioName] = scenarioID;
 
-	return EPlayerReturnCode::Success;
+	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCode CKernelFacade::updateScenario(const SUpdateScenarioCmd& command) const
+OpenViBE::EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& command) const
 {
 	assert(command.scenarioFile && command.scenarioName);
 
@@ -195,7 +195,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::updateScenario(const SUpdateScenarioC
 	if (m_impl->scenarios.find(scenarioName) == m_impl->scenarios.end())
 	{
 		std::cerr << "ERROR: Trying to update a not loaded scenario " << scenarioName << std::endl;
-		return EPlayerReturnCode::ScenarioNotLoaded;
+		return EPlayerReturnCodes::ScenarioNotLoaded;
 	}
 
 	auto& scenario = scenarioManager.getScenario(m_impl->scenarios[scenarioName]);
@@ -213,24 +213,24 @@ OpenViBE::EPlayerReturnCode CKernelFacade::updateScenario(const SUpdateScenarioC
 	if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_impl->scenarios[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
 	{
 		std::cerr << "ERROR: failed to create scenario " << std::endl;
-		return EPlayerReturnCode::KernelInternalFailure;
+		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
-	return EPlayerReturnCode::Success;
+	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCode CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
+OpenViBE::EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
 {
 	if (!m_impl->ctx)
 	{
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
-		return EPlayerReturnCode::KernelInternalFailure;
+		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
 	if (!command.scenarioName)
 	{
 		std::cerr << "ERROR: Missing scenario name for setup" << std::endl;
-		return EPlayerReturnCode::KernelInternalFailure;
+		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
 	const auto name = command.scenarioName.get();
@@ -238,31 +238,31 @@ OpenViBE::EPlayerReturnCode CKernelFacade::setupScenario(const SSetupScenarioCmd
 	if (m_impl->scenarios.find(name) == m_impl->scenarios.end())
 	{
 		std::cerr << "ERROR: Trying to configure not loaded scenario " << name << std::endl;
-		return EPlayerReturnCode::ScenarioNotLoaded;
+		return EPlayerReturnCodes::ScenarioNotLoaded;
 	}
 
 	// token list is just stored at this step for further use at runtime
 	// current token list overwrites the previous one
 	if (command.tokenList) { m_impl->scenarioTokens[name] = command.tokenList.get(); }
 
-	return EPlayerReturnCode::Success;
+	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCode CKernelFacade::runScenarioList(const SRunScenarioCmd& command) const
+OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command) const
 {
 	assert(command.scenarioList);
 
 	if (!m_impl->ctx)
 	{
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
-		return EPlayerReturnCode::KernelInternalFailure;
+		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
 	auto scenarios = command.scenarioList.get();
 
 	// use of returnCode to store error and achive an RAII-like
 	// behavior by releasing all players at the end
-	EPlayerReturnCode returnCode = EPlayerReturnCode::Success;
+	EPlayerReturnCodes returnCode = EPlayerReturnCodes::Success;
 
 	// set up global token
 	if (command.tokenList) { setConfigTokens(m_impl->ctx->getConfigurationManager(), command.tokenList.get()); }
@@ -285,7 +285,7 @@ OpenViBE::EPlayerReturnCode CKernelFacade::runScenarioList(const SRunScenarioCmd
 		if (!playerManager.createPlayer(id) || id == OV_UndefinedIdentifier)
 		{
 			std::cerr << "ERROR: impossible to create player" << std::endl;
-			returnCode = EPlayerReturnCode::KernelInternalFailure;
+			returnCode = EPlayerReturnCodes::KernelInternalFailure;
 			break;
 		}
 
@@ -301,11 +301,11 @@ OpenViBE::EPlayerReturnCode CKernelFacade::runScenarioList(const SRunScenarioCmd
 		if (!player->setScenario(pair.second, &configTokens))
 		{
 			std::cerr << "ERROR: impossible to set player scenario " << name << std::endl;
-			returnCode = EPlayerReturnCode::KernelInternalFailure;
+			returnCode = EPlayerReturnCodes::KernelInternalFailure;
 			break;
 		}
 
-		if (player->initialize() == PlayerReturnCode_Sucess)
+		if (player->initialize() == Kernel::EPlayerReturnCodes::Success)
 		{
 			if (command.playMode && command.playMode.get() == EPlayerPlayMode::Fastfoward) { player->forward(); }
 			else { player->play(); }
@@ -315,12 +315,12 @@ OpenViBE::EPlayerReturnCode CKernelFacade::runScenarioList(const SRunScenarioCmd
 		else
 		{
 			std::cerr << "ERROR: impossible to initialize player for scenario " << name << std::endl;
-			returnCode = EPlayerReturnCode::KernelInternalFailure;
+			returnCode = EPlayerReturnCodes::KernelInternalFailure;
 			break;
 		}
 	}
 
-	if (returnCode == EPlayerReturnCode::Success)
+	if (returnCode == EPlayerReturnCodes::Success)
 	{
 		// loop until timeout
 		const uint64_t startTime = System::Time::zgetTime();
@@ -344,14 +344,14 @@ OpenViBE::EPlayerReturnCode CKernelFacade::runScenarioList(const SRunScenarioCmd
 			allStopped                 = true;
 			for (auto p : players)
 			{
-				if (p->getStatus() != PlayerStatus_Stop)
+				if (p->getStatus() != EPlayerStatus::Stop)
 				{
-					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCode::KernelInternalFailure; }
+					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; }
 				}
 
 				if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
 
-				allStopped &= (p->getStatus() == PlayerStatus_Stop);
+				allStopped &= (p->getStatus() == EPlayerStatus::Stop);
 			}
 
 			lastLoopTime = currentTime;

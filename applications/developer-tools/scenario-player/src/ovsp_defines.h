@@ -30,26 +30,26 @@ namespace OpenViBE
 	*/
 
 	/**
-	* \class EPlayerReturnCode
+	* \class EPlayerReturnCodes
 	* \author cgarraud
 	* \date 2016-01-25
 	* \brief Scenario player list of potential return code
 	* \ingroup ScenarioPlayer
 	*/
-	enum class EPlayerReturnCode
+	enum class EPlayerReturnCodes
 	{
-		Success = 0, /*!< No error during execution */
-		InvalidArg, /*!< Invalid command-line options */
-		MissingMandatoryArgument, /*!< A mandatory argument is missing */
-		BadArg, /*!< An argument is given with a wrong value */
-		OpeningFileFailure, /*!< A file could not be opened */
-		ParsingCommandFailure, /*!< General parsing command error*/
-		UnkownFailure, /*!< Error of unknown type*/
-		KernelLoadingFailure, /*!< Kernel loading failed*/
-		KernelInvalidDesc, /*!< Invalid kernel descriptor*/
-		KernelInvalidContext, /*!< Invalid kernel context*/
-		KernelInternalFailure, /*!< Generic error type for kernel internal error*/
-		ScenarioNotLoaded /*!< Error triggered when an action is requested on an unknown scenario */
+		Success = 0,				///< No error during execution */
+		InvalidArg,					///< Invalid command-line options */
+		MissingMandatoryArgument,	///< A mandatory argument is missing */
+		BadArg,						///< An argument is given with a wrong value */
+		OpeningFileFailure,			///< A file could not be opened */
+		ParsingCommandFailure,		///< General parsing command error*/
+		UnkownFailure,				///< Error of unknown type*/
+		KernelLoadingFailure,		///< Kernel loading failed*/
+		KernelInvalidDesc,			///< Invalid kernel descriptor*/
+		KernelInvalidContext,		///< Invalid kernel context*/
+		KernelInternalFailure,		///< Generic error type for kernel internal error*/
+		ScenarioNotLoaded			///< Error triggered when an action is requested on an unknown scenario */
 	};
 
 	/**
@@ -59,12 +59,28 @@ namespace OpenViBE
 	* \brief Way of playing a scenario
 	* \ingroup ScenarioPlayer
 	*/
-	enum class EPlayerPlayMode
-	{
-		Standard = 0,
-		Fastfoward
-	};
+	enum class EPlayerPlayMode { Standard = 0, Fastfoward };
 
 	/* Define the common parser to be used in the application */
 	using ProgramOptionParser = ProgramOptions<SProgramOptionsTraits::String, SProgramOptionsTraits::Float, SProgramOptionsTraits::TokenPairList>;
+
+	inline std::string toString(const EPlayerReturnCodes code)
+	{
+		switch (code)
+		{
+			case EPlayerReturnCodes::Success: return "Success";
+			case EPlayerReturnCodes::InvalidArg: return "Invalid Arg";
+			case EPlayerReturnCodes::MissingMandatoryArgument: return "Missing Mandatory Argument";
+			case EPlayerReturnCodes::BadArg: return "Bad Arg";
+			case EPlayerReturnCodes::OpeningFileFailure: return "Opening File Failure";
+			case EPlayerReturnCodes::ParsingCommandFailure: return "Parsing Command Failure";
+			case EPlayerReturnCodes::UnkownFailure: return "Unkown Failure";
+			case EPlayerReturnCodes::KernelLoadingFailure: return "Kernel Loading Failure";
+			case EPlayerReturnCodes::KernelInvalidDesc: return "Kernel Invalid Desc";
+			case EPlayerReturnCodes::KernelInvalidContext: return "Kernel Invalid Context";
+			case EPlayerReturnCodes::KernelInternalFailure: return "Kernel Internal Failure";
+			case EPlayerReturnCodes::ScenarioNotLoaded: return "Scenario Not Loaded";
+			default: return "Invalid Code";
+		}
+	}
 }	// namespace OpenViBE

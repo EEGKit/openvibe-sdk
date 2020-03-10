@@ -26,7 +26,7 @@ namespace OpenViBE
 				Toolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_decoder;
 				Toolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_encoder;
 
-				uint64_t m_windowMethod = 0;
+				EWindowMethod m_windowMethod = EWindowMethod::None;
 				std::vector<double> m_windowCoefs;
 			};
 

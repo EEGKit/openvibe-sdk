@@ -53,7 +53,7 @@ bool CBoxAlgorithmCrop::initialize()
 	TParameterHandler<IMatrix*>(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)).setReferenceTarget(m_matrix);
 	TParameterHandler<IMatrix*>(m_decoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix)).setReferenceTarget(m_matrix);
 
-	m_cropMethod   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_cropMethod   = ECropMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
 	m_minCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_maxCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
@@ -106,8 +106,8 @@ bool CBoxAlgorithmCrop::process()
 			double* buffer = m_matrix->getBuffer();
 			for (size_t j = 0; j < m_matrix->getBufferElementCount(); j++, buffer++)
 			{
-				if (*buffer < m_minCropValue && (m_cropMethod == Min || m_cropMethod == MinMax)) { *buffer = m_minCropValue; }
-				if (*buffer > m_maxCropValue && (m_cropMethod == Max || m_cropMethod == MinMax)) { *buffer = m_maxCropValue; }
+				if (*buffer < m_minCropValue && (m_cropMethod == ECropMethod::Min || m_cropMethod == ECropMethod::MinMax)) { *buffer = m_minCropValue; }
+				if (*buffer > m_maxCropValue && (m_cropMethod == ECropMethod::Max || m_cropMethod == ECropMethod::MinMax)) { *buffer = m_maxCropValue; }
 			}
 			m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeBuffer);
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));

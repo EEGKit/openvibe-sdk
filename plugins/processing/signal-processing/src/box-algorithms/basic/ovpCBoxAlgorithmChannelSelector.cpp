@@ -1,33 +1,28 @@
 #include "ovpCBoxAlgorithmChannelSelector.h"
-
-#include <system/ovCMemory.h>
-
-#include <climits>
+#include <limits>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
-
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 
 namespace
 {
-	size_t FindChannel(const IMatrix& matrix, const CString& channel, const CIdentifier& matchMethodID, const size_t start = 0)
+	size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 	{
 		size_t result         = std::numeric_limits<size_t>::max();
 		const size_t nChannel = matrix.getDimensionSize(0);
 
-		if (matchMethodID == Name)
+		if (matchMethod == EMatchMethod::Name)
 		{
 			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 			{
 				if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
 			}
 		}
-		else if (matchMethodID == Index)
+		else if (matchMethod == EMatchMethod::Index)
 		{
 			try
 			{
@@ -53,10 +48,10 @@ namespace
 				// catch block intentionnaly left blank
 			}
 		}
-		else if (matchMethodID == Smart)
+		else if (matchMethod == EMatchMethod::Smart)
 		{
-			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, Name, start); }
-			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, Index, start); }
+			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, EMatchMethod::Name, start); }
+			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, EMatchMethod::Index, start); }
 		}
 
 		return result;
@@ -146,11 +141,11 @@ bool CBoxAlgorithmChannelSelector::process()
 		m_decoder->decode(i);
 		if (m_decoder->isHeaderReceived())
 		{
-			CString settingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-			const uint64_t selectionMethodID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-			const uint64_t matchMethodID     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+			CString settingValue                   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+			const ESelectionMethod selectionMethod = ESelectionMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
+			const EMatchMethod matchMethod         = EMatchMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2)));
 
-			if (selectionMethodID == Select_EEG)
+			if (selectionMethod == ESelectionMethod::Select_EEG)
 			{
 				// ______________________________________________________________________________________________________________________________________________________
 				//
@@ -194,8 +189,8 @@ bool CBoxAlgorithmChannelSelector::process()
 							  OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)
-						size_t startIdx = FindChannel(*m_iMatrix, subTokens[0], Index);
-						size_t endIdx   = FindChannel(*m_iMatrix, subTokens[1], Index);
+						size_t startIdx = FindChannel(*m_iMatrix, subTokens[0], EMatchMethod::Index);
+						size_t endIdx   = FindChannel(*m_iMatrix, subTokens[1], EMatchMethod::Index);
 
 						// When first or second part is not found but associated token is empty, don't consider this as an error
 						if (startIdx == std::numeric_limits<size_t>::max() && subTokens[0] == CString("")) { startIdx = 0; }
@@ -222,7 +217,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						size_t index = std::numeric_limits<size_t>::max();
 
 						// Looks for all the channels with this name
-						while ((index = FindChannel(*m_iMatrix, tokens[j], matchMethodID, index + 1)) != std::numeric_limits<size_t>::max())
+						while ((index = FindChannel(*m_iMatrix, tokens[j], matchMethod, index + 1)) != std::numeric_limits<size_t>::max())
 						{
 							found = true;
 							m_vLookup.push_back(index);
@@ -240,7 +235,7 @@ bool CBoxAlgorithmChannelSelector::process()
 				// ______________________________________________________________________________________________________________________________________________________
 				//
 
-				if (selectionMethodID == Reject)
+				if (selectionMethod == ESelectionMethod::Reject)
 				{
 					std::vector<size_t> inversedLookup;
 					for (size_t j = 0; j < m_iMatrix->getDimensionSize(0); ++j)
@@ -288,7 +283,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			{
 				if (m_vLookup[j] < m_iMatrix->getDimensionSize(0))
 				{
-					System::Memory::copy(m_oMatrix->getBuffer() + j * nSample, m_iMatrix->getBuffer() + m_vLookup[j] * nSample, nSample * sizeof(double));
+					memcpy(m_oMatrix->getBuffer() + j * nSample, m_iMatrix->getBuffer() + m_vLookup[j] * nSample, nSample * sizeof(double));
 				}
 			}
 			m_encoder->encodeBuffer();

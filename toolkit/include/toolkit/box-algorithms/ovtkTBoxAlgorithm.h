@@ -282,33 +282,33 @@ namespace OpenViBE
 				CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
 				switch (eBoxModificationType)
 				{
-					case Kernel::BoxModification_Initialized: return this->onInitialized(m_boxListenerCtx->getBox());
-					case Kernel::BoxModification_DefaultInitialized: return this->onDefaultInitialized(m_boxListenerCtx->getBox());
-					case Kernel::BoxModification_NameChanged: return this->onNameChanged(m_boxListenerCtx->getBox());
-					case Kernel::BoxModification_IdentifierChanged: return this->onIdentifierChanged(m_boxListenerCtx->getBox());
-					case Kernel::BoxModification_AlgorithmClassIdentifierChanged: return this->onAlgorithmClassIdentifierChanged(m_boxListenerCtx->getBox());
-					case Kernel::BoxModification_InputConnected: return this->onInputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_InputDisconnected: return this->onInputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_InputAdded: return this->onInputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_InputRemoved: return this->onInputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_InputTypeChanged: return this->onInputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_InputNameChanged: return this->onInputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_OutputConnected: return this->onOutputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_OutputDisconnected: return this->
+					case Kernel::EBoxModification::Initialized: return this->onInitialized(m_boxListenerCtx->getBox());
+					case Kernel::EBoxModification::DefaultInitialized: return this->onDefaultInitialized(m_boxListenerCtx->getBox());
+					case Kernel::EBoxModification::NameChanged: return this->onNameChanged(m_boxListenerCtx->getBox());
+					case Kernel::EBoxModification::IdentifierChanged: return this->onIdentifierChanged(m_boxListenerCtx->getBox());
+					case Kernel::EBoxModification::AlgorithmClassIdentifierChanged: return this->onAlgorithmClassIdentifierChanged(m_boxListenerCtx->getBox());
+					case Kernel::EBoxModification::InputConnected: return this->onInputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::InputDisconnected: return this->onInputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::InputAdded: return this->onInputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::InputRemoved: return this->onInputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::InputTypeChanged: return this->onInputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::InputNameChanged: return this->onInputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::OutputConnected: return this->onOutputConnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::OutputDisconnected: return this->
 								onOutputDisconnected(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_OutputAdded: return this->onOutputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_OutputRemoved: return this->onOutputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_OutputTypeChanged: return this->onOutputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_OutputNameChanged: return this->onOutputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_SettingAdded: return this->onSettingAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_SettingRemoved: return this->onSettingRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_SettingTypeChanged: return this->
+					case Kernel::EBoxModification::OutputAdded: return this->onOutputAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::OutputRemoved: return this->onOutputRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::OutputTypeChanged: return this->onOutputTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::OutputNameChanged: return this->onOutputNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::SettingAdded: return this->onSettingAdded(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::SettingRemoved: return this->onSettingRemoved(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
+					case Kernel::EBoxModification::SettingTypeChanged: return this->
 								onSettingTypeChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_SettingNameChanged: return this->
+					case Kernel::EBoxModification::SettingNameChanged: return this->
 								onSettingNameChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(
+					case Kernel::EBoxModification::SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(
 							m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-					case Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(
+					case Kernel::EBoxModification::SettingValueChanged: return this->onSettingValueChanged(
 							m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
 					default: OV_ERROR_KRF("Unhandled box modification type " << size_t(eBoxModificationType), Kernel::ErrorType::BadArgument);
 				}

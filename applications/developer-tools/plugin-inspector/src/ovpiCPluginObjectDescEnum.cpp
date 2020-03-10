@@ -6,16 +6,16 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace std;
 
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes
-bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pluginDescriptors)
+bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pod)
 {
-	for (auto* plugin : pluginDescriptors) { this->callback(*plugin); }
+	for (auto* plugin : pod) { this->callback(*plugin); }
 	return true;
 }
 
-bool CPluginObjectDescEnum::enumeratePluginObjectDesc(const CIdentifier& parentClassIdentifier)
+bool CPluginObjectDescEnum::enumeratePluginObjectDesc(const CIdentifier& parentClassID)
 {
 	CIdentifier id;
-	while ((id = m_kernelCtx.getPluginManager().getNextPluginObjectDescIdentifier(id, parentClassIdentifier)) != OV_UndefinedIdentifier)
+	while ((id = m_kernelCtx.getPluginManager().getNextPluginObjectDescIdentifier(id, parentClassID)) != OV_UndefinedIdentifier)
 	{
 		this->callback(*m_kernelCtx.getPluginManager().getPluginObjectDesc(id));
 	}

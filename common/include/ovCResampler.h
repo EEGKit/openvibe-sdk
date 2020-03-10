@@ -11,13 +11,9 @@ namespace Common
 {
 	namespace Resampler
 	{
-		typedef enum
-		{
-			ResamplerStoreMode_ChannelWise,
-			ResamplerStoreMode_SampleWise,
-		} EResamplerStoreMode;
+		enum class EResamplerStoreModes { ChannelWise, SampleWise };
 
-		template <class TFloat, EResamplerStoreMode TStoreMode>
+		template <class TFloat, EResamplerStoreModes TStoreMode>
 		class TResampler
 		{
 		public:
@@ -44,11 +40,11 @@ namespace Common
 				this->clear();
 				switch (TStoreMode)
 				{
-					case ResamplerStoreMode_ChannelWise:
+					case EResamplerStoreModes::ChannelWise:
 						m_fpResample = &TResampler<TFloat, TStoreMode>::resampleChannelWise;
 						m_fpResampleDirect = &TResampler<TFloat, TStoreMode>::resampleChannelWise;
 						break;
-					case ResamplerStoreMode_SampleWise:
+					case EResamplerStoreModes::SampleWise:
 						m_fpResample = &TResampler<TFloat, TStoreMode>::resampleSampleWise;
 						m_fpResampleDirect = &TResampler<TFloat, TStoreMode>::resampleSampleWise;
 						break;
@@ -450,14 +446,14 @@ namespace Common
 																		 const size_t nOutSample);
 		};
 
-		typedef TResampler<float, ResamplerStoreMode_SampleWise> CResamplerSf;
-		typedef TResampler<float, ResamplerStoreMode_ChannelWise> CResamplerCf;
-		typedef TResampler<double, ResamplerStoreMode_SampleWise> CResamplerSd;
-		typedef TResampler<double, ResamplerStoreMode_ChannelWise> CResamplerCd;
+		typedef TResampler<float, EResamplerStoreModes::SampleWise> CResamplerSf;
+		typedef TResampler<float, EResamplerStoreModes::ChannelWise> CResamplerCf;
+		typedef TResampler<double, EResamplerStoreModes::SampleWise> CResamplerSd;
+		typedef TResampler<double, EResamplerStoreModes::ChannelWise> CResamplerCd;
 
-		typedef TResampler<float, ResamplerStoreMode_SampleWise> CDownsamplerSf;
-		typedef TResampler<float, ResamplerStoreMode_ChannelWise> CDownsamplerCf;
-		typedef TResampler<double, ResamplerStoreMode_SampleWise> CDownsamplerSd;
-		typedef TResampler<double, ResamplerStoreMode_ChannelWise> CDownsamplerCd;
+		typedef TResampler<float, EResamplerStoreModes::SampleWise> CDownsamplerSf;
+		typedef TResampler<float, EResamplerStoreModes::ChannelWise> CDownsamplerCf;
+		typedef TResampler<double, EResamplerStoreModes::SampleWise> CDownsamplerSd;
+		typedef TResampler<double, EResamplerStoreModes::ChannelWise> CDownsamplerCd;
 	} // namespace Resampler
 } // namespace Common

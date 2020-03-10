@@ -9,11 +9,6 @@ namespace System
 	{
 	public:
 
-		static bool copy(void* dstBuffer, const void* srcBuffer, size_t size);
-		static bool move(void* dstBuffer, const void* srcBuffer, size_t size);
-		static bool set(void* dstBuffer, size_t size, uint8_t value);
-		static bool compare(const void* srcBuffer1, const void* srcBuffer2, size_t size);
-
 		static bool hostToLittleEndian(uint16_t value, uint8_t* buffer);
 		static bool hostToLittleEndian(uint32_t value, uint8_t* buffer);
 		static bool hostToLittleEndian(uint64_t value, uint8_t* buffer);
@@ -53,7 +48,6 @@ namespace System
 		static bool bigEndianToHost(const uint8_t* buffer, long double* value);
 
 	private:
-
 		Memory() = delete;
 	};
 } // namespace System

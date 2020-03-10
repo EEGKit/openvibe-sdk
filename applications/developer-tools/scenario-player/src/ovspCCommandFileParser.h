@@ -73,11 +73,11 @@ namespace OpenViBE
 
 		std::vector<std::shared_ptr<SCommand>> getCommandList() const override { return m_cmdList; }
 
-		EPlayerReturnCode parse() override;
+		EPlayerReturnCodes parse() override;
 
 	private:
 
-		using CallbackType = std::function<EPlayerReturnCode(std::vector<std::string>)>;
+		using CallbackType = std::function<EPlayerReturnCodes(std::vector<std::string>)>;
 		using Token = std::pair<std::string, std::string>;
 
 		static std::string trim(const std::string& str);
@@ -87,14 +87,14 @@ namespace OpenViBE
 		static std::vector<std::string> toList(const std::string& str);
 		static std::vector<Token> toTokenList(const std::string& str);
 
-		EPlayerReturnCode flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent);
 
-		EPlayerReturnCode initCommandCb(const std::vector<std::string>& sectionContent);
-		EPlayerReturnCode resetCommandCb(const std::vector<std::string>& sectionContent);
-		EPlayerReturnCode loadKernelCommandCb(const std::vector<std::string>& sectionContent);
-		EPlayerReturnCode loadScenarioCommandCb(const std::vector<std::string>& sectionContent);
-		EPlayerReturnCode setupScenarioCommandCb(const std::vector<std::string>& sectionContent);
-		EPlayerReturnCode runScenarioCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes initCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes resetCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes loadKernelCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes loadScenarioCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes setupScenarioCommandCb(const std::vector<std::string>& sectionContent);
+		EPlayerReturnCodes runScenarioCommandCb(const std::vector<std::string>& sectionContent);
 
 		std::string m_cmdFile;
 		std::vector<std::shared_ptr<SCommand>> m_cmdList;

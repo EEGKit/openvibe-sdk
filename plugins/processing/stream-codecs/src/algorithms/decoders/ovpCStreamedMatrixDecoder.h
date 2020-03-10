@@ -33,17 +33,11 @@ namespace OpenViBE
 
 			private:
 
-				enum
-				{
-					Status_ParsingNothing,
-					Status_ParsingHeader,
-					Status_ParsingBuffer,
-					Status_ParsingDimension,
-				};
+				enum class EParsingStatus { Nothing, Header, Buffer, Dimension };
 
 				std::stack<EBML::CIdentifier> m_nodes;
 
-				size_t m_status            = 0;
+				EParsingStatus m_status            = EParsingStatus::Nothing;
 				size_t m_dimensionIdx      = 0;
 				size_t m_dimensionEntryIdx = 0;
 				// size_t mdimensionEntryIdxUnit = 0;

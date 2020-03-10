@@ -12,36 +12,34 @@ namespace
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::HighPass<32>, 1, Dsp::DirectFormII> CButterworthHighPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::LowPass<32>, 1, Dsp::DirectFormII> CButterworthLowPass;
 
-	std::shared_ptr<Dsp::Filter> createButterworthFilter(const size_t type, const size_t nSmooth)
+	std::shared_ptr<Dsp::Filter> createButterworthFilter(const EFilterType type, const size_t nSmooth)
 	{
 		switch (type)
 		{
-			case BandPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandPass>(int(nSmooth)));
-			case BandStop: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandStop>(int(nSmooth)));
-			case HighPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthHighPass>(int(nSmooth)));
-			case LowPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthLowPass>(int(nSmooth)));
-			default:
-				break;
+			case EFilterType::BandPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandPass>(int(nSmooth)));
+			case EFilterType::BandStop: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandStop>(int(nSmooth)));
+			case EFilterType::HighPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthHighPass>(int(nSmooth)));
+			case EFilterType::LowPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthLowPass>(int(nSmooth)));
+			default: return nullptr;
 		}
-		return nullptr;
 	}
 
-	bool getButterworthParameters(Dsp::Params& parameters, const size_t frequency, const size_t type, const size_t order,
+	bool getButterworthParameters(Dsp::Params& parameters, const size_t frequency, const EFilterType type, const size_t order,
 								  const double lowCut, const double highCut, const double /*ripple*/)
 	{
 		parameters[0] = double(frequency);
 		parameters[1] = double(order);
 		switch (type)
 		{
-			case BandPass:
-			case BandStop:
+			case EFilterType::BandPass:
+			case EFilterType::BandStop:
 				parameters[2] = .5 * (highCut + lowCut);
 				parameters[3] = 1. * (highCut - lowCut);
 				break;
-			case HighPass:
+			case EFilterType::HighPass:
 				parameters[2] = lowCut;
 				break;
-			case LowPass:
+			case EFilterType::LowPass:
 				parameters[2] = highCut;
 				break;
 			default:
@@ -96,14 +94,14 @@ namespace
 		}
 		*/
 
-	typedef bool (*fpGetParameters_t)(Dsp::Params& params, size_t type, size_t sampling, size_t order, double lowCut, double highCut, double ripple);
-	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(size_t type, size_t nSmooth);
+	typedef bool (*fpGetParameters_t)(Dsp::Params& params, size_t sampling, EFilterType type, size_t order, double lowCut, double highCut, double ripple);
+	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(EFilterType type, size_t nSmooth);
 }  // namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
 {
-	m_method            = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));	// cast Needed for x32
-	m_type              = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));	// cast Needed for x32
+	m_method            = EFilterMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));	// cast Needed for x32
+	m_type              = EFilterType(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));	// cast Needed for x32
 	const int64_t order = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_lowCut            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	m_highCut           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
@@ -112,15 +110,15 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 
 	m_order = size_t(order);
 
-	if (m_type == LowPass)
+	if (m_type == EFilterType::LowPass)
 	{
 		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", ErrorType::BadSetting);
 	}
-	else if (m_type == HighPass)
+	else if (m_type == EFilterType::HighPass)
 	{
 		OV_ERROR_UNLESS_KRF(m_lowCut > 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value > 0)", ErrorType::BadSetting);
 	}
-	else if (m_type == BandPass || m_type == BandStop)
+	else if (m_type == EFilterType::BandPass || m_type == EFilterType::BandStop)
 	{
 		OV_ERROR_UNLESS_KRF(m_lowCut >= 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value >= 0)", ErrorType::BadSetting);
 		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", ErrorType::BadSetting);
@@ -128,7 +126,7 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 							"Invalid cut-off frequencies [" << m_lowCut << "," << m_highCut << "] (expected low frequency < high frequency)",
 							ErrorType::BadSetting);
 	}
-	else { OV_ERROR_KRF("Invalid filter type [" << m_type << "]", ErrorType::BadSetting); }
+	else { OV_ERROR_KRF("Invalid filter type", ErrorType::BadSetting); }
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -167,13 +165,13 @@ bool CBoxAlgorithmTemporalFilter::process()
 
 		if (m_decoder.isHeaderReceived())
 		{
-			if (m_type != LowPass) // verification for high-pass, band-pass and band-stop filters
+			if (m_type != EFilterType::LowPass) // verification for high-pass, band-pass and band-stop filters
 			{
 				OV_ERROR_UNLESS_KRF(m_lowCut <= m_decoder.getOutputSamplingRate()*.5,
 									"Invalid low cut-off frequency [" << m_lowCut << "] (expected value must meet nyquist criteria for sampling rate "
 									<< m_decoder.getOutputSamplingRate() << ")", ErrorType::BadConfig);
 			}
-			if (m_type != HighPass) // verification for low-pass, band-pass and band-stop filters
+			if (m_type != EFilterType::HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
 				OV_ERROR_UNLESS_KRF(m_highCut <= m_decoder.getOutputSamplingRate()*.5,
 									"Invalid high cut-off frequency [" << m_highCut << "] (expected value must meet nyquist criteria for sampling rate "
@@ -185,27 +183,27 @@ bool CBoxAlgorithmTemporalFilter::process()
 
 			fpGetParameters_t fpGetParameters;
 			fpCreateFilter_t fpCreateFilter;
-			if (m_method == Butterworth) // Butterworth
+			if (m_method == EFilterMethod::Butterworth) // Butterworth
 			{
 				fpGetParameters = getButterworthParameters;
 				fpCreateFilter  = createButterworthFilter;
 			}
-			else if (m_method == Chebyshev) // Chebyshev
+			else if (m_method == EFilterMethod::Chebyshev) // Chebyshev
 			{
 				OV_ERROR_KRF("Chebyshev method not implemented", ErrorType::NotImplemented);
 				//fpGetParameters = getChebishevParameters;
 				//fpCreateFilter = createChebishevFilter;
 			}
-			else if (m_method == YuleWalker) // YuleWalker
+			else if (m_method == EFilterMethod::YuleWalker) // YuleWalker
 			{
 				OV_ERROR_KRF("YuleWalker method not implemented", ErrorType::NotImplemented);
 				//fpGetParameters = getYuleWalkerParameters;
 				//fpCreateFilter = createYuleWalkerFilter;
 			}
-			else { OV_ERROR_KRF("Invalid filter method [" << m_method << "]", ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("Invalid filter method", ErrorType::BadSetting); }
 
-			if (m_type == HighPass) { this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n"; }
-			if (m_type == LowPass) { this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n"; }
+			if (m_type == EFilterType::HighPass) { this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n"; }
+			if (m_type == EFilterType::LowPass) { this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n"; }
 
 			const size_t frequency = m_decoder.getOutputSamplingRate();
 			const size_t nSmooth   = 100 * frequency;
@@ -232,7 +230,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 			if (m_firstSamples.empty())
 			{
 				m_firstSamples.resize(nChannel, 0); //initialization to 0
-				if (m_type == BandPass || m_type == HighPass)
+				if (m_type == EFilterType::BandPass || m_type == EFilterType::HighPass)
 				{
 					for (j = 0; j < nChannel; ++j)
 					{

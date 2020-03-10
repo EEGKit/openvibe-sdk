@@ -1,7 +1,5 @@
 #include "ovpCBoxAlgorithmSpatialFilter.h"
 
-#include <system/ovCMemory.h>
-
 #include <sstream>
 #include <string>
 
@@ -237,7 +235,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 #else
 			const double* filter = m_filterBank.getBuffer();
 
-			System::Memory::set(out, nSample*nChannelOut*sizeof(double), 0);
+			memset(out, 0, nSample*nChannelOut*sizeof(double));
 
 			for (size_t j = 0; j < nChannelOut; ++j)
 			{

@@ -1,7 +1,5 @@
 #include "ovtkISignalTrial.h"
 
-#include <system/ovCMemory.h>
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Toolkit;
 
@@ -31,10 +29,7 @@ ISignalTrial& Toolkit::copy(ISignalTrial& trial, const ISignalTrial* srcTrial)
 		const size_t nChannel = srcTrial->getChannelCount();
 		const size_t nSample  = srcTrial->getSampleCount();
 		trial.setSampleCount(nSample, false);
-		for (size_t i = 0; i < nChannel; ++i)
-		{
-			System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), nSample * sizeof(double));
-		}
+		for (size_t i = 0; i < nChannel; ++i) { memcpy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), nSample * sizeof(double)); }
 	}
 
 	return trial;
@@ -53,7 +48,7 @@ ISignalTrial& Toolkit::selectSamples(ISignalTrial& trial, const size_t sampleSta
 	trial.setSampleCount(nSample, false);
 	for (size_t i = 0; i < nChannel; ++i)
 	{
-		System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i) + sampleStart, nSample * sizeof(double));
+		memcpy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i) + sampleStart, nSample * sizeof(double));
 	}
 
 	return trial;
@@ -82,9 +77,8 @@ ISignalTrial& Toolkit::removeSamples(ISignalTrial& trial, const size_t sampleSta
 	trial.setSampleCount(srcNSample, false);
 	for (size_t i = 0; i < srcNChannel; ++i)
 	{
-		System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double));
-		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart, srcTrial->getChannelSampleBuffer(i) + sampleEnd,
-							 (srcNSample - sampleStart) * sizeof(double));
+		memcpy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double));
+		memcpy(trial.getChannelSampleBuffer(i) + sampleStart, srcTrial->getChannelSampleBuffer(i) + sampleEnd, (srcNSample - sampleStart) * sizeof(double));
 	}
 
 	return trial;
@@ -113,11 +107,10 @@ ISignalTrial& Toolkit::insertBufferSamples(ISignalTrial& trial, const size_t sam
 	trial.setSampleCount(srcNSample + nSample, true);
 	for (size_t i = 0; i < srcNChannel; ++i)
 	{
-		if (&trial != srcTrial) { System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double)); }
+		if (&trial != srcTrial) { memcpy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double)); }
 
-		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart + nSample, srcTrial->getChannelSampleBuffer(i),
-							 (srcNSample - sampleStart) * sizeof(double));
-		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart, buffer + nSample * i, nSample * sizeof(double));
+		memcpy(trial.getChannelSampleBuffer(i) + sampleStart + nSample, srcTrial->getChannelSampleBuffer(i), (srcNSample - sampleStart) * sizeof(double));
+		memcpy(trial.getChannelSampleBuffer(i) + sampleStart, buffer + nSample * i, nSample * sizeof(double));
 	}
 
 	return trial;

@@ -1,7 +1,8 @@
 #include "ovpCBoxAlgorithmClassifierTrainer.h"
-
-#include <system/ovCMemory.h>
 #include <system/ovCMath.h>
+
+#include <xml/IXMLHandler.h>
+#include <xml/IXMLNode.h>
 
 #include <sstream>
 #include <cmath>
@@ -10,10 +11,6 @@
 #include <map>
 
 #include <iomanip> // setw
-
-#include <xml/IXMLHandler.h>
-#include <xml/IXMLNode.h>
-
 //This needs to reachable from outside
 const char* const CLASSIFIER_ROOT                = "OpenViBE-Classifier";
 const char* const FORMAT_VERSION_ATTRIBUTE_NAME  = "FormatVersion";
@@ -421,7 +418,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 	{
 		const size_t k       = permutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
 		const double classId = double(dataset[k].inputIdx);
-		System::Memory::copy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
+		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
 
 		buffer[nFeature] = classId;
 		buffer += (nFeature + 1);
@@ -469,7 +466,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
-		System::Memory::copy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
+		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
 
 		m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
@@ -484,7 +481,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 			double* buf = confusionMatrix.getBuffer();
 			buf[size_t(correctValue) * confusionMatrix.getDimensionSize(1) + size_t(predictedValue)] += 1.0;
 		}
-		else { std::cout << "errorn\n"; }
+		else { std::cout << "error\n"; }
 	}
 
 	return double((nSuccess * 100.0) / (stopIdx - startIdx));

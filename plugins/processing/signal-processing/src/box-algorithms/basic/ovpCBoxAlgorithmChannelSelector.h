@@ -82,9 +82,9 @@ namespace OpenViBE
 						box.getSettingValue(1, method);
 						box.getSettingType(1, enumID);
 
-						const CIdentifier methodID = this->getTypeManager().getEnumerationEntryValueFromName(enumID, method);
+						const ESelectionMethod methodID = ESelectionMethod(this->getTypeManager().getEnumerationEntryValueFromName(enumID, method));
 
-						if (methodID == Reject) { channels = CString("!") + channels; }
+						if (methodID == ESelectionMethod::Reject) { channels = CString("!") + channels; }
 						box.setName(channels);
 					}
 					return true;

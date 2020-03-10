@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
 	vector<string> pluginFilestoLoad;
 
-	CString boxAlgorithmDocTemplateDirectory;
+	string docTemplateDir;
 	bool ignoreMetaboxes = false;
 	vector<string> metaboxExtensionsToLoad;
 
@@ -46,8 +46,8 @@ int main(int argc, char** argv)
 				cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards." << endl;
 				return 0;
 			}
-			boxAlgorithmDocTemplateDirectory = argv[i];
-			cout << "Templates will be generated in folder: [" << boxAlgorithmDocTemplateDirectory.toASCIIString() << "]." << endl;
+			docTemplateDir = argv[i];
+			cout << "Templates will be generated in folder: [" << docTemplateDir << "]." << endl;
 		}
 		else if (i < argc) { pluginFilestoLoad.push_back(string(argv[i])); }
 	}
@@ -94,9 +94,9 @@ int main(int argc, char** argv)
 					}
 				}
 
-				ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
+				ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << docTemplateDir << "]\n";
 
-				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*ctx, boxAlgorithmDocTemplateDirectory);
+				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*ctx, string(docTemplateDir));
 				if (!boxTemplateGenerator.initialize())
 				{
 					cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << endl;
@@ -106,8 +106,7 @@ int main(int argc, char** argv)
 
 				if (!ignoreMetaboxes)
 				{
-					ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << boxAlgorithmDocTemplateDirectory <<
-							"]\n";
+					ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << docTemplateDir << "]\n";
 					// Do not load the binary metaboxes as they would only be duplicated
 					//ctx->getScenarioManager().unregisterScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mbb");
 					configurationManager.addOrReplaceConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/");
@@ -116,11 +115,10 @@ int main(int argc, char** argv)
 
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
 					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
-					CIdentifier metaboxDescIdentifier;
-					while ((metaboxDescIdentifier = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) !=
-						   OV_UndefinedIdentifier)
+					CIdentifier id;
+					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != OV_UndefinedIdentifier)
 					{
-						metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier));
+						metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(id));
 					}
 					boxTemplateGenerator.enumeratePluginObjectDesc(metaboxPluginObjectDescriptors);
 				}

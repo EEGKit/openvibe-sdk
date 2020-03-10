@@ -310,24 +310,24 @@ bool CScheduler::flattenScenario()
 	return true;
 }
 
-ESchedulerInitializationCode CScheduler::initialize()
+ESchedulerInitialization CScheduler::initialize()
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 
 	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall,
-					  SchedulerInitialization_Failed);
+					  ESchedulerInitialization::Failed);
 
 	m_scenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_scenarioID);
 
-	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_scenarioID.str(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
+	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_scenarioID.str(), ErrorType::ResourceNotFound, ESchedulerInitialization::Failed);
 
 	OV_ERROR_UNLESS_K(m_scenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
-					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
+					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, ESchedulerInitialization::Failed);
 
 	CBoxSettingModifierVisitor boxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
 	OV_ERROR_UNLESS_K(m_scenario->acceptVisitor(boxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id "
-					  << m_scenarioID.str(), ErrorType::Internal, SchedulerInitialization_Failed);
+					  << m_scenarioID.str(), ErrorType::Internal, ESchedulerInitialization::Failed);
 
 
 	{
@@ -380,11 +380,11 @@ ESchedulerInitializationCode CScheduler::initialize()
 			OV_ERROR_UNLESS_K(
 				!m_scenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
 				"Box [" << box->getName() << "] with class identifier [" << boxID.str() << "] should be updated",
-				ErrorType::Internal, SchedulerInitialization_Failed);
+				ErrorType::Internal, ESchedulerInitialization::Failed);
 
 			OV_ERROR_UNLESS_K(box->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
 							  "Not expanded metabox with id [" << box->getAttributeValue(OVP_AttributeId_Metabox_ID) << "] detected in the scenario",
-							  ErrorType::Internal, SchedulerInitialization_Failed);
+							  ErrorType::Internal, ESchedulerInitialization::Failed);
 
 			const IPluginObjectDesc* boxDesc = this->getPluginManager().getPluginObjectDescCreating(box->getAlgorithmClassIdentifier());
 
@@ -392,13 +392,13 @@ ESchedulerInitializationCode CScheduler::initialize()
 				!(box->hasAttribute(OV_AttributeId_Box_Disabled) && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}",
 					false)),
 				"Disabled box [" << box->getName() << "] with class identifier [" << boxID.str() << "] detected in the scenario",
-				ErrorType::Internal, SchedulerInitialization_Failed);
+				ErrorType::Internal, ESchedulerInitialization::Failed);
 
 			if (!box->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
 				OV_ERROR_UNLESS_K(boxDesc != nullptr,
 								  "Failed to create runtime box [" << box->getName() << "] with class identifier [" << boxID.str() << "]",
-								  ErrorType::BadResourceCreation, SchedulerInitialization_Failed);
+								  ErrorType::BadResourceCreation, ESchedulerInitialization::Failed);
 
 				CSimulatedBox* simulatedBox = new CSimulatedBox(this->getKernelContext(), *this);
 				simulatedBox->setScenarioIdentifier(m_scenarioID);
@@ -438,7 +438,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 		m_scenario->releaseIdentifierList(listID);
 	}
 
-	OV_ERROR_UNLESS_K(!m_simulatedBoxes.empty(), "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
+	OV_ERROR_UNLESS_K(!m_simulatedBoxes.empty(), "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, ESchedulerInitialization::Failed);
 
 
 	bool boxInitialization = true;
@@ -466,7 +466,7 @@ ESchedulerInitializationCode CScheduler::initialize()
 
 	m_oBenchmarkChrono.reset(m_frequency);
 
-	return (boxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
+	return (boxInitialization ? ESchedulerInitialization::Success : ESchedulerInitialization::Failed);
 }
 
 bool CScheduler::uninitialize()

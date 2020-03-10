@@ -4,60 +4,11 @@
 
 namespace OpenViBE
 {
-	namespace Kernel
-	{
-		/**
-		 * \brief Functionality enumeration in order to know what a plugin is capable of
-		 */
-		enum EPluginFunctionality
-		{
-			PluginFunctionality_Undefined,
-			PluginFunctionality_Processing,
-		};
-
-		/**
-		 * \brief License type enumeration in order to know what software license a plugin can be released with
-		 */
-		enum ELicenseType
-		{
-			LicenseType_Unspecified,  //!< Generic for unspecified license type
-			LicenseType_Commercial,   //!< Generic for commercial software
-			LicenseType_AFL,          //!< Academic Free License
-			LicenseType_AL20,         //!< Apache License, Version 2.0
-			LicenseType_ASL,          //!< Apache Software License
-			LicenseType_APSL,         //!< Apple Public Source Licenses
-			LicenseType_BSD,          //!< BSD License
-			LicenseType_CPL,          //!< Common Public License
-			LicenseType_CeCILL,       //!< Licence CEA CNRS INRIA Logiciel Libre
-			LicenseType_CeCILLB,      //!< Licence CEA CNRS INRIA Logiciel Libre B
-			LicenseType_CeCILLC,      //!< Licence CEA CNRS INRIA Logiciel Libre C
-			LicenseType_EFL2,         //!< Eiffel Forum License Version 2.0
-			LicenseType_GPL,          //!< GNU General Public License
-			LicenseType_LGPL,         //!< GNU Lesser General Public License
-			LicenseType_IBMPL,        //!< IBM Public License
-			LicenseType_IOSL,         //!< Intel Open Source License
-			LicenseType_MPL10,        //!< Mozilla Public License Version 1.0
-			LicenseType_MPL11,        //!< Mozilla Public License Version 1.1
-			LicenseType_NPL10,        //!< Netscape Public License Version 1.0
-			LicenseType_NPL11,        //!< Netscape Public License Version 1.1
-			LicenseType_OSL,          //!< Open Software License
-			LicenseType_PHPL,         //!< PHP License
-			LicenseType_PAL,          //!< Perl Artistic License
-			LicenseType_CNRIPL,       //!< Python License (CNRI Python License)
-			LicenseType_PSFL,         //!< Python Software Foundation License
-			LicenseType_QPL,          //!< Q Public Licence (QT)
-			LicenseType_SL,           //!< Sleepycat Software Product License
-			LicenseType_SISSL,        //!< Sun Industry Standards Source License
-			LicenseType_SPL,          //!< Sun Public License
-			LicenseType_W3C,          //!< W3C Software License
-			LicenseType_WXWLL,        //!< wxWindows Library License
-			LicenseType_ZLL,          //!< zlib/libpng License
-			LicenseType_ZPL,          //!< Zope Public License
-		};
-	}  // namespace Kernel
-
 	namespace Plugins
 	{
+		/// <summary> Functionality enumeration in order to know what a plugin is capable of </summary>
+		enum class EPluginFunctionality { Undefined, Processing, Visualization };
+
 		class IPluginObject;
 
 		/**
@@ -204,30 +155,7 @@ namespace OpenViBE
 			 * \return \e true in case plugin has this functionality.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasFunctionality(Kernel::EPluginFunctionality functionality) const { return false; }
-
-			/**
-			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
-			 * \param functionality The identifier of the functionality to poll
-			 * \retval true If the plugin has the demanded functionality.
-			 * \retval false If the plugin does not have the demanded functionality.
-			 */
-			virtual bool hasFunctionality(const CIdentifier& functionality) const { return false; }
-			/**
-			 * \brief Tests the licence type for this plugin
-			 * \param license [in] : the licence type that this plugin may have
-			 * \return \e true in case this plugin accepts the specified licence.
-			 * \return \e false in other case
-			 *
-			 * Default implementation returns \c false .
-			 *
-			 * This function should return the licence which can be used to distribute the plugin. The aim of this functionnality is to
-			 * be able to quickly warn the user if the usage he is doing for the software is incompatible with the licence the plugin uses.
-			 * for example, a GPL plugin should not be used in a commercial context.
-			 *
-			 * A plugin may be used under different licences. For this reason, the OpenViBE kernel will loop on this function for each licence type to request.
-			 */
-			virtual bool hasLicenceType(Kernel::ELicenseType license) const { return false; }
+			virtual bool hasFunctionality(const EPluginFunctionality functionality) const { return false; }
 
 			//@}
 

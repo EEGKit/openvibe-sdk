@@ -12,13 +12,11 @@ using namespace /*OpenViBE::*/Toolkit;
 bool CBoxAlgorithmWindowing::initialize()
 {
 	//reads the plugin settings
-	m_windowMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_windowMethod = EWindowMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
 
-	if (m_windowMethod != None && m_windowMethod != Hamming && m_windowMethod != Hanning && m_windowMethod != Hann
-		&& m_windowMethod != Blackman && m_windowMethod != Triangular && m_windowMethod != SquareRoot)
-	{
-		OV_ERROR_KRF("No valid windowing method set.\n", ErrorType::BadSetting);
-	}
+	if (m_windowMethod != EWindowMethod::None && m_windowMethod != EWindowMethod::Hamming && m_windowMethod != EWindowMethod::Hanning
+		&& m_windowMethod != EWindowMethod::Hann && m_windowMethod != EWindowMethod::Blackman && m_windowMethod != EWindowMethod::Triangular
+		&& m_windowMethod != EWindowMethod::SquareRoot) { OV_ERROR_KRF("No valid windowing method set.\n", ErrorType::BadSetting); }
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -64,22 +62,22 @@ bool CBoxAlgorithmWindowing::process()
 			m_windowCoefs.resize(matrix->getDimensionSize(1));
 			const size_t n = m_windowCoefs.size();
 
-			if (m_windowMethod == Hamming)
+			if (m_windowMethod == EWindowMethod::Hamming)
 			{
 				for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 0.54 - 0.46 * cos(2. * M_PI * double(k) / (double(n) - 1.)); }
 			}
-			else if (m_windowMethod == Hann || m_windowMethod == Hanning)
+			else if (m_windowMethod == EWindowMethod::Hann || m_windowMethod == EWindowMethod::Hanning)
 			{
 				for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 0.5 * (1. - cos(2. * M_PI * double(k) / (double(n) - 1.))); }
 			}
-			else if (m_windowMethod == Blackman)
+			else if (m_windowMethod == EWindowMethod::Blackman)
 			{
 				for (size_t k = 0; k < n; ++k)
 				{
 					m_windowCoefs[k] = 0.42 - 0.5 * cos(2. * M_PI * double(k) / (double(n) - 1.)) + 0.08 * cos(4. * M_PI * double(k) / (double(n) - 1.));
 				}
 			}
-			else if (m_windowMethod == Triangular)
+			else if (m_windowMethod == EWindowMethod::Triangular)
 			{
 				/* from MATLAB implementation, as ITPP documentation seems to be flawed */
 				for (size_t k = 1; k <= (n + 1) / 2; ++k)
@@ -94,7 +92,7 @@ bool CBoxAlgorithmWindowing::process()
 					else { m_windowCoefs[k - 1] = double(2. - (2. * double(k) - 1.) / double(n)); }
 				}
 			}
-			else if (m_windowMethod == SquareRoot)
+			else if (m_windowMethod == EWindowMethod::SquareRoot)
 			{
 				for (size_t k = 1; k <= (n + 1) / 2; ++k)
 				{
@@ -108,7 +106,7 @@ bool CBoxAlgorithmWindowing::process()
 					else { m_windowCoefs[k - 1] = sqrt(2. - (2. * double(k) - 1.) / double(n)); }
 				}
 			}
-			else if (m_windowMethod == None) { for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 1; } }
+			else if (m_windowMethod == EWindowMethod::None) { for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 1; } }
 			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", ErrorType::BadSetting); }
 
 			m_encoder.encodeHeader();

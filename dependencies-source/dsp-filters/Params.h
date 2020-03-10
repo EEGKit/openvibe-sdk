@@ -76,10 +76,7 @@ namespace Dsp
 		idZeroReal
 	};
 
-	enum
-	{
-		maxParameters = 8
-	};
+	enum { maxParameters = 8 };
 
 	struct Params
 	{

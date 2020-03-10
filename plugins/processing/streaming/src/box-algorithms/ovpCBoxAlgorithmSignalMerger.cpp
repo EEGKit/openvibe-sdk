@@ -1,11 +1,9 @@
 #include "ovpCBoxAlgorithmSignalMerger.h"
 
-#include <system/ovCMemory.h>
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-using namespace Streaming;
+using namespace /*OpenViBE::Plugins::*/Streaming;
 
 bool CBoxAlgorithmSignalMerger::initialize()
 {
@@ -168,8 +166,7 @@ bool CBoxAlgorithmSignalMerger::process()
 				IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
 				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++)
 				{
-					System::Memory::copy(ip_matrix->getBuffer() + k * nSamplePerBlock, op_matrix->getBuffer() + j * nSamplePerBlock,
-										 nSamplePerBlock * sizeof(double));
+					memcpy(ip_matrix->getBuffer() + k * nSamplePerBlock, op_matrix->getBuffer() + j * nSamplePerBlock, nSamplePerBlock * sizeof(double));
 				}
 			}
 			m_encoder->encodeBuffer();

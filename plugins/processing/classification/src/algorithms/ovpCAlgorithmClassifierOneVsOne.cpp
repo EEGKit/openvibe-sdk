@@ -6,7 +6,6 @@
 #include <sstream>
 #include <utility>
 #include <iostream>
-#include <system/ovCMemory.h>
 
 namespace
 {
@@ -150,7 +149,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 				const double tmp = dataset[k].getLabel();
 				if (tmp == double(i) || tmp == double(j))
 				{
-					System::Memory::copy(buffer, dataset[k].getBuffer(), size * sizeof(double));
+					memcpy(buffer, dataset[k].getBuffer(), size * sizeof(double));
 
 					buffer[size] = size_t(tmp) == i ? 0 : 1;
 					buffer += (size + 1);
@@ -195,7 +194,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 			ip_sample->setDimensionSize(0, size);
 
 			double* buffer = ip_sample->getBuffer();
-			System::Memory::copy(buffer, sample.getBuffer(), size * sizeof(double));
+			memcpy(buffer, sample.getBuffer(), size * sizeof(double));
 			tmp->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
 			classification_info_t classificationInfo = { double(i), double(j), op_label, op_values };

@@ -92,6 +92,7 @@ namespace OpenViBE
 			 * \sa registerEnumerationType
 			 */
 			virtual bool registerEnumerationEntry(const CIdentifier& typeID, const CString& name, uint64_t value) = 0;
+
 			/**
 			 * \brief Registers a new bitmask type
 			 * \param typeID [in] : the type identifier for this type

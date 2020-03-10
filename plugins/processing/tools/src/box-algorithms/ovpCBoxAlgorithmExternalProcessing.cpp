@@ -34,7 +34,7 @@ uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 	{
 		// We slow down the generator type boxes by default, in order to limit syncing
 		// In fast forward we limit the syncing even more by setting the frequency to 1Hz
-		if (this->getPlayerContext().getStatus() == PlayerStatus_Forward) { return 1LL << 32; }
+		if (this->getPlayerContext().getStatus() == EPlayerStatus::Forward) { return 1LL << 32; }
 		return 16LL << 32;
 	}
 	return 128LL << 32;

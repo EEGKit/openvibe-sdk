@@ -30,8 +30,8 @@ namespace OpenViBE
 				Toolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter> m_encoder;
 
 
-				size_t m_method = 0;
-				size_t m_type   = 0;
+				EFilterMethod m_method = EFilterMethod::Butterworth;
+				EFilterType m_type   = EFilterType::BandPass;
 				size_t m_order  = 0;
 
 				double m_lowCut  = 0;

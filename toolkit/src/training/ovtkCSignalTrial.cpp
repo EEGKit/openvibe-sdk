@@ -1,7 +1,5 @@
 #include "ovtkCSignalTrial.hpp"
 
-#include <system/ovCMemory.h>
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Toolkit;
 using namespace std;
@@ -54,7 +52,7 @@ bool CSignalTrial::setSampleCount(const size_t count, const bool preserve)
 		for (auto it = m_channelSamples.begin(); it != m_channelSamples.end(); ++it)
 		{
 			double* sample = new double[nSampleReserved];
-			if (preserve) { System::Memory::copy(sample, it->second, (count < m_nSample ? count : m_nSample) * sizeof(double)); }
+			if (preserve) { memcpy(sample, it->second, (count < m_nSample ? count : m_nSample) * sizeof(double)); }
 			delete [] it->second;
 			it->second = sample;
 		}

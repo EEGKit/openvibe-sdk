@@ -7,26 +7,23 @@
 
 using namespace std;
 
-typedef enum
-{
-	CPP, MATLAB, PYTHON, LUA, UNKNOWN
-} generation_type;
+enum class EGenerationTypes { CPP, MATLAB, PYTHON, LUA, UNKNOWN };
 
 
-generation_type parse_argument(string option)
+EGenerationTypes parse_argument(string option)
 {
-	if (option == "--cpp") { return CPP; }
-	if (option == "--matlab") { return MATLAB; }
-	if (option == "--python") { return PYTHON; }
-	if (option == "--lua") { return LUA; }
-	return UNKNOWN;
+	if (option == "--cpp") { return EGenerationTypes::CPP; }
+	if (option == "--matlab") { return EGenerationTypes::MATLAB; }
+	if (option == "--python") { return EGenerationTypes::PYTHON; }
+	if (option == "--lua") { return EGenerationTypes::LUA; }
+	return EGenerationTypes::UNKNOWN;
 }
 
-int generate_generator_list(vector<CFileGeneratorBase*>& list, generation_type type, int argc, char** argv)
+int generate_generator_list(vector<CFileGeneratorBase*>& list, EGenerationTypes type, int argc, char** argv)
 {
 	switch (type)
 	{
-		case CPP:
+		case EGenerationTypes::CPP:
 		{
 			if (argc < 4) { return -1; }
 			CFileGeneratorBase* gen = new CCppDefineGenerator();
@@ -47,7 +44,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, generation_type t
 			return 0;
 		}
 
-		case MATLAB:
+		case EGenerationTypes::MATLAB:
 		{
 			CFileGeneratorBase* gen = new CMatlabGenerator();
 			if (!gen->openFile(argv[3]))
@@ -58,9 +55,9 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, generation_type t
 			list.push_back(gen);
 			return 0;
 		}
-		case PYTHON:
-		case LUA:
-		case UNKNOWN:
+		case EGenerationTypes::PYTHON:
+		case EGenerationTypes::LUA:
+		case EGenerationTypes::UNKNOWN:
 		default:
 		{
 			cerr << "Unhandle type. Fatal error" << endl;
@@ -72,7 +69,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, generation_type t
 int main(int argc, char** argv)
 {
 	if (argc < 3) { return -1; }
-	generation_type type = parse_argument(argv[1]);
+	EGenerationTypes type = parse_argument(argv[1]);
 
 	vector<SStimulation> stimulations;
 	vector<CFileGeneratorBase*> generators;

@@ -65,24 +65,25 @@
 #define OVP_TypeId_SelectionMethod								OpenViBE::CIdentifier(0x3BCF9E67, 0x0C23994D)
 #define OVP_TypeId_MatchMethod									OpenViBE::CIdentifier(0x666F25E9, 0x3E5738D6)
 #define OVP_TypeId_WindowMethod									OpenViBE::CIdentifier(0x0A430FE4, 0x4F318280)
+#include <string>
 
-enum EFilterMethod { Butterworth, Chebyshev, YuleWalker };
+enum class EFilterMethod { Butterworth, Chebyshev, YuleWalker };
 
-enum EFilterType { LowPass, BandPass, HighPass, BandStop };
+enum class EFilterType { LowPass, BandPass, HighPass, BandStop };
 
-enum EUpdateMethod { ChunkAverage, Incremental };
+enum class EUpdateMethod { ChunkAverage, Incremental };
 
-enum EEpochAverageMethod { Moving, MovingImmediate, Block, Cumulative };
+enum class EEpochAverageMethod { Moving, MovingImmediate, Block, Cumulative };
 
-enum EContinuousWaveletType { Morlet, Paul, DOG };
+enum class EContinuousWaveletType { Morlet, Paul, DOG };
 
-enum ECropMethod { Min, Max, MinMax };
+enum class ECropMethod { Min, Max, MinMax };
 
-enum ESelectionMethod { Select, Reject, Select_EEG };
+enum class ESelectionMethod { Select, Reject, Select_EEG };
 
-enum EMatchMethod { Name, Index, Smart };
+enum class EMatchMethod { Name, Index, Smart };
 
-enum EWindowMethod { None, Hamming, Hanning, Hann, Blackman, Triangular, SquareRoot };
+enum class EWindowMethod { None, Hamming, Hanning, Hann, Blackman, Triangular, SquareRoot };
 
 // Global defines
 //---------------------------------------------------------------------------------------------------

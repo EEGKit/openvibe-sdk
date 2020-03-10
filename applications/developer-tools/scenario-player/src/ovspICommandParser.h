@@ -71,7 +71,7 @@ namespace OpenViBE
 		* \pre This method should be called after the initialize() method
 		*
 		*/
-		virtual EPlayerReturnCode parse() = 0;
+		virtual EPlayerReturnCodes parse() = 0;
 
 	private:
 
