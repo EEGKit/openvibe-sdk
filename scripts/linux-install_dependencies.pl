@@ -101,6 +101,8 @@ if ($lsb_distributor =~ 'Ubuntu') {
     $distribution = 'Ubuntu 14.04';
   } elsif ($lsb_release =~ '16.04') {
     $distribution = 'Ubuntu 16.04';
+  } elsif ($lsb_release =~ '19.10') {
+    $distribution = 'Ubuntu 19.10';
   }
 }
 
@@ -130,6 +132,8 @@ if ($distribution eq 'Ubuntu 14.04') {
   $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
 } elsif ($distribution eq 'Ubuntu 16.04') {
   $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1604.txt";
+} elsif ($distribution eq 'Ubuntu 19.10') {
+  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1910.txt";
 } else {
   die("Unknown distro\n");
 }
