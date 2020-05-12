@@ -77,8 +77,8 @@ if (! -e $dependencies_arch_dir) {
 }
 
 # Check for the release version and set the update and install commands
-
-my $distribution = 'Unknown';
+my $unsupported_distribution = 'Unsupported';
+my $distribution = $unsupported_distribution;
 my $update_packages_command = '';
 my $package_install_command = '';
 my $add_repository_command  = '';
@@ -97,16 +97,16 @@ if ($lsb_distributor =~ 'Ubuntu') {
       $add_repository_command  = 'sudo add-apt-repository universe';
     }
   }
-  if ($lsb_release =~ '14.04') {
-    $distribution = 'Ubuntu 14.04';
-  } elsif ($lsb_release =~ '16.04') {
-    $distribution = 'Ubuntu 16.04';
-  } elsif ($lsb_release =~ '19.10') {
-    $distribution = 'Ubuntu 19.10';
+
+  if ($lsb_release =~ '14.04'
+      || $lsb_release =~ '16.04'
+      || $lsb_release =~ '18.04'
+      || $lsb_release =~ '19.10') {
+    $distribution = 'Ubuntu ' . $lsb_release;
   }
 }
 
-$distribution eq 'Unknown' and die('This distribution is unsupported');
+$distribution eq $unsupported_distribution and die('This distribution is unsupported');
 
 print "Installing dependencies for: $distribution\n";
 
@@ -130,12 +130,8 @@ my $pkg_file = "";
 
 if ($distribution eq 'Ubuntu 14.04') {
   $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
-} elsif ($distribution eq 'Ubuntu 16.04') {
-  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1604.txt";
-} elsif ($distribution eq 'Ubuntu 19.10') {
-  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1910.txt";
 } else {
-  die("Unknown distro\n");
+  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu16_plus.txt";
 }
 
 # Install actual packages
