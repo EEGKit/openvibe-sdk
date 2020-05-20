@@ -2,15 +2,12 @@
 
 #include <string>
 
-using namespace OpenViBE;
+namespace OpenViBE {
 
-namespace OpenViBE
+struct SStringImpl
 {
-	struct SStringImpl
-	{
-		std::string m_Value;
-	};
-}
+	std::string m_Value;
+};
 
 CString::CString() { m_impl = new SStringImpl(); }
 
@@ -43,19 +40,16 @@ CString& CString::operator+=(const CString& str)
 
 char& CString::operator[](const size_t idx) const { return m_impl->m_Value[idx]; }
 
-namespace OpenViBE
+CString operator+(const CString& str1, const CString& str2)
 {
-	CString operator+(const CString& str1, const CString& str2)
-	{
-		std::string res;
-		res = str1.m_impl->m_Value + str2.m_impl->m_Value;
-		return res.c_str();
-	}
+	std::string res;
+	res = str1.m_impl->m_Value + str2.m_impl->m_Value;
+	return res.c_str();
+}
 
-	bool operator==(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) == (str2.m_impl->m_Value); }
-	bool operator!=(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) != (str2.m_impl->m_Value); }
-	bool operator<(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) < (str2.m_impl->m_Value); }
-} // namespace OpenViBE
+bool operator==(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) == (str2.m_impl->m_Value); }
+bool operator!=(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) != (str2.m_impl->m_Value); }
+bool operator<(const CString& str1, const CString& str2) { return (str1.m_impl->m_Value) < (str2.m_impl->m_Value); }
 
 bool CString::set(const CString& str) const
 {
@@ -73,3 +67,5 @@ bool CString::set(const char* str) const
 const char* CString::toASCIIString() const { return m_impl->m_Value.c_str(); }
 
 size_t CString::length() const { return m_impl->m_Value.length(); }
+
+} // namespace OpenViBE

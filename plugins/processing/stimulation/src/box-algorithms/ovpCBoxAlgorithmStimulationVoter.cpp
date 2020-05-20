@@ -1,6 +1,5 @@
 #include "ovpCBoxAlgorithmStimulationVoter.h"
 
-#include <openvibe/ovTimeArithmetics.h>
 #include <system/ovCMath.h>
 
 #include <string>
@@ -90,7 +89,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 				uint64_t stimulationId   = op_stimulationSet->getStimulationIdentifier(k);
 				uint64_t stimulationDate = op_stimulationSet->getStimulationDate(k);
 				m_latestStimulusDate     = std::max(m_latestStimulusDate, stimulationDate);
-				if (TimeArithmetics::timeToSeconds(m_latestStimulusDate - stimulationDate) <= m_timeWindow)
+				if (CTime(m_latestStimulusDate - stimulationDate).toSeconds() <= m_timeWindow)
 				{
 					// Stimulus is fresh, append
 					m_oStimulusDeque.push_back(std::pair<uint64_t, uint64_t>(stimulationId, stimulationDate));
@@ -108,7 +107,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	while (!m_oStimulusDeque.empty())
 	{
 		const uint64_t frontDate = m_oStimulusDeque.front().second;
-		if (TimeArithmetics::timeToSeconds(m_latestStimulusDate - frontDate) > m_timeWindow)
+		if (CTime(m_latestStimulusDate - frontDate).toSeconds() > m_timeWindow)
 		{
 			// Drop it
 			m_oStimulusDeque.pop_front();

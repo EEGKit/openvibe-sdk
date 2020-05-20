@@ -2,35 +2,31 @@
 
 #include <cmath>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-
-using namespace /*OpenViBE::*/Plugins;
-using namespace Tools;
+namespace OpenViBE {
+namespace Plugins {
+namespace Tools {
 
 bool CBoxAlgorithmMatrixValidityChecker::initialize()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxCtx = this->getStaticBoxContext();
 
 	uint64_t logLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_logLevel            = ELogLevel(logLevel);
+	m_logLevel            = Kernel::ELogLevel(logLevel);
 	m_validityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	if (boxContext.getSettingCount() == 1
+	if (boxCtx.getSettingCount() == 1
 	)
 	{
 		m_validityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger();
 	} // note that for boxes with one setting, we fallback to the old behavior 
 
-	OV_ERROR_UNLESS_KRF(boxContext.getSettingCount() <= 1 || boxContext.getInputCount() == boxContext.getOutputCount(),
-						"Invalid input count [" << boxContext.getInputCount() << "] (expected same value as output count [" << boxContext.getOutputCount() <<
+	OV_ERROR_UNLESS_KRF(boxCtx.getSettingCount() <= 1 || boxCtx.getInputCount() == boxCtx.getOutputCount(),
+						"Invalid input count [" << boxCtx.getInputCount() << "] (expected same value as output count [" << boxCtx.getOutputCount() <<
 						"])",
-						ErrorType::BadConfig);
+						Kernel::ErrorType::BadConfig);
 
-	m_decoders.resize(boxContext.getInputCount());
-	m_encoders.resize(boxContext.getInputCount());
-	for (size_t i = 0; i < boxContext.getInputCount(); ++i)
+	m_decoders.resize(boxCtx.getInputCount());
+	m_encoders.resize(boxCtx.getInputCount());
+	for (size_t i = 0; i < boxCtx.getInputCount(); ++i)
 	{
 		m_decoders[i].initialize(*this, i);
 		m_encoders[i].initialize(*this, i);
@@ -38,11 +34,11 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	}
 
 	m_lastValidSamples.clear();
-	m_lastValidSamples.resize(boxContext.getInputCount());
+	m_lastValidSamples.resize(boxCtx.getInputCount());
 	m_nTotalInterpolatedSample.clear();
-	m_nTotalInterpolatedSample.resize(boxContext.getInputCount());
+	m_nTotalInterpolatedSample.resize(boxCtx.getInputCount());
 	m_nTotalInterpolatedChunk.clear();
-	m_nTotalInterpolatedChunk.resize(boxContext.getInputCount());
+	m_nTotalInterpolatedChunk.resize(boxCtx.getInputCount());
 
 	return true;
 }
@@ -69,13 +65,13 @@ bool CBoxAlgorithmMatrixValidityChecker::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmMatrixValidityChecker::process()
 {
-	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxCtx    = this->getDynamicBoxContext();
 	const size_t nInput   = this->getStaticBoxContext().getInputCount();
 	const size_t nSetting = this->getStaticBoxContext().getSettingCount();
 
 	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
+		for (size_t j = 0; j < boxCtx.getInputChunkCount(i); ++j)
 		{
 			m_decoders[i].decode(j);
 			IMatrix* matrix = m_decoders[i].getOutputMatrix();
@@ -97,22 +93,22 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
-					if (!Matrix::isContentValid(*matrix))
+					if (!Toolkit::Matrix::isContentValid(*matrix))
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
-								time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
+								CTime(boxCtx.getInputChunkStartTime(i, j)) << " and " << CTime(boxCtx.getInputChunkEndTime(i, j)) << ".\n";
 					}
 				}
 					// stop player
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
-					if (!Matrix::isContentValid(*matrix))
+					if (!Toolkit::Matrix::isContentValid(*matrix))
 					{
 						this->getPlayerContext().stop();
 						OV_ERROR_KRF(
-							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(boxContext.
-								getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "]",
-							ErrorType::BadInput);
+							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << CTime(boxCtx.
+								getInputChunkStartTime(i, j)) << "] and [" << CTime(boxCtx.getInputChunkEndTime(i, j)) << "]",
+							Kernel::ErrorType::BadInput);
 					}
 				}
 					// interpolate
@@ -145,8 +141,8 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// log management
 					if (nInterpolatedSample > 0 && m_nTotalInterpolatedSample[i] == nInterpolatedSample) // beginning of interpolation
 					{
-						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(
-							boxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
+						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << CTime(
+							boxCtx.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
 					}
 					if (nInterpolatedSample > 0) // update of ChunkCount during interpolation
 					{
@@ -155,8 +151,8 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					if (nInterpolatedSample == 0 && m_nTotalInterpolatedSample[i] > 0) // end of interpolation
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " contained " << 100.0 * m_nTotalInterpolatedSample[i] / (
-							m_nTotalInterpolatedChunk[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(
-							boxContext.getInputChunkStartTime(i, j)) << ".\n";
+							m_nTotalInterpolatedChunk[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << CTime(
+							boxCtx.getInputChunkStartTime(i, j)) << ".\n";
 						m_nTotalInterpolatedSample[i] = 0; // reset
 						m_nTotalInterpolatedChunk[i]  = 0;
 					}
@@ -166,9 +162,13 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				if (nSetting > 1) { m_encoders[i].encodeBuffer(); }
 			}
 			if (m_decoders[i].isEndReceived()) { if (nSetting > 1) { m_encoders[i].encodeEnd(); } }
-			if (nSetting > 1) { boxContext.markOutputAsReadyToSend(i, boxContext.getInputChunkStartTime(i, j), boxContext.getInputChunkEndTime(i, j)); }
+			if (nSetting > 1) { boxCtx.markOutputAsReadyToSend(i, boxCtx.getInputChunkStartTime(i, j), boxCtx.getInputChunkEndTime(i, j)); }
 		}
 	}
 
 	return true;
 }
+
+} // namespace Tools
+} // namespace Plugins
+} // namespace OpenViBE

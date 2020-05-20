@@ -48,10 +48,10 @@ bool CBoxAlgorithmClockStimulator::process()
 	CStimulationSet stimulationSet;
 	stimulationSet.setStimulationCount(0);
 
-	while (TimeArithmetics::secondsToTime(double(m_nSentStimulation + 1) * m_stimulationInterval) < currentTime)
+	while (CTime(double(m_nSentStimulation + 1) * m_stimulationInterval).time() < currentTime)
 	{
 		m_nSentStimulation += 1;
-		m_lastStimulationDate = TimeArithmetics::secondsToTime(m_nSentStimulation * m_stimulationInterval);
+		m_lastStimulationDate = CTime(double(m_nSentStimulation) * m_stimulationInterval).time();
 		stimulationSet.appendStimulation(m_stimulationID, m_lastStimulationDate, 0);
 	}
 

@@ -2,15 +2,15 @@
 #include "ovCObservable.h"
 
 
-#include "ov_base.h"
+#include "ov_defines.h"
 #include <iostream>
 #include <vector>
 
-using namespace OpenViBE;
+namespace OpenViBE {
 
 struct CObservable::SObserverList
 {
-	std::vector<IObserver *> m_Vector;
+	std::vector<IObserver*> m_Vector;
 };
 
 CObservable::CObservable() { m_observers = new SObserverList(); }
@@ -31,15 +31,13 @@ void CObservable::deleteObserver(IObserver* o)
 	}
 }
 
-void CObservable::setChanged() { m_hasChanged = true; }
-void CObservable::clearChanged() { m_hasChanged = false; }
-bool CObservable::hasChanged() { return m_hasChanged; }
-
 void CObservable::notifyObservers(void* data)
 {
 	if (m_hasChanged)
 	{
-		for (auto it = m_observers->m_Vector.begin(); it != m_observers->m_Vector.end(); ++it) { static_cast<IObserver *>(*it)->update(*this, data); }
+		for (auto it = m_observers->m_Vector.begin(); it != m_observers->m_Vector.end(); ++it) { static_cast<IObserver*>(*it)->update(*this, data); }
 		m_hasChanged = false;
 	}
 }
+
+} // namespace OpenViBE

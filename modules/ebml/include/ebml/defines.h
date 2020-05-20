@@ -8,10 +8,8 @@
 #pragma once
 
 #include <ov_common_defines.h>
-
-#define OV_APPEND_TO_NAMESPACE EBML
-#include <ov_common_types.h>
-#undef OV_APPEND_TO_NAMESPACE
+#include <cstdlib>	// For Unix Compatibility
+#include <cstdint>
 
 //___________________________________________________________________//
 //                                                                   //

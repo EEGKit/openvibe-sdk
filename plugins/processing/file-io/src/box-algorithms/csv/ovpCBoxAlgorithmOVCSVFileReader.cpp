@@ -3,14 +3,12 @@
 #include <map>
 #include <algorithm>
 
-#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace CSV;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
-using namespace TimeArithmetics;
 
 bool CBoxAlgorithmOVCSVFileReader::initialize()
 {
@@ -177,7 +175,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 							ErrorType::Internal);
 	}
 
-	const double currentTime = timeToSeconds(this->getPlayerContext().getCurrentTime());
+	const double currentTime = CTime(this->getPlayerContext().getCurrentTime()).toSeconds();
 
 	if (!m_readerLib->hasDataToRead() && m_savedChunks.empty()) { return true; }
 
@@ -219,7 +217,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", ErrorType::Internal);
 
 				OV_ERROR_UNLESS_KRF(
-					boxContext.markOutputAsReadyToSend(0, secondsToTime(chunk.startTime), secondsToTime(chunk.endTime)),
+					boxContext.markOutputAsReadyToSend(0, CTime(chunk.startTime).time(), CTime(chunk.endTime).time()),
 					"Failed to mark signal output as ready to send",
 					ErrorType::Internal);
 
@@ -234,7 +232,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", ErrorType::Internal);
 
 			OV_ERROR_UNLESS_KRF(
-				boxContext.markOutputAsReadyToSend(0, secondsToTime(m_savedChunks.back().startTime), secondsToTime(m_savedChunks.back().endTime)),
+				boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime).time(), CTime(m_savedChunks.back().endTime).time()),
 				"Failed to mark signal output as ready to send",
 				ErrorType::Internal);
 		}
@@ -284,8 +282,8 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
-				stimulationSet->appendStimulation(it->id, secondsToTime(it->date), secondsToTime(it->duration));
-				m_lastStimulationDate = secondsToTime(it->date);
+				stimulationSet->appendStimulation(it->id, CTime(it->date).time(), CTime(it->duration).time());
+				m_lastStimulationDate = CTime(it->date).time();
 			}
 			else
 			{

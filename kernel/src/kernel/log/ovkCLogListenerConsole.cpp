@@ -7,11 +7,8 @@
 #include <Windows.h>
 #endif
 
-#include <openvibe/ovTimeArithmetics.h>
-
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace std;
+namespace OpenViBE {
+namespace Kernel {
 
 CLogListenerConsole::CLogListenerConsole(const IKernelContext& ctx, const CString& sApplicationName)
 	: TKernelObject<ILogListener>(ctx), m_color(LogColor_Default), m_applicationName(sApplicationName), m_timeInSeconds(true), m_timePrecision(3),
@@ -52,32 +49,11 @@ bool CLogListenerConsole::activate(const ELogLevel startLevel, const ELogLevel e
 
 bool CLogListenerConsole::activate(const bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
-void CLogListenerConsole::log(const time64 value)
+void CLogListenerConsole::log(const CTime value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	const ios_base::fmtflags fmt = cout.flags();
-
-	if (m_timeInSeconds)
-	{
-		const uint64_t precision = m_timePrecision;
-		const double time        = TimeArithmetics::timeToSeconds(value.timeValue);
-		std::stringstream ss;
-		ss.precision(static_cast<long long>(precision));
-		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << time;
-		ss << " sec";
-		if (m_logWithHexa) { ss << " (0x" << hex << value.timeValue << ")"; }
-
-		cout << ss.str();
-	}
-	else
-	{
-		cout << dec << value.timeValue;
-		if (m_logWithHexa) { cout << " (0x" << hex << value.timeValue << ")"; }
-	}
-
-	cout.flags(fmt);
+	std::cout << value.str(m_timeInSeconds, m_logWithHexa);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -85,11 +61,11 @@ void CLogListenerConsole::log(const uint64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	const ios_base::fmtflags fmt = cout.flags();
-	cout << dec << value;
-	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
+	const std::ios_base::fmtflags fmt = std::cout.flags();
+	std::cout << std::dec << value;
+	if (m_logWithHexa) { std::cout << " (0x" << std::hex << value << ")"; }
 
-	cout.flags(fmt);
+	std::cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -97,10 +73,10 @@ void CLogListenerConsole::log(const uint32_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	const ios_base::fmtflags fmt = cout.flags();
-	cout << dec << value;
-	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(fmt);
+	const std::ios_base::fmtflags fmt = std::cout.flags();
+	std::cout << std::dec << value;
+	if (m_logWithHexa) { std::cout << " (0x" << std::hex << value << ")"; }
+	std::cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -108,10 +84,10 @@ void CLogListenerConsole::log(const int64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	const ios_base::fmtflags fmt = cout.flags();
-	cout << dec << value;
-	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(fmt);
+	const std::ios_base::fmtflags fmt = std::cout.flags();
+	std::cout << std::dec << value;
+	if (m_logWithHexa) { std::cout << " (0x" << std::hex << value << ")"; }
+	std::cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -119,10 +95,10 @@ void CLogListenerConsole::log(const int value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	const ios_base::fmtflags fmt = cout.flags();
-	cout << dec << value;
-	if (m_logWithHexa) { cout << " (0x" << hex << value << ")"; }
-	cout.flags(fmt);
+	const std::ios_base::fmtflags fmt = std::cout.flags();
+	std::cout << std::dec << value;
+	if (m_logWithHexa) { std::cout << " (0x" << std::hex << value << ")"; }
+	std::cout.flags(fmt);
 	this->log(LogColor_PopStateBit);
 }
 
@@ -130,7 +106,7 @@ void CLogListenerConsole::log(const double value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << value;
+	std::cout << value;
 	this->log(LogColor_PopStateBit);
 }
 
@@ -138,7 +114,7 @@ void CLogListenerConsole::log(const bool value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << (value ? "true" : "false");
+	std::cout << (value ? "true" : "false");
 	this->log(LogColor_PopStateBit);
 }
 
@@ -146,7 +122,7 @@ void CLogListenerConsole::log(const CIdentifier& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << value.str();
+	std::cout << value.str();
 	this->log(LogColor_PopStateBit);
 }
 
@@ -154,7 +130,7 @@ void CLogListenerConsole::log(const CString& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << value;
+	std::cout << value;
 	this->log(LogColor_PopStateBit);
 }
 
@@ -162,93 +138,35 @@ void CLogListenerConsole::log(const std::string& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << value;
+	std::cout << value;
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const char* value) { cout << value << flush; }
+void CLogListenerConsole::log(const char* value) { std::cout << value << std::flush; }
 
 void CLogListenerConsole::log(const ELogLevel level)
 {
+	this->log(LogColor_PushStateBit);
 	switch (level)
 	{
-		case LogLevel_Debug:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundBlue);
-			cout << " DEBUG ";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
+		case LogLevel_Debug: this->log(LogColor_ForegroundBlue);
 			break;
-
-		case LogLevel_Benchmark:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundMagenta);
-			cout << " BENCH ";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
+		case LogLevel_Benchmark: this->log(LogColor_ForegroundMagenta);
 			break;
-
-		case LogLevel_Trace:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundYellow);
-			cout << " TRACE ";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
+		case LogLevel_Trace: this->log(LogColor_ForegroundYellow);
 			break;
-
-		case LogLevel_Info:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundGreen);
-			cout << "  INF  ";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
+		case LogLevel_Info: this->log(LogColor_ForegroundGreen);
 			break;
-
-		case LogLevel_Warning:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundCyan);
-			cout << "WARNING";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
+		case LogLevel_Warning: this->log(LogColor_ForegroundCyan);
 			break;
-
 		case LogLevel_ImportantWarning:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundRed);
-			cout << "WARNING";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
-			break;
-
 		case LogLevel_Error:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundRed);
-			cout << " ERROR ";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
+		case LogLevel_Fatal: this->log(LogColor_ForegroundRed);
 			break;
-
-		case LogLevel_Fatal:
-			cout << "[";
-			this->log(LogColor_PushStateBit);
-			this->log(LogColor_ForegroundRed);
-			cout << " FATAL ";
-			this->log(LogColor_PopStateBit);
-			cout << "]";
-			break;
-
-		default:
-			cout << "[UNKNOWN]";
-			break;
+		default: break;
 	}
-	cout << " ";
+	std::cout << toString(level);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const ELogColor color)
@@ -357,32 +275,29 @@ void CLogListenerConsole::applyColor()
 
 	#define _command_separator_ (gotACommand++?";":"")
 
-	cout << "\033[00m";
+	std::cout << "\033[00m";
 
 	if(m_color!=LogColor_Default)
 	{
-		cout << "\033[";
+		std::cout << "\033[";
 
 		if(m_color&LogColor_ForegroundBit)
 		{
-			if(m_color&LogColor_ForegroundLightBit && m_color&LogColor_ForegroundLightStateBit)
-			{
-				// No function to do that
-			}
+			if(m_color&LogColor_ForegroundLightBit && m_color&LogColor_ForegroundLightStateBit) { }	// No function to do that
 
 			if(m_color&LogColor_ForegroundBoldBit && m_color&LogColor_ForegroundBoldStateBit)
 			{
-				cout << _command_separator_ << "01";
+				std::cout << _command_separator_ << "01";
 			}
 
 			if(m_color&LogColor_ForegroundUnderlineBit && m_color&LogColor_ForegroundUnderlineStateBit)
 			{
-				cout << _command_separator_ << "04";
+				std::cout << _command_separator_ << "04";
 			}
 
 			if(m_color&LogColor_ForegroundBlinkBit && m_color&LogColor_ForegroundBlinkStateBit)
 			{
-				cout << _command_separator_ << "05";
+				std::cout << _command_separator_ << "05";
 			}
 
 			if(m_color&LogColor_ForegroundColorBit)
@@ -390,14 +305,14 @@ void CLogListenerConsole::applyColor()
 				ELogColor color=ELogColor(m_color&(LogColor_ForegroundBit|LogColor_ForegroundColorBit|LogColor_ForegroundColorRedBit|LogColor_ForegroundColorGreenBit|LogColor_ForegroundColorBlueBit));
 				switch(color)
 				{
-					case LogColor_ForegroundBlack:    cout << _command_separator_ << "30"; break;
-					case LogColor_ForegroundRed:      cout << _command_separator_ << "31"; break;
-					case LogColor_ForegroundGreen:    cout << _command_separator_ << "32"; break;
-					case LogColor_ForegroundYellow:   cout << _command_separator_ << "33"; break;
-					case LogColor_ForegroundBlue:     cout << _command_separator_ << "34"; break;
-					case LogColor_ForegroundMagenta:  cout << _command_separator_ << "35"; break;
-					case LogColor_ForegroundCyan:     cout << _command_separator_ << "36"; break;
-					case LogColor_ForegroundWhite:    cout << _command_separator_ << "37"; break;
+					case LogColor_ForegroundBlack:    std::cout << _command_separator_ << "30"; break;
+					case LogColor_ForegroundRed:      std::cout << _command_separator_ << "31"; break;
+					case LogColor_ForegroundGreen:    std::cout << _command_separator_ << "32"; break;
+					case LogColor_ForegroundYellow:   std::cout << _command_separator_ << "33"; break;
+					case LogColor_ForegroundBlue:     std::cout << _command_separator_ << "34"; break;
+					case LogColor_ForegroundMagenta:  std::cout << _command_separator_ << "35"; break;
+					case LogColor_ForegroundCyan:     std::cout << _command_separator_ << "36"; break;
+					case LogColor_ForegroundWhite:    std::cout << _command_separator_ << "37"; break;
 					default: break;
 				}
 			}
@@ -410,30 +325,23 @@ void CLogListenerConsole::applyColor()
 				ELogColor color=ELogColor(m_color&(LogColor_BackgroundBit|LogColor_BackgroundColorBit|LogColor_BackgroundColorRedBit|LogColor_BackgroundColorGreenBit|LogColor_BackgroundColorBlueBit));
 				switch(color)
 				{
-					case LogColor_BackgroundBlack:    cout << _command_separator_ << "40"; break;
-					case LogColor_BackgroundRed:      cout << _command_separator_ << "41"; break;
-					case LogColor_BackgroundGreen:    cout << _command_separator_ << "42"; break;
-					case LogColor_BackgroundYellow:   cout << _command_separator_ << "43"; break;
-					case LogColor_BackgroundBlue:     cout << _command_separator_ << "44"; break;
-					case LogColor_BackgroundMagenta:  cout << _command_separator_ << "45"; break;
-					case LogColor_BackgroundCyan:     cout << _command_separator_ << "46"; break;
-					case LogColor_BackgroundWhite:    cout << _command_separator_ << "47"; break;
+					case LogColor_BackgroundBlack:    std::cout << _command_separator_ << "40"; break;
+					case LogColor_BackgroundRed:      std::cout << _command_separator_ << "41"; break;
+					case LogColor_BackgroundGreen:    std::cout << _command_separator_ << "42"; break;
+					case LogColor_BackgroundYellow:   std::cout << _command_separator_ << "43"; break;
+					case LogColor_BackgroundBlue:     std::cout << _command_separator_ << "44"; break;
+					case LogColor_BackgroundMagenta:  std::cout << _command_separator_ << "45"; break;
+					case LogColor_BackgroundCyan:     std::cout << _command_separator_ << "46"; break;
+					case LogColor_BackgroundWhite:    std::cout << _command_separator_ << "47"; break;
 					default: break;
 				}
 			}
 
-			if(m_color&LogColor_BackgroundLightBit && m_color&LogColor_BackgroundLightStateBit)
-			{
-				// No function to do that
-			}
-
-			if(m_color&LogColor_BackgroundBlinkBit && m_color&LogColor_BackgroundBlinkStateBit)
-			{
-				// No function to do that
-			}
+			if(m_color&LogColor_BackgroundLightBit && m_color&LogColor_BackgroundLightStateBit) { }	// No function to do that
+			if(m_color&LogColor_BackgroundBlinkBit && m_color&LogColor_BackgroundBlinkStateBit) { }	// No function to do that
 		}
 
-		cout << "m";
+		std::cout << "m";
 	}
 
 	#undef _command_separator_
@@ -462,18 +370,9 @@ void CLogListenerConsole::applyColor()
 		}
 
 		if (m_color & LogColor_ForegroundLightBit && m_color & LogColor_ForegroundLightStateBit) { attribute |= FOREGROUND_INTENSITY; }
-
-		if (m_color & LogColor_ForegroundBoldBit && m_color & LogColor_ForegroundBoldStateBit)
-		{
-			// No function to do that
-		}
-
+		if (m_color & LogColor_ForegroundBoldBit && m_color & LogColor_ForegroundBoldStateBit) { }		// No function to do that
 		if (m_color & LogColor_ForegroundUnderlineBit && m_color & LogColor_ForegroundUnderlineStateBit) { attribute |= COMMON_LVB_UNDERSCORE; }
-
-		if (m_color & LogColor_ForegroundBlinkBit && m_color & LogColor_ForegroundBlinkStateBit)
-		{
-			// No function to do that
-		}
+		if (m_color & LogColor_ForegroundBlinkBit && m_color & LogColor_ForegroundBlinkStateBit) { }	// No function to do that
 	}
 	else
 	{
@@ -503,9 +402,8 @@ void CLogListenerConsole::applyColor()
 }
 
 #else
-
-void CLogListenerConsole::applyColor()
-{
-}
-
+void CLogListenerConsole::applyColor() { }
 #endif
+
+} // namespace Kernel
+} // namespace OpenViBE

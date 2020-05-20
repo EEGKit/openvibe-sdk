@@ -2,10 +2,6 @@
 
 #include <ov_common_defines.h>
 
-#define OV_APPEND_TO_NAMESPACE System
-#include <ov_common_types.h>
-#undef OV_APPEND_TO_NAMESPACE
-
 #if defined System_Shared
 #if defined TARGET_OS_Windows
 #define System_API_Export __declspec(dllexport)

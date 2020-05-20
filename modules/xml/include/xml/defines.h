@@ -2,10 +2,6 @@
 
 #include <ov_common_defines.h>
 
-#define OV_APPEND_TO_NAMESPACE XML
-#include <ov_common_types.h>
-#undef OV_APPEND_TO_NAMESPACE
-
 #if defined XML_Shared
 #if defined TARGET_OS_Windows
 #define XML_API_Export __declspec(dllexport)

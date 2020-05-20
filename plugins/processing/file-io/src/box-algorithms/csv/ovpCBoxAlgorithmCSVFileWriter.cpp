@@ -3,13 +3,10 @@
 #include <string>
 #include <iostream>
 
-#include "openvibe/ovTimeArithmetics.h"
-
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
-using namespace TimeArithmetics;
 
 bool CBoxAlgorithmCSVFileWriter::initialize()
 {
@@ -170,17 +167,17 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 
 			for (size_t s = 0; s < nSample; ++s)
 			{
-				if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_FeatureVector) { m_fileStream << timeToSeconds(tStart); }
+				if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_FeatureVector) { m_fileStream << CTime(tStart).toSeconds(); }
 				else if (m_typeID == OV_TypeId_Signal)
 				{
 					const uint64_t frequency = static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
 							getOutputSamplingRate();
-					const uint64_t timeOfNthSample = sampleCountToTime(frequency, s); // assuming chunk start is 0
+					const uint64_t timeOfNthSample = CTime(frequency, s).time(); // assuming chunk start is 0
 					const uint64_t sampleTime      = tStart + timeOfNthSample;
 
-					m_fileStream << timeToSeconds(sampleTime);
+					m_fileStream << CTime(sampleTime).toSeconds();
 				}
-				else if (m_typeID == OV_TypeId_Spectrum) { m_fileStream << timeToSeconds(tEnd); }
+				else if (m_typeID == OV_TypeId_Spectrum) { m_fileStream << CTime(tEnd).toSeconds(); }
 				for (size_t c = 0; c < nChannel; ++c) { m_fileStream << m_separator.toASCIIString() << matrix->getBuffer()[c * nSample + s]; }
 
 				if (m_firstBuffer)
@@ -249,9 +246,9 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 					getOutputStimulationSet();
 			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
 			{
-				m_fileStream << timeToSeconds(stimSet->getStimulationDate(j)) << m_separator.toASCIIString()
+				m_fileStream << CTime(stimSet->getStimulationDate(j)).toSeconds() << m_separator.toASCIIString()
 						<< stimSet->getStimulationIdentifier(j) << m_separator.toASCIIString()
-						<< timeToSeconds(stimSet->getStimulationDuration(j)) << "\n";
+						<< CTime(stimSet->getStimulationDuration(j)).toSeconds() << "\n";
 			}
 		}
 		if (m_decoder->isEndReceived()) { }

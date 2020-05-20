@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ov_base.h"
+#include "ov_defines.h"
 #include "ovCIdentifier.h"
 
 namespace OpenViBE

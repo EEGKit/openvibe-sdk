@@ -9,10 +9,10 @@
 //                                                                   //
 
 #include "ov_defines.h"
-#include "ov_types.h"
 #include "ov_directories.h"
 
 #include "ovCIdentifier.h"
+#include "CTime.hpp"
 #include "ovCString.h"
 #include "ovCNameValuePairList.h"
 

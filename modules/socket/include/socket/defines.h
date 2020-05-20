@@ -2,10 +2,6 @@
 
 #include <ov_common_defines.h>
 
-#define OV_APPEND_TO_NAMESPACE Socket
-#include <ov_common_types.h>
-#undef OV_APPEND_TO_NAMESPACE
-
 // Taken from
 // - http://people.redhat.com/drepper/dsohowto.pdf
 // - http://www.nedprod.com/programs/gccvisibility.html

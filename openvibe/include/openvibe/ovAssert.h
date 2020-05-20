@@ -24,11 +24,9 @@
 #include <sstream>
 
 #include "ovCIdentifier.h"
-#include "ovTimeArithmetics.h"
 
-namespace OpenViBE
-{
-	typedef std::ostringstream ErrorStream;
+namespace OpenViBE {
+typedef std::ostringstream ErrorStream;
 }
 
 /**
@@ -55,28 +53,14 @@ namespace OpenViBE
 // internal use
 #define convertErrorTypeToString(type) #type
 
-namespace OpenViBE
-{
-	// overload needed to enable streaming time data in error description
-	inline std::ostream& operator<<(std::ostream& os, const time64 time)
-	{
-		std::stringstream ss;
-		ss.precision(3);
-		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << TimeArithmetics::timeToSeconds(time.timeValue) << " sec";
-
-		os << ss.str();
-
-		return os;
-	}
-
+namespace OpenViBE {
 #define HAS_IMBUED_OSTREAM_WITH_C_IDENTIFIER
 
-	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
-	{
-		os << id.str();
-		return os;
-	}
+inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
+{
+	os << id.str();
+	return os;
+}
 } // namespace OpenViBE
 
 /**

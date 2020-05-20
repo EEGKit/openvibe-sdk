@@ -1,6 +1,5 @@
 #include "ovpCBoxAlgorithmOVCSVFileWriter.h"
 
-#include <openvibe/ovTimeArithmetics.h>
 #include <fs/Files.h>
 
 #include <string>
@@ -10,7 +9,6 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
-using namespace TimeArithmetics;
 
 CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter()
 	: m_writerLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) {}
@@ -255,11 +253,11 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					std::vector<double> matrixValues;
 					// get starting and ending time
 
-					const uint64_t timeOfNthSample       = sampleCountToTime(sampling, sampleIndex); // assuming chunk start is 0
+					const uint64_t timeOfNthSample       = CTime(sampling, sampleIndex).time(); // assuming chunk start is 0
 					const uint64_t sampleTime            = chunkStartTime + timeOfNthSample;
-					const double startTime               = double(timeToSeconds(sampleTime));
-					const uint64_t timeOfNthAndOneSample = sampleCountToTime(sampling, sampleIndex + 1);
-					const double endTime                 = double(timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
+					const double startTime               = CTime(sampleTime).toSeconds();
+					const uint64_t timeOfNthAndOneSample = CTime(sampling, sampleIndex + 1).time();
+					const double endTime                 = CTime(chunkStartTime + timeOfNthAndOneSample).toSeconds();
 
 					// get matrix values
 					for (size_t channelIndex = 0; channelIndex < nChannel; ++channelIndex)
@@ -276,8 +274,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 			{
-				const double startTime = timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, i));
-				const double endTime   = timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, i));
+				const double startTime = CTime(dynamicBoxContext.getInputChunkStartTime(0, i)).toSeconds();
+				const double endTime   = CTime(dynamicBoxContext.getInputChunkEndTime(0, i)).toSeconds();
 				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getBufferElementCount());
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
@@ -287,8 +285,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_FeatureVector)
 			{
-				const double startTime = timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, i));
-				const double endTime   = timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, i));
+				const double startTime = CTime(dynamicBoxContext.getInputChunkStartTime(0, i)).toSeconds();
+				const double endTime   = CTime(dynamicBoxContext.getInputChunkEndTime(0, i)).toSeconds();
 				const IMatrix* zmatrix = m_streamDecoder.getOutputMatrix();
 
 				const std::vector<double> streamedMatrixValues(zmatrix->getBuffer(), zmatrix->getBuffer() + zmatrix->getBufferElementCount());
@@ -300,8 +298,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_Spectrum)
 			{
-				const double startTime = timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, i));
-				const double endTime   = timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, i));
+				const double startTime = CTime(dynamicBoxContext.getInputChunkStartTime(0, i)).toSeconds();
+				const double endTime   = CTime(dynamicBoxContext.getInputChunkEndTime(0, i)).toSeconds();
 				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getBufferElementCount());
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
@@ -336,8 +334,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 			for (size_t j = 0; j < stimulationSet->getStimulationCount(); ++j)
 			{
 				OV_ERROR_UNLESS_KRF(m_writerLib->addEvent({ stimulationSet->getStimulationIdentifier(j),
-										timeToSeconds(stimulationSet->getStimulationDate(j)),
-										timeToSeconds(stimulationSet->getStimulationDuration(j)) }),
+										CTime(stimulationSet->getStimulationDate(j)).toSeconds(),
+										CTime(stimulationSet->getStimulationDuration(j)).toSeconds() }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
 										"Details: " + m_writerLib->getLastErrorString())).c_str(),
 									ErrorType::Internal);
@@ -345,7 +343,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 			
 			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
 			OV_ERROR_UNLESS_KRF(
-				m_writerLib->noEventsUntilDate(timeToSeconds(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1)))),
+				m_writerLib->noEventsUntilDate(CTime(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1))).toSeconds()),
 				(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: " + m_writerLib->
 					getLastErrorString())).c_str(),
 				ErrorType::Internal);

@@ -26,8 +26,9 @@
 #include <tuple>
 #include <chrono>
 
+
+#include "openvibe/CTime.hpp"
 #include "system/ovCTime.h"
-#include "openvibe/ovTimeArithmetics.h"
 
 #include "ovtAssert.h"
 
@@ -73,17 +74,15 @@ std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*
 // \brief Return a warning count that is incremented when sleep function did not meet following requirements:
 //       - sleep enough time
 //       - sleep less than the expected time + delta
-size_t assessSleepTestResult(const std::vector<uint64_t>& expectedTimes, const std::vector<uint64_t>& resultTimes, const uint64_t delta, const uint64_t epsilon)
+size_t assessSleepTestResult(const std::vector<uint64_t>& expected, const std::vector<uint64_t>& result, const uint64_t delta, const uint64_t epsilon)
 {
 	size_t warningCount = 0;
-	for (size_t i = 0; i < expectedTimes.size(); ++i)
+	for (size_t i = 0; i < expected.size(); ++i)
 	{
-		if (resultTimes[i] + epsilon < expectedTimes[i]
-			|| resultTimes[i] > (expectedTimes[i] + delta + epsilon))
+		if (result[i] + epsilon < expected[i] || result[i] > (expected[i] + delta + epsilon))
 		{
 			std::cerr << "WARNING: Failure to sleep the right amount of time: [expected|result] = "
-					<< OpenViBE::TimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
-					<< OpenViBE::TimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
+					<< OpenViBE::CTime(expected[i]) << "|" << OpenViBE::CTime(result[i]) << std::endl;
 			warningCount++;
 		}
 	}
@@ -186,13 +185,13 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	// calibrate sleep function
 	const auto deltaTime = calibrateSleep(1000, Time::zsleep, Time::zgetTime);
 
-	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::TimeArithmetics::timeToSeconds(deltaTime) << std::endl;
+	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::CTime(deltaTime) << std::endl;
 
 	const auto resultSleepData = testSleep(expectedSleepData, Time::zsleep, Time::zgetTime);
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
-	const size_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime, OpenViBE::TimeArithmetics::secondsToTime(0.005));
+	const size_t warningCount = assessSleepTestResult(expectedSleepData, resultSleepData, deltaTime, OpenViBE::CTime(0.005).time());
 
 	// relax this threshold in case there is some recurrent problems
 	// according to the runtime environment
@@ -203,7 +202,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	//
 
 	// the sample count guess was found in an empiric way
-	auto resultGetTimeData = testClock(OpenViBE::TimeArithmetics::secondsToTime(0.5), 500000, Time::zgetTime);
+	auto resultGetTimeData = testClock(OpenViBE::CTime(0.5).time(), 500000, Time::zgetTime);
 
 	OVT_ASSERT(std::get<0>(resultGetTimeData), "Failure in zgetTime() test: the clock is not monotonic");
 

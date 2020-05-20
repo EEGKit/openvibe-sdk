@@ -1,16 +1,15 @@
 #include "ovpCBoxAlgorithmStimulationListener.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Tools;
+namespace OpenViBE {
+namespace Plugins {
+namespace Tools {
 
 bool CBoxAlgorithmStimulationListener::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 	for (size_t i = 0; i < nInput; ++i) { m_stimulationDecoders.push_back(new Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i)); }
 
-	m_logLevel = ELogLevel(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
+	m_logLevel = Kernel::ELogLevel(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
 
 	return true;
 }
@@ -36,44 +35,46 @@ bool CBoxAlgorithmStimulationListener::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmStimulationListener::process()
 {
-	const IBox& staticBoxContext = this->getStaticBoxContext();
-	IBoxIO& boxContext           = this->getDynamicBoxContext();
-	const size_t nInput          = this->getStaticBoxContext().getInputCount();
+	const Kernel::IBox& staticboxCtx = this->getStaticBoxContext();
+	Kernel::IBoxIO& boxCtx           = this->getDynamicBoxContext();
+	const size_t nInput              = this->getStaticBoxContext().getInputCount();
 
 	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
+		for (size_t j = 0; j < boxCtx.getInputChunkCount(i); ++j)
 		{
 			m_stimulationDecoders[i]->decode(j);
 			if (m_stimulationDecoders[i]->isHeaderReceived()) { }
 			if (m_stimulationDecoders[i]->isBufferReceived())
 			{
-				const IStimulationSet* op_stimulationSet = m_stimulationDecoders[i]->getOutputStimulationSet();
+				const IStimulationSet* stimSet = m_stimulationDecoders[i]->getOutputStimulationSet();
 
 				CString inputName;
-				staticBoxContext.getInputName(i, inputName);
-				for (size_t k = 0; k < op_stimulationSet->getStimulationCount(); ++k)
+				staticboxCtx.getInputName(i, inputName);
+				for (size_t k = 0; k < stimSet->getStimulationCount(); ++k)
 				{
-					this->getLogManager() << m_logLevel
+					this->getLogManager() << m_logLevel 
 							<< "For input " << i << " with name " << inputName
-							<< " got stimulation " << op_stimulationSet->getStimulationIdentifier(k)
-							<< "[" << this->getTypeManager().getEnumerationEntryNameFromValue(
-								OV_TypeId_Stimulation, op_stimulationSet->getStimulationIdentifier(k)) << "]"
-							<< " at date " << time64(op_stimulationSet->getStimulationDate(k))
-							<< " and duration " << time64(op_stimulationSet->getStimulationDuration(k))
-							<< "\n";
+							<< " got stimulation " << stimSet->getStimulationIdentifier(k)
+							<< "[" << getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, stimSet->getStimulationIdentifier(k)) << "]"
+							<< " at date " << CTime(stimSet->getStimulationDate(k))
+							<< " and duration " << CTime(stimSet->getStimulationDuration(k)) << "\n";
 
 					OV_WARNING_UNLESS_K(
-						op_stimulationSet->getStimulationDate(k) >= boxContext.getInputChunkStartTime(i, j) && op_stimulationSet->getStimulationDate(k) <=
-						boxContext.getInputChunkEndTime(i, j),
-						"Invalid out of range date [" << time64(op_stimulationSet->getStimulationDate(k)) << "] (expected value between [" << time64(boxContext
-							.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "])");
+						stimSet->getStimulationDate(k) >= boxCtx.getInputChunkStartTime(i, j)
+						&& stimSet->getStimulationDate(k) <= boxCtx.getInputChunkEndTime(i, j),
+						"Invalid out of range date [" << CTime(stimSet->getStimulationDate(k)) << "] (expected value between ["
+						<< CTime(boxCtx.getInputChunkStartTime(i, j)) << "] and [" << CTime(boxCtx.getInputChunkEndTime(i, j)) << "])");
 				}
 			}
 			if (m_stimulationDecoders[i]->isEndReceived()) { }
-			boxContext.markInputAsDeprecated(i, j);
+			boxCtx.markInputAsDeprecated(i, j);
 		}
 	}
 
 	return true;
 }
+
+} // namespace Tools
+} // namespace Plugins
+} // namespace OpenViBE

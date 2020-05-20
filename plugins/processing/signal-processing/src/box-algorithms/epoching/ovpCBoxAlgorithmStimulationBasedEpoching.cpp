@@ -1,20 +1,15 @@
 #include <cmath>
 #include <algorithm>
 
-#include <openvibe/ovTimeArithmetics.h>
 #include "ovpCBoxAlgorithmStimulationBasedEpoching.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
-namespace
-{
-	const int INPUT_SIGNAL_IDX       = 0;
-	const int INPUT_STIMULATIONS_IDX = 1;
-	const int OUTPUT_SIGNAL_IDX      = 0;
-}
+static const int INPUT_SIGNAL_IDX       = 0;
+static const int INPUT_STIMULATIONS_IDX = 1;
+static const int OUTPUT_SIGNAL_IDX      = 0;
 
 bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 {
@@ -22,10 +17,10 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 	const double epochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_stimulationID          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	m_epochDuration = TimeArithmetics::secondsToTime(m_epochDurationInSeconds);
+	m_epochDuration = CTime(m_epochDurationInSeconds).time();
 
 	const int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
-	m_epochOffset             = epochOffsetSign * int64_t(TimeArithmetics::secondsToTime(std::fabs(epochOffset)));
+	m_epochOffset             = epochOffsetSign * int64_t(CTime(std::fabs(epochOffset)).time());
 
 	m_lastReceivedStimulationDate   = 0;
 	m_lastStimulationChunkStartTime = 0;
@@ -44,7 +39,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_epochDurationInSeconds > 0,
 						"Epocher setting is invalid. Duration (= " << m_epochDurationInSeconds << ") must have a strictly positive value.",
-						ErrorType::Internal);
+						Kernel::ErrorType::Internal);
 
 	return true;
 }
@@ -67,58 +62,56 @@ bool CBoxAlgorithmStimulationBasedEpoching::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmStimulationBasedEpoching::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
 
-	for (size_t chunk = 0; chunk < boxContext.getInputChunkCount(INPUT_SIGNAL_IDX); ++chunk)
+	for (size_t chunk = 0; chunk < boxCtx.getInputChunkCount(INPUT_SIGNAL_IDX); ++chunk)
 	{
-		OV_ERROR_UNLESS_KRF(m_signalDecoder.decode(chunk), "Failed to decode chunk", ErrorType::Internal);
-		IMatrix* inputMatrix         = m_signalDecoder.getOutputMatrix();
-		uint64_t inputChunkStartTime = boxContext.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
-		uint64_t inputChunkEndTime   = boxContext.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
+		OV_ERROR_UNLESS_KRF(m_signalDecoder.decode(chunk), "Failed to decode chunk", Kernel::ErrorType::Internal);
+		IMatrix* iMatrix         = m_signalDecoder.getOutputMatrix();
+		uint64_t iChunkStartTime = boxCtx.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
+		uint64_t iChunkEndTime   = boxCtx.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
 
 		if (m_signalDecoder.isHeaderReceived())
 		{
-			IMatrix* outputMatrix = m_encoder.getInputMatrix();
+			IMatrix* oMatrix = m_encoder.getInputMatrix();
 
-			m_nChannel              = inputMatrix->getDimensionSize(0);
-			m_nSamplePerInputBuffer = inputMatrix->getDimensionSize(1);
+			m_nChannel              = iMatrix->getDimensionSize(0);
+			m_nSamplePerInputBuffer = iMatrix->getDimensionSize(1);
 
 			m_sampling = m_signalDecoder.getOutputSamplingRate();
-			OV_ERROR_UNLESS_KRZ(m_sampling, LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRZ(m_sampling, Kernel::LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.",
+								Kernel::ErrorType::Internal);
 
-			m_nSampleCountOutputEpoch = size_t(TimeArithmetics::timeToSampleCount(m_sampling, TimeArithmetics::secondsToTime(m_epochDurationInSeconds)));
+			m_nSampleCountOutputEpoch = size_t(CTime(m_epochDurationInSeconds).toSampleCount(m_sampling));
 
-			outputMatrix->setDimensionCount(2);
-			outputMatrix->setDimensionSize(0, m_nChannel);
-			outputMatrix->setDimensionSize(1, m_nSampleCountOutputEpoch);
+			oMatrix->setDimensionCount(2);
+			oMatrix->setDimensionSize(0, m_nChannel);
+			oMatrix->setDimensionSize(1, m_nSampleCountOutputEpoch);
 
-			for (size_t channel = 0; channel < m_nChannel; ++channel)
-			{
-				outputMatrix->setDimensionLabel(0, channel, inputMatrix->getDimensionLabel(0, channel));
-			}
+			for (size_t channel = 0; channel < m_nChannel; ++channel) { oMatrix->setDimensionLabel(0, channel, iMatrix->getDimensionLabel(0, channel)); }
 			m_encoder.encodeHeader();
-			boxContext.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, 0, 0);
+			boxCtx.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, 0, 0);
 		}
 
 		if (m_signalDecoder.isBufferReceived())
 		{
-			OV_ERROR_UNLESS_KRF((inputChunkStartTime >= m_lastSignalChunkEndTime), "Stimulation Based Epoching can not work on overlapping signal",
-								ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF((iChunkStartTime >= m_lastSignalChunkEndTime), "Stimulation Based Epoching can not work on overlapping signal",
+								Kernel::ErrorType::Internal);
 			// Cache the signal data
-			m_cachedChunks.emplace_back(inputChunkStartTime, inputChunkEndTime, new CMatrix());
-			Toolkit::Matrix::copy(*m_cachedChunks.back().matrix, *inputMatrix);
+			m_cachedChunks.emplace_back(iChunkStartTime, iChunkEndTime, new CMatrix());
+			Toolkit::Matrix::copy(*m_cachedChunks.back().matrix, *iMatrix);
 
-			m_lastSignalChunkEndTime = inputChunkEndTime;
+			m_lastSignalChunkEndTime = iChunkEndTime;
 		}
 
 		if (m_signalDecoder.isEndReceived())
 		{
 			m_encoder.encodeEnd();
-			boxContext.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, inputChunkStartTime, inputChunkEndTime);
+			boxCtx.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, iChunkStartTime, iChunkEndTime);
 		}
 	}
 
-	for (size_t chunk = 0; chunk < boxContext.getInputChunkCount(INPUT_STIMULATIONS_IDX); ++chunk)
+	for (size_t chunk = 0; chunk < boxCtx.getInputChunkCount(INPUT_STIMULATIONS_IDX); ++chunk)
 	{
 		m_stimDecoder.decode(chunk);
 		// We only handle buffers and ignore stimulation headers and ends
@@ -133,8 +126,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 					if (date < m_lastReceivedStimulationDate)
 					{
 						OV_WARNING_K(
-							"Skipping stimulation (received at date " << time64(date) << ") that predates an already received stimulation (at date "
-							<< time64(m_lastReceivedStimulationDate) << ")");
+							"Skipping stimulation (received at date " << CTime(date) << ") that predates an already received stimulation (at date "
+							<< CTime(m_lastReceivedStimulationDate) << ")");
 					}
 					else if (int64_t(date) + m_epochOffset >= 0)
 					{
@@ -142,7 +135,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 						m_lastReceivedStimulationDate = date;
 					}
 				}
-				m_lastStimulationChunkStartTime = boxContext.getInputChunkEndTime(INPUT_STIMULATIONS_IDX, chunk);
+				m_lastStimulationChunkStartTime = boxCtx.getInputChunkEndTime(INPUT_STIMULATIONS_IDX, chunk);
 			}
 		}
 	}
@@ -185,17 +178,17 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 			// If we have found a chunk that contains samples in the current epoch
 			if (idx != m_cachedChunks.size())
 			{
-				uint64_t iBufferIdx = TimeArithmetics::timeToSampleCount(m_sampling, epochStartTime - tStart);
+				uint64_t iBufferIdx = CTime(epochStartTime - tStart).toSampleCount(m_sampling);
 
 				while (oBufferIdx < m_nSampleCountOutputEpoch)
 				{
-					const auto oTime = epochStartTime + TimeArithmetics::sampleCountToTime(m_sampling, oBufferIdx);
+					const auto oTime = epochStartTime + CTime(m_sampling, oBufferIdx).time();
 
 					// If we handle non-dyadic sampling rates then we do not have a guarantee that all chunks will be
 					// dated with exact values. We add a bit of wiggle room around the incoming chunks to consider
 					// whether a sample is in them or not. This wiggle room will be of half of the sample duration
 					// on each side.
-					const uint64_t timeTolerance = TimeArithmetics::sampleCountToTime(m_sampling, 1) / 2;
+					const uint64_t timeTolerance = CTime(m_sampling, 1).time() / 2;
 					if (iBufferIdx == m_nSamplePerInputBuffer)
 					{
 						// advance to beginning of the next cached chunk
@@ -205,11 +198,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 						tEnd       = m_cachedChunks[idx].endTime;
 						iBufferIdx = 0;
 
-						if (tStart > oTime + timeTolerance)
-						{
-							// Case of non-consecutive chunks
-							break;
-						}
+						// Case of non-consecutive chunks
+						if (tStart > oTime + timeTolerance) { break; }
 					}
 					else if (tStart <= oTime + timeTolerance && oTime <= tEnd + timeTolerance)
 					{
@@ -221,7 +211,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 						oBufferIdx += 1;
 						iBufferIdx += 1;
 					}
-					else { OV_ERROR_KRF("Can not construct the output chunk due to internal error", ErrorType::Internal); }
+					else { OV_ERROR_KRF("Can not construct the output chunk due to internal error", Kernel::ErrorType::Internal); }
 				}
 			}
 
@@ -229,18 +219,15 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 			if (oBufferIdx == m_nSampleCountOutputEpoch)
 			{
 				m_encoder.encodeBuffer();
-				boxContext.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, epochStartTime, epochStartTime + m_epochDuration);
+				boxCtx.markOutputAsReadyToSend(OUTPUT_SIGNAL_IDX, epochStartTime, epochStartTime + m_epochDuration);
 			}
 			else { OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks."); }
 
 			lastProcessedStimDate = stimDate;
 		}
 			// We only process stimulations for which we have received enough signal to create an epoch
-		else
-		{
 			// No more complete epochs can be constructed
-			break;
-		}
+		else { break; }
 	}
 
 	// Remove all stimulations for which the epochs have been constructed and sent
@@ -254,7 +241,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	auto cutoffTime = int64_t(lastUsefulChunkEndTime) + m_epochOffset;
 	if (cutoffTime > 0)
 	{
-		m_cachedChunks.erase(std::remove_if(m_cachedChunks.begin(), m_cachedChunks.end(), [cutoffTime](const CachedChunk& chunk)
+		m_cachedChunks.erase(std::remove_if(m_cachedChunks.begin(), m_cachedChunks.end(), [cutoffTime](const SCachedChunk& chunk)
 		{
 			return chunk.endTime < uint64_t(cutoffTime);
 		}), m_cachedChunks.end());
@@ -262,3 +249,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 	return true;
 }
+
+} // namespace SignalProcessing
+} // namespace Plugins
+} // namespace OpenViBE

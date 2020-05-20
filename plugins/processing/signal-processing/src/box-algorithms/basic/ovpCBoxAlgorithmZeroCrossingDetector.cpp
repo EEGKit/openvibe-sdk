@@ -20,7 +20,6 @@
  */
 
 #include "ovpCBoxAlgorithmZeroCrossingDetector.h"
-#include <openvibe/ovTimeArithmetics.h>
 
 #include <vector>
 #include <iostream>
@@ -146,7 +145,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 				for (k = 0; k < nSample; ++k)
 				{
 					uint64_t stimulationDate;
-					if (m_sampling > 0) { stimulationDate = boxContext.getInputChunkStartTime(0, i) + TimeArithmetics::sampleCountToTime(m_sampling, k); }
+					if (m_sampling > 0) { stimulationDate = boxContext.getInputChunkStartTime(0, i) + CTime(m_sampling, k).time(); }
 					else if (nSample == 1) { stimulationDate = boxContext.getInputChunkEndTime(0, i); }
 					else
 					{
