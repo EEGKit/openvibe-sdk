@@ -1,5 +1,4 @@
 #include "ovpCBoxAlgorithmSignalDecimation.h"
-#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
@@ -163,8 +162,8 @@ bool CBoxAlgorithmSignalDecimation::process()
 						oBuffer      = ip_pMatrix->getBuffer();
 						m_oSampleIdx = 0;
 						m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeBuffer);
-						const uint64_t tStartSample = m_startTimeBase + TimeArithmetics::sampleCountToTime(m_oSampling, m_nTotalSample);
-						const uint64_t tEndSample   = m_startTimeBase + TimeArithmetics::sampleCountToTime(m_oSampling, m_nTotalSample + m_oNSamplePerBlock);
+						const uint64_t tStartSample = m_startTimeBase + CTime(m_oSampling, m_nTotalSample).time();
+						const uint64_t tEndSample   = m_startTimeBase + CTime(m_oSampling, m_nTotalSample + m_oNSamplePerBlock).time();
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_oNSamplePerBlock;
 

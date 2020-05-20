@@ -5,15 +5,13 @@
 #include <string>
 #include <map>
 
-using namespace OpenViBE;
 
-namespace OpenViBE
+namespace OpenViBE {
+
+struct CNameValuePairListImpl
 {
-	struct CNameValuePairListImpl
-	{
-		std::map<CString, CString> m_Map;
-	};
-}
+	std::map<CString, CString> m_Map;
+};
 
 CNameValuePairList::CNameValuePairList() { m_impl = new CNameValuePairListImpl(); }
 
@@ -103,3 +101,5 @@ bool CNameValuePairList::getValue(const size_t index, CString& name, CString& va
 }
 
 size_t CNameValuePairList::getSize() const { return m_impl->m_Map.size(); }
+
+} // namespace OpenViBE

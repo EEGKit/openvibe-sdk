@@ -5,6 +5,7 @@ SET(SRC_FILES src/main-generator.cpp)
 ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-toolkit)
 
+INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleEBML")
 INCLUDE("FindOpenViBEModuleSocket")
@@ -23,10 +24,10 @@ SET(SRC_FILES src/main-filter.cpp)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 
+INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleSocket")
 INCLUDE("FindOpenViBEModuleCommunication")
-INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBEToolkit")
 
 SET_BUILD_PLATFORM()

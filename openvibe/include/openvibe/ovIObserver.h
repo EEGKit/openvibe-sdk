@@ -2,7 +2,7 @@
 
 
 #include "ovCObservable.h"
-#include "ov_base.h"
+#include "ov_defines.h"
 
 namespace OpenViBE
 {

@@ -25,7 +25,6 @@
 #include "ovspCKernelFacade.h"
 
 #include <system/ovCTime.h>
-#include <openvibe/ovTimeArithmetics.h>
 
 #include <cstdio>
 #include <map>
@@ -328,12 +327,12 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 
 		// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 		// because it could overflow
-		const double boundedMaxExecutionTimeInS = TimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
+		const double boundedMaxExecutionTimeInS = CTime::max().toSeconds();
 
 		uint64_t maxExecutionTimeInFixedPoint;
 		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
 		{
-			maxExecutionTimeInFixedPoint = TimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
+			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time();
 		}
 		else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
 

@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 
-using namespace OpenViBE;
+namespace OpenViBE {
 
 CIdentifier& CIdentifier::operator=(const CIdentifier& id)
 {
@@ -33,13 +33,10 @@ CIdentifier& CIdentifier::operator--()
 	return *this;
 }
 
-namespace OpenViBE
-{
-	bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id == id2.m_id; }
-	bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 == id2); }
-	bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
-	bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
-} // namespace OpenViBE
+bool operator==(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id == id2.m_id; }
+bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 == id2); }
+bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
+bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
 
 CString CIdentifier::toString() const { return CString(str().c_str()); }
 
@@ -70,3 +67,5 @@ CIdentifier CIdentifier::random()
 	std::uniform_int_distribution<size_t> uni(0, std::numeric_limits<size_t>::max() - 1); // This exclude OV_UndefinedIdentifier value no const un unix system
 	return CIdentifier(uni(rng));
 }
+
+} // namespace OpenViBE

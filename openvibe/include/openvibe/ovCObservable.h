@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ovIObserver.h"
-#include "ov_base.h"
+#include "ov_defines.h"
 
 namespace OpenViBE
 {
@@ -43,19 +43,19 @@ namespace OpenViBE
 		 *
 		 * \note The "changed" state will be reverted after each call to clearChanged and notifyObservers.
 		 */
-		virtual void setChanged();
+		virtual void setChanged() { m_hasChanged = true; }
 
 		/**
 		 * \brief Revert the effect of setChanged.
 		 */
-		virtual void clearChanged();
+		virtual void clearChanged() { m_hasChanged = false; }
 
 		/**
 		 * \brief Indicate if some change have been made.
 		 * \return \e true if setChanged have been called this the last clearChanged/notifyObservers call.
 		 * \return \e false in other case.
 		 */
-		virtual bool hasChanged();
+		virtual bool hasChanged() { return m_hasChanged; }
 
 		/**
 		 * \brief Notify all registered observers.

@@ -1,4 +1,3 @@
-#include <openvibe/ovTimeArithmetics.h>
 #include <openvibe/ovExceptionHandler.h>
 
 #include "ovkCScheduler.h"
@@ -559,7 +558,7 @@ bool CScheduler::loop()
 
 	m_steps++;
 
-	m_currentTime = m_steps * TimeArithmetics::sampleCountToTime(m_frequency, 1LL);
+	m_currentTime = m_steps * CTime(m_frequency, 1LL).time();
 
 	return boxProcessing;
 }

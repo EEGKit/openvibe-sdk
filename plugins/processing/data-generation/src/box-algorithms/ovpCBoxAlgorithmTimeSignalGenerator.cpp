@@ -1,6 +1,5 @@
 #include "ovpCBoxAlgorithmTimeSignalGenerator.h"
 
-#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
@@ -62,11 +61,9 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 	}
 	else
 	{
-
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
-		const uint64_t nextStepDate = TimeArithmetics::timeToSampleCount(uint64_t(m_sampling),
-																		 uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		const uint64_t nextStepDate = CTime(uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25))).toSampleCount(m_sampling);
 		while (m_nSentSample + m_nGeneratedEpochSample < nextStepDate)
 		{
 			double* buffer = m_encoder.getInputMatrix()->getBuffer();
@@ -75,9 +72,9 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 			m_encoder.encodeBuffer();
 
-			const uint64_t tStart = TimeArithmetics::sampleCountToTime(m_sampling, m_nSentSample);
+			const uint64_t tStart = CTime(m_sampling, m_nSentSample).time();
 			m_nSentSample += m_nGeneratedEpochSample;
-			const uint64_t tEnd = TimeArithmetics::sampleCountToTime(m_sampling, m_nSentSample);
+			const uint64_t tEnd = CTime(m_sampling, m_nSentSample).time();
 
 			boxContext->markOutputAsReadyToSend(0, tStart, tEnd);
 		}

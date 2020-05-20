@@ -5,7 +5,6 @@
 #include <vector>
 #include <cmath>  // std::ceil() on Linux
 
-#include <openvibe/ovTimeArithmetics.h>
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
@@ -206,7 +205,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	if (m_file == nullptr) { OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_filename, ErrorType::Internal); }
 	//line buffer
 	char line[BUFFER_LEN];
-	const double currentTime = TimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
+	const double currentTime = CTime(getPlayerContext().getCurrentTime()).toSeconds();
 
 	//if no line was read, read the first data line.
 	if (m_lastLineSplits.empty())
@@ -295,8 +294,8 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 	}
 	else
 	{
-		m_startTime = TimeArithmetics::secondsToTime(atof(m_dataMatrices[0][0].c_str()));
-		m_endTime   = TimeArithmetics::secondsToTime(atof(m_dataMatrices.back()[0].c_str()));
+		m_startTime = CTime(atof(m_dataMatrices[0][0].c_str())).time();
+		m_endTime   = CTime(atof(m_dataMatrices.back()[0].c_str())).time();
 	}
 
 	boxContext.markOutputAsReadyToSend(0, m_startTime, m_endTime);
@@ -324,9 +323,9 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 		OV_ERROR_UNLESS_KRF(m_dataMatrices[i].size() == 3, "Invalid data row length: must be 3 for stimulation date, index and duration",
 							ErrorType::BadParsing);
 
-		const uint64_t date     = TimeArithmetics::secondsToTime(atof(m_dataMatrices[i][0].c_str()));
+		const uint64_t date     = CTime(atof(m_dataMatrices[i][0].c_str())).time();
 		const uint64_t id       = uint64_t(atof(m_dataMatrices[i][1].c_str()));
-		const uint64_t duration = TimeArithmetics::secondsToTime(atof(m_dataMatrices[i][2].c_str()));
+		const uint64_t duration = CTime(atof(m_dataMatrices[i][2].c_str())).time();
 
 		ip_stimSet->appendStimulation(id, date, duration);
 	}
@@ -352,7 +351,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 	{
 		// This is the first chunk, find out the start time from the file
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
-		if (!m_doNotUseFileTime) { m_endTime = TimeArithmetics::secondsToTime(atof(m_dataMatrices[0][0].c_str())); }
+		if (!m_doNotUseFileTime) { m_endTime = CTime(atof(m_dataMatrices[0][0].c_str())).time(); }
 
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nCol - 1);
@@ -379,13 +378,13 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 	{
 		// We use time dictated by the sampling rate
 		m_startTime = m_endTime; // previous time end is current time start
-		m_endTime   = m_startTime + TimeArithmetics::sampleCountToTime(m_sampling, m_samplesPerBuffer);
+		m_endTime   = m_startTime + CTime(m_sampling, m_samplesPerBuffer).time();
 	}
 	else
 	{
 		// We use time suggested by the last sample of the chunk
-		m_startTime = TimeArithmetics::secondsToTime(atof(m_dataMatrices[0][0].c_str()));
-		m_endTime   = TimeArithmetics::secondsToTime(atof(m_dataMatrices.back()[0].c_str()));
+		m_startTime = CTime(atof(m_dataMatrices[0][0].c_str())).time();
+		m_endTime   = CTime(atof(m_dataMatrices.back()[0].c_str())).time();
 	}
 
 	boxContext.markOutputAsReadyToSend(0, m_startTime, m_endTime);
@@ -432,7 +431,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 			OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(iMatrix), "Error converting vector data to channel localisation", ErrorType::Internal);
 
 			m_encoder->encodeBuffer();
-			const uint64_t date = TimeArithmetics::secondsToTime(atof(m_dataMatrices[0][0].c_str()));
+			const uint64_t date = CTime(atof(m_dataMatrices[0][0].c_str())).time();
 			boxContext.markOutputAsReadyToSend(0, date, date);
 
 			//clear matrix
@@ -480,7 +479,7 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 
 		m_encoder->encodeBuffer();
 
-		const uint64_t date = TimeArithmetics::secondsToTime(atof(m_dataMatrices[i][0].c_str()));
+		const uint64_t date = CTime(atof(m_dataMatrices[i][0].c_str())).time();
 		boxContext.markOutputAsReadyToSend(0, date, date);
 	}
 
@@ -543,7 +542,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 			OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(iMatrix), "Error converting vector data to spectrum", ErrorType::Internal);
 
 			m_encoder->encodeBuffer();
-			const uint64_t date = TimeArithmetics::secondsToTime(std::stod(m_dataMatrices[0][0]));
+			const uint64_t date = CTime(std::stod(m_dataMatrices[0][0])).time();
 			boxContext.markOutputAsReadyToSend(0, date - 1, date);
 
 			//clear matrix

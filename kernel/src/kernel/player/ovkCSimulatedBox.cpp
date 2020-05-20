@@ -6,7 +6,6 @@
 #include "ovkCMessageClock.h"
 #include "ovkCMessageEvent.h"
 
-#include <openvibe/ovTimeArithmetics.h>
 
 #include <cstdlib>
 #include <algorithm>
@@ -117,9 +116,8 @@ bool CSimulatedBox::processClock()
 			{
 				OV_ERROR_UNLESS_KRF(newFreq <= m_scheduler.getFrequency()<<32,
 									"Box " << m_box->getName() << " requested higher clock frequency ("
-									<< newFreq << " == " << TimeArithmetics::timeToSeconds(newFreq) << "hz) " <<
-									"than what the scheduler can handle ("
-									<< (m_scheduler.getFrequency()<<32) << " == " << TimeArithmetics::timeToSeconds(m_scheduler.getFrequency()<<32) << "hz)",
+									<< newFreq << " == " << CTime(newFreq).toSeconds() << "hz) " << "than what the scheduler can handle ("
+									<< (m_scheduler.getFrequency()<<32) << " == " << CTime(m_scheduler.getFrequency()<<32).toSeconds() << "hz)",
 									ErrorType::BadConfig);
 
 				// note: 1LL should be left shifted 64 bits but this

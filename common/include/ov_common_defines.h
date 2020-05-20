@@ -1,5 +1,7 @@
-#ifndef OV_COMMON_DEFINES_H
-#define OV_COMMON_DEFINES_H
+#pragma once
+
+#include <cstdlib>	// For Unix Compatibility (size_t)
+#include <cstdint>  // For Uint standard
 
 //
 // This file checks the presence of several defines that are supposed to
@@ -144,6 +146,4 @@
 #else
   #define OV_DEPRECATED(since) __attribute__((__deprecated__))
   #define OV_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__))
-#endif
-
 #endif

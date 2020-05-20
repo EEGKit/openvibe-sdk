@@ -16,7 +16,7 @@
 
 #include <toolkit/ovtk_defines.h>
 #include <openvibe/ovIMemoryBuffer.h>
-#include <openvibe/ovTimeArithmetics.h>
+#include <openvibe/CTime.hpp>
 
 
 static bool didRequestForcedQuit = false;
@@ -234,7 +234,7 @@ int main(const int argc, char** argv)
 
 		while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
-		const uint64_t expectedSamples = OpenViBE::TimeArithmetics::timeToSampleCount(samplingRate, client.getTime());
+		const uint64_t expectedSamples = OpenViBE::CTime(client.getTime()).toSampleCount(samplingRate);
 
 		while (sentSamples < expectedSamples && (samplesToSend == 0 || sentSamples < samplesToSend))
 		{
@@ -262,8 +262,8 @@ int main(const int argc, char** argv)
 			}
 
 
-			const uint64_t tStart = OpenViBE::TimeArithmetics::sampleCountToTime(samplingRate, sentSamples);
-			const uint64_t tEnd   = OpenViBE::TimeArithmetics::sampleCountToTime(samplingRate, sentSamples + samplesPerBuffer);
+			const uint64_t tStart = OpenViBE::CTime(samplingRate, sentSamples).time();
+			const uint64_t tEnd   = OpenViBE::CTime(samplingRate, sentSamples + samplesPerBuffer).time();
 
 			if (!client.pushEBML(0, tStart, tEnd, std::make_shared<const std::vector<uint8_t>>(callback.data())))
 			{

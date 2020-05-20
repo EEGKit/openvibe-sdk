@@ -1,8 +1,7 @@
 #include "ovkCLogManager.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace std;
+namespace OpenViBE {
+namespace Kernel {
 
 bool CLogManager::isActive(const ELogLevel level)
 {
@@ -55,11 +54,11 @@ bool CLogManager::addListener(ILogListener* listener)
 
 	if (listener == nullptr) { return false; }
 
-	auto itLogListener = m_listeners.begin();
-	while (itLogListener != m_listeners.end())
+	auto it = m_listeners.begin();
+	while (it != m_listeners.end())
 	{
-		if ((*itLogListener) == listener) { return false; }
-		++itLogListener;
+		if ((*it) == listener) { return false; }
+		++it;
 	}
 
 	m_listeners.push_back(listener);
@@ -70,15 +69,18 @@ bool CLogManager::removeListener(ILogListener* listener)
 {
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-	auto itLogListener = m_listeners.begin();
-	while (itLogListener != m_listeners.end())
+	auto it = m_listeners.begin();
+	while (it != m_listeners.end())
 	{
-		if ((*itLogListener) == listener)
+		if ((*it) == listener)
 		{
-			m_listeners.erase(itLogListener);
+			m_listeners.erase(it);
 			return true;	// due to constraint in addListener(), listener can be in the array only once, so we can return
 		}
-		++itLogListener;
+		++it;
 	}
 	return false;
 }
+
+} // namespace Kernel
+} // namespace OpenViBE

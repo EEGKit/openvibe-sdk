@@ -6,17 +6,13 @@
 
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/Tools;	//Ambiguous without OpenViBEPlugins
-using namespace /*OpenViBE::*/Toolkit;
-using namespace std;
-
+namespace OpenViBE {
+namespace Plugins {
+namespace Tools {
 
 bool CBoxAlgorithmEBMLStreamSpy::initialize()
 {
-	const IBox& boxContext = getStaticBoxContext();
+	const Kernel::IBox& boxCtx = getStaticBoxContext();
 
 	m_reader = createReader(*this);
 	m_helper = EBML::createReaderHelper();
@@ -25,7 +21,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 	const CString fileName  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	const uint64_t logLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	if (boxContext.getSettingCount() > 2)
+	if (boxCtx.getSettingCount() > 2)
 	{
 		expand          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 		m_nExpandValues = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -36,18 +32,18 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 		m_nExpandValues = 4;
 	}
 
-	m_logLevel = ELogLevel(logLevel);
+	m_logLevel = Kernel::ELogLevel(logLevel);
 
-	ifstream file;
+	std::ifstream file;
 	FS::Files::openIFStream(file, fileName);
 	while (file.good() && !file.eof())
 	{
 		uint32_t id1;
 		uint32_t id2;
-		string identifier1;
-		string identifier2;
-		string name;
-		string type;
+		std::string identifier1;
+		std::string identifier2;
+		std::string name;
+		std::string type;
 
 		file >> name;
 		file >> identifier1;
@@ -203,8 +199,8 @@ bool CBoxAlgorithmEBMLStreamSpy::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmEBMLStreamSpy::process()
 {
-	IBoxIO& boxContext           = getDynamicBoxContext();
-	const IBox& staticBoxContext = getStaticBoxContext();
+	Kernel::IBoxIO& boxCtx           = getDynamicBoxContext();
+	const Kernel::IBox& staticBoxCtx = getStaticBoxContext();
 
 	uint64_t tStart       = 0;
 	uint64_t tEnd         = 0;
@@ -213,25 +209,25 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 
 	getLogManager() << m_logLevel << "\n";
 
-	for (size_t i = 0; i < staticBoxContext.getInputCount(); ++i)
+	for (size_t i = 0; i < staticBoxCtx.getInputCount(); ++i)
 	{
-		if (boxContext.getInputChunkCount(i))
+		if (boxCtx.getInputChunkCount(i))
 		{
 			CString inputName;
-			staticBoxContext.getInputName(i, inputName);
+			staticBoxCtx.getInputName(i, inputName);
 
 			CIdentifier inputType;
-			staticBoxContext.getInputType(i, inputType);
+			staticBoxCtx.getInputType(i, inputType);
 
 			getLogManager() << m_logLevel << "For input " << inputName << " of type " << getTypeManager().getTypeName(inputType) << " :\n";
 
-			for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
+			for (size_t j = 0; j < boxCtx.getInputChunkCount(i); ++j)
 			{
-				boxContext.getInputChunk(i, j, tStart, tEnd, size, buffer);
-				boxContext.markInputAsDeprecated(i, j);
+				boxCtx.getInputChunk(i, j, tStart, tEnd, size, buffer);
+				boxCtx.markInputAsDeprecated(i, j);
 
 				getLogManager() << m_logLevel << "For chunk [id:" << j << "] at [time:" << CIdentifier(tStart) << "," << CIdentifier(tEnd)
-						<< " / " << time64(tStart) << "," << time64(tEnd) << "]\n";
+						<< " / " << CTime(tStart) << "," << CTime(tEnd) << "]\n";
 
 				m_reader->processData(buffer, size);
 			}
@@ -242,3 +238,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 
 	return true;
 }
+
+} // namespace Tools
+} // namespace Plugins
+} // namespace OpenViBE

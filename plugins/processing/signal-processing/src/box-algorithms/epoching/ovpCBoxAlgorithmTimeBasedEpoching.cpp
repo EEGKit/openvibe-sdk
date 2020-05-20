@@ -1,5 +1,4 @@
 #include "ovpCBoxAlgorithmTimeBasedEpoching.h"
-#include <openvibe/ovTimeArithmetics.h>
 #include <iostream>
 #include <algorithm>
 
@@ -121,9 +120,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					if (m_oSampleIdx == m_oNSample) // An epoch has been totally filled !
 					{
 						// Calculates start and end time of output
-						const uint64_t oTStart = m_referenceTime + TimeArithmetics::sampleCountToTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch);
-						const uint64_t oTEnd   = m_referenceTime + TimeArithmetics::sampleCountToTime(
-													 m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample);
+						const uint64_t oTStart = m_referenceTime + CTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch).time();
+						const uint64_t oTEnd   = m_referenceTime + CTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample).time();
 						m_oChunkIdx++;
 
 						// Writes epoch

@@ -2,7 +2,6 @@
 
 #include "defines.h"
 #include <climits>
-#include <cstdlib>	// For Unix Compatibility
 
 namespace EBML
 {
