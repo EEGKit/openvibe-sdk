@@ -8,16 +8,15 @@
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
 /// 
 ///-------------------------------------------------------------------------------------------------
-
 #pragma once
 
-#include "ov_defines.h"
+#include "ov_common_defines.h"
 #include <cstdint>
 #include <limits>
 #include <string>
 
 namespace OpenViBE {
-/// <summary>  This class is the basic class to use to compute and display time in the OpenViBE platform.\n
+/// <summary>  This class is the basic class to use, compute and display time in the OpenViBE platform.\n
 /// The time in the OpenViBE platform is based on 64 bits integers. </summary>
 class OV_API CTime
 {
@@ -103,8 +102,13 @@ public:
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="time">The time.</param>
 	/// <returns> himself. </returns>
+	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-	CTime& operator=(T time);
+	CTime& operator=(const T time)
+	{
+		m_time = time;
+		return *this;
+	}
 
 	/// <summary> Add Assignment Operator. </summary>
 	/// <param name="time"> The time to add. </param>
@@ -160,10 +164,10 @@ public:
 	//--- friends (must be in header files for link) ---
 	//--------------------------------------------------
 
-	/// <summary>	Override the ostream operator. </summary>
-	/// <param name="os">	The ostream. </param>
-	/// <param name="obj">	The object. </param>
-	/// <returns>	Return the modified ostream. </returns>
+	/// <summary> Override the ostream operator. </summary>
+	/// <param name="os"> The ostream. </param>
+	/// <param name="obj"> The object. </param>
+	/// <returns> Return the modified ostream. </returns>
 	friend std::ostream& operator<<(std::ostream& os, const CTime& obj)
 	{
 		os << obj.str();
@@ -171,9 +175,9 @@ public:
 	}
 
 	/// <summary> Addition Operator. </summary>
-	/// <param name="left"> The fisrt time. </param>
+	/// <param name="left">	The fisrt time. </param>
 	/// <param name="right"> The second time. </param>
-	/// <returns> the result of the operation. </returns>
+	/// <returns> The result of the operation. </returns>
 	friend CTime operator+(CTime left, const CTime& right)
 	{
 		left += right;
@@ -183,7 +187,7 @@ public:
 	/// <summary> Substract Operator. </summary>
 	/// <param name="left"> The fisrt time. </param>
 	/// <param name="right"> The second time. </param>
-	/// <returns> the result of the operation. </returns>
+	/// <returns> The result of the operation. </returns>
 	friend CTime operator-(CTime left, const CTime& right)
 	{
 		left -= right;

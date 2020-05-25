@@ -22,7 +22,7 @@ public:
 	uint64_t getClockFrequency() override;
 	bool initialize() override;
 	bool uninitialize() override;
-	bool processClock(CMessageClock& messageClock) override;
+	bool processClock(CMessage& msg) override;
 	bool processInput(const size_t index) override;
 	bool process() override;
 
@@ -37,7 +37,7 @@ private:
 		size_t index;
 		std::shared_ptr<std::vector<uint8_t>> EBML;
 
-		SPacket(const uint64_t startTime, const uint64_t endTime, const size_t index, const std::shared_ptr<std::vector<uint8_t>>& ebml)
+		SPacket(const CTime startTime, const CTime endTime, const size_t index, const std::shared_ptr<std::vector<uint8_t>>& ebml)
 			: startTime(startTime), endTime(endTime), index(index), EBML(ebml) { }
 	};
 

@@ -13,9 +13,9 @@ namespace OpenViBE
 	{
 		class IConfigurationManager;
 		class ILogManager;
-		class IMessageClock;
-		class IMessageEvent;
-		class IMessageSignal;
+		class CMessage;
+		class CMessage;
+		class CMessage;
 		class IScenarioManager;
 
 		/**
@@ -39,27 +39,27 @@ namespace OpenViBE
 
 			/**
 			* \brief Sends signal to the kernel
-			* \param messageSignal [in] : the signal message to send
+			* \param msg [in] : the signal message to send
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendSignal(const IMessageSignal& messageSignal) = 0;
+			virtual bool sendSignal(const CMessage& msg) = 0;
 			/**
 			* \brief Sends a message to another box
-			* \param messageEvent [in] : the message to send to the other box
+			* \param msg [in] : the message to send to the other box
 			* \param dstID [in] : the identifier of the other box
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier& dstID) = 0;
+			virtual bool sendMessage(const CMessage& msg, const CIdentifier& dstID) = 0;
 			/**
 			* \brief Broadcasts a message to several other boxes
-			* \param messageEvent [in] : the message to send
+			* \param msg [in] : the message to send
 			* \param dstID [in] : a pointer containing all
 			*        the targets which should receive the sent message.
 			* \param nDstID [in] : the number of
 			*        targets contained in the \c dstID array.
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendMessage(const IMessageEvent& messageEvent, const CIdentifier* dstID, const size_t nDstID) = 0;
+			virtual bool sendMessage(const CMessage& msg, const CIdentifier* dstID, const size_t nDstID) = 0;
 
 			//}@
 

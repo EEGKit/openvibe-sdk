@@ -36,7 +36,7 @@ bool CBoxAlgorithmTimeout::uninitialize()
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processClock(Kernel::IMessageClock& /*messageClock*/)
+bool CBoxAlgorithmTimeout::processClock(CMessage& /*msg*/)
 {
 	// if there was nothing received on the input for a period of time we raise the
 	// timeout flag and let the box send a stimulation

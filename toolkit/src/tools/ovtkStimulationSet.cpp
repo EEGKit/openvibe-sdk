@@ -41,7 +41,7 @@ bool StimulationSet::appendRange(IStimulationSet& dst, const IStimulationSet& sr
 	return true;
 }
 
-bool StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
+bool StimulationSet::removeRange(IStimulationSet& stimSet, const CTime startTime, const CTime endTime)
 {
 	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
 	{

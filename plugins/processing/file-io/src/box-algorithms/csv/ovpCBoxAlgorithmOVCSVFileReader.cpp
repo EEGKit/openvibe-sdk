@@ -82,7 +82,7 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& /*messageClock*/)
+bool CBoxAlgorithmOVCSVFileReader::processClock(CMessage& /*msg*/)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Failed to mark clock algorithm as ready to process", ErrorType::Internal);
 	return true;

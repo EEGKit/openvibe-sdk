@@ -6,9 +6,9 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class IMessageClock;
-		class IMessageEvent;
-		class IMessageSignal;
+		class CMessage;
+		class CMessage;
+		class CMessage;
 
 		/**
 		 * \brief This enum lists all the way a box can be modified
@@ -25,9 +25,9 @@ namespace OpenViBE
 	}  // namespace Kernel
 
 	// for backward compatibility
-	typedef Kernel::IMessageClock CMessageClock;
-	typedef Kernel::IMessageEvent CMessageEvent;
-	typedef Kernel::IMessageSignal CMessageSignal;
+	typedef CMessage CMessage;
+	typedef CMessage CMessage;
+	typedef CMessage CMessage;
 
 	namespace Kernel
 	{
@@ -143,7 +143,7 @@ namespace OpenViBE
 			 *
 			 * \sa IBoxAlgorithmContext
 			 */
-			virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageEvent& msgEvent) { return false; }
+			virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgEvent) { return false; }
 			/**
 			 * \brief Reaction to a signal
 			 * \param ctx [in] : the box algorithm context to use
@@ -161,7 +161,7 @@ namespace OpenViBE
 			 *
 			 * \sa Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageSignal& msgSignal) { return false; }
+			virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgSignal) { return false; }
 			/**
 			 * \brief Reaction to a clock tick
 			 * \param ctx [in] : the box algorithm context to use
@@ -182,7 +182,7 @@ namespace OpenViBE
 			 * \sa Kernel::IBoxAlgorithmContext
 			 * \sa getClockFrequency
 			 */
-			virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageClock& msgClock) { return false; }
+			virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgClock) { return false; }
 			/**
 			 * \brief Reaction to an input update
 			 * \param ctx [in] : the box algorithm context to use

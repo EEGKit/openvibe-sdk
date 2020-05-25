@@ -146,7 +146,7 @@ bool MessagingServer::popEBML(uint64_t& packetId, size_t& index, uint64_t& start
 
 bool MessagingServer::pushError(const EError error, const uint64_t guiltyId) const { return this->pushMessage(ErrorMessage(error, guiltyId)); }
 
-bool MessagingServer::pushEBML(const size_t index, const uint64_t startTime, const uint64_t endTime, 
+bool MessagingServer::pushEBML(const size_t index, const uint64_t startTime, const uint64_t endTime,
 							   const std::shared_ptr<const std::vector<uint8_t>>& ebml) const
 {
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));

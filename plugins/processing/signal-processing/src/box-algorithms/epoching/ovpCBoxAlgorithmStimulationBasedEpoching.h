@@ -48,7 +48,7 @@ private:
 
 	struct SCachedChunk
 	{
-		SCachedChunk(const uint64_t startTime, const uint64_t endTime, IMatrix* matrix)
+		SCachedChunk(const CTime startTime, const CTime endTime, IMatrix* matrix)
 			: startTime(startTime), endTime(endTime), matrix(matrix) {}
 
 		SCachedChunk& operator=(SCachedChunk&& other)

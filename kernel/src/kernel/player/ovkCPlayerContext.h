@@ -15,9 +15,9 @@ namespace OpenViBE
 
 			CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox);
 			~CPlayerContext() override { }
-			bool sendSignal(const CMessageSignal& messageSignal) override;
-			bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier& dstID) override;
-			bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier* dstID, const size_t nDstID) override;
+			bool sendSignal(const CMessage& msg) override;
+			bool sendMessage(const CMessage& msg, const CIdentifier& dstID) override;
+			bool sendMessage(const CMessage& msg, const CIdentifier* dstID, const size_t nDstID) override;
 			uint64_t getCurrentTime() const override;
 			uint64_t getCurrentLateness() const override;
 			double getCurrentCPUUsage() const override;

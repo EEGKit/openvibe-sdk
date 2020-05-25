@@ -1,10 +1,9 @@
 // #if defined __MY_COMPILE_ALL
 
+#include "openvibe/CMessage.hpp"
 #include "ovkCSimulatedBox.h"
 #include "ovkCPlayer.h"
 #include "ovkCBoxAlgorithmContext.h"
-#include "ovkCMessageClock.h"
-#include "ovkCMessageEvent.h"
 
 
 #include <cstdlib>
@@ -19,10 +18,9 @@ using namespace /*OpenViBE::*/Plugins;
 // ________________________________________________________________________________________________________________
 //
 
-#define OV_IncorrectTime 0xffffffffffffffffULL
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& ctx, CScheduler& scheduler)
-	: TKernelObject<IBoxIO>(ctx), m_scheduler(scheduler), m_lastClockActivationDate(OV_IncorrectTime) {}
+	: TKernelObject<IBoxIO>(ctx), m_scheduler(scheduler), m_lastClockActivationDate(CTime::max()) {}
 
 CSimulatedBox::~CSimulatedBox() {}
 
@@ -61,10 +59,10 @@ bool CSimulatedBox::initialize()
 	m_Inputs.resize(m_box->getInputCount());
 	m_Outputs.resize(m_box->getOutputCount());
 	m_CurrentOutputs.resize(m_box->getOutputCount());
-	m_LastOutputStartTimes.resize(m_box->getOutputCount(), 0);
-	m_LastOutputEndTimes.resize(m_box->getOutputCount(), 0);
+	m_LastOutputStartTimes.resize(m_box->getOutputCount());	// Time is automatically set to 0 by default
+	m_LastOutputEndTimes.resize(m_box->getOutputCount());	// Time is automatically set to 0 by default
 
-	m_lastClockActivationDate = OV_IncorrectTime;
+	m_lastClockActivationDate = CTime::max();
 	m_clockFrequency          = 0;
 	m_clockActivationStep     = 0;
 
@@ -109,8 +107,8 @@ bool CSimulatedBox::processClock()
 			const uint64_t newFreq = m_boxAlgorithm->getClockFrequency(context);
 			if (newFreq == 0)
 			{
-				m_clockActivationStep     = OV_IncorrectTime;
-				m_lastClockActivationDate = OV_IncorrectTime;
+				m_clockActivationStep     = CTime::max();
+				m_lastClockActivationDate = CTime::max();
 			}
 			else
 			{
@@ -130,16 +128,15 @@ bool CSimulatedBox::processClock()
 		}
 	}
 
-	if ((m_clockFrequency != 0) && (m_lastClockActivationDate == OV_IncorrectTime || m_scheduler.getCurrentTime() - m_lastClockActivationDate >=
-									m_clockActivationStep))
+	if ((m_clockFrequency != CTime(0)) 
+		&& (m_lastClockActivationDate == CTime::max() || CTime(m_scheduler.getCurrentTime()) - m_lastClockActivationDate >= m_clockActivationStep))
 	{
 		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			if (m_lastClockActivationDate == OV_IncorrectTime) { m_lastClockActivationDate = m_scheduler.getCurrentTime(); }
+			if (m_lastClockActivationDate == CTime::max()) { m_lastClockActivationDate = m_scheduler.getCurrentTime(); }
 			else { m_lastClockActivationDate = m_lastClockActivationDate + m_clockActivationStep; }
 
-			CMessageClock message(this->getKernelContext());
-			message.setTime(m_lastClockActivationDate);
+			CMessage message(OV_UndefinedIdentifier, m_lastClockActivationDate);
 
 			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processClock(context, message),
 								"Box algorithm <" << m_box->getName() << "> processClock() function failed", ErrorType::Internal);
@@ -369,7 +366,7 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(const size_t outputIdx)
 	return &m_CurrentOutputs[outputIdx].getBuffer();
 }
 
-bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64_t startTime, const uint64_t endTime)
+bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const CTime startTime, const CTime endTime)
 {
 	OV_ERROR_UNLESS_KRF(outputIdx < m_CurrentOutputs.size(),
 						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_CurrentOutputs.size() - 1 << "])",

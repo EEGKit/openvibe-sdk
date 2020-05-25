@@ -17,7 +17,7 @@ namespace OpenViBE
 				uint64_t getClockFrequency() override { return (1LL << 32) * 32; }
 				bool initialize() override;
 				bool uninitialize() override;
-				bool processClock(CMessageClock& messageClock) override;
+				bool processClock(CMessage& msg) override;
 				bool process() override;
 
 				_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ClockStimulator)

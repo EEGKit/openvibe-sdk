@@ -57,14 +57,11 @@ namespace OpenViBE
 			/**
 			 * \brief Gets an input chunk.
 			 * \param inputIdx [in] : the index of the desired input.
-			 * \param chunkIdx [in] : the index of the desired
-			 *        chunk in this input.
+			 * \param chunkIdx [in] : the index of the desired chunk in this input.
 			 * \return The memory buffer for the specified chunk.
 			 * \return \c NULL in case of error.
-			 * \warning The chunks are ordered like they arrived
-			 *          to the box, this means chunk 0 arrived
-			 *          before chunk 1, that arrived before
-			 *          chunk 2 and so on...
+			 * \warning The chunks are ordered like they arrived to the box, this means chunk 0 arrived
+			 *          before chunk 1, that arrived before chunk 2 and so on...
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
@@ -72,8 +69,7 @@ namespace OpenViBE
 			/**
 			 * \brief Gets an input chunk start time.
 			 * \param inputIdx [in] : the index of the desired input.
-			 * \param chunkIdx [in] : the index of the desired
-			 *        chunk in this input.
+			 * \param chunkIdx [in] : the index of the desired chunk in this input.
 			 * \return The input chunk start time.
 			 * \return \c 0 is returned in case of error.
 			 * \note Both time value are given in fixed point 32:32 seconds
@@ -84,8 +80,7 @@ namespace OpenViBE
 			/**
 			 * \brief Gets an input chunk end time.
 			 * \param inputIdx [in] : the index of the desired input.
-			 * \param chunkIdx [in] : the index of the desired
-			 *        chunk in this input.
+			 * \param chunkIdx [in] : the index of the desired chunk in this input.
 			 * \return The input chunk end time.
 			 * \return \c 0 is returned in case of error.
 			 * \note Both time value are given in fixed point 32:32 seconds
@@ -99,10 +94,8 @@ namespace OpenViBE
 			 * \param chunkIdx [in] : the index of the chunk to mark.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
-			 * \warning The chunks are ordered like they arrived
-			 *          to the box, this means chunk 0 arrived
-			 *          before chunk 1, that arrived before
-			 *          chunk 2 and so on...
+			 * \warning The chunks are ordered like they arrived to the box, this means chunk 0 arrived
+			 *          before chunk 1, that arrived before chunk 2 and so on...
 			 *
 			 * This function discards a chunk when it's been read
 			 * and processed. This allows the kernel to know a chunk
@@ -161,28 +154,22 @@ namespace OpenViBE
 			/**
 			 * \brief Marks output buffer as 'ready to send'
 			 * \param index [in] : the index of the output to work on
-			 * \param startTime [in] : the start time for
-			 *        the related buffer.
-			 * \param endTime [in] : the end time for the
-			 *        related buffer.
+			 * \param startTime [in] : the start time for the related buffer.
+			 * \param endTime [in] : the end time for the related buffer.
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
-			 * The output chunk should first be filled. For
-			 * that, one will have to get a reference on it
-			 * thanks to the getChunkBuffer or the
-			 * appendOutputChunkData methods ! The
-			 * player will then know the buffer can be sent.
+			 * The output chunk should first be filled.
+			 * For that, one will have to get a reference on it thanks to the getChunkBuffer or the appendOutputChunkData methods !
+			 * The player will then know the buffer can be sent.
 			 *
-			 * When called, the function flushes the output
-			 * chunk. Thus, after the call, the chunk size
-			 * is turned to 0 and the output is ready for
-			 * a new chunk when necessary...
+			 * When called, the function flushes the output chunk.
+			 * Thus, after the call, the chunk size is turned to 0 and the output is ready for a new chunk when necessary...
 			 *
 			 * \note Both time value are given in fixed point 32:32 seconds
 			 * \sa getChunk
 			 */
-			virtual bool markOutputAsReadyToSend(const size_t index, const uint64_t startTime, const uint64_t endTime) = 0;
+			virtual bool markOutputAsReadyToSend(const size_t index, const CTime startTime, const CTime endTime) = 0;
 
 			//@}
 

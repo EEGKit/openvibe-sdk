@@ -36,22 +36,22 @@ namespace OpenViBE
 				return uninitialize();
 			}
 
-			virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessageEvent& messageEvent)
+			virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessage& msg)
 			{
 				CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
-				return processEvent(messageEvent);
+				return processEvent(msg);
 			}
 
-			virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessageSignal& messageSignal)
+			virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessage& msg)
 			{
 				CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
-				return processSignal(messageSignal);
+				return processSignal(msg);
 			}
 
-			virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessageClock& messageClock)
+			virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessage& msg)
 			{
 				CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
-				return processClock(messageClock);
+				return processClock(msg);
 			}
 
 			virtual bool processInput(Kernel::IBoxAlgorithmContext& ctx, const size_t index)
@@ -73,9 +73,9 @@ namespace OpenViBE
 			virtual uint64_t getClockFrequency() { return 0; }
 			virtual bool initialize() { return true; }
 			virtual bool uninitialize() { return true; }
-			virtual bool processEvent(CMessageEvent& /*messageEvent*/) { return false; }
-			virtual bool processSignal(CMessageSignal& /*messageSignal*/) { return false; }
-			virtual bool processClock(CMessageClock& /*messageClock*/) { return false; }
+			virtual bool processEvent(CMessage& /*msg*/) { return false; }
+			virtual bool processSignal(CMessage& /*msg*/) { return false; }
+			virtual bool processClock(CMessage& /*msg*/) { return false; }
 			virtual bool processInput(const size_t /*index*/) { return false; }
 			virtual bool process() = 0;
 

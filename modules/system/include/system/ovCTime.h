@@ -51,18 +51,15 @@ namespace System
 		/**
 		 * \brief Check if the internal clock used by the framework is steady
 		 * \return True if the clock is steady, false otherwise
-		 * \note This is a theoretical check that queries the internal
-		 *       clock implementation for available services
+		 * \note This is a theoretical check that queries the internal clock implementation for available services
 		 */
 		static bool isClockSteady();
 		 
 		/**
-		 * \brief Check if the internal clock used by the framework has
-		 *        a resolution higher than the required one
+		 * \brief Check if the internal clock used by the framework has a resolution higher than the required one.
 		 * \param milliSeconds : Expected clock resolution (period between ticks) in ms (must be non-zero value)
 		 * \return True if the clock meets the requirements, false otherwise
-		 * \note This is a theoretical check that queries the internal
-		 *  	 clock implementation for available services
+		 * \note This is a theoretical check that queries the internal clock implementation for available services
 		 */
 		static bool checkResolution(const size_t milliSeconds);
 
