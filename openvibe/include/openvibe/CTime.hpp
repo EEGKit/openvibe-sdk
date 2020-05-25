@@ -103,7 +103,8 @@ public:
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="time">The time.</param>
 	/// <returns> himself. </returns>
-	CTime& operator=(uint64_t time);
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	CTime& operator=(T time);
 
 	/// <summary> Add Assignment Operator. </summary>
 	/// <param name="time"> The time to add. </param>
@@ -145,14 +146,15 @@ public:
 	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
 	bool operator>=(const CTime& time) const { return m_time >= time.m_time; }
 
-
-	/// <summary> Implements the operator uint64_t. </summary>
+	/// <summary> Implements the operator for integral type. </summary>
 	/// <returns> The result of the operator. </returns>
-	explicit operator uint64_t() const { return m_time; }
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	explicit operator T() const { return m_time; }
 
-	/// <summary> Implements the const operator uint64_t. </summary>
+	/// <summary> Implements the operator for const integral type. </summary>
 	/// <returns> The result of the operator. </returns>
-	explicit operator const uint64_t() const { return m_time; }
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	explicit operator const T() const { return m_time; }
 
 	//--------------------------------------------------
 	//--- friends (must be in header files for link) ---

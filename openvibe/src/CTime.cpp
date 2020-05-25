@@ -15,7 +15,8 @@ CTime& CTime::operator=(const CTime& time)
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-CTime& CTime::operator=(const uint64_t time)
+template <typename T, typename>
+CTime& CTime::operator=(const T time)
 {
 	m_time = time;
 	return *this;
