@@ -95,21 +95,11 @@ public:
 	//------------------- Operators --------------------
 	//--------------------------------------------------
 
+	//---------- With Time ----------
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="time">The time.</param>
 	/// <returns> himself. </returns>
 	CTime& operator=(const CTime& time);
-
-	/// <summary> Copy Assignment Operator. </summary>
-	/// <param name="time">The time.</param>
-	/// <returns> himself. </returns>
-	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
-	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-	CTime& operator=(const T time)
-	{
-		m_time = time;
-		return *this;
-	}
 
 	/// <summary> Add Assignment Operator. </summary>
 	/// <param name="time"> The time to add. </param>
@@ -151,6 +141,76 @@ public:
 	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
 	bool operator>=(const CTime& time) const { return m_time >= time.m_time; }
 
+	//---------- With Template ----------
+	/// <summary> Copy Assignment Operator. </summary>
+	/// <param name="time">The time.</param>
+	/// <returns> himself. </returns>
+	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	CTime& operator=(const T time)
+	{
+		m_time = time;
+		return *this;
+	}
+	
+	/// <summary> Add Assignment Operator. </summary>
+	/// <param name="time"> The time to add. </param>
+	/// <returns> himself. </returns>
+	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	CTime& operator+=(const T time)
+	{
+		m_time += time;
+		return *this;
+	}
+	
+	/// <summary> Substract Assignment Operator. </summary>
+	/// <param name="time"> The time to remove. </param>
+	/// <returns> himself. </returns>
+	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	CTime& operator-=(const T time)
+	{
+		m_time -= time;
+		return *this;
+	}
+
+	/// <summary> "Equal" test operator. </summary>
+	/// <param name="time"> The time to compare. </param>
+	/// <returns> <c>true</c> if equals, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator==(const T time) const { return m_time == time; }
+
+	/// <summary> "Difference" test operator. </summary>
+	/// <param name="time"> The time to compare. </param>
+	/// <returns> <c>true</c> if different, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator!=(const T time) const { return m_time != time; }
+
+	/// <summary> "Less than" test operator. </summary>
+	/// <param name="time"> The time to compare. </param>
+	/// <returns> <c>true</c> if less than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator<(const T time) const { return m_time < time; }
+
+	/// <summary> "Greater than" test operator. </summary>
+	/// <param name="time"> The time to compare. </param>
+	/// <returns> <c>true</c> if greater than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator>(const T time) const { return m_time > time; }
+
+	/// <summary> "Less or equal than" test operator. </summary>
+	/// <param name="time"> The time to compare. </param>
+	/// <returns> <c>true</c> if less or equal than, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator<=(const T time) const { return m_time <= time; }
+
+	/// <summary> "Greater or equal than" test operator. </summary>
+	/// <param name="time"> The time to compare. </param>
+	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator>=(const T time) const { return m_time >= time; }
+	
 	/// <summary> Implements the operator for integral type. </summary>
 	/// <returns> The result of the operator. </returns>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
