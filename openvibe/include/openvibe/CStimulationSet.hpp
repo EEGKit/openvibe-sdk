@@ -27,45 +27,48 @@ public:
 	//--------------------------------------------------
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
-	CStimulationSet()  = default;	///< Default constructor
-	~CStimulationSet() = default;	///< Default destructor
+	CStimulationSet() { m_stimulations = new std::vector<CStimulation>; }	///< Default constructor
+	~CStimulationSet() { delete m_stimulations; }	///< Default destructor
 
 	//--------------------------------------------------
 	//------------- Basic Vector Functions -------------
 	//--------------------------------------------------
-	void clear() { m_stimulations.clear(); }
-	size_t size() const { return m_stimulations.size(); }
-	void resize(const size_t n) { m_stimulations.resize(n); }
+	void clear() const { m_stimulations->clear(); }
+	size_t size() const { return m_stimulations->size(); }
+	void resize(const size_t n) const { m_stimulations->resize(n); }
 
-	void append(const CStimulation& stim) { m_stimulations.push_back(stim); }
-	void pop() { m_stimulations.pop_back(); }
+	void append(const CStimulation& stim) const { m_stimulations->push_back(stim); }
+	void pop() const { m_stimulations->pop_back(); }
 
-	void insert(const CStimulation& stim, const size_t index) { m_stimulations.insert(m_stimulations.begin() + index, stim); }
-	void remove(const size_t index) { m_stimulations.erase(m_stimulations.begin() + index); }
+	void insert(const CStimulation& stim, const size_t index) const { m_stimulations->insert(m_stimulations->begin() + index, stim); }
+	void remove(const size_t index) const { m_stimulations->erase(m_stimulations->begin() + index); }
 
+	//--------------------------------------------------
+	//---------------- Special Functions ---------------
+	//--------------------------------------------------
 	/// <summary> Shifts by the time shift. </summary>
 	/// <param name="shift"> The time shift. </param>
-	void shift(const CTime& shift) { for (auto& s : m_stimulations) { s.m_Date += shift; } }
+	void shift(const CTime& shift) const { for (auto& s : *m_stimulations) { s.m_Date += shift; } }
 
-	/// <summary> First object Iterator (usefull for modern for loop). </summary>
+	/// <summary> First object Iterator (usefull for modern forloop). </summary>
 	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::iterator begin() { return m_stimulations.begin(); }
+	std::vector<CStimulation>::iterator begin() { return m_stimulations->begin(); }
 	/// <summary> End of vector Iterator (usefull for modern for loop). </summary>
 	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::iterator end() { return m_stimulations.end(); }
+	std::vector<CStimulation>::iterator end() { return m_stimulations->end(); }
 	/// <summary> First object Iterator (usefull for modern for loop). </summary>
 	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::const_iterator begin() const { return m_stimulations.cbegin(); }
+	std::vector<CStimulation>::const_iterator begin() const { return m_stimulations->cbegin(); }
 	/// <summary> End of vector Iterator (usefull for modern for loop). </summary>
 	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::const_iterator end() const { return m_stimulations.cend(); }
+	std::vector<CStimulation>::const_iterator end() const { return m_stimulations->cend(); }
 
 	//--------------------------------------------------
 	//------------------- Operators --------------------
 	//--------------------------------------------------
 
-	CStimulation& operator[](const size_t index) { return m_stimulations[index]; }
-	const CStimulation& operator[](const size_t index) const { return m_stimulations[index]; }
+	CStimulation& operator[](const size_t index) { return m_stimulations->operator[](index); }
+	const CStimulation& operator[](const size_t index) const { return m_stimulations->operator[](index); }
 
 	//--------------------------------------------------
 	//---------------- Static Functions ----------------
@@ -77,6 +80,6 @@ public:
 
 protected:
 
-	std::vector<CStimulation> m_stimulations; ///< Internal implementation
+	std::vector<CStimulation>* m_stimulations = nullptr; ///< Internal implementation
 };
 }  // namespace OpenViBE
