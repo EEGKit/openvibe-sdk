@@ -42,7 +42,7 @@ public:
 
 	void insert(const CStimulation& stim, const size_t index) { m_stimulations.insert(m_stimulations.begin() + index, stim); }
 	void remove(const size_t index) { m_stimulations.erase(m_stimulations.begin() + index); }
-	
+
 	/// <summary> Shifts by the time shift. </summary>
 	/// <param name="shift"> The time shift. </param>
 	void shift(const CTime& shift) { for (auto& s : m_stimulations) { s.m_Date += shift; } }
@@ -79,4 +79,4 @@ protected:
 
 	std::vector<CStimulation> m_stimulations; ///< Internal implementation
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

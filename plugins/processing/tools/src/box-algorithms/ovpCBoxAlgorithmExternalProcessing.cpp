@@ -294,8 +294,8 @@ bool CBoxAlgorithmExternalProcessing::process()
 		{
 			if (!m_hasReceivedEndMessage)
 			{
-				CTime startTime         = 0;
-				CTime endTime           = 0;
+				CTime startTime            = 0;
+				CTime endTime              = 0;
 				size_t chunkSize           = 0;
 				const uint8_t* chunkBuffer = nullptr;
 
@@ -605,6 +605,6 @@ void CBoxAlgorithmExternalProcessing::log()
 	}
 }
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

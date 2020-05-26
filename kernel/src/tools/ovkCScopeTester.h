@@ -4,23 +4,22 @@
 
 #include <openvibe/ov_all.h>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Tools {
+class CScopeTester final : public IObject
 {
-	namespace Tools
-	{
-		class CScopeTester final : public IObject
-		{
-		public:
+public:
 
-			CScopeTester(const Kernel::IKernelContext& ctx, const CString& prefix);
-			~CScopeTester() override;
+	CScopeTester(const Kernel::IKernelContext& ctx, const CString& prefix);
+	~CScopeTester() override;
 
-			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester)
+	_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester)
 
-		protected:
+protected:
 
-			CString m_prefix;
-			const Kernel::IKernelContext& m_kernelCtx;
-		};
-	} // namespace Tools
-} // namespace OpenViBE
+	CString m_prefix;
+	const Kernel::IKernelContext& m_kernelCtx;
+};
+
+}  // namespace Tools
+}  // namespace OpenViBE

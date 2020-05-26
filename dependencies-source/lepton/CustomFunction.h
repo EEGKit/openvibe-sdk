@@ -33,42 +33,41 @@
 
 #include "windowsIncludes.h"
 
-namespace Lepton
+namespace Lepton {
+
+/**
+ * This class is the interface for defining your own function that may be included in expressions.
+ * To use it, create a concrete subclass that implements all of the virtual methods for each new function
+ * you want to define.  Then when you call Parser::parse() to parse an expression, pass a map of
+ * function names to CustomFunction objects.
+ */
+
+class LEPTON_EXPORT CustomFunction
 {
-
+public:
+	virtual ~CustomFunction() { }
 	/**
-	 * This class is the interface for defining your own function that may be included in expressions.
-	 * To use it, create a concrete subclass that implements all of the virtual methods for each new function
-	 * you want to define.  Then when you call Parser::parse() to parse an expression, pass a map of
-	 * function names to CustomFunction objects.
+	 * Get the number of arguments this function exprects.
 	 */
-
-	class LEPTON_EXPORT CustomFunction
-	{
-	public:
-		virtual ~CustomFunction() { }
-		/**
-		 * Get the number of arguments this function exprects.
-		 */
-		virtual int getNumArguments() const = 0;
-		/**
-		 * Evaluate the function.
-		 *
-		 * @param arguments    the array of argument values
-		 */
-		virtual double evaluate(const double* arguments) const = 0;
-		/**
-		 * Evaluate a derivative of the function.
-		 *
-		 * @param arguments    the array of argument values
-		 * @param derivOrder   an array specifying the number of times the function has been differentiated
-		 *                     with respect to each of its arguments.  For example, the array {0, 2} indicates
-		 *                     a second derivative with respect to the second argument.
-		 */
-		virtual double evaluateDerivative(const double* arguments, const int* derivOrder) const = 0;
-		/**
-		 * Create a new duplicate of this object on the heap using the "new" operator.
-		 */
-		virtual CustomFunction* clone() const = 0;
-	};
+	virtual int getNumArguments() const = 0;
+	/**
+	 * Evaluate the function.
+	 *
+	 * @param arguments    the array of argument values
+	 */
+	virtual double evaluate(const double* arguments) const = 0;
+	/**
+	 * Evaluate a derivative of the function.
+	 *
+	 * @param arguments    the array of argument values
+	 * @param derivOrder   an array specifying the number of times the function has been differentiated
+	 *                     with respect to each of its arguments.  For example, the array {0, 2} indicates
+	 *                     a second derivative with respect to the second argument.
+	 */
+	virtual double evaluateDerivative(const double* arguments, const int* derivOrder) const = 0;
+	/**
+	 * Create a new duplicate of this object on the heap using the "new" operator.
+	 */
+	virtual CustomFunction* clone() const = 0;
+};
 } // namespace Lepton

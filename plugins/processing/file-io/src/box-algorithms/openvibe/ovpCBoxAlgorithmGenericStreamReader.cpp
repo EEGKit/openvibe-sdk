@@ -50,7 +50,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 	if (m_file == nullptr) { if (!initializeFile()) { return false; } }
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
 	const size_t nInput    = this->getStaticBoxContext().getOutputCount();
-	const CTime time    = this->getPlayerContext().getCurrentTime();
+	const CTime time       = this->getPlayerContext().getCurrentTime();
 	bool finished          = false;
 
 	while (!finished && (!feof(m_file) || m_pending))

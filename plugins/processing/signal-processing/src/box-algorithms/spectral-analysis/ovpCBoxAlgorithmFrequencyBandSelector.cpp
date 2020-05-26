@@ -9,22 +9,21 @@ using namespace std;
 #include <vector>
 #include <string>
 
-namespace
+namespace {
+vector<string> split(const string& str, const char c)
 {
-	vector<string> split(const string& str, const char c)
+	vector<string> result;
+	size_t i = 0;
+	while (i < str.length())
 	{
-		vector<string> result;
-		size_t i = 0;
-		while (i < str.length())
-		{
-			size_t j = i;
-			while (j < str.length() && str[j] != c) { j++; }
-			if (i != j) { result.push_back(string(str, i, j - i)); }
-			i = j + 1;
-		}
-		return result;
+		size_t j = i;
+		while (j < str.length() && str[j] != c) { j++; }
+		if (i != j) { result.push_back(string(str, i, j - i)); }
+		i = j + 1;
 	}
-} // namespace
+	return result;
+}
+}  // namespace
 
 bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {

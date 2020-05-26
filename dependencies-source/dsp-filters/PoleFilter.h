@@ -39,162 +39,161 @@ THE SOFTWARE.
 #include "MathSupplement.h"
 #include "Cascade.h"
 
-namespace Dsp
+namespace Dsp {
+
+/*
+ * Base for filters designed via algorithmic placement of poles and zeros.
+ *
+ * Typically, the filter is first designed as a half-band low pass or
+ * low shelf analog filter (s-plane). Then, using a transformation such
+ * as the ones from Constantinides, the poles and zeros of the analog filter
+ * are calculated in the z-plane.
+ *
+ */
+
+// Factored implementations to reduce template instantiations
+
+class PoleFilterBase2 : public Cascade
 {
-
-	/*
-	 * Base for filters designed via algorithmic placement of poles and zeros.
-	 *
-	 * Typically, the filter is first designed as a half-band low pass or
-	 * low shelf analog filter (s-plane). Then, using a transformation such
-	 * as the ones from Constantinides, the poles and zeros of the analog filter
-	 * are calculated in the z-plane.
-	 *
-	 */
-
-	// Factored implementations to reduce template instantiations
-
-	class PoleFilterBase2 : public Cascade
-	{
-	public:
-		// This gets the poles/zeros directly from the digital
-		// prototype. It is used to double check the correctness
-		// of the recovery of pole/zeros from biquad coefficients.
-		//
-		// It can also be used to accelerate the interpolation
-		// of pole/zeros for parameter modulation, since a pole
-		// filter already has them calculated
+public:
+	// This gets the poles/zeros directly from the digital
+	// prototype. It is used to double check the correctness
+	// of the recovery of pole/zeros from biquad coefficients.
+	//
+	// It can also be used to accelerate the interpolation
+	// of pole/zeros for parameter modulation, since a pole
+	// filter already has them calculated
 
 #if 1
-		// Commenting this out will pass the call to the Cascade,
-		// which tries to compute the poles and zeros from the biquad
-		// coefficients.
-		std::vector<PoleZeroPair> getPoleZeros() const
-		{
-			std::vector<PoleZeroPair> vpz;
-			const int pairs = (m_digitalProto.getNumPoles() + 1) / 2;
-			for (int i = 0; i < pairs; ++i) { vpz.push_back(m_digitalProto[i]); }
-			return vpz;
-		}
+	// Commenting this out will pass the call to the Cascade,
+	// which tries to compute the poles and zeros from the biquad
+	// coefficients.
+	std::vector<PoleZeroPair> getPoleZeros() const
+	{
+		std::vector<PoleZeroPair> vpz;
+		const int pairs = (m_digitalProto.getNumPoles() + 1) / 2;
+		for (int i = 0; i < pairs; ++i) { vpz.push_back(m_digitalProto[i]); }
+		return vpz;
+	}
 #endif
 
-	protected:
-		LayoutBase m_digitalProto;
-	};
+protected:
+	LayoutBase m_digitalProto;
+};
 
-	// Serves a container to hold the analog prototype
-	// and the digital pole/zero layout.
-	template <class AnalogPrototype>
-	class PoleFilterBase : public PoleFilterBase2
+// Serves a container to hold the analog prototype
+// and the digital pole/zero layout.
+template <class AnalogPrototype>
+class PoleFilterBase : public PoleFilterBase2
+{
+protected:
+	void setPrototypeStorage(const LayoutBase& analogStorage, const LayoutBase& digitalStorage)
 	{
-	protected:
-		void setPrototypeStorage(const LayoutBase& analogStorage, const LayoutBase& digitalStorage)
-		{
-			m_analogProto.setStorage(analogStorage);
-			m_digitalProto = digitalStorage;
-		}
+		m_analogProto.setStorage(analogStorage);
+		m_digitalProto = digitalStorage;
+	}
 
-		AnalogPrototype m_analogProto;
-	};
+	AnalogPrototype m_analogProto;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	// Storage for pole filters
-	template <class BaseClass,
-			  int MaxAnalogPoles,
-			  int MaxDigitalPoles = MaxAnalogPoles>
-	struct PoleFilter : BaseClass
-						, CascadeStages<(MaxDigitalPoles + 1) / 2>
+// Storage for pole filters
+template <class BaseClass,
+		  int MaxAnalogPoles,
+		  int MaxDigitalPoles = MaxAnalogPoles>
+struct PoleFilter : BaseClass
+				  , CascadeStages<(MaxDigitalPoles + 1) / 2>
+{
+	PoleFilter()
 	{
-		PoleFilter()
-		{
-			// This glues together the factored base classes
-			// with the templatized storage classes.
-			BaseClass::setCascadeStorage(this->getCascadeStorage());
-			BaseClass::setPrototypeStorage(m_analogStorage, m_digitalStorage);
-		}
+		// This glues together the factored base classes
+		// with the templatized storage classes.
+		BaseClass::setCascadeStorage(this->getCascadeStorage());
+		BaseClass::setPrototypeStorage(m_analogStorage, m_digitalStorage);
+	}
 
-	private:
-		Layout<MaxAnalogPoles> m_analogStorage;
-		Layout<MaxDigitalPoles> m_digitalStorage;
-	};
+private:
+	Layout<MaxAnalogPoles> m_analogStorage;
+	Layout<MaxDigitalPoles> m_digitalStorage;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	/*
-	 * s-plane to z-plane transforms
-	 *
-	 * For pole filters, an analog prototype is created via placement of
-	 * poles and zeros in the s-plane. The analog prototype is either
-	 * a halfband low pass or a halfband low shelf. The poles, zeros,
-	 * and normalization parameters are transformed into the z-plane
-	 * using variants of the bilinear transformation.
-	 *
-	 */
+/*
+ * s-plane to z-plane transforms
+ *
+ * For pole filters, an analog prototype is created via placement of
+ * poles and zeros in the s-plane. The analog prototype is either
+ * a halfband low pass or a halfband low shelf. The poles, zeros,
+ * and normalization parameters are transformed into the z-plane
+ * using variants of the bilinear transformation.
+ *
+ */
 
-	// low pass to low pass 
-	class LowPassTransform
-	{
-	public:
-		LowPassTransform(double fc, LayoutBase& digital, LayoutBase const& analog);
+// low pass to low pass 
+class LowPassTransform
+{
+public:
+	LowPassTransform(double fc, LayoutBase& digital, LayoutBase const& analog);
 
-	private:
-		complex_t transform(complex_t c) const;
+private:
+	complex_t transform(complex_t c) const;
 
-		double f = 0;
-	};
+	double f = 0;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	// low pass to high pass
-	class HighPassTransform
-	{
-	public:
-		HighPassTransform(double fc, LayoutBase& digital, LayoutBase const& analog);
+// low pass to high pass
+class HighPassTransform
+{
+public:
+	HighPassTransform(double fc, LayoutBase& digital, LayoutBase const& analog);
 
-	private:
-		complex_t transform(complex_t c) const;
+private:
+	complex_t transform(complex_t c) const;
 
-		double f = 0;
-	};
+	double f = 0;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	// low pass to band pass transform
-	class BandPassTransform
-	{
-	public:
-		BandPassTransform(double fc, double fw, LayoutBase& digital, LayoutBase const& analog);
+// low pass to band pass transform
+class BandPassTransform
+{
+public:
+	BandPassTransform(double fc, double fw, LayoutBase& digital, LayoutBase const& analog);
 
-	private:
-		ComplexPair transform(complex_t c) const;
+private:
+	ComplexPair transform(complex_t c) const;
 
-		double wc   = 0;
-		double wc2  = 0;
-		double a    = 0;
-		double b    = 0;
-		double a2   = 0;
-		double b2   = 0;
-		double ab   = 0;
-		double ab_2 = 0;
-	};
+	double wc   = 0;
+	double wc2  = 0;
+	double a    = 0;
+	double b    = 0;
+	double a2   = 0;
+	double b2   = 0;
+	double ab   = 0;
+	double ab_2 = 0;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	// low pass to band stop transform
-	class BandStopTransform
-	{
-	public:
-		BandStopTransform(double fc, double fw, LayoutBase& digital, LayoutBase const& analog);
+// low pass to band stop transform
+class BandStopTransform
+{
+public:
+	BandStopTransform(double fc, double fw, LayoutBase& digital, LayoutBase const& analog);
 
-	private:
-		ComplexPair transform(complex_t c) const;
+private:
+	ComplexPair transform(complex_t c) const;
 
-		double wc  = 0;
-		double wc2 = 0;
-		double a   = 0;
-		double b   = 0;
-		double a2  = 0;
-		double b2  = 0;
-	};
+	double wc  = 0;
+	double wc2 = 0;
+	double a   = 0;
+	double b   = 0;
+	double a2  = 0;
+	double b2  = 0;
+};
 } // namespace Dsp

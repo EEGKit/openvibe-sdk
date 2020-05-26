@@ -86,13 +86,12 @@
 //___________________________________________________________________//
 //                                                                   //
 
-namespace OpenViBE
-{
-	namespace Toolkit
-	{
-		OVTK_API bool initialize(const Kernel::IKernelContext& ctx);
-		OVTK_API bool uninitialize(const Kernel::IKernelContext& ctx);
+namespace OpenViBE {
+namespace Toolkit {
+OVTK_API bool initialize(const Kernel::IKernelContext& ctx);
+OVTK_API bool uninitialize(const Kernel::IKernelContext& ctx);
 
-		bool initializeStimulationList(const Kernel::IKernelContext& ctx);
-	}  // namespace Toolkit
+bool initializeStimulationList(const Kernel::IKernelContext& ctx);
+
+}  // namespace Toolkit
 }  // namespace OpenViBE

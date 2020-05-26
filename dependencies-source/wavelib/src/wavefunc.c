@@ -112,7 +112,7 @@ void gauss(int N, int p, double lb, double ub, double* psi, double* t)
 	else { num = -1.0; }
 
 	num /= den;
-	
+
 	//printf("\n%g\n",num);
 
 	if (p == 1) { for (i = 0; i < N; ++i) { psi[i] = -t[i] * exp(- t[i] * t[i] / 2.0) * num; } }

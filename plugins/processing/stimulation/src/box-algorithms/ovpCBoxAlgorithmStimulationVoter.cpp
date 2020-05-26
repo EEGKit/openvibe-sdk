@@ -86,9 +86,9 @@ bool CBoxAlgorithmStimulationVoter::process()
 		{
 			for (size_t k = 0; k < op_stimulationSet->size(); ++k)
 			{
-				size_t id   = op_stimulationSet->operator[](k).m_ID;
-				CTime date = op_stimulationSet->operator[](k).m_Date;
-				m_latestStimulusDate     = std::max(m_latestStimulusDate, date);
+				size_t id            = op_stimulationSet->operator[](k).m_ID;
+				CTime date           = op_stimulationSet->operator[](k).m_Date;
+				m_latestStimulusDate = std::max(m_latestStimulusDate, date);
 				if ((m_latestStimulusDate - date).toSeconds() <= m_timeWindow)
 				{
 					// Stimulus is fresh, append
@@ -134,7 +134,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	for (const auto& stim : m_oStimulusDeque)
 	{
 		const size_t type = stim.first;
-		const CTime date = stim.second;
+		const CTime date  = stim.second;
 
 		votes[type]++;
 		lastSeen[type] = std::max(lastSeen[type], date);
@@ -143,11 +143,11 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	// Find the winner
 	size_t resultClassLabel = m_rejectClassLabel;
-	size_t maxVotes           = 0;
+	size_t maxVotes         = 0;
 
 	for (const auto& vote : votes)
 	{
-		const size_t type = vote.first;
+		const size_t type   = vote.first;
 		const size_t nVotes = vote.second; // can not be zero by construction above
 
 		if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && type == m_rejectClassLabel)

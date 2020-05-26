@@ -64,5 +64,5 @@ private:
 	}
 };
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

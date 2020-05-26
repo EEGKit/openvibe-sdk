@@ -7,6 +7,7 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace Stimulation {
+
 class CBoxAlgorithmClockStimulator final : virtual public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
@@ -22,7 +23,7 @@ public:
 protected:
 
 	Toolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_encoder;
-	size_t m_stimulationID       = 0;
+	size_t m_stimulationID      = 0;
 	CTime m_lastStimulationDate = 0;
 	CTime m_lastEndTime         = 0;
 
@@ -57,6 +58,7 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClockStimulatorDesc)
 };
-} // namespace Stimulation
+
+}  // namespace Stimulation
 }  // namespace Plugins
 }  // namespace OpenViBE

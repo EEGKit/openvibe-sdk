@@ -41,280 +41,277 @@ THE SOFTWARE.
 #include "PoleFilter.h"
 #include "RootFinder.h"
 
-namespace Dsp
+namespace Dsp {
+
+/*
+ * Filters with Legendre / "Optimum-L" response characteristics
+ *
+ */
+
+namespace Legendre {
+
+// Numerical computation of Legendre "Optimum-L" polynomials
+
+class PolynomialFinderBase
 {
+public:
+	void solve(int n);
 
-	/*
-	 * Filters with Legendre / "Optimum-L" response characteristics
-	 *
-	 */
+	double* coef() { return m_w; }
 
-	namespace Legendre
+private:
+	void legendre(double* p, int n);
+
+protected:
+	int m_maxN   = 0;
+	double* m_w  = nullptr;
+	double* m_a  = nullptr;
+	double* m_p  = nullptr;
+	double* m_s  = nullptr;
+	double* m_v  = nullptr;
+	double* m_aa = nullptr;
+	double* m_bb = nullptr;
+};
+
+template <int maxN>
+class PolynomialFinder : public PolynomialFinderBase
+{
+public:
+	PolynomialFinder()
 	{
+		m_maxN = maxN;
+		m_w    = m_ws;
+		m_a    = m_as;
+		m_p    = m_ps;
+		m_s    = m_ss;
+		m_v    = m_vs;
+		m_aa   = m_aas;
+		m_bb   = m_bbs;
+	}
 
-		// Numerical computation of Legendre "Optimum-L" polynomials
+	void solve(int n)
+	{
+		assert(n <= maxN);
+		PolynomialFinderBase::solve(n);
+	}
 
-		class PolynomialFinderBase
-		{
-		public:
-			void solve(int n);
+private:
+	double m_ws [2 * maxN + 1];
+	double m_as [ maxN + 1];
+	double m_ps [2 * maxN + 1];
+	double m_ss [2 * maxN + 1];
+	double m_vs [2 * maxN + 4];
+	double m_aas [ maxN + 1];
+	double m_bbs [ maxN + 1];
+};
 
-			double* coef() { return m_w; }
+//------------------------------------------------------------------------------
 
-		private:
-			void legendre(double* p, int n);
+// A Workspace is necessary to construct the polynomial and find its roots
 
-		protected:
-			int m_maxN   = 0;
-			double* m_w  = nullptr;
-			double* m_a  = nullptr;
-			double* m_p  = nullptr;
-			double* m_s  = nullptr;
-			double* m_v  = nullptr;
-			double* m_aa = nullptr;
-			double* m_bb = nullptr;
-		};
+struct WorkspaceBase
+{
+	WorkspaceBase(PolynomialFinderBase* polyBase, RootFinderBase* rootsBase) : poly(*polyBase), roots(*rootsBase) { }
 
-		template <int maxN>
-		class PolynomialFinder : public PolynomialFinderBase
-		{
-		public:
-			PolynomialFinder()
-			{
-				m_maxN = maxN;
-				m_w    = m_ws;
-				m_a    = m_as;
-				m_p    = m_ps;
-				m_s    = m_ss;
-				m_v    = m_vs;
-				m_aa   = m_aas;
-				m_bb   = m_bbs;
-			}
+	PolynomialFinderBase& poly;
+	RootFinderBase& roots;
 
-			void solve(int n)
-			{
-				assert(n <= maxN);
-				PolynomialFinderBase::solve(n);
-			}
+private:
+	WorkspaceBase(WorkspaceBase&);
+	WorkspaceBase& operator=(WorkspaceBase&);
+};
 
-		private:
-			double m_ws [2 * maxN + 1];
-			double m_as [ maxN + 1];
-			double m_ps [2 * maxN + 1];
-			double m_ss [2 * maxN + 1];
-			double m_vs [2 * maxN + 4];
-			double m_aas [ maxN + 1];
-			double m_bbs [ maxN + 1];
-		};
+template <int MaxOrder>
+struct Workspace : WorkspaceBase
+{
+	Workspace() : WorkspaceBase(&m_poly, &m_roots) { }
 
-		//------------------------------------------------------------------------------
+private:
+	PolynomialFinder<MaxOrder> m_poly;
+	RootFinder<MaxOrder * 2> m_roots;
+};
 
-		// A Workspace is necessary to construct the polynomial and find its roots
+//------------------------------------------------------------------------------
 
-		struct WorkspaceBase
-		{
-			WorkspaceBase(PolynomialFinderBase* polyBase, RootFinderBase* rootsBase) : poly(*polyBase), roots(*rootsBase) { }
+// Half-band analog prototypes (s-plane)
 
-			PolynomialFinderBase& poly;
-			RootFinderBase& roots;
+class AnalogLowPass : public LayoutBase
+{
+public:
+	AnalogLowPass();
 
-		private:
-			WorkspaceBase(WorkspaceBase&);
-			WorkspaceBase& operator=(WorkspaceBase&);
-		};
+	void design(int numPoles, WorkspaceBase* w);
 
-		template <int MaxOrder>
-		struct Workspace : WorkspaceBase
-		{
-			Workspace() : WorkspaceBase(&m_poly, &m_roots) { }
+private:
+	int m_numPoles = 0;
+};
 
-		private:
-			PolynomialFinder<MaxOrder> m_poly;
-			RootFinder<MaxOrder * 2> m_roots;
-		};
+//------------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------------
+// Factored implementations to reduce template instantiations
 
-		// Half-band analog prototypes (s-plane)
+struct LowPassBase : PoleFilterBase<AnalogLowPass>
+{
+	void setup(int order, double sampleRate, double cutoffFrequency, WorkspaceBase* w);
+};
 
-		class AnalogLowPass : public LayoutBase
-		{
-		public:
-			AnalogLowPass();
+struct HighPassBase : PoleFilterBase<AnalogLowPass>
+{
+	void setup(int order, double sampleRate, double cutoffFrequency, WorkspaceBase* w);
+};
 
-			void design(int numPoles, WorkspaceBase* w);
+struct BandPassBase : PoleFilterBase<AnalogLowPass>
+{
+	void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, WorkspaceBase* w);
+};
 
-		private:
-			int m_numPoles = 0;
-		};
+struct BandStopBase : PoleFilterBase<AnalogLowPass>
+{
+	void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, WorkspaceBase* w);
+};
 
-		//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-		// Factored implementations to reduce template instantiations
+//
+// Raw filters
+//
 
-		struct LowPassBase : PoleFilterBase<AnalogLowPass>
-		{
-			void setup(int order, double sampleRate, double cutoffFrequency, WorkspaceBase* w);
-		};
+template <int MaxOrder>
+struct LowPass : PoleFilter<LowPassBase, MaxOrder>
+{
+	void setup(int order, double sampleRate, double cutoffFrequency)
+	{
+		Workspace<MaxOrder> w;
+		LowPassBase::setup(order, sampleRate, cutoffFrequency, &w);
+	}
+};
 
-		struct HighPassBase : PoleFilterBase<AnalogLowPass>
-		{
-			void setup(int order, double sampleRate, double cutoffFrequency, WorkspaceBase* w);
-		};
+template <int MaxOrder>
+struct HighPass : PoleFilter<HighPassBase, MaxOrder>
+{
+	void setup(int order, double sampleRate, double cutoffFrequency)
+	{
+		Workspace<MaxOrder> w;
+		HighPassBase::setup(order, sampleRate, cutoffFrequency, &w);
+	}
+};
 
-		struct BandPassBase : PoleFilterBase<AnalogLowPass>
-		{
-			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, WorkspaceBase* w);
-		};
+template <int MaxOrder>
+struct BandPass : PoleFilter<BandPassBase, MaxOrder, MaxOrder * 2>
+{
+	void setup(int order, double sampleRate, double centerFrequency, double widthFrequency)
+	{
+		Workspace<MaxOrder> w;
+		BandPassBase::setup(order, sampleRate, centerFrequency, widthFrequency, &w);
+	}
+};
 
-		struct BandStopBase : PoleFilterBase<AnalogLowPass>
-		{
-			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, WorkspaceBase* w);
-		};
+template <int MaxOrder>
+struct BandStop : PoleFilter<BandStopBase, MaxOrder, MaxOrder * 2>
+{
+	void setup(int order, double sampleRate, double centerFrequency, double widthFrequency)
+	{
+		Workspace<MaxOrder> w;
+		BandStopBase::setup(order, sampleRate, centerFrequency, widthFrequency, &w);
+	}
+};
 
-		//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-		//
-		// Raw filters
-		//
+//
+// Gui-friendly Design layer
+//
 
-		template <int MaxOrder>
-		struct LowPass : PoleFilter<LowPassBase, MaxOrder>
-		{
-			void setup(int order, double sampleRate, double cutoffFrequency)
-			{
-				Workspace<MaxOrder> w;
-				LowPassBase::setup(order, sampleRate, cutoffFrequency, &w);
-			}
-		};
+namespace Design {
+struct TypeIBase : DesignBase
+{
+	enum
+	{
+		NumParams = 3
+	};
 
-		template <int MaxOrder>
-		struct HighPass : PoleFilter<HighPassBase, MaxOrder>
-		{
-			void setup(int order, double sampleRate, double cutoffFrequency)
-			{
-				Workspace<MaxOrder> w;
-				HighPassBase::setup(order, sampleRate, cutoffFrequency, &w);
-			}
-		};
+	static int getNumParams() { return 3; }
+	static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
+};
 
-		template <int MaxOrder>
-		struct BandPass : PoleFilter<BandPassBase, MaxOrder, MaxOrder * 2>
-		{
-			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency)
-			{
-				Workspace<MaxOrder> w;
-				BandPassBase::setup(order, sampleRate, centerFrequency, widthFrequency, &w);
-			}
-		};
+template <class FilterClass>
+struct TypeI : TypeIBase, FilterClass
+{
+	void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2]); }
+};
 
-		template <int MaxOrder>
-		struct BandStop : PoleFilter<BandStopBase, MaxOrder, MaxOrder * 2>
-		{
-			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency)
-			{
-				Workspace<MaxOrder> w;
-				BandStopBase::setup(order, sampleRate, centerFrequency, widthFrequency, &w);
-			}
-		};
+struct TypeIIBase : DesignBase
+{
+	enum
+	{
+		NumParams = 4
+	};
 
-		//------------------------------------------------------------------------------
+	static int getNumParams() { return 4; }
+	static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
+	static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
+};
 
-		//
-		// Gui-friendly Design layer
-		//
+template <class FilterClass>
+struct TypeII : TypeIIBase, FilterClass
+{
+	void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
+};
 
-		namespace Design
-		{
-			struct TypeIBase : DesignBase
-			{
-				enum
-				{
-					NumParams = 3
-				};
+// Factored kind and name
 
-				static int getNumParams() { return 3; }
-				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
-			};
+struct LowPassDescription
+{
+	static Kind getKind() { return kindLowPass; }
+	static const char* getName() { return "Legendre Low Pass"; }
+};
 
-			template <class FilterClass>
-			struct TypeI : TypeIBase, FilterClass
-			{
-				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2]); }
-			};
+struct HighPassDescription
+{
+	static Kind getKind() { return kindHighPass; }
+	static const char* getName() { return "Legendre High Pass"; }
+};
 
-			struct TypeIIBase : DesignBase
-			{
-				enum
-				{
-					NumParams = 4
-				};
+struct BandPassDescription
+{
+	static Kind getKind() { return kindHighPass; }
+	static const char* getName() { return "Legendre Band Pass"; }
+};
 
-				static int getNumParams() { return 4; }
-				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
-				static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
-			};
+struct BandStopDescription
+{
+	static Kind getKind() { return kindHighPass; }
+	static const char* getName() { return "Legendre Band Stop"; }
+};
 
-			template <class FilterClass>
-			struct TypeII : TypeIIBase, FilterClass
-			{
-				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
-			};
+// This glues on the Order parameter
+template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
+struct OrderBase : TypeClass<FilterClass<MaxOrder>>
+{
+	ParamInfo getParamInfo_1() const
+	{
+		return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue,
+						 &ParamInfo::Int_toString);
+	}
+};
 
-			// Factored kind and name
+//------------------------------------------------------------------------------
 
-			struct LowPassDescription
-			{
-				static Kind getKind() { return kindLowPass; }
-				static const char* getName() { return "Legendre Low Pass"; }
-			};
+//
+// Design filters
+//
 
-			struct HighPassDescription
-			{
-				static Kind getKind() { return kindHighPass; }
-				static const char* getName() { return "Legendre High Pass"; }
-			};
+template <int MaxOrder>
+struct LowPass : OrderBase<MaxOrder, TypeI, Legendre::LowPass>, LowPassDescription {};
 
-			struct BandPassDescription
-			{
-				static Kind getKind() { return kindHighPass; }
-				static const char* getName() { return "Legendre Band Pass"; }
-			};
+template <int MaxOrder>
+struct HighPass : OrderBase<MaxOrder, TypeI, Legendre::HighPass>, HighPassDescription {};
 
-			struct BandStopDescription
-			{
-				static Kind getKind() { return kindHighPass; }
-				static const char* getName() { return "Legendre Band Stop"; }
-			};
+template <int MaxOrder>
+struct BandPass : OrderBase<MaxOrder, TypeII, Legendre::BandPass>, BandPassDescription {};
 
-			// This glues on the Order parameter
-			template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
-			struct OrderBase : TypeClass<FilterClass<MaxOrder>>
-			{
-				ParamInfo getParamInfo_1() const
-				{
-					return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue,
-									 &ParamInfo::Int_toString);
-				}
-			};
-
-			//------------------------------------------------------------------------------
-
-			//
-			// Design filters
-			//
-
-			template <int MaxOrder>
-			struct LowPass : OrderBase<MaxOrder, TypeI, Legendre::LowPass>, LowPassDescription {};
-
-			template <int MaxOrder>
-			struct HighPass : OrderBase<MaxOrder, TypeI, Legendre::HighPass>, HighPassDescription {};
-
-			template <int MaxOrder>
-			struct BandPass : OrderBase<MaxOrder, TypeII, Legendre::BandPass>, BandPassDescription {};
-
-			template <int MaxOrder>
-			struct BandStop : OrderBase<MaxOrder, TypeII, Legendre::BandStop>, BandStopDescription {};
-		} // namespace Design
-	} // namespace Legendre
+template <int MaxOrder>
+struct BandStop : OrderBase<MaxOrder, TypeII, Legendre::BandStop>, BandStopDescription {};
+} // namespace Design
+} // namespace Legendre
 } // namespace Dsp

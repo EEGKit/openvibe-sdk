@@ -253,5 +253,5 @@ public:
 
 	_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxListener)
 };
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Plugins
+}  // namespace OpenViBE

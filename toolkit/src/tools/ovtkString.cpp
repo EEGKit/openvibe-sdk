@@ -12,28 +12,25 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Toolkit;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+namespace String {
+namespace {
+bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
 {
-	namespace Toolkit
-	{
-		namespace String
-		{
-			namespace
-			{
-				bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
-				{
-					for (size_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
-					return false;
-				}
+	for (size_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
+	return false;
+}
 
-				// because std::tolower has multiple signatures,
-				// it can not be easily used in std::transform
-				// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-				template <class TCharT>
-				TCharT ToLower(TCharT c) { return std::tolower(c); }
-			} // namespace
-		} // namespace String
-	}  // namespace Toolkit
+// because std::tolower has multiple signatures,
+// it can not be easily used in std::transform
+// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
+template <class TCharT>
+TCharT ToLower(TCharT c) { return std::tolower(c); }
+
+}  // namespace
+}  // namespace String
+}  // namespace Toolkit
 }  // namespace OpenViBE
 
 size_t String::split(const CString& str, const ISplitCallback& splitCB, uint8_t separator) { return split(str, splitCB, &separator, 1); }

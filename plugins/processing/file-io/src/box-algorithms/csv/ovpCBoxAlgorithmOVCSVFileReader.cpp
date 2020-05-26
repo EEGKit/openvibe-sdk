@@ -59,7 +59,10 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	{
 		OV_ERROR_UNLESS_KRF(m_readerLib->getStreamedMatrixInformation(m_dimSizes, m_channelNames), msg, Kernel::ErrorType::Internal);
 	}
-	else if (m_typeID == OV_TypeId_FeatureVector) { OV_ERROR_UNLESS_KRF(m_readerLib->getFeatureVectorInformation(m_channelNames), msg, Kernel::ErrorType::Internal); }
+	else if (m_typeID == OV_TypeId_FeatureVector)
+	{
+		OV_ERROR_UNLESS_KRF(m_readerLib->getFeatureVectorInformation(m_channelNames), msg, Kernel::ErrorType::Internal);
+	}
 	else if (m_typeID == OV_TypeId_Spectrum)
 	{
 		OV_ERROR_UNLESS_KRF(m_readerLib->getSpectrumInformation(m_channelNames, m_frequencyAbscissa, m_sampling), msg, Kernel::ErrorType::Internal);
@@ -83,14 +86,15 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 
 bool CBoxAlgorithmOVCSVFileReader::processClock(CMessage& /*msg*/)
 {
-	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Failed to mark clock algorithm as ready to process", Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Failed to mark clock algorithm as ready to process",
+						Kernel::ErrorType::Internal);
 	return true;
 }
 
 bool CBoxAlgorithmOVCSVFileReader::process()
 {
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* matrix    = m_algorithmEncoder.getInputMatrix();
+	IMatrix* matrix            = m_algorithmEncoder.getInputMatrix();
 
 	// encode Header if not already encoded
 	if (!m_isHeaderSent)

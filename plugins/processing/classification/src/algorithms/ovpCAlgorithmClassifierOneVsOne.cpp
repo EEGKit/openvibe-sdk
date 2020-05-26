@@ -7,21 +7,20 @@
 #include <utility>
 #include <iostream>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME                      = "OneVsOne";
-	const char* const SUB_CLASSIFIER_IDENTIFIER_NODE_NAME = "SubClassifierIdentifier";
-	const char* const PAIRWISE_DECISION_NAME              = "PairwiseDecision";
-	const char* const ALGORITHM_ID_ATTRIBUTE              = "algorithm-id";
-	const char* const SUB_CLASSIFIER_COUNT_NODE_NAME      = "SubClassifierCount";
-	const char* const SUB_CLASSIFIERS_NODE_NAME           = "SubClassifiers";
-	const char* const SUB_CLASSIFIER_NODE_NAME            = "SubClassifier";
-	const char* const FIRST_CLASS_ATRRIBUTE_NAME          = "first-class";
-	const char* const SECOND_CLASS_ATTRIBUTE_NAME         = "second-class";
+namespace {
+const char* const TYPE_NODE_NAME                      = "OneVsOne";
+const char* const SUB_CLASSIFIER_IDENTIFIER_NODE_NAME = "SubClassifierIdentifier";
+const char* const PAIRWISE_DECISION_NAME              = "PairwiseDecision";
+const char* const ALGORITHM_ID_ATTRIBUTE              = "algorithm-id";
+const char* const SUB_CLASSIFIER_COUNT_NODE_NAME      = "SubClassifierCount";
+const char* const SUB_CLASSIFIERS_NODE_NAME           = "SubClassifiers";
+const char* const SUB_CLASSIFIER_NODE_NAME            = "SubClassifier";
+const char* const FIRST_CLASS_ATRRIBUTE_NAME          = "first-class";
+const char* const SECOND_CLASS_ATTRIBUTE_NAME         = "second-class";
 
-	//This map is used to record the decision strategies available for each algorithm
-	//std::map<uint64_t, OpenViBE::CIdentifier> g_oDecisionMap;
-} // namespace
+//This map is used to record the decision strategies available for each algorithm
+//std::map<uint64_t, OpenViBE::CIdentifier> g_oDecisionMap;
+}  // namespace
 
 extern const char* const CLASSIFIER_ROOT;
 
@@ -96,7 +95,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 
 	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->initialize(), "Failed to unitialize decision strategy algorithm", Kernel::ErrorType::Internal);
 
-	TParameterHandler<CIdentifier *> ip_classificationAlgorithm(
+	TParameterHandler<CIdentifier*> ip_classificationAlgorithm(
 		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
 	ip_classificationAlgorithm = &m_subClassifierAlgorithmID;
 	TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
@@ -209,7 +208,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 	//	}
 	//	std::cout << std::endl;
 
-	TParameterHandler<std::vector<classification_info_t> *> ip_infos(
+	TParameterHandler<std::vector<classification_info_t>*> ip_infos(
 		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs));
 	ip_infos = &classificationList;
 
@@ -379,7 +378,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 	TParameterHandler<XML::IXMLNode*> ip_config(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config));
 	ip_config = tempNode->getChild(0);
 
-	TParameterHandler<CIdentifier *> ip_algorithm(
+	TParameterHandler<CIdentifier*> ip_algorithm(
 		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
 	ip_algorithm = &algorithmID;
 

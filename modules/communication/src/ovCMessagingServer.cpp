@@ -132,10 +132,7 @@ bool MessagingServer::addParameter(const uint64_t id, const size_t type, const s
 
 bool MessagingServer::addInput(const uint64_t id, const size_t type, const std::string& name) const { return impl->m_BoxDesc.addInput(id, type, name); }
 
-bool MessagingServer::addOutput(const uint64_t id, const size_t type, const std::string& name) const
-{
-	return impl->m_BoxDesc.addOutput(id, type, name);
-}
+bool MessagingServer::addOutput(const uint64_t id, const size_t type, const std::string& name) const { return impl->m_BoxDesc.addOutput(id, type, name); }
 
 bool MessagingServer::popLog(uint64_t& packetId, ELogLevel& type, std::string& message) { return CMessaging::popLog(packetId, type, message); }
 

@@ -5,33 +5,32 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CKernelDesc final : public IKernelDesc
 {
-	namespace Kernel
+public:
+	IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) override
 	{
-		class CKernelDesc final : public IKernelDesc
-		{
-		public:
-			IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) override
-			{
-				return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
-			}
+		return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
+	}
 
-			IKernelContext* createKernel(const IKernelContext& masterKernelCtx, const CString& applicationName, const CString& configFilename)
-			override { return new CKernelContext(&masterKernelCtx, applicationName, configFilename); }
+	IKernelContext* createKernel(const IKernelContext& masterKernelCtx, const CString& applicationName, const CString& configFilename)
+	override { return new CKernelContext(&masterKernelCtx, applicationName, configFilename); }
 
-			void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
-			CString getName() const override { return CString("OpenViBE Kernel Implementation"); }
-			CString getAuthorName() const override { return CString("Yann Renard"); }
-			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-			CString getShortDescription() const override { return CString("OpenViBE Kernel Implementation"); }
-			CString getDetailedDescription() const override { return CString("OpenViBE Kernel Implementation"); }
-			CString getVersion() const override { return CString("0.5"); }
+	void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
+	CString getName() const override { return CString("OpenViBE Kernel Implementation"); }
+	CString getAuthorName() const override { return CString("Yann Renard"); }
+	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+	CString getShortDescription() const override { return CString("OpenViBE Kernel Implementation"); }
+	CString getDetailedDescription() const override { return CString("OpenViBE Kernel Implementation"); }
+	CString getVersion() const override { return CString("0.5"); }
 
-			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
+};
+
+}  // namespace Kernel
+}  // namespace OpenViBE
 
 static CKernelDesc gKernelDesc;
 

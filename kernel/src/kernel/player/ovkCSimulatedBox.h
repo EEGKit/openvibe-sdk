@@ -10,6 +10,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 class CScheduler;
 
 class CChunk
@@ -47,9 +48,9 @@ public:
 protected:
 
 	CBuffer m_buffer;
-	CTime m_startTime = 0;
-	CTime m_endTime   = 0;
-	bool m_isDeprecated  = false;
+	CTime m_startTime   = 0;
+	CTime m_endTime     = 0;
+	bool m_isDeprecated = false;
 };
 
 class CSimulatedBox final : public TKernelObject<IBoxIO>
@@ -121,5 +122,5 @@ public:
 	std::vector<CTime> m_LastOutputStartTimes;
 	std::vector<CTime> m_LastOutputEndTimes;
 };
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

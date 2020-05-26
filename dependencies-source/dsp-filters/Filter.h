@@ -42,178 +42,171 @@ THE SOFTWARE.
 #include "State.h"
 #include "Types.h"
 
-namespace Dsp
+namespace Dsp {
+
+/*
+ * Filter
+ *
+ * Full abstraction of a digital IIR filter.
+ * Supports run-time introspection and modulation of filter
+ * parameters.
+ *
+ */
+class Filter
 {
+public:
+	virtual ~Filter();
 
-	/*
-	 * Filter
-	 *
-	 * Full abstraction of a digital IIR filter.
-	 * Supports run-time introspection and modulation of filter
-	 * parameters.
-	 *
-	 */
-	class Filter
+	virtual Kind getKind() const = 0;
+
+	virtual const std::string getName() const = 0;
+
+	virtual int getNumParams() const = 0;
+
+	virtual ParamInfo getParamInfo(int index) const = 0;
+
+	Params getDefaultParams() const;
+
+	const Params& getParams() const { return m_params; }
+
+	double getParam(int paramIndex) const
 	{
-	public:
-		virtual ~Filter();
+		assert(paramIndex >= 0 && paramIndex <= getNumParams());
+		return m_params[paramIndex];
+	}
 
-		virtual Kind getKind() const = 0;
+	void setParam(int paramIndex, double nativeValue)
+	{
+		assert(paramIndex >= 0 && paramIndex <= getNumParams());
+		m_params[paramIndex] = nativeValue;
+		doSetParams(m_params);
+	}
 
-		virtual const std::string getName() const = 0;
+	int findParamId(int paramId);
 
-		virtual int getNumParams() const = 0;
+	void setParamById(int paramId, double nativeValue);
 
-		virtual ParamInfo getParamInfo(int index) const = 0;
-
-		Params getDefaultParams() const;
-
-		const Params& getParams() const { return m_params; }
-
-		double getParam(int paramIndex) const
-		{
-			assert(paramIndex >= 0 && paramIndex <= getNumParams());
-			return m_params[paramIndex];
-		}
-
-		void setParam(int paramIndex, double nativeValue)
-		{
-			assert(paramIndex >= 0 && paramIndex <= getNumParams());
-			m_params[paramIndex] = nativeValue;
-			doSetParams(m_params);
-		}
-
-		int findParamId(int paramId);
-
-		void setParamById(int paramId, double nativeValue);
-
-		void setParams(const Params& parameters)
-		{
-			m_params = parameters;
-			doSetParams(parameters);
-		}
+	void setParams(const Params& parameters)
+	{
+		m_params = parameters;
+		doSetParams(parameters);
+	}
 
 #include "FilterSynthesisH.inl"
 
-		// This makes a best-effort to pick up the values
-		// of matching parameters from another set. It uses
-		// the ParamID information to make the match.
-		void copyParamsFrom(Filter const* other);
+	// This makes a best-effort to pick up the values
+	// of matching parameters from another set. It uses
+	// the ParamID information to make the match.
+	void copyParamsFrom(Filter const* other);
 
-		virtual std::vector<PoleZeroPair> getPoleZeros() const = 0;
+	virtual std::vector<PoleZeroPair> getPoleZeros() const = 0;
 
-		virtual complex_t response(double normalizedFrequency) const = 0;
+	virtual complex_t response(double normalizedFrequency) const = 0;
 
-		virtual int getNumChannels() = 0;
-		virtual void reset() = 0;
-		virtual void process(int nSamples, float* const* arrayOfChannels) = 0;
-		virtual void process(int nSamples, double* const* arrayOfChannels) = 0;
+	virtual int getNumChannels() = 0;
+	virtual void reset() = 0;
+	virtual void process(int nSamples, float* const* arrayOfChannels) = 0;
+	virtual void process(int nSamples, double* const* arrayOfChannels) = 0;
 
-	protected:
-		virtual void doSetParams(const Params& parameters) = 0;
+protected:
+	virtual void doSetParams(const Params& parameters) = 0;
 
-	private:
-		Params m_params;
-	};
+private:
+	Params m_params;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	/*
-	 * FilterDesign
-	 *
-	 * This container holds a filter Design (Gui-friendly layer) and
-	 * optionally combines it with the necessary state information to
-	 * process channel data.
-	 *
-	 */
+/*
+ * FilterDesign
+ *
+ * This container holds a filter Design (Gui-friendly layer) and
+ * optionally combines it with the necessary state information to
+ * process channel data.
+ *
+ */
 
-	// Factored to reduce template instantiations
-	template <class DesignClass>
-	class FilterDesignBase : public Filter
+// Factored to reduce template instantiations
+template <class DesignClass>
+class FilterDesignBase : public Filter
+{
+public:
+	Kind getKind() const override { return m_design.getKind(); }
+
+	const std::string getName() const override { return m_design.getName(); }
+
+	int getNumParams() const override { return DesignClass::NumParams; }
+
+	Params getDefaultParams() const { return m_design.getDefaultParams(); }
+
+	ParamInfo getParamInfo(int index) const override
 	{
-	public:
-		Kind getKind() const override { return m_design.getKind(); }
-
-		const std::string getName() const override { return m_design.getName(); }
-
-		int getNumParams() const override { return DesignClass::NumParams; }
-
-		Params getDefaultParams() const { return m_design.getDefaultParams(); }
-
-		ParamInfo getParamInfo(int index) const override
+		switch (index)
 		{
-			switch (index)
-			{
-				case 0: return m_design.getParamInfo_0();
-				case 1: return m_design.getParamInfo_1();
-				case 2: return m_design.getParamInfo_2();
-				case 3: return m_design.getParamInfo_3();
-				case 4: return m_design.getParamInfo_4();
-				case 5: return m_design.getParamInfo_5();
-				case 6: return m_design.getParamInfo_6();
-				case 7: return m_design.getParamInfo_7();
-				default: return ParamInfo();
-			}
+			case 0: return m_design.getParamInfo_0();
+			case 1: return m_design.getParamInfo_1();
+			case 2: return m_design.getParamInfo_2();
+			case 3: return m_design.getParamInfo_3();
+			case 4: return m_design.getParamInfo_4();
+			case 5: return m_design.getParamInfo_5();
+			case 6: return m_design.getParamInfo_6();
+			case 7: return m_design.getParamInfo_7();
+			default: return ParamInfo();
 		}
+	}
 
-		std::vector<PoleZeroPair> getPoleZeros() const override { return m_design.getPoleZeros(); }
+	std::vector<PoleZeroPair> getPoleZeros() const override { return m_design.getPoleZeros(); }
 
-		complex_t response(double normalizedFrequency) const override { return m_design.response(normalizedFrequency); }
+	complex_t response(double normalizedFrequency) const override { return m_design.response(normalizedFrequency); }
 
-	protected:
-		void doSetParams(const Params& parameters) override { m_design.setParams(parameters); }
+protected:
+	void doSetParams(const Params& parameters) override { m_design.setParams(parameters); }
 
 #include "FilterSynthesisH2.inl"
 
-		DesignClass m_design;
-	};
+	DesignClass m_design;
+};
 
 
-	template <class DesignClass, int Channels = 0, class StateType = DirectFormII>
-	class FilterDesign : public FilterDesignBase<DesignClass>
-	{
-	public:
-		FilterDesign() { }
+template <class DesignClass, int Channels = 0, class StateType = DirectFormII>
+class FilterDesign : public FilterDesignBase<DesignClass>
+{
+public:
+	FilterDesign() { }
 
-		int getNumChannels() override { return Channels; }
-		void reset() override { m_state.reset(); }
+	int getNumChannels() override { return Channels; }
+	void reset() override { m_state.reset(); }
 
-		void process(int nSamples, float* const* arrayOfChannels) override
-		{
-			m_state.process(nSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design);
-		}
+	void process(int nSamples, float* const* arrayOfChannels) override { m_state.process(nSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
 
-		void process(int nSamples, double* const* arrayOfChannels) override
-		{
-			m_state.process(nSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design);
-		}
+	void process(int nSamples, double* const* arrayOfChannels) override { m_state.process(nSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
 
-	protected:
-		ChannelsState<Channels, typename DesignClass::template State<StateType>> m_state;
-	};
+protected:
+	ChannelsState<Channels, typename DesignClass::template State<StateType>> m_state;
+};
 
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-	/*
-	 * This container combines a raw filter with state information
-	 * so it can process channels. In order to set up the filter you
-	 * must call a setup function directly. Smooth changes are
-	 * not supported, but this class has a smaller footprint.
-	 *
-	 */
-	template <class FilterClass, int Channels = 0, class StateType = DirectFormII>
-	class SimpleFilter : public FilterClass
-	{
-	public:
-		int getNumChannels() { return Channels; }
-		void reset() { m_state.reset(); }
+/*
+ * This container combines a raw filter with state information
+ * so it can process channels. In order to set up the filter you
+ * must call a setup function directly. Smooth changes are
+ * not supported, but this class has a smaller footprint.
+ *
+ */
+template <class FilterClass, int Channels = 0, class StateType = DirectFormII>
+class SimpleFilter : public FilterClass
+{
+public:
+	int getNumChannels() { return Channels; }
+	void reset() { m_state.reset(); }
 
-		template <typename Sample>
-		void process(int nSamples, Sample* const* arrayOfChannels) { m_state.process(nSamples, arrayOfChannels, *static_cast<FilterClass*>(this)); }
+	template <typename Sample>
+	void process(int nSamples, Sample* const* arrayOfChannels) { m_state.process(nSamples, arrayOfChannels, *static_cast<FilterClass*>(this)); }
 
-	protected:
-		ChannelsState<Channels, typename FilterClass::template State<StateType>> m_state;
-	};
+protected:
+	ChannelsState<Channels, typename FilterClass::template State<StateType>> m_state;
+};
 } // namespace Dsp
 
 #endif

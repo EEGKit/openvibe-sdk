@@ -303,7 +303,6 @@
 #define OVTK_UNIT_Degree_Per_Second													100001
 
 
-
 //__________________________________________________________________//
 //																	//
 // Measurement Factors												//

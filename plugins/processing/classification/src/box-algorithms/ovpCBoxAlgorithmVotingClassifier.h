@@ -132,6 +132,6 @@ public:
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_VotingClassifierDesc)
 };
 
-} // namespace Classification
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE

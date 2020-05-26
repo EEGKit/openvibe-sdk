@@ -28,4 +28,4 @@ public:
 	CTime m_Date;										///< Date of the Stimulation.
 	CTime m_Duration;									///< Duration of the Stimulation.
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

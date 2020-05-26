@@ -27,103 +27,102 @@ using namespace /*OpenViBE::*/Plugins;
 //___________________________________________________________________//
 //                                                                   //
 
-namespace
+namespace {
+template <class T>
+struct STestTrue
 {
-	template <class T>
-	struct STestTrue
+	bool operator()(typename map<CIdentifier, T>::const_iterator /*it*/) const { return true; }
+};
+
+struct STestEqSourceBox
+{
+	explicit STestEqSourceBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getSourceBoxIdentifier() == m_BoxId; }
+	const CIdentifier& m_BoxId;
+};
+
+struct STestEqSourceBoxOutput
+{
+	STestEqSourceBoxOutput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_OutputIdx(index) { }
+
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
 	{
-		bool operator()(typename map<CIdentifier, T>::const_iterator /*it*/) const { return true; }
-	};
-
-	struct STestEqSourceBox
-	{
-		explicit STestEqSourceBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getSourceBoxIdentifier() == m_BoxId; }
-		const CIdentifier& m_BoxId;
-	};
-
-	struct STestEqSourceBoxOutput
-	{
-		STestEqSourceBoxOutput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_OutputIdx(index) { }
-
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
-		{
-			return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIdx;
-		}
-
-		const CIdentifier& m_BoxId;
-		size_t m_OutputIdx;
-	};
-
-	struct STestEqTargetBox
-	{
-		explicit STestEqTargetBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getTargetBoxIdentifier() == m_BoxId; }
-		const CIdentifier& m_BoxId;
-	};
-
-	struct STestEqTargetBoxInput
-	{
-		STestEqTargetBoxInput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_InputIdx(index) { }
-
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
-		{
-			return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIdx;
-		}
-
-		const CIdentifier& m_BoxId;
-		size_t m_InputIdx;
-	};
-
-	template <class T, class TTest>
-	CIdentifier getNextID(const map<CIdentifier, T>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
-	{
-		typename map<CIdentifier, T>::const_iterator it;
-
-		if (previousID == OV_UndefinedIdentifier) { it = elementMap.begin(); }
-		else
-		{
-			it = elementMap.find(previousID);
-			if (it == elementMap.end()) { return OV_UndefinedIdentifier; }
-			++it;
-		}
-
-		while (it != elementMap.end())
-		{
-			if (testFunctor(it)) { return it->first; }
-			++it;
-		}
-
-		return OV_UndefinedIdentifier;
+		return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIdx;
 	}
 
-	/*
-	template <class T, class TTest>
-	CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+	const CIdentifier& m_BoxId;
+	size_t m_OutputIdx;
+};
+
+struct STestEqTargetBox
+{
+	explicit STestEqTargetBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getTargetBoxIdentifier() == m_BoxId; }
+	const CIdentifier& m_BoxId;
+};
+
+struct STestEqTargetBoxInput
+{
+	STestEqTargetBoxInput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_InputIdx(index) { }
+
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
 	{
-		typename map<CIdentifier, T*>::const_iterator it;
-
-		if(previousID==OV_UndefinedIdentifier)
-		{
-			it=elementMap.begin();
-		}
-		else
-		{
-			it=elementMap.find(previousID);
-			if(it==elementMap.end()) { return OV_UndefinedIdentifier; }
-			++it;
-		}
-
-		while(it!=elementMap.end())
-		{
-			if(testFunctor(it)) { return it->first; }
-			++it;
-		}
-
-		return OV_UndefinedIdentifier;
+		return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIdx;
 	}
-	*/
-} // namespace
+
+	const CIdentifier& m_BoxId;
+	size_t m_InputIdx;
+};
+
+template <class T, class TTest>
+CIdentifier getNextID(const map<CIdentifier, T>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+{
+	typename map<CIdentifier, T>::const_iterator it;
+
+	if (previousID == OV_UndefinedIdentifier) { it = elementMap.begin(); }
+	else
+	{
+		it = elementMap.find(previousID);
+		if (it == elementMap.end()) { return OV_UndefinedIdentifier; }
+		++it;
+	}
+
+	while (it != elementMap.end())
+	{
+		if (testFunctor(it)) { return it->first; }
+		++it;
+	}
+
+	return OV_UndefinedIdentifier;
+}
+
+/*
+template <class T, class TTest>
+CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+{
+	typename map<CIdentifier, T*>::const_iterator it;
+
+	if(previousID==OV_UndefinedIdentifier)
+	{
+		it=elementMap.begin();
+	}
+	else
+	{
+		it=elementMap.find(previousID);
+		if(it==elementMap.end()) { return OV_UndefinedIdentifier; }
+		++it;
+	}
+
+	while(it!=elementMap.end())
+	{
+		if(testFunctor(it)) { return it->first; }
+		++it;
+	}
+
+	return OV_UndefinedIdentifier;
+}
+*/
+}  // namespace
 
 //___________________________________________________________________//
 //                                                                   //

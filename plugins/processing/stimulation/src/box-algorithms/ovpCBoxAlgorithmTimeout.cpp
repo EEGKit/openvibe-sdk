@@ -107,6 +107,6 @@ bool CBoxAlgorithmTimeout::process()
 	return true;
 }
 
-} // namespace Stimulation
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -61,7 +61,7 @@ inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	os << id.str();
 	return os;
 }
-} // namespace OpenViBE
+}  // namespace OpenViBE
 
 /**
  * \def OV_WARNING_LOG(message, logManager)

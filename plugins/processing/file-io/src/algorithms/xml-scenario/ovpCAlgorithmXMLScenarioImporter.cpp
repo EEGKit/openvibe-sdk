@@ -20,60 +20,59 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
 using namespace /*OpenViBE::*/Toolkit;
 
-namespace
+namespace {
+class _AutoBind_
 {
-	class _AutoBind_
+public:
+	explicit _AutoBind_(const std::string& value) : m_value(value) { }
+	operator CString() const { return CString(m_value.c_str()); }
+
+	operator CIdentifier() const
 	{
-	public:
-		explicit _AutoBind_(const std::string& value) : m_value(value) { }
-		operator CString() const { return CString(m_value.c_str()); }
-
-		operator CIdentifier() const
-		{
-			CIdentifier res;
-			res.fromString(m_value.c_str());
-			return res;
-		}
-
-		operator size_t() { return atoi(m_value.c_str()); }
-	protected:
-		const std::string& m_value;
-	};
-
-	std::string xercesToString(const XMLCh* xercesString)
-	{
-		const std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
-		return std::string(charArray.get());
+		CIdentifier res;
+		res.fromString(m_value.c_str());
+		return res;
 	}
 
-	class CErrorHandler final : public HandlerBase
+	operator size_t() { return atoi(m_value.c_str()); }
+protected:
+	const std::string& m_value;
+};
+
+std::string xercesToString(const XMLCh* xercesString)
+{
+	const std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
+	return std::string(charArray.get());
+}
+
+class CErrorHandler final : public HandlerBase
+{
+public:
+
+	explicit CErrorHandler(IAlgorithmContext& algorithmCtx)
+		: m_algorithmContext(algorithmCtx) { }
+
+	void fatalError(const SAXParseException& exception) override { this->error(exception); }
+
+	void error(const SAXParseException& exception) override
 	{
-	public:
+		// we just issue a trace here because the calling method
+		// implements a fallback mechanism and we don't want to populate
+		// the error manager if the importer returns gracefully.
+		m_algorithmContext.getLogManager() << LogLevel_Trace << "Failed to validate xml: error [" << xercesToString(exception.getMessage())
+				<< "], line number [" << size_t(exception.getLineNumber()) << "]" << "\n";
+	}
 
-		explicit CErrorHandler(IAlgorithmContext& algorithmCtx)
-			: m_algorithmContext(algorithmCtx) { }
+	void warning(const SAXParseException& exception) override
+	{
+		OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()) << "], line number ["
+				   << size_t(exception.getLineNumber()) << "]", m_algorithmContext.getLogManager());
+	}
 
-		void fatalError(const SAXParseException& exception) override { this->error(exception); }
-
-		void error(const SAXParseException& exception) override
-		{
-			// we just issue a trace here because the calling method
-			// implements a fallback mechanism and we don't want to populate
-			// the error manager if the importer returns gracefully.
-			m_algorithmContext.getLogManager() << LogLevel_Trace << "Failed to validate xml: error [" << xercesToString(exception.getMessage())
-					<< "], line number [" << size_t(exception.getLineNumber()) << "]" << "\n";
-		}
-
-		void warning(const SAXParseException& exception) override
-		{
-			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()) << "], line number ["
-					   << size_t(exception.getLineNumber()) << "]", m_algorithmContext.getLogManager());
-		}
-
-	private:
-		IAlgorithmContext& m_algorithmContext;
-	};
-} //namespace
+private:
+	IAlgorithmContext& m_algorithmContext;
+};
+}  // namespace
 
 CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter() { m_reader = createReader(*this); }
 

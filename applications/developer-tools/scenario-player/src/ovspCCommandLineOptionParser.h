@@ -24,41 +24,40 @@
 #include "ovsp_defines.h"
 #include "ovspICommandParser.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+/**
+* \class CommandLineOptionParser
+* \author cgarraud (INRIA)
+* \date 2016-01-27
+* \brief Parser implementation that parses command from command-line arguments
+* \ingroup ScenarioPlayer
+*
+* The current implementation retrieves the options from a ProgramOptions parser and
+* simply builds the commands from the parsed options.
+*
+*/
+class CommandLineOptionParser final : public ICommandParser
 {
+public:
+
 	/**
-	* \class CommandLineOptionParser
-	* \author cgarraud (INRIA)
-	* \date 2016-01-27
-	* \brief Parser implementation that parses command from command-line arguments
-	* \ingroup ScenarioPlayer
 	*
-	* The current implementation retrieves the options from a ProgramOptions parser and
-	* simply builds the commands from the parsed options.
+	* \brief Constructor
+	* \param[in] parser Specific instantiation of ProgramOptions parser
 	*
 	*/
-	class CommandLineOptionParser final : public ICommandParser
-	{
-	public:
+	explicit CommandLineOptionParser(ProgramOptionParser& parser);
 
-		/**
-		*
-		* \brief Constructor
-		* \param[in] parser Specific instantiation of ProgramOptions parser
-		*
-		*/
-		explicit CommandLineOptionParser(ProgramOptionParser& parser);
+	void initialize() override;
+	void uninitialize() override;
 
-		void initialize() override;
-		void uninitialize() override;
+	std::vector<std::shared_ptr<SCommand>> getCommandList() const override;
 
-		std::vector<std::shared_ptr<SCommand>> getCommandList() const override;
+	EPlayerReturnCodes parse() override;
 
-		EPlayerReturnCodes parse() override;
+private:
 
-	private:
-
-		ProgramOptionParser& m_parser;
-		std::vector<std::shared_ptr<SCommand>> m_cmdList;
-	};
+	ProgramOptionParser& m_parser;
+	std::vector<std::shared_ptr<SCommand>> m_cmdList;
+};
 }	// namespace OpenViBE

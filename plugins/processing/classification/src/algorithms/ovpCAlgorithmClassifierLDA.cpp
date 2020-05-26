@@ -21,15 +21,14 @@ using namespace /*OpenViBE::Plugins::*/Classification;
 
 using namespace Eigen;
 
-namespace
-{
-	const char* const TYPE_NODE_NAME    = "LDA";
-	const char* const CLASSES_NODE_NAME = "Classes";
-	//const char* const COEFFICIENTS_NODE_NAME = "Weights";
-	//const char* const BIAS_DISTANCE_NODE_NAME = "Bias-distance";
-	//const char* const COEFFICIENT_PROBABILITY_NODE_NAME = "Coefficient-probability";
-	const char* const COMPUTATION_HELPERS_CONFIGURATION_NODE = "Class-config-list";
-	const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
+namespace {
+const char* const TYPE_NODE_NAME    = "LDA";
+const char* const CLASSES_NODE_NAME = "Classes";
+//const char* const COEFFICIENTS_NODE_NAME = "Weights";
+//const char* const BIAS_DISTANCE_NODE_NAME = "Bias-distance";
+//const char* const COEFFICIENT_PROBABILITY_NODE_NAME = "Coefficient-probability";
+const char* const COMPUTATION_HELPERS_CONFIGURATION_NODE = "Class-config-list";
+const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
 }
 
 extern const char* const CLASSIFIER_ROOT;

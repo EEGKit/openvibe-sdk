@@ -66,7 +66,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	for (size_t chunk = 0; chunk < boxCtx.getInputChunkCount(INPUT_SIGNAL_IDX); ++chunk)
 	{
 		OV_ERROR_UNLESS_KRF(m_signalDecoder.decode(chunk), "Failed to decode chunk", Kernel::ErrorType::Internal);
-		IMatrix* iMatrix         = m_signalDecoder.getOutputMatrix();
+		IMatrix* iMatrix      = m_signalDecoder.getOutputMatrix();
 		CTime iChunkStartTime = boxCtx.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
 		CTime iChunkEndTime   = boxCtx.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
 
@@ -250,6 +250,6 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	return true;
 }
 
-} // namespace SignalProcessing
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

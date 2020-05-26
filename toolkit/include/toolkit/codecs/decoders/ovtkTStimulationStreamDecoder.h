@@ -6,73 +6,71 @@
 
 #include "ovtkTDecoder.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+template <class T>
+class TStimulationDecoderLocal : public T
 {
-	namespace Toolkit
+protected:
+
+	Kernel::TParameterHandler<CStimulationSet*> m_oStimulationSet;
+
+	using T::m_codec;
+	using T::m_boxAlgorithm;
+	using T::m_iBuffer;
+
+	bool initializeImpl()
 	{
-		template <class T>
-		class TStimulationDecoderLocal : public T
-		{
-		protected:
+		m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(
+			m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
+		m_codec->initialize();
+		m_oStimulationSet.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
+		m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
 
-			Kernel::TParameterHandler<CStimulationSet*> m_oStimulationSet;
+		return true;
+	}
 
-			using T::m_codec;
-			using T::m_boxAlgorithm;
-			using T::m_iBuffer;
+public:
+	using T::initialize;
 
-			bool initializeImpl()
-			{
-				m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(
-					m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationDecoder));
-				m_codec->initialize();
-				m_oStimulationSet.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
-				m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_StimulationDecoder_InputParameterId_MemoryBufferToDecode));
+	bool uninitialize()
+	{
+		if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
-				return true;
-			}
+		m_oStimulationSet.uninitialize();
+		m_iBuffer.uninitialize();
+		m_codec->uninitialize();
+		m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
+		m_boxAlgorithm = NULL;
 
-		public:
-			using T::initialize;
+		return true;
+	}
 
-			bool uninitialize()
-			{
-				if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
+	Kernel::TParameterHandler<CStimulationSet*>& getOutputStimulationSet() { return m_oStimulationSet; }
 
-				m_oStimulationSet.uninitialize();
-				m_iBuffer.uninitialize();
-				m_codec->uninitialize();
-				m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
-				m_boxAlgorithm = NULL;
+	virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader); }
+	virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer); }
+	virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedEnd); }
+};
 
-				return true;
-			}
+template <class T>
+class TStimulationDecoder : public TStimulationDecoderLocal<TDecoder<T>>
+{
+	using TStimulationDecoderLocal<TDecoder<T>>::m_boxAlgorithm;
+public:
+	using TStimulationDecoderLocal<TDecoder<T>>::uninitialize;
 
-			Kernel::TParameterHandler<CStimulationSet*>& getOutputStimulationSet() { return m_oStimulationSet; }
+	TStimulationDecoder() { }
 
-			virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader); }
-			virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer); }
-			virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedEnd); }
-		};
+	TStimulationDecoder(T& boxAlgorithm, size_t index)
+	{
+		m_boxAlgorithm = NULL;
+		this->initialize(boxAlgorithm, index);
+	}
 
-		template <class T>
-		class TStimulationDecoder : public TStimulationDecoderLocal<TDecoder<T>>
-		{
-			using TStimulationDecoderLocal<TDecoder<T>>::m_boxAlgorithm;
-		public:
-			using TStimulationDecoderLocal<TDecoder<T>>::uninitialize;
-
-			TStimulationDecoder() { }
-
-			TStimulationDecoder(T& boxAlgorithm, size_t index)
-			{
-				m_boxAlgorithm = NULL;
-				this->initialize(boxAlgorithm, index);
-			}
-
-			virtual ~TStimulationDecoder() { this->uninitialize(); }
-		};
-	}  // namespace Toolkit
+	virtual ~TStimulationDecoder() { this->uninitialize(); }
+};
+}  // namespace Toolkit
 }  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

@@ -128,7 +128,7 @@ bool CSimulatedBox::processClock()
 		}
 	}
 
-	if ((m_clockFrequency != CTime(0)) 
+	if ((m_clockFrequency != CTime(0))
 		&& (m_lastClockActivationDate == CTime::max() || CTime(m_scheduler.getCurrentTime()) - m_lastClockActivationDate >= m_clockActivationStep))
 	{
 		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);

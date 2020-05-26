@@ -5,64 +5,64 @@
 #include <map>
 #include <list>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+
+enum class ESchedulerInitialization { Success, BoxInitializationFailed, Failed };
+
+class CSimulatedBox;
+class CChunk;
+class CPlayer;
+
+class CScheduler final : public TKernelObject<IKernelObject>
 {
-	namespace Kernel
-	{
-		enum class ESchedulerInitialization { Success, BoxInitializationFailed, Failed };
+public:
 
-		class CSimulatedBox;
-		class CChunk;
-		class CPlayer;
+	CScheduler(const IKernelContext& ctx, CPlayer& player);
+	~CScheduler() override;
 
-		class CScheduler final : public TKernelObject<IKernelObject>
-		{
-		public:
+	bool setScenario(const CIdentifier& scenarioID);
+	bool setFrequency(uint64_t frequency);
 
-			CScheduler(const IKernelContext& ctx, CPlayer& player);
-			~CScheduler() override;
+	bool isHoldingResources() const;
 
-			bool setScenario(const CIdentifier& scenarioID);
-			bool setFrequency(uint64_t frequency);
+	ESchedulerInitialization initialize();
+	bool uninitialize();
+	bool loop();
 
-			bool isHoldingResources() const;
+	bool sendInput(const CChunk& chunk, const CIdentifier& boxId, size_t index);
+	CTime getCurrentTime() const { return m_currentTime; }
+	uint64_t getCurrentLateness() const;
+	uint64_t getFrequency() const { return m_frequency; }
+	uint64_t getStepDuration() const { return m_stepDuration; }
+	double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
+	double getFastForwardMaximumFactor() const;
 
-			ESchedulerInitialization initialize();
-			bool uninitialize();
-			bool loop();
+	_IsDerivedFromClass_Final_(TKernelObject<IKernelObject>, OVK_ClassId_Kernel_Player_Scheduler)
 
-			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, size_t index);
-			CTime getCurrentTime() const { return m_currentTime; }
-			uint64_t getCurrentLateness() const;
-			uint64_t getFrequency() const { return m_frequency; }
-			uint64_t getStepDuration() const { return m_stepDuration; }
-			double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
-			double getFastForwardMaximumFactor() const;
+	CPlayer& getPlayer() const { return m_rPlayer; }
 
-			_IsDerivedFromClass_Final_(TKernelObject<IKernelObject>, OVK_ClassId_Kernel_Player_Scheduler)
+protected:
 
-			CPlayer& getPlayer() const { return m_rPlayer; }
+	CPlayer& m_rPlayer;
+	CIdentifier m_scenarioID = OV_UndefinedIdentifier;
+	IScenario* m_scenario    = nullptr;
+	size_t m_steps           = 0;
+	uint64_t m_frequency     = 0;
+	CTime m_stepDuration     = 0;
+	CTime m_currentTime      = 0;
 
-		protected:
+	std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_simulatedBoxes;
+	std::map<CIdentifier, System::CChrono> m_simulatedBoxChronos;
+	std::map<CIdentifier, std::map<size_t, std::list<CChunk>>> m_simulatedBoxInputs;
 
-			CPlayer& m_rPlayer;
-			CIdentifier m_scenarioID = OV_UndefinedIdentifier;
-			IScenario* m_scenario    = nullptr;
-			size_t m_steps           = 0;
-			uint64_t m_frequency     = 0;
-			CTime m_stepDuration  = 0;
-			CTime m_currentTime   = 0;
+private:
 
-			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_simulatedBoxes;
-			std::map<CIdentifier, System::CChrono> m_simulatedBoxChronos;
-			std::map<CIdentifier, std::map<size_t, std::list<CChunk>>> m_simulatedBoxInputs;
+	void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
+	bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxID);
+	bool flattenScenario();
+	System::CChrono m_oBenchmarkChrono;
+};
 
-		private:
-
-			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
-			bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxID);
-			bool flattenScenario();
-			System::CChrono m_oBenchmarkChrono;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

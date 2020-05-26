@@ -29,7 +29,7 @@ bool CStimulationEncoder::processBuffer()
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations);
 	m_writerHelper->setUInt(set.size());
 	m_writerHelper->closeChild();
-	for(const auto& s : set)
+	for (const auto& s : set)
 	{
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation);
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_ID);

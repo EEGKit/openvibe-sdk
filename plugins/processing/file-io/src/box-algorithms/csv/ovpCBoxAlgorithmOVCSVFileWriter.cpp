@@ -106,7 +106,8 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 
 bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 {
-	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Error while marking algorithm as ready to process", Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Error while marking algorithm as ready to process",
+						Kernel::ErrorType::Internal);
 	return true;
 }
 
@@ -242,10 +243,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 			if (m_typeID == OV_TypeId_Signal)
 			{
-				const uint64_t sampling       = m_streamDecoder.getOutputSamplingRate();
+				const uint64_t sampling    = m_streamDecoder.getOutputSamplingRate();
 				const CTime chunkStartTime = boxCtx.getInputChunkStartTime(0, i);
-				const size_t nChannel         = matrix->getDimensionSize(0);
-				const size_t nSample          = matrix->getDimensionSize(1);
+				const size_t nChannel      = matrix->getDimensionSize(0);
+				const size_t nSample       = matrix->getDimensionSize(1);
 
 				for (size_t sampleIndex = 0; sampleIndex < nSample; ++sampleIndex)
 				{
@@ -254,8 +255,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 					const CTime timeOfNthSample       = CTime(sampling, sampleIndex); // assuming chunk start is 0
 					const CTime timeOfNthAndOneSample = CTime(sampling, sampleIndex + 1);
-					const double startTime               = (chunkStartTime + timeOfNthSample).toSeconds();
-					const double endTime                 = (chunkStartTime + timeOfNthAndOneSample).toSeconds();
+					const double startTime            = (chunkStartTime + timeOfNthSample).toSeconds();
+					const double endTime              = (chunkStartTime + timeOfNthAndOneSample).toSeconds();
 
 					// get matrix values
 					for (size_t channelIndex = 0; channelIndex < nChannel; ++channelIndex)
@@ -338,7 +339,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 										"Details: " + m_writerLib->getLastErrorString())).c_str(),
 									Kernel::ErrorType::Internal);
 			}
-			
+
 			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
 			OV_ERROR_UNLESS_KRF(
 				m_writerLib->noEventsUntilDate(CTime(boxCtx.getInputChunkEndTime(1, (boxCtx.getInputChunkCount(1) - 1))).toSeconds()),

@@ -28,31 +28,30 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
-namespace SigProSTD
+namespace SigProSTD {
+template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr, typename std::enable_if<std::is_unsigned<T>::value>::type* =
+				  nullptr>
+T gcd(T a, T b)
 {
-	template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr, typename std::enable_if<std::is_unsigned<T>::value>::type* =
-					  nullptr>
-	T gcd(T a, T b)
+	T t;
+
+	if (a > b) // ensure b > a
 	{
-		T t;
-
-		if (a > b) // ensure b > a
-		{
-			t = b;
-			b = a;
-			a = t;
-		}
-
-		while (b != 0)
-		{
-			t = a % b;
-			a = b;
-			b = t;
-		}
-
-		return a;
+		t = b;
+		b = a;
+		a = t;
 	}
-} // namespace SigProSTD
+
+	while (b != 0)
+	{
+		t = a % b;
+		a = b;
+		b = t;
+	}
+
+	return a;
+}
+}  // namespace SigProSTD
 
 bool CBoxAlgorithmSignalResampling::initialize()
 {

@@ -33,7 +33,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 	const std::string name = argv[1];
 	char* end;
 	const size_t port = strtol(argv[2], &end, 10);
-	
+
 	// basic tests on server and clients
 
 	Socket::IConnectionServer* server = Socket::createConnectionServer();
@@ -68,7 +68,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 	OVT_ASSERT(client->connect(name.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
 	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
 	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
-	
+
 	// Release ressources
 
 	server->release();

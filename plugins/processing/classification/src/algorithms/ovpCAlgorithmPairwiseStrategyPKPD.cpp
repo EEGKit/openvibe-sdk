@@ -4,9 +4,8 @@
 
 #include <iostream>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME = "PairwiseDecision_PKDP";
+namespace {
+const char* const TYPE_NODE_NAME = "PairwiseDecision_PKDP";
 }
 
 

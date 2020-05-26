@@ -11,30 +11,29 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
 using namespace std;
 
-namespace
+namespace {
+vector<string> split(const string& sString, const string& c)
 {
-	vector<string> split(const string& sString, const string& c)
+	vector<string> result;
+	size_t i = 0;
+	size_t j;
+	while ((j = sString.find(c, i)) != string::npos)
 	{
-		vector<string> result;
-		size_t i = 0;
-		size_t j;
-		while ((j = sString.find(c, i)) != string::npos)
-		{
-			result.push_back(string(sString, i, j - i));
-			i = j + c.size();
-		}
-		//the last element without the \n character
-		result.push_back(string(sString, i, sString.size() - 1 - i));
-
-		return result;
+		result.push_back(string(sString, i, j - i));
+		i = j + c.size();
 	}
+	//the last element without the \n character
+	result.push_back(string(sString, i, sString.size() - 1 - i));
 
-	void clearMatrix(vector<vector<string>>& vMatrix)
-	{
-		for (size_t i = 0; i < vMatrix.size(); ++i) { vMatrix[i].clear(); }
-		vMatrix.clear();
-	}
-} // namespace
+	return result;
+}
+
+void clearMatrix(vector<vector<string>>& vMatrix)
+{
+	for (size_t i = 0; i < vMatrix.size(); ++i) { vMatrix[i].clear(); }
+	vMatrix.clear();
+}
+}  // namespace
 
 bool CBoxAlgorithmCSVFileReader::initialize()
 {
@@ -266,7 +265,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* iMatrix   = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* iMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -323,7 +322,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 							Kernel::ErrorType::BadParsing);
 
 		const CTime date     = CTime(atof(m_dataMatrices[i][0].c_str()));
-		const uint64_t id       = uint64_t(atof(m_dataMatrices[i][1].c_str()));
+		const uint64_t id    = uint64_t(atof(m_dataMatrices[i][1].c_str()));
 		const CTime duration = CTime(atof(m_dataMatrices[i][2].c_str()));
 
 		ip_stimSet.append(CStimulation(id, date, duration));
@@ -343,7 +342,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 bool CBoxAlgorithmCSVFileReader::processSignal()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* iMatrix   = static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* iMatrix       = static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -394,7 +393,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* iMatrix   = static_cast<Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* iMatrix       = static_cast<Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	if (!m_headerSent)
 	{
@@ -447,7 +446,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* matrix    = static_cast<Toolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	IMatrix* matrix        = static_cast<Toolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -489,7 +488,7 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 
 bool CBoxAlgorithmCSVFileReader::processSpectrum()
 {
-	Kernel::IBoxIO& boxCtx          = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxCtx      = this->getDynamicBoxContext();
 	IMatrix* iMatrix            = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 	IMatrix* iFrequencyAbscissa = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputFrequencyAbscissa();
 

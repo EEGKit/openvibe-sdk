@@ -2,28 +2,27 @@
 
 #include "IWriterHelper.h"
 
-namespace EBML
+namespace EBML {
+class EBML_API CWriterHelper final : public IWriterHelper
 {
-	class EBML_API CWriterHelper final : public IWriterHelper
-	{
-	public:
+public:
 
-		CWriterHelper();
-		~CWriterHelper() override;
-		bool connect(IWriter* writer) override;
-		bool disconnect() override;
-		bool openChild(const CIdentifier& identifier) override;
-		bool closeChild() override;
-		bool setInt(const int64_t value) override;
-		bool setUInt(const uint64_t value) override;
-		bool setFloat(const float value) override;
-		bool setDouble(const double value) override;
-		bool setBinary(const void* buffer, const size_t size) override;
-		bool setStr(const char* value) override;
-		void release() override { }
+	CWriterHelper();
+	~CWriterHelper() override;
+	bool connect(IWriter* writer) override;
+	bool disconnect() override;
+	bool openChild(const CIdentifier& identifier) override;
+	bool closeChild() override;
+	bool setInt(const int64_t value) override;
+	bool setUInt(const uint64_t value) override;
+	bool setFloat(const float value) override;
+	bool setDouble(const double value) override;
+	bool setBinary(const void* buffer, const size_t size) override;
+	bool setStr(const char* value) override;
+	void release() override { }
 
-	protected:
+protected:
 
-		IWriterHelper* m_impl = nullptr;
-	};
-} // namespace EBML
+	IWriterHelper* m_impl = nullptr;
+};
+}  // namespace EBML

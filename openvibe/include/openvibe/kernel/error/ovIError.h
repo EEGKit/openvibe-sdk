@@ -23,61 +23,59 @@
 
 #include "../ovIKernelObject.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+/**
+ * \class IError
+ * \author Charles Garraud (Inria)
+ * \date 2016-07-12
+ * \brief Interface for Kernel error implementation
+ * \ingroup Group_Error
+ * \ingroup Group_Kernel
+ *
+ * IError interface aims at providing information about an error
+ * occurring in the framework. One specific concept here is the
+ * notion of nested errors. In a call stack, it can be
+ * interesting to catch a n-1 level error and enhance it instead
+ * of rethrowing it directy unchanged. In this case, we say
+ * the level n-1 error is nested into the level n error.
+ */
+class OV_API IError : public IKernelObject
 {
-	namespace Kernel
-	{
-		/**
-		 * \class IError
-		 * \author Charles Garraud (Inria)
-		 * \date 2016-07-12
-		 * \brief Interface for Kernel error implementation
-		 * \ingroup Group_Error
-		 * \ingroup Group_Kernel
-		 *
-		 * IError interface aims at providing information about an error
-		 * occurring in the framework. One specific concept here is the
-		 * notion of nested errors. In a call stack, it can be
-		 * interesting to catch a n-1 level error and enhance it instead
-		 * of rethrowing it directy unchanged. In this case, we say
-		 * the level n-1 error is nested into the level n error.
-		 */
-		class OV_API IError : public IKernelObject
-		{
-		public:
+public:
 
-			IError() {}
-			~IError() override {}
-			IError(const IError&)            = delete;
-			IError& operator=(const IError&) = delete;
+	IError() {}
+	~IError() override {}
+	IError(const IError&)            = delete;
+	IError& operator=(const IError&) = delete;
 
-			/**
-			 * \brief Retrieve error description
-			 */
-			virtual const char* getErrorString() const = 0;
+	/**
+	 * \brief Retrieve error description
+	 */
+	virtual const char* getErrorString() const = 0;
 
-			/**
-			 * \brief Retrieve error location
-			 * \return the error location with file:line format
-			 */
-			virtual const char* getErrorLocation() const = 0;
+	/**
+	 * \brief Retrieve error location
+	 * \return the error location with file:line format
+	 */
+	virtual const char* getErrorLocation() const = 0;
 
-			/**
-			 * \brief Retrieve error type
-			 */
-			virtual ErrorType getErrorType() const = 0;
+	/**
+	 * \brief Retrieve error type
+	 */
+	virtual ErrorType getErrorType() const = 0;
 
-			/**
-			 * \brief Retrieve nested error
-			 * \return the nested error if there is one, nullptr otherwise
-			 *
-			 * \warning The error keeps the ownership of the nested error.
-			 *          Therefore the API consumer is not responsible for its
-			 *          life cycle/management
-			 */
-			virtual const IError* getNestedError() const = 0;
+	/**
+	 * \brief Retrieve nested error
+	 * \return the nested error if there is one, nullptr otherwise
+	 *
+	 * \warning The error keeps the ownership of the nested error.
+	 *          Therefore the API consumer is not responsible for its
+	 *          life cycle/management
+	 */
+	virtual const IError* getNestedError() const = 0;
 
-			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Error_Error)
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Error_Error)
+};
+}  // namespace Kernel
+}  // namespace OpenViBE

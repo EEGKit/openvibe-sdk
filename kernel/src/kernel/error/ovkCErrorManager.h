@@ -26,43 +26,41 @@
 
 #include "../ovkTKernelObject.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+/**
+ * \class CErrorManager
+ * \author Charles Garraud (Inria)
+ * \date 2016-07-13
+ * \brief Error manager kernel default implementation
+ */
+class CErrorManager final : public TKernelObject<IErrorManager>
 {
-	namespace Kernel
-	{
-		/**
-		 * \class CErrorManager
-		 * \author Charles Garraud (Inria)
-		 * \date 2016-07-13
-		 * \brief Error manager kernel default implementation
-		 */
-		class CErrorManager final : public TKernelObject<IErrorManager>
-		{
-		public:
+public:
 
-			explicit CErrorManager(const IKernelContext& context);
-			~CErrorManager() override;
+	explicit CErrorManager(const IKernelContext& context);
+	~CErrorManager() override;
 
-			void pushError(ErrorType type, const char* description) override;
+	void pushError(ErrorType type, const char* description) override;
 
-			void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, size_t line) override;
+	void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, size_t line) override;
 
-			void releaseErrors() override;
+	void releaseErrors() override;
 
-			bool hasError() const override;
+	bool hasError() const override;
 
-			const IError* getLastError() const override;
+	const IError* getLastError() const override;
 
-			const char* getLastErrorString() const override;
+	const char* getLastErrorString() const override;
 
-			ErrorType getLastErrorType() const override;
+	ErrorType getLastErrorType() const override;
 
-			_IsDerivedFromClass_Final_(TKernelObject<IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager)
+	_IsDerivedFromClass_Final_(TKernelObject<IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager)
 
-		private:
+private:
 
-			mutable std::mutex m_managerGuard;
-			std::unique_ptr<IError> m_topError;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	mutable std::mutex m_managerGuard;
+	std::unique_ptr<IError> m_topError;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE

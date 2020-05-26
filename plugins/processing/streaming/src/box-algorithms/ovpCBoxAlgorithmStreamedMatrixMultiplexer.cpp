@@ -32,8 +32,8 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			const IMemoryBuffer* iBuffer = boxContext.getInputChunk(i, j);
-			const CTime tStart        = boxContext.getInputChunkStartTime(i, j);
-			const CTime tEnd          = boxContext.getInputChunkEndTime(i, j);
+			const CTime tStart           = boxContext.getInputChunkStartTime(i, j);
+			const CTime tEnd             = boxContext.getInputChunkEndTime(i, j);
 
 			if ((!m_headerSent && tStart == tEnd) || (m_headerSent && tStart != tEnd))
 			{

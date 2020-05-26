@@ -6,33 +6,31 @@
 
 #include <iostream>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CScenario;
+
+class CComment final : public TAttributable<TKernelObject<IComment>>
 {
-	namespace Kernel
-	{
-		class CScenario;
+public:
 
-		class CComment final : public TAttributable<TKernelObject<IComment>>
-		{
-		public:
+	CComment(const IKernelContext& ctx, CScenario& rOwnerScenario);
+	~CComment() override;
+	CIdentifier getIdentifier() const override;
+	CString getText() const override;
+	bool setIdentifier(const CIdentifier& id) override;
+	bool setText(const CString& sText) override;
+	bool initializeFromExistingComment(const IComment& rExisitingComment) override;
+	bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
-			CComment(const IKernelContext& ctx, CScenario& rOwnerScenario);
-			~CComment() override;
-			CIdentifier getIdentifier() const override;
-			CString getText() const override;
-			bool setIdentifier(const CIdentifier& id) override;
-			bool setText(const CString& sText) override;
-			bool initializeFromExistingComment(const IComment& rExisitingComment) override;
-			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
+	_IsDerivedFromClass_Final_(TAttributable<TKernelObject<IComment>>, OVK_ClassId_Kernel_Scenario_Comment)
 
-			_IsDerivedFromClass_Final_(TAttributable<TKernelObject<IComment>>, OVK_ClassId_Kernel_Scenario_Comment)
+protected:
 
-		protected:
+	CScenario& m_rOwnerScenario;
 
-			CScenario& m_rOwnerScenario;
-
-			CIdentifier m_id = OV_UndefinedIdentifier;
-			CString m_text;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	CIdentifier m_id = OV_UndefinedIdentifier;
+	CString m_text;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE

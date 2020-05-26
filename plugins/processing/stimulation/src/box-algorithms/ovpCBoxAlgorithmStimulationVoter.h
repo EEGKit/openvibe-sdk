@@ -10,6 +10,7 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace Stimulation {
+
 class CBoxAlgorithmStimulationVoter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
@@ -99,6 +100,6 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationVoterDesc)
 };
-} // namespace Stimulation
+}  // namespace Stimulation
 }  // namespace Plugins
 }  // namespace OpenViBE

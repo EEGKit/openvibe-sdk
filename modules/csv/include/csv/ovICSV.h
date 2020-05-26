@@ -30,6 +30,7 @@
 
 namespace OpenViBE {
 namespace CSV {
+
 struct SMatrixChunk
 {
 	double startTime;	// in second

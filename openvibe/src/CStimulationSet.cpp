@@ -37,4 +37,4 @@ void CStimulationSet::removeRange(CStimulationSet& set, const CTime& startTime, 
 	}
 }
 //--------------------------------------------------------------------------------
-} // namespace OpenViBE
+}  // namespace OpenViBE

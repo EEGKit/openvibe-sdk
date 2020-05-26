@@ -72,5 +72,5 @@ _parameter_template_instance_pointer_(CPointerParameter, void*, void*, OVK_Class
 
 #undef _instance_
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

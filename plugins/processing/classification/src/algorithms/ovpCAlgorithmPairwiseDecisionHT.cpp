@@ -9,10 +9,9 @@
 #include <xml/IXMLNode.h>
 #include <xml/IXMLHandler.h>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
-	const char* const REPARTITION_NODE_NAME = "Repartition";
+namespace {
+const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
+const char* const REPARTITION_NODE_NAME = "Repartition";
 }
 
 

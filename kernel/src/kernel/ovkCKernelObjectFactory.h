@@ -5,25 +5,24 @@
 #include <vector>
 #include <mutex>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CKernelObjectFactory final : public TKernelObject<IKernelObjectFactory>
 {
-	namespace Kernel
-	{
-		class CKernelObjectFactory final : public TKernelObject<IKernelObjectFactory>
-		{
-		public:
+public:
 
-			explicit CKernelObjectFactory(const IKernelContext& ctx) : TKernelObject<IKernelObjectFactory>(ctx) {}
-			IObject* createObject(const CIdentifier& classID) override;
-			bool releaseObject(IObject* pObject) override;
+	explicit CKernelObjectFactory(const IKernelContext& ctx) : TKernelObject<IKernelObjectFactory>(ctx) {}
+	IObject* createObject(const CIdentifier& classID) override;
+	bool releaseObject(IObject* pObject) override;
 
-			_IsDerivedFromClass_Final_(TKernelObject<IKernelObjectFactory>, OVK_ClassId_Kernel_KernelObjectFactory)
+	_IsDerivedFromClass_Final_(TKernelObject<IKernelObjectFactory>, OVK_ClassId_Kernel_KernelObjectFactory)
 
-		protected:
+protected:
 
-			std::vector<IObject*> m_oCreatedObjects;
+	std::vector<IObject*> m_oCreatedObjects;
 
-			std::mutex m_oMutex;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	std::mutex m_oMutex;
+};
+
+}  // namespace Kernel
+}  // namespace OpenViBE

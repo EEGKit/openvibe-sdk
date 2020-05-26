@@ -37,94 +37,93 @@
 #include <map>
 #include <string>
 
-namespace Lepton
+namespace Lepton {
+class CompiledExpression;
+class ExpressionProgram;
+
+/**
+ * This class represents the result of parsing an expression.  It provides methods for working with the
+ * expression in various ways, such as evaluating it, getting the tree representation of the expresson, etc.
+ */
+
+class LEPTON_EXPORT ParsedExpression
 {
-	class CompiledExpression;
-	class ExpressionProgram;
-
+public:
 	/**
-	 * This class represents the result of parsing an expression.  It provides methods for working with the
-	 * expression in various ways, such as evaluating it, getting the tree representation of the expresson, etc.
+	 * Create an uninitialized ParsedExpression.  This exists so that ParsedExpressions can be put in STL containers.
+	 * Doing anything with it will produce an exception.
 	 */
+	ParsedExpression();
+	/**
+	 * Create a ParsedExpression.  Normally you will not call this directly.  Instead, use the Parser class
+	 * to parse expression.
+	 */
+	ParsedExpression(const ExpressionTreeNode& rootNode);
+	/**
+	 * Get the root node of the expression's abstract syntax tree.
+	 */
+	const ExpressionTreeNode& getRootNode() const;
+	/**
+	 * Evaluate the expression.  If the expression involves any variables, this method will throw an exception.
+	 */
+	double evaluate() const;
+	/**
+	 * Evaluate the expression.
+	 *
+	 * @param variables    a map specifying the values of all variables that appear in the expression.  If any
+	 *                     variable appears in the expression but is not included in this map, an exception
+	 *                     will be thrown.
+	 */
+	double evaluate(const std::map<std::string, double>& variables) const;
+	/**
+	 * Create a new ParsedExpression which produces the same result as this one, but is faster to evaluate.
+	 */
+	ParsedExpression optimize() const;
+	/**
+	 * Create a new ParsedExpression which produces the same result as this one, but is faster to evaluate.
+	 *
+	 * @param variables    a map specifying values for a subset of variables that appear in the expression.
+	 *                     All occurrences of these variables in the expression are replaced with the values
+	 *                     specified.
+	 */
+	ParsedExpression optimize(const std::map<std::string, double>& variables) const;
+	/**
+	 * Create a new ParsedExpression which is the analytic derivative of this expression with respect to a
+	 * particular variable.
+	 *
+	 * @param variable     the variable with respect to which the derivate should be taken
+	 */
+	ParsedExpression differentiate(const std::string& variable) const;
+	/**
+	 * Create an ExpressionProgram that represents the same calculation as this expression.
+	 */
+	ExpressionProgram createProgram() const;
+	/**
+	 * Create a CompiledExpression that represents the same calculation as this expression.
+	 */
+	CompiledExpression createCompiledExpression() const;
+	/**
+	 * Create a new ParsedExpression which is identical to this one, except that the names of some
+	 * variables have been changed.
+	 *
+	 * @param replacements    a map whose keys are the names of variables, and whose values are the
+	 *                        new names to replace them with
+	 */
+	ParsedExpression renameVariables(const std::map<std::string, std::string>& replacements) const;
+private:
+	static double evaluate(const ExpressionTreeNode& node, const std::map<std::string, double>& variables);
+	static ExpressionTreeNode preevaluateVariables(const ExpressionTreeNode& node, const std::map<std::string, double>& variables);
+	static ExpressionTreeNode precalculateConstantSubexpressions(const ExpressionTreeNode& node);
+	static ExpressionTreeNode substituteSimplerExpression(const ExpressionTreeNode& node);
+	static ExpressionTreeNode differentiate(const ExpressionTreeNode& node, const std::string& variable);
+	static double getConstantValue(const ExpressionTreeNode& node);
+	static ExpressionTreeNode renameNodeVariables(const ExpressionTreeNode& node, const std::map<std::string, std::string>& replacements);
+	ExpressionTreeNode rootNode;
+};
 
-	class LEPTON_EXPORT ParsedExpression
-	{
-	public:
-		/**
-		 * Create an uninitialized ParsedExpression.  This exists so that ParsedExpressions can be put in STL containers.
-		 * Doing anything with it will produce an exception.
-		 */
-		ParsedExpression();
-		/**
-		 * Create a ParsedExpression.  Normally you will not call this directly.  Instead, use the Parser class
-		 * to parse expression.
-		 */
-		ParsedExpression(const ExpressionTreeNode& rootNode);
-		/**
-		 * Get the root node of the expression's abstract syntax tree.
-		 */
-		const ExpressionTreeNode& getRootNode() const;
-		/**
-		 * Evaluate the expression.  If the expression involves any variables, this method will throw an exception.
-		 */
-		double evaluate() const;
-		/**
-		 * Evaluate the expression.
-		 *
-		 * @param variables    a map specifying the values of all variables that appear in the expression.  If any
-		 *                     variable appears in the expression but is not included in this map, an exception
-		 *                     will be thrown.
-		 */
-		double evaluate(const std::map<std::string, double>& variables) const;
-		/**
-		 * Create a new ParsedExpression which produces the same result as this one, but is faster to evaluate.
-		 */
-		ParsedExpression optimize() const;
-		/**
-		 * Create a new ParsedExpression which produces the same result as this one, but is faster to evaluate.
-		 *
-		 * @param variables    a map specifying values for a subset of variables that appear in the expression.
-		 *                     All occurrences of these variables in the expression are replaced with the values
-		 *                     specified.
-		 */
-		ParsedExpression optimize(const std::map<std::string, double>& variables) const;
-		/**
-		 * Create a new ParsedExpression which is the analytic derivative of this expression with respect to a
-		 * particular variable.
-		 *
-		 * @param variable     the variable with respect to which the derivate should be taken
-		 */
-		ParsedExpression differentiate(const std::string& variable) const;
-		/**
-		 * Create an ExpressionProgram that represents the same calculation as this expression.
-		 */
-		ExpressionProgram createProgram() const;
-		/**
-		 * Create a CompiledExpression that represents the same calculation as this expression.
-		 */
-		CompiledExpression createCompiledExpression() const;
-		/**
-		 * Create a new ParsedExpression which is identical to this one, except that the names of some
-		 * variables have been changed.
-		 *
-		 * @param replacements    a map whose keys are the names of variables, and whose values are the
-		 *                        new names to replace them with
-		 */
-		ParsedExpression renameVariables(const std::map<std::string, std::string>& replacements) const;
-	private:
-		static double evaluate(const ExpressionTreeNode& node, const std::map<std::string, double>& variables);
-		static ExpressionTreeNode preevaluateVariables(const ExpressionTreeNode& node, const std::map<std::string, double>& variables);
-		static ExpressionTreeNode precalculateConstantSubexpressions(const ExpressionTreeNode& node);
-		static ExpressionTreeNode substituteSimplerExpression(const ExpressionTreeNode& node);
-		static ExpressionTreeNode differentiate(const ExpressionTreeNode& node, const std::string& variable);
-		static double getConstantValue(const ExpressionTreeNode& node);
-		static ExpressionTreeNode renameNodeVariables(const ExpressionTreeNode& node, const std::map<std::string, std::string>& replacements);
-		ExpressionTreeNode rootNode;
-	};
+LEPTON_EXPORT std::ostream& operator<<(std::ostream& out, const ExpressionTreeNode& node);
 
-	LEPTON_EXPORT std::ostream& operator<<(std::ostream& out, const ExpressionTreeNode& node);
-
-	LEPTON_EXPORT std::ostream& operator<<(std::ostream& out, const ParsedExpression& exp);
+LEPTON_EXPORT std::ostream& operator<<(std::ostream& out, const ParsedExpression& exp);
 } // namespace Lepton
 
 #endif /*LEPTON_PARSED_EXPRESSION_H_*/

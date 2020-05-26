@@ -109,11 +109,13 @@
 
 namespace OpenViBE {
 namespace Plugins {
+
 // Backward compatibility
 typedef Kernel::IBox IStaticBoxContext;
 typedef Kernel::IBoxIO IDynamicBoxContext;
-} // namespace Plugins
-} // namespace OpenViBE
+
+}  // namespace Plugins
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //

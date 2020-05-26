@@ -44,8 +44,8 @@ private:
 
 	ISignalTrial* m_pendingSignal = nullptr;
 
-	CTime m_trialStartTime = 0;
-	CTime m_trialEndTime   = 0;
+	CTime m_trialStartTime    = 0;
+	CTime m_trialEndTime      = 0;
 	size_t m_nSamplePerBuffer = 0;
 	CIdentifier m_trialLabel  = OV_UndefinedIdentifier;
 

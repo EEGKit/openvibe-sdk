@@ -76,7 +76,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 		compileExpression(node.getChildren()[i], temps);
 		args.push_back(findTempIndex(node.getChildren()[i], temps));
 	}
-    
+
 	// Process this node.
 
 	if (node.getOperation().getId() == Operation::VARIABLE)

@@ -1525,7 +1525,6 @@ void idwt(wt_object wt, double* dwtop)
 
 		for (i = 0; i < J; ++i)
 		{
-
 			//idwt1(wt, temp, cA_up, out, det_len, wt->output + iter, det_len, X_lp, X_hp, out);
 
 			idwt_per(wt, out, det_len, wt->output + iter, det_len, X_lp);
@@ -1551,7 +1550,6 @@ void idwt(wt_object wt, double* dwtop)
 
 		for (i = 0; i < J; ++i)
 		{
-
 			//idwt1(wt, temp, cA_up, out, det_len, wt->output + iter, det_len, X_lp, X_hp, out);
 
 			idwt_sym(wt, out, det_len, wt->output + iter, det_len, X_lp);

@@ -35,24 +35,23 @@
 #include <exception>
 #include <string>
 
-namespace Lepton
+namespace Lepton {
+
+/**
+ * This class is used for all exceptions thrown by Lepton.
+ */
+
+class Exception final : public std::exception
 {
+public:
+	Exception(const std::string& message) : message(message) { }
+	~Exception() throw() override { }
 
-	/**
-	 * This class is used for all exceptions thrown by Lepton.
-	 */
+	const char* what() const throw() override { return message.c_str(); }
 
-	class Exception final : public std::exception
-	{
-	public:
-		Exception(const std::string& message) : message(message) { }
-		~Exception() throw() override { }
-
-		const char* what() const throw() override { return message.c_str(); }
-
-	private:
-		std::string message;
-	};
+private:
+	std::string message;
+};
 } // namespace Lepton
 
 #endif /*LEPTON_EXCEPTION_H_*/

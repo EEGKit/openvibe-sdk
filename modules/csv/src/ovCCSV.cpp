@@ -49,28 +49,27 @@ using namespace OpenViBE;
 using namespace CSV;
 using namespace boost::spirit;
 
-namespace
-{
-	const size_t SIGNAL_EPOCH_COL_IDX = 1;
-	const size_t TIME_COL_IDX         = 0;
-	const size_t END_TIME_COL_IDX     = 1;
-	const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
-	const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
+namespace {
+const size_t SIGNAL_EPOCH_COL_IDX = 1;
+const size_t TIME_COL_IDX         = 0;
+const size_t END_TIME_COL_IDX     = 1;
+const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
+const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
 
-	//Separators
-	const char SEPARATOR(',');
-	const char DATA_SEPARATOR(':');
-	const char DIMENSION_SEPARATOR('x');
+//Separators
+const char SEPARATOR(',');
+const char DATA_SEPARATOR(':');
+const char DIMENSION_SEPARATOR('x');
 
-	// Columns Names
-	const std::string EVENT_ID_COL       = "Event Id";
-	const std::string EVENT_DATE_COL     = "Event Date";
-	const std::string EVENT_DURATION_COL = "Event Duration";
+// Columns Names
+const std::string EVENT_ID_COL       = "Event Id";
+const std::string EVENT_DATE_COL     = "Event Date";
+const std::string EVENT_DURATION_COL = "Event Duration";
 
-	const size_t CHAR_TO_READ = 1000;
-	//const size_t MAXIMUM_FLOAT_DECIMAL = 32;
+const size_t CHAR_TO_READ = 1000;
+//const size_t MAXIMUM_FLOAT_DECIMAL = 32;
 
-	const char END_OF_LINE_CHAR('\n');
+const char END_OF_LINE_CHAR('\n');
 }	// namespace 
 
 bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char delimiter, std::string& bufferHistory) const
@@ -1754,4 +1753,4 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 
 CSV_API ICSVHandler* CSV::createCSVHandler() { return new CCSVHandler(); }
 
-CSV_API void CSV::releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler *>(object); }
+CSV_API void CSV::releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler*>(object); }

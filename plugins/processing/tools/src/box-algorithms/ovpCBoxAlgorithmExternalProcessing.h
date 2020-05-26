@@ -14,6 +14,7 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace Tools {
+
 class CBoxAlgorithmExternalProcessing final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
@@ -74,7 +75,7 @@ private:
 
 	int m_extProcessId = 0;
 
-	CTime m_acceptTimeout     = 0;
+	CTime m_acceptTimeout        = 0;
 	bool m_shouldLaunchProgram   = false;
 	bool m_hasReceivedEndMessage = false;
 	// Synchronization timeout, and save time of last synchronization
@@ -138,6 +139,7 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc)
 };
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

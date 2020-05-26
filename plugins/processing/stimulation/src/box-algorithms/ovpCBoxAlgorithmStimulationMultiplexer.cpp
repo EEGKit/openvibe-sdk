@@ -47,7 +47,7 @@ bool CBoxAlgorithmStimulationMultiplexer::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmStimulationMultiplexer::process()
 {
-	IBoxIO& boxCtx = this->getDynamicBoxContext();
+	IBoxIO& boxCtx      = this->getDynamicBoxContext();
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
 	if (!m_wasHeaderSent)
@@ -68,10 +68,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 			if (m_decoders[i].isBufferReceived())
 			{
 				CStimulationSet& set = *m_decoders[i].getOutputStimulationSet();
-				for (size_t s = 0; s < set.size(); ++s)
-				{
-					m_stimulations.insert(std::make_pair(set[s].m_Date, set[s]));
-				}
+				for (size_t s = 0; s < set.size(); ++s) { m_stimulations.insert(std::make_pair(set[s].m_Date, set[s])); }
 			}
 
 			m_decoderEndTimes[i] = boxCtx.getInputChunkEndTime(i, j);

@@ -7,36 +7,33 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+namespace {
+class CAlgorithmScenarioExporterHelper
 {
-	namespace Toolkit
-	{
-		namespace
-		{
-			class CAlgorithmScenarioExporterHelper
-			{
-				friend class CAlgorithmScenarioExporter;
-			public:
+	friend class CAlgorithmScenarioExporter;
+public:
 
-				CAlgorithmScenarioExporterHelper(IAlgorithmContext& context, CAlgorithmScenarioExporter& parent);
-				bool exportBox(IMemoryBuffer& buffer, const IBox& box) const;
-				bool exportComment(IMemoryBuffer& buffer, const IComment& comment) const;
-				bool exportMetadata(IMemoryBuffer& buffer, const IMetadata& metadata) const;
-				bool exportSetting(IMemoryBuffer& buffer, const IScenario& scenario, const size_t index) const;
-				bool exportInput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
-				bool exportOutput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
-				bool exportLink(IMemoryBuffer& buffer, const ILink& rLink) const;
-				void exportAttributes(const IAttributable& attributable, IMemoryBuffer& buffer, const CIdentifier& idAttributes,
-									  const CIdentifier& idAttribute, const CIdentifier& idAttributeID, const CIdentifier& idAttributeValue) const;
+	CAlgorithmScenarioExporterHelper(IAlgorithmContext& context, CAlgorithmScenarioExporter& parent);
+	bool exportBox(IMemoryBuffer& buffer, const IBox& box) const;
+	bool exportComment(IMemoryBuffer& buffer, const IComment& comment) const;
+	bool exportMetadata(IMemoryBuffer& buffer, const IMetadata& metadata) const;
+	bool exportSetting(IMemoryBuffer& buffer, const IScenario& scenario, const size_t index) const;
+	bool exportInput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
+	bool exportOutput(IMemoryBuffer& buffer, const IScenario& scenario, size_t index) const;
+	bool exportLink(IMemoryBuffer& buffer, const ILink& rLink) const;
+	void exportAttributes(const IAttributable& attributable, IMemoryBuffer& buffer, const CIdentifier& idAttributes,
+						  const CIdentifier& idAttribute, const CIdentifier& idAttributeID, const CIdentifier& idAttributeValue) const;
 
 
-			protected:
+protected:
 
-				IAlgorithmContext& m_algorithmContext;
-				CAlgorithmScenarioExporter& m_parent;
-			};
-		} // namespace
-	}  // namespace Toolkit
+	IAlgorithmContext& m_algorithmContext;
+	CAlgorithmScenarioExporter& m_parent;
+};
+}  // namespace
+}  // namespace Toolkit
 }  // namespace OpenViBE
 
 #define exportAttributesMacro(exporter, attributable, memoryBuffer, AttributableName) \

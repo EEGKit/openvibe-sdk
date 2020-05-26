@@ -239,6 +239,6 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 	return true;
 }
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

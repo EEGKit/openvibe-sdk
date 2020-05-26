@@ -3,19 +3,18 @@
 #include "ovkTKernelObject.h"
 #include "ovkTConfigurable.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+typedef TBaseConfigurable<TKernelObject<IConfigurable>> configurable;
+
+class CConfigurable final : public configurable
 {
-	namespace Kernel
-	{
-		typedef TBaseConfigurable<TKernelObject<IConfigurable>> configurable;
+public:
 
-		class CConfigurable final : public configurable
-		{
-		public:
+	explicit CConfigurable(const IKernelContext& ctx) : TBaseConfigurable<TKernelObject<IConfigurable>>(ctx) { }
 
-			explicit CConfigurable(const IKernelContext& ctx) : TBaseConfigurable<TKernelObject<IConfigurable>>(ctx) { }
+	_IsDerivedFromClass_Final_(configurable, OVK_ClassId_Kernel_Configurable)
+};
 
-			_IsDerivedFromClass_Final_(configurable, OVK_ClassId_Kernel_Configurable)
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

@@ -3,43 +3,41 @@
 #include "../../ovtk_base.h"
 #include "../../ovtkIVector.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+template <class TParent>
+class TVector : public TParent
 {
-	namespace Toolkit
+public:
+
+	explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
+
+	uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
+
+	bool setSize(const uint32_t size) override
 	{
-		template <class TParent>
-		class TVector : public TParent
-		{
-		public:
+		m_matrix.setDimensionCount(1);
+		m_matrix.setDimensionSize(0, size);
+		return true;
+	}
 
-			explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
+	double* getBuffer() override { return m_matrix.getBuffer(); }
+	const double* getBuffer() const override { return m_matrix.getBuffer(); }
+	const char* getElementLabel(const uint32_t index) const override { return m_matrix.getDimensionLabel(0, index); }
 
-			uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
+	bool setElementLabel(const uint32_t index, const char* label) override
+	{
+		m_matrix.setDimensionLabel(0, index, label);
+		return true;
+	}
 
-			bool setSize(const uint32_t size) override
-			{
-				m_matrix.setDimensionCount(1);
-				m_matrix.setDimensionSize(0, size);
-				return true;
-			}
+	_IsDerivedFromClass_Final_(TParent, OV_UndefinedIdentifier)
 
-			double* getBuffer() override { return m_matrix.getBuffer(); }
-			const double* getBuffer() const override { return m_matrix.getBuffer(); }
-			const char* getElementLabel(const uint32_t index) const override { return m_matrix.getDimensionLabel(0, index); }
+protected:
 
-			bool setElementLabel(const uint32_t index, const char* label) override
-			{
-				m_matrix.setDimensionLabel(0, index, label);
-				return true;
-			}
+	IMatrix& m_matrix;
+};
 
-			_IsDerivedFromClass_Final_(TParent, OV_UndefinedIdentifier)
-
-		protected:
-
-			IMatrix& m_matrix;
-		};
-
-		typedef TVector<IVector> CVector;
-	}  // namespace Toolkit
+typedef TVector<IVector> CVector;
+}  // namespace Toolkit
 }  // namespace OpenViBE

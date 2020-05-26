@@ -142,9 +142,9 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 	if (canChoose)
 	{
-		double score        = -1E100;
+		double score      = -1E100;
 		size_t classLabel = m_rejectClassLabel;
-		CTime time       = 0;
+		CTime time        = 0;
 
 		std::map<size_t, double> scores;
 		for (size_t i = 0; i < nInput; ++i)
@@ -184,7 +184,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 			this->getLogManager() << LogLevel_Debug << "Chosen rejection "
 					<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel) << "\n";
 		}
-		
+
 		m_classificationChoiceEncoder.getInputStimulationSet()->clear();
 		m_classificationChoiceEncoder.getInputStimulationSet()->append(CStimulation(classLabel, time, 0));
 

@@ -18,25 +18,24 @@ using namespace /*OpenViBE::*/Toolkit;
 #define _EQ_PARSER_DEBUG_LOG_(level, message) m_parentPlugin.getLogManager() << level << message << "\n";
 #define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_parentPlugin.getLogManager() << level; m_tree->printTree(m_parentPlugin.getLogManager()); m_parentPlugin.getLogManager() << "\n"; }
 
-namespace
-{
-	// because std::tolower has multiple signatures,
-	// it can not be easily used in std::transform
-	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class TChar>
-	TChar ToLower(TChar c) { return std::tolower(c); }
+namespace {
+// because std::tolower has multiple signatures,
+// it can not be easily used in std::transform
+// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
+template <class TChar>
+TChar ToLower(TChar c) { return std::tolower(c); }
 
-	// BOOST::Ast should be able to remove spaces / tabs etc but
-	// unfortunately, it seems it does not work correcly in some
-	// cases so I add this sanitizer function to clear the Simple DSP
-	// equation before sending it to BOOST::Ast
-	std::string FindAndReplace(std::string s, const std::string& f, const std::string& r)
-	{
-		size_t i;
-		while ((i = s.find(f)) != std::string::npos) { s.replace(i, f.length(), r); }
-		return s;
-	}
-} // namespace
+// BOOST::Ast should be able to remove spaces / tabs etc but
+// unfortunately, it seems it does not work correcly in some
+// cases so I add this sanitizer function to clear the Simple DSP
+// equation before sending it to BOOST::Ast
+std::string FindAndReplace(std::string s, const std::string& f, const std::string& r)
+{
+	size_t i;
+	while ((i = s.find(f)) != std::string::npos) { s.replace(i, f.length(), r); }
+	return s;
+}
+}  // namespace
 
 std::array<functionPointer, 32> CEquationParser::m_functionTable =
 {

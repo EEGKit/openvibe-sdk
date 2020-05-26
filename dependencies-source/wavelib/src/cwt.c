@@ -176,7 +176,7 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 	for (int i = 1; i < npad / 2 + 1; ++i) { kwave[i] = i * freq1; }
 
 	for (int i = npad / 2 + 1; i < npad; ++i) { kwave[i] = -kwave[npad - i]; }
-	
+
 	// Main loop
 
 	for (int j = 1; j <= jtot; ++j)

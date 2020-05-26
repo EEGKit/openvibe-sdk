@@ -27,9 +27,9 @@ private:
 	Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimDecoder;
 	Toolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_encoder;
 
-	size_t m_stimulationID        = 0;
+	size_t m_stimulationID          = 0;
 	double m_epochDurationInSeconds = 0;
-	CTime m_epochDuration        = 0;
+	CTime m_epochDuration           = 0;
 	int64_t m_epochOffset           = 0;
 
 	// Input matrix parameters
@@ -104,6 +104,6 @@ public:
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc)
 };
 
-} // namespace SignalProcessing
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -37,13 +37,12 @@ using namespace /*OpenViBE::*/Plugins;
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
-namespace
+namespace {
+void setConfigTokens(IConfigurationManager& configsManager, const TokenList& tokens)
 {
-	void setConfigTokens(IConfigurationManager& configsManager, const TokenList& tokens)
-	{
-		for (auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
-	}
-} // namespace
+	for (auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
+}
+}  // namespace
 
 struct CKernelFacade::SKernelFacadeImpl
 {
@@ -340,7 +339,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 		while (!allStopped) // negative condition here because it is easier to reason about it
 		{
 			const CTime currentTime = System::Time::zgetTime();
-			allStopped                 = true;
+			allStopped              = true;
 			for (auto p : players)
 			{
 				if (p->getStatus() != EPlayerStatus::Stop)

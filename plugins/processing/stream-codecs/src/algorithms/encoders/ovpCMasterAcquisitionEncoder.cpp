@@ -12,7 +12,7 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace StreamCodecs;
 
 bool CMasterAcquisitionEncoder::initialize()
-{	
+{
 	// Manages sub-algorithms
 
 	m_acquisitionStreamEncoder = &this->getAlgorithmManager().getAlgorithm(
@@ -105,7 +105,6 @@ bool CMasterAcquisitionEncoder::initialize()
 	TParameterHandler<IMatrix*> ip_pUnits(m_channelUnitsStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<IMemoryBuffer*> op_channelUnitsMemoryBuffer(
 		m_channelUnitsStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
-
 
 
 	// Manage parameter connection / referencing | this algorithm to sub algorithm

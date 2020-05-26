@@ -8,6 +8,7 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace DataGeneration {
+
 class CBoxAlgorithmTimeSignalGenerator final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
@@ -67,6 +68,6 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeSignalGeneratorDesc)
 };
-} // namespace DataGeneration
+}  // namespace DataGeneration
 }  // namespace Plugins
 }  // namespace OpenViBE

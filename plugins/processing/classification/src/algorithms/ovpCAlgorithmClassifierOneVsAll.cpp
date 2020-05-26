@@ -5,15 +5,14 @@
 #include <utility>
 #include <iostream>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME                      = "OneVsAll";
-	const char* const SUB_CLASSIFIER_IDENTIFIER_NODE_NAME = "SubClassifierIdentifier";
-	const char* const ALGORITHM_ID_ATTRIBUTE              = "algorithm-id";
-	const char* const SUB_CLASSIFIER_COUNT_NODE_NAME      = "SubClassifierCount";
-	const char* const SUB_CLASSIFIERS_NODE_NAME           = "SubClassifiers";
-	//const char* const SUB_CLASSIFIER_NODE_NAME = "SubClassifier";
-} // namespace
+namespace {
+const char* const TYPE_NODE_NAME                      = "OneVsAll";
+const char* const SUB_CLASSIFIER_IDENTIFIER_NODE_NAME = "SubClassifierIdentifier";
+const char* const ALGORITHM_ID_ATTRIBUTE              = "algorithm-id";
+const char* const SUB_CLASSIFIER_COUNT_NODE_NAME      = "SubClassifierCount";
+const char* const SUB_CLASSIFIERS_NODE_NAME           = "SubClassifiers";
+//const char* const SUB_CLASSIFIER_NODE_NAME = "SubClassifier";
+}  // namespace
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;

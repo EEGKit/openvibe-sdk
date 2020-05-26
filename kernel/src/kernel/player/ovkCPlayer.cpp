@@ -1,4 +1,3 @@
-
 #include "ovkCPlayer.h"
 #include "ovkCSimulatedBox.h"
 #include "ovkCScheduler.h"
@@ -291,7 +290,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 
 	const CTime schedulerStepDuration = m_scheduler.getStepDuration();
 	const CTime tStart                = System::Time::zgetTime();
-	bool finished                        = false;
+	bool finished                     = false;
 	while (!finished)
 	{
 		const CTime nextSchedulerTime = m_scheduler.getCurrentTime() + schedulerStepDuration;

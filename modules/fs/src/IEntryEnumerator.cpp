@@ -25,65 +25,62 @@ using namespace FS;
 // ________________________________________________________________________________________________________________
 //
 
-namespace FS
+namespace FS {
+class CEntry final : public IEntryEnumerator::IEntry
 {
-	class CEntry final : public IEntryEnumerator::IEntry
-	{
-	public:
+public:
 
-		explicit CEntry(const string& name) : m_Name(name) {}
-		const char* getName() override { return m_Name.c_str(); }
+	explicit CEntry(const string& name) : m_Name(name) {}
+	const char* getName() override { return m_Name.c_str(); }
 
-		string m_Name;
-	};
-} // namespace FS
-
-// ________________________________________________________________________________________________________________
-//
-
-namespace FS
-{
-	class CAttributes final : public IEntryEnumerator::IAttributes
-	{
-	public:
-
-		CAttributes() {}
-		~CAttributes() override {}
-		bool isFile() override { return m_IsFile; }
-		bool isDirectory() override { return m_IsDirectory; }
-		bool isSymbolicLink() override { return m_IsSymbolicLink; }
-		bool isArchive() override { return m_IsArchive; }
-		bool isReadOnly() override { return m_IsReadOnly; }
-		bool isHidden() override { return m_IsHidden; }
-		bool isSystem() override { return m_IsSystem; }
-		bool isExecutable() override { return m_IsExecutable; }
-		size_t getSize() override { return m_Size; }
-
-		bool m_IsFile         = false;
-		bool m_IsDirectory    = false;
-		bool m_IsSymbolicLink = false;
-		bool m_IsArchive      = false;
-		bool m_IsReadOnly     = false;
-		bool m_IsHidden       = false;
-		bool m_IsSystem       = false;
-		bool m_IsExecutable   = false;
-		size_t m_Size         = 0;
-	};
+	string m_Name;
+};
 }  // namespace FS
 
 // ________________________________________________________________________________________________________________
 //
 
-namespace FS
+namespace FS {
+class CAttributes final : public IEntryEnumerator::IAttributes
 {
-	class CEntryEnumerator : public IEntryEnumerator
-	{
-	public:
-		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : m_entryEnumeratorCB(rEntryEnumeratorCallBack) {}
-		void release() override { delete this; }
-	protected:
-		IEntryEnumeratorCallBack& m_entryEnumeratorCB;
-	};
+public:
+
+	CAttributes() {}
+	~CAttributes() override {}
+	bool isFile() override { return m_IsFile; }
+	bool isDirectory() override { return m_IsDirectory; }
+	bool isSymbolicLink() override { return m_IsSymbolicLink; }
+	bool isArchive() override { return m_IsArchive; }
+	bool isReadOnly() override { return m_IsReadOnly; }
+	bool isHidden() override { return m_IsHidden; }
+	bool isSystem() override { return m_IsSystem; }
+	bool isExecutable() override { return m_IsExecutable; }
+	size_t getSize() override { return m_Size; }
+
+	bool m_IsFile         = false;
+	bool m_IsDirectory    = false;
+	bool m_IsSymbolicLink = false;
+	bool m_IsArchive      = false;
+	bool m_IsReadOnly     = false;
+	bool m_IsHidden       = false;
+	bool m_IsSystem       = false;
+	bool m_IsExecutable   = false;
+	size_t m_Size         = 0;
+};
+}  // namespace FS
+
+// ________________________________________________________________________________________________________________
+//
+
+namespace FS {
+class CEntryEnumerator : public IEntryEnumerator
+{
+public:
+	explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : m_entryEnumeratorCB(rEntryEnumeratorCallBack) {}
+	void release() override { delete this; }
+protected:
+	IEntryEnumeratorCallBack& m_entryEnumeratorCB;
+};
 
 // ________________________________________________________________________________________________________________
 //
@@ -96,12 +93,12 @@ namespace FS
 	};
 
 #elif defined TARGET_OS_Windows
-	class CEntryEnumeratorWindows final : public CEntryEnumerator
-	{
-	public:
-		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) {}
-		bool enumerate(const char* sWildCard, bool bRecursive = false) override;
-	};
+class CEntryEnumeratorWindows final : public CEntryEnumerator
+{
+public:
+	explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) {}
+	bool enumerate(const char* sWildCard, bool bRecursive = false) override;
+};
 
 #else
 	class CEntryEnumeratorDummy : public CEntryEnumerator
@@ -112,7 +109,7 @@ namespace FS
 	};
 
 #endif
-} // namespace FS
+}  // namespace FS
 
 // ________________________________________________________________________________________________________________
 //

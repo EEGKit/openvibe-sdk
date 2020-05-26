@@ -23,6 +23,6 @@ OVP_Declare_Begin()
 
 OVP_Declare_End()
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

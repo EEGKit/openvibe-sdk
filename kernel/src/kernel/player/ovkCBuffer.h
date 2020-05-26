@@ -2,18 +2,16 @@
 
 #include <openvibe/ov_all.h>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CBuffer final : public CMemoryBuffer
 {
-	namespace Kernel
-	{
-		class CBuffer final : public CMemoryBuffer
-		{
-		public:
+public:
 
-			CBuffer() { }
-			explicit CBuffer(const CBuffer& buffer);
+	CBuffer() { }
+	explicit CBuffer(const CBuffer& buffer);
 
-			CBuffer& operator=(const CBuffer& buffer);
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	CBuffer& operator=(const CBuffer& buffer);
+};
+}  // namespace Kernel
+}  // namespace OpenViBE

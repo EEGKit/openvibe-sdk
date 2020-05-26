@@ -31,15 +31,14 @@
 
 using namespace System;
 
-namespace
-{
+namespace {
 #if defined TARGET_OS_Windows
-	//const std::string LIB_PATH = OV_CMAKE_PATH_LIB;
+//const std::string LIB_PATH = OV_CMAKE_PATH_LIB;
 
-	// Microsoft specific
-	const std::string EXISTING_MODULE_NAME = "NTDLL.dll";
+// Microsoft specific
+const std::string EXISTING_MODULE_NAME = "NTDLL.dll";
 
-	std::string existingModulePath;
+std::string existingModulePath;
 
 #if defined _WIN64
 #define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEM
@@ -47,24 +46,24 @@ namespace
 	#define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEMX86
 #endif
 
-	std::string existingModulePathName;
-	const std::string NON_EXISTING_MODULE_NAME = "randomRandomRandom.dll";
+std::string existingModulePathName;
+const std::string NON_EXISTING_MODULE_NAME = "randomRandomRandom.dll";
 
-	const std::string NON_EXISTING_SYMBOL = "nonExistingSymbol";
+const std::string NON_EXISTING_SYMBOL = "nonExistingSymbol";
 
-	const std::string EXISTING_ENVIRONMENT_PATH = "PATH";
+const std::string EXISTING_ENVIRONMENT_PATH = "PATH";
 
-	const std::string EXISTING_REGISTRY_MODULE_NAME = EXISTING_MODULE_NAME;
-	const std::string SYMBOL_NAME_NTDLL             = "toupper";
+const std::string EXISTING_REGISTRY_MODULE_NAME = EXISTING_MODULE_NAME;
+const std::string SYMBOL_NAME_NTDLL             = "toupper";
 
-	const HKEY EXISTING_REGISTRY_KEY     = HKEY_LOCAL_MACHINE; // 0x80000002
-	const HKEY NON_EXISTING_REGISTRY_KEY = HKEY(ULONG_PTR(LONG(0x800000FF)));
+const HKEY EXISTING_REGISTRY_KEY     = HKEY_LOCAL_MACHINE; // 0x80000002
+const HKEY NON_EXISTING_REGISTRY_KEY = HKEY(ULONG_PTR(LONG(0x800000FF)));
 
-	const std::string EXISTING_REGISTRY_PATH     = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
-	const std::string NON_EXISTING_REGISTRY_PATH = "SOFTWARE\\Random\\Random\\Random";
+const std::string EXISTING_REGISTRY_PATH     = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
+const std::string NON_EXISTING_REGISTRY_PATH = "SOFTWARE\\Random\\Random\\Random";
 
-	int (*toupperSymbol)(int c);
-	bool (*randomRandomRandomSymbol)(int number);
+int (*toupperSymbol)(int c);
+bool (*randomRandomRandomSymbol)(int number);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	static const std::string EXISTING_SYMBOL = "createCSVLib";

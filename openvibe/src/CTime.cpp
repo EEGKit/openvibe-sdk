@@ -44,4 +44,4 @@ std::string CTime::str(const bool inSecond, const bool inHexa) const
 }
 //--------------------------------------------------------------------------------
 
-} // namespace OpenViBE
+}  // namespace OpenViBE

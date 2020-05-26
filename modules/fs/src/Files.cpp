@@ -162,8 +162,10 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 	bool res = true;
 	if (pFile1 && pFile2)
 	{
-		const HANDLE handle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-		const HANDLE handle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+		const HANDLE handle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+											FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+		const HANDLE handle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+											FILE_FLAG_BACKUP_SEMANTICS, nullptr);
 		if (handle1 && handle2)
 		{
 			BY_HANDLE_FILE_INFORMATION stat1;
@@ -173,10 +175,10 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 			if (!bStat1 && !bStat2) { res = true; }
 			else if (bStat1 && bStat2)
 			{
-				res = (stat1.dwVolumeSerialNumber == stat2.dwVolumeSerialNumber) && (stat1.nFileIndexHigh == stat2.nFileIndexHigh) 
-					&& (stat1.nFileIndexLow == stat2.nFileIndexLow) && (stat1.nFileSizeHigh == stat2.nFileSizeHigh) 
-					&& (stat1.nFileSizeLow == stat2.nFileSizeLow) && (stat1.ftLastWriteTime.dwHighDateTime == stat2.ftLastWriteTime.dwHighDateTime) 
-					&& (stat1.ftLastWriteTime.dwLowDateTime == stat2.ftLastWriteTime.dwLowDateTime);
+				res = (stat1.dwVolumeSerialNumber == stat2.dwVolumeSerialNumber) && (stat1.nFileIndexHigh == stat2.nFileIndexHigh)
+					  && (stat1.nFileIndexLow == stat2.nFileIndexLow) && (stat1.nFileSizeHigh == stat2.nFileSizeHigh)
+					  && (stat1.nFileSizeLow == stat2.nFileSizeLow) && (stat1.ftLastWriteTime.dwHighDateTime == stat2.ftLastWriteTime.dwHighDateTime)
+					  && (stat1.ftLastWriteTime.dwLowDateTime == stat2.ftLastWriteTime.dwLowDateTime);
 			}
 			else { res = false; }
 			CloseHandle(handle1);
@@ -331,7 +333,6 @@ bool Files::removeAll(const char* path)
 	}
 	return true;
 }
-
 
 
 // old boost compliance

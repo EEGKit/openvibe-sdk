@@ -28,4 +28,4 @@ public:
 	CIdentifier m_ID = OV_UndefinedIdentifier;	///< The Id of the message
 	CTime m_Time;								///< The time of the message
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

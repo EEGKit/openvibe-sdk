@@ -3,39 +3,37 @@
 #include <openvibe/kernel/scenario/ovIMetadata.h>
 #include "../ovkTKernelObject.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CScenario;
+
+class CMetadata final : public TKernelObject<IMetadata>
 {
-	namespace Kernel
-	{
-		class CScenario;
+public:
 
-		class CMetadata final : public TKernelObject<IMetadata>
-		{
-		public:
+	CMetadata(const IKernelContext& ctx, CScenario& ownerScenario);
+	~CMetadata() override;
 
-			CMetadata(const IKernelContext& ctx, CScenario& ownerScenario);
-			~CMetadata() override;
+	CIdentifier getIdentifier() const override;
+	CIdentifier getType() const override;
+	CString getData() const override;
+	bool setIdentifier(const CIdentifier& identifier) override;
+	bool setType(const CIdentifier& typeID) override;
+	bool setData(const CString& data) override;
 
-			CIdentifier getIdentifier() const override;
-			CIdentifier getType() const override;
-			CString getData() const override;
-			bool setIdentifier(const CIdentifier& identifier) override;
-			bool setType(const CIdentifier& typeID) override;
-			bool setData(const CString& data) override;
+	bool initializeFromExistingMetadata(const IMetadata& existingMetadata) override;
 
-			bool initializeFromExistingMetadata(const IMetadata& existingMetadata) override;
+	bool acceptVisitor(IObjectVisitor& objectVisitor) override;
 
-			bool acceptVisitor(IObjectVisitor& objectVisitor) override;
+	_IsDerivedFromClass_Final_(TKernelObject<IMetadata>, OVK_ClassId_Kernel_Scenario_Metadata)
 
-			_IsDerivedFromClass_Final_(TKernelObject<IMetadata>, OVK_ClassId_Kernel_Scenario_Metadata)
+private:
 
-		private:
+	CScenario& m_ownerScenario;
 
-			CScenario& m_ownerScenario;
-
-			CIdentifier m_id   = OV_UndefinedIdentifier;
-			CIdentifier m_type = OV_UndefinedIdentifier;
-			CString m_data;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	CIdentifier m_id   = OV_UndefinedIdentifier;
+	CIdentifier m_type = OV_UndefinedIdentifier;
+	CString m_data;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE

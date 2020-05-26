@@ -7,43 +7,42 @@
 using namespace OpenViBE;
 using namespace std;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace {
+class CMatrixImpl final : public IMatrix
 {
-	namespace
-	{
-		class CMatrixImpl final : public IMatrix
-		{
-		public:
+public:
 
-			CMatrixImpl();
-			CMatrixImpl(const CMatrixImpl& other);
-			~CMatrixImpl() override;
-			size_t getDimensionCount() const override;
-			size_t getDimensionSize(const size_t index) const override;
-			const char* getDimensionLabel(const size_t idx1, const size_t idx2) const override;
-			const double* getBuffer() const override;
-			size_t getBufferElementCount() const override;
-			bool setDimensionCount(const size_t count) override;
-			bool setDimensionSize(const size_t index, const size_t size) override;
-			bool setDimensionLabel(const size_t idx1, const size_t idx2, const char* label) override;
-			double* getBuffer() override;
+	CMatrixImpl();
+	CMatrixImpl(const CMatrixImpl& other);
+	~CMatrixImpl() override;
+	size_t getDimensionCount() const override;
+	size_t getDimensionSize(const size_t index) const override;
+	const char* getDimensionLabel(const size_t idx1, const size_t idx2) const override;
+	const double* getBuffer() const override;
+	size_t getBufferElementCount() const override;
+	bool setDimensionCount(const size_t count) override;
+	bool setDimensionSize(const size_t index, const size_t size) override;
+	bool setDimensionLabel(const size_t idx1, const size_t idx2, const char* label) override;
+	double* getBuffer() override;
 
-			_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixImpl)
+	_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixImpl)
 
-		private:
+private:
 
-			bool refreshInternalBuffer() const;
+	bool refreshInternalBuffer() const;
 
-		protected:
+protected:
 
-			mutable double* m_buffer = nullptr;
-			mutable size_t m_size    = 0;
+	mutable double* m_buffer = nullptr;
+	mutable size_t m_size    = 0;
 
-			std::vector<size_t> m_dimensionSizes;
-			std::vector<std::vector<std::string>> m_dimensionLabels;
-		};
-	} // namespace
-} // namespace OpenViBE
+	std::vector<size_t> m_dimensionSizes;
+	std::vector<std::vector<std::string>> m_dimensionLabels;
+};
+
+}  // namespace
+}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //

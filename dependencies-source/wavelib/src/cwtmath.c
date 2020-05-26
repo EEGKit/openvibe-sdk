@@ -62,7 +62,7 @@ static void nsfft_fd(const fft_object obj, fft_data* inp, fft_data* oup, const d
 		oup[i].im = delta * (tempi * cos(theta) - tempr * sin(theta));
 	}
 
-	
+
 	//free(w);
 	free(temp1);
 	free(temp2);
@@ -169,8 +169,8 @@ double gamma(double x)
 	Springer Verlag, Berlin, 1976.
 
    Computer Approximations, Hart, Et. Al., Wiley and sons, New York, 1968.
-   */ 
-   
+   */
+
 	// numerator and denominator coefficients for 1 <= x <= 2
 
 	double oup, yi, z;
@@ -203,8 +203,8 @@ double gamma(double x)
 		4.75584627752788110767815e+3,
 		-1.34659959864969306392456e+5,
 		-1.15132259675553483497211e+5
-	}; 
-                       
+	};
+
 	// Coefficients for Hart's Minimax approximation x >= 12       
 
 

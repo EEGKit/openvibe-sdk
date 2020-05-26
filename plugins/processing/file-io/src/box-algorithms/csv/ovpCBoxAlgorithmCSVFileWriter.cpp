@@ -34,7 +34,8 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 		{
 			if (m_typeID != OV_TypeId_StreamedMatrix)
 			{
-				this->getLogManager() << Kernel::LogLevel_Info << "Input is a type derived from matrix that the box doesn't recognize, decoding as Streamed Matrix\n";
+				this->getLogManager() << Kernel::LogLevel_Info <<
+						"Input is a type derived from matrix that the box doesn't recognize, decoding as Streamed Matrix\n";
 			}
 			m_decoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>();
 			m_decoder->initialize(*this, 0);

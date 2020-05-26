@@ -2,25 +2,24 @@
 
 #include "IWriter.h"
 
-namespace EBML
+namespace EBML {
+class EBML_API CWriter final : public IWriter
 {
-	class EBML_API CWriter final : public IWriter
-	{
-	public:
+public:
 
-		explicit CWriter(IWriterCallback& callback);
-		~CWriter() override;
-		bool openChild(const CIdentifier& identifier) override;
-		bool setChildData(const void* buffer, const size_t size) override;
-		bool closeChild() override;
-		void release() override;
+	explicit CWriter(IWriterCallback& callback);
+	~CWriter() override;
+	bool openChild(const CIdentifier& identifier) override;
+	bool setChildData(const void* buffer, const size_t size) override;
+	bool closeChild() override;
+	void release() override;
 
-	protected:
+protected:
 
-		IWriter* m_impl = nullptr;
+	IWriter* m_impl = nullptr;
 
-	private:
+private:
 
-		CWriter() = delete;
-	};
-} // namespace EBML
+	CWriter() = delete;
+};
+}  // namespace EBML
