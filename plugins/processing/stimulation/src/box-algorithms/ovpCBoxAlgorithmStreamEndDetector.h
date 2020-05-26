@@ -41,9 +41,9 @@ namespace OpenViBE
 					Finished
 				};
 
-				uint64_t m_endDate             = 0;
-				uint64_t m_currentChunkEndDate = 0;
-				uint64_t m_previousTime        = 0;
+				CTime m_endDate             = 0;
+				CTime m_currentChunkEndDate = 0;
+				CTime m_previousTime        = 0;
 				size_t m_inputEBMLIdx          = 0;
 				size_t m_outputStimulationsIdx = 0;
 				bool m_isHeaderSent            = false;

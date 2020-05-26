@@ -22,9 +22,9 @@ namespace OpenViBE
 			{
 			public:
 
-				CBoxAlgorithmGenericStreamReader();
+				CBoxAlgorithmGenericStreamReader() : m_reader(*this) {}
 				void release() override { delete this; }
-				uint64_t getClockFrequency() override;
+				uint64_t getClockFrequency() override { return 128LL << 32; }
 				bool initialize() override;
 				bool uninitialize() override;
 				bool processClock(CMessage& msg) override;
@@ -42,8 +42,8 @@ namespace OpenViBE
 
 				CMemoryBuffer m_swap;
 				CMemoryBuffer m_pendingChunk;
-				uint64_t m_startTime = 0;
-				uint64_t m_endTime   = 0;
+				CTime m_startTime = 0;
+				CTime m_endTime   = 0;
 				size_t m_outputIdx   = 0;
 				bool m_pending       = false;
 				bool m_hasEBMLHeader = false;

@@ -105,7 +105,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_iMatrix = decoder->getOutputMatrix();
 		m_oMatrix = encoder->getInputMatrix();
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", Kernel::ErrorType::BadInput); }
 
 	m_vLookup.clear();
 	return true;
@@ -200,7 +200,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						OV_ERROR_UNLESS_KRF(
 							startIdx != std::numeric_limits<size_t>::max() && endIdx != std::numeric_limits<size_t>::max() && startIdx <= endIdx,
 							"Invalid channel range [" << tokens[j] << "] - splitted as [" << subTokens[0] << "][" << subTokens[1] << "]",
-							ErrorType::BadSetting);
+							Kernel::ErrorType::BadSetting);
 
 						// The range is valid so selects all the channels in this range
 						this->getLogManager() << LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
@@ -224,7 +224,7 @@ bool CBoxAlgorithmChannelSelector::process()
 							this->getLogManager() << LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
 						}
 
-						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", ErrorType::BadSetting);
+						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", Kernel::ErrorType::BadSetting);
 					}
 				}
 
@@ -254,7 +254,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			// ______________________________________________________________________________________________________________________________________________________
 			//
 
-			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", ErrorType::BadConfig);
+			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", Kernel::ErrorType::BadConfig);
 
 			m_oMatrix->setDimensionCount(2);
 			m_oMatrix->setDimensionSize(0, m_vLookup.size());

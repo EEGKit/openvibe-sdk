@@ -31,7 +31,7 @@ size_t CBoxAlgorithmSpatialFilter::loadCoefs(const CString& coefs, const char c1
 	}
 
 	OV_ERROR_UNLESS_KRZ(count == nRows*nCols, "Invalid computed coefficients count [" << count << "] (expected " << nRows * nCols << " coefficients)",
-						ErrorType::BadProcessing);
+						Kernel::ErrorType::BadProcessing);
 
 	// Resize in one step for efficiency.
 	m_filterBank.setDimensionCount(2);
@@ -61,7 +61,7 @@ size_t CBoxAlgorithmSpatialFilter::loadCoefs(const CString& coefs, const char c1
 		buffer[i] = 0;
 
 		OV_ERROR_UNLESS_KRZ(idx < count, "Invalid parsed coefficient number [" << idx << "] (expected maximium " << count << " coefficients)",
-							ErrorType::BadProcessing);
+							Kernel::ErrorType::BadProcessing);
 
 		// Finally, convert
 		try { filter[idx] = std::stod(buffer); }
@@ -71,7 +71,7 @@ size_t CBoxAlgorithmSpatialFilter::loadCoefs(const CString& coefs, const char c1
 			const size_t col = idx % nRows + 1;
 
 			OV_ERROR_KRZ("Failed to parse coefficient number [" << idx << "] at matrix positions [" << row << "," << col << "]",
-						 ErrorType::BadProcessing);
+						 Kernel::ErrorType::BadProcessing);
 		}
 
 		idx++;
@@ -116,7 +116,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(
 				m_decoder)->getOutputSamplingRate());
 	}
-	else { OV_ERROR_KRF("Invalid input stream type [" << id.str() << "]", ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input stream type [" << id.str() << "]", Kernel::ErrorType::BadInput); }
 
 	// If we have a filter file, use dimensions and coefficients from that. Otherwise, use box config params.
 	const CString filterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -124,11 +124,11 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 	{
 		OV_ERROR_UNLESS_KRF(Toolkit::Matrix::loadFromTextFile(m_filterBank, filterFile),
 							"Failed to load filter parameters from file at location [" << filterFile << "]",
-							ErrorType::BadFileRead);
+							Kernel::ErrorType::BadFileRead);
 
 		OV_ERROR_UNLESS_KRF(m_filterBank.getDimensionCount() == 2,
 							"Invalid filter matrix in file " << filterFile << ": found [" << m_filterBank.getDimensionCount() <<
-							"] dimensions (expected 2 dimension)", ErrorType::BadConfig);
+							"] dimensions (expected 2 dimension)", Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
 		Toolkit::Matrix::saveToTextFile(m_filterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
@@ -144,7 +144,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 
 		OV_ERROR_UNLESS_KRF(nCoefs == nOChannels * nIChannels,
 							"Invalid number of coefficients [" << nCoefs << "] (expected "<< nOChannels * nIChannels
-							<< " coefficients)", ErrorType::BadConfig);
+							<< " coefficients)", Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
 		Toolkit::Matrix::saveToTextFile(m_filterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
@@ -196,14 +196,14 @@ bool CBoxAlgorithmSpatialFilter::process()
 
 			OV_ERROR_UNLESS_KRF(nChannelIn != 0 && nSampleIn != 0,
 								"Invalid matrix size with zero dimension on input [" << nChannelIn << " x " << nSampleIn << "]",
-								ErrorType::BadConfig);
+								Kernel::ErrorType::BadConfig);
 
 			const size_t nChannelFilterIn  = m_filterBank.getDimensionSize(1);
 			const size_t nChannelFilterOut = m_filterBank.getDimensionSize(0);
 
 			OV_ERROR_UNLESS_KRF(nChannelIn == nChannelFilterIn,
 								"Invalid input channel count  [" << nChannelIn << "] (expected " << nChannelFilterIn << " channel count)",
-								ErrorType::BadConfig);
+								Kernel::ErrorType::BadConfig);
 
 			IMatrix* oMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
 			oMatrix->setDimensionCount(2);

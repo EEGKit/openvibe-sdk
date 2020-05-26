@@ -2,15 +2,9 @@
 
 
 using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace DataGeneration;
-using namespace /*OpenViBE::*/Toolkit;
 using namespace std;
-
-CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator() {}
-
-void CBoxAlgorithmTimeSignalGenerator::release() { delete this; }
 
 bool CBoxAlgorithmTimeSignalGenerator::initialize()
 {
@@ -40,7 +34,7 @@ bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessage& /*msg*/)
 
 bool CBoxAlgorithmTimeSignalGenerator::process()
 {
-	IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	Kernel::IBoxIO* boxCtx = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	if (!m_headerSent)
 	{
@@ -57,7 +51,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		m_headerSent = true;
 
-		boxContext->markOutputAsReadyToSend(0, 0, 0);
+		boxCtx->markOutputAsReadyToSend(0, 0, 0);
 	}
 	else
 	{
@@ -72,11 +66,11 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 			m_encoder.encodeBuffer();
 
-			const uint64_t tStart = CTime(m_sampling, m_nSentSample).time();
+			const CTime tStart = CTime(m_sampling, m_nSentSample);
 			m_nSentSample += m_nGeneratedEpochSample;
-			const uint64_t tEnd = CTime(m_sampling, m_nSentSample).time();
+			const CTime tEnd = CTime(m_sampling, m_nSentSample);
 
-			boxContext->markOutputAsReadyToSend(0, tStart, tEnd);
+			boxCtx->markOutputAsReadyToSend(0, tStart, tEnd);
 		}
 	}
 

@@ -428,7 +428,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 		return false;
 	}
 
-	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", ErrorType::BadXMLSchemaValidation);
+	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", Kernel::ErrorType::BadXMLSchemaValidation);
 }
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, const size_t size)

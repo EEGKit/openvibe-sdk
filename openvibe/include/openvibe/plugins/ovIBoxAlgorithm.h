@@ -2,270 +2,256 @@
 
 #include "ovIPluginObject.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+
+/**
+ * \brief This enum lists all the way a box can be modified
+ * \sa Plugins::IBoxListener::process
+ */
+enum class EBoxModification
 {
-	namespace Kernel
-	{
-		class CMessage;
-		class CMessage;
-		class CMessage;
+	Initialized, DefaultInitialized,
+	NameChanged, IdentifierChanged, AlgorithmClassIdentifierChanged,
+	InputConnected, InputDisconnected, InputAdded, InputRemoved, InputTypeChanged, InputNameChanged,
+	OutputConnected, OutputDisconnected, OutputAdded, OutputRemoved, OutputTypeChanged, OutputNameChanged,
+	SettingAdded, SettingRemoved, SettingTypeChanged, SettingNameChanged, SettingDefaultValueChanged, SettingValueChanged
+};
 
-		/**
-		 * \brief This enum lists all the way a box can be modified
-		 * \sa Plugins::IBoxListener::process
-		 */
-		enum class EBoxModification
-		{
-			Initialized, DefaultInitialized,
-			NameChanged, IdentifierChanged, AlgorithmClassIdentifierChanged,
-			InputConnected, InputDisconnected, InputAdded, InputRemoved, InputTypeChanged, InputNameChanged,
-			OutputConnected, OutputDisconnected, OutputAdded, OutputRemoved, OutputTypeChanged, OutputNameChanged,
-			SettingAdded, SettingRemoved, SettingTypeChanged, SettingNameChanged, SettingDefaultValueChanged, SettingValueChanged
-		};
-	}  // namespace Kernel
+class IBoxAlgorithmContext;
+class IBoxListenerContext;
+}  // namespace Kernel
 
-	// for backward compatibility
-	typedef CMessage CMessage;
-	typedef CMessage CMessage;
-	typedef CMessage CMessage;
+namespace Plugins {
+/**
+ * \class IBoxAlgorithm
+ * \author Yann Renard (INRIA/IRISA)
+ * \date 2006-06-19
+ * \brief Algorithm to create/process/transform OpenViBE data
+ * \ingroup Group_Extend
+ *
+ * This class should be derived by any plugin that is related
+ * to data processing. It can be data acquisition/production
+ * from an hardware device or from a file. It can be data
+ * processing/transforming, moving time information into
+ * frequency space for example. It can be data classification
+ * generating discrete classification events better than
+ * continuous data flow.
+ *
+ * This is the heart of the extension mechanism of the
+ * OpenViBE platform.
+ *
+ * \sa Kernel::IBoxAlgorithmDesc
+ *
+ * \todo details about building new plugins
+ */
+class OV_API IBoxAlgorithm : public IPluginObject
+{
+public:
 
-	namespace Kernel
-	{
-		class IBoxAlgorithmContext;
-		class IBoxListenerContext;
-	}
+	/** \name Behavioral configuration */
+	//@{
 
-	namespace Plugins
-	{
-		/**
-		 * \class IBoxAlgorithm
-		 * \author Yann Renard (INRIA/IRISA)
-		 * \date 2006-06-19
-		 * \brief Algorithm to create/process/transform OpenViBE data
-		 * \ingroup Group_Extend
-		 *
-		 * This class should be derived by any plugin that is related
-		 * to data processing. It can be data acquisition/production
-		 * from an hardware device or from a file. It can be data
-		 * processing/transforming, moving time information into
-		 * frequency space for example. It can be data classification
-		 * generating discrete classification events better than
-		 * continuous data flow.
-		 *
-		 * This is the heart of the extension mechanism of the
-		 * OpenViBE platform.
-		 *
-		 * \sa Kernel::IBoxAlgorithmDesc
-		 *
-		 * \todo details about building new plugins
-		 */
-		class OV_API IBoxAlgorithm : public IPluginObject
-		{
-		public:
+	/**
+	 * \brief Gets the clock frequency to call this algorithm
+	 * \param ctx [in] : The current box state
+	 * \return The clock frequency to call this algorithm
+	 * \note Default implementation returns 0
+	 *
+	 * This function is used for algorithms that are triggered on
+	 * clock signals. The frequency is given in Hz, with 32:32 fixed
+	 * point representation thus returning \c (1<<32) will make the
+	 * algorithm to be called every second, returning \c (100<<32)
+	 * will make the algorithm being called 100 times a second,
+	 * returning \c (1<<31) will make the algorithm be called once
+	 * every two seconds and so on...
+	 *
+	 * \note Returning 0 means the algorithm should not be
+	 *       clock activated.
+	 *
+	 * \sa processClock
+	 */
+	virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& ctx) { return 0; }
 
-			/** \name Behavioral configuration */
-			//@{
+	//@}
+	/** \name Initialization / Uninitialization */
+	//@{
 
-			/**
-			 * \brief Gets the clock frequency to call this algorithm
-			 * \param ctx [in] : The current box state
-			 * \return The clock frequency to call this algorithm
-			 * \note Default implementation returns 0
-			 *
-			 * This function is used for algorithms that are triggered on
-			 * clock signals. The frequency is given in Hz, with 32:32 fixed
-			 * point representation thus returning \c (1<<32) will make the
-			 * algorithm to be called every second, returning \c (100<<32)
-			 * will make the algorithm being called 100 times a second,
-			 * returning \c (1<<31) will make the algorithm be called once
-			 * every two seconds and so on...
-			 *
-			 * \note Returning 0 means the algorithm should not be
-			 *       clock activated.
-			 *
-			 * \sa processClock
-			 */
-			virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& ctx) { return 0; }
+	/**
+	 * \brief Prepares plugin object
+	 * \param ctx [in] : the plugin object context
+	 * \return \e true when this object successfully initialized
+	 *         or \e false if it didn't succeed to initialize.
+	 * \note Default implementation simply returns \e true.
+	 *
+	 * After a successful initialization, the caller knows
+	 * the object can safely be used... On failure, this object
+	 * should be ready to be uninitialized and then released.
+	 *
+	 * \sa uninitialize
+	 */
+	virtual bool initialize(Kernel::IBoxAlgorithmContext& ctx) { return true; }
+	/**
+	 * \brief Unprepares the object so it can be deleted
+	 * \param ctx [in] : the plugin object context
+	 * \return \e true when this object sucessfully uninitialized or \e false if didn't succeed to uninitialize.
+	 * \exception this method must be noexcept
+	 * \note Default implementation simply returns \e true.
+	 *
+	 * If this function returns \e false, it means it could not
+	 * uninitialize the object members correctly. Thus, the
+	 * object won't be released and none of its method will
+	 * be called anymore for security. Note that this results
+	 * in memory leaks. This is why this method should return
+	 * \e true as often as possible.
+	 *
+	 * \sa initialize
+	 */
+	virtual bool uninitialize(Kernel::IBoxAlgorithmContext& ctx) { return true; }
 
-			//@}
-			/** \name Initialization / Uninitialization */
-			//@{
+	//@}
+	/** \name Several event processing callbacks */
+	//@{
 
-			/**
-			 * \brief Prepares plugin object
-			 * \param ctx [in] : the plugin object context
-			 * \return \e true when this object successfully initialized
-			 *         or \e false if it didn't succeed to initialize.
-			 * \note Default implementation simply returns \e true.
-			 *
-			 * After a successful initialization, the caller knows
-			 * the object can safely be used... On failure, this object
-			 * should be ready to be uninitialized and then released.
-			 *
-			 * \sa uninitialize
-			 */
-			virtual bool initialize(Kernel::IBoxAlgorithmContext& ctx) { return true; }
-			/**
-			 * \brief Unprepares the object so it can be deleted
-			 * \param ctx [in] : the plugin object context
-			 * \return \e true when this object sucessfully uninitialized or \e false if didn't succeed to uninitialize.
-			 * \exception this method must be noexcept
-			 * \note Default implementation simply returns \e true.
-			 *
-			 * If this function returns \e false, it means it could not
-			 * uninitialize the object members correctly. Thus, the
-			 * object won't be released and none of its method will
-			 * be called anymore for security. Note that this results
-			 * in memory leaks. This is why this method should return
-			 * \e true as often as possible.
-			 *
-			 * \sa initialize
-			 */
-			virtual bool uninitialize(Kernel::IBoxAlgorithmContext& ctx) { return true; }
+	/**
+	 * \brief Reaction to an event launched by another box
+	 * \param ctx [in] : the box algorithm context to use
+	 * \param msgEvent [in] : the message the box just received
+	 * \return \e true when the message is processed.
+	 * \return \e false when the message is not processed.
+	 * \note Default implementation returns \e false
+	 *
+	 * This function is called by the OpenViBE kernel when
+	 * another box tries to send an event message to this
+	 * box. This event message is described in the
+	 * msgEvent parameter and can be interpreted by this
+	 * algorithm.
+	 *
+	 * \sa IBoxAlgorithmContext
+	 */
+	virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgEvent) { return false; }
+	/**
+	 * \brief Reaction to a signal
+	 * \param ctx [in] : the box algorithm context to use
+	 * \param msgSignal [in] : the signal the box just received
+	 * \return \e true when the message is processed.
+	 * \return \e false when the message is not processed.
+	 * \note Default implementation returns \e false
+	 *
+	 * This function is called by the OpenViBE kernel when
+	 * it has sent a signal. Signal are special messages,
+	 * mainly sent by the kernel to all of the OpenViBE
+	 * boxes in order to tell them it is about to start,
+	 * processing, stop processing, load a new scenario
+	 * and so on...
+	 *
+	 * \sa Kernel::IBoxAlgorithmContext
+	 */
+	virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgSignal) { return false; }
+	/**
+	 * \brief Reaction to a clock tick
+	 * \param ctx [in] : the box algorithm context to use
+	 * \param msgClock [in] : the clock message the box received
+	 * \return \e true when the message is processed.
+	 * \return \e false when the message is not processed.
+	 * \note Default implementation returns \e false
+	 *
+	 * This function is called by the OpenViBE kernel when
+	 * it has sent clock messages. Clock messages are used for
+	 * processes that should be executed regularly and which
+	 * can not be triggered thanks to their inputs (for example
+	 * acquisition modules). They also can be used for example
+	 * when viewing inputs on smaller range than what input
+	 * sends periodically, thus needing a moving
+	 * 'viewed-window' on lastly received data.
+	 *
+	 * \sa Kernel::IBoxAlgorithmContext
+	 * \sa getClockFrequency
+	 */
+	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgClock) { return false; }
+	/**
+	 * \brief Reaction to an input update
+	 * \param ctx [in] : the box algorithm context to use
+	 * \param index [in] : the index of the input which has ben updated
+	 * \return \e true when the message is processed.
+	 * \return \e false when the message is not processed.
+	 * \note Default implementation returns \e false
+	 *
+	 * This function is called by the OpenViBE kernel each
+	 * time an input of this box is updated. This allows the
+	 * algorithm to decide to call the process function and
+	 * eventually to the received data.
+	 *
+	 * \sa Kernel::IBoxAlgorithmContext
+	 */
+	virtual bool processInput(Kernel::IBoxAlgorithmContext& ctx, const size_t index) { return false; }
 
-			//@}
-			/** \name Several event processing callbacks */
-			//@{
+	//@}
+	/** \name Algorithm processing */
+	//@{
 
-			/**
-			 * \brief Reaction to an event launched by another box
-			 * \param ctx [in] : the box algorithm context to use
-			 * \param msgEvent [in] : the message the box just received
-			 * \return \e true when the message is processed.
-			 * \return \e false when the message is not processed.
-			 * \note Default implementation returns \e false
-			 *
-			 * This function is called by the OpenViBE kernel when
-			 * another box tries to send an event message to this
-			 * box. This event message is described in the
-			 * msgEvent parameter and can be interpreted by this
-			 * algorithm.
-			 *
-			 * \sa IBoxAlgorithmContext
-			 */
-			virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgEvent) { return false; }
-			/**
-			 * \brief Reaction to a signal
-			 * \param ctx [in] : the box algorithm context to use
-			 * \param msgSignal [in] : the signal the box just received
-			 * \return \e true when the message is processed.
-			 * \return \e false when the message is not processed.
-			 * \note Default implementation returns \e false
-			 *
-			 * This function is called by the OpenViBE kernel when
-			 * it has sent a signal. Signal are special messages,
-			 * mainly sent by the kernel to all of the OpenViBE
-			 * boxes in order to tell them it is about to start,
-			 * processing, stop processing, load a new scenario
-			 * and so on...
-			 *
-			 * \sa Kernel::IBoxAlgorithmContext
-			 */
-			virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgSignal) { return false; }
-			/**
-			 * \brief Reaction to a clock tick
-			 * \param ctx [in] : the box algorithm context to use
-			 * \param msgClock [in] : the clock message the box received
-			 * \return \e true when the message is processed.
-			 * \return \e false when the message is not processed.
-			 * \note Default implementation returns \e false
-			 *
-			 * This function is called by the OpenViBE kernel when
-			 * it has sent clock messages. Clock messages are used for
-			 * processes that should be executed regularly and which
-			 * can not be triggered thanks to their inputs (for example
-			 * acquisition modules). They also can be used for example
-			 * when viewing inputs on smaller range than what input
-			 * sends periodically, thus needing a moving
-			 * 'viewed-window' on lastly received data.
-			 *
-			 * \sa Kernel::IBoxAlgorithmContext
-			 * \sa getClockFrequency
-			 */
-			virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgClock) { return false; }
-			/**
-			 * \brief Reaction to an input update
-			 * \param ctx [in] : the box algorithm context to use
-			 * \param index [in] : the index of the input which has ben updated
-			 * \return \e true when the message is processed.
-			 * \return \e false when the message is not processed.
-			 * \note Default implementation returns \e false
-			 *
-			 * This function is called by the OpenViBE kernel each
-			 * time an input of this box is updated. This allows the
-			 * algorithm to decide to call the process function and
-			 * eventually to the received data.
-			 *
-			 * \sa Kernel::IBoxAlgorithmContext
-			 */
-			virtual bool processInput(Kernel::IBoxAlgorithmContext& ctx, const size_t index) { return false; }
+	/**
+	 * \brief Processing function
+	 * \param ctx [in] : the box algorithm context to use
+	 * \return \e true on success, \e false when something went wrong.
+	 *
+	 * This function is used to process the arrived data and
+	 * eventually generate results. See OpenViBE global
+	 * architecture to understand how the commponents interact
+	 * and how an OpenViBE box works internally.
+	 *
+	 * The processing function may use the provided context
+	 * in order to read its inputs and write its outputs...
+	 * Also it could use the provided context to send
+	 * messages/events to other boxes. Finally, it may use
+	 * the provided context in order to perform rendering
+	 * tasks !
+	 *
+	 * \sa Kernel::IBoxAlgorithmContext
+	 */
+	virtual bool process(Kernel::IBoxAlgorithmContext& ctx) = 0;
 
-			//@}
-			/** \name Algorithm processing */
-			//@{
+	//@}
 
-			/**
-			 * \brief Processing function
-			 * \param ctx [in] : the box algorithm context to use
-			 * \return \e true on success, \e false when something went wrong.
-			 *
-			 * This function is used to process the arrived data and
-			 * eventually generate results. See OpenViBE global
-			 * architecture to understand how the commponents interact
-			 * and how an OpenViBE box works internally.
-			 *
-			 * The processing function may use the provided context
-			 * in order to read its inputs and write its outputs...
-			 * Also it could use the provided context to send
-			 * messages/events to other boxes. Finally, it may use
-			 * the provided context in order to perform rendering
-			 * tasks !
-			 *
-			 * \sa Kernel::IBoxAlgorithmContext
-			 */
-			virtual bool process(Kernel::IBoxAlgorithmContext& ctx) = 0;
+	_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxAlgorithm)
+};
 
-			//@}
+class OV_API IBoxListener : public IPluginObject
+{
+public:
+	~IBoxListener() override { }
+	void release() override { }
 
-			_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxAlgorithm)
-		};
+	virtual bool initialize(Kernel::IBoxListenerContext& /*boxListenerCtx*/) { return true; }
 
-		class OV_API IBoxListener : public IPluginObject
-		{
-		public:
-			~IBoxListener() override { }
-			void release() override { }
+	virtual bool uninitialize(Kernel::IBoxListenerContext& /*boxListenerCtx*/) { return true; }
 
-			virtual bool initialize(Kernel::IBoxListenerContext& /*boxListenerCtx*/) { return true; }
+	/** \name Box modifications callbacks */
+	//@{
 
-			virtual bool uninitialize(Kernel::IBoxListenerContext& /*boxListenerCtx*/) { return true; }
+	/**
+	 * \brief This callback is called when the box is modified in some way
+	 * \return \e true in case of success.
+	 * \return \e false in case of error.
+	 * \param boxListenerCtx [in] : the box listener context
+	 *        containing the description of the box
+	 * \param boxModificationType [in] : the type of modification
+	 *        applied to the box
+	 *
+	 * This function is called as soon as a modification is done
+	 * on the box which this listener is attached to. The box listener
+	 * is then allowed to examine and check box status validity
+	 * and to adpat the box itself according to this validity.
+	 *
+	 * \sa IBoxProto
+	 * \sa IBoxListenerContext
+	 * \sa EBoxModification
+	 */
+	virtual bool process(Kernel::IBoxListenerContext& boxListenerCtx, const Kernel::EBoxModification boxModificationType) = 0;
 
-			/** \name Box modifications callbacks */
-			//@{
+	//@}
 
-			/**
-			 * \brief This callback is called when the box is modified in some way
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 * \param boxListenerCtx [in] : the box listener context
-			 *        containing the description of the box
-			 * \param boxModificationType [in] : the type of modification
-			 *        applied to the box
-			 *
-			 * This function is called as soon as a modification is done
-			 * on the box which this listener is attached to. The box listener
-			 * is then allowed to examine and check box status validity
-			 * and to adpat the box itself according to this validity.
-			 *
-			 * \sa IBoxProto
-			 * \sa IBoxListenerContext
-			 * \sa EBoxModification
-			 */
-			virtual bool process(Kernel::IBoxListenerContext& boxListenerCtx, const Kernel::EBoxModification boxModificationType) = 0;
-
-			//@}
-
-			_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxListener)
-		};
-	} // namespace Plugins
+	_IsDerivedFromClass_(IPluginObject, OV_ClassId_Plugins_BoxListener)
+};
+} // namespace Plugins
 } // namespace OpenViBE

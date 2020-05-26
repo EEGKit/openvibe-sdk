@@ -27,7 +27,7 @@ bool CAlgorithmOVMatrixFileReader::process()
 {
 	OV_ERROR_UNLESS_KRF(Toolkit::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
 						"Reading matrix file " << *ip_sFilename << " failed",
-						ErrorType::BadFileRead);
+						Kernel::ErrorType::BadFileRead);
 
 	return true;
 }

@@ -39,8 +39,8 @@ namespace OpenViBE
 			bool setFastForwardMaximumFactor(double fastForwardFactor) override;
 			double getFastForwardMaximumFactor() const override;
 			double getCPUUsage() const override;
-			bool loop(uint64_t elapsedTime, uint64_t maximumTimeToReach) override;
-			uint64_t getCurrentSimulatedTime() const override;
+			bool loop(CTime elapsedTime, CTime maximumTimeToReach) override;
+			CTime getCurrentSimulatedTime() const override;
 			uint64_t getCurrentSimulatedLateness() const;
 
 
@@ -55,7 +55,7 @@ namespace OpenViBE
 
 			CScheduler m_scheduler;
 
-			uint64_t m_currentTimeToReach     = 0;
+			CTime m_currentTimeToReach     = 0;
 			uint64_t m_lateness               = 0;
 			uint64_t m_innerLateness          = 0;
 			EPlayerStatus m_status            = EPlayerStatus::Stop;

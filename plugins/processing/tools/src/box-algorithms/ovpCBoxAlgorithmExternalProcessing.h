@@ -32,8 +32,8 @@ private:
 
 	struct SPacket
 	{
-		uint64_t startTime;
-		uint64_t endTime;
+		CTime startTime;
+		CTime endTime;
 		size_t index;
 		std::shared_ptr<std::vector<uint8_t>> EBML;
 
@@ -74,12 +74,12 @@ private:
 
 	int m_extProcessId = 0;
 
-	uint64_t m_acceptTimeout     = 0;
+	CTime m_acceptTimeout     = 0;
 	bool m_shouldLaunchProgram   = false;
 	bool m_hasReceivedEndMessage = false;
 	// Synchronization timeout, and save time of last synchronization
-	uint64_t m_syncTimeout  = 0;
-	uint64_t m_lastSyncTime = 0;
+	CTime m_syncTimeout  = 0;
+	CTime m_lastSyncTime = 0;
 
 	std::map<uint64_t, Toolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_decoders;
 	std::queue<SPacket> m_packetHistory;

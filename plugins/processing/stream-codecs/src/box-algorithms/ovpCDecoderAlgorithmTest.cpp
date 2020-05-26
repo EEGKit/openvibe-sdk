@@ -29,17 +29,17 @@ static stringstream print(IMatrix& matrix)
 	return ss;
 }
 
-static stringstream print(IStimulationSet& stimSet)
+static stringstream print(CStimulationSet& stimSet)
 {
 	stringstream ss;
 	ss << "Stimulation set :\n";
-	ss << " | Number of elements : " << stimSet.getStimulationCount() << "\n";
-	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
+	ss << " | Number of elements : " << stimSet.size() << "\n";
+	for (size_t i = 0; i < stimSet.size(); ++i)
 	{
 		ss << " |   Stimulation " << i << " : "
-				<< "id = " << stimSet.getStimulationIdentifier(i) << " "
-				<< "date = " << stimSet.getStimulationDate(i) << " "
-				<< "duration = " << stimSet.getStimulationDuration(i) << "\n";
+				<< "id = " << stimSet[i].m_ID << " "
+				<< "date = " << stimSet[i].m_Date << " "
+				<< "duration = " << stimSet[i].m_Duration << "\n";
 	}
 	return ss;
 }
@@ -115,7 +115,7 @@ bool CDecoderAlgorithmTest::process()
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer))
 			{
 				{
-					TParameterHandler<IStimulationSet*>
+					TParameterHandler<CStimulationSet*>
 							handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
 					if (handler.exists()) { getLogManager() << LogLevel_Warning << print(*handler).str() << "\n"; }
 				}

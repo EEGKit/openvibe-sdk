@@ -120,7 +120,7 @@ int main(const int argc, char** argv)
 
 		uint64_t packetId;
 		size_t index;
-		uint64_t startTime;
+		CTime startTime;
 		uint64_t endtime;
 		std::shared_ptr<const std::vector<uint8_t>> ebml;
 

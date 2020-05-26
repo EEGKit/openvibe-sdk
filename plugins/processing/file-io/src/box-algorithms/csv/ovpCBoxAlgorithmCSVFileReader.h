@@ -62,8 +62,8 @@ namespace OpenViBE
 
 				double m_nextTime = 0;
 
-				uint64_t m_startTime = 0;
-				uint64_t m_endTime   = 0;
+				CTime m_startTime = 0;
+				CTime m_endTime   = 0;
 
 				static const size_t BUFFER_LEN = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 			};

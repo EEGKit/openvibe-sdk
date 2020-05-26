@@ -23,8 +23,8 @@ namespace OpenViBE
 
 			protected:
 
-				uint64_t m_lastStartTime = 0;
-				uint64_t m_lastEndTime   = 0;
+				CTime m_lastStartTime = 0;
+				CTime m_lastEndTime   = 0;
 				bool m_headerSent        = false;
 			};
 

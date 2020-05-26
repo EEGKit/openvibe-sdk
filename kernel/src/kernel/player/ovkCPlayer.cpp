@@ -245,7 +245,7 @@ double CPlayer::getCPUUsage() const { return m_scheduler.getCPUUsage(); }
 
 bool CPlayer::isHoldingResources() const { return m_scheduler.isHoldingResources(); }
 
-bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach)
+bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
@@ -289,12 +289,12 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 ::printf("Time to reach : %llx\n", m_currentTimeToReach);
 #endif // CPlayer_Debug_Time
 
-	const uint64_t schedulerStepDuration = m_scheduler.getStepDuration();
-	const uint64_t tStart                = System::Time::zgetTime();
+	const CTime schedulerStepDuration = m_scheduler.getStepDuration();
+	const CTime tStart                = System::Time::zgetTime();
 	bool finished                        = false;
 	while (!finished)
 	{
-		const uint64_t nextSchedulerTime = m_scheduler.getCurrentTime() + schedulerStepDuration;
+		const CTime nextSchedulerTime = m_scheduler.getCurrentTime() + schedulerStepDuration;
 
 #if defined CPlayer_Debug_Time
 ::printf("    Next time : %llx\n", nextSchedulerTime);
@@ -357,5 +357,5 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 	return true;
 }
 
-uint64_t CPlayer::getCurrentSimulatedTime() const { return m_scheduler.getCurrentTime(); }
+CTime CPlayer::getCurrentSimulatedTime() const { return m_scheduler.getCurrentTime(); }
 uint64_t CPlayer::getCurrentSimulatedLateness() const { return m_innerLateness; }

@@ -20,7 +20,6 @@
 //                                                                   //
 
 #include "tools/ovtkMatrix.h"
-#include "tools/ovtkStimulationSet.h"
 #include "tools/ovtkString.h"
 
 //___________________________________________________________________//

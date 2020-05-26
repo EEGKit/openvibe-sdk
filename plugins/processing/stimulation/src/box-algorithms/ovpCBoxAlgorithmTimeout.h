@@ -38,10 +38,10 @@ private:
 	ETimeoutState m_timeoutState = ETimeoutState::No;
 	bool m_isHeaderSent          = false;
 
-	uint64_t m_timeout           = 0;
-	uint64_t m_lastTimePolled    = 0;
-	uint64_t m_previousTime      = 0;
-	uint64_t m_stimulationToSend = 0;
+	CTime m_timeout           = 0;
+	CTime m_lastTimePolled    = 0;
+	CTime m_previousTime      = 0;
+	CTime m_stimulationToSend = 0;
 };
 
 /**

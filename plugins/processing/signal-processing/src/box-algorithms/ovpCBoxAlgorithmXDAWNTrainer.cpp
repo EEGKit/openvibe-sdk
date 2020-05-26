@@ -17,20 +17,20 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 	m_trainStimulationID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_filterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(m_filterFilename.length() != 0, "The filter filename is empty.\n", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_filterFilename.length() != 0, "The filter filename is empty.\n", Kernel::ErrorType::BadSetting);
 
 	if (FS::Files::fileExists(m_filterFilename))
 	{
 		FILE* file = FS::Files::open(m_filterFilename, "wt");
 
-		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", ErrorType::BadFileRead);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", Kernel::ErrorType::BadFileRead);
 
 		fclose(file);
 	}
 
 	const int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", Kernel::ErrorType::OutOfBound);
 
 	m_filterDim = size_t(filterDimension);
 
@@ -76,16 +76,16 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		if (m_stimDecoder.isHeaderReceived()) { m_stimEncoder.encodeHeader(); }
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
+			CStimulationSet& set = *m_stimDecoder.getOutputStimulationSet();
+			for (size_t j = 0; j < set.size(); ++j)
 			{
-				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
+				const uint64_t stimulationId = set[j].m_ID;
 
 				if (stimulationId == m_trainStimulationID)
 				{
 					train = true;
 
-					m_stimEncoder.getInputStimulationSet()->appendStimulation(
-						OVTK_StimulationId_TrainCompleted, m_stimDecoder.getOutputStimulationSet()->getStimulationDate(j), 0);
+					m_stimEncoder.getInputStimulationSet()->append(CStimulation(OVTK_StimulationId_TrainCompleted, set[j].m_Date, 0));
 				}
 			}
 
@@ -124,10 +124,10 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 				if (decoder.isHeaderReceived())
 				{
-					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -174,7 +174,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 #endif
 			}
 
-			OV_ERROR_UNLESS_KRF(n[j] != 0, "Did not have input signal for condition " << j + 1 << "\n", ErrorType::BadValue);
+			OV_ERROR_UNLESS_KRF(n[j] != 0, "Did not have input signal for condition " << j + 1 << "\n", Kernel::ErrorType::BadValue);
 
 			switch (j)
 			{
@@ -194,7 +194,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		OV_ERROR_UNLESS_KRF(X[0].rows() == X[1].rows(),
 							"Dimension mismatch, first input had " << size_t(X[0].rows()) << " channels while second input had " << size_t(X[1].rows()) <<
 							" channels\n",
-							ErrorType::BadValue);
+							Kernel::ErrorType::BadValue);
 
 		// Grabs usefull values
 
@@ -233,7 +233,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			}
 
 			OV_ERROR_KRF("Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n",
-						 ErrorType::BadProcessing);
+						 Kernel::ErrorType::BadProcessing);
 		}
 				
 		// Create a CMatrix mapper that can spool the filters to a file
@@ -251,7 +251,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		FILE* file = FS::Files::open(m_filterFilename.toASCIIString(), "wt");
 
-		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_filterFilename << "] for writing.\n", ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_filterFilename << "] for writing.\n", Kernel::ErrorType::BadFileWrite);
 
 		if (m_saveAsBoxConfig)
 		{
@@ -269,7 +269,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		else
 		{
 			OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
-								"Unable to save to [" << m_filterFilename << "]\n", ErrorType::BadFileWrite);
+								"Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite);
 		}
 
 		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");

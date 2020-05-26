@@ -8,7 +8,6 @@
 #include "../algorithms/encoders/ovpCChannelLocalisationEncoder.h"
 
 using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace StreamCodecs;
 
@@ -98,9 +97,9 @@ bool CEncoderAlgorithmTest::processClock(CMessage& /*msg*/)
 
 bool CEncoderAlgorithmTest::process()
 {
-	IBoxIO& boxContext            = getDynamicBoxContext();
-	IPlayerContext& playerContext = getPlayerContext();
-	const size_t nInput           = getStaticBoxContext().getOutputCount();
+	Kernel::IBoxIO& boxCtx            = getDynamicBoxContext();
+	Kernel::IPlayerContext& playerCtx = getPlayerContext();
+	const size_t nInput               = getStaticBoxContext().getOutputCount();
 
 	if (!m_hasSentHeader)
 	{
@@ -108,7 +107,7 @@ bool CEncoderAlgorithmTest::process()
 		m_endTime   = 0;
 		for (size_t i = 0; i < nInput; ++i)
 		{
-			op_buffer[i] = boxContext.getOutputChunk(i);
+			op_buffer[i] = boxCtx.getOutputChunk(i);
 			m_encoders[i]->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader);
 		}
 		m_hasSentHeader = true;
@@ -117,15 +116,15 @@ bool CEncoderAlgorithmTest::process()
 	{
 		for (size_t i = 0; i < nInput; ++i)
 		{
-			op_buffer[i] = boxContext.getOutputChunk(i);
+			op_buffer[i] = boxCtx.getOutputChunk(i);
 			m_encoders[i]->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer);
 		}
 	}
 
-	for (size_t i = 0; i < nInput; ++i) { boxContext.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
+	for (size_t i = 0; i < nInput; ++i) { boxCtx.markOutputAsReadyToSend(i, m_startTime, m_endTime); }
 
 	m_startTime = m_endTime;
-	m_endTime   = playerContext.getCurrentTime();
+	m_endTime   = playerCtx.getCurrentTime();
 
 	return true;
 }

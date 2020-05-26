@@ -38,7 +38,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	m_hysteresis  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_windowTimeD = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(m_windowTimeD > 0, "Invalid negative number for window length", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_windowTimeD > 0, "Invalid negative number for window length", Kernel::ErrorType::BadSetting);
 
 	m_stimId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_stimId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -61,7 +61,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 		m_decoder                                                          = decoder;
 		m_encoder0                                                         = encoder;
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", Kernel::ErrorType::BadInput); }
 
 	return true;
 }
@@ -150,21 +150,21 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					else
 					{
 						OV_ERROR_KRF("Can only process chunks with sampling rate larger or equal to 1 or chunks with exactly one sample.",
-									 ErrorType::OutOfBound);
+									 Kernel::ErrorType::OutOfBound);
 					}
 
 					if ((m_states[j] == 1) && (signals[k] > -m_hysteresis) && (signals[k + 1] < -m_hysteresis))
 					{
 						// negative ZC : positive-to-negative
 						oBuffer0[k + j * nSample] = -1;
-						m_encoder1.getInputStimulationSet()->appendStimulation(m_stimId2, stimulationDate, 0);
+						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId2, stimulationDate, 0));
 						m_states[j] = -1;
 					}
 					else if ((m_states[j] == -1) && (signals[k] < m_hysteresis) && (signals[k + 1] > m_hysteresis))
 					{
 						// positive ZC : negative-to-positive
 						oBuffer0[k + j * nSample] = 1;
-						m_encoder1.getInputStimulationSet()->appendStimulation(m_stimId1, stimulationDate, 0);
+						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId1, stimulationDate, 0));
 						m_states[j] = 1;
 
 						// for the rythm estimation

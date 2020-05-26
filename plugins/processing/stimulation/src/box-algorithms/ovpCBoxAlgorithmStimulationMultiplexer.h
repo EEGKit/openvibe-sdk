@@ -30,13 +30,13 @@ namespace OpenViBE
 				std::vector<Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationMultiplexer>> m_decoders;
 				Toolkit::TStimulationEncoder<CBoxAlgorithmStimulationMultiplexer> m_encoder;
 
-				std::vector<uint64_t> m_decoderEndTimes;
+				std::vector<CTime> m_decoderEndTimes;
 
-				uint64_t m_lastStartTime = 0;
-				uint64_t m_lastEndTime   = 0;
+				CTime m_lastStartTime;
+				CTime m_lastEndTime;
 				bool m_wasHeaderSent     = false;
 
-				std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_stimulations;
+				std::multimap<CTime, CStimulation> m_stimulations;
 			};
 
 			class CBoxAlgorithmStimulationMultiplexerListener final : public Toolkit::TBoxListener<IBoxListener>

@@ -18,7 +18,7 @@ namespace OpenViBE
 			bool sendSignal(const CMessage& msg) override;
 			bool sendMessage(const CMessage& msg, const CIdentifier& dstID) override;
 			bool sendMessage(const CMessage& msg, const CIdentifier* dstID, const size_t nDstID) override;
-			uint64_t getCurrentTime() const override;
+			CTime getCurrentTime() const override;
 			uint64_t getCurrentLateness() const override;
 			double getCurrentCPUUsage() const override;
 			double getCurrentFastForwardMaximumFactor() const override;

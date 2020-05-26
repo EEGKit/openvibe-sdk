@@ -100,8 +100,8 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 	// Process input data
 	for (size_t i = 0; i < boxContext->getInputChunkCount(0); ++i)
 	{
-		const uint64_t startTime = boxContext->getInputChunkStartTime(0, i);
-		const uint64_t endTime   = boxContext->getInputChunkEndTime(0, i);
+		const CTime startTime = boxContext->getInputChunkStartTime(0, i);
+		const CTime endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
 		IMatrix* matrix = m_decoder.getOutputMatrix();
@@ -111,11 +111,11 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_nChannel = matrix->getDimensionSize(0);
 			m_nSample  = matrix->getDimensionSize(1);
 
-			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", Kernel::ErrorType::BadInput);
 
 			m_sampling = size_t(m_decoder.getOutputSamplingRate());
 
-			OV_ERROR_UNLESS_KRF(m_sampling > 0, "Invalid sampling rate [" << m_sampling << "] (expected value > 0)", ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_sampling > 0, "Invalid sampling rate [" << m_sampling << "] (expected value > 0)", Kernel::ErrorType::BadInput);
 
 			// size of the spectrum
 			m_sizeFFT = m_nSample / 2 + 1;
@@ -216,7 +216,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 							break;
 
 						default:
-							OV_ERROR_KRF("Invalid decoder output.\n", ErrorType::BadProcessing);
+							OV_ERROR_KRF("Invalid decoder output.\n", Kernel::ErrorType::BadProcessing);
 					}
 
 					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();

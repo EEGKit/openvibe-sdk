@@ -21,7 +21,7 @@ bool CCppCodeGenerator::openFile(const char* filename)
 }
 
 
-bool CCppCodeGenerator::appendStimulation(SStimulation& stim)
+bool CCppCodeGenerator::append(SStimulation& stim)
 {
 	m_file << "\ttypeManager.registerEnumerationEntry(OV_TypeId_Stimulation, \"" << stim.name << "\", " << stim.id << ");" << endl;
 	return true;

@@ -31,7 +31,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 		m_decoder = new Toolkit::TSpectrumDecoder<CBoxAlgorithmChannelRename>(*this, 0);
 		m_encoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmChannelRename>(*this, 0);
 	}
-	else { OV_ERROR_KRF("Incompatible stream type", ErrorType::BadConfig); }
+	else { OV_ERROR_KRF("Incompatible stream type", Kernel::ErrorType::BadConfig); }
 
 	ip_Matrix = m_encoder.getInputMatrix();
 	op_Matrix = m_decoder.getOutputMatrix();

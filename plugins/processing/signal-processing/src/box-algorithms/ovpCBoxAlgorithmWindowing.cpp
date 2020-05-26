@@ -16,7 +16,7 @@ bool CBoxAlgorithmWindowing::initialize()
 
 	if (m_windowMethod != EWindowMethod::None && m_windowMethod != EWindowMethod::Hamming && m_windowMethod != EWindowMethod::Hanning
 		&& m_windowMethod != EWindowMethod::Hann && m_windowMethod != EWindowMethod::Blackman && m_windowMethod != EWindowMethod::Triangular
-		&& m_windowMethod != EWindowMethod::SquareRoot) { OV_ERROR_KRF("No valid windowing method set.\n", ErrorType::BadSetting); }
+		&& m_windowMethod != EWindowMethod::SquareRoot) { OV_ERROR_KRF("No valid windowing method set.\n", Kernel::ErrorType::BadSetting); }
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -47,8 +47,8 @@ bool CBoxAlgorithmWindowing::process()
 	// Process input data
 	for (size_t i = 0; i < boxContext->getInputChunkCount(0); ++i)
 	{
-		const uint64_t startTime = boxContext->getInputChunkStartTime(0, i);
-		const uint64_t endTime   = boxContext->getInputChunkEndTime(0, i);
+		const CTime startTime = boxContext->getInputChunkStartTime(0, i);
+		const CTime endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
 		IMatrix* matrix = m_decoder.getOutputMatrix();
@@ -107,7 +107,7 @@ bool CBoxAlgorithmWindowing::process()
 				}
 			}
 			else if (m_windowMethod == EWindowMethod::None) { for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 1; } }
-			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", Kernel::ErrorType::BadSetting); }
 
 			m_encoder.encodeHeader();
 		}

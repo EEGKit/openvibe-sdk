@@ -11,17 +11,17 @@
 #include "ov_defines.h"
 #include "ov_directories.h"
 
-#include "ovCIdentifier.h"
 #include "CTime.hpp"
 #include "CMessage.hpp"
+#include "CStimulationSet.hpp"
+
+#include "ovCIdentifier.h"
 #include "ovCString.h"
 #include "ovCNameValuePairList.h"
 
 #include "ovIMatrix.h"
 #include "ovCMatrix.h"
 
-#include "ovIStimulationSet.h"
-#include "ovCStimulationSet.h"
 
 #include "ovIMemoryBuffer.h"
 #include "ovCMemoryBuffer.h"

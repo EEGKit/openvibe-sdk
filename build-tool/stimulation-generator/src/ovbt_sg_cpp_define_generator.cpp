@@ -14,7 +14,7 @@ bool CCppDefineGenerator::openFile(const char* filename)
 }
 
 
-bool CCppDefineGenerator::appendStimulation(SStimulation& stim)
+bool CCppDefineGenerator::append(SStimulation& stim)
 {
 	m_file << "#define " << stim.id << "  " << stim.hexa << endl;
 	return true;

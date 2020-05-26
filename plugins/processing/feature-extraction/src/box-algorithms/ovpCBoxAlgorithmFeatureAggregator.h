@@ -47,8 +47,8 @@ namespace OpenViBE
 				std::vector<size_t> m_iBufferSizes;
 
 				//start time and end time of the last arrived chunk
-				uint64_t m_lastChunkStartTime = 0;
-				uint64_t m_lastChunkEndTime   = 0;
+				CTime m_lastChunkStartTime = 0;
+				CTime m_lastChunkEndTime   = 0;
 
 				// number of inputs
 				size_t m_nInput = 0;

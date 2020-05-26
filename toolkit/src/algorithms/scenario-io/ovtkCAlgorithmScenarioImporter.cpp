@@ -146,18 +146,18 @@ bool CAlgorithmScenarioImporter::process()
 	TParameterHandler<IScenario*> op_scenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 	IScenario* scenario = op_scenario;
 
-	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", ErrorType::BadOutput);
+	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", Kernel::ErrorType::BadOutput);
 
 	TParameterHandler<IMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
 	IMemoryBuffer* memoryBuffer = ip_buffer;
 
-	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", Kernel::ErrorType::BadInput);
 
 	std::map<CIdentifier, CIdentifier> boxIdMapping;
 
 	CAlgorithmScenarioImporterContext context(this->getAlgorithmContext());
 
-	OV_ERROR_UNLESS_KRF(this->import(context, *memoryBuffer), "Import failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->import(context, *memoryBuffer), "Import failed", Kernel::ErrorType::Internal);
 
 	scenario_t& symbolicScenario = context.m_SymbolicScenario;
 
@@ -197,7 +197,7 @@ bool CAlgorithmScenarioImporter::process()
 
 					if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportOnUnknownSetting}", true))
 					{
-						OV_ERROR_KRF(msg, ErrorType::BadSetting);
+						OV_ERROR_KRF(msg, Kernel::ErrorType::BadSetting);
 					}
 					OV_WARNING_K(msg);
 				}
@@ -255,12 +255,12 @@ bool CAlgorithmScenarioImporter::process()
 		if (srcBoxOutputID != OV_UndefinedIdentifier) { scenario->getSourceBoxOutputIndex(boxIdMapping[l->linkSrc.boxID], srcBoxOutputID, srcBoxOutputIdx); }
 
 		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found",
-							ErrorType::BadOutput);
+							Kernel::ErrorType::BadOutput);
 
 		if (dstBoxInputID != OV_UndefinedIdentifier) { scenario->getTargetBoxInputIndex(boxIdMapping[l->linkDst.boxID], dstBoxInputID, dstBoxInputIdx); }
 
 		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found",
-							ErrorType::BadOutput);
+							Kernel::ErrorType::BadOutput);
 
 		scenario->connect(newLinkID, boxIdMapping[l->linkSrc.boxID], srcBoxOutputIdx, boxIdMapping[l->linkDst.boxID], dstBoxInputIdx, l->id);
 
@@ -292,7 +292,7 @@ bool CAlgorithmScenarioImporter::process()
 				}
 
 				OV_ERROR_UNLESS_KRF(linkedBoxInputIndex != size_t(-1), "Input index of the target box could not be found",
-									ErrorType::BadOutput);
+									Kernel::ErrorType::BadOutput);
 
 				scenario->setScenarioInputLink(scenarioInputIdx, symbolicScenarioInput.linkedBoxID, linkedBoxInputIndex);
 			}
@@ -325,7 +325,7 @@ bool CAlgorithmScenarioImporter::process()
 				}
 
 				OV_ERROR_UNLESS_KRF(linkedBoxOutputIndex != size_t(-1), "Output index of the target box could not be found",
-									ErrorType::BadOutput);
+									Kernel::ErrorType::BadOutput);
 				scenario->setScenarioOutputLink(scenarioOutputIdx, symbolicScenarioOutput.linkedBoxID, linkedBoxOutputIndex);
 			}
 		}
@@ -388,7 +388,7 @@ bool CAlgorithmScenarioImporterContext::processStart(const CIdentifier& identifi
 		//
 	else
 	{
-		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument, false,
+		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), Kernel::ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -439,7 +439,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	else
 	{
 		OV_ERROR("(id) Unexpected node identifier " << identifier.str(),
-				 ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
+				 Kernel::ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
 }
@@ -479,7 +479,7 @@ bool CAlgorithmScenarioImporterContext::processString(const CIdentifier& identif
 
 	else
 	{
-		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument,
+		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), Kernel::ErrorType::BadArgument,
 				 false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -504,7 +504,7 @@ bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& ident
 
 	else
 	{
-		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument, false,
+		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), Kernel::ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;

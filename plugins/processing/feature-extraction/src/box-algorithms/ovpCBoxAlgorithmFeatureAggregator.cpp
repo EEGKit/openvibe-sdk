@@ -99,7 +99,7 @@ namespace OpenViBE
 							}
 
 							//readyToProcess = false;
-							OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", ErrorType::BadInput);
+							OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", Kernel::ErrorType::BadInput);
 						}
 					}
 					else { readyToProcess = false; }

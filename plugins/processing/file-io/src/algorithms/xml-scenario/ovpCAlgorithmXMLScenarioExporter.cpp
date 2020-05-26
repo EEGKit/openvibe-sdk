@@ -118,7 +118,7 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& memoryBuffer, con
 	else if (id == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_ID) { name = "Identifier"; }
 	else if (id == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value) { name = "Value"; }
 		//
-	else { OV_ERROR_KRF("(start) Unexpected node identifier " << id.str(), ErrorType::BadArgument); }
+	else { OV_ERROR_KRF("(start) Unexpected node identifier " << id.str(), Kernel::ErrorType::BadArgument); }
 
 	m_writer->openChild(name.toASCIIString());
 
@@ -129,7 +129,7 @@ bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& memoryBuffer
 {
 	m_pMemoryBuffer = &memoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting identifier failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting identifier failed", Kernel::ErrorType::Internal);
 
 	m_writer->setChildData(value.str().c_str());
 	this->exportStop(memoryBuffer);
@@ -141,7 +141,7 @@ bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& memoryBuffer, co
 {
 	m_pMemoryBuffer = &memoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting string failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting string failed", Kernel::ErrorType::Internal);
 
 	m_writer->setChildData(value.toASCIIString());
 	this->exportStop(memoryBuffer);
@@ -152,7 +152,7 @@ bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& memoryBuffer, co
 bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const uint64_t value)
 {
 	m_pMemoryBuffer = &memoryBuffer;
-	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting uint failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting uint failed", Kernel::ErrorType::Internal);
 	m_writer->setChildData(std::to_string(value).c_str());
 	this->exportStop(memoryBuffer);
 

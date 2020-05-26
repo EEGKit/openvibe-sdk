@@ -100,7 +100,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 					{
 						OV_ERROR_UNLESS_KRF(input.op_matrix->getBufferElementCount() == 2,
 											"Invalid input matrix with [" << input.op_matrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
-											ErrorType::BadInput);
+											Kernel::ErrorType::BadInput);
 
 						this->getLogManager() << LogLevel_Debug <<
 								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";
@@ -115,16 +115,17 @@ bool CBoxAlgorithmVotingClassifier::process()
 					double value;
 					if (input.twoValueInput) { value = input.op_matrix->getBuffer()[1] - input.op_matrix->getBuffer()[0]; }
 					else { value = input.op_matrix->getBuffer()[0]; }
-					input.scores.push_back(std::pair<double, uint64_t>(-value, boxContext.getInputChunkEndTime(i, j)));
+					input.scores.push_back(std::pair<double, CTime>(-value, boxContext.getInputChunkEndTime(i, j)));
 				}
 				else
 				{
-					for (size_t k = 0; k < input.op_stimSet->getStimulationCount(); ++k)
+					CStimulationSet& set = *input.op_stimSet;
+					for (size_t k = 0; k < set.size(); ++k)
 					{
-						const uint64_t id = input.op_stimSet->getStimulationIdentifier(k);
+						const uint64_t id = set[k].m_ID;
 						if (id == m_targetClassLabel || id == m_nonTargetClassLabel || id == m_rejectClassLabel)
 						{
-							input.scores.push_back(std::pair<double, uint64_t>(id == m_targetClassLabel ? 1 : 0, input.op_stimSet->getStimulationDate(k)));
+							input.scores.push_back(std::pair<double, uint64_t>(id == m_targetClassLabel ? 1 : 0, set[k].m_Date.time()));
 						}
 					}
 				}
@@ -142,10 +143,10 @@ bool CBoxAlgorithmVotingClassifier::process()
 	if (canChoose)
 	{
 		double score        = -1E100;
-		uint64_t classLabel = m_rejectClassLabel;
-		uint64_t time       = 0;
+		size_t classLabel = m_rejectClassLabel;
+		CTime time       = 0;
 
-		std::map<uint32_t, double> scores;
+		std::map<size_t, double> scores;
 		for (size_t i = 0; i < nInput; ++i)
 		{
 			input_t& input = m_results[i];
@@ -183,8 +184,9 @@ bool CBoxAlgorithmVotingClassifier::process()
 			this->getLogManager() << LogLevel_Debug << "Chosen rejection "
 					<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel) << "\n";
 		}
+		
 		m_classificationChoiceEncoder.getInputStimulationSet()->clear();
-		m_classificationChoiceEncoder.getInputStimulationSet()->appendStimulation(classLabel, time, 0);
+		m_classificationChoiceEncoder.getInputStimulationSet()->append(CStimulation(classLabel, time, 0));
 
 		m_classificationChoiceEncoder.encodeBuffer();
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, time);

@@ -12,7 +12,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 
 	m_decimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_decimationFactor > 1, "Invalid decimation factor [" << m_decimationFactor << "] (expected value > 1)",
-						ErrorType::BadSetting);
+						Kernel::ErrorType::BadSetting);
 
 	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalDecoder));
 	m_decoder->initialize();
@@ -85,8 +85,8 @@ bool CBoxAlgorithmSignalDecimation::process()
 		ip_buffer = boxContext.getInputChunk(0, i);
 		op_buffer = boxContext.getOutputChunk(0);
 
-		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
-		const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
+		const CTime tStart = boxContext.getInputChunkStartTime(0, i);
+		const CTime tEnd   = boxContext.getInputChunkEndTime(0, i);
 
 		if (tStart != m_lastEndTime)
 		{
@@ -108,14 +108,14 @@ bool CBoxAlgorithmSignalDecimation::process()
 
 			OV_ERROR_UNLESS_KRF(m_iSampling%m_decimationFactor == 0,
 								"Failed to decimate: input sampling frequency [" << m_iSampling << "] not multiple of decimation factor [" <<
-								m_decimationFactor << "]", ErrorType::BadSetting);
+								m_decimationFactor << "]", Kernel::ErrorType::BadSetting);
 
 			m_oSampleIdx       = 0;
 			m_oNSamplePerBlock = size_t(m_iNSamplePerBlock / m_decimationFactor);
 			m_oNSamplePerBlock = (m_oNSamplePerBlock ? m_oNSamplePerBlock : 1);
 			m_oSampling        = op_sampling / m_decimationFactor;
 
-			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", ErrorType::BadOutput);
+			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", Kernel::ErrorType::BadOutput);
 
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
@@ -162,8 +162,8 @@ bool CBoxAlgorithmSignalDecimation::process()
 						oBuffer      = ip_pMatrix->getBuffer();
 						m_oSampleIdx = 0;
 						m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeBuffer);
-						const uint64_t tStartSample = m_startTimeBase + CTime(m_oSampling, m_nTotalSample).time();
-						const uint64_t tEndSample   = m_startTimeBase + CTime(m_oSampling, m_nTotalSample + m_oNSamplePerBlock).time();
+						const CTime tStartSample = m_startTimeBase + CTime(m_oSampling, m_nTotalSample);
+						const CTime tEndSample   = m_startTimeBase + CTime(m_oSampling, m_nTotalSample + m_oNSamplePerBlock);
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_oNSamplePerBlock;
 

@@ -15,7 +15,7 @@ namespace OpenViBE
 		{
 		protected:
 
-			Kernel::TParameterHandler<IStimulationSet*> m_oStimulationSet;
+			Kernel::TParameterHandler<CStimulationSet*> m_oStimulationSet;
 
 			using T::m_codec;
 			using T::m_boxAlgorithm;
@@ -48,7 +48,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			Kernel::TParameterHandler<IStimulationSet*>& getOutputStimulationSet() { return m_oStimulationSet; }
+			Kernel::TParameterHandler<CStimulationSet*>& getOutputStimulationSet() { return m_oStimulationSet; }
 
 			virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader); }
 			virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer); }

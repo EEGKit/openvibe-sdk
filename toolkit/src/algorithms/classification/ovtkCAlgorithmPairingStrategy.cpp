@@ -34,7 +34,7 @@ bool CAlgorithmPairingStrategy::process()
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Designing architecture failed", ErrorType::Internal);
+			OV_ERROR_KRF("Designing architecture failed", Kernel::ErrorType::Internal);
 		}
 	}
 	else { return CAlgorithmClassifier::process(); }

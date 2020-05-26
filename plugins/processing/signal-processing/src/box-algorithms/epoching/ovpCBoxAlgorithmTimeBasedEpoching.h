@@ -33,8 +33,8 @@ namespace OpenViBE
 				size_t m_oNSampleBetweenEpoch = 0;
 				size_t m_oSampleIdx           = 0;
 				size_t m_oChunkIdx            = 0;
-				uint64_t m_lastInputEndTime   = 0;
-				uint64_t m_referenceTime      = 0;
+				CTime m_lastInputEndTime   = 0;
+				CTime m_referenceTime      = 0;
 			};
 
 			class CBoxAlgorithmTimeBasedEpochingDesc final : public IBoxAlgorithmDesc

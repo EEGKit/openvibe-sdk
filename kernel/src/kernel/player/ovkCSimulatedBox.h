@@ -21,18 +21,18 @@ public:
 	CChunk(const CChunk& chunk) : m_buffer(chunk.m_buffer), m_startTime(chunk.m_startTime), m_endTime(chunk.m_endTime) { }
 
 	const CBuffer& getBuffer() const { return m_buffer; }
-	uint64_t getStartTime() const { return m_startTime; }
-	uint64_t getEndTime() const { return m_endTime; }
+	CTime getStartTime() const { return m_startTime; }
+	CTime getEndTime() const { return m_endTime; }
 	bool isDeprecated() const { return m_isDeprecated; }
 	CBuffer& getBuffer() { return m_buffer; }
 
-	bool setStartTime(const uint64_t startTime)
+	bool setStartTime(const CTime startTime)
 	{
 		m_startTime = startTime;
 		return true;
 	}
 
-	bool setEndTime(const uint64_t endTime)
+	bool setEndTime(const CTime endTime)
 	{
 		m_endTime = endTime;
 		return true;
@@ -47,8 +47,8 @@ public:
 protected:
 
 	CBuffer m_buffer;
-	uint64_t m_startTime = 0;
-	uint64_t m_endTime   = 0;
+	CTime m_startTime = 0;
+	CTime m_endTime   = 0;
 	bool m_isDeprecated  = false;
 };
 
@@ -77,11 +77,10 @@ public:
 	/** \name IBoxIO inputs handling */
 	//@{
 	size_t getInputChunkCount(const size_t index) const override;
-	bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size,
-					   const uint8_t*& buffer) const override;
+	bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, CTime& startTime, CTime& endTime, size_t& size, const uint8_t*& buffer) const override;
 	const IMemoryBuffer* getInputChunk(const size_t inputIdx, const size_t chunkIdx) const override;
-	uint64_t getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const override;
-	uint64_t getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const override;
+	CTime getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const override;
+	CTime getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const override;
 	bool markInputAsDeprecated(const size_t inputIdx, const size_t chunkIdx) override;
 	//@}
 

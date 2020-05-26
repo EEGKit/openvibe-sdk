@@ -15,7 +15,7 @@ bool CBoxAlgorithmTimeBasedEpoching::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_duration>0 && m_interval>0,
 						"Epocher settings are invalid (duration:" << m_duration << "|interval:"
-						<< m_interval << "). These parameters should be strictly positive.", ErrorType::Internal);
+						<< m_interval << "). These parameters should be strictly positive.", Kernel::ErrorType::Internal);
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -44,7 +44,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", Kernel::ErrorType::Internal);
 
 		IMatrix* iMatrix = m_decoder.getOutputMatrix();
 		IMatrix* oMatrix = m_encoder.getInputMatrix();
@@ -60,14 +60,14 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			m_referenceTime    = 0;
 
 			m_sampling = m_decoder.getOutputSamplingRate();
-			OV_ERROR_UNLESS_KRZ(m_sampling, "Input sampling frequency is equal to 0. Plugin can not process.", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRZ(m_sampling, "Input sampling frequency is equal to 0. Plugin can not process.", Kernel::ErrorType::Internal);
 
 			m_oNSample             = size_t(m_duration * m_sampling); // sample count per output epoch
 			m_oNSampleBetweenEpoch = size_t(m_interval * m_sampling);
 
 			OV_ERROR_UNLESS_KRF(m_oNSample>0 && m_oNSampleBetweenEpoch>0,
 								"Input sampling frequency is [" << m_sampling << "]. This is too low in order to produce epochs of ["
-								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", ErrorType::Internal);
+								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", Kernel::ErrorType::Internal);
 
 			oMatrix->setDimensionCount(2);
 			oMatrix->setDimensionSize(0, nChannel);
@@ -79,8 +79,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 		}
 		if (m_decoder.isBufferReceived())
 		{
-			const uint64_t iTStart = boxContext.getInputChunkStartTime(0, i);
-			const uint64_t iTEnd   = boxContext.getInputChunkEndTime(0, i);
+			const CTime iTStart = boxContext.getInputChunkStartTime(0, i);
+			const CTime iTEnd   = boxContext.getInputChunkEndTime(0, i);
 
 			if (m_lastInputEndTime != iTStart)
 			{
@@ -120,8 +120,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					if (m_oSampleIdx == m_oNSample) // An epoch has been totally filled !
 					{
 						// Calculates start and end time of output
-						const uint64_t oTStart = m_referenceTime + CTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch).time();
-						const uint64_t oTEnd   = m_referenceTime + CTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample).time();
+						const CTime oTStart = m_referenceTime + CTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch);
+						const CTime oTEnd   = m_referenceTime + CTime(m_sampling, m_oChunkIdx * m_oNSampleBetweenEpoch + m_oNSample);
 						m_oChunkIdx++;
 
 						// Writes epoch

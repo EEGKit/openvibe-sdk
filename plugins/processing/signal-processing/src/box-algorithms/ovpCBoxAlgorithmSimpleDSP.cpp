@@ -18,15 +18,15 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	m_variables = new double*[boxContext.getInputCount()];
 
 	OV_ERROR_UNLESS_KRF(m_variables, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs",
-						ErrorType::BadAlloc);
+						Kernel::ErrorType::BadAlloc);
 
 	const CString equation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_parser               = new CEquationParser(*this, m_variables, boxContext.getInputCount());
 
-	OV_ERROR_UNLESS_KRF(m_parser, "Failed to create equation parser", ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_parser, "Failed to create equation parser", Kernel::ErrorType::BadAlloc);
 
 	OV_ERROR_UNLESS_KRF(m_parser->compileEquation(equation.toASCIIString()), "Failed to compile equation [" << equation << "]",
-						ErrorType::Internal);
+						Kernel::ErrorType::Internal);
 
 	m_equationType  = m_parser->getTreeCategory();
 	m_equationParam = m_parser->getTreeParameter();
@@ -36,7 +36,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(streamType, OV_TypeId_StreamedMatrix),
 						"Invalid output stream [" << streamType.str() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
-						ErrorType::Internal);
+						Kernel::ErrorType::Internal);
 
 	if (streamType == OV_TypeId_StreamedMatrix)
 	{
@@ -97,7 +97,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	else
 	{
 		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(streamType) << ":id=" << streamType.str() << "] not yet implemented",
-					 ErrorType::NotImplemented);
+					 Kernel::ErrorType::NotImplemented);
 	}
 
 	m_checkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
@@ -138,8 +138,8 @@ bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }
 
-	const uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
-	const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
+	const CTime tStart = boxContext.getInputChunkStartTime(0, 0);
+	const CTime tEnd   = boxContext.getInputChunkEndTime(0, 0);
 	for (size_t i = 1; i < nInput; ++i)
 	{
 		if (boxContext.getInputChunkCount(i) == 0) { return true; }
@@ -147,7 +147,7 @@ bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 		{
 			OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0) || tEnd == boxContext.getInputChunkEndTime(i, 0),
 								"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",
-								ErrorType::BadInput);
+								Kernel::ErrorType::BadInput);
 		}
 	}
 
@@ -184,7 +184,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 			{
 				OV_ERROR_UNLESS_KRF(m_matrices[0]->getBufferElementCount() == op_matrix->getBufferElementCount(),
 									"Invalid matrix dimension [" << m_matrices[0]->getBufferElementCount() << "] (expected value = "
-									<< op_matrix->getBufferElementCount() <<")", ErrorType::BadValue);
+									<< op_matrix->getBufferElementCount() <<")", Kernel::ErrorType::BadValue);
 			}
 			nHeader++;
 		}
@@ -195,7 +195,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 	}
 
 	OV_ERROR_UNLESS_KRF((!nHeader || nHeader == nInput) && (!nBuffer || nBuffer == nInput) && (!nEnd || nEnd == nInput),
-						"Invalid stream structure", ErrorType::BadValue);
+						"Invalid stream structure", Kernel::ErrorType::BadValue);
 
 	if (nHeader)
 	{

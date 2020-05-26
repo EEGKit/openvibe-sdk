@@ -30,10 +30,11 @@ public:
 	CTime() = default;
 
 	/// <summary> 64 bits integer based constructor. </summary>
-	/// <param name="time">The original time in <c>uint64_t</c>.</param>
-	/// <remarks> the template is used to avoid the ambiguity with the double constructor. </remarks>
+	/// <param name="time"> The original time in <c>uint64_t</c>.</param>
+	/// <remarks> the template is used to avoid the ambiguity with the double constructor and can be used with all integer type.
+	/// We don't use explicit qualifier to allow expression as <c>CTime t = 0;</c> </remarks>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-	explicit CTime(const T time) : m_time(time) {}
+	CTime(const T time) : m_time(time) {}
 
 	/// <summary> Constructor with time in seconds. </summary>
 	/// <param name="seconds"> The time in seconds. </param>
@@ -153,12 +154,12 @@ public:
 	/// <summary> Implements the operator for integral type. </summary>
 	/// <returns> The result of the operator. </returns>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-	explicit operator T() const { return m_time; }
+	operator T() const { return m_time; }
 
 	/// <summary> Implements the operator for const integral type. </summary>
 	/// <returns> The result of the operator. </returns>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-	explicit operator const T() const { return m_time; }
+	operator const T() const { return m_time; }
 
 	//--------------------------------------------------
 	//--- friends (must be in header files for link) ---

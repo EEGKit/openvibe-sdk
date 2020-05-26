@@ -40,8 +40,8 @@ namespace OpenViBE
 				typedef struct
 				{
 					CMatrix* sampleMatrix;
-					uint64_t startTime;
-					uint64_t endTime;
+					CTime startTime;
+					CTime endTime;
 					size_t inputIdx;
 				} sample_t;
 

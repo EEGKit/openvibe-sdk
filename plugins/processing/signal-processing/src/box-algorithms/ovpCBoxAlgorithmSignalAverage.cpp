@@ -81,8 +81,8 @@ bool CBoxAlgorithmSignalAverage::process()
 
 		if (m_decoder.isBufferReceived())
 		{
-			const uint64_t tStart = boxContext->getInputChunkStartTime(0, i);
-			const uint64_t tEnd   = boxContext->getInputChunkEndTime(0, i);
+			const CTime tStart = boxContext->getInputChunkStartTime(0, i);
+			const CTime tEnd   = boxContext->getInputChunkEndTime(0, i);
 
 			computeAverage();
 

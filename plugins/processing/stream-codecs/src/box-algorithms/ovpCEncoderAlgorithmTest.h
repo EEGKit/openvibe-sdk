@@ -28,8 +28,8 @@ namespace OpenViBE
 				std::array<Kernel::TParameterHandler<IMemoryBuffer*>, 7> op_buffer;
 
 				bool m_hasSentHeader = false;
-				uint64_t m_startTime = 0;
-				uint64_t m_endTime   = 0;
+				CTime m_startTime = 0;
+				CTime m_endTime   = 0;
 
 				CMatrix* m_matrix1         = nullptr;
 				CMatrix* m_matrix2         = nullptr;

@@ -86,15 +86,15 @@ bool CBoxAlgorithmTimeout::process()
 		m_isHeaderSent = true;
 	}
 
-	IStimulationSet* stimSet = m_encoder.getInputStimulationSet();
-	stimSet->clear();
+	CStimulationSet& stimSet = *m_encoder.getInputStimulationSet();
+	stimSet.clear();
 
-	const uint64_t date = this->getPlayerContext().getCurrentTime();
+	const CTime date = this->getPlayerContext().getCurrentTime();
 
 	// If the timeout is reached we send the stimulation on the output 0
 	if (m_timeoutState == ETimeoutState::Occurred)
 	{
-		stimSet->appendStimulation(m_stimulationToSend, date, 0);
+		stimSet.append(CStimulation(m_stimulationToSend, date, 0));
 		m_timeoutState = ETimeoutState::Sent;
 	}
 

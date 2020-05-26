@@ -62,8 +62,8 @@ bool CBoxAlgorithmSignalResampling::initialize()
 	const int64_t oSampling  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSampling);
 	const int64_t nOutSample = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
 
-	OV_ERROR_UNLESS_KRF(oSampling > 0, "Invalid output sampling rate [" << oSampling << "] (expected value > 0)", ErrorType::BadSetting);
-	OV_ERROR_UNLESS_KRF(nOutSample > 0, "Invalid sample count per buffer [" << nOutSample << "] (expected value > 0)", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(oSampling > 0, "Invalid output sampling rate [" << oSampling << "] (expected value > 0)", Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(nOutSample > 0, "Invalid sample count per buffer [" << nOutSample << "] (expected value > 0)", Kernel::ErrorType::BadSetting);
 
 	m_oSampling = size_t(oSampling);
 	m_oNSample  = size_t(nOutSample);
@@ -111,7 +111,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			m_iSampling = size_t(m_decoder.getOutputSamplingRate());
 
 			OV_ERROR_UNLESS_KRF(m_iSampling > 0, "Invalid input sampling rate [" << m_iSampling << "] (expected value > 0)",
-								ErrorType::BadInput);
+								Kernel::ErrorType::BadInput);
 
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_iSampling << "] Hz to [" << m_oSampling << "] Hz.\n";
 

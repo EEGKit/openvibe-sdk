@@ -27,7 +27,7 @@ public:
 	virtual void setSampleBuffer(const double* buffer);
 
 	// Stimulation input reader callback
-	virtual void setStimulationCount(size_t /*count*/) {}
+	virtual void resize(size_t /*count*/) {}
 	virtual void setStimulation(const size_t index, uint64_t identifier, uint64_t date);
 
 	// What should be implemented by the derived class
@@ -44,8 +44,8 @@ private:
 
 	ISignalTrial* m_pendingSignal = nullptr;
 
-	uint64_t m_trialStartTime = 0;
-	uint64_t m_trialEndTime   = 0;
+	CTime m_trialStartTime = 0;
+	CTime m_trialEndTime   = 0;
 	size_t m_nSamplePerBuffer = 0;
 	CIdentifier m_trialLabel  = OV_UndefinedIdentifier;
 

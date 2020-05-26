@@ -294,8 +294,8 @@ bool CBoxAlgorithmExternalProcessing::process()
 		{
 			if (!m_hasReceivedEndMessage)
 			{
-				uint64_t startTime         = 0;
-				uint64_t endTime           = 0;
+				CTime startTime         = 0;
+				CTime endTime           = 0;
 				size_t chunkSize           = 0;
 				const uint8_t* chunkBuffer = nullptr;
 
@@ -310,7 +310,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 					maybeStimulationDecoder->second.decode(j, false); // The input will be marked as deprecated later
 
 					// Cache empty chunks, we will send them when a stimulation or a signal chunk arrives
-					if (maybeStimulationDecoder->second.getOutputStimulationSet()->getStimulationCount() == 0)
+					if (maybeStimulationDecoder->second.getOutputStimulationSet()->size() == 0)
 					{
 						m_packetHistory.emplace(startTime, endTime, i, ebml);
 						OV_FATAL_UNLESS_K(boxCtx.markInputAsDeprecated(i, j), "Failed to mark input as deprecated", Kernel::ErrorType::Internal);
@@ -351,8 +351,8 @@ bool CBoxAlgorithmExternalProcessing::process()
 
 			uint64_t packetId;
 			size_t index;
-			uint64_t startTime;
-			uint64_t endTime;
+			CTime startTime;
+			CTime endTime;
 			std::shared_ptr<const std::vector<uint8_t>> ebml;
 
 			bool receivedSync = false;

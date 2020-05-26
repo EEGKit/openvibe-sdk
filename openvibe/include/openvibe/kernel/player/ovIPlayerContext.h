@@ -13,9 +13,6 @@ namespace OpenViBE
 	{
 		class IConfigurationManager;
 		class ILogManager;
-		class CMessage;
-		class CMessage;
-		class CMessage;
 		class IScenarioManager;
 
 		/**
@@ -71,7 +68,7 @@ namespace OpenViBE
 			 * \return the current player time.
 			 * \note The time value is fixed point 32:32 representated in seconds
 			 */
-			virtual uint64_t getCurrentTime() const = 0;
+			virtual CTime getCurrentTime() const = 0;
 			/**
 			 * \brief Gets the current player lateness
 			 * \return the current player lateness

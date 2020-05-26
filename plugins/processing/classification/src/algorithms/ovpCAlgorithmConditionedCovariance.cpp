@@ -53,24 +53,24 @@ bool CAlgorithmConditionedCovariance::process()
 	double shrinkage = ip_shrinkage;
 
 	OV_ERROR_UNLESS_KRF(shrinkage <= 1.0, "Invalid shrinkage value " << shrinkage << "(expected value <= 1.0)",
-						ErrorType::BadConfig);
+						Kernel::ErrorType::BadConfig);
 
 
 	OV_ERROR_UNLESS_KRF(ip_sample->getDimensionCount() == 2,
 						"Invalid dimension count for vector set " << ip_sample->getDimensionCount() << "(expected value = 2)",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	const size_t nRows = ip_sample->getDimensionSize(0);
 	const size_t nCols = ip_sample->getDimensionSize(1);
 
 	OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1,
 						"Invalid input matrix [" << nRows << "x" << nCols << "] (expected at least 1x1 size)",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	const double* buffer = ip_sample->getBuffer();
 
 
-	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", Kernel::ErrorType::BadInput);
 
 	// Set the output buffers so we can write the results to them without copy
 	op_mean->setDimensionCount(2);

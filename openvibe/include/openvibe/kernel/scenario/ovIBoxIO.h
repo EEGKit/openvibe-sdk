@@ -52,7 +52,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size,
+			virtual bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, CTime& startTime, CTime& endTime, size_t& size,
 									   const uint8_t*& buffer) const = 0;
 			/**
 			 * \brief Gets an input chunk.
@@ -76,7 +76,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual uint64_t getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const = 0;
+			virtual CTime getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const = 0;
 			/**
 			 * \brief Gets an input chunk end time.
 			 * \param inputIdx [in] : the index of the desired input.
@@ -87,7 +87,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual uint64_t getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const = 0;
+			virtual CTime getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const = 0;
 			/**
 			 * \brief Marks an input chunk as deprecated
 			 * \param inputIdx [in] : the index of the desired input.

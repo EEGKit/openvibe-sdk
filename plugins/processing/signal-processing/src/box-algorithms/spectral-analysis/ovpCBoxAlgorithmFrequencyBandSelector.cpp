@@ -85,7 +85,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	ip_matrix = &m_oMatrix;
 	op_matrix = &m_oMatrix;
 
-	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, Kernel::ErrorType::BadSetting);
 
 	return true;
 }

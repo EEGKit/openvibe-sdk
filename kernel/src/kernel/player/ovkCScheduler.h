@@ -32,7 +32,7 @@ namespace OpenViBE
 			bool loop();
 
 			bool sendInput(const CChunk& chunk, const CIdentifier& boxId, size_t index);
-			uint64_t getCurrentTime() const { return m_currentTime; }
+			CTime getCurrentTime() const { return m_currentTime; }
 			uint64_t getCurrentLateness() const;
 			uint64_t getFrequency() const { return m_frequency; }
 			uint64_t getStepDuration() const { return m_stepDuration; }
@@ -50,8 +50,8 @@ namespace OpenViBE
 			IScenario* m_scenario    = nullptr;
 			size_t m_steps           = 0;
 			uint64_t m_frequency     = 0;
-			uint64_t m_stepDuration  = 0;
-			uint64_t m_currentTime   = 0;
+			CTime m_stepDuration  = 0;
+			CTime m_currentTime   = 0;
 
 			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_simulatedBoxes;
 			std::map<CIdentifier, System::CChrono> m_simulatedBoxChronos;

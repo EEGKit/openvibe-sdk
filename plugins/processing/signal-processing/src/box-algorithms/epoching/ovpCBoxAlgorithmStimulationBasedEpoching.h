@@ -27,9 +27,9 @@ private:
 	Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimDecoder;
 	Toolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_encoder;
 
-	uint64_t m_stimulationID        = 0;
+	size_t m_stimulationID        = 0;
 	double m_epochDurationInSeconds = 0;
-	uint64_t m_epochDuration        = 0;
+	CTime m_epochDuration        = 0;
 	int64_t m_epochOffset           = 0;
 
 	// Input matrix parameters
@@ -40,11 +40,11 @@ private:
 	size_t m_nChannel                = 0;
 	size_t m_nSampleCountOutputEpoch = 0;
 
-	uint64_t m_lastSignalChunkEndTime        = 0;
-	uint64_t m_lastStimulationChunkStartTime = 0;
-	uint64_t m_lastReceivedStimulationDate   = 0;
+	CTime m_lastSignalChunkEndTime        = 0;
+	CTime m_lastStimulationChunkStartTime = 0;
+	CTime m_lastReceivedStimulationDate   = 0;
 
-	std::deque<uint64_t> m_receivedStimulations;
+	std::deque<CTime> m_receivedStimulations;
 
 	struct SCachedChunk
 	{
@@ -59,8 +59,7 @@ private:
 			return *this;
 		}
 
-		uint64_t startTime;
-		uint64_t endTime;
+		CTime startTime, endTime;
 		std::unique_ptr<IMatrix> matrix;
 	};
 

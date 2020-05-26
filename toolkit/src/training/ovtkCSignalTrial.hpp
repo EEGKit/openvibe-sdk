@@ -25,7 +25,7 @@ namespace OpenViBE
 			const char* getChannelName(const size_t index) const override;
 			CIdentifier getLabelIdentifier() const override { return m_labelID; }
 			size_t getSampleCount() const override { return m_nSample; }
-			uint64_t getDuration() const override { return (m_sampling ? CTime(m_sampling, m_nSample).time() : 0); }
+			CTime getDuration() const override { return (m_sampling ? CTime(m_sampling, m_nSample) : 0); }
 			double* getChannelSampleBuffer(size_t index) const override;
 
 			_IsDerivedFromClass_Final_(ISignalTrial, OVTK_ClassId_)

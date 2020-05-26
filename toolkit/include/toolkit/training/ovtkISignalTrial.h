@@ -21,7 +21,7 @@ namespace OpenViBE
 			virtual const char* getChannelName(const size_t index) const = 0;
 			virtual CIdentifier getLabelIdentifier() const = 0;
 			virtual size_t getSampleCount() const = 0;
-			virtual uint64_t getDuration() const = 0;
+			virtual CTime getDuration() const = 0;
 			virtual double* getChannelSampleBuffer(size_t index) const = 0;
 
 			_IsDerivedFromClass_(IObject, OVTK_ClassId_)

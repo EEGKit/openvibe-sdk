@@ -21,7 +21,7 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize()
 
 	m_encoder.initialize(*this, 0);
 
-	m_decoderEndTimes = std::vector<uint64_t>(staticBoxContext.getInputCount(), 0ULL);
+	m_decoderEndTimes = std::vector<CTime>(staticBoxContext.getInputCount(), 0);
 
 	m_lastStartTime = 0;
 	m_lastEndTime   = 0;
@@ -47,40 +47,37 @@ bool CBoxAlgorithmStimulationMultiplexer::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmStimulationMultiplexer::process()
 {
-	const IBox& staticBoxContext = this->getStaticBoxContext();
-	IBoxIO& dynamicBoxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxCtx = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
 	if (!m_wasHeaderSent)
 	{
 		m_encoder.encodeHeader();
-		dynamicBoxContext.markOutputAsReadyToSend(0, m_lastEndTime, m_lastEndTime);
+		boxCtx.markOutputAsReadyToSend(0, m_lastEndTime, m_lastEndTime);
 		m_wasHeaderSent = true;
 	}
 
-	uint64_t earliestReceivedChunkEndTime = 0xffffffffffffffffULL;
+	CTime earliestReceivedChunkEndTime = CTime::max();
 
-	for (size_t input = 0; input < staticBoxContext.getInputCount(); ++input)
+	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (size_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
+		for (size_t j = 0; j < boxCtx.getInputChunkCount(i); ++j)
 		{
-			m_decoders[input].decode(chunk);
+			m_decoders[i].decode(j);
 
-			if (m_decoders[input].isBufferReceived())
+			if (m_decoders[i].isBufferReceived())
 			{
-				for (size_t stimulation = 0; stimulation < m_decoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+				CStimulationSet& set = *m_decoders[i].getOutputStimulationSet();
+				for (size_t s = 0; s < set.size(); ++s)
 				{
-					m_stimulations.insert(std::make_pair(m_decoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-														 std::make_tuple(
-															 m_decoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
-															 m_decoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-															 m_decoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
+					m_stimulations.insert(std::make_pair(set[s].m_Date, set[s]));
 				}
 			}
 
-			m_decoderEndTimes[input] = dynamicBoxContext.getInputChunkEndTime(input, chunk);
+			m_decoderEndTimes[i] = boxCtx.getInputChunkEndTime(i, j);
 		}
 
-		if (earliestReceivedChunkEndTime > m_decoderEndTimes[input]) { earliestReceivedChunkEndTime = m_decoderEndTimes[input]; }
+		if (earliestReceivedChunkEndTime > m_decoderEndTimes[i]) { earliestReceivedChunkEndTime = m_decoderEndTimes[i]; }
 	}
 
 	if (earliestReceivedChunkEndTime >= m_lastEndTime)
@@ -91,8 +88,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 		{
 			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
-																	  std::get<2>(stimulation->second));
+				m_encoder.getInputStimulationSet()->append(stimulation->second);
 				stimulation = m_stimulations.erase(stimulation);
 			}
 			else { ++stimulation; }
@@ -100,7 +96,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 
 		m_encoder.encodeBuffer();
 
-		dynamicBoxContext.markOutputAsReadyToSend(0, m_lastEndTime, earliestReceivedChunkEndTime);
+		boxCtx.markOutputAsReadyToSend(0, m_lastEndTime, earliestReceivedChunkEndTime);
 
 		m_lastStartTime = m_lastEndTime;
 		m_lastEndTime   = earliestReceivedChunkEndTime;

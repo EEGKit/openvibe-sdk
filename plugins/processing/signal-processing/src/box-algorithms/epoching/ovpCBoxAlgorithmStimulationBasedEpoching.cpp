@@ -17,7 +17,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 	const double epochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_stimulationID          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	m_epochDuration = CTime(m_epochDurationInSeconds).time();
+	m_epochDuration = CTime(m_epochDurationInSeconds);
 
 	const int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
 	m_epochOffset             = epochOffsetSign * int64_t(CTime(std::fabs(epochOffset)).time());
@@ -56,7 +56,6 @@ bool CBoxAlgorithmStimulationBasedEpoching::uninitialize()
 bool CBoxAlgorithmStimulationBasedEpoching::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
 	return true;
 }
 
@@ -68,8 +67,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	{
 		OV_ERROR_UNLESS_KRF(m_signalDecoder.decode(chunk), "Failed to decode chunk", Kernel::ErrorType::Internal);
 		IMatrix* iMatrix         = m_signalDecoder.getOutputMatrix();
-		uint64_t iChunkStartTime = boxCtx.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
-		uint64_t iChunkEndTime   = boxCtx.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
+		CTime iChunkStartTime = boxCtx.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
+		CTime iChunkEndTime   = boxCtx.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
 
 		if (m_signalDecoder.isHeaderReceived())
 		{
@@ -117,19 +116,20 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		// We only handle buffers and ignore stimulation headers and ends
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t stimulation = 0; stimulation < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+			for (size_t stimulation = 0; stimulation < m_stimDecoder.getOutputStimulationSet()->size(); ++stimulation)
 			{
-				if (m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation) == m_stimulationID)
+				CStimulationSet& set = *m_stimDecoder.getOutputStimulationSet();
+				if (set[stimulation].m_ID == m_stimulationID)
 				{
 					// Stimulations are put into cache, we ignore stimulations that would produce output chunks with negative start date (after applying the offset)
-					uint64_t date = m_stimDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
+					CTime date = set[stimulation].m_Date;
 					if (date < m_lastReceivedStimulationDate)
 					{
 						OV_WARNING_K(
-							"Skipping stimulation (received at date " << CTime(date) << ") that predates an already received stimulation (at date "
-							<< CTime(m_lastReceivedStimulationDate) << ")");
+							"Skipping stimulation (received at date " << date << ") that predates an already received stimulation (at date "
+							<< m_lastReceivedStimulationDate << ")");
 					}
-					else if (int64_t(date) + m_epochOffset >= 0)
+					else if (int64_t(date.time()) + m_epochOffset >= 0)
 					{
 						m_receivedStimulations.push_back(date);
 						m_lastReceivedStimulationDate = date;
@@ -141,11 +141,11 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	}
 
 	// Process the received stimulations
-	uint64_t lastProcessedStimDate = 0;
+	CTime lastProcessedStimDate = 0;
 
 	for (const auto& stimDate : m_receivedStimulations)
 	{
-		const uint64_t epochStartTime = uint64_t(int64_t(stimDate) + m_epochOffset);
+		const CTime epochStartTime = int64_t(stimDate.time()) + m_epochOffset;
 
 		// No cache available
 		if (m_cachedChunks.empty()) { break; }
@@ -163,8 +163,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 			size_t oBufferIdx = 0;
 			size_t idx        = 0;
 
-			auto tStart = m_cachedChunks[idx].startTime;
-			auto tEnd   = m_cachedChunks[idx].endTime;
+			CTime tStart = m_cachedChunks[idx].startTime;
+			CTime tEnd   = m_cachedChunks[idx].endTime;
 
 			// Find the first chunk that contains data interesting for the sent epoch
 			while (tStart > epochStartTime || tEnd < epochStartTime)
@@ -182,13 +182,13 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 				while (oBufferIdx < m_nSampleCountOutputEpoch)
 				{
-					const auto oTime = epochStartTime + CTime(m_sampling, oBufferIdx).time();
+					const CTime oTime = epochStartTime + CTime(m_sampling, oBufferIdx);
 
 					// If we handle non-dyadic sampling rates then we do not have a guarantee that all chunks will be
 					// dated with exact values. We add a bit of wiggle room around the incoming chunks to consider
 					// whether a sample is in them or not. This wiggle room will be of half of the sample duration
 					// on each side.
-					const uint64_t timeTolerance = CTime(m_sampling, 1).time() / 2;
+					const CTime timeTolerance = CTime(m_sampling, 1).time() / 2;
 					if (iBufferIdx == m_nSamplePerInputBuffer)
 					{
 						// advance to beginning of the next cached chunk
@@ -232,18 +232,18 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 	// Remove all stimulations for which the epochs have been constructed and sent
 	m_receivedStimulations.erase(std::remove_if(m_receivedStimulations.begin(), m_receivedStimulations.end(),
-												[&lastProcessedStimDate](const uint64_t& stimulationDate) { return stimulationDate <= lastProcessedStimDate; }),
+												[&lastProcessedStimDate](const CTime& stimulationDate) { return stimulationDate <= lastProcessedStimDate; }),
 								 m_receivedStimulations.end());
 
 	// Deprecate cached chunks which will no longer be used because they are too far back in history compared to received stimulations
-	const uint64_t lastUsefulChunkEndTime = m_receivedStimulations.empty() ? m_lastStimulationChunkStartTime : m_receivedStimulations.front();
+	const CTime lastUsefulChunkEndTime = m_receivedStimulations.empty() ? m_lastStimulationChunkStartTime : m_receivedStimulations.front();
 
-	auto cutoffTime = int64_t(lastUsefulChunkEndTime) + m_epochOffset;
+	auto cutoffTime = int64_t(lastUsefulChunkEndTime.time()) + m_epochOffset;
 	if (cutoffTime > 0)
 	{
 		m_cachedChunks.erase(std::remove_if(m_cachedChunks.begin(), m_cachedChunks.end(), [cutoffTime](const SCachedChunk& chunk)
 		{
-			return chunk.endTime < uint64_t(cutoffTime);
+			return chunk.endTime < CTime(cutoffTime);
 		}), m_cachedChunks.end());
 	}
 

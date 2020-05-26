@@ -15,13 +15,13 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	const IBox& boxContext = this->getStaticBoxContext();
 
 	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() == 1, "Invalid number of inputs [" << boxContext.getInputCount() << "] (expected 1 single input)",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	CIdentifier typeID;
 	boxContext.getInputType(0, typeID);
 
 	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.str() << "] (expected OV_TypeId_Stimulations type)",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));
 	m_encoder->initialize();
@@ -71,7 +71,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	TParameterHandler<IStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	TParameterHandler<CStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_buffer = boxContext.getOutputChunk(0);
 
@@ -84,15 +84,15 @@ bool CBoxAlgorithmStimulationVoter::process()
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			for (size_t k = 0; k < op_stimulationSet->getStimulationCount(); ++k)
+			for (size_t k = 0; k < op_stimulationSet->size(); ++k)
 			{
-				uint64_t stimulationId   = op_stimulationSet->getStimulationIdentifier(k);
-				uint64_t stimulationDate = op_stimulationSet->getStimulationDate(k);
-				m_latestStimulusDate     = std::max(m_latestStimulusDate, stimulationDate);
-				if (CTime(m_latestStimulusDate - stimulationDate).toSeconds() <= m_timeWindow)
+				size_t id   = op_stimulationSet->operator[](k).m_ID;
+				CTime date = op_stimulationSet->operator[](k).m_Date;
+				m_latestStimulusDate     = std::max(m_latestStimulusDate, date);
+				if ((m_latestStimulusDate - date).toSeconds() <= m_timeWindow)
 				{
 					// Stimulus is fresh, append
-					m_oStimulusDeque.push_back(std::pair<uint64_t, uint64_t>(stimulationId, stimulationDate));
+					m_oStimulusDeque.push_back(std::pair<size_t, CTime>(id, date));
 					newStimulus = true;
 				}
 			}
@@ -106,8 +106,8 @@ bool CBoxAlgorithmStimulationVoter::process()
 	// Always clear too old votes that have slipped off the time window. The time window is relative to the time of the latest stimulus received.
 	while (!m_oStimulusDeque.empty())
 	{
-		const uint64_t frontDate = m_oStimulusDeque.front().second;
-		if (CTime(m_latestStimulusDate - frontDate).toSeconds() > m_timeWindow)
+		const CTime frontDate = m_oStimulusDeque.front().second;
+		if ((m_latestStimulusDate - frontDate).toSeconds() > m_timeWindow)
 		{
 			// Drop it
 			m_oStimulusDeque.pop_front();
@@ -127,14 +127,14 @@ bool CBoxAlgorithmStimulationVoter::process()
 		return true;
 	}
 
-	std::map<uint64_t, uint64_t> lastSeen;			// The last occurrence of each type in time
-	std::map<uint64_t, size_t> votes;				// Histogram of votes
+	std::map<size_t, CTime> lastSeen;			// The last occurrence of each type in time
+	std::map<size_t, size_t> votes;				// Histogram of votes
 
 	// Make a histogram of the votes
 	for (const auto& stim : m_oStimulusDeque)
 	{
-		const uint64_t type = stim.first;
-		const uint64_t date = stim.second;
+		const size_t type = stim.first;
+		const CTime date = stim.second;
 
 		votes[type]++;
 		lastSeen[type] = std::max(lastSeen[type], date);
@@ -142,12 +142,12 @@ bool CBoxAlgorithmStimulationVoter::process()
 	}
 
 	// Find the winner
-	uint64_t resultClassLabel = m_rejectClassLabel;
+	size_t resultClassLabel = m_rejectClassLabel;
 	size_t maxVotes           = 0;
 
 	for (const auto& vote : votes)
 	{
-		const uint64_t type = vote.first;
+		const size_t type = vote.first;
 		const size_t nVotes = vote.second; // can not be zero by construction above
 
 		if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && type == m_rejectClassLabel)
@@ -172,7 +172,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		}
 	}
 
-	if (m_lastTime == 0)
+	if (m_lastTime == CTime(0))
 	{
 		m_encoder->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeHeader);
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, m_lastTime);
@@ -184,17 +184,17 @@ bool CBoxAlgorithmStimulationVoter::process()
 	}
 	else
 	{
-		const uint64_t currentTime = getPlayerContext().getCurrentTime();
+		const CTime currentTime = getPlayerContext().getCurrentTime();
 
-		uint64_t timeStamp;
+		CTime timeStamp;
 		if (m_outputDateMode == OVP_TypeId_Voting_OutputTime_Vote) { timeStamp = currentTime; }
 		else if (m_outputDateMode == OVP_TypeId_Voting_OutputTime_Winner) { timeStamp = lastSeen[resultClassLabel]; }
 		else { timeStamp = m_latestStimulusDate; }
 
 		this->getLogManager() << LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
 
-		ip_stimSet->setStimulationCount(0);
-		ip_stimSet->appendStimulation(resultClassLabel, timeStamp, 0);
+		ip_stimSet->resize(0);
+		ip_stimSet->append(CStimulation(resultClassLabel, timeStamp, 0));
 		m_encoder->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeBuffer);
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, currentTime);
 		m_lastTime = currentTime;

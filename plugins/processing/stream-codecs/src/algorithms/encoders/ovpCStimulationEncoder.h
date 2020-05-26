@@ -21,7 +21,7 @@ namespace OpenViBE
 
 			protected:
 
-				Kernel::TParameterHandler<IStimulationSet*> ip_stimSet;
+				Kernel::TParameterHandler<CStimulationSet*> ip_stimSet;
 			};
 
 			class CStimulationEncoderDesc final : public CEBMLBaseEncoderDesc

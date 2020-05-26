@@ -33,9 +33,9 @@ namespace OpenViBE
 				size_t m_oSampling        = 0;
 
 				size_t m_nTotalSample    = 0;
-				uint64_t m_startTimeBase = 0;
-				uint64_t m_lastStartTime = 0;
-				uint64_t m_lastEndTime   = 0;
+				CTime m_startTimeBase = 0;
+				CTime m_lastStartTime = 0;
+				CTime m_lastEndTime   = 0;
 
 				Kernel::IAlgorithmProxy* m_decoder = nullptr;
 				Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;

@@ -51,10 +51,10 @@ bool CBoxAlgorithmPlayerController::process()
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			IStimulationSet* stimSet = op_stimulationSet;
-			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
+			CStimulationSet& stimSet = *op_stimulationSet;
+			for (size_t j = 0; j < stimSet.size(); ++j)
 			{
-				if (stimSet->getStimulationIdentifier(j) == m_stimulationID)
+				if (stimSet[j].m_ID == m_stimulationID)
 				{
 					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) <<
@@ -70,7 +70,7 @@ bool CBoxAlgorithmPlayerController::process()
 					OV_ERROR_UNLESS_KRF(res,
 										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
 											m_actionID) << "]",
-										ErrorType::BadConfig);
+										Kernel::ErrorType::BadConfig);
 				}
 			}
 		}

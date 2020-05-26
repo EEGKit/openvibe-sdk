@@ -4,7 +4,7 @@
 
 namespace OpenViBE
 {
-	class IStimulationSet;
+	class CStimulationSet;
 
 	namespace Kernel
 	{
@@ -30,9 +30,9 @@ namespace OpenViBE
 			virtual size_t getChannelCount() = 0;
 			virtual size_t getSampleCountPerSentBlock() = 0;
 			virtual double* getBuffer() = 0;
-			virtual uint64_t getStimulationSetStartTime() = 0;
-			virtual uint64_t getStimulationSetEndTime() = 0;
-			virtual IStimulationSet& getStimulationSet() = 0;
+			virtual CTime getStimulationSetStartTime() = 0;
+			virtual CTime getStimulationSetEndTime() = 0;
+			virtual CStimulationSet& getStimulationSet() = 0;
 		};
 	} // namespace Kernel
 } // namespace OpenViBE

@@ -79,7 +79,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 
 			OV_ERROR_UNLESS_KRF(iMatrix.getDimensionSize(0) >= 2,
 								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
-								ErrorType::BadInput);
+								Kernel::ErrorType::BadInput);
 
 			CString channel                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			const EMatchMethod method = EMatchMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
@@ -87,7 +87,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 			m_referenceChannelIdx = FindChannel(iMatrix, channel, method, 0);
 
 			OV_ERROR_UNLESS_KRF(m_referenceChannelIdx != std::numeric_limits<size_t>::max(), "Invalid channel [" << channel << "]: channel not found",
-								ErrorType::BadSetting);
+								Kernel::ErrorType::BadSetting);
 
 			if (FindChannel(*m_decoder.getOutputMatrix(), channel, method, m_referenceChannelIdx + 1) != std::numeric_limits<size_t>::max())
 			{

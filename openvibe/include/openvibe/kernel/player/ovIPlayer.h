@@ -188,9 +188,9 @@ namespace OpenViBE
 			 * run beyond the specified time when ran in fast forward mode. It defaults
 			 * to \c uint64_t(-1) which represents the largest OpenViBE time.
 			 */
-			virtual bool loop(uint64_t elapsedTime, uint64_t maximumTimeToReach = uint64_t(-1)) = 0;
+			virtual bool loop(CTime elapsedTime, CTime maximumTimeToReach = CTime::max()) = 0;
 
-			virtual uint64_t getCurrentSimulatedTime() const = 0;
+			virtual CTime getCurrentSimulatedTime() const = 0;
 
 			_IsDerivedFromClass_(IKernelObject, OV_ClassId_Kernel_Player_Player)
 		};

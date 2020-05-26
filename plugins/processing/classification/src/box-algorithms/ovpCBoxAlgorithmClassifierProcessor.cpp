@@ -23,13 +23,13 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	XML::IXMLHandler* handler = XML::createXMLHandler();
 	XML::IXMLNode* rootNode   = handler->parseFile(filename);
 
-	OV_ERROR_UNLESS_KRF(rootNode, "Unable to get xml root node from file at " << filename, ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(rootNode, "Unable to get xml root node from file at " << filename, Kernel::ErrorType::BadParsing);
 
 	m_stimulations.clear();
 
 	// Check the version of the file
 	OV_ERROR_UNLESS_KRF(rootNode->hasAttribute(FORMAT_VERSION_ATTRIBUTE_NAME), "Configuration file [" << filename << "] has no version information",
-						ErrorType::ResourceNotFound);
+						Kernel::ErrorType::ResourceNotFound);
 
 	std::stringstream data(rootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME));
 	size_t version;
@@ -41,13 +41,13 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 
 	OV_ERROR_UNLESS_KRF(version >= OVP_Classification_BoxTrainerFormatVersionRequired,
 						"Classifier configuration in [" << filename << "] saved using an obsolete version [" << version << "] (minimum expected version = "
-						<< OVP_Classification_BoxTrainerFormatVersionRequired << ")", ErrorType::BadVersion);
+						<< OVP_Classification_BoxTrainerFormatVersionRequired << ")", Kernel::ErrorType::BadVersion);
 
 	CIdentifier algorithmClassID = OV_UndefinedIdentifier;
 
 	XML::IXMLNode* tmp = rootNode->getChildByName(STRATEGY_NODE_NAME);
 
-	OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << STRATEGY_NODE_NAME, ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << STRATEGY_NODE_NAME, Kernel::ErrorType::BadParsing);
 
 	algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
@@ -56,26 +56,26 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	{
 		tmp = rootNode->getChildByName(ALGORITHM_NODE_NAME);
 
-		OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << ALGORITHM_NODE_NAME, ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << ALGORITHM_NODE_NAME, Kernel::ErrorType::BadParsing);
 
 		algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
 		//If the algorithm is still unknown, that means that we face an error
 		OV_ERROR_UNLESS_KRF(algorithmClassID != OV_UndefinedIdentifier, "No classifier retrieved from configuration file [" << filename << "]",
-							ErrorType::BadConfig);
+							Kernel::ErrorType::BadConfig);
 	}
 
 	//Now loading all stimulations output
 	XML::IXMLNode* stimNode = rootNode->getChildByName(STIMULATIONS_NODE_NAME);
 
-	OV_ERROR_UNLESS_KRF(stimNode, "Configuration file [" << filename << "] has no node " << STIMULATIONS_NODE_NAME, ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(stimNode, "Configuration file [" << filename << "] has no node " << STIMULATIONS_NODE_NAME, Kernel::ErrorType::BadParsing);
 
 	//Now load every stimulation and store them in the map with the right class id
 	for (size_t i = 0; i < stimNode->getChildCount(); ++i)
 	{
 		tmp = stimNode->getChild(i);
 
-		OV_ERROR_UNLESS_KRF(tmp, "Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]", ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(tmp, "Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]", Kernel::ErrorType::BadParsing);
 
 		CString name(tmp->getPCData());
 
@@ -83,7 +83,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 		const char* att = tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
 
 		OV_ERROR_UNLESS_KRF(att, "Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute ["
-							<< IDENTIFIER_ATTRIBUTE_NAME << "] not found", ErrorType::BadParsing);
+							<< IDENTIFIER_ATTRIBUTE_NAME << "] not found", Kernel::ErrorType::BadParsing);
 
 		std::stringstream ss(att);
 		ss >> classID;
@@ -94,7 +94,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 
 	OV_ERROR_UNLESS_KRF(id != OV_UndefinedIdentifier,
 						"Invalid classifier algorithm with id [" << algorithmClassID.str() << "] in configuration file [" << filename << "]",
-						ErrorType::BadConfig);
+						Kernel::ErrorType::BadConfig);
 
 	m_classifier = &this->getAlgorithmManager().getAlgorithm(id);
 	m_classifier->initialize();
@@ -113,7 +113,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	ip_classificationConfig = rootNode->getChildByName(CLASSIFIER_ROOT)->getChild(0);
 
 	OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig),
-						"Loading configuration failed for subclassifier [" << id.str() << "]", ErrorType::Internal);
+						"Loading configuration failed for subclassifier [" << id.str() << "]", Kernel::ErrorType::Internal);
 
 	rootNode->release();
 	handler->release();
@@ -128,7 +128,7 @@ bool CBoxAlgorithmClassifierProcessor::initialize()
 	//First of all, let's get the XML file for configuration
 	const CString configFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	OV_ERROR_UNLESS_KRF(configFilename != CString(""), "Invalid empty configuration file name", ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(configFilename != CString(""), "Invalid empty configuration file name", Kernel::ErrorType::BadConfig);
 
 	m_sampleDecoder.initialize(*this, 0);
 	m_stimDecoder.initialize(*this, 1);
@@ -176,9 +176,10 @@ bool CBoxAlgorithmClassifierProcessor::process()
 		if (m_stimDecoder.isHeaderReceived()) { }
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
+			CStimulationSet& set = *m_stimDecoder.getOutputStimulationSet();
+			for (size_t j = 0; j < set.size(); ++j)
 			{
-				if (m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
+				if (set[j].m_ID == OVTK_StimulationId_TrainCompleted)
 				{
 					CString configFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 					if (!loadClassifier(configFilename.toASCIIString())) { return false; }
@@ -191,8 +192,8 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	// Classify data
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		const uint64_t startTime = boxContext.getInputChunkStartTime(0, i);
-		const uint64_t endTime   = boxContext.getInputChunkEndTime(0, i);
+		const CTime startTime = boxContext.getInputChunkStartTime(0, i);
+		const CTime endTime   = boxContext.getInputChunkEndTime(0, i);
 
 		m_sampleDecoder.decode(i);
 		if (m_sampleDecoder.isHeaderReceived())
@@ -209,16 +210,16 @@ bool CBoxAlgorithmClassifierProcessor::process()
 		{
 			OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify)
 								&& m_classifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
-								"Classification failed", ErrorType::Internal);
+								"Classification failed", Kernel::ErrorType::Internal);
 
 			TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
-			IStimulationSet* set = m_labelsEncoder.getInputStimulationSet();
+			CStimulationSet& set = *m_labelsEncoder.getInputStimulationSet();
 
-			set->setStimulationCount(1);
-			set->setStimulationIdentifier(0, m_stimulations[op_classificationState]);
-			set->setStimulationDate(0, endTime);
-			set->setStimulationDuration(0, 0);
+			set.resize(1);
+			set[0].m_ID = m_stimulations[op_classificationState];
+			set[0].m_Date = endTime;
+			set[0].m_Duration = 0;
 
 			m_labelsEncoder.encodeBuffer();
 			m_hyperplanesEncoder.encodeBuffer();

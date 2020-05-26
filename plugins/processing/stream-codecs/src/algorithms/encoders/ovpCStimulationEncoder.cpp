@@ -1,7 +1,6 @@
 #include "ovpCStimulationEncoder.h"
 
 using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace StreamCodecs;
 
@@ -24,23 +23,23 @@ bool CStimulationEncoder::uninitialize()
 
 bool CStimulationEncoder::processBuffer()
 {
-	IStimulationSet* stimulationSet = ip_stimSet;
+	CStimulationSet& set = *ip_stimSet;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations);
-	m_writerHelper->setUInt(stimulationSet->getStimulationCount());
+	m_writerHelper->setUInt(set.size());
 	m_writerHelper->closeChild();
-	for (size_t i = 0; i < stimulationSet->getStimulationCount(); ++i)
+	for(const auto& s : set)
 	{
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation);
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_ID);
-		m_writerHelper->setUInt(stimulationSet->getStimulationIdentifier(i));
+		m_writerHelper->setUInt(s.m_ID);
 		m_writerHelper->closeChild();
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_Date);
-		m_writerHelper->setUInt(stimulationSet->getStimulationDate(i));
+		m_writerHelper->setUInt(s.m_Date.time());
 		m_writerHelper->closeChild();
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration);
-		m_writerHelper->setUInt(stimulationSet->getStimulationDuration(i));
+		m_writerHelper->setUInt(s.m_Duration.time());
 		m_writerHelper->closeChild();
 		m_writerHelper->closeChild();
 	}

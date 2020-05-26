@@ -17,14 +17,14 @@ bool CAlgorithmClassifierTrainer::process()
 		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Feature vector set is NULL", ErrorType::BadInput);
+			OV_ERROR_KRF("Feature vector set is NULL", Kernel::ErrorType::BadInput);
 		}
 		const CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
 		if (this->train(featureVectorSetAdapter)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Training failed", ErrorType::Internal);
+			OV_ERROR_KRF("Training failed", Kernel::ErrorType::Internal);
 		}
 	}
 
@@ -34,14 +34,14 @@ bool CAlgorithmClassifierTrainer::process()
 		if (!config)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Configuration memory buffer is NULL", ErrorType::BadOutput);
+			OV_ERROR_KRF("Configuration memory buffer is NULL", Kernel::ErrorType::BadOutput);
 		}
 		config->setSize(0, true);
 		if (this->saveConfig(*config)) { this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true); }
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Saving configuration failed", ErrorType::Internal);
+			OV_ERROR_KRF("Saving configuration failed", Kernel::ErrorType::Internal);
 		}
 	}
 

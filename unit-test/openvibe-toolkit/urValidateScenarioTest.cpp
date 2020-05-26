@@ -43,7 +43,7 @@ bool checkForSchemaValidationError()
 
 	while (error)
 	{
-		if (error->getErrorType() == ErrorType::BadXMLSchemaValidation) { return true; }
+		if (error->getErrorType() == Kernel::ErrorType::BadXMLSchemaValidation) { return true; }
 		error = error->getNestedError();
 	}
 

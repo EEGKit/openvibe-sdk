@@ -1,7 +1,6 @@
 #include "ovpCStimulationDecoder.h"
 
 using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace StreamCodecs;
 
@@ -62,23 +61,16 @@ void CStimulationDecoder::processChildData(const void* buffer, const size_t size
 		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
 	{
+		CStimulationSet& set = *op_stimulationSet;
+
 		if (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
 		{
-			op_stimulationSet->setStimulationCount(m_readerHelper->getUInt(buffer, size));
+			set.resize(m_readerHelper->getUInt(buffer, size));
 			m_stimulationIdx = 0;
 		}
-		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID)
-		{
-			op_stimulationSet->setStimulationIdentifier(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
-		}
-		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		{
-			op_stimulationSet->setStimulationDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
-		}
-		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
-		{
-			op_stimulationSet->setStimulationDuration(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
-		}
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID) { set[m_stimulationIdx].m_ID = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { set[m_stimulationIdx].m_Date = m_readerHelper->getUInt(buffer, size); }
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { set[m_stimulationIdx].m_Duration = m_readerHelper->getUInt(buffer, size); }
 	}
 	else { CEBMLBaseDecoder::processChildData(buffer, size); }
 }

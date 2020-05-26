@@ -245,7 +245,7 @@ size_t CSimulatedBox::getInputChunkCount(const size_t index) const
 	return size_t(m_Inputs[index].size());
 }
 
-bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size,
+bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, CTime& startTime, CTime& endTime, size_t& size,
 								  const uint8_t*& buffer) const
 {
 	OV_ERROR_UNLESS_KRF(inputIdx < m_Inputs.size(),
@@ -276,7 +276,7 @@ const IMemoryBuffer* CSimulatedBox::getInputChunk(const size_t inputIdx, const s
 	return &(m_Inputs[inputIdx][chunkIdx]).getBuffer();
 }
 
-uint64_t CSimulatedBox::getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const
+CTime CSimulatedBox::getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const
 {
 	OV_ERROR_UNLESS_KRZ(inputIdx < m_Inputs.size(),
 						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_Inputs.size() - 1 << "])",
@@ -290,7 +290,7 @@ uint64_t CSimulatedBox::getInputChunkStartTime(const size_t inputIdx, const size
 	return chunk.getStartTime();
 }
 
-uint64_t CSimulatedBox::getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const
+CTime CSimulatedBox::getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const
 {
 	OV_ERROR_UNLESS_KRZ(inputIdx < m_Inputs.size(),
 						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_Inputs.size() - 1 << "])",

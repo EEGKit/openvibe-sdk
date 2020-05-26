@@ -76,24 +76,24 @@
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OV_Shared
 #if defined TARGET_OS_Windows
-#define OV_API_Export __declspec(dllexport)
-#define OV_API_Import __declspec(dllimport)
+#	define OV_API_Export __declspec(dllexport)
+#	define OV_API_Import __declspec(dllimport)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-  #define OV_API_Export __attribute__((visibility("default")))
-  #define OV_API_Import __attribute__((visibility("default")))
+#	define OV_API_Export __attribute__((visibility("default")))
+#	define OV_API_Import __attribute__((visibility("default")))
 #else
-  #define OV_API_Export
-  #define OV_API_Import
+#	define OV_API_Export
+#	define OV_API_Import
 #endif
 #else
-#define OV_API_Export
-#define OV_API_Import
+#	define OV_API_Export
+#	define OV_API_Import
 #endif
 
 #if defined OV_Exports
- #define OV_API OV_API_Export
+#	define OV_API OV_API_Export
 #else
-#define OV_API OV_API_Import
+#	define OV_API OV_API_Import
 #endif
 
 //___________________________________________________________________//
@@ -108,14 +108,14 @@
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OVP_Shared
 #if defined TARGET_OS_Windows
-#define OVP_API_Export __declspec(dllexport)
-#define OVP_API_Import __declspec(dllimport)
+#	define OVP_API_Export __declspec(dllexport)
+#	define OVP_API_Import __declspec(dllimport)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		#define OVP_API_Export __attribute__((visibility("default")))
-		#define OPV_API_Import __attribute__((visibility("default")))
+#	define OVP_API_Export __attribute__((visibility("default")))
+#	define OPV_API_Import __attribute__((visibility("default")))
 #else
-		#define OVP_API_Export
-		#define OVP_API_Import
+#	define OVP_API_Export
+#	define OVP_API_Import
 #endif
 #else
 #define OVP_API_Export

@@ -3,11 +3,8 @@
 #include "../algorithms/ovpCAlgorithmOVMatrixFileReader.h"
 
 using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
-
-uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency() { return uint64_t(1LL) << 32; }
 
 bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 {
@@ -22,7 +19,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 
 	//*
 	// OVMatrix file reader parameters
-	TParameterHandler<CString*> ip_sFilename(m_pOVMatrixFileReader->getInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename));
+	Kernel::TParameterHandler<CString*> ip_sFilename(m_pOVMatrixFileReader->getInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename));
 	/*
 	TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
 		// Channel localisation parameters
@@ -71,17 +68,17 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 {
 	if (m_headerSent == true && m_bufferSent == true) { return true; }
 
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Channel localisation stream encoder parameters
-	TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
+	Kernel::TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
 
 	m_pOVMatrixFileReader->process(/*OVP_Algorithm_OVMatrixFileReader_InputTriggerId_Next*/);
 
 	//ensure matrix is 2 dimensional and that dimension sizes are correct
 	OV_ERROR_UNLESS_KRF(op_pMatrix->getDimensionCount() == 2 && op_pMatrix->getDimensionSize(1) == 3,
 						"Wrong format for electrode localisation matrix loaded from file " << m_filename,
-						ErrorType::BadParsing);
+						Kernel::ErrorType::BadParsing);
 
 	if (m_headerSent == false)
 	{

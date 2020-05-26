@@ -59,7 +59,7 @@ bool CBoxAlgorithmCrop::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_minCropValue < m_maxCropValue,
 						"Invalid crop values: minimum crop value [" << m_minCropValue << "] should be lower than the maximum crop value ["
-						<< m_maxCropValue << "]", ErrorType::BadSetting);
+						<< m_maxCropValue << "]", Kernel::ErrorType::BadSetting);
 
 	return true;
 }

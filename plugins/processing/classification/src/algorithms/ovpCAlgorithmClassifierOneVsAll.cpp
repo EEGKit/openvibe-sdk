@@ -52,7 +52,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& dataset)
 
 	OV_ERROR_UNLESS_KRF(classLabels.size() == nClass,
 						"Invalid samples count for [" << classLabels.size() << "] classes (expected samples for " << nClass << " classes)",
-						ErrorType::BadConfig);
+						Kernel::ErrorType::BadConfig);
 
 	//We set the IMatrix fo the first classifier
 	const size_t size = dataset[0].getSize();
@@ -167,7 +167,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(best.second != nullptr, "Unable to find a class for feature vector", ErrorType::BadProcessing);
+	OV_ERROR_UNLESS_KRF(best.second != nullptr, "Unable to find a class for feature vector", Kernel::ErrorType::BadProcessing);
 
 	// Now that we made the calculation, we send the corresponding data
 
@@ -199,7 +199,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 
 	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != OV_UndefinedIdentifier,
 						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.str() << "]",
-						ErrorType::BadConfig);
+						Kernel::ErrorType::BadConfig);
 
 	IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
 	subClassifier->initialize();
@@ -306,7 +306,7 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfig(XML::IXMLNode* node)
 		ip_config = subClassifierNode;
 
 		OV_ERROR_UNLESS_KRF(m_subClassifiers[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig),
-							"Unable to load the configuration of the classifier " << i + 1, ErrorType::Internal);
+							"Unable to load the configuration of the classifier " << i + 1, Kernel::ErrorType::Internal);
 	}
 	return true;
 }
@@ -318,7 +318,7 @@ bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier&
 
 	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr,
 						"No comparison function found for classifier [" << m_subClassifierAlgorithmID.str() << "]",
-						ErrorType::ResourceNotFound);
+						Kernel::ErrorType::ResourceNotFound);
 
 	return true;
 }

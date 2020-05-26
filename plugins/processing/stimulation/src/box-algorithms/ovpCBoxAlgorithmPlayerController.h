@@ -25,7 +25,7 @@ namespace OpenViBE
 
 				Kernel::IAlgorithmProxy* m_decoder = nullptr;
 				Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
-				Kernel::TParameterHandler<IStimulationSet*> op_stimulationSet;
+				Kernel::TParameterHandler<CStimulationSet*> op_stimulationSet;
 
 				uint64_t m_stimulationID = 0;
 				uint64_t m_actionID      = 0;

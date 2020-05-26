@@ -32,8 +32,8 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
 			const IMemoryBuffer* iBuffer = boxContext.getInputChunk(i, j);
-			const uint64_t tStart        = boxContext.getInputChunkStartTime(i, j);
-			const uint64_t tEnd          = boxContext.getInputChunkEndTime(i, j);
+			const CTime tStart        = boxContext.getInputChunkStartTime(i, j);
+			const CTime tEnd          = boxContext.getInputChunkEndTime(i, j);
 
 			if ((!m_headerSent && tStart == tEnd) || (m_headerSent && tStart != tEnd))
 			{
@@ -45,7 +45,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				OV_ERROR_UNLESS_KRF(tStart >= m_lastStartTime && tEnd >= m_lastEndTime,
 									"Invalid chunk times with start = [" << tStart << "] and end = [" << tEnd << "] while last chunk has start = [" <<
 									m_lastStartTime << "] and end = [" << m_lastEndTime << "]",
-									ErrorType::BadInput);
+									Kernel::ErrorType::BadInput);
 
 				m_lastStartTime = tStart;
 				m_lastEndTime   = tEnd;

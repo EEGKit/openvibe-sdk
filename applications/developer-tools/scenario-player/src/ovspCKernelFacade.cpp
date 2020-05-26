@@ -322,14 +322,14 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 	if (returnCode == EPlayerReturnCodes::Success)
 	{
 		// loop until timeout
-		const uint64_t startTime = System::Time::zgetTime();
-		uint64_t lastLoopTime    = startTime;
+		const CTime startTime = System::Time::zgetTime();
+		CTime lastLoopTime    = startTime;
 
 		// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 		// because it could overflow
 		const double boundedMaxExecutionTimeInS = CTime::max().toSeconds();
 
-		uint64_t maxExecutionTimeInFixedPoint;
+		CTime maxExecutionTimeInFixedPoint;
 		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
 		{
 			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time();
@@ -339,7 +339,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 		bool allStopped{ false };
 		while (!allStopped) // negative condition here because it is easier to reason about it
 		{
-			const uint64_t currentTime = System::Time::zgetTime();
+			const CTime currentTime = System::Time::zgetTime();
 			allStopped                 = true;
 			for (auto p : players)
 			{

@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 	if (generate_generator_list(generators, type, argc, argv)) { return -1; }
 
 	//Now we generate all files that needs to be done
-	for (auto& s : stimulations) { for (auto& g : generators) { g->appendStimulation(s); } }
+	for (auto& s : stimulations) { for (auto& g : generators) { g->append(s); } }
 
 	for (auto& g : generators) { g->closeFile(); }
 

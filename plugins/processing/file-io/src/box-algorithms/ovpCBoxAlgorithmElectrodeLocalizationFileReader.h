@@ -14,7 +14,7 @@ namespace OpenViBE
 			{
 			public:
 				void release() override { delete this; }
-				uint64_t getClockFrequency() override;
+				uint64_t getClockFrequency() override { return uint64_t(1LL) << 32; }
 				bool initialize() override;
 				bool uninitialize() override;
 				bool processClock(CMessage& msg) override;

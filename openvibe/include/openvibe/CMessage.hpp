@@ -19,18 +19,13 @@ namespace OpenViBE {
 class OV_API CMessage
 {
 public:
+	//----- Constructor -----
 	CMessage() = default;	///< Default constructor.
-	CMessage(const CIdentifier& id, const CTime& time) : m_id(id), m_time(time) {}	///< Default constructor.
+	CMessage(const CIdentifier& id, const CTime& time) : m_ID(id), m_Time(time) {}	///< Specific Constructor.
 	~CMessage() = default;	///< Default Destructor.
 
-	CIdentifier getId() const { return m_id; }	///< Identifier Getter.
-	CTime getTime() const { return m_time; }	///< Time Getter.
-
-	void setIdentifier(const CIdentifier& id) { m_id = id; }	///< Identifier Setter.
-	void setTime(const CTime& time) { m_time = time; }			///< Time Setter.
-
-protected:
-	CIdentifier m_id = OV_UndefinedIdentifier;	///< The Id of the message
-	CTime m_time;								///< The time of the message
+	//----- Members (useless to protect members) -----
+	CIdentifier m_ID = OV_UndefinedIdentifier;	///< The Id of the message
+	CTime m_Time;								///< The time of the message
 };
 } // namespace OpenViBE

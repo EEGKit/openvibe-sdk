@@ -33,7 +33,7 @@ bool CPlayerContext::sendMessage(const CMessage& /*msg*/, const CIdentifier* /*d
 	return false;
 }
 
-uint64_t CPlayerContext::getCurrentTime() const { return m_simulatedBox.getScheduler().getCurrentTime(); }
+CTime CPlayerContext::getCurrentTime() const { return m_simulatedBox.getScheduler().getCurrentTime(); }
 
 uint64_t CPlayerContext::getCurrentLateness() const { return m_simulatedBox.getScheduler().getCurrentLateness(); }
 
