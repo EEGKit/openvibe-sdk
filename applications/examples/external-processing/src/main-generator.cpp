@@ -262,8 +262,8 @@ int main(const int argc, char** argv)
 			}
 
 
-			const OpenViBE::CTime tStart = OpenViBE::CTime(samplingRate, sentSamples);
-			const OpenViBE::CTime tEnd   = OpenViBE::CTime(samplingRate, sentSamples + samplesPerBuffer);
+			const uint64_t tStart = OpenViBE::CTime(samplingRate, sentSamples).time();
+			const uint64_t tEnd   = OpenViBE::CTime(samplingRate, sentSamples + samplesPerBuffer).time();
 
 			if (!client.pushEBML(0, tStart, tEnd, std::make_shared<const std::vector<uint8_t>>(callback.data())))
 			{

@@ -202,8 +202,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 	Kernel::IBoxIO& boxCtx           = getDynamicBoxContext();
 	const Kernel::IBox& staticBoxCtx = getStaticBoxContext();
 
-	uint64_t tStart       = 0;
-	uint64_t tEnd         = 0;
+	CTime tStart, tEnd;
 	size_t size           = 0;
 	const uint8_t* buffer = nullptr;
 
@@ -226,8 +225,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 				boxCtx.getInputChunk(i, j, tStart, tEnd, size, buffer);
 				boxCtx.markInputAsDeprecated(i, j);
 
-				getLogManager() << m_logLevel << "For chunk [id:" << j << "] at [time:" << CIdentifier(tStart) << "," << CIdentifier(tEnd)
-						<< " / " << CTime(tStart) << "," << CTime(tEnd) << "]\n";
+				getLogManager() << m_logLevel << "For chunk [id:" << j << "] at [time:" << tStart.str(true, true) << ", " << tStart.str(true, true) << "]\n";
 
 				m_reader->processData(buffer, size);
 			}

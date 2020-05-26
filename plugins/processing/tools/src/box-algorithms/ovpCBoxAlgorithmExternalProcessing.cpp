@@ -153,7 +153,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	m_acceptTimeout = CTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6))).time();
 	m_isGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
-	while (System::Time::zgetTime() - startTime < m_acceptTimeout)
+	while (System::Time::zgetTime() - startTime < m_acceptTimeout.time())
 	{
 		if (m_messaging.accept())
 		{
@@ -204,7 +204,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 			// Wait for external process to stop by himself, terminate it if necessary
 			const auto startTime = System::Time::zgetTime();
-			while (System::Time::zgetTime() - startTime < m_acceptTimeout)
+			while (System::Time::zgetTime() - startTime < m_acceptTimeout.time())
 			{
 				GetExitCodeProcess(HANDLE(m_extProcessId), &exitCode);
 
@@ -278,7 +278,8 @@ bool CBoxAlgorithmExternalProcessing::process()
 		m_hasReceivedEndMessage = true;
 	}
 
-	OV_ERROR_UNLESS_KRF(m_messaging.pushTime(this->getPlayerContext().getCurrentTime()), "Failed to push Time.", Kernel::ErrorType::BadNetworkConnection);
+	OV_ERROR_UNLESS_KRF(m_messaging.pushTime(this->getPlayerContext().getCurrentTime().time()), "Failed to push Time.",
+						Kernel::ErrorType::BadNetworkConnection);
 
 	const Kernel::IBox& staticboxCtx = this->getStaticBoxContext();
 	Kernel::IBoxIO& boxCtx           = this->getDynamicBoxContext();
@@ -321,14 +322,15 @@ bool CBoxAlgorithmExternalProcessing::process()
 				// Empty the history before to send useful data
 				while (!m_packetHistory.empty())
 				{
-					OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(m_packetHistory.front().index, m_packetHistory.front().startTime, m_packetHistory.front().endTime,
-											m_packetHistory.front().EBML), "Failed to push EBML.", Kernel::ErrorType::BadNetworkConnection);
+					OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(m_packetHistory.front().index, m_packetHistory.front().startTime.time(),
+											m_packetHistory.front().endTime.time(), m_packetHistory.front().EBML),
+										"Failed to push EBML.", Kernel::ErrorType::BadNetworkConnection);
 
 					m_packetHistory.pop();
 				}
 
 				// Push the last EBML
-				OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(i, startTime, endTime, ebml), "Failed to push EBML.", Kernel::ErrorType::BadNetworkConnection);
+				OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(i, startTime.time(), endTime.time(), ebml), "Failed to push EBML.", Kernel::ErrorType::BadNetworkConnection);
 				hasSentDataToClient = true;
 			}
 
@@ -336,7 +338,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 		}
 	}
 
-	if (hasSentDataToClient || m_isGenerator || System::Time::zgetTime() - m_lastSyncTime > m_syncTimeout)
+	if (hasSentDataToClient || m_isGenerator || System::Time::zgetTime() - m_lastSyncTime.time() > m_syncTimeout.time())
 	{
 		m_lastSyncTime = System::Time::zgetTime();
 		// Here, we send a sync message to tell to the client that we have no more data to send.
@@ -351,8 +353,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 
 			uint64_t packetId;
 			size_t index;
-			CTime startTime;
-			CTime endTime;
+			uint64_t startTime, endTime;
 			std::shared_ptr<const std::vector<uint8_t>> ebml;
 
 			bool receivedSync = false;
