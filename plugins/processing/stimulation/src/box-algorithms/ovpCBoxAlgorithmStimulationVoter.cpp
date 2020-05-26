@@ -193,7 +193,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 		this->getLogManager() << LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
 
-		ip_stimSet->resize(0);
+		ip_stimSet->clear();
 		ip_stimSet->append(CStimulation(resultClassLabel, timeStamp, 0));
 		m_encoder->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeBuffer);
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, currentTime);

@@ -4,6 +4,7 @@
 
 namespace OpenViBE {
 namespace Toolkit {
+
 class IFeatureVector;
 
 class OVTK_API IFeatureVectorSet : public IObject

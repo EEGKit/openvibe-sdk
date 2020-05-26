@@ -1,13 +1,8 @@
 #include "ovpCBoxAlgorithmIdentity.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace std;
-
-void CBoxAlgorithmIdentity::release() { delete this; }
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmIdentity::processInput(const size_t /*index*/)
 {
@@ -17,23 +12,27 @@ bool CBoxAlgorithmIdentity::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmIdentity::process()
 {
-	IBoxIO* boxContext    = getBoxAlgorithmContext()->getDynamicBoxContext();
-	const size_t nInput   = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
-	uint64_t tStart       = 0;
-	uint64_t tEnd         = 0;
-	size_t size           = 0;
-	const uint8_t* buffer = nullptr;
+	Kernel::IBoxIO* boxCtx = getBoxAlgorithmContext()->getDynamicBoxContext();
+	const size_t nInput    = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
+	CTime tStart           = 0;
+	CTime tEnd             = 0;
+	size_t size            = 0;
+	const uint8_t* buffer  = nullptr;
 
 	for (size_t i = 0; i < nInput; ++i)
 	{
-		for (size_t j = 0; j < boxContext->getInputChunkCount(i); ++j)
+		for (size_t j = 0; j < boxCtx->getInputChunkCount(i); ++j)
 		{
-			boxContext->getInputChunk(i, j, tStart, tEnd, size, buffer);
-			boxContext->appendOutputChunkData(i, buffer, size);
-			boxContext->markOutputAsReadyToSend(i, tStart, tEnd);
-			boxContext->markInputAsDeprecated(i, j);
+			boxCtx->getInputChunk(i, j, tStart, tEnd, size, buffer);
+			boxCtx->appendOutputChunkData(i, buffer, size);
+			boxCtx->markOutputAsReadyToSend(i, tStart, tEnd);
+			boxCtx->markInputAsDeprecated(i, j);
 		}
 	}
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

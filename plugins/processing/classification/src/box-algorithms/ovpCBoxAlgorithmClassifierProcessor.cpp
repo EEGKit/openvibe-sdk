@@ -216,10 +216,8 @@ bool CBoxAlgorithmClassifierProcessor::process()
 
 			CStimulationSet& set = *m_labelsEncoder.getInputStimulationSet();
 
-			set.resize(1);
-			set[0].m_ID       = m_stimulations[op_classificationState];
-			set[0].m_Date     = endTime;
-			set[0].m_Duration = 0;
+			set.clear();
+			set.append(CStimulation(m_stimulations[op_classificationState], endTime, 0));
 
 			m_labelsEncoder.encodeBuffer();
 			m_hyperplanesEncoder.encodeBuffer();

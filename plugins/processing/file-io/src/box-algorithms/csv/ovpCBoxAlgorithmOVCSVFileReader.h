@@ -37,7 +37,7 @@ private:
 	std::deque<CSV::SMatrixChunk> m_savedChunks;
 	std::deque<CSV::SStimulationChunk> m_savedStimulations;
 
-	uint64_t m_lastStimulationDate = 0;
+	CTime m_lastStimulationDate = 0;
 
 	CIdentifier m_typeID = OV_UndefinedIdentifier;
 	std::vector<std::string> m_channelNames;

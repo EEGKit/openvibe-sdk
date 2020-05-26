@@ -4,6 +4,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 class IObjectVisitorContext;
 
 class IBox;

@@ -29,6 +29,7 @@
 
 namespace OpenViBE {
 namespace CSV {
+
 class CCSVHandler final : public ICSVHandler
 {
 public:

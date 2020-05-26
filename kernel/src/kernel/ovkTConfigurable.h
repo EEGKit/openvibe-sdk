@@ -8,6 +8,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 class IParameter;
 
 template <class TBase>

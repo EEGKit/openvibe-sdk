@@ -122,7 +122,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 		{
 			if (m_nChunk == 0)
 			{
-				m_sampling   = nSample * size_t((1LL << 32) / (boxContext.getInputChunkEndTime(0, i) - boxContext.getInputChunkStartTime(0, i)));
+				m_sampling   = nSample * size_t((1LL << 32) / (boxContext.getInputChunkEndTime(0, i) - boxContext.getInputChunkStartTime(0, i)).time());
 				m_windowTime = size_t(m_windowTimeD * m_sampling);
 			}
 
@@ -144,9 +144,9 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 
 				for (k = 0; k < nSample; ++k)
 				{
-					uint64_t stimulationDate;
-					if (m_sampling > 0) { stimulationDate = boxContext.getInputChunkStartTime(0, i) + CTime(m_sampling, k).time(); }
-					else if (nSample == 1) { stimulationDate = boxContext.getInputChunkEndTime(0, i); }
+					CTime date;
+					if (m_sampling > 0) { date = boxContext.getInputChunkStartTime(0, i) + CTime(m_sampling, k); }
+					else if (nSample == 1) { date = boxContext.getInputChunkEndTime(0, i); }
 					else
 					{
 						OV_ERROR_KRF("Can only process chunks with sampling rate larger or equal to 1 or chunks with exactly one sample.",
@@ -157,14 +157,14 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					{
 						// negative ZC : positive-to-negative
 						oBuffer0[k + j * nSample] = -1;
-						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId2, stimulationDate, 0));
+						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId2, date, 0));
 						m_states[j] = -1;
 					}
 					else if ((m_states[j] == -1) && (signals[k] < m_hysteresis) && (signals[k + 1] > m_hysteresis))
 					{
 						// positive ZC : negative-to-positive
 						oBuffer0[k + j * nSample] = 1;
-						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId1, stimulationDate, 0));
+						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId1, date, 0));
 						m_states[j] = 1;
 
 						// for the rythm estimation

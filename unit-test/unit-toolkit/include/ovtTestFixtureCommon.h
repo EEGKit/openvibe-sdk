@@ -30,6 +30,7 @@
 // \note: This file contains fixture implementation shared by many unit tests
 namespace OpenViBE {
 namespace Test {
+
 struct SKernelFixture final : TestFixture
 {
 	SKernelFixture() = default;

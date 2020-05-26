@@ -24,8 +24,8 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 
 
-const uint64_t SCHEDULER_DEFAULT_FREQUENCY      = 128;
-const uint64_t SCHEDULER_MAXIMUM_LOOPS_DURATION = (100LL << 22); /* 100/1024 seconds, approx 100ms */
+const uint64_t SCHEDULER_DEFAULT_FREQUENCY   = 128;
+const CTime SCHEDULER_MAXIMUM_LOOPS_DURATION = (100LL << 22); /* 100/1024 seconds, approx 100ms */
 
 //___________________________________________________________________//
 //                                                                   //
@@ -267,7 +267,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 			// SCHEDULER_MAXIMUM_LOOPS_DURATION seconds elapsed
 			if (m_fastForwardMaximumFactor != 0)
 			{
-				m_currentTimeToReach += uint64_t(m_fastForwardMaximumFactor * elapsedTime);
+				m_currentTimeToReach += CTime(uint64_t(m_fastForwardMaximumFactor * elapsedTime.time()));
 				hasTimeToReach = true;
 			}
 			break;
@@ -310,7 +310,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 		}
 		else
 		{
-			if (hasTimeToReach) { m_innerLateness = (m_currentTimeToReach > nextSchedulerTime ? m_currentTimeToReach - nextSchedulerTime : 0); }
+			if (hasTimeToReach) { m_innerLateness = (m_currentTimeToReach > nextSchedulerTime ? (m_currentTimeToReach - nextSchedulerTime).time() : 0); }
 			else { m_innerLateness = 0; }
 
 			if (!m_scheduler.loop())
@@ -324,7 +324,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 ::printf("Iterates (%f / %f - %s)\n", (m_scheduler.getCurrentTime()>>22)/1024., (maximumTimeToReach>>22)/1024., (m_status==EPlayerStatus::Forward?"true":"false"));
 #endif // CPlayer_Debug_Time
 		}
-		if (System::Time::zgetTime() > tStart + SCHEDULER_MAXIMUM_LOOPS_DURATION)
+		if (System::Time::zgetTime() > (tStart + SCHEDULER_MAXIMUM_LOOPS_DURATION).time())
 		{
 			finished = true;
 #if defined CPlayer_Debug_Time
@@ -339,7 +339,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 	}
 
 	uint64_t lateness;
-	if (m_currentTimeToReach > m_scheduler.getCurrentTime()) { lateness = m_currentTimeToReach - m_scheduler.getCurrentTime(); }
+	if (m_currentTimeToReach > m_scheduler.getCurrentTime()) { lateness = (m_currentTimeToReach - m_scheduler.getCurrentTime()).time(); }
 	else { lateness = 0; }
 
 #if defined CPlayer_Debug_Time

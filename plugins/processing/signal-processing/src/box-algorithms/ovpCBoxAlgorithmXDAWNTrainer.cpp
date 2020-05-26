@@ -64,11 +64,11 @@ bool CBoxAlgorithmXDAWNTrainer::processInput(const size_t index)
 
 bool CBoxAlgorithmXDAWNTrainer::process()
 {
-	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxCtx = this->getDynamicBoxContext();
 
 	bool train = false;
 
-	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i)
+	for (size_t i = 0; i < boxCtx.getInputChunkCount(0); ++i)
 	{
 		m_stimEncoder.getInputStimulationSet()->clear();
 		m_stimDecoder.decode(i);
@@ -93,7 +93,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		}
 		if (m_stimDecoder.isEndReceived()) { m_stimEncoder.encodeEnd(); }
 
-		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, i), dynamicBoxContext.getInputChunkEndTime(0, i));
+		boxCtx.markOutputAsReadyToSend(0, boxCtx.getInputChunkStartTime(0, i), boxCtx.getInputChunkEndTime(0, i));
 	}
 
 	if (train)
@@ -112,7 +112,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		{
 			n[j] = 0;
 
-			for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i)
+			for (size_t i = 0; i < boxCtx.getInputChunkCount(j + 1); ++i)
 			{
 				Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
@@ -132,7 +132,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
-						X[j].resize(nChannel, (dynamicBoxContext.getInputChunkCount(j + 1) - 1) * nSample);
+						X[j].resize(nChannel, (boxCtx.getInputChunkCount(j + 1) - 1) * nSample);
 					}
 					else // otherwise, only ERP averaging buffer (X[1]) is reset
 					{
@@ -156,8 +156,8 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 							// $$$ Assumes continuous session signal starting at date 0
 							{
-								size_t ERPSampleIndex = size_t(((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16) * sampling) >> 16);
-								erpSampleIndexes.push_back(ERPSampleIndex);
+								size_t erpSampleIdx = size_t(((boxCtx.getInputChunkStartTime(j + 1, i).time() >> 16) * sampling) >> 16);
+								erpSampleIndexes.push_back(erpSampleIdx);
 							}
 							break;
 

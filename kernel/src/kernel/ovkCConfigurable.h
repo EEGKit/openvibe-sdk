@@ -5,6 +5,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 typedef TBaseConfigurable<TKernelObject<IConfigurable>> configurable;
 
 class CConfigurable final : public configurable

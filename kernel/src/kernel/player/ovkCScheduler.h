@@ -34,7 +34,7 @@ public:
 	CTime getCurrentTime() const { return m_currentTime; }
 	uint64_t getCurrentLateness() const;
 	uint64_t getFrequency() const { return m_frequency; }
-	uint64_t getStepDuration() const { return m_stepDuration; }
+	CTime getStepDuration() const { return m_stepDuration; }
 	double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
 	double getFastForwardMaximumFactor() const;
 

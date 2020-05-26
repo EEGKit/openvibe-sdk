@@ -4,6 +4,7 @@
 
 namespace OpenViBE {
 namespace Toolkit {
+
 class OVTK_API IVector : public IObject
 {
 public:

@@ -376,7 +376,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 	{
 		// We use time dictated by the sampling rate
 		m_startTime = m_endTime; // previous time end is current time start
-		m_endTime   = m_startTime + CTime(m_sampling, m_samplesPerBuffer).time();
+		m_endTime   = m_startTime + CTime(m_sampling, m_samplesPerBuffer);
 	}
 	else
 	{
@@ -541,7 +541,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 
 			m_encoder->encodeBuffer();
 			const CTime date = CTime(std::stod(m_dataMatrices[0][0]));
-			boxCtx.markOutputAsReadyToSend(0, date - 1, date);
+			boxCtx.markOutputAsReadyToSend(0, date - CTime(1), date);
 
 			//clear matrix
 			clearMatrix(m_dataMatrices);

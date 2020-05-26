@@ -98,10 +98,10 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 			m_writerHelper.setUInt(i);
 			m_writerHelper.closeChild();
 			m_writerHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_StartTime);
-			m_writerHelper.setUInt(boxContext.getInputChunkStartTime(i, j));
+			m_writerHelper.setUInt(boxContext.getInputChunkStartTime(i, j).time());
 			m_writerHelper.closeChild();
 			m_writerHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_EndTime);
-			m_writerHelper.setUInt(boxContext.getInputChunkEndTime(i, j));
+			m_writerHelper.setUInt(boxContext.getInputChunkEndTime(i, j).time());
 			m_writerHelper.closeChild();
 			m_writerHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_Content);
 			m_writerHelper.setBinary(boxContext.getInputChunk(i, j)->getDirectPointer(), boxContext.getInputChunk(i, j)->getSize());

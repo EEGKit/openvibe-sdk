@@ -9,6 +9,7 @@ using namespace std;
 
 namespace OpenViBE {
 namespace {
+
 class CMatrixImpl final : public IMatrix
 {
 public:

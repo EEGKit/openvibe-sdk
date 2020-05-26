@@ -15,6 +15,7 @@ using namespace /*OpenViBE::*/Toolkit;
 namespace OpenViBE {
 namespace Toolkit {
 namespace String {
+
 namespace {
 bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
 {

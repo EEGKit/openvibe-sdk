@@ -8,6 +8,7 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
+
 class CAlgorithmOVMatrixFileReader final : public Toolkit::TAlgorithm<IAlgorithm>
 {
 public:
@@ -52,6 +53,7 @@ public:
 
 	_IsDerivedFromClass_Final_(IAlgorithmDesc, OVP_ClassId_Algorithm_OVMatrixFileReaderDesc)
 };
+
 }  // namespace FileIO
 }  // namespace Plugins
 }  // namespace OpenViBE

@@ -7,6 +7,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 class CKernelObjectFactory final : public TKernelObject<IKernelObjectFactory>
 {
 public:

@@ -209,7 +209,7 @@ bool CSimulatedBox::process()
 	}
 
 	// flushes sent output chunks
-	for (auto& socket : m_Outputs) { socket.resize(0); }
+	for (auto& socket : m_Outputs) { socket.clear(); }
 
 	// discards waiting output chunks
 	for (const auto& chunk : m_CurrentOutputs)

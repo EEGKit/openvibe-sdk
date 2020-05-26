@@ -7,6 +7,7 @@ using namespace /*OpenViBE::*/Kernel;
 
 namespace OpenViBE {
 namespace Kernel {
+
 class CKernelDesc final : public IKernelDesc
 {
 public:

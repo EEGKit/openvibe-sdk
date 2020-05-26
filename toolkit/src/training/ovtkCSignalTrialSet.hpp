@@ -6,6 +6,7 @@
 
 namespace OpenViBE {
 namespace Toolkit {
+
 class CSignalTrialSet final : public ISignalTrialSet
 {
 public:

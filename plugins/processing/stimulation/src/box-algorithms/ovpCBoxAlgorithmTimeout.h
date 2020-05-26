@@ -24,7 +24,7 @@ public:
 	bool uninitialize() override;
 	bool processClock(CMessage& msg) override;
 	bool processInput(const size_t index) override;
-	uint64_t getClockFrequency() override;
+	uint64_t getClockFrequency() override { return 16LL << 32; }
 	bool process() override;
 
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_Timeout)
@@ -41,7 +41,7 @@ private:
 	CTime m_timeout           = 0;
 	CTime m_lastTimePolled    = 0;
 	CTime m_previousTime      = 0;
-	CTime m_stimulationToSend = 0;
+	size_t m_stimulationToSend = 0;
 };
 
 /**

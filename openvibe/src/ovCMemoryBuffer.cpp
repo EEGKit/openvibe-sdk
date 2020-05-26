@@ -6,6 +6,7 @@ using namespace OpenViBE;
 
 namespace OpenViBE {
 namespace {
+
 class CMemoryBufferImpl final : public IMemoryBuffer
 {
 public:

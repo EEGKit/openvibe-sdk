@@ -25,6 +25,7 @@
 
 namespace OpenViBE {
 namespace Test {
+
 void printError(const char* expression, const char* message, const char* file, const int line);
 void printError(const char* expression, const std::string& message, const char* file, const int line);
 void printError(const char* expression, const std::ostream& message, const char* file, const int line);

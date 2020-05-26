@@ -6,6 +6,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 template <class TBase, class TType>
 class TBaseParameter : public TBase
 {

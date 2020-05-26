@@ -1,25 +1,20 @@
 #include "ovpCAlgorithmOVMatrixFileReader.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FileIO;
+namespace OpenViBE {
+	namespace Plugins {
+		namespace FileIO {
 
 bool CAlgorithmOVMatrixFileReader::initialize()
 {
 	ip_sFilename.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename));
-
 	op_pMatrix.initialize(getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
-
 	return true;
 }
 
 bool CAlgorithmOVMatrixFileReader::uninitialize()
 {
 	op_pMatrix.uninitialize();
-
 	ip_sFilename.uninitialize();
-
 	return true;
 }
 
@@ -31,3 +26,7 @@ bool CAlgorithmOVMatrixFileReader::process()
 
 	return true;
 }
+
+		}  // namespace FileIO
+	}  // namespace Plugins
+}  // namespace OpenViBE

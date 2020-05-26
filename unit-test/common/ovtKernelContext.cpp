@@ -29,6 +29,7 @@ using namespace /*OpenViBE::*/Plugins;
 
 namespace OpenViBE {
 namespace Test {
+
 bool ctx::initialize()
 {
 #if defined TARGET_OS_Windows

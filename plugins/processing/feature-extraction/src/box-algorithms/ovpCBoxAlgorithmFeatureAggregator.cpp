@@ -14,6 +14,7 @@ using namespace std;
 namespace OpenViBE {
 namespace Plugins {
 namespace FeatureExtraction {
+
 bool CBoxAlgorithmFeatureAggregator::initialize()
 {
 	m_nInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
@@ -73,7 +74,7 @@ bool CBoxAlgorithmFeatureAggregator::processInput(const size_t index)
 	//gets the first buffer from the concerned input
 	boxIO->getInputChunk(index, 0, m_lastChunkStartTime, m_lastChunkEndTime, lastBufferChunkSize, lastBuffer);
 
-	uint64_t tStart = 0, tEnd = 0;
+	CTime tStart = 0, tEnd = 0;
 
 	bool readyToProcess = true;
 
@@ -161,6 +162,7 @@ bool CBoxAlgorithmFeatureAggregator::process()
 
 	return true;
 }
+
 }  // namespace FeatureExtraction
 }  // namespace Plugins
 }  // namespace OpenViBE

@@ -25,6 +25,7 @@
 
 namespace OpenViBE {
 namespace Test {
+
 static void printErrorCore(const char* expression, const char* file, const int line)
 {
 	std::cerr << "Failed to evaluate: " << expression << std::endl;

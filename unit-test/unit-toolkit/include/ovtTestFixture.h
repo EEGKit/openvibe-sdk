@@ -25,6 +25,7 @@
 
 namespace OpenViBE {
 namespace Test {
+
 /**
 * \struct TestFixture
 * \author cgarraud (INRIA)

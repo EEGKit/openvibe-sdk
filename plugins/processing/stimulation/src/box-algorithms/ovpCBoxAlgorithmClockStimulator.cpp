@@ -42,29 +42,29 @@ bool CBoxAlgorithmClockStimulator::process()
 {
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	const CTime currentTime = getPlayerContext().getCurrentTime();
+	const CTime time = getPlayerContext().getCurrentTime();
 
-	CStimulationSet stimulationSet;
-	stimulationSet.resize(0);
+	CStimulationSet set;
+	set.clear();
 
-	while (CTime(double(m_nSentStimulation + 1) * m_stimulationInterval).time() < currentTime)
+	while (CTime(double(m_nSentStimulation + 1) * m_stimulationInterval) < time)
 	{
 		m_nSentStimulation += 1;
 		m_lastStimulationDate = CTime(double(m_nSentStimulation) * m_stimulationInterval).time();
-		stimulationSet.append(CStimulation(m_stimulationID, m_lastStimulationDate, 0));
+		set.append(CStimulation(m_stimulationID, m_lastStimulationDate, 0));
 	}
 
-	if (currentTime == 0)
+	if (time == CTime(0))
 	{
 		m_encoder.encodeHeader();
 		boxContext.markOutputAsReadyToSend(0, m_lastEndTime, m_lastEndTime);
 	}
-	m_encoder.getInputStimulationSet() = &stimulationSet;
+	m_encoder.getInputStimulationSet() = &set;
 
 	m_encoder.encodeBuffer();
-	boxContext.markOutputAsReadyToSend(0, m_lastEndTime, currentTime);
+	boxContext.markOutputAsReadyToSend(0, m_lastEndTime, time);
 
-	m_lastEndTime = currentTime;
+	m_lastEndTime = time;
 
 	return true;
 }

@@ -6,10 +6,11 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace SignalProcessing {
+
 class CBoxAlgorithmIdentity final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-	void release() override;
+	void release() override { delete this; }
 	bool processInput(const size_t index) override;
 	bool process() override;
 
@@ -116,6 +117,7 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_IdentityDesc)
 };
+
 }  // namespace SignalProcessing
 }  // namespace Plugins
 }  // namespace OpenViBE

@@ -6,6 +6,7 @@
 
 namespace OpenViBE {
 namespace Kernel {
+
 class CLogListenerConsole;
 class CLogListenerFile;
 

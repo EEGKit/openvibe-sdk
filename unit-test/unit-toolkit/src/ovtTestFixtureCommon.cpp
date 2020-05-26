@@ -31,6 +31,7 @@ using namespace /*OpenViBE::*/Plugins;
 
 namespace OpenViBE {
 namespace Test {
+
 void SKernelFixture::setUp()
 {
 #if defined TARGET_OS_Windows

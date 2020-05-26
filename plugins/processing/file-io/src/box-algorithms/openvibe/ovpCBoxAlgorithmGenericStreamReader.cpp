@@ -253,9 +253,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 	if (top == OVP_NodeId_OpenViBEStream_Buffer)
 	{
-		m_pending = ((m_outputIdx != std::numeric_limits<size_t>::max()) &&
-					 (m_startTime != std::numeric_limits<uint64_t>::max()) &&
-					 (m_endTime != std::numeric_limits<uint64_t>::max()));
+		m_pending = ((m_outputIdx != std::numeric_limits<size_t>::max()) && (m_startTime != CTime::max()) && (m_endTime != CTime::max()));
 	}
 
 	m_nodes.pop();

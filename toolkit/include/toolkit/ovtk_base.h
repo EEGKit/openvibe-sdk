@@ -15,6 +15,7 @@ class IReaderHelper;
 
 namespace OpenViBE {
 namespace Toolkit {
+
 template <class THandledType>
 class TScopeHandle
 {

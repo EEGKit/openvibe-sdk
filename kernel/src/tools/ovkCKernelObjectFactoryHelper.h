@@ -4,6 +4,7 @@
 
 namespace OpenViBE {
 namespace Tools {
+
 class CKernelObjectFactoryHelper final : public IObject
 {
 public:

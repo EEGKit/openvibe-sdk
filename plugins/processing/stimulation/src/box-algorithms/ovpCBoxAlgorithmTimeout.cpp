@@ -16,7 +16,7 @@ bool CBoxAlgorithmTimeout::initialize()
 	OV_ERROR_UNLESS_KRF(timeout > 0, "Timeout delay value must be positive and non-zero", Kernel::ErrorType::BadSetting);
 	OV_ERROR_UNLESS_KRF(timeout == std::floor(timeout), "Timeout delay value is not an integer", Kernel::ErrorType::BadSetting);
 
-	m_timeout           = uint64_t(timeout) << 32;
+	m_timeout           = CTime(timeout);
 	m_stimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_lastTimePolled = 0;
@@ -30,7 +30,6 @@ bool CBoxAlgorithmTimeout::initialize()
 bool CBoxAlgorithmTimeout::uninitialize()
 {
 	m_encoder.uninitialize();
-
 	return true;
 }
 /*******************************************************************************/
@@ -51,14 +50,6 @@ bool CBoxAlgorithmTimeout::processClock(CMessage& /*msg*/)
 	return true;
 }
 /*******************************************************************************/
-
-
-uint64_t CBoxAlgorithmTimeout::getClockFrequency()
-{
-	return 16LL << 32; // the box clock frequency
-}
-/*******************************************************************************/
-
 
 bool CBoxAlgorithmTimeout::processInput(const size_t /*index*/)
 {
