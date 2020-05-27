@@ -86,8 +86,8 @@ bool CBoxAlgorithmStimulationVoter::process()
 		{
 			for (size_t k = 0; k < op_stimulationSet->size(); ++k)
 			{
-				size_t id            = op_stimulationSet->operator[](k).m_ID;
-				CTime date           = op_stimulationSet->operator[](k).m_Date;
+				size_t id            = op_stimulationSet->at(k).m_ID;
+				CTime date           = op_stimulationSet->at(k).m_Date;
 				m_latestStimulusDate = std::max(m_latestStimulusDate, date);
 				if ((m_latestStimulusDate - date).toSeconds() <= m_timeWindow)
 				{

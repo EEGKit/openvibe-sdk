@@ -256,9 +256,9 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			const TParameterHandler<CStimulationSet*> stimSet(m_stimDecoder.getOutputStimulationSet());
 			for (size_t j = 0; j < stimSet->size(); ++j)
 			{
-				if (stimSet->operator[](j).m_ID == m_stimID)
+				if (stimSet->at(j).m_ID == m_stimID)
 				{
-					date        = stimSet->operator[](stimSet->size() - 1).m_Date;
+					date        = stimSet->at(stimSet->size() - 1).m_Date;
 					startTime   = boxContext.getInputChunkStartTime(0, i);
 					endTime     = boxContext.getInputChunkEndTime(0, i);
 					shouldTrain = true;

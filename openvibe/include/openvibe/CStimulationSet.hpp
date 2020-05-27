@@ -36,7 +36,7 @@ public:
 	void clear() const { m_stimulations->clear(); }
 	size_t size() const { return m_stimulations->size(); }
 	void resize(const size_t n) const { m_stimulations->resize(n); }
-	void at(const size_t n) const { m_stimulations->at(n); }
+	CStimulation& at(const size_t n) const { return m_stimulations->at(n); }
 
 	void append(const CStimulation& stim) const { m_stimulations->push_back(stim); }
 	void pop() const { m_stimulations->pop_back(); }
