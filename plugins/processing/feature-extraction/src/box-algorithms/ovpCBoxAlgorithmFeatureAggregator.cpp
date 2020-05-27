@@ -125,7 +125,7 @@ bool CBoxAlgorithmFeatureAggregator::process()
 		//*
 		if ((m_decoder[input]->isHeaderReceived()) && !m_headerSent)
 		{
-			//getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "header " << input << "\n";
+			//getLogManager() << LogLevel_Warning << "header " << input << "\n";
 			IMatrix* iMatrix = m_decoder[input]->getOutputMatrix();
 			totalBufferSize += iMatrix->getBufferElementCount();
 			if (input == boxContext->getInputCount() - 1)

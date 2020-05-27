@@ -47,7 +47,7 @@ struct SStimulationChunk
 	uint64_t id;
 	double date;		// in second
 	double duration;	// in second
-	SStimulationChunk(const uint64_t id, const double date, const double duration) : id(id), date(date), duration(duration) { }
+	SStimulationChunk(const size_t id, const double date, const double duration) : id(id), date(date), duration(duration) { }
 };
 
 enum class EStreamType

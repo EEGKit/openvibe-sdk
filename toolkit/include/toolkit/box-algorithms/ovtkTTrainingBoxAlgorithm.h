@@ -28,7 +28,7 @@ public:
 
 	// Stimulation input reader callback
 	virtual void resize(size_t /*count*/) {}
-	virtual void setStimulation(const size_t index, uint64_t identifier, uint64_t date);
+	virtual void setStimulation(const size_t index, size_t identifier, CTime date);
 
 	// What should be implemented by the derived class
 	virtual CIdentifier getStimulationIdentifierTrialStart() = 0;
@@ -90,7 +90,7 @@ void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setSampleBuffer(const doub
 //
 
 template <class TBoxAlgorithmParentClass>
-void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_t /*index*/, const uint64_t identifier, const uint64_t date)
+void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_t /*index*/, const size_t identifier, const CTime date)
 {
 	if (identifier == this->getStimulationIdentifierTrain())
 	{
