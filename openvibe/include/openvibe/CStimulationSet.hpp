@@ -81,12 +81,12 @@ public:
 		dst.clear();
 		append(dst, src, shift);
 	}
-	
+
 	static void append(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
 	{
 		for (const auto& s : src) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
 	}
-	
+
 	static void appendRange(CStimulationSet& dst, const CStimulationSet& src, const CTime& startTime, const CTime& endTime, const CTime& shift = 0)
 	{
 		for (const auto& s : src)
@@ -95,7 +95,7 @@ public:
 			if (startTime <= date && date < endTime) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
 		}
 	}
-	
+
 	static void removeRange(CStimulationSet& set, const CTime& startTime, const CTime& endTime)
 	{
 		for (size_t i = 0; i < set.size(); ++i)
