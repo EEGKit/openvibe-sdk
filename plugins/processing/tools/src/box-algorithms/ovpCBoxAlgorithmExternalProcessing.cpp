@@ -228,7 +228,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			
 			// Wait for external process to stop by himself, terminate it after 10s
 			auto startTime = System::Time::zgetTime();
-			while (pid == 0 && System::Time::zgetTime() - startTime < m_acceptTimeout)
+			while (pid == 0 && System::Time::zgetTime() - startTime < m_acceptTimeout.time())
 			{
 				// Check if the program has hung itself
 				pid = waitpid(m_extProcessId, &status, WNOHANG);
