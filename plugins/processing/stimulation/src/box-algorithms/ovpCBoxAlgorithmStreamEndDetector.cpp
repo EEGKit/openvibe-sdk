@@ -71,7 +71,7 @@ bool CBoxAlgorithmStreamEndDetector::process()
 	// If the timeout is reached we send the stimulation on the output 0
 	if (m_endState == EEndState::EndReceived)
 	{
-		stimulationSet.append(CStimulation(m_stimulationID, m_endDate, 0));
+		stimulationSet.append(m_stimulationID, m_endDate, 0);
 		m_endState = EEndState::StimulationSent;
 	}
 

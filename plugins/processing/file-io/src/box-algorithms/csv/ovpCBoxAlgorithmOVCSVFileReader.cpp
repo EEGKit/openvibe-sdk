@@ -285,7 +285,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
-				stimulationSet.append(CStimulation(it->id, CTime(it->date), CTime(it->duration)));
+				stimulationSet.append(it->id, CTime(it->date), CTime(it->duration));
 				m_lastStimulationDate = CTime(it->date).time();
 			}
 			else

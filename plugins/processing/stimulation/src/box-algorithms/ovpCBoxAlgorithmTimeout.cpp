@@ -85,7 +85,7 @@ bool CBoxAlgorithmTimeout::process()
 	// If the timeout is reached we send the stimulation on the output 0
 	if (m_timeoutState == ETimeoutState::Occurred)
 	{
-		stimSet.append(CStimulation(m_stimulationToSend, date, 0));
+		stimSet.append(m_stimulationToSend, date, 0);
 		m_timeoutState = ETimeoutState::Sent;
 	}
 

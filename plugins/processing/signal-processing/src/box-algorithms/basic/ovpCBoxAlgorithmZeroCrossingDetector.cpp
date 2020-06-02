@@ -157,14 +157,14 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					{
 						// negative ZC : positive-to-negative
 						oBuffer0[k + j * nSample] = -1;
-						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId2, date, 0));
+						m_encoder1.getInputStimulationSet()->append(m_stimId2, date, 0);
 						m_states[j] = -1;
 					}
 					else if ((m_states[j] == -1) && (signals[k] < m_hysteresis) && (signals[k + 1] > m_hysteresis))
 					{
 						// positive ZC : negative-to-positive
 						oBuffer0[k + j * nSample] = 1;
-						m_encoder1.getInputStimulationSet()->append(CStimulation(m_stimId1, date, 0));
+						m_encoder1.getInputStimulationSet()->append(m_stimId1, date, 0);
 						m_states[j] = 1;
 
 						// for the rythm estimation

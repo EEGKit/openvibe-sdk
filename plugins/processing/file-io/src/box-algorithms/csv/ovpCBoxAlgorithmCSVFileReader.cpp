@@ -325,7 +325,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 		const uint64_t id    = uint64_t(atof(m_dataMatrices[i][1].c_str()));
 		const CTime duration = CTime(atof(m_dataMatrices[i][2].c_str()));
 
-		ip_stimSet.append(CStimulation(id, date, duration));
+		ip_stimSet.append(id, date, duration);
 	}
 
 	m_encoder->encodeBuffer();

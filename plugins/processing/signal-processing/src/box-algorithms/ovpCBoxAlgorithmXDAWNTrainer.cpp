@@ -85,7 +85,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				{
 					train = true;
 
-					m_stimEncoder.getInputStimulationSet()->append(CStimulation(OVTK_StimulationId_TrainCompleted, set[j].m_Date, 0));
+					m_stimEncoder.getInputStimulationSet()->append(OVTK_StimulationId_TrainCompleted, set[j].m_Date, 0);
 				}
 			}
 

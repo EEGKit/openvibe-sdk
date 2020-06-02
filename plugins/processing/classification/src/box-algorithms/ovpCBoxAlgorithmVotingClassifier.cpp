@@ -186,7 +186,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 		}
 
 		m_classificationChoiceEncoder.getInputStimulationSet()->clear();
-		m_classificationChoiceEncoder.getInputStimulationSet()->append(CStimulation(classLabel, time, 0));
+		m_classificationChoiceEncoder.getInputStimulationSet()->append(classLabel, time, 0);
 
 		m_classificationChoiceEncoder.encodeBuffer();
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, time);

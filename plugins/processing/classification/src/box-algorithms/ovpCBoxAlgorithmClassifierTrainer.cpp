@@ -251,7 +251,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				{
 					startTrain        = true;
 					const uint64_t id = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, "OVTK_StimulationId_TrainCompleted");
-					oStimulationSet.append(CStimulation(id, iStimulationSet[j].m_Date, 0));
+					oStimulationSet.append(id, iStimulationSet[j].m_Date, 0);
 				}
 			}
 			m_encoder.encodeBuffer();

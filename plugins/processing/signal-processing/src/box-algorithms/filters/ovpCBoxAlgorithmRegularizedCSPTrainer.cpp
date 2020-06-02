@@ -386,7 +386,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 
 		m_encoder.getInputStimulationSet()->clear();
-		m_encoder.getInputStimulationSet()->append(CStimulation(OVTK_StimulationId_TrainCompleted, date, 0));
+		m_encoder.getInputStimulationSet()->append(OVTK_StimulationId_TrainCompleted, date, 0);
 		m_encoder.encodeBuffer();
 
 		boxContext.markOutputAsReadyToSend(0, startTime, endTime);

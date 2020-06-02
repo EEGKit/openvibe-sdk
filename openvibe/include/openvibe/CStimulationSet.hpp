@@ -6,6 +6,7 @@
 /// \version 1.0.
 /// \date 25/05/2020.
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// \remarks Static functions vith dll must me define in <c>header</c>
 /// 
 ///-------------------------------------------------------------------------------------------------
 #pragma once
@@ -39,6 +40,7 @@ public:
 	CStimulation& at(const size_t n) const { return m_stimulations->at(n); }
 
 	void append(const CStimulation& stim) const { m_stimulations->push_back(stim); }
+	void append(const uint64_t id, const CTime& date, const CTime& duration) const { append(CStimulation(id, date, duration)); }
 	void pop() const { m_stimulations->pop_back(); }
 
 	void insert(const CStimulation& stim, const size_t index) const { m_stimulations->insert(m_stimulations->begin() + index, stim); }
@@ -74,10 +76,34 @@ public:
 	//--------------------------------------------------
 	//---------------- Static Functions ----------------
 	//--------------------------------------------------
-	static void copy(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0);
-	static void append(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0);
-	static void appendRange(CStimulationSet& dst, const CStimulationSet& src, const CTime& startTime, const CTime& endTime, const CTime& shift = 0);
-	static void removeRange(CStimulationSet& set, const CTime& startTime, const CTime& endTime);
+	static void copy(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
+	{
+		dst.clear();
+		append(dst, src, shift);
+	}
+	
+	static void append(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
+	{
+		for (const auto& s : src) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
+	}
+	
+	static void appendRange(CStimulationSet& dst, const CStimulationSet& src, const CTime& startTime, const CTime& endTime, const CTime& shift = 0)
+	{
+		for (const auto& s : src)
+		{
+			const CTime date = s.m_Date;
+			if (startTime <= date && date < endTime) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
+		}
+	}
+	
+	static void removeRange(CStimulationSet& set, const CTime& startTime, const CTime& endTime)
+	{
+		for (size_t i = 0; i < set.size(); ++i)
+		{
+			const CTime date = set[i].m_Date;
+			if (startTime <= date && date < endTime) { set.remove(i--); }
+		}
+	}
 
 protected:
 
