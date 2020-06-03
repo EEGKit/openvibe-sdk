@@ -45,7 +45,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 
 		if (m_waveletParam < 0)
 		{
-			this->getLogManager() << LogLevel_Error << "Morlet wavelet parameter should be positive.\n";
+			getLogManager() << LogLevel_Error << "Morlet wavelet parameter should be positive.\n";
 			return false;
 		}
 	}
@@ -55,12 +55,12 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 
 		if (m_waveletParam <= 0 || m_waveletParam > 20)
 		{
-			this->getLogManager() << LogLevel_Error << "Paul wavelet parameter should be included in ]0,20].\n";
+			getLogManager() << LogLevel_Error << "Paul wavelet parameter should be included in ]0,20].\n";
 			return false;
 		}
 		if (std::ceil(m_waveletParam) != m_waveletParam)
 		{
-			this->getLogManager() << LogLevel_Error << "Paul wavelet parameter should be an integer.\n";
+			getLogManager() << LogLevel_Error << "Paul wavelet parameter should be an integer.\n";
 			return false;
 		}
 	}
@@ -70,34 +70,34 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 
 		if (m_waveletParam <= 0 || size_t(m_waveletParam) % 2 == 1)
 		{
-			this->getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be strictly positive and even.\n";
+			getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be strictly positive and even.\n";
 			return false;
 		}
 		if (std::ceil(m_waveletParam) != m_waveletParam)
 		{
-			this->getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be an integer.\n";
+			getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be an integer.\n";
 			return false;
 		}
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Error << "Unknown wavelet type.\n";
+		getLogManager() << LogLevel_Error << "Unknown wavelet type.\n";
 		return false;
 	}
 
 	if (m_nScaleJ <= 0)
 	{
-		this->getLogManager() << LogLevel_Error << "Number of frequencies can not be negative.\n";
+		getLogManager() << LogLevel_Error << "Number of frequencies can not be negative.\n";
 		return false;
 	}
 	if (m_highestFreq <= 0)
 	{
-		this->getLogManager() << LogLevel_Error << "Highest frequency can not be negative.\n";
+		getLogManager() << LogLevel_Error << "Highest frequency can not be negative.\n";
 		return false;
 	}
 	if (frequencySpacing <= 0)
 	{
-		this->getLogManager() << LogLevel_Error << "Frequency spacing can not be negative.\n";
+		getLogManager() << LogLevel_Error << "Frequency spacing can not be negative.\n";
 		return false;
 	}
 
@@ -147,17 +147,17 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 		if (m_decoder.isHeaderReceived())
 		{
 			size_t sampling = m_decoder.getOutputSamplingRate();
-			this->getLogManager() << LogLevel_Trace << "Input signal is [" << nChannel << " x " << nSample << "] @ " << sampling << "Hz.\n";
+			getLogManager() << LogLevel_Trace << "Input signal is [" << nChannel << " x " << nSample << "] @ " << sampling << "Hz.\n";
 			if (sampling == 0)
 			{
-				this->getLogManager() << LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.\n";
+				getLogManager() << LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.\n";
 				return false;
 			}
 			m_samplingPeriodDt = 1.0 / sampling;
 
 			if (m_highestFreq > 0.5 * sampling)
 			{
-				this->getLogManager() << LogLevel_Error << "Highest frequency (" << m_highestFreq << " Hz) is above Nyquist criterion (sampling rate is "
+				getLogManager() << LogLevel_Error << "Highest frequency (" << m_highestFreq << " Hz) is above Nyquist criterion (sampling rate is "
 						<< sampling << " Hz), can not proceed!\n";
 				return false;
 			}
@@ -165,7 +165,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			const int nScaleLimit = int(std::log2(nSample * m_samplingPeriodDt / m_smallestScaleS0) / m_scaleSpacingDj); // Eq.(10)
 			if (int(m_nScaleJ) > nScaleLimit)
 			{
-				this->getLogManager() << LogLevel_Error << "Frequency count [" << m_nScaleJ << "] is superior to the limit [" << nScaleLimit << "].\n";
+				getLogManager() << LogLevel_Error << "Frequency count [" << m_nScaleJ << "] is superior to the limit [" << nScaleLimit << "].\n";
 				return false;
 			}
 
@@ -173,14 +173,14 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			m_waveletTransform = cwt_init(const_cast<char*>(m_waveletType), m_waveletParam, int(nSample), m_samplingPeriodDt, int(m_nScaleJ));
 			if (!m_waveletTransform)
 			{
-				this->getLogManager() << LogLevel_Error << "Error during CWT initialization.\n";
+				getLogManager() << LogLevel_Error << "Error during CWT initialization.\n";
 				return false;
 			}
 
 			// define scales of CWT
 			if (setCWTScales(m_waveletTransform, m_smallestScaleS0, m_scaleSpacingDj, const_cast<char*>(m_scaleType), m_scalePowerBaseA0) != 0)
 			{
-				this->getLogManager() << LogLevel_Error << "Error during CWT scales definition.\n";
+				getLogManager() << LogLevel_Error << "Error during CWT scales definition.\n";
 				return false;
 			}
 			//cwt_summary(m_waveletTransform); // FOR DEBUG
@@ -223,7 +223,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				// compute CWT
 				if (cwt(m_waveletTransform, ibuffer) != 0)
 				{
-					this->getLogManager() << LogLevel_Error << "Error during CWT computation.\n";
+					getLogManager() << LogLevel_Error << "Error during CWT computation.\n";
 					return false;
 				}
 

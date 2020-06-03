@@ -89,16 +89,16 @@ class CBoxAlgorithmIdentityDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Identity"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Duplicates input to output"); }
-	CString getDetailedDescription() const override { return CString("This simply duplicates intput on its output"); }
-	CString getCategory() const override { return CString("Signal processing/Basic"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getName() const override { return "Identity"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Duplicates input to output"; }
+	CString getDetailedDescription() const override { return "This simply duplicates intput on its output"; }
+	CString getCategory() const override { return "Signal processing/Basic"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Identity; }
 	IPluginObject* create() override { return new CBoxAlgorithmIdentity(); }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmIdentityListener; }

@@ -51,7 +51,7 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 	m_lastTime = 0;
 
 	m_classificationChoiceEncoder.encodeHeader();
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_lastTime, getPlayerContext().getCurrentTime());
 
 	return true;
 }
@@ -102,7 +102,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 											"Invalid input matrix with [" << input.op_matrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
 											Kernel::ErrorType::BadInput);
 
-						this->getLogManager() << LogLevel_Debug <<
+						getLogManager() << LogLevel_Debug <<
 								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";
 						input.twoValueInput = true;
 					}
@@ -133,7 +133,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 			if (input.decoder->isEndReceived())
 			{
 				m_classificationChoiceEncoder.encodeEnd();
-				boxContext.markOutputAsReadyToSend(0, m_lastTime, this->getPlayerContext().getCurrentTime());
+				boxContext.markOutputAsReadyToSend(0, m_lastTime, getPlayerContext().getCurrentTime());
 			}
 		}
 
@@ -171,17 +171,17 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 			input.scores.erase(input.scores.begin(), input.scores.begin() + int(m_nRepetitions));
 
-			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << scores[i] << "\n";
+			getLogManager() << LogLevel_Debug << "Input " << i << " got score " << scores[i] << "\n";
 		}
 
 		if (classLabel != m_rejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel)
+			getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel)
 					<< " with score " << score << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen rejection "
+			getLogManager() << LogLevel_Debug << "Chosen rejection "
 					<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel) << "\n";
 		}
 

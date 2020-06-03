@@ -25,7 +25,7 @@ class _AutoBind_
 {
 public:
 	explicit _AutoBind_(const std::string& value) : m_value(value) { }
-	operator CString() const { return CString(m_value.c_str()); }
+	operator CString() const { return m_value.c_str(); }
 
 	operator CIdentifier() const
 	{
@@ -406,7 +406,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 
 	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), buffer, size))
 	{
-		this->getLogManager() << LogLevel_Trace <<
+		getLogManager() << LogLevel_Trace <<
 				"Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
 		return true;
 	}
@@ -432,7 +432,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, const size_t size)
 {
-	this->getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
+	getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
 
 	size_t errorCount;
 	XMLPlatformUtils::Initialize();

@@ -16,11 +16,7 @@
 
 //typedef std::vector<CStimulation> CStimulationSet; // Why not ?
 namespace OpenViBE {
-/// <summary> Basic standalone OpenViBE stimulation set implementation.
-///
-/// This class offers a basic standalone impementation of the CStimulationSet interface. This class can be directly instanciatedand used.
-/// Instances of this class use an internal implementation of the CStimulationSet interfaceand redirect their calls to this implementation.
-/// </summary>
+/// <summary> Basic standalone OpenViBE stimulation set implementation. </summary>
 class OV_API CStimulationSet
 {
 public:
@@ -29,27 +25,47 @@ public:
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
 	CStimulationSet() { m_stimulations = new std::vector<CStimulation>; }	///< Default constructor
-	~CStimulationSet() { delete m_stimulations; }	///< Default destructor
+	~CStimulationSet() { delete m_stimulations; }							///< Default destructor
 
 	//--------------------------------------------------
 	//------------- Basic Vector Functions -------------
 	//--------------------------------------------------
+	/// <summary> Clears the vector. </summary>
 	void clear() const { m_stimulations->clear(); }
+	/// <summary> Size of the vector. </summary>
+	/// <returns> Size of the vector. </returns>
 	size_t size() const { return m_stimulations->size(); }
+	/// <summary> Resizes the vector. </summary>
+	/// <param name="n"> The size. </param>
 	void resize(const size_t n) const { m_stimulations->resize(n); }
+	/// <summary> Getter for the object on position n. </summary>
+	/// <param name="n"> The index of the object. </param>
+	/// <returns> Reference of the object. </returns>
 	CStimulation& at(const size_t n) const { return m_stimulations->at(n); }
 
+	/// <summary> Appends the specified stimulation. </summary>
+	/// <param name="stim"> The stimulation. </param>
 	void append(const CStimulation& stim) const { m_stimulations->push_back(stim); }
+	/// <summary> Appends the specified stimulation. </summary>
+	/// <param name="id"> The identifier. </param>
+	/// <param name="date"> The date. </param>
+	/// <param name="duration"> The duration. </param>
 	void append(const uint64_t id, const CTime& date, const CTime& duration) const { append(CStimulation(id, date, duration)); }
+	/// <summary> Remove last object of the vector. </summary>
 	void pop() const { m_stimulations->pop_back(); }
 
+	/// <summary> Inserts the specified stimulation at specified index. </summary>
+	/// <param name="stim"> The stimulation. </param>
+	/// <param name="index"> The index where to insert stimulation. </param>
 	void insert(const CStimulation& stim, const size_t index) const { m_stimulations->insert(m_stimulations->begin() + index, stim); }
+	/// <summary> Removes the object at specified index. </summary>
+	/// <param name="index">The index.</param>
 	void remove(const size_t index) const { m_stimulations->erase(m_stimulations->begin() + index); }
 
-	//--------------------------------------------------
-	//---------------- Special Functions ---------------
-	//--------------------------------------------------
-	/// <summary> Shifts by the time shift. </summary>
+	/// --------------------------------------------------
+	/// ---------------- Special Functions ---------------
+	/// --------------------------------------------------
+	/// <summary> Shifts all the stimulation by the time shift. </summary>
 	/// <param name="shift"> The time shift. </param>
 	void shift(const CTime& shift) const { for (auto& s : *m_stimulations) { s.m_Date += shift; } }
 
@@ -70,23 +86,43 @@ public:
 	//------------------- Operators --------------------
 	//--------------------------------------------------
 
+	/// <summary> Overload of operator []. </summary>
+	/// <param name="index"> The index. </param>
+	/// <returns> Reference of the object. </returns>
 	CStimulation& operator[](const size_t index) { return m_stimulations->operator[](index); }
+	/// <summary> Overload of const operator []. </summary>
+	/// <param name="index"> The index. </param>
+	/// <returns> Reference of the object. </returns>
 	const CStimulation& operator[](const size_t index) const { return m_stimulations->operator[](index); }
 
 	//--------------------------------------------------
 	//---------------- Static Functions ----------------
 	//--------------------------------------------------
+	/// <summary> Copy source on destination and add a time shift to each stimulation. </summary>
+	/// <param name="dst"> The destination. </param>
+	/// <param name="src"> The source. </param>
+	/// <param name="shift"> The time shift. </param>
 	static void copy(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
 	{
 		dst.clear();
 		append(dst, src, shift);
 	}
 
+	/// <summary> Add source on destination and add a time shift to each (new) stimulation. </summary>
+	/// <param name="dst"> The destination. </param>
+	/// <param name="src"> The source. </param>
+	/// <param name="shift"> The time shift. </param>
 	static void append(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
 	{
 		for (const auto& s : src) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
 	}
 
+	/// <summary> Add source on destination limited by start and end times and add a time shift to each (new) stimulation. </summary>
+	/// <param name="dst"> The destination. </param>
+	/// <param name="src"> The source. </param>
+	/// <param name="startTime"> The start time. </param>
+	/// <param name="endTime"> The end time. </param>
+	/// <param name="shift"> The time shift. </param>
 	static void appendRange(CStimulationSet& dst, const CStimulationSet& src, const CTime& startTime, const CTime& endTime, const CTime& shift = 0)
 	{
 		for (const auto& s : src)
@@ -96,6 +132,10 @@ public:
 		}
 	}
 
+	/// <summary> Remove stimulations between start and end times. </summary>
+	/// <param name="set"> The stimulation set. </param>
+	/// <param name="startTime"> The start time. </param>
+	/// <param name="endTime"> The end time. </param>
 	static void removeRange(CStimulationSet& set, const CTime& startTime, const CTime& endTime)
 	{
 		for (size_t i = 0; i < set.size(); ++i)
@@ -107,6 +147,6 @@ public:
 
 protected:
 
-	std::vector<CStimulation>* m_stimulations = nullptr; ///< Internal implementation
+	std::vector<CStimulation>* m_stimulations = nullptr;	///< Internal implementation
 };
 }  // namespace OpenViBE

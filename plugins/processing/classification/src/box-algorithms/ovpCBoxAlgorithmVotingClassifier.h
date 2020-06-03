@@ -102,11 +102,11 @@ public:
 		return "Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.";
 	}
 
-	CString getCategory() const override { return CString("Classification"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Classification"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
 	IPluginObject* create() override { return new CBoxAlgorithmVotingClassifier; }
 

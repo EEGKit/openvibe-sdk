@@ -53,7 +53,7 @@ CScheduler::~CScheduler() { this->uninitialize(); }
 
 bool CScheduler::setScenario(const CIdentifier& scenarioID)
 {
-	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
+	getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
@@ -77,7 +77,7 @@ bool CScheduler::setScenario(const CIdentifier& scenarioID)
 
 bool CScheduler::setFrequency(const uint64_t frequency)
 {
-	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
+	getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
 
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
@@ -311,7 +311,7 @@ bool CScheduler::flattenScenario()
 
 ESchedulerInitialization CScheduler::initialize()
 {
-	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
+	getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 
 	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall,
 					  ESchedulerInitialization::Failed);
@@ -446,7 +446,7 @@ ESchedulerInitialization CScheduler::initialize()
 	{
 		if (auto simulatedBox = it->second)
 		{
-			this->getLogManager() << LogLevel_Trace << "Scheduled box : id = " << it->first.second << " priority = " << -it->first.first
+			getLogManager() << LogLevel_Trace << "Scheduled box : id = " << it->first.second << " priority = " << -it->first.first
 					<< " name = " << simulatedBox->getName() << "\n";
 			if (!translateException([&]() { return simulatedBox->initialize(); },
 									std::bind(&CScheduler::handleException, this, simulatedBox, "Box initialization", std::placeholders::_1)))
@@ -470,7 +470,7 @@ ESchedulerInitialization CScheduler::initialize()
 
 bool CScheduler::uninitialize()
 {
-	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
+	getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
 	bool boxUninitialization = true;
 	for (auto it = m_simulatedBoxes.begin(); it != m_simulatedBoxes.end(); ++
@@ -542,7 +542,7 @@ bool CScheduler::loop()
 
 	if ((m_steps % m_frequency) == 0)
 	{
-		this->getLogManager() << LogLevel_Debug
+		getLogManager() << LogLevel_Debug
 				<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Scheduler" << LogColor_PopStateBit
 				<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "elapsed time" << LogColor_PopStateBit << "> "
 				<< m_steps / m_frequency << "s\n";
@@ -550,7 +550,7 @@ bool CScheduler::loop()
 
 	if (m_oBenchmarkChrono.hasNewEstimation())
 	{
-		this->getLogManager() << LogLevel_Benchmark
+		getLogManager() << LogLevel_Benchmark
 				<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Scheduler" << LogColor_PopStateBit
 				<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "processor use" << LogColor_PopStateBit << "> "
 				<< m_oBenchmarkChrono.getStepInPercentage() << "%\n";

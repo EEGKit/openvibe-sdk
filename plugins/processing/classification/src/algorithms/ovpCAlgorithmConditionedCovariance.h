@@ -32,22 +32,21 @@ class CAlgorithmConditionedCovarianceDesc final : virtual public IAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Conditioned Covariance"); }
-	CString getAuthorName() const override { return CString("Jussi T. Lindgren"); }
-	CString getAuthorCompanyName() const override { return CString("Inria"); }
-	CString getShortDescription() const override { return CString("Computes covariance with shrinkage."); }
+	CString getName() const override { return "Conditioned Covariance"; }
+	CString getAuthorName() const override { return "Jussi T. Lindgren"; }
+	CString getAuthorCompanyName() const override { return "Inria"; }
+	CString getShortDescription() const override { return "Computes covariance with shrinkage."; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular.");
+		return "Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular.";
 	}
 
-	CString getCategory() const override { return CString(""); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return ""; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ConditionedCovariance; }
 	IPluginObject* create() override { return new CAlgorithmConditionedCovariance; }
 

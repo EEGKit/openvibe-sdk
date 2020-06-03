@@ -20,12 +20,12 @@ public:
 	override { return new CKernelContext(&masterKernelCtx, applicationName, configFilename); }
 
 	void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
-	CString getName() const override { return CString("OpenViBE Kernel Implementation"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("OpenViBE Kernel Implementation"); }
-	CString getDetailedDescription() const override { return CString("OpenViBE Kernel Implementation"); }
-	CString getVersion() const override { return CString("0.5"); }
+	CString getName() const override { return "OpenViBE Kernel Implementation"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "OpenViBE Kernel Implementation"; }
+	CString getDetailedDescription() const override { return "OpenViBE Kernel Implementation"; }
+	CString getVersion() const override { return "0.5"; }
 
 	_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
 };

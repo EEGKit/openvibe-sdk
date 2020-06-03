@@ -38,7 +38,7 @@ bool operator!=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 =
 bool operator<(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id < id2.m_id; }
 bool operator>(const CIdentifier& id1, const CIdentifier& id2) { return id1.m_id > id2.m_id; }
 
-CString CIdentifier::toString() const { return CString(str().c_str()); }
+CString CIdentifier::toString() const { return str().c_str(); }
 
 std::string CIdentifier::str() const
 {

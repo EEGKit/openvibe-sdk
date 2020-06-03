@@ -50,7 +50,7 @@ bool CBoxAlgorithmClockStimulator::process()
 	while (CTime(double(m_nSentStimulation + 1) * m_stimulationInterval) < time)
 	{
 		m_nSentStimulation += 1;
-		m_lastStimulationDate = CTime(double(m_nSentStimulation) * m_stimulationInterval).time();
+		m_lastStimulationDate = CTime(double(m_nSentStimulation) * m_stimulationInterval);
 		set.append(m_stimulationID, m_lastStimulationDate, 0);
 	}
 

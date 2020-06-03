@@ -331,7 +331,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 		CTime maxExecutionTimeInFixedPoint;
 		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
 		{
-			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time();
+			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get()));
 		}
 		else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
 

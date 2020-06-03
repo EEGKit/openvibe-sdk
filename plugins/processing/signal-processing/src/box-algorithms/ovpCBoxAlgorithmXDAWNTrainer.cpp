@@ -104,7 +104,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		std::array<size_t, 2> n;
 		size_t nChannel = 0;
 
-		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
+		getLogManager() << LogLevel_Info << "Received train stimulation...\n";
 
 		// Decodes input signals
 
@@ -275,7 +275,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
 
-		this->getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_filterFilename << "]!\n";
+		getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_filterFilename << "]!\n";
 	}
 
 	return true;

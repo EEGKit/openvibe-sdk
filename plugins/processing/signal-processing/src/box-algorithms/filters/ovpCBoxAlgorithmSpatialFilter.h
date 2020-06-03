@@ -56,23 +56,22 @@ class CBoxAlgorithmSpatialFilterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Spatial Filter"); }
-	CString getAuthorName() const override { return CString("Yann Renard, Jussi T. Lindgren"); }
-	CString getAuthorCompanyName() const override { return CString("Inria"); }
+	CString getName() const override { return "Spatial Filter"; }
+	CString getAuthorName() const override { return "Yann Renard, Jussi T. Lindgren"; }
+	CString getAuthorCompanyName() const override { return "Inria"; }
 
-	CString getShortDescription() const override { return CString("Maps M inputs to N outputs by multiplying the each input vector with a matrix"); }
+	CString getShortDescription() const override { return "Maps M inputs to N outputs by multiplying the each input vector with a matrix"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"The applied coefficient matrix must be specified as a box parameter. The filter processes each sample independently of the past samples.");
+		return "The applied coefficient matrix must be specified as a box parameter. The filter processes each sample independently of the past samples.";
 	}
 
-	CString getCategory() const override { return CString("Signal processing/Filtering"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+	CString getCategory() const override { return "Signal processing/Filtering"; }
+	CString getVersion() const override { return "1.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SpatialFilter; }
 	IPluginObject* create() override { return new CBoxAlgorithmSpatialFilter; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSpatialFilterListener; }

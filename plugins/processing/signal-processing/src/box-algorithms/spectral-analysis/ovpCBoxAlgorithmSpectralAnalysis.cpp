@@ -62,7 +62,7 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 		curEncoder->getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate());
 	}
 
-	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
+	getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
 			<< (m_isSpectrumEncoderActive[0] ? CString("AMP ") : "")
 			<< (m_isSpectrumEncoderActive[1] ? CString("PHASE ") : "")
 			<< (m_isSpectrumEncoderActive[2] ? CString("REAL ") : "")

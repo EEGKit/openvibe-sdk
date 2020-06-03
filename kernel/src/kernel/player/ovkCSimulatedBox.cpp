@@ -129,7 +129,7 @@ bool CSimulatedBox::processClock()
 	}
 
 	if ((m_clockFrequency != CTime(0))
-		&& (m_lastClockActivationDate == CTime::max() || CTime(m_scheduler.getCurrentTime()) - m_lastClockActivationDate >= m_clockActivationStep))
+		&& (m_lastClockActivationDate == CTime::max() || m_scheduler.getCurrentTime() - m_lastClockActivationDate >= m_clockActivationStep))
 	{
 		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
@@ -403,12 +403,12 @@ bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const CTime 
 
 		if (!isConsistent)
 		{
-			this->getLogManager() << m_chunkConsistencyCheckingLogLevel << "Box <" << m_box->getName() << "> sends inconsistent chunk dates on output [" <<
+			getLogManager() << m_chunkConsistencyCheckingLogLevel << "Box <" << m_box->getName() << "> sends inconsistent chunk dates on output [" <<
 					outputIdx << "] (current chunk dates are [" << startTime << "," << endTime << "] whereas previous chunk dates were [" <<
 					m_LastOutputStartTimes[outputIdx] << "," << m_LastOutputEndTimes[outputIdx] << "])\n";
-			if (specificMessage) { this->getLogManager() << m_chunkConsistencyCheckingLogLevel << specificMessage << "\n"; }
-			this->getLogManager() << m_chunkConsistencyCheckingLogLevel << "Please report to box author and attach your scenario\n";
-			this->getLogManager() << LogLevel_Trace << "Previous warning can be disabled setting Kernel_CheckChunkConsistency to false\n";
+			if (specificMessage) { getLogManager() << m_chunkConsistencyCheckingLogLevel << specificMessage << "\n"; }
+			getLogManager() << m_chunkConsistencyCheckingLogLevel << "Please report to box author and attach your scenario\n";
+			getLogManager() << LogLevel_Trace << "Previous warning can be disabled setting Kernel_CheckChunkConsistency to false\n";
 			m_chunkConsistencyCheckingLogLevel = LogLevel_Trace;
 		}
 

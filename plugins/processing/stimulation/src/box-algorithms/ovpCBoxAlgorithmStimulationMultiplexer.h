@@ -63,23 +63,22 @@ public:
 
 	void release() override { }
 
-	CString getName() const override { return CString("Stimulation multiplexer"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Merges several stimulation streams into one."); }
+	CString getName() const override { return "Stimulation multiplexer"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Merges several stimulation streams into one."; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs.");
+		return "The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs.";
 	}
 
-	CString getCategory() const override { return CString("Streaming"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getStockItemName() const override { return CString("gtk-sort-ascending"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Streaming"; }
+	CString getVersion() const override { return "1.1"; }
+	CString getStockItemName() const override { return "gtk-sort-ascending"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationMultiplexer; }

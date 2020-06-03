@@ -39,7 +39,7 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	m_rejectClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 	m_rejectClassCanWin = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
 
-	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_clearVotes << ", timestamp at " << m_outputDateMode << ", reject mode " <<
+	getLogManager() << LogLevel_Debug << "Vote clear mode " << m_clearVotes << ", timestamp at " << m_outputDateMode << ", reject mode " <<
 			m_rejectClassCanWin << "\n";
 
 	m_latestStimulusDate = 0;
@@ -119,7 +119,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		}
 	}
 
-	this->getLogManager() << LogLevel_Debug << "Queue size is " << m_oStimulusDeque.size() << "\n";
+	getLogManager() << LogLevel_Debug << "Queue size is " << m_oStimulusDeque.size() << "\n";
 
 	if (m_oStimulusDeque.size() < m_minimumVotes)
 	{
@@ -180,7 +180,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && resultClassLabel == m_rejectClassLabel)
 	{
-		this->getLogManager() << LogLevel_Debug << "Winning class " << resultClassLabel << " was 'rejected' with " << maxVotes << "votes. Dropped.\n";
+		getLogManager() << LogLevel_Debug << "Winning class " << resultClassLabel << " was 'rejected' with " << maxVotes << "votes. Dropped.\n";
 	}
 	else
 	{
@@ -191,7 +191,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		else if (m_outputDateMode == OVP_TypeId_Voting_OutputTime_Winner) { timeStamp = lastSeen[resultClassLabel]; }
 		else { timeStamp = m_latestStimulusDate; }
 
-		this->getLogManager() << LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
+		getLogManager() << LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
 
 		ip_stimSet->clear();
 		ip_stimSet->append(resultClassLabel, timeStamp, 0);

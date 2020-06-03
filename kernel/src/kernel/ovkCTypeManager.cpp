@@ -8,8 +8,8 @@
 #include <cctype>
 #include <algorithm>
 
-#define OV_TRACE_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
-#define OV_DEBUG_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
+#define OV_TRACE_K(message) getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
+#define OV_DEBUG_K(message) getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
 #define OV_DEBUG_UNLESS_K(expression, message) if (!(expression)) { OV_DEBUG_K(message); }
 
 using namespace OpenViBE;
@@ -234,7 +234,7 @@ CString CTypeManager::getTypeName(const CIdentifier& typeID) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	if (!isRegistered(typeID)) { return CString(""); }
+	if (!isRegistered(typeID)) { return ""; }
 	return m_names.find(typeID)->second;
 }
 

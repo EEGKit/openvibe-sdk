@@ -41,19 +41,19 @@ class CBoxAlgorithmContinuousWaveletAnalysisDesc final : virtual public IBoxAlgo
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Continuous Wavelet Analysis"); }
-	CString getAuthorName() const override { return CString("Quentin Barthelemy"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
-	CString getShortDescription() const override { return CString("Performs a Time-Frequency Analysis using CWT."); }
+	CString getName() const override { return "Continuous Wavelet Analysis"; }
+	CString getAuthorName() const override { return "Quentin Barthelemy"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getShortDescription() const override { return "Performs a Time-Frequency Analysis using CWT."; }
 
-	CString getDetailedDescription() const override { return CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
+	CString getDetailedDescription() const override { return "Performs a Time-Frequency Analysis using Continuous Wavelet Transform."; }
 
-	CString getCategory() const override { return CString("Signal processing/Spectral Analysis"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("1.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("1.0.0"); }
-	CString getStockItemName() const override { return CString("gtk-execute"); }
+	CString getCategory() const override { return "Signal processing/Spectral Analysis"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "1.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "1.0.0"; }
+	CString getStockItemName() const override { return "gtk-execute"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_ContinuousWaveletAnalysis; }
 	IPluginObject* create() override { return new CBoxAlgorithmContinuousWaveletAnalysis(); }
 

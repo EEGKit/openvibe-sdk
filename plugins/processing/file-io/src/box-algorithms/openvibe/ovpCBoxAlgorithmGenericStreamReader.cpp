@@ -50,7 +50,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 	if (m_file == nullptr) { if (!initializeFile()) { return false; } }
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
 	const size_t nInput    = this->getStaticBoxContext().getOutputCount();
-	const CTime time       = this->getPlayerContext().getCurrentTime();
+	const CTime time       = getPlayerContext().getCurrentTime();
 	bool finished          = false;
 
 	while (!finished && (!feof(m_file) || m_pending))
@@ -127,7 +127,7 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& identi
 	{
 		if (!m_hasEBMLHeader)
 		{
-			this->getLogManager() << Kernel::LogLevel_Info << "The file " << m_filename <<
+			getLogManager() << Kernel::LogLevel_Info << "The file " << m_filename <<
 					" uses an outdated (but still compatible) version of the .ov file format\n";
 		}
 	}
@@ -211,7 +211,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 						{
 							const CString srcTypeName = this->getTypeManager().getTypeName(it->second);
 							const CString dstTypeName = this->getTypeManager().getTypeName(typeID);
-							this->getLogManager() << Kernel::LogLevel_Info << "Note: downcasting output " << i + 1 << " from "
+							getLogManager() << Kernel::LogLevel_Info << "Note: downcasting output " << i + 1 << " from "
 									<< srcTypeName << " to " << dstTypeName << ", as there is no exactly type-matching output connector.\n";
 							index = i;
 						}

@@ -42,16 +42,16 @@ class CBoxAlgorithmSignalMergerDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Signal Merger"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Merges several input streams into a single output stream"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Streaming"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getName() const override { return "Signal Merger"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Merges several input streams into a single output stream"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Streaming"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalMerger; }
 	IPluginObject* create() override { return new CBoxAlgorithmSignalMerger; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSignalMergerListener; }

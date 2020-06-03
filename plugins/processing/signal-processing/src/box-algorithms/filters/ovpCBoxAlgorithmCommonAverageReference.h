@@ -37,22 +37,21 @@ class CBoxAlgorithmCommonAverageReferenceDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Common Average Reference"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Re-reference the signal to common average reference"); }
+	CString getName() const override { return "Common Average Reference"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Re-reference the signal to common average reference"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time");
+		return "Re-referencing the signal to common average reference consists in subtracting from each sample the average value of the samples of all electrodes at this time";
 	}
 
-	CString getCategory() const override { return CString("Signal processing/Spatial Filtering"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Signal processing/Spatial Filtering"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CommonAverageReference; }
 	IPluginObject* create() override { return new CBoxAlgorithmCommonAverageReference; }
 

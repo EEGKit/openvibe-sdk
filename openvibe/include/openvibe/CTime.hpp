@@ -152,7 +152,7 @@ public:
 		m_time = time;
 		return *this;
 	}
-	
+
 	/// <summary> Add Assignment Operator. </summary>
 	/// <param name="time"> The time to add. </param>
 	/// <returns> himself. </returns>
@@ -163,7 +163,7 @@ public:
 		m_time += time;
 		return *this;
 	}
-	
+
 	/// <summary> Substract Assignment Operator. </summary>
 	/// <param name="time"> The time to remove. </param>
 	/// <returns> himself. </returns>
@@ -210,7 +210,7 @@ public:
 	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
 	bool operator>=(const T time) const { return m_time >= time; }
-	
+
 	/// <summary> Implements the operator for integral type. </summary>
 	/// <returns> The result of the operator. </returns>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>

@@ -39,19 +39,19 @@ class CBoxAlgorithmTimeBasedEpochingDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Time based epoching"); }
-	CString getAuthorName() const override { return CString("Quentin Barthelemy"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+	CString getName() const override { return "Time based epoching"; }
+	CString getAuthorName() const override { return "Quentin Barthelemy"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
 
-	CString getShortDescription() const override { return CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
+	CString getShortDescription() const override { return "Generates signal 'slices' or 'blocks' having a specified duration and interval"; }
 
-	CString getDetailedDescription() const override { return CString("Interval can be used to control the overlap of epochs"); }
-	CString getCategory() const override { return CString("Signal processing/Epoching"); }
-	CString getVersion() const override { return CString("2.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getStockItemName() const override { return CString("gtk-cut"); }
+	CString getDetailedDescription() const override { return "Interval can be used to control the overlap of epochs"; }
+	CString getCategory() const override { return "Signal processing/Epoching"; }
+	CString getVersion() const override { return "2.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+	CString getStockItemName() const override { return "gtk-cut"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
 	IPluginObject* create() override { return new CBoxAlgorithmTimeBasedEpoching(); }
 

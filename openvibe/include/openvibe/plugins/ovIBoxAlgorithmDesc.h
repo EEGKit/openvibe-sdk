@@ -63,7 +63,7 @@ public:
 	 * should now be handled at application level.
 	 *
 	 */
-	virtual CString getStockItemName() const { return CString(""); }
+	virtual CString getStockItemName() const { return ""; }
 
 	//@{
 	/** \name Box modification monitoring */

@@ -48,7 +48,7 @@ uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 	{
 		// We slow down the generator type boxes by default, in order to limit syncing
 		// In fast forward we limit the syncing even more by setting the frequency to 1Hz
-		if (this->getPlayerContext().getStatus() == Kernel::EPlayerStatus::Forward) { return 1LL << 32; }
+		if (getPlayerContext().getStatus() == Kernel::EPlayerStatus::Forward) { return 1LL << 32; }
 		return 16LL << 32;
 	}
 	return 128LL << 32;
@@ -105,7 +105,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 		if (!m_messaging.addOutput(i, type.toUInteger(), name.toASCIIString()))
 		{
-			this->getLogManager() << Kernel::LogLevel_Error << "Failed to add an output: " << i << "\n";
+			getLogManager() << Kernel::LogLevel_Error << "Failed to add an output: " << i << "\n";
 			return false;
 		}
 	}
@@ -126,7 +126,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	if (m_port == 0)
 	{
 		m_messaging.getSocketPort(m_port);
-		this->getLogManager() << Kernel::LogLevel_Info << "Box is now listening on TCP port [" << m_port << "].\n";
+		getLogManager() << Kernel::LogLevel_Info << "Box is now listening on TCP port [" << m_port << "].\n";
 	}
 
 	m_shouldLaunchProgram = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -142,7 +142,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 			return false;
 		}
 
-		this->getLogManager() << Kernel::LogLevel_Info << "Third party program [" << programPath.toASCIIString() << "] started.\n";
+		getLogManager() << Kernel::LogLevel_Info << "Third party program [" << programPath.toASCIIString() << "] started.\n";
 	}
 
 	const auto startTime = System::Time::zgetTime();
@@ -150,7 +150,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	bool clientConnected    = false;
 	m_hasReceivedEndMessage = false;
 
-	m_acceptTimeout = CTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6))).time();
+	m_acceptTimeout = CTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
 	m_isGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
 	while (System::Time::zgetTime() - startTime < m_acceptTimeout.time())
@@ -158,7 +158,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		if (m_messaging.accept())
 		{
 			clientConnected = true;
-			this->getLogManager() << Kernel::LogLevel_Info << "Client connected to the server.\n";
+			getLogManager() << Kernel::LogLevel_Info << "Client connected to the server.\n";
 			break;
 		}
 
@@ -184,7 +184,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		if (!m_messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	}
 
-	m_syncTimeout  = CTime(0.0625).time();
+	m_syncTimeout  = CTime(0.0625);
 	m_lastSyncTime = System::Time::zgetTime();
 	return true;
 }
@@ -244,7 +244,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			{
 				kill(m_extProcessId, SIGTERM);
 				waitpid(m_extProcessId, &status, 0);
-				this->getLogManager() << Kernel::LogLevel_Info << "Third party program [" << m_extProcessId << "] exited with status [" << WEXITSTATUS(status) << "]\n";
+				getLogManager() << Kernel::LogLevel_Info << "Third party program [" << m_extProcessId << "] exited with status [" << WEXITSTATUS(status) << "]\n";
 			}
 		}
 #endif
@@ -273,12 +273,12 @@ bool CBoxAlgorithmExternalProcessing::process()
 
 	if (m_hasReceivedEndMessage == false && m_messaging.isEndReceived() == true)
 	{
-		this->getLogManager() << Kernel::LogLevel_Info << "The third party program has ended the communication.\n";
+		getLogManager() << Kernel::LogLevel_Info << "The third party program has ended the communication.\n";
 		m_messaging.close();
 		m_hasReceivedEndMessage = true;
 	}
 
-	OV_ERROR_UNLESS_KRF(m_messaging.pushTime(this->getPlayerContext().getCurrentTime().time()), "Failed to push Time.",
+	OV_ERROR_UNLESS_KRF(m_messaging.pushTime(getPlayerContext().getCurrentTime().time()), "Failed to push Time.",
 						Kernel::ErrorType::BadNetworkConnection);
 
 	const Kernel::IBox& staticboxCtx = this->getStaticBoxContext();
@@ -330,7 +330,8 @@ bool CBoxAlgorithmExternalProcessing::process()
 				}
 
 				// Push the last EBML
-				OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(i, startTime.time(), endTime.time(), ebml), "Failed to push EBML.", Kernel::ErrorType::BadNetworkConnection);
+				OV_ERROR_UNLESS_KRF(m_messaging.pushEBML(i, startTime.time(), endTime.time(), ebml), "Failed to push EBML.",
+									Kernel::ErrorType::BadNetworkConnection);
 				hasSentDataToClient = true;
 			}
 
@@ -500,7 +501,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	res = posix_spawn_file_actions_addclose(&fileAction, STDOUT_FILENO);
 	OV_ERROR_UNLESS_KRF(res==0, "File action 'close' could not be added. Got error [" << res << "]", Kernel::ErrorType::BadCall);
 
-	this->getLogManager() << Kernel::LogLevel_Info << "Run third party program [" << programPath << "] with arguments [" << arguments << "].\n";
+	getLogManager() << Kernel::LogLevel_Info << "Run third party program [" << programPath << "] with arguments [" << arguments << "].\n";
 	int status = posix_spawnp(&m_extProcessId, programPath.c_str(), &fileAction, nullptr, argv.data(), environ);
 
 #ifdef TARGET_OS_Linux
@@ -602,7 +603,7 @@ void CBoxAlgorithmExternalProcessing::log()
 
 	while (m_messaging.popLog(packetId, logLevel, logMessage))
 	{
-		this->getLogManager() << convertLogLevel(logLevel) << "From third party program: " << logMessage << "\n";
+		getLogManager() << convertLogLevel(logLevel) << "From third party program: " << logMessage << "\n";
 	}
 }
 

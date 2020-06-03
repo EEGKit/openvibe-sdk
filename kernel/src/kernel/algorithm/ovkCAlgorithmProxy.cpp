@@ -280,11 +280,11 @@ bool CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& classID) { retur
 
 void CAlgorithmProxy::handleException(const char* errorHint, const std::exception& exception)
 {
-	this->getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
-	this->getLogManager() << LogLevel_Error << "  [name: " << this->getAlgorithmDesc().getName() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [class identifier: " << this->getAlgorithmDesc().getCreatedClass() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [cause: " << exception.what() << "]\n";
+	getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
+	getLogManager() << LogLevel_Error << "  [name: " << this->getAlgorithmDesc().getName() << "]\n";
+	getLogManager() << LogLevel_Error << "  [class identifier: " << this->getAlgorithmDesc().getCreatedClass() << "]\n";
+	getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
+	getLogManager() << LogLevel_Error << "  [cause: " << exception.what() << "]\n";
 
 	OV_ERROR_KRV("Caught exception: " << exception.what(), ErrorType::ExceptionCaught);
 }

@@ -15,21 +15,21 @@ CPlayerContext::CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimula
 bool CPlayerContext::sendSignal(const CMessage& /*msg*/)
 {
 	// TODO
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendSignal - Not yet implemented\n";
+	getLogManager() << LogLevel_Debug << "CPlayerContext::sendSignal - Not yet implemented\n";
 	return false;
 }
 
 bool CPlayerContext::sendMessage(const CMessage& /*msg*/, const CIdentifier& /*dstID*/)
 {
 	// TODO
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
+	getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
 	return false;
 }
 
 bool CPlayerContext::sendMessage(const CMessage& /*msg*/, const CIdentifier* /*dstID*/, const size_t /*nDstID*/)
 {
 	// TODO
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
+	getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
 	return false;
 }
 

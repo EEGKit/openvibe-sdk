@@ -155,7 +155,7 @@ bool CConfigurationManager::addConfigurationFromFile(const CString& rFileNameWil
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	this->getLogManager() << LogLevel_Trace << "Adding configuration file(s) [" << rFileNameWildCard << "]\n";
+	getLogManager() << LogLevel_Trace << "Adding configuration file(s) [" << rFileNameWildCard << "]\n";
 
 
 	CConfigurationManagerEntryEnumeratorCallBack cb(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);

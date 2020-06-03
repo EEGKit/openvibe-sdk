@@ -203,11 +203,11 @@ bool CBoxAlgorithmTemporalFilter::process()
 
 			if (m_type == EFilterType::HighPass)
 			{
-				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
+				getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
 			}
 			if (m_type == EFilterType::LowPass)
 			{
-				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
+				getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
 			}
 
 			const size_t frequency = m_decoder.getOutputSamplingRate();

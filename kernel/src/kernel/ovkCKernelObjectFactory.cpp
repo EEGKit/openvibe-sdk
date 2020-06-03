@@ -46,7 +46,7 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 	m_oCreatedObjects.erase(i);
 	delete pObject;
 
-	this->getLogManager() << LogLevel_Debug << "Released object with final class id " << classID << "\n";
+	getLogManager() << LogLevel_Debug << "Released object with final class id " << classID << "\n";
 
 	return true;
 }

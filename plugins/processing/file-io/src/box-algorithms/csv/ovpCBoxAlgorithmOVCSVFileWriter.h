@@ -72,16 +72,16 @@ class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("CSV File Writer"); }
-	CString getAuthorName() const override { return CString("Victor Herlin"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
-	CString getShortDescription() const override { return CString("Writes signal in a CSV (text based) file"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("File reading and writing/CSV"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.1.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+	CString getName() const override { return "CSV File Writer"; }
+	CString getAuthorName() const override { return "Victor Herlin"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getShortDescription() const override { return "Writes signal in a CSV (text based) file"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "File reading and writing/CSV"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.1.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
 	IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileWriter; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileWriterListener; }

@@ -113,7 +113,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 		//If the algorithm give a probability we take it, instead we take the first value
 		if (probabilities->getDimensionCount() != 0) { classification.push_back(CClassifierOutput(double(op_class), probabilities)); }
 		else { classification.push_back(CClassifierOutput(double(op_class), static_cast<IMatrix*>(op_values))); }
-		this->getLogManager() << LogLevel_Debug << i << " " << double(op_class) << " " << double((*op_probabilities)[0]) << " " << double(
+		getLogManager() << LogLevel_Debug << i << " " << double(op_class) << " " << double((*op_probabilities)[0]) << " " << double(
 			(*op_probabilities)[1]) << "\n";
 	}
 
@@ -145,7 +145,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 	//If no one recognize the class, let's take the more relevant
 	if (int(classId) == -1)
 	{
-		this->getLogManager() << LogLevel_Debug << "Unable to find a class in first instance\n";
+		getLogManager() << LogLevel_Debug << "Unable to find a class in first instance\n";
 		for (size_t nClassification = 0; nClassification < classification.size(); ++nClassification)
 		{
 			CClassifierOutput& tmp = classification[nClassification];

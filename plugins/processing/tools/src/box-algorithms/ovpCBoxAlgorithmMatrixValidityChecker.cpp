@@ -96,7 +96,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					if (!Toolkit::Matrix::isContentValid(*matrix))
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
-								CTime(boxCtx.getInputChunkStartTime(i, j)) << " and " << CTime(boxCtx.getInputChunkEndTime(i, j)) << ".\n";
+								boxCtx.getInputChunkStartTime(i, j) << " and " << boxCtx.getInputChunkEndTime(i, j) << ".\n";
 					}
 				}
 					// stop player
@@ -104,10 +104,10 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				{
 					if (!Toolkit::Matrix::isContentValid(*matrix))
 					{
-						this->getPlayerContext().stop();
+						getPlayerContext().stop();
 						OV_ERROR_KRF(
-							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << CTime(boxCtx.
-								getInputChunkStartTime(i, j)) << "] and [" << CTime(boxCtx.getInputChunkEndTime(i, j)) << "]",
+							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between ["
+							<< boxCtx.getInputChunkStartTime(i, j) << "] and [" << boxCtx.getInputChunkEndTime(i, j) << "]",
 							Kernel::ErrorType::BadInput);
 					}
 				}
@@ -141,8 +141,8 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// log management
 					if (nInterpolatedSample > 0 && m_nTotalInterpolatedSample[i] == nInterpolatedSample) // beginning of interpolation
 					{
-						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << CTime(
-							boxCtx.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
+						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity from "
+								<< boxCtx.getInputChunkStartTime(i, j) << ": interpolation is enable.\n";
 					}
 					if (nInterpolatedSample > 0) // update of ChunkCount during interpolation
 					{
@@ -150,9 +150,9 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 					if (nInterpolatedSample == 0 && m_nTotalInterpolatedSample[i] > 0) // end of interpolation
 					{
-						getLogManager() << m_logLevel << "Matrix on input " << i << " contained " << 100.0 * m_nTotalInterpolatedSample[i] / (
-							m_nTotalInterpolatedChunk[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << CTime(
-							boxCtx.getInputChunkStartTime(i, j)) << ".\n";
+						getLogManager() << m_logLevel << "Matrix on input " << i << " contained "
+								<< 100.0 * m_nTotalInterpolatedSample[i] / (m_nTotalInterpolatedChunk[i] * nSample * nChannel)
+								<< " % of NAN or Infinity. Interpolation disable from " << boxCtx.getInputChunkStartTime(i, j) << ".\n";
 						m_nTotalInterpolatedSample[i] = 0; // reset
 						m_nTotalInterpolatedChunk[i]  = 0;
 					}

@@ -203,7 +203,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	if (m_file == nullptr) { OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_filename, Kernel::ErrorType::Internal); }
 	//line buffer
 	char line[BUFFER_LEN];
-	const double currentTime = CTime(getPlayerContext().getCurrentTime()).toSeconds();
+	const double currentTime = getPlayerContext().getCurrentTime().toSeconds();
 
 	//if no line was read, read the first data line.
 	if (m_lastLineSplits.empty())
@@ -288,12 +288,12 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 	if (m_doNotUseFileTime)
 	{
 		m_startTime = m_endTime;
-		m_endTime   = this->getPlayerContext().getCurrentTime();
+		m_endTime   = getPlayerContext().getCurrentTime();
 	}
 	else
 	{
-		m_startTime = CTime(atof(m_dataMatrices[0][0].c_str())).time();
-		m_endTime   = CTime(atof(m_dataMatrices.back()[0].c_str())).time();
+		m_startTime = CTime(atof(m_dataMatrices[0][0].c_str()));
+		m_endTime   = CTime(atof(m_dataMatrices.back()[0].c_str()));
 	}
 
 	boxCtx.markOutputAsReadyToSend(0, m_startTime, m_endTime);
@@ -332,7 +332,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 
 	// Never use file time
 	m_startTime = m_endTime;
-	m_endTime   = this->getPlayerContext().getCurrentTime();
+	m_endTime   = getPlayerContext().getCurrentTime();
 
 	boxCtx.markOutputAsReadyToSend(0, m_startTime, m_endTime);
 
@@ -349,7 +349,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 	{
 		// This is the first chunk, find out the start time from the file
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
-		if (!m_doNotUseFileTime) { m_endTime = CTime(atof(m_dataMatrices[0][0].c_str())).time(); }
+		if (!m_doNotUseFileTime) { m_endTime = CTime(atof(m_dataMatrices[0][0].c_str())); }
 
 		iMatrix->setDimensionCount(2);
 		iMatrix->setDimensionSize(0, m_nCol - 1);
@@ -367,8 +367,8 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 
 	OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(iMatrix), "Error converting vector data to signal", Kernel::ErrorType::Internal);
 
-	// this->getLogManager() << LogLevel_Info << "Cols from header " << m_nCol << "\n";
-	// this->getLogManager() << LogLevel_Info << "InMatrix " << (m_dataMatrices.size() > 0 ? m_dataMatrices[0].size() : 0) << " outMatrix " << iMatrix->getDimensionSize(0) << "\n";
+	// getLogManager() << LogLevel_Info << "Cols from header " << m_nCol << "\n";
+	// getLogManager() << LogLevel_Info << "InMatrix " << (m_dataMatrices.size() > 0 ? m_dataMatrices[0].size() : 0) << " outMatrix " << iMatrix->getDimensionSize(0) << "\n";
 
 	m_encoder->encodeBuffer();
 
@@ -381,8 +381,8 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 	else
 	{
 		// We use time suggested by the last sample of the chunk
-		m_startTime = CTime(atof(m_dataMatrices[0][0].c_str())).time();
-		m_endTime   = CTime(atof(m_dataMatrices.back()[0].c_str())).time();
+		m_startTime = CTime(atof(m_dataMatrices[0][0].c_str()));
+		m_endTime   = CTime(atof(m_dataMatrices.back()[0].c_str()));
 	}
 
 	boxCtx.markOutputAsReadyToSend(0, m_startTime, m_endTime);

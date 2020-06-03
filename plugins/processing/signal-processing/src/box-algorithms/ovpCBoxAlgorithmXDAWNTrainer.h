@@ -40,23 +40,23 @@ class CBoxAlgorithmXDAWNTrainerDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override {}
-	CString getName() const override { return CString("xDAWN Trainer"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+	CString getName() const override { return "xDAWN Trainer"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
 
-	CString getShortDescription() const override { return CString("Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"); }
+	CString getShortDescription() const override { return "Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString("Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300");
+		return "Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300";
 	}
 
-	CString getCategory() const override { return CString("Signal processing/Spatial Filtering"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getStockItemName() const override { return CString("gtk-zoom-100"); }
+	CString getCategory() const override { return "Signal processing/Spatial Filtering"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+	CString getStockItemName() const override { return "gtk-zoom-100"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
 	IPluginObject* create() override { return new CBoxAlgorithmXDAWNTrainer; }
 

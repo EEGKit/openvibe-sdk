@@ -86,7 +86,7 @@ CMetaboxManager::~CMetaboxManager() { for (auto& desc : m_objectDesc) { delete d
 
 bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 {
-	this->getLogManager() << LogLevel_Info << "Adding metaboxes from [" << fileNameWildCard << "]\n";
+	getLogManager() << LogLevel_Info << "Adding metaboxes from [" << fileNameWildCard << "]\n";
 
 	CMetaboxManagerEntryEnumeratorCallBack callBack(this->getKernelContext(), *this); //, m_pluginModules, m_pluginObjectDescs, haveAllPluginsLoadedCorrectly);
 	FS::IEntryEnumerator* entryEnumerator = createEntryEnumerator(callBack);
@@ -100,7 +100,7 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 		{
 			result |= entryEnumerator->enumerate((path + "*" + ext.toASCIIString()).c_str());
 		}
-		if (result) { this->getLogManager() << LogLevel_Info << "Added " << callBack.resetMetaboxCount() << " metaboxes from [" << path << "]\n"; }
+		if (result) { getLogManager() << LogLevel_Info << "Added " << callBack.resetMetaboxCount() << " metaboxes from [" << path << "]\n"; }
 	}
 	entryEnumerator->release();
 

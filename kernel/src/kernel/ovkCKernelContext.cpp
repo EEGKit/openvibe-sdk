@@ -65,7 +65,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 		m_logListenerConsole.reset(new CLogListenerConsole(m_masterKernelCtx, m_applicationName));
 		m_logListenerConsole->activate(false);
 		m_logListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
-		this->getLogManager().addListener(m_logListenerConsole.get());
+		getLogManager().addListener(m_logListenerConsole.get());
 	}
 
 
@@ -105,7 +105,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 
 	for (auto& token : initializationTokens) { m_configManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 
-	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_configFile << "]\n";
+	getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_configFile << "]\n";
 
 	OV_ERROR_UNLESS_KRF(m_configManager->addConfigurationFromFile(m_configFile),
 						"Problem parsing config file [" << m_configFile << "]", ErrorType::Internal);
@@ -121,7 +121,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 	// We do this here to allow user to set the Path_Log in the .conf. The downside is that earlier log messages will not appear in the file log.
 	m_logListenerFile.reset(new CLogListenerFile(m_masterKernelCtx, m_applicationName, logFile));
 	m_logListenerFile->activate(true);
-	this->getLogManager().addListener(m_logListenerFile.get());
+	getLogManager().addListener(m_logListenerFile.get());
 
 	const ELogLevel mainLogLevel    = this->earlyGetLogLevel(m_configManager->expand("${Kernel_MainLogLevel}"));
 	const ELogLevel consoleLogLevel = this->earlyGetLogLevel(m_configManager->expand("${Kernel_ConsoleLogLevel}"));
@@ -215,8 +215,8 @@ bool CKernelContext::uninitialize()
 	m_algorithmManager.reset();
 	m_configManager.reset();
 
-	this->getLogManager().removeListener(m_logListenerConsole.get());
-	this->getLogManager().removeListener(m_logListenerFile.get());
+	getLogManager().removeListener(m_logListenerConsole.get());
+	getLogManager().removeListener(m_logListenerFile.get());
 
 	m_logManager.reset();
 	m_logListenerConsole.reset();

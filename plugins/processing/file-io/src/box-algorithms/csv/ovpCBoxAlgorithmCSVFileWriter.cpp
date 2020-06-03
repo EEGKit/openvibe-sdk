@@ -34,7 +34,7 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 		{
 			if (m_typeID != OV_TypeId_StreamedMatrix)
 			{
-				this->getLogManager() << Kernel::LogLevel_Info <<
+				getLogManager() << Kernel::LogLevel_Info <<
 						"Input is a type derived from matrix that the box doesn't recognize, decoding as Streamed Matrix\n";
 			}
 			m_decoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>();
@@ -162,22 +162,21 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 			const size_t nChannel = m_oMatrix.getDimensionSize(0);
 			const size_t nSample  = m_oMatrix.getDimensionSize(1);
 
-			//this->getLogManager() << LogLevel_Info << " dimsIn " << matrix->getDimensionSize(0) << "," << matrix->getDimensionSize(1) << "\n";
-			//this->getLogManager() << LogLevel_Info << " dimsBuf " << m_oMatrix.getDimensionSize(0) << "," << m_oMatrix.getDimensionSize(1) << "\n";
+			//getLogManager() << LogLevel_Info << " dimsIn " << matrix->getDimensionSize(0) << "," << matrix->getDimensionSize(1) << "\n";
+			//getLogManager() << LogLevel_Info << " dimsBuf " << m_oMatrix.getDimensionSize(0) << "," << m_oMatrix.getDimensionSize(1) << "\n";
 
 			for (size_t s = 0; s < nSample; ++s)
 			{
-				if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_FeatureVector) { m_fileStream << CTime(tStart).toSeconds(); }
+				if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_FeatureVector) { m_fileStream << tStart.toSeconds(); }
 				else if (m_typeID == OV_TypeId_Signal)
 				{
-					const uint64_t frequency = static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
-							getOutputSamplingRate();
-					const CTime timeOfNthSample = CTime(frequency, s).time(); // assuming chunk start is 0
+					const uint64_t frequency    = static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputSamplingRate();
+					const CTime timeOfNthSample = CTime(frequency, s); // assuming chunk start is 0
 					const CTime sampleTime      = tStart + timeOfNthSample;
 
-					m_fileStream << CTime(sampleTime).toSeconds();
+					m_fileStream << sampleTime.toSeconds();
 				}
-				else if (m_typeID == OV_TypeId_Spectrum) { m_fileStream << CTime(tEnd).toSeconds(); }
+				else if (m_typeID == OV_TypeId_Spectrum) { m_fileStream << tEnd.toSeconds(); }
 				for (size_t c = 0; c < nChannel; ++c) { m_fileStream << m_separator.toASCIIString() << matrix->getBuffer()[c * nSample + s]; }
 
 				if (m_firstBuffer)

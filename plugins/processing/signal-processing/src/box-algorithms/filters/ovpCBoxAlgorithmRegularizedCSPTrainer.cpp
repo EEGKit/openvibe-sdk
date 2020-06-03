@@ -167,7 +167,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(const size_t skipInd
 	for (size_t i = 0; i < m_nClasses; ++i)
 	{
 		classWeights[i] = i == skipIndex ? 0 : m_covProxies[i].nSamples / double(totalOutclassSamples);
-		this->getLogManager() << LogLevel_Debug << "Condition " << i + 1 << " averaging weight = " << classWeights[i] << "\n";
+		getLogManager() << LogLevel_Debug << "Condition " << i + 1 << " averaging weight = " << classWeights[i] << "\n";
 	}
 
 	// Average the covs
@@ -181,7 +181,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(const size_t skipInd
 bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const vector<MatrixXd>& cov, vector<MatrixXd>& sortedEigenVectors,
 													vector<VectorXd>& sortedEigenValues)
 {
-	this->getLogManager() << LogLevel_Info << "Compute CSP Begin\n";
+	getLogManager() << LogLevel_Info << "Compute CSP Begin\n";
 	// We wouldn't need to store all this -- they are kept for debugging purposes
 	vector<VectorXd> eigenValues(m_nClasses);
 	vector<MatrixXd> eigenVectors(m_nClasses), covInv(m_nClasses), covProd(m_nClasses);
@@ -274,12 +274,12 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 	if (shouldTrain)
 	{
-		this->getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";
+		getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";
 
 		const IMatrix* input   = m_signalDecoders[0].getOutputMatrix();
 		const size_t nChannels = input->getDimensionSize(0);
 
-		this->getLogManager() << LogLevel_Debug << "Computing eigen vector decomposition...\n";
+		getLogManager() << LogLevel_Debug << "Computing eigen vector decomposition...\n";
 
 		// Get out the covariances
 		vector<MatrixXd> cov(m_nClasses);
@@ -311,13 +311,13 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 								"Mismatch between the number of channel in both input streams", Kernel::ErrorType::BadValue);
 		}
 
-		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << cov[0].rows() << "x" << cov[0].cols()
+		getLogManager() << LogLevel_Info << "Data covariance dims are [" << cov[0].rows() << "x" << cov[0].cols()
 				<< "]. Number of samples per condition : \n";
 		for (size_t i = 0; i < m_nClasses; ++i)
 		{
-			this->getLogManager() << LogLevel_Info << "  cond " << i + 1 << " = " << m_covProxies[i].nBuffers
+			getLogManager() << LogLevel_Info << "  cond " << i + 1 << " = " << m_covProxies[i].nBuffers
 					<< " chunks, sized " << input->getDimensionSize(1) << " -> " << m_covProxies[i].nSamples << " samples\n";
-			// this->getLogManager() << LogLevel_Info << "Using shrinkage coeff " << m_Shrinkage << " ...\n";
+			// getLogManager() << LogLevel_Info << "Using shrinkage coeff " << m_Shrinkage << " ...\n";
 		}
 
 		// Compute the actual CSP using the obtained covariance matrices
@@ -338,7 +338,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			selectedVectorsMapper.block(c * m_filtersPerClass, 0, m_filtersPerClass, nChannels) = sortedVectors[c]
 																								  .block(0, 0, nChannels, m_filtersPerClass).transpose();
 
-			this->getLogManager() << LogLevel_Info << "The " << m_filtersPerClass << " filter(s) for cond " << c + 1 << " cover "
+			getLogManager() << LogLevel_Info << "The " << m_filtersPerClass << " filter(s) for cond " << c + 1 << " cover "
 					<< 100.0 * sortedValues[c].head(m_filtersPerClass).sum() / sortedValues[c].sum() << "% of corresp. eigenvalues\n";
 		}
 
@@ -374,7 +374,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 								Kernel::ErrorType::BadFileWrite);
 		}
 
-		this->getLogManager() << LogLevel_Info << "Regularized CSP Spatial filter trained successfully.\n";
+		getLogManager() << LogLevel_Info << "Regularized CSP Spatial filter trained successfully.\n";
 
 		// Clean data, so if there's a new train stimulation, we'll start again.
 		// @note possibly this should be a parameter in the future to allow incremental training

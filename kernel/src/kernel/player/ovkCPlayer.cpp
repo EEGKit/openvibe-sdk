@@ -60,7 +60,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 {
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall);
 
-	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
+	getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
 	// Create a fresh runtime configuration manager which will handle scenario-specific
 	// configuration, such as the scenario settings and local settings (workspace)
@@ -91,11 +91,11 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 		m_runtimeConfigManager->createConfigurationToken("Player_ScenarioDirectory", directoryName.c_str());
 		m_runtimeConfigManager->createConfigurationToken("__volatile_ScenarioDir", directoryName.c_str());
 		const std::string workspaceConfigurationFile = directoryName + "/" + std::string("openvibe-workspace.conf");
-		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << workspaceConfigurationFile <<
+		getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << workspaceConfigurationFile <<
 				"] to runtime configuration manager\n";
 		m_runtimeConfigManager->addConfigurationFromFile(CString(workspaceConfigurationFile.c_str()));
 		std::string scenarioConfigurationFile = directoryName + "/" + std::string("scenario.conf");
-		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << scenarioConfigurationFile <<
+		getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << scenarioConfigurationFile <<
 				"] to runtime configuration manager\n";
 		m_runtimeConfigManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 
@@ -103,7 +103,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 		if (ext != std::string::npos)
 		{
 			scenarioConfigurationFile = filename.substr(0, ext) + std::string(".conf");
-			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << scenarioConfigurationFile <<
+			getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << scenarioConfigurationFile <<
 					"] to runtime configuration manager\n";
 			m_runtimeConfigManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 		}
@@ -113,14 +113,14 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 	// Once every token file, applies the configuration tokens coming from an external application defining its own scenario specific tokens
 	if (localConfigurationTokens != nullptr)
 	{
-		this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
+		getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
 		for (size_t i = 0; i < localConfigurationTokens->getSize(); ++i)
 		{
 			CString name;
 			CString value;
 			if (localConfigurationTokens->getValue(i, name, value))
 			{
-				this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << name << "] = [" << value << "].\n";
+				getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << name << "] = [" << value << "].\n";
 				CIdentifier tokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
 				if (tokenID == OV_UndefinedIdentifier) { m_runtimeConfigManager->createConfigurationToken(name, value); }
 				else { m_runtimeConfigManager->setConfigurationTokenValue(tokenID, value); }
@@ -128,7 +128,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 				// This should not happen
 			else
 			{
-				this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n";
+				getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n";
 			}
 		}
 	}
@@ -147,7 +147,7 @@ EPlayerReturnCodes CPlayer::initialize()
 {
 	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall, EPlayerReturnCodes::Failed);
 
-	this->getLogManager() << LogLevel_Trace << "Player initialized.\n";
+	getLogManager() << LogLevel_Trace << "Player initialized.\n";
 
 	m_fastForwardMaximumFactor = 0;
 	// At this point we've inserted the bridge as a stand-in for Kernel context to the local CConfigurationManager, but the manager in the bridge is still the
@@ -174,7 +174,7 @@ EPlayerReturnCodes CPlayer::initialize()
 
 bool CPlayer::uninitialize()
 {
-	this->getLogManager() << LogLevel_Trace << "Player uninitialize\n";
+	getLogManager() << LogLevel_Trace << "Player uninitialize\n";
 
 	m_scheduler.uninitialize();
 	m_kernelCtxBridge.setConfigurationManager(nullptr);
@@ -193,7 +193,7 @@ bool CPlayer::uninitialize()
 bool CPlayer::stop()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
-	this->getLogManager() << LogLevel_Trace << "Player stop\n";
+	getLogManager() << LogLevel_Trace << "Player stop\n";
 	m_status = EPlayerStatus::Stop;
 	return true;
 }
@@ -201,7 +201,7 @@ bool CPlayer::stop()
 bool CPlayer::pause()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
-	this->getLogManager() << LogLevel_Trace << "Player pause\n";
+	getLogManager() << LogLevel_Trace << "Player pause\n";
 	m_status = EPlayerStatus::Pause;
 	return true;
 }
@@ -209,7 +209,7 @@ bool CPlayer::pause()
 bool CPlayer::step()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
-	this->getLogManager() << LogLevel_Trace << "Player step\n";
+	getLogManager() << LogLevel_Trace << "Player step\n";
 	m_status = EPlayerStatus::Step;
 	return true;
 }
@@ -217,7 +217,7 @@ bool CPlayer::step()
 bool CPlayer::play()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
-	this->getLogManager() << LogLevel_Trace << "Player play\n";
+	getLogManager() << LogLevel_Trace << "Player play\n";
 	m_status = EPlayerStatus::Play;
 	return true;
 }
@@ -225,7 +225,7 @@ bool CPlayer::play()
 bool CPlayer::forward()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
-	this->getLogManager() << LogLevel_Trace << "Player forward\n";
+	getLogManager() << LogLevel_Trace << "Player forward\n";
 	m_status = EPlayerStatus::Forward;
 	return true;
 }
@@ -255,7 +255,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 	{
 			// Calls a single controller loop and goes back to pause state
 		case EPlayerStatus::Step:
-			m_currentTimeToReach += CTime(m_scheduler.getFrequency(), 1LL).time();
+			m_currentTimeToReach += CTime(m_scheduler.getFrequency(), 1LL);
 			hasTimeToReach = true;
 			m_status       = EPlayerStatus::Pause;
 			break;
@@ -316,7 +316,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 			if (!m_scheduler.loop())
 			{
 				m_status = EPlayerStatus::Stop;
-				this->getLogManager() << LogLevel_Error << "Scheduler loop failed.\n";
+				getLogManager() << LogLevel_Error << "Scheduler loop failed.\n";
 				return false;
 			}
 

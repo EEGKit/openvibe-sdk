@@ -37,23 +37,23 @@ class CAlgorithmPairwiseDecisionHTDesc final : virtual public CAlgorithmPairwise
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Pairwise decision strategy based on HT"); }
-	CString getAuthorName() const override { return CString("Serrière Guillaume"); }
-	CString getAuthorCompanyName() const override { return CString("Inria"); }
-	CString getShortDescription() const override { return CString("."); }
+	CString getName() const override { return "Pairwise decision strategy based on HT"; }
+	CString getAuthorName() const override { return "Serrière Guillaume"; }
+	CString getAuthorCompanyName() const override { return "Inria"; }
+	CString getShortDescription() const override { return "."; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString("This method is based on the method describe in the article "
+		return "This method is based on the method describe in the article "
 			"Hastie, Trevor; Tibshirani, Robert. Classification by pairwise coupling."
-			"The Annals of Statistics 26 (1998), no. 2, 451--471");
+			"The Annals of Statistics 26 (1998), no. 2, 451--471";
 	}
 
-	CString getCategory() const override { return CString(""); }
-	CString getVersion() const override { return CString("0.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return ""; }
+	CString getVersion() const override { return "0.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseDecision_HT; }
 	IPluginObject* create() override { return new CAlgorithmPairwiseDecisionHT; }
 

@@ -130,7 +130,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 	const size_t nRows = dataset.getFeatureVectorCount();
 	const size_t nCols = (nRows > 0 ? dataset[0].getSize() : 0);
-	this->getLogManager() << LogLevel_Debug << "Feature set input dims [" << dataset.getFeatureVectorCount() << "x" << nCols << "]\n";
+	getLogManager() << LogLevel_Debug << "Feature set input dims [" << dataset.getFeatureVectorCount() << "x" << nCols << "]\n";
 
 	OV_ERROR_UNLESS_KRF(nRows != 0 && nCols != 0, "Input data has a zero-size dimension, dims = [" << nRows << "x" << nCols << "]",
 						Kernel::ErrorType::BadInput);
@@ -219,8 +219,8 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 		globalCov = covMapper;
 	}
 
-	//dumpMatrix(this->getLogManager(), mean[l_classIdx], "Mean");
-	//dumpMatrix(this->getLogManager(), globalCov, "Shrinked cov");
+	//dumpMatrix(getLogManager(), mean[l_classIdx], "Mean");
+	//dumpMatrix(getLogManager(), globalCov, "Shrinked cov");
 
 	if (diagonalCov)
 	{
@@ -256,14 +256,14 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 			const MatrixXd inter  = -0.5 * classMeans[i].transpose() * globalCovInv * classMeans[i];
 			const double bias     = inter(0, 0) + std::log(examplesInClass / totalExamples);
 
-			this->getLogManager() << LogLevel_Debug << "Bias for " << i << " is " << bias << ", from " << examplesInClass / totalExamples
+			getLogManager() << LogLevel_Debug << "Bias for " << i << " is " << bias << ", from " << examplesInClass / totalExamples
 					<< ", " << examplesInClass << "/" << totalExamples << ", int = " << inter(0, 0) << "\n";
-			// dumpMatrix(this->getLogManager(), perClassMeans[i], "Means");
+			// dumpMatrix(getLogManager(), perClassMeans[i], "Means");
 
 			m_discriminantFunctions[i].setWeight(weigth);
 			m_discriminantFunctions[i].setBias(bias);
 		}
-		else { this->getLogManager() << LogLevel_Debug << "Class " << i << " has no examples\n"; }
+		else { getLogManager() << LogLevel_Debug << "Class " << i << " has no examples\n"; }
 	}
 
 	// Hack for classes with zero examples, give them valid models but such that will always lose
@@ -288,11 +288,11 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	m_nCols = nCols;
 
 	// Debug output
-	//dumpMatrix(this->getLogManager(), globalCov, "Global cov");
-	//dumpMatrix(this->getLogManager(), eigenValues, "Eigenvalues");
-	//dumpMatrix(this->getLogManager(), eigenSolver.eigenvectors(), "Eigenvectors");
-	//dumpMatrix(this->getLogManager(), globalCovInv, "Global cov inverse");
-	//dumpMatrix(this->getLogManager(), m_coefficients, "Hyperplane weights");
+	//dumpMatrix(getLogManager(), globalCov, "Global cov");
+	//dumpMatrix(getLogManager(), eigenValues, "Eigenvalues");
+	//dumpMatrix(getLogManager(), eigenSolver.eigenvectors(), "Eigenvectors");
+	//dumpMatrix(getLogManager(), globalCovInv, "Global cov inverse");
+	//dumpMatrix(getLogManager(), m_coefficients, "Hyperplane weights");
 
 	return true;
 }

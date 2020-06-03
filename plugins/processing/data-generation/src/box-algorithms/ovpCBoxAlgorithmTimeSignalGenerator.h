@@ -42,16 +42,16 @@ class CBoxAlgorithmTimeSignalGeneratorDesc final : public IBoxAlgorithmDesc
 public:
 
 	void release() override { }
-	CString getName() const override { return CString("Time signal"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Simple time signal generator (for use with DSP)"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Data generation"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.4.0"); }
+	CString getName() const override { return "Time signal"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Simple time signal generator (for use with DSP)"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Data generation"; }
+	CString getVersion() const override { return "1.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.4.0"; }
 
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
 	IPluginObject* create() override { return new CBoxAlgorithmTimeSignalGenerator(); }

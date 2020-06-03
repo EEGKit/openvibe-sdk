@@ -38,16 +38,16 @@ class CSignalAverageDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Signal average"); }
-	CString getAuthorName() const override { return CString("Bruno Renier"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Computes the average of each input buffer."); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Signal processing/Averaging"); }
-	CString getVersion() const override { return CString("0.5"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getName() const override { return "Signal average"; }
+	CString getAuthorName() const override { return "Bruno Renier"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Computes the average of each input buffer."; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Signal processing/Averaging"; }
+	CString getVersion() const override { return "0.5"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
 	IPluginObject* create() override { return new CBoxAlgorithmSignalAverage(); }
 

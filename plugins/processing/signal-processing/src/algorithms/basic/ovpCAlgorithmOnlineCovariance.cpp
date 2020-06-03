@@ -64,9 +64,9 @@ bool CAlgorithmOnlineCovariance::process()
 							"Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)",
 							Kernel::ErrorType::BadInput);
 
-		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_Shrinkage << " ...\n";
-		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_TraceNormalization ? "[on]" : "[off]") << "\n";
-		this->getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(
+		getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_Shrinkage << " ...\n";
+		getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_TraceNormalization ? "[on]" : "[off]") << "\n";
+		getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(
 			OVP_TypeId_OnlineCovariance_UpdateMethod, ip_UpdateMethod) << "\n";
 
 		// Set the output buffers
@@ -126,8 +126,8 @@ bool CAlgorithmOnlineCovariance::process()
 
 			m_n++;
 
-			// dumpMatrix(this->getLogManager(), sampleChunk, "SampleChunk");
-			// dumpMatrix(this->getLogManager(), sampleCenteredMean, "SampleCenteredMean");
+			// dumpMatrix(getLogManager(), sampleChunk, "SampleChunk");
+			// dumpMatrix(getLogManager(), sampleCenteredMean, "SampleCenteredMean");
 		}
 		else if (ip_UpdateMethod == uint64_t(EUpdateMethod::Incremental))
 		{
@@ -163,7 +163,7 @@ bool CAlgorithmOnlineCovariance::process()
 
 			m_cov += chunkContribution;
 
-			// dumpMatrix(this->getLogManager(), sampleChunk, "Sample");
+			// dumpMatrix(getLogManager(), sampleChunk, "Sample");
 		}
 #if 0
 		else if(method == 2)
@@ -254,10 +254,10 @@ bool CAlgorithmOnlineCovariance::process()
 		outputCov  = ip_Shrinkage * priorCov + (1.0 - ip_Shrinkage) * (m_cov / double(m_n));
 
 		// Debug block
-		dumpMatrix(this->getLogManager(), outputMean, "Data mean");
-		dumpMatrix(this->getLogManager(), m_cov / double(m_n), "Data cov");
-		dumpMatrix(this->getLogManager(), ip_Shrinkage * priorCov, "Prior cov");
-		dumpMatrix(this->getLogManager(), outputCov, "Output cov");
+		dumpMatrix(getLogManager(), outputMean, "Data mean");
+		dumpMatrix(getLogManager(), m_cov / double(m_n), "Data cov");
+		dumpMatrix(getLogManager(), ip_Shrinkage * priorCov, "Prior cov");
+		dumpMatrix(getLogManager(), outputCov, "Output cov");
 	}
 
 	// Give just the output with no shrinkage?
@@ -276,8 +276,8 @@ bool CAlgorithmOnlineCovariance::process()
 		outputCov  = m_cov / double(m_n);
 
 		// Debug block
-		dumpMatrix(this->getLogManager(), outputMean, "Data mean");
-		dumpMatrix(this->getLogManager(), outputCov, "Data Cov");
+		dumpMatrix(getLogManager(), outputMean, "Data mean");
+		dumpMatrix(getLogManager(), outputCov, "Data Cov");
 	}
 
 	return true;

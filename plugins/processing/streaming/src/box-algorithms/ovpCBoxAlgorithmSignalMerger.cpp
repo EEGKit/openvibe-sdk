@@ -147,7 +147,7 @@ bool CBoxAlgorithmSignalMerger::process()
 			const uint64_t sampling           = m_decoders[0]->getOutputSamplingRate();
 			m_encoder->getInputSamplingRate() = sampling;
 
-			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << sampling << "\n";
+			getLogManager() << LogLevel_Debug << "Setting sampling rate to " << sampling << "\n";
 
 			m_encoder->encodeHeader();
 

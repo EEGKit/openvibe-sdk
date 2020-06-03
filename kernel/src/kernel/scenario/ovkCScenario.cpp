@@ -142,7 +142,7 @@ CScenario::~CScenario() { this->clear(); }
 
 bool CScenario::clear()
 {
-	this->getLogManager() << LogLevel_Debug << "Clearing scenario\n";
+	getLogManager() << LogLevel_Debug << "Clearing scenario\n";
 
 	for (auto& box : m_boxes) { delete box.second; }
 	m_boxes.clear();
@@ -315,7 +315,7 @@ bool CScenario::isBox(const CIdentifier& boxID) const { return m_boxes.count(box
 
 IBox* CScenario::getBoxDetails(const CIdentifier& boxID)
 {
-	// this->getLogManager() << LogLevel_Debug << "Getting box details from scenario\n";
+	// getLogManager() << LogLevel_Debug << "Getting box details from scenario\n";
 	const auto it = m_boxes.find(boxID);
 	OV_ERROR_UNLESS_KRN(it != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
 	return it->second;
@@ -1429,7 +1429,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 			<< " Please remove them before exporting scenario\n");
 		this->getBoxDetails(boxID)->setAttributeValue(OV_AttributeId_Box_PendingDeprecatedInterfacors, "");
 	}
-	else { this->getLogManager() << LogLevel_Info << m_boxes[boxID]->getName() << " box has been updated successfully\n"; }
+	else { getLogManager() << LogLevel_Info << m_boxes[boxID]->getName() << " box has been updated successfully\n"; }
 
 	return true;
 }
@@ -1454,7 +1454,7 @@ bool CScenario::removeDeprecatedInterfacorsFromBox(const CIdentifier& boxID)
 		} while (index != 0);
 	}
 
-	this->getLogManager() << LogLevel_Info << m_boxes[boxID]->getName()
+	getLogManager() << LogLevel_Info << m_boxes[boxID]->getName()
 			<< " Deprecated I/O and settings have been removed successfully\n";
 
 	box->removeAttribute(OV_AttributeId_Box_PendingDeprecatedInterfacors);

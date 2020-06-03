@@ -65,16 +65,16 @@ class CAlgorithmClassifierLDADesc final : public Toolkit::CAlgorithmClassifierDe
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("LDA Classifier"); }
-	CString getAuthorName() const override { return CString("Jussi T. Lindgren / Guillaume Serrière"); }
-	CString getAuthorCompanyName() const override { return CString("Inria / Loria"); }
-	CString getShortDescription() const override { return CString("Estimates LDA using regularized or classic covariances"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString(""); }
-	CString getVersion() const override { return CString("2.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getName() const override { return "LDA Classifier"; }
+	CString getAuthorName() const override { return "Jussi T. Lindgren / Guillaume Serrière"; }
+	CString getAuthorCompanyName() const override { return "Inria / Loria"; }
+	CString getShortDescription() const override { return "Estimates LDA using regularized or classic covariances"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return ""; }
+	CString getVersion() const override { return "2.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierLDA; }
 	IPluginObject* create() override { return new CAlgorithmClassifierLDA; }
 

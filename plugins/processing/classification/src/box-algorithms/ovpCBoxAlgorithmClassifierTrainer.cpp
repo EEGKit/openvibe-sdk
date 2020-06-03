@@ -181,7 +181,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 	const IBox& boxContext = this->getStaticBoxContext();
 	const size_t nClass    = boxContext.getInputCount() - 1;
 
-	this->getLogManager() << LogLevel_Info << "Balancing dataset...\n";
+	getLogManager() << LogLevel_Info << "Balancing dataset...\n";
 
 	// Collect index set of feature vectors per class
 	std::vector<std::vector<size_t>> classIndexes;
@@ -201,10 +201,10 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 		const size_t paddingNeeded   = nMax - examplesInClass;
 		if (examplesInClass == 0)
 		{
-			this->getLogManager() << LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
+			getLogManager() << LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
 			continue;
 		}
-		if (paddingNeeded > 0) { this->getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << paddingNeeded << " examples\n"; }
+		if (paddingNeeded > 0) { getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << paddingNeeded << " examples\n"; }
 
 		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_datasets owns the data pointer.
@@ -300,11 +300,11 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		OV_ERROR_UNLESS_KRF(!m_datasets.empty(), "No training example received", Kernel::ErrorType::BadInput);
 
-		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
+		getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
 				<< m_datasets[0].sampleMatrix->getBufferElementCount() << "]\n";
 		for (size_t i = 1; i < nInput; ++i)
 		{
-			this->getLogManager() << LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
+			getLogManager() << LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
 		}
 
 		const bool balancedDataset = this->getConfigurationManager().expandAsBoolean((*m_parameter)[BALANCE_SETTING_NAME]);
@@ -323,7 +323,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		// randomize the vector if necessary
 		if (randomizeVectorOrder)
 		{
-			this->getLogManager() << LogLevel_Info << "Randomizing the feature vector set\n";
+			getLogManager() << LogLevel_Info << "Randomizing the feature vector set\n";
 			random_shuffle(featurePermutation.begin(), featurePermutation.end(), System::Math::randomWithCeiling);
 		}
 
@@ -340,13 +340,13 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 			Matrix::clearContent(confusion);
 
-			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
+			getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (size_t i = 0; i < m_nPartition; ++i)
 			{
 				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_nPartition);
 				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_nPartition);
 
-				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << startIdx << " to " <<
+				getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << startIdx << " to " <<
 						stopIdx - 1 << ")...\n";
 
 				OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, startIdx, stopIdx), "Training failed: bailing out (from xval)",
@@ -356,7 +356,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				partitionAccuracies[i] = partitionAccuracy;
 				finalAccuracy += partitionAccuracy;
 
-				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_nPartition << " (performance : "
+				getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_nPartition << " (performance : "
 						<< partitionAccuracy << "%)\n";
 			}
 
@@ -370,18 +370,18 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			}
 			deviation = sqrt(deviation / m_nPartition);
 
-			this->getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << mean << "% (sigma = " << deviation << "%)\n";
+			getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << mean << "% (sigma = " << deviation << "%)\n";
 
 			printConfusionMatrix(confusion);
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Info << "Training without cross-validation.\n";
-			this->getLogManager() << LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
+			getLogManager() << LogLevel_Info << "Training without cross-validation.\n";
+			getLogManager() << LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
 		}
 
 
-		this->getLogManager() << LogLevel_Trace << "Training final classifier on the whole set...\n";
+		getLogManager() << LogLevel_Trace << "Training final classifier on the whole set...\n";
 
 		OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, 0, 0),
 							"Training failed: bailing out (from whole set training)", Kernel::ErrorType::Internal);
@@ -389,7 +389,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		Matrix::clearContent(confusion);
 		const double accuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
 
-		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
+		getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
 
 		printConfusionMatrix(confusion);
 
@@ -464,7 +464,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 		double* buffer            = ip_sample->getBuffer();
 		const double correctValue = double(dataset[k].inputIdx);
 
-		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
+		getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
 		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
 
@@ -472,7 +472,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 		const double predictedValue = op_classificationState;
 
-		this->getLogManager() << LogLevel_Debug << "Recognize " << predictedValue << "\n";
+		getLogManager() << LogLevel_Debug << "Recognize " << predictedValue << "\n";
 
 		if (predictedValue == correctValue) { nSuccess++; }
 
@@ -498,7 +498,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	if (rows > 10 && !this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_ForceConfusionMatrixPrint}"))
 	{
-		this->getLogManager() << LogLevel_Info <<
+		getLogManager() << LogLevel_Info <<
 				"Over 10 classes, not printing the confusion matrix. If needed, override with setting Plugin_Classification_ForceConfusionMatrixPrint token to true.\n";
 		return true;
 	}
@@ -521,7 +521,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	ss << "  Cls vs cls ";
 	for (size_t i = 0; i < rows; ++i) { ss << setw(6) << (i + 1); }
-	this->getLogManager() << LogLevel_Info << ss.str() << "\n";
+	getLogManager() << LogLevel_Info << ss.str() << "\n";
 
 	ss.precision(1);
 	for (size_t i = 0; i < rows; ++i)
@@ -529,7 +529,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 		ss.str("");
 		ss << "  Target " << setw(2) << (i + 1) << ": ";
 		for (size_t j = 0; j < rows; ++j) { ss << setw(6) << tmp[i * rows + j] * 100; }
-		this->getLogManager() << LogLevel_Info << ss.str() << " %, " << size_t(rowSum[i]) << " examples\n";
+		getLogManager() << LogLevel_Info << ss.str() << " %, " << size_t(rowSum[i]) << " examples\n";
 	}
 
 	return true;

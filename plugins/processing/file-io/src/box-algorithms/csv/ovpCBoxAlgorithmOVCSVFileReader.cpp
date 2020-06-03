@@ -178,7 +178,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 							Kernel::ErrorType::Internal);
 	}
 
-	const double currentTime = CTime(this->getPlayerContext().getCurrentTime()).toSeconds();
+	const double currentTime = getPlayerContext().getCurrentTime().toSeconds();
 
 	if (!m_readerLib->hasDataToRead() && m_savedChunks.empty()) { return true; }
 
@@ -220,7 +220,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", Kernel::ErrorType::Internal);
 
 				OV_ERROR_UNLESS_KRF(
-					boxContext.markOutputAsReadyToSend(0, CTime(chunk.startTime).time(), CTime(chunk.endTime).time()),
+					boxContext.markOutputAsReadyToSend(0, CTime(chunk.startTime), CTime(chunk.endTime)),
 					"Failed to mark signal output as ready to send",
 					Kernel::ErrorType::Internal);
 
@@ -235,7 +235,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", Kernel::ErrorType::Internal);
 
 			OV_ERROR_UNLESS_KRF(
-				boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime).time(), CTime(m_savedChunks.back().endTime).time()),
+				boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime), CTime(m_savedChunks.back().endTime)),
 				"Failed to mark signal output as ready to send",
 				Kernel::ErrorType::Internal);
 		}
@@ -286,7 +286,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
 				stimulationSet.append(it->id, CTime(it->date), CTime(it->duration));
-				m_lastStimulationDate = CTime(it->date).time();
+				m_lastStimulationDate = CTime(it->date);
 			}
 			else
 			{

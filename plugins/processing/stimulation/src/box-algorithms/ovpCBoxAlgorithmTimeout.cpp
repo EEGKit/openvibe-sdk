@@ -41,7 +41,7 @@ bool CBoxAlgorithmTimeout::processClock(CMessage& /*msg*/)
 	// timeout flag and let the box send a stimulation
 	if (m_timeoutState == ETimeoutState::No && getPlayerContext().getCurrentTime() > m_lastTimePolled + m_timeout)
 	{
-		this->getLogManager() << Kernel::LogLevel_Trace << "Timeout reached at time " << CTime(this->getPlayerContext().getCurrentTime()) << "\n";
+		getLogManager() << Kernel::LogLevel_Trace << "Timeout reached at time " << getPlayerContext().getCurrentTime() << "\n";
 		m_timeoutState = ETimeoutState::Occurred;
 	}
 
@@ -56,7 +56,7 @@ bool CBoxAlgorithmTimeout::processInput(const size_t /*index*/)
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	// every time we receive input we store the last kernel time
-	m_lastTimePolled = this->getPlayerContext().getCurrentTime();
+	m_lastTimePolled = getPlayerContext().getCurrentTime();
 
 	return true;
 }
@@ -80,7 +80,7 @@ bool CBoxAlgorithmTimeout::process()
 	CStimulationSet& stimSet = *m_encoder.getInputStimulationSet();
 	stimSet.clear();
 
-	const CTime date = this->getPlayerContext().getCurrentTime();
+	const CTime date = getPlayerContext().getCurrentTime();
 
 	// If the timeout is reached we send the stimulation on the output 0
 	if (m_timeoutState == ETimeoutState::Occurred)

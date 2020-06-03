@@ -52,16 +52,16 @@ class CBoxAlgorithmStreamEndDetectorDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Stream End Detector"); }
-	CString getAuthorName() const override { return CString("Jozef Legeny"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies"); }
-	CString getShortDescription() const override { return CString("Sends a stimulation upon receiving an End chunk"); }
-	CString getDetailedDescription() const override { return CString("Sends a stimulation upon receiving an End chunk"); }
-	CString getCategory() const override { return CString("Stimulation"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("2.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getName() const override { return "Stream End Detector"; }
+	CString getAuthorName() const override { return "Jozef Legeny"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies"; }
+	CString getShortDescription() const override { return "Sends a stimulation upon receiving an End chunk"; }
+	CString getDetailedDescription() const override { return "Sends a stimulation upon receiving an End chunk"; }
+	CString getCategory() const override { return "Stimulation"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "2.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamEndDetector; }
 	IPluginObject* create() override { return new CBoxAlgorithmStreamEndDetector; }
 

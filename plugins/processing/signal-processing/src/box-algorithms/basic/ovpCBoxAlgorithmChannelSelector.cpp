@@ -201,11 +201,11 @@ bool CBoxAlgorithmChannelSelector::process()
 							Kernel::ErrorType::BadSetting);
 
 						// The range is valid so selects all the channels in this range
-						this->getLogManager() << LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
+						getLogManager() << LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
 						for (size_t k = startIdx; k <= endIdx; ++k)
 						{
 							m_vLookup.push_back(k);
-							this->getLogManager() << LogLevel_Debug << "  Selected channel [" << k + 1 << "]\n";
+							getLogManager() << LogLevel_Debug << "  Selected channel [" << k + 1 << "]\n";
 						}
 					}
 					else
@@ -219,7 +219,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						{
 							found = true;
 							m_vLookup.push_back(index);
-							this->getLogManager() << LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
+							getLogManager() << LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
 						}
 
 						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", Kernel::ErrorType::BadSetting);

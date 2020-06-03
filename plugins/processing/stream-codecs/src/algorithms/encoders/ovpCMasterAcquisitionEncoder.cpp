@@ -194,7 +194,7 @@ bool CMasterAcquisitionEncoder::process()
 				ip_bEncodeUnitData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelUnitData));
 		if (ip_bEncodeUnitData)
 		{
-			// this->getLogManager() << LogLevel_Info << "Encoding units " << ip_pUnits->getBufferElementCount() << "\n";
+			// getLogManager() << LogLevel_Info << "Encoding units " << ip_pUnits->getBufferElementCount() << "\n";
 			m_channelUnitsStreamEncoder->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer);
 		}
 

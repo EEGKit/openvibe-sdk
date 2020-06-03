@@ -112,7 +112,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			OV_ERROR_UNLESS_KRF(m_iSampling > 0, "Invalid input sampling rate [" << m_iSampling << "] (expected value > 0)",
 								Kernel::ErrorType::BadInput);
 
-			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_iSampling << "] Hz to [" << m_oSampling << "] Hz.\n";
+			getLogManager() << LogLevel_Info << "Resampling from [" << m_iSampling << "] Hz to [" << m_oSampling << "] Hz.\n";
 
 			double src                = 1.0 * m_oSampling / m_iSampling;
 			const size_t gcd          = size_t(SigProSTD::gcd(m_iSampling, m_oSampling));
@@ -120,7 +120,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			size_t factorDownsampling = m_iSampling / gcd;
 			if (src <= 0.5 || src > 1.0)
 			{
-				this->getLogManager() << LogLevel_Info << "Sampling rate conversion [" << src << "] : upsampling by a factor of [" << factorUpsampling
+				getLogManager() << LogLevel_Info << "Sampling rate conversion [" << src << "] : upsampling by a factor of [" << factorUpsampling
 						<< "], low-pass filtering, and downsampling by a factor of [" << factorDownsampling << "].\n";
 			}
 			else
@@ -135,10 +135,10 @@ bool CBoxAlgorithmSignalResampling::process()
 			m_resampler.reset(nChannel, m_iSampling, m_oSampling);
 
 			double builtInLatency = m_resampler.getBuiltInLatency();
-			if (builtInLatency <= 0.15) { this->getLogManager() << LogLevel_Trace << "Latency induced by the resampling is [" << builtInLatency << "] s.\n"; }
+			if (builtInLatency <= 0.15) { getLogManager() << LogLevel_Trace << "Latency induced by the resampling is [" << builtInLatency << "] s.\n"; }
 			else if (0.15 < builtInLatency && builtInLatency <= 0.5)
 			{
-				this->getLogManager() << LogLevel_Info << "Latency induced by the resampling is [" << builtInLatency << "] s.\n";
+				getLogManager() << LogLevel_Info << "Latency induced by the resampling is [" << builtInLatency << "] s.\n";
 			}
 			else if (0.5 < builtInLatency) { OV_WARNING_K("Latency induced by the resampling is [" << builtInLatency << "] s."); }
 
@@ -154,7 +154,7 @@ bool CBoxAlgorithmSignalResampling::process()
 		{
 			// re-sampling sample-wise via a callback
 			//size_t count = m_resampler.resample(*this, iMatrix->getBuffer(), nSample);
-			//this->getLogManager() << LogLevel_Info << "count = " << count << ".\n";
+			//getLogManager() << LogLevel_Info << "count = " << count << ".\n";
 
 			// encoding made in the callback (see next function)
 		}

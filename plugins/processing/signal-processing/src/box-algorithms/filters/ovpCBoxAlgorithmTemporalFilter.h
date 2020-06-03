@@ -45,22 +45,22 @@ class CBoxAlgorithmTemporalFilterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Temporal Filter"); }
-	CString getAuthorName() const override { return CString("Yann Renard & Laurent Bonnet"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
+	CString getName() const override { return "Temporal Filter"; }
+	CString getAuthorName() const override { return "Yann Renard & Laurent Bonnet"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
 
-	CString getShortDescription() const override { return CString("Temporal filtering based on various one-way IIR filter designs"); }
+	CString getShortDescription() const override { return "Temporal filtering based on various one-way IIR filter designs"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString("Applies a temporal filter, based on various one-way IIR filter designs, to the input stream.");
+		return "Applies a temporal filter, based on various one-way IIR filter designs, to the input stream.";
 	}
 
-	CString getCategory() const override { return CString("Signal processing/Temporal Filtering"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Signal processing/Temporal Filtering"; }
+	CString getVersion() const override { return "1.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TemporalFilter; }
 	IPluginObject* create() override { return new CBoxAlgorithmTemporalFilter; }
 

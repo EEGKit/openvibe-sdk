@@ -101,7 +101,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	}
 
 	m_checkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
-	this->getLogManager() << LogLevel_Trace << (m_checkDates ? "Checking chunk dates..." : "Not checking chunk dates !") << "\n";
+	getLogManager() << LogLevel_Trace << (m_checkDates ? "Checking chunk dates..." : "Not checking chunk dates !") << "\n";
 
 	return true;
 }

@@ -61,16 +61,16 @@ class CBoxAlgorithmChannelRenameDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Channel Rename"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Renames channels of different types of streamed matrices"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Signal processing/Channels"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("1.1.0"); }
+	CString getName() const override { return "Channel Rename"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Renames channels of different types of streamed matrices"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Signal processing/Channels"; }
+	CString getVersion() const override { return "1.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "1.1.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ChannelRename; }
 	IPluginObject* create() override { return new CBoxAlgorithmChannelRename; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmChannelRenameListener; }

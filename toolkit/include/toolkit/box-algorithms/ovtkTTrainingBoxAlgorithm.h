@@ -118,13 +118,13 @@ void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_
 	{
 		m_trialStartTime = date;
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
-				<< "Saved trial start time " << CTime(m_trialStartTime) << "...\n";
+				<< "Saved trial start time " << m_trialStartTime << "...\n";
 	}
 	else if (identifier == this->getStimulationIdentifierTrialEnd())
 	{
 		m_trialEndTime = date;
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
-				<< "Saved trial end time " << CTime(m_trialEndTime) << "...\n";
+				<< "Saved trial end time " << m_trialEndTime << "...\n";
 	}
 	else if (this->getStimulationIdentifierTrialLabelRangeStart() <= CIdentifier(identifier) && CIdentifier(identifier) <= this->
 			 getStimulationIdentifierTrialLabelRangeEnd())
@@ -136,7 +136,7 @@ void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_
 	else
 	{
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Debug
-				<< "Unhandled stimulation " << CIdentifier(identifier) << " at time " << CTime(date) << "\n";
+				<< "Unhandled stimulation " << CIdentifier(identifier) << " at time " << date << "\n";
 	}
 
 	if (m_trialEndTime != ULLONG_MAX && m_trialStartTime != ULLONG_MAX && m_trialEndTime > m_trialStartTime)
@@ -144,11 +144,11 @@ void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_
 		size_t nSample = size_t(((m_trialEndTime - m_trialStartTime) * m_pendingSignal->getSamplingRate()) >> 32);
 
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Trace
-				<< "Created trial " << CTime(m_trialStartTime) << "-" << CTime(m_trialEndTime) << " with " << nSample << " samples\n";
+				<< "Created trial " << m_trialStartTime << "-" << m_trialEndTime << " with " << nSample << " samples\n";
 
 		ISignalTrial* signalTrial = createSignalTrial();
 		copyHeader(*signalTrial, m_pendingSignal);
-		selectTime(*signalTrial, m_trialStartTime, m_trialEndTime, m_pendingSignal);
+		selectTime(*signalTrial, m_trialStartTime.time(), m_trialEndTime.time(), m_pendingSignal);
 		signalTrial->setLabelIdentifier(m_trialLabel);
 
 		m_signalTrials.push_back(signalTrial);

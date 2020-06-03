@@ -56,16 +56,16 @@ bool CBoxAlgorithmPlayerController::process()
 			{
 				if (stimSet[j].m_ID == m_stimulationID)
 				{
-					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
+					getLogManager() << LogLevel_Trace << "Received stimulation ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) <<
 							"] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]\n";
 
 					bool res = false;
-					if (m_actionID == OV_TypeId_PlayerAction_Play) { res = this->getPlayerContext().play(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Stop) { res = this->getPlayerContext().stop(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Pause) { res = this->getPlayerContext().pause(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = this->getPlayerContext().forward(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Play) { res = getPlayerContext().play(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Stop) { res = getPlayerContext().stop(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Pause) { res = getPlayerContext().pause(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = getPlayerContext().forward(); }
 
 					OV_ERROR_UNLESS_KRF(res,
 										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,

@@ -9,7 +9,7 @@ void CBoxAlgorithmLogManager::log(const ELogLevel logLevel)
 	CIdentifier boxId;
 	m_simulatedBox.getBoxIdentifier(boxId);
 
-	m_logManager << logLevel << "At time " << CTime(m_playerCtx.getCurrentTime()) << " <" << LogColor_PushStateBit << LogColor_ForegroundBlue
+	m_logManager << logLevel << "At time " << m_playerCtx.getCurrentTime() << " <" << LogColor_PushStateBit << LogColor_ForegroundBlue
 			<< "Box algorithm" << LogColor_PopStateBit << "::" << boxId << " aka " << m_simulatedBox.getName() << "> ";
 }
 

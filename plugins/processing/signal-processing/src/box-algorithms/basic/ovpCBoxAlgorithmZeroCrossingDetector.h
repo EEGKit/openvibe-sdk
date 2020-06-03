@@ -124,22 +124,21 @@ class CBoxAlgorithmZeroCrossingDetectorDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Zero-Crossing Detector"); }
-	CString getAuthorName() const override { return CString("Quentin Barthelemy"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
-	CString getShortDescription() const override { return CString("Detects zero-crossings of the signal"); }
+	CString getName() const override { return "Zero-Crossing Detector"; }
+	CString getAuthorName() const override { return "Quentin Barthelemy"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getShortDescription() const override { return "Detects zero-crossings of the signal"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"Detects zero-crossings of the signal for each channel, with 1 for positive zero-crossings (negative-to-positive), -1 for negatives ones (positive-to-negative), 0 otherwise. For all channels, stimulations mark positive and negatives zero-crossings. For each channel, the rythm is computed in events per min.");
+		return "Detects zero-crossings of the signal for each channel, with 1 for positive zero-crossings (negative-to-positive), -1 for negatives ones (positive-to-negative), 0 otherwise. For all channels, stimulations mark positive and negatives zero-crossings. For each channel, the rythm is computed in events per min.";
 	}
 
-	CString getCategory() const override { return CString("Signal processing/Temporal Filtering"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Signal processing/Temporal Filtering"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector; }
 	IPluginObject* create() override { return new CBoxAlgorithmZeroCrossingDetector; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmZeroCrossingDetectorListener; }

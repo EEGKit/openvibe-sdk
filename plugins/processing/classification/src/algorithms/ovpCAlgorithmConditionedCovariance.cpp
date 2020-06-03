@@ -108,12 +108,12 @@ bool CAlgorithmConditionedCovariance::process()
 
 		shrinkage = std::max<double>(0, std::min<double>(1, kappa / double(nRows)));
 
-		this->getLogManager() << LogLevel_Debug << "Phi " << phi << " Gamma " << gamma << " kappa " << kappa << "\n";
-		this->getLogManager() << LogLevel_Debug << "Estimated shrinkage weight to be " << shrinkage << "\n";
+		getLogManager() << LogLevel_Debug << "Phi " << phi << " Gamma " << gamma << " kappa " << kappa << "\n";
+		getLogManager() << LogLevel_Debug << "Estimated shrinkage weight to be " << shrinkage << "\n";
 
-		dumpMatrix(this->getLogManager(), phiMat, "PhiMat");
+		dumpMatrix(getLogManager(), phiMat, "PhiMat");
 	}
-	else { this->getLogManager() << LogLevel_Debug << "Using user-provided shrinkage weight " << shrinkage << "\n"; }
+	else { getLogManager() << LogLevel_Debug << "Using user-provided shrinkage weight " << shrinkage << "\n"; }
 
 	// Use the output as a buffer to avoid copying
 	Map<MatrixXdRowMajor> oCov(op_covMatrix->getBuffer(), nCols, nCols);
@@ -122,10 +122,10 @@ bool CAlgorithmConditionedCovariance::process()
 	oCov = shrinkage * priorCov + (1.0 - shrinkage) * sampleCov;
 
 	// Debug block
-	dumpMatrix(this->getLogManager(), dataMean, "DataMean");
-	dumpMatrix(this->getLogManager(), sampleCov, "Sample cov");
-	dumpMatrix(this->getLogManager(), priorCov, "Prior cov");
-	dumpMatrix(this->getLogManager(), oCov, "Output cov");
+	dumpMatrix(getLogManager(), dataMean, "DataMean");
+	dumpMatrix(getLogManager(), sampleCov, "Sample cov");
+	dumpMatrix(getLogManager(), priorCov, "Prior cov");
+	dumpMatrix(getLogManager(), oCov, "Output cov");
 
 	return true;
 }
