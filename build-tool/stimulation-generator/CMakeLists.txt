@@ -18,8 +18,6 @@ ADD_EXECUTABLE(openvibe-stimulation-generator ${SRC_FILES})
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()

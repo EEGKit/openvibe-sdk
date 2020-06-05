@@ -13,12 +13,14 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${MODULES_FOLDER}
 	COMPILE_FLAGS "-DXML_Shared -DXML_Exports")
 	
 ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${MODULES_FOLDER}
 	COMPILE_FLAGS "-DXML_Static -DXML_Exports")
 
 IF(UNIX)
@@ -32,9 +34,7 @@ INCLUDE("FindThirdPartyExpat")
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 

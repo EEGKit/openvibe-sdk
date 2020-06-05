@@ -51,7 +51,7 @@ SET(TEST_SCENARIOS
 # This is just a way to have the test scripts available in the IDE
 FILE(GLOB_RECURSE script_files ${CMAKE_CURRENT_SOURCE_DIR}/*.mxs ${CMAKE_CURRENT_SOURCE_DIR}/*.xml ${CMAKE_CURRENT_SOURCE_DIR}/*.xml.in)
 ADD_CUSTOM_TARGET(${PROJECT_NAME} SOURCES ${script_files})
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${OVT_VALIDATION_TESTS_FOLDER})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${VALIDATION_FOLDER})
 
 # ---------------------------
 # Add test to test to be run
