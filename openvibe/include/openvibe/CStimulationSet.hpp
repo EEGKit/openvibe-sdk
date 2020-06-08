@@ -6,7 +6,6 @@
 /// \version 1.0.
 /// \date 25/05/2020.
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
-/// \remarks Static functions vith dll must me define in <c>header</c>
 /// 
 ///-------------------------------------------------------------------------------------------------
 #pragma once
@@ -51,6 +50,35 @@ public:
 	/// <param name="date"> The date. </param>
 	/// <param name="duration"> The duration. </param>
 	void append(const uint64_t id, const CTime& date, const CTime& duration) const { append(CStimulation(id, date, duration)); }
+
+	/// <summary> Add source on destination and add a time shift to each (new) stimulation. </summary>
+	/// <param name="set"> StimulationSet to append. </param>
+	/// <param name="shift"> The time shift. </param>
+	void append(const CStimulationSet& set, const CTime& shift = 0) const { for (const auto& s : set) { append(s.m_ID, s.m_Date + shift, s.m_Duration); } }
+
+	/// <summary> Add source on destination limited by start and end times and add a time shift to each (new) stimulation. </summary>
+	/// <param name="set"> StimulationSet to append. </param>
+	/// <param name="startTime"> The start time. </param>
+	/// <param name="endTime"> The end time. </param>
+	/// <param name="shift"> The time shift. </param>
+	void appendRange(const CStimulationSet& set, const CTime& startTime, const CTime& endTime, const CTime& shift = 0) const
+	{
+		for (const auto& s : set)
+		{
+			const CTime date = s.m_Date;
+			if (startTime <= date && date < endTime) { append(s.m_ID, s.m_Date + shift, s.m_Duration); }
+		}
+	}
+
+	/// <summary> Copy source on destination and add a time shift to each stimulation. </summary>
+	/// <param name="set"> StimulationSet to copy. </param>
+	/// <param name="shift"> The time shift. </param>
+	void copy(const CStimulationSet& set, const CTime& shift = 0) const
+	{
+		clear();
+		append(set, shift);
+	}
+
 	/// <summary> Remove last object of the vector. </summary>
 	void pop() const { m_stimulations->pop_back(); }
 
@@ -61,6 +89,18 @@ public:
 	/// <summary> Removes the object at specified index. </summary>
 	/// <param name="index">The index.</param>
 	void remove(const size_t index) const { m_stimulations->erase(m_stimulations->begin() + index); }
+
+	/// <summary> Remove stimulations between start and end times. </summary>
+	/// <param name="startTime"> The start time. </param>
+	/// <param name="endTime"> The end time. </param>
+	void removeRange(const CTime& startTime, const CTime& endTime) const
+	{
+		for (size_t i = 0; i < size(); ++i)
+		{
+			const CTime date = at(i).m_Date;
+			if (startTime <= date && date < endTime) { remove(i--); }
+		}
+	}
 
 	/// --------------------------------------------------
 	/// ---------------- Special Functions ---------------
@@ -94,56 +134,6 @@ public:
 	/// <param name="index"> The index. </param>
 	/// <returns> Reference of the object. </returns>
 	const CStimulation& operator[](const size_t index) const { return m_stimulations->operator[](index); }
-
-	//--------------------------------------------------
-	//---------------- Static Functions ----------------
-	//--------------------------------------------------
-	/// <summary> Copy source on destination and add a time shift to each stimulation. </summary>
-	/// <param name="dst"> The destination. </param>
-	/// <param name="src"> The source. </param>
-	/// <param name="shift"> The time shift. </param>
-	static void copy(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
-	{
-		dst.clear();
-		append(dst, src, shift);
-	}
-
-	/// <summary> Add source on destination and add a time shift to each (new) stimulation. </summary>
-	/// <param name="dst"> The destination. </param>
-	/// <param name="src"> The source. </param>
-	/// <param name="shift"> The time shift. </param>
-	static void append(CStimulationSet& dst, const CStimulationSet& src, const CTime& shift = 0)
-	{
-		for (const auto& s : src) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
-	}
-
-	/// <summary> Add source on destination limited by start and end times and add a time shift to each (new) stimulation. </summary>
-	/// <param name="dst"> The destination. </param>
-	/// <param name="src"> The source. </param>
-	/// <param name="startTime"> The start time. </param>
-	/// <param name="endTime"> The end time. </param>
-	/// <param name="shift"> The time shift. </param>
-	static void appendRange(CStimulationSet& dst, const CStimulationSet& src, const CTime& startTime, const CTime& endTime, const CTime& shift = 0)
-	{
-		for (const auto& s : src)
-		{
-			const CTime date = s.m_Date;
-			if (startTime <= date && date < endTime) { dst.append(s.m_ID, s.m_Date + shift, s.m_Duration); }
-		}
-	}
-
-	/// <summary> Remove stimulations between start and end times. </summary>
-	/// <param name="set"> The stimulation set. </param>
-	/// <param name="startTime"> The start time. </param>
-	/// <param name="endTime"> The end time. </param>
-	static void removeRange(CStimulationSet& set, const CTime& startTime, const CTime& endTime)
-	{
-		for (size_t i = 0; i < set.size(); ++i)
-		{
-			const CTime date = set[i].m_Date;
-			if (startTime <= date && date < endTime) { set.remove(i--); }
-		}
-	}
 
 protected:
 
