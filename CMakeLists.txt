@@ -7,11 +7,10 @@ cmake_policy(SET CMP0048 OLD)
 
 PROJECT(OpenVIBE)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
-SET(CMAKE_INSTALL_LIBDIR lib) # Fix for non debian-based distrib, as it seeems to be a common occurence to name this folder lib32/lib64
-INCLUDE("Utilities")
-INCLUDE("SetProjectVersion")
+SET(CMAKE_INSTALL_LIBDIR lib)	# Fix for non debian-based distrib, as it seeems to be a common occurence to name this folder lib32/lib64
+INCLUDE("Utilities")			
 set_version()
-OV_SET_PROJECT_VERSION()
+SET_PROJECT_VERSION()
 MESSAGE(STATUS "BUILDING VERSION OpenViBE SDK: ${OV_GLOBAL_VERSION_STRING} Branch : ${OV_PROJECT_BRANCH}~${OV_PROJECT_COMMITHASH}")
 
 # Default is to build to dist/. If you wish a custom install, set your own MAKE_INSTALL_PREFIX when you call CMake. Safest to do under a fakeroot.
@@ -207,33 +206,6 @@ MESSAGE(STATUS "  CMAKE_CXX_FLAGS = '${CMAKE_CXX_FLAGS}'")
 MESSAGE(STATUS "  CMAKE_CXX_FLAGS_RELEASE = '${CMAKE_CXX_FLAGS_RELEASE}'")
 MESSAGE(STATUS "  CMAKE_CXX_FLAGS_DEBUG = '${CMAKE_CXX_FLAGS_DEBUG}'")
 
-FUNCTION(SET_BUILD_PLATFORM)
-	IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_x64)
-	ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
-		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_i386)
-		SET(PLATFORM_TARGET "x86")
-	ELSE()
-		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_Unknown)
-	ENDIF()
-
-	IF(WIN32)
-		ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
-		ADD_DEFINITIONS(-DTARGET_OS_Windows)
-		ADD_DEFINITIONS(-DTARGET_COMPILER_VisualStudio)
-	ELSEIF(APPLE)
-		ADD_DEFINITIONS(-fnon-call-exceptions)
-		ADD_DEFINITIONS(-DTARGET_OS_MacOS)
-		# ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_x64)
-		ADD_DEFINITIONS(-DTARGET_COMPILER_LLVM)
-	ELSEIF(UNIX)
-		# ADD_DEFINITIONS(-fvisibility=hidden) # This flag should be present... man gcc
-		ADD_DEFINITIONS(-fnon-call-exceptions)
-		ADD_DEFINITIONS(-DTARGET_OS_Linux)
-		ADD_DEFINITIONS(-DTARGET_COMPILER_GCC)
-	ENDIF()
-ENDFUNCTION()
-
 # Custom cmakelist can be used to overwrite the default compilation & packaging parameters
 # e.g. OEM_DISTRIBUTION
 IF(EXISTS "${CMAKE_SOURCE_DIR}/CustomCMakeLists.txt")
@@ -278,7 +250,7 @@ INCLUDE("OvLinkBoostLib")
 INCLUDE("OvDelayLoad")
 
 # Sets the PROJECT_VERSION variable to something, depending on overriding OvSetProjectVersion.cmake files
-OV_SET_PROJECT_VERSION()
+SET_PROJECT_VERSION()
 
 # Sort target into directories for better visualization in IDE
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)

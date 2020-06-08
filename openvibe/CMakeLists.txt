@@ -64,3 +64,10 @@ INSTALL(TARGETS ${PROJECT_NAME}
 
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.h")
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp")
+
+# ---------------------------------
+# Test applications
+# ---------------------------------
+IF(BUILD_UNIT_TEST)
+ADD_SUBDIRECTORY(tests)
+ENDIF()
