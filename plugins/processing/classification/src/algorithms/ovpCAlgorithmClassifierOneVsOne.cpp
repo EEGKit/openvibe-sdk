@@ -219,7 +219,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 	TParameterHandler<IMatrix*> op_proba = m_decisionStrategyAlgorithm->getOutputParameter(
 		OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
 	double maxProb       = -1;
-	int selectedClassIdx = -1;
+	classId = -1;
 
 	distance.setSize(0);
 	probability.setSize(m_nClasses);
@@ -230,13 +230,11 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 		const double tmp = op_proba->getBuffer()[i];
 		if (tmp > maxProb)
 		{
-			selectedClassIdx = i;
+			classId = double(i);
 			maxProb          = tmp;
 		}
 		probability[i] = tmp;
 	}
-
-	classId = double(selectedClassIdx);
 	return true;
 }
 
@@ -341,7 +339,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfig()
 
 	XML::IXMLNode* subClassifersNode = XML::createNode(SUB_CLASSIFIERS_NODE_NAME);
 
-	for (auto& kv : m_subClassifiers) { subClassifersNode->addChild(getClassifierConfig(kv.first.first, kv.first.second, kv.second)); }
+	for (auto& kv : m_subClassifiers) { subClassifersNode->addChild(getClassifierConfig(double(kv.first.first), double(kv.first.second), kv.second)); }
 	oneVsOneNode->addChild(subClassifersNode);
 
 	return oneVsOneNode;

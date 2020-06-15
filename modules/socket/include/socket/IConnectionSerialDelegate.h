@@ -15,7 +15,7 @@ struct Socket_API SConnectionSerialDelegate
 	// TODO for Android compatibility
 	//bool(*fpIsErrorRaised)(void*); 
 	//void(*fpClearError)(void*);
-	//bool(*fSetTimeouts)(void*, const size_t decisecondsTimeout);
+	//bool(*fSetTimeouts)(void*, const size_t deciseconds);
 };
 
 class Socket_API IConnectionSerialDelegate : public TConnectionDelegate<IConnectionSerial>

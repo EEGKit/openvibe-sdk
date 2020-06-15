@@ -184,7 +184,7 @@ bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 	{
 		size_t value;
 		ss >> value;
-		repartition.push_back(value);
+		repartition.push_back(double(value));
 	}
 
 	ip_repartition->setDimensionCount(1);

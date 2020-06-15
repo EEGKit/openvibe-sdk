@@ -26,7 +26,7 @@ public:
 	override { return false; }		// return m_connectionSerialDelegate.fpIsErrorRaised(m_connectionSerialDelegate.connectionDelegate.data);
 	void clearError() override { }	// return m_connectionSerialDelegate.fpClearError(m_connectionSerialDelegate.connectionDelegate.data);
 	bool setTimeouts(const size_t /*timeout*/)
-	override { return true; }		// return m_connectionSerialDelegate.fpSetTimeouts(m_connectionSerialDelegate.connectionDelegate.data, decisecondsTimeout);
+	override { return true; }		// return m_connectionSerialDelegate.fpSetTimeouts(m_connectionSerialDelegate.connectionDelegate.data, deciseconds);
 };
 
 IConnectionSerialDelegate* createConnectionSerialDelegate(const SConnectionSerialDelegate connectionSerialDelegate)

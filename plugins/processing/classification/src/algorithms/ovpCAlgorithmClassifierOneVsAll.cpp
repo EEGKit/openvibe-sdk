@@ -160,7 +160,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) < 0)
 				{
 					best    = tmp;
-					classId = nClassification;
+					classId = double(nClassification);
 				}
 			}
 		}

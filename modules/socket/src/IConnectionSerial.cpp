@@ -389,7 +389,7 @@ public:
 		return true;
 	}
 
-	bool setTimeouts(const size_t decisecondsTimeout) override
+	bool setTimeouts(const size_t deciseconds) override
 	{
 		if (!this->isConnected()) { return false; }
 
@@ -404,8 +404,8 @@ public:
 			return false;
 		}
 
-		timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
-		timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
+		timeouts.ReadTotalTimeoutConstant  = DWORD(deciseconds * 100);	// Deciseconds to milliseconds
+		timeouts.WriteTotalTimeoutConstant = DWORD(deciseconds * 100);	// Deciseconds to milliseconds
 
 		if (!SetCommTimeouts(m_file, &timeouts))
 		{
@@ -424,7 +424,7 @@ public:
 				return false;
 			}
 
-			terminalAtt.c_cc[VTIME] = decisecondsTimeout;
+			terminalAtt.c_cc[VTIME] = deciseconds;
 
 			if (::tcsetattr(m_file, TCSAFLUSH, &terminalAtt) != 0)
 			{
