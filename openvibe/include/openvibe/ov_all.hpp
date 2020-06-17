@@ -10,12 +10,8 @@
 
 #include <memory>
 
-//___________________________________________________________________//
-//                                                                   //
-// Basic includes                                                    //
-//___________________________________________________________________//
-//                                                                   //
-
+// Basic includes
+//---------------------------------------------------------------------------------------------------
 #include "ov_defines.h"
 #include "ov_directories.h"
 
@@ -44,12 +40,8 @@
 
 #include "ovAssert.h"
 
-//___________________________________________________________________//
-//                                                                   //
-// Kernel includes                                                   //
-//___________________________________________________________________//
-//                                                                   //
-
+// Kernel includes
+//---------------------------------------------------------------------------------------------------
 #include "kernel/ovIKernelContext.h"
 #include "kernel/ovIKernelDesc.h"
 #include "kernel/ovIKernelObject.h"
@@ -100,12 +92,8 @@
 #include "kernel/scenario/ovIAlgorithmScenarioImporter.h"
 #include "kernel/scenario/ovIAlgorithmScenarioExporter.h"
 
-//___________________________________________________________________//
-//                                                                   //
-// Plugins includes                                                  //
-//___________________________________________________________________//
-//                                                                   //
-
+// Plugins includes
+//---------------------------------------------------------------------------------------------------
 #include "plugins/ovIPluginObject.h"
 #include "plugins/ovIPluginObjectDesc.h"
 
@@ -115,22 +103,8 @@
 #include "plugins/ovIBoxAlgorithm.h"
 #include "plugins/ovIBoxAlgorithmDesc.h"
 
-namespace OpenViBE {
-namespace Plugins {
-
-// Backward compatibility
-typedef Kernel::IBox IStaticBoxContext;
-typedef Kernel::IBoxIO IDynamicBoxContext;
-
-}  // namespace Plugins
-}  // namespace OpenViBE
-
-//___________________________________________________________________//
-//                                                                   //
-// Plugins includes                                                  //
-//___________________________________________________________________//
-//                                                                   //
-
+// Macro for Plugins includes
+//---------------------------------------------------------------------------------------------------
 #define OVP_Declare_Begin() \
 	static std::vector<std::unique_ptr<OpenViBE::Plugins::IPluginObjectDesc>> g_descriptors; \
 	extern "C" \

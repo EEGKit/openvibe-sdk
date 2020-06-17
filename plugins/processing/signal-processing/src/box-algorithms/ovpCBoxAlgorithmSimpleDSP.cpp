@@ -133,7 +133,7 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 
 bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 {
-	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	const size_t nInput            = this->getStaticBoxContext().getInputCount();
 
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }
@@ -158,7 +158,7 @@ bool CBoxAlgorithmSimpleDSP::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSimpleDSP::process()
 {
-	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	const size_t nInput            = this->getStaticBoxContext().getInputCount();
 
 	size_t nHeader = 0;

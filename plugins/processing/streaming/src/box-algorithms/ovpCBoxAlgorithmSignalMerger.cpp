@@ -35,7 +35,7 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 
 bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 {
-	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	const size_t nInput            = this->getStaticBoxContext().getInputCount();
 
 	if (boxContext.getInputChunkCount(0) == 0) { return true; }

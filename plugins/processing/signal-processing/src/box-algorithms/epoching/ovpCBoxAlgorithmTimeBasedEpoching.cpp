@@ -40,7 +40,7 @@ bool CBoxAlgorithmTimeBasedEpoching::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmTimeBasedEpoching::process()
 {
-	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{

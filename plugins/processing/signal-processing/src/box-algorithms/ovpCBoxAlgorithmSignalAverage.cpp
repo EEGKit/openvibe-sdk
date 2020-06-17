@@ -48,7 +48,7 @@ bool CBoxAlgorithmSignalAverage::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSignalAverage::process()
 {
-	IDynamicBoxContext* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	Kernel::IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
 	for (size_t i = 0; i < boxContext->getInputChunkCount(0); ++i)
