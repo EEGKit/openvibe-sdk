@@ -13,7 +13,7 @@
 // Basic includes
 //---------------------------------------------------------------------------------------------------
 #include "defines.hpp"
-#include "ov_directories.h"
+#include "directories.hpp"
 
 #include "CTime.hpp"
 #include "CMessage.hpp"

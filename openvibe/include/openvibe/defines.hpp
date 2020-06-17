@@ -172,7 +172,6 @@
 
 #define OV_TypeId_EBMLStream									OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
 #define	OV_TypeId_ExperimentInfo								OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
-#define	OV_TypeId_ExperimentationInformation					OpenViBE::CIdentifier(0x403488E7, 0x565D70B6) // deprecated, kept for compatibility
 #define	OV_TypeId_Stimulations									OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
 #define	OV_TypeId_StreamedMatrix								OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
 #define	OV_TypeId_ChannelLocalisation							OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
