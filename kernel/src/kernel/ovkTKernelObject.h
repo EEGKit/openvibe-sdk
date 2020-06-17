@@ -2,7 +2,7 @@
 
 #include "../ovk_base.h"
 
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 
 namespace OpenViBE {
 namespace Kernel {

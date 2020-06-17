@@ -1,4 +1,4 @@
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 #include <vector>
 #include <tuple>
 

@@ -2,7 +2,7 @@
 
 #include "ovtk_defines.h"
 
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 
 namespace EBML {
 class IWriter;

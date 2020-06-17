@@ -5,7 +5,7 @@
 #include "ovpCEquationParserGrammar.h"
 #include "ovpCEquationParser.h"
 
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 #include <toolkit/ovtk_all.h>
 
 #include <boost/spirit/include/classic_ast.hpp>

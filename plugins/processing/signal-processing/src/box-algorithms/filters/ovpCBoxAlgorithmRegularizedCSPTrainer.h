@@ -3,7 +3,7 @@
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
 #include "../../ovp_defines.h"
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 #include <toolkit/ovtk_all.h>
 
 #include "../../algorithms/basic/ovpCAlgorithmOnlineCovariance.h"

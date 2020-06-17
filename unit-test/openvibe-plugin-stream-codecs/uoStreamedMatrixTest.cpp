@@ -5,7 +5,7 @@
 #include "ovtAssert.h"
 
 #include "../common/ovtKernelContext.h"
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 
 #include <ovp_global_defines.h>
 

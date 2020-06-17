@@ -23,7 +23,7 @@
 
 #include <map>
 
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 
 #include "../ovtk_base.h"
 #include "decoders/ovtkTStreamedMatrixDecoder.h"

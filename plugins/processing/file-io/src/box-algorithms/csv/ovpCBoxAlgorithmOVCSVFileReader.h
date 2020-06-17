@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <memory>
 
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 #include <toolkit/ovtk_all.h>
 
 #include "csv/ovICSV.h"

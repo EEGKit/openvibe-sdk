@@ -1,3 +1,11 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file ov_all.hpp
+/// \brief All includes of OpenViBE base.
+/// \version 1.0.
+/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// 
+///-------------------------------------------------------------------------------------------------
 #pragma once
 
 #include <memory>
@@ -130,8 +138,7 @@ typedef Kernel::IBoxIO IDynamicBoxContext;
 		OVP_API bool onInitialize(const OpenViBE::Kernel::IPluginModuleContext& context) \
 		{
 
-#define OVP_Declare_New(Class) \
-			g_descriptors.emplace_back(new Class);
+#define OVP_Declare_New(Class) g_descriptors.emplace_back(new Class);
 
 #define OVP_Declare_End() \
 			return true; \
@@ -139,12 +146,12 @@ typedef Kernel::IBoxIO IDynamicBoxContext;
 		OVP_API bool onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& context) { return true; } \
 		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& context, size_t index, OpenViBE::Plugins::IPluginObjectDesc*& pluginObjectDesc) \
 		{ \
-			if(index>=g_descriptors.size()) \
+			if(index >= g_descriptors.size()) \
 			{ \
-				pluginObjectDesc=NULL; \
+				pluginObjectDesc = nullptr; \
 				return false; \
 			} \
-			pluginObjectDesc=g_descriptors[index].get(); \
+			pluginObjectDesc = g_descriptors[index].get(); \
 			return true; \
 		} \
 	}

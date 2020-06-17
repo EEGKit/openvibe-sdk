@@ -3,7 +3,7 @@
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
 #include "../ovp_defines.h"
-#include <openvibe/ov_all.h>
+#include <openvibe/ov_all.hpp>
 
 #include <Eigen/Eigenvalues>
 
