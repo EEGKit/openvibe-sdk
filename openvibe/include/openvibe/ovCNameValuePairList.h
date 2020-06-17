@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ov_defines.h"
+#include "defines.hpp"
 
 namespace OpenViBE {
 

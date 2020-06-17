@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ov_defines.h"
+#include "defines.hpp"
 #include "ovCString.h"
 #include <climits>
 #include <string>
@@ -22,9 +22,9 @@ namespace OpenViBE {
  *
  * This class is heavily used in the OpenViBE::IObject class.
  * Also, the OpenViBE specification gives serveral already defined class identifiers the developer should know of.
- * For this, let you have a look to the documentation of ov_defines.h !
+ * For this, let you have a look to the documentation of defines.hpp !
  *
- * \sa ov_defines.h
+ * \sa defines.hpp
  */
 class OV_API CIdentifier
 {

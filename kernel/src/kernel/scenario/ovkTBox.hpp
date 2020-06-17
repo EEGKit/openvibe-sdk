@@ -7,7 +7,7 @@
 #include "ovkCBoxProto.h"
 #include <openvibe/plugins/ovIPluginObjectDesc.h>
 #include "../ovkCObjectVisitorContext.h"
-#include <openvibe/ov_defines.h>
+#include <openvibe/defines.hpp>
 #include <system/ovCMath.h>
 
 #include <algorithm>

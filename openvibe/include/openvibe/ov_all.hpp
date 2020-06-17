@@ -12,7 +12,7 @@
 
 // Basic includes
 //---------------------------------------------------------------------------------------------------
-#include "ov_defines.h"
+#include "defines.hpp"
 #include "ov_directories.h"
 
 #include "CTime.hpp"

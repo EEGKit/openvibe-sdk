@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ovIObserver.h"
-#include "ov_defines.h"
+#include "defines.hpp"
 
 namespace OpenViBE {
 class IObserver;
