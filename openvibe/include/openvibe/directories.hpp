@@ -98,11 +98,11 @@ public:
 	
 	/// <summary> Gets the user data dir. </summary>
 	/// <returns></returns>
-	static CString getUserDataDir() { return (getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR).c_str(); }
+	static CString getUserDataDir() { return (getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR); }
 	
 	/// <summary> Gets the all user data dir. </summary>
 	/// <returns></returns>
-	static CString getAllUsersDataDir() { return (getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR).c_str(); }
+	static CString getAllUsersDataDir() { return (getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR); }
 #endif
 
 	/// <summary> Gets the log dir. </summary>
