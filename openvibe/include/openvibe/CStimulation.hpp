@@ -10,6 +10,7 @@
 ///-------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <iostream>
 #include "ov_common_defines.h"
 #include "CTime.hpp"
 
