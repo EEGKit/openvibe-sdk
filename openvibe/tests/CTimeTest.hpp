@@ -1,7 +1,7 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CMatrixTest.hpp
-/// \brief Test Definitions for OpenViBE Matrix Class.
+/// \file CTimeTest.hpp
+/// \brief Test Definitions for OpenViBE Time Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 11/05/2020.

@@ -34,11 +34,25 @@ std::string ErrorMsg(const std::string& name, const T ref, const T calc)
 	return ss.str();
 }
 
+std::string ErrorMsg(const std::string& name, const size_t ref, const size_t calc)
+{
+	std::stringstream ss;
+	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
+	return ss.str();
+}
+
 /// <summary>	Error message for CTime value. </summary>
 /// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
 inline std::string ErrorMsg(const std::string& name, const OpenViBE::CTime& ref, const OpenViBE::CTime& calc)
 {
 	std::stringstream ss;
 	ss << SEP << name << " : Reference : " << ref.str(true, true) << ", \tCompute : " << calc.str(true, true) << SEP;
+	return ss.str();
+}
+
+std::string ErrorMsg(const std::string& name, const OpenViBE::CStimulation& ref, const OpenViBE::CStimulation& calc)
+{
+	std::stringstream ss;
+	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
 	return ss.str();
 }

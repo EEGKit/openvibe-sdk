@@ -16,18 +16,24 @@
 #include "utils.hpp"
 
 //---------------------------------------------------------------------------------------------------
-namespace Dataset {}	// namespace Dataset
+namespace Dataset {
+static const OpenViBE::CTime T02(2.0), T03(3.0), T04(4.0), T05(5.0);
+static const OpenViBE::CTime T06(6.0), T10(10.0), T20(20.0), T90(90.0);
+static const OpenViBE::CStimulation S0(0, 0, 0), S1(1, T02, T03);
+static const OpenViBE::CStimulation S2(4, T05, T06), S4(4, T04, T04);
+
+}	// namespace Dataset
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
 TEST(CStimulation_Tests, append)
 {
 	OpenViBE::CStimulationSet set;
-	size_t i = 0;
-	set.append(OpenViBE::CStimulation(i++, i++, i++));
-	set.append(i++, i++, i);
-	EXPECT_TRUE(set[0].m_ID == 0 && set[0].m_Date == 1 && set[0].m_Duration == 2) << "First Append is False.";
-	EXPECT_TRUE(set[0].m_ID == 3 && set[0].m_Date == 4 && set[0].m_Duration == 5) << "Second Append is False.";
+
+	set.append(Dataset::S1);
+	set.append(Dataset::S2.m_ID, Dataset::S2.m_Date, Dataset::S2.m_Duration);
+	EXPECT_TRUE(set[0] == Dataset::S1) << ErrorMsg("First Append : ", Dataset::S1, set[0]);
+	EXPECT_TRUE(set[1] == Dataset::S2) << ErrorMsg("Second Append : ", Dataset::S2, set[1]);
 }
 //---------------------------------------------------------------------------------------------------
 
@@ -35,14 +41,13 @@ TEST(CStimulation_Tests, append)
 TEST(CStimulation_Tests, insert_remove)
 {
 	OpenViBE::CStimulationSet set;
-	size_t i = 0;
-	for (size_t n = 0; n < 5; ++n) { set.append(i, i, i++); }
+	for (size_t i = 0; i < 5; ++i) { set.append(i, i << 32, i << 32); }
 
-	set.insert(OpenViBE::CStimulation(0, 0, 0), 3);	//insert at index 3 (so stim id are 0,1,2,0,3,4)
-	EXPECT_TRUE(set[3].m_ID == 0 && set[3].m_Date == 0 && set[3].m_Duration == 0) << "Insert fail.";
+	set.insert(Dataset::S0, 3);		//insert at index 3 (so stim id are 0,1,2,0,3,4)
+	EXPECT_TRUE(set[3] == Dataset::S0) << ErrorMsg("Insert : ", Dataset::S0, set[3]);
 
-	set.remove(4);									//insert at index 4 (so stim id are 0,1,2,0,4)
-	EXPECT_TRUE(set[4].m_ID == 4 && set[4].m_Date == 4 && set[4].m_Duration == 4) << "Remove fail.";
+	set.remove(4);					//insert at index 4 (so stim id are 0,1,2,0,4)
+	EXPECT_TRUE(set[4] == Dataset::S4) << ErrorMsg("Remove : ", Dataset::S4, set[4]);
 }
 //---------------------------------------------------------------------------------------------------
 
@@ -50,15 +55,14 @@ TEST(CStimulation_Tests, insert_remove)
 TEST(CStimulation_Tests, range)
 {
 	OpenViBE::CStimulationSet set;
-	size_t i = 0;
-	for (size_t n = 0; n < 10; ++n) { set.append(i, i, i++); }
+	for (size_t i = 0; i < 10; ++i) { set.append(i, i << 32, i << 32); }
 
-	set.appendRange(set, 2, 10);	// append 2 to 9 (so new size 18)
-	set.appendRange(set, 20, 90);	// append nothing
+	set.appendRange(set, Dataset::T02, Dataset::T10);	// append 2 to 9 (so new size 18)
+	set.appendRange(set, Dataset::T20, Dataset::T90);	// append nothing
 	EXPECT_TRUE(set.size() == 18) << ErrorMsg("Size of Stimuation Set", 18, set.size());
 
-	set.removeRange(4, 6);		// remove all between 4 and 6 second (so stim with date 4 and 5 2 time (with the previous append)
-	set.removeRange(10, 20);	// remove nothing
+	set.removeRange(Dataset::T04, Dataset::T06);	// remove all between 4 and 6 second (so stim with date 4 and 5 2 time (with the previous append)
+	set.removeRange(Dataset::T10, Dataset::T20);	// remove nothing
 	EXPECT_TRUE(set.size() == 14) << ErrorMsg("Size of Stimuation Set", 14, set.size());
 }
 //---------------------------------------------------------------------------------------------------
@@ -67,10 +71,13 @@ TEST(CStimulation_Tests, range)
 TEST(CStimulation_Tests, shift)
 {
 	OpenViBE::CStimulationSet set;
-	size_t i = 0;
-	for (size_t n = 0; n < 10; ++n) { set.append(i, i, i++); }
+	for (size_t i = 0; i < 10; ++i) { set.append(i, i << 32, i << 32); }
 
-	set.shift(10);
-	for (size_t n = 0; n < 10; ++n) { EXPECT_TRUE(set[i].m_Date == n + 10) << ErrorMsg("Date Shifted", n + 10, set[i].m_Date); }
+	set.shift(Dataset::T10);
+	for (size_t i = 0; i < 10; ++i)
+	{
+		EXPECT_TRUE(set[i].m_Date == OpenViBE::CTime(i + 10.0))
+		<< ErrorMsg("Date Shifted for Stim " + std::to_string(i), OpenViBE::CTime(i + 10.0), set[i].m_Date);
+	}
 }
 //---------------------------------------------------------------------------------------------------

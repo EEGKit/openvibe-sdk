@@ -21,8 +21,41 @@ public:
 	//----- Constructor -----
 	CStimulation() = default;	///< Default constructor.
 	CStimulation(const size_t id, const CTime& date, const CTime& duration) : m_ID(id), m_Date(date), m_Duration(duration) {}	///< Specific constructor.
+	CStimulation(const CStimulation& other) : m_ID(other.m_ID), m_Date(other.m_Date), m_Duration(other.m_Duration) {}			///< Copy constructor.
 	~CStimulation() = default;	///< Default Destructor.
 
+	/// <summary> Affectation Operator. </summary>
+	/// <param name="stim"> The stimulation. </param>
+	/// <returns> himself. </returns>
+	CStimulation& operator=(const CStimulation& stim)
+	{
+		if (this == &stim) return *this;
+		m_ID       = stim.m_ID;
+		m_Date     = stim.m_Date;
+		m_Duration = stim.m_Duration;
+		return *this;
+	}
+
+	/// <summary> "Equal" test operator. </summary>
+	/// <param name="stim"> The stimulation to compare. </param>
+	/// <returns> <c>true</c> if equals, <c>false</c> otherwise. </returns>
+	bool operator==(const CStimulation& stim) const { return m_ID == stim.m_ID && m_Date == stim.m_Date && m_Duration == stim.m_Duration; }
+
+	/// <summary> "Difference" test operator. </summary>
+	/// <param name="stim"> The stimulation to compare. </param>
+	/// <returns> <c>true</c> if different, <c>false</c> otherwise. </returns>
+	bool operator!=(const CStimulation& stim) const { return m_ID != stim.m_ID || m_Date != stim.m_Date || m_Duration != stim.m_Duration; }
+	
+	/// <summary> Override the ostream operator. </summary>
+	/// <param name="os"> The ostream. </param>
+	/// <param name="obj"> The object. </param>
+	/// <returns> Return the modified ostream. </returns>
+	friend std::ostream& operator<<(std::ostream& os, const CStimulation& obj)
+	{
+		os << obj.m_ID << ", at " << obj.m_Date << " during " << obj.m_Duration;
+		return os;
+	}
+	
 	//----- Members (useless to protect members) -----
 	size_t m_ID = std::numeric_limits<size_t>::max();	///< The Id of the Stimulation (Identifier OpenViBE are useless).
 	CTime m_Date;										///< Date of the Stimulation.

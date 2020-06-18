@@ -42,9 +42,27 @@ public:
 	/// <returns> Reference of the object. </returns>
 	CStimulation& at(const size_t n) const { return m_stimulations->at(n); }
 
+	/// <summary> First object Iterator (usefull for modern forloop). </summary>
+	/// <returns> Iterator. </returns>
+	std::vector<CStimulation>::iterator begin() { return m_stimulations->begin(); }
+	/// <summary> End of vector Iterator (usefull for modern for loop). </summary>
+	/// <returns> Iterator. </returns>
+	std::vector<CStimulation>::iterator end() { return m_stimulations->end(); }
+	/// <summary> First object Iterator (usefull for modern for loop). </summary>
+	/// <returns> Iterator. </returns>
+	std::vector<CStimulation>::const_iterator begin() const { return m_stimulations->cbegin(); }
+	/// <summary> End of vector Iterator (usefull for modern for loop). </summary>
+	/// <returns> Iterator. </returns>
+	std::vector<CStimulation>::const_iterator end() const { return m_stimulations->cend(); }
+
+	/// --------------------------------------------------
+	/// ---------------- Special Functions ---------------
+	/// --------------------------------------------------
+	
 	/// <summary> Appends the specified stimulation. </summary>
 	/// <param name="stim"> The stimulation. </param>
 	void append(const CStimulation& stim) const { m_stimulations->push_back(stim); }
+	
 	/// <summary> Appends the specified stimulation. </summary>
 	/// <param name="id"> The identifier. </param>
 	/// <param name="date"> The date. </param>
@@ -101,27 +119,11 @@ public:
 			if (startTime <= date && date < endTime) { remove(i--); }
 		}
 	}
-
-	/// --------------------------------------------------
-	/// ---------------- Special Functions ---------------
-	/// --------------------------------------------------
+	
 	/// <summary> Shifts all the stimulation by the time shift. </summary>
 	/// <param name="shift"> The time shift. </param>
 	void shift(const CTime& shift) const { for (auto& s : *m_stimulations) { s.m_Date += shift; } }
-
-	/// <summary> First object Iterator (usefull for modern forloop). </summary>
-	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::iterator begin() { return m_stimulations->begin(); }
-	/// <summary> End of vector Iterator (usefull for modern for loop). </summary>
-	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::iterator end() { return m_stimulations->end(); }
-	/// <summary> First object Iterator (usefull for modern for loop). </summary>
-	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::const_iterator begin() const { return m_stimulations->cbegin(); }
-	/// <summary> End of vector Iterator (usefull for modern for loop). </summary>
-	/// <returns> Iterator. </returns>
-	std::vector<CStimulation>::const_iterator end() const { return m_stimulations->cend(); }
-
+	
 	//--------------------------------------------------
 	//------------------- Operators --------------------
 	//--------------------------------------------------
@@ -134,6 +136,17 @@ public:
 	/// <param name="index"> The index. </param>
 	/// <returns> Reference of the object. </returns>
 	const CStimulation& operator[](const size_t index) const { return m_stimulations->operator[](index); }
+
+
+	/// <summary> Override the ostream operator. </summary>
+	/// <param name="os"> The ostream. </param>
+	/// <param name="obj"> The object. </param>
+	/// <returns> Return the modified ostream. </returns>
+	friend std::ostream& operator<<(std::ostream& os, const CStimulationSet& obj)
+	{
+		for (const auto& i : obj) { os << i << std::endl; }
+		return os;
+	}
 
 protected:
 

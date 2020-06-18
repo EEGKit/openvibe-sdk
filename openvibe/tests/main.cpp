@@ -2,7 +2,9 @@
 
 // ReSharper disable CppUnusedIncludeDirective
 #include "CMatrixTest.hpp"
+#include "CStimulationTest.hpp"
 #include "CTimeTest.hpp"
+#include "directoriesTest.hpp"
 
 int main(int argc, char* argv[])
 {

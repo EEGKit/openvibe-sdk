@@ -38,7 +38,7 @@ public:
 
 	/// <summary> Constructor with time in seconds. </summary>
 	/// <param name="seconds"> The time in seconds. </param>
-	explicit CTime(const double seconds) : m_time(seconds >= 0.0 ? uint64_t(seconds * double(1LL << 32)) : 0) {}
+	explicit CTime(const double seconds) : m_time(fromSeconds(seconds)) {}
 
 	/// <summary> Copy constructor. </summary>
 	/// <param name="time">The original time.</param>
@@ -72,6 +72,11 @@ public:
 	/// <summary> Get the time in seconds. </summary>
 	/// <returns> Regular floating point time in seconds. </returns>
 	double toSeconds() const { return m_time / double(1LL << 32); }
+	
+	/// <summary> Get the time from seconds. </summary>
+	/// <param name="seconds"> The time in seconds. </param>
+	/// <returns> Regular fixed point time. </returns>
+	static uint64_t fromSeconds(const double seconds) { return seconds >= 0.0 ? uint64_t(seconds * double(1LL << 32)) : 0; }
 
 	/// <summary> Ceil the time. \n
 	/// - <c>1LL << 32</c> corresponds to <c>1</c> followed by 32 <c>0</c> so the maximum of an int of 32bit + <c>1</c> (\f$ 2^{32} \f$).
