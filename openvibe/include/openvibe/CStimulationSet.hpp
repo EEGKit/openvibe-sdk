@@ -12,6 +12,7 @@
 
 #include "CStimulation.hpp"
 #include <vector>
+#include <iostream>
 
 //typedef std::vector<CStimulation> CStimulationSet; // Why not ?
 namespace OpenViBE {
