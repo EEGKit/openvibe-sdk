@@ -249,9 +249,6 @@ INCLUDE("OvInstallLaunchScript")
 INCLUDE("OvLinkBoostLib")
 INCLUDE("OvDelayLoad")
 
-# Sets the PROJECT_VERSION variable to something, depending on overriding OvSetProjectVersion.cmake files
-SET_PROJECT_VERSION()
-
 # Sort target into directories for better visualization in IDE
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 SET(APP_FOLDER Applications)
@@ -262,34 +259,16 @@ SET(VALIDATION_FOLDER Validation-Tests)
 
 # Traverse these directories and build their components
 ADD_SUBDIRECTORY("build-tool/")
-
 ADD_SUBDIRECTORY("documentation/")
 ADD_SUBDIRECTORY("common/")
-
-IF(NOT(SKIP_OPENVIBE))
-    ADD_SUBDIRECTORY("openvibe/")
-ENDIF()
-
-IF(NOT(SKIP_KERNEL))
-    ADD_SUBDIRECTORY("kernel/")
-ENDIF()
-
+ADD_SUBDIRECTORY("openvibe/")
+ADD_SUBDIRECTORY("kernel/")
 ADD_SUBDIRECTORY("modules/")
-
-IF(NOT(SKIP_TOOLKIT))
-    ADD_SUBDIRECTORY("toolkit/")
-ENDIF()
-
-IF(NOT(SKIP_PLUGINS))
-    ADD_SUBDIRECTORY("plugins/")
-ENDIF()
-
-IF(NOT(SKIP_APPLICATIONS))
-    ADD_SUBDIRECTORY("applications/")
-ENDIF()
+ADD_SUBDIRECTORY("toolkit/")
+ADD_SUBDIRECTORY("plugins/")
+ADD_SUBDIRECTORY("applications/")
 
 INSTALL(FILES "${CMAKE_BINARY_DIR}/.install" DESTINATION ${CMAKE_INSTALL_PREFIX})
-
 
 OPTION(BUILD_TESTING "Include and build unit tests" ON)
 
@@ -313,3 +292,6 @@ ENDIF()
 IF(BUILD_VALIDATION_TEST) 
 	ADD_SUBDIRECTORY("validation-test/")
 ENDIF()
+
+# Google CTest 
+configure_file(CTestTestfile.cmake . @ONLY)

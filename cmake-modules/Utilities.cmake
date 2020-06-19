@@ -144,13 +144,43 @@ FUNCTION(SET_PROJECT_VERSION)
 ENDFUNCTION()
 #==================================================
 
+# Modify library prefixes and suffixes to comply to Windows or Linux naming
 #==================================================
-FUNCTION(SET_UNIT_TEST_PROJECT_CONFIG)
+FUNCTION(SET_LIB_SUFFIX_PREFFIX)
+	IF(WIN32)
+		SET(CMAKE_FIND_LIBRARY_PREFIXES "")
+		SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
+	ELSEIF(APPLE)
+		SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+		SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a")
+	ELSE()
+		SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+		SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
+	ENDIF()
+ENDFUNCTION()
+#==================================================
+
+# Set All element of Google test projects.
+#==================================================
+FUNCTION(SET_GTEST_PROJECT_CONFIG)
+	# IDE Config
 	SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})				# Place project in folder Unit-Tests (for some IDE)
 
+	# Valgrind/Memcheck Config
+	# TODO
+	
+	# Code Coverage Config
+	# TODO
+
+	# GTest Config
+	ENABLE_TESTING()
+	SET_LIB_SUFFIX_PREFFIX()															# set The Prefixes and Suffixes for all libs
 	SET(GTEST_ROOT ${OV_CUSTOM_DEPENDENCIES_PATH}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest)	# Set link to Gtest root
 	FIND_PACKAGE(GTest REQUIRED)														# Find Package
 	INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})											# Add gtest dir to root include dir
 	TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})						# Add google Test to project
+
+	# Install
+	INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${DIST_BINDIR})					# Add executable to bin dir
 ENDFUNCTION()
 #==================================================

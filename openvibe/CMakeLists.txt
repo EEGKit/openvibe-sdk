@@ -69,5 +69,5 @@ INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN
 # Test applications
 # ---------------------------------
 IF(BUILD_UNIT_TEST)
-ADD_SUBDIRECTORY(tests)
+ADD_SUBDIRECTORY(test)
 ENDIF()
