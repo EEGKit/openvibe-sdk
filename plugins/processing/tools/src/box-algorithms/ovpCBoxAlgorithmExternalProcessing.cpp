@@ -75,7 +75,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 		const CString value = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 
-		OV_FATAL_UNLESS_K(m_messaging.addParameter(i, type.toUInteger(), name.toASCIIString(), value.toASCIIString()),
+		OV_FATAL_UNLESS_K(m_messaging.addParameter(i, type.id(), name.toASCIIString(), value.toASCIIString()),
 						  "Failed to add a parameter: " << i, Kernel::ErrorType::Internal);
 	}
 
@@ -90,7 +90,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		CString name;
 		staticboxCtx.getInputName(i, name);
 
-		OV_FATAL_UNLESS_K(m_messaging.addInput(i, type.toUInteger(), name.toASCIIString()),
+		OV_FATAL_UNLESS_K(m_messaging.addInput(i, type.id(), name.toASCIIString()),
 						  "Failed to add an input: " << i, Kernel::ErrorType::Internal);
 	}
 
@@ -103,7 +103,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		CString name;
 		staticboxCtx.getOutputName(i, name);
 
-		if (!m_messaging.addOutput(i, type.toUInteger(), name.toASCIIString()))
+		if (!m_messaging.addOutput(i, type.id(), name.toASCIIString()))
 		{
 			getLogManager() << Kernel::LogLevel_Error << "Failed to add an output: " << i << "\n";
 			return false;

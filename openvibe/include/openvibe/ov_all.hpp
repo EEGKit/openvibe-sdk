@@ -19,7 +19,7 @@
 #include "CMessage.hpp"
 #include "CStimulationSet.hpp"
 
-#include "ovCIdentifier.h"
+#include "CIdentifier.hpp"
 #include "ovCString.h"
 #include "ovCNameValuePairList.h"
 

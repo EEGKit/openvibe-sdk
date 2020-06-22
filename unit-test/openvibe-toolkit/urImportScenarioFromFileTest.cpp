@@ -38,7 +38,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		CIdentifier scenarioID;
 		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
 				   "Failed to import the scenario file");
-		OVT_ASSERT(scenarioID != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
+		OVT_ASSERT(scenarioID != CIdentifier::undefined(), "Scenario importer failed to import the scenario but failed to report an error");
 
 		auto& scenario = context->getScenarioManager().getScenario(scenarioID);
 
@@ -95,7 +95,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 
 			CIdentifier dstBoxID;
 			size_t dstBoxInputIdx;
-			CIdentifier dstBoxInputID = OV_UndefinedIdentifier;
+			CIdentifier dstBoxInputID = CIdentifier::undefined();
 			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputIdx), "Cannot get scenario input details by index");
 			OVT_ASSERT(scenario.getScenarioInputLink(index, dstBoxID, dstBoxInputID), "Cannot get scenario input details by identifier");
 			OVT_ASSERT(dstBoxID == std::get<2>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box");
@@ -117,7 +117,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 
 			CIdentifier dstBoxID;
 			size_t dstBoxOutputIndex;
-			CIdentifier dstBoxOutputIdentifier = OV_UndefinedIdentifier;
+			CIdentifier dstBoxOutputIdentifier = CIdentifier::undefined();
 			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIndex), "Cannot get scenario output details by index");
 			OVT_ASSERT(scenario.getScenarioOutputLink(idx, dstBoxID, dstBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
 			OVT_ASSERT(dstBoxID == std::get<2>(simpleScenarioOutputs[idx]), "Scenario output is not connected to the correct box");

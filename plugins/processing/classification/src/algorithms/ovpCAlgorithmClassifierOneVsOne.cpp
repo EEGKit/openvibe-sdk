@@ -37,7 +37,7 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 	op_configuration = nullptr;
 
 	TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
-	ip_pPairwise = OV_UndefinedIdentifier.toUInteger();
+	ip_pPairwise = OV_UndefinedIdentifier.id();
 
 	m_decisionStrategyAlgorithm = nullptr;
 	m_pairwiseDecisionID        = OV_UndefinedIdentifier;
@@ -312,7 +312,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration() 
 	m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig);
 	tmp->addChild(static_cast<XML::IXMLNode*>(op_config));
 
-	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_pairwiseDecisionID.toString());
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_pairwiseDecisionID.str().c_str());
 
 	return tmp;
 }
@@ -325,9 +325,9 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfig()
 	XML::IXMLNode* oneVsOneNode = XML::createNode(TYPE_NODE_NAME);
 
 	XML::IXMLNode* tmp = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
-	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.toString());
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.str().c_str());
 	tmp->setPCData(
-		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.toUInteger()).
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.id()).
 			  toASCIIString());
 	oneVsOneNode->addChild(tmp);
 

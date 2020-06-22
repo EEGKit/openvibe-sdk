@@ -51,7 +51,7 @@ public:
 	{
 		prototype.addInput("Stimulations", OV_TypeId_Stimulations);
 		prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
-		prototype.addSetting("Action to perform", OV_TypeId_PlayerAction, OV_TypeId_PlayerAction_Pause.toString());
+		prototype.addSetting("Action to perform", OV_TypeId_PlayerAction, OV_TypeId_PlayerAction_Pause.str().c_str());
 
 		return true;
 	}

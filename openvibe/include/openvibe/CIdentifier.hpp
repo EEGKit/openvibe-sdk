@@ -1,31 +1,37 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CIdentifier.hpp
+/// \brief Globally used identification class.
+/// \author  Yann Renard (INRIA/IRISA).
+/// \version 1.0.
+/// \date 16/06/2006.
+/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// 
+///-------------------------------------------------------------------------------------------------
 #pragma once
 
 #include "defines.hpp"
 #include "ovCString.h"
-#include <climits>
+#include <limits>
 #include <string>
 
 #define OV_UndefinedIdentifier	OpenViBE::CIdentifier(0xffffffff, 0xffffffff)
 
 namespace OpenViBE {
-/**
- * \class CIdentifier
- * \author Yann Renard (INRIA/IRISA)
- * \date 2006-06-16
- * \brief Globally used identification class
- * \ingroup Group_Base
- *
- * This class is the basic class to use in order to identify objects in the OpenViBE platform.
- * It can be used for class identification, for object identification and any user needed identification process.
- *
- * The identification of the OpenViBE platform is based on 64 bits integers.
- *
- * This class is heavily used in the OpenViBE::IObject class.
- * Also, the OpenViBE specification gives serveral already defined class identifiers the developer should know of.
- * For this, let you have a look to the documentation of defines.hpp !
- *
- * \sa defines.hpp
- */
+
+/// <summary> Globally used identification class.\n
+///
+/// This class is the basic class to use in order to identify objects in the OpenViBE platform.\n
+/// It can be used for class identification, for object identification and any user needed identification process.\n
+///
+/// The identification of the OpenViBE platform is based on 64 bits integers.\n
+///
+/// This class is heavily used in the OpenViBE::IObject class.\n
+/// Also, the OpenViBE specification gives serveral already defined class identifiers the developer should know of.\n
+/// For this, let you have a look to the documentation of defines.hpp !
+/// 
+/// </summary>
+/// <seealso cref="defines.hpp"/>
 class OV_API CIdentifier
 {
 public:
@@ -33,36 +39,29 @@ public:
 	/** \name Constructors */
 	//@{
 
-	/**
-	 * \brief Default constructor
-	 *
-	 * Builds up the 64 bits identifier initialized to
-	 * \c OV_UndefinedIdentifier.
-	 */
-	CIdentifier() : m_id(ULLONG_MAX) {}
-	/**
-	 * \brief 32 bits integer based constructor
-	 * \param id1 [in] : the first part of the identifier
-	 * \param id2 [in] : the second part of the identifier
-	 *
-	 * Builds up the 64 bits identifier given its two 32 bits
-	 * components.
-	 */
+	/// <summary> Default constructor.\n Builds up the 64 bits identifier initialized to \c undefined.</summary>
+	CIdentifier() : m_id(std::numeric_limits<uint64_t>::max()) {}
+
+	/// <summary> 32 bits integer based constructor.\n Builds up the 64 bits identifier given its two 32 bits components. </summary>
+	/// <param name="id1">The first part of the identifier.</param>
+	/// <param name="id2">The second part of the identifier.</param>
 	CIdentifier(const size_t id1, const size_t id2) : m_id((uint64_t(id1) << 32) + id2) {}
-	/**
-	 * \brief 64 bits integer based constructor
-	 * \param id [in] : The identifier
-	 */
+
+	/// <summary> 64 bits integer based constructor. </summary>
+	/// <param name="id"> The identifier. </param>
 	CIdentifier(const uint64_t id) : m_id(id) {}
-	/**
-	 * \brief Copy constructor
-	 * \param id [in] : the identifier to initialize
-	 *        this identifier from
-	 *
-	 * Builds up the 64 bits identifier exacly the same as
-	 * given identifier parameter.
-	 */
+	
+	/// <summary> string based constructor. </summary>
+	/// <param name="str"> The string with identifier. </param>
+	CIdentifier(const std::string& str) { fromString(str); }
+
+	/// <summary> Copy constructor.\n Builds up the 64 bits identifier exacly the same as given identifier parameter. </summary>
+	/// <param name="id"> the identifier to initialize this identifier from. </param>
 	CIdentifier(const CIdentifier& id) : m_id(id.m_id) {}
+
+	/// <summary> Undefined Identifier (the same as default constructor. </summary>
+	/// <returns> Identifier define as undefined. </returns>
+	static CIdentifier undefined() { return CIdentifier(std::numeric_limits<uint64_t>::max()); }
 
 	//@}
 	/** \name Operators */
@@ -173,15 +172,8 @@ public:
 
 	//@}
 
-	/**
-	 * \brief Converts this identifier into an OpenViBE string
-	 * \return This identifier represented as an OpenViBE string
-	 */
-	CString toString() const;
-	/**
-	 * \brief Converts this identifier into an OpenViBE string
-	 * \return This identifier represented as an OpenViBE string
-	 */
+	/// <summary> Converts this identifier into a string. </summary>
+	/// <returns> This identifier represented as a <c>std::string</c>. </returns>
 	std::string str() const;
 	/**
 	 * \brief Reads a an OpenViBE string to extract this identifier
@@ -189,7 +181,7 @@ public:
 	 * \return \e true in case of success.
 	 * \return \e false in case of error.
 	 */
-	bool fromString(const CString& str);
+	bool fromString(const std::string& str);
 	/**
 	 * \brief Converts this identifier into an unsigned 64 bits integer
 	 * \return The unsigned integer converted identifier
@@ -197,13 +189,24 @@ public:
 	 *          as integers. Actually, the internal 64 bits representation may
 	 *          change, resulting in code port needs if you use this function
 	 */
-	uint64_t toUInteger() const { return m_id; }
+	uint64_t id() const { return m_id; }
+	
 	/**
 	 * \brief Creates a random identifier
 	 * \return a random identifier
 	 * \note The returned identifier can not be \c OV_UndefinedIdentifier
 	 */
 	static CIdentifier random();
+
+	/// <summary> Override the ostream operator. </summary>
+	/// <param name="os"> The ostream. </param>
+	/// <param name="obj"> The object. </param>
+	/// <returns> Return the modified ostream. </returns>
+	friend std::ostream& operator<<(std::ostream& os, const CIdentifier& obj)
+	{
+		os << obj.str();
+		return os;
+	}
 
 protected:
 

@@ -12,13 +12,13 @@ static std::map<uint64_t, fClassifierComparison> comparisionFunctions;
 
 void Toolkit::registerClassificationComparisonFunction(const CIdentifier& classID, const fClassifierComparison comparision)
 {
-	comparisionFunctions[classID.toUInteger()] = comparision;
+	comparisionFunctions[classID.id()] = comparision;
 }
 
 fClassifierComparison Toolkit::getClassificationComparisonFunction(const CIdentifier& classID)
 {
-	if (comparisionFunctions.count(classID.toUInteger()) == 0) { return nullptr; }
-	return comparisionFunctions[classID.toUInteger()];
+	if (comparisionFunctions.count(classID.id()) == 0) { return nullptr; }
+	return comparisionFunctions[classID.id()];
 }
 
 bool CAlgorithmPairingStrategy::process()

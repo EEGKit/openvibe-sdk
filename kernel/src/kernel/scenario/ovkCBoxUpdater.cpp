@@ -48,11 +48,11 @@ bool CBoxUpdater::initialize()
 	// initialize kernel box reference
 	if (m_sourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
-		const CString metaboxID = m_sourceBox->getAttributeValue(OVP_AttributeId_Metabox_ID);
-		OV_ERROR_UNLESS_KRF(metaboxID != CString(""), "Failed to find metabox with id " << metaboxID, ErrorType::BadCall);
+		const CString tmp = m_sourceBox->getAttributeValue(OVP_AttributeId_Metabox_ID);
+		OV_ERROR_UNLESS_KRF(tmp != CString(""), "Failed to find metabox with id " << tmp, ErrorType::BadCall);
 
 		CIdentifier metaboxId;
-		metaboxId.fromString(metaboxID);
+		metaboxId.fromString(tmp.toASCIIString());
 		const CString path(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 		OV_ERROR_UNLESS_KRF(path != CString(""), "Metabox scenario is not available for " << m_sourceBox->getName(), ErrorType::BadCall);

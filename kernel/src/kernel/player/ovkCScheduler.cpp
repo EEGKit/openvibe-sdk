@@ -125,8 +125,7 @@ bool CScheduler::flattenScenario()
 					}
 					else if (box->hasAttribute(OVP_AttributeId_Metabox_ID)) // We verify that the box actually has a backend scenario
 					{
-						CIdentifier metaboxId;
-						metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_ID));
+						CIdentifier metaboxId(string(box->getAttributeValue(OVP_AttributeId_Metabox_ID).toASCIIString()));
 						CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 						if (FS::Files::fileExists(metaboxScenarioPath.toASCIIString()))
@@ -165,8 +164,7 @@ bool CScheduler::flattenScenario()
 
 			// The box has an attribute with the metabox ID and config manager has a path to each metabox scenario
 			CString str = box->getAttributeValue(OVP_AttributeId_Metabox_ID);
-			CIdentifier metaboxId;
-			metaboxId.fromString(str);
+			CIdentifier metaboxId(string(str.toASCIIString()));
 			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 			OV_ERROR_UNLESS_KRF(str != CString(""), "Failed to find metabox with id " << str, ErrorType::ResourceNotFound);
@@ -535,7 +533,7 @@ bool CScheduler::loop()
 		{
 			//IBox* box=m_scenario->getBoxDetails(it->first.second);
 			box->addAttribute(OV_AttributeId_Box_ComputationTimeLastSecond, "");
-			box->setAttributeValue(OV_AttributeId_Box_ComputationTimeLastSecond, CIdentifier(simulatedBoxChrono.getTotalStepInDuration()).toString());
+			box->setAttributeValue(OV_AttributeId_Box_ComputationTimeLastSecond, CIdentifier(simulatedBoxChrono.getTotalStepInDuration()).str().c_str());
 		}
 	}
 	m_oBenchmarkChrono.stepOut();

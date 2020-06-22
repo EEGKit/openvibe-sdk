@@ -139,13 +139,13 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
 			"The requested importer does not have a MemoryBuffer input parameter with scenarioID " <<
-			OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.toString(),
+			OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.str(),
 			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
-			"The requested importer does not have a Scenario output parameter with scenarioID " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.
-			toString(),
+			"The requested importer does not have a Scenario output parameter with scenarioID " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.str(
+			),
 			ErrorType::BadOutput);
 	}
 
@@ -352,9 +352,9 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 
 		if (scenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
 		{
-			scenario.setAttributeValue(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_hash.toString());
+			scenario.setAttributeValue(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_hash.str().c_str());
 		}
-		else { scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_hash.toString()); }
+		else { scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, metaboxProto.m_hash.str().c_str()); }
 	}
 
 	CIdentifier exporterInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioExporterAlgorithmID);
@@ -396,14 +396,13 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
-			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.
-			toString(),
+			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.str(),
 			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
 			"The requested exporter does not have a MemoryBuffer output parameter with identifier " <<
-			OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.toString(),
+			OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.str(),
 			ErrorType::BadOutput);
 	}
 

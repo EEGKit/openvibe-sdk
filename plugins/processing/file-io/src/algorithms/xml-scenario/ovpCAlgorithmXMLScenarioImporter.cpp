@@ -30,7 +30,7 @@ public:
 	operator CIdentifier() const
 	{
 		CIdentifier res;
-		res.fromString(m_value.c_str());
+		res.fromString(m_value);
 		return res;
 	}
 

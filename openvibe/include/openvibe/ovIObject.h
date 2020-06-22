@@ -1,7 +1,7 @@
 #pragma once
 
 #include "defines.hpp"
-#include "ovCIdentifier.h"
+#include "CIdentifier.hpp"
 
 namespace OpenViBE {
 class IObjectVisitor;

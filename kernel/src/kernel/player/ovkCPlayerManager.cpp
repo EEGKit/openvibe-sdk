@@ -42,7 +42,7 @@ IPlayer& CPlayerManager::getPlayer(const CIdentifier& playerID)
 
 CIdentifier CPlayerManager::getUnusedIdentifier() const
 {
-	uint64_t id = CIdentifier::random().toUInteger();
+	uint64_t id = CIdentifier::random().id();
 	CIdentifier res;
 	map<CIdentifier, CPlayer*>::const_iterator i;
 	do

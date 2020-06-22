@@ -27,11 +27,11 @@ using namespace /*OpenViBE::*/Plugins;
 const char* const PAIRWISE_STRATEGY_ENUMERATION_NAME = "Pairwise Decision Strategy";
 
 OVP_Declare_Begin()
-	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "Native", OV_UndefinedIdentifier.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "OneVsAll", OVP_ClassId_Algorithm_ClassifierOneVsAll.toUInteger());
-	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "OneVsOne", OVP_ClassId_Algorithm_ClassifierOneVsOne.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "Native", OV_UndefinedIdentifier.id());
+	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "OneVsAll", OVP_ClassId_Algorithm_ClassifierOneVsAll.id());
+	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "OneVsOne", OVP_ClassId_Algorithm_ClassifierOneVsOne.id());
 
-	//	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationAlgorithm, "NULL Classifier (does nothing)",OVP_ClassId_Algorithm_ClassifierNULL.toUInteger());
+	//	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationAlgorithm, "NULL Classifier (does nothing)",OVP_ClassId_Algorithm_ClassifierNULL.id());
 	//	OVP_Declare_New(Classification::CAlgorithmClassifierNULLDesc);
 
 
@@ -47,31 +47,31 @@ OVP_Declare_Begin()
 
 	OVP_Declare_New(Classification::CAlgorithmPairwiseStrategyPKPDDesc);
 	context.getTypeManager().registerEnumerationEntry(
-		OVP_TypeId_ClassificationPairwiseStrategy, "PKPD", OVP_ClassId_Algorithm_PairwiseStrategy_PKPD.toUInteger());
+		OVP_TypeId_ClassificationPairwiseStrategy, "PKPD", OVP_ClassId_Algorithm_PairwiseStrategy_PKPD.id());
 	OVP_Declare_New(Classification::CAlgorithmPairwiseDecisionVotingDesc);
 	context.getTypeManager().registerEnumerationEntry(
-		OVP_TypeId_ClassificationPairwiseStrategy, "Voting", OVP_ClassId_Algorithm_PairwiseDecision_Voting.toUInteger());
+		OVP_TypeId_ClassificationPairwiseStrategy, "Voting", OVP_ClassId_Algorithm_PairwiseDecision_Voting.id());
 	OVP_Declare_New(Classification::CAlgorithmPairwiseDecisionHTDesc);
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ClassificationPairwiseStrategy, "HT", OVP_ClassId_Algorithm_PairwiseDecision_HT.toUInteger());
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ClassificationPairwiseStrategy, "HT", OVP_ClassId_Algorithm_PairwiseDecision_HT.id());
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	OVP_Declare_New(Classification::CAlgorithmConditionedCovarianceDesc);
 
 	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)",
-													  OVP_ClassId_Algorithm_ClassifierLDA.toUInteger());
+													  OVP_ClassId_Algorithm_ClassifierLDA.id());
 	OpenViBE::Toolkit::registerClassificationComparisonFunction(OVP_ClassId_Algorithm_ClassifierLDA, Classification::LDAClassificationCompare);
 	OVP_Declare_New(Classification::CAlgorithmClassifierLDADesc);
 	context.getTypeManager().registerEnumerationType(OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, PAIRWISE_STRATEGY_ENUMERATION_NAME);
 	context.getTypeManager().registerEnumerationEntry(
-		OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "PKPD", OVP_ClassId_Algorithm_PairwiseStrategy_PKPD.toUInteger());
+		OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "PKPD", OVP_ClassId_Algorithm_PairwiseStrategy_PKPD.id());
 	context.getTypeManager().registerEnumerationEntry(
-		OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "Voting", OVP_ClassId_Algorithm_PairwiseDecision_Voting.toUInteger());
+		OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "Voting", OVP_ClassId_Algorithm_PairwiseDecision_Voting.id());
 	context.getTypeManager().registerEnumerationEntry(
-		OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "HT", OVP_ClassId_Algorithm_PairwiseDecision_HT.toUInteger());
+		OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "HT", OVP_ClassId_Algorithm_PairwiseDecision_HT.id());
 
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_OneVsOne_DecisionAlgorithms, "One vs One Decision Algorithms");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OneVsOne_DecisionAlgorithms, "Linear Discrimimant Analysis (LDA)",
-													  OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable.toUInteger());
+													  OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable.id());
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
 

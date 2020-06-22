@@ -57,7 +57,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 		boxContext.getInputType(i, id);
 
 		m_writerHelper.openChild(OVP_NodeId_OpenViBEStream_Header_StreamType);
-		m_writerHelper.setUInt(id.toUInteger());
+		m_writerHelper.setUInt(id.id());
 		m_writerHelper.closeChild();
 	}
 	m_writerHelper.closeChild();

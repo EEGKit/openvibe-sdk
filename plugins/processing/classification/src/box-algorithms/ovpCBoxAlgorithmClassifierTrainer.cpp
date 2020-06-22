@@ -563,14 +563,14 @@ bool CBoxAlgorithmClassifierTrainer::saveConfig()
 	XML::IXMLNode* tempNode           = XML::createNode(STRATEGY_NODE_NAME);
 	const CIdentifier strategyClassId = this->getTypeManager().getEnumerationEntryValueFromName(
 		OVTK_TypeId_ClassificationStrategy, (*m_parameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
-	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, strategyClassId.toString());
+	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, strategyClassId.str().c_str());
 	tempNode->setPCData((*m_parameter)[MULTICLASS_STRATEGY_SETTING_NAME].toASCIIString());
 	root->addChild(tempNode);
 
 	tempNode                            = XML::createNode(ALGORITHM_NODE_NAME);
 	const CIdentifier classifierClassId = this->getTypeManager().getEnumerationEntryValueFromName(
 		OVTK_TypeId_ClassificationAlgorithm, (*m_parameter)[ALGORITHM_SETTING_NAME]);
-	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, classifierClassId.toString());
+	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, classifierClassId.str().c_str());
 	tempNode->setPCData((*m_parameter)[ALGORITHM_SETTING_NAME].toASCIIString());
 	root->addChild(tempNode);
 

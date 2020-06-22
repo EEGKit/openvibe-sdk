@@ -199,9 +199,7 @@ public:
 	{
 		this->disableNotification();
 
-		const Plugins::IBoxAlgorithmDesc* desc = dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this
-																								 ->getKernelContext().getPluginManager().
-																								 getPluginObjectDescCreating(algorithmClassID));
+		const Plugins::IBoxAlgorithmDesc* desc = dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(algorithmClassID));
 		if (!desc)
 		{
 			this->enableNotification();
@@ -217,13 +215,11 @@ public:
 
 		if (this->hasAttribute(OV_AttributeId_Box_InitialPrototypeHashValue))
 		{
-			this->setAttributeValue(
-				OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(algorithmClassID).toString());
+			this->setAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(algorithmClassID).str().c_str());
 		}
 		else
 		{
-			this->addAttribute(
-				OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(algorithmClassID).toString());
+			this->addAttribute(OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(algorithmClassID).str().c_str());
 		}
 
 		this->enableNotification();
@@ -242,13 +238,11 @@ public:
 
 		if (this->hasAttribute(OV_AttributeId_Box_InitialPrototypeHashValue))
 		{
-			this->setAttributeValue(
-				OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(boxAlgorithmDesc).toString());
+			this->setAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(boxAlgorithmDesc).str().c_str());
 		}
 		else
 		{
-			this->addAttribute(
-				OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(boxAlgorithmDesc).toString());
+			this->addAttribute(OV_AttributeId_Box_InitialPrototypeHashValue, this->getPluginManager().getPluginObjectHashValue(boxAlgorithmDesc).str().c_str());
 		}
 
 		this->enableNotification();
@@ -718,8 +712,8 @@ public:
 				ILink* link    = m_ownerScenario->getLinkDetails(id);
 				if (link->getTargetBoxInputIndex() > index)
 				{
-					links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().toUInteger(), link->getSourceBoxOutputIndex()),
-												   std::make_pair(link->getTargetBoxIdentifier().toUInteger(), link->getTargetBoxInputIndex())));
+					links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().id(), link->getSourceBoxOutputIndex()),
+												   std::make_pair(link->getTargetBoxIdentifier().id(), link->getTargetBoxInputIndex())));
 
 					if (m_ownerScenario->isLink(id)) { m_ownerScenario->disconnect(id); }
 				}
@@ -740,7 +734,7 @@ public:
 				{
 					if (boxConnectorIdx > index)
 					{
-						scenarioLinks.push_back(std::make_pair(scenarioInputIdx, std::make_pair(boxID.toUInteger(), boxConnectorIdx)));
+						scenarioLinks.push_back(std::make_pair(scenarioInputIdx, std::make_pair(boxID.id(), boxConnectorIdx)));
 					}
 					if (boxConnectorIdx >= index) { m_ownerScenario->removeScenarioInputLink(scenarioInputIdx, boxID, boxConnectorIdx); }
 				}
@@ -830,8 +824,8 @@ public:
 					ILink* link              = m_ownerScenario->getLinkDetails(curID);
 					if (link->getSourceBoxOutputIndex() > index)
 					{
-						links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().toUInteger(), link->getSourceBoxOutputIndex()),
-													   std::make_pair(link->getTargetBoxIdentifier().toUInteger(), link->getTargetBoxInputIndex())));
+						links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().id(), link->getSourceBoxOutputIndex()),
+													   std::make_pair(link->getTargetBoxIdentifier().id(), link->getTargetBoxInputIndex())));
 						if (m_ownerScenario->isLink(curID)) { m_ownerScenario->disconnect(curID); }
 					}
 				}
@@ -851,7 +845,7 @@ public:
 					{
 						if (boxConnectorIdx > index)
 						{
-							scenarioLinks.push_back(std::make_pair(scenarioOutputIdx, std::make_pair(boxID.toUInteger(), boxConnectorIdx)));
+							scenarioLinks.push_back(std::make_pair(scenarioOutputIdx, std::make_pair(boxID.id(), boxConnectorIdx)));
 						}
 						if (boxConnectorIdx >= index) { m_ownerScenario->removeScenarioOutputLink(scenarioOutputIdx, boxID, boxConnectorIdx); }
 					}
@@ -965,8 +959,8 @@ private:
 	CIdentifier getUnusedInterfacorIdentifier(const EBoxInterfacorType interfacorType,
 											  const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 	{
-		uint64_t identifier = CIdentifier::random().toUInteger();
-		if (suggestedIdentifier != OV_UndefinedIdentifier) { identifier = suggestedIdentifier.toUInteger(); }
+		uint64_t identifier = CIdentifier::random().id();
+		if (suggestedIdentifier != OV_UndefinedIdentifier) { identifier = suggestedIdentifier.id(); }
 
 		CIdentifier resultIdentifier = OV_UndefinedIdentifier;
 		std::map<CIdentifier, size_t>::const_iterator it;
@@ -996,13 +990,13 @@ public:
 		return this->getUnusedInterfacorIdentifier(Output);
 	}
 
-	bool addSetting(const CString& name, const CIdentifier& typeID, const CString& sDefaultValue, const size_t index,
-					const bool bModifiability, const CIdentifier& identifier, const bool notify) override
+	bool addSetting(const CString& name, const CIdentifier& typeID, const CString& defaultValue, const size_t index,
+					const bool modifiability, const CIdentifier& identifier, const bool notify) override
 	{
-		CString value(sDefaultValue);
+		CString value(defaultValue);
 		if (this->getTypeManager().isEnumeration(typeID))
 		{
-			if (this->getTypeManager().getEnumerationEntryValueFromName(typeID, sDefaultValue) == OV_UndefinedIdentifier)
+			if (this->getTypeManager().getEnumerationEntryValueFromName(typeID, defaultValue) == OV_UndefinedIdentifier)
 			{
 				if (this->getTypeManager().getEnumerationEntryCount(typeID) != 0)
 				{
@@ -1013,11 +1007,11 @@ public:
 
 					// Find if the default value string actually is an identifier, otherwise just keep the zero index name as default.
 					CIdentifier defaultValueID = OV_UndefinedIdentifier;
-					defaultValueID.fromString(sDefaultValue);
+					defaultValueID.fromString(defaultValue.toASCIIString());
 
 					// Finally, if it is an identifier, then a name should be found
 					// from the type manager ! Otherwise value is left to the default.
-					const CString candidateValue = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, defaultValueID.toUInteger());
+					const CString candidateValue = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, defaultValueID.id());
 					if (candidateValue != CString("")) { value = candidateValue; }
 				}
 			}
@@ -1028,7 +1022,7 @@ public:
 		s.m_TypeID       = typeID;
 		s.m_DefaultValue = value;
 		s.m_Value        = value;
-		s.m_Mod          = bModifiability;
+		s.m_Mod          = modifiability;
 		s.m_ID           = identifier;
 
 		const size_t idx = index;
@@ -1067,7 +1061,7 @@ public:
 							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
 
 		//if this setting is modifiable, keep its index
-		if (bModifiability) { m_modifiableSettingIndexes.push_back(idx); }
+		if (modifiability) { m_modifiableSettingIndexes.push_back(idx); }
 
 		this->getLogManager() << LogLevel_Debug
 				<< "Pushed '" << m_interfacors.at(Setting)[insertLocation]->m_Name << "' : '"

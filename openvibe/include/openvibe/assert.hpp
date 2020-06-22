@@ -18,20 +18,10 @@
 
 #include <sstream>
 
-#include "ovCIdentifier.h"
+#include "CIdentifier.hpp"
 
 // internal use
 #define CONVERT_ERROR_TYPE_TO_STRING(type) #type
-
-namespace OpenViBE {
-#define HAS_IMBUED_OSTREAM_WITH_C_IDENTIFIER
-
-inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
-{
-	os << id.str();
-	return os;
-}
-}  // namespace OpenViBE
 
 /**
  * \def OV_WARNING_LOG(message, logManager)

@@ -13,30 +13,30 @@ struct SBoxProto final : IBoxProto
 
 	bool addInput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_inputCountHash);
 		swap_byte(m_inputCountHash, 0x7936A0F3BD12D936LL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		if (id != OV_UndefinedIdentifier)
 		{
-			v = id.toUInteger();
+			v = id.id();
 			swap_byte(v, 0x2BD1D158F340014D);
-			m_hash = m_hash.toUInteger() ^ v;
+			m_hash = m_hash.id() ^ v;
 		}
 		return true;
 	}
 
 	bool addOutput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_outputCountHash);
 		swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		if (id != OV_UndefinedIdentifier)
 		{
-			v = id.toUInteger();
+			v = id.id();
 			swap_byte(v, 0x87CA0F5EFC4FAC68);
-			m_hash = m_hash.toUInteger() ^ v;
+			m_hash = m_hash.id() ^ v;
 		}
 		return true;
 	}
@@ -44,52 +44,52 @@ struct SBoxProto final : IBoxProto
 	bool addSetting(const CString& /*name*/, const CIdentifier& typeID, const CString& /*defaultValue*/, const bool /*modifiable*/, const CIdentifier& id,
 					const bool /*notify*/) override
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_settingCountHash);
 		swap_byte(m_settingCountHash, 0x3C87F3AAE9F8303BLL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		if (id != OV_UndefinedIdentifier)
 		{
-			v = id.toUInteger();
+			v = id.id();
 			swap_byte(v, 0x17185F7CDA63A9FA);
-			m_hash = m_hash.toUInteger() ^ v;
+			m_hash = m_hash.id() ^ v;
 		}
 		return true;
 	}
 
 	bool addInputSupport(const CIdentifier& typeID) override
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_outputCountHash);
 		swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		return true;
 	}
 
 	bool addInputAndDerivedSupport(const CIdentifier& typeID)
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_outputCountHash);
 		swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		return true;
 	}
 
 	bool addOutputSupport(const CIdentifier& typeID) override
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_outputCountHash);
 		swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		return true;
 	}
 
 	bool addOutputAndDerivedSupport(const CIdentifier& typeID)
 	{
-		uint64_t v = typeID.toUInteger();
+		uint64_t v = typeID.id();
 		swap_byte(v, m_outputCountHash);
 		swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
-		m_hash = m_hash.toUInteger() ^ v;
+		m_hash = m_hash.id() ^ v;
 		return true;
 	}
 
@@ -97,17 +97,17 @@ struct SBoxProto final : IBoxProto
 	{
 		switch (flag)
 		{
-			case BoxFlag_CanAddInput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x07507AC8, 0xEB643ACE).toUInteger();
+			case BoxFlag_CanAddInput: m_hash = m_hash.id() ^ CIdentifier(0x07507AC8, 0xEB643ACE).id();
 				break;
-			case BoxFlag_CanModifyInput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x5C985376, 0x8D74CDB8).toUInteger();
+			case BoxFlag_CanModifyInput: m_hash = m_hash.id() ^ CIdentifier(0x5C985376, 0x8D74CDB8).id();
 				break;
-			case BoxFlag_CanAddOutput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x58DEA69B, 0x12411365).toUInteger();
+			case BoxFlag_CanAddOutput: m_hash = m_hash.id() ^ CIdentifier(0x58DEA69B, 0x12411365).id();
 				break;
-			case BoxFlag_CanModifyOutput: m_hash = m_hash.toUInteger() ^ CIdentifier(0x6E162C01, 0xAC979F22).toUInteger();
+			case BoxFlag_CanModifyOutput: m_hash = m_hash.id() ^ CIdentifier(0x6E162C01, 0xAC979F22).id();
 				break;
-			case BoxFlag_CanAddSetting: m_hash = m_hash.toUInteger() ^ CIdentifier(0xFA7A50DC, 0x2140C013).toUInteger();
+			case BoxFlag_CanAddSetting: m_hash = m_hash.id() ^ CIdentifier(0xFA7A50DC, 0x2140C013).id();
 				break;
-			case BoxFlag_CanModifySetting: m_hash = m_hash.toUInteger() ^ CIdentifier(0x624D7661, 0xD8DDEA0A).toUInteger();
+			case BoxFlag_CanModifySetting: m_hash = m_hash.id() ^ CIdentifier(0x624D7661, 0xD8DDEA0A).id();
 				break;
 			case BoxFlag_IsDeprecated: m_isDeprecated = true;
 				break;
@@ -119,10 +119,10 @@ struct SBoxProto final : IBoxProto
 
 	bool addFlag(const CIdentifier& flagId) override
 	{
-		const uint64_t value = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, flagId.toString());
+		const uint64_t value = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, flagId.str().c_str());
 		if (value == OV_UndefinedIdentifier) { return false; }
 		// Flags do not modify internal hash
-		//m_hash=m_hash.toUInteger() ^ flagId.toUInteger();
+		//m_hash=m_hash.id() ^ flagId.id();
 		return true;
 	}
 

@@ -32,12 +32,12 @@ static std::vector<std::tuple<CIdentifier, std::string, std::string, std::string
 
 static std::vector<std::tuple<CIdentifier, std::string, CIdentifier, size_t>> simpleScenarioInputs = {
 	std::make_tuple(OV_TypeId_Stimulations, "Stimulation Input", s_StimulationListenerBoxId, 0),
-	std::make_tuple(OV_TypeId_StreamedMatrix, "Disconnected Matrix Input", OV_UndefinedIdentifier, 0),
+	std::make_tuple(OV_TypeId_StreamedMatrix, "Disconnected Matrix Input", CIdentifier::undefined(), 0),
 };
 
 static std::vector<std::tuple<CIdentifier, std::string, CIdentifier, size_t>> simpleScenarioOutputs = {
 	std::make_tuple(OV_TypeId_Stimulations, "Stimulation Output", s_ClockStimulatorBoxId, 0),
-	std::make_tuple(OV_TypeId_StreamedMatrix, "Disconnected Matrix Output", OV_UndefinedIdentifier, 0),
+	std::make_tuple(OV_TypeId_StreamedMatrix, "Disconnected Matrix Output", CIdentifier::undefined(), 0),
 };
 
 

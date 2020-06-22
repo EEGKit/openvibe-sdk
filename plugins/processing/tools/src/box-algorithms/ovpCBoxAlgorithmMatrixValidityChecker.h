@@ -115,7 +115,7 @@ public:
 		prototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
 		prototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
 		prototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
-		prototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
+		prototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.str().c_str());
 		prototype.addFlag(Kernel::BoxFlag_CanAddInput);
 		prototype.addFlag(Kernel::BoxFlag_CanAddOutput);
 

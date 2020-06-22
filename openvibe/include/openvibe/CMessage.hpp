@@ -11,7 +11,7 @@
 #pragma once
 
 #include "ov_common_defines.h"
-#include "ovCIdentifier.h"
+#include "CIdentifier.hpp"
 #include "CTime.hpp"
 
 namespace OpenViBE {

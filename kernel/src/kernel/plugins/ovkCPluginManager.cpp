@@ -353,7 +353,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 
 	CIdentifier substitutionTokenID;
 	char substitutionTokenName[1024];
-	const uint64_t srcClassID = classID.toUInteger();
+	const uint64_t srcClassID = classID.id();
 	uint64_t dstClassID       = srcClassID;
 	sprintf(substitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, srcClassID);
 	if ((substitutionTokenID = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(substitutionTokenName)) !=

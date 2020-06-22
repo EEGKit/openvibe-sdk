@@ -2,7 +2,7 @@
 #include "ovkCKernelObjectFactory.h"
 #include "ovkCTypeManager.h"
 
-#include <openvibe/ovCIdentifier.h>
+#include <openvibe/CIdentifier.hpp>
 
 #include "algorithm/ovkCAlgorithmManager.h"
 #include "configuration/ovkCConfigurationManager.h"

@@ -16,7 +16,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	if (boxCtx.getSettingCount() == 1
 	)
 	{
-		m_validityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger();
+		m_validityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.id();
 	} // note that for boxes with one setting, we fallback to the old behavior 
 
 	OV_ERROR_UNLESS_KRF(boxCtx.getSettingCount() <= 1 || boxCtx.getInputCount() == boxCtx.getOutputCount(),
@@ -80,7 +80,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 			{
 				if (nSetting > 1) { m_encoders[i].encodeHeader(); }
 
-				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
+				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.id())
 				{
 					m_nTotalInterpolatedSample[i] = 0;
 					m_nTotalInterpolatedChunk[i]  = 0;
@@ -91,7 +91,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 			if (m_decoders[i].isBufferReceived())
 			{
 				// log warning
-				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
+				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.id())
 				{
 					if (!Toolkit::Matrix::isContentValid(*matrix))
 					{
@@ -100,7 +100,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 				}
 					// stop player
-				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
+				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.id())
 				{
 					if (!Toolkit::Matrix::isContentValid(*matrix))
 					{
@@ -112,7 +112,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					}
 				}
 					// interpolate
-				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
+				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.id())
 				{
 					const size_t nChannel      = matrix->getDimensionSize(0);
 					const size_t nSample       = matrix->getDimensionSize(1);

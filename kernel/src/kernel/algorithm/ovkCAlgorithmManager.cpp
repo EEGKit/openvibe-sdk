@@ -148,7 +148,7 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier() const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	uint64_t identifier = CIdentifier::random().toUInteger();
+	uint64_t identifier = CIdentifier::random().id();
 	CIdentifier result;
 
 	std::map<CIdentifier, CAlgorithmProxy*>::const_iterator i;

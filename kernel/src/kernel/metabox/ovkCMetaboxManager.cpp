@@ -29,15 +29,14 @@ public:
 			const char* fullFileName = rEntry.getName();
 
 			CIdentifier scenarioID, metaboxId, metaboxHash;
-			this->getKernelContext().getScenarioManager().
-				  importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+			this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
 			if (scenarioID != OV_UndefinedIdentifier)
 			{
 				IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
-				const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID));
+				const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID).toASCIIString());
 				if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 				{
-					const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+					const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash).toASCIIString());
 					if (!hasHash)
 					{
 						this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.str() <<

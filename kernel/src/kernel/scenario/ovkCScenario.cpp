@@ -1003,7 +1003,7 @@ bool CScenario::acceptVisitor(IObjectVisitor& objectVisitor)
 CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedID) const
 {
 	uint64_t newID = (uint64_t(rand()) << 32) + uint64_t(rand());
-	if (suggestedID != OV_UndefinedIdentifier) { newID = suggestedID.toUInteger() - 1; }
+	if (suggestedID != OV_UndefinedIdentifier) { newID = suggestedID.id() - 1; }
 
 	CIdentifier result;
 	map<CIdentifier, CBox*>::const_iterator itBox;
@@ -1085,12 +1085,12 @@ bool CScenario::isBoxOutdated(const CIdentifier& boxId)
 	if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		CIdentifier metaboxId;
-		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_ID));
+		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_ID).toASCIIString());
 		boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
 	}
 	else { boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box->getAlgorithmClassIdentifier()); }
 
-	boxHashCode2.fromString(box->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
+	boxHashCode2.fromString(box->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue).toASCIIString());
 
 	if (!(boxHashCode1 == OV_UndefinedIdentifier || boxHashCode1 == boxHashCode2)) { return true; }
 
@@ -1118,11 +1118,11 @@ bool CScenario::checkOutdatedBoxes()
 		// Do not attempt to update metaboxes which do not have an associated scenario
 		if (boxAlgorithmClassID == OVP_ClassId_BoxAlgorithm_Metabox)
 		{
-			CString metaboxIdentifier = box.second->getAttributeValue(OVP_AttributeId_Metabox_ID);
-			if (metaboxIdentifier == CString("")) { continue; }
+			CString tmp = box.second->getAttributeValue(OVP_AttributeId_Metabox_ID);
+			if (tmp == CString("")) { continue; }
 
 			CIdentifier metaboxId;
-			metaboxId.fromString(metaboxIdentifier);
+			metaboxId.fromString(tmp.toASCIIString());
 			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 			if (metaboxScenarioPath == CString("")) { continue; }
