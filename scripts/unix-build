@@ -180,7 +180,6 @@ cmake ${ov_script_dir}/.. \
 		${ov_test_data_dir_token} \
 		${dependencies_dir_token} \
 		-DOV_PACKAGE=${package_option} \
-		-DOV_DISPLAY_ERROR_LOCATION=${display_error_location} \
 		-DBUILD_UNIT_TEST=${ov_build_unit} \
 		-DBUILD_VALIDATION_TEST=${ov_build_validation} \
 		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \

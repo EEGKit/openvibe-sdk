@@ -38,7 +38,7 @@
 #include "ovIObserver.h"
 #include "ovCObservable.h"
 
-#include "ovAssert.h"
+#include "assert.hpp"
 
 // Kernel includes
 //---------------------------------------------------------------------------------------------------

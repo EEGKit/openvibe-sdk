@@ -47,7 +47,6 @@ ELSE()
 ENDIF()
 
 OPTION(Flag_VerboseOutput "Verbose CMake output" OFF)
-OPTION(OV_DISPLAY_ERROR_LOCATION ON)
 OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 
 if(NOT(${Flag_VerboseOutput}))
@@ -219,10 +218,6 @@ ADD_DEFINITIONS(-DBRAND_NAME="${BRAND_NAME}")
 if(${BRAND_NAME} STREQUAL "NeuroRT")
 	ADD_DEFINITIONS(-DOV_LOCAL_SYMBOLS)
 endif()
-
-IF(OV_DISPLAY_ERROR_LOCATION)
-	ADD_DEFINITIONS(-DOV_DISPLAY_ERROR_LOCATION)
-ENDIF()
 #################################################################
 
 SET(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/launchers")

@@ -204,7 +204,6 @@ if %CallCmake%=="true" (
 		%build_type% ^
 		-DCMAKE_INSTALL_PREFIX=%install_dir% ^
 		-DOV_PACKAGE=%PackageOption% ^
-		-DOV_DISPLAY_ERROR_LOCATION=%DisplayErrorLocation% ^
 		-DBUILD_UNIT_TEST=%ov_build_unit% ^
 		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
 		%ov_cmake_test_data% ^
