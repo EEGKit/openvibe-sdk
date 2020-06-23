@@ -40,14 +40,18 @@ CIdentifier& CIdentifier::operator--()
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-std::string CIdentifier::str() const
+std::string CIdentifier::str(const bool hexa) const
 {
 	const uint32_t id1 = uint32_t(m_id >> 32);
 	const uint32_t id2 = uint32_t(m_id);
-	std::stringstream ss;
-	ss.fill('0');
-	ss << "(0x" << std::setw(8) << std::hex << id1 << ", 0x" << std::setw(8) << std::hex << id2 << ")";
-	return ss.str();
+	if (hexa)
+	{
+		std::stringstream ss;
+		ss.fill('0');
+		ss << "(0x" << std::setw(8) << std::hex << id1 << ", 0x" << std::setw(8) << std::hex << id2 << ")";
+		return ss.str();
+	}
+	return std::to_string(m_id);
 }
 //--------------------------------------------------------------------------------
 

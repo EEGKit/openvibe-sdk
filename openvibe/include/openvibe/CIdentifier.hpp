@@ -33,8 +33,9 @@ class OV_API CIdentifier
 {
 public:
 
-	/** \name Constructors */
-	//@{
+	//--------------------------------------------------
+	//------------ Constructor / Destructor ------------
+	//--------------------------------------------------
 
 	/// <summary> Default constructor.\n Builds up the 64 bits identifier initialized to <c>undefined</c>. </summary>
 	CIdentifier() : m_id(undefined().id()) {}
@@ -60,9 +61,9 @@ public:
 	/// <returns> Identifier define as undefined. </returns>
 	static CIdentifier undefined() { return CIdentifier(std::numeric_limits<uint64_t>::max()); }
 
-	//@}
-	/** \name Operators */
-	//@{
+	//--------------------------------------------------
+	//------------------- Operators --------------------
+	//--------------------------------------------------
 
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="id">The identifier.</param>
@@ -71,8 +72,9 @@ public:
 
 	/// <summary> Increments this identifier by 1. </summary>
 	/// <returns> himself. </returns>
-	/// <remarks> If this identifier is \c CIdentifier::undefined(), it is not incremented.\n
-	/// If this idenfitier is not \c CIdentifier::undefined(), it can not becomre \c CIdentifier::undefined() after being incremented. </remarks>
+	/// 
+	/// <remarks> If this identifier is <see cref="CIdentifier::undefined()"/>, it is not incremented.\n
+	/// If this idenfitier is not <see cref="CIdentifier::undefined()"/>, it can not become <see cref="CIdentifier::undefined()"/> after being incremented. </remarks>
 	CIdentifier& operator++();
 
 	/// <summary> Decrements this identifier by 1. </summary>
@@ -159,11 +161,14 @@ public:
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
 	bool operator>=(const T id) const { return m_id >= id; }
 
-	//@}
+	//--------------------------------------------------
+	//---------------------- Misc ----------------------
+	//--------------------------------------------------
 
 	/// <summary> Converts this identifier into a string. </summary>
+	/// <param name="hexa"> if the str is in hexadecimal with two uint32 number or in decimal mode with only one uint64 number. </param>
 	/// <returns> This identifier represented as a <c>std::string</c>. </returns>
-	std::string str() const;
+	std::string str(const bool hexa = true) const;
 
 	/// <summary> Reads a a string to extract this identifier. </summary>
 	/// <param name="str"> the string to convert. </param>

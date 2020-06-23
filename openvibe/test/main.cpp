@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 // ReSharper disable CppUnusedIncludeDirective
+#include "CIdentifierTest.hpp"
 #include "CMatrixTest.hpp"
 #include "CStimulationTest.hpp"
 #include "CTimeTest.hpp"

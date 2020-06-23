@@ -13,7 +13,9 @@
 
 #include <cmath>
 #include <sstream>
+#include "openvibe/CIdentifier.hpp"
 #include "openvibe/CTime.hpp"
+#include "openvibe/CStimulation.hpp"
 
 const std::string SEP = "\n====================\n";
 
@@ -34,7 +36,18 @@ std::string ErrorMsg(const std::string& name, const T ref, const T calc)
 	return ss.str();
 }
 
-std::string ErrorMsg(const std::string& name, const size_t ref, const size_t calc)
+/// <summary>	Error message for size_t value. </summary>
+/// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
+inline std::string ErrorMsg(const std::string& name, const size_t ref, const size_t calc)
+{
+	std::stringstream ss;
+	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
+	return ss.str();
+}
+
+/// <summary>	Error message for string value. </summary>
+/// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
+inline std::string ErrorMsg(const std::string& name, const std::string& ref, const std::string& calc)
 {
 	std::stringstream ss;
 	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
@@ -50,7 +63,18 @@ inline std::string ErrorMsg(const std::string& name, const OpenViBE::CTime& ref,
 	return ss.str();
 }
 
-std::string ErrorMsg(const std::string& name, const OpenViBE::CStimulation& ref, const OpenViBE::CStimulation& calc)
+/// <summary>	Error message for CStimulation value. </summary>
+/// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
+inline std::string ErrorMsg(const std::string& name, const OpenViBE::CStimulation& ref, const OpenViBE::CStimulation& calc)
+{
+	std::stringstream ss;
+	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
+	return ss.str();
+}
+
+/// <summary>	Error message for CIdentifier value. </summary>
+/// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
+inline std::string ErrorMsg(const std::string& name, const OpenViBE::CIdentifier& ref, const OpenViBE::CIdentifier& calc)
 {
 	std::stringstream ss;
 	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
