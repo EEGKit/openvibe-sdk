@@ -103,7 +103,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TKernelObject<IObject>, CIdentifier::undefined())
 
 protected:
 
@@ -182,26 +182,26 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier&
 {
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-	bool foundPrevious = (previousID == OV_UndefinedIdentifier);
+	bool foundPrevious = (previousID == CIdentifier::undefined());
 	for (const auto& elem : m_pluginObjectDescs)
 	{
 		if (!foundPrevious) { if (elem.first->getClassIdentifier() == previousID) { foundPrevious = true; } }
 		else { return elem.first->getClassIdentifier(); }
 	}
-	return OV_UndefinedIdentifier;
+	return CIdentifier::undefined();
 }
 
 CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& previousID, const CIdentifier& baseClassID) const
 {
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-	bool foundPrevious = (previousID == OV_UndefinedIdentifier);
+	bool foundPrevious = (previousID == CIdentifier::undefined());
 	for (const auto& elem : m_pluginObjectDescs)
 	{
 		if (!foundPrevious) { if (elem.first->getClassIdentifier() == previousID) { foundPrevious = true; } }
 		else { if (elem.first->isDerivedFromClass(baseClassID)) { return elem.first->getClassIdentifier(); } }
 	}
-	return OV_UndefinedIdentifier;
+	return CIdentifier::undefined();
 }
 
 bool CPluginManager::canCreatePluginObject(const CIdentifier& classID)
@@ -253,7 +253,7 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const CIdentifier& classID)
 		boxAlgorithmDesc->getBoxPrototype(prototype);
 		return prototype.m_hash;
 	}
-	return OV_UndefinedIdentifier;
+	return CIdentifier::undefined();
 }
 
 CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& boxAlgorithmDesc) const
@@ -357,7 +357,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& classID, 
 	uint64_t dstClassID       = srcClassID;
 	sprintf(substitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, srcClassID);
 	if ((substitutionTokenID = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(substitutionTokenName)) !=
-		OV_UndefinedIdentifier)
+		CIdentifier::undefined())
 	{
 		CString value = this->getConfigurationManager().getConfigurationTokenValue(substitutionTokenID);
 		value         = this->getConfigurationManager().expand(value);

@@ -234,7 +234,7 @@ protected:
 		Kernel::ITypeManager& m_typeManager;
 		Kernel::IConfigurationManager& m_configManager;
 		CString m_settingValue;
-		CIdentifier m_settingType = OV_UndefinedIdentifier;
+		CIdentifier m_settingType = CIdentifier::undefined();
 	};
 
 private:

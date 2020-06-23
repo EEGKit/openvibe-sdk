@@ -50,6 +50,6 @@ CIdentifier CPlayerManager::getUnusedIdentifier() const
 		id++;
 		res = CIdentifier(id);
 		i   = m_players.find(res);
-	} while (i != m_players.end() || res == OV_UndefinedIdentifier);
+	} while (i != m_players.end() || res == CIdentifier::undefined());
 	return res;
 }

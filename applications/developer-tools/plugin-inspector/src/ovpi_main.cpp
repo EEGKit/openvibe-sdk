@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
 					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
 					CIdentifier id;
-					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != OV_UndefinedIdentifier)
+					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != CIdentifier::undefined())
 					{
 						metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(id));
 					}

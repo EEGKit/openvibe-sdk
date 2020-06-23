@@ -43,7 +43,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 						"Classifier configuration in [" << filename << "] saved using an obsolete version [" << version << "] (minimum expected version = "
 						<< OVP_Classification_BoxTrainerFormatVersionRequired << ")", Kernel::ErrorType::BadVersion);
 
-	CIdentifier algorithmClassID = OV_UndefinedIdentifier;
+	CIdentifier algorithmClassID = CIdentifier::undefined();
 
 	XML::IXMLNode* tmp = rootNode->getChildByName(STRATEGY_NODE_NAME);
 
@@ -52,7 +52,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
 	//If the Identifier is undefined, that means we need to load a native algorithm
-	if (algorithmClassID == OV_UndefinedIdentifier)
+	if (algorithmClassID == CIdentifier::undefined())
 	{
 		tmp = rootNode->getChildByName(ALGORITHM_NODE_NAME);
 
@@ -61,7 +61,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 		algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
 		//If the algorithm is still unknown, that means that we face an error
-		OV_ERROR_UNLESS_KRF(algorithmClassID != OV_UndefinedIdentifier, "No classifier retrieved from configuration file [" << filename << "]",
+		OV_ERROR_UNLESS_KRF(algorithmClassID != CIdentifier::undefined(), "No classifier retrieved from configuration file [" << filename << "]",
 							Kernel::ErrorType::BadConfig);
 	}
 
@@ -92,7 +92,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 
 	const CIdentifier id = this->getAlgorithmManager().createAlgorithm(algorithmClassID);
 
-	OV_ERROR_UNLESS_KRF(id != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(id != CIdentifier::undefined(),
 						"Invalid classifier algorithm with id [" << algorithmClassID.str() << "] in configuration file [" << filename << "]",
 						Kernel::ErrorType::BadConfig);
 

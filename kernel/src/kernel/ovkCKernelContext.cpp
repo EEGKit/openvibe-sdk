@@ -168,7 +168,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 	m_typeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Error", LogLevel_Error);
 	m_typeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Fatal error", LogLevel_Fatal);
 
-	m_typeManager->registerStreamType(OV_TypeId_EBMLStream, "EBML stream", OV_UndefinedIdentifier);
+	m_typeManager->registerStreamType(OV_TypeId_EBMLStream, "EBML stream", CIdentifier::undefined());
 	m_typeManager->registerStreamType(OV_TypeId_ExperimentInfo, "Experiment information", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_Stimulations, "Stimulations", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_StreamedMatrix, "Streamed matrix", OV_TypeId_EBMLStream);
@@ -196,13 +196,13 @@ bool CKernelContext::uninitialize()
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
 	// before Plugin Manager destructor needs it.
 	CIdentifier scenarioID;
-	while ((scenarioID = m_scenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	while ((scenarioID = m_scenarioManager->getNextScenarioIdentifier(CIdentifier::undefined())) != CIdentifier::undefined())
 	{
 		m_scenarioManager->releaseScenario(scenarioID);
 	}
 
 	CIdentifier algorithmIdentifier;
-	while ((algorithmIdentifier = m_algorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	while ((algorithmIdentifier = m_algorithmManager->getNextAlgorithmIdentifier(CIdentifier::undefined())) != CIdentifier::undefined())
 	{
 		m_algorithmManager->releaseAlgorithm(algorithmIdentifier);
 	}

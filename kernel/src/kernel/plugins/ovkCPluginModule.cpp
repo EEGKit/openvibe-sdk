@@ -29,7 +29,7 @@ public:
 	bool uninitialize() override;
 	bool getFileName(CString& fileName) const override;
 
-	_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, CIdentifier::undefined())
 
 protected:
 

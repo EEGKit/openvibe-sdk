@@ -37,10 +37,10 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 	op_configuration = nullptr;
 
 	TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
-	ip_pPairwise = OV_UndefinedIdentifier.id();
+	ip_pPairwise = CIdentifier::undefined().id();
 
 	m_decisionStrategyAlgorithm = nullptr;
-	m_pairwiseDecisionID        = OV_UndefinedIdentifier;
+	m_pairwiseDecisionID        = CIdentifier::undefined();
 
 	return CAlgorithmPairingStrategy::initialize();
 }
@@ -81,7 +81,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 	m_pairwiseDecisionID = this->getEnumerationParameter(
 		OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, OVP_TypeId_ClassificationPairwiseStrategy);
 
-	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != CIdentifier::undefined(),
 						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.str() << "]",
 						Kernel::ErrorType::BadConfig);
 
@@ -257,7 +257,7 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 			const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 			OV_ERROR_UNLESS_KRF(
-				subClassifierAlgorithm != OV_UndefinedIdentifier,
+				subClassifierAlgorithm != CIdentifier::undefined(),
 				"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.str() << "]",
 				Kernel::ErrorType::BadConfig);
 

@@ -136,7 +136,7 @@ bool CSimulatedBox::processClock()
 			if (m_lastClockActivationDate == CTime::max()) { m_lastClockActivationDate = m_scheduler.getCurrentTime(); }
 			else { m_lastClockActivationDate = m_lastClockActivationDate + m_clockActivationStep; }
 
-			CMessage message(OV_UndefinedIdentifier, m_lastClockActivationDate);
+			CMessage message(CIdentifier::undefined(), m_lastClockActivationDate);
 
 			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processClock(context, message),
 								"Box algorithm <" << m_box->getName() << "> processClock() function failed", ErrorType::Internal);

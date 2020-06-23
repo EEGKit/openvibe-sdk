@@ -12,8 +12,8 @@ namespace Kernel {
 typedef struct _InterfacorRequest
 {
 	size_t index           = size_t(-1);
-	CIdentifier identifier = OV_UndefinedIdentifier;
-	CIdentifier typeID     = OV_UndefinedIdentifier;
+	CIdentifier identifier = CIdentifier::undefined();
+	CIdentifier typeID     = CIdentifier::undefined();
 	CString name;
 	bool toBeRemoved;
 

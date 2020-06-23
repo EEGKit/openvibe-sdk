@@ -43,7 +43,7 @@ protected:
 	bool m_doNotUseFileTime = false;
 	CString m_filename;
 
-	CIdentifier m_typeID       = OV_UndefinedIdentifier;
+	CIdentifier m_typeID       = CIdentifier::undefined();
 	size_t m_nCol              = 0;
 	size_t m_sampling          = 0;
 	size_t m_samplesPerBuffer  = 0;
@@ -71,7 +71,7 @@ class CBoxAlgorithmCSVFileReaderListener final : public Toolkit::TBoxListener<IB
 public:
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 		if (typeID == OV_TypeId_Spectrum)
 		{
@@ -109,7 +109,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmCSVFileReaderDesc final : virtual public IBoxAlgorithmDesc

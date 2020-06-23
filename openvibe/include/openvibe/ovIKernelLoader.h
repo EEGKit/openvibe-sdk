@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ovIObject.h"
+#include "ovCString.h"
 
 namespace OpenViBE {
 namespace Kernel {

@@ -44,7 +44,7 @@ using namespace /*OpenViBE::*/Plugins;
 //                                                                   //
 
 CScheduler::CScheduler(const IKernelContext& ctx, CPlayer& player)
-	: TKernelObject<IKernelObject>(ctx), m_rPlayer(player), m_scenarioID(OV_UndefinedIdentifier) {}
+	: TKernelObject<IKernelObject>(ctx), m_rPlayer(player), m_scenarioID(CIdentifier::undefined()) {}
 
 CScheduler::~CScheduler() { this->uninitialize(); }
 
@@ -199,7 +199,7 @@ bool CScheduler::flattenScenario()
 				box->getSettingValue(idx, value);
 				box->getInterfacorIdentifier(Setting, idx, id);
 
-				if (id != OV_UndefinedIdentifier) { metaboxScenarioInstance.setSettingValue(id, value); }
+				if (id != CIdentifier::undefined()) { metaboxScenarioInstance.setSettingValue(id, value); }
 				else { metaboxScenarioInstance.setSettingValue(idx, value); }
 			}
 
@@ -251,14 +251,14 @@ bool CScheduler::flattenScenario()
 					CIdentifier metaBoxInputID = link->getTargetBoxInputIdentifier();
 					size_t metaBoxInputIdx     = link->getTargetBoxInputIndex();
 
-					if (metaBoxInputID != OV_UndefinedIdentifier) { metaboxScenarioInstance.getInterfacorIndex(Input, metaBoxInputID, metaBoxInputIdx); }
+					if (metaBoxInputID != CIdentifier::undefined()) { metaboxScenarioInstance.getInterfacorIndex(Input, metaBoxInputID, metaBoxInputIdx); }
 					OV_ERROR_UNLESS_KRF(metaBoxInputIdx != size_t(-1), "Failed to find metabox input with identifier " << metaBoxInputID.str(),
 										ErrorType::ResourceNotFound);
 					metaboxScenarioInstance.getScenarioInputLink(metaBoxInputIdx, dstBoxID, dstBoxInputIdx);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
-					CIdentifier dstBoxInputID = OV_UndefinedIdentifier;
-					if (dstBoxID != OV_UndefinedIdentifier)
+					CIdentifier dstBoxInputID = CIdentifier::undefined();
+					if (dstBoxID != CIdentifier::undefined())
 					{
 						m_scenario->getBoxDetails(correspondenceID[dstBoxID])->getInterfacorIdentifier(Input, dstBoxInputIdx, dstBoxInputID);
 						link->setTarget(correspondenceID[dstBoxID], dstBoxInputIdx, dstBoxInputID);
@@ -281,14 +281,14 @@ bool CScheduler::flattenScenario()
 					CIdentifier metaBoxOutputID = link->getSourceBoxOutputIdentifier();
 					size_t metaBoxOutputIdx     = link->getSourceBoxOutputIndex();
 
-					if (metaBoxOutputID != OV_UndefinedIdentifier) { metaboxScenarioInstance.getInterfacorIndex(Output, metaBoxOutputID, metaBoxOutputIdx); }
+					if (metaBoxOutputID != CIdentifier::undefined()) { metaboxScenarioInstance.getInterfacorIndex(Output, metaBoxOutputID, metaBoxOutputIdx); }
 					OV_ERROR_UNLESS_KRF(metaBoxOutputIdx != size_t(-1),
 										"Failed to find metabox input with identifier " << metaBoxOutputID.str(), ErrorType::ResourceNotFound);
 					metaboxScenarioInstance.getScenarioOutputLink(metaBoxOutputIdx, srcBoxID, srcBoxOutputIdx);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
-					CIdentifier srcBoxOutputID = OV_UndefinedIdentifier;
-					if (srcBoxID != OV_UndefinedIdentifier)
+					CIdentifier srcBoxOutputID = CIdentifier::undefined();
+					if (srcBoxID != CIdentifier::undefined())
 					{
 						m_scenario->getBoxDetails(correspondenceID[srcBoxID])->getInterfacorIdentifier(
 							Output, srcBoxOutputIdx, srcBoxOutputID);
@@ -318,7 +318,7 @@ ESchedulerInitialization CScheduler::initialize()
 
 	OV_ERROR_UNLESS_K(m_scenario, "Failed to find scenario with id " << m_scenarioID.str(), ErrorType::ResourceNotFound, ESchedulerInitialization::Failed);
 
-	OV_ERROR_UNLESS_K(m_scenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_K(m_scenario->getNextBoxIdentifier(CIdentifier::undefined()) != CIdentifier::undefined(),
 					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, ESchedulerInitialization::Failed);
 
 	CBoxSettingModifierVisitor boxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
@@ -631,7 +631,7 @@ double CScheduler::getFastForwardMaximumFactor() const { return m_rPlayer.getFas
 
 void CScheduler::handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception)
 {
-	CIdentifier dstBoxID = OV_UndefinedIdentifier;
+	CIdentifier dstBoxID = CIdentifier::undefined();
 	box->getBoxIdentifier(dstBoxID);
 
 	box->getLogManager() << LogLevel_Error << "Exception caught in box\n";

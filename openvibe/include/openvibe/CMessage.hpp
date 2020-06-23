@@ -24,8 +24,18 @@ public:
 	CMessage(const CIdentifier& id, const CTime& time) : m_ID(id), m_Time(time) {}	///< Specific Constructor.
 	~CMessage() = default;	///< Default Destructor.
 
+	/// <summary> Override the ostream operator. </summary>
+	/// <param name="os"> The ostream. </param>
+	/// <param name="obj"> The object. </param>
+	/// <returns> Return the modified ostream. </returns>
+	friend std::ostream& operator<<(std::ostream& os, const CMessage& obj)
+	{
+		os << obj.m_ID << ", at " << obj.m_Time;
+		return os;
+	}
+	
 	//----- Members (useless to protect members) -----
-	CIdentifier m_ID = OV_UndefinedIdentifier;	///< The Id of the message
-	CTime m_Time;								///< The time of the message
+	CIdentifier m_ID = CIdentifier::undefined();	///< The Id of the message
+	CTime m_Time;									///< The time of the message
 };
 }  // namespace OpenViBE

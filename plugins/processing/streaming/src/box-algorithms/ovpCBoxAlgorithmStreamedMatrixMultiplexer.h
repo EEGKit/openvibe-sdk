@@ -38,7 +38,7 @@ public:
 
 	bool onInputAdded(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 		box.setInputType(index, typeID);
 		return this->check(box);
@@ -46,7 +46,7 @@ public:
 
 	bool onInputRemoved(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 
 		while (box.getInputCount() < 2) { box.addInput("", typeID); }
@@ -56,7 +56,7 @@ public:
 
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 
 		if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
@@ -76,7 +76,7 @@ public:
 
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 
 		if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
@@ -92,7 +92,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmStreamedMatrixMultiplexerDesc final : virtual public IBoxAlgorithmDesc

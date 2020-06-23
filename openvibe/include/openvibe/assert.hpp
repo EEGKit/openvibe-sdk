@@ -8,7 +8,7 @@
 /// Most OpenViBE API functions communicates a failure occurrence through their return value (false boolean, null pointer, bad identifier...).  
 /// A fatal event should be triggered when failure impacting the sanity of the system occurs and it is impossible to recover from it.
 /// 
-/// \author Charles Garraud (Inria).
+/// \author Charles Garraud (Inria) & Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 20/07/2016.
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
@@ -140,12 +140,12 @@ do { if (!(expression)) { OV_ERROR(description, type, returnValue, errorManager,
  * \def OV_ERROR_KRO(description, type)
  * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for error macro that returns OV_UndefinedIdentifier and launched by objects that have direct access to kernel logger
+ * Shorthand for error macro that returns CIdentifier::undefined() and launched by objects that have direct access to kernel logger
  * and error managers through this->getLogManager() and this->getErrorManager().
  *
  * Suffix KRU stands for Kernel Return Undefined.
  */
-#define OV_ERROR_KRU(description, type) OV_ERROR(description, type, OV_UndefinedIdentifier, this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_KRU(description, type) OV_ERROR(description, type, CIdentifier::undefined(), this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_KRV(description, type)
@@ -206,12 +206,12 @@ do { if (!(expression)) { OV_ERROR(description, type, returnValue, errorManager,
  * \def OV_ERROR_UNLESS_KRU(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for conditional error macro that returns OV_UndefinedIdentifier and launched by objects that have direct access to kernel logger
+ * Shorthand for conditional error macro that returns CIdentifier::undefined() and launched by objects that have direct access to kernel logger
  * and error managers through this->getLogManager() and this->getErrorManager().
  *
  * Suffix KRU stands for Kernel Return Undefined.
  */
-#define OV_ERROR_UNLESS_KRU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, OV_UndefinedIdentifier, this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_UNLESS_KRU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, CIdentifier::undefined(), this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_UNLESS_KRV(expression, description, type)

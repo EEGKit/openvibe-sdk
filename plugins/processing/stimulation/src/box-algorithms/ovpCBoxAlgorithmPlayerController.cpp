@@ -57,20 +57,16 @@ bool CBoxAlgorithmPlayerController::process()
 				if (stimSet[j].m_ID == m_stimulationID)
 				{
 					getLogManager() << LogLevel_Trace << "Received stimulation ["
-							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) <<
-							"] causing action ["
+							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) << "] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]\n";
 
 					bool res = false;
-					if (m_actionID == OV_TypeId_PlayerAction_Play) { res = getPlayerContext().play(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Stop) { res = getPlayerContext().stop(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Pause) { res = getPlayerContext().pause(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = getPlayerContext().forward(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Play.id()) { res = getPlayerContext().play(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Stop.id()) { res = getPlayerContext().stop(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Pause.id()) { res = getPlayerContext().pause(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Forward.id()) { res = getPlayerContext().forward(); }
 
-					OV_ERROR_UNLESS_KRF(res,
-										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
-											m_actionID) << "]",
-										Kernel::ErrorType::BadConfig);
+					OV_ERROR_UNLESS_KRF(res, "Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]", Kernel::ErrorType::BadConfig);
 				}
 			}
 		}

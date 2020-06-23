@@ -196,7 +196,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 {
 	const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
-	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != CIdentifier::undefined(),
 						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.str() << "]",
 						Kernel::ErrorType::BadConfig);
 

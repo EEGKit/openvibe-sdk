@@ -35,7 +35,7 @@ class CBoxAlgorithmSpatialFilterListener final : public Toolkit::TBoxListener<IB
 public:
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(0, typeID);
 		box.setOutputType(0, typeID);
 		return true;
@@ -43,13 +43,13 @@ public:
 
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 		box.setInputType(0, typeID);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmSpatialFilterDesc final : public IBoxAlgorithmDesc

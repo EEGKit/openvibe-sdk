@@ -36,7 +36,7 @@ class CBoxAlgorithmChannelSelectorListener final : public Toolkit::TBoxListener<
 public:
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 		if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix)
 		{
@@ -51,7 +51,7 @@ public:
 
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(0, typeID);
 		if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum
 			|| typeID == OV_TypeId_StreamedMatrix)
@@ -75,7 +75,7 @@ public:
 			box.getSettingValue(0, channels);
 
 			CString method;
-			CIdentifier enumID = OV_UndefinedIdentifier;
+			CIdentifier enumID = CIdentifier::undefined();
 			box.getSettingValue(1, method);
 			box.getSettingType(1, enumID);
 
@@ -111,7 +111,7 @@ public:
 private:
 	bool m_hasUserSetName = false;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmChannelSelectorDesc final : public IBoxAlgorithmDesc

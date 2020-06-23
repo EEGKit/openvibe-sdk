@@ -6,6 +6,7 @@
 /// The functions in this file should be only used in bootstrapping circumstances where Configuration Manager (Kernel Context) is not available.
 /// With access to Configuration Manager, the paths should be fetched using tokens such as ${Path_UserData}. Note that in such a case changing the environment variable later may no longer be affected in the token value.
 /// 
+/// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
 /// \remarks These functions may not be thread-safe

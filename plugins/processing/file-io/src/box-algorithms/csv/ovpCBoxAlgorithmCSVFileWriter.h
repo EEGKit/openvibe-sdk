@@ -35,7 +35,7 @@ protected:
 	std::ofstream m_fileStream;
 
 	CString m_separator;
-	CIdentifier m_typeID                                = OV_UndefinedIdentifier;
+	CIdentifier m_typeID                                = CIdentifier::undefined();
 	bool m_firstBuffer                                  = false;
 	bool (CBoxAlgorithmCSVFileWriter::*m_realProcess)() = nullptr;
 
@@ -51,7 +51,7 @@ class CBoxAlgorithmCSVFileWriterListener final : public Toolkit::TBoxListener<IB
 {
 public:
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmCSVFileWriterDesc final : public IBoxAlgorithmDesc

@@ -32,7 +32,7 @@ private:
 
 	std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_writerLib;
 
-	CIdentifier m_typeID = OV_UndefinedIdentifier;
+	CIdentifier m_typeID = CIdentifier::undefined();
 
 	Toolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
 	Toolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
@@ -53,7 +53,7 @@ public:
 	{
 		if (index == 1)
 		{
-			CIdentifier typeID = OV_UndefinedIdentifier;
+			CIdentifier typeID = CIdentifier::undefined();
 			box.getInputType(1, typeID);
 			if (typeID != OV_TypeId_Stimulations)
 			{
@@ -65,7 +65,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc

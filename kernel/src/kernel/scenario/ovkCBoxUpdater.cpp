@@ -87,7 +87,7 @@ bool CBoxUpdater::initialize()
 
 	// initialize updated box attribute to kernel ones
 	CIdentifier attributeIdentifier;
-	while ((attributeIdentifier = m_kernelBox->getNextAttributeIdentifier(attributeIdentifier)) != OV_UndefinedIdentifier)
+	while ((attributeIdentifier = m_kernelBox->getNextAttributeIdentifier(attributeIdentifier)) != CIdentifier::undefined())
 	{
 		CString attributeValue = m_kernelBox->getAttributeValue(attributeIdentifier);
 		m_updatedBox->addAttribute(attributeIdentifier, attributeValue);
@@ -288,7 +288,7 @@ bool CBoxUpdater::updateInterfacors(const EBoxInterfacorType interfacorType)
 size_t CBoxUpdater::getInterfacorIndex(const EBoxInterfacorType type, const IBox& box, const CIdentifier& typeID, const CIdentifier& id, const CString& name)
 {
 	size_t index = size_t(-1);
-	if (id != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(type, id)) { box.getInterfacorIndex(type, id, index); }
+	if (id != CIdentifier::undefined() && box.hasInterfacorWithIdentifier(type, id)) { box.getInterfacorIndex(type, id, index); }
 	else if (box.hasInterfacorWithNameAndType(type, name, typeID)) { box.getInterfacorIndex(type, name, index); }
 
 	return index;

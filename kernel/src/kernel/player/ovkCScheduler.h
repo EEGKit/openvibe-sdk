@@ -45,7 +45,7 @@ public:
 protected:
 
 	CPlayer& m_rPlayer;
-	CIdentifier m_scenarioID = OV_UndefinedIdentifier;
+	CIdentifier m_scenarioID = CIdentifier::undefined();
 	IScenario* m_scenario    = nullptr;
 	size_t m_steps           = 0;
 	uint64_t m_frequency     = 0;

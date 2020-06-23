@@ -13,7 +13,7 @@ namespace Kernel {
 			class _CName_ : public _Base_##_CName_ \
 			{ \
 			public: \
-				_CName_(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = OV_UndefinedIdentifier) \
+				_CName_(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = CIdentifier::undefined()) \
 					:TBaseParameter < TKernelObject < IParameter >, IType >(ctx, eParameterType, subTypeID) \
 				{ \
 					m_defaultValue = 0; \

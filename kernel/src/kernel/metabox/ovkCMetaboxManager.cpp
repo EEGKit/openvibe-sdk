@@ -30,7 +30,7 @@ public:
 
 			CIdentifier scenarioID, metaboxId, metaboxHash;
 			this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
-			if (scenarioID != OV_UndefinedIdentifier)
+			if (scenarioID != CIdentifier::undefined())
 			{
 				IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
 				const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID).toASCIIString());
@@ -65,7 +65,7 @@ public:
 		return res;
 	}
 
-	_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TKernelObject<IObject>, CIdentifier::undefined())
 protected:
 	CMetaboxManager& m_manager;
 	size_t m_n;
@@ -108,11 +108,11 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 
 CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& previousID) const
 {
-	if (m_objectDesc.empty()) { return OV_UndefinedIdentifier; }
-	if (previousID == OV_UndefinedIdentifier) { return m_objectDesc.begin()->first; }
+	if (m_objectDesc.empty()) { return CIdentifier::undefined(); }
+	if (previousID == CIdentifier::undefined()) { return m_objectDesc.begin()->first; }
 
 	const auto result = m_objectDesc.find(previousID);
-	if (result == m_objectDesc.end() || std::next(result, 1) == m_objectDesc.end()) { return OV_UndefinedIdentifier; }
+	if (result == m_objectDesc.end() || std::next(result, 1) == m_objectDesc.end()) { return CIdentifier::undefined(); }
 	return std::next(result, 1)->first;
 }
 
@@ -135,7 +135,7 @@ void CMetaboxManager::setMetaboxFilePath(const CIdentifier& metaboxID, const CSt
 CIdentifier CMetaboxManager::getMetaboxHash(const CIdentifier& metaboxID) const
 {
 	const auto resultIt = m_hash.find(metaboxID);
-	return resultIt != m_hash.end() ? resultIt->second : OV_UndefinedIdentifier;
+	return resultIt != m_hash.end() ? resultIt->second : CIdentifier::undefined();
 }
 
 void CMetaboxManager::setMetaboxHash(const CIdentifier& metaboxID, const CIdentifier& hash) { m_hash[metaboxID] = hash; }

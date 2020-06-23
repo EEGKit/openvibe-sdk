@@ -122,7 +122,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 			{
 				getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << name << "] = [" << value << "].\n";
 				CIdentifier tokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
-				if (tokenID == OV_UndefinedIdentifier) { m_runtimeConfigManager->createConfigurationToken(name, value); }
+				if (tokenID == CIdentifier::undefined()) { m_runtimeConfigManager->createConfigurationToken(name, value); }
 				else { m_runtimeConfigManager->setConfigurationTokenValue(tokenID, value); }
 			}
 				// This should not happen

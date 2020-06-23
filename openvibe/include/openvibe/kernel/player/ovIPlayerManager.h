@@ -52,8 +52,8 @@ public:
 	 * \param previousID [in] : The identifier
 	 *        for the preceeding player
 	 * \return The identifier of the next player in case of success.
-	 * \return \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \return \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first player
 	 *       identifier.
 	 */

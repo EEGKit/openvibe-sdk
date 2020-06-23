@@ -53,7 +53,7 @@ public:
 
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 		box.setOutputType(index, typeID);
 		return true;
@@ -76,13 +76,13 @@ public:
 
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 		box.setInputType(index, typeID);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmIdentityDesc final : public IBoxAlgorithmDesc

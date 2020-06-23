@@ -278,7 +278,7 @@ public:
 
 	virtual bool onInputTypeChanged(Kernel::IBox& box, const size_t index)
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 		if (this->isValidInputType(typeID, index)) { box.setOutputType(index, typeID); }
 		else
@@ -297,7 +297,7 @@ public:
 
 	virtual bool onOutputTypeChanged(Kernel::IBox& box, const size_t index)
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 		if (this->isValidOutputType(typeID, index)) { box.setInputType(index, typeID); }
 		else
@@ -308,7 +308,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(T, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(T, CIdentifier::undefined())
 
 private:
 

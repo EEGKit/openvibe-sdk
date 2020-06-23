@@ -19,7 +19,7 @@ bool CMetadata::setIdentifier(const CIdentifier& identifier)
 						"Metadata [" << m_id << "] in scenario [" << m_ownerScenario.getIdentifier() << "]  already has an identifier.",
 						ErrorType::BadCall);
 
-	OV_ERROR_UNLESS_KRF(identifier != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(identifier != CIdentifier::undefined(),
 						"Attempted to assign undefined identifier to Metadata in scenario [" << m_ownerScenario.getIdentifier() << "].",
 						ErrorType::BadArgument);
 

@@ -2,6 +2,7 @@
 /// 
 /// \file ov_all.hpp
 /// \brief All includes of OpenViBE base.
+/// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
 /// 
@@ -15,11 +16,11 @@
 #include "defines.hpp"
 #include "directories.hpp"
 
+#include "CIdentifier.hpp"
 #include "CTime.hpp"
 #include "CMessage.hpp"
 #include "CStimulationSet.hpp"
 
-#include "CIdentifier.hpp"
 #include "ovCString.h"
 #include "ovCNameValuePairList.h"
 

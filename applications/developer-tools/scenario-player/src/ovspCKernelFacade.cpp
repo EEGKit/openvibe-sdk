@@ -280,7 +280,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 		if (std::find(scenarios.begin(), scenarios.end(), name) == scenarios.end()) { continue; } // not in the list of scenario to run 
 
 		CIdentifier id;
-		if (!playerManager.createPlayer(id) || id == OV_UndefinedIdentifier)
+		if (!playerManager.createPlayer(id) || id == CIdentifier::undefined())
 		{
 			std::cerr << "ERROR: impossible to create player" << std::endl;
 			returnCode = EPlayerReturnCodes::KernelInternalFailure;

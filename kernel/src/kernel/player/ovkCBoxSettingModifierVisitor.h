@@ -32,7 +32,7 @@ public:
 	bool m_IsParsingSettingOverride           = false;
 	IConfigurationManager* m_ConfigManager    = nullptr;
 
-	_IsDerivedFromClass_Final_(IObjectVisitor, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IObjectVisitor, CIdentifier::undefined())
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

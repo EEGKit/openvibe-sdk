@@ -12,7 +12,7 @@ class CMetadata final : public TKernelObject<IMetadata>
 public:
 
 	CMetadata(const IKernelContext& ctx, CScenario& ownerScenario)
-		: TKernelObject<IMetadata>(ctx), m_ownerScenario(ownerScenario), m_id(OV_UndefinedIdentifier), m_type(OV_UndefinedIdentifier), m_data("") {}
+		: TKernelObject<IMetadata>(ctx), m_ownerScenario(ownerScenario), m_id(CIdentifier::undefined()), m_type(CIdentifier::undefined()), m_data("") {}
 	~CMetadata() override {}
 
 	CIdentifier getIdentifier() const override { return m_id; }
@@ -32,8 +32,8 @@ private:
 
 	CScenario& m_ownerScenario;
 
-	CIdentifier m_id   = OV_UndefinedIdentifier;
-	CIdentifier m_type = OV_UndefinedIdentifier;
+	CIdentifier m_id   = CIdentifier::undefined();
+	CIdentifier m_type = CIdentifier::undefined();
 	CString m_data;
 };
 }  // namespace Kernel

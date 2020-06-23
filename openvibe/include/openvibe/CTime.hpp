@@ -145,7 +145,7 @@ public:
 	/// <param name="time"> The time to compare. </param>
 	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
 	bool operator>=(const CTime& time) const { return m_time >= time.m_time; }
-
+	
 	//---------- With Template ----------
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="time">The time.</param>

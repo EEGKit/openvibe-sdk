@@ -17,7 +17,7 @@ struct SBoxProto final : IBoxProto
 		swap_byte(v, m_inputCountHash);
 		swap_byte(m_inputCountHash, 0x7936A0F3BD12D936LL);
 		m_hash = m_hash.id() ^ v;
-		if (id != OV_UndefinedIdentifier)
+		if (id != CIdentifier::undefined())
 		{
 			v = id.id();
 			swap_byte(v, 0x2BD1D158F340014D);
@@ -32,7 +32,7 @@ struct SBoxProto final : IBoxProto
 		swap_byte(v, m_outputCountHash);
 		swap_byte(m_outputCountHash, 0xCBB66A5B893AA4E9LL);
 		m_hash = m_hash.id() ^ v;
-		if (id != OV_UndefinedIdentifier)
+		if (id != CIdentifier::undefined())
 		{
 			v = id.id();
 			swap_byte(v, 0x87CA0F5EFC4FAC68);
@@ -48,7 +48,7 @@ struct SBoxProto final : IBoxProto
 		swap_byte(v, m_settingCountHash);
 		swap_byte(m_settingCountHash, 0x3C87F3AAE9F8303BLL);
 		m_hash = m_hash.id() ^ v;
-		if (id != OV_UndefinedIdentifier)
+		if (id != CIdentifier::undefined())
 		{
 			v = id.id();
 			swap_byte(v, 0x17185F7CDA63A9FA);
@@ -120,7 +120,7 @@ struct SBoxProto final : IBoxProto
 	bool addFlag(const CIdentifier& flagId) override
 	{
 		const uint64_t value = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, flagId.str().c_str());
-		if (value == OV_UndefinedIdentifier) { return false; }
+		if (value == CIdentifier::undefined().id()) { return false; }
 		// Flags do not modify internal hash
 		//m_hash=m_hash.id() ^ flagId.id();
 		return true;
@@ -143,9 +143,9 @@ struct SBoxProto final : IBoxProto
 		System::Memory::littleEndianToHost(v2, &v);
 	}
 
-	_IsDerivedFromClass_Final_(IBoxProto, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IBoxProto, CIdentifier::undefined())
 
-	CIdentifier m_hash          = OV_UndefinedIdentifier;
+	CIdentifier m_hash          = CIdentifier::undefined();
 	bool m_isDeprecated         = false;
 	uint64_t m_inputCountHash   = 0x64AC3CB54A35888CLL;
 	uint64_t m_outputCountHash  = 0x21E0FAAFE5CAF1E1LL;

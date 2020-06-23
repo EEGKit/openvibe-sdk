@@ -116,7 +116,7 @@ public:
 	/**
 	 * \brief Reaction to an event launched by another box
 	 * \param ctx [in] : the box algorithm context to use
-	 * \param msgEvent [in] : the message the box just received
+	 * \param msg [in] : the message the box just received
 	 * \return \e true when the message is processed.
 	 * \return \e false when the message is not processed.
 	 * \note Default implementation returns \e false
@@ -129,11 +129,11 @@ public:
 	 *
 	 * \sa IBoxAlgorithmContext
 	 */
-	virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgEvent) { return false; }
+	virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessage& msg) { return false; }
 	/**
 	 * \brief Reaction to a signal
 	 * \param ctx [in] : the box algorithm context to use
-	 * \param msgSignal [in] : the signal the box just received
+	 * \param msg [in] : the signal the box just received
 	 * \return \e true when the message is processed.
 	 * \return \e false when the message is not processed.
 	 * \note Default implementation returns \e false
@@ -147,11 +147,11 @@ public:
 	 *
 	 * \sa Kernel::IBoxAlgorithmContext
 	 */
-	virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgSignal) { return false; }
+	virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessage& msg) { return false; }
 	/**
 	 * \brief Reaction to a clock tick
 	 * \param ctx [in] : the box algorithm context to use
-	 * \param msgClock [in] : the clock message the box received
+	 * \param msg [in] : the clock message the box received
 	 * \return \e true when the message is processed.
 	 * \return \e false when the message is not processed.
 	 * \note Default implementation returns \e false
@@ -168,7 +168,7 @@ public:
 	 * \sa Kernel::IBoxAlgorithmContext
 	 * \sa getClockFrequency
 	 */
-	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessage& msgClock) { return false; }
+	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessage& msg) { return false; }
 	/**
 	 * \brief Reaction to an input update
 	 * \param ctx [in] : the box algorithm context to use
@@ -223,7 +223,6 @@ public:
 	void release() override { }
 
 	virtual bool initialize(Kernel::IBoxListenerContext& /*boxListenerCtx*/) { return true; }
-
 	virtual bool uninitialize(Kernel::IBoxListenerContext& /*boxListenerCtx*/) { return true; }
 
 	/** \name Box modifications callbacks */
@@ -233,10 +232,8 @@ public:
 	 * \brief This callback is called when the box is modified in some way
 	 * \return \e true in case of success.
 	 * \return \e false in case of error.
-	 * \param boxListenerCtx [in] : the box listener context
-	 *        containing the description of the box
-	 * \param boxModificationType [in] : the type of modification
-	 *        applied to the box
+	 * \param boxListenerCtx [in] : the box listener context containing the description of the box
+	 * \param boxModificationType [in] : the type of modification applied to the box
 	 *
 	 * This function is called as soon as a modification is done
 	 * on the box which this listener is attached to. The box listener

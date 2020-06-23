@@ -2,7 +2,7 @@
 /// 
 /// \file CIdentifier.hpp
 /// \brief Globally used identification class.
-/// \author  Yann Renard (INRIA/IRISA).
+/// \author  Yann Renard (INRIA/IRISA) & Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 16/06/2006.
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
@@ -11,11 +11,8 @@
 #pragma once
 
 #include "defines.hpp"
-#include "ovCString.h"
 #include <limits>
 #include <string>
-
-#define OV_UndefinedIdentifier	OpenViBE::CIdentifier(0xffffffff, 0xffffffff)
 
 namespace OpenViBE {
 
@@ -39,8 +36,8 @@ public:
 	/** \name Constructors */
 	//@{
 
-	/// <summary> Default constructor.\n Builds up the 64 bits identifier initialized to \c undefined.</summary>
-	CIdentifier() : m_id(std::numeric_limits<uint64_t>::max()) {}
+	/// <summary> Default constructor.\n Builds up the 64 bits identifier initialized to <c>undefined</c>. </summary>
+	CIdentifier() : m_id(undefined().id()) {}
 
 	/// <summary> 32 bits integer based constructor.\n Builds up the 64 bits identifier given its two 32 bits components. </summary>
 	/// <param name="id1">The first part of the identifier.</param>
@@ -50,10 +47,10 @@ public:
 	/// <summary> 64 bits integer based constructor. </summary>
 	/// <param name="id"> The identifier. </param>
 	CIdentifier(const uint64_t id) : m_id(id) {}
-	
+
 	/// <summary> string based constructor. </summary>
 	/// <param name="str"> The string with identifier. </param>
-	CIdentifier(const std::string& str) { fromString(str); }
+	CIdentifier(const std::string& str) { if (!fromString(str)) { m_id = undefined().id(); } }
 
 	/// <summary> Copy constructor.\n Builds up the 64 bits identifier exacly the same as given identifier parameter. </summary>
 	/// <param name="id"> the identifier to initialize this identifier from. </param>
@@ -67,135 +64,121 @@ public:
 	/** \name Operators */
 	//@{
 
-	/**
-	 * \brief Affectation operator
-	 * \param id [in] : the identifier to initialize
-	 *        this identifier from
-	 * \return this identifier
-	 *
-	 * Reinitializes the 64 bits identifier exactly the same as
-	 * given identifier parameter.
-	 */
+	/// <summary> Copy Assignment Operator. </summary>
+	/// <param name="id">The identifier.</param>
+	/// <returns> himself. </returns>
 	CIdentifier& operator=(const CIdentifier& id);
-	/**
-	 * \brief Increments this identifier by 1
-	 * \return this identifier
-	 * \note if this identifier is \c OV_UndefinedIdentifier, it is not incremented
-	 * \note if this idenfitier is not \c OV_UndefinedIdentifier, it can not becomre \c OV_UndefinedIdentifier after being incremented
-	 */
+
+	/// <summary> Increments this identifier by 1. </summary>
+	/// <returns> himself. </returns>
+	/// <remarks> If this identifier is \c CIdentifier::undefined(), it is not incremented.\n
+	/// If this idenfitier is not \c CIdentifier::undefined(), it can not becomre \c CIdentifier::undefined() after being incremented. </remarks>
 	CIdentifier& operator++();
-	/**
-	 * \brief Decrements this identifier by 1
-	 * \return this identifier
-	 * \note if this identifier is \c OV_UndefinedIdentifier, it is not decremented
-	 * \note if this idenfitier is not \c OV_UndefinedIdentifier, it can not becomre \c OV_UndefinedIdentifier after being decremented
-	 */
+
+	/// <summary> Decrements this identifier by 1. </summary>
+	/// <returns> himself. </returns>
+	/// <remarks> If this identifier is \c CIdentifier::undefined(), it is not decremented.\n
+	/// If this idenfitier is not \c CIdentifier::undefined(), it can not become \c CIdentifier::undefined() after being decremented. </remarks>
 	CIdentifier& operator--();
-	/**
-	 * \brief Equality test operator
-	 * \param id1 [in] : the first identifier to compare
-	 * \param id2 [in] : the second identifier to compare
-	 * \return \e true if the two identifiers are equal,
-	 * \return \e false if the two identifiers are different
-	 *
-	 * Compares both 32 bits parts of the two identifiers and
-	 * checks if those are equal or not.
-	 *
-	 * \sa operator!=
-	 */
-	friend OV_API bool operator==(const CIdentifier& id1, const CIdentifier& id2);
-	/**
-	 * \brief Difference test operator
-	 * \param id1 [in] : the first identifier to compare
-	 * \param id2 [in] : the second identifier to compare
-	 * \return \e true if the two identifiers are different,
-	 * \return \e false if the two identifiers are equal
-	 *
-	 * Compares both 32 bits parts of the two identifiers and
-	 * checks if those are equal or not.
-	 *
-	 * \sa operator==
-	 */
-	friend OV_API bool operator!=(const CIdentifier& id1, const CIdentifier& id2);
-	/**
-	 * \brief Order test operator
-	 * \param id1 [in] : the first identifier to compare
-	 * \param id2 [in] : the second identifier to compare
-	 * \return \e true if the first identifier is less than the second one
-	 * \return \e false if the first identifier is greater or equal to the second one
-	 *
-	 * Compares both 32 bits parts of the two identifiers.
-	 *
-	 * \sa operator>
-	 * \sa operator==
-	 */
-	friend OV_API bool operator<(const CIdentifier& id1, const CIdentifier& id2);
-	/**
-	 * \brief Order test operator
-	 * \param id1 [in] : the first identifier to compare
-	 * \param id2 [in] : the second identifier to compare
-	 * \return \e true if the first identifier is greater than the second one
-	 * \return \e false if the first identifier is less or equal to the second one
-	 *
-	 * Compares both 32 bits parts of the two identifiers.
-	 *
-	 * \sa operator<
-	 * \sa operator==
-	 */
-	friend OV_API bool operator>(const CIdentifier& id1, const CIdentifier& id2);
-	/**
-	 * \brief Order test operator
-	 * \param id1 [in] : the first identifier to compare
-	 * \param id2 [in] : the second identifier to compare
-	 * \return \e true if the first identifier is less or equal than the second one
-	 * \return \e false if the first identifier is greater to the second one
-	 *
-	 * Compares both 32 bits parts of the two identifiers.
-	 *
-	 * \sa operator>
-	 * \sa operator==
-	 */
-	friend OV_API bool operator<=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 > id2); }
-	/**
-	 * \brief Order test operator
-	 * \param id1 [in] : the first identifier to compare
-	 * \param id2 [in] : the second identifier to compare
-	 * \return \e true if the first identifier is greater or equal than the second one
-	 * \return \e false if the first identifier is less to the second one
-	 *
-	 * Compares both 32 bits parts of the two identifiers.
-	 *
-	 * \sa operator<
-	 * \sa operator==
-	 */
-	friend OV_API bool operator>=(const CIdentifier& id1, const CIdentifier& id2) { return !(id1 < id2); }
+
+	/// <summary> "Equal" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if equals, <c>false</c> otherwise. </returns>
+	bool operator==(const CIdentifier& id) const { return m_id == id.id(); }
+
+	/// <summary> "Difference" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if different, <c>false</c> otherwise. </returns>
+	bool operator!=(const CIdentifier& id) const { return m_id != id.id(); }
+
+	/// <summary> "Less than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if less than the test, <c>false</c> otherwise. </returns>
+	bool operator<(const CIdentifier& id) const { return m_id < id.id(); }
+
+	/// <summary> "Greater than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if greater than the test, <c>false</c> otherwise. </returns>
+	bool operator>(const CIdentifier& id) const { return m_id > id.id(); }
+
+	/// <summary> "Less or equal than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if  less or equal than the test, <c>false</c> otherwise. </returns>
+	bool operator<=(const CIdentifier& id) const { return m_id <= id.id(); }
+
+	/// <summary> "Greater or equal than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
+	bool operator>=(const CIdentifier& id) const { return m_id >= id.id(); }
+
+	//---------- With Template ----------
+	/// <summary> Copy Assignment Operator. </summary>
+	/// <param name="id"> The identifier. </param>
+	/// <returns> Himself. </returns>
+	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	CIdentifier& operator=(const T id)
+	{
+		m_id = id;
+		return *this;
+	}
+
+	/// <summary> "Equal" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if equals, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator==(const T id) const { return m_id == id; }
+
+	/// <summary> "Difference" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if different, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator!=(const T id) const { return m_id != id; }
+
+	/// <summary> "Less than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if less than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator<(const T id) const { return m_id < id; }
+
+	/// <summary> "Greater than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if greater than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator>(const T id) const { return m_id > id; }
+
+	/// <summary> "Less or equal than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if  less or equal than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator<=(const T id) const { return m_id <= id; }
+
+	/// <summary> "Greater or equal than" test operator. </summary>
+	/// <param name="id"> The identifier to compare. </param>
+	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
+	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
+	bool operator>=(const T id) const { return m_id >= id; }
 
 	//@}
 
 	/// <summary> Converts this identifier into a string. </summary>
 	/// <returns> This identifier represented as a <c>std::string</c>. </returns>
 	std::string str() const;
-	/**
-	 * \brief Reads a an OpenViBE string to extract this identifier
-	 * \param str [in] : the string to convert
-	 * \return \e true in case of success.
-	 * \return \e false in case of error.
-	 */
+
+	/// <summary> Reads a a string to extract this identifier. </summary>
+	/// <param name="str"> the string to convert. </param>
+	/// <returns> <c>true</c> in case of success, <c>false</c> otherwise. </returns>
 	bool fromString(const std::string& str);
-	/**
-	 * \brief Converts this identifier into an unsigned 64 bits integer
-	 * \return The unsigned integer converted identifier
-	 * \warning Use this function with care, identifiers should not be considered
-	 *          as integers. Actually, the internal 64 bits representation may
-	 *          change, resulting in code port needs if you use this function
-	 */
-	uint64_t id() const { return m_id; }
 	
-	/**
-	 * \brief Creates a random identifier
-	 * \return a random identifier
-	 * \note The returned identifier can not be \c OV_UndefinedIdentifier
-	 */
+	/// <summary> Get the ID. </summary>
+	/// <returns> The unsigned integer identifier. </returns>
+	/// <remarks> Use this function with care, identifiers should not be considered as integers.
+	/// Actually, the internal 64 bits representation may change, resulting in code port needs if you use this function. </remarks>
+	uint64_t id() const { return m_id; }
+
+	/// <summary> Creates a random identifier. </summary>
+	/// <returns> A random identifier. </returns>
+	/// <remarks> The returned identifier can not be \c CIdentifier::undefined(). </remarks>
 	static CIdentifier random();
 
 	/// <summary> Override the ostream operator. </summary>
@@ -210,6 +193,6 @@ public:
 
 protected:
 
-	uint64_t m_id = 0; ///< the 64 bit identifier value
+	uint64_t m_id = 0;	///< the 64 bit identifier value
 };
 }  // namespace OpenViBE
