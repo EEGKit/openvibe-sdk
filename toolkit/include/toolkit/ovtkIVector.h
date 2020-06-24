@@ -13,8 +13,8 @@ public:
 	virtual bool setSize(const size_t size) = 0;
 	virtual double* getBuffer() = 0;
 	virtual const double* getBuffer() const = 0;
-	virtual const char* getElementLabel(const size_t index) const = 0;
-	virtual bool setElementLabel(const size_t index, const char* sElementLabel) = 0;
+	virtual std::string getElementLabel(const size_t index) const = 0;
+	virtual bool setElementLabel(const size_t index, const std::string& sElementLabel) = 0;
 
 	_IsDerivedFromClass_(IObject, OVTK_ClassId_Vector)
 

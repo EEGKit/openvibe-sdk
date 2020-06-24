@@ -101,12 +101,12 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const size_t index)
 	for (size_t i = 0; i < boxCtx.getInputChunkCount(index + 1); ++i)
 	{
 		auto* decoder         = &m_signalDecoders[index];
-		const IMatrix* matrix = decoder->getOutputMatrix();
+		const CMatrix* matrix = decoder->getOutputMatrix();
 
 		decoder->decode(i);
 		if (decoder->isHeaderReceived())
 		{
-			TParameterHandler<IMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
+			TParameterHandler<CMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 
 			features->setDimensionCount(2);
 			features->setDimensionSize(0, matrix->getDimensionSize(1));
@@ -123,7 +123,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const size_t index)
 		}
 		if (decoder->isBufferReceived())
 		{
-			TParameterHandler<IMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
+			TParameterHandler<CMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 
 			// transpose data
 			const size_t nChannels = matrix->getDimensionSize(0);
@@ -276,7 +276,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 	{
 		getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";
 
-		const IMatrix* input   = m_signalDecoders[0].getOutputMatrix();
+		const CMatrix* input   = m_signalDecoders[0].getOutputMatrix();
 		const size_t nChannels = input->getDimensionSize(0);
 
 		getLogManager() << LogLevel_Debug << "Computing eigen vector decomposition...\n";
@@ -290,7 +290,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 								"Invalid sample count of [" <<m_covProxies[i].nSamples << "] for condition number " << i << " (expected value > 2)",
 								Kernel::ErrorType::BadProcessing);
 
-			TParameterHandler<IMatrix*> op_cov(m_covProxies[i].cov->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
+			TParameterHandler<CMatrix*> op_cov(m_covProxies[i].cov->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
 
 			// Get regularized cov
 			m_covProxies[i].cov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, true);

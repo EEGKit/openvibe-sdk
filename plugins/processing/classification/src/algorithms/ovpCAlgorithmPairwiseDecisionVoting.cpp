@@ -27,7 +27,7 @@ bool CAlgorithmPairwiseDecisionVoting::parameterize()
 	return true;
 }
 
-bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
+bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found",
 						Kernel::ErrorType::BadInput);

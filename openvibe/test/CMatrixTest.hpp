@@ -12,7 +12,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include <openvibe/ovCMatrix.h>
+#include <openvibe/CMatrix.hpp>
 
 //---------------------------------------------------------------------------------------------------
 class CMatrix_Tests : public testing::Test
@@ -44,9 +44,9 @@ TEST_F(CMatrix_Tests, constructor_copy)
 	ASSERT_EQ(2, res.getDimensionSize(1));
 	EXPECT_EQ(10, res.getBuffer()[0]);
 	EXPECT_EQ(20, res.getBuffer()[1]);
-	EXPECT_STREQ("dim0e0", res.getDimensionLabel(0, 0));
-	EXPECT_STREQ("dim1e0", res.getDimensionLabel(1, 0));
-	EXPECT_STREQ("dim1e1", res.getDimensionLabel(1, 1));
+	EXPECT_STREQ(m_mat.getDimensionLabel(0, 0).c_str(), res.getDimensionLabel(0, 0).c_str());
+	EXPECT_STREQ(m_mat.getDimensionLabel(0, 0).c_str(), res.getDimensionLabel(1, 0).c_str());
+	EXPECT_STREQ(m_mat.getDimensionLabel(0, 0).c_str(), res.getDimensionLabel(1, 1).c_str());
 
 	res.getBuffer()[0] = 15;
 	res.getBuffer()[1] = 25;
@@ -54,10 +54,10 @@ TEST_F(CMatrix_Tests, constructor_copy)
 
 	EXPECT_EQ(10, m_mat.getBuffer()[0]);
 	EXPECT_EQ(20, m_mat.getBuffer()[1]);
-	EXPECT_STREQ("dim1e0", m_mat.getDimensionLabel(1, 0));
+	EXPECT_STREQ("dim1e0", m_mat.getDimensionLabel(1, 0).c_str());
 	EXPECT_EQ(15, res.getBuffer()[0]);
 	EXPECT_EQ(25, res.getBuffer()[1]);
-	EXPECT_STREQ("changed", res.getDimensionLabel(1, 0));
+	EXPECT_STREQ("changed", res.getDimensionLabel(1, 0).c_str());
 }
 //---------------------------------------------------------------------------------------------------
 
@@ -91,9 +91,9 @@ TEST_F(CMatrix_Tests, operator_copy_assignment)
 
 	EXPECT_EQ(15, m_mat.getBuffer()[0]);
 	EXPECT_EQ(25, m_mat.getBuffer()[1]);
-	EXPECT_STREQ("changed", m_mat.getDimensionLabel(1, 0));
+	EXPECT_STREQ("changed", m_mat.getDimensionLabel(1, 0).c_str());
 	EXPECT_EQ(10, matB.getBuffer()[0]);
 	EXPECT_EQ(20, matB.getBuffer()[1]);
-	EXPECT_STREQ("dim1e0", matB.getDimensionLabel(1, 0));
+	EXPECT_STREQ("dim1e0", matB.getDimensionLabel(1, 0).c_str());
 }
 //---------------------------------------------------------------------------------------------------

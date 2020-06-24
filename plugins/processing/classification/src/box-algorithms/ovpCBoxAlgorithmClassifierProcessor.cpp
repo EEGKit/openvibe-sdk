@@ -101,7 +101,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 
 	// Connect the params to the new classifier
 
-	TParameterHandler<IMatrix*> ip_sample = m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
+	TParameterHandler<CMatrix*> ip_sample = m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
 	ip_sample.setReferenceTarget(m_sampleDecoder.getOutputMatrix());
 
 	m_hyperplanesEncoder.getInputMatrix().

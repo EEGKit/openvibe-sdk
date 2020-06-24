@@ -25,7 +25,7 @@ namespace Kernel {
  *  - for \c ParameterType_Float : \c double
  *  - for \c ParameterType_String : \c CString
  *  - for \c ParameterType_Identifier : \c CIdentifier
- *  - for \c ParameterType_Matrix : \c IMatrix*
+ *  - for \c ParameterType_Matrix : \c CMatrix*
  *  - for \c ParameterType_StimulationSet : \c CStimulationSet*
  *  - for \c ParameterType_MemoryBuffer : \c IMemoryBuffer*
  *  - for \c ParameterType_Object : \c IObject*
@@ -138,7 +138,7 @@ public:
 	 *
 	 * \code
 	 * // parameter will directly be used as if it is a matrix pointer
-	 * TParameterHandler<IMatrix*> parameter ( ... );
+	 * TParameterHandler<CMatrix*> parameter ( ... );
 	 * parameter->setDimensionCount(2);
 	 * \endcode
 	 */

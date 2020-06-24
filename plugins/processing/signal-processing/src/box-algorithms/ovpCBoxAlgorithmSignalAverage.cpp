@@ -58,8 +58,8 @@ bool CBoxAlgorithmSignalAverage::process()
 		if (m_decoder.isHeaderReceived())
 		{
 			// Construct the properties of the output stream
-			const IMatrix* iMatrix = m_decoder.getOutputMatrix();
-			IMatrix* oMatrix       = m_encoder.getInputMatrix();
+			const CMatrix* iMatrix = m_decoder.getOutputMatrix();
+			CMatrix* oMatrix       = m_encoder.getInputMatrix();
 
 			// Sampling rate will be decimated in the output
 			const uint64_t iSampling   = m_decoder.getOutputSamplingRate();

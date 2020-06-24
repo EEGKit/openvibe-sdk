@@ -20,7 +20,7 @@ public:
 
 protected:
 
-	IMatrix* m_matrix                  = nullptr;
+	CMatrix* m_matrix                  = nullptr;
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	double m_minCropValue              = 0;

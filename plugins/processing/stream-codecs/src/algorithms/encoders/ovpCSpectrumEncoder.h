@@ -17,7 +17,7 @@ public:
 	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SpectrumEncoder)
 
 protected:
-	Kernel::TParameterHandler<IMatrix*> ip_frequencyAbscissa;
+	Kernel::TParameterHandler<CMatrix*> ip_frequencyAbscissa;
 	Kernel::TParameterHandler<uint64_t> ip_sampling;
 };
 

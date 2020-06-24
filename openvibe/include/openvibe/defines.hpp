@@ -98,12 +98,7 @@
 
 //---------------------------------------------------------------------------------------------------
 #define OV_ClassId_Matrix										OpenViBE::CIdentifier(0x65AA951D, 0x73EE781E)
-#define OV_ClassId_MatrixBridge									OpenViBE::CIdentifier(0x4331378D, 0x5A1E0A69)
-#define OV_ClassId_MatrixImpl									OpenViBE::CIdentifier(0x2F59C42E, 0x54166A96)
-
 #define OV_ClassId_StimulationSet								OpenViBE::CIdentifier(0x691473DE, 0x2EE37ABD)
-#define OV_ClassId_StimulationSetBridge							OpenViBE::CIdentifier(0x39F81801, 0x2491BF81)
-#define OV_ClassId_StimulationSetImpl							OpenViBE::CIdentifier(0x1649669C, 0x25B89AD7)
 
 #define OV_ClassId_MemoryBuffer									OpenViBE::CIdentifier(0xADF318BB, 0xB728A579)
 #define OV_ClassId_MemoryBufferBridge							OpenViBE::CIdentifier(0xFD84704B, 0xA9E61735)

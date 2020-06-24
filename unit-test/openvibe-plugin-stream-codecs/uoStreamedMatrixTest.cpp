@@ -71,12 +71,12 @@ TEST_F(StreamedMatrixTest, matrix_decoder_does_not_crash_when_given_an_empty_mat
 	ASSERT_TRUE(mat.setDimensionCount(1));
 	ASSERT_TRUE(mat.setDimensionSize(0, 0));
 
-	TParameterHandler<const IMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<const CMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<const IMemoryBuffer*> oBuffer(
 		encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 	TParameterHandler<const IMemoryBuffer*>
 			iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-	TParameterHandler<const IMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+	TParameterHandler<const CMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
 	iMatrix = &mat;
 	iBuffer.setReferenceTarget(oBuffer);
@@ -115,12 +115,12 @@ TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_origi
 	}
 	for (size_t i = 0; i < elemCount; ++i) { mat.getBuffer()[i] = double(i); }
 
-	TParameterHandler<const IMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<const CMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<const IMemoryBuffer*> oBuffer(
 		encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 	TParameterHandler<const IMemoryBuffer*> iBuffer(
 		decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-	TParameterHandler<const IMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+	TParameterHandler<const CMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
 	iMatrix = &mat;
 	iBuffer.setReferenceTarget(oBuffer);

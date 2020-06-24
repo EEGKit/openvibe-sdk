@@ -18,7 +18,7 @@ namespace Plugins {
 namespace Classification {
 class CAlgorithmLDADiscriminantFunction;
 
-int LDAClassificationCompare(IMatrix& first, IMatrix& second);
+int LDAClassificationCompare(CMatrix& first, CMatrix& second);
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 

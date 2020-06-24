@@ -70,7 +70,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 		for (size_t j = 0; j < boxCtx.getInputChunkCount(i); ++j)
 		{
 			m_decoders[i].decode(j);
-			IMatrix* matrix = m_decoders[i].getOutputMatrix();
+			CMatrix* matrix = m_decoders[i].getOutputMatrix();
 
 			if (m_decoders[i].isHeaderReceived())
 			{

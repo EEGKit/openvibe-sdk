@@ -40,7 +40,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 	{
 		m_encoder.getInputSamplingRate() = m_sampling;
 
-		IMatrix* matrix = m_encoder.getInputMatrix();
+		CMatrix* matrix = m_encoder.getInputMatrix();
 
 		matrix->setDimensionCount(2);
 		matrix->setDimensionSize(0, 1);

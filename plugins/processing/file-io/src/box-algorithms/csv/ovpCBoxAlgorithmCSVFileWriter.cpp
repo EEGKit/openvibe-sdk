@@ -114,7 +114,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 			{
 				m_headerReceived = true;
 
-				const IMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
+				const CMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
 
 				OV_ERROR_UNLESS_KRF(matrix->getDimensionCount() == 1 || matrix->getDimensionCount() == 2,
 									"Invalid input matrix: must have 1 or 2 dimensions", Kernel::ErrorType::BadInput);
@@ -157,7 +157,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 		}
 		if (m_decoder->isBufferReceived())
 		{
-			const IMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
+			const CMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
 
 			const size_t nChannel = m_oMatrix.getDimensionSize(0);
 			const size_t nSample  = m_oMatrix.getDimensionSize(1);
@@ -194,7 +194,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 					{
 						// This should not be supported anymore
 						// This is not the correct formula
-						const IMatrix* freq = static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
+						const CMatrix* freq = static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
 								getOutputFrequencyAbscissa();
 						const double half = s > 0 ? (freq->getBuffer()[s] - freq->getBuffer()[s - 1]) / 2.0
 												: (freq->getBuffer()[s + 1] - freq->getBuffer()[s]) / 2.0;

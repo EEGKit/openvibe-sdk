@@ -8,7 +8,7 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
 namespace {
-size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
+size_t FindChannel(const CMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 {
 	size_t res = std::numeric_limits<size_t>::max();
 
@@ -16,7 +16,7 @@ size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMe
 	{
 		for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 		{
-			if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
+			if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i).c_str(), channel, false)) { res = i; }
 		}
 	}
 	else if (matchMethod == EMatchMethod::Index)
@@ -73,8 +73,8 @@ bool CBoxAlgorithmReferenceChannel::process()
 		m_decoder.decode(i);
 		if (m_decoder.isHeaderReceived())
 		{
-			IMatrix& iMatrix = *m_decoder.getOutputMatrix();
-			IMatrix& oMatrix = *m_encoder.getInputMatrix();
+			CMatrix& iMatrix = *m_decoder.getOutputMatrix();
+			CMatrix& oMatrix = *m_encoder.getInputMatrix();
 
 			OV_ERROR_UNLESS_KRF(iMatrix.getDimensionSize(0) >= 2,
 								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
@@ -105,8 +105,8 @@ bool CBoxAlgorithmReferenceChannel::process()
 		}
 		if (m_decoder.isBufferReceived())
 		{
-			IMatrix& iMatrix      = *m_decoder.getOutputMatrix();
-			IMatrix& oMatrix      = *m_encoder.getInputMatrix();
+			CMatrix& iMatrix      = *m_decoder.getOutputMatrix();
+			CMatrix& oMatrix      = *m_encoder.getInputMatrix();
 			double* iBuffer       = iMatrix.getBuffer();
 			double* oBuffer       = oMatrix.getBuffer();
 			double* refBuffer     = iMatrix.getBuffer() + m_referenceChannelIdx * iMatrix.getDimensionSize(1);

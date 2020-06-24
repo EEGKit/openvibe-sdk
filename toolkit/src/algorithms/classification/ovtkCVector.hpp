@@ -11,9 +11,9 @@ class TVector : public TParent
 {
 public:
 
-	explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
+	explicit TVector(CMatrix& matrix) : m_matrix(matrix) { }
 
-	size_t getSize() const override { return m_matrix.getBufferElementCount(); }
+	size_t getSize() const override { return m_matrix.getSize(); }
 
 	bool setSize(const size_t size) override
 	{
@@ -24,9 +24,9 @@ public:
 
 	double* getBuffer() override { return m_matrix.getBuffer(); }
 	const double* getBuffer() const override { return m_matrix.getBuffer(); }
-	const char* getElementLabel(const size_t index) const override { return m_matrix.getDimensionLabel(0, index); }
+	std::string getElementLabel(const size_t index) const override { return m_matrix.getDimensionLabel(0, index); }
 
-	bool setElementLabel(const size_t index, const char* label) override
+	bool setElementLabel(const size_t index, const std::string& label) override
 	{
 		m_matrix.setDimensionLabel(0, index, label);
 		return true;
@@ -36,7 +36,7 @@ public:
 
 protected:
 
-	IMatrix& m_matrix;
+	CMatrix& m_matrix;
 };
 
 typedef TVector<IVector> CVector;

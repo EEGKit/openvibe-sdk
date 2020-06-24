@@ -38,8 +38,8 @@ bool CAlgorithmMatrixAverage::uninitialize()
 
 bool CAlgorithmMatrixAverage::process()
 {
-	IMatrix* iMatrix = ip_matrix;
-	IMatrix* oMatrix = op_averagedMatrix;
+	CMatrix* iMatrix = ip_matrix;
+	CMatrix* oMatrix = op_averagedMatrix;
 
 	bool shouldPerformAverage = false;
 
@@ -56,7 +56,7 @@ bool CAlgorithmMatrixAverage::process()
 	{
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Moving))
 		{
-			IMatrix* swapMatrix;
+			CMatrix* swapMatrix;
 
 			if (m_history.size() >= ip_matrixCount)
 			{
@@ -76,7 +76,7 @@ bool CAlgorithmMatrixAverage::process()
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::MovingImmediate))
 		{
-			IMatrix* swapMatrix;
+			CMatrix* swapMatrix;
 
 			if (m_history.size() >= ip_matrixCount)
 			{
@@ -96,7 +96,7 @@ bool CAlgorithmMatrixAverage::process()
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Block))
 		{
-			IMatrix* swapMatrix = new CMatrix();
+			CMatrix* swapMatrix = new CMatrix();
 
 			if (m_history.size() >= ip_matrixCount)
 			{
@@ -124,21 +124,21 @@ bool CAlgorithmMatrixAverage::process()
 
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
-			IMatrix* matrix = m_history.at(0);
+			CMatrix* matrix = m_history.at(0);
 
 			m_nAverageSamples++;
 
 			if (m_nAverageSamples == 1) // If it's the first matrix, the average is the first matrix
 			{
 				double* buffer    = matrix->getBuffer();
-				const size_t size = matrix->getBufferElementCount();
+				const size_t size = matrix->getSize();
 
 				m_averageMatrices.clear();
 				m_averageMatrices.insert(m_averageMatrices.begin(), buffer, buffer + size);
 			}
 			else
 			{
-				if (matrix->getBufferElementCount() != m_averageMatrices.size()) { return false; }
+				if (matrix->getSize() != m_averageMatrices.size()) { return false; }
 
 				const double n = double(m_nAverageSamples);
 
@@ -167,10 +167,10 @@ bool CAlgorithmMatrixAverage::process()
 		}
 		else
 		{
-			const size_t n     = oMatrix->getBufferElementCount();
+			const size_t n     = oMatrix->getSize();
 			const double scale = 1. / m_history.size();
 
-			for (IMatrix* matrix : m_history)
+			for (CMatrix* matrix : m_history)
 			{
 				double* oBuffer = oMatrix->getBuffer();
 				double* iBuffer = matrix->getBuffer();

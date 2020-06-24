@@ -121,7 +121,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 		Kernel::ErrorType::BadConfig);
 
 	//Now we create the corresponding repartition set
-	TParameterHandler<IMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->getInputParameter(
+	TParameterHandler<CMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->getInputParameter(
 		OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	ip_pRepartitionSet->setDimensionCount(1);
 	ip_pRepartitionSet->setDimensionSize(0, m_nClasses);
@@ -137,7 +137,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 			const size_t nFeature          = classLabels[double(i)] + classLabels[double(j)];
 			IAlgorithmProxy* subClassifier = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
 
-			TParameterHandler<IMatrix*> ip_dataset(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+			TParameterHandler<CMatrix*> ip_dataset(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 			ip_dataset->setDimensionCount(2);
 			ip_dataset->setDimensionSize(0, nFeature);
 			ip_dataset->setDimensionSize(1, size + 1);
@@ -171,14 +171,14 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 	const size_t size = sample.getSize();
 	std::vector<classification_info_t> classificationList;
 
-	TParameterHandler<IMatrix*> ip_proba = m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
-	IMatrix* matrix                      = static_cast<IMatrix*>(ip_proba);
+	TParameterHandler<CMatrix*> ip_proba = m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
+	CMatrix* matrix                      = static_cast<CMatrix*>(ip_proba);
 
 	matrix->setDimensionCount(2);
 	matrix->setDimensionSize(0, m_nClasses);
 	matrix->setDimensionSize(1, m_nClasses);
 
-	for (size_t i = 0; i < matrix->getBufferElementCount(); ++i) { matrix->getBuffer()[i] = 0.0; }
+	for (size_t i = 0; i < matrix->getSize(); ++i) { matrix->getBuffer()[i] = 0.0; }
 
 	//Let's generate the matrix of confidence score
 	for (size_t i = 0; i < m_nClasses; ++i)
@@ -186,8 +186,8 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 		for (size_t j = i + 1; j < m_nClasses; ++j)
 		{
 			IAlgorithmProxy* tmp = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
-			TParameterHandler<IMatrix*> ip_sample(tmp->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-			TParameterHandler<IMatrix*> op_values(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+			TParameterHandler<CMatrix*> ip_sample(tmp->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+			TParameterHandler<CMatrix*> op_values(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 			TParameterHandler<double> op_label(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 			ip_sample->setDimensionCount(1);
 			ip_sample->setDimensionSize(0, size);
@@ -216,7 +216,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute), "Failed to compute decision strategy",
 						Kernel::ErrorType::Internal);
 
-	TParameterHandler<IMatrix*> op_proba = m_decisionStrategyAlgorithm->getOutputParameter(
+	TParameterHandler<CMatrix*> op_proba = m_decisionStrategyAlgorithm->getOutputParameter(
 		OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
 	double maxProb       = -1;
 	classId = -1;

@@ -24,10 +24,10 @@ protected:
 
 	Kernel::TParameterHandler<uint64_t> ip_averagingMethod;
 	Kernel::TParameterHandler<uint64_t> ip_matrixCount;
-	Kernel::TParameterHandler<IMatrix*> ip_matrix;
-	Kernel::TParameterHandler<IMatrix*> op_averagedMatrix;
+	Kernel::TParameterHandler<CMatrix*> ip_matrix;
+	Kernel::TParameterHandler<CMatrix*> op_averagedMatrix;
 
-	std::deque<IMatrix*> m_history;
+	std::deque<CMatrix*> m_history;
 	std::vector<double> m_averageMatrices;
 	size_t m_nAverageSamples = 0;
 };

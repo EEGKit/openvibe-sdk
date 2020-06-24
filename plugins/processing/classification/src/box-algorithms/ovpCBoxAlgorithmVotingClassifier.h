@@ -37,7 +37,7 @@ private:
 	{
 		Toolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
 		Kernel::TParameterHandler<CStimulationSet*> op_stimSet;
-		Kernel::TParameterHandler<IMatrix*> op_matrix;
+		Kernel::TParameterHandler<CMatrix*> op_matrix;
 		bool twoValueInput;
 		std::vector<std::pair<double, CTime>> scores;
 	} input_t;

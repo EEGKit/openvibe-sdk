@@ -189,7 +189,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 		if (m_decoder->isHeaderReceived())
 		{
 			// we can treat them all as matrix decoders as they all inherit from it
-			const IMatrix* iMatrix = (static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder))->getOutputMatrix();
+			const CMatrix* iMatrix = (static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder))->getOutputMatrix();
 
 			const size_t nChannelIn = iMatrix->getDimensionSize(0);
 			const size_t nSampleIn  = iMatrix->getDimensionSize(1);
@@ -205,7 +205,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 								"Invalid input channel count  [" << nChannelIn << "] (expected " << nChannelFilterIn << " channel count)",
 								Kernel::ErrorType::BadConfig);
 
-			IMatrix* oMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
+			CMatrix* oMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
 			oMatrix->setDimensionCount(2);
 			oMatrix->setDimensionSize(0, nChannelFilterOut);
 			oMatrix->setDimensionSize(1, nSampleIn);
@@ -217,8 +217,8 @@ bool CBoxAlgorithmSpatialFilter::process()
 		}
 		if (m_decoder->isBufferReceived())
 		{
-			const IMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputMatrix();
-			IMatrix* oMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
+			const CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputMatrix();
+			CMatrix* oMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
 
 			const double* in         = iMatrix->getBuffer();
 			double* out              = oMatrix->getBuffer();

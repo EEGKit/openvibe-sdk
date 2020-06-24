@@ -114,7 +114,7 @@ bool CBoxAlgorithmFeatureAggregator::process()
 	const IBox* boxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 	IBoxIO* boxIO          = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-	IMatrix* oMatrix = m_encoder->getInputMatrix();
+	CMatrix* oMatrix = m_encoder->getInputMatrix();
 	std::vector<double> bufferElements;
 	size_t totalBufferSize = 0;
 	bool bufferReceived    = false;
@@ -126,8 +126,8 @@ bool CBoxAlgorithmFeatureAggregator::process()
 		if ((m_decoder[input]->isHeaderReceived()) && !m_headerSent)
 		{
 			//getLogManager() << LogLevel_Warning << "header " << input << "\n";
-			IMatrix* iMatrix = m_decoder[input]->getOutputMatrix();
-			totalBufferSize += iMatrix->getBufferElementCount();
+			CMatrix* iMatrix = m_decoder[input]->getOutputMatrix();
+			totalBufferSize += iMatrix->getSize();
 			if (input == boxContext->getInputCount() - 1)
 			{
 				oMatrix->setDimensionCount(1);
@@ -144,8 +144,8 @@ bool CBoxAlgorithmFeatureAggregator::process()
 		if (m_decoder[input]->isBufferReceived())
 		{
 			bufferReceived    = true;
-			IMatrix* iMatrix  = m_decoder[input]->getOutputMatrix();
-			const size_t size = iMatrix->getBufferElementCount();
+			CMatrix* iMatrix  = m_decoder[input]->getOutputMatrix();
+			const size_t size = iMatrix->getSize();
 
 			double* buffer = iMatrix->getBuffer();
 			for (size_t i = 0; i < size; ++i) { bufferElements.push_back(buffer[i]); }

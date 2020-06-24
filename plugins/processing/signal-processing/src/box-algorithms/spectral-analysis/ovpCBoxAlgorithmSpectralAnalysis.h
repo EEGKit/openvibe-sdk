@@ -29,7 +29,7 @@ protected:
 
 	size_t m_sizeFFT = 0;
 
-	IMatrix* m_frequencyAbscissa = nullptr;
+	CMatrix* m_frequencyAbscissa = nullptr;
 };
 
 class CBoxAlgorithmSpectralAnalysisDesc final : virtual public IBoxAlgorithmDesc

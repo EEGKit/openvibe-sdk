@@ -24,9 +24,7 @@
 #include "ovCString.h"
 #include "ovCNameValuePairList.h"
 
-#include "ovIMatrix.h"
-#include "ovCMatrix.h"
-
+#include "CMatrix.hpp"
 
 #include "ovIMemoryBuffer.h"
 #include "ovCMemoryBuffer.h"

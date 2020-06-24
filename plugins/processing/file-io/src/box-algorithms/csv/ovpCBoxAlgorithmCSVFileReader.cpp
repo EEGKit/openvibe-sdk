@@ -224,7 +224,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 			&& feof(m_file) && nSamples < m_samplesPerBuffer)
 		{
 			// Last chunk will be partial, zero the whole output matrix...
-			IMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+			CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 			Toolkit::Matrix::clearContent(*iMatrix);
 		}
 	}
@@ -265,7 +265,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* iMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -342,7 +342,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 bool CBoxAlgorithmCSVFileReader::processSignal()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* iMatrix       = static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iMatrix       = static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -393,7 +393,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* iMatrix       = static_cast<Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iMatrix       = static_cast<Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	if (!m_headerSent)
 	{
@@ -446,13 +446,13 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
-	IMatrix* matrix        = static_cast<Toolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* matrix        = static_cast<Toolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
 	{
 		// in this case we need to transpose it
-		IMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+		CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 		iMatrix->setDimensionCount(1);
 		iMatrix->setDimensionSize(0, m_nCol - 1);
@@ -489,8 +489,8 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 bool CBoxAlgorithmCSVFileReader::processSpectrum()
 {
 	Kernel::IBoxIO& boxCtx      = this->getDynamicBoxContext();
-	IMatrix* iMatrix            = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
-	IMatrix* iFrequencyAbscissa = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputFrequencyAbscissa();
+	CMatrix* iMatrix            = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iFrequencyAbscissa = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputFrequencyAbscissa();
 
 	//Header
 	if (!m_headerSent)
@@ -553,7 +553,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
+bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(CMatrix* matrix)
 {
 	// note: Chunk size shouldn't change after encoding header, do not mess with it here, even if the input has different size
 

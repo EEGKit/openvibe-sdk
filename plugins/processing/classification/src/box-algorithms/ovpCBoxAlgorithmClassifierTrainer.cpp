@@ -275,7 +275,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			if (m_sampleDecoder[i - 1]->isHeaderReceived()) { }
 			if (m_sampleDecoder[i - 1]->isBufferReceived())
 			{
-				const IMatrix* sampleMatrix = m_sampleDecoder[i - 1]->getOutputMatrix();
+				const CMatrix* sampleMatrix = m_sampleDecoder[i - 1]->getOutputMatrix();
 
 				sample_t sample;
 				sample.sampleMatrix = new CMatrix();
@@ -301,7 +301,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		OV_ERROR_UNLESS_KRF(!m_datasets.empty(), "No training example received", Kernel::ErrorType::BadInput);
 
 		getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
-				<< m_datasets[0].sampleMatrix->getBufferElementCount() << "]\n";
+				<< m_datasets[0].sampleMatrix->getSize() << "]\n";
 		for (size_t i = 1; i < nInput; ++i)
 		{
 			getLogManager() << LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
@@ -405,9 +405,9 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 	OV_ERROR_UNLESS_KRF(stopIdx - startIdx != 1, "Invalid indexes: stopIdx - trainIndex = 1", Kernel::ErrorType::BadArgument);
 
 	const size_t nSample  = dataset.size() - (stopIdx - startIdx);
-	const size_t nFeature = dataset[0].sampleMatrix->getBufferElementCount();
+	const size_t nFeature = dataset[0].sampleMatrix->getSize();
 
-	TParameterHandler<IMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
 	ip_sample->setDimensionCount(2);
 	ip_sample->setDimensionSize(0, nSample);
@@ -441,7 +441,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 {
 	OV_ERROR_UNLESS_KRF(stopIdx != startIdx, "Invalid indexes: start index equals stop index", Kernel::ErrorType::BadArgument);
 
-	const size_t nFeature = dataset[0].sampleMatrix->getBufferElementCount();
+	const size_t nFeature = dataset[0].sampleMatrix->getSize();
 
 	TParameterHandler<XML::IXMLNode*> op_config(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* node = op_config;//Requested for affectation
@@ -450,7 +450,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 	m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig);
 
-	TParameterHandler<IMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	ip_sample->setDimensionCount(1);
 	ip_sample->setDimensionSize(0, nFeature);

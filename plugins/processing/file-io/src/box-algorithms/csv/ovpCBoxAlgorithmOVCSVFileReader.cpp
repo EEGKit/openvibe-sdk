@@ -94,7 +94,7 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(CMessage& /*msg*/)
 bool CBoxAlgorithmOVCSVFileReader::process()
 {
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* matrix            = m_algorithmEncoder.getInputMatrix();
+	CMatrix* matrix            = m_algorithmEncoder.getInputMatrix();
 
 	// encode Header if not already encoded
 	if (!m_isHeaderSent)
@@ -145,7 +145,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		}
 		else if (m_typeID == OV_TypeId_Spectrum)
 		{
-			IMatrix* frequencyAbscissaMatrix = m_algorithmEncoder.getInputFrequencyAbcissa();
+			CMatrix* frequencyAbscissaMatrix = m_algorithmEncoder.getInputFrequencyAbcissa();
 
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2), "Failed to set dimension count", Kernel::ErrorType::Internal);
 			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", Kernel::ErrorType::Internal);

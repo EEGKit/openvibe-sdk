@@ -103,7 +103,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 		const CTime endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
-		IMatrix* matrix = m_decoder.getOutputMatrix();
+		CMatrix* matrix = m_decoder.getOutputMatrix();
 
 		if (m_decoder.isHeaderReceived())
 		{
@@ -136,7 +136,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				if (m_isSpectrumEncoderActive[encoderIdx])
 				{
 					// Spectrum matrix
-					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
+					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
 					spectrum->setDimensionCount(2);
 					spectrum->setDimensionSize(0, m_nChannel);
 					spectrum->setDimensionSize(1, m_sizeFFT);
@@ -218,7 +218,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 							OV_ERROR_KRF("Invalid decoder output.\n", Kernel::ErrorType::BadProcessing);
 					}
 
-					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
+					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
 
 					for (size_t j = 0; j < m_nChannel; ++j)
 					{

@@ -96,10 +96,10 @@ bool CBoxAlgorithmVotingClassifier::process()
 			{
 				if (m_matrixBased)
 				{
-					if (input.op_matrix->getBufferElementCount() != 1)
+					if (input.op_matrix->getSize() != 1)
 					{
-						OV_ERROR_UNLESS_KRF(input.op_matrix->getBufferElementCount() == 2,
-											"Invalid input matrix with [" << input.op_matrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
+						OV_ERROR_UNLESS_KRF(input.op_matrix->getSize() == 2,
+											"Invalid input matrix with [" << input.op_matrix->getSize() << "] (expected values must be 1 or 2)",
 											Kernel::ErrorType::BadInput);
 
 						getLogManager() << LogLevel_Debug <<

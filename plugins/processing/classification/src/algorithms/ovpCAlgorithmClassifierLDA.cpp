@@ -33,14 +33,14 @@ const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
 
 extern const char* const CLASSIFIER_ROOT;
 
-int Classification::LDAClassificationCompare(IMatrix& first, IMatrix& second)
+int Classification::LDAClassificationCompare(CMatrix& first, CMatrix& second)
 {
 	//We first need to find the best classification of each.
 	double* buffer        = first.getBuffer();
-	const double maxFirst = *(std::max_element(buffer, buffer + first.getBufferElementCount()));
+	const double maxFirst = *(std::max_element(buffer, buffer + first.getSize()));
 
 	buffer                 = second.getBuffer();
-	const double maxSecond = *(std::max_element(buffer, buffer + second.getBufferElementCount()));
+	const double maxSecond = *(std::max_element(buffer, buffer + second.getSize()));
 
 	//Then we just compared them
 	if (OVFloatEqual(maxFirst, maxSecond)) { return 0; }
@@ -124,9 +124,9 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", Kernel::ErrorType::Internal);
 
 	// IO to the covariance alg
-	TParameterHandler<IMatrix*> op_mean(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_covMatrix(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
-	TParameterHandler<IMatrix*> ip_dataset(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	TParameterHandler<CMatrix*> op_mean(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
+	TParameterHandler<CMatrix*> op_covMatrix(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	TParameterHandler<CMatrix*> ip_dataset(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
 	const size_t nRows = dataset.getFeatureVectorCount();
 	const size_t nCols = (nRows > 0 ? dataset[0].getSize() : 0);

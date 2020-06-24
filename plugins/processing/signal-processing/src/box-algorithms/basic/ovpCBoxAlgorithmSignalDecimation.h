@@ -37,12 +37,12 @@ protected:
 
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
 	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
-	Kernel::TParameterHandler<IMatrix*> op_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> op_pMatrix;
 	Kernel::TParameterHandler<uint64_t> op_sampling;
 
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::TParameterHandler<uint64_t> ip_sampling;
-	Kernel::TParameterHandler<IMatrix*> ip_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> ip_pMatrix;
 	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
 };
 

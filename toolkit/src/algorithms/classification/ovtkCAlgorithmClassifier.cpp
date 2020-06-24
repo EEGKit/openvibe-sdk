@@ -31,18 +31,18 @@ bool CAlgorithmClassifier::uninitialize()
 
 bool CAlgorithmClassifier::process()
 {
-	const TParameterHandler<IMatrix*> ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-	const TParameterHandler<IMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	const TParameterHandler<CMatrix*> ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+	const TParameterHandler<CMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 	const TParameterHandler<XML::IXMLNode*> ip_Config(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 
 	TParameterHandler<double> op_EstimatedClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-	TParameterHandler<IMatrix*> op_ClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	TParameterHandler<IMatrix*> op_ProbabilityValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+	TParameterHandler<CMatrix*> op_ClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	TParameterHandler<CMatrix*> op_ProbabilityValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 	TParameterHandler<XML::IXMLNode*> op_Config(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_Train))
 	{
-		IMatrix* featureVectorSet = ip_FeatureVectorSet;
+		CMatrix* featureVectorSet = ip_FeatureVectorSet;
 		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
@@ -59,9 +59,9 @@ bool CAlgorithmClassifier::process()
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_Classify))
 	{
-		IMatrix* featureVector        = ip_FeatureVector;
-		IMatrix* classificationValues = op_ClassificationValues;
-		IMatrix* probabilityValues    = op_ProbabilityValues;
+		CMatrix* featureVector        = ip_FeatureVector;
+		CMatrix* classificationValues = op_ClassificationValues;
+		CMatrix* probabilityValues    = op_ProbabilityValues;
 
 		if (!featureVector || !classificationValues || !probabilityValues)
 		{
@@ -151,7 +151,7 @@ CString& CAlgorithmClassifier::getParameterValue(const CIdentifier& parameterID)
 	return (*static_cast<std::map<CString, CString>*>(m_ExtraParametersMap))[parameterName];
 }
 
-void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, const size_t length)
+void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<CMatrix*>& matrix, const size_t length)
 {
 	matrix->setDimensionCount(1);
 	matrix->setDimensionSize(0, length);

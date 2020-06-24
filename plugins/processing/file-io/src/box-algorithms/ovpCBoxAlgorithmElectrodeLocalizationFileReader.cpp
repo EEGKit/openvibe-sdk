@@ -21,10 +21,10 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 	// OVMatrix file reader parameters
 	Kernel::TParameterHandler<CString*> ip_sFilename(m_pOVMatrixFileReader->getInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename));
 	/*
-	TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
+	TParameterHandler<CMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
 		// Channel localisation parameters
 		TParameterHandler<bool> ip_bDynamic(m_encoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Dynamic));
-		TParameterHandler<IMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Matrix));
+		TParameterHandler<CMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationEncoder_InputParameterId_Matrix));
 	
 		// Configure parameters
 	
@@ -71,7 +71,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Channel localisation stream encoder parameters
-	Kernel::TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
+	Kernel::TParameterHandler<CMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
 
 	m_pOVMatrixFileReader->process(/*OVP_Algorithm_OVMatrixFileReader_InputTriggerId_Next*/);
 
@@ -89,7 +89,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		// m_pOVMatrixFileReader->process(OVP_Algorithm_BrainampFileReader_InputTriggerId_Open);
 
 		// Produces header
-		IMatrix* iMatrix = m_encoder->getInputMatrix();
+		CMatrix* iMatrix = m_encoder->getInputMatrix();
 		Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		m_encoder->encodeHeader();
@@ -104,7 +104,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 		m_pOVMatrixFileReader->isOutputTriggerActive(OVP_Algorithm_OVMatrixFileReader_OutputTriggerId_DataProduced)*/)
 	{
 		// Connects parameters to memory buffer
-		IMatrix* iMatrix = m_encoder->getInputMatrix();
+		CMatrix* iMatrix = m_encoder->getInputMatrix();
 		Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer

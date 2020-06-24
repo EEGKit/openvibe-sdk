@@ -48,7 +48,7 @@ private:
 
 	struct SCachedChunk
 	{
-		SCachedChunk(const CTime startTime, const CTime endTime, IMatrix* matrix)
+		SCachedChunk(const CTime startTime, const CTime endTime, CMatrix* matrix)
 			: startTime(startTime), endTime(endTime), matrix(matrix) {}
 
 		SCachedChunk& operator=(SCachedChunk&& other)
@@ -60,7 +60,7 @@ private:
 		}
 
 		CTime startTime, endTime;
-		std::unique_ptr<IMatrix> matrix;
+		std::unique_ptr<CMatrix> matrix;
 	};
 
 	std::deque<SCachedChunk> m_cachedChunks;

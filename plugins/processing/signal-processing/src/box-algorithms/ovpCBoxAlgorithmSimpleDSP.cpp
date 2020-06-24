@@ -86,8 +86,8 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 			IAlgorithmProxy* decoder = &this->getAlgorithmManager().getAlgorithm(
 				this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumDecoder));
 			decoder->initialize();
-			TParameterHandler<IMatrix*> op_CenterBands(m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
-			TParameterHandler<IMatrix*> ip_CenterBands(decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
+			TParameterHandler<CMatrix*> op_CenterBands(m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
+			TParameterHandler<CMatrix*> ip_CenterBands(decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
 			ip_CenterBands.setReferenceTarget(op_CenterBands);
 			decoder->getOutputParameter(OVP_GD_Algorithm_SpectrumDecoder_OutputParameterId_Sampling)->setReferenceTarget(
 				m_encoder->getInputParameter(OVP_GD_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
@@ -165,7 +165,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 	size_t nBuffer = 0;
 	size_t nEnd    = 0;
 
-	TParameterHandler<IMatrix*> ip_matrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<CMatrix*> ip_matrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_matrices.clear();
@@ -175,16 +175,16 @@ bool CBoxAlgorithmSimpleDSP::process()
 	{
 		TParameterHandler<const IMemoryBuffer*> ip_buffer(
 			m_decoders[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-		TParameterHandler<IMatrix*> op_matrix(m_decoders[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+		TParameterHandler<CMatrix*> op_matrix(m_decoders[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 		ip_buffer = boxContext.getInputChunk(i, 0);
 		m_decoders[i]->process();
 		if (m_decoders[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			if (i != 0)
 			{
-				OV_ERROR_UNLESS_KRF(m_matrices[0]->getBufferElementCount() == op_matrix->getBufferElementCount(),
-									"Invalid matrix dimension [" << m_matrices[0]->getBufferElementCount() << "] (expected value = "
-									<< op_matrix->getBufferElementCount() <<")", Kernel::ErrorType::BadValue);
+				OV_ERROR_UNLESS_KRF(m_matrices[0]->getSize() == op_matrix->getSize(),
+									"Invalid matrix dimension [" << m_matrices[0]->getSize() << "] (expected value = "
+									<< op_matrix->getSize() <<")", Kernel::ErrorType::BadValue);
 			}
 			nHeader++;
 		}
@@ -220,9 +220,9 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 
 	for (size_t i = 0; i < boxContext.getInputCount(); ++i) { m_variables[i] = m_matrices[i]->getBuffer(); }
 
-	TParameterHandler<IMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<CMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	double* buffer    = ip_pMatrix->getBuffer();
-	double* bufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getBufferElementCount();
+	double* bufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getSize();
 
 	while (buffer != bufferEnd)
 	{

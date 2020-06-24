@@ -141,7 +141,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 		OV_ERROR_UNLESS_KRF(m_streamDecoder.decode(i), "Failed to decode chunk", Kernel::ErrorType::Internal);
 
 		// represents the properties of the input, no data
-		const IMatrix* matrix = m_streamDecoder.getOutputMatrix();
+		const CMatrix* matrix = m_streamDecoder.getOutputMatrix();
 
 		if (m_streamDecoder.isHeaderReceived())
 		{
@@ -213,7 +213,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_Spectrum)
 			{
-				const IMatrix* frequencyAbscissaMatrix = m_streamDecoder.getOutputFrequencyAbcissa();
+				const CMatrix* frequencyAbscissaMatrix = m_streamDecoder.getOutputFrequencyAbcissa();
 				std::vector<std::string> channelsLabels;
 				std::vector<double> frequencyAbscissa;
 
@@ -239,7 +239,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 		if (m_streamDecoder.isBufferReceived())
 		{
-			const IMatrix* imatrix = m_streamDecoder.getOutputMatrix();
+			const CMatrix* imatrix = m_streamDecoder.getOutputMatrix();
 
 			if (m_typeID == OV_TypeId_Signal)
 			{
@@ -275,7 +275,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				const double startTime = CTime(boxCtx.getInputChunkStartTime(0, i)).toSeconds();
 				const double endTime   = CTime(boxCtx.getInputChunkEndTime(0, i)).toSeconds();
-				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getBufferElementCount());
+				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getSize());
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
@@ -286,9 +286,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				const double startTime = CTime(boxCtx.getInputChunkStartTime(0, i)).toSeconds();
 				const double endTime   = CTime(boxCtx.getInputChunkEndTime(0, i)).toSeconds();
-				const IMatrix* zmatrix = m_streamDecoder.getOutputMatrix();
+				const CMatrix* zmatrix = m_streamDecoder.getOutputMatrix();
 
-				const std::vector<double> streamedMatrixValues(zmatrix->getBuffer(), zmatrix->getBuffer() + zmatrix->getBufferElementCount());
+				const std::vector<double> streamedMatrixValues(zmatrix->getBuffer(), zmatrix->getBuffer() + zmatrix->getSize());
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
@@ -299,7 +299,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				const double startTime = CTime(boxCtx.getInputChunkStartTime(0, i)).toSeconds();
 				const double endTime   = CTime(boxCtx.getInputChunkEndTime(0, i)).toSeconds();
-				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getBufferElementCount());
+				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getSize());
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :

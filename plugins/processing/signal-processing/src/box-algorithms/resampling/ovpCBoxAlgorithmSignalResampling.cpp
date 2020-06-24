@@ -99,8 +99,8 @@ bool CBoxAlgorithmSignalResampling::process()
 	{
 		m_decoder.decode(i);
 
-		IMatrix* iMatrix = m_decoder.getOutputMatrix();
-		IMatrix* oMatrix = m_encoder.getInputMatrix();
+		CMatrix* iMatrix = m_decoder.getOutputMatrix();
+		CMatrix* oMatrix = m_encoder.getInputMatrix();
 
 		const size_t nChannel = iMatrix->getDimensionSize(0);
 		//size_t nSample  = iMatrix->getDimensionSize(1);

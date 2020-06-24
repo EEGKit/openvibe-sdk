@@ -9,7 +9,7 @@ using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 
 namespace {
-size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
+size_t FindChannel(const CMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 {
 	size_t result         = std::numeric_limits<size_t>::max();
 	const size_t nChannel = matrix.getDimensionSize(0);
@@ -18,7 +18,7 @@ size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMe
 	{
 		for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 		{
-			if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
+			if (String::isAlmostEqual(matrix.getDimensionLabel(0, i).c_str(), channel, false)) { result = i; }
 		}
 	}
 	else if (matchMethod == EMatchMethod::Index)
@@ -162,7 +162,7 @@ bool CBoxAlgorithmChannelSelector::process()
 				{
 					for (size_t k = 0; k < nToken; ++k)
 					{
-						if (String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
+						if (String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j).c_str(), token[k], false)) { m_vLookup.push_back(j); }
 					}
 				}
 			}

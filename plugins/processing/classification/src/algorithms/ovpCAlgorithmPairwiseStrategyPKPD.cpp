@@ -27,7 +27,7 @@ bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 	return true;
 }
 
-bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
+bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
 						Kernel::ErrorType::BadInput);

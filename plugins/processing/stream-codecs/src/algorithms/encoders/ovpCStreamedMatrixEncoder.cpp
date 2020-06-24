@@ -25,7 +25,7 @@ bool CStreamedMatrixEncoder::uninitialize()
 
 bool CStreamedMatrixEncoder::processHeader()
 {
-	IMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_pMatrix;
 	size_t j;
 
 	m_size = (matrix->getDimensionCount() == 0 ? 0 : 1);
@@ -44,14 +44,14 @@ bool CStreamedMatrixEncoder::processHeader()
 		bool shouldSendLabels = false;
 		for (j = 0; j < matrix->getDimensionSize(i) && !shouldSendLabels; ++j)
 		{
-			if (matrix->getDimensionLabel(i, j) != nullptr && matrix->getDimensionLabel(i, j)[0] != '\0') { shouldSendLabels = true; }
+			if (!matrix->getDimensionLabel(i, j).empty() && matrix->getDimensionLabel(i, j)[0] != '\0') { shouldSendLabels = true; }
 		}
 		if (shouldSendLabels)
 		{
 			for (j = 0; j < matrix->getDimensionSize(i); ++j)
 			{
 				m_writerHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Label);
-				m_writerHelper->setStr(matrix->getDimensionLabel(i, j));
+				m_writerHelper->setStr(matrix->getDimensionLabel(i, j).c_str());
 				m_writerHelper->closeChild();
 			}
 		}
@@ -64,7 +64,7 @@ bool CStreamedMatrixEncoder::processHeader()
 
 bool CStreamedMatrixEncoder::processBuffer()
 {
-	IMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_pMatrix;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);

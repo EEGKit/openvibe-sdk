@@ -46,8 +46,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 	{
 		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", Kernel::ErrorType::Internal);
 
-		IMatrix* iMatrix = m_decoder.getOutputMatrix();
-		IMatrix* oMatrix = m_encoder.getInputMatrix();
+		CMatrix* iMatrix = m_decoder.getOutputMatrix();
+		CMatrix* oMatrix = m_encoder.getInputMatrix();
 
 		const size_t nChannel = iMatrix->getDimensionSize(0);
 		const size_t nISample = iMatrix->getDimensionSize(1);

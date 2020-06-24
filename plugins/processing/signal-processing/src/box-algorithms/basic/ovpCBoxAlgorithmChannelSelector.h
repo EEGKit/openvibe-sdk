@@ -25,8 +25,8 @@ protected:
 	Toolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
 	Toolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
 
-	IMatrix* m_iMatrix = nullptr;
-	IMatrix* m_oMatrix = nullptr;
+	CMatrix* m_iMatrix = nullptr;
+	CMatrix* m_oMatrix = nullptr;
 
 	std::vector<size_t> m_vLookup;
 };

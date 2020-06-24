@@ -43,7 +43,7 @@ void fillMatrix(CMatrix& matrix)
 		}
 	}
 
-	for (size_t i = 0; i < matrix.getBufferElementCount(); ++i)
+	for (size_t i = 0; i < matrix.getSize(); ++i)
 	{
 		matrix.getBuffer()[i] = System::Math::random0To1() * double(int8_t(System::Math::randomI()));
 	}
@@ -75,7 +75,7 @@ bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, const size
 		return false;
 	}
 
-	for (size_t i = 0; i < expectedMatrix.getBufferElementCount(); ++i)
+	for (size_t i = 0; i < expectedMatrix.getSize(); ++i)
 	{
 		const double error = std::fabs(expectedMatrix.getBuffer()[i] - resultMatrix.getBuffer()[i]);
 

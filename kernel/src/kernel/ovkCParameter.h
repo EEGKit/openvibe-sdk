@@ -64,7 +64,7 @@ _parameter_template_instance_simple_type_(CBooleanParameter, bool, bool, OVK_Cla
 _parameter_template_instance_simple_type_(CFloatParameter, double, double, OVK_ClassId_Kernel_FloatParameter)
 _parameter_template_instance_object_(CStringParameter, CString, CString*, OVK_ClassId_Kernel_StringParameter)
 _parameter_template_instance_object_(CIdentifierParameter, CIdentifier, CIdentifier*, OVK_ClassId_Kernel_IdentifierParameter)
-_parameter_template_instance_object_(CMatrixParameter, CMatrix, IMatrix*, OVK_ClassId_Kernel_MatrixParameter)
+_parameter_template_instance_object_(CMatrixParameter, CMatrix, CMatrix*, OVK_ClassId_Kernel_MatrixParameter)
 _parameter_template_instance_object_(CStimulationSetParameter, CStimulationSet, CStimulationSet*, OVK_ClassId_Kernel_StimulationSetParameter)
 _parameter_template_instance_object_(CMemoryBufferParameter, CMemoryBuffer, IMemoryBuffer*, OVK_ClassId_Kernel_MemoryBufferParameter)
 _parameter_template_instance_object_(CObjectParameter, CNullObject, IObject*, OVK_ClassId_Kernel_ObjectParameter)

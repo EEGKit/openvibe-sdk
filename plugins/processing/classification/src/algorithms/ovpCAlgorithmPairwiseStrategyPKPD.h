@@ -25,7 +25,7 @@ public:
 	bool initialize() override { return true; }
 	bool uninitialize() override { return true; }
 	bool parameterize() override;
-	bool compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities) override;
+	bool compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities) override;
 	XML::IXMLNode* saveConfig() override;
 	bool loadConfig(XML::IXMLNode& /*node*/) override { return true; }
 

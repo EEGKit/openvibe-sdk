@@ -117,7 +117,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
 
-				IMatrix* matrix       = decoder.getOutputMatrix();
+				CMatrix* matrix       = decoder.getOutputMatrix();
 				nChannel              = matrix->getDimensionSize(0);
 				const size_t nSample  = matrix->getDimensionSize(1);
 				const size_t sampling = size_t(decoder.getOutputSamplingRate());
@@ -259,7 +259,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
 
-			for (size_t i = 0; i < eigenVectors.getBufferElementCount(); ++i) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
+			for (size_t i = 0; i < eigenVectors.getSize(); ++i) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
 
 			fprintf(file, "</SettingValue>\n");
 			fprintf(file, "\t<SettingValue>%zu</SettingValue>\n", m_filterDim);

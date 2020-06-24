@@ -43,9 +43,9 @@ bool CAlgorithmOnlineCovariance::process()
 	const TParameterHandler<double> ip_Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
 	const TParameterHandler<bool> ip_TraceNormalization(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
 	const TParameterHandler<uint64_t> ip_UpdateMethod(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
-	const TParameterHandler<IMatrix*> ip_FeatureVectorSet(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
-	TParameterHandler<IMatrix*> op_Mean(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_CovarianceMatrix(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
+	const TParameterHandler<CMatrix*> ip_FeatureVectorSet(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
+	TParameterHandler<CMatrix*> op_Mean(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean));
+	TParameterHandler<CMatrix*> op_CovarianceMatrix(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Reset))
 	{

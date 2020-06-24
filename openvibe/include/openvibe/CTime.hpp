@@ -89,6 +89,8 @@ public:
 	CTime ceil() const { return CTime(uint64_t(((m_time << 32) > 0) ? ((m_time & (0xFFFFFFFFLL << 32)) + (1LL << 32)) : m_time)); }
 
 	/// <summary> Display the time in second and/or in hexa. </summary>
+	/// <param name="inSecond"> Display in second (with " sec" after the number) if <c> true</c>, display only the time directly in fixed <c>uint64_t</c>. </param>
+	/// <param name="inHexa"> Display <c>uint64_t</c> in hexadecimal in addition with the previous dipslay. </param>
 	/// <returns> the time. </returns>
 	std::string str(const bool inSecond = true, const bool inHexa = false) const;
 
