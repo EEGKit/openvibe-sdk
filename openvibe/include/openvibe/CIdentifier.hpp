@@ -66,19 +66,19 @@ public:
 	//--------------------------------------------------
 
 	/// <summary> Copy Assignment Operator. </summary>
-	/// <param name="id">The identifier.</param>
-	/// <returns> himself. </returns>
+	/// <param name="id"> The identifier. </param>
+	/// <returns> Himself. </returns>
 	CIdentifier& operator=(const CIdentifier& id);
 
 	/// <summary> Increments this identifier by 1. </summary>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	/// 
 	/// <remarks> If this identifier is <see cref="CIdentifier::undefined()"/>, it is not incremented.\n
 	/// If this idenfitier is not <see cref="CIdentifier::undefined()"/>, it can not become <see cref="CIdentifier::undefined()"/> after being incremented. </remarks>
 	CIdentifier& operator++();
 
 	/// <summary> Decrements this identifier by 1. </summary>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	/// <remarks> If this identifier is \c CIdentifier::undefined(), it is not decremented.\n
 	/// If this idenfitier is not \c CIdentifier::undefined(), it can not become \c CIdentifier::undefined() after being decremented. </remarks>
 	CIdentifier& operator--();

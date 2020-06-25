@@ -27,7 +27,7 @@ public:
 
 	/// <summary> Affectation Operator. </summary>
 	/// <param name="stim"> The stimulation. </param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	CStimulation& operator=(const CStimulation& stim)
 	{
 		if (this == &stim) return *this;

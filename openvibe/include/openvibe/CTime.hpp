@@ -105,17 +105,17 @@ public:
 	//---------- With Time ----------
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="time">The time.</param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	CTime& operator=(const CTime& time);
 
 	/// <summary> Add Assignment Operator. </summary>
 	/// <param name="time"> The time to add. </param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	CTime& operator+=(const CTime& time);
 
 	/// <summary> Substract Assignment Operator. </summary>
 	/// <param name="time"> The time to remove. </param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	CTime& operator-=(const CTime& time);
 
 	/// <summary> "Equal" test operator. </summary>
@@ -151,7 +151,7 @@ public:
 	//---------- With Template ----------
 	/// <summary> Copy Assignment Operator. </summary>
 	/// <param name="time">The time.</param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
 	CTime& operator=(const T time)
@@ -162,7 +162,7 @@ public:
 
 	/// <summary> Add Assignment Operator. </summary>
 	/// <param name="time"> The time to add. </param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
 	CTime& operator+=(const T time)
@@ -173,7 +173,7 @@ public:
 
 	/// <summary> Substract Assignment Operator. </summary>
 	/// <param name="time"> The time to remove. </param>
-	/// <returns> himself. </returns>
+	/// <returns> Himself. </returns>
 	/// <remarks> Template function must be define in header to keep the template system in extern program. </remarks>
 	template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
 	CTime& operator-=(const T time)

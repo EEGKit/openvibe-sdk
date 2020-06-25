@@ -9,9 +9,9 @@ namespace OpenViBE {
 //--------------------------------------------------
 
 //--------------------------------------------------------------------------------
-std::string CMatrix::getDimensionLabel(const size_t idx1, const size_t idx2) const
+std::string CMatrix::getDimensionLabel(const size_t dim, const size_t idx) const
 {
-	return (!m_dimSizes || idx1 >= m_dimSizes->size() || idx2 >= m_dimSizes->at(idx1)) ? "" : m_dimLabels->at(idx1)[idx2];
+	return (!m_dimSizes || dim >= m_dimSizes->size() || idx >= m_dimSizes->at(dim)) ? "" : m_dimLabels->at(dim)[idx];
 }
 //--------------------------------------------------------------------------------
 
@@ -40,39 +40,35 @@ size_t CMatrix::getSize() const
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CMatrix::setDimensionCount(const size_t count)
+void CMatrix::setDimensionCount(const size_t count)
 {
-	if (count == 0) { return false; }
+	if (count == 0) { return; }
 
 	clearBuffer();
 	if (!m_dimSizes) { m_dimSizes = new std::vector<size_t>; }
 	if (!m_dimLabels) { m_dimLabels = new std::vector<std::vector<std::string>>; }
 	m_dimSizes->resize(count);
 	m_dimLabels->resize(count);
-
-	return true;
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CMatrix::setDimensionSize(const size_t index, const size_t size)
+void CMatrix::setDimensionSize(const size_t dim, const size_t size) const
 {
-	if (!m_dimSizes || !m_dimLabels || index >= m_dimSizes->size()) { return false; }
+	if (!m_dimSizes || !m_dimLabels || dim >= m_dimSizes->size()) { return; }
 
 	clearBuffer();
-	m_dimSizes->at(index) = size;
-	m_dimLabels->at(index).clear();
-	m_dimLabels->at(index).resize(size);
-	return true;
+	m_dimSizes->at(dim) = size;
+	m_dimLabels->at(dim).clear();
+	m_dimLabels->at(dim).resize(size);
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CMatrix::setDimensionLabel(const size_t idx1, const size_t idx2, const std::string& label) const
+void CMatrix::setDimensionLabel(const size_t dim, const size_t idx, const std::string& label) const
 {
-	if (!m_dimLabels || idx1 >= m_dimLabels->size() || idx2 >= m_dimLabels->at(idx1).size()) { return false; }
-	m_dimLabels->at(idx1)[idx2] = label;
-	return true;
+	if (!m_dimLabels || dim >= m_dimLabels->size() || idx >= m_dimLabels->at(dim).size()) { return; }
+	m_dimLabels->at(dim)[idx] = label;
 }
 //--------------------------------------------------------------------------------
 
@@ -129,12 +125,12 @@ void CMatrix::clear()
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-void CMatrix::copy(const CMatrix& other)
+void CMatrix::copy(const CMatrix& m)
 {
-	m_dimSizes  = new std::vector<size_t>(*other.m_dimSizes);
-	m_dimLabels = new std::vector<std::vector<std::string>>(*other.m_dimLabels);
+	m_dimSizes  = new std::vector<size_t>(*m.m_dimSizes);
+	m_dimLabels = new std::vector<std::vector<std::string>>(*m.m_dimLabels);
 	refreshInternalBuffer();
-	std::memcpy(m_buffer, other.getBuffer(), other.getSize() * sizeof(double));
+	std::memcpy(m_buffer, m.getBuffer(), m.getSize() * sizeof(double));
 }
 //--------------------------------------------------------------------------------
 
@@ -167,14 +163,13 @@ std::string CMatrix::str() const
 //--------------------------------------------------------------------------------
 void CMatrix::refreshInternalBuffer() const
 {
-	if (!m_buffer && !m_dimSizes->empty())
-	{
-		m_size = 1;
-		for (const auto& s : *m_dimSizes) { m_size *= s; }
+	if (m_buffer || m_dimSizes->empty()) { return; }
 
-		if (m_size != 0) { m_buffer = new double[m_size]; }
-		if (!m_buffer) { m_size = 0; }
-	}
+	m_size = 1;
+	for (const auto& s : *m_dimSizes) { m_size *= s; }
+
+	if (m_size != 0) { m_buffer = new double[m_size]; }
+	if (!m_buffer) { m_size = 0; }
 }
 //--------------------------------------------------------------------------------
 

@@ -135,7 +135,7 @@ public:
 	CStimulation& operator[](const size_t index) { return m_stimulations->operator[](index); }
 	/// <summary> Overload of const operator []. </summary>
 	/// <param name="index"> The index. </param>
-	/// <returns> Reference of the object. </returns>
+	/// <returns> Const Reference of the object. </returns>
 	const CStimulation& operator[](const size_t index) const { return m_stimulations->operator[](index); }
 
 
