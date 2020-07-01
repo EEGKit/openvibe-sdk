@@ -72,7 +72,7 @@ public:
 	 * \return the current player lateness
 	 * \note The lateness is fixed point 32:32 representated in seconds
 	 */
-	virtual uint64_t getCurrentLateness() const = 0;
+	virtual CTime getCurrentLateness() const = 0;
 	/**
 	 * \brief Gets the current CPU use for the running processing unit
 	 * \return the current CPU use

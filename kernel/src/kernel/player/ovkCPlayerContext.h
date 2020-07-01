@@ -18,7 +18,7 @@ public:
 	bool sendMessage(const CMessage& msg, const CIdentifier& dstID) override;
 	bool sendMessage(const CMessage& msg, const CIdentifier* dstID, const size_t nDstID) override;
 	CTime getCurrentTime() const override;
-	uint64_t getCurrentLateness() const override;
+	CTime getCurrentLateness() const override;
 	double getCurrentCPUUsage() const override;
 	double getCurrentFastForwardMaximumFactor() const override;
 	bool stop() override;

@@ -32,7 +32,7 @@ public:
 
 	bool sendInput(const CChunk& chunk, const CIdentifier& boxId, size_t index);
 	CTime getCurrentTime() const { return m_currentTime; }
-	uint64_t getCurrentLateness() const;
+	CTime getCurrentLateness() const;
 	uint64_t getFrequency() const { return m_frequency; }
 	CTime getStepDuration() const { return m_stepDuration; }
 	double getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }

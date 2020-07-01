@@ -628,7 +628,7 @@ bool CScheduler::sendInput(const CChunk& chunk, const CIdentifier& boxId, const 
 	return true;
 }
 
-uint64_t CScheduler::getCurrentLateness() const { return m_rPlayer.getCurrentSimulatedLateness(); }
+CTime CScheduler::getCurrentLateness() const { return m_rPlayer.getCurrentSimulatedLateness(); }
 double CScheduler::getFastForwardMaximumFactor() const { return m_rPlayer.getFastForwardMaximumFactor(); }
 
 void CScheduler::handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception)

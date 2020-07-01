@@ -20,12 +20,12 @@ public:
 	explicit CPlayer(const IKernelContext& ctx);
 	~CPlayer() override;
 	bool setScenario(const CIdentifier& scenarioID, const CNameValuePairList* localConfigurationTokens) override;
-	IConfigurationManager& getRuntimeConfigurationManager() const override;
-	IScenarioManager& getRuntimeScenarioManager() const override;
-	CIdentifier getRuntimeScenarioIdentifier() const override;
+	IConfigurationManager& getRuntimeConfigurationManager() const override { return *m_runtimeConfigManager; }
+	IScenarioManager& getRuntimeScenarioManager() const override { return *m_runtimeScenarioManager; }
+	CIdentifier getRuntimeScenarioIdentifier() const override { return m_runtimeScenarioID; }
 
 
-	bool isHoldingResources() const;
+	bool isHoldingResources() const { return m_scheduler.isHoldingResources(); }
 	EPlayerReturnCodes initialize() override;
 	bool uninitialize() override;
 	bool stop() override;
@@ -33,14 +33,13 @@ public:
 	bool step() override;
 	bool play() override;
 	bool forward() override;
-	EPlayerStatus getStatus() const override;
+	EPlayerStatus getStatus() const override { return m_status; }
 	bool setFastForwardMaximumFactor(double fastForwardFactor) override;
-	double getFastForwardMaximumFactor() const override;
-	double getCPUUsage() const override;
+	double getFastForwardMaximumFactor() const override { return m_fastForwardMaximumFactor; }
+	double getCPUUsage() const override { return m_scheduler.getCPUUsage(); }
 	bool loop(CTime elapsedTime, CTime maximumTimeToReach) override;
-	CTime getCurrentSimulatedTime() const override;
-	uint64_t getCurrentSimulatedLateness() const;
-
+	CTime getCurrentSimulatedTime() const override { return m_scheduler.getCurrentTime(); }
+	CTime getCurrentSimulatedLateness() const { return m_innerLateness; }
 
 	_IsDerivedFromClass_Final_(TKernelObject<IPlayer>, OVK_ClassId_Kernel_Player_Player)
 
@@ -54,8 +53,8 @@ protected:
 	CScheduler m_scheduler;
 
 	CTime m_currentTimeToReach        = 0;
-	uint64_t m_lateness               = 0;
-	uint64_t m_innerLateness          = 0;
+	CTime m_lateness                  = 0;
+	CTime m_innerLateness             = 0;
 	EPlayerStatus m_status            = EPlayerStatus::Stop;
 	bool m_isInitializing             = false;
 	double m_fastForwardMaximumFactor = 0;

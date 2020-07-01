@@ -14,22 +14,14 @@
 #include <iostream>
 #include <fstream>
 
-//___________________________________________________________________//
-//                                                                   //
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
+namespace OpenViBE {
+namespace Kernel {
 
 const uint64_t SCHEDULER_DEFAULT_FREQUENCY   = 128;
 const CTime SCHEDULER_MAXIMUM_LOOPS_DURATION = (100LL << 22); /* 100/1024 seconds, approx 100ms */
 
-//___________________________________________________________________//
-//                                                                   //
-
+//--------------------------------------------------------------------------------
 CPlayer::CPlayer(const IKernelContext& ctx)
 	: TKernelObject<IPlayer>(ctx), m_kernelCtxBridge(ctx), m_scheduler(m_kernelCtxBridge, *this)
 {
@@ -44,7 +36,9 @@ CPlayer::CPlayer(const IKernelContext& ctx)
 	else { TKernelObject<IPlayer>::getLogManager() << LogLevel_Trace << "Player frequency set to " << schedulerFrequency << "\n"; }
 	m_scheduler.setFrequency(schedulerFrequency);
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 CPlayer::~CPlayer()
 {
 	if (this->isHoldingResources()) { this->uninitialize(); }
@@ -52,10 +46,9 @@ CPlayer::~CPlayer()
 	delete m_runtimeConfigManager;
 	delete m_runtimeScenarioManager;
 }
+//--------------------------------------------------------------------------------
 
-//___________________________________________________________________//
-//                                                                   //
-
+//--------------------------------------------------------------------------------
 bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairList* localConfigurationTokens)
 {
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall);
@@ -126,10 +119,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 				else { m_runtimeConfigManager->setConfigurationTokenValue(tokenID, value); }
 			}
 				// This should not happen
-			else
-			{
-				getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n";
-			}
+			else { getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n"; }
 		}
 	}
 
@@ -138,11 +128,9 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 
 	return m_scheduler.setScenario(m_runtimeScenarioID);
 }
+//--------------------------------------------------------------------------------
 
-IConfigurationManager& CPlayer::getRuntimeConfigurationManager() const { return *m_runtimeConfigManager; }
-IScenarioManager& CPlayer::getRuntimeScenarioManager() const { return *m_runtimeScenarioManager; }
-CIdentifier CPlayer::getRuntimeScenarioIdentifier() const { return m_runtimeScenarioID; }
-
+//--------------------------------------------------------------------------------
 EPlayerReturnCodes CPlayer::initialize()
 {
 	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall, EPlayerReturnCodes::Failed);
@@ -171,7 +159,9 @@ EPlayerReturnCodes CPlayer::initialize()
 	m_status = EPlayerStatus::Stop;
 	return EPlayerReturnCodes::Success;
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 bool CPlayer::uninitialize()
 {
 	getLogManager() << LogLevel_Trace << "Player uninitialize\n";
@@ -189,7 +179,9 @@ bool CPlayer::uninitialize()
 
 	return true;
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 bool CPlayer::stop()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
@@ -197,7 +189,9 @@ bool CPlayer::stop()
 	m_status = EPlayerStatus::Stop;
 	return true;
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 bool CPlayer::pause()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
@@ -205,7 +199,9 @@ bool CPlayer::pause()
 	m_status = EPlayerStatus::Pause;
 	return true;
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 bool CPlayer::step()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
@@ -213,7 +209,9 @@ bool CPlayer::step()
 	m_status = EPlayerStatus::Step;
 	return true;
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 bool CPlayer::play()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
@@ -221,7 +219,9 @@ bool CPlayer::play()
 	m_status = EPlayerStatus::Play;
 	return true;
 }
+//--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
 bool CPlayer::forward()
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
@@ -229,21 +229,17 @@ bool CPlayer::forward()
 	m_status = EPlayerStatus::Forward;
 	return true;
 }
+//--------------------------------------------------------------------------------
 
-EPlayerStatus CPlayer::getStatus() const { return m_status; }
-
+//--------------------------------------------------------------------------------
 bool CPlayer::setFastForwardMaximumFactor(const double fastForwardFactor)
 {
 	m_fastForwardMaximumFactor = (fastForwardFactor < 0 ? 0 : fastForwardFactor);
 	return true;
 }
+//--------------------------------------------------------------------------------
 
-double CPlayer::getFastForwardMaximumFactor() const { return m_fastForwardMaximumFactor; }
-
-double CPlayer::getCPUUsage() const { return m_scheduler.getCPUUsage(); }
-
-bool CPlayer::isHoldingResources() const { return m_scheduler.isHoldingResources(); }
-
+//--------------------------------------------------------------------------------
 bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 {
 	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
@@ -282,10 +278,10 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 	}
 
 #if defined CPlayer_Debug_Time
-::printf("---\n");
-::printf("Factor        : %lf\n", m_fastForwardMaximumFactor);
-::printf("Current time  : %llx\n", m_scheduler.getCurrentTime());
-::printf("Time to reach : %llx\n", m_currentTimeToReach);
+	std::cout << "---" << std::endl
+		<< "Factor        : " << m_fastForwardMaximumFactor << std::endl
+		<< "Current time  : " << m_scheduler.getCurrentTime() << std::endl
+		<< "Time to reach : " << m_currentTimeToReach << std::endl;
 #endif // CPlayer_Debug_Time
 
 	const CTime schedulerStepDuration = m_scheduler.getStepDuration();
@@ -296,7 +292,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 		const CTime nextSchedulerTime = m_scheduler.getCurrentTime() + schedulerStepDuration;
 
 #if defined CPlayer_Debug_Time
-::printf("    Next time : %llx\n", nextSchedulerTime);
+		std::cout << "    Next time : " << nextSchedulerTime << std::endl;
 #endif // CPlayer_Debug_Time
 		if (m_status == EPlayerStatus::Stop) { finished = true; }
 
@@ -305,7 +301,7 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 		{
 			finished = true;
 #if defined CPlayer_Debug_Time
-::printf("Breaks because would get over time to reach\n");
+			std::cout << "Breaks because would get over time to reach\n" << std::endl;
 #endif // CPlayer_Debug_Time
 		}
 		else
@@ -319,16 +315,16 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 				getLogManager() << LogLevel_Error << "Scheduler loop failed.\n";
 				return false;
 			}
-
 #if defined CPlayer_Debug_Time
-::printf("Iterates (%f / %f - %s)\n", (m_scheduler.getCurrentTime()>>22)/1024., (maximumTimeToReach>>22)/1024., (m_status==EPlayerStatus::Forward?"true":"false"));
+			std::cout << "Iterates (" << (m_scheduler.getCurrentTime().time() >> 22) / 1024. << " / " << (maximumTimeToReach.time() >> 22) / 1024.
+				<< " - " << (m_status == EPlayerStatus::Forward ? "true" : "false") << ")" << std::endl;
 #endif // CPlayer_Debug_Time
 		}
 		if (System::Time::zgetTime() > (tStart + SCHEDULER_MAXIMUM_LOOPS_DURATION).time())
 		{
 			finished = true;
 #if defined CPlayer_Debug_Time
-::printf("Breaks because of loop time out\n");
+			std::cout << "Breaks because of loop time out\n" << std::endl;
 #endif // CPlayer_Debug_Time
 		}
 	}
@@ -338,23 +334,24 @@ bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)
 		m_currentTimeToReach = m_scheduler.getCurrentTime();
 	}
 
-	uint64_t lateness;
-	if (m_currentTimeToReach > m_scheduler.getCurrentTime()) { lateness = (m_currentTimeToReach - m_scheduler.getCurrentTime()).time(); }
+	CTime lateness;
+	if (m_currentTimeToReach > m_scheduler.getCurrentTime()) { lateness = (m_currentTimeToReach - m_scheduler.getCurrentTime()); }
 	else { lateness = 0; }
 
 #if defined CPlayer_Debug_Time
-::printf("Done -- New time to reach : %llx\n", m_currentTimeToReach);
+	std::cout << "Done -- New time to reach :" << m_currentTimeToReach << std::endl;
 #endif // CPlayer_Debug_Time
 
-	const uint64_t latenessSec     = lateness >> 32;
-	const uint64_t prevlatenessSec = m_lateness >> 32;
-	stringstream ss;
+	const size_t latenessSec     = size_t(lateness.toSeconds());
+	const size_t prevlatenessSec = size_t(m_lateness.toSeconds());
+	std::stringstream ss;
 	ss << "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit
 			<< LogColor_ForegroundBlue << "can not reach realtime" << LogColor_PopStateBit << "> " << latenessSec << " second(s) late...\n";
 	OV_WARNING_UNLESS_K(latenessSec == prevlatenessSec, ss.str());
 
 	return true;
 }
+//--------------------------------------------------------------------------------
 
-CTime CPlayer::getCurrentSimulatedTime() const { return m_scheduler.getCurrentTime(); }
-uint64_t CPlayer::getCurrentSimulatedLateness() const { return m_innerLateness; }
+}  // namespace Kernel
+}  // namespace OpenViBE
