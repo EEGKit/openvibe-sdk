@@ -24,7 +24,7 @@ public:
 	~CStimulation() = default;	///< Default Destructor.
 
 	//----- Members (useless to protect members) -----
-	size_t m_ID = std::numeric_limits<size_t>::max();	///< The Id of the Stimulation (Identifier OpenViBE are useless).
+	size_t m_ID = std::numeric_limits<size_t>::max();	///< The Id of the Stimulation (size_t is sufficient and replaces the original CIdentifier).
 	CTime m_Date;										///< Date of the Stimulation.
 	CTime m_Duration;									///< Duration of the Stimulation.
 };
