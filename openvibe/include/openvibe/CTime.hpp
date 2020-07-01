@@ -73,6 +73,17 @@ public:
 	/// <returns> Regular floating point time in seconds. </returns>
 	double toSeconds() const { return m_time / double(1LL << 32); }
 
+	/// <summary> Get the number of hours, minutes, seconds, milliseconds of the time. </summary>
+	/// <param name="hours"> The hours. </param>
+	/// <param name="minutes"> The minutes. </param>
+	/// <param name="seconds"> The seconds. </param>
+	/// <param name="milliseconds"> The milliseconds. </param>
+	void getTime(size_t& hours, size_t& minutes, size_t& seconds, size_t& milliseconds) const;
+
+	/// <summary> Get the string of the time with the format "XXh XXm XXs XXXms". </summary>
+	std::string getTimeStr() const;
+
+	
 	/// <summary> Ceil the time. \n
 	/// - <c>1LL << 32</c> corresponds to <c>1</c> followed by 32 <c>0</c> so the maximum of an int of 32bit + <c>1</c> (\f$ 2^{32} \f$).
 	/// - <c>0xFFFFFFFFLL << 32</c> corresponds to 32 <c>1</c> followed by 32 <c>0</c> (we see 8 character because 4 bit is used by Hexadecimal characters).
