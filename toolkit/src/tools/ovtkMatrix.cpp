@@ -31,12 +31,12 @@ bool Matrix::copyDescription(CMatrix& dst, const CMatrix& src)
 	if (&dst == &src) { return true; }
 
 	const size_t nDim = src.getDimensionCount();
-	if (!dst.setDimensionCount(nDim)) { return false; }
+	dst.setDimensionCount(nDim);
 	for (size_t i = 0; i < nDim; ++i)
 	{
 		const size_t dimSize = src.getDimensionSize(i);
-		if (!dst.setDimensionSize(i, dimSize)) { return false; }
-		for (size_t j = 0; j < dimSize; ++j) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
+		dst.setDimensionSize(i, dimSize);
+		for (size_t j = 0; j < dimSize; ++j) { dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j)); }
 	}
 	return true;
 }

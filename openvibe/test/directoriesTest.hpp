@@ -17,13 +17,13 @@
 //---------------------------------------------------------------------------------------------------
 TEST(directories_Tests, directories)
 {
-	std::cout << "Dist Dir :\t" << OpenViBE::Directories::getDistRootDir() << std::endl;
-	std::cout << "Binary Dir :\t" << OpenViBE::Directories::getBinDir() << std::endl;
-	std::cout << "Data Dir :\t" << OpenViBE::Directories::getDataDir() << std::endl;
-	std::cout << "Library Dir :\t" << OpenViBE::Directories::getLibDir() << std::endl;
-	std::cout << "User Home dir :\t" << OpenViBE::Directories::getUserHomeDir() << std::endl;
-	std::cout << "User Data Dir :\t" << OpenViBE::Directories::getUserDataDir() << std::endl;
-	std::cout << "All User Data dir :\t" << OpenViBE::Directories::getAllUsersDataDir() << std::endl;
-	std::cout << "Log dir :\t" << OpenViBE::Directories::getLogDir() << std::endl;
+	std::cout << "Dist Dir :\t\t" << OpenViBE::Directories::getDistRootDir() << std::endl;
+	std::cout << "Binary Dir :\t\t" << OpenViBE::Directories::getBinDir() << std::endl;
+	std::cout << "Data Dir :\t\t" << OpenViBE::Directories::getDataDir() << std::endl;
+	std::cout << "Library Dir :\t\t" << OpenViBE::Directories::getLibDir() << std::endl;
+	std::cout << "User Home Dir :\t\t" << OpenViBE::Directories::getUserHomeDir() << std::endl;
+	std::cout << "User Data Dir :\t\t" << OpenViBE::Directories::getUserDataDir() << std::endl;
+	std::cout << "All User Data Dir :\t" << OpenViBE::Directories::getAllUsersDataDir() << std::endl;
+	std::cout << "Log Dir :\t\t" << OpenViBE::Directories::getLogDir() << std::endl;
 }
 //---------------------------------------------------------------------------------------------------

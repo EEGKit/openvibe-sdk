@@ -24,7 +24,7 @@ public:
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
 	/// <summary> Default constructor. </summary>
-	CMatrix() = default;
+	CMatrix() { initVector(); };
 
 	/// <summary> Constructor for 1D or 2D matrix with initial dimensions. </summary>
 	/// <param name="dim1"> The first dimension size. </param>
@@ -58,7 +58,7 @@ public:
 
 	/// <summary> Const Buffer Accessor. </summary>
 	/// <returns> The buffer. </returns>
-	const double* getBuffer() const;
+	const double* getBuffer() const { return m_buffer; }
 
 	/// <summary> Buffer Accessor. </summary>
 	/// <returns> The buffer. </returns>
@@ -68,10 +68,18 @@ public:
 	/// <returns> The number of element. </returns>
 	size_t getSize() const;
 
+	/// <summary> Get the dimension's sizes vector. </summary>
+	/// <returns> The member <see cref="m_dimSizes"/>. </returns>
+	std::vector<size_t>* getSizes() const { return m_dimSizes; }
+
+	/// <summary> Get the dimension's labels vector. </summary>
+	/// <returns> The member <see cref="m_dimLabels"/>. </returns>
+	std::vector<std::vector<std::string>>* getLabels() const { return m_dimLabels; }
+
 	/// <summary> Set the number of dimensions. </summary>
 	/// <param name="count">The number of dimensions. </param>
 	/// <returns></returns>
-	void setDimensionCount(const size_t count);
+	void setDimensionCount(const size_t count) const;
 
 	/// <summary> Set the size of the selected dimension. </summary>
 	/// <param name="dim"> The selected dimension. </param>
@@ -115,10 +123,8 @@ public:
 	/// <param name="dim2"> The second dimension. </param>
 	void resize(const size_t dim1 = 0, const size_t dim2 = 0);
 
-	/// <summary> Delete Buffer pointer and reset size to 0. </summary>
-	void clearBuffer() const;
-
 	/// <summary> Delete all pointer and reset size to 0. </summary>
+	/// <remarks> Be carefull with this, must use a new constructor or resize function to allocate all pointers. </remarks>
 	void clear();
 
 	/// <summary> Copy matrix to this instance. </summary>
@@ -127,7 +133,10 @@ public:
 
 	/// <summary> Set all element of the buffer to 0. </summary>
 	void reset() const;
-
+	
+	/// <summary> Set all labels to "". </summary>
+	void resetLabels() const { for (auto& dim : *m_dimLabels) { for (auto& l : dim) { l = ""; } } }
+	
 	/// <summary> Display the matrix. </summary>
 	/// <returns> the Matrix. </returns>
 	std::string str() const;
@@ -145,9 +154,19 @@ public:
 	_IsDerivedFromClass_Final_(IObject, OV_ClassId_Matrix)
 
 private:
+	
 	/// <summary> Init Buffer and number of element. </summary>
-	void refreshInternalBuffer() const;
+	void initBuffer() const;
 
+	/// <summary> Initialize vector pointer. </summary>
+	void initVector();
+
+	/// <summary> Delete Buffer pointer and reset size to 0. </summary>
+	void clearBuffer() const;
+
+	/// <summary> Delete vector pointer. </summary>
+	void clearVector();
+	
 	mutable double* m_buffer = nullptr;	///< The matrix buffer.
 	mutable size_t m_size    = 0;		///< The number of element.
 

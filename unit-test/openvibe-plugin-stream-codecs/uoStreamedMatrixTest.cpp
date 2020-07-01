@@ -68,8 +68,8 @@ TEST_F(StreamedMatrixTest, matrix_decoder_does_not_crash_when_given_an_empty_mat
 	EXPECT_TRUE(encoder.initialize());
 	EXPECT_TRUE(decoder.initialize());
 	CMatrix mat;
-	ASSERT_TRUE(mat.setDimensionCount(1));
-	ASSERT_TRUE(mat.setDimensionSize(0, 0));
+	mat.setDimensionCount(1);
+	mat.setDimensionSize(0, 0);
 
 	TParameterHandler<const CMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<const IMemoryBuffer*> oBuffer(
@@ -99,9 +99,9 @@ TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_origi
 	EXPECT_TRUE(encoder.initialize());
 	EXPECT_TRUE(decoder.initialize());
 	CMatrix mat;
-	ASSERT_TRUE(mat.setDimensionCount(2));
-	ASSERT_TRUE(mat.setDimensionSize(0, 2));
-	ASSERT_TRUE(mat.setDimensionSize(1, 3));
+	mat.setDimensionCount(2);
+	mat.setDimensionSize(0, 2);
+	mat.setDimensionSize(1, 3);
 	size_t elemCount = 1;
 	for (size_t dim = 0; dim < mat.getDimensionCount(); ++dim)
 	{

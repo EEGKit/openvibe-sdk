@@ -93,79 +93,64 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(CMessage& /*msg*/)
 
 bool CBoxAlgorithmOVCSVFileReader::process()
 {
-	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
-	CMatrix* matrix            = m_algorithmEncoder.getInputMatrix();
+	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
+	CMatrix* matrix        = m_algorithmEncoder.getInputMatrix();
 
 	// encode Header if not already encoded
 	if (!m_isHeaderSent)
 	{
 		if (m_typeID == OV_TypeId_Signal)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2), "Failed to set dimension count", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, m_nSamplePerBuffer), "Failed to set second dimension size", Kernel::ErrorType::Internal);
+			matrix->setDimensionCount(2);
+			matrix->setDimensionSize(0, m_channelNames.size());
+			matrix->setDimensionSize(1, m_nSamplePerBuffer);
 
 			size_t index = 0;
 
-			for (const std::string& channelName : m_channelNames)
-			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal);
-			}
+			for (const auto& channelName : m_channelNames) { matrix->setDimensionLabel(0, index++, channelName); }
 
 			m_algorithmEncoder.getInputSamplingRate() = m_sampling;
 		}
 		else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(m_dimSizes.size()), "Failed to set dimension count", Kernel::ErrorType::Internal);
+			matrix->setDimensionCount(m_dimSizes.size());
 			size_t prevDimSize = 0;
 
 			for (size_t d1 = 0; d1 < m_dimSizes.size(); ++d1)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionSize(d1, m_dimSizes[d1]), "Failed to set dimension size " << d1 + 1, Kernel::ErrorType::Internal);
+				matrix->setDimensionSize(d1, m_dimSizes[d1]);
 
-				for (size_t d2 = 0; d2 < m_dimSizes[d1]; ++d2)
-				{
-					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()), "Failed to set dimension label",
-									  Kernel::ErrorType::Internal);
-				}
+				for (size_t d2 = 0; d2 < m_dimSizes[d1]; ++d2) { matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2]); }
 
 				prevDimSize += m_dimSizes[d1];
 			}
 		}
 		else if (m_typeID == OV_TypeId_FeatureVector)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(1), "Failed to set dimension count", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", Kernel::ErrorType::Internal);
+			matrix->setDimensionCount(1);
+			matrix->setDimensionSize(0, m_channelNames.size());
 
 			size_t index = 0;
-			for (const std::string& channelName : m_channelNames)
-			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal);
-			}
+			for (const auto& channelName : m_channelNames) { matrix->setDimensionLabel(0, index++, channelName); }
 		}
 		else if (m_typeID == OV_TypeId_Spectrum)
 		{
 			CMatrix* frequencyAbscissaMatrix = m_algorithmEncoder.getInputFrequencyAbcissa();
 
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2), "Failed to set dimension count", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, m_frequencyAbscissa.size()), "Failed to set first dimension size", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionCount(1), "Failed to set dimension count", Kernel::ErrorType::Internal);
-			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionSize(0, m_frequencyAbscissa.size()), "Failed to set first dimension size",
-							  Kernel::ErrorType::Internal);
+			matrix->setDimensionCount(2);
+			matrix->setDimensionSize(0, m_channelNames.size());
+			matrix->setDimensionSize(1, m_frequencyAbscissa.size());
+			frequencyAbscissaMatrix->setDimensionCount(1);
+			frequencyAbscissaMatrix->setDimensionSize(0, m_frequencyAbscissa.size());
 
 			size_t index = 0;
-			for (const std::string& channelName : m_channelNames)
-			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal);
-			}
+			for (const auto& channelName : m_channelNames) { matrix->setDimensionLabel(0, index++, channelName); }
 
 			index = 0;
-			for (const double& frequencyAbscissaValue : m_frequencyAbscissa)
+			for (const auto& f : m_frequencyAbscissa)
 			{
-				frequencyAbscissaMatrix->getBuffer()[index] = frequencyAbscissaValue;
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()), "Failed to set dimension label",
-								  Kernel::ErrorType::Internal);
+				frequencyAbscissaMatrix->getBuffer()[index] = f;
+				matrix->setDimensionLabel(1, index++, std::to_string(f));
 			}
 
 			m_algorithmEncoder.getInputSamplingRate() = m_sampling;
@@ -174,7 +159,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeHeader(), "Failed to encode signal header", Kernel::ErrorType::Internal);
 
 		m_isHeaderSent = true;
-		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send",
+		OV_ERROR_UNLESS_KRF(boxCtx.markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send",
 							Kernel::ErrorType::Internal);
 	}
 
@@ -220,7 +205,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", Kernel::ErrorType::Internal);
 
 				OV_ERROR_UNLESS_KRF(
-					boxContext.markOutputAsReadyToSend(0, CTime(chunk.startTime), CTime(chunk.endTime)),
+					boxCtx.markOutputAsReadyToSend(0, CTime(chunk.startTime), CTime(chunk.endTime)),
 					"Failed to mark signal output as ready to send",
 					Kernel::ErrorType::Internal);
 
@@ -235,7 +220,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", Kernel::ErrorType::Internal);
 
 			OV_ERROR_UNLESS_KRF(
-				boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime), CTime(m_savedChunks.back().endTime)),
+				boxCtx.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime), CTime(m_savedChunks.back().endTime)),
 				"Failed to mark signal output as ready to send",
 				Kernel::ErrorType::Internal);
 		}
@@ -248,30 +233,29 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, const double endTime)
 {
-	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
 	if (!m_isStimulationHeaderSent)
 	{
 		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeHeader(), "Failed to encode stimulation header", Kernel::ErrorType::Internal);
 		m_isStimulationHeaderSent = true;
 
-		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, 0, 0), "Failed to mark stimulation header as ready to send", Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(boxCtx.markOutputAsReadyToSend(1, 0, 0), "Failed to mark stimulation header as ready to send", Kernel::ErrorType::Internal);
 	}
 
 	CStimulationSet& stimulationSet = *m_stimEncoder.getInputStimulationSet();
 	stimulationSet.clear();
 
-	const CTime stimulationChunkStartTime = m_lastStimulationDate;
-	const CTime currentTime               = getPlayerContext().getCurrentTime();
+	const CTime start = m_lastStimulationDate;
+	const CTime end   = getPlayerContext().getCurrentTime();
 
 	if (m_savedStimulations.empty())
 	{
-		if (currentTime > m_lastStimulationDate)
+		if (end > m_lastStimulationDate)
 		{
-			m_lastStimulationDate = currentTime;
+			m_lastStimulationDate = end;
 
 			OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", Kernel::ErrorType::Internal);
-
-			OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
+			OV_ERROR_UNLESS_KRF(boxCtx.markOutputAsReadyToSend(1, start, end),
 								"Failed to mark stimulation output as ready to send", Kernel::ErrorType::Internal);
 		}
 	}
@@ -290,11 +274,11 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 			}
 			else
 			{
-				const std::string message = "The stimulation is not synced with the stream and will be ignored: [Value: "
-											+ std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
-											" | Duration: " + std::to_string(it->duration) + "]";
+				const std::string msg = "The stimulation is not synced with the stream and will be ignored: [Value: "
+										+ std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
+										" | Duration: " + std::to_string(it->duration) + "]";
 
-				OV_WARNING_K(message.c_str());
+				OV_WARNING_K(msg);
 			}
 		}
 
@@ -303,7 +287,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", Kernel::ErrorType::Internal);
 
-		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, m_lastStimulationDate),
+		OV_ERROR_UNLESS_KRF(boxCtx.markOutputAsReadyToSend(1, start, m_lastStimulationDate),
 							"Failed to mark stimulation output as ready to send", Kernel::ErrorType::Internal);
 
 		// If there is no more data to send, we push the end.
@@ -311,7 +295,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 		{
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", Kernel::ErrorType::Internal);
 
-			OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
+			OV_ERROR_UNLESS_KRF(boxCtx.markOutputAsReadyToSend(1, start, end),
 								"Failed to mark signal output as ready to send", Kernel::ErrorType::Internal);
 		}
 	}

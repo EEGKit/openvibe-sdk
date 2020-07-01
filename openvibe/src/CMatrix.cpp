@@ -11,22 +11,14 @@ namespace OpenViBE {
 //--------------------------------------------------------------------------------
 std::string CMatrix::getDimensionLabel(const size_t dim, const size_t idx) const
 {
-	return (!m_dimSizes || dim >= m_dimSizes->size() || idx >= m_dimSizes->at(dim)) ? "" : m_dimLabels->at(dim)[idx];
-}
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-const double* CMatrix::getBuffer() const
-{
-	if (!m_buffer) { refreshInternalBuffer(); }
-	return m_buffer;
+	return (dim >= m_dimSizes->size() || idx >= m_dimSizes->at(dim)) ? "" : m_dimLabels->at(dim)[idx];
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 double* CMatrix::getBuffer()
 {
-	if (!m_buffer) { refreshInternalBuffer(); }
+	if (!m_buffer) { initBuffer(); }
 	return m_buffer;
 }
 //--------------------------------------------------------------------------------
@@ -34,19 +26,17 @@ double* CMatrix::getBuffer()
 //--------------------------------------------------------------------------------
 size_t CMatrix::getSize() const
 {
-	if (!m_buffer || m_size == 0) { refreshInternalBuffer(); }
+	if (!m_buffer || m_size == 0) { initBuffer(); }
 	return m_size;
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-void CMatrix::setDimensionCount(const size_t count)
+void CMatrix::setDimensionCount(const size_t count) const
 {
 	if (count == 0) { return; }
 
 	clearBuffer();
-	if (!m_dimSizes) { m_dimSizes = new std::vector<size_t>; }
-	if (!m_dimLabels) { m_dimLabels = new std::vector<std::vector<std::string>>; }
 	m_dimSizes->resize(count);
 	m_dimLabels->resize(count);
 }
@@ -55,7 +45,7 @@ void CMatrix::setDimensionCount(const size_t count)
 //--------------------------------------------------------------------------------
 void CMatrix::setDimensionSize(const size_t dim, const size_t size) const
 {
-	if (!m_dimSizes || !m_dimLabels || dim >= m_dimSizes->size()) { return; }
+	if (dim >= m_dimSizes->size()) { return; }
 
 	clearBuffer();
 	m_dimSizes->at(dim) = size;
@@ -67,7 +57,7 @@ void CMatrix::setDimensionSize(const size_t dim, const size_t size) const
 //--------------------------------------------------------------------------------
 void CMatrix::setDimensionLabel(const size_t dim, const size_t idx, const std::string& label) const
 {
-	if (!m_dimLabels || dim >= m_dimLabels->size() || idx >= m_dimLabels->at(dim).size()) { return; }
+	if (dim >= m_dimLabels->size() || idx >= m_dimLabels->at(dim).size()) { return; }
 	m_dimLabels->at(dim)[idx] = label;
 }
 //--------------------------------------------------------------------------------
@@ -80,6 +70,7 @@ void CMatrix::setDimensionLabel(const size_t dim, const size_t idx, const std::s
 void CMatrix::resize(const size_t dim1, const size_t dim2)
 {
 	clear();
+	initVector();
 	if (dim1 == 0) { return; }
 	if (dim2 == 0)
 	{
@@ -90,8 +81,9 @@ void CMatrix::resize(const size_t dim1, const size_t dim2)
 	{
 		setDimensionCount(2);
 		setDimensionSize(0, dim1);
-		setDimensionSize(0, dim2);
+		setDimensionSize(1, dim2);
 	}
+	reset();	// Initialise buffer with 0
 }
 //--------------------------------------------------------------------------------
 
@@ -108,9 +100,8 @@ void CMatrix::clearBuffer() const
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-void CMatrix::clear()
+void CMatrix::clearVector()
 {
-	clearBuffer();
 	if (m_dimSizes)
 	{
 		delete m_dimSizes;
@@ -125,20 +116,39 @@ void CMatrix::clear()
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
+void CMatrix::clear()
+{
+	clearBuffer();
+	clearVector();
+}
+//--------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------
 void CMatrix::copy(const CMatrix& m)
 {
+	clear();
 	m_dimSizes  = new std::vector<size_t>(*m.m_dimSizes);
 	m_dimLabels = new std::vector<std::vector<std::string>>(*m.m_dimLabels);
-	refreshInternalBuffer();
-	std::memcpy(m_buffer, m.getBuffer(), m.getSize() * sizeof(double));
+
+	initBuffer();
+	if (m_buffer) { std::memcpy(m_buffer, m.getBuffer(), getSize() * sizeof(double)); }
+}
+//--------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------
+void CMatrix::initVector()
+{
+	clearVector();
+	m_dimSizes  = new std::vector<size_t>;
+	m_dimLabels = new std::vector<std::vector<std::string>>;
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 void CMatrix::reset() const
 {
-	if (!m_buffer) { refreshInternalBuffer(); }
-	std::memset(m_buffer, 0, m_size);
+	if (!m_buffer) { initBuffer(); }
+	if (m_buffer) { std::memset(m_buffer, 0, m_size); }
 }
 //--------------------------------------------------------------------------------
 
@@ -161,7 +171,7 @@ std::string CMatrix::str() const
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-void CMatrix::refreshInternalBuffer() const
+void CMatrix::initBuffer() const
 {
 	if (m_buffer || m_dimSizes->empty()) { return; }
 

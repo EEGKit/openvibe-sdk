@@ -19,6 +19,13 @@
 
 const std::string SEP = "\n====================\n";
 
+/// <summary> Check if double are almost equals. </summary>
+/// <param name="a"> The first number. </param>
+/// <param name="b"> The second number. </param>
+/// <param name="epsilon"> The tolerance. </param>
+/// <returns> <c>true</c> if almmost equals, <c>false</c> otherwise. </returns>
+inline bool AlmostEqual(const double a, const double b, const double epsilon = OV_EPSILON) { return abs(a - b) < abs(epsilon); }
+
 //*****************************************************************
 //********** Error Message Standardization for googltest **********
 //*****************************************************************
