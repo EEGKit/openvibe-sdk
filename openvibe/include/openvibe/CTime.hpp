@@ -38,7 +38,7 @@ public:
 
 	/// <summary> Constructor with time in seconds. </summary>
 	/// <param name="seconds"> The time in seconds. </param>
-	explicit CTime(const double seconds) : m_time(seconds >= 0.0 ? uint64_t(seconds * double(1LL << 32)) : 0) {}
+	explicit CTime(const double seconds) { fromSeconds(seconds); }
 
 	/// <summary> Copy constructor. </summary>
 	/// <param name="time">The original time.</param>
@@ -48,8 +48,7 @@ public:
 	/// <param name="sampling"> The sampling frequency.</param>
 	/// <param name="sampleCount"> The sample count.</param>
 	/// <remarks> It assumes, if you indicate a sampling with 0 return max. </remarks>
-	CTime(const uint64_t sampling, const uint64_t sampleCount)
-		: m_time(sampling == 0 ? std::numeric_limits<uint64_t>::max() : (sampleCount << 32) / sampling) { }
+	CTime(const uint64_t sampling, const uint64_t sampleCount) { fromSamples(sampling, sampleCount); }
 
 	/// <summary> Default Destructor. </summary>
 	~CTime() = default;
@@ -69,9 +68,22 @@ public:
 	/// <returns> Sample count corresponding to the time with this sampling. </returns>
 	uint64_t toSampleCount(const uint64_t sampling) const { return (sampling == 0 ? std::numeric_limits<uint64_t>::max() : (m_time + 1) * sampling - 1) >> 32; }
 
+	/// <summary> Set the time with the sampling rate and the number of samples. </summary>
+	/// <param name="sampling"> The sampling frequency.</param>
+	/// <param name="sampleCount"> The sample count.</param>
+	/// <remarks> It assumes, if you indicate a sampling with 0 return max. </remarks>
+	void fromSamples(const uint64_t sampling, const uint64_t sampleCount)
+	{
+		m_time = (sampling == 0 ? std::numeric_limits<uint64_t>::max() : (sampleCount << 32) / sampling);
+	}
+
 	/// <summary> Get the time in seconds. </summary>
 	/// <returns> Regular floating point time in seconds. </returns>
 	double toSeconds() const { return m_time / double(1LL << 32); }
+
+	/// <summary> Set the time in seconds. </summary>
+	/// <param name="seconds"> The time in seconds. </param>
+	void fromSeconds(const double seconds) { m_time = (seconds >= 0.0 ? uint64_t(seconds * double(1LL << 32)) : 0); }
 
 	/// <summary> Get the number of hours, minutes, seconds, milliseconds of the time. </summary>
 	/// <param name="hours"> The hours. </param>
@@ -83,7 +95,7 @@ public:
 	/// <summary> Get the string of the time with the format "XXh XXm XXs XXXms". </summary>
 	std::string getTimeStr() const;
 
-	
+
 	/// <summary> Ceil the time. \n
 	/// - <c>1LL << 32</c> corresponds to <c>1</c> followed by 32 <c>0</c> so the maximum of an int of 32bit + <c>1</c> (\f$ 2^{32} \f$).
 	/// - <c>0xFFFFFFFFLL << 32</c> corresponds to 32 <c>1</c> followed by 32 <c>0</c> (we see 8 character because 4 bit is used by Hexadecimal characters).
