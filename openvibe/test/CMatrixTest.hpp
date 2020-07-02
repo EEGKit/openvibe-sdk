@@ -13,6 +13,7 @@
 
 #include <gtest/gtest.h>
 #include <openvibe/CMatrix.hpp>
+#include "utils.hpp"
 
 //---------------------------------------------------------------------------------------------------
 class CMatrix_Tests : public testing::Test
@@ -30,6 +31,25 @@ protected:
 		m_mat.setDimensionLabel(1, 1, "dim1e1");	// Column 2 Label set
 	}
 };
+//---------------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------
+TEST_F(CMatrix_Tests, constructor)
+{
+	OpenViBE::CMatrix res;
+	ASSERT_EQ(0, res.getSize()) << "Default constructor haven't a size of 0.";
+	ASSERT_EQ(0, res.getDimensionLabel(0, 0)) << "Default constructor haven't label.";
+	
+	ASSERT_EQ(2, m_mat.getSize());
+	ASSERT_EQ(1, m_mat.getDimensionSize(0));
+	ASSERT_EQ(2, m_mat.getDimensionSize(1));
+	EXPECT_TRUE(AlmostEqual(10, m_mat.getBuffer()[0]));
+	EXPECT_TRUE(AlmostEqual(20, m_mat.getBuffer()[1]));
+	EXPECT_STREQ("dim0e0", m_mat.getDimensionLabel(0, 0).c_str());
+	EXPECT_STREQ("dim1e0", m_mat.getDimensionLabel(1, 0).c_str());
+	EXPECT_STREQ("dim1e1", m_mat.getDimensionLabel(1, 1).c_str());
+
+}
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------

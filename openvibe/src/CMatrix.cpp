@@ -1,5 +1,6 @@
 #include "CMatrix.hpp"
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 
@@ -131,7 +132,7 @@ void CMatrix::copy(const CMatrix& m)
 	m_dimLabels = new std::vector<std::vector<std::string>>(*m.m_dimLabels);
 
 	initBuffer();
-	if (m_buffer) { std::memcpy(m_buffer, m.getBuffer(), getSize() * sizeof(double)); }
+	if (m_buffer) { std::copy(m.getBuffer(), m.getBuffer() + getSize(), m_buffer); }
 }
 //--------------------------------------------------------------------------------
 
@@ -148,7 +149,7 @@ void CMatrix::initVector()
 void CMatrix::reset() const
 {
 	if (!m_buffer) { initBuffer(); }
-	if (m_buffer) { std::memset(m_buffer, 0, m_size); }
+	if (m_buffer) { std::fill(m_buffer, m_buffer + m_size, 0); }
 }
 //--------------------------------------------------------------------------------
 
