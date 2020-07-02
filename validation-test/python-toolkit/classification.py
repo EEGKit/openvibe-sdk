@@ -78,7 +78,7 @@ for firstLineReference, secondLineReference, classificationLine in zip(reference
     ref_list = [index.count(stimulationReference) for index in outputData if firstTimeReference < float(index[0]) < secondTimeReference]
     print(ref_list)
     #Compute the percentage of success
-    classificationEvaluation = (floa(sum(ref_list)/len(ref_list)))*100
+    classificationEvaluation = (float(sum(ref_list)/len(ref_list)))*100
 
     # Compare to the reference value
     if abs(classificationEvaluation - float(classificationLine)) > sys.float_info.epsilon:
