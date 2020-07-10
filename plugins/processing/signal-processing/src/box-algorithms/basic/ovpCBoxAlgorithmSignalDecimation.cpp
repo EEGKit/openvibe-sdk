@@ -120,7 +120,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
 
-			ip_matrix->copyDescription(*op_pMatrix);
+			Toolkit::Matrix::copyDescription(*ip_matrix, *op_pMatrix);
 			ip_matrix->setDimensionSize(1, m_oNSamplePerBlock);
 			ip_sampling = m_oSampling;
 			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader);

@@ -36,7 +36,6 @@ bool CBoxAlgorithmChannelRename::initialize()
 	ip_Matrix = m_encoder.getInputMatrix();
 	op_Matrix = m_decoder.getOutputMatrix();
 
-	// Ueless to copy content each time if matrix is referenced
 	m_encoder.getInputMatrix().setReferenceTarget(m_decoder.getOutputMatrix());
 
 	if (m_typeID == OV_TypeId_Signal) { m_encoder.getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate()); }
@@ -73,9 +72,7 @@ bool CBoxAlgorithmChannelRename::process()
 		m_decoder.decode(chunk);
 		if (m_decoder.isHeaderReceived())
 		{
-			// ip_Matrix is input of encoder so it's input of the output.....
-			// @todo with set target reference i'm not sure it's usefull to have ip and op variable.
-			ip_Matrix->copyDescription(*op_Matrix);
+			Toolkit::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
 			for (size_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
 			{
 				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());

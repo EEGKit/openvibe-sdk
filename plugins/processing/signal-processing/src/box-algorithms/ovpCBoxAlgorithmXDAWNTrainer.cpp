@@ -266,7 +266,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			fprintf(file, "\t<SettingValue></SettingValue>\n");
 			fprintf(file, "</OpenViBE-SettingsOverride>");
 		}
-		else { OV_ERROR_UNLESS_KRF(eigenVectors.toTextFile(m_filterFilename.toASCIIString()), "Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite); }
+		else
+		{
+			OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
+								"Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite);
+		}
 
 		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
 

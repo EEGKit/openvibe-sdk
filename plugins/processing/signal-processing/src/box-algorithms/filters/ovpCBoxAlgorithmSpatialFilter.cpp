@@ -122,7 +122,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 	const CString filterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	if (filterFile != CString(""))
 	{
-		OV_ERROR_UNLESS_KRF(m_filterBank.fromTextFile(filterFile.toASCIIString()),
+		OV_ERROR_UNLESS_KRF(Toolkit::Matrix::loadFromTextFile(m_filterBank, filterFile),
 							"Failed to load filter parameters from file at location [" << filterFile << "]",
 							Kernel::ErrorType::BadFileRead);
 
@@ -131,7 +131,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 							"] dimensions (expected 2 dimension)", Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
-		m_filterBank.toTextFile(this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt").toASCIIString());
+		Toolkit::Matrix::saveToTextFile(m_filterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
 #endif
 	}
 	else
@@ -147,7 +147,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 							<< " coefficients)", Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
-		m_filterBank.toTextFile(this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt").toASCIIString());
+		Toolkit::Matrix::saveToTextFile(m_filterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
 #endif
 	}
 
