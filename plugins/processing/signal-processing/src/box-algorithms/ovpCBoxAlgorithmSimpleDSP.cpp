@@ -199,7 +199,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 
 	if (nHeader)
 	{
-		Toolkit::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
+		ip_matrix->copyDescription(*m_matrices[0]);
 		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 	}
 	if (nBuffer)
@@ -220,9 +220,9 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 
 	for (size_t i = 0; i < boxContext.getInputCount(); ++i) { m_variables[i] = m_matrices[i]->getBuffer(); }
 
-	TParameterHandler<CMatrix*> ip_pMatrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	double* buffer    = ip_pMatrix->getBuffer();
-	double* bufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getSize();
+	TParameterHandler<CMatrix*> ip_matrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	double* buffer    = ip_matrix->getBuffer();
+	double* bufferEnd = ip_matrix->getBuffer() + ip_matrix->getSize();
 
 	while (buffer != bufferEnd)
 	{

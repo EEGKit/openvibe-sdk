@@ -27,31 +27,16 @@ bool CEncoderAlgorithmTest::initialize()
 		op_buffer[i].initialize(m_encoders[i]->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 	}
 
-	m_matrix1 = new CMatrix();
-	m_matrix1->setDimensionCount(2);
-	m_matrix1->setDimensionSize(0, 16);
-	m_matrix1->setDimensionSize(1, 16);
-	Toolkit::Matrix::clearContent(*m_matrix1);
-
-	m_matrix2 = new CMatrix();
-	m_matrix2->setDimensionCount(1);
-	m_matrix2->setDimensionSize(0, 16);
-	Toolkit::Matrix::clearContent(*m_matrix2);
-
-	m_matrix3 = new CMatrix();
-	m_matrix3->setDimensionCount(2);
-	m_matrix3->setDimensionSize(0, 4);
-	m_matrix3->setDimensionLabel(0, 0, "C3");
-	m_matrix3->setDimensionLabel(0, 1, "Cz");
-	m_matrix3->setDimensionLabel(0, 2, "C4");
-	m_matrix3->setDimensionLabel(0, 3, "Pz");
-	m_matrix3->setDimensionSize(1, 3);
-	m_matrix3->setDimensionLabel(1, 0, "x");
-	m_matrix3->setDimensionLabel(1, 1, "y");
-	m_matrix3->setDimensionLabel(1, 2, "z");
-	Toolkit::Matrix::clearContent(*m_matrix3);
-
-	m_stimSet = new CStimulationSet();
+	m_matrix1.resize(16, 16);
+	m_matrix2.resize(16);
+	m_matrix3.resize(4, 3);
+	m_matrix3.setDimensionLabel(0, 0, "C3");
+	m_matrix3.setDimensionLabel(0, 1, "Cz");
+	m_matrix3.setDimensionLabel(0, 2, "C4");
+	m_matrix3.setDimensionLabel(0, 3, "Pz");
+	m_matrix3.setDimensionLabel(1, 0, "x");
+	m_matrix3.setDimensionLabel(1, 1, "y");
+	m_matrix3.setDimensionLabel(1, 2, "z");
 
 	size_t frequency = 16;
 
@@ -73,11 +58,6 @@ bool CEncoderAlgorithmTest::initialize()
 
 bool CEncoderAlgorithmTest::uninitialize()
 {
-	delete m_stimSet;
-	delete m_matrix3;
-	delete m_matrix2;
-	delete m_matrix1;
-
 	for (size_t i = 0; i < 7; ++i)
 	{
 		op_buffer[i].uninitialize();

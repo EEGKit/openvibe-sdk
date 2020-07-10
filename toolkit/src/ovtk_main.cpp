@@ -1,8 +1,5 @@
 #include "toolkit/ovtk_all.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Toolkit;
 
 // ********************************************************************************************************************
 //                                                                                                                    *
@@ -11,10 +8,12 @@ using namespace /*OpenViBE::*/Toolkit;
 // :%s/#define \([A-Za-z0-9_]\+\).*/	typeManager.registerEnumerationEntry(OV_TypeId_Stimulation, "\1", \1);/g   *
 //                                                                                                                    *
 // ********************************************************************************************************************
+namespace OpenViBE {
+namespace Toolkit {
 
-bool Toolkit::initialize(const IKernelContext& ctx)
+bool initialize(const Kernel::IKernelContext& ctx)
 {
-	ITypeManager& typeManager = ctx.getTypeManager();
+	Kernel::ITypeManager& typeManager = ctx.getTypeManager();
 
 	initializeStimulationList(ctx);
 
@@ -256,4 +255,7 @@ bool Toolkit::initialize(const IKernelContext& ctx)
 	return true;
 }
 
-bool Toolkit::uninitialize(const IKernelContext& /*ctx*/) { return true; }
+bool uninitialize(const Kernel::IKernelContext& /*ctx*/) { return true; }
+
+}  // namespace Toolkit
+}  // namespace OpenViBE

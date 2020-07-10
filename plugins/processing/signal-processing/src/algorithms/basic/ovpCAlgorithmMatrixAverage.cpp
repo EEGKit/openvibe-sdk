@@ -22,7 +22,6 @@ bool CAlgorithmMatrixAverage::initialize()
 
 bool CAlgorithmMatrixAverage::uninitialize()
 {
-	for (auto it = m_history.begin(); it != m_history.end(); ++it) { delete *it; }
 	m_history.clear();
 
 	op_averagedMatrix.uninitialize();
@@ -45,74 +44,34 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset))
 	{
-		for (auto it = m_history.begin(); it != m_history.end(); ++it) { delete*it; }
-
 		m_history.clear();
-
-		Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
+		oMatrix->copyDescription(*iMatrix);
+		oMatrix->reset();
 	}
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
 	{
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Moving))
 		{
-			CMatrix* swapMatrix;
-
-			if (m_history.size() >= ip_matrixCount)
-			{
-				swapMatrix = m_history.front();
-				m_history.pop_front();
-			}
-			else
-			{
-				swapMatrix = new CMatrix();
-				Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
-			}
-
-			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
-
-			m_history.push_back(swapMatrix);
+			if (m_history.size() >= ip_matrixCount) { m_history.pop_front(); }
+			m_history.push_back(CMatrix(*iMatrix));	// call constructor when pushback
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::MovingImmediate))
 		{
-			CMatrix* swapMatrix;
-
-			if (m_history.size() >= ip_matrixCount)
-			{
-				swapMatrix = m_history.front();
-				m_history.pop_front();
-			}
-			else
-			{
-				swapMatrix = new CMatrix();
-				Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
-			}
-
-			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
-
-			m_history.push_back(swapMatrix);
+			if (m_history.size() >= ip_matrixCount) { m_history.pop_front(); }
+			m_history.push_back(CMatrix(*iMatrix));	// call constructor when pushback
 			shouldPerformAverage = (!m_history.empty());
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Block))
 		{
-			CMatrix* swapMatrix = new CMatrix();
-
-			if (m_history.size() >= ip_matrixCount)
-			{
-				for (auto it = m_history.begin(); it != m_history.end(); ++it) { delete *it; }
-				m_history.clear();
-			}
-
-			Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
-			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
-
-			m_history.push_back(swapMatrix);
+			if (m_history.size() >= ip_matrixCount) { m_history.clear(); }
+			m_history.push_back(CMatrix(*iMatrix));	// call constructor when pushback
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
-			m_history.push_back(iMatrix);
+			m_history.push_back(CMatrix(*iMatrix));
 			shouldPerformAverage = true;
 		}
 		else { shouldPerformAverage = false; }
@@ -120,29 +79,29 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (shouldPerformAverage)
 	{
-		Toolkit::Matrix::clearContent(*oMatrix);
+		oMatrix->reset();
 
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
-			CMatrix* matrix = m_history.at(0);
+			CMatrix& matrix = m_history.at(0);
 
 			m_nAverageSamples++;
 
 			if (m_nAverageSamples == 1) // If it's the first matrix, the average is the first matrix
 			{
-				double* buffer    = matrix->getBuffer();
-				const size_t size = matrix->getSize();
+				double* buffer    = matrix.getBuffer();
+				const size_t size = matrix.getSize();
 
 				m_averageMatrices.clear();
 				m_averageMatrices.insert(m_averageMatrices.begin(), buffer, buffer + size);
 			}
 			else
 			{
-				if (matrix->getSize() != m_averageMatrices.size()) { return false; }
+				if (matrix.getSize() != m_averageMatrices.size()) { return false; }
 
 				const double n = double(m_nAverageSamples);
 
-				double* iBuffer = matrix->getBuffer();
+				double* iBuffer = matrix.getBuffer();
 
 				for (double& value : m_averageMatrices)
 				{
@@ -170,10 +129,10 @@ bool CAlgorithmMatrixAverage::process()
 			const size_t n     = oMatrix->getSize();
 			const double scale = 1. / m_history.size();
 
-			for (CMatrix* matrix : m_history)
+			for (const CMatrix& matrix : m_history)
 			{
-				double* oBuffer = oMatrix->getBuffer();
-				double* iBuffer = matrix->getBuffer();
+				double* oBuffer       = oMatrix->getBuffer();
+				const double* iBuffer = matrix.getBuffer();
 
 				for (size_t i = 0; i < n; ++i)
 				{

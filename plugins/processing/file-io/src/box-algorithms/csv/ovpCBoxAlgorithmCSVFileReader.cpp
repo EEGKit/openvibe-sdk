@@ -225,7 +225,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 		{
 			// Last chunk will be partial, zero the whole output matrix...
 			CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
-			Toolkit::Matrix::clearContent(*iMatrix);
+			iMatrix->reset();
 		}
 	}
 

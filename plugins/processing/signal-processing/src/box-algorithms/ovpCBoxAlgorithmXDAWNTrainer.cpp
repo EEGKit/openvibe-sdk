@@ -127,8 +127,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n",
-										Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -267,11 +266,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			fprintf(file, "\t<SettingValue></SettingValue>\n");
 			fprintf(file, "</OpenViBE-SettingsOverride>");
 		}
-		else
-		{
-			OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
-								"Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite);
-		}
+		else { OV_ERROR_UNLESS_KRF(eigenVectors.toTextFile(m_filterFilename.toASCIIString()), "Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite); }
 
 		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
 

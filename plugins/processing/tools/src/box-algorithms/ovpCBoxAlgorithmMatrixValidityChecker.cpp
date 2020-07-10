@@ -89,7 +89,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.id())
 				{
-					if (!Toolkit::Matrix::isContentValid(*matrix))
+					if (!matrix->isBufferValid())
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
 								boxCtx.getInputChunkStartTime(i, j) << " and " << boxCtx.getInputChunkEndTime(i, j) << ".\n";
@@ -98,7 +98,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// stop player
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.id())
 				{
-					if (!Toolkit::Matrix::isContentValid(*matrix))
+					if (!matrix->isBufferValid())
 					{
 						getPlayerContext().stop();
 						OV_ERROR_KRF(

@@ -8,14 +8,14 @@ using namespace StreamCodecs;
 bool CStreamedMatrixEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
-	ip_pMatrix.initialize(getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	ip_matrix.initialize(getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	m_size = 0;
 	return true;
 }
 
 bool CStreamedMatrixEncoder::uninitialize()
 {
-	ip_pMatrix.uninitialize();
+	ip_matrix.uninitialize();
 	CEBMLBaseEncoder::uninitialize();
 	return true;
 }
@@ -25,7 +25,7 @@ bool CStreamedMatrixEncoder::uninitialize()
 
 bool CStreamedMatrixEncoder::processHeader()
 {
-	CMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_matrix;
 	size_t j;
 
 	m_size = (matrix->getDimensionCount() == 0 ? 0 : 1);
@@ -64,7 +64,7 @@ bool CStreamedMatrixEncoder::processHeader()
 
 bool CStreamedMatrixEncoder::processBuffer()
 {
-	CMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_matrix;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);

@@ -20,7 +20,7 @@ public:
 protected:
 
 	Kernel::TParameterHandler<CString*> ip_sFilename;
-	Kernel::TParameterHandler<CMatrix*> ip_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> ip_matrix;
 };
 
 class CAlgorithmOVMatrixFileWriterDesc final : public IAlgorithmDesc

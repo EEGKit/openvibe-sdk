@@ -31,9 +31,9 @@
 
 #if !(defined(TARGET_OS_Windows) || defined(TARGET_OS_Linux) || defined(TARGET_OS_MacOS))
 #if defined(_MSC_VER)
- #pragma message( __WARNING__ "No known target OS specified!")
+#	pragma message( __WARNING__ "No known target OS specified!")
 #else
- #warning "No known target OS specified!"
+#	warning "No known target OS specified!"
 #endif
 #endif
 
@@ -45,9 +45,9 @@
 
 #if !(defined(TARGET_BUILDTYPE_Debug) || defined(TARGET_BUILDTYPE_Release))
 #if defined(_MSC_VER)
- #pragma message( __WARNING__ "No known build type defined!")
+#	pragma message( __WARNING__ "No known build type defined!")
 #else
- #warning "No known build type defined!"
+#	warning "No known build type defined!"
 #endif
 #endif
 
@@ -59,9 +59,9 @@
 
 #if !(defined(TARGET_COMPILER_GCC) || defined(TARGET_COMPILER_VisualStudio) || defined(TARGET_COMPILER_LLVM))
 #if defined(_MSC_VER)
- #pragma message( __WARNING__ "No known compiler defined!")
+#	pragma message( __WARNING__ "No known compiler defined!")
 #else
- #warning "No known compiler defined!"
+ #	warning "No known compiler defined!"
 #endif
 #endif
 
@@ -134,16 +134,16 @@
 //                                                                   //
 
 #ifndef NULL
-#define NULL 0
+#	define NULL 0
 #endif
 
 #if defined(__cplusplus) && (__cplusplus >= 201402L)
-  #define OV_DEPRECATED(since) [[deprecated("Since " #since)]]
-  #define OV_DEPRECATED_FOR(since, replacement) [[deprecated("Since " #since "; use " #replacement)]]
+#	define OV_DEPRECATED(since) [[deprecated("Since " #since)]]
+#	define OV_DEPRECATED_FOR(since, replacement) [[deprecated("Since " #since "; use " #replacement)]]
 #elif defined(_MSC_VER)
-#define OV_DEPRECATED(since) __declspec(deprecated("Since " # since))
-#define OV_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; use " #replacement))
+#	define OV_DEPRECATED(since) __declspec(deprecated("Since " # since))
+#	define OV_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; use " #replacement))
 #else
-  #define OV_DEPRECATED(since) __attribute__((__deprecated__))
-  #define OV_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__))
+#	define OV_DEPRECATED(since) __attribute__((__deprecated__))
+#	define OV_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__))
 #endif

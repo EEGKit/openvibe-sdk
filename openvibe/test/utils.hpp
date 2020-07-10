@@ -11,11 +11,13 @@
 
 #pragma once
 
-#include <cmath>
-#include <sstream>
 #include "openvibe/CIdentifier.hpp"
 #include "openvibe/CTime.hpp"
 #include "openvibe/CStimulation.hpp"
+#include <openvibe/CMatrix.hpp>
+
+#include <cmath>
+#include <sstream>
 
 const std::string SEP = "\n====================\n";
 
@@ -24,7 +26,7 @@ const std::string SEP = "\n====================\n";
 /// <param name="b"> The second number. </param>
 /// <param name="epsilon"> The tolerance. </param>
 /// <returns> <c>true</c> if almmost equals, <c>false</c> otherwise. </returns>
-inline bool AlmostEqual(const double a, const double b, const double epsilon = OV_EPSILON) { return abs(a - b) < abs(epsilon); }
+inline bool AlmostEqual(const double a, const double b, const double epsilon = OV_EPSILON) { return std::fabs(a - b) < std::fabs(epsilon); }
 
 //*****************************************************************
 //********** Error Message Standardization for googltest **********
@@ -85,5 +87,14 @@ inline std::string ErrorMsg(const std::string& name, const OpenViBE::CIdentifier
 {
 	std::stringstream ss;
 	ss << SEP << name << " : Reference : " << ref << ", \tCompute : " << calc << SEP;
+	return ss.str();
+}
+
+/// <summary>	Error message for CIdentifier value. </summary>
+/// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
+inline std::string ErrorMsg(const std::string& name, const OpenViBE::CMatrix& ref, const OpenViBE::CMatrix& calc)
+{
+	std::stringstream ss;
+	ss << SEP << name << " : " << std::endl << "********** Reference **********\n" << ref << std::endl << "********** Compute **********\n" << calc << SEP;
 	return ss.str();
 }

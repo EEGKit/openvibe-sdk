@@ -34,11 +34,11 @@ protected:
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
-TEST_F(CMatrix_Tests, constructor)
+TEST_F(CMatrix_Tests, Constructor)
 {
 	OpenViBE::CMatrix res;
 	ASSERT_EQ(0, res.getSize()) << "Default constructor haven't a size of 0.";
-	ASSERT_EQ(0, res.getDimensionLabel(0, 0)) << "Default constructor haven't label.";
+	EXPECT_STREQ("", res.getDimensionLabel(0, 0).c_str()) << "Default constructor dimension so haven't label.";
 	
 	ASSERT_EQ(2, m_mat.getSize());
 	ASSERT_EQ(1, m_mat.getDimensionSize(0));
@@ -48,22 +48,15 @@ TEST_F(CMatrix_Tests, constructor)
 	EXPECT_STREQ("dim0e0", m_mat.getDimensionLabel(0, 0).c_str());
 	EXPECT_STREQ("dim1e0", m_mat.getDimensionLabel(1, 0).c_str());
 	EXPECT_STREQ("dim1e1", m_mat.getDimensionLabel(1, 1).c_str());
-
 }
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
-TEST_F(CMatrix_Tests, constructor_copy)
+TEST_F(CMatrix_Tests, Constructor_Copy)
 {
 	OpenViBE::CMatrix res(m_mat);
 
-	ASSERT_EQ(1, res.getDimensionSize(0));
-	ASSERT_EQ(2, res.getDimensionSize(1));
-	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0]));
-	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1]));
-	EXPECT_STREQ(m_mat.getDimensionLabel(0, 0).c_str(), res.getDimensionLabel(0, 0).c_str());
-	EXPECT_STREQ(m_mat.getDimensionLabel(1, 0).c_str(), res.getDimensionLabel(1, 0).c_str());
-	EXPECT_STREQ(m_mat.getDimensionLabel(1, 1).c_str(), res.getDimensionLabel(1, 1).c_str());
+	EXPECT_TRUE(m_mat == res) << ErrorMsg("Copy Constructor", m_mat, res);
 
 	res.getBuffer()[0] = 15;
 	res.getBuffer()[1] = 25;
@@ -79,7 +72,7 @@ TEST_F(CMatrix_Tests, constructor_copy)
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
-TEST_F(CMatrix_Tests, constructor_copy_in_array_push)
+TEST_F(CMatrix_Tests, Constructor_copy_in_array_push)
 {
 	std::vector<OpenViBE::CMatrix> res;
 	res.push_back(m_mat);
@@ -99,15 +92,15 @@ TEST_F(CMatrix_Tests, constructor_copy_in_array_push)
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
-TEST_F(CMatrix_Tests, operator_copy_assignment)
+TEST_F(CMatrix_Tests, Operators)
 {
 	OpenViBE::CMatrix res = m_mat;
 
-	ASSERT_EQ(2, res.getDimensionCount());
-	ASSERT_EQ(1, res.getDimensionSize(0));
-	ASSERT_EQ(2, res.getDimensionSize(1));
-	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0]));
-	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1]));
+	EXPECT_TRUE(m_mat.isDescriptionEqual(m_mat)) << ErrorMsg("equality description", m_mat, m_mat);
+	EXPECT_TRUE(m_mat.isBufferEqual(m_mat)) << ErrorMsg("equality buffer", m_mat, m_mat);
+	EXPECT_TRUE(m_mat.isBufferAlmostEqual(m_mat)) << ErrorMsg("Almost equality buffer", m_mat, m_mat);
+	EXPECT_TRUE(m_mat == m_mat) << ErrorMsg("equality operator", m_mat, m_mat);
+	EXPECT_TRUE(m_mat == res) << ErrorMsg("Copy assignement", m_mat, res);
 
 	m_mat.getBuffer()[0] = 15;
 	m_mat.getBuffer()[1] = 25;
@@ -123,7 +116,7 @@ TEST_F(CMatrix_Tests, operator_copy_assignment)
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
-TEST_F(CMatrix_Tests, resize)
+TEST_F(CMatrix_Tests, Resize)
 {
 	OpenViBE::CMatrix res(1, 2);
 	res.reset();
@@ -136,7 +129,7 @@ TEST_F(CMatrix_Tests, resize)
 	EXPECT_STREQ("label", res.getDimensionLabel(0, 0).c_str());
 	EXPECT_STREQ("", res.getDimensionLabel(1, 0).c_str());
 	EXPECT_STREQ("", res.getDimensionLabel(1, 1).c_str());
-
+	
 	res.resize(2, 2);
 	res.setDimensionLabel(1, 1, "label");
 	ASSERT_EQ(2, res.getDimensionCount());
@@ -144,12 +137,30 @@ TEST_F(CMatrix_Tests, resize)
 	ASSERT_EQ(2, res.getDimensionSize(1));
 	EXPECT_STREQ("", res.getDimensionLabel(0, 0).c_str());		// The resize remove all previous label and size
 	EXPECT_STREQ("label", res.getDimensionLabel(1, 1).c_str());
-
+		
 	res.resetLabels();
 	EXPECT_STREQ("", res.getDimensionLabel(1, 1).c_str());
-	
+		
 	res.resize(2);
 	ASSERT_EQ(1, res.getDimensionCount());
 	ASSERT_EQ(2, res.getDimensionSize(0));
+}
+//---------------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------
+TEST_F(CMatrix_Tests, Save_Load)
+{
+	OpenViBE::CMatrix res;
+	EXPECT_TRUE(m_mat.toTextFile("Save_2DMatrix-output.txt")) << "Error during Saving 2D Matrix : " << std::endl << m_mat << std::endl;
+	EXPECT_TRUE(res.fromTextFile("Save_2DMatrix-output.txt")) << "Error during Loading 2D Matrix : " << std::endl << res << std::endl;
+	EXPECT_TRUE(m_mat == res) << ErrorMsg("Save", m_mat, res);
+
+	OpenViBE::CMatrix row(2);
+	row.getBuffer()[0] = -1;
+	row.getBuffer()[1] = -4.549746549678;
+	EXPECT_TRUE(row.toTextFile("Save_2DMatrix-output.txt")) << "Error during Saving 1D Matrix : " << std::endl << row << std::endl;
+	EXPECT_TRUE(res.fromTextFile("Save_2DMatrix-output.txt")) << "Error during Loading 1D Matrix : " << std::endl << res << std::endl;
+	EXPECT_TRUE(row == res) << ErrorMsg("Save", row, res);
+	
 }
 //---------------------------------------------------------------------------------------------------

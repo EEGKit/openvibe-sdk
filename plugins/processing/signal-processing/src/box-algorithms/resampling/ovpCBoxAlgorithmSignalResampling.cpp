@@ -142,7 +142,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			}
 			else if (0.5 < builtInLatency) { OV_WARNING_K("Latency induced by the resampling is [" << builtInLatency << "] s."); }
 
-			Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
+			oMatrix->copyDescription(*iMatrix);
 			oMatrix->setDimensionSize(1, m_oNSample);
 
 			m_oTotalSample = 0;

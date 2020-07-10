@@ -34,7 +34,6 @@ SET_BUILD_PLATFORM()
 
 # Test that needs to called with parameters
 SET(TEST_WITH_PARAM
-	uoMatrixToolkitTest.cpp
 	urImportScenarioFromFileTest.cpp
 	urExportScenarioToFileTest.cpp
 	urValidateScenarioTest.cpp
@@ -70,7 +69,6 @@ FOREACH(test ${TEST_NO_PARAM})
 ENDFOREACH()
 
 # Add test with parameter to driver
-ADD_TEST(NAME uoMatrixToolkitTest COMMAND ${PROJECT_NAME} uoMatrixToolkitTest "${OVT_TEST_TEMPORARY_DIR}")
 ADD_TEST(NAME urImportScenarioFromFileTest COMMAND ${PROJECT_NAME} urImportScenarioFromFileTest "${OVT_OPENVIBE_DATA}/kernel/openvibe.conf" "${CMAKE_CURRENT_SOURCE_DIR}/data/")
 ADD_TEST(NAME urExportScenarioToFileTest COMMAND ${PROJECT_NAME} urExportScenarioToFileTest "${OVT_OPENVIBE_DATA}/kernel/openvibe.conf" "${OVT_TEST_TEMPORARY_DIR}")
 ADD_TEST(NAME urValidateScenarioTest COMMAND ${PROJECT_NAME} urValidateScenarioTest "${OVT_OPENVIBE_DATA}/kernel/openvibe.conf" "${CMAKE_CURRENT_SOURCE_DIR}/data/")

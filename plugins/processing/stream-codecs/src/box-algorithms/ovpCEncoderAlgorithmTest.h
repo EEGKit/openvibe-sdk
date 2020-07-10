@@ -29,10 +29,8 @@ protected:
 	CTime m_startTime    = 0;
 	CTime m_endTime      = 0;
 
-	CMatrix* m_matrix1         = nullptr;
-	CMatrix* m_matrix2         = nullptr;
-	CMatrix* m_matrix3         = nullptr;
-	CStimulationSet* m_stimSet = nullptr;
+	CMatrix m_matrix1, m_matrix2, m_matrix3;
+	CStimulationSet m_stimSet;
 };
 
 class CEncoderAlgorithmTestDesc final : public IBoxAlgorithmDesc

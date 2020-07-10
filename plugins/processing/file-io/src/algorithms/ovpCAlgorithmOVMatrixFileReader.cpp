@@ -1,8 +1,8 @@
 #include "ovpCAlgorithmOVMatrixFileReader.h"
 
 namespace OpenViBE {
-	namespace Plugins {
-		namespace FileIO {
+namespace Plugins {
+namespace FileIO {
 
 bool CAlgorithmOVMatrixFileReader::initialize()
 {
@@ -20,13 +20,10 @@ bool CAlgorithmOVMatrixFileReader::uninitialize()
 
 bool CAlgorithmOVMatrixFileReader::process()
 {
-	OV_ERROR_UNLESS_KRF(Toolkit::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
-						"Reading matrix file " << *ip_sFilename << " failed",
-						Kernel::ErrorType::BadFileRead);
-
+	OV_ERROR_UNLESS_KRF(op_pMatrix->fromTextFile(ip_sFilename->toASCIIString()), "Reading matrix file " << *ip_sFilename << " failed", Kernel::ErrorType::BadFileRead);
 	return true;
 }
 
-		}  // namespace FileIO
-	}  // namespace Plugins
+}  // namespace FileIO
+}  // namespace Plugins
 }  // namespace OpenViBE

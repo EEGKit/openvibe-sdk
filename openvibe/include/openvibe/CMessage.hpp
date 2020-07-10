@@ -13,6 +13,7 @@
 #include "ov_common_defines.h"
 #include "CIdentifier.hpp"
 #include "CTime.hpp"
+#include <iostream>
 
 namespace OpenViBE {
 /// <summary>  This class is used to send an id and a time for event, clock or signal. </summary>

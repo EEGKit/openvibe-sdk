@@ -368,10 +368,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 				label << "Cond " << i / m_filtersPerClass + 1 << " filter " << i % m_filtersPerClass + 1;
 				selectedVectors.setDimensionLabel(0, i, label.str().c_str());
 			}
-
-			OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(selectedVectors, m_configFilename, 10),
-								"Failed to save file to location [" << m_configFilename << "]",
-								Kernel::ErrorType::BadFileWrite);
+			OV_ERROR_UNLESS_KRF(selectedVectors.toTextFile(m_configFilename.toASCIIString()), "Failed to save file to location [" << m_configFilename << "]", Kernel::ErrorType::BadFileWrite);
 		}
 
 		getLogManager() << LogLevel_Info << "Regularized CSP Spatial filter trained successfully.\n";

@@ -42,7 +42,7 @@ protected:
 
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::TParameterHandler<uint64_t> ip_sampling;
-	Kernel::TParameterHandler<CMatrix*> ip_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> ip_matrix;
 	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
 };
 

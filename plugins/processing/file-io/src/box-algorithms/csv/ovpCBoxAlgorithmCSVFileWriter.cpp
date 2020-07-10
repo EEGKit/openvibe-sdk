@@ -122,18 +122,11 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 				if (matrix->getDimensionCount() == 1 || m_typeID == OV_TypeId_FeatureVector)
 				{
 					// The matrix is a vector, make a matrix to represent it
-					m_oMatrix.setDimensionCount(2);
-
 					// This [n X 1] will get written as a single row due to transpose later
-					m_oMatrix.setDimensionSize(0, matrix->getDimensionSize(0));
-					m_oMatrix.setDimensionSize(1, 1);
+					m_oMatrix.resize(matrix->getDimensionSize(0), 1);
 					for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { m_oMatrix.setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
 				}
-				else
-				{
-					// As-is
-					Toolkit::Matrix::copyDescription(m_oMatrix, *matrix);
-				}
+				else { m_oMatrix.copy(*matrix); }	// As-is
 				// std::cout<<&m_Matrix<<" "<<&op_pMatrix<<"\n";
 				m_fileStream << "Time (s)";
 				for (size_t c = 0; c < m_oMatrix.getDimensionSize(0); ++c)

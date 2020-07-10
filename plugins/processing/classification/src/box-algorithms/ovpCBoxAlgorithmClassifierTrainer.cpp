@@ -144,11 +144,6 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	m_encoder.uninitialize();
 	m_stimDecoder.uninitialize();
 
-	for (size_t i = 0; i < m_datasets.size(); ++i)
-	{
-		delete m_datasets[i].sampleMatrix;
-		m_datasets[i].sampleMatrix = nullptr;
-	}
 	m_datasets.clear();
 
 	if (m_parameter)
@@ -275,15 +270,12 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			if (m_sampleDecoder[i - 1]->isHeaderReceived()) { }
 			if (m_sampleDecoder[i - 1]->isBufferReceived())
 			{
-				const CMatrix* sampleMatrix = m_sampleDecoder[i - 1]->getOutputMatrix();
-
 				sample_t sample;
-				sample.sampleMatrix = new CMatrix();
+				sample.sampleMatrix = *m_sampleDecoder[i - 1]->getOutputMatrix();
 				sample.startTime    = boxContext.getInputChunkStartTime(i, j);
 				sample.endTime      = boxContext.getInputChunkEndTime(i, j);
 				sample.inputIdx     = i - 1;
 
-				Matrix::copy(*sample.sampleMatrix, *sampleMatrix);
 				m_datasets.push_back(sample);
 				m_nFeatures[i]++;
 			}
@@ -301,7 +293,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		OV_ERROR_UNLESS_KRF(!m_datasets.empty(), "No training example received", Kernel::ErrorType::BadInput);
 
 		getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
-				<< m_datasets[0].sampleMatrix->getSize() << "]\n";
+				<< m_datasets[0].sampleMatrix.getSize() << "]\n";
 		for (size_t i = 1; i < nInput; ++i)
 		{
 			getLogManager() << LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
@@ -338,7 +330,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			double partitionAccuracy = 0;
 			double finalAccuracy     = 0;
 
-			Matrix::clearContent(confusion);
+			confusion.reset();
 
 			getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (size_t i = 0; i < m_nPartition; ++i)
@@ -386,7 +378,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, 0, 0),
 							"Training failed: bailing out (from whole set training)", Kernel::ErrorType::Internal);
 
-		Matrix::clearContent(confusion);
+		confusion.reset();
 		const double accuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
 
 		getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
@@ -405,7 +397,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 	OV_ERROR_UNLESS_KRF(stopIdx - startIdx != 1, "Invalid indexes: stopIdx - trainIndex = 1", Kernel::ErrorType::BadArgument);
 
 	const size_t nSample  = dataset.size() - (stopIdx - startIdx);
-	const size_t nFeature = dataset[0].sampleMatrix->getSize();
+	const size_t nFeature = dataset[0].sampleMatrix.getSize();
 
 	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
@@ -418,7 +410,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 	{
 		const size_t k       = permutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
 		const double classId = double(dataset[k].inputIdx);
-		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
+		memcpy(buffer, dataset[k].sampleMatrix.getBuffer(), nFeature * sizeof(double));
 
 		buffer[nFeature] = classId;
 		buffer += (nFeature + 1);
@@ -441,7 +433,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 {
 	OV_ERROR_UNLESS_KRF(stopIdx != startIdx, "Invalid indexes: start index equals stop index", Kernel::ErrorType::BadArgument);
 
-	const size_t nFeature = dataset[0].sampleMatrix->getSize();
+	const size_t nFeature = dataset[0].sampleMatrix.getSize();
 
 	TParameterHandler<XML::IXMLNode*> op_config(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* node = op_config;//Requested for affectation
@@ -466,7 +458,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 		getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
-		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
+		memcpy(buffer, dataset[k].sampleMatrix.getBuffer(), nFeature * sizeof(double));
 
 		m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
@@ -504,11 +496,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	}
 
 	// Normalize
-	CMatrix tmp, rowSum;
-	Matrix::copy(tmp, oMatrix);
-	rowSum.setDimensionCount(1);
-	rowSum.setDimensionSize(0, rows);
-	Matrix::clearContent(rowSum);
+	CMatrix tmp(oMatrix), rowSum(rows);
 
 	for (size_t i = 0; i < rows; ++i)
 	{

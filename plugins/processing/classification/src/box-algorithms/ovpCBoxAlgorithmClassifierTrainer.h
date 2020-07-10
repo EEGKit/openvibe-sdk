@@ -36,15 +36,14 @@ protected:
 
 	typedef struct
 	{
-		CMatrix* sampleMatrix;
+		CMatrix sampleMatrix;
 		CTime startTime;
 		CTime endTime;
 		size_t inputIdx;
 	} sample_t;
 
 	bool train(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx);
-	double getAccuracy(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx,
-					   CMatrix& confusionMatrix);
+	double getAccuracy(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation, size_t startIdx, size_t stopIdx, CMatrix& confusionMatrix);
 	bool printConfusionMatrix(const CMatrix& oMatrix);
 	bool balanceDataset();
 

@@ -25,7 +25,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 	m_encoder->initialize();
 
 	ip_sampling.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Sampling));
-	ip_pMatrix.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Matrix));
+	ip_matrix.initialize(m_encoder->getInputParameter(OVP_GD_Algorithm_SignalEncoder_InputParameterId_Matrix));
 	op_buffer.initialize(m_encoder->getOutputParameter(OVP_GD_Algorithm_SignalEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_nChannel         = 0;
@@ -46,7 +46,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 bool CBoxAlgorithmSignalDecimation::uninitialize()
 {
 	op_buffer.uninitialize();
-	ip_pMatrix.uninitialize();
+	ip_matrix.uninitialize();
 	ip_sampling.uninitialize();
 
 	if (m_encoder)
@@ -120,18 +120,18 @@ bool CBoxAlgorithmSignalDecimation::process()
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
 
-			Toolkit::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
-			ip_pMatrix->setDimensionSize(1, m_oNSamplePerBlock);
+			ip_matrix->copyDescription(*op_pMatrix);
+			ip_matrix->setDimensionSize(1, m_oNSamplePerBlock);
 			ip_sampling = m_oSampling;
 			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader);
-			Toolkit::Matrix::clearContent(*ip_pMatrix);
+			ip_matrix->reset();
 
 			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			double* iBuffer = op_pMatrix->getBuffer();
-			double* oBuffer = ip_pMatrix->getBuffer() + m_oSampleIdx;
+			double* oBuffer = ip_matrix->getBuffer() + m_oSampleIdx;
 
 			for (size_t j = 0; j < m_iNSamplePerBlock; ++j)
 			{
@@ -159,7 +159,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 					m_oSampleIdx++;
 					if (m_oSampleIdx == m_oNSamplePerBlock)
 					{
-						oBuffer      = ip_pMatrix->getBuffer();
+						oBuffer      = ip_matrix->getBuffer();
 						m_oSampleIdx = 0;
 						m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeBuffer);
 						const CTime tStartSample = m_startTimeBase + CTime(m_oSampling, m_nTotalSample);
@@ -167,7 +167,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_oNSamplePerBlock;
 
-						Toolkit::Matrix::clearContent(*ip_pMatrix);
+						ip_matrix->reset();
 					}
 				}
 

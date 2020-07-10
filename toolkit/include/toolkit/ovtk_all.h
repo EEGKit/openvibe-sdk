@@ -1,33 +1,19 @@
 #pragma once
 
-
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 #include "ovp_global_defines.h"
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
-//___________________________________________________________________//
-//                                                                   //
-// Basic includes                                                    //
-//___________________________________________________________________//
-//                                                                   //
-
+// Basic includes
+//---------------------------------------------------------------------------------------------------
 #include "ovtk_defines.h"
 
-//___________________________________________________________________//
-//                                                                   //
-// Tools                                                             //
-//___________________________________________________________________//
-//                                                                   //
-
-#include "tools/ovtkMatrix.h"
+// Tools
+//---------------------------------------------------------------------------------------------------
 #include "tools/ovtkString.h"
 
-//___________________________________________________________________//
-//                                                                   //
-// Codecs                                                            //
-//___________________________________________________________________//
-//                                                                   //
-
+// Codecs
+//---------------------------------------------------------------------------------------------------
 #include "codecs/ovtkTCodec.h"
 #include "codecs/ovtkTGenericCodec.h"
 #include "codecs/encoders/ovtkTEncoder.h"
@@ -61,12 +47,7 @@
 #include "codecs/encoders/ovtkTSpectrumEncoder.h"
 #include "codecs/decoders/ovtkTSpectrumDecoder.h"
 
-//___________________________________________________________________//
-//                                                                   //
-//                                                                   //
-//___________________________________________________________________//
-//                                                                   //
-
+//---------------------------------------------------------------------------------------------------
 #include "ovtkIVector.h"
 #include "ovtkIFeatureVector.h"
 #include "ovtkIFeatureVectorSet.h"
@@ -80,12 +61,7 @@
 #include "algorithms/scenario-io/ovtkCAlgorithmScenarioImporter.h"
 #include "algorithms/scenario-io/ovtkCAlgorithmScenarioExporter.h"
 
-//___________________________________________________________________//
-//                                                                   //
-//                                                                   //
-//___________________________________________________________________//
-//                                                                   //
-
+//---------------------------------------------------------------------------------------------------
 namespace OpenViBE {
 namespace Toolkit {
 

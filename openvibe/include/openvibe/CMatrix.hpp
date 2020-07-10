@@ -104,6 +104,11 @@ public:
 		return *this;
 	}
 
+	/// <summary>	Override the egal operator. </summary>
+	/// <param name="obj">	The second object. </param>
+	/// <returns>	True if the two <see cref="CMatrix"/> are equals. </returns>
+	bool operator==(const CMatrix& obj) const { return isAlmostEqual(obj); }
+
 	/// <summary> Overload of const operator []. </summary>
 	/// <param name="index">The index.</param>
 	/// <returns> Const Reference of the object. </returns>
@@ -118,43 +123,116 @@ public:
 	//---------------------- Misc ----------------------
 	//--------------------------------------------------
 
+	/// <summary> Determines if the buffer contains <c>NaN</c> or <c>Ininity</c>. </summary>
+	/// <param name="checkNaN">	Check if <c>NaN</c> is in buffer or not. </param>
+	/// <param name="checkInf">	Check if <c>Ininity</c> is in buffer or not. </param>
+	/// <returns> <c>true</c> if buffer is valid doesn't have <c>NaN</c> or <c>Ininity</c> value, <c>false</c> otherwise. </returns>
+	bool isBufferValid(const bool checkNaN = true, const bool checkInf = true) const;
+
+	/// <summary> Determines if the size and the labels of the matrix are equals. </summary>
+	/// <param name="m"> The matrix to compare. </param>
+	/// <param name="checkLabels"> The check labels or not. </param>
+	/// <returns> <c>true</c> if description is equal, <c>false</c> otherwise. </returns>
+	bool isDescriptionEqual(const CMatrix& m, const bool checkLabels = true) const;
+
+	/// <summary> Determines if the buffer is exactly the same. </summary>
+	/// <param name="m"> The matrix to compare. </param>
+	/// <returns> <c>true</c> if buffer is equal, <c>false</c> otherwise. </returns>
+	bool isBufferEqual(const CMatrix& m) const;
+
+	/// <summary> Determines if the buffer is almost equals. </summary>
+	/// <param name="m"> The matrix to compare. </param>
+	/// <param name="epsilon"> Tolerance for the difference. </param>
+	/// <returns> <c>true</c> if buffer is equal, <c>false</c> otherwise. </returns>
+	/// <remarks> We use it to avoïd double precision problems. </remarks>
+	bool isBufferAlmostEqual(const CMatrix& m, const double epsilon = OV_EPSILON) const;
+
+	/// <summary> Determines if the two <see cref="CMatrix"/> (Description & Buffer is exactly the same. </summary>
+	/// <param name="m"> The matrix to compare. </param>
+	/// <returns>	True if the two <see cref="CMatrix"/> are exactly the same. </returns>
+	bool isEqual(const CMatrix& m) const { return isDescriptionEqual(m) && isBufferEqual(m); }
+
+	/// <summary> Determines if the two <see cref="CMatrix"/> (Description & Buffer) is almost equal. </summary>
+	/// <param name="m"> The matrix to compare. </param>
+	/// <param name="epsilon"> Tolerance for the difference. </param>
+	/// <returns>	True if the two <see cref="CMatrix"/> are exactly the same. </returns>
+	/// <remarks> We use it to avoïd double precision problems. </remarks>
+	bool isAlmostEqual(const CMatrix& m, const double epsilon = OV_EPSILON) const { return isDescriptionEqual(m) && isBufferAlmostEqual(m, epsilon); }
+
+
 	/// <summary> Resize 2D matrix (or 1D if dim2 = 0). </summary>
 	/// <param name="dim1"> The first dimension. </param>
 	/// <param name="dim2"> The second dimension. </param>
 	void resize(const size_t dim1 = 0, const size_t dim2 = 0);
 
-	/// <summary> Delete all pointer and reset size to 0. </summary>
-	/// <remarks> Be carefull with this, must use a new constructor or resize function to allocate all pointers. </remarks>
-	void clear();
+	/// <summary> Resize ND matrix with given sizes. </summary>
+	/// <param name="sizes"> The  sizes of dimensions. </param>
+	void resize(const std::vector<size_t>& sizes);
+
+	/// <summary> Delete all pointer and reset size to 0 and init vector pointer. </summary>
+	void clean();
 
 	/// <summary> Copy matrix to this instance. </summary>
 	/// <param name="m"> The matrix to copy. </param>
 	void copy(const CMatrix& m);
 
+	/// <summary> Copy the size and the labels of matrix to this instance. </summary>
+	/// <param name="m"> The matrix to copy. </param>
+	void copyDescription(const CMatrix& m);
+
+	/// <summary> Copy the content of matrix to this instance. </summary>
+	/// <param name="m"> The matrix to copy. </param>
+	void copyContent(const CMatrix& m) const;
+
 	/// <summary> Set all element of the buffer to 0. </summary>
 	void reset() const;
-	
+
 	/// <summary> Set all labels to "". </summary>
 	void resetLabels() const { for (auto& dim : *m_dimLabels) { for (auto& l : dim) { l = ""; } } }
-	
+
+	/// <summary> Save to the text file. </summary>
+	/// <param name="filename"> The filename. </param>
+	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise. </returns>
+	bool toTextFile(const std::string& filename) const;
+
+	/// <summary> Load from the text file. </summary>
+	/// <param name="filename"> The filename. </param>
+	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise. </returns>
+	bool fromTextFile(const std::string& filename);
+
+	/// <summary> Fill in from string. </summary>
+	/// <param name="in">	The in. </param>
+	/// <param name="before">	caracter before the line (by default nothing). </param>
+	/// <param name="start">	caracter when the line start (by default nothing). </param>
+	/// <param name="sep">	separator between value (by default tabulation). </param>
+	/// <param name="end">	caracter when the line finish (by default nothing). </param>
+	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise. </returns>
+	bool fromString(const std::string& in, const std::string& before = "", const std::string& start = "",
+					const std::string& sep                           = "\t", const std::string& end = "") const;
+
+
 	/// <summary> Display the matrix. </summary>
+	/// <param name="before">	caracter before the line (by default nothing). </param>
+	/// <param name="start">	caracter when the line start (by default nothing). </param>
+	/// <param name="sep">	separator between value (by default tabulation). </param>
+	/// <param name="end">	caracter when the line finish (by default nothing). </param>
 	/// <returns> the Matrix. </returns>
-	std::string str() const;
+	/// <remarks> Display works for 2D and 1D matrix respectively in table format or a row. </remarks>
+	std::string toString(const std::string& before = "", const std::string& start = "", const std::string& sep = "\t", const std::string& end = "") const;
 
 	/// <summary> Override the ostream operator. </summary>
-	/// <param name="os"> The ostream. </param>
-	/// <param name="obj"> The object. </param>
+	/// <param name="os">	The ostream. </param>
+	/// <param name="obj">	The object. </param>
 	/// <returns> Return the modified ostream. </returns>
 	friend std::ostream& operator<<(std::ostream& os, const CMatrix& obj)
 	{
-		os << obj.str();
+		os << obj.toString();
 		return os;
 	}
 
 	_IsDerivedFromClass_Final_(IObject, OV_ClassId_Matrix)
 
 private:
-	
 	/// <summary> Init Buffer and number of element. </summary>
 	void initBuffer() const;
 
@@ -166,7 +244,11 @@ private:
 
 	/// <summary> Delete vector pointer. </summary>
 	void clearVector();
-	
+
+	/// <summary> Delete all pointer and reset size to 0. </summary>
+	/// <remarks> Be carefull with this, must use a new constructor or resize function to allocate all pointers. </remarks>
+	void clear();
+
 	mutable double* m_buffer = nullptr;	///< The matrix buffer.
 	mutable size_t m_size    = 0;		///< The number of element.
 

@@ -121,11 +121,15 @@ If a file is used, the filter size is read from the file and the other parameter
 
 To provide the filter matrix as a file, the format is the same as is used for storing electrode localizations. E.g. for 3x3 identity matrix, the file would be
 
-
 .. code::
 
-   [ [ "row1" "row2" "row3" ] [ "col1" "col2" "col3" ] ]
-   [ [ 1 0 0 ] ]
-   [ [ 0 1 0 ] ]
-   [ [ 0 0 1 ] ]
+[ 
+	[ "row1" "row2" "row3" ] 
+	[ "col1" "col2" "col3" ]
+]
+[
+	[ 1 0 0 ]
+	[ 0 1 0 ]
+	[ 0 0 1 ]
+]
 

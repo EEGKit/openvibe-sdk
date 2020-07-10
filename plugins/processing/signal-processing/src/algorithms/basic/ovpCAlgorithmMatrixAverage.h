@@ -27,7 +27,7 @@ protected:
 	Kernel::TParameterHandler<CMatrix*> ip_matrix;
 	Kernel::TParameterHandler<CMatrix*> op_averagedMatrix;
 
-	std::deque<CMatrix*> m_history;
+	std::deque<CMatrix> m_history;
 	std::vector<double> m_averageMatrices;
 	size_t m_nAverageSamples = 0;
 };
