@@ -30,3 +30,6 @@ scripts/windows-install-dependencies-x64-custom.cmd
 # Temp & Software Folder
 .vs/
 .vscode/
+
+# Test output
+*-output.csv
