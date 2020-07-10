@@ -10,6 +10,7 @@
 
 // Tools
 //---------------------------------------------------------------------------------------------------
+#include "tools/ovtkMatrix.h"
 #include "tools/ovtkString.h"
 
 // Codecs

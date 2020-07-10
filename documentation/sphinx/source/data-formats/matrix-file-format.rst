@@ -13,8 +13,8 @@ be used, or more straightforwardly via the toolkit functions,
 
 .. code::
 
-   OpenViBE::CMatrix.toTextFile(...)
-   OpenViBE::CMatrix.fromTextFile(...)
+   OpenViBE::Toolkit::Matrix::saveToTextFile(...)
+   OpenViBE::Toolkit::Matrix::loadFromTextFile(...)
 
 On disk, this format follows a very simple text syntax for maximum portability.
 
@@ -56,9 +56,12 @@ The next section of the file is the buffer part of the matrix. Opening and closi
    
    #buffer
    
-   [ 
-           [1 0 0] #color1 red
-           [0 1 0] #color2 blue
+   [ #color1
+           [1 0 0] #red
+   ]
+   
+   [ #color2
+           [0 1 0] #blue
    ]
    
    #end of buffer

@@ -48,6 +48,12 @@ TEST_F(CMatrix_Tests, Constructor)
 	EXPECT_STREQ("dim0e0", m_mat.getDimensionLabel(0, 0).c_str());
 	EXPECT_STREQ("dim1e0", m_mat.getDimensionLabel(1, 0).c_str());
 	EXPECT_STREQ("dim1e1", m_mat.getDimensionLabel(1, 1).c_str());
+
+	EXPECT_TRUE(m_mat.isBufferValid());
+	m_mat.getBuffer()[0] = std::numeric_limits<double>::infinity();
+	EXPECT_FALSE(m_mat.isBufferValid());
+	m_mat.getBuffer()[0] = std::numeric_limits<double>::quiet_NaN();
+	EXPECT_FALSE(m_mat.isBufferValid());
 }
 //---------------------------------------------------------------------------------------------------
 
