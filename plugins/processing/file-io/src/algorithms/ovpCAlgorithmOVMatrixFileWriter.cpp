@@ -23,7 +23,8 @@ bool CAlgorithmOVMatrixFileWriter::uninitialize()
 
 bool CAlgorithmOVMatrixFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(ip_matrix->toTextFile(ip_sFilename->toASCIIString()), "Writing matrix file " << *ip_sFilename << " failed", Kernel::ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(*ip_matrix, ip_sFilename->toASCIIString()),
+						"Writing matrix file " << *ip_sFilename << " failed", Kernel::ErrorType::BadFileWrite);
 
 	return true;
 }

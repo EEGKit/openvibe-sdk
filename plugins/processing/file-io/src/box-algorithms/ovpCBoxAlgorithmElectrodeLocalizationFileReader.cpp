@@ -90,7 +90,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 
 		// Produces header
 		CMatrix* iMatrix = m_encoder->getInputMatrix();
-		iMatrix->copy(*op_pMatrix);
+		Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		m_encoder->encodeHeader();
 
@@ -105,7 +105,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	{
 		// Connects parameters to memory buffer
 		CMatrix* iMatrix = m_encoder->getInputMatrix();
-		iMatrix->copy(*op_pMatrix);
+		Toolkit::Matrix::copy(*iMatrix, *op_pMatrix);
 
 		// Produces buffer
 		m_encoder->encodeBuffer();
