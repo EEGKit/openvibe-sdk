@@ -20,9 +20,7 @@
 using namespace std;
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
-
 
 const uint64_t SCHEDULER_DEFAULT_FREQUENCY   = 128;
 const CTime SCHEDULER_MAXIMUM_LOOPS_DURATION = (100LL << 22); /* 100/1024 seconds, approx 100ms */
@@ -239,9 +237,7 @@ bool CPlayer::setFastForwardMaximumFactor(const double fastForwardFactor)
 }
 
 double CPlayer::getFastForwardMaximumFactor() const { return m_fastForwardMaximumFactor; }
-
 double CPlayer::getCPUUsage() const { return m_scheduler.getCPUUsage(); }
-
 bool CPlayer::isHoldingResources() const { return m_scheduler.isHoldingResources(); }
 
 bool CPlayer::loop(const CTime elapsedTime, const CTime maximumTimeToReach)

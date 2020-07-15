@@ -54,50 +54,6 @@ bool Matrix::copyContent(CMatrix& dst, const CMatrix& src)
 	return true;
 }
 
-bool Matrix::isDescriptionSimilar(const CMatrix& src1, const CMatrix& src2, const bool checkLabels)
-{
-	if (&src1 == &src2) { return true; }
-
-	if (src1.getDimensionCount() != src2.getDimensionCount()) { return false; }
-
-	for (size_t i = 0; i < src1.getDimensionCount(); ++i) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
-
-	if (checkLabels)
-	{
-		for (size_t i = 0; i < src1.getDimensionCount(); ++i)
-		{
-			for (size_t j = 0; j < src1.getDimensionSize(i); ++j)
-			{
-				if (src1.getDimensionLabel(i, j) == src2.getDimensionLabel(i, j)) { return false; }
-			}
-		}
-	}
-
-	return true;
-}
-
-bool Matrix::isContentSimilar(const CMatrix& src1, const CMatrix& src2)
-{
-	if (&src1 == &src2) { return true; }
-
-	if (src1.getSize() != src2.getSize()) { return false; }
-
-	return memcmp(src1.getBuffer(), src2.getBuffer(), src1.getSize() * sizeof(double)) == 0;
-}
-
-bool Matrix::isContentValid(const CMatrix& src, const bool checkNotANumber, const bool checkInfinity)
-{
-	const double* buffer    = src.getBuffer();
-	const double* bufferEnd = src.getBuffer() + src.getSize();
-	while (buffer != bufferEnd)
-	{
-		if (checkNotANumber && std::isnan(*buffer)) { return false; }
-		if (checkInfinity && std::isinf(*buffer)) { return false; }
-		buffer++;
-	}
-	return true;
-}
-
 enum class EParsingStatus { Nothing, ParsingHeader, ParsingHeaderDimension, ParsingHeaderLabel, ParsingBuffer, ParsingBufferValue };
 
 // tokens in the ascii matrix format
