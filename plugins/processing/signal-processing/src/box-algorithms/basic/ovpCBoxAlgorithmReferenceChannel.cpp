@@ -93,9 +93,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 				OV_WARNING_K("Multiple channels match for setting [" << channel << "]. Selecting [" << m_referenceChannelIdx << "]");
 			}
 
-			oMatrix.setDimensionCount(2);
-			oMatrix.setDimensionSize(0, iMatrix.getDimensionSize(0) - 1);
-			oMatrix.setDimensionSize(1, iMatrix.getDimensionSize(1));
+			oMatrix.resize(iMatrix.getDimensionSize(0) - 1, iMatrix.getDimensionSize(1));
 			for (size_t j = 0, k = 0; j < iMatrix.getDimensionSize(0); ++j)
 			{
 				if (j != m_referenceChannelIdx) { oMatrix.setDimensionLabel(0, k++, iMatrix.getDimensionLabel(0, j)); }

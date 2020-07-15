@@ -321,9 +321,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		const size_t nClass = nInput - 1;
 		CMatrix confusion;
-		confusion.setDimensionCount(2);
-		confusion.setDimensionSize(0, nClass);
-		confusion.setDimensionSize(1, nClass);
+		confusion.resize(nClass, nClass);
 
 		if (m_nPartition >= 2)
 		{
@@ -401,9 +399,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 
 	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
-	ip_sample->setDimensionCount(2);
-	ip_sample->setDimensionSize(0, nSample);
-	ip_sample->setDimensionSize(1, nFeature + 1);
+	ip_sample->resize(nSample, nFeature + 1);
 
 	double* buffer = ip_sample->getBuffer();
 	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); ++j)
@@ -444,8 +440,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-	ip_sample->setDimensionCount(1);
-	ip_sample->setDimensionSize(0, nFeature);
+	ip_sample->resize(nFeature);
 
 	size_t nSuccess = 0;
 

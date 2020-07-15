@@ -98,9 +98,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 		{
 			Matrix::copyDescription(*m_encoder0.getInputMatrix(), *m_decoder.getOutputMatrix());
 			CMatrix* o2Matrix = m_encoder2.getInputMatrix();
-			o2Matrix->setDimensionCount(2);
-			o2Matrix->setDimensionSize(0, nChannel);
-			o2Matrix->setDimensionSize(1, nSample);
+			o2Matrix->resize(nChannel, nSample);
 
 			m_signals.clear();
 			m_signals.resize(nChannel, 0);

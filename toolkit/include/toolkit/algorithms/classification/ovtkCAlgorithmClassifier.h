@@ -66,7 +66,6 @@ protected:
 
 private:
 	CString& getParameterValue(const CIdentifier& parameterID) const;
-	static void setMatrixOutputDimension(Kernel::TParameterHandler<CMatrix*>& matrix, size_t length);
 
 	Kernel::IAlgorithmProxy* m_AlgorithmProxy = nullptr;
 	void* m_ExtraParametersMap                = nullptr;

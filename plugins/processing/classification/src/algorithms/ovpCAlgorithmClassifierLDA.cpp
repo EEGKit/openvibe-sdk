@@ -169,10 +169,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 			const size_t examplesInClass = nClasses[classIdx];
 
 			// Copy all the data of the class to a matrix
-			CMatrix classData;
-			classData.setDimensionCount(2);
-			classData.setDimensionSize(0, examplesInClass);
-			classData.setDimensionSize(1, nCols);
+			CMatrix classData(examplesInClass, nCols);
 			double* buffer = classData.getBuffer();
 			for (size_t i = 0; i < nRows; ++i)
 			{
@@ -199,9 +196,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 	// We need a global covariance, use the regularized cov algorithm
 	{
-		ip_dataset->setDimensionCount(2);
-		ip_dataset->setDimensionSize(0, nRows);
-		ip_dataset->setDimensionSize(1, nCols);
+		ip_dataset->resize(nRows, nCols);
 		double* buffer = ip_dataset->getBuffer();
 
 		// Insert all data as the input of the cov algorithm

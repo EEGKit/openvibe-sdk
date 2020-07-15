@@ -239,9 +239,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		// Create a CMatrix mapper that can spool the filters to a file
 
 		CMatrix eigenVectors;
-		eigenVectors.setDimensionCount(2);
-		eigenVectors.setDimensionSize(0, m_filterDim);
-		eigenVectors.setDimensionSize(1, nChannel);
+		eigenVectors.resize(m_filterDim, nChannel);
 
 		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDim, nChannel);
 

@@ -70,12 +70,8 @@ bool CAlgorithmOnlineCovariance::process()
 			OVP_TypeId_OnlineCovariance_UpdateMethod, ip_UpdateMethod) << "\n";
 
 		// Set the output buffers
-		op_Mean->setDimensionCount(2);
-		op_Mean->setDimensionSize(0, 1);
-		op_Mean->setDimensionSize(1, nCols);
-		op_CovarianceMatrix->setDimensionCount(2);
-		op_CovarianceMatrix->setDimensionSize(0, nCols);
-		op_CovarianceMatrix->setDimensionSize(1, nCols);
+		op_Mean->resize(1, nCols);
+		op_CovarianceMatrix->resize(nCols, nCols);
 
 		// These keep track of the non-normalized incremental estimates
 		m_mean.resize(1, nCols);

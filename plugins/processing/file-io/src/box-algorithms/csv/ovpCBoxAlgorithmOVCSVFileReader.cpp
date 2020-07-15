@@ -101,9 +101,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 	{
 		if (m_typeID == OV_TypeId_Signal)
 		{
-			matrix->setDimensionCount(2);
-			matrix->setDimensionSize(0, m_channelNames.size());
-			matrix->setDimensionSize(1, m_nSamplePerBuffer);
+			matrix->resize(m_channelNames.size(), m_nSamplePerBuffer);
 
 			size_t index = 0;
 
@@ -127,8 +125,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		}
 		else if (m_typeID == OV_TypeId_FeatureVector)
 		{
-			matrix->setDimensionCount(1);
-			matrix->setDimensionSize(0, m_channelNames.size());
+			matrix->resize(m_channelNames.size());
 
 			size_t index = 0;
 			for (const auto& channelName : m_channelNames) { matrix->setDimensionLabel(0, index++, channelName); }
@@ -137,11 +134,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		{
 			CMatrix* frequencyAbscissaMatrix = m_algorithmEncoder.getInputFrequencyAbcissa();
 
-			matrix->setDimensionCount(2);
-			matrix->setDimensionSize(0, m_channelNames.size());
-			matrix->setDimensionSize(1, m_frequencyAbscissa.size());
-			frequencyAbscissaMatrix->setDimensionCount(1);
-			frequencyAbscissaMatrix->setDimensionSize(0, m_frequencyAbscissa.size());
+			matrix->resize(m_channelNames.size(), m_frequencyAbscissa.size());
+			frequencyAbscissaMatrix->resize(m_frequencyAbscissa.size());
 
 			size_t index = 0;
 			for (const auto& channelName : m_channelNames) { matrix->setDimensionLabel(0, index++, channelName); }

@@ -50,8 +50,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 
 	if (top == OVTK_NodeId_Header_Spectrum)
 	{
-		op_frequencyAbscissa->setDimensionCount(1);
-		op_frequencyAbscissa->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
+		op_frequencyAbscissa->resize(op_pMatrix->getDimensionSize(1));
 		m_frequencyBandIdx = 0;
 	}
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { }

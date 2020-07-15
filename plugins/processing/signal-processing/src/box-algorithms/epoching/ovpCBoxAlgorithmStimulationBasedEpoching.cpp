@@ -83,9 +83,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 			m_nSampleCountOutputEpoch = size_t(CTime(m_epochDurationInSeconds).toSampleCount(m_sampling));
 
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, m_nChannel);
-			oMatrix->setDimensionSize(1, m_nSampleCountOutputEpoch);
+			oMatrix->resize(m_nChannel, m_nSampleCountOutputEpoch);
 
 			for (size_t channel = 0; channel < m_nChannel; ++channel) { oMatrix->setDimensionLabel(0, channel, iMatrix->getDimensionLabel(0, channel)); }
 			m_encoder.encodeHeader();

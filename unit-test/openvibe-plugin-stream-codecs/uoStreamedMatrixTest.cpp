@@ -68,14 +68,10 @@ TEST_F(StreamedMatrixTest, matrix_decoder_does_not_crash_when_given_an_empty_mat
 	EXPECT_TRUE(encoder.initialize());
 	EXPECT_TRUE(decoder.initialize());
 	CMatrix mat;
-	mat.setDimensionCount(1);
-	mat.setDimensionSize(0, 0);
 
 	TParameterHandler<const CMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<const IMemoryBuffer*> oBuffer(
-		encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
-	TParameterHandler<const IMemoryBuffer*>
-			iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
+	TParameterHandler<const IMemoryBuffer*> oBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+	TParameterHandler<const IMemoryBuffer*> iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
 	TParameterHandler<const CMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
 	iMatrix = &mat;
@@ -98,10 +94,7 @@ TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_origi
 	auto& decoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_decoderId);
 	EXPECT_TRUE(encoder.initialize());
 	EXPECT_TRUE(decoder.initialize());
-	CMatrix mat;
-	mat.setDimensionCount(2);
-	mat.setDimensionSize(0, 2);
-	mat.setDimensionSize(1, 3);
+	CMatrix mat(2, 3);
 	size_t elemCount = 1;
 	for (size_t dim = 0; dim < mat.getDimensionCount(); ++dim)
 	{

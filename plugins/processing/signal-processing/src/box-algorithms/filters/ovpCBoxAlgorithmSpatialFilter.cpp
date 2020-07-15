@@ -34,9 +34,7 @@ size_t CBoxAlgorithmSpatialFilter::loadCoefs(const CString& coefs, const char c1
 						Kernel::ErrorType::BadProcessing);
 
 	// Resize in one step for efficiency.
-	m_filterBank.setDimensionCount(2);
-	m_filterBank.setDimensionSize(0, nRows);
-	m_filterBank.setDimensionSize(1, nCols);
+	m_filterBank.resize(nRows, nCols);
 
 	double* filter = m_filterBank.getBuffer();
 
@@ -206,9 +204,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 								Kernel::ErrorType::BadConfig);
 
 			CMatrix* oMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, nChannelFilterOut);
-			oMatrix->setDimensionSize(1, nSampleIn);
+			oMatrix->resize(nChannelFilterOut, nSampleIn);
 
 			// Name channels
 			for (size_t j = 0; j < oMatrix->getDimensionSize(0); ++j) { oMatrix->setDimensionLabel(0, j, ("sFiltered " + std::to_string(j)).c_str()); }

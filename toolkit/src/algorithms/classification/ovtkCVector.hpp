@@ -17,8 +17,7 @@ public:
 
 	bool setSize(const size_t size) override
 	{
-		m_matrix.setDimensionCount(1);
-		m_matrix.setDimensionSize(0, size);
+		m_matrix.resize(size);
 		return true;
 	}
 

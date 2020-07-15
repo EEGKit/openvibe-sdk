@@ -73,12 +73,8 @@ bool CAlgorithmConditionedCovariance::process()
 	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", Kernel::ErrorType::BadInput);
 
 	// Set the output buffers so we can write the results to them without copy
-	op_mean->setDimensionCount(2);
-	op_mean->setDimensionSize(0, 1);
-	op_mean->setDimensionSize(1, nCols);
-	op_covMatrix->setDimensionCount(2);
-	op_covMatrix->setDimensionSize(0, nCols);
-	op_covMatrix->setDimensionSize(1, nCols);
+	op_mean->resize(1, nCols);
+	op_covMatrix->resize(nCols, nCols);
 
 	// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
 	const Map<MatrixXdRowMajor> dataMatrix(const_cast<double*>(buffer), nRows, nCols);

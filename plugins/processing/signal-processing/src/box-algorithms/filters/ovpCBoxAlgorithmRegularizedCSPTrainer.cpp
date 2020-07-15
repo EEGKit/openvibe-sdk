@@ -108,9 +108,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const size_t index)
 		{
 			TParameterHandler<CMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 
-			features->setDimensionCount(2);
-			features->setDimensionSize(0, matrix->getDimensionSize(1));
-			features->setDimensionSize(1, matrix->getDimensionSize(0));
+			features->resize(matrix->getDimensionSize(1), matrix->getDimensionSize(0));
 
 			OV_ERROR_UNLESS_KRF(m_filtersPerClass <= matrix->getDimensionSize(0),
 								"Invalid CSP filter dimension of [" << m_filtersPerClass << "] for stream " << i+1 <<
@@ -327,9 +325,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		// Create a CMatrix mapper that can spool the filters to a file
 		CMatrix selectedVectors;
-		selectedVectors.setDimensionCount(2);
-		selectedVectors.setDimensionSize(0, m_filtersPerClass * m_nClasses);
-		selectedVectors.setDimensionSize(1, nChannels);
+		selectedVectors.resize(m_filtersPerClass * m_nClasses, nChannels);
 
 		Map<MatrixXdRowMajor> selectedVectorsMapper(selectedVectors.getBuffer(), m_filtersPerClass * m_nClasses, nChannels);
 

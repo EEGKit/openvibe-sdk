@@ -56,9 +56,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& dataset)
 	//We set the CMatrix fo the first classifier
 	const size_t size = dataset[0].getSize();
 	TParameterHandler<CMatrix*> reference(m_subClassifiers[0]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-	reference->setDimensionCount(2);
-	reference->setDimensionSize(0, dataset.getFeatureVectorCount());
-	reference->setDimensionSize(1, size + 1);
+	reference->resize(dataset.getFeatureVectorCount(), size + 1);
 
 	double* buffer = reference->getBuffer();
 	for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j)
@@ -102,8 +100,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 		TParameterHandler<double> op_class(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 		TParameterHandler<CMatrix*> op_values(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 		TParameterHandler<CMatrix*> op_probabilities(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-		ip_sample->setDimensionCount(1);
-		ip_sample->setDimensionSize(0, size);
+		ip_sample->resize(size);
 
 		double* buffer = ip_sample->getBuffer();
 		memcpy(buffer, sample.getBuffer(), size * sizeof(double));

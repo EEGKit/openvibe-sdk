@@ -136,9 +136,7 @@ bool CBoxAlgorithmSignalMerger::process()
 			// We have received headers from all inputs
 			CMatrix* ip_matrix = m_encoder->getInputMatrix();
 
-			ip_matrix->setDimensionCount(2);
-			ip_matrix->setDimensionSize(0, nChannel);
-			ip_matrix->setDimensionSize(1, nSamplePerBlock);
+			ip_matrix->resize(nChannel, nSamplePerBlock);
 			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
 				const CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();

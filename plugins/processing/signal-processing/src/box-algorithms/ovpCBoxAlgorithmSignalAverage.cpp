@@ -69,9 +69,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			m_encoder.getInputSamplingRate() = newSampling;
 
 			// We keep the number of channels, but the output chunk size will be 1
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, iMatrix->getDimensionSize(0));
-			oMatrix->setDimensionSize(1, 1);
+			oMatrix->resize(iMatrix->getDimensionSize(0), 1);
 
 			for (size_t j = 0; j < oMatrix->getDimensionSize(0); ++j) { oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j)); }
 

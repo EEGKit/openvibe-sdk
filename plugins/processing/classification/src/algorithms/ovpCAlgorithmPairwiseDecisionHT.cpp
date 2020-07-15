@@ -151,8 +151,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& c
 	std::cout << std::endl << std::endl;
 #endif
 
-	probabilities->setDimensionCount(1);
-	probabilities->setDimensionSize(0, m_nClass);
+	probabilities->resize(m_nClass);
 	for (size_t i = 0; i < m_nClass; ++i) { probabilities->getBuffer()[i] = p[i]; }
 	return true;
 }
@@ -187,8 +186,7 @@ bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 		repartition.push_back(double(value));
 	}
 
-	ip_repartition->setDimensionCount(1);
-	ip_repartition->setDimensionSize(0, repartition.size());
+	ip_repartition->resize(repartition.size());
 	for (size_t i = 0; i < repartition.size(); ++i) { ip_repartition->getBuffer()[i] = repartition[i]; }
 	return true;
 }

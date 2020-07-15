@@ -42,13 +42,10 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		CMatrix* matrix = m_encoder.getInputMatrix();
 
-		matrix->setDimensionCount(2);
-		matrix->setDimensionSize(0, 1);
-		matrix->setDimensionSize(1, m_nGeneratedEpochSample);
+		matrix->resize(1, m_nGeneratedEpochSample);
 		matrix->setDimensionLabel(0, 0, "Time signal");
 
 		m_encoder.encodeHeader();
-
 		m_headerSent = true;
 
 		boxCtx->markOutputAsReadyToSend(0, 0, 0);

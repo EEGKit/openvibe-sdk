@@ -130,9 +130,7 @@ bool CBoxAlgorithmFeatureAggregator::process()
 			totalBufferSize += iMatrix->getSize();
 			if (input == boxContext->getInputCount() - 1)
 			{
-				oMatrix->setDimensionCount(1);
-				oMatrix->setDimensionSize(0, totalBufferSize);
-
+				oMatrix->resize(totalBufferSize);
 				for (size_t i = 0; i < totalBufferSize; ++i) { oMatrix->setDimensionLabel(0, i, ("Feature " + std::to_string(i + 1)).c_str()); }
 
 				m_encoder->encodeHeader();

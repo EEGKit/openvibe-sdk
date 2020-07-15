@@ -120,8 +120,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_sizeFFT = m_nSample / 2 + 1;
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
-			m_frequencyAbscissa->setDimensionCount(1);  // a list of frequencies
-			m_frequencyAbscissa->setDimensionSize(0, m_sizeFFT); // FFTSize frquency abscissa
+			m_frequencyAbscissa->resize(m_sizeFFT); // a list of frequencies, FFTSize frquency abscissa
 
 			// Frequency values
 			for (size_t frequencyAbscissaIdx = 0; frequencyAbscissaIdx < m_sizeFFT; ++frequencyAbscissaIdx)
@@ -137,9 +136,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				{
 					// Spectrum matrix
 					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
-					spectrum->setDimensionCount(2);
-					spectrum->setDimensionSize(0, m_nChannel);
-					spectrum->setDimensionSize(1, m_sizeFFT);
+					spectrum->resize(m_nChannel, m_sizeFFT);
 
 					// Spectrum channel names
 					for (size_t j = 0; j < m_nChannel; ++j) { spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }

@@ -270,9 +270,7 @@ bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 	//Header
 	if (!m_headerSent)
 	{
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
+		iMatrix->resize(m_nCol - 1, m_samplesPerBuffer);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 		m_encoder->encodeHeader();
@@ -351,9 +349,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
 		if (!m_doNotUseFileTime) { m_endTime = CTime(atof(m_dataMatrices[0][0].c_str())); }
 
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
+		iMatrix->resize(m_nCol - 1, m_samplesPerBuffer);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 
@@ -397,9 +393,7 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 
 	if (!m_headerSent)
 	{
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
+		iMatrix->resize(m_nCol - 1, m_samplesPerBuffer);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 
@@ -454,8 +448,7 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 		// in this case we need to transpose it
 		CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
-		iMatrix->setDimensionCount(1);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
+		iMatrix->resize(m_nCol - 1);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 
@@ -495,13 +488,10 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 	//Header
 	if (!m_headerSent)
 	{
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_dataMatrices.size());
+		iMatrix->resize(m_nCol - 1, m_dataMatrices.size());
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
-		iFrequencyAbscissa->setDimensionCount(1);
-		iFrequencyAbscissa->setDimensionSize(0, m_dataMatrices.size());
+		iFrequencyAbscissa->setDimensionCount(m_dataMatrices.size());	// Row matrix vector
 		if (m_dataMatrices.size() > 1)
 		{
 			for (size_t i = 0; i < m_dataMatrices.size(); ++i)

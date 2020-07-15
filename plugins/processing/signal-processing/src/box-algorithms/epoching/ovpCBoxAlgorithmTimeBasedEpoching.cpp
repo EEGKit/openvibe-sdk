@@ -69,9 +69,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 								"Input sampling frequency is [" << m_sampling << "]. This is too low in order to produce epochs of ["
 								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", Kernel::ErrorType::Internal);
 
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, nChannel);
-			oMatrix->setDimensionSize(1, m_oNSample);
+			oMatrix->resize(nChannel, m_oNSample);
 			for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 
 			m_encoder.encodeHeader();

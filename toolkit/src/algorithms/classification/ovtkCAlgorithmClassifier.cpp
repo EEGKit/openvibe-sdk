@@ -109,8 +109,8 @@ bool CAlgorithmClassifier::process()
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 			//Now we need to parametrize the two output Matrix for values
-			setMatrixOutputDimension(op_ProbabilityValues, this->getNProbabilities());
-			setMatrixOutputDimension(op_ClassificationValues, this->getNDistances());
+			op_ProbabilityValues->resize(this->getNProbabilities());
+			op_ClassificationValues->resize(this->getNDistances());
 		}
 		else
 		{
@@ -149,12 +149,6 @@ CString& CAlgorithmClassifier::getParameterValue(const CIdentifier& parameterID)
 {
 	const CString parameterName = m_AlgorithmProxy->getInputParameterName(parameterID);
 	return (*static_cast<std::map<CString, CString>*>(m_ExtraParametersMap))[parameterName];
-}
-
-void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<CMatrix*>& matrix, const size_t length)
-{
-	matrix->setDimensionCount(1);
-	matrix->setDimensionSize(0, length);
 }
 
 uint64_t CAlgorithmClassifier::getUInt64Parameter(const CIdentifier& parameterID)

@@ -123,8 +123,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 	//Now we create the corresponding repartition set
 	TParameterHandler<CMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->getInputParameter(
 		OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	ip_pRepartitionSet->setDimensionCount(1);
-	ip_pRepartitionSet->setDimensionSize(0, m_nClasses);
+	ip_pRepartitionSet->resize(m_nClasses);
 
 	const size_t size = dataset[0].getSize();
 	//Now let's train each classifier
@@ -138,9 +137,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 			IAlgorithmProxy* subClassifier = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
 
 			TParameterHandler<CMatrix*> ip_dataset(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-			ip_dataset->setDimensionCount(2);
-			ip_dataset->setDimensionSize(0, nFeature);
-			ip_dataset->setDimensionSize(1, size + 1);
+			ip_dataset->resize(nFeature, size + 1);
 
 			double* buffer = ip_dataset->getBuffer();
 			for (size_t k = 0; k < dataset.getFeatureVectorCount(); ++k)
@@ -174,9 +171,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 	TParameterHandler<CMatrix*> ip_proba = m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
 	CMatrix* matrix                      = static_cast<CMatrix*>(ip_proba);
 
-	matrix->setDimensionCount(2);
-	matrix->setDimensionSize(0, m_nClasses);
-	matrix->setDimensionSize(1, m_nClasses);
+	matrix->resize(m_nClasses, m_nClasses);
 
 	for (size_t i = 0; i < matrix->getSize(); ++i) { matrix->getBuffer()[i] = 0.0; }
 
@@ -189,8 +184,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& sample, double
 			TParameterHandler<CMatrix*> ip_sample(tmp->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 			TParameterHandler<CMatrix*> op_values(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 			TParameterHandler<double> op_label(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-			ip_sample->setDimensionCount(1);
-			ip_sample->setDimensionSize(0, size);
+			ip_sample->resize(size);
 
 			double* buffer = ip_sample->getBuffer();
 			memcpy(buffer, sample.getBuffer(), size * sizeof(double));
