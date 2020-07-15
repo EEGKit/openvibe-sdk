@@ -54,12 +54,6 @@ bool Matrix::copyContent(CMatrix& dst, const CMatrix& src)
 	return true;
 }
 
-bool Matrix::clearContent(CMatrix& matrix)
-{
-	memset(matrix.getBuffer(), 0, matrix.getSize() * sizeof(double));
-	return true;
-}
-
 bool Matrix::isDescriptionSimilar(const CMatrix& src1, const CMatrix& src2, const bool checkLabels)
 {
 	if (&src1 == &src2) { return true; }
