@@ -59,7 +59,7 @@ std::string CMatrix::getDimensionLabel(const size_t dim, const size_t idx) const
 //--------------------------------------------------------------------------------
 double* CMatrix::getBuffer()
 {
-	if (!m_buffer) { initBuffer(); }
+	if (!m_buffer) { initBuffer(); }				// Initialize buffer if needed
 	return m_buffer;
 }
 //--------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ double* CMatrix::getBuffer()
 //--------------------------------------------------------------------------------
 size_t CMatrix::getSize() const
 {
-	if (!m_buffer || m_size == 0) { initBuffer(); }
+	if (!m_buffer || m_size == 0) { initBuffer(); }	// Initialize buffer if needed
 	return m_size;
 }
 //--------------------------------------------------------------------------------
@@ -75,9 +75,8 @@ size_t CMatrix::getSize() const
 //--------------------------------------------------------------------------------
 void CMatrix::setDimensionCount(const size_t count) const
 {
-	if (count == 0) { return; }
-
-	clearBuffer();
+	if (count == 0) { return; }						// If dimension number is 0, make nothing
+	clearBuffer();									// Reset Buffer pointer
 	m_dimSizes->resize(count);
 	m_dimLabels->resize(count);
 }
@@ -86,9 +85,8 @@ void CMatrix::setDimensionCount(const size_t count) const
 //--------------------------------------------------------------------------------
 void CMatrix::setDimensionSize(const size_t dim, const size_t size) const
 {
-	if (dim >= m_dimSizes->size()) { return; }
-
-	clearBuffer();
+	if (dim >= m_dimSizes->size()) { return; }		// If out of dimension make nothing
+	clearBuffer();									// Reset Buffer pointer
 	m_dimSizes->at(dim) = size;
 	m_dimLabels->at(dim).clear();
 	m_dimLabels->at(dim).resize(size);
@@ -153,7 +151,7 @@ bool CMatrix::isBufferAlmostEqual(const CMatrix& m, const double epsilon) const
 //--------------------------------------------------------------------------------
 void CMatrix::resize(const size_t dim1, const size_t dim2)
 {
-	clean();
+	clean();	// Delete all pointer and initialize vector pointer
 	if (dim2 == 0)
 	{
 		if (getDimensionCount() != 1 || getDimensionSize(0) != dim1) // check if size don't change
