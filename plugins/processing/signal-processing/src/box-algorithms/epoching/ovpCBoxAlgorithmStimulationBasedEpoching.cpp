@@ -96,7 +96,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								Kernel::ErrorType::Internal);
 			// Cache the signal data
 			m_cachedChunks.emplace_back(iChunkStartTime, iChunkEndTime, new CMatrix());
-			Toolkit::Matrix::copy(*m_cachedChunks.back().matrix, *iMatrix);
+			m_cachedChunks.back().matrix->copy(*iMatrix);
 
 			m_lastSignalChunkEndTime = iChunkEndTime;
 		}

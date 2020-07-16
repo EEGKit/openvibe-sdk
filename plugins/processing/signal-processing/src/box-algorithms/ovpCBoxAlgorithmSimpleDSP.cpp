@@ -199,7 +199,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 
 	if (nHeader)
 	{
-		Toolkit::Matrix::copyDescription(*ip_matrix, *m_matrices[0]);
+		ip_matrix->copyDescription(*m_matrices[0]);
 		m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
 	}
 	if (nBuffer)
