@@ -1,47 +1,89 @@
 #!/usr/bin/perl
 
-# Intended to be run from linux-install_dependencies.pl
+# Intended to be run from linux-install_dependencies.pl which defines the dependencies_dir variable.
 # 
 # Variables are wrt that parent scope
 #
-if (!$no_install && $distribution eq 'Ubuntu 14.04') {
-  # Install cmake 3.5.1 from source if it is not already
-  # This is because Ubuntu 14.04 only has an old version of cmake
-  if (-e "/usr/local/bin/cmake") {
-    print STDERR "Warning: cmake is already installed in /usr/local\n";
-  } else {
-    my $old_dir = Cwd::getcwd();
 
-    my $dependencies_dir = $FindBin::Bin . "/../dependencies";
-    my $cmake_build_folder = $dependencies_dir . "/cmake-build";
-    my $cmake_extracted_folder = $cmake_build_folder . "/cmake-3.5.1";
+use strict;
+use warnings;
+use Getopt::Long;
 
-    if (! -e $dependencies_dir) {
-      mkdir($dependencies_dir) or die("Failed to create directory [$dependencies_dir]");
-    }
-    if (! -e $cmake_build_folder) {
-      mkdir($cmake_build_folder) or die("Failed to create directory [$cmake_build_folder]");
-    }
+use English;
+use FindBin;
+use File::Copy;
+use File::Spec;
 
-    chdir $cmake_build_folder;
+# Version of CMake to install if needed (latest as of 08/2020)
+my $version_major = 3;
+my $version_minor = 18;
+my $version_patch = 1;
 
-    if (! -e "cmake-3.5.1.tar.gz") {
-      system('wget "http://www.cmake.org/files/v3.5/cmake-3.5.1.tar.gz"');
-      ($CHILD_ERROR != 0) and die ("Could not download the CMake sources [$CHILD_ERROR]");
-    }
-    if (! -e $cmake_extracted_folder) {
-      system('tar -xzf "cmake-3.5.1.tar.gz"');
-      ($CHILD_ERROR != 0) and die ("Could not extract the CMake archive");
-    }
-    chdir $cmake_extracted_folder;
-    system("./configure");
-    ($CHILD_ERROR != 0) and die("Failed to configure for cmake [$CHILD_ERROR]");
+# Minimum version needed for the project.
+# 3.12 for FindPython functionalities.
+my $minimum_major = 3;
+my $minimum_minor = 15;
 
-    system("sudo make install");
-    ($CHILD_ERROR != 0) and die("Failed make install cmake [$CHILD_ERROR]");
-	
-    # Go back to the scripts folder
-    chdir $old_dir;
+my $install_dir = $dependencies_dir;
+
+# Updating path with potentially installed cmake before looking for it.
+if ("$dependencies_dir/cmake") {
+  print "Found cmake folder in deps\n";
+  my $path = $ENV{'PATH'};
+  $path = "$dependencies_dir/cmake/bin:$path";
+  $ENV{'PATH'} = $path;
+  #system("PATH=$dependencies_dir/cmake/bin:$PATH")
+}
+
+# Checking for CMake presence
+my $major_found = 0;
+my $minor_found = 0;
+
+if (`which cmake`) {
+  `cmake --version` =~ /.*(\d)\.(\d\d)\.*/;
+
+  print "cmake version found: $1.$2\n";
+
+  $major_found = $1;
+  $minor_found = $2;
+}
+
+# Minimum cmake version required for the project: 3.12
+if (int($major_found) < $minimum_major || int($minor_found) < $minimum_minor) {
+
+  my $old_dir = Cwd::getcwd();
+
+  my $cmake_archive = "cmake-${version_major}.${version_minor}.${version_patch}.tar.gz";
+  my $cmake_folder = "cmake-${version_major}.${version_minor}.${version_patch}";
+
+  print "CMake version too low. Installing newer one in $install_dir\n";
+
+  if (! -d $install_dir) {
+    mkdir($install_dir) or die("Failed to create directory [$install_dir]");
   }
+
+  # Download
+  print "Downloading ${cmake_archive}\n";
+  system("wget http://www.cmake.org/files/v${version_major}.${version_minor}/${cmake_archive}") == 0
+    or die "Could not download the CMake sources - err $?";
+
+  # Extract
+  system("tar -xzf ${cmake_archive}") == 0
+    or die ("Could not extract the CMake archive - err $?");
+
+  # Configure, compile and install
+  chdir $cmake_folder;
+  system("./configure --prefix=$install_dir/cmake") == 0
+    or die("Failed to configure for cmake - err $?");
+  system("make install") == 0
+    or die ("Failed make install cmake - err $?");
+
+  # Go back to previous folder
+  chdir $old_dir;
+
+  #Clear
+  system("rm -r ${cmake_archive} ${cmake_folder}") == 0
+    or die ("Failed to clear after install - err $?");
+
 }
 

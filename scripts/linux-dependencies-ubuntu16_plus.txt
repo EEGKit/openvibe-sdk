@@ -1,6 +1,5 @@
 doxygen
 make
-cmake
 gcc
 g++
 libexpat1-dev

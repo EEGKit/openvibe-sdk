@@ -43,7 +43,6 @@ ov_build_validation=0
 gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
-
 while [[ $# -gt 0 ]]; do
 	key="$1"
 	case $key in
@@ -68,6 +67,7 @@ while [[ $# -gt 0 ]]; do
 			;;
 		--dependencies-dir)
 			dependencies_dir_token="-DOV_CUSTOM_DEPENDENCIES_PATH=$2"
+			dependencies_dir=$2
 			shift
 			;;
 		--test-data-dir)
@@ -118,6 +118,13 @@ while [[ $# -gt 0 ]]; do
 	esac
 	shift # past argument or value
 done
+
+if [[ ! -z ${dependencies_dir} ]]
+then
+  ./unix-init-env.sh --dependencies-dir ${dependencies_dir}
+else
+  echo "dependencies_dir not set: not initialisaing environment"
+fi
 
 # Check parameters validity
 if [[ ${ov_build_type} != "Debug" ]] \
