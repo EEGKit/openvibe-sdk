@@ -113,7 +113,7 @@ FOREACH(SCENARIO ${TEST_SCENARIOS})
 	-DCMD3="${OVT_OPENVIBE_PLAYER} --mode=x --max-time=15000 --play-mode=ff --config-file=${OVT_OPENVIBE_DATA}/openvibe.conf --scenario-file=${SCENARIO_TO_TEST}"
 	
 	#Launch python checking module
-	-DCMD4="${PYTHON_EXECUTABLE} ${OVT_VALIDATION_TOOLKIT_PATH}/accuracy.py ${OVT_OPENVIBE_PLAYER_LOG_FILE} Cross-validation ${THRESHOLDS}"
+	-DCMD4="${Python3_EXECUTABLE} ${OVT_VALIDATION_TOOLKIT_PATH}/accuracy.py ${OVT_OPENVIBE_PLAYER_LOG_FILE} Cross-validation ${THRESHOLDS}"
 	
 	-P ${OVT_CMAKE_DIR}/OvtRunMultipleCommand.cmake
 	)

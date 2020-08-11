@@ -49,15 +49,15 @@ ELSE()
 ENDIF()
 
 # Find main dependency
-if(DEFINED PYTHON_EXECUTABLE AND NOT DEFINED PythonInterp_FOUND)
+if(DEFINED Python3_EXECUTABLE AND NOT DEFINED Python3_Interpreter_FOUND)
 	# Python exec was supplied through command line, just set it in the files and don't ask questions
-	set(PythonInterp_FOUND TRUE)
+	set(Python3_Interpreter_FOUND TRUE)
 else()
-	SET(Python_ADDITIONAL_VERSIONS 3.4)
-	FIND_PACKAGE(PythonInterp 3.4)
+	SET(Python_ADDITIONAL_VERSIONS 3.7)
+	FIND_PACKAGE(Python3 COMPONENTS Interpreter Development)
 endif()
 
-if(NOT ${PythonInterp_FOUND})
+if(NOT Python3_Interpreter_FOUND)
 	# This is likely a messed-up PYTHONPATH/HOME ISSUE
 	message(WARNING "Current PYTHONPATH likely not suitable for a Python 3 executable, \
 please check that the following values are plausible :\n\
@@ -68,7 +68,7 @@ or directly give Python3 executable path at build time using \"--python-exec\"\n
 These tests will be generated with a generic \"python\" call, please use the \"--python-dir\" \
 option of the launcher to set the path to a working python3 directory.")
 else()
-	message(STATUS "Found Python3 at ${PYTHON_EXECUTABLE}")
+	message(STATUS "Found Python3 at ${Python3_EXECUTABLE}")
 endif()
 
 # --------------------
