@@ -19,9 +19,9 @@ bool CMatlabGenerator::openFile(const char* filename)
 	m_file << "function OV_stimulations()" << endl << endl;
 
 	m_file << "global OVTK_StimulationId_LabelStart;" << endl;
-	m_file << "OVTK_StimulationId_LabelStart = uint64_t(hex2dec('00008100'));" << endl << endl;
+	m_file << "OVTK_StimulationId_LabelStart = uint64(hex2dec('00008100'));" << endl << endl;
 	m_file << "global OVTK_StimulationId_LabelEnd;" << endl;
-	m_file << "OVTK_StimulationId_LabelEnd = uint64_t(hex2dec('000081ff'));" << endl << endl;
+	m_file << "OVTK_StimulationId_LabelEnd = uint64(hex2dec('000081ff'));" << endl << endl;
 
 	return true;
 }
@@ -29,7 +29,7 @@ bool CMatlabGenerator::openFile(const char* filename)
 bool CMatlabGenerator::appendStimulation(SStimulation& stim)
 {
 	m_file << "\tglobal " << stim.id << ";" << endl;
-	m_file << "\t" << stim.id << " = uint64_t(hex2dec('" << getBrutHexaCode(stim.hexa) << "'));" << endl << endl;
+	m_file << "\t" << stim.id << " = uint64(hex2dec('" << getBrutHexaCode(stim.hexa) << "'));" << endl << endl;
 	return true;
 }
 
