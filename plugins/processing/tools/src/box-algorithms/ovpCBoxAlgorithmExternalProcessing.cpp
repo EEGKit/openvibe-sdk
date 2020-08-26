@@ -1,4 +1,4 @@
-﻿#include "ovpCBoxAlgorithmExternalProcessing.h"
+#include "ovpCBoxAlgorithmExternalProcessing.h"
 
 #include <chrono>
 #include <cstdlib>
@@ -462,9 +462,9 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 
 char* strToChar(const std::string& s)
 {
-	char* pc = nullptr;
-	std::copy(s.begin(), s.end(), pc);
-	return pc;
+	char* c = new char[s.size() + 1];
+	std::copy(s.begin(), s.end(), c);
+	return c;
 }
 
 bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string& programPath, const std::string& arguments)
