@@ -104,14 +104,13 @@ bool CBoxAlgorithmSignalResampling::process()
 		IMatrix* oMatrix = m_encoder.getInputMatrix();
 
 		const size_t nChannel = iMatrix->getDimensionSize(0);
-		//size_t nSample  = iMatrix->getDimensionSize(1);
+		const size_t nSample  = iMatrix->getDimensionSize(1);
 
 		if (m_decoder.isHeaderReceived())
 		{
 			m_iSampling = size_t(m_decoder.getOutputSamplingRate());
 
-			OV_ERROR_UNLESS_KRF(m_iSampling > 0, "Invalid input sampling rate [" << m_iSampling << "] (expected value > 0)",
-								ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_iSampling > 0, "Invalid input sampling rate [" << m_iSampling << "] (expected value > 0)", ErrorType::BadInput);
 
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_iSampling << "] Hz to [" << m_oSampling << "] Hz.\n";
 
@@ -154,9 +153,8 @@ bool CBoxAlgorithmSignalResampling::process()
 		if (m_decoder.isBufferReceived())
 		{
 			// re-sampling sample-wise via a callback
-			//size_t count = m_resampler.resample(*this, iMatrix->getBuffer(), nSample);
+			m_resampler.resample(*this, iMatrix->getBuffer(), nSample);
 			//this->getLogManager() << LogLevel_Info << "count = " << count << ".\n";
-
 			// encoding made in the callback (see next function)
 		}
 		if (m_decoder.isEndReceived())
