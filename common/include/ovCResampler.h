@@ -133,98 +133,76 @@ public:
 		m_iSampling = iSampling;
 		m_oSampling = oSampling;
 
+		m_nChannel = nChannel;
 		for (size_t i = 0; i < m_resamplers.size(); ++i) { delete m_resamplers[i]; }
 		m_resamplers.clear();
-		m_resamplers.resize(nChannel);
+		m_resamplers.resize(m_nChannel);
 
 		const double in                  = double(iSampling), out = double(oSampling);
 		const double stopBandAttenuation = m_stopBandAttenuation == 0
 											   ? std::min(6.02 * m_nFractionalDelayFilterSample + 40, r8b::CDSPFIRFilter::getLPMaxAtten())
 											   : m_stopBandAttenuation;
-
-		for (size_t j = 0; j < nChannel; ++j)
+#define NEW_SAMPLER(Len, Fracs)\
+	new r8b::CDSPResampler<r8b::CDSPFracInterpolator<Len, Fracs>>(in, out, m_iMaxNSampleIn,\
+		m_transitionBandPercent, stopBandAttenuation,r8b::EDSPFilterPhaseResponse(0), false)
+		
+		for (size_t j = 0; j < m_nChannel; ++j)
 		{
 			switch (m_nFractionalDelayFilterSample) // it defines iFractionalDelayPositionCount 
 			{
 				case 6:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(6, 11);
 					break;
 
 				case 8:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(8, 17);
 					break;
 
 				case 10:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(10, 23);
 					break;
 
 				case 12:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(12, 41);
 					break;
 
 				case 14:
 					//stopBandAttenuation = 109.56;
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(14, 67);
 					break;
 
 				case 16:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(16, 97);
 					break;
 
 				case 18:
 					//stopBandAttenuation = 136.45;
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(18, 137);
 					break;
 
 				case 20:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(20, 211);
 					break;
 
 				case 22:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(22, 353);
 					break;
 
 				case 24:
 					//stopBandAttenuation = 180.15;
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(24, 673);
 					break;
 
 				case 26:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(26, 1051);
 					break;
 
 				case 28:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(28, 1733);
 					break;
 
 				case 30:
-					m_resamplers[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(
-						in, out, m_iMaxNSampleIn, m_transitionBandPercent, stopBandAttenuation,
-						r8b::EDSPFilterPhaseResponse(0), false);
+					m_resamplers[j] = NEW_SAMPLER(30, 2833);
 					break;
 
 				default:
@@ -232,6 +210,8 @@ public:
 			}
 		}
 
+#undef NEW_SAMPLER(Len, Fracs)
+		
 		return true;
 	}
 
