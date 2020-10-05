@@ -32,9 +32,7 @@ SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 
 SET_BUILD_PLATFORM()
@@ -47,7 +45,11 @@ ADD_DEFINITIONS( -DPROJECT_VERSION="${PROJECT_VERSION}" )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 FILE(GLOB_RECURSE SRC_FILES src/*.cpp include/*.h)
 ADD_LIBRARY(${PROJECT_NAME} ${SRC_FILES})
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${OVT_TOOLS_FOLDER})
+
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${TESTS_FOLDER})
 
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
