@@ -23,9 +23,7 @@ PROJECT(openvibe-module-csv-test)
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
@@ -59,7 +57,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} ${Tests})
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBEModuleCSV")
 
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${OVT_UNIT_TESTS_FOLDER})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
 # set(OV_MODULE_CSV "C:/gitdir/build/openvibe-sdk-debug/modules/csv/openvibe-module-csv")
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${GTEST_BOTH_LIBRARIES} ${OV_LIBS} ${OV_MODULE_CSV})
 

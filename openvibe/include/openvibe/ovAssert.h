@@ -111,9 +111,9 @@ inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 #define OV_WARNING_UNLESS_K(expression, message) OV_WARNING_UNLESS(expression, message, this->getLogManager())
 
 #if defined OV_DISPLAY_ERROR_LOCATION
-#define OV_ERROR_LOG_LOCATION(file, line) ", {Error location} : {" << file << "::" << line << "}"
+#	define OV_ERROR_LOG_LOCATION(file, line) ", {Error location} : {" << file << "::" << line << "}"
 #else
-#define OV_ERROR_LOG_LOCATION(file, line) ""
+#	define OV_ERROR_LOG_LOCATION(file, line) ""
 #endif
 /**
  * \def OV_ERROR_LOG(description, type, file, line, logManager)
@@ -157,12 +157,7 @@ do { \
  * instead.
  */
 #define OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager) \
-do { \
-	if (!(expression)) \
-	{ \
-		OV_ERROR(description, type, returnValue, errorManager, logManager); \
-	} \
-} while(0)
+do { if (!(expression)) { OV_ERROR(description, type, returnValue, errorManager, logManager); } } while(0)
 
 /**
  * \def OV_ERROR_K(description, type, returnValue)

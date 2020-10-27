@@ -28,6 +28,8 @@ FUNCTION(SETUP_TEST)
 	INCLUDE("FindOpenViBEModuleFS")
 	INCLUDE("FindThirdPartyBoost")
 	INCLUDE("FindThirdPartyBoost_FileSystem")
+	
+	SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 
 	TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})
 

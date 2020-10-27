@@ -23,9 +23,7 @@ PROJECT(openvibe-kernel-test)
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
@@ -56,7 +54,7 @@ CREATE_TEST_SOURCELIST (Tests
 ADD_EXECUTABLE(${PROJECT_NAME} ${Tests})
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${OVT_UNIT_TESTS_FOLDER})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${GTEST_BOTH_LIBRARIES} ${OV_LIBS})
 
 # Add test without parameter to driver

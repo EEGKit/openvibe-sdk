@@ -12,11 +12,14 @@ INCLUDE_DIRECTORIES(include)
 ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
 INCLUDE("FindThirdPartyBoost")
 	
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${KERNEL_FOLDER})
+
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 

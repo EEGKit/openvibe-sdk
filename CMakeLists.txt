@@ -280,6 +280,15 @@ INCLUDE("OvDelayLoad")
 # Sets the PROJECT_VERSION variable to something, depending on overriding OvSetProjectVersion.cmake files
 OV_SET_PROJECT_VERSION()
 
+# Sort target into directories for better visualization in IDE
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+SET(APP_FOLDER Applications)
+SET(KERNEL_FOLDER Kernel)
+SET(MODULES_FOLDER Modules)
+SET(PLUGINS_FOLDER Plugins)
+SET(TESTS_FOLDER Unit-Tests)
+SET(VALIDATION_FOLDER Validation-Tests)
+
 # Traverse these directories and build their components
 ADD_SUBDIRECTORY("build-tool/")
 

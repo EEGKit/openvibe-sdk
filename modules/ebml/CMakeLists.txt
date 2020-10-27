@@ -14,12 +14,14 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${MODULES_FOLDER}
 	COMPILE_FLAGS "-DEBML_Shared -DEBML_Exports")
 
 ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${MODULES_FOLDER}
 	COMPILE_FLAGS "-DEBML_Static -DEBML_Exports")
 
 IF(UNIX)
@@ -30,9 +32,7 @@ INCLUDE("FindOpenViBECommon")
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
