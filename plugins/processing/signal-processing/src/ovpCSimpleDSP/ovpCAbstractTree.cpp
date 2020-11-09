@@ -33,7 +33,7 @@ void CAbstractTree::simplifyTree()
 }
 
 // Dirty hack to avoid GCC 4.3 crash at compilation time
-static void ClearChildren(std::vector<CAbstractTreeNode *>& children) { for (size_t i = 0; i < children.size(); ++i) { delete children[i]; } }
+static void ClearChildren(std::vector<CAbstractTreeNode*>& children) { for (size_t i = 0; i < children.size(); ++i) { delete children[i]; } }
 
 CAbstractTreeParentNode::~CAbstractTreeParentNode()
 {
@@ -189,7 +189,6 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		//binary operator not associative
 	else if (nChildren == 2 && !isAssociative())
 	{
-
 		//if we can already compute the result
 		if (m_Children[0]->isConstant() && m_Children[1]->isConstant())
 		{
@@ -252,7 +251,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		sort(m_Children.begin(), m_Children.end(), CAbstractTreeNodeOrderingFunction());
 
 		//the new children if there are changes
-		vector<CAbstractTreeNode *> newChildren;
+		vector<CAbstractTreeNode*> newChildren;
 
 		//iterator on the children
 		size_t i     = 0;
@@ -429,11 +428,11 @@ void CAbstractTree::recognizeSpecialTree(uint64_t& treeId, double& parameter)
 		return;
 	}
 
-	CAbstractTreeParentNode* parent = reinterpret_cast<CAbstractTreeParentNode *>(m_root);
+	CAbstractTreeParentNode* parent = reinterpret_cast<CAbstractTreeParentNode*>(m_root);
 
-	std::vector<CAbstractTreeNode *>& children = parent->getChildren();
-	const size_t nChildren                     = children.size();
-	const uint64_t nodeId                      = parent->getOperatorIdentifier();
+	std::vector<CAbstractTreeNode*>& children = parent->getChildren();
+	const size_t nChildren                    = children.size();
+	const uint64_t nodeId                     = parent->getOperatorIdentifier();
 
 	//unary operator/function
 	if (nChildren == 1) { if (children[0]->isTerminal() && !children[0]->isConstant()) { treeId = nodeId; } }

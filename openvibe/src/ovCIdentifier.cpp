@@ -68,4 +68,4 @@ CIdentifier CIdentifier::random()
 	return CIdentifier(uni(rng));
 }
 
-} // namespace OpenViBE
+}  // namespace OpenViBE

@@ -5,15 +5,14 @@
 #include <utility>
 #include <iostream>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME                      = "OneVsAll";
-	const char* const SUB_CLASSIFIER_IDENTIFIER_NODE_NAME = "SubClassifierIdentifier";
-	const char* const ALGORITHM_ID_ATTRIBUTE              = "algorithm-id";
-	const char* const SUB_CLASSIFIER_COUNT_NODE_NAME      = "SubClassifierCount";
-	const char* const SUB_CLASSIFIERS_NODE_NAME           = "SubClassifiers";
-	//const char* const SUB_CLASSIFIER_NODE_NAME = "SubClassifier";
-} // namespace
+namespace {
+const char* const TYPE_NODE_NAME                      = "OneVsAll";
+const char* const SUB_CLASSIFIER_IDENTIFIER_NODE_NAME = "SubClassifierIdentifier";
+const char* const ALGORITHM_ID_ATTRIBUTE              = "algorithm-id";
+const char* const SUB_CLASSIFIER_COUNT_NODE_NAME      = "SubClassifierCount";
+const char* const SUB_CLASSIFIERS_NODE_NAME           = "SubClassifiers";
+//const char* const SUB_CLASSIFIER_NODE_NAME = "SubClassifier";
+}  // namespace
 
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
@@ -198,8 +197,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 	const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != OV_UndefinedIdentifier,
-						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.str() << "]",
-						ErrorType::BadConfig);
+						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.str() << "]", ErrorType::BadConfig);
 
 	IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
 	subClassifier->initialize();
@@ -317,8 +315,7 @@ bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier&
 	m_fAlgorithmComparison     = getClassificationComparisonFunction(id);
 
 	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr,
-						"No comparison function found for classifier [" << m_subClassifierAlgorithmID.str() << "]",
-						ErrorType::ResourceNotFound);
+						"No comparison function found for classifier [" << m_subClassifierAlgorithmID.str() << "]", ErrorType::ResourceNotFound);
 
 	return true;
 }

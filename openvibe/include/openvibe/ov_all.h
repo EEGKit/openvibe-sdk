@@ -110,15 +110,13 @@
 #include "plugins/ovIBoxAlgorithm.h"
 #include "plugins/ovIBoxAlgorithmDesc.h"
 
-namespace OpenViBE
-{
-	namespace Plugins
-	{
-		// Backward compatibility
-		typedef Kernel::IBox IStaticBoxContext;
-		typedef Kernel::IBoxIO IDynamicBoxContext;
-	} // namespace Plugins
-} // namespace OpenViBE
+namespace OpenViBE {
+namespace Plugins {
+// Backward compatibility
+typedef Kernel::IBox IStaticBoxContext;
+typedef Kernel::IBoxIO IDynamicBoxContext;
+}  // namespace Plugins
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -133,8 +131,7 @@ namespace OpenViBE
 		OVP_API bool onInitialize(const OpenViBE::Kernel::IPluginModuleContext& context) \
 		{
 
-#define OVP_Declare_New(Class) \
-			g_descriptors.emplace_back(new Class);
+#define OVP_Declare_New(Class) g_descriptors.emplace_back(new Class);
 
 #define OVP_Declare_End() \
 			return true; \

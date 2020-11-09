@@ -105,6 +105,6 @@ public:
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc)
 };
 
-} // namespace SignalProcessing
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

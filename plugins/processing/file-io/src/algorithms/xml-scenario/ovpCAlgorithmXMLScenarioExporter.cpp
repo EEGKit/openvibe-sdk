@@ -15,7 +15,6 @@ using namespace std;
 //                                                                   //
 
 CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter() { m_writer = createWriter(*this); }
-
 CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter() { m_writer->release(); }
 
 void CAlgorithmXMLScenarioExporter::write(const char* str) { m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(str), strlen(str)); }
@@ -128,24 +127,18 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& memoryBuffer, con
 bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const CIdentifier& value)
 {
 	m_pMemoryBuffer = &memoryBuffer;
-
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting identifier failed", ErrorType::Internal);
-
 	m_writer->setChildData(value.str().c_str());
 	this->exportStop(memoryBuffer);
-
 	return true;
 }
 
 bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const CString& value)
 {
 	m_pMemoryBuffer = &memoryBuffer;
-
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting string failed", ErrorType::Internal);
-
 	m_writer->setChildData(value.toASCIIString());
 	this->exportStop(memoryBuffer);
-
 	return true;
 }
 
@@ -155,7 +148,6 @@ bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& memoryBuffer, 
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting uint failed", ErrorType::Internal);
 	m_writer->setChildData(std::to_string(value).c_str());
 	this->exportStop(memoryBuffer);
-
 	return true;
 }
 

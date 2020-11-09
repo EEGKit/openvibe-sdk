@@ -95,7 +95,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	}
 
 	//We link the parameters to the extra parameters input parameter to transmit them
-	TParameterHandler<map<CString, CString> *> ip_parameter(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+	TParameterHandler<map<CString, CString>*> ip_parameter(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 	ip_parameter = m_parameter;
 
 	m_encoder.initialize(*this, 0);

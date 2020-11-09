@@ -23,51 +23,50 @@
 
 #include "ovsp_defines.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+class CKernelFacade;
+
+/**
+* \struct SCommand
+* \author cgarraud (INRIA)
+* \date 2016-01-26
+* \brief Base abstract struct for commands
+* \ingroup ScenarioPlayer
+*
+* A command is an object that encapsulates all necessary information to perform an action later one.
+* Typically, a command implementation should contain an implementation of CommandInterface interface,
+* and a list of properties.
+*
+*/
+struct SCommand
 {
-	class CKernelFacade;
+	SCommand()          = default;
+	virtual ~SCommand() = default;
+
+	friend std::ostream& operator<<(std::ostream& os, const SCommand& cmd);
 
 	/**
-	* \struct SCommand
-	* \author cgarraud (INRIA)
-	* \date 2016-01-26
-	* \brief Base abstract struct for commands
-	* \ingroup ScenarioPlayer
-	*
-	* A command is an object that encapsulates all necessary information to perform an action later one.
-	* Typically, a command implementation should contain an implementation of CommandInterface interface,
-	* and a list of properties.
-	*
+	* \brief Execute the command
+	* \param[in] kernelFacade the kernel facade that gives access to kernel features
 	*/
-	struct SCommand
-	{
-		SCommand()          = default;
-		virtual ~SCommand() = default;
+	virtual EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const = 0;
 
-		friend std::ostream& operator<<(std::ostream& os, const SCommand& cmd);
+protected:
 
-		/**
-		* \brief Execute the command
-		* \param[in] kernelFacade the kernel facade that gives access to kernel features
-		*/
-		virtual EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const = 0;
+	// use of the non-virtual interface pattern to implement printing in the class hierarchy
+	virtual void doPrint(std::ostream& os) const = 0;
 
-	protected:
+private:
 
-		// use of the non-virtual interface pattern to implement printing in the class hierarchy
-		virtual void doPrint(std::ostream& os) const = 0;
+	// disable copy and assignment because it is not meant to used
+	// as a value class
+	SCommand(const SCommand&)            = delete;
+	SCommand& operator=(const SCommand&) = delete;
+};
 
-	private:
-
-		// disable copy and assignment because it is not meant to used
-		// as a value class
-		SCommand(const SCommand&)            = delete;
-		SCommand& operator=(const SCommand&) = delete;
-	};
-
-	inline std::ostream& operator<<(std::ostream& os, const SCommand& cmd)
-	{
-		cmd.doPrint(os);
-		return os;
-	}
+inline std::ostream& operator<<(std::ostream& os, const SCommand& cmd)
+{
+	cmd.doPrint(os);
+	return os;
+}
 }	// namespace OpenViBE

@@ -130,7 +130,6 @@ int main(const int argc, char** argv)
 		{
 			while (client.popEBML(packetId, index, startTime, endtime, ebml))
 			{
-
 				// We just push out the received EBML as is
 				if (!client.pushEBML(index, startTime, endtime, ebml))
 				{

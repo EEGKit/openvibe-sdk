@@ -20,9 +20,7 @@ CMetadata::CMetadata(const IKernelContext& ctx, CScenario& ownerScenario)
 CMetadata::~CMetadata() {}
 
 CIdentifier CMetadata::getIdentifier() const { return m_id; }
-
 CIdentifier CMetadata::getType() const { return m_type; }
-
 CString CMetadata::getData() const { return m_data; }
 
 bool CMetadata::setIdentifier(const CIdentifier& identifier)

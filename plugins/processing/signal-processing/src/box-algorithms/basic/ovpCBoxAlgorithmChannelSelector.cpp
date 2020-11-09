@@ -8,55 +8,54 @@ using namespace /*OpenViBE::*/Toolkit;
 using namespace /*OpenViBE::Plugins::*/SignalProcessing;
 
 
-namespace
+namespace {
+size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 {
-	size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
+	size_t result         = std::numeric_limits<size_t>::max();
+	const size_t nChannel = matrix.getDimensionSize(0);
+
+	if (matchMethod == EMatchMethod::Name)
 	{
-		size_t result         = std::numeric_limits<size_t>::max();
-		const size_t nChannel = matrix.getDimensionSize(0);
-
-		if (matchMethod == EMatchMethod::Name)
+		for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 		{
-			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
-			{
-				if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
-			}
+			if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
 		}
-		else if (matchMethod == EMatchMethod::Index)
-		{
-			try
-			{
-				const int value = std::stoi(channel.toASCIIString());
-
-				if (value < 0)
-				{
-					size_t idx = size_t(- value - 1); // => makes it 0-indexed !
-					if (idx < nChannel)
-					{
-						idx = nChannel - idx - 1; // => reverses index
-						if (start <= idx) { result = idx; }
-					}
-				}
-				if (value > 0)
-				{
-					const size_t index = size_t(value - 1); // => makes it 0-indexed !
-					if (index < nChannel) { if (start <= index) { result = index; } }
-				}
-			}
-			catch (const std::exception&)
-			{
-				// catch block intentionnaly left blank
-			}
-		}
-		else if (matchMethod == EMatchMethod::Smart)
-		{
-			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, EMatchMethod::Name, start); }
-			if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, EMatchMethod::Index, start); }
-		}
-
-		return result;
 	}
-} // namespace
+	else if (matchMethod == EMatchMethod::Index)
+	{
+		try
+		{
+			const int value = std::stoi(channel.toASCIIString());
+
+			if (value < 0)
+			{
+				size_t idx = size_t(- value - 1); // => makes it 0-indexed !
+				if (idx < nChannel)
+				{
+					idx = nChannel - idx - 1; // => reverses index
+					if (start <= idx) { result = idx; }
+				}
+			}
+			if (value > 0)
+			{
+				const size_t index = size_t(value - 1); // => makes it 0-indexed !
+				if (index < nChannel) { if (start <= index) { result = index; } }
+			}
+		}
+		catch (const std::exception&)
+		{
+			// catch block intentionnaly left blank
+		}
+	}
+	else if (matchMethod == EMatchMethod::Smart)
+	{
+		if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, EMatchMethod::Name, start); }
+		if (result == std::numeric_limits<size_t>::max()) { result = FindChannel(matrix, channel, EMatchMethod::Index, start); }
+	}
+
+	return result;
+}
+}  // namespace
 
 bool CBoxAlgorithmChannelSelector::initialize()
 {
@@ -169,7 +168,6 @@ bool CBoxAlgorithmChannelSelector::process()
 			}
 			else
 			{
-
 				// ______________________________________________________________________________________________________________________________________________________
 				//
 				// Splits the channel list in order to build up the look up table

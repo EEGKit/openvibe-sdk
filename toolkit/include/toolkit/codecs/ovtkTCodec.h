@@ -55,55 +55,53 @@ The Codec Toolkit reference page may also be useful.
 GL&HF
 */
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+template <class T>
+class TCodec
 {
-	namespace Toolkit
+protected:
+
+	// We will need the dynamic box context when trying to decode and encode, thus we keep a pointer on the underlying box.
+	T* m_boxAlgorithm = nullptr;
+
+	// Every codec has an algorithm
+	Kernel::IAlgorithmProxy* m_codec = nullptr;
+	size_t m_connectorIdx            = 0;//one codec per connector
+
+public:
+	TCodec() : m_boxAlgorithm(nullptr) { }
+	virtual ~TCodec() { }
+
+	//The initialization need a reference to the underlying box
+	//it will certainly be called in the box in such manner : m_codec.initialize(*this);
+	bool initialize(T& boxAlgorithm, const size_t connectorIdx)
 	{
-		template <class T>
-		class TCodec
+		if (m_boxAlgorithm == nullptr)
 		{
-		protected:
+			m_boxAlgorithm = &boxAlgorithm;
+			m_connectorIdx = connectorIdx;	//TODO : can we check the box static context and verify the requested connector exist?
+		}
+		else { return false; }
+		// we call the initialization process specific to each codec
+		return initializeImpl();
+	}
 
-			// We will need the dynamic box context when trying to decode and encode, thus we keep a pointer on the underlying box.
-			T* m_boxAlgorithm = nullptr;
+	// As we need to properly uninit parameter handlers before anything else, we can't design a common uninit behavior
+	virtual bool uninitialize() = 0;
 
-			// Every codec has an algorithm
-			Kernel::IAlgorithmProxy* m_codec = nullptr;
-			size_t m_connectorIdx            = 0;//one codec per connector
+protected:
 
-		public:
-			TCodec() : m_boxAlgorithm(nullptr) { }
-			virtual ~TCodec() { }
+	// Note that this method is NOT public.
+	virtual bool initializeImpl() = 0;
 
-			//The initialization need a reference to the underlying box
-			//it will certainly be called in the box in such manner : m_codec.initialize(*this);
-			bool initialize(T& boxAlgorithm, const size_t connectorIdx)
-			{
-				if (m_boxAlgorithm == nullptr)
-				{
-					m_boxAlgorithm = &boxAlgorithm;
-					m_connectorIdx = connectorIdx;	//TODO : can we check the box static context and verify the requested connector exist?
-				}
-				else { return false; }
-				// we call the initialization process specific to each codec
-				return initializeImpl();
-			}
-		
-			// As we need to properly uninit parameter handlers before anything else, we can't design a common uninit behavior
-			virtual bool uninitialize() = 0;
+	// for easier access to algorithm functionnality, we redefine some functions:
+	virtual bool isOutputTriggerActive(const CIdentifier trigger) { return m_codec->isOutputTriggerActive(trigger); }
 
-		protected:
-
-			// Note that this method is NOT public.
-			virtual bool initializeImpl() = 0;
-
-			// for easier access to algorithm functionnality, we redefine some functions:
-			virtual bool isOutputTriggerActive(const CIdentifier trigger) { return m_codec->isOutputTriggerActive(trigger); }
-
-			virtual bool process(const CIdentifier& trigger) { return m_codec->process(trigger); }
-			virtual bool process() { return m_codec->process(); }
-		};
-	}  // namespace Toolkit
+	virtual bool process(const CIdentifier& trigger) { return m_codec->process(trigger); }
+	virtual bool process() { return m_codec->process(); }
+};
+}  // namespace Toolkit
 }  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

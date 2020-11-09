@@ -27,103 +27,102 @@ using namespace /*OpenViBE::*/Plugins;
 //___________________________________________________________________//
 //                                                                   //
 
-namespace
+namespace {
+template <class T>
+struct STestTrue
 {
-	template <class T>
-	struct STestTrue
+	bool operator()(typename map<CIdentifier, T>::const_iterator /*it*/) const { return true; }
+};
+
+struct STestEqSourceBox
+{
+	explicit STestEqSourceBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getSourceBoxIdentifier() == m_BoxId; }
+	const CIdentifier& m_BoxId;
+};
+
+struct STestEqSourceBoxOutput
+{
+	STestEqSourceBoxOutput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_OutputIdx(index) { }
+
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
 	{
-		bool operator()(typename map<CIdentifier, T>::const_iterator /*it*/) const { return true; }
-	};
-
-	struct STestEqSourceBox
-	{
-		explicit STestEqSourceBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getSourceBoxIdentifier() == m_BoxId; }
-		const CIdentifier& m_BoxId;
-	};
-
-	struct STestEqSourceBoxOutput
-	{
-		STestEqSourceBoxOutput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_OutputIdx(index) { }
-
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
-		{
-			return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIdx;
-		}
-
-		const CIdentifier& m_BoxId;
-		size_t m_OutputIdx;
-	};
-
-	struct STestEqTargetBox
-	{
-		explicit STestEqTargetBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getTargetBoxIdentifier() == m_BoxId; }
-		const CIdentifier& m_BoxId;
-	};
-
-	struct STestEqTargetBoxInput
-	{
-		STestEqTargetBoxInput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_InputIdx(index) { }
-
-		bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
-		{
-			return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIdx;
-		}
-
-		const CIdentifier& m_BoxId;
-		size_t m_InputIdx;
-	};
-
-	template <class T, class TTest>
-	CIdentifier getNextID(const map<CIdentifier, T>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
-	{
-		typename map<CIdentifier, T>::const_iterator it;
-
-		if (previousID == OV_UndefinedIdentifier) { it = elementMap.begin(); }
-		else
-		{
-			it = elementMap.find(previousID);
-			if (it == elementMap.end()) { return OV_UndefinedIdentifier; }
-			++it;
-		}
-
-		while (it != elementMap.end())
-		{
-			if (testFunctor(it)) { return it->first; }
-			++it;
-		}
-
-		return OV_UndefinedIdentifier;
+		return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIdx;
 	}
 
-	/*
-	template <class T, class TTest>
-	CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+	const CIdentifier& m_BoxId;
+	size_t m_OutputIdx;
+};
+
+struct STestEqTargetBox
+{
+	explicit STestEqTargetBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getTargetBoxIdentifier() == m_BoxId; }
+	const CIdentifier& m_BoxId;
+};
+
+struct STestEqTargetBoxInput
+{
+	STestEqTargetBoxInput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_InputIdx(index) { }
+
+	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
 	{
-		typename map<CIdentifier, T*>::const_iterator it;
-
-		if(previousID==OV_UndefinedIdentifier)
-		{
-			it=elementMap.begin();
-		}
-		else
-		{
-			it=elementMap.find(previousID);
-			if(it==elementMap.end()) { return OV_UndefinedIdentifier; }
-			++it;
-		}
-
-		while(it!=elementMap.end())
-		{
-			if(testFunctor(it)) { return it->first; }
-			++it;
-		}
-
-		return OV_UndefinedIdentifier;
+		return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIdx;
 	}
-	*/
-} // namespace
+
+	const CIdentifier& m_BoxId;
+	size_t m_InputIdx;
+};
+
+template <class T, class TTest>
+CIdentifier getNextID(const map<CIdentifier, T>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+{
+	typename map<CIdentifier, T>::const_iterator it;
+
+	if (previousID == OV_UndefinedIdentifier) { it = elementMap.begin(); }
+	else
+	{
+		it = elementMap.find(previousID);
+		if (it == elementMap.end()) { return OV_UndefinedIdentifier; }
+		++it;
+	}
+
+	while (it != elementMap.end())
+	{
+		if (testFunctor(it)) { return it->first; }
+		++it;
+	}
+
+	return OV_UndefinedIdentifier;
+}
+
+/*
+template <class T, class TTest>
+CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+{
+	typename map<CIdentifier, T*>::const_iterator it;
+
+	if(previousID==OV_UndefinedIdentifier)
+	{
+		it=elementMap.begin();
+	}
+	else
+	{
+		it=elementMap.find(previousID);
+		if(it==elementMap.end()) { return OV_UndefinedIdentifier; }
+		++it;
+	}
+
+	while(it!=elementMap.end())
+	{
+		if(testFunctor(it)) { return it->first; }
+		++it;
+	}
+
+	return OV_UndefinedIdentifier;
+}
+*/
+}  // namespace
 
 //___________________________________________________________________//
 //                                                                   //
@@ -229,12 +228,9 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CIdentifier linkID = listID[i];
 			const ILink* link  = scenario.getLinkDetails(linkID);
 			CIdentifier newID;
-			this->connect(newID,
-						  oldToNewIdMap[link->getSourceBoxIdentifier()],
-						  link->getSourceBoxOutputIndex(),
-						  oldToNewIdMap[link->getTargetBoxIdentifier()],
-						  link->getTargetBoxInputIndex(),
-						  OV_UndefinedIdentifier);
+			this->connect(newID, oldToNewIdMap[link->getSourceBoxIdentifier()],
+						  link->getSourceBoxOutputIndex(), oldToNewIdMap[link->getTargetBoxIdentifier()],
+						  link->getTargetBoxInputIndex(), OV_UndefinedIdentifier);
 
 			if (scenarioMergeCallback) { scenarioMergeCallback->process(linkID, newID); }
 		}
@@ -1233,44 +1229,32 @@ void CScenario::releaseIdentifierList(CIdentifier* listID) const { delete[] list
 bool CScenario::getSourceBoxOutputIndex(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, size_t& srcBoxOutputIdx)
 {
 	const auto itSourceBox = m_boxes.find(srcBoxID);
-
 	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
-
 	m_boxes[srcBoxID]->getInterfacorIndex(Output, srcBoxOutputID, srcBoxOutputIdx);
-
 	return true;
 }
 
 bool CScenario::getTargetBoxInputIndex(const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, size_t& dstBoxInputIdx)
 {
 	const auto itTargetBox = m_boxes.find(dstBoxID);
-
 	OV_ERROR_UNLESS_KRF(itTargetBox != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
-
 	m_boxes[dstBoxID]->getInterfacorIndex(Input, dstBoxInputID, dstBoxInputIdx);
-
 	return true;
 }
 
 bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& srcBoxID, const size_t& srcBoxOutputIdx, CIdentifier& srcBoxOutputID)
 {
 	const auto itSourceBox = m_boxes.find(srcBoxID);
-
 	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
-
 	m_boxes[srcBoxID]->getInterfacorIdentifier(Output, srcBoxOutputIdx, srcBoxOutputID);
-
 	return true;
 }
 
 bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& dstBoxID, const size_t& dstBoxInputIdx, CIdentifier& dstBoxInputID)
 {
 	const auto itTargetBox = m_boxes.find(dstBoxID);
-
 	OV_ERROR_UNLESS_KRF(itTargetBox != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
-
 	m_boxes[dstBoxID]->getInterfacorIdentifier(Input, dstBoxInputIdx, dstBoxInputID);
-
 	return true;
 }
 /**
@@ -1351,9 +1335,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		}
 	}
 
-	OV_FATAL_UNLESS_K(this->removeBox(boxID),
-					  "Failed to remove redundant box",
-					  ErrorType::Internal);
+	OV_FATAL_UNLESS_K(this->removeBox(boxID), "Failed to remove redundant box", ErrorType::Internal);
 
 	CIdentifier updatedBoxIdentifier;
 	OV_FATAL_UNLESS_K(this->addBox(updatedBoxIdentifier, *(itUpdateBox->second.get()), boxID), "Failed to add box to the scenario", ErrorType::Internal);

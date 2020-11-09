@@ -36,9 +36,7 @@ void fillMatrix(CMatrix& matrix)
 		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j)
 		{
 			std::stringstream dimensionLabel;
-
 			dimensionLabel << "Label " << j + 1 << " of Dimension " << i + 1;
-
 			matrix.setDimensionLabel(i, j, dimensionLabel.str().c_str());
 		}
 	}

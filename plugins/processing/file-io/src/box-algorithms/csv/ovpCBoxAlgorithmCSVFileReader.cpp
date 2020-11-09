@@ -12,30 +12,29 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
 using namespace std;
 
-namespace
+namespace {
+vector<string> split(const string& sString, const string& c)
 {
-	vector<string> split(const string& sString, const string& c)
+	vector<string> result;
+	size_t i = 0;
+	size_t j;
+	while ((j = sString.find(c, i)) != string::npos)
 	{
-		vector<string> result;
-		size_t i = 0;
-		size_t j;
-		while ((j = sString.find(c, i)) != string::npos)
-		{
-			result.push_back(string(sString, i, j - i));
-			i = j + c.size();
-		}
-		//the last element without the \n character
-		result.push_back(string(sString, i, sString.size() - 1 - i));
-
-		return result;
+		result.push_back(string(sString, i, j - i));
+		i = j + c.size();
 	}
+	//the last element without the \n character
+	result.push_back(string(sString, i, sString.size() - 1 - i));
 
-	void clearMatrix(vector<vector<string>>& vMatrix)
-	{
-		for (size_t i = 0; i < vMatrix.size(); ++i) { vMatrix[i].clear(); }
-		vMatrix.clear();
-	}
-} // namespace
+	return result;
+}
+
+void clearMatrix(vector<vector<string>>& vMatrix)
+{
+	for (size_t i = 0; i < vMatrix.size(); ++i) { vMatrix[i].clear(); }
+	vMatrix.clear();
+}
+}  // namespace
 
 bool CBoxAlgorithmCSVFileReader::initialize()
 {

@@ -28,25 +28,23 @@
 #include "ovtTestFixture.h"
 
 // \note: This file contains fixture implementation shared by many unit tests
-namespace OpenViBE
+namespace OpenViBE {
+namespace Test {
+struct SKernelFixture final : TestFixture
 {
-	namespace Test
-	{
-	struct SKernelFixture final : TestFixture
-	{
-		SKernelFixture() = default;
-		explicit SKernelFixture(const std::string& configFile) : m_configFile(configFile) { }
+	SKernelFixture() = default;
+	explicit SKernelFixture(const std::string& configFile) : m_configFile(configFile) { }
 
-		void setConfigFile(const std::string& configFile) { m_configFile = configFile; }
+	void setConfigFile(const std::string& configFile) { m_configFile = configFile; }
 
-		void setUp() override;
-		void tearDown() override;
+	void setUp() override;
+	void tearDown() override;
 
-		Kernel::IKernelContext* context{ nullptr };
+	Kernel::IKernelContext* context{ nullptr };
 
-	private:
-		std::string m_configFile;
-		CKernelLoader m_kernelLoader;
-	};
-	} // namespace Test
-} // namespace OpenViBE
+private:
+	std::string m_configFile;
+	CKernelLoader m_kernelLoader;
+};
+}  // namespace Test
+}  // namespace OpenViBE

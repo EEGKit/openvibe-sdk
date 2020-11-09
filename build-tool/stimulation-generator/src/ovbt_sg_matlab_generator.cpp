@@ -4,7 +4,6 @@
 
 using namespace std;
 
-
 string getBrutHexaCode(string formatedHexaCode)
 {
 	string res = formatedHexaCode;
@@ -32,7 +31,6 @@ bool CMatlabGenerator::appendStimulation(SStimulation& stim)
 	m_file << "\t" << stim.id << " = uint64(hex2dec('" << getBrutHexaCode(stim.hexa) << "'));" << endl << endl;
 	return true;
 }
-
 
 bool CMatlabGenerator::closeFile()
 {

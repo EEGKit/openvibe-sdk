@@ -20,9 +20,8 @@ OVP_Declare_Begin()
 	OVP_Declare_New(CBoxAlgorithmEBMLStreamSpyDesc);
 	OVP_Declare_New(CBoxAlgorithmMatrixValidityCheckerDesc);
 	OVP_Declare_New(CBoxAlgorithmExternalProcessingDesc);
-
 OVP_Declare_End()
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

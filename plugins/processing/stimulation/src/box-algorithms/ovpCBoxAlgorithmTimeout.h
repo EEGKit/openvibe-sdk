@@ -87,6 +87,6 @@ public:
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc)
 };
 
-} // namespace Stimulation
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

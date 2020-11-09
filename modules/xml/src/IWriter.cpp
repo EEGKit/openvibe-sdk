@@ -6,29 +6,28 @@
 using namespace XML;
 using namespace std;
 
-namespace XML
+namespace XML {
+class CWriter final : public IWriter
 {
-	class CWriter final : public IWriter
-	{
-	public:
-		explicit CWriter(IWriterCallback& callback);
-		bool openChild(const char* name) override;
-		bool setChildData(const char* data) override;
-		bool setAttribute(const char* name, const char* value) override;
-		bool closeChild() override;
-		void release() override;
+public:
+	explicit CWriter(IWriterCallback& callback);
+	bool openChild(const char* name) override;
+	bool setChildData(const char* data) override;
+	bool setAttribute(const char* name, const char* value) override;
+	bool closeChild() override;
+	void release() override;
 
-	private:
-		static void sanitize(string& str, bool escapeQuotes = true);
+private:
+	static void sanitize(string& str, bool escapeQuotes = true);
 
-	protected:
-		IWriterCallback& m_callback;
-		stack<string> m_nodes;
-		bool m_hasChild             = false;
-		bool m_hasData              = false;
-		bool m_hasClosedOpeningNode = true;
-	};
-} // namespace XML
+protected:
+	IWriterCallback& m_callback;
+	stack<string> m_nodes;
+	bool m_hasChild             = false;
+	bool m_hasData              = false;
+	bool m_hasClosedOpeningNode = true;
+};
+}  // namespace XML
 
 CWriter::CWriter(IWriterCallback& callback) : m_callback(callback) {}
 

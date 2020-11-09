@@ -7,82 +7,73 @@
 
 using namespace Communication;
 
-namespace
+namespace {
+/**
+ * \brief Copy a string to buffer
+ *
+ * \param [out]	dest	   	The buffer destination
+ * \param [out]	bufferIndex	The index of the buffer where the beginning of the string must be copied.
+ * \param		value	   	The string to copy.
+ *
+ * \retval True if it succeeds
+ * \retval False if it fails.
+ */
+bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const std::string& value)
 {
-	/**
-	 * \brief Copy a string to buffer
-	 *
-	 * \param [out]	dest	   	The buffer destination
-	 * \param [out]	bufferIndex	The index of the buffer where the beginning of the string must be copied.
-	 * \param		value	   	The string to copy.
-	 *
-	 * \retval True if it succeeds
-	 * \retval False if it fails.
-	 */
-	bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const std::string& value)
-	{
-		if (dest.size() < bufferIndex + value.size()) { return false; }
+	if (dest.size() < bufferIndex + value.size()) { return false; }
+	memcpy(dest.data() + bufferIndex, value.data(), value.size());
+	bufferIndex += value.size();
+	return true;
+}
 
-		memcpy(dest.data() + bufferIndex, value.data(), value.size());
+/**
+ * \brief Copy a value to a buffer.
+ *
+ * \param [out]	dest	   	Destination for the.
+ * \param [out]	bufferIndex	Zero-based index of the buffer.
+ * \param		value	   	The value.
+ *
+ * \return	True if it succeeds, false if it fails.
+ */
+template <class T>
+bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const T& value)
+{
+	if (dest.size() < bufferIndex + sizeof(value)) { return false; }
+	memcpy(dest.data() + bufferIndex, &value, sizeof(value));
+	bufferIndex += sizeof(value);
+	return true;
+}
 
-		bufferIndex += value.size();
+template <class T>
+bool copyToVariable(const std::vector<uint8_t>& src, const size_t bufferIndex, T& destVariable)
+{
+	if (src.size() < bufferIndex + sizeof(destVariable)) { return false; }
+	memcpy(&destVariable, src.data() + bufferIndex, sizeof(destVariable));
+	return true;
+}
 
-		return true;
-	}
+/**
+ * \brief Convert a buffer to a string
+ *
+ * \param 		src		   	The buffer
+ * \param 		bufferIndex	The index where to start the convertion.
+ * \param 		size	   	The size of the string.
+ * \param [out]	string	   	The string.
+ *
+ * \retval True if it succeeds
+ * \retval False if it fails.
+ *
+ * \sa copyToVariable
+ */
+bool copyToString(const std::vector<uint8_t>& src, const size_t bufferIndex, const size_t size, std::string& string)
+{
+	if (src.size() < bufferIndex + size) { return false; }
 
-	/**
-	 * \brief Copy a value to a buffer.
-	 *
-	 * \param [out]	dest	   	Destination for the.
-	 * \param [out]	bufferIndex	Zero-based index of the buffer.
-	 * \param		value	   	The value.
-	 *
-	 * \return	True if it succeeds, false if it fails.
-	 */
-	template <class T>
-	bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const T& value)
-	{
-		if (dest.size() < bufferIndex + sizeof(value)) { return false; }
+	string = std::string(src.begin() + static_cast<const long>(bufferIndex),
+						 src.begin() + static_cast<const long>(bufferIndex) + static_cast<const long>(size));
 
-		memcpy(dest.data() + bufferIndex, &value, sizeof(value));
-
-		bufferIndex += sizeof(value);
-
-		return true;
-	}
-
-	template <class T>
-	bool copyToVariable(const std::vector<uint8_t>& src, const size_t bufferIndex, T& destVariable)
-	{
-		if (src.size() < bufferIndex + sizeof(destVariable)) { return false; }
-
-		memcpy(&destVariable, src.data() + bufferIndex, sizeof(destVariable));
-
-		return true;
-	}
-
-	/**
-	 * \brief Convert a buffer to a string
-	 *
-	 * \param 		src		   	The buffer
-	 * \param 		bufferIndex	The index where to start the convertion.
-	 * \param 		size	   	The size of the string.
-	 * \param [out]	string	   	The string.
-	 *
-	 * \retval True if it succeeds
-	 * \retval False if it fails.
-	 *
-	 * \sa copyToVariable
-	 */
-	bool copyToString(const std::vector<uint8_t>& src, const size_t bufferIndex, const size_t size, std::string& string)
-	{
-		if (src.size() < bufferIndex + size) { return false; }
-
-		string = std::string(src.begin() + static_cast<const long>(bufferIndex),
-							 src.begin() + static_cast<const long>(bufferIndex) + static_cast<const long>(size));
-
-		return true;
-	}
+	return true;
+}
 }	// namespace 
 
 /******************************************************************************
@@ -92,7 +83,6 @@ namespace
 ******************************************************************************/
 
 Header::Header() : m_type(MessageType_Unknown), m_id(std::numeric_limits<decltype(m_id)>::max()) { m_isValid = false; }
-
 Header::Header(const EMessageType type, const uint64_t id, const size_t size) : m_type(type), m_id(id), m_size(size) { m_isValid = true; }
 
 std::vector<uint8_t> Header::toBytes() const
@@ -382,7 +372,6 @@ bool BoxDescriptionMessage::addInput(const uint64_t id, const size_t type, const
 {
 	const auto it = std::find_if(m_inputs.begin(), m_inputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
 	if (it != m_inputs.end()) { return false; }
-
 	m_inputs.emplace_back(id, type, name);
 	return true;
 }
@@ -390,9 +379,7 @@ bool BoxDescriptionMessage::addInput(const uint64_t id, const size_t type, const
 bool BoxDescriptionMessage::addOutput(const uint64_t id, const size_t type, const std::string& name)
 {
 	const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&id](const InputOutput& obj) { return obj.getId() == id; });
-
 	if (it != m_outputs.end()) { return false; }
-
 	m_outputs.emplace_back(id, type, name);
 	return true;
 }
@@ -400,9 +387,7 @@ bool BoxDescriptionMessage::addOutput(const uint64_t id, const size_t type, cons
 bool BoxDescriptionMessage::addParameter(const uint64_t id, const size_t type, const std::string& name, const std::string& value)
 {
 	const auto it = std::find_if(m_parameters.begin(), m_parameters.end(), [&id](const Parameter& obj) { return obj.getId() == id; });
-
 	if (it != m_parameters.end()) { return false; }
-
 	m_parameters.emplace_back(id, type, name, value);
 	return true;
 }
@@ -420,7 +405,6 @@ bool BoxDescriptionMessage::addParameter(const uint64_t id, const size_t type, c
 ******************************************************************************/
 
 LogMessage::LogMessage() : m_type(LogLevel_Unknown) { m_isValid = false; }
-
 LogMessage::LogMessage(const ELogLevel type, const std::string& message) : m_type(type), m_message(message) { m_isValid = true; }
 
 std::vector<uint8_t> LogMessage::toBytes() const
@@ -571,7 +555,6 @@ bool TimeMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 	m_isValid = false;
 
 	if (buffer.size() < bufferIndex + MINIMUM_SIZE) { return false; }
-
 	if (!copyToVariable(buffer, bufferIndex + TIME_INDEX, m_time)) { return false; }
 
 	bufferIndex += MINIMUM_SIZE;

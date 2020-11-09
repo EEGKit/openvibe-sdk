@@ -17,23 +17,21 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 using namespace /*OpenViBE::*/Toolkit;
 
-namespace
+namespace {
+double amplitude(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
 {
-	double amplitude(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
-	{
-		return sqrt(
-			matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
-	}
+	return sqrt(matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
+}
 
-	double phase(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
-	{
-		return atan2(matrix(channelIdx, fftIdx).imag(), matrix(channelIdx, fftIdx).real());
-	}
+double phase(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
+{
+	return atan2(matrix(channelIdx, fftIdx).imag(), matrix(channelIdx, fftIdx).real());
+}
 
-	double realPart(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).real(); }
+double realPart(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).real(); }
 
-	double imaginaryPart(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).imag(); }
-} // namespace
+double imaginaryPart(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).imag(); }
+}  // namespace
 
 bool CBoxAlgorithmSpectralAnalysis::initialize()
 {
@@ -64,11 +62,8 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 	}
 
 	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
-			<< (m_isSpectrumEncoderActive[0] ? CString("AMP ") : "")
-			<< (m_isSpectrumEncoderActive[1] ? CString("PHASE ") : "")
-			<< (m_isSpectrumEncoderActive[2] ? CString("REAL ") : "")
-			<< (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "")
-			<< "]\n";
+			<< (m_isSpectrumEncoderActive[0] ? CString("AMP ") : "") << (m_isSpectrumEncoderActive[1] ? CString("PHASE ") : "")
+			<< (m_isSpectrumEncoderActive[2] ? CString("REAL ") : "") << (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "") << "]\n";
 
 	return true;
 }

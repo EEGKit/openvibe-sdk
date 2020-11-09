@@ -4,66 +4,62 @@
 #include "ovpCStreamedMatrixDecoder.h"
 #include <stack>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
+class CChannelUnitsDecoder final : public CStreamedMatrixDecoder
 {
-	namespace Plugins
+public:
+	void release() override { delete this; }
+	bool initialize() override;
+	bool uninitialize() override;
+
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelUnitsDecoder)
+
+	// ebml callbacks
+	bool isMasterChild(const EBML::CIdentifier& identifier) override;
+	void openChild(const EBML::CIdentifier& identifier) override;
+	void processChildData(const void* buffer, const size_t size) override;
+	void closeChild() override;
+
+protected:
+
+	Kernel::TParameterHandler<bool> op_bDynamic;
+
+private:
+
+	std::stack<EBML::CIdentifier> m_nodes;
+	// size_t m_unitIdx = 0;
+};
+
+class CChannelUnitsDecoderDesc final : public CStreamedMatrixDecoderDesc
+{
+public:
+	void release() override { }
+	CString getName() const override { return CString("Channel units stream decoder"); }
+	CString getAuthorName() const override { return CString("Yann Renard"); }
+	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+	CString getShortDescription() const override { return CString(""); }
+	CString getDetailedDescription() const override { return CString(""); }
+	CString getCategory() const override { return CString("Stream codecs/Decoders"); }
+	CString getVersion() const override { return CString("1.0"); }
+	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
+	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelUnitsDecoder; }
+	IPluginObject* create() override { return new CChannelUnitsDecoder(); }
+
+	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
-		namespace StreamCodecs
-		{
-			class CChannelUnitsDecoder final : public CStreamedMatrixDecoder
-			{
-			public:
-				void release() override { delete this; }
-				bool initialize() override;
-				bool uninitialize() override;
+		CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
 
-				_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelUnitsDecoder)
+		prototype.addOutputParameter(OVP_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic, "Dynamic", Kernel::ParameterType_Boolean);
 
-				// ebml callbacks
-				bool isMasterChild(const EBML::CIdentifier& identifier) override;
-				void openChild(const EBML::CIdentifier& identifier) override;
-				void processChildData(const void* buffer, const size_t size) override;
-				void closeChild() override;
+		return true;
+	}
 
-			protected:
-
-				Kernel::TParameterHandler<bool> op_bDynamic;
-
-			private:
-
-				std::stack<EBML::CIdentifier> m_nodes;
-				// size_t m_unitIdx = 0;
-			};
-
-			class CChannelUnitsDecoderDesc final : public CStreamedMatrixDecoderDesc
-			{
-			public:
-				void release() override { }
-				CString getName() const override { return CString("Channel units stream decoder"); }
-				CString getAuthorName() const override { return CString("Yann Renard"); }
-				CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-				CString getShortDescription() const override { return CString(""); }
-				CString getDetailedDescription() const override { return CString(""); }
-				CString getCategory() const override { return CString("Stream codecs/Decoders"); }
-				CString getVersion() const override { return CString("1.0"); }
-				CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-				CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-				CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
-				CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelUnitsDecoder; }
-				IPluginObject* create() override { return new CChannelUnitsDecoder(); }
-
-				bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
-				{
-					CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
-
-					prototype.addOutputParameter(
-						OVP_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic, "Dynamic", Kernel::ParameterType_Boolean);
-
-					return true;
-				}
-
-				_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_ChannelUnitsDecoderDesc)
-			};
-		} // namespace StreamCodecs
-	}  // namespace Plugins
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_ChannelUnitsDecoderDesc)
+};
+}  // namespace StreamCodecs
+}  // namespace Plugins
 }  // namespace OpenViBE

@@ -82,5 +82,5 @@ bool CLogManager::removeListener(ILogListener* listener)
 	return false;
 }
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

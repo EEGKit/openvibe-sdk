@@ -2,38 +2,36 @@
 
 #include <openvibe/ov_all.h>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Tools {
+class CKernelObjectFactoryHelper final : public IObject
 {
-	namespace Tools
+public:
+
+	explicit CKernelObjectFactoryHelper(Kernel::IKernelObjectFactory& rKernelObjectFactory)
+		: m_rKernelObjectFactory(rKernelObjectFactory) { }
+
+	template <class T>
+	T createObject(const CIdentifier& classID)
 	{
-		class CKernelObjectFactoryHelper final : public IObject
-		{
-		public:
+		IObject* obj = m_rKernelObjectFactory.createObject(classID);
+		T res        = dynamic_cast<T>(obj);
+		if (obj && !res) { m_rKernelObjectFactory.releaseObject(obj); }
+		return res;
+	}
 
-			explicit CKernelObjectFactoryHelper(Kernel::IKernelObjectFactory& rKernelObjectFactory)
-				: m_rKernelObjectFactory(rKernelObjectFactory) { }
+	template <class T>
+	bool releaseObject(T tObject) { return m_rKernelObjectFactory.releaseObject(tObject); }
 
-			template <class T>
-			T createObject(const CIdentifier& classID)
-			{
-				IObject* obj = m_rKernelObjectFactory.createObject(classID);
-				T res        = dynamic_cast<T>(obj);
-				if (obj && !res) { m_rKernelObjectFactory.releaseObject(obj); }
-				return res;
-			}
+	_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper)
 
-			template <class T>
-			bool releaseObject(T tObject) { return m_rKernelObjectFactory.releaseObject(tObject); }
+protected:
 
-			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper)
+	Kernel::IKernelObjectFactory& m_rKernelObjectFactory;
 
-		protected:
+private:
 
-			Kernel::IKernelObjectFactory& m_rKernelObjectFactory;
-
-		private:
-
-			CKernelObjectFactoryHelper();
-		};
-	} // namespace Tools
-} // namespace OpenViBE
+	CKernelObjectFactoryHelper();
+};
+}  // namespace Tools
+}  // namespace OpenViBE

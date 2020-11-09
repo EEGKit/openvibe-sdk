@@ -11,10 +11,8 @@ using namespace StreamCodecs;
 bool CSpectrumDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
-
 	op_frequencyAbscissa.initialize(getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
 	op_sampling.initialize(getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_Sampling));
-
 	return true;
 }
 
@@ -22,9 +20,7 @@ bool CSpectrumDecoder::uninitialize()
 {
 	op_frequencyAbscissa.uninitialize();
 	op_sampling.uninitialize();
-
 	CStreamedMatrixDecoder::uninitialize();
-
 	return true;
 }
 
@@ -61,8 +57,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 void CSpectrumDecoder::processChildData(const void* buffer, const size_t size)
 {
 	EBML::CIdentifier& top = m_nodes.top();
-	if ((top == OVTK_NodeId_Header_Spectrum)
-		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)) { }
+	if ((top == OVTK_NodeId_Header_Spectrum) || (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)) { }
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { m_lowerFreq = m_readerHelper->getDouble(buffer, size); }
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)
 	{
@@ -95,7 +90,7 @@ void CSpectrumDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_Spectrum)
+	if ((top == OVTK_NodeId_Header_Spectrum) 
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)) { }
 	else if ((top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) || (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)) { m_frequencyBandIdx++; }

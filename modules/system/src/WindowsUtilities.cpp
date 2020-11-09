@@ -18,11 +18,12 @@ void* WindowsUtilities::utf16CompliantLoadLibrary(const char* path, const HANDLE
 }
 
 BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* name, const char* value) { return SetEnvironmentVariable(name, value); }
-		
+
 // Load a library in a matter compliant with non-ascii path
 // returns the eventual error code
 BOOL WindowsUtilities::utf16CompliantCreateProcess(char* applicationName, char* commandLine, LPSECURITY_ATTRIBUTES processAttributes,
-												   LPSECURITY_ATTRIBUTES threadAttributes, const BOOL inheritHandles, const DWORD creationFlags, LPVOID environment,
+												   LPSECURITY_ATTRIBUTES threadAttributes, const BOOL inheritHandles, const DWORD creationFlags,
+												   LPVOID environment,
 												   char* currentDirectory, LPSTARTUPINFO startupInfo, LPPROCESS_INFORMATION processInformation)
 {
 	return CreateProcess(applicationName, const_cast<char*>(commandLine), processAttributes, threadAttributes,

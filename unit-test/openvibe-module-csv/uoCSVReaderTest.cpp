@@ -36,38 +36,37 @@ struct SSignalFile
 	std::vector<std::pair<std::pair<double, double>, std::vector<double>>> m_data;
 };
 
-namespace
-{
-	std::string dataDirectory = "";
+namespace {
+std::string dataDirectory = "";
 
-	const struct SSignalFile SIMPLE_SIGNAL_FILE = {
-		{ "Time Signal" },
-		32,
-		8,
-		{
-			{
-				{ 0.00000, 0.25000 },
-				{ 0.00000, 0.03125, 0.06250, 0.09375, 0.125, 0.15625, 0.1875, 0.21875 }
-			},
-			{
-				{ 0.250000, 0.500000 },
-				{ 0.250000, 0.281250, 0.312500, 0.343750, 0.375000, 0.406250, 0.437500, 0.468750 }
-			},
-			{
-				{ 0.500000, 0.750000 },
-				{ 0.500000, 0.531250, 0.562500, 0.593750, 0.625000, 0.656250, 0.687500, 0.718750 }
-			},
-		}
-	};
-
-	void compareChunks(const std::pair<std::pair<double, double>, std::vector<double>>& expected, const SMatrixChunk& actual)
+const struct SSignalFile SIMPLE_SIGNAL_FILE = {
+	{ "Time Signal" },
+	32,
+	8,
 	{
-		ASSERT_EQ(expected.first.first, actual.startTime);
-		ASSERT_EQ(expected.first.second, actual.endTime);
-		ASSERT_EQ(expected.second.size(), actual.matrix.size());
-		for (size_t sample = 0; sample < expected.second.size(); ++sample) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
+		{
+			{ 0.00000, 0.25000 },
+			{ 0.00000, 0.03125, 0.06250, 0.09375, 0.125, 0.15625, 0.1875, 0.21875 }
+		},
+		{
+			{ 0.250000, 0.500000 },
+			{ 0.250000, 0.281250, 0.312500, 0.343750, 0.375000, 0.406250, 0.437500, 0.468750 }
+		},
+		{
+			{ 0.500000, 0.750000 },
+			{ 0.500000, 0.531250, 0.562500, 0.593750, 0.625000, 0.656250, 0.687500, 0.718750 }
+		},
 	}
-} // namespace
+};
+
+void compareChunks(const std::pair<std::pair<double, double>, std::vector<double>>& expected, const SMatrixChunk& actual)
+{
+	ASSERT_EQ(expected.first.first, actual.startTime);
+	ASSERT_EQ(expected.first.second, actual.endTime);
+	ASSERT_EQ(expected.second.size(), actual.matrix.size());
+	for (size_t sample = 0; sample < expected.second.size(); ++sample) { ASSERT_EQ(expected.second[sample], actual.matrix[sample]); }
+}
+}  // namespace
 
 TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 {

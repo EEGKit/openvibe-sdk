@@ -605,6 +605,6 @@ void CBoxAlgorithmExternalProcessing::log()
 	}
 }
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

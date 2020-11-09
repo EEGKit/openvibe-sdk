@@ -5,48 +5,46 @@
 using namespace OpenViBE;
 using namespace std;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace {
+class CStimulation
 {
-	namespace
-	{
-		class CStimulation
-		{
-		public:
+public:
 
-			CStimulation() { }
+	CStimulation() { }
 
-			CStimulation(const uint64_t id, const uint64_t date, const uint64_t duration)
-				: m_Id(id), m_Date(date), m_Duration(duration) { }
+	CStimulation(const uint64_t id, const uint64_t date, const uint64_t duration)
+		: m_Id(id), m_Date(date), m_Duration(duration) { }
 
-			uint64_t m_Id       = 0;
-			uint64_t m_Date     = 0;
-			uint64_t m_Duration = 0;
-		};
+	uint64_t m_Id       = 0;
+	uint64_t m_Date     = 0;
+	uint64_t m_Duration = 0;
+};
 
-		class CStimulationSetImpl final : public IStimulationSet
-		{
-		public:
-			void clear() override { m_stimulations.clear(); }
-			size_t getStimulationCount() const override { return m_stimulations.size(); }
-			uint64_t getStimulationIdentifier(const size_t index) const override { return m_stimulations[index].m_Id; }
-			uint64_t getStimulationDate(const size_t index) const override { return m_stimulations[index].m_Date; }
-			uint64_t getStimulationDuration(const size_t index) const override { return m_stimulations[index].m_Duration; }
-			bool setStimulationCount(const size_t n) override;
-			bool setStimulationIdentifier(const size_t index, const uint64_t id) override;
-			bool setStimulationDate(const size_t index, const uint64_t date) override;
-			bool setStimulationDuration(const size_t index, const uint64_t duration) override;
-			size_t appendStimulation(const uint64_t id, const uint64_t date, const uint64_t duration) override;
-			size_t insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration) override;
-			bool removeStimulation(const size_t index) override;
+class CStimulationSetImpl final : public IStimulationSet
+{
+public:
+	void clear() override { m_stimulations.clear(); }
+	size_t getStimulationCount() const override { return m_stimulations.size(); }
+	uint64_t getStimulationIdentifier(const size_t index) const override { return m_stimulations[index].m_Id; }
+	uint64_t getStimulationDate(const size_t index) const override { return m_stimulations[index].m_Date; }
+	uint64_t getStimulationDuration(const size_t index) const override { return m_stimulations[index].m_Duration; }
+	bool setStimulationCount(const size_t n) override;
+	bool setStimulationIdentifier(const size_t index, const uint64_t id) override;
+	bool setStimulationDate(const size_t index, const uint64_t date) override;
+	bool setStimulationDuration(const size_t index, const uint64_t duration) override;
+	size_t appendStimulation(const uint64_t id, const uint64_t date, const uint64_t duration) override;
+	size_t insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration) override;
+	bool removeStimulation(const size_t index) override;
 
-			_IsDerivedFromClass_Final_(IStimulationSet, OV_ClassId_StimulationSetImpl)
+	_IsDerivedFromClass_Final_(IStimulationSet, OV_ClassId_StimulationSetImpl)
 
-		private:
+private:
 
-			vector<CStimulation> m_stimulations;
-		};
-	} // namespace
-} // namespace OpenViBE
+	vector<CStimulation> m_stimulations;
+};
+}  // namespace
+}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //

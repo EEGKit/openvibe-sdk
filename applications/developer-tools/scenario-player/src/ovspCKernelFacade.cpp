@@ -37,13 +37,12 @@ using namespace /*OpenViBE::*/Plugins;
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
-namespace
+namespace {
+void setConfigTokens(IConfigurationManager& configsManager, const TokenList& tokens)
 {
-	void setConfigTokens(IConfigurationManager& configsManager, const TokenList& tokens)
-	{
-		for (auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
-	}
-} // namespace
+	for (auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
+}
+}  // namespace
 
 struct CKernelFacade::SKernelFacadeImpl
 {

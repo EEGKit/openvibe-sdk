@@ -10,117 +10,116 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
 
-namespace
+namespace {
+typedef struct SScenarioInput
 {
-	typedef struct SScenarioInput
-	{
-		CIdentifier id     = OV_UndefinedIdentifier;
-		CIdentifier typeID = OV_UndefinedIdentifier;
-		CString name;
-		CIdentifier linkedBoxID      = OV_UndefinedIdentifier;
-		size_t linkedBoxInputIdx     = size_t(-1);
-		CIdentifier linkedBoxInputID = OV_UndefinedIdentifier;
-	} scenario_input_t;
+	CIdentifier id     = OV_UndefinedIdentifier;
+	CIdentifier typeID = OV_UndefinedIdentifier;
+	CString name;
+	CIdentifier linkedBoxID      = OV_UndefinedIdentifier;
+	size_t linkedBoxInputIdx     = size_t(-1);
+	CIdentifier linkedBoxInputID = OV_UndefinedIdentifier;
+} scenario_input_t;
 
-	typedef struct SScenarioOutput
-	{
-		CIdentifier id     = OV_UndefinedIdentifier;
-		CIdentifier typeID = OV_UndefinedIdentifier;
-		CString name;
-		CIdentifier linkedBoxID       = OV_UndefinedIdentifier;
-		size_t linkedBoxOutputIdx     = size_t(-1);
-		CIdentifier linkedBoxOutputID = OV_UndefinedIdentifier;
-	} scenario_output_t;
+typedef struct SScenarioOutput
+{
+	CIdentifier id     = OV_UndefinedIdentifier;
+	CIdentifier typeID = OV_UndefinedIdentifier;
+	CString name;
+	CIdentifier linkedBoxID       = OV_UndefinedIdentifier;
+	size_t linkedBoxOutputIdx     = size_t(-1);
+	CIdentifier linkedBoxOutputID = OV_UndefinedIdentifier;
+} scenario_output_t;
 
-	typedef struct SInput
-	{
-		CIdentifier id     = OV_UndefinedIdentifier;
-		CIdentifier typeID = OV_UndefinedIdentifier;
-		CString name;
-	} input_t;
+typedef struct SInput
+{
+	CIdentifier id     = OV_UndefinedIdentifier;
+	CIdentifier typeID = OV_UndefinedIdentifier;
+	CString name;
+} input_t;
 
-	typedef struct SOutput
-	{
-		CIdentifier id     = OV_UndefinedIdentifier;
-		CIdentifier typeID = OV_UndefinedIdentifier;
-		CString name;
-	} output_t;
+typedef struct SOutput
+{
+	CIdentifier id     = OV_UndefinedIdentifier;
+	CIdentifier typeID = OV_UndefinedIdentifier;
+	CString name;
+} output_t;
 
-	typedef struct SSetting
-	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
-		CString name;
-		CString defaultValue;
-		CString value;
-		bool modifiability = false;
-		CIdentifier id     = OV_UndefinedIdentifier;
-	} setting_t;
+typedef struct SSetting
+{
+	CIdentifier typeID = OV_UndefinedIdentifier;
+	CString name;
+	CString defaultValue;
+	CString value;
+	bool modifiability = false;
+	CIdentifier id     = OV_UndefinedIdentifier;
+} setting_t;
 
-	typedef struct SAttribute
-	{
-		CIdentifier id = OV_UndefinedIdentifier;
-		CString value;
-	} attribute_t;
+typedef struct SAttribute
+{
+	CIdentifier id = OV_UndefinedIdentifier;
+	CString value;
+} attribute_t;
 
-	typedef struct SBox
-	{
-		CIdentifier id               = OV_UndefinedIdentifier;
-		CIdentifier algorithmClassID = OV_UndefinedIdentifier;
-		CString name;
-		std::vector<input_t> inputs;
-		std::vector<output_t> outputs;
-		std::vector<setting_t> settings;
-		std::vector<attribute_t> attributes;
-	} box_t;
+typedef struct SBox
+{
+	CIdentifier id               = OV_UndefinedIdentifier;
+	CIdentifier algorithmClassID = OV_UndefinedIdentifier;
+	CString name;
+	std::vector<input_t> inputs;
+	std::vector<output_t> outputs;
+	std::vector<setting_t> settings;
+	std::vector<attribute_t> attributes;
+} box_t;
 
-	typedef struct SComment
-	{
-		CIdentifier id;
-		CString text;
-		std::vector<attribute_t> attributes;
-	} comment_t;
+typedef struct SComment
+{
+	CIdentifier id;
+	CString text;
+	std::vector<attribute_t> attributes;
+} comment_t;
 
-	typedef struct SMetadata
-	{
-		CIdentifier identifier;
-		CIdentifier type;
-		CString data;
-	} metadata_t;
+typedef struct SMetadata
+{
+	CIdentifier identifier;
+	CIdentifier type;
+	CString data;
+} metadata_t;
 
-	typedef struct SLinkSrc
-	{
-		CIdentifier boxID;
-		size_t boxOutputIdx     = size_t(-1);
-		CIdentifier boxOutputID = OV_UndefinedIdentifier;
-	} link_src_t;
+typedef struct SLinkSrc
+{
+	CIdentifier boxID;
+	size_t boxOutputIdx     = size_t(-1);
+	CIdentifier boxOutputID = OV_UndefinedIdentifier;
+} link_src_t;
 
-	typedef struct SLinkDst
-	{
-		CIdentifier boxID;
-		size_t boxInputIdx     = size_t(-1);
-		CIdentifier boxInputID = OV_UndefinedIdentifier;
-	} link_dst_t;
+typedef struct SLinkDst
+{
+	CIdentifier boxID;
+	size_t boxInputIdx     = size_t(-1);
+	CIdentifier boxInputID = OV_UndefinedIdentifier;
+} link_dst_t;
 
-	typedef struct SLink
-	{
-		CIdentifier id;
-		link_src_t linkSrc;
-		link_dst_t linkDst;
-		std::vector<attribute_t> attributes;
-	} link_t;
+typedef struct SLink
+{
+	CIdentifier id;
+	link_src_t linkSrc;
+	link_dst_t linkDst;
+	std::vector<attribute_t> attributes;
+} link_t;
 
-	typedef struct SScenario
-	{
-		std::vector<setting_t> settings;
-		std::vector<scenario_input_t> iScenarios;
-		std::vector<scenario_output_t> oScenarios;
-		std::vector<box_t> boxes;
-		std::vector<comment_t> comments;
-		std::vector<metadata_t> metadata;
-		std::vector<link_t> links;
-		std::vector<attribute_t> attributes;
-	} scenario_t;
-} // namespace
+typedef struct SScenario
+{
+	std::vector<setting_t> settings;
+	std::vector<scenario_input_t> iScenarios;
+	std::vector<scenario_output_t> oScenarios;
+	std::vector<box_t> boxes;
+	std::vector<comment_t> comments;
+	std::vector<metadata_t> metadata;
+	std::vector<link_t> links;
+	std::vector<attribute_t> attributes;
+} scenario_t;
+}  // namespace
 
 class CAlgorithmScenarioImporterContext final : public IAlgorithmScenarioImporterContext
 {
@@ -254,13 +253,11 @@ bool CAlgorithmScenarioImporter::process()
 
 		if (srcBoxOutputID != OV_UndefinedIdentifier) { scenario->getSourceBoxOutputIndex(boxIdMapping[l->linkSrc.boxID], srcBoxOutputID, srcBoxOutputIdx); }
 
-		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found",
-							ErrorType::BadOutput);
+		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found", ErrorType::BadOutput);
 
 		if (dstBoxInputID != OV_UndefinedIdentifier) { scenario->getTargetBoxInputIndex(boxIdMapping[l->linkDst.boxID], dstBoxInputID, dstBoxInputIdx); }
 
-		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found",
-							ErrorType::BadOutput);
+		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found", ErrorType::BadOutput);
 
 		scenario->connect(newLinkID, boxIdMapping[l->linkSrc.boxID], srcBoxOutputIdx, boxIdMapping[l->linkDst.boxID], dstBoxInputIdx, l->id);
 

@@ -5,18 +5,16 @@
 
 #include <openvibe/ov_all.h>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CMessageClock final : public TMessage<TKernelObject<IMessageClock>>
 {
-	namespace Kernel
-	{
-		class CMessageClock final : public TMessage<TKernelObject<IMessageClock>>
-		{
-		public:
+public:
 
-			explicit CMessageClock(const IKernelContext& ctx)
-				: TMessage<TKernelObject<IMessageClock>>(ctx) { }
+	explicit CMessageClock(const IKernelContext& ctx)
+		: TMessage<TKernelObject<IMessageClock>>(ctx) { }
 
-			_IsDerivedFromClass_Final_(TMessage<TKernelObject<IMessageClock>>, OVK_ClassId_Kernel_Player_MessageClock)
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	_IsDerivedFromClass_Final_(TMessage<TKernelObject<IMessageClock>>, OVK_ClassId_Kernel_Player_MessageClock)
+};
+}  // namespace Kernel
+}  // namespace OpenViBE
