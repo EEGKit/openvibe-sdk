@@ -29,71 +29,69 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Test {
+void SKernelFixture::setUp()
 {
-	namespace Test
-	{
-	void SKernelFixture::setUp()
-	{
 #if defined TARGET_OS_Windows
-		const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
+	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-		const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
+	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-		const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
-		CString error;
+	CString error;
 
-		if (!m_kernelLoader.load(kernelFile, &error))
-		{
-			std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
-			std::cerr << "ERROR: kernel error: " << error << std::endl;
-			return;
-		}
+	if (!m_kernelLoader.load(kernelFile, &error))
+	{
+		std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
+		std::cerr << "ERROR: kernel error: " << error << std::endl;
+		return;
+	}
 
-		m_kernelLoader.initialize();
+	m_kernelLoader.initialize();
 
+	IKernelDesc* kernelDesc = nullptr;
+	m_kernelLoader.getKernelDesc(kernelDesc);
+
+	if (!kernelDesc)
+	{
+		std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
+		return;
+	}
+
+	CString configFile;
+
+	if (!m_configFile.empty()) { configFile = m_configFile.c_str(); }
+	else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
+
+
+	IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
+
+	if (!ctx)
+	{
+		std::cerr << "ERROR: impossible to create kernel context " << std::endl;
+		return;
+	}
+
+	ctx->initialize();
+	Toolkit::initialize(*ctx);
+	context = ctx;
+}
+
+void SKernelFixture::tearDown()
+{
+	if (context)
+	{
+		Toolkit::uninitialize(*context);
 		IKernelDesc* kernelDesc = nullptr;
 		m_kernelLoader.getKernelDesc(kernelDesc);
-
-		if (!kernelDesc)
-		{
-			std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
-			return;
-		}
-
-		CString configFile;
-
-		if (!m_configFile.empty()) { configFile = m_configFile.c_str(); }
-		else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
-
-
-		IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
-
-		if (!ctx)
-		{
-			std::cerr << "ERROR: impossible to create kernel context " << std::endl;
-			return;
-		}
-
-		ctx->initialize();
-		Toolkit::initialize(*ctx);
-		context = ctx;
+		kernelDesc->releaseKernel(context);
+		context = nullptr;
 	}
 
-	void SKernelFixture::tearDown()
-	{
-		if (context)
-		{
-			Toolkit::uninitialize(*context);
-			IKernelDesc* kernelDesc = nullptr;
-			m_kernelLoader.getKernelDesc(kernelDesc);
-			kernelDesc->releaseKernel(context);
-			context = nullptr;
-		}
-
-		m_kernelLoader.uninitialize();
-		m_kernelLoader.unload();
-	}
-	} // namespace Test
-} // namespace OpenViBE
+	m_kernelLoader.uninitialize();
+	m_kernelLoader.unload();
+}
+}  // namespace Test
+}  // namespace OpenViBE

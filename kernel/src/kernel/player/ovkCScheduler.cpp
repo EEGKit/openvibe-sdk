@@ -292,8 +292,7 @@ bool CScheduler::flattenScenario()
 					CIdentifier srcBoxOutputID = OV_UndefinedIdentifier;
 					if (srcBoxID != OV_UndefinedIdentifier)
 					{
-						m_scenario->getBoxDetails(correspondenceID[srcBoxID])->getInterfacorIdentifier(
-							Output, srcBoxOutputIdx, srcBoxOutputID);
+						m_scenario->getBoxDetails(correspondenceID[srcBoxID])->getInterfacorIdentifier(Output, srcBoxOutputIdx, srcBoxOutputID);
 
 						link->setSource(correspondenceID[srcBoxID], srcBoxOutputIdx, srcBoxOutputID);
 					}
@@ -488,8 +487,7 @@ bool CScheduler::uninitialize()
 		}
 	}
 
-	for (auto it = m_simulatedBoxes.begin(); it != m_simulatedBoxes.end(); ++
-		 it) { delete it->second; }
+	for (auto it = m_simulatedBoxes.begin(); it != m_simulatedBoxes.end(); ++it) { delete it->second; }
 	m_simulatedBoxes.clear();
 
 	m_scenario = nullptr;

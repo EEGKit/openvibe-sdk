@@ -53,7 +53,7 @@ bool CBoxAlgorithmStimulationListener::process()
 				staticboxCtx.getInputName(i, inputName);
 				for (size_t k = 0; k < stimSet->getStimulationCount(); ++k)
 				{
-					this->getLogManager() << m_logLevel 
+					this->getLogManager() << m_logLevel
 							<< "For input " << i << " with name " << inputName
 							<< " got stimulation " << stimSet->getStimulationIdentifier(k)
 							<< "[" << getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, stimSet->getStimulationIdentifier(k)) << "]"
@@ -75,6 +75,6 @@ bool CBoxAlgorithmStimulationListener::process()
 	return true;
 }
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

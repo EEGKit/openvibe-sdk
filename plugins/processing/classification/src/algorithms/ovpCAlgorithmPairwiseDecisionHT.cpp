@@ -9,10 +9,9 @@
 #include <xml/IXMLNode.h>
 #include <xml/IXMLHandler.h>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
-	const char* const REPARTITION_NODE_NAME = "Repartition";
+namespace {
+const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
+const char* const REPARTITION_NODE_NAME = "Repartition";
 }
 
 
@@ -28,8 +27,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
-						ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadInput);
 
 	return true;
 }
@@ -37,8 +35,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 
 bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found",
-						ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadConfig);
 
 	TParameterHandler<IMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	std::vector<double> probability(m_nClass * m_nClass);

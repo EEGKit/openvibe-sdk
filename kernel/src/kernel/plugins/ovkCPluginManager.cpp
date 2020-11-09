@@ -17,105 +17,103 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace std;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CPluginManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
 {
-	namespace Kernel
+public:
+
+	CPluginManagerEntryEnumeratorCallBack(const IKernelContext& ctx, vector<IPluginModule*>& pluginModule,
+										  map<IPluginObjectDesc*, IPluginModule*>& pluginObjectDesc, bool& haveAllPluginsLoadedCorrectly)
+		: TKernelObject<IObject>(ctx), m_rPluginManager(ctx.getPluginManager()), m_rPluginModule(pluginModule),
+		  m_rPluginObjectDesc(pluginObjectDesc), m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
+
+	bool callback(FS::IEntryEnumerator::IEntry& entry, FS::IEntryEnumerator::IAttributes& /*attributes*/) override
 	{
-		class CPluginManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
+		for (auto& pluginModule : m_rPluginModule)
 		{
-		public:
+			CString name;
+			if (!pluginModule->getFileName(name)) { return true; }
 
-			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& ctx, vector<IPluginModule*>& pluginModule,
-												  map<IPluginObjectDesc*, IPluginModule*>& pluginObjectDesc, bool& haveAllPluginsLoadedCorrectly)
-				: TKernelObject<IObject>(ctx), m_rPluginManager(ctx.getPluginManager()), m_rPluginModule(pluginModule),
-				  m_rPluginObjectDesc(pluginObjectDesc), m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
-
-			bool callback(FS::IEntryEnumerator::IEntry& entry, FS::IEntryEnumerator::IAttributes& /*attributes*/) override
+			if (FS::Files::equals(entry.getName(), name.toASCIIString()))
 			{
-				for (auto& pluginModule : m_rPluginModule)
-				{
-					CString name;
-					if (!pluginModule->getFileName(name)) { return true; }
-
-					if (FS::Files::equals(entry.getName(), name.toASCIIString()))
-					{
-						OV_WARNING_K(std::string("Module [") + entry.getName() + "] has already been loaded");
-						return true;
-					}
-				}
-
-				IPluginModule* module = new CPluginModule(this->getKernelContext());
-				CString loadError;
-				if (!module->load(entry.getName(), &loadError))
-				{
-					delete module;
-					OV_WARNING_K(std::string("File [") + entry.getName() + "] is not a plugin module (error:" + loadError.toASCIIString() + ")");
-					m_HaveAllPluginsLoadedCorrectly = false;
-					return true;
-				}
-
-				if (!module->initialize())
-				{
-					module->uninitialize();
-					module->unload();
-					delete module;
-					OV_WARNING_K(std::string("Module [") + entry.getName() + "] did not initialize correctly");
-					m_HaveAllPluginsLoadedCorrectly = false;
-					return true;
-				}
-
-				bool pluginObjectDescAdded = false;
-				size_t index               = 0;
-				size_t n                   = 0;
-				IPluginObjectDesc* desc    = nullptr;
-				while (module->getPluginObjectDescription(index, desc))
-				{
-					bool found = false;
-
-					for (const auto& pluginObjectDesc : m_rPluginObjectDesc)
-					{
-						if (pluginObjectDesc.first->getClassIdentifier() == desc->getClassIdentifier())
-						{
-							OV_WARNING_K("Duplicate plugin object descriptor class identifier [" + pluginObjectDesc.first->getName()
-								+ "] and [" + desc->getName() + "]... second one is ignored");
-							found = true;
-							break;
-						}
-					}
-
-					if (!found)
-					{
-						if (!pluginObjectDescAdded)
-						{
-							m_rPluginModule.push_back(module);
-							pluginObjectDescAdded = true;
-						}
-						m_rPluginObjectDesc[desc] = module;
-						n++;
-					}
-					index++;
-					desc = nullptr;
-				}
-
-				OV_WARNING_UNLESS_K(pluginObjectDescAdded,
-									std::string("No 'plugin object descriptor' found from [") + entry.getName() + "] even if it looked like a plugin module\n");
-
-				this->getLogManager() << LogLevel_Info << "Added " << n << " plugin object descriptor(s) from [" << CString(entry.getName()) << "]\n";
-
+				OV_WARNING_K(std::string("Module [") + entry.getName() + "] has already been loaded");
 				return true;
 			}
+		}
 
-			_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
+		IPluginModule* module = new CPluginModule(this->getKernelContext());
+		CString loadError;
+		if (!module->load(entry.getName(), &loadError))
+		{
+			delete module;
+			OV_WARNING_K(std::string("File [") + entry.getName() + "] is not a plugin module (error:" + loadError.toASCIIString() + ")");
+			m_HaveAllPluginsLoadedCorrectly = false;
+			return true;
+		}
 
-		protected:
+		if (!module->initialize())
+		{
+			module->uninitialize();
+			module->unload();
+			delete module;
+			OV_WARNING_K(std::string("Module [") + entry.getName() + "] did not initialize correctly");
+			m_HaveAllPluginsLoadedCorrectly = false;
+			return true;
+		}
 
-			IPluginManager& m_rPluginManager;
-			vector<IPluginModule*>& m_rPluginModule;
-			map<IPluginObjectDesc*, IPluginModule*>& m_rPluginObjectDesc;
-			bool& m_HaveAllPluginsLoadedCorrectly;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+		bool pluginObjectDescAdded = false;
+		size_t index               = 0;
+		size_t n                   = 0;
+		IPluginObjectDesc* desc    = nullptr;
+		while (module->getPluginObjectDescription(index, desc))
+		{
+			bool found = false;
+
+			for (const auto& pluginObjectDesc : m_rPluginObjectDesc)
+			{
+				if (pluginObjectDesc.first->getClassIdentifier() == desc->getClassIdentifier())
+				{
+					OV_WARNING_K("Duplicate plugin object descriptor class identifier [" + pluginObjectDesc.first->getName()
+						+ "] and [" + desc->getName() + "]... second one is ignored");
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				if (!pluginObjectDescAdded)
+				{
+					m_rPluginModule.push_back(module);
+					pluginObjectDescAdded = true;
+				}
+				m_rPluginObjectDesc[desc] = module;
+				n++;
+			}
+			index++;
+			desc = nullptr;
+		}
+
+		OV_WARNING_UNLESS_K(pluginObjectDescAdded,
+							std::string("No 'plugin object descriptor' found from [") + entry.getName() + "] even if it looked like a plugin module\n");
+
+		this->getLogManager() << LogLevel_Info << "Added " << n << " plugin object descriptor(s) from [" << CString(entry.getName()) << "]\n";
+
+		return true;
+	}
+
+	_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
+
+protected:
+
+	IPluginManager& m_rPluginManager;
+	vector<IPluginModule*>& m_rPluginModule;
+	map<IPluginObjectDesc*, IPluginModule*>& m_rPluginObjectDesc;
+	bool& m_HaveAllPluginsLoadedCorrectly;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE
 
 CPluginManager::~CPluginManager()
 {
@@ -176,7 +174,7 @@ bool CPluginManager::registerPluginDesc(const IPluginObjectDesc& rPluginObjectDe
 {
 	std::unique_lock<std::mutex> lock(m_mutex);
 
-	m_pluginObjectDescs[const_cast<IPluginObjectDesc *>(&rPluginObjectDesc)] = nullptr;
+	m_pluginObjectDescs[const_cast<IPluginObjectDesc*>(&rPluginObjectDesc)] = nullptr;
 	return true;
 }
 

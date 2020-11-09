@@ -15,68 +15,63 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CPluginModuleBase : public TKernelObject<IPluginModule>
 {
-	namespace Kernel
-	{
-		class CPluginModuleBase : public TKernelObject<IPluginModule>
-		{
-		public:
-			explicit CPluginModuleBase(const IKernelContext& ctx)
-				: TKernelObject<IPluginModule>(ctx), m_onInitializeCB(nullptr), m_onGetPluginObjectDescCB(nullptr), m_onUninitializeCB(nullptr) {}
+public:
+	explicit CPluginModuleBase(const IKernelContext& ctx)
+		: TKernelObject<IPluginModule>(ctx), m_onInitializeCB(nullptr), m_onGetPluginObjectDescCB(nullptr), m_onUninitializeCB(nullptr) {}
 
-			~CPluginModuleBase() override { }
-			bool initialize() override;
-			bool getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc) override;
-			bool uninitialize() override;
-			bool getFileName(CString& fileName) const override;
+	~CPluginModuleBase() override { }
+	bool initialize() override;
+	bool getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc) override;
+	bool uninitialize() override;
+	bool getFileName(CString& fileName) const override;
 
-			_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OV_UndefinedIdentifier)
 
-		protected:
+protected:
 
-			virtual bool isOpen() const = 0;
+	virtual bool isOpen() const = 0;
 
-			vector<IPluginObjectDesc*> m_pluginObjectDescs;
-			CString m_filename;
-			bool m_gotDesc = false;
+	vector<IPluginObjectDesc*> m_pluginObjectDescs;
+	CString m_filename;
+	bool m_gotDesc = false;
 
-			bool (*m_onInitializeCB)(const IPluginModuleContext&);
-			bool (*m_onGetPluginObjectDescCB)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&);
-			bool (*m_onUninitializeCB)(const IPluginModuleContext&);
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	bool (*m_onInitializeCB)(const IPluginModuleContext&);
+	bool (*m_onGetPluginObjectDescCB)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&);
+	bool (*m_onUninitializeCB)(const IPluginModuleContext&);
+};
+}  // namespace Kernel
+}  // namespace OpenViBE
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+namespace {
+class CPluginModuleContext final : public TKernelObject<IPluginModuleContext>
 {
-	namespace Kernel
-	{
-		namespace
-		{
-			class CPluginModuleContext final : public TKernelObject<IPluginModuleContext>
-			{
-			public:
+public:
 
-				explicit CPluginModuleContext(const IKernelContext& ctx)
-					: TKernelObject<IPluginModuleContext>(ctx), m_logManager(ctx.getLogManager()), m_typeManager(ctx.getTypeManager()),
-					  m_scenarioManager(ctx.getScenarioManager()) { }
+	explicit CPluginModuleContext(const IKernelContext& ctx)
+		: TKernelObject<IPluginModuleContext>(ctx), m_logManager(ctx.getLogManager()), m_typeManager(ctx.getTypeManager()),
+		  m_scenarioManager(ctx.getScenarioManager()) { }
 
-				ILogManager& getLogManager() const override { return m_logManager; }
-				ITypeManager& getTypeManager() const override { return m_typeManager; }
-				IScenarioManager& getScenarioManager() const override { return m_scenarioManager; }
+	ILogManager& getLogManager() const override { return m_logManager; }
+	ITypeManager& getTypeManager() const override { return m_typeManager; }
+	IScenarioManager& getScenarioManager() const override { return m_scenarioManager; }
 
-				_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext)
+	_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext)
 
-			protected:
+protected:
 
-				ILogManager& m_logManager;
-				ITypeManager& m_typeManager;
-				IScenarioManager& m_scenarioManager;
-			};
-		} // namespace
-	} // namespace Kernel
-} // namespace OpenViBE
+	ILogManager& m_logManager;
+	ITypeManager& m_typeManager;
+	IScenarioManager& m_scenarioManager;
+};
+}  // namespace
+}  // namespace Kernel
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -132,79 +127,63 @@ bool CPluginModuleBase::getFileName(CString& fileName) const
 //___________________________________________________________________//
 //                                                                   //
 
+namespace OpenViBE {
+namespace Kernel {
+
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-namespace OpenViBE
+class CPluginModuleLinux : public CPluginModuleBase
 {
-	namespace Kernel
-	{
-		class CPluginModuleLinux : public CPluginModuleBase
-		{
-		public:
+public:
 
-			CPluginModuleLinux(const IKernelContext& ctx);
+	CPluginModuleLinux(const IKernelContext& ctx);
 
-			virtual bool load(const CString& filename, CString* pError);
-			virtual bool unload(CString* pError);
-			virtual bool isOpen() const;
+	virtual bool load(const CString& filename, CString* pError);
+	virtual bool unload(CString* pError);
+	virtual bool isOpen() const;
 
-		protected:
+protected:
 
-			void* m_fileHandle;
-		};
-	}
-} // namespace OpenViBE
+	void* m_fileHandle;
+};
 
 #elif defined TARGET_OS_Windows
-
-namespace OpenViBE
+class CPluginModuleWindows final : public CPluginModuleBase
 {
-	namespace Kernel
-	{
-		class CPluginModuleWindows final : public CPluginModuleBase
-		{
-		public:
+public:
 
-			explicit CPluginModuleWindows(const IKernelContext& ctx);
-			bool load(const CString& filename, CString* pError) override;
-			bool unload(CString* pError) override;
+	explicit CPluginModuleWindows(const IKernelContext& ctx);
+	bool load(const CString& filename, CString* pError) override;
+	bool unload(CString* pError) override;
 
-		protected:
-			bool isOpen() const override { return m_fileHandle != nullptr; }
+protected:
+	bool isOpen() const override { return m_fileHandle != nullptr; }
 
-			HMODULE m_fileHandle;
+	HMODULE m_fileHandle;
 
-		private:
+private:
 
-			static CString getLastErrorMessageString();
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	static CString getLastErrorMessageString();
+};
 
 #else
-
-namespace OpenViBE
+class CPluginModuleDummy : public CPluginModuleBase
 {
-	namespace Kernel
-	{
-		class CPluginModuleDummy : public CPluginModuleBase
-		{
-		public:
+public:
 
-			explicit CPluginModuleDummy(const IKernelContext& ctx);
+	explicit CPluginModuleDummy(const IKernelContext& ctx);
 
-			virtual bool load(const CString& filename, CString* pError);
-			virtual bool unload(CString* pError);
+	virtual bool load(const CString& filename, CString* pError);
+	virtual bool unload(CString* pError);
 
-		protected:
+protected:
 
-			virtual bool isOpen() const;
-		};
-	}
-} // namespace OpenViBE
-
+	virtual bool isOpen() const;
+};
 #endif
 
+}  // namespace Kernel
+}  // namespace OpenViBE
+// 
 //___________________________________________________________________//
 //                                                                   //
 
@@ -364,9 +343,7 @@ CPluginModule::CPluginModule(const IKernelContext& ctx)
 CPluginModule::~CPluginModule() { delete m_impl; }
 
 bool CPluginModule::load(const CString& filename, CString* error) { return !m_impl ? false : m_impl->load(filename, error); }
-
 bool CPluginModule::unload(CString* error) { return !m_impl ? false : m_impl->unload(error); }
-
 bool CPluginModule::initialize() { return !m_impl ? false : m_impl->initialize(); }
 
 bool CPluginModule::getPluginObjectDescription(const size_t index, IPluginObjectDesc*& desc)
@@ -375,5 +352,4 @@ bool CPluginModule::getPluginObjectDescription(const size_t index, IPluginObject
 }
 
 bool CPluginModule::uninitialize() { return !m_impl ? false : m_impl->uninitialize(); }
-
 bool CPluginModule::getFileName(CString& rFileName) const { return !m_impl ? false : m_impl->getFileName(rFileName); }

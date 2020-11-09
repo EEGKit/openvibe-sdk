@@ -65,9 +65,9 @@ bool CBoxAlgorithmMatrixValidityChecker::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmMatrixValidityChecker::process()
 {
-	Kernel::IBoxIO& boxCtx    = this->getDynamicBoxContext();
-	const size_t nInput   = this->getStaticBoxContext().getInputCount();
-	const size_t nSetting = this->getStaticBoxContext().getSettingCount();
+	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
+	const size_t nInput    = this->getStaticBoxContext().getInputCount();
+	const size_t nSetting  = this->getStaticBoxContext().getSettingCount();
 
 	for (size_t i = 0; i < nInput; ++i)
 	{
@@ -169,6 +169,6 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 	return true;
 }
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

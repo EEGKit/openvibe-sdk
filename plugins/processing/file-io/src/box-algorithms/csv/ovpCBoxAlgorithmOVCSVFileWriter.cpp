@@ -41,9 +41,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 	}
 	else { OV_ERROR_KRF("Input is a type derived from matrix that the box doesn't recognize", ErrorType::BadInput); }
 
-	OV_ERROR_UNLESS_KRF(m_stimDecoder.initialize(*this, 1),
-						"Error while stimulation decoder initialization",
-						ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_stimDecoder.initialize(*this, 1), "Error while stimulation decoder initialization", ErrorType::Internal);
 
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -56,8 +54,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 	{
 		OV_ERROR_UNLESS_KRF(m_writerLib->openFile(filename.toASCIIString(), CSV::EFileAccessMode::Write),
 							(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-								"Details: " + m_writerLib->getLastErrorString())).c_str(),
-							ErrorType::Internal);
+								"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 		m_writeHeader = true;
 	}
 	else
@@ -73,8 +70,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 
 		OV_ERROR_UNLESS_KRF(m_writerLib->openFile(filename.toASCIIString(), CSV::EFileAccessMode::Append),
 							(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-								"Details: " + m_writerLib->getLastErrorString())).c_str(),
-							ErrorType::Internal);
+								"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 	}
 
 	m_isHeaderReceived = false;
@@ -89,18 +85,15 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 
 	OV_ERROR_UNLESS_KRF(m_writerLib->noEventsUntilDate(std::numeric_limits<double>::max()),
 						(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: "
-							+ m_writerLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+							+ m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 
 	OV_ERROR_UNLESS_KRF(m_writerLib->writeAllDataToFile(),
 						(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: "
-							+ m_writerLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+							+ m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 
 	OV_ERROR_UNLESS_KRF(m_writerLib->closeFile(),
 						(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: "
-							+ m_writerLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+							+ m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 
 	return true;
 }
@@ -113,20 +106,15 @@ bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmOVCSVFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(this->processStreamedMatrix(),
-						"Error have been thrown during streamed matrix process",
-						ErrorType::Internal);
-	OV_ERROR_UNLESS_KRF(this->processStimulation(),
-						"Error have been thrown during stimulation process",
-						ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->processStreamedMatrix(), "Error have been thrown during streamed matrix process", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->processStimulation(), "Error have been thrown during stimulation process", ErrorType::Internal);
 
 	// write into the library
 	if (!m_lastMatrixOnly)
 	{
 		OV_ERROR_UNLESS_KRF(m_writerLib->writeDataToFile(),
 							(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-								"Details: " + m_writerLib->getLastErrorString())).c_str(),
-							ErrorType::Internal);
+								"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 	}
 
 	return true;
@@ -181,15 +169,13 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->setStreamedMatrixInformation(dimensionSizes, dimensionLabels),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-										"Details: " + m_writerLib->getLastErrorString())).c_str(),
-									ErrorType::Internal);
+										"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 
 				if (m_writeHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_writerLib->writeHeaderToFile(),
 										(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ?
-											"" : "Details: " + m_writerLib->getLastErrorString())).c_str(),
-										ErrorType::Internal);
+											"" : "Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 				}
 			}
 			else if (m_typeID == OV_TypeId_FeatureVector)
@@ -200,15 +186,13 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->setFeatureVectorInformation(channelsLabels),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-										"Details: " + m_writerLib->getLastErrorString())).c_str(),
-									ErrorType::Internal);
+										"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 
 				if (m_writeHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_writerLib->writeHeaderToFile(),
 										(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ?
-											"" : "Details: " + m_writerLib->getLastErrorString())).c_str(),
-										ErrorType::Internal);
+											"" : "Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 				}
 			}
 			else if (m_typeID == OV_TypeId_Spectrum)
@@ -268,8 +252,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					// add sample to the library
 					OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, matrixValues, m_epoch }),
 										(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ?
-											"" : "Details: " + m_writerLib->getLastErrorString())).c_str(),
-										ErrorType::Internal);
+											"" : "Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 				}
 			}
 			else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
@@ -280,8 +263,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-										"Details: " + m_writerLib->getLastErrorString())).c_str(),
-									ErrorType::Internal);
+										"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 			}
 			else if (m_typeID == OV_TypeId_FeatureVector)
 			{
@@ -293,8 +275,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-										"Details: " + m_writerLib->getLastErrorString())).c_str(),
-									ErrorType::Internal);
+										"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 			}
 			else if (m_typeID == OV_TypeId_Spectrum)
 			{
@@ -304,8 +285,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->addSample({ startTime, endTime, streamedMatrixValues, m_epoch }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-										"Details: " + m_writerLib->getLastErrorString())).c_str(),
-									ErrorType::Internal);
+										"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 			}
 
 			m_epoch++;
@@ -337,16 +317,14 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 										CTime(stimulationSet->getStimulationDate(j)).toSeconds(),
 										CTime(stimulationSet->getStimulationDuration(j)).toSeconds() }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
-										"Details: " + m_writerLib->getLastErrorString())).c_str(),
-									ErrorType::Internal);
+										"Details: " + m_writerLib->getLastErrorString())).c_str(), ErrorType::Internal);
 			}
-			
+
 			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
 			OV_ERROR_UNLESS_KRF(
 				m_writerLib->noEventsUntilDate(CTime(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1))).toSeconds()),
 				(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: " + m_writerLib->
-					getLastErrorString())).c_str(),
-				ErrorType::Internal);
+					getLastErrorString())).c_str(), ErrorType::Internal);
 		}
 
 		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(1, i), "Failed to mark stimulations input as deprecated", ErrorType::Internal);

@@ -34,19 +34,13 @@ bool CPlayerContext::sendMessage(const CMessageEvent& /*messageEvent*/, const CI
 }
 
 uint64_t CPlayerContext::getCurrentTime() const { return m_simulatedBox.getScheduler().getCurrentTime(); }
-
 uint64_t CPlayerContext::getCurrentLateness() const { return m_simulatedBox.getScheduler().getCurrentLateness(); }
-
 double CPlayerContext::getCurrentCPUUsage() const { return m_simulatedBox.getScheduler().getCPUUsage(); }
-
 double CPlayerContext::getCurrentFastForwardMaximumFactor() const { return m_simulatedBox.getScheduler().getFastForwardMaximumFactor(); }
 
 bool CPlayerContext::stop() { return m_simulatedBox.getScheduler().getPlayer().stop(); }
-
 bool CPlayerContext::pause() { return m_simulatedBox.getScheduler().getPlayer().pause(); }
-
 bool CPlayerContext::play() { return m_simulatedBox.getScheduler().getPlayer().play(); }
-
 bool CPlayerContext::forward() { return m_simulatedBox.getScheduler().getPlayer().forward(); }
 
 EPlayerStatus CPlayerContext::getStatus() const { return m_simulatedBox.getScheduler().getPlayer().getStatus(); }

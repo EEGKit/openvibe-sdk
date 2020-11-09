@@ -49,9 +49,7 @@ bool CAlgorithmOnlineCovariance::process()
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Reset))
 	{
-		OV_ERROR_UNLESS_KRF(ip_Shrinkage >= 0.0 && ip_Shrinkage <= 1.0,
-							"Invalid shrinkage parameter (expected value between 0 and 1)",
-							ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(ip_Shrinkage >= 0.0 && ip_Shrinkage <= 1.0, "Invalid shrinkage parameter (expected value between 0 and 1)", ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(ip_FeatureVectorSet->getDimensionCount() == 2,
 							"Invalid feature vector with " << ip_FeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
@@ -60,9 +58,7 @@ bool CAlgorithmOnlineCovariance::process()
 		const size_t nRows = ip_FeatureVectorSet->getDimensionSize(0);
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1,
-							"Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)",
-							ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1, "Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)", ErrorType::BadInput);
 
 		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_Shrinkage << " ...\n";
 		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_TraceNormalization ? "[on]" : "[off]") << "\n";

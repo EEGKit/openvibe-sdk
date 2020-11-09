@@ -31,62 +31,61 @@
 
 #include "ovtAssert.h"
 
-namespace
+namespace {
+std::condition_variable gServerStartedCondVar;
+std::mutex gServerStartedMutex;
+std::condition_variable gClientConnectedCondVar;
+std::mutex gClientConnectedMutex;
+std::vector<std::string> gReceivedData;
+bool gServerStarted   = false;
+bool gClientConnected = false;
+
+// server callback run from a child thread
+void onServerListening(const int port, const size_t packetCount)
 {
-	std::condition_variable gServerStartedCondVar;
-	std::mutex gServerStartedMutex;
-	std::condition_variable gClientConnectedCondVar;
-	std::mutex gClientConnectedMutex;
-	std::vector<std::string> gReceivedData;
-	bool gServerStarted   = false;
-	bool gClientConnected = false;
+	// only the server side modifies gReceivedData thus no need to handle race condition
+	gReceivedData.clear();
 
-	// server callback run from a child thread
-	void onServerListening(const int port, const size_t packetCount)
+	Socket::IConnection* clientConnection = nullptr;
+
+	// create server
+	Socket::IConnectionServer* server = Socket::createConnectionServer();
+	server->listen(port);
+
+	// keep the scope braces here, as it ensures mutex is released
 	{
-		// only the server side modifies gReceivedData thus no need to handle race condition
-		gReceivedData.clear();
-
-		Socket::IConnection* clientConnection = nullptr;
-
-		// create server
-		Socket::IConnectionServer* server = Socket::createConnectionServer();
-		server->listen(port);
-
-		// keep the scope braces here, as it ensures mutex is released
-		{
-			std::lock_guard<std::mutex> lockOnServerStart(gServerStartedMutex);
-			gServerStarted = true;
-		}
-
-		gServerStartedCondVar.notify_one();
-
-		// connect clients
-		while (!clientConnection) { if (server->isReadyToReceive()) { clientConnection = server->accept(); } }
-
-		// keep the scope braces here, as it ensures mutex is released
-		{
-			std::lock_guard<std::mutex> lockOnClientConnected(gClientConnectedMutex);
-			gClientConnected = true;
-		}
-
-		gClientConnectedCondVar.notify_one();
-
-		while (gReceivedData.size() < packetCount)
-		{
-			if (clientConnection->isReadyToReceive())
-			{
-				size_t dataSize = 0;
-				char dataBuffer[64];
-				clientConnection->receiveBufferBlocking(&dataSize, sizeof(dataSize));
-				clientConnection->receiveBufferBlocking(dataBuffer, dataSize);
-				gReceivedData.push_back(std::string(dataBuffer, dataSize));
-			}
-		}
-
-		server->release();
+		std::lock_guard<std::mutex> lockOnServerStart(gServerStartedMutex);
+		gServerStarted = true;
 	}
-} // namespace
+
+	gServerStartedCondVar.notify_one();
+
+	// connect clients
+	while (!clientConnection) { if (server->isReadyToReceive()) { clientConnection = server->accept(); } }
+
+	// keep the scope braces here, as it ensures mutex is released
+	{
+		std::lock_guard<std::mutex> lockOnClientConnected(gClientConnectedMutex);
+		gClientConnected = true;
+	}
+
+	gClientConnectedCondVar.notify_one();
+
+	while (gReceivedData.size() < packetCount)
+	{
+		if (clientConnection->isReadyToReceive())
+		{
+			size_t dataSize = 0;
+			char dataBuffer[64];
+			clientConnection->receiveBufferBlocking(&dataSize, sizeof(dataSize));
+			clientConnection->receiveBufferBlocking(dataBuffer, dataSize);
+			gReceivedData.push_back(std::string(dataBuffer, dataSize));
+		}
+	}
+
+	server->release();
+}
+}  // namespace
 
 int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 {

@@ -2,31 +2,29 @@
 
 #include <openvibe/ov_all.h>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+template <class T>
+class TMessage : public T
 {
-	namespace Kernel
-	{
-		template <class T>
-		class TMessage : public T
-		{
-		public:
+public:
 
-			explicit TMessage(const IKernelContext& ctx);
+	explicit TMessage(const IKernelContext& ctx);
 
-			CIdentifier getIdentifier() const override;
-			uint64_t getTime() const override;
+	CIdentifier getIdentifier() const override;
+	uint64_t getTime() const override;
 
-			bool setIdentifier(const CIdentifier& id) override;
-			bool setTime(const uint64_t time) override;
+	bool setIdentifier(const CIdentifier& id) override;
+	bool setTime(const uint64_t time) override;
 
-			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
+	_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
 
-		protected:
+protected:
 
-			CIdentifier m_id = OV_UndefinedIdentifier;
-			uint64_t m_time  = 0;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	CIdentifier m_id = OV_UndefinedIdentifier;
+	uint64_t m_time  = 0;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE
 
 #include "ovkTMessage.inl"

@@ -23,61 +23,59 @@
 
 #include <memory>
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Test {
+/**
+* \struct TestFixture
+* \author cgarraud (INRIA)
+* \date 2016-02-08
+* \brief Base abstract struct for test fixture
+*
+* A test fixture is used when an environment has to be set for a specific test.
+* TestFixture implementation should not be used directly but through ScopedTest.
+*/
+struct TestFixture
 {
-	namespace Test
-	{
-	/**
-	* \struct TestFixture
-	* \author cgarraud (INRIA)
-	* \date 2016-02-08
-	* \brief Base abstract struct for test fixture
-	*
-	* A test fixture is used when an environment has to be set for a specific test.
-	* TestFixture implementation should not be used directly but through ScopedTest.
-	*/
-	struct TestFixture
-	{
-		virtual ~TestFixture() = default;
-		TestFixture()          = default;
-
-		/**
-		* \brief Setup resources for the test
-		*/
-		virtual void setUp() = 0;
-
-		/**
-		* \brief Release resources
-		*/
-		virtual void tearDown() = 0;
-
-	private:
-
-		TestFixture& operator=(const TestFixture&) = delete;
-		TestFixture(const TestFixture&)            = delete;
-	};
+	virtual ~TestFixture() = default;
+	TestFixture()          = default;
 
 	/**
-	* \struct ScopedTest
-	* \author cgarraud (INRIA)
-	* \date 2016-02-08
-	* \brief Class used to ensure RAII when using TestFixture
-	*
-	* A scoped object is a wrapper around a test fixture used to
-	* ensure RAII when running tests.
+	* \brief Setup resources for the test
 	*/
-	template <typename T>
-	struct ScopedTest
-	{
-		template <typename... TArgs>
-		explicit ScopedTest(TArgs&&... args) : fixture(new T(std::forward<TArgs>(args)...)) { fixture->setUp(); }
+	virtual void setUp() = 0;
 
-		~ScopedTest() { fixture->tearDown(); }
+	/**
+	* \brief Release resources
+	*/
+	virtual void tearDown() = 0;
 
-		const T* operator->() const { return fixture.get(); }
-		T* operator->() { return fixture.get(); }
+private:
 
-		std::unique_ptr<T> fixture;
-	};
-	} // namespace Test
-} // namespace OpenViBE
+	TestFixture& operator=(const TestFixture&) = delete;
+	TestFixture(const TestFixture&)            = delete;
+};
+
+/**
+* \struct ScopedTest
+* \author cgarraud (INRIA)
+* \date 2016-02-08
+* \brief Class used to ensure RAII when using TestFixture
+*
+* A scoped object is a wrapper around a test fixture used to
+* ensure RAII when running tests.
+*/
+template <typename T>
+struct ScopedTest
+{
+	template <typename... TArgs>
+	explicit ScopedTest(TArgs&&... args) : fixture(new T(std::forward<TArgs>(args)...)) { fixture->setUp(); }
+
+	~ScopedTest() { fixture->tearDown(); }
+
+	const T* operator->() const { return fixture.get(); }
+	T* operator->() { return fixture.get(); }
+
+	std::unique_ptr<T> fixture;
+};
+}  // namespace Test
+}  // namespace OpenViBE

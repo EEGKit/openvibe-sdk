@@ -9,7 +9,6 @@ using namespace std;
 
 enum class EGenerationTypes { CPP, MATLAB, PYTHON, LUA, UNKNOWN };
 
-
 EGenerationTypes parse_argument(string option)
 {
 	if (option == "--cpp") { return EGenerationTypes::CPP; }
@@ -86,7 +85,6 @@ int main(int argc, char** argv)
 
 	//Now we generate all files that needs to be done
 	for (auto& s : stimulations) { for (auto& g : generators) { g->appendStimulation(s); } }
-
 	for (auto& g : generators) { g->closeFile(); }
 
 	return 0;

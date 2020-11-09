@@ -35,7 +35,8 @@ using namespace /*OpenViBE::*/Plugins;
 OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_EpochAverageMethod, "Epoch Average method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average", size_t(EEpochAverageMethod::Moving));
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average (Immediate)", size_t(EEpochAverageMethod::MovingImmediate));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Moving epoch average (Immediate)",
+													  size_t(EEpochAverageMethod::MovingImmediate));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Epoch block average", size_t(EEpochAverageMethod::Block));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Cumulative average", size_t(EEpochAverageMethod::Cumulative));
 

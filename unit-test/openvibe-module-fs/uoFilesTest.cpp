@@ -113,7 +113,7 @@ int uoFilesTest(int /*argc*/, char* argv[])
 	FS::Files::openOFStream(ostream2, testFile2.c_str());
 	OVT_ASSERT(FS::Files::fileExists(testFile2.c_str()), "Failure to create file in subfolder");
 	OVT_ASSERT(ostream2.is_open(), "Failure to open file");
-	ostream2.close();	
+	ostream2.close();
 	// copy folder
 	testDir = outputDirectory + "uoFilesTest";
 	FS::Files::copyDirectory(testDir.c_str(), testTargetDir.c_str());

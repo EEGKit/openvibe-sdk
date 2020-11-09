@@ -6,24 +6,22 @@
 using namespace EBML;
 using namespace std;
 
-namespace EBML
+namespace EBML {
+namespace {
+class CReaderHelper final : public IReaderHelper
 {
-	namespace
-	{
-		class CReaderHelper final : public IReaderHelper
-		{
-		public:
-			CReaderHelper() { }
-			uint64_t getUInt(const void* buffer, const size_t size) override;
-			int64_t getInt(const void* buffer, const size_t size) override;
-			double getDouble(const void* buffer, const size_t size) override;
-			const char* getStr(const void* buffer, const size_t size) override;
-			void release() override;
+public:
+	CReaderHelper() { }
+	uint64_t getUInt(const void* buffer, const size_t size) override;
+	int64_t getInt(const void* buffer, const size_t size) override;
+	double getDouble(const void* buffer, const size_t size) override;
+	const char* getStr(const void* buffer, const size_t size) override;
+	void release() override;
 
-			std::string m_Str;
-		};
-	} // namespace
-} // namespace EBML
+	std::string m_Str;
+};
+}  // namespace
+}  // namespace EBML
 
 uint64_t CReaderHelper::getUInt(const void* buffer, const size_t size)
 {

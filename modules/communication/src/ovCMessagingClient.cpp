@@ -85,21 +85,18 @@ bool MessagingClient::close() const
 size_t MessagingClient::getParameterCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
-
 	return impl->m_BoxDesc.getParameters()->size();
 }
 
 size_t MessagingClient::getInputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
-
 	return impl->m_BoxDesc.getInputs()->size();
 }
 
 size_t MessagingClient::getOutputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
-
 	return impl->m_BoxDesc.getOutputs()->size();
 }
 
@@ -161,7 +158,6 @@ bool MessagingClient::popEBML(uint64_t& packetId, size_t& index, uint64_t& start
 }
 
 bool MessagingClient::pushAuthentication(const std::string& connectionID) const { return this->pushMessage(AuthenticationMessage(connectionID)); }
-
 bool MessagingClient::pushLog(const ELogLevel logLevel, const std::string& log) const { return this->pushMessage(LogMessage(logLevel, log)); }
 
 bool MessagingClient::pushEBML(const size_t index, const uint64_t startTime, const uint64_t endTime,
@@ -171,5 +167,4 @@ bool MessagingClient::pushEBML(const size_t index, const uint64_t startTime, con
 }
 
 bool MessagingClient::pushSync() const { return this->pushMessage(SyncMessage()); }
-
 bool MessagingClient::waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }

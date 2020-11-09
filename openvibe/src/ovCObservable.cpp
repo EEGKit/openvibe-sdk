@@ -40,4 +40,4 @@ void CObservable::notifyObservers(void* data)
 	}
 }
 
-} // namespace OpenViBE
+}  // namespace OpenViBE

@@ -2,25 +2,24 @@
 
 #include "IReader.h"
 
-namespace EBML
+namespace EBML {
+class EBML_API CReader final : public IReader
 {
-	class EBML_API CReader final : public IReader
-	{
-	public:
+public:
 
-		explicit CReader(IReaderCallback& callback);
-		~CReader() override;
-		bool processData(const void* buffer, const size_t size) override;
-		CIdentifier getCurrentNodeID() const override;
-		size_t getCurrentNodeSize() const override;
-		void release() override;
+	explicit CReader(IReaderCallback& callback);
+	~CReader() override;
+	bool processData(const void* buffer, const size_t size) override;
+	CIdentifier getCurrentNodeID() const override;
+	size_t getCurrentNodeSize() const override;
+	void release() override;
 
-	protected:
+protected:
 
-		IReader* m_impl = nullptr;
+	IReader* m_impl = nullptr;
 
-	private:
+private:
 
-		CReader() = delete;
-	};
-} // namespace EBML
+	CReader() = delete;
+};
+}  // namespace EBML

@@ -48,13 +48,7 @@ class CWriterCallBack : public EBML::IWriterCallBack
 public:
 	CWriterCallBack(const char* filename) { m_file = std::fopen(filename, "wb"); }
 
-	~CWriterCallBack() override
-	{
-		if (m_file)
-		{
-			std::fclose(m_file); // in case release is not called
-		}
-	}
+	~CWriterCallBack() override { if (m_file) { std::fclose(m_file); } }	// in case release is not called
 
 	void write(const void* buffer, const size_t size) override { if (m_file) { std::fwrite(buffer, size_t(size), 1, m_file); } }
 

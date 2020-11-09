@@ -10,11 +10,7 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace FileIO;
 
 CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader() : m_reader(*this) {}
-
-uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency()
-{
-	return 128LL << 32; // the box clock frequency
-}
+uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency() { return 128LL << 32; } // the box clock frequency
 
 bool CBoxAlgorithmGenericStreamReader::initialize()
 {
@@ -260,7 +256,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 	if (top == OVP_NodeId_OpenViBEStream_Buffer)
 	{
-		m_pending = ((m_outputIdx != std::numeric_limits<size_t>::max()) &&
+		m_pending = ((m_outputIdx != std::numeric_limits<size_t>::max()) && 
 					 (m_startTime != std::numeric_limits<uint64_t>::max()) &&
 					 (m_endTime != std::numeric_limits<uint64_t>::max()));
 	}

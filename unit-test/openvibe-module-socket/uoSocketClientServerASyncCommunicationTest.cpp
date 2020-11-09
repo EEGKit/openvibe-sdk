@@ -31,68 +31,67 @@
 
 #include "ovtAssert.h"
 
-namespace
+namespace {
+std::condition_variable gServerStartedCondVar;
+std::mutex gServerStartedMutex;
+std::vector<std::string> gReceivedData;
+bool gServerStarted = false;
+
+// server callback run from a child thread
+void onServerListening(const int port, const size_t expectedPacketCount)
 {
-	std::condition_variable gServerStartedCondVar;
-	std::mutex gServerStartedMutex;
-	std::vector<std::string> gReceivedData;
-	bool gServerStarted = false;
+	gReceivedData.clear();
 
-	// server callback run from a child thread
-	void onServerListening(const int port, const size_t expectedPacketCount)
+	Socket::IConnection* clientConnection = nullptr;
+
+	// create server
+	Socket::IConnectionServer* server = Socket::createConnectionServer();
+	server->listen(port);
+
+	// keep the scope braces here, as it ensures mutex is released
 	{
-		gReceivedData.clear();
-
-		Socket::IConnection* clientConnection = nullptr;
-
-		// create server
-		Socket::IConnectionServer* server = Socket::createConnectionServer();
-		server->listen(port);
-
-		// keep the scope braces here, as it ensures mutex is released
-		{
-			std::lock_guard<std::mutex> lockOnServerStart(gServerStartedMutex);
-			gServerStarted = true;
-		}
-
-		// notify main thread that the server is created so that it can connect a single client
-		gServerStartedCondVar.notify_one();
-
-		// loop until all packet are received
-		while (gReceivedData.size() < expectedPacketCount)
-		{
-			if (server->isReadyToReceive()) { clientConnection = server->accept(); }
-
-			if (clientConnection && clientConnection->isReadyToReceive())
-			{
-				size_t dataSize       = 0;
-				size_t bytesToReceive = sizeof(dataSize);
-				size_t bytesReceived  = 0;
-				char dataBuffer[32];
-
-				// first receive data size
-				while (bytesReceived < bytesToReceive) { bytesReceived += clientConnection->receiveBuffer(&dataSize, bytesToReceive - bytesReceived); }
-
-				// then receive data
-				bytesToReceive = dataSize;
-				bytesReceived  = 0;
-
-				while (bytesReceived < bytesToReceive) { bytesReceived += clientConnection->receiveBuffer(dataBuffer, bytesToReceive - bytesReceived); }
-
-				gReceivedData.push_back(std::string(dataBuffer, dataSize));
-			}
-		}
-
-		server->release();
+		std::lock_guard<std::mutex> lockOnServerStart(gServerStartedMutex);
+		gServerStarted = true;
 	}
 
-	void sendData(Socket::IConnectionClient* client, void* data, const size_t size)
-	{
-		const size_t bytesToSend = size;
-		size_t bytesSent         = 0;
+	// notify main thread that the server is created so that it can connect a single client
+	gServerStartedCondVar.notify_one();
 
-		while (bytesSent < bytesToSend) { bytesSent += client->sendBuffer(data, bytesToSend - bytesSent); }
+	// loop until all packet are received
+	while (gReceivedData.size() < expectedPacketCount)
+	{
+		if (server->isReadyToReceive()) { clientConnection = server->accept(); }
+
+		if (clientConnection && clientConnection->isReadyToReceive())
+		{
+			size_t dataSize       = 0;
+			size_t bytesToReceive = sizeof(dataSize);
+			size_t bytesReceived  = 0;
+			char dataBuffer[32];
+
+			// first receive data size
+			while (bytesReceived < bytesToReceive) { bytesReceived += clientConnection->receiveBuffer(&dataSize, bytesToReceive - bytesReceived); }
+
+			// then receive data
+			bytesToReceive = dataSize;
+			bytesReceived  = 0;
+
+			while (bytesReceived < bytesToReceive) { bytesReceived += clientConnection->receiveBuffer(dataBuffer, bytesToReceive - bytesReceived); }
+
+			gReceivedData.push_back(std::string(dataBuffer, dataSize));
+		}
 	}
+
+	server->release();
+}
+
+void sendData(Socket::IConnectionClient* client, void* data, const size_t size)
+{
+	const size_t bytesToSend = size;
+	size_t bytesSent         = 0;
+
+	while (bytesSent < bytesToSend) { bytesSent += client->sendBuffer(data, bytesToSend - bytesSent); }
+}
 }	// namespace 
 
 int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])

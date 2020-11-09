@@ -12,8 +12,7 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace std;
 
-CScenarioManager::CScenarioManager(const IKernelContext& ctx)
-	: TKernelObject<IScenarioManager>(ctx) {}
+CScenarioManager::CScenarioManager(const IKernelContext& ctx) : TKernelObject<IScenarioManager>(ctx) {}
 
 CScenarioManager::~CScenarioManager() { for (auto i = m_scenarios.begin(); i != m_scenarios.end(); ++i) { delete i->second; } }
 
@@ -72,8 +71,7 @@ bool CScenarioManager::createScenario(CIdentifier& scenarioID)
 	return true;
 }
 
-bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuffer& iMemoryBuffer,
-									  const CIdentifier& scenarioImporterAlgorithmID)
+bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID)
 {
 	scenarioID = OV_UndefinedIdentifier;
 
@@ -175,8 +173,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 	return true;
 }
 
-bool CScenarioManager::importScenarioFromFile(CIdentifier& scenarioID, const CString& fileName,
-											  const CIdentifier& scenarioImporterAlgorithmID)
+bool CScenarioManager::importScenarioFromFile(CIdentifier& scenarioID, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmID)
 {
 	scenarioID = OV_UndefinedIdentifier;
 

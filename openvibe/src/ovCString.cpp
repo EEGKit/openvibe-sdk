@@ -68,4 +68,4 @@ const char* CString::toASCIIString() const { return m_impl->m_Value.c_str(); }
 
 size_t CString::length() const { return m_impl->m_Value.length(); }
 
-} // namespace OpenViBE
+}  // namespace OpenViBE

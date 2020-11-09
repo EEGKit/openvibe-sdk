@@ -152,4 +152,4 @@ protected:
 
 	SStringImpl* m_impl = nullptr; ///< The string implementation
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

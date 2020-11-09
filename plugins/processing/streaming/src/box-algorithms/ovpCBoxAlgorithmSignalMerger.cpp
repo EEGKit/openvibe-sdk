@@ -8,11 +8,8 @@ using namespace /*OpenViBE::Plugins::*/Streaming;
 bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
-
 	for (size_t i = 0; i < nInput; ++i) { m_decoders.push_back(new Toolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>(*this, i)); }
-
 	m_encoder = new Toolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>(*this, 0);
-
 	return true;
 }
 
@@ -122,14 +119,9 @@ bool CBoxAlgorithmSignalMerger::process()
 			if (m_decoders[i]->isEndReceived()) { nEnd++; }
 		}
 
-		OV_ERROR_UNLESS_KRF(!nHeader || nHeader == nInput,
-							"Received [" << nHeader << "] headers for [" << nInput << "] declared inputs", ErrorType::BadInput);
-
-		OV_ERROR_UNLESS_KRF(!nBuffer || nBuffer == nInput,
-							"Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", ErrorType::BadInput);
-
-		OV_ERROR_UNLESS_KRF(!nEnd || nEnd == nInput,
-							"Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!nHeader || nHeader == nInput, "Received [" << nHeader << "] headers for [" << nInput << "] declared inputs", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!nBuffer || nBuffer == nInput, "Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!nEnd || nEnd == nInput, "Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", ErrorType::BadInput);
 
 		if (nHeader)
 		{

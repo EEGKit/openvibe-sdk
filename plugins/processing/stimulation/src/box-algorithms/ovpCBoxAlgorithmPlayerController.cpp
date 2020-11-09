@@ -57,8 +57,7 @@ bool CBoxAlgorithmPlayerController::process()
 				if (stimSet->getStimulationIdentifier(j) == m_stimulationID)
 				{
 					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
-							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) <<
-							"] causing action ["
+							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) << "] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]\n";
 
 					bool res = false;
@@ -67,9 +66,8 @@ bool CBoxAlgorithmPlayerController::process()
 					if (m_actionID == OV_TypeId_PlayerAction_Pause) { res = this->getPlayerContext().pause(); }
 					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = this->getPlayerContext().forward(); }
 
-					OV_ERROR_UNLESS_KRF(res,
-										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction,
-											m_actionID) << "]",
+					OV_ERROR_UNLESS_KRF(res, "Failed to request player action ["
+										<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]",
 										ErrorType::BadConfig);
 				}
 			}

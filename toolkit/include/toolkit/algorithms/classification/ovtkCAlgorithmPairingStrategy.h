@@ -14,49 +14,47 @@
 
 typedef int (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+extern OVTK_API void registerClassificationComparisonFunction(const CIdentifier& classID, fClassifierComparison comparision);
+extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const CIdentifier& classID);
+
+
+class OVTK_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
 {
-	namespace Toolkit
+public:
+	bool process() override;
+	void release() override { delete this; }
+
+	virtual bool designArchitecture(const CIdentifier& id, const size_t nClass) = 0;
+	bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
+	bool classify(const IFeatureVector& rFeatureVector, double& classId, IVector& distance, IVector& probability) override = 0;
+	XML::IXMLNode* saveConfig() override = 0;
+	bool loadConfig(XML::IXMLNode* pConfiguratioNode) override = 0;
+	_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
+	size_t getNProbabilities() override = 0;
+	size_t getNDistances() override = 0;
+
+
+protected:
+	//  std::vector <double> m_classes;
+	//The vector will be use when the user will be able to specify class label
+	CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
+};
+
+class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
+{
+public:
+	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
-		extern OVTK_API void registerClassificationComparisonFunction(const CIdentifier& classID, fClassifierComparison comparision);
-		extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const CIdentifier& classID);
+		CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
+		prototype.addInputParameter(
+			OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", Kernel::ParameterType_Identifier);
+		prototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
+		return true;
+	}
 
-
-		class OVTK_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
-		{
-		public:
-			bool process() override;
-			void release() override { delete this; }
-
-			virtual bool designArchitecture(const CIdentifier& id, const size_t nClass) = 0;
-			bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
-			bool classify(const IFeatureVector& rFeatureVector, double& classId, IVector& distance, IVector& probability) override = 0;
-			XML::IXMLNode* saveConfig() override = 0;
-			bool loadConfig(XML::IXMLNode* pConfiguratioNode) override = 0;
-			_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
-			size_t getNProbabilities() override = 0;
-			size_t getNDistances() override = 0;
-
-
-		protected:
-			//  std::vector <double> m_classes;
-			//The vector will be use when the user will be able to specify class label
-			CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
-		};
-
-		class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
-		{
-		public:
-			bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
-			{
-				CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
-				prototype.addInputParameter(
-					OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", Kernel::ParameterType_Identifier);
-				prototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
-				return true;
-			}
-
-			_IsDerivedFromClass_(CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
-		};
-	}  // namespace Toolkit
+	_IsDerivedFromClass_(CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
+};
+}  // namespace Toolkit
 }  // namespace OpenViBE

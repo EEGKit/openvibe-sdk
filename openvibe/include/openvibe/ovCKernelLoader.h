@@ -2,24 +2,23 @@
 
 #include "ovIKernelLoader.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+class OV_API CKernelLoader final : public IKernelLoader
 {
-	class OV_API CKernelLoader final : public IKernelLoader
-	{
-	public:
+public:
 
-		CKernelLoader();
-		~CKernelLoader() override;
-		bool load(const CString& filename, CString* error = nullptr) override;
-		bool unload(CString* error = nullptr) override;
-		bool initialize() override;
-		bool getKernelDesc(Kernel::IKernelDesc*& desc) override;
-		bool uninitialize() override;
+	CKernelLoader();
+	~CKernelLoader() override;
+	bool load(const CString& filename, CString* error = nullptr) override;
+	bool unload(CString* error = nullptr) override;
+	bool initialize() override;
+	bool getKernelDesc(Kernel::IKernelDesc*& desc) override;
+	bool uninitialize() override;
 
-		_IsDerivedFromClass_Final_(IKernelLoader, OV_ClassId_KernelLoaderBridge)
+	_IsDerivedFromClass_Final_(IKernelLoader, OV_ClassId_KernelLoaderBridge)
 
-	private:
+private:
 
-		IKernelLoader* m_impl = nullptr; ///< Internal implementation
-	};
-} // namespace OpenViBE
+	IKernelLoader* m_impl = nullptr; ///< Internal implementation
+};
+}  // namespace OpenViBE

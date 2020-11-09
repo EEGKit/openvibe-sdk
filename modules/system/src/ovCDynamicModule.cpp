@@ -12,55 +12,54 @@
 
 using namespace System;
 
-namespace
+namespace {
+const std::map<CDynamicModule::ELogErrorCodes, std::string> ERROR_MAP =
 {
-	const std::map<CDynamicModule::ELogErrorCodes, std::string> ERROR_MAP =
-	{
-		{ CDynamicModule::LogErrorCodes_ModuleAlreadyLoaded, "A module is already loaded." },
-		{ CDynamicModule::LogErrorCodes_NoModuleLoaded, "No module loaded." },
-		{ CDynamicModule::LogErrorCodes_FilenameEmpty, "The filename is empty." },
-		{ CDynamicModule::LogErrorCodes_FolderPathInvalid, "The folder path is invalid." },
-		{ CDynamicModule::LogErrorCodes_RegistryQueryFailed, "The registry query is invalid." },
-		{ CDynamicModule::LogErrorCodes_UnloadModuleFailed, "Fail to unload the module." },
-		{ CDynamicModule::LogErrorCodes_FailToLoadModule, "Fail to load the module." },
-		{ CDynamicModule::LogErrorCodes_InvalidSymbol, "The symbol is invalid." },
-		{ CDynamicModule::LogErrorCodes_ModuleNotFound, "Module not found." }
-	};
+	{ CDynamicModule::LogErrorCodes_ModuleAlreadyLoaded, "A module is already loaded." },
+	{ CDynamicModule::LogErrorCodes_NoModuleLoaded, "No module loaded." },
+	{ CDynamicModule::LogErrorCodes_FilenameEmpty, "The filename is empty." },
+	{ CDynamicModule::LogErrorCodes_FolderPathInvalid, "The folder path is invalid." },
+	{ CDynamicModule::LogErrorCodes_RegistryQueryFailed, "The registry query is invalid." },
+	{ CDynamicModule::LogErrorCodes_UnloadModuleFailed, "Fail to unload the module." },
+	{ CDynamicModule::LogErrorCodes_FailToLoadModule, "Fail to load the module." },
+	{ CDynamicModule::LogErrorCodes_InvalidSymbol, "The symbol is invalid." },
+	{ CDynamicModule::LogErrorCodes_ModuleNotFound, "Module not found." }
+};
 
 #if defined TARGET_OS_Windows
-	std::vector<std::string> split(char* str, const char* delim)
+std::vector<std::string> split(char* str, const char* delim)
+{
+	char* token = strtok(str, delim);
+
+	std::vector<std::string> result;
+
+	while (token != nullptr)
 	{
-		char* token = strtok(str, delim);
-
-		std::vector<std::string> result;
-
-		while (token != nullptr)
-		{
-			result.push_back(token);
-			token = strtok(nullptr, delim);
-		}
-
-		return result;
+		result.push_back(token);
+		token = strtok(nullptr, delim);
 	}
 
-	std::string formatWindowsError(const DWORD code)
-	{
-		LPTSTR text;
+	return result;
+}
 
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
-					  FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
-					  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-					  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
-					  code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-					  LPTSTR(&text),                        // output
-					  0,                                           // minimum size for output buffer
-					  nullptr
-		);                                           // arguments - see note
+std::string formatWindowsError(const DWORD code)
+{
+	LPTSTR text;
 
-		return std::string(text);
-	}
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
+				  FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
+				  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+				  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+				  code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+				  LPTSTR(&text),                        // output
+				  0,                                           // minimum size for output buffer
+				  nullptr
+	);                                           // arguments - see note
+
+	return std::string(text);
+}
 #endif
-} // namespace
+}  // namespace
 
 const char* CDynamicModule::getErrorString(size_t errorCode)
 {
@@ -69,7 +68,6 @@ const char* CDynamicModule::getErrorString(size_t errorCode)
 }
 
 const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0]; }
-
 size_t CDynamicModule::getLastError() const { return m_ErrorCode; }
 
 CDynamicModule::CDynamicModule()
@@ -283,7 +281,7 @@ bool CDynamicModule::unload()
 		this->setError(LogErrorCodes_NoModuleLoaded);
 		return false;
 	}
-	
+
 	// If the flag m_shouldFreeModule, set to true per default, is set to false,
 	// the module is not unloaded.
 	// This flag was first set for Enobio3G driver which dll freezes when unloaded

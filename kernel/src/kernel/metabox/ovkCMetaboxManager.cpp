@@ -13,68 +13,66 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace Metabox;
 using namespace std;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CMetaboxManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
 {
-	namespace Kernel
+public:
+
+	CMetaboxManagerEntryEnumeratorCallBack(const IKernelContext& ctx, CMetaboxManager& metaboxManager)
+		: TKernelObject<IObject>(ctx), m_manager(metaboxManager) { m_n = 0; }
+
+	bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 	{
-		class CMetaboxManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
+		if (rAttributes.isFile())
 		{
-		public:
+			const char* fullFileName = rEntry.getName();
 
-			CMetaboxManagerEntryEnumeratorCallBack(const IKernelContext& ctx, CMetaboxManager& metaboxManager)
-				: TKernelObject<IObject>(ctx), m_manager(metaboxManager) { m_n = 0; }
-
-			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
+			CIdentifier scenarioID, metaboxId, metaboxHash;
+			this->getKernelContext().getScenarioManager().
+				  importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+			if (scenarioID != OV_UndefinedIdentifier)
 			{
-				if (rAttributes.isFile())
+				IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
+				const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID));
+				if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 				{
-					const char* fullFileName = rEntry.getName();
-
-					CIdentifier scenarioID, metaboxId, metaboxHash;
-					this->getKernelContext().getScenarioManager().
-						  importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
-					if (scenarioID != OV_UndefinedIdentifier)
+					const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+					if (!hasHash)
 					{
-						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
-						const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID));
-						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
-						{
-							const bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
-							if (!hasHash)
-							{
-								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.str() <<
-										" has no Hash in the scenario " << fullFileName << "\n";
-							}
-							m_manager.setMetaboxFilePath(metaboxId, CString(fullFileName));
-							m_manager.setMetaboxHash(metaboxId, metaboxHash);
-							m_manager.setMetaboxObjectDesc(metaboxId, new CMetaboxObjectDesc(metaboxId.str().c_str(), metaboxScenario));
-							m_n++;
-						}
-						else
-						{
-							this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox file " << fullFileName <<
-									" is missing elements. Please check it.\n";
-						}
+						this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.str() <<
+								" has no Hash in the scenario " << fullFileName << "\n";
 					}
-					this->getKernelContext().getScenarioManager().releaseScenario(scenarioID);
+					m_manager.setMetaboxFilePath(metaboxId, CString(fullFileName));
+					m_manager.setMetaboxHash(metaboxId, metaboxHash);
+					m_manager.setMetaboxObjectDesc(metaboxId, new CMetaboxObjectDesc(metaboxId.str().c_str(), metaboxScenario));
+					m_n++;
 				}
-				return true;
+				else
+				{
+					this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox file " << fullFileName <<
+							" is missing elements. Please check it.\n";
+				}
 			}
+			this->getKernelContext().getScenarioManager().releaseScenario(scenarioID);
+		}
+		return true;
+	}
 
-			size_t resetMetaboxCount()
-			{
-				const size_t res = m_n;
-				m_n              = 0;
-				return res;
-			}
+	size_t resetMetaboxCount()
+	{
+		const size_t res = m_n;
+		m_n              = 0;
+		return res;
+	}
 
-			_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
-		protected:
-			CMetaboxManager& m_manager;
-			size_t m_n;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+	_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
+protected:
+	CMetaboxManager& m_manager;
+	size_t m_n;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE
 
 CMetaboxManager::CMetaboxManager(const IKernelContext& ctx) : TKernelObject<IMetaboxManager>(ctx)
 {

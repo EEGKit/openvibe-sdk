@@ -35,7 +35,6 @@ bool CBoxAlgorithmTimeout::uninitialize()
 }
 /*******************************************************************************/
 
-
 bool CBoxAlgorithmTimeout::processClock(Kernel::IMessageClock& /*messageClock*/)
 {
 	// if there was nothing received on the input for a period of time we raise the
@@ -52,13 +51,8 @@ bool CBoxAlgorithmTimeout::processClock(Kernel::IMessageClock& /*messageClock*/)
 }
 /*******************************************************************************/
 
-
-uint64_t CBoxAlgorithmTimeout::getClockFrequency()
-{
-	return 16LL << 32; // the box clock frequency
-}
+uint64_t CBoxAlgorithmTimeout::getClockFrequency() { return 16LL << 32; }	// the box clock frequency
 /*******************************************************************************/
-
 
 bool CBoxAlgorithmTimeout::processInput(const size_t /*index*/)
 {
@@ -107,6 +101,6 @@ bool CBoxAlgorithmTimeout::process()
 	return true;
 }
 
-} // namespace Stimulation
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE
