@@ -3,6 +3,7 @@
 #include "IConnection.h"
 
 #include <array>
+#include <cstdio>
 
 namespace Socket
 {

@@ -83,8 +83,10 @@ my $update_packages_command = '';
 my $package_install_command = '';
 my $add_repository_command  = '';
 
-my $lsb_distributor = `lsb_release --id --short`;
-my $lsb_release = `lsb_release --release --short`;
+my $os_release = `cat /etc/os-release`;
+# Check for NAME= and VERSION_ID=
+# Take into account distros placing quotes around values
+my ($lsb_distributor, $lsb_release) = ($os_release =~ m/NAME=["'\`]*([a-zA-Z]+).*VERSION_ID=["'\`]*([0-9.]+)/s);
 
 if ($lsb_distributor =~ 'Ubuntu') {
   if (!$no_install) {
@@ -104,17 +106,25 @@ if ($lsb_distributor =~ 'Ubuntu') {
       || $lsb_release =~ '19.10') {
     $distribution = 'Ubuntu ' . $lsb_release;
   }
+} elsif ($lsb_distributor =~ 'Fedora') {
+  if (!$no_install) {
+    if ($assume_yes) {
+      $package_install_command = 'sudo dnf -y install';
+    } else {
+      $package_install_command = 'sudo dnf install';
+    }
+  }
+  $distribution = 'Fedora';
 }
 
 $distribution eq $unsupported_distribution and die('This distribution is unsupported');
 
 print "Installing dependencies for: $distribution\n";
-
+print "Install command: $package_install_command\n";
 # Perform steps before installing packages
 opendir(my $dir_handle, $helper_script_dir) or die("unable to open $helper_script_dir");
 while(my $filename = readdir($dir_handle)) {
   if($filename =~ /^linux-preinstall.*pl/) {
-	print "Running $helper_script_dir/$filename ...\n";
 	open(my $pl_file_handle, '<', "$helper_script_dir/$filename") 
     		or die "Unable to open file, $helper_script_dir/$filename";
 	undef $/;
@@ -130,8 +140,10 @@ my $pkg_file = "";
 
 if ($distribution eq 'Ubuntu 14.04') {
   $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
-} else {
+} elsif ($distribution =~ 'Ubuntu') {
   $pkg_file = "$manifest_dir/linux-dependencies-ubuntu16_plus.txt";
+} elsif ($distribution eq 'Fedora') {
+  $pkg_file = "$manifest_dir/linux-dependencies-fedora.txt";
 }
 
 # Install actual packages
@@ -152,11 +164,15 @@ close($pkg_file_handle) or warn "Unable to close $pkg_file";
 
 if (!$no_install) {
   # Update package list
-  print "Updating package database...\n";
-  system($add_repository_command);
-  ($CHILD_ERROR != 0) and die('Failed to add additional repositories');
-  system($update_packages_command);
-  ($CHILD_ERROR != 0) and die('Failed to update the package databases');
+  if ($add_repository_command) {
+    print "Updating package database...\n";
+    system($add_repository_command);
+    ($CHILD_ERROR != 0) and die('Failed to add additional repositories');
+  }
+  if ($update_packages_command) {
+    system($update_packages_command);
+    ($CHILD_ERROR != 0) and die('Failed to update the package databases');
+  }
 
   # Install the packages
   print "Will install following packages:\n";
