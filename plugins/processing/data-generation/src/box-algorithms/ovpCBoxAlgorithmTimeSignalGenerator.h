@@ -21,7 +21,7 @@ public:
 	bool initialize() override;
 	bool uninitialize() override;
 
-	bool processClock(Kernel::IMessageClock& messageClock) override;
+	bool processClock(Kernel::CMessageClock& msg) override;
 	bool process() override;
 
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeSignalGenerator)
