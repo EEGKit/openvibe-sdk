@@ -68,10 +68,7 @@
 #include "kernel/error/ovErrorType.h"
 
 #include "kernel/player/ovIBoxAlgorithmContext.h"
-#include "kernel/player/ovIMessage.h"
-#include "kernel/player/ovIMessageClock.h"
-#include "kernel/player/ovIMessageEvent.h"
-#include "kernel/player/ovIMessageSignal.h"
+#include "kernel/player/CMessageClock.hpp"
 #include "kernel/player/ovIPlayer.h"
 #include "kernel/player/ovIPlayerContext.h"
 #include "kernel/player/ovIPlayerManager.h"

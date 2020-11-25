@@ -32,7 +32,7 @@ bool CBoxAlgorithmTimeSignalGenerator::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& /*messageClock*/)
+bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& /*msg*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

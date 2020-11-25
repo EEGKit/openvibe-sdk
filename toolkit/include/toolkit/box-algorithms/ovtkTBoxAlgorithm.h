@@ -34,22 +34,10 @@ private:
 		return uninitialize();
 	}
 
-	virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, CMessageEvent& messageEvent)
+	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, Kernel::CMessageClock& msg)
 	{
 		CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
-		return processEvent(messageEvent);
-	}
-
-	virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, CMessageSignal& messageSignal)
-	{
-		CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
-		return processSignal(messageSignal);
-	}
-
-	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, CMessageClock& messageClock)
-	{
-		CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
-		return processClock(messageClock);
+		return processClock(msg);
 	}
 
 	virtual bool processInput(Kernel::IBoxAlgorithmContext& ctx, const size_t index)
@@ -71,9 +59,7 @@ public:
 	virtual uint64_t getClockFrequency() { return 0; }
 	virtual bool initialize() { return true; }
 	virtual bool uninitialize() { return true; }
-	virtual bool processEvent(CMessageEvent& /*messageEvent*/) { return false; }
-	virtual bool processSignal(CMessageSignal& /*messageSignal*/) { return false; }
-	virtual bool processClock(CMessageClock& /*messageClock*/) { return false; }
+	virtual bool processClock(Kernel::CMessageClock& /*msg*/) { return false; }
 	virtual bool processInput(const size_t /*index*/) { return false; }
 	virtual bool process() = 0;
 

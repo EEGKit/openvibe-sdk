@@ -20,7 +20,7 @@ public:
 	uint64_t getClockFrequency() override { return 128LL << 32; } // the box clock frequency
 	bool initialize() override;
 	bool uninitialize() override;
-	bool processClock(CMessageClock& messageClock) override;
+	bool processClock(Kernel::CMessageClock& msg) override;
 	bool process() override;
 
 	bool processStreamedMatrix();

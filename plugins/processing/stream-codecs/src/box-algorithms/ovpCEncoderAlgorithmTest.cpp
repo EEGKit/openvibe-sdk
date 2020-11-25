@@ -90,7 +90,7 @@ bool CEncoderAlgorithmTest::uninitialize()
 	return true;
 }
 
-bool CEncoderAlgorithmTest::processClock(IMessageClock& /*messageClock*/)
+bool CEncoderAlgorithmTest::processClock(Kernel::CMessageClock& /*msg*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

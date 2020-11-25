@@ -16,9 +16,7 @@ public:
 	// virtual uint64_t getClockFrequency();
 	bool initialize() override;
 	bool uninitialize() override;
-	// virtual bool processEvent(CMessageEvent& messageEvent);
-	// virtual bool processSignal(CMessageSignal& messageSignal);
-	// virtual bool processClock(CMessageClock& messageClock);
+	// virtual bool processClock(Kernel::CMessageClock& msg);
 	bool processInput(const size_t index) override;
 	bool process() override;
 

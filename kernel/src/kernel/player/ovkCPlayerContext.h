@@ -13,13 +13,12 @@ public:
 
 	CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox);
 	~CPlayerContext() override { }
-	bool sendSignal(const CMessageSignal& messageSignal) override;
-	bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier& dstID) override;
-	bool sendMessage(const CMessageEvent& messageEvent, const CIdentifier* dstID, const size_t nDstID) override;
+	
 	uint64_t getCurrentTime() const override;
 	uint64_t getCurrentLateness() const override;
 	double getCurrentCPUUsage() const override;
 	double getCurrentFastForwardMaximumFactor() const override;
+
 	bool stop() override;
 	bool pause() override;
 	bool play() override;

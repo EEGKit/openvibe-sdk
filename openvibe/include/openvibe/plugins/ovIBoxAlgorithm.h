@@ -4,9 +4,6 @@
 
 namespace OpenViBE {
 namespace Kernel {
-class IMessageClock;
-class IMessageEvent;
-class IMessageSignal;
 
 /**
  * \brief This enum lists all the way a box can be modified
@@ -22,10 +19,6 @@ enum class EBoxModification
 };
 }  // namespace Kernel
 
-// for backward compatibility
-typedef Kernel::IMessageClock CMessageClock;
-typedef Kernel::IMessageEvent CMessageEvent;
-typedef Kernel::IMessageSignal CMessageSignal;
 
 namespace Kernel {
 class IBoxAlgorithmContext;
@@ -124,44 +117,9 @@ public:
 	//@{
 
 	/**
-	 * \brief Reaction to an event launched by another box
-	 * \param ctx [in] : the box algorithm context to use
-	 * \param msgEvent [in] : the message the box just received
-	 * \return \e true when the message is processed.
-	 * \return \e false when the message is not processed.
-	 * \note Default implementation returns \e false
-	 *
-	 * This function is called by the OpenViBE kernel when
-	 * another box tries to send an event message to this
-	 * box. This event message is described in the
-	 * msgEvent parameter and can be interpreted by this
-	 * algorithm.
-	 *
-	 * \sa IBoxAlgorithmContext
-	 */
-	virtual bool processEvent(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageEvent& msgEvent) { return false; }
-	/**
-	 * \brief Reaction to a signal
-	 * \param ctx [in] : the box algorithm context to use
-	 * \param msgSignal [in] : the signal the box just received
-	 * \return \e true when the message is processed.
-	 * \return \e false when the message is not processed.
-	 * \note Default implementation returns \e false
-	 *
-	 * This function is called by the OpenViBE kernel when
-	 * it has sent a signal. Signal are special messages,
-	 * mainly sent by the kernel to all of the OpenViBE
-	 * boxes in order to tell them it is about to start,
-	 * processing, stop processing, load a new scenario
-	 * and so on...
-	 *
-	 * \sa Kernel::IBoxAlgorithmContext
-	 */
-	virtual bool processSignal(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageSignal& msgSignal) { return false; }
-	/**
 	 * \brief Reaction to a clock tick
 	 * \param ctx [in] : the box algorithm context to use
-	 * \param msgClock [in] : the clock message the box received
+	 * \param msg [in] : the clock message the box received
 	 * \return \e true when the message is processed.
 	 * \return \e false when the message is not processed.
 	 * \note Default implementation returns \e false
@@ -178,7 +136,7 @@ public:
 	 * \sa Kernel::IBoxAlgorithmContext
 	 * \sa getClockFrequency
 	 */
-	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, Kernel::IMessageClock& msgClock) { return false; }
+	virtual bool processClock(Kernel::IBoxAlgorithmContext& ctx, Kernel::CMessageClock& msg) { return false; }
 	/**
 	 * \brief Reaction to an input update
 	 * \param ctx [in] : the box algorithm context to use
