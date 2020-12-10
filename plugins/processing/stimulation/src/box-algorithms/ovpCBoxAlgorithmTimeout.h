@@ -22,7 +22,7 @@ public:
 	void release() override { delete this; }
 	bool initialize() override;
 	bool uninitialize() override;
-	bool processClock(CMessageClock& messageClock) override;
+	bool processClock(Kernel::CMessageClock& msg) override;
 	bool processInput(const size_t index) override;
 	uint64_t getClockFrequency() override;
 	bool process() override;
@@ -87,6 +87,6 @@ public:
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc)
 };
 
-} // namespace Stimulation
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

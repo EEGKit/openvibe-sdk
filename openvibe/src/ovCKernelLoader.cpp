@@ -16,30 +16,29 @@ using namespace /*OpenViBE::*/Kernel;
 //___________________________________________________________________//
 //                                                                   //
 
-namespace OpenViBE
+namespace OpenViBE {
+class CKernelLoaderBase : public IKernelLoader
 {
-	class CKernelLoaderBase : public IKernelLoader
-	{
-	public:
+public:
 
-		CKernelLoaderBase() { }
-		bool initialize() override;
-		bool getKernelDesc(IKernelDesc*& desc) override;
-		bool uninitialize() override;
-		virtual void release();
+	CKernelLoaderBase() { }
+	bool initialize() override;
+	bool getKernelDesc(IKernelDesc*& desc) override;
+	bool uninitialize() override;
+	virtual void release();
 
-		_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
 
-		virtual bool isOpen() = 0;
+	virtual bool isOpen() = 0;
 
-	protected:
+protected:
 
-		CString m_filename;
-		bool (*m_onInitializeCB)()                 = nullptr;
-		bool (*m_onUninitializeCB)()               = nullptr;
-		bool (*m_onGetKernelDescCB)(IKernelDesc*&) = nullptr;
-	};
-} // namespace OpenViBE
+	CString m_filename;
+	bool (*m_onInitializeCB)()                 = nullptr;
+	bool (*m_onUninitializeCB)()               = nullptr;
+	bool (*m_onGetKernelDescCB)(IKernelDesc*&) = nullptr;
+};
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -69,8 +68,7 @@ void CKernelLoaderBase::release() { delete this; }
 //___________________________________________________________________//
 //                                                                   //
 
-namespace OpenViBE
-{
+namespace OpenViBE {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	class CKernelLoaderLinux : public CKernelLoaderBase
 	{
@@ -89,23 +87,23 @@ namespace OpenViBE
 	};
 
 #elif defined TARGET_OS_Windows
-	class CKernelLoaderWindows final : public CKernelLoaderBase
-	{
-	public:
-		CKernelLoaderWindows() : m_fileHandle(nullptr) { }
-		bool load(const CString& filename, CString* error) override;
-		bool unload(CString* error) override;
+class CKernelLoaderWindows final : public CKernelLoaderBase
+{
+public:
+	CKernelLoaderWindows() : m_fileHandle(nullptr) { }
+	bool load(const CString& filename, CString* error) override;
+	bool unload(CString* error) override;
 
-	protected:
-		bool isOpen() override { return m_fileHandle != nullptr; }
+protected:
+	bool isOpen() override { return m_fileHandle != nullptr; }
 
-		HMODULE m_fileHandle;
-	};
+	HMODULE m_fileHandle;
+};
 
 #else
 
 #endif
-} // namespace OpenViBE
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -246,11 +244,7 @@ CKernelLoader::CKernelLoader()
 CKernelLoader::~CKernelLoader() { delete m_impl; }
 
 bool CKernelLoader::load(const CString& filename, CString* error) { return m_impl ? m_impl->load(filename, error) : false; }
-
 bool CKernelLoader::unload(CString* error) { return m_impl ? m_impl->unload(error) : false; }
-
 bool CKernelLoader::initialize() { return m_impl ? m_impl->initialize() : false; }
-
 bool CKernelLoader::getKernelDesc(IKernelDesc*& desc) { return m_impl ? m_impl->getKernelDesc(desc) : false; }
-
 bool CKernelLoader::uninitialize() { return m_impl ? m_impl->uninitialize() : false; }

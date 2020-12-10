@@ -35,6 +35,7 @@ SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 ADD_DEFINITIONS( -DPROJECT_VERSION="${PROJECT_VERSION}" )
 FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp)
 ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
 
 # ----------------------
 # External dependecies 
@@ -50,9 +51,7 @@ INCLUDE("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 

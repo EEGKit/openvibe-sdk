@@ -23,17 +23,15 @@
 
 #include <string>
 
-namespace OpenViBE
-{
-	namespace Test
-	{
-		void printError(const char* expression, const char* message, const char* file, const int line);
-		void printError(const char* expression, const std::string& message, const char* file, const int line);
-		void printError(const char* expression, const std::ostream& message, const char* file, const int line);
-		void printExpressionPair(const char* str1, const char* str2);
-		std::string buildExpressionFromPair(const char* str1, const char* str2);
-	}
-}
+namespace OpenViBE {
+namespace Test {
+void printError(const char* expression, const char* message, const char* file, const int line);
+void printError(const char* expression, const std::string& message, const char* file, const int line);
+void printError(const char* expression, const std::ostream& message, const char* file, const int line);
+void printExpressionPair(const char* str1, const char* str2);
+std::string buildExpressionFromPair(const char* str1, const char* str2);
+}  // namespace Test
+}  // namespace OpenViBE
 
 /**
 * OVT_ASSERT_PRIV: Assess expression and

@@ -30,116 +30,113 @@ using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 
-namespace
-{
-	// because std::tolower has multiple signatures,
-	// it can not be easily used in std::transform
-	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class TCharT>
-	TCharT ToLower(TCharT c) { return std::tolower(c); }
-} // namespace
+namespace {
+// because std::tolower has multiple signatures,
+// it can not be easily used in std::transform
+// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
+template <class TCharT>
+TCharT ToLower(TCharT c) { return std::tolower(c); }
+}  // namespace
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Kernel {
+class CConfigurationManagerEntryEnumeratorCallBack final : public FS::IEntryEnumeratorCallBack
 {
-	namespace Kernel
+public:
+
+	CConfigurationManagerEntryEnumeratorCallBack(ILogManager& logManager, IErrorManager& errorManager, IConfigurationManager& configManger)
+		: m_logManager(logManager), m_errorManager(errorManager), m_configManager(configManger) { }
+
+	static std::string reduce(const std::string& value)
 	{
-		class CConfigurationManagerEntryEnumeratorCallBack final : public FS::IEntryEnumeratorCallBack
+		if (value.length() == 0) { return ""; }
+
+		size_t i = 0;
+		size_t j = value.length() - 1;
+
+		while (i < value.length() && (value[i] == '\t' || value[i] == ' ')) { i++; }
+		while (j >= i && (value[j] == '\t' || value[j] == ' ')) { j--; }
+
+		return value.substr(i, j - i + 1);
+	}
+
+	bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& /*attributes*/) override
+	{
+		std::ifstream file;
+		FS::Files::openIFStream(file, rEntry.getName());
+
+		OV_ERROR_UNLESS(file.good(), "Could not open file " << rEntry.getName(), ErrorType::ResourceNotFound, false, m_errorManager, m_logManager);
+		m_logManager << LogLevel_Trace << "Processing configuration file " << rEntry.getName() << "\n";
+
+		do
 		{
-		public:
+			std::string line;
+			std::string linePart;
+			size_t eq;
 
-			CConfigurationManagerEntryEnumeratorCallBack(ILogManager& logManager, IErrorManager& errorManager, IConfigurationManager& configManger)
-				: m_logManager(logManager), m_errorManager(errorManager), m_configManager(configManger) { }
-
-			static std::string reduce(const std::string& value)
+			while (!file.eof() && (line.length() == 0 || line[line.length() - 1] == '\\'))
 			{
-				if (value.length() == 0) { return ""; }
-
-				size_t i = 0;
-				size_t j = value.length() - 1;
-
-				while (i < value.length() && (value[i] == '\t' || value[i] == ' ')) { i++; }
-				while (j >= i && (value[j] == '\t' || value[j] == ' ')) { j--; }
-
-				return value.substr(i, j - i + 1);
-			}
-
-			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& /*attributes*/) override
-			{
-				std::ifstream file;
-				FS::Files::openIFStream(file, rEntry.getName());
-
-				OV_ERROR_UNLESS(file.good(), "Could not open file " << rEntry.getName(), ErrorType::ResourceNotFound, false, m_errorManager, m_logManager);
-				m_logManager << LogLevel_Trace << "Processing configuration file " << rEntry.getName() << "\n";
-
-				do
+				while (line.length() != 0 && line[line.length() - 1] == '\\')
 				{
-					std::string line;
-					std::string linePart;
-					size_t eq;
+					line.resize(line.length() - 1); // removes ending backslashes
+				}
 
-					while (!file.eof() && (line.length() == 0 || line[line.length() - 1] == '\\'))
-					{
-						while (line.length() != 0 && line[line.length() - 1] == '\\')
-						{
-							line.resize(line.length() - 1); // removes ending backslashes
-						}
-
-						std::getline(file, linePart, '\n');
-						line += reduce(linePart);
-					}
-
-					// process everything except empty line or comment
-					if (!line.empty() && line[0] != '\0' && line[0] != '#')
-					{
-						OV_ERROR_UNLESS((eq=line.find('=')) != std::string::npos,
-										"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << line,
-										ErrorType::BadFileParsing, false, m_errorManager, m_logManager);
-
-						std::string name(reduce(line.substr(0, eq)));
-						std::string value(reduce(line.substr(eq + 1, line.length() - eq)));
-						if (name == "Include")
-						{
-							CString wildCard = m_configManager.expand(value.c_str());
-							m_logManager << LogLevel_Trace << "Including configuration file " << wildCard << "...\n";
-							m_configManager.addConfigurationFromFile(wildCard);
-							m_logManager << LogLevel_Trace << "Including configuration file " << wildCard << " done...\n";
-						}
-						else
-						{
-							CIdentifier tokenID = m_configManager.lookUpConfigurationTokenIdentifier(name.c_str());
-							if (tokenID == OV_UndefinedIdentifier)
-							{
-								m_logManager << LogLevel_Trace << "Adding configuration token " << name << " : " << value << "\n";
-								m_configManager.createConfigurationToken(name.c_str(), value.c_str());
-							}
-							else
-							{
-								m_logManager << LogLevel_Trace << "Changing configuration token " << name << " to " << value << "\n";
-
-								// warning if base token are overwritten here
-								OV_WARNING_UNLESS(name != "Path_UserData" && name != "Path_Log" && name != "Path_Tmp"
-												  && name != "Path_Lib" && name != "Path_Bin" && name != "OperatingSystem",
-												  "Overwriting critical token " + name, m_logManager);
-
-								m_configManager.setConfigurationTokenValue(tokenID, value.c_str());
-							}
-						}
-					}
-				} while (!file.eof());
-
-				m_logManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << " finished\n";
-
-				return true;
+				std::getline(file, linePart, '\n');
+				line += reduce(linePart);
 			}
 
-		protected:
+			// process everything except empty line or comment
+			if (!line.empty() && line[0] != '\0' && line[0] != '#')
+			{
+				OV_ERROR_UNLESS((eq=line.find('=')) != std::string::npos,
+								"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << line,
+								ErrorType::BadFileParsing, false, m_errorManager, m_logManager);
 
-			ILogManager& m_logManager;
-			IErrorManager& m_errorManager;
-			IConfigurationManager& m_configManager;
-		};
-	} // namespace Kernel
-} // namespace OpenViBE
+				std::string name(reduce(line.substr(0, eq)));
+				std::string value(reduce(line.substr(eq + 1, line.length() - eq)));
+				if (name == "Include")
+				{
+					CString wildCard = m_configManager.expand(value.c_str());
+					m_logManager << LogLevel_Trace << "Including configuration file " << wildCard << "...\n";
+					m_configManager.addConfigurationFromFile(wildCard);
+					m_logManager << LogLevel_Trace << "Including configuration file " << wildCard << " done...\n";
+				}
+				else
+				{
+					CIdentifier tokenID = m_configManager.lookUpConfigurationTokenIdentifier(name.c_str());
+					if (tokenID == OV_UndefinedIdentifier)
+					{
+						m_logManager << LogLevel_Trace << "Adding configuration token " << name << " : " << value << "\n";
+						m_configManager.createConfigurationToken(name.c_str(), value.c_str());
+					}
+					else
+					{
+						m_logManager << LogLevel_Trace << "Changing configuration token " << name << " to " << value << "\n";
+
+						// warning if base token are overwritten here
+						OV_WARNING_UNLESS(name != "Path_UserData" && name != "Path_Log" && name != "Path_Tmp"
+										  && name != "Path_Lib" && name != "Path_Bin" && name != "OperatingSystem",
+										  "Overwriting critical token " + name, m_logManager);
+
+						m_configManager.setConfigurationTokenValue(tokenID, value.c_str());
+					}
+				}
+			}
+		} while (!file.eof());
+
+		m_logManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << " finished\n";
+
+		return true;
+	}
+
+protected:
+
+	ILogManager& m_logManager;
+	IErrorManager& m_errorManager;
+	IConfigurationManager& m_configManager;
+};
+}  // namespace Kernel
+}  // namespace OpenViBE
 
 CConfigurationManager::CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* parentConfigManager)
 	: TKernelObject<IConfigurationManager>(ctx), m_parentConfigManager(parentConfigManager)

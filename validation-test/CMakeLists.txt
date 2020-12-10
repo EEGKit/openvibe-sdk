@@ -20,11 +20,6 @@ SET(OVT_VALIDATION_TEST_OUTPUT_DIR ${PROJECT_BINARY_DIR}/validation-test-output/
 # Project configuration
 # ----------------------
 
-# Sort target into directories for better visualization in IDE
-SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET(OVT_VALIDATION_TESTS_FOLDER validation-tests)
-SET(OVT_TOOLS_FOLDER tools)
-
 # Add python tools path
 SET(OVT_PYTHON_TOOL_DIR  ${PROJECT_SOURCE_DIR}/python-toolkit/)
 

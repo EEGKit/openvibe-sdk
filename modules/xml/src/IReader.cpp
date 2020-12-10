@@ -7,30 +7,29 @@
 using namespace XML;
 using namespace std;
 
-namespace XML
+namespace XML {
+class CReader final : public IReader
 {
-	class CReader final : public IReader
-	{
-	public:
-		explicit CReader(IReaderCallback& callback);
-		bool processData(const void* buffer, const size_t size) override;
-		void release() override;
+public:
+	explicit CReader(IReaderCallback& callback);
+	bool processData(const void* buffer, const size_t size) override;
+	void release() override;
 
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute);
-		void processChildData(const char* data);
-		void closeChild();
+	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute);
+	void processChildData(const char* data);
+	void closeChild();
 
-	protected:
+protected:
 
-		IReaderCallback& m_callback;
-		XML_Parser m_pXMLParser;
-		std::string m_data;
-	};
+	IReaderCallback& m_callback;
+	XML_Parser m_pXMLParser;
+	std::string m_data;
+};
 
-	static void XMLCALL ExpatXMLStart(void* data, const char* element, const char** attribute);
-	static void XMLCALL ExpatXMLEnd(void* data, const char* element);
-	static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
-} // namespace XML
+static void XMLCALL ExpatXMLStart(void* data, const char* element, const char** attribute);
+static void XMLCALL ExpatXMLEnd(void* data, const char* element);
+static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
+}  // namespace XML
 
 CReader::CReader(IReaderCallback& callback) : m_callback(callback), m_pXMLParser(nullptr)
 {

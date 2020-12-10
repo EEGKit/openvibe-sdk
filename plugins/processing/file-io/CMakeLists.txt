@@ -16,6 +16,7 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${PLUGINS_FOLDER}
 	COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE")
 
 # ---------------------------------
@@ -31,9 +32,7 @@ INCLUDE("FindThirdPartyXerces")
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 

@@ -53,5 +53,5 @@ bool CLogListenerFile::activate(const ELogLevel startLevel, const ELogLevel endL
 
 bool CLogListenerFile::activate(const bool active) { return activate(LogLevel_First, LogLevel_Last, active); }
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

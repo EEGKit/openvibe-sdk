@@ -36,14 +36,7 @@ class CWriterCallBack : public XML::IWriterCallBack
 public:
 
 	CWriterCallBack(const char* filename) { m_file = FS::Files::open(filename, "wb"); }
-
-	~CWriterCallBack() override
-	{
-		if (m_file)
-		{
-			std::fclose(m_file); // in case release is not called
-		}
-	}
+	~CWriterCallBack() override { if (m_file) { std::fclose(m_file); } }	// in case release is not called
 
 	void write(const char* outputData) override { if (m_file) { std::fputs(outputData, m_file); } }
 

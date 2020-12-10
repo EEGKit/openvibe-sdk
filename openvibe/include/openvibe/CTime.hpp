@@ -191,4 +191,4 @@ public:
 protected:
 	uint64_t m_time = 0; ///< the 64 bit time value
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

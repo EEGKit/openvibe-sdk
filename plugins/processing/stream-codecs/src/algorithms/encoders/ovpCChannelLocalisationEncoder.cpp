@@ -8,18 +8,14 @@ using namespace StreamCodecs;
 bool CChannelLocalisationEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
-
 	ip_bDynamic.initialize(getInputParameter(OVP_Algorithm_ChannelLocalisationEncoder_InputParameterId_Dynamic));
-
 	return true;
 }
 
 bool CChannelLocalisationEncoder::uninitialize()
 {
 	ip_bDynamic.uninitialize();
-
 	CStreamedMatrixEncoder::uninitialize();
-
 	return true;
 }
 

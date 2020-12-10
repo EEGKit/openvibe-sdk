@@ -7,20 +7,19 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::Plugins::*/StreamCodecs;
 
-namespace
+namespace {
+// removes pre and post spaces, tabs and carriage returns
+void trim(char* dst, const char* src1, const char* src2)
 {
-	// removes pre and post spaces, tabs and carriage returns
-	void trim(char* dst, const char* src1, const char* src2)
-	{
-		if (!src1 || *src1 == '\0') { dst[0] = '\0'; }
-		if (!src2) { src2 = src1 + strlen(src1) - 1; }
-		while (src1 < src2 && (*src1 == ' ' || *src1 == '\t' || *src1 == '\r' || *src1 == '\n')) { src1++; }
-		while (src1 < src2 && (*src2 == ' ' || *src2 == '\t' || *src2 == '\r' || *src2 == '\n')) { src2--; }
-		src2++;
-		strncpy(dst, src1, src2 - src1);
-		dst[src2 - src1] = '\0';
-	}
-} // namespace
+	if (!src1 || *src1 == '\0') { dst[0] = '\0'; }
+	if (!src2) { src2 = src1 + strlen(src1) - 1; }
+	while (src1 < src2 && (*src1 == ' ' || *src1 == '\t' || *src1 == '\r' || *src1 == '\n')) { src1++; }
+	while (src1 < src2 && (*src2 == ' ' || *src2 == '\t' || *src2 == '\r' || *src2 == '\n')) { src2--; }
+	src2++;
+	strncpy(dst, src1, src2 - src1);
+	dst[src2 - src1] = '\0';
+}
+}  // namespace
 
 // ________________________________________________________________________________________________________________
 //
@@ -65,7 +64,7 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& id)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size)
 		|| (top == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
-		|| (top == OVTK_NodeId_Buffer_StreamedMatrix) 
+		|| (top == OVTK_NodeId_Buffer_StreamedMatrix)
 		|| (top == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer))
 	{
 		if (top == OVTK_NodeId_Header_StreamedMatrix && m_status == EParsingStatus::Nothing)

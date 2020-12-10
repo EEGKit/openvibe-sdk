@@ -95,7 +95,8 @@ public:
 
 	CString getDetailedDescription() const override
 	{
-		return "This box is for debugging purposes and allows an author to check the validity of a streamed matrix and derived stream. This box can log a message, stop the player or interpolate data.";
+		return
+				"This box is for debugging purposes and allows an author to check the validity of a streamed matrix and derived stream. This box can log a message, stop the player or interpolate data.";
 	}
 
 	CString getCategory() const override { return "Tools"; }
@@ -122,6 +123,6 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MatrixValidityCheckerDesc)
 };
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

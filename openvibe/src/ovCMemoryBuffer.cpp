@@ -4,36 +4,34 @@
 
 using namespace OpenViBE;
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace {
+class CMemoryBufferImpl final : public IMemoryBuffer
 {
-	namespace
-	{
-		class CMemoryBufferImpl final : public IMemoryBuffer
-		{
-		public:
+public:
 
-			CMemoryBufferImpl() {}
-			explicit CMemoryBufferImpl(const IMemoryBuffer& buffer);
-			CMemoryBufferImpl(const uint8_t* buffer, size_t size);
-			~CMemoryBufferImpl() override;
-			bool reserve(const size_t size) override;
-			bool setSize(const size_t size, const bool discard) override;
-			size_t getSize() const override { return m_size; }
-			uint8_t* getDirectPointer() override { return m_buffer; }
-			const uint8_t* getDirectPointer() const override { return m_buffer; }
-			bool append(const uint8_t* buffer, const size_t size) override;
-			bool append(const IMemoryBuffer& buffer) override;
+	CMemoryBufferImpl() {}
+	explicit CMemoryBufferImpl(const IMemoryBuffer& buffer);
+	CMemoryBufferImpl(const uint8_t* buffer, size_t size);
+	~CMemoryBufferImpl() override;
+	bool reserve(const size_t size) override;
+	bool setSize(const size_t size, const bool discard) override;
+	size_t getSize() const override { return m_size; }
+	uint8_t* getDirectPointer() override { return m_buffer; }
+	const uint8_t* getDirectPointer() const override { return m_buffer; }
+	bool append(const uint8_t* buffer, const size_t size) override;
+	bool append(const IMemoryBuffer& buffer) override;
 
-			_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl)
+	_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl)
 
-		protected:
+protected:
 
-			uint8_t* m_buffer      = nullptr;
-			size_t m_size          = 0;
-			size_t m_allocatedSize = 0;
-		};
-	} // namespace
-} // namespace OpenViBE
+	uint8_t* m_buffer      = nullptr;
+	size_t m_size          = 0;
+	size_t m_allocatedSize = 0;
+};
+}  // namespace
+}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //

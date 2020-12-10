@@ -15,19 +15,18 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Kernel;
 
-namespace
-{
-	// because std::tolower has multiple signatures,
-	// it can not be easily used in std::transform
-	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class TCharT>
-	TCharT ToLower(TCharT c) { return std::tolower(c); }
+namespace {
+// because std::tolower has multiple signatures,
+// it can not be easily used in std::transform
+// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
+template <class TCharT>
+TCharT ToLower(TCharT c) { return std::tolower(c); }
 
-	struct SAInfB
-	{
-		bool operator()(const std::pair<CIdentifier, CString> a, const std::pair<CIdentifier, CString>& b) const { return a.second < b.second; }
-	};
-} // namespace
+struct SAInfB
+{
+	bool operator()(const std::pair<CIdentifier, CString> a, const std::pair<CIdentifier, CString>& b) const { return a.second < b.second; }
+};
+}  // namespace
 
 CTypeManager::CTypeManager(const IKernelContext& ctx)
 	: TKernelObject<ITypeManager>(ctx)

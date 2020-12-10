@@ -33,7 +33,6 @@ public:
 	bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 	{
 		if (rAttributes.isFile()) { m_files.push_back(rEntry.getName()); }
-
 		return true;
 	}
 

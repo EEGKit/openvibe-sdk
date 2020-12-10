@@ -66,5 +66,5 @@ static std::wstring Utf8ToUtf16(const std::string& utf8)
 }
 #endif // TARGET_OS_Windows
 
-} // namespace Converter
-} // namespace Common
+}  // namespace Converter
+}  // namespace Common

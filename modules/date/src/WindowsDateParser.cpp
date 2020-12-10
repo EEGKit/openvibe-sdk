@@ -57,11 +57,13 @@ using namespace DateParser;
 
 static int ConvNum(const char** buf, int* dest, const int llim, const int ulim);
 
-static const std::array<const std::string, 7> DAY = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+static const std::array<const std::string, 7> DAY    = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 static const std::array<const std::string, 7> AB_DAY = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-static const std::array<const std::string, 12> MON = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+static const std::array<const std::string, 12> MON   = {
+	"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+};
 static const std::array<const std::string, 12> AB_MON = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-static const std::array<const std::string, 2> AM_PM = { "AM", "PM" };
+static const std::array<const std::string, 2> AM_PM   = { "AM", "PM" };
 
 
 Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, struct tm* tmParsed)
@@ -325,7 +327,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 	}
 
 	/* LINTED functional specification */
-	return const_cast<char *>(bp);
+	return const_cast<char*>(bp);
 }
 
 

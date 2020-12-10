@@ -62,69 +62,65 @@ inline uint64_t getValue(unsigned char* buffer)
 // ________________________________________________________________________________________________________________
 //
 
-namespace EBML
+namespace EBML {
+namespace {
+class CReaderNode
 {
-	namespace
-	{
-		class CReaderNode
-		{
-		public:
-			CReaderNode(const CIdentifier& identifier, CReaderNode* parentNode) : m_ParentNode(parentNode), m_Id(identifier) { }
+public:
+	CReaderNode(const CIdentifier& identifier, CReaderNode* parentNode) : m_ParentNode(parentNode), m_Id(identifier) { }
 
-		private:
-			CReaderNode() = delete;
+private:
+	CReaderNode() = delete;
 
-		public:
+public:
 
-			CReaderNode* m_ParentNode = nullptr;
-			CIdentifier m_Id;
-			size_t m_ContentSize     = 0;
-			size_t m_ReadContentSize = 0;
-			unsigned char* m_Buffer  = nullptr;
-		};
-	} // namespace
-} // namespace EBML
+	CReaderNode* m_ParentNode = nullptr;
+	CIdentifier m_Id;
+	size_t m_ContentSize     = 0;
+	size_t m_ReadContentSize = 0;
+	unsigned char* m_Buffer  = nullptr;
+};
+}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
 
-namespace EBML
+namespace EBML {
+namespace {
+class CReader final : public IReader
 {
-	namespace
+public:
+
+	explicit CReader(IReaderCallback& callback) : m_readerCB(callback) { }
+	~CReader() override;
+	bool processData(const void* buffer, const size_t size) override;
+	CIdentifier getCurrentNodeID() const override;
+	size_t getCurrentNodeSize() const override;
+	void release() override;
+
+protected:
+
+	enum EStatus
 	{
-		class CReader final : public IReader
-		{
-		public:
+		FillingIdentifier,
+		FillingContentSize,
+		FillingContent,
+	};
 
-			explicit CReader(IReaderCallback& callback) : m_readerCB(callback) { }
-			~CReader() override;
-			bool processData(const void* buffer, const size_t size) override;
-			CIdentifier getCurrentNodeID() const override;
-			size_t getCurrentNodeSize() const override;
-			void release() override;
-
-		protected:
-
-			enum EStatus
-			{
-				FillingIdentifier,
-				FillingContentSize,
-				FillingContent,
-			};
-
-			IReaderCallback& m_readerCB;
-			CReaderNode* m_currentNode  = nullptr;
-			size_t m_pendingSize        = 0;
-			size_t m_nPending           = 0;
-			unsigned char* m_pending    = nullptr;
-			EStatus m_status            = FillingIdentifier;
-			EStatus m_lastStatus        = FillingIdentifier;
-			CIdentifier m_currentID     = 0;
-			size_t m_currentContentSize = 0;
-			size_t m_totalBytes         = 0;
-		};
-	} // namespace
-} // namespace EBML
+	IReaderCallback& m_readerCB;
+	CReaderNode* m_currentNode  = nullptr;
+	size_t m_pendingSize        = 0;
+	size_t m_nPending           = 0;
+	unsigned char* m_pending    = nullptr;
+	EStatus m_status            = FillingIdentifier;
+	EStatus m_lastStatus        = FillingIdentifier;
+	CIdentifier m_currentID     = 0;
+	size_t m_currentContentSize = 0;
+	size_t m_totalBytes         = 0;
+};
+}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -248,7 +244,7 @@ bool CReader::processData(const void* buffer, const size_t size)
 					}
 				}
 			}
-				break;
+			break;
 
 			case FillingContent:
 			{

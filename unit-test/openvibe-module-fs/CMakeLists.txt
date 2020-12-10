@@ -30,6 +30,8 @@ INCLUDE("FindThirdPartyBoost")
 #INCLUDE("FindThirdPartyBoost_System")
 INCLUDE("FindThirdPartyBoost_FileSystem")
 
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
+
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})
 
 ADD_DEFINITIONS("-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
@@ -40,9 +42,7 @@ PROJECT(openvibe-module-fs-test)
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
@@ -75,7 +75,7 @@ ADD_EXECUTABLE(${PROJECT_NAME} ${Tests})
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleFS")
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${OVT_UNIT_TESTS_FOLDER})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${OV_MODULE_FS})
 
 # Add test without parameter to driver 

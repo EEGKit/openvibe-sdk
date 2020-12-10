@@ -1,4 +1,3 @@
-
 #include "ovkCPlayer.h"
 #include "ovkCSimulatedBox.h"
 #include "ovkCScheduler.h"
@@ -240,9 +239,7 @@ bool CPlayer::setFastForwardMaximumFactor(const double fastForwardFactor)
 }
 
 double CPlayer::getFastForwardMaximumFactor() const { return m_fastForwardMaximumFactor; }
-
 double CPlayer::getCPUUsage() const { return m_scheduler.getCPUUsage(); }
-
 bool CPlayer::isHoldingResources() const { return m_scheduler.isHoldingResources(); }
 
 bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach)

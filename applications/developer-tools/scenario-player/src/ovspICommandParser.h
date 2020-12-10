@@ -25,59 +25,58 @@
 #include <vector>
 #include <memory>
 
-namespace OpenViBE
+namespace OpenViBE {
+struct SCommand;
+
+/**
+* \class ICommandParser
+* \author cgarraud (INRIA)
+* \date 2016-01-27
+* \brief Base abstract class for command parser
+* \ingroup ScenarioPlayer
+*
+* Command parsers aim at parsing a list of commands from a specific input.
+*
+*/
+class ICommandParser
 {
-	struct SCommand;
+public:
+
+	virtual ~ICommandParser() = default;
+	ICommandParser()          = default;
 
 	/**
-	* \class ICommandParser
-	* \author cgarraud (INRIA)
-	* \date 2016-01-27
-	* \brief Base abstract class for command parser
-	* \ingroup ScenarioPlayer
-	*
-	* Command parsers aim at parsing a list of commands from a specific input.
+	* \brief Initialize parser
 	*
 	*/
-	class ICommandParser
-	{
-	public:
+	virtual void initialize() = 0;
 
-		virtual ~ICommandParser() = default;
-		ICommandParser()          = default;
+	/**
+	* \brief Unitialize parser
+	*
+	*/
+	virtual void uninitialize() = 0;
 
-		/**
-		* \brief Initialize parser
-		*
-		*/
-		virtual void initialize() = 0;
-
-		/**
-		* \brief Unitialize parser
-		*
-		*/
-		virtual void uninitialize() = 0;
-
-		/**
-		* \brief Retrieve the list of commands
-		* \pre This method should be called after the parse() method
-		*
-		*/
-		virtual std::vector<std::shared_ptr<SCommand>> getCommandList() const = 0;
+	/**
+	* \brief Retrieve the list of commands
+	* \pre This method should be called after the parse() method
+	*
+	*/
+	virtual std::vector<std::shared_ptr<SCommand>> getCommandList() const = 0;
 
 
-		/**
-		* \brief Retrieve the list of commands
-		* \pre This method should be called after the initialize() method
-		*
-		*/
-		virtual EPlayerReturnCodes parse() = 0;
+	/**
+	* \brief Retrieve the list of commands
+	* \pre This method should be called after the initialize() method
+	*
+	*/
+	virtual EPlayerReturnCodes parse() = 0;
 
-	private:
+private:
 
-		// disable copy and assignment because it is not meant to used
-		// as a value class
-		ICommandParser(const ICommandParser&)            = delete;
-		ICommandParser& operator=(const ICommandParser&) = delete;
-	};
+	// disable copy and assignment because it is not meant to used
+	// as a value class
+	ICommandParser(const ICommandParser&)            = delete;
+	ICommandParser& operator=(const ICommandParser&) = delete;
+};
 }	// namespace OpenViBE

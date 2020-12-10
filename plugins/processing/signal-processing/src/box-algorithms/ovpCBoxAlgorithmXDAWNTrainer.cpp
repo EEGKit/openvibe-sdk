@@ -235,7 +235,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			OV_ERROR_KRF("Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n",
 						 ErrorType::BadProcessing);
 		}
-				
+
 		// Create a CMatrix mapper that can spool the filters to a file
 
 		CMatrix eigenVectors;
@@ -245,8 +245,8 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDim, nChannel);
 
-		vectorsMapper.block(0, 0, m_filterDim, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_filterDim).transpose();			
-					
+		vectorsMapper.block(0, 0, m_filterDim, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_filterDim).transpose();
+
 		// Saves filters
 
 		FILE* file = FS::Files::open(m_filterFilename.toASCIIString(), "wt");

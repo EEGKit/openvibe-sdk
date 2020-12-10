@@ -70,8 +70,7 @@ size_t CBoxAlgorithmSpatialFilter::loadCoefs(const CString& coefs, const char c1
 			const size_t row = idx / nRows + 1;
 			const size_t col = idx % nRows + 1;
 
-			OV_ERROR_KRZ("Failed to parse coefficient number [" << idx << "] at matrix positions [" << row << "," << col << "]",
-						 ErrorType::BadProcessing);
+			OV_ERROR_KRZ("Failed to parse coefficient number [" << idx << "] at matrix positions [" << row << "," << col << "]", ErrorType::BadProcessing);
 		}
 
 		idx++;
@@ -101,8 +100,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		m_encoder = new Toolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 
 		static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputSamplingRate().setReferenceTarget(
-			static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*>(
-				m_decoder)->getOutputSamplingRate());
+			static_cast<Toolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputSamplingRate());
 	}
 	else if (id == OV_TypeId_Spectrum)
 	{
@@ -110,11 +108,9 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		m_encoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>(*this, 0);
 
 		static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputFrequencyAbscissa().setReferenceTarget(
-			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(
-				m_decoder)->getOutputFrequencyAbscissa());
+			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputFrequencyAbscissa());
 		static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputSamplingRate().setReferenceTarget(
-			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(
-				m_decoder)->getOutputSamplingRate());
+			static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputSamplingRate());
 	}
 	else { OV_ERROR_KRF("Invalid input stream type [" << id.str() << "]", ErrorType::BadInput); }
 
@@ -123,8 +119,7 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 	if (filterFile != CString(""))
 	{
 		OV_ERROR_UNLESS_KRF(Toolkit::Matrix::loadFromTextFile(m_filterBank, filterFile),
-							"Failed to load filter parameters from file at location [" << filterFile << "]",
-							ErrorType::BadFileRead);
+							"Failed to load filter parameters from file at location [" << filterFile << "]", ErrorType::BadFileRead);
 
 		OV_ERROR_UNLESS_KRF(m_filterBank.getDimensionCount() == 2,
 							"Invalid filter matrix in file " << filterFile << ": found [" << m_filterBank.getDimensionCount() <<

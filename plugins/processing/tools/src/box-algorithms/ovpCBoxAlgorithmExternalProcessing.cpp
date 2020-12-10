@@ -254,7 +254,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*messageClock*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
+bool CBoxAlgorithmExternalProcessing::processClock(Kernel::CMessageClock& /*msg*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
 bool CBoxAlgorithmExternalProcessing::processInput(const size_t /*index*/)
 {
@@ -605,6 +605,6 @@ void CBoxAlgorithmExternalProcessing::log()
 	}
 }
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

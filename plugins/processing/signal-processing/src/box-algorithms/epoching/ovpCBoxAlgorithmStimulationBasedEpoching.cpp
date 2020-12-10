@@ -250,6 +250,6 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	return true;
 }
 
-} // namespace SignalProcessing
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

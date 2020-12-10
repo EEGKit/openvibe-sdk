@@ -20,13 +20,11 @@ bool CCppCodeGenerator::openFile(const char* filename)
 	return true;
 }
 
-
 bool CCppCodeGenerator::appendStimulation(SStimulation& stim)
 {
 	m_file << "\ttypeManager.registerEnumerationEntry(OV_TypeId_Stimulation, \"" << stim.name << "\", " << stim.id << ");" << endl;
 	return true;
 }
-
 
 bool CCppCodeGenerator::closeFile()
 {

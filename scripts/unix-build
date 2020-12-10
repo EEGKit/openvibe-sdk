@@ -119,13 +119,6 @@ while [[ $# -gt 0 ]]; do
 	shift # past argument or value
 done
 
-if [[ ! -z ${dependencies_dir} ]]
-then
-  ./unix-init-env.sh --dependencies-dir ${dependencies_dir}
-else
-  echo "dependencies_dir not set: not initialisaing environment"
-fi
-
 # Check parameters validity
 if [[ ${ov_build_type} != "Debug" ]] \
 	&& [[ ${ov_build_type} != "Release" ]] \

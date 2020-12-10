@@ -1,0 +1,11 @@
+doxygen
+make
+gcc
+gcc-c++
+expat-devel
+openssl-devel
+boost-devel
+ninja-build
+zziplib-devel
+xerces-c-devel
+gtest-devel

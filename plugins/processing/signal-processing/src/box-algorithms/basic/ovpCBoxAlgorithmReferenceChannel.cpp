@@ -7,42 +7,41 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
-namespace
+namespace {
+size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 {
-	size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
+	size_t res = std::numeric_limits<size_t>::max();
+
+	if (matchMethod == EMatchMethod::Name)
 	{
-		size_t res = std::numeric_limits<size_t>::max();
-
-		if (matchMethod == EMatchMethod::Name)
+		for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 		{
-			for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
-			{
-				if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
-			}
+			if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { res = i; }
 		}
-		else if (matchMethod == EMatchMethod::Index)
-		{
-			try
-			{
-				size_t value = std::stoul(channel.toASCIIString());
-				value--; // => makes it 0-indexed !
-
-				if (start <= size_t(value) && size_t(value) < matrix.getDimensionSize(0)) { res = size_t(value); }
-			}
-			catch (const std::exception&)
-			{
-				// catch block intentionnaly left blank
-			}
-		}
-		else if (matchMethod == EMatchMethod::Smart)
-		{
-			if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, EMatchMethod::Name, start); }
-			if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, EMatchMethod::Index, start); }
-		}
-
-		return res;
 	}
-} // namespace
+	else if (matchMethod == EMatchMethod::Index)
+	{
+		try
+		{
+			size_t value = std::stoul(channel.toASCIIString());
+			value--; // => makes it 0-indexed !
+
+			if (start <= size_t(value) && size_t(value) < matrix.getDimensionSize(0)) { res = size_t(value); }
+		}
+		catch (const std::exception&)
+		{
+			// catch block intentionnaly left blank
+		}
+	}
+	else if (matchMethod == EMatchMethod::Smart)
+	{
+		if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, EMatchMethod::Name, start); }
+		if (res == std::numeric_limits<size_t>::max()) { res = FindChannel(matrix, channel, EMatchMethod::Index, start); }
+	}
+
+	return res;
+}
+}  // namespace
 
 bool CBoxAlgorithmReferenceChannel::initialize()
 {
@@ -78,10 +77,9 @@ bool CBoxAlgorithmReferenceChannel::process()
 			IMatrix& oMatrix = *m_encoder.getInputMatrix();
 
 			OV_ERROR_UNLESS_KRF(iMatrix.getDimensionSize(0) >= 2,
-								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
-								ErrorType::BadInput);
+								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)", ErrorType::BadInput);
 
-			CString channel                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+			CString channel           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			const EMatchMethod method = EMatchMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
 
 			m_referenceChannelIdx = FindChannel(iMatrix, channel, method, 0);

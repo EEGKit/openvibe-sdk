@@ -118,14 +118,14 @@
 		#define OVP_API_Import
 #endif
 #else
-#define OVP_API_Export
-#define OVP_API_Import
+#	define OVP_API_Export
+#	define OVP_API_Import
 #endif
 
 #if defined OVP_Exports
-#define OVP_API OVP_API_Export
+#	define OVP_API OVP_API_Export
 #else
-#define OVP_API OVP_API_Import
+#	define OVP_API OVP_API_Import
 #endif
 //___________________________________________________________________//
 //                                                                   //

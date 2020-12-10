@@ -82,7 +82,7 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& /*messageClock*/)
+bool CBoxAlgorithmOVCSVFileReader::processClock(Kernel::CMessageClock& /*msg*/)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Failed to mark clock algorithm as ready to process", ErrorType::Internal);
 	return true;
@@ -233,8 +233,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 			OV_ERROR_UNLESS_KRF(
 				boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime).time(), CTime(m_savedChunks.back().endTime).time()),
-				"Failed to mark signal output as ready to send",
-				ErrorType::Internal);
+				"Failed to mark signal output as ready to send", ErrorType::Internal);
 		}
 
 		if (chunksToRemove != 0) { m_savedChunks.erase(m_savedChunks.begin(), m_savedChunks.begin() + chunksToRemove); }

@@ -209,4 +209,4 @@ protected:
 
 	uint64_t m_id = 0; ///< the 64 bit identifier value
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

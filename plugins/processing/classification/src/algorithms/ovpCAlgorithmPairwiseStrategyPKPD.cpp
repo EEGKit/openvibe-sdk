@@ -4,9 +4,8 @@
 
 #include <iostream>
 
-namespace
-{
-	const char* const TYPE_NODE_NAME = "PairwiseDecision_PKDP";
+namespace {
+const char* const TYPE_NODE_NAME = "PairwiseDecision_PKDP";
 }
 
 
@@ -22,16 +21,14 @@ bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
-						ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadInput);
 
 	return true;
 }
 
 bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found",
-						ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadInput);
 
 	std::vector<double> matrix(m_nClass * m_nClass);
 

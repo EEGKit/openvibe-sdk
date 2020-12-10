@@ -13,38 +13,37 @@
 using namespace Communication;
 
 
-namespace
+namespace {
+const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
 {
-	const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
-	{
-		{ CMessaging::NoError, "No error" },
-		{ CMessaging::Socket_NotConnected, "Not connected" },
-		{ CMessaging::Socket_FailedToConnect, "Failed to connect" },
-		{ CMessaging::Socket_ReceiveBufferFail, "Failed to receive the buffer" },
-		{ CMessaging::Socket_SendBufferFail, "Failed to send the buffer" },
-		{ CMessaging::Socket_NoIncomingClientConnection, "No incoming client connection before the timeout" },
-		{ CMessaging::Socket_NotReadyToSend, "Socket not ready to send the buffer" },
-		{ CMessaging::Socket_NoDataReceived, "No data received by the socket" },
-		{ CMessaging::Socket_FailedCloseClientConnection, "Failed to close the client connection" },
-		{ CMessaging::Socket_FailedToCloseConnection, "Failed to close the server connection" },
-		{ CMessaging::Socket_FailedConnectClient, "Failed to connect the client" },
-		{ CMessaging::Socket_ClientAlreadyConnected, "A client is already connected" },
-		{ CMessaging::Deserialize_BufferTooSmall, "Buffer received is too small to be unpacked" },
-		{ CMessaging::Deserialize_Header, "Fail to unpack the buffer to a Header" },
-		{ CMessaging::Deserialize_ProtocolVersionMessage, "Fail to unpack Protocol Version message" },
-		{ CMessaging::Deserialize_BoxDescriptionMessage, "Fail to unpack Box description message" },
-		{ CMessaging::Deserialize_EBMLMessage, "Fail to unpack EBML message" },
-		{ CMessaging::Deserialize_EndMessage, "Fail to unpack End message" },
-		{ CMessaging::Deserialize_ErrorMessage, "Fail to unpack error message" },
-		{ CMessaging::Deserialize_LogMessage, "Fail to unpack log message" },
-		{ CMessaging::Deserialize_AuthenticationMessage, "Fail to unpack Authentication message" },
-		{ CMessaging::Deserialize_MessageTypeNotSupported, "Message type not supported" },
-		{ CMessaging::BoxDescriptionAlreadyReceived, "Box Description already received" },
-		{ CMessaging::BoxDescriptionNotReceived, "Box description not received" },
-		{ CMessaging::BadAuthenticationReceived, "Authentication received is invalid" },
-		{ CMessaging::NoAuthenticationReceived, "No authentication received before the timeout" },
-		{ CMessaging::ThreadJoinFailed, "Failed to terminate the thread" }
-	};
+	{ CMessaging::NoError, "No error" },
+	{ CMessaging::Socket_NotConnected, "Not connected" },
+	{ CMessaging::Socket_FailedToConnect, "Failed to connect" },
+	{ CMessaging::Socket_ReceiveBufferFail, "Failed to receive the buffer" },
+	{ CMessaging::Socket_SendBufferFail, "Failed to send the buffer" },
+	{ CMessaging::Socket_NoIncomingClientConnection, "No incoming client connection before the timeout" },
+	{ CMessaging::Socket_NotReadyToSend, "Socket not ready to send the buffer" },
+	{ CMessaging::Socket_NoDataReceived, "No data received by the socket" },
+	{ CMessaging::Socket_FailedCloseClientConnection, "Failed to close the client connection" },
+	{ CMessaging::Socket_FailedToCloseConnection, "Failed to close the server connection" },
+	{ CMessaging::Socket_FailedConnectClient, "Failed to connect the client" },
+	{ CMessaging::Socket_ClientAlreadyConnected, "A client is already connected" },
+	{ CMessaging::Deserialize_BufferTooSmall, "Buffer received is too small to be unpacked" },
+	{ CMessaging::Deserialize_Header, "Fail to unpack the buffer to a Header" },
+	{ CMessaging::Deserialize_ProtocolVersionMessage, "Fail to unpack Protocol Version message" },
+	{ CMessaging::Deserialize_BoxDescriptionMessage, "Fail to unpack Box description message" },
+	{ CMessaging::Deserialize_EBMLMessage, "Fail to unpack EBML message" },
+	{ CMessaging::Deserialize_EndMessage, "Fail to unpack End message" },
+	{ CMessaging::Deserialize_ErrorMessage, "Fail to unpack error message" },
+	{ CMessaging::Deserialize_LogMessage, "Fail to unpack log message" },
+	{ CMessaging::Deserialize_AuthenticationMessage, "Fail to unpack Authentication message" },
+	{ CMessaging::Deserialize_MessageTypeNotSupported, "Message type not supported" },
+	{ CMessaging::BoxDescriptionAlreadyReceived, "Box Description already received" },
+	{ CMessaging::BoxDescriptionNotReceived, "Box description not received" },
+	{ CMessaging::BadAuthenticationReceived, "Authentication received is invalid" },
+	{ CMessaging::NoAuthenticationReceived, "No authentication received before the timeout" },
+	{ CMessaging::ThreadJoinFailed, "Failed to terminate the thread" }
+};
 }	// namespace 
 
 CMessaging::CMessaging()
@@ -88,7 +87,6 @@ void CMessaging::reset() const
 }
 
 CMessaging::ELibraryError CMessaging::getLastError() const { return impl->m_LastLibraryError; }
-
 void CMessaging::setLastError(const ELibraryError libraryError) const { impl->m_LastLibraryError = libraryError; }
 
 bool CMessaging::push() const

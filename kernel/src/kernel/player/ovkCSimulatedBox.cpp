@@ -3,9 +3,6 @@
 #include "ovkCSimulatedBox.h"
 #include "ovkCPlayer.h"
 #include "ovkCBoxAlgorithmContext.h"
-#include "ovkCMessageClock.h"
-#include "ovkCMessageEvent.h"
-
 
 #include <cstdlib>
 #include <algorithm>
@@ -138,7 +135,7 @@ bool CSimulatedBox::processClock()
 			if (m_lastClockActivationDate == OV_IncorrectTime) { m_lastClockActivationDate = m_scheduler.getCurrentTime(); }
 			else { m_lastClockActivationDate = m_lastClockActivationDate + m_clockActivationStep; }
 
-			CMessageClock message(this->getKernelContext());
+			Kernel::CMessageClock message;
 			message.setTime(m_lastClockActivationDate);
 
 			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processClock(context, message),

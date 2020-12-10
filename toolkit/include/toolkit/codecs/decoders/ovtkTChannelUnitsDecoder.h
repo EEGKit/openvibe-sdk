@@ -4,77 +4,75 @@
 
 #include "ovtkTStreamedMatrixDecoder.h"
 
-namespace OpenViBE
+namespace OpenViBE {
+namespace Toolkit {
+template <class T>
+class TChannelUnitsDecoderLocal : public T
 {
-	namespace Toolkit
+protected:
+
+	Kernel::TParameterHandler<bool> m_oDynamic;
+
+	using T::m_codec;
+	using T::m_boxAlgorithm;
+	using T::m_iBuffer;
+	using T::m_oMatrix;
+
+	bool initializeImpl()
 	{
-		template <class T>
-		class TChannelUnitsDecoderLocal : public T
-		{
-		protected:
+		m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(
+			m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsDecoder));
+		m_codec->initialize();
+		m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsDecoder_InputParameterId_MemoryBufferToDecode));
+		m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputParameterId_Matrix));
+		m_oDynamic.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic));
 
-			Kernel::TParameterHandler<bool> m_oDynamic;
+		return true;
+	}
 
-			using T::m_codec;
-			using T::m_boxAlgorithm;
-			using T::m_iBuffer;
-			using T::m_oMatrix;
+public:
+	using T::initialize;
 
-			bool initializeImpl()
-			{
-				m_codec = &m_boxAlgorithm->getAlgorithmManager().getAlgorithm(
-					m_boxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsDecoder));
-				m_codec->initialize();
-				m_iBuffer.initialize(m_codec->getInputParameter(OVP_GD_Algorithm_ChannelUnitsDecoder_InputParameterId_MemoryBufferToDecode));
-				m_oMatrix.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputParameterId_Matrix));
-				m_oDynamic.initialize(m_codec->getOutputParameter(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic));
+	bool uninitialize()
+	{
+		if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
 
-				return true;
-			}
+		m_oDynamic.uninitialize();
+		m_oMatrix.uninitialize();
 
-		public:
-			using T::initialize;
+		m_iBuffer.uninitialize();
+		m_codec->uninitialize();
+		m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
+		m_boxAlgorithm = NULL;
 
-			bool uninitialize()
-			{
-				if (m_boxAlgorithm == nullptr || m_codec == nullptr) { return false; }
+		return true;
+	}
 
-				m_oDynamic.uninitialize();
-				m_oMatrix.uninitialize();
+	Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_oDynamic; }
 
-				m_iBuffer.uninitialize();
-				m_codec->uninitialize();
-				m_boxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_codec);
-				m_boxAlgorithm = NULL;
+	virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedHeader); }
+	virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedBuffer); }
+	virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedEnd); }
+};
 
-				return true;
-			}
+template <class T>
+class TChannelUnitsDecoder : public TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
+{
+	using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_boxAlgorithm;
+public:
+	using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-			Kernel::TParameterHandler<bool>& getOutputDynamic() { return m_oDynamic; }
+	TChannelUnitsDecoder() { }
 
-			virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedHeader); }
-			virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedBuffer); }
-			virtual bool isEndReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsDecoder_OutputTriggerId_ReceivedEnd); }
-		};
+	TChannelUnitsDecoder(T& boxAlgorithm, size_t index)
+	{
+		m_boxAlgorithm = NULL;
+		this->initialize(boxAlgorithm, index);
+	}
 
-		template <class T>
-		class TChannelUnitsDecoder : public TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
-		{
-			using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_boxAlgorithm;
-		public:
-			using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
-
-			TChannelUnitsDecoder() { }
-
-			TChannelUnitsDecoder(T& boxAlgorithm, size_t index)
-			{
-				m_boxAlgorithm = NULL;
-				this->initialize(boxAlgorithm, index);
-			}
-
-			virtual ~TChannelUnitsDecoder() { this->uninitialize(); }
-		};
-	}  // namespace Toolkit
+	virtual ~TChannelUnitsDecoder() { this->uninitialize(); }
+};
+}  // namespace Toolkit
 }  // namespace OpenViBE
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
