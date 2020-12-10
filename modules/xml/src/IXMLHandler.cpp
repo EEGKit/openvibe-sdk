@@ -9,46 +9,45 @@
 
 using namespace std;
 
-namespace XML
+namespace XML {
+class IXMLHandlerImpl final : public IXMLHandler
 {
-	class IXMLHandlerImpl final : public IXMLHandler
-	{
-	public:
-		void release() override;
-		IXMLHandlerImpl();
+public:
+	void release() override;
+	IXMLHandlerImpl();
 
-		//Parsing
-		IXMLNode* parseFile(const char* sPath) override;
-		IXMLNode* parseString(const char* str, const size_t& size) override;
+	//Parsing
+	IXMLNode* parseFile(const char* sPath) override;
+	IXMLNode* parseString(const char* str, const size_t& size) override;
 
-		//XML extraction
-		bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const override;
+	//XML extraction
+	bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const override;
 
-		//Error handling
-		std::string getLastErrorString() const override;
+	//Error handling
+	std::string getLastErrorString() const override;
 
-		//Internal function for parsing
-		void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute);
-		void processChildData(const char* data);
-		void closeChild();
+	//Internal function for parsing
+	void openChild(const char* name, const char** sAttributeName, const char** sAttributeValue, const size_t nAttribute);
+	void processChildData(const char* data);
+	void closeChild();
 
-		std::stringstream& getErrorStringStream() const;
+	std::stringstream& getErrorStringStream() const;
 
-	protected:
-		~IXMLHandlerImpl() override;
+protected:
+	~IXMLHandlerImpl() override;
 
-	private:
-		XML_Parser m_pXMLParser;
-		std::stack<IXMLNode *> m_oNodeStack;
-		IXMLNode* m_pRootNode;
-		mutable std::stringstream m_ssErrorStringStream;
-	};
+private:
+	XML_Parser m_pXMLParser;
+	std::stack<IXMLNode*> m_oNodeStack;
+	IXMLNode* m_pRootNode;
+	mutable std::stringstream m_ssErrorStringStream;
+};
 
-	//Callback for expat
-	static void XMLCALL ExpatXMLStart(void* pData, const char* element, const char** attribute);
-	static void XMLCALL ExpatXMLEnd(void* data, const char* element);
-	static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
-} // namespace XML
+//Callback for expat
+static void XMLCALL ExpatXMLStart(void* pData, const char* element, const char** attribute);
+static void XMLCALL ExpatXMLEnd(void* data, const char* element);
+static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
+}  // namespace XML
 
 using namespace std;
 using namespace XML;
@@ -68,8 +67,7 @@ IXMLHandlerImpl::~IXMLHandlerImpl()
 void IXMLHandlerImpl::release() { delete this; }
 
 
-IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(nullptr),
-									m_pRootNode(nullptr)
+IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(nullptr), m_pRootNode(nullptr)
 {
 	m_pXMLParser = XML_ParserCreate(nullptr);
 	XML_SetElementHandler(m_pXMLParser, ExpatXMLStart, ExpatXMLEnd);
@@ -83,7 +81,6 @@ IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 	FS::Files::openIFStream(file, sPath, ios::binary);
 	if (file.is_open())
 	{
-
 		//Compute size
 		file.seekg(0, ios::end);
 		const size_t fileLen = size_t(file.tellg());

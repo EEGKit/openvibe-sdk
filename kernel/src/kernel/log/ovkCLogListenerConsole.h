@@ -50,5 +50,5 @@ protected:
 	bool m_useColor          = false;
 };
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

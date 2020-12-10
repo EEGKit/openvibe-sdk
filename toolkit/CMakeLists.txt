@@ -50,6 +50,7 @@ ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-generate-stimulation-file)
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
+	FOLDER ${KERNEL_FOLDER}
 	COMPILE_FLAGS "-DOVTK_Exports -DOVTK_Shared")
 
 # ---------------------------------
@@ -62,9 +63,7 @@ INCLUDE("FindThirdPartyBoost_FileSystem")
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 

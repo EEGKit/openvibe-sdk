@@ -25,38 +25,36 @@
 #include <functional>
 #include <stdexcept>
 
-namespace OpenViBE
+namespace OpenViBE {
+using ExceptionHandlerType = std::function<void(const std::exception&)>;
+
+/**
+  * \brief Invokes code and potentially translates exceptions to boolean
+  * 
+  * \tparam TCallback callable type (e.g. functor) with TCallback() returning boolean
+  * 
+  * \param callable code that must be guarded against exceptions
+  * \param handler callback that handles the exception
+  * \return false either if callable() returns false or an exception 
+  * 		occurs, true otherwise
+  * 
+  * \details This method is a specific exception-to-boolean translation
+  * 		 method. If an exception is caught, it is handled by calling
+  * 		 the provided exception handler.
+  */
+template <typename TCallback, typename std::enable_if<std::is_same<bool, typename std::result_of<TCallback()>::type>::value>::type* = nullptr>
+bool translateException(TCallback&& callable, const ExceptionHandlerType& handler)
 {
-	using ExceptionHandlerType = std::function<void(const std::exception&)>;
-	
-	/**
-	  * \brief Invokes code and potentially translates exceptions to boolean
-	  * 
-	  * \tparam TCallback callable type (e.g. functor) with TCallback() returning boolean
-	  * 
-	  * \param callable code that must be guarded against exceptions
-	  * \param handler callback that handles the exception
-	  * \return false either if callable() returns false or an exception 
-	  * 		occurs, true otherwise
-	  * 
-	  * \details This method is a specific exception-to-boolean translation
-	  * 		 method. If an exception is caught, it is handled by calling
-	  * 		 the provided exception handler.
-	  */
-	template <typename TCallback,
-			  typename std::enable_if<std::is_same<bool, typename std::result_of<TCallback()>::type>::value>::type* = nullptr>
-	bool translateException(TCallback&& callable, const ExceptionHandlerType& handler)
+	try { return callable(); }
+	catch (const std::exception& exception)
 	{
-		try { return callable(); }
-		catch (const std::exception& exception)
-		{
-			handler(exception);
-			return false;
-		}
-		catch (...)
-		{
-			handler(std::runtime_error("unknown exception"));
-			return false;
-		}
+		handler(exception);
+		return false;
 	}
-} // namespace OpenViBE
+	catch (...)
+	{
+		handler(std::runtime_error("unknown exception"));
+		return false;
+	}
+}
+}  // namespace OpenViBE

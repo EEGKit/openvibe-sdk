@@ -136,4 +136,4 @@ protected:
 
 	CNameValuePairListImpl* m_impl = nullptr; ///< The list implementation
 };
-} // namespace OpenViBE
+}  // namespace OpenViBE

@@ -48,5 +48,5 @@ private:
 	CSimulatedBox& m_simulatedBox;
 };
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

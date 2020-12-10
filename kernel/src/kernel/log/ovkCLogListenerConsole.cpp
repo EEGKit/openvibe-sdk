@@ -405,5 +405,5 @@ void CLogListenerConsole::applyColor()
 void CLogListenerConsole::applyColor() { }
 #endif
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

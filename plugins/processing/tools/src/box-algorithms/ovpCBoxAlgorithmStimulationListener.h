@@ -56,10 +56,7 @@ public:
 	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
 	CString getShortDescription() const override { return "Prints stimulation codes in the log manager"; }
 
-	CString getDetailedDescription() const override
-	{
-		return "Prints each received stimulationto the log using the log level specified in the box config.";
-	}
+	CString getDetailedDescription() const override { return "Prints each received stimulationto the log using the log level specified in the box config."; }
 
 	CString getCategory() const override { return "Tools"; }
 	CString getVersion() const override { return "1.0"; }
@@ -82,6 +79,6 @@ public:
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationListenerDesc)
 };
 
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

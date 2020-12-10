@@ -2,22 +2,21 @@
 
 #include "IReaderHelper.h"
 
-namespace EBML
+namespace EBML {
+class EBML_API CReaderHelper final : public IReaderHelper
 {
-	class EBML_API CReaderHelper final : public IReaderHelper
-	{
-	public:
+public:
 
-		CReaderHelper();
-		~CReaderHelper() override;
-		uint64_t getUInt(const void* buffer, const size_t size) override;
-		int64_t getInt(const void* buffer, const size_t size) override;
-		double getDouble(const void* buffer, const size_t size) override;
-		const char* getStr(const void* buffer, const size_t size) override;
-		void release() override;
+	CReaderHelper();
+	~CReaderHelper() override;
+	uint64_t getUInt(const void* buffer, const size_t size) override;
+	int64_t getInt(const void* buffer, const size_t size) override;
+	double getDouble(const void* buffer, const size_t size) override;
+	const char* getStr(const void* buffer, const size_t size) override;
+	void release() override;
 
-	protected:
+protected:
 
-		IReaderHelper* m_impl = nullptr;
-	};
-} // namespace EBML
+	IReaderHelper* m_impl = nullptr;
+};
+}  // namespace EBML

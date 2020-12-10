@@ -227,7 +227,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const vector<MatrixXd>& cov,
 
 		for (int i = 0; i < eigenValues[c].size(); ++i)
 		{
-			sortedEigenValues[c][i]      = eigenValues[c][indexes[i].second];
+			sortedEigenValues[c][i] = eigenValues[c][indexes[i].second];
 			//@todo @FIXME This fonction work sometimes randomly
 			sortedEigenVectors[c].col(i) = eigenVectors[c].col(indexes[i].second);
 		}
@@ -335,7 +335,8 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		for (size_t c = 0; c < m_nClasses; ++c)
 		{
-			selectedVectorsMapper.block(c * m_filtersPerClass, 0, m_filtersPerClass, nChannels) = sortedVectors[c].block(0, 0, nChannels, m_filtersPerClass).transpose();
+			selectedVectorsMapper.block(c * m_filtersPerClass, 0, m_filtersPerClass, nChannels) = sortedVectors[c].block(0, 0, nChannels, m_filtersPerClass).
+					transpose();
 
 			this->getLogManager() << LogLevel_Info << "The " << m_filtersPerClass << " filter(s) for cond " << c + 1 << " cover "
 					<< 100.0 * sortedValues[c].head(m_filtersPerClass).sum() / sortedValues[c].sum() << "% of corresp. eigenvalues\n";

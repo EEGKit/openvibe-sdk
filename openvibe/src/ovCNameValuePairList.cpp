@@ -102,4 +102,4 @@ bool CNameValuePairList::getValue(const size_t index, CString& name, CString& va
 
 size_t CNameValuePairList::getSize() const { return m_impl->m_Map.size(); }
 
-} // namespace OpenViBE
+}  // namespace OpenViBE

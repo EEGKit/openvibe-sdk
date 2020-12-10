@@ -22,7 +22,7 @@ public:
 	uint64_t getClockFrequency() override;
 	bool initialize() override;
 	bool uninitialize() override;
-	bool processClock(CMessageClock& messageClock) override;
+	bool processClock(Kernel::CMessageClock& msg) override;
 	bool processInput(const size_t index) override;
 	bool process() override;
 
@@ -138,6 +138,6 @@ public:
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc)
 };
-} // namespace Tools
-} // namespace Plugins
-} // namespace OpenViBE
+}  // namespace Tools
+}  // namespace Plugins
+}  // namespace OpenViBE

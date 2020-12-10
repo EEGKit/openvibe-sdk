@@ -13,21 +13,20 @@ using namespace SignalProcessing;
 
 using namespace /*OpenViBE::*/Toolkit;
 
-namespace SigProSTD
+namespace SigProSTD {
+double WaveletFourierFactor(const char* type, const double param)
 {
-	double WaveletFourierFactor(const char* type, const double param)
-	{
-		double factor = -1;
-		if (strcmp(type, "morlet") == 0) { factor = 4.0 * M_PI / (param + std::sqrt(2 + param * param)); }
-		else if (strcmp(type, "paul") == 0) { factor = 4.0 * M_PI / (2 * param + 1); }
-		else if (strcmp(type, "dog") == 0) { factor = 2.0 * M_PI / std::sqrt(param + 0.5); }
-		return factor;
-	}
+	double factor = -1;
+	if (strcmp(type, "morlet") == 0) { factor = 4.0 * M_PI / (param + std::sqrt(2 + param * param)); }
+	else if (strcmp(type, "paul") == 0) { factor = 4.0 * M_PI / (2 * param + 1); }
+	else if (strcmp(type, "dog") == 0) { factor = 2.0 * M_PI / std::sqrt(param + 0.5); }
+	return factor;
+}
 
-	double WaveletScale2Period(const char* type, const double param, const double scale) { return WaveletFourierFactor(type, param) * scale; }
-	double WaveletScale2Freq(const char* type, const double param, const double scale) { return 1.0 / (WaveletFourierFactor(type, param) * scale); }
-	double WaveletFreq2Scale(const char* type, const double param, const double frequency) { return 1.0 / (WaveletFourierFactor(type, param) * frequency); }
-} // namespace SigProSTD
+double WaveletScale2Period(const char* type, const double param, const double scale) { return WaveletFourierFactor(type, param) * scale; }
+double WaveletScale2Freq(const char* type, const double param, const double scale) { return 1.0 / (WaveletFourierFactor(type, param) * scale); }
+double WaveletFreq2Scale(const char* type, const double param, const double frequency) { return 1.0 / (WaveletFourierFactor(type, param) * frequency); }
+}  // namespace SigProSTD
 
 bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 {
@@ -171,7 +170,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			}
 
 			// initialize CWT
-			m_waveletTransform = cwt_init(const_cast<char *>(m_waveletType), m_waveletParam, int(nSample), m_samplingPeriodDt, int(m_nScaleJ));
+			m_waveletTransform = cwt_init(const_cast<char*>(m_waveletType), m_waveletParam, int(nSample), m_samplingPeriodDt, int(m_nScaleJ));
 			if (!m_waveletTransform)
 			{
 				this->getLogManager() << LogLevel_Error << "Error during CWT initialization.\n";
@@ -194,7 +193,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				oMatrix->setDimensionSize(1, m_nScaleJ);
 				oMatrix->setDimensionSize(2, nSample);
 
-				for (size_t c          = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
+				for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 				for (size_t scaleIndex = 0; scaleIndex < m_nScaleJ; ++scaleIndex)
 				{
 					const double scaleValue     = m_waveletTransform->scale[scaleIndex];

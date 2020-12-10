@@ -71,5 +71,5 @@ protected:
 	std::thread::id m_owner;
 };
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

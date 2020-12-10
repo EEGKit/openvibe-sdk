@@ -31,11 +31,11 @@
 #define	OVTK_TypeId_ExperimentationInformation	OpenViBE::CIdentifier(0x403488E7, 0x565D70B6) // deprecated token, kept for compatibility, equal to the one above
 #define	OVTK_TypeId_Stimulations				OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
 #define	OVTK_TypeId_StreamedMatrix				OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
-#define		OVTK_TypeId_FeatureVector			OpenViBE::CIdentifier(0x17341935, 0x152FF448)
-#define		OVTK_TypeId_Signal					OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
-#define		OVTK_TypeId_Spectrum				OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
-#define		OVTK_TypeId_ChannelLocalisation		OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
-#define		OVTK_TypeId_ChannelUnits			OpenViBE::CIdentifier(0x6AB26B81, 0x0F8C02F3)
+#define OVTK_TypeId_FeatureVector				OpenViBE::CIdentifier(0x17341935, 0x152FF448)
+#define OVTK_TypeId_Signal						OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
+#define OVTK_TypeId_Spectrum					OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
+#define OVTK_TypeId_ChannelLocalisation			OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
+#define OVTK_TypeId_ChannelUnits				OpenViBE::CIdentifier(0x6AB26B81, 0x0F8C02F3)
 
 
 //__________________________________________________________________//
@@ -301,7 +301,6 @@
 
 // OpenViBE extensions, starting from 100001
 #define OVTK_UNIT_Degree_Per_Second													100001
-
 
 
 //__________________________________________________________________//

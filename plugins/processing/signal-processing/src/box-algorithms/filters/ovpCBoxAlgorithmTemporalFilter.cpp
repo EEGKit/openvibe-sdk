@@ -5,97 +5,96 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace SignalProcessing;
 
-namespace
-{
-	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandPass<32>, 1, Dsp::DirectFormII> CButterworthBandPass;
-	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandStop<32>, 1, Dsp::DirectFormII> CButterworthBandStop;
-	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::HighPass<32>, 1, Dsp::DirectFormII> CButterworthHighPass;
-	typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::LowPass<32>, 1, Dsp::DirectFormII> CButterworthLowPass;
+namespace {
+typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandPass<32>, 1, Dsp::DirectFormII> CButterworthBandPass;
+typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandStop<32>, 1, Dsp::DirectFormII> CButterworthBandStop;
+typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::HighPass<32>, 1, Dsp::DirectFormII> CButterworthHighPass;
+typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::LowPass<32>, 1, Dsp::DirectFormII> CButterworthLowPass;
 
-	std::shared_ptr<Dsp::Filter> createButterworthFilter(const EFilterType type, const size_t nSmooth)
+std::shared_ptr<Dsp::Filter> createButterworthFilter(const EFilterType type, const size_t nSmooth)
+{
+	switch (type)
 	{
-		switch (type)
+		case EFilterType::BandPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandPass>(int(nSmooth)));
+		case EFilterType::BandStop: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandStop>(int(nSmooth)));
+		case EFilterType::HighPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthHighPass>(int(nSmooth)));
+		case EFilterType::LowPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthLowPass>(int(nSmooth)));
+		default: return nullptr;
+	}
+}
+
+bool getButterworthParameters(Dsp::Params& parameters, const size_t frequency, const EFilterType type, const size_t order,
+							  const double lowCut, const double highCut, const double /*ripple*/)
+{
+	parameters[0] = double(frequency);
+	parameters[1] = double(order);
+	switch (type)
+	{
+		case EFilterType::BandPass:
+		case EFilterType::BandStop:
+			parameters[2] = .5 * (highCut + lowCut);
+			parameters[3] = 1. * (highCut - lowCut);
+			break;
+		case EFilterType::HighPass:
+			parameters[2] = lowCut;
+			break;
+		case EFilterType::LowPass:
+			parameters[2] = highCut;
+			break;
+		default:
+			return false;
+	}
+	return true;
+}
+
+/*
+typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandPass<4>, 1, Dsp::DirectFormII> CChebyshevBandPass;
+typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandStop<4>, 1, Dsp::DirectFormII> CChebyshevBandStop;
+typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::HighPass<4>, 1, Dsp::DirectFormII> CChebyshevHighPass;
+typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::LowPass<4>, 1, Dsp::DirectFormII> CChebyshevLowPass;
+	std::shared_ptr < Dsp::Filter > createChebishevFilter(size_t type, size_t nSmooth)
+	{
+		switch(type)
 		{
-			case EFilterType::BandPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandPass>(int(nSmooth)));
-			case EFilterType::BandStop: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthBandStop>(int(nSmooth)));
-			case EFilterType::HighPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthHighPass>(int(nSmooth)));
-			case EFilterType::LowPass: return std::static_pointer_cast<Dsp::Filter>(std::make_shared<CButterworthLowPass>(int(nSmooth)));
-			default: return nullptr;
+			case EFilterType::BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(int(nSmooth)));
+			case EFilterType::BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(int(nSmooth)));
+			case EFilterType::HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(int(nSmooth)));
+			case EFilterType::LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(int(nSmooth)));
+			default:
+				break;
 		}
+		return NULL;
 	}
 
-	bool getButterworthParameters(Dsp::Params& parameters, const size_t frequency, const EFilterType type, const size_t order,
-								  const double lowCut, const double highCut, const double /*ripple*/)
+	bool getChebishevParameters(Dsp::Params& params, size_t type, size_t sampling, size_t order, double lowCut, double highCut, double ripple)
 	{
-		parameters[0] = double(frequency);
-		parameters[1] = double(order);
-		switch (type)
+		params[0]=int(sampling);
+		params[1]=int(order);
+		switch(type)
 		{
 			case EFilterType::BandPass:
 			case EFilterType::BandStop:
-				parameters[2] = .5 * (highCut + lowCut);
-				parameters[3] = 1. * (highCut - lowCut);
+				params[2]=.5*(highCut+lowCut);
+				params[3]=1.*(highCut-lowCut);
+				params[4]=ripple;
 				break;
 			case EFilterType::HighPass:
-				parameters[2] = lowCut;
+				params[2]=highCut; // TO CHECK : lowCut ?
+				params[3]=ripple;
 				break;
 			case EFilterType::LowPass:
-				parameters[2] = highCut;
+				params[2]=highCut;
+				params[3]=lowCut;  // TO CHECK : ripple ?
 				break;
 			default:
 				return false;
 		}
 		return true;
 	}
+	*/
 
-	/*
-	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandPass<4>, 1, Dsp::DirectFormII> CChebyshevBandPass;
-	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandStop<4>, 1, Dsp::DirectFormII> CChebyshevBandStop;
-	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::HighPass<4>, 1, Dsp::DirectFormII> CChebyshevHighPass;
-	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::LowPass<4>, 1, Dsp::DirectFormII> CChebyshevLowPass;
-		std::shared_ptr < Dsp::Filter > createChebishevFilter(size_t type, size_t nSmooth)
-		{
-			switch(type)
-			{
-				case EFilterType::BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(int(nSmooth)));
-				case EFilterType::BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(int(nSmooth)));
-				case EFilterType::HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(int(nSmooth)));
-				case EFilterType::LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(int(nSmooth)));
-				default:
-					break;
-			}
-			return NULL;
-		}
-	
-		bool getChebishevParameters(Dsp::Params& params, size_t type, size_t sampling, size_t order, double lowCut, double highCut, double ripple)
-		{
-			params[0]=int(sampling);
-			params[1]=int(order);
-			switch(type)
-			{
-				case EFilterType::BandPass:
-				case EFilterType::BandStop:
-					params[2]=.5*(highCut+lowCut);
-					params[3]=1.*(highCut-lowCut);
-					params[4]=ripple;
-					break;
-				case EFilterType::HighPass:
-					params[2]=highCut; // TO CHECK : lowCut ?
-					params[3]=ripple;
-					break;
-				case EFilterType::LowPass:
-					params[2]=highCut;
-					params[3]=lowCut;  // TO CHECK : ripple ?
-					break;
-				default:
-					return false;
-			}
-			return true;
-		}
-		*/
-
-	typedef bool (*fpGetParameters_t)(Dsp::Params& params, size_t sampling, EFilterType type, size_t order, double lowCut, double highCut, double ripple);
-	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(EFilterType type, size_t nSmooth);
+typedef bool (*fpGetParameters_t)(Dsp::Params& params, size_t sampling, EFilterType type, size_t order, double lowCut, double highCut, double ripple);
+typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(EFilterType type, size_t nSmooth);
 }  // namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
@@ -202,8 +201,14 @@ bool CBoxAlgorithmTemporalFilter::process()
 			}
 			else { OV_ERROR_KRF("Invalid filter method", ErrorType::BadSetting); }
 
-			if (m_type == EFilterType::HighPass) { this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n"; }
-			if (m_type == EFilterType::LowPass) { this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n"; }
+			if (m_type == EFilterType::HighPass)
+			{
+				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
+			}
+			if (m_type == EFilterType::LowPass)
+			{
+				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
+			}
 
 			const size_t frequency = m_decoder.getOutputSamplingRate();
 			const size_t nSmooth   = 100 * frequency;

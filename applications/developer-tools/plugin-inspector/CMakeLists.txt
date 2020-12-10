@@ -22,8 +22,8 @@
 PROJECT(openvibe-plugin-inspector)
 
 FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
-
 ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
 
 INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBECommon")
@@ -34,9 +34,7 @@ INCLUDE("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros
-# Defines target operating system
-# Defines target architecture
-# Defines target compiler
+# Defines target operating system, architecture and compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
 

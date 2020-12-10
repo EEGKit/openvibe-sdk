@@ -83,11 +83,8 @@ bool CChrono::stepOut()
 }
 
 uint64_t CChrono::getTotalStepInDuration() const { return m_totalStepInTime; }
-
 uint64_t CChrono::getTotalStepOutDuration() const { return m_totalStepOutTime; }
-
 uint64_t CChrono::getAverageStepInDuration() const { return m_nStep ? this->getTotalStepInDuration() / m_nStep : 0; }
-
 uint64_t CChrono::getAverageStepOutDuration() const { return m_nStep ? this->getTotalStepOutDuration() / m_nStep : 0; }
 
 double CChrono::getStepInPercentage() const

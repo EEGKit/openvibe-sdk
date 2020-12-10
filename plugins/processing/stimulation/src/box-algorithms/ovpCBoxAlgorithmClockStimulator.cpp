@@ -33,7 +33,7 @@ bool CBoxAlgorithmClockStimulator::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& /*messageClock*/)
+bool CBoxAlgorithmClockStimulator::processClock(Kernel::CMessageClock& /*msg*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

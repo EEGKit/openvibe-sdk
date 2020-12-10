@@ -13,15 +13,6 @@ IF(NOT DEFINED OVT_TEST_DATA_DIR)
 	MESSAGE(FATAL_ERROR "Path to tests input data files is not set")
 ENDIF()
 
-# ----------------------
-# Project configuration
-# ----------------------
-
-# Sort target into directories for better visualization in IDE
-SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET(OVT_UNIT_TESTS_FOLDER unit-tests)
-SET(OVT_TOOLS_FOLDER tools)
-
 # ---------------------
 # Project dependencies
 # ---------------------

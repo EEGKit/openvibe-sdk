@@ -17,16 +17,14 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 	m_variables = new double*[boxContext.getInputCount()];
 
-	OV_ERROR_UNLESS_KRF(m_variables, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs",
-						ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_variables, "Failed to allocate arrays of floats for [" << boxContext.getInputCount() << "] inputs", ErrorType::BadAlloc);
 
 	const CString equation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_parser               = new CEquationParser(*this, m_variables, boxContext.getInputCount());
 
 	OV_ERROR_UNLESS_KRF(m_parser, "Failed to create equation parser", ErrorType::BadAlloc);
 
-	OV_ERROR_UNLESS_KRF(m_parser->compileEquation(equation.toASCIIString()), "Failed to compile equation [" << equation << "]",
-						ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_parser->compileEquation(equation.toASCIIString()), "Failed to compile equation [" << equation << "]", ErrorType::Internal);
 
 	m_equationType  = m_parser->getTreeCategory();
 	m_equationParam = m_parser->getTreeParameter();
@@ -35,8 +33,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	boxContext.getOutputType(0, streamType);
 
 	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(streamType, OV_TypeId_StreamedMatrix),
-						"Invalid output stream [" << streamType.str() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
-						ErrorType::Internal);
+						"Invalid output stream [" << streamType.str() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)", ErrorType::Internal);
 
 	if (streamType == OV_TypeId_StreamedMatrix)
 	{

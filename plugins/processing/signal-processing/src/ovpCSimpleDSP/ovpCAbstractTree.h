@@ -86,7 +86,7 @@ class CAbstractTreeParentNode : public CAbstractTreeNode
 public:
 
 	//! Children of this node
-	std::vector<CAbstractTreeNode *> m_Children;
+	std::vector<CAbstractTreeNode*> m_Children;
 
 	//! The node operator's identifier
 	uint64_t m_ID = 0;
@@ -133,7 +133,7 @@ public:
 	 * Returns the vector of children of the node.
 	 * \return A reference to the vector of children.
 	 */
-	virtual std::vector<CAbstractTreeNode *>& getChildren() { return m_Children; }
+	virtual std::vector<CAbstractTreeNode*>& getChildren() { return m_Children; }
 
 	/**
 	 * Adds a child to this node.

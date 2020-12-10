@@ -13,5 +13,5 @@ void CBoxAlgorithmLogManager::log(const ELogLevel logLevel)
 			<< "Box algorithm" << LogColor_PopStateBit << "::" << boxId << " aka " << m_simulatedBox.getName() << "> ";
 }
 
-} // namespace Kernel
-} // namespace OpenViBE
+}  // namespace Kernel
+}  // namespace OpenViBE

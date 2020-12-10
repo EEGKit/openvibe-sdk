@@ -14,12 +14,11 @@ using namespace /*OpenViBE::*/Toolkit;
 using namespace Eigen;
 
 
-namespace
-{
-	const char* const BASE_NODE_NAME   = "Class-config";
-	const char* const WEIGHT_NODE_NAME = "Weights";
-	const char* const BIAS_NODE_NAME   = "Bias";
-} // namespace
+namespace {
+const char* const BASE_NODE_NAME   = "Class-config";
+const char* const WEIGHT_NODE_NAME = "Weights";
+const char* const BIAS_NODE_NAME   = "Bias";
+}  // namespace
 
 bool CAlgorithmLDADiscriminantFunction::loadConfig(const XML::IXMLNode* configuration)
 {

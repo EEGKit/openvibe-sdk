@@ -13,13 +13,11 @@ bool CCppDefineGenerator::openFile(const char* filename)
 	return true;
 }
 
-
 bool CCppDefineGenerator::appendStimulation(SStimulation& stim)
 {
 	m_file << "#define " << stim.id << "  " << stim.hexa << endl;
 	return true;
 }
-
 
 bool CCppDefineGenerator::closeFile()
 {

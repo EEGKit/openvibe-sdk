@@ -47,37 +47,35 @@ inline bool getCodedBuffer(const uint64_t value, unsigned char* buffer, size_t* 
 // ________________________________________________________________________________________________________________
 //
 
-namespace EBML
+namespace EBML {
+namespace {
+class CWriterNode final
 {
-	namespace
-	{
-		class CWriterNode final
-		{
-		public:
+public:
 
-			CWriterNode(const CIdentifier& identifier, CWriterNode* parentNode) : m_ID(identifier), m_ParentNode(parentNode) {}
-			~CWriterNode();
-			void process(IWriterCallback& callback);
+	CWriterNode(const CIdentifier& identifier, CWriterNode* parentNode) : m_ID(identifier), m_ParentNode(parentNode) {}
+	~CWriterNode();
+	void process(IWriterCallback& callback);
 
-		protected:
+protected:
 
-			size_t getTotalContentSize(bool identifierAndSize);
+	size_t getTotalContentSize(bool identifierAndSize);
 
-		private:
+private:
 
-			CWriterNode() = delete;
+	CWriterNode() = delete;
 
-		public:
+public:
 
-			CIdentifier m_ID;
-			CWriterNode* m_ParentNode = nullptr;
-			size_t m_BufferLength     = 0;
-			unsigned char* m_Buffer   = nullptr;
-			bool m_Buffered           = false;
-			vector<CWriterNode*> m_Childrens;
-		};
-	} // namespace
-} // namespace EBML
+	CIdentifier m_ID;
+	CWriterNode* m_ParentNode = nullptr;
+	size_t m_BufferLength     = 0;
+	unsigned char* m_Buffer   = nullptr;
+	bool m_Buffered           = false;
+	vector<CWriterNode*> m_Childrens;
+};
+}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -130,30 +128,28 @@ size_t CWriterNode::getTotalContentSize(const bool identifierAndSize)
 // ________________________________________________________________________________________________________________
 //
 
-namespace EBML
+namespace EBML {
+namespace {
+class CWriter final : public IWriter
 {
-	namespace
-	{
-		class CWriter final : public IWriter
-		{
-		public:
+public:
 
-			explicit CWriter(IWriterCallback& callback) : m_callback(callback) {}
-			bool openChild(const CIdentifier& identifier) override;
-			bool setChildData(const void* buffer, const size_t size) override;
-			bool closeChild() override;
-			void release() override;
+	explicit CWriter(IWriterCallback& callback) : m_callback(callback) {}
+	bool openChild(const CIdentifier& identifier) override;
+	bool setChildData(const void* buffer, const size_t size) override;
+	bool closeChild() override;
+	void release() override;
 
-		protected:
+protected:
 
-			CWriterNode* m_node = nullptr;
-			IWriterCallback& m_callback;
+	CWriterNode* m_node = nullptr;
+	IWriterCallback& m_callback;
 
-		private:
-			CWriter() = delete;
-		};
-	} // namespace
-} // namespace EBML
+private:
+	CWriter() = delete;
+};
+}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //

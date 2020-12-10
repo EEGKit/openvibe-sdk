@@ -418,5 +418,5 @@ typedef TResampler<float, EResamplerStoreModes::ChannelWise> CDownsamplerCf;
 typedef TResampler<double, EResamplerStoreModes::SampleWise> CDownsamplerSd;
 typedef TResampler<double, EResamplerStoreModes::ChannelWise> CDownsamplerCd;
 
-} // namespace Resampler
-} // namespace Common
+}  // namespace Resampler
+}  // namespace Common

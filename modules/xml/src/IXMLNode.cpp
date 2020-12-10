@@ -13,48 +13,47 @@
 
 using namespace std;
 
-namespace XML
+namespace XML {
+class IXMLNodeImpl final : public IXMLNode
 {
-	class IXMLNodeImpl final : public IXMLNode
-	{
-	public:
-		explicit IXMLNodeImpl(const char* name) : m_name(name) {}
-		const char* getName() const override { return m_name.c_str(); }
-		void release() override { delete this; }
+public:
+	explicit IXMLNodeImpl(const char* name) : m_name(name) {}
+	const char* getName() const override { return m_name.c_str(); }
+	void release() override { delete this; }
 
-		//Attribute
-		bool addAttribute(const char* name, const char* value) override;
-		bool hasAttribute(const char* name) const override { return m_attibutes.count(name) != 0; }
-		const char* getAttribute(const char* name) const override;
+	//Attribute
+	bool addAttribute(const char* name, const char* value) override;
+	bool hasAttribute(const char* name) const override { return m_attibutes.count(name) != 0; }
+	const char* getAttribute(const char* name) const override;
 
-		//PCDATA
-		void setPCData(const char* data) override;
-		void appendPCData(const char* data) override;
-		const char* getPCData() const override { return m_pcData.c_str(); }
+	//PCDATA
+	void setPCData(const char* data) override;
+	void appendPCData(const char* data) override;
+	const char* getPCData() const override { return m_pcData.c_str(); }
 
-		//Child
-		void addChild(IXMLNode* node) override { m_nodes.push_back(node); }
-		IXMLNode* getChild(const size_t index) const override { return m_nodes[index]; }
-		IXMLNode* getChildByName(const char* name) const override;
-		size_t getChildCount() const override;
+	//Child
+	void addChild(IXMLNode* node) override { m_nodes.push_back(node); }
+	IXMLNode* getChild(const size_t index) const override { return m_nodes[index]; }
+	IXMLNode* getChildByName(const char* name) const override;
+	size_t getChildCount() const override;
 
-		//XMl generation
-		char* getXML(const size_t depth = 0) const override;
+	//XMl generation
+	char* getXML(const size_t depth = 0) const override;
 
-	protected:
-		~IXMLNodeImpl() override { for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); } }
+protected:
+	~IXMLNodeImpl() override { for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); } }
 
-	private:
-		static std::string sanitize(const std::string& str);
-		static void applyIndentation(std::string& str, const size_t depth);
+private:
+	static std::string sanitize(const std::string& str);
+	static void applyIndentation(std::string& str, const size_t depth);
 
 
-		std::vector<IXMLNode *> m_nodes;
-		std::map<std::string, std::string> m_attibutes;
-		std::string m_name = "";
-		std::string m_pcData = "";
-		bool m_hasPCData = false;
-	};
+	std::vector<IXMLNode*> m_nodes;
+	std::map<std::string, std::string> m_attibutes;
+	std::string m_name   = "";
+	std::string m_pcData = "";
+	bool m_hasPCData     = false;
+};
 }	// namespace XML
 
 using namespace std;
@@ -80,7 +79,7 @@ const char* IXMLNodeImpl::getAttribute(const char* name) const
 
 void IXMLNodeImpl::setPCData(const char* data)
 {
-	m_pcData   = data;
+	m_pcData    = data;
 	m_hasPCData = true;
 }
 
@@ -151,7 +150,7 @@ char* IXMLNodeImpl::getXML(const size_t depth) const
 
 	for (auto it = m_nodes.begin(); it != m_nodes.end(); ++it)
 	{
-		IXMLNode* node = static_cast<IXMLNode *>(*it);
+		IXMLNode* node = static_cast<IXMLNode*>(*it);
 		str += string("\n") + node->getXML(depth + 1);
 	}
 
