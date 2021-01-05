@@ -5,7 +5,7 @@ using namespace /*OpenViBE::*/Kernel;
 using namespace /*OpenViBE::*/Plugins;
 using namespace /*OpenViBE::*/Toolkit;
 
-CFeatureVectorSet::CFeatureVectorSet(const IMatrix& matrix) : m_matrix(matrix)
+CFeatureVectorSet::CFeatureVectorSet(const CMatrix& matrix) : m_matrix(matrix)
 {
 	if (matrix.getDimensionCount() != 2) { throw std::runtime_error("Fetaure vector set matrix must be 2 dimensions"); }
 

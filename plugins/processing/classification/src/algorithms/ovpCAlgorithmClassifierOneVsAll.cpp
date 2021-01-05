@@ -21,8 +21,8 @@ using namespace Classification;
 
 using namespace /*OpenViBE::*/Toolkit;
 
-typedef std::pair<IMatrix*, IMatrix*> CIMatrixPointerPair;
-typedef std::pair<double, IMatrix*> CClassifierOutput;
+typedef std::pair<CMatrix*, CMatrix*> CIMatrixPointerPair;
+typedef std::pair<double, CMatrix*> CClassifierOutput;
 
 bool CAlgorithmClassifierOneVsAll::initialize()
 {
@@ -53,12 +53,10 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& dataset)
 						"Invalid samples count for [" << classLabels.size() << "] classes (expected samples for " << nClass << " classes)",
 						ErrorType::BadConfig);
 
-	//We set the IMatrix fo the first classifier
+	//We set the CMatrix fo the first classifier
 	const size_t size = dataset[0].getSize();
-	TParameterHandler<IMatrix*> reference(m_subClassifiers[0]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-	reference->setDimensionCount(2);
-	reference->setDimensionSize(0, dataset.getFeatureVectorCount());
-	reference->setDimensionSize(1, size + 1);
+	TParameterHandler<CMatrix*> reference(m_subClassifiers[0]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	reference->resize(dataset.getFeatureVectorCount(), size + 1);
 
 	double* buffer = reference->getBuffer();
 	for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j)
@@ -71,8 +69,8 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& dataset)
 	//And then we just change adapt the label for each feature vector but we don't copy them anymore
 	for (size_t c = 0; c < m_subClassifiers.size(); ++c)
 	{
-		TParameterHandler<IMatrix*> ip_dataset(m_subClassifiers[c]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-		ip_dataset = static_cast<IMatrix*>(reference);
+		TParameterHandler<CMatrix*> ip_dataset(m_subClassifiers[c]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+		ip_dataset = static_cast<CMatrix*>(reference);
 
 		buffer = ip_dataset->getBuffer();
 		for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j)
@@ -98,27 +96,26 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 	for (size_t i = 0; i < m_subClassifiers.size(); ++i)
 	{
 		IAlgorithmProxy* subClassifier = this->m_subClassifiers[i];
-		TParameterHandler<IMatrix*> ip_sample(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+		TParameterHandler<CMatrix*> ip_sample(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 		TParameterHandler<double> op_class(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-		TParameterHandler<IMatrix*> op_values(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-		TParameterHandler<IMatrix*> op_probabilities(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-		ip_sample->setDimensionCount(1);
-		ip_sample->setDimensionSize(0, size);
+		TParameterHandler<CMatrix*> op_values(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+		TParameterHandler<CMatrix*> op_probabilities(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+		ip_sample->resize(size);
 
 		double* buffer = ip_sample->getBuffer();
 		memcpy(buffer, sample.getBuffer(), size * sizeof(double));
 		subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
-		IMatrix* probabilities = static_cast<IMatrix*>(op_probabilities);
+		CMatrix* probabilities = static_cast<CMatrix*>(op_probabilities);
 		//If the algorithm give a probability we take it, instead we take the first value
 		if (probabilities->getDimensionCount() != 0) { classification.push_back(CClassifierOutput(double(op_class), probabilities)); }
-		else { classification.push_back(CClassifierOutput(double(op_class), static_cast<IMatrix*>(op_values))); }
+		else { classification.push_back(CClassifierOutput(double(op_class), static_cast<CMatrix*>(op_values))); }
 		this->getLogManager() << LogLevel_Debug << i << " " << double(op_class) << " " << double((*op_probabilities)[0]) << " " << double(
 			(*op_probabilities)[1]) << "\n";
 	}
 
 	//Now, we determine the best classification
-	CClassifierOutput best = CClassifierOutput(-1.0, static_cast<IMatrix*>(nullptr));
+	CClassifierOutput best = CClassifierOutput(-1.0, static_cast<CMatrix*>(nullptr));
 	classId                = -1;
 
 	for (size_t i = 0; i < classification.size(); ++i)
@@ -172,8 +169,8 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 
 	// For distances we just send the distance vector of the winner
 	IAlgorithmProxy* winner = this->m_subClassifiers[size_t(classId)];
-	TParameterHandler<IMatrix*> op_winnerValues(winner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	IMatrix* tmpMatrix = static_cast<IMatrix*>(op_winnerValues);
+	TParameterHandler<CMatrix*> op_winnerValues(winner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	CMatrix* tmpMatrix = static_cast<CMatrix*>(op_winnerValues);
 	distance.setSize(tmpMatrix->getBufferElementCount());
 	memcpy(distance.getBuffer(), tmpMatrix->getBuffer(), tmpMatrix->getBufferElementCount() * sizeof(double));
 
@@ -182,7 +179,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& sample, double
 	probability.setSize(m_subClassifiers.size());
 	for (size_t i = 0; i < m_subClassifiers.size(); ++i)
 	{
-		TParameterHandler<IMatrix*> op_Probabilities(m_subClassifiers[i]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+		TParameterHandler<CMatrix*> op_Probabilities(m_subClassifiers[i]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 		probability[i] = op_Probabilities->getBuffer()[0];
 		sum += probability[i];
 	}
@@ -291,7 +288,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfig(XML::IXMLNode* configNode)
 
 size_t CAlgorithmClassifierOneVsAll::getNDistances()
 {
-	TParameterHandler<IMatrix*> op_distances(m_subClassifiers[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	TParameterHandler<CMatrix*> op_distances(m_subClassifiers[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	return op_distances->getDimensionSize(0);
 }
 

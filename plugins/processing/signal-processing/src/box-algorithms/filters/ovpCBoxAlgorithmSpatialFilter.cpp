@@ -34,9 +34,7 @@ size_t CBoxAlgorithmSpatialFilter::loadCoefs(const CString& coefs, const char c1
 						ErrorType::BadProcessing);
 
 	// Resize in one step for efficiency.
-	m_filterBank.setDimensionCount(2);
-	m_filterBank.setDimensionSize(0, nRows);
-	m_filterBank.setDimensionSize(1, nCols);
+	m_filterBank.resize(nRows, nCols);
 
 	double* filter = m_filterBank.getBuffer();
 
@@ -184,7 +182,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 		if (m_decoder->isHeaderReceived())
 		{
 			// we can treat them all as matrix decoders as they all inherit from it
-			const IMatrix* iMatrix = (static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder))->getOutputMatrix();
+			const CMatrix* iMatrix = (static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder))->getOutputMatrix();
 
 			const size_t nChannelIn = iMatrix->getDimensionSize(0);
 			const size_t nSampleIn  = iMatrix->getDimensionSize(1);
@@ -200,10 +198,8 @@ bool CBoxAlgorithmSpatialFilter::process()
 								"Invalid input channel count  [" << nChannelIn << "] (expected " << nChannelFilterIn << " channel count)",
 								ErrorType::BadConfig);
 
-			IMatrix* oMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, nChannelFilterOut);
-			oMatrix->setDimensionSize(1, nSampleIn);
+			CMatrix* oMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
+			oMatrix->resize(nChannelFilterOut, nSampleIn);
 
 			// Name channels
 			for (size_t j = 0; j < oMatrix->getDimensionSize(0); ++j) { oMatrix->setDimensionLabel(0, j, ("sFiltered " + std::to_string(j)).c_str()); }
@@ -212,8 +208,8 @@ bool CBoxAlgorithmSpatialFilter::process()
 		}
 		if (m_decoder->isBufferReceived())
 		{
-			const IMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputMatrix();
-			IMatrix* oMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
+			const CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*>(m_decoder)->getOutputMatrix();
+			CMatrix* oMatrix       = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*>(m_encoder)->getInputMatrix();
 
 			const double* in         = iMatrix->getBuffer();
 			double* out              = oMatrix->getBuffer();

@@ -23,7 +23,7 @@ public:
 
 	virtual bool parameterize() = 0;
 
-	virtual bool compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities) = 0;
+	virtual bool compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities) = 0;
 	virtual XML::IXMLNode* saveConfig() = 0;
 	virtual bool loadConfig(XML::IXMLNode& node) = 0;
 	bool process() override;

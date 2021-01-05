@@ -19,7 +19,7 @@ public:
 
 protected:
 
-	Kernel::TParameterHandler<IMatrix*> ip_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> ip_pMatrix;
 
 private:
 

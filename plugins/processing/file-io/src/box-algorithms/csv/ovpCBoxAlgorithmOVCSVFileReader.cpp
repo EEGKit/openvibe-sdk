@@ -91,17 +91,14 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(Kernel::CMessageClock& /*msg*/)
 bool CBoxAlgorithmOVCSVFileReader::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* matrix    = m_algorithmEncoder.getInputMatrix();
+	CMatrix* matrix    = m_algorithmEncoder.getInputMatrix();
 
 	// encode Header if not already encoded
 	if (!m_isHeaderSent)
 	{
 		if (m_typeID == OV_TypeId_Signal)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2), "Failed to set dimension count", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, m_nSamplePerBuffer), "Failed to set second dimension size", ErrorType::Internal);
-
+			matrix->resize(m_channelNames.size(), m_nSamplePerBuffer);
 			size_t index = 0;
 
 			for (const std::string& channelName : m_channelNames)
@@ -122,8 +119,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 				for (size_t d2 = 0; d2 < m_dimSizes[d1]; ++d2)
 				{
-					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()), "Failed to set dimension label",
-									  ErrorType::Internal);
+					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()), "Failed to set dimension label", ErrorType::Internal);
 				}
 
 				prevDimSize += m_dimSizes[d1];
@@ -131,8 +127,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		}
 		else if (m_typeID == OV_TypeId_FeatureVector)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(1), "Failed to set dimension count", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", ErrorType::Internal);
+			matrix->resize(m_channelNames.size());
 
 			size_t index = 0;
 			for (const std::string& channelName : m_channelNames)
@@ -142,14 +137,10 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		}
 		else if (m_typeID == OV_TypeId_Spectrum)
 		{
-			IMatrix* frequencyAbscissaMatrix = m_algorithmEncoder.getInputFrequencyAbcissa();
+			CMatrix* frequencyAbscissaMatrix = m_algorithmEncoder.getInputFrequencyAbcissa();
 
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2), "Failed to set dimension count", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, m_channelNames.size()), "Failed to set first dimension size", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, m_frequencyAbscissa.size()), "Failed to set first dimension size", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionCount(1), "Failed to set dimension count", ErrorType::Internal);
-			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionSize(0, m_frequencyAbscissa.size()), "Failed to set first dimension size",
-							  ErrorType::Internal);
+			matrix->resize(m_channelNames.size(), m_frequencyAbscissa.size());
+			frequencyAbscissaMatrix->resize(m_frequencyAbscissa.size());
 
 			size_t index = 0;
 			for (const std::string& channelName : m_channelNames)

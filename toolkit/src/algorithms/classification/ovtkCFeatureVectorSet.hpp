@@ -23,7 +23,7 @@ public:
 
 	_IsDerivedFromClass_Final_(IFeatureVector, OV_UndefinedIdentifier)
 
-	const IMatrix* m_Matrix = nullptr;
+	const CMatrix* m_Matrix = nullptr;
 	uint32_t m_DimensionIdx = 0;
 	uint32_t m_Size         = 0;
 	const double* m_Buffer  = nullptr;
@@ -33,7 +33,7 @@ class CFeatureVectorSet final : public IFeatureVectorSet
 {
 public:
 
-	explicit CFeatureVectorSet(const IMatrix& matrix);
+	explicit CFeatureVectorSet(const CMatrix& matrix);
 	size_t getFeatureVectorCount() const override { return m_matrix.getDimensionSize(0); }
 	bool setFeatureVectorCount(const size_t /*nFeatureVector*/) override { return false; }
 	bool addFeatureVector(const IFeatureVector& /*featureVector*/) override { return false; }
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-	const IMatrix& m_matrix;
+	const CMatrix& m_matrix;
 	std::map<uint32_t, CInternalFeatureVector> m_features;
 };
 }  // namespace Toolkit

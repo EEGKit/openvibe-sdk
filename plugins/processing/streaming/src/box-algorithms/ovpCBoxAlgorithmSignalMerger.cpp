@@ -90,7 +90,7 @@ bool CBoxAlgorithmSignalMerger::process()
 		{
 			m_decoders[i]->decode(c);
 
-			const IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
+			const CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
 			if (m_decoders[i]->isHeaderReceived())
 			{
 				nHeader++;
@@ -126,14 +126,12 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nHeader)
 		{
 			// We have received headers from all inputs
-			IMatrix* ip_matrix = m_encoder->getInputMatrix();
+			CMatrix* ip_matrix = m_encoder->getInputMatrix();
 
-			ip_matrix->setDimensionCount(2);
-			ip_matrix->setDimensionSize(0, nChannel);
-			ip_matrix->setDimensionSize(1, nSamplePerBlock);
+			ip_matrix->resize(nChannel, nSamplePerBlock);
 			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
-				const IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
+				const CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
 				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++) { ip_matrix->setDimensionLabel(0, k, op_matrix->getDimensionLabel(0, j)); }
 			}
 			const uint64_t sampling           = m_decoders[0]->getOutputSamplingRate();
@@ -149,13 +147,13 @@ bool CBoxAlgorithmSignalMerger::process()
 		if (nBuffer)
 		{
 			// We have received one buffer from each input
-			IMatrix* ip_matrix = m_encoder->getInputMatrix();
+			CMatrix* ip_matrix = m_encoder->getInputMatrix();
 
 			nSamplePerBlock = ip_matrix->getDimensionSize(1);
 
 			for (size_t i = 0, k = 0; i < nInput; ++i)
 			{
-				IMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
+				CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
 				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++)
 				{
 					memcpy(ip_matrix->getBuffer() + k * nSamplePerBlock, op_matrix->getBuffer() + j * nSamplePerBlock, nSamplePerBlock * sizeof(double));

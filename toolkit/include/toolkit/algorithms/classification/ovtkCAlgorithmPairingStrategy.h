@@ -12,7 +12,7 @@
 #define OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm      OpenViBE::CIdentifier(0xD9E60DF9, 0x20EC8FC9)
 #define OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture            OpenViBE::CIdentifier(0x784A9CDF, 0xA41C27F8)
 
-typedef int (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
+typedef int (*fClassifierComparison)(OpenViBE::CMatrix&, OpenViBE::CMatrix&);
 
 namespace OpenViBE {
 namespace Toolkit {

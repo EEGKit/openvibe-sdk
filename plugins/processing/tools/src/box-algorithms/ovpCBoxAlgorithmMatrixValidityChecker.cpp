@@ -74,7 +74,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 		for (size_t j = 0; j < boxCtx.getInputChunkCount(i); ++j)
 		{
 			m_decoders[i].decode(j);
-			IMatrix* matrix = m_decoders[i].getOutputMatrix();
+			CMatrix* matrix = m_decoders[i].getOutputMatrix();
 
 			if (m_decoders[i].isHeaderReceived())
 			{
@@ -93,7 +93,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				// log warning
 				if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
-					if (!Toolkit::Matrix::isContentValid(*matrix))
+					if (!matrix->isBufferValid())
 					{
 						getLogManager() << m_logLevel << "Matrix on input " << i << " either contains NAN or Infinity between " <<
 								CTime(boxCtx.getInputChunkStartTime(i, j)) << " and " << CTime(boxCtx.getInputChunkEndTime(i, j)) << ".\n";
@@ -102,7 +102,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					// stop player
 				else if (m_validityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
-					if (!Toolkit::Matrix::isContentValid(*matrix))
+					if (!matrix->isBufferValid())
 					{
 						this->getPlayerContext().stop();
 						OV_ERROR_KRF(

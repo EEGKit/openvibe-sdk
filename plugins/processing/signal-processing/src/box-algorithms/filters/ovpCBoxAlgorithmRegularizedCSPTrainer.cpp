@@ -101,16 +101,14 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const size_t index)
 	for (size_t i = 0; i < boxCtx.getInputChunkCount(index + 1); ++i)
 	{
 		auto* decoder         = &m_signalDecoders[index];
-		const IMatrix* matrix = decoder->getOutputMatrix();
+		const CMatrix* matrix = decoder->getOutputMatrix();
 
 		decoder->decode(i);
 		if (decoder->isHeaderReceived())
 		{
-			TParameterHandler<IMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
+			TParameterHandler<CMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 
-			features->setDimensionCount(2);
-			features->setDimensionSize(0, matrix->getDimensionSize(1));
-			features->setDimensionSize(1, matrix->getDimensionSize(0));
+			features->resize(matrix->getDimensionSize(1), matrix->getDimensionSize(0));
 
 			OV_ERROR_UNLESS_KRF(m_filtersPerClass <= matrix->getDimensionSize(0),
 								"Invalid CSP filter dimension of [" << m_filtersPerClass << "] for stream " << i+1 <<
@@ -123,7 +121,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(const size_t index)
 		}
 		if (decoder->isBufferReceived())
 		{
-			TParameterHandler<IMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
+			TParameterHandler<CMatrix*> features(curCovProxy.cov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 
 			// transpose data
 			const size_t nChannels = matrix->getDimensionSize(0);
@@ -276,7 +274,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 	{
 		this->getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";
 
-		const IMatrix* input   = m_signalDecoders[0].getOutputMatrix();
+		const CMatrix* input   = m_signalDecoders[0].getOutputMatrix();
 		const size_t nChannels = input->getDimensionSize(0);
 
 		this->getLogManager() << LogLevel_Debug << "Computing eigen vector decomposition...\n";
@@ -290,7 +288,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 								"Invalid sample count of [" <<m_covProxies[i].nSamples << "] for condition number " << i << " (expected value > 2)",
 								ErrorType::BadProcessing);
 
-			TParameterHandler<IMatrix*> op_cov(m_covProxies[i].cov->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
+			TParameterHandler<CMatrix*> op_cov(m_covProxies[i].cov->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
 
 			// Get regularized cov
 			m_covProxies[i].cov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, true);
@@ -327,9 +325,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		// Create a CMatrix mapper that can spool the filters to a file
 		CMatrix selectedVectors;
-		selectedVectors.setDimensionCount(2);
-		selectedVectors.setDimensionSize(0, m_filtersPerClass * m_nClasses);
-		selectedVectors.setDimensionSize(1, nChannels);
+		selectedVectors.resize(m_filtersPerClass * m_nClasses, nChannels);
 
 		Map<MatrixXdRowMajor> selectedVectorsMapper(selectedVectors.getBuffer(), m_filtersPerClass * m_nClasses, nChannels);
 

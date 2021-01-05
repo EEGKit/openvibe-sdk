@@ -140,7 +140,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_decoder.decode(i);
-		IMatrix* iMatrix = m_decoder.getOutputMatrix();
+		CMatrix* iMatrix = m_decoder.getOutputMatrix();
 		size_t nChannel  = iMatrix->getDimensionSize(0);
 		size_t nSample   = iMatrix->getDimensionSize(1);
 
@@ -187,11 +187,8 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 
 			for (size_t j = 0; j < 4; ++j)
 			{
-				IMatrix* oMatrix = m_encoders[j].getInputMatrix();
-				oMatrix->setDimensionCount(3);
-				oMatrix->setDimensionSize(0, nChannel);
-				oMatrix->setDimensionSize(1, m_nScaleJ);
-				oMatrix->setDimensionSize(2, nSample);
+				CMatrix* oMatrix = m_encoders[j].getInputMatrix();
+				oMatrix->resize({ nChannel, m_nScaleJ, nSample });
 
 				for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 				for (size_t scaleIndex = 0; scaleIndex < m_nScaleJ; ++scaleIndex)

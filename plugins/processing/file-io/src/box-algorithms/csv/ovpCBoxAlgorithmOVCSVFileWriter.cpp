@@ -129,7 +129,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 		OV_ERROR_UNLESS_KRF(m_streamDecoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
 
 		// represents the properties of the input, no data
-		const IMatrix* matrix = m_streamDecoder.getOutputMatrix();
+		const CMatrix* matrix = m_streamDecoder.getOutputMatrix();
 
 		if (m_streamDecoder.isHeaderReceived())
 		{
@@ -197,7 +197,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_Spectrum)
 			{
-				const IMatrix* frequencyAbscissaMatrix = m_streamDecoder.getOutputFrequencyAbcissa();
+				const CMatrix* frequencyAbscissaMatrix = m_streamDecoder.getOutputFrequencyAbcissa();
 				std::vector<std::string> channelsLabels;
 				std::vector<double> frequencyAbscissa;
 
@@ -223,7 +223,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 		if (m_streamDecoder.isBufferReceived())
 		{
-			const IMatrix* imatrix = m_streamDecoder.getOutputMatrix();
+			const CMatrix* imatrix = m_streamDecoder.getOutputMatrix();
 
 			if (m_typeID == OV_TypeId_Signal)
 			{
@@ -269,7 +269,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				const double startTime = CTime(dynamicBoxContext.getInputChunkStartTime(0, i)).toSeconds();
 				const double endTime   = CTime(dynamicBoxContext.getInputChunkEndTime(0, i)).toSeconds();
-				const IMatrix* zmatrix = m_streamDecoder.getOutputMatrix();
+				const CMatrix* zmatrix = m_streamDecoder.getOutputMatrix();
 
 				const std::vector<double> streamedMatrixValues(zmatrix->getBuffer(), zmatrix->getBuffer() + zmatrix->getBufferElementCount());
 

@@ -120,11 +120,11 @@ bool CBoxAlgorithmSignalDecimation::process()
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
 
-			Toolkit::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
+			ip_pMatrix->copyDescription(*op_pMatrix);
 			ip_pMatrix->setDimensionSize(1, m_oNSamplePerBlock);
 			ip_sampling = m_oSampling;
 			m_encoder->process(OVP_GD_Algorithm_SignalEncoder_InputTriggerId_EncodeHeader);
-			Toolkit::Matrix::clearContent(*ip_pMatrix);
+			ip_pMatrix->resetBuffer();
 
 			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
@@ -167,7 +167,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_nTotalSample += m_oNSamplePerBlock;
 
-						Toolkit::Matrix::clearContent(*ip_pMatrix);
+						ip_pMatrix->resetBuffer();
 					}
 				}
 

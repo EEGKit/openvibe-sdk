@@ -31,7 +31,7 @@ bool CSpectrumEncoder::processHeader()
 	// ip_frequencyAbscissa dimension count should be 1
 	// ip_frequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1
 
-	IMatrix* frequencyAbscissa = ip_frequencyAbscissa;
+	CMatrix* frequencyAbscissa = ip_frequencyAbscissa;
 	const uint64_t sampling    = ip_sampling;
 	CStreamedMatrixEncoder::processHeader();
 	m_writerHelper->openChild(OVTK_NodeId_Header_Spectrum);

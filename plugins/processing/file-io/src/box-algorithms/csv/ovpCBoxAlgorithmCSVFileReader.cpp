@@ -225,8 +225,8 @@ bool CBoxAlgorithmCSVFileReader::process()
 			&& feof(m_file) && nSamples < m_samplesPerBuffer)
 		{
 			// Last chunk will be partial, zero the whole output matrix...
-			IMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
-			Toolkit::Matrix::clearContent(*iMatrix);
+			CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+			iMatrix->resetBuffer();
 		}
 	}
 
@@ -266,14 +266,12 @@ bool CBoxAlgorithmCSVFileReader::process()
 bool CBoxAlgorithmCSVFileReader::processStreamedMatrix()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* iMatrix   = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iMatrix   = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
 	{
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
+		iMatrix->resize(m_nCol - 1, m_samplesPerBuffer);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 		m_encoder->encodeHeader();
@@ -343,7 +341,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 bool CBoxAlgorithmCSVFileReader::processSignal()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* iMatrix   = static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iMatrix   = static_cast<Toolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
@@ -352,9 +350,7 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 		// (to keep time chunks continuous, start time is previous end time, hence set end time)
 		if (!m_doNotUseFileTime) { m_endTime = CTime(atof(m_dataMatrices[0][0].c_str())).time(); }
 
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
+		iMatrix->resize(m_nCol - 1, m_samplesPerBuffer);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 
@@ -394,13 +390,11 @@ bool CBoxAlgorithmCSVFileReader::processSignal()
 bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* iMatrix   = static_cast<Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iMatrix   = static_cast<Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	if (!m_headerSent)
 	{
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_samplesPerBuffer);
+		iMatrix->resize(m_nCol - 1, m_samplesPerBuffer);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 
@@ -447,16 +441,15 @@ bool CBoxAlgorithmCSVFileReader::processChannelLocalisation()
 bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
-	IMatrix* matrix    = static_cast<Toolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* matrix    = static_cast<Toolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
 	//Header
 	if (!m_headerSent)
 	{
 		// in this case we need to transpose it
-		IMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+		CMatrix* iMatrix = static_cast<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
 
-		iMatrix->setDimensionCount(1);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
+		iMatrix->resize(m_nCol - 1);
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
 
@@ -490,19 +483,16 @@ bool CBoxAlgorithmCSVFileReader::processFeatureVector()
 bool CBoxAlgorithmCSVFileReader::processSpectrum()
 {
 	IBoxIO& boxContext          = this->getDynamicBoxContext();
-	IMatrix* iMatrix            = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
-	IMatrix* iFrequencyAbscissa = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputFrequencyAbscissa();
+	CMatrix* iMatrix            = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputMatrix();
+	CMatrix* iFrequencyAbscissa = static_cast<Toolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputFrequencyAbscissa();
 
 	//Header
 	if (!m_headerSent)
 	{
-		iMatrix->setDimensionCount(2);
-		iMatrix->setDimensionSize(0, m_nCol - 1);
-		iMatrix->setDimensionSize(1, m_dataMatrices.size());
+		iMatrix->resize(m_nCol - 1, m_dataMatrices.size());
 
 		for (size_t i = 1; i < m_nCol; ++i) { iMatrix->setDimensionLabel(0, i - 1, m_headerFiles[i].c_str()); }
-		iFrequencyAbscissa->setDimensionCount(1);
-		iFrequencyAbscissa->setDimensionSize(0, m_dataMatrices.size());
+		iFrequencyAbscissa->resize(m_dataMatrices.size());
 		if (m_dataMatrices.size() > 1)
 		{
 			for (size_t i = 0; i < m_dataMatrices.size(); ++i)
@@ -554,7 +544,7 @@ bool CBoxAlgorithmCSVFileReader::processSpectrum()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
+bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(CMatrix* matrix)
 {
 	// note: Chunk size shouldn't change after encoding header, do not mess with it here, even if the input has different size
 

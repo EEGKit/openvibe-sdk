@@ -101,7 +101,7 @@ public:
 
 	void uninitialize() { this->reset(); }
 
-	Kernel::TParameterHandler<IMatrix*>& getOutputMatrix()
+	Kernel::TParameterHandler<CMatrix*>& getOutputMatrix()
 	{
 		decoder_return_impl(getOutputMatrix());
 	}
@@ -112,7 +112,7 @@ public:
 		return m_spectrumDecoder->getOutputSamplingRate();
 	}
 
-	Kernel::TParameterHandler<IMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
+	Kernel::TParameterHandler<CMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
 
 	bool decode(int, int)       = delete;
 	bool decode(size_t, size_t) = delete;
@@ -207,7 +207,7 @@ public:
 
 	void uninitialize() { this->reset(); }
 
-	Kernel::TParameterHandler<IMatrix*>& getInputMatrix()
+	Kernel::TParameterHandler<CMatrix*>& getInputMatrix()
 	{
 		encoder_return_impl(getInputMatrix());
 	}
@@ -218,7 +218,7 @@ public:
 		return m_spectrumEncoder->getInputSamplingRate();
 	}
 
-	Kernel::TParameterHandler<IMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
+	Kernel::TParameterHandler<CMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
 
 	bool encodeHeader()
 	{

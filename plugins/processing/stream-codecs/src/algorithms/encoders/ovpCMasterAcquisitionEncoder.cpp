@@ -39,14 +39,14 @@ bool CMasterAcquisitionEncoder::initialize()
 	TParameterHandler<uint64_t> ip_subjectID(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectID));
 	TParameterHandler<uint64_t> ip_subjectAge(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectAge));
 	TParameterHandler<uint64_t> ip_subjectGender(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectGender));
-	TParameterHandler<IMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix));
+	TParameterHandler<CMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix));
 	TParameterHandler<uint64_t> ip_sampling(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling));
 	TParameterHandler<IStimulationSet*> ip_stimSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<uint64_t> ip_bufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration));
 	TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
-	TParameterHandler<IMatrix*> ip_channelLocalisationMaster(
+	TParameterHandler<CMatrix*> ip_channelLocalisationMaster(
 		this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelLocalisation));
-	TParameterHandler<IMatrix*> ip_channelUnitsMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits));
+	TParameterHandler<CMatrix*> ip_channelUnitsMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits));
 
 	// Declares parameter handlers for sub-algorithm acquisition
 
@@ -85,7 +85,7 @@ bool CMasterAcquisitionEncoder::initialize()
 
 	// Declares parameter handlers for sub-algorithm signal
 
-	TParameterHandler<IMatrix*> ip_matrix(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<CMatrix*> ip_matrix(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<uint64_t> ip_signalSamplingRate(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling));
 	TParameterHandler<IMemoryBuffer*> op_signalMemoryBuffer(
 		m_signalStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
@@ -97,12 +97,12 @@ bool CMasterAcquisitionEncoder::initialize()
 	TParameterHandler<IMemoryBuffer*> op_stimulationMemoryBuffer(
 		m_stimulationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	TParameterHandler<IMatrix*> ip_channelLocalisation(
+	TParameterHandler<CMatrix*> ip_channelLocalisation(
 		m_channelLocalisationStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<IMemoryBuffer*> op_channelLocalisationMemoryBuffer(
 		m_channelLocalisationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	TParameterHandler<IMatrix*> ip_pUnits(m_channelUnitsStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	TParameterHandler<CMatrix*> ip_pUnits(m_channelUnitsStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
 	TParameterHandler<IMemoryBuffer*> op_channelUnitsMemoryBuffer(
 		m_channelUnitsStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 

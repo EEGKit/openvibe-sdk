@@ -27,7 +27,7 @@ public:
 protected:
 	std::vector<Kernel::IAlgorithmProxy*> m_decoders;
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
-	std::vector<IMatrix*> m_matrices;
+	std::vector<CMatrix*> m_matrices;
 
 	CEquationParser* m_parser = nullptr;
 

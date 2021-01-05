@@ -29,7 +29,7 @@ public:
 	bool processChannelLocalisation();
 	bool processFeatureVector();
 	bool processSpectrum();
-	bool convertVectorDataToMatrix(IMatrix* matrix);
+	bool convertVectorDataToMatrix(CMatrix* matrix);
 
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_CSVFileReader)
 

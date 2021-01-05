@@ -33,7 +33,7 @@ const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
 
 extern const char* const CLASSIFIER_ROOT;
 
-int Classification::LDAClassificationCompare(IMatrix& first, IMatrix& second)
+int Classification::LDAClassificationCompare(CMatrix& first, CMatrix& second)
 {
 	//We first need to find the best classification of each.
 	double* buffer        = first.getBuffer();
@@ -124,9 +124,9 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", ErrorType::Internal);
 
 	// IO to the covariance alg
-	TParameterHandler<IMatrix*> op_mean(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_covMatrix(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
-	TParameterHandler<IMatrix*> ip_dataset(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	TParameterHandler<CMatrix*> op_mean(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
+	TParameterHandler<CMatrix*> op_covMatrix(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	TParameterHandler<CMatrix*> ip_dataset(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
 	const size_t nRows = dataset.getFeatureVectorCount();
 	const size_t nCols = (nRows > 0 ? dataset[0].getSize() : 0);
@@ -170,9 +170,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 			// Copy all the data of the class to a matrix
 			CMatrix classData;
-			classData.setDimensionCount(2);
-			classData.setDimensionSize(0, examplesInClass);
-			classData.setDimensionSize(1, nCols);
+			classData.resize(examplesInClass, nCols);
 			double* buffer = classData.getBuffer();
 			for (size_t i = 0; i < nRows; ++i)
 			{
@@ -199,9 +197,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 	// We need a global covariance, use the regularized cov algorithm
 	{
-		ip_dataset->setDimensionCount(2);
-		ip_dataset->setDimensionSize(0, nRows);
-		ip_dataset->setDimensionSize(1, nCols);
+		ip_dataset->resize(nRows, nCols);
 		double* buffer = ip_dataset->getBuffer();
 
 		// Insert all data as the input of the cov algorithm

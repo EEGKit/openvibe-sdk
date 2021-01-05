@@ -117,7 +117,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
 
-				IMatrix* matrix       = decoder.getOutputMatrix();
+				CMatrix* matrix       = decoder.getOutputMatrix();
 				nChannel              = matrix->getDimensionSize(0);
 				const size_t nSample  = matrix->getDimensionSize(1);
 				const size_t sampling = size_t(decoder.getOutputSamplingRate());
@@ -239,9 +239,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		// Create a CMatrix mapper that can spool the filters to a file
 
 		CMatrix eigenVectors;
-		eigenVectors.setDimensionCount(2);
-		eigenVectors.setDimensionSize(0, m_filterDim);
-		eigenVectors.setDimensionSize(1, nChannel);
+		eigenVectors.resize(m_filterDim, nChannel);
 
 		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDim, nChannel);
 
