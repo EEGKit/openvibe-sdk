@@ -99,8 +99,8 @@ bool CBoxAlgorithmSignalResampling::process()
 	{
 		m_decoder.decode(i);
 
-		IMatrix* iMatrix = m_decoder.getOutputMatrix();
-		IMatrix* oMatrix = m_encoder.getInputMatrix();
+		CMatrix* iMatrix = m_decoder.getOutputMatrix();
+		CMatrix* oMatrix = m_encoder.getInputMatrix();
 
 		const size_t nChannel = iMatrix->getDimensionSize(0);
 		const size_t nSample  = iMatrix->getDimensionSize(1);
@@ -141,7 +141,7 @@ bool CBoxAlgorithmSignalResampling::process()
 			}
 			else if (0.5 < builtInLatency) { OV_WARNING_K("Latency induced by the resampling is [" << builtInLatency << "] s."); }
 
-			Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
+			oMatrix->copyDescription(*iMatrix);
 			oMatrix->setDimensionSize(1, m_oNSample);
 
 			m_oTotalSample = 0;

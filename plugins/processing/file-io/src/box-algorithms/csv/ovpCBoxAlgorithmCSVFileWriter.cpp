@@ -114,25 +114,21 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 			{
 				m_headerReceived = true;
 
-				const IMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
+				const CMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
 
 				OV_ERROR_UNLESS_KRF(matrix->getDimensionCount() == 1 || matrix->getDimensionCount() == 2,
 									"Invalid input matrix: must have 1 or 2 dimensions", ErrorType::BadInput);
 
 				if (matrix->getDimensionCount() == 1 || m_typeID == OV_TypeId_FeatureVector)
 				{
-					// The matrix is a vector, make a matrix to represent it
-					m_oMatrix.setDimensionCount(2);
-
-					// This [n X 1] will get written as a single row due to transpose later
-					m_oMatrix.setDimensionSize(0, matrix->getDimensionSize(0));
-					m_oMatrix.setDimensionSize(1, 1);
+					// The matrix is a vector, make a matrix to represent it. This [n X 1] will get written as a single row due to transpose later
+					m_oMatrix.resize(matrix->getDimensionSize(0), 1);
 					for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { m_oMatrix.setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
 				}
 				else
 				{
 					// As-is
-					Toolkit::Matrix::copyDescription(m_oMatrix, *matrix);
+					m_oMatrix.copyDescription(*matrix);
 				}
 				// std::cout<<&m_Matrix<<" "<<&op_pMatrix<<"\n";
 				m_fileStream << "Time (s)";
@@ -157,7 +153,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 		}
 		if (m_decoder->isBufferReceived())
 		{
-			const IMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
+			const CMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
 
 			const size_t nChannel = m_oMatrix.getDimensionSize(0);
 			const size_t nSample  = m_oMatrix.getDimensionSize(1);
@@ -195,7 +191,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 					{
 						// This should not be supported anymore
 						// This is not the correct formula
-						const IMatrix* freq = static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
+						const CMatrix* freq = static_cast<Toolkit::TSpectrumDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
 								getOutputFrequencyAbscissa();
 						const double half = s > 0 ? (freq->getBuffer()[s] - freq->getBuffer()[s - 1]) / 2.0
 												: (freq->getBuffer()[s + 1] - freq->getBuffer()[s]) / 2.0;

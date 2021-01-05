@@ -8,12 +8,12 @@ using namespace /*OpenViBE::*/Toolkit;
 
 bool CAlgorithmClassifierTrainer::process()
 {
-	TParameterHandler<IMatrix*> ip_featureVectorSet(this->getInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet));
+	TParameterHandler<CMatrix*> ip_featureVectorSet(this->getInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet));
 	TParameterHandler<IMemoryBuffer*> op_config(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Config));
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train))
 	{
-		IMatrix* featureVectorSet = ip_featureVectorSet;
+		CMatrix* featureVectorSet = ip_featureVectorSet;
 		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);

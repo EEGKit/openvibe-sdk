@@ -50,8 +50,8 @@ bool CBoxAlgorithmCrop::initialize()
 	}
 
 	m_matrix = new CMatrix();
-	TParameterHandler<IMatrix*>(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)).setReferenceTarget(m_matrix);
-	TParameterHandler<IMatrix*>(m_decoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix)).setReferenceTarget(m_matrix);
+	TParameterHandler<CMatrix*>(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)).setReferenceTarget(m_matrix);
+	TParameterHandler<CMatrix*>(m_decoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix)).setReferenceTarget(m_matrix);
 
 	m_cropMethod   = ECropMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
 	m_minCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);

@@ -13,7 +13,7 @@ class TStreamedMatrixEncoderLocal : public T
 {
 protected:
 	//specific attribute : a matrix handler
-	Kernel::TParameterHandler<IMatrix*> m_iMatrix;
+	Kernel::TParameterHandler<CMatrix*> m_iMatrix;
 
 	using T::m_codec;
 	using T::m_boxAlgorithm;
@@ -47,7 +47,7 @@ public:
 		return true;
 	}
 
-	Kernel::TParameterHandler<IMatrix*>& getInputMatrix() { return m_iMatrix; }
+	Kernel::TParameterHandler<CMatrix*>& getInputMatrix() { return m_iMatrix; }
 
 protected:
 

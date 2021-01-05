@@ -17,6 +17,13 @@
 
 const std::string SEP = "\n====================\n";
 
+/// <summary> Check if double are almost equals. </summary>
+/// <param name="a"> The first number. </param>
+/// <param name="b"> The second number. </param>
+/// <param name="epsilon"> The tolerance. </param>
+/// <returns> <c>true</c> if almmost equals, <c>false</c> otherwise. </returns>
+inline bool AlmostEqual(const double a, const double b, const double epsilon = OV_EPSILON) { return abs(a - b) < abs(epsilon); }
+
 //*****************************************************************
 //********** Error Message Standardization for googltest **********
 //*****************************************************************
@@ -40,5 +47,15 @@ inline std::string ErrorMsg(const std::string& name, const OpenViBE::CTime& ref,
 {
 	std::stringstream ss;
 	ss << SEP << name << " : Reference : " << ref.str(true, true) << ", \tCompute : " << calc.str(true, true) << SEP;
+	return ss.str();
+}
+
+
+/// <summary>	Error message for CMatrix. </summary>
+/// <inheritdoc cref="ErrorMsg(const std::string&, const T, const T)"/>
+inline std::string ErrorMsg(const std::string& name, const OpenViBE::CMatrix& ref, const OpenViBE::CMatrix& calc)
+{
+	std::stringstream ss;
+	ss << SEP << name << " : " << std::endl << "********** Reference **********\n" << ref << std::endl << "********** Compute **********\n" << calc << SEP;
 	return ss.str();
 }

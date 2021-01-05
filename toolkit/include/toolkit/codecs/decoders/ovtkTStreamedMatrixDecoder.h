@@ -13,7 +13,7 @@ class TStreamedMatrixDecoderLocal : public T
 {
 protected:
 
-	Kernel::TParameterHandler<IMatrix*> m_oMatrix;
+	Kernel::TParameterHandler<CMatrix*> m_oMatrix;
 
 	using T::m_codec;
 	using T::m_boxAlgorithm;
@@ -46,7 +46,7 @@ public:
 		return true;
 	}
 
-	virtual Kernel::TParameterHandler<IMatrix*>& getOutputMatrix() { return m_oMatrix; }
+	virtual Kernel::TParameterHandler<CMatrix*>& getOutputMatrix() { return m_oMatrix; }
 
 	virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedHeader); }
 	virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputTriggerId_ReceivedBuffer); }

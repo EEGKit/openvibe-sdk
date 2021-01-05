@@ -21,7 +21,7 @@ public:
 protected:
 
 	Kernel::TParameterHandler<CString*> ip_sFilename;
-	Kernel::TParameterHandler<IMatrix*> op_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> op_pMatrix;
 };
 
 class CAlgorithmOVMatrixFileReaderDesc final : public IAlgorithmDesc

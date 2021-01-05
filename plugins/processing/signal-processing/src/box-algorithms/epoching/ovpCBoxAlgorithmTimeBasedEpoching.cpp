@@ -46,8 +46,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 	{
 		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
 
-		IMatrix* iMatrix = m_decoder.getOutputMatrix();
-		IMatrix* oMatrix = m_encoder.getInputMatrix();
+		CMatrix* iMatrix = m_decoder.getOutputMatrix();
+		CMatrix* oMatrix = m_encoder.getInputMatrix();
 
 		const size_t nChannel = iMatrix->getDimensionSize(0);
 		const size_t nISample = iMatrix->getDimensionSize(1);
@@ -69,9 +69,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 								"Input sampling frequency is [" << m_sampling << "]. This is too low in order to produce epochs of ["
 								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", ErrorType::Internal);
 
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, nChannel);
-			oMatrix->setDimensionSize(1, m_oNSample);
+			oMatrix->resize(nChannel, m_oNSample);
 			for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 
 			m_encoder.encodeHeader();

@@ -28,12 +28,12 @@ protected:
 
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
 	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
-	Kernel::TParameterHandler<IMatrix*> op_matrix;
-	Kernel::TParameterHandler<IMatrix*> op_bands;
+	Kernel::TParameterHandler<CMatrix*> op_matrix;
+	Kernel::TParameterHandler<CMatrix*> op_bands;
 
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
-	Kernel::TParameterHandler<IMatrix*> ip_matrix;
-	Kernel::TParameterHandler<IMatrix*> ip_frequencyAbscissa;
+	Kernel::TParameterHandler<CMatrix*> ip_matrix;
+	Kernel::TParameterHandler<CMatrix*> ip_frequencyAbscissa;
 	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
 
 	CMatrix m_oMatrix;

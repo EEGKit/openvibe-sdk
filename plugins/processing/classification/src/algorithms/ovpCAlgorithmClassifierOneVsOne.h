@@ -20,7 +20,7 @@ typedef struct
 	double secondClass;
 	double classLabel;
 	//This output is probabilist
-	IMatrix* classificationValue;
+	CMatrix* classificationValue;
 } classification_info_t;
 
 

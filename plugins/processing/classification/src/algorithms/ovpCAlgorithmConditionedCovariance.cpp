@@ -47,9 +47,9 @@ bool CAlgorithmConditionedCovariance::process()
 {
 	// Set up the IO
 	const TParameterHandler<double> ip_shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
-	const TParameterHandler<IMatrix*> ip_sample(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
-	TParameterHandler<IMatrix*> op_mean(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_covMatrix(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	const TParameterHandler<CMatrix*> ip_sample(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	TParameterHandler<CMatrix*> op_mean(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
+	TParameterHandler<CMatrix*> op_covMatrix(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
 	double shrinkage = ip_shrinkage;
 
 	OV_ERROR_UNLESS_KRF(shrinkage <= 1.0, "Invalid shrinkage value " << shrinkage << "(expected value <= 1.0)", ErrorType::BadConfig);
@@ -69,12 +69,8 @@ bool CAlgorithmConditionedCovariance::process()
 	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", ErrorType::BadInput);
 
 	// Set the output buffers so we can write the results to them without copy
-	op_mean->setDimensionCount(2);
-	op_mean->setDimensionSize(0, 1);
-	op_mean->setDimensionSize(1, nCols);
-	op_covMatrix->setDimensionCount(2);
-	op_covMatrix->setDimensionSize(0, nCols);
-	op_covMatrix->setDimensionSize(1, nCols);
+	op_mean->resize(1, nCols);
+	op_covMatrix->resize(nCols, nCols);
 
 	// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
 	const Map<MatrixXdRowMajor> dataMatrix(const_cast<double*>(buffer), nRows, nCols);

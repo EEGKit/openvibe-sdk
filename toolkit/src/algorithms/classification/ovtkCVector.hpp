@@ -10,14 +10,13 @@ class TVector : public TParent
 {
 public:
 
-	explicit TVector(IMatrix& matrix) : m_matrix(matrix) { }
+	explicit TVector(CMatrix& matrix) : m_matrix(matrix) { }
 
 	uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
 
 	bool setSize(const uint32_t size) override
 	{
-		m_matrix.setDimensionCount(1);
-		m_matrix.setDimensionSize(0, size);
+		m_matrix.resize(size);
 		return true;
 	}
 
@@ -35,7 +34,7 @@ public:
 
 protected:
 
-	IMatrix& m_matrix;
+	CMatrix& m_matrix;
 };
 
 typedef TVector<IVector> CVector;

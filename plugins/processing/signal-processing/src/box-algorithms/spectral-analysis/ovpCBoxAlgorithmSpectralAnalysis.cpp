@@ -99,7 +99,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 		const uint64_t endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
-		IMatrix* matrix = m_decoder.getOutputMatrix();
+		CMatrix* matrix = m_decoder.getOutputMatrix();
 
 		if (m_decoder.isHeaderReceived())
 		{
@@ -116,8 +116,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			m_sizeFFT = m_nSample / 2 + 1;
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
-			m_frequencyAbscissa->setDimensionCount(1);  // a list of frequencies
-			m_frequencyAbscissa->setDimensionSize(0, m_sizeFFT); // FFTSize frquency abscissa
+			m_frequencyAbscissa->resize(m_sizeFFT); // FFTSize frequency abscissa
 
 			// Frequency values
 			for (size_t frequencyAbscissaIdx = 0; frequencyAbscissaIdx < m_sizeFFT; ++frequencyAbscissaIdx)
@@ -132,10 +131,8 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				if (m_isSpectrumEncoderActive[encoderIdx])
 				{
 					// Spectrum matrix
-					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
-					spectrum->setDimensionCount(2);
-					spectrum->setDimensionSize(0, m_nChannel);
-					spectrum->setDimensionSize(1, m_sizeFFT);
+					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
+					spectrum->resize(m_nChannel, m_sizeFFT);
 
 					// Spectrum channel names
 					for (size_t j = 0; j < m_nChannel; ++j) { spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
@@ -214,7 +211,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 							OV_ERROR_KRF("Invalid decoder output.\n", ErrorType::BadProcessing);
 					}
 
-					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
+					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
 
 					for (size_t j = 0; j < m_nChannel; ++j)
 					{

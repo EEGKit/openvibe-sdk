@@ -25,7 +25,7 @@ bool CStreamedMatrixEncoder::uninitialize()
 
 bool CStreamedMatrixEncoder::processHeader()
 {
-	IMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_pMatrix;
 	size_t j;
 
 	m_size = (matrix->getDimensionCount() == 0 ? 0 : 1);
@@ -64,7 +64,7 @@ bool CStreamedMatrixEncoder::processHeader()
 
 bool CStreamedMatrixEncoder::processBuffer()
 {
-	IMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_pMatrix;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);

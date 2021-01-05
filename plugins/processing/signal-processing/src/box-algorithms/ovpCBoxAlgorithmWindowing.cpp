@@ -51,7 +51,7 @@ bool CBoxAlgorithmWindowing::process()
 		const uint64_t endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
-		IMatrix* matrix = m_decoder.getOutputMatrix();
+		CMatrix* matrix = m_decoder.getOutputMatrix();
 
 		if (m_decoder.isHeaderReceived())
 		{

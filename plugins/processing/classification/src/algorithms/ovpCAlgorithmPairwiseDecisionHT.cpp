@@ -33,11 +33,11 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 }
 
 
-bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
+bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities)
 {
 	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadConfig);
 
-	TParameterHandler<IMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	TParameterHandler<CMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	std::vector<double> probability(m_nClass * m_nClass);
 
 	//First we set the diagonal to 0
@@ -149,8 +149,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& c
 	std::cout << std::endl << std::endl;
 #endif
 
-	probabilities->setDimensionCount(1);
-	probabilities->setDimensionSize(0, m_nClass);
+	probabilities->resize(m_nClass);
 	for (size_t i = 0; i < m_nClass; ++i) { probabilities->getBuffer()[i] = p[i]; }
 	return true;
 }
@@ -159,7 +158,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 {
 	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
 
-	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	TParameterHandler<CMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	const size_t nClass                        = ip_repartition->getDimensionSize(0);
 
 	std::stringstream ss;
@@ -174,7 +173,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 {
 	std::stringstream ss(node.getChildByName(REPARTITION_NODE_NAME)->getPCData());
-	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	TParameterHandler<CMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 
 
 	std::vector<double> repartition;
@@ -185,8 +184,7 @@ bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 		repartition.push_back(value);
 	}
 
-	ip_repartition->setDimensionCount(1);
-	ip_repartition->setDimensionSize(0, repartition.size());
+	ip_repartition->resize(repartition.size());
 	for (size_t i = 0; i < repartition.size(); ++i) { ip_repartition->getBuffer()[i] = repartition[i]; }
 	return true;
 }

@@ -28,8 +28,8 @@ protected:
 
 	CIdentifier m_typeID = OV_UndefinedIdentifier;
 
-	Kernel::TParameterHandler<IMatrix*> ip_Matrix;
-	Kernel::TParameterHandler<IMatrix*> op_Matrix;
+	Kernel::TParameterHandler<CMatrix*> ip_Matrix;
+	Kernel::TParameterHandler<CMatrix*> op_Matrix;
 
 	std::vector<std::string> m_names;
 };

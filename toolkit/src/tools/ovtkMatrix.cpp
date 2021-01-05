@@ -17,93 +17,6 @@
 using namespace OpenViBE;
 using namespace /*OpenViBE::*/Toolkit;
 
-bool Matrix::copy(IMatrix& dst, const IMatrix& src)
-{
-	if (&dst == &src) { return true; }
-
-	if (!copyDescription(dst, src)) { return false; }
-	if (!copyContent(dst, src)) { return false; }
-	return true;
-}
-
-bool Matrix::copyDescription(IMatrix& dst, const IMatrix& src)
-{
-	if (&dst == &src) { return true; }
-
-	const size_t nDim = src.getDimensionCount();
-	if (!dst.setDimensionCount(nDim)) { return false; }
-	for (size_t i = 0; i < nDim; ++i)
-	{
-		const size_t dimSize = src.getDimensionSize(i);
-		if (!dst.setDimensionSize(i, dimSize)) { return false; }
-		for (size_t j = 0; j < dimSize; ++j) { if (!dst.setDimensionLabel(i, j, src.getDimensionLabel(i, j))) { return false; } }
-	}
-	return true;
-}
-
-bool Matrix::copyContent(IMatrix& dst, const IMatrix& src)
-{
-	if (&dst == &src) { return true; }
-
-	const size_t nElementIn  = src.getBufferElementCount();
-	const size_t nElementOut = dst.getBufferElementCount();
-	if (nElementOut != nElementIn) { return false; }
-	const double* bufferIn = src.getBuffer();
-	double* bufferOut      = dst.getBuffer();
-	memcpy(bufferOut, bufferIn, nElementIn * sizeof(double));
-	return true;
-}
-
-bool Matrix::clearContent(IMatrix& matrix)
-{
-	memset(matrix.getBuffer(), 0, matrix.getBufferElementCount() * sizeof(double));
-	return true;
-}
-
-bool Matrix::isDescriptionSimilar(const IMatrix& src1, const IMatrix& src2, const bool checkLabels)
-{
-	if (&src1 == &src2) { return true; }
-
-	if (src1.getDimensionCount() != src2.getDimensionCount()) { return false; }
-
-	for (size_t i = 0; i < src1.getDimensionCount(); ++i) { if (src1.getDimensionSize(i) != src2.getDimensionSize(i)) { return false; } }
-
-	if (checkLabels)
-	{
-		for (size_t i = 0; i < src1.getDimensionCount(); ++i)
-		{
-			for (size_t j = 0; j < src1.getDimensionSize(i); ++j)
-			{
-				if (strcmp(src1.getDimensionLabel(i, j), src2.getDimensionLabel(i, j)) != 0) { return false; }
-			}
-		}
-	}
-
-	return true;
-}
-
-bool Matrix::isContentSimilar(const IMatrix& src1, const IMatrix& src2)
-{
-	if (&src1 == &src2) { return true; }
-
-	if (src1.getBufferElementCount() != src2.getBufferElementCount()) { return false; }
-
-	return memcmp(src1.getBuffer(), src2.getBuffer(), src1.getBufferElementCount() * sizeof(double)) == 0;
-}
-
-bool Matrix::isContentValid(const IMatrix& src, const bool checkNotANumber, const bool checkInfinity)
-{
-	const double* buffer    = src.getBuffer();
-	const double* bufferEnd = src.getBuffer() + src.getBufferElementCount();
-	while (buffer != bufferEnd)
-	{
-		if (checkNotANumber && std::isnan(*buffer)) { return false; }
-		if (checkInfinity && std::isinf(*buffer)) { return false; }
-		buffer++;
-	}
-	return true;
-}
-
 enum class EParsingStatus { Nothing, ParsingHeader, ParsingHeaderDimension, ParsingHeaderLabel, ParsingBuffer, ParsingBufferValue };
 
 // tokens in the ascii matrix format
@@ -116,7 +29,7 @@ const char CONSTANT_CARRIAGE_RETURN      = '\r';
 const char CONSTANT_EOL                  = '\n';
 const char CONSTANT_SPACE                = ' ';
 
-bool Matrix::fromString(IMatrix& matrix, const CString& str)
+bool Matrix::fromString(CMatrix& matrix, const CString& str)
 {
 	std::stringstream buffer;
 
@@ -180,20 +93,15 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						//new dimension opened
 					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET)
 					{
-						dimSize.resize(dimSize.size() + 1);			//increment dimension count
-						curDimIdx++;								//update current dimension index
-						status = EParsingStatus::ParsingHeaderDimension;		//update status
+						dimSize.resize(dimSize.size() + 1);					//increment dimension count
+						curDimIdx++;										//update current dimension index
+						status = EParsingStatus::ParsingHeaderDimension;	//update status
 					}
 						//finished parsing header
 					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
 					{
-						//ensure at least one dimension was found
-						if (dimSize.empty()) { return false; }
-
-						//resize matrix
-						matrix.setDimensionCount(dimSize.size());
-						for (size_t i = 0; i < dimSize.size(); ++i) { matrix.setDimensionSize(i, dimSize[i]); }
-
+						if (dimSize.empty()) { return false; }	//ensure at least one dimension was found
+						matrix.resize(dimSize);					//resize matrix
 						nValue.resize(matrix.getDimensionCount());
 
 						// set labels now that we know the matrix size
@@ -337,8 +245,6 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 						//otherwise, append current character to current string
 					else { curString.append(1, *it); }
 					break;
-
-				default: break;
 			} // switch(status)
 
 			//increment iterator
@@ -355,7 +261,7 @@ bool Matrix::fromString(IMatrix& matrix, const CString& str)
 }
 
 // A recursive helper function to spool matrix contents to a txt stringstream.
-bool dumpMatrixBuffer(const IMatrix& matrix, std::stringstream& buffer, const size_t index1, size_t& index2)
+bool dumpMatrixBuffer(const CMatrix& matrix, std::stringstream& buffer, const size_t index1, size_t& index2)
 {
 	//are we in innermost dimension?
 	if (index1 == matrix.getDimensionCount() - 1)
@@ -390,7 +296,7 @@ bool dumpMatrixBuffer(const IMatrix& matrix, std::stringstream& buffer, const si
 	return true;
 }
 
-bool Matrix::toString(const IMatrix& matrix, CString& str, const size_t precision /* = 6 */)
+bool Matrix::toString(const CMatrix& matrix, CString& str, const size_t precision /* = 6 */)
 {
 	std::stringstream buffer;
 
@@ -427,7 +333,7 @@ bool Matrix::toString(const IMatrix& matrix, CString& str, const size_t precisio
 	return true;
 }
 
-bool Matrix::loadFromTextFile(IMatrix& matrix, const CString& filename)
+bool Matrix::loadFromTextFile(CMatrix& matrix, const CString& filename)
 {
 	std::ifstream dataFile;
 	FS::Files::openIFStream(dataFile, filename.toASCIIString(), std::ios_base::in);
@@ -444,7 +350,7 @@ bool Matrix::loadFromTextFile(IMatrix& matrix, const CString& filename)
 	return res;
 }
 
-bool Matrix::saveToTextFile(const IMatrix& matrix, const CString& filename, const size_t precision /* = 6 */)
+bool Matrix::saveToTextFile(const CMatrix& matrix, const CString& filename, const size_t precision /* = 6 */)
 {
 	std::ofstream dataFile;
 	FS::Files::openOFStream(dataFile, filename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
@@ -458,4 +364,52 @@ bool Matrix::saveToTextFile(const IMatrix& matrix, const CString& filename, cons
 	dataFile.close();
 
 	return true;
+}
+
+
+bool Matrix::copy(CMatrix& dst, const CMatrix& src)
+{
+	if (&dst == &src) { return true; }
+	dst.copy(src);
+	return true;
+}
+
+bool Matrix::copyDescription(CMatrix& dst, const CMatrix& src)
+{
+	if (&dst == &src) { return true; }
+	dst.copyDescription(src);
+	return true;
+}
+
+bool Matrix::copyContent(CMatrix& dst, const CMatrix& src)
+{
+	if (&dst == &src) { return true; }
+	const size_t nElementIn  = src.getBufferElementCount();
+	const size_t nElementOut = dst.getBufferElementCount();
+	if (nElementOut != nElementIn) { return false; }
+	dst.copyContent(src);
+	return true;
+}
+
+bool Matrix::clearContent(CMatrix& matrix)
+{
+	matrix.resetBuffer();
+	return true;
+}
+
+bool Matrix::isDescriptionSimilar(const CMatrix& src1, const CMatrix& src2, const bool checkLabels)
+{
+	if (&src1 == &src2) { return true; }
+	return src1.isDescriptionEqual(src2, checkLabels);
+}
+
+bool Matrix::isContentSimilar(const CMatrix& src1, const CMatrix& src2)
+{
+	if (&src1 == &src2) { return true; }
+	return src1.isBufferEqual(src2);
+}
+
+bool Matrix::isContentValid(const CMatrix& src, const bool checkNotANumber, const bool checkInfinity)
+{
+	return src.isBufferValid(checkNotANumber, checkInfinity);
 }

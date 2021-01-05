@@ -38,8 +38,8 @@ bool CAlgorithmMatrixAverage::uninitialize()
 
 bool CAlgorithmMatrixAverage::process()
 {
-	IMatrix* iMatrix = ip_matrix;
-	IMatrix* oMatrix = op_averagedMatrix;
+	CMatrix* iMatrix = ip_matrix;
+	CMatrix* oMatrix = op_averagedMatrix;
 
 	bool shouldPerformAverage = false;
 
@@ -49,14 +49,14 @@ bool CAlgorithmMatrixAverage::process()
 
 		m_history.clear();
 
-		Toolkit::Matrix::copyDescription(*oMatrix, *iMatrix);
+		oMatrix->copyDescription(*iMatrix);
 	}
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix))
 	{
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Moving))
 		{
-			IMatrix* swapMatrix;
+			CMatrix* swapMatrix;
 
 			if (m_history.size() >= ip_matrixCount)
 			{
@@ -66,17 +66,17 @@ bool CAlgorithmMatrixAverage::process()
 			else
 			{
 				swapMatrix = new CMatrix();
-				Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
+				swapMatrix->copyDescription(*iMatrix);
 			}
 
-			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
+			swapMatrix->copyContent(*iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::MovingImmediate))
 		{
-			IMatrix* swapMatrix;
+			CMatrix* swapMatrix;
 
 			if (m_history.size() >= ip_matrixCount)
 			{
@@ -86,17 +86,17 @@ bool CAlgorithmMatrixAverage::process()
 			else
 			{
 				swapMatrix = new CMatrix();
-				Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
+				swapMatrix->copyDescription(*iMatrix);
 			}
 
-			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
+			swapMatrix->copyContent(*iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (!m_history.empty());
 		}
 		else if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Block))
 		{
-			IMatrix* swapMatrix = new CMatrix();
+			CMatrix* swapMatrix = new CMatrix();
 
 			if (m_history.size() >= ip_matrixCount)
 			{
@@ -104,8 +104,7 @@ bool CAlgorithmMatrixAverage::process()
 				m_history.clear();
 			}
 
-			Toolkit::Matrix::copyDescription(*swapMatrix, *iMatrix);
-			Toolkit::Matrix::copyContent(*swapMatrix, *iMatrix);
+			swapMatrix->copy(*iMatrix);
 
 			m_history.push_back(swapMatrix);
 			shouldPerformAverage = (m_history.size() == ip_matrixCount);
@@ -120,11 +119,11 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (shouldPerformAverage)
 	{
-		Toolkit::Matrix::clearContent(*oMatrix);
-
+		oMatrix->resetBuffer();
+		
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
-			IMatrix* matrix = m_history.at(0);
+			CMatrix* matrix = m_history.at(0);
 
 			m_nAverageSamples++;
 
@@ -170,7 +169,7 @@ bool CAlgorithmMatrixAverage::process()
 			const size_t n     = oMatrix->getBufferElementCount();
 			const double scale = 1. / m_history.size();
 
-			for (IMatrix* matrix : m_history)
+			for (CMatrix* matrix : m_history)
 			{
 				double* oBuffer = oMatrix->getBuffer();
 				double* iBuffer = matrix->getBuffer();

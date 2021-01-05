@@ -13,7 +13,7 @@ using namespace /*OpenViBE::*/Plugins;
 using namespace StreamCodecs;
 using namespace std;
 
-static stringstream print(IMatrix& matrix)
+static stringstream print(CMatrix& matrix)
 {
 	stringstream ss;
 	ss << "Matrix :\n";
@@ -97,12 +97,12 @@ bool CDecoderAlgorithmTest::process()
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader))
 			{
 				{
-					TParameterHandler<IMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+					TParameterHandler<CMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 					if (handler.exists()) { OV_WARNING_K(print(*handler).str()); }
 				}
 
 				{
-					TParameterHandler<IMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
+					TParameterHandler<CMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
 					if (handler.exists()) { OV_WARNING_K(print(*handler).str()); }
 				}
 

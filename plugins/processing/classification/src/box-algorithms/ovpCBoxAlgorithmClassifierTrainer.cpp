@@ -275,7 +275,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			if (m_sampleDecoder[i - 1]->isHeaderReceived()) { }
 			if (m_sampleDecoder[i - 1]->isBufferReceived())
 			{
-				const IMatrix* sampleMatrix = m_sampleDecoder[i - 1]->getOutputMatrix();
+				const CMatrix* sampleMatrix = m_sampleDecoder[i - 1]->getOutputMatrix();
 
 				sample_t sample;
 				sample.sampleMatrix = new CMatrix();
@@ -283,7 +283,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 				sample.endTime      = boxContext.getInputChunkEndTime(i, j);
 				sample.inputIdx     = i - 1;
 
-				Matrix::copy(*sample.sampleMatrix, *sampleMatrix);
+				sample.sampleMatrix->copy(*sampleMatrix);
 				m_datasets.push_back(sample);
 				m_nFeatures[i]++;
 			}
@@ -328,17 +328,12 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		}
 
 		const size_t nClass = nInput - 1;
-		CMatrix confusion;
-		confusion.setDimensionCount(2);
-		confusion.setDimensionSize(0, nClass);
-		confusion.setDimensionSize(1, nClass);
+		CMatrix confusion(nClass, nClass);
 
 		if (m_nPartition >= 2)
 		{
 			double partitionAccuracy = 0;
 			double finalAccuracy     = 0;
-
-			Matrix::clearContent(confusion);
 
 			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (size_t i = 0; i < m_nPartition; ++i)
@@ -386,7 +381,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, 0, 0),
 							"Training failed: bailing out (from whole set training)", ErrorType::Internal);
 
-		Matrix::clearContent(confusion);
+		confusion.resetBuffer();
 		const double accuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
 
 		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
@@ -407,11 +402,9 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 	const size_t nSample  = dataset.size() - (stopIdx - startIdx);
 	const size_t nFeature = dataset[0].sampleMatrix->getBufferElementCount();
 
-	TParameterHandler<IMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
-	ip_sample->setDimensionCount(2);
-	ip_sample->setDimensionSize(0, nSample);
-	ip_sample->setDimensionSize(1, nFeature + 1);
+	ip_sample->resize(nSample, nFeature + 1);
 
 	double* buffer = ip_sample->getBuffer();
 	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); ++j)
@@ -450,10 +443,9 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 	m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig);
 
-	TParameterHandler<IMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-	ip_sample->setDimensionCount(1);
-	ip_sample->setDimensionSize(0, nFeature);
+	ip_sample->resize(nFeature);
 
 	size_t nSuccess = 0;
 
@@ -503,17 +495,13 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 		return true;
 	}
 
-	// Normalize
-	CMatrix tmp, rowSum;
-	Matrix::copy(tmp, oMatrix);
-	rowSum.setDimensionCount(1);
-	rowSum.setDimensionSize(0, rows);
-	Matrix::clearContent(rowSum);
+	CMatrix tmp(oMatrix), rowSum(rows);
 
 	for (size_t i = 0; i < rows; ++i)
 	{
-		for (size_t j = 0; j < rows; ++j) { rowSum[i] += tmp[i * rows + j]; }
-		for (size_t j = 0; j < rows; ++j) { tmp[i * rows + j] /= rowSum[i]; }
+		const size_t idx = i * rows;
+		for (size_t j = 0; j < rows; ++j) { rowSum[i] += tmp[idx + j]; }
+		for (size_t j = 0; j < rows; ++j) { tmp[idx + j] /= rowSum[i]; }
 	}
 
 	std::stringstream ss;

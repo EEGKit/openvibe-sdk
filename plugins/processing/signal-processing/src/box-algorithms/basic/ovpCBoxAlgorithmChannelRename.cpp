@@ -72,7 +72,7 @@ bool CBoxAlgorithmChannelRename::process()
 		m_decoder.decode(chunk);
 		if (m_decoder.isHeaderReceived())
 		{
-			Toolkit::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
+			ip_Matrix->copyDescription(*op_Matrix);
 			for (size_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
 			{
 				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());
