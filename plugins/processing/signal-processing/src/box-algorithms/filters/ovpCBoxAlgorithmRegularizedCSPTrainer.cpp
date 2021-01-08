@@ -44,7 +44,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 		m_signalDecoders[i].initialize(*this, i + 1);
 
 		const CIdentifier covAlgId = this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OnlineCovariance);
-		OV_ERROR_UNLESS_KRF(covAlgId != OV_UndefinedIdentifier, "Failed to create online covariance algorithm", ErrorType::BadResourceCreation);
+		OV_ERROR_UNLESS_KRF(covAlgId != CIdentifier::undefined(), "Failed to create online covariance algorithm", ErrorType::BadResourceCreation);
 
 		m_covProxies[i].cov = &this->getAlgorithmManager().getAlgorithm(covAlgId);
 		OV_ERROR_UNLESS_KRF(m_covProxies[i].cov->initialize(), "Failed to initialize online covariance algorithm", ErrorType::Internal);

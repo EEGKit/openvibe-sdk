@@ -47,7 +47,7 @@ private:
 	uint64_t m_trialStartTime = 0;
 	uint64_t m_trialEndTime   = 0;
 	size_t m_nSamplePerBuffer = 0;
-	CIdentifier m_trialLabel  = OV_UndefinedIdentifier;
+	CIdentifier m_trialLabel  = CIdentifier::undefined();
 
 	std::vector<ISignalTrial*> m_signalTrials;
 };
@@ -155,7 +155,7 @@ void TTrainingBoxAlgorithm<TBoxAlgorithmParentClass>::setStimulation(const size_
 
 		m_trialStartTime = ULLONG_MAX;
 		m_trialEndTime   = ULLONG_MAX;
-		m_trialLabel     = OV_UndefinedIdentifier;
+		m_trialLabel     = CIdentifier::undefined();
 	}
 }
 

@@ -30,6 +30,6 @@ protected:
 	std::string m_docTemplateDirectory;
 	std::vector<std::pair<std::string, std::string>> m_categories;
 	std::vector<std::pair<std::string, std::string>> m_deprecatedBoxesCategories;
-	OpenViBE::CIdentifier m_scenarioID      = OV_UndefinedIdentifier;
+	OpenViBE::CIdentifier m_scenarioID = OpenViBE::CIdentifier::undefined();
 	OpenViBE::Kernel::IScenario* m_scenario = nullptr;
 };

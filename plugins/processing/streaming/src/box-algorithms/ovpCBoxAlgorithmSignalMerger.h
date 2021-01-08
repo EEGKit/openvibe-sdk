@@ -35,7 +35,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmSignalMergerDesc final : public IBoxAlgorithmDesc

@@ -3,6 +3,7 @@
 // ReSharper disable CppUnusedIncludeDirective
 #include "CMatrixTest.hpp"
 #include "CTimeTest.hpp"
+#include "CIdentifierTest.hpp"
 
 int main(int argc, char* argv[])
 {

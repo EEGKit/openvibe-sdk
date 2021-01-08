@@ -65,8 +65,8 @@ public:
 	 * \brief Gets next input parameter identifier given the previous input parameter
 	 * \param prevInputParameterID [in] : the previous input parameter
 	 * \return the next input parameter identifier if existing.
-	 * \return \c OV_UndefinedIdentifier if the previous was the last input parameter identifier.
-	 * \note Passing \c OV_UndefinedIdentifier as \c prevInputParameterID will
+	 * \return \c CIdentifier::undefined() if the previous was the last input parameter identifier.
+	 * \note Passing \c CIdentifier::undefined() as \c prevInputParameterID will
 	 *       cause this function to return the firs input parameter identifier.
 	 */
 	virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& prevInputParameterID) const = 0;
@@ -86,8 +86,8 @@ public:
 	 * \brief Gets next output parameter identifier given the previous output parameter
 	 * \param prevOutputParameterID [in] : the previous output parameter
 	 * \return the next output parameter identifier if existing.
-	 * \return \c OV_UndefinedIdentifier if the previous was the last output parameter identifier.
-	 * \note Passing \c OV_UndefinedIdentifier as \c prevOutputParameterID will
+	 * \return \c CIdentifier::undefined() if the previous was the last output parameter identifier.
+	 * \note Passing \c CIdentifier::undefined() as \c prevOutputParameterID will
 	 *       cause this function to return the firs output parameter identifier.
 	 */
 	virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& prevOutputParameterID) const = 0;

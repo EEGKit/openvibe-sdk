@@ -23,7 +23,7 @@
 
 #include <sstream>
 
-#include "ovCIdentifier.h"
+#include "CIdentifier.hpp"
 
 namespace OpenViBE {
 typedef std::ostringstream ErrorStream;
@@ -52,16 +52,6 @@ typedef std::ostringstream ErrorStream;
 
 // internal use
 #define convertErrorTypeToString(type) #type
-
-namespace OpenViBE {
-#define HAS_IMBUED_OSTREAM_WITH_C_IDENTIFIER
-
-inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
-{
-	os << id.str();
-	return os;
-}
-}  // namespace OpenViBE
 
 /**
  * \def OV_WARNING_LOG(message, logManager)
@@ -199,13 +189,13 @@ do { if (!(expression)) { OV_ERROR(description, type, returnValue, errorManager,
  * \def OV_ERROR_KRO(description, type)
  * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for error macro that returns OV_UndefinedIdentifier and launched by objects
+ * Shorthand for error macro that returns CIdentifier::undefined() and launched by objects
  * that have direct access to kernel logger and error managers through this->getLogManager()
  * and this->getErrorManager().
  *
  * Suffix KRU stands for Kernel Return Undefined.
  */
-#define OV_ERROR_KRU(description, type) OV_ERROR(description, type, OV_UndefinedIdentifier, this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_KRU(description, type) OV_ERROR(description, type, CIdentifier::undefined(), this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_KRV(description, type)
@@ -271,13 +261,13 @@ do { if (!(expression)) { OV_ERROR(description, type, returnValue, errorManager,
  * \def OV_ERROR_UNLESS_KRU(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for conditional error macro that returns OV_UndefinedIdentifier and
+ * Shorthand for conditional error macro that returns CIdentifier::undefined() and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
  * Suffix KRU stands for Kernel Return Undefined.
  */
-#define OV_ERROR_UNLESS_KRU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, OV_UndefinedIdentifier, this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_UNLESS_KRU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, CIdentifier::undefined(), this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_UNLESS_KRV(expression, description, type)

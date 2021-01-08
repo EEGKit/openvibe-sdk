@@ -1,5 +1,5 @@
 #pragma once
-#include "../../ovCIdentifier.h"
+#include "../../CIdentifier.hpp"
 
 namespace OpenViBE {
 namespace Kernel {
@@ -25,7 +25,7 @@ public:
 	void setIdentifier(const CIdentifier& id) { m_id = id; }
 	void setTime(const uint64_t time) { m_time = time; }
 protected:
-	CIdentifier m_id = OV_UndefinedIdentifier;
+	CIdentifier m_id = CIdentifier::undefined();
 	uint64_t m_time = 0;
 };
 

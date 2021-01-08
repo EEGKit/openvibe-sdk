@@ -31,8 +31,8 @@ private:
 
 	CScenario& m_ownerScenario;
 
-	CIdentifier m_id   = OV_UndefinedIdentifier;
-	CIdentifier m_type = OV_UndefinedIdentifier;
+	CIdentifier m_id   = CIdentifier::undefined();
+	CIdentifier m_type = CIdentifier::undefined();
 	CString m_data;
 };
 }  // namespace Kernel

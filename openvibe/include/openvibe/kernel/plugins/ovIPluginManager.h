@@ -56,8 +56,8 @@ public:
 	 * \param previousID [in] : The identifier
 	 *        for the preceeding plugin object descriptor
 	 * \return The identifier of the next plugin object descriptor in case of success.
-	 * \return \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \return \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first plugin object
 	 *       descriptor identifier.
 	 */
@@ -68,8 +68,8 @@ public:
 	 *        for the preceeding plugin object descriptor
 	 * \param baseClassID [in] : the class the plugin object descriptor should derive from
 	 * \return The identifier of the next plugin object descriptor in case of success.
-	 * \return \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \return \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first plugin object
 	 *       descriptor identifier.
 	 */

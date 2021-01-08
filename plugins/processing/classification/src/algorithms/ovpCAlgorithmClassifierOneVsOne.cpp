@@ -37,10 +37,10 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 	op_configuration = nullptr;
 
 	TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
-	ip_pPairwise = OV_UndefinedIdentifier.toUInteger();
+	ip_pPairwise = CIdentifier::undefined().id();
 
 	m_decisionStrategyAlgorithm = nullptr;
-	m_pairwiseDecisionID        = OV_UndefinedIdentifier;
+	m_pairwiseDecisionID        = CIdentifier::undefined();
 
 	return CAlgorithmPairingStrategy::initialize();
 }
@@ -81,7 +81,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& dataset)
 	m_pairwiseDecisionID = this->getEnumerationParameter(
 		OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, OVP_TypeId_ClassificationPairwiseStrategy);
 
-	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != CIdentifier::undefined(),
 						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.str() << "]",
 						ErrorType::BadConfig);
 
@@ -252,7 +252,7 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 			const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 			OV_ERROR_UNLESS_KRF(
-				subClassifierAlgorithm != OV_UndefinedIdentifier,
+				subClassifierAlgorithm != CIdentifier::undefined(),
 				"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.str() << "]",
 				ErrorType::BadConfig);
 
@@ -307,7 +307,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration() 
 	m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig);
 	tmp->addChild(static_cast<XML::IXMLNode*>(op_config));
 
-	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_pairwiseDecisionID.toString());
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_pairwiseDecisionID.str().c_str());
 
 	return tmp;
 }
@@ -320,9 +320,9 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfig()
 	XML::IXMLNode* oneVsOneNode = XML::createNode(TYPE_NODE_NAME);
 
 	XML::IXMLNode* tmp = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
-	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.toString());
+	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.str().c_str());
 	tmp->setPCData(
-		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.toUInteger()).
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.id()).
 			  toASCIIString());
 	oneVsOneNode->addChild(tmp);
 

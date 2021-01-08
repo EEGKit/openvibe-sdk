@@ -36,7 +36,7 @@ protected:
 	size_t m_nSample         = 0;
 	size_t m_nSampleReserved = 0;
 	size_t m_sampling        = 0;
-	CIdentifier m_labelID    = OV_UndefinedIdentifier;
+	CIdentifier m_labelID    = CIdentifier::undefined();
 };
 }  // namespace Toolkit
 }  // namespace OpenViBE

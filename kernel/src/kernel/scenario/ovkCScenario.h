@@ -142,7 +142,7 @@ private:
 	// Helper members. These are used for quick lookup of next identifiers for the purpose
 	// of the getNextMetadataIdentifier function.
 	std::map<CIdentifier, CIdentifier> m_nextMetadataID;
-	CIdentifier m_firstMetadataID = OV_UndefinedIdentifier;
+	CIdentifier m_firstMetadataID = CIdentifier::undefined();
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

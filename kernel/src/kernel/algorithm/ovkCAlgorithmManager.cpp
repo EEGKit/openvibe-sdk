@@ -135,20 +135,20 @@ CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(const CIdentifier& pre
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	auto itAlgorithm = m_algorithms.begin();
-	if (previousID != OV_UndefinedIdentifier)
+	if (previousID != CIdentifier::undefined())
 	{
 		itAlgorithm = m_algorithms.find(previousID);
-		if (itAlgorithm == m_algorithms.end()) { return OV_UndefinedIdentifier; }
+		if (itAlgorithm == m_algorithms.end()) { return CIdentifier::undefined(); }
 		++itAlgorithm;
 	}
-	return (itAlgorithm != m_algorithms.end() ? itAlgorithm->first : OV_UndefinedIdentifier);
+	return (itAlgorithm != m_algorithms.end() ? itAlgorithm->first : CIdentifier::undefined());
 }
 
 CIdentifier CAlgorithmManager::getUnusedIdentifier() const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	uint64_t identifier = CIdentifier::random().toUInteger();
+	uint64_t identifier = CIdentifier::random().id();
 	CIdentifier result;
 
 	std::map<CIdentifier, CAlgorithmProxy*>::const_iterator i;
@@ -157,7 +157,7 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier() const
 		identifier++;
 		result = CIdentifier(identifier);
 		i      = m_algorithms.find(result);
-	} while (i != m_algorithms.end() || result == OV_UndefinedIdentifier);
+	} while (i != m_algorithms.end() || result == CIdentifier::undefined());
 
 	return result;
 }

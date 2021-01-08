@@ -27,7 +27,7 @@ public:
 	bool uninitialize() override;
 	virtual void release();
 
-	_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IKernelLoader, CIdentifier::undefined())
 
 	virtual bool isOpen() = 0;
 

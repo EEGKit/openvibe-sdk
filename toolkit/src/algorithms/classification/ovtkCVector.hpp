@@ -30,7 +30,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(TParent, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TParent, CIdentifier::undefined())
 
 protected:
 

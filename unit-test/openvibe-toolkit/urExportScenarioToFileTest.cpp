@@ -85,7 +85,7 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		for (auto& scenarioInput : simpleScenarioInputs)
 		{
 			scenario.addInput(std::get<1>(scenarioInput).c_str(), std::get<0>(scenarioInput));
-			if (std::get<2>(scenarioInput) != OV_UndefinedIdentifier)
+			if (std::get<2>(scenarioInput) != CIdentifier::undefined())
 			{
 				scenario.setScenarioInputLink(scenarioInputIdx, std::get<2>(scenarioInput), std::get<3>(scenarioInput));
 			}
@@ -96,7 +96,7 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		for (auto& scenarioOutput : simpleScenarioOutputs)
 		{
 			scenario.addOutput(std::get<1>(scenarioOutput).c_str(), std::get<0>(scenarioOutput));
-			if (std::get<2>(scenarioOutput) != OV_UndefinedIdentifier)
+			if (std::get<2>(scenarioOutput) != CIdentifier::undefined())
 			{
 				scenario.setScenarioOutputLink(scenarioOutputIdx, std::get<2>(scenarioOutput), std::get<3>(scenarioOutput));
 			}

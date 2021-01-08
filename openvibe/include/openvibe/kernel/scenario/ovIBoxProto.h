@@ -48,7 +48,7 @@ public:
 	 * \param notify [in]: if true, activate notification callback (true by default)
 	 * \return true if successful
 	 */
-	virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+	virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) = 0;
 
 	/**
 	 * \brief Adds an output to the box
@@ -58,7 +58,7 @@ public:
 	 * \param notify [in]: if true, activate notification callback (true by default)
 	 * \return true if successful
 	 */
-	virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier,
+	virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = CIdentifier::undefined(),
 						   const bool notify                                                     = true) = 0;
 
 	/**
@@ -73,7 +73,7 @@ public:
 	 * \return true if successful
 	 */
 	virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const bool modifiable = false,
-							const CIdentifier& id                                                                       = OV_UndefinedIdentifier,
+							const CIdentifier& id                                                                       = CIdentifier::undefined(),
 							const bool notify                                                                           = true) = 0;
 	/**
 	 * \brief Adds a flag to the box

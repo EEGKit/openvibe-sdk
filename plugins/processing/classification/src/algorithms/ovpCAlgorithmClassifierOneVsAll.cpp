@@ -193,7 +193,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 {
 	const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
-	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != CIdentifier::undefined(),
 						"Invalid classifier identifier [" << this->m_subClassifierAlgorithmID.str() << "]", ErrorType::BadConfig);
 
 	IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
@@ -239,9 +239,9 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfig()
 	XML::IXMLNode* oneVsAllNode = XML::createNode(TYPE_NODE_NAME);
 
 	XML::IXMLNode* tempNode = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
-	tempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.toString());
+	tempNode->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.str().c_str());
 	tempNode->setPCData(
-		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.toUInteger()).toASCIIString());
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.id()).toASCIIString());
 	oneVsAllNode->addChild(tempNode);
 
 	tempNode = XML::createNode(SUB_CLASSIFIER_COUNT_NODE_NAME);

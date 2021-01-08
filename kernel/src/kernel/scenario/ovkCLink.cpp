@@ -10,8 +10,8 @@ using namespace /*OpenViBE::*/Kernel;
 //                                                                   //
 
 CLink::CLink(const IKernelContext& ctx, CScenario& ownerScenario)
-	: TAttributable<TKernelObject<ILink>>(ctx), m_ownerScenario(ownerScenario), m_id(OV_UndefinedIdentifier), m_srcBoxID(OV_UndefinedIdentifier),
-	  m_dstBoxID(OV_UndefinedIdentifier) {}
+	: TAttributable<TKernelObject<ILink>>(ctx), m_ownerScenario(ownerScenario), m_id(CIdentifier::undefined()), m_srcBoxID(CIdentifier::undefined()),
+	  m_dstBoxID(CIdentifier::undefined()) {}
 
 bool CLink::initializeFromExistingLink(const ILink& link)
 {

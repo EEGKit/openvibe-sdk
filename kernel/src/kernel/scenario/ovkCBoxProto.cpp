@@ -77,7 +77,7 @@ bool CBoxProto::addFlag(const EBoxFlag boxFlag)
 bool CBoxProto::addFlag(const CIdentifier& flagID)
 {
 	const uint64_t value = getKernelContext().getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, flagID.toString());
-	if (value == OV_UndefinedIdentifier) { return false; }
+	if (value == CIdentifier::undefined().id()) { return false; }
 	m_box.addAttribute(flagID, "");
 	return true;
 }

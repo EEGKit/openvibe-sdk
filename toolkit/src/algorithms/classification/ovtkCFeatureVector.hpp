@@ -15,7 +15,7 @@ public:
 	double getLabel() const override { return 0; }
 	bool setLabel(const double /*label*/) override { return false; }
 
-	_IsDerivedFromClass_Final_(TVector<TParent>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TVector<TParent>, CIdentifier::undefined())
 };
 
 typedef TFeatureVector<IFeatureVector> CFeatureVector;

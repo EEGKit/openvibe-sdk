@@ -62,12 +62,12 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	classifierAlgorithmClassID = this->getTypeManager().getEnumerationEntryValueFromName(
 		OVTK_TypeId_ClassificationAlgorithm, (*m_parameter)[ALGORITHM_SETTING_NAME]);
 
-	if (strategyClassID == OV_UndefinedIdentifier)
+	if (strategyClassID == CIdentifier::undefined())
 	{
 		//That means that we want to use a classical algorithm so just let's create it
 		const CIdentifier classifierAlgorithmID = this->getAlgorithmManager().createAlgorithm(classifierAlgorithmClassID);
 
-		OV_ERROR_UNLESS_KRF(classifierAlgorithmID != OV_UndefinedIdentifier,
+		OV_ERROR_UNLESS_KRF(classifierAlgorithmID != CIdentifier::undefined(),
 							"Unable to instantiate classifier for class [" << classifierAlgorithmID.str() << "]", ErrorType::BadConfig);
 
 		m_classifier = &this->getAlgorithmManager().getAlgorithm(classifierAlgorithmID);
@@ -551,14 +551,14 @@ bool CBoxAlgorithmClassifierTrainer::saveConfig()
 	XML::IXMLNode* tempNode           = XML::createNode(STRATEGY_NODE_NAME);
 	const CIdentifier strategyClassId = this->getTypeManager().getEnumerationEntryValueFromName(
 		OVTK_TypeId_ClassificationStrategy, (*m_parameter)[MULTICLASS_STRATEGY_SETTING_NAME]);
-	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, strategyClassId.toString());
+	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, strategyClassId.str().c_str());
 	tempNode->setPCData((*m_parameter)[MULTICLASS_STRATEGY_SETTING_NAME].toASCIIString());
 	root->addChild(tempNode);
 
 	tempNode                            = XML::createNode(ALGORITHM_NODE_NAME);
 	const CIdentifier classifierClassId = this->getTypeManager().getEnumerationEntryValueFromName(
 		OVTK_TypeId_ClassificationAlgorithm, (*m_parameter)[ALGORITHM_SETTING_NAME]);
-	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, classifierClassId.toString());
+	tempNode->addAttribute(IDENTIFIER_ATTRIBUTE_NAME, classifierClassId.str().c_str());
 	tempNode->setPCData((*m_parameter)[ALGORITHM_SETTING_NAME].toASCIIString());
 	root->addChild(tempNode);
 

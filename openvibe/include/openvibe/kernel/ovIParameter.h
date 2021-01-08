@@ -45,7 +45,7 @@ public:
 	 * \brief Gets the sub type of this parameter's content (e.g. for enumeration)
 	 * \return the sub type of this parameter's content (e.g. for enumeration).
 	 */
-	virtual CIdentifier getSubTypeIdentifier() const { return OV_UndefinedIdentifier; }
+	virtual CIdentifier getSubTypeIdentifier() const { return CIdentifier::undefined(); }
 
 	//@}
 	/** \name Reinitialization */
