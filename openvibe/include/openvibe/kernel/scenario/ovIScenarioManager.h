@@ -28,8 +28,8 @@ public:
 	 * \param previousID [in] : The identifier
 	 *        for the preceeding scenario
 	 * \return The identifier of the next scenario in case of success.
-	 * \return \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \return \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first scenario
 	 *       identifier.
 	 */

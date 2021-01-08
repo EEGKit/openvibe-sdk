@@ -39,8 +39,8 @@ public:
 	 * \param[in] previousID : The identifier
 	 *        for the preceeding metabox object descriptor
 	 * \return The identifier of the next metabox object descriptor in case of success.
-	 * \retval \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \retval \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first metabox object
 	 *       descriptor identifier.
 	 */

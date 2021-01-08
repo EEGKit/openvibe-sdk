@@ -45,7 +45,7 @@ public:
 	{
 		char name[1024];
 		sprintf(name, "Input - %c", char('A' + index));
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 		box.setInputType(index, typeID);
 		box.setInputName(index, name);
@@ -54,7 +54,7 @@ public:
 
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 		box.setOutputType(0, typeID);
 		for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
@@ -63,14 +63,14 @@ public:
 
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 		box.setOutputType(0, typeID);
 		for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmSimpleDSPDesc final : public IBoxAlgorithmDesc

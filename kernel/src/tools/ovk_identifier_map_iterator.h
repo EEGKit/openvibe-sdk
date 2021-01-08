@@ -9,13 +9,13 @@ OpenViBE::CIdentifier getNextIdentifier(const std::map<OpenViBE::CIdentifier, T>
 {
 	typename std::map<OpenViBE::CIdentifier, T>::const_iterator it;
 
-	if (previousID == OV_UndefinedIdentifier) { it = map.begin(); }
+	if (previousID == OpenViBE::CIdentifier::undefined()) { it = map.begin(); }
 	else
 	{
 		it = map.find(previousID);
-		if (it == map.end()) { return OV_UndefinedIdentifier; }
+		if (it == map.end()) { return OpenViBE::CIdentifier::undefined(); }
 		++it;
 	}
 
-	return it != map.end() ? it->first : OV_UndefinedIdentifier;
+	return it != map.end() ? it->first : OpenViBE::CIdentifier::undefined();
 }

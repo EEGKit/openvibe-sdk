@@ -25,7 +25,7 @@ CString CComment::getText() const { return m_text; }
 
 bool CComment::setIdentifier(const CIdentifier& id)
 {
-	if (m_id != OV_UndefinedIdentifier || id == OV_UndefinedIdentifier) { return false; }
+	if (m_id != CIdentifier::undefined() || id == CIdentifier::undefined()) { return false; }
 	m_id = id;
 	return true;
 }
@@ -43,8 +43,8 @@ bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
 	m_text = rExisitingComment.getText();
 
-	CIdentifier id = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-	while (id != OV_UndefinedIdentifier)
+	CIdentifier id = rExisitingComment.getNextAttributeIdentifier(CIdentifier::undefined());
+	while (id != CIdentifier::undefined())
 	{
 		addAttribute(id, rExisitingComment.getAttributeValue(id));
 		id = rExisitingComment.getNextAttributeIdentifier(id);

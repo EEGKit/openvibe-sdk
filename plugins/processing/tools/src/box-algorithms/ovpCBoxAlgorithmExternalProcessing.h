@@ -88,7 +88,7 @@ private:
 class CBoxAlgorithmExternalProcessingListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmExternalProcessingDesc final : public IBoxAlgorithmDesc

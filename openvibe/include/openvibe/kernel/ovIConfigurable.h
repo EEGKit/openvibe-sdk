@@ -49,15 +49,15 @@ public:
 	 * \brief Enumerates parameter identifiers for this configurable.
 	 * \param previousID [in] : the identifier which next identifier has to be returned
 	 * \return the parameter identifier following the provided parameter identifier.
-	 * \note if \c previousID is \e OV_UndefinedIdentifier , the first parameter identifier is returned
-	 * \note getting \e OV_UndefinedIdentifier has result means there are no more identifier after \c previousID
+	 * \note if \c previousID is \e CIdentifier::undefined() , the first parameter identifier is returned
+	 * \note getting \e CIdentifier::undefined() has result means there are no more identifier after \c previousID
 	 *
 	 * Sample code to iterate on parameter identifiers :
 	 *
 	 * \code
 	 * IConfigurable* configurable= // ...
-	 * CIdentifier currentID=OV_UndefinedIdentifier;
-	 * while((currentID=configurable->getNextParameterIdentifier(currentID))!=OV_UndefinedIdentifier)
+	 * CIdentifier currentID=CIdentifier::undefined();
+	 * while((currentID=configurable->getNextParameterIdentifier(currentID))!=CIdentifier::undefined())
 	 * {
 	 *   IParameter* parameter=configurable->getParameter(currentID);
 	 *   // ...
@@ -96,7 +96,7 @@ public:
 	 *
 	 * This function creates a new parameter with its associated object.
 	 */
-	virtual IParameter* createParameter(const CIdentifier& id, const EParameterType type, const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
+	virtual IParameter* createParameter(const CIdentifier& id, const EParameterType type, const CIdentifier& subTypeID = CIdentifier::undefined()) = 0;
 	/**
 	 * \brief Removes an existing parameter
 	 * \param id [in] : the identifier of the parameter to remove

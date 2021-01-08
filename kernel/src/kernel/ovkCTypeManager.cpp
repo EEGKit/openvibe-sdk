@@ -31,7 +31,7 @@ struct SAInfB
 CTypeManager::CTypeManager(const IKernelContext& ctx)
 	: TKernelObject<ITypeManager>(ctx)
 {
-	m_names[OV_UndefinedIdentifier] = "undefined";
+	m_names[CIdentifier::undefined()] = "undefined";
 	this->registerEnumerationType(OV_TypeId_BoxAlgorithmFlag, "BoxFlags");
 }
 
@@ -77,7 +77,7 @@ bool CTypeManager::registerStreamType(const CIdentifier& typeID, const CString& 
 	OV_DEBUG_UNLESS_K(m_takenNames.find(name) == m_takenNames.end(),
 					  "Trying to register stream type " << typeID << " with a name that already exists ( " << name << ")");
 
-	OV_ERROR_UNLESS_KRF(parentTypeID == OV_UndefinedIdentifier || isStream(parentTypeID),
+	OV_ERROR_UNLESS_KRF(parentTypeID == CIdentifier::undefined() || isStream(parentTypeID),
 						"Trying to register an invalid stream type [" << name << "] " << typeID.str() << ", parent : " << parentTypeID.str() << ".",
 						ErrorType::BadArgument);
 
@@ -242,7 +242,7 @@ CIdentifier CTypeManager::getStreamParentType(const CIdentifier& typeID) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	if (!isStream(typeID)) { return OV_UndefinedIdentifier; }
+	if (!isStream(typeID)) { return CIdentifier::undefined(); }
 	return m_streams.find(typeID)->second;
 }
 

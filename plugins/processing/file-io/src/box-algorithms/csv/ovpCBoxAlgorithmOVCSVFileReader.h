@@ -39,7 +39,7 @@ private:
 
 	uint64_t m_lastStimulationDate = 0;
 
-	CIdentifier m_typeID = OV_UndefinedIdentifier;
+	CIdentifier m_typeID = CIdentifier::undefined();
 	std::vector<std::string> m_channelNames;
 	std::vector<size_t> m_dimSizes;
 	size_t m_sampling         = 0;
@@ -55,7 +55,7 @@ class CBoxAlgorithmOVCSVFileReaderListener final : public Toolkit::TBoxListener<
 public:
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 
 		if (index == 0 && typeID == OV_TypeId_Stimulations)
@@ -71,7 +71,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public IBoxAlgorithmDesc

@@ -15,7 +15,7 @@ using namespace /*OpenViBE::*/Plugins;
 //                                                                   //
 
 CMetadata::CMetadata(const IKernelContext& ctx, CScenario& ownerScenario)
-	: TKernelObject<IMetadata>(ctx), m_ownerScenario(ownerScenario), m_id(OV_UndefinedIdentifier), m_type(OV_UndefinedIdentifier), m_data("") {}
+	: TKernelObject<IMetadata>(ctx), m_ownerScenario(ownerScenario), m_id(CIdentifier::undefined()), m_type(CIdentifier::undefined()), m_data("") {}
 
 CMetadata::~CMetadata() {}
 
@@ -25,13 +25,12 @@ CString CMetadata::getData() const { return m_data; }
 
 bool CMetadata::setIdentifier(const CIdentifier& identifier)
 {
-	OV_ERROR_UNLESS_KRF(m_id == OV_UndefinedIdentifier,
-						"Metadata [" << m_id.str() << "] in scenario [" << m_ownerScenario.getIdentifier().str() <<
-						"]  already has an identifier.",
+	OV_ERROR_UNLESS_KRF(m_id == CIdentifier::undefined(),
+						"Metadata [" << m_id.str() << "] in scenario [" << m_ownerScenario.getIdentifier() << "]  already has an identifier.",
 						ErrorType::BadCall);
 
-	OV_ERROR_UNLESS_KRF(identifier != OV_UndefinedIdentifier,
-						"Attempted to assign undefined identifier to Metadata in scenario [" << m_ownerScenario.getIdentifier().str() << "].",
+	OV_ERROR_UNLESS_KRF(identifier != CIdentifier::undefined(),
+						"Attempted to assign undefined identifier to Metadata in scenario [" << m_ownerScenario.getIdentifier() << "].",
 						ErrorType::BadArgument);
 
 	m_id = identifier;
@@ -40,9 +39,8 @@ bool CMetadata::setIdentifier(const CIdentifier& identifier)
 
 bool CMetadata::setType(const CIdentifier& typeID)
 {
-	OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
-						"Attempted to assign undefined typeID to Metadata [" << m_id.str() << "] in scenario [" << m_ownerScenario.getIdentifier().
-						toString() << "].",
+	OV_ERROR_UNLESS_KRF(typeID != CIdentifier::undefined(),
+						"Attempted to assign undefined typeID to Metadata [" << m_id.str() << "] in scenario [" << m_ownerScenario.getIdentifier() << "].",
 						ErrorType::BadArgument);
 
 	m_type = typeID;

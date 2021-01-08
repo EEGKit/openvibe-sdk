@@ -39,7 +39,7 @@ public:
 protected:
 	//  std::vector <double> m_classes;
 	//The vector will be use when the user will be able to specify class label
-	CIdentifier m_subClassifierAlgorithmID = OV_UndefinedIdentifier;
+	CIdentifier m_subClassifierAlgorithmID = CIdentifier::undefined();
 };
 
 class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc

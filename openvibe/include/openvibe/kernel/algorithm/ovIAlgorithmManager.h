@@ -28,7 +28,7 @@ public:
 	 * \param algorithmClassID [out] : the class identifier of
 	 *        the newly created algorithm
 	 * \return \e true in case of success.
-	 * \return \e OV_UndefinedIdentifier in case of error.
+	 * \return \e CIdentifier::undefined() in case of error.
 	 */
 	virtual CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) = 0;
 	/**
@@ -36,7 +36,7 @@ public:
 	  * \param algorithmDesc [in] : the algorithm descriptor of
 	  *        the algorithm to create
 	  * \return \e identifier of the created algorithm
-	  * \return \e OV_UndefinedIdentifier
+	  * \return \e CIdentifier::undefined()
 	  */
 	virtual CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) = 0;
 
@@ -66,8 +66,8 @@ public:
 	 * \param previousID [in] : The identifier
 	 *        for the preceeding algorithm
 	 * \return The identifier of the next algorithm in case of success.
-	 * \return \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \return \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first algorithm
 	 *       identifier.
 	 */

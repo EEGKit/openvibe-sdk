@@ -33,13 +33,13 @@ public:
 protected:
 
 	CScenario& m_ownerScenario;
-	CIdentifier m_id             = OV_UndefinedIdentifier;
-	CIdentifier m_srcBoxID       = OV_UndefinedIdentifier;
-	CIdentifier m_dstBoxID       = OV_UndefinedIdentifier;
+	CIdentifier m_id             = CIdentifier::undefined();
+	CIdentifier m_srcBoxID       = CIdentifier::undefined();
+	CIdentifier m_dstBoxID       = CIdentifier::undefined();
 	size_t m_srcOutputIdx        = 0;
-	CIdentifier m_srcBoxOutputID = OV_UndefinedIdentifier;
+	CIdentifier m_srcBoxOutputID = CIdentifier::undefined();
 	size_t m_dstInputIdx         = 0;
-	CIdentifier m_dstBoxInputID  = OV_UndefinedIdentifier;
+	CIdentifier m_dstBoxInputID  = CIdentifier::undefined();
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

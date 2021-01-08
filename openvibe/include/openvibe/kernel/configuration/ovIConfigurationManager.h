@@ -39,7 +39,7 @@ public:
 	 * \param name [in] : the name of the configuration token
 	 * \param value [in] the value of the configuration token
 	 * \return the identifier of the newly created token in case of success
-	 * \return \c OV_UndefinedIdentifier in case of error
+	 * \return \c CIdentifier::undefined() in case of error
 	 * \sa IConfigurationManager::releaseConfigurationToken
 	 * \sa IConfigurationManager::createConfigurationToken
 	 */
@@ -57,12 +57,12 @@ public:
 	 * \brief Iterates on the existing configuration tokens of this configuration manager
 	 * \param prevConfigTokenID [in] : the identifier of the token to start the iteration from
 	 * \return the identifier of the next configuration token in case of success
-	 * \return \c OV_UndefinedIdentifier in case there is no more token to iterate on
+	 * \return \c CIdentifier::undefined() in case there is no more token to iterate on
 	 *
 	 * Typicall use of this function is :
 	 * \code
-	 * CIdentifier tokenID = OV_UndefinedIdentifier; // defaults to OV_UndefinedIdentifier
-	 * while((tokenID=configManager->getNextConfigurationTokenIdentifier(tokenID)) != OV_UndefinedIdentifier)
+	 * CIdentifier tokenID = CIdentifier::undefined(); // defaults to CIdentifier::undefined()
+	 * while((tokenID=configManager->getNextConfigurationTokenIdentifier(tokenID)) != CIdentifier::undefined())
 	 * {
 	 *     // do some stuff with current token identified with tokenID
 	 * }
@@ -136,7 +136,7 @@ public:
 	 * \param recursive [in] : when set to true, asks this configuration manager to propagate
 	 *                          the request to parent configuration manager (if any).
 	 * \return the identifier of the token with the actual name in case of success
-	 * \return \c OV_UndefinedIdentifier in case of error
+	 * \return \c CIdentifier::undefined() in case of error
 	 * \note if \c recursive is set to \e true then the returned identifier should
 	 *       not be considered as the identifier of an existing token in this configuration manager
 	 *       as it may have been returned from a parent configuration manager. Instead, one must consider

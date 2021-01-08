@@ -44,7 +44,7 @@ public:
 	bool onInputRemoved(Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 	bool onInputAdded(Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmStimulationListenerDesc final : virtual public IBoxAlgorithmDesc

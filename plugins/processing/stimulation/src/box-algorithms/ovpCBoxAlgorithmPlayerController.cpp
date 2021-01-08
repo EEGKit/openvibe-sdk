@@ -61,10 +61,10 @@ bool CBoxAlgorithmPlayerController::process()
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]\n";
 
 					bool res = false;
-					if (m_actionID == OV_TypeId_PlayerAction_Play) { res = this->getPlayerContext().play(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Stop) { res = this->getPlayerContext().stop(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Pause) { res = this->getPlayerContext().pause(); }
-					if (m_actionID == OV_TypeId_PlayerAction_Forward) { res = this->getPlayerContext().forward(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Play.id()) { res = this->getPlayerContext().play(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Stop.id()) { res = this->getPlayerContext().stop(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Pause.id()) { res = this->getPlayerContext().pause(); }
+					if (m_actionID == OV_TypeId_PlayerAction_Forward.id()) { res = this->getPlayerContext().forward(); }
 
 					OV_ERROR_UNLESS_KRF(res, "Failed to request player action ["
 										<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]",

@@ -42,7 +42,7 @@ IPlayer& CPlayerManager::getPlayer(const CIdentifier& playerID)
 
 CIdentifier CPlayerManager::getUnusedIdentifier() const
 {
-	uint64_t id = CIdentifier::random().toUInteger();
+	uint64_t id = CIdentifier::random().id();
 	CIdentifier res;
 	map<CIdentifier, CPlayer*>::const_iterator i;
 	do
@@ -50,6 +50,6 @@ CIdentifier CPlayerManager::getUnusedIdentifier() const
 		id++;
 		res = CIdentifier(id);
 		i   = m_players.find(res);
-	} while (i != m_players.end() || res == OV_UndefinedIdentifier);
+	} while (i != m_players.end() || res == CIdentifier::undefined());
 	return res;
 }

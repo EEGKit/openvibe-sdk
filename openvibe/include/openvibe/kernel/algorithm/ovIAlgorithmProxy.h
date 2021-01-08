@@ -30,8 +30,8 @@ public:
 	 * \brief Gets next input parameter identifier given the previous input parameter
 	 * \param previousID [in] : the previous input parameter
 	 * \return the next input parameter identifier if existing.
-	 * \return \c OV_UndefinedIdentifier if the previous was the last input parameter identifier.
-	 * \note Passing \c OV_UndefinedIdentifier as \c previousID will
+	 * \return \c CIdentifier::undefined() if the previous was the last input parameter identifier.
+	 * \note Passing \c CIdentifier::undefined() as \c previousID will
 	 *       cause this function to return the first input parameter identifier.
 	 */
 	virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& previousID) const = 0;
@@ -58,8 +58,8 @@ public:
 	 * \brief Gets next output parameter identifier given the previous output parameter
 	 * \param previousID [in] : the previous output parameter
 	 * \return the next output parameter identifier if existing.
-	 * \return \c OV_UndefinedIdentifier if the previous was the last output parameter identifier.
-	 * \note Passing \c OV_UndefinedIdentifier as \c previousID will
+	 * \return \c CIdentifier::undefined() if the previous was the last output parameter identifier.
+	 * \note Passing \c CIdentifier::undefined() as \c previousID will
 	 *       cause this function to return the first output parameter identifier.
 	 */
 	virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& previousID) const = 0;
@@ -86,8 +86,8 @@ public:
 	 * \brief Gets next output trigger identifier given the previous output trigger
 	 * \param previousID [in] : the previous output trigger
 	 * \return the next output trigger identifier if existing.
-	 * \return \c OV_UndefinedIdentifier if the previous was the last output trigger identifier.
-	 * \note Passing \c OV_UndefinedIdentifier as \c previousID will
+	 * \return \c CIdentifier::undefined() if the previous was the last output trigger identifier.
+	 * \note Passing \c CIdentifier::undefined() as \c previousID will
 	 *       cause this function to return the first output trigger identifier.
 	 */
 	virtual CIdentifier getNextOutputTriggerIdentifier(const CIdentifier& previousID) const = 0;
@@ -110,8 +110,8 @@ public:
 	 * \brief Gets next input trigger identifier given the previous input trigger
 	 * \param previousID [in] : the previous input trigger
 	 * \return the next input trigger identifier if existing.
-	 * \return \c OV_UndefinedIdentifier if the previous was the last input trigger identifier.
-	 * \note Passing \c OV_UndefinedIdentifier as \c previousID will
+	 * \return \c CIdentifier::undefined() if the previous was the last input trigger identifier.
+	 * \note Passing \c CIdentifier::undefined() as \c previousID will
 	 *       cause this function to return the first input trigger identifier.
 	 */
 	virtual CIdentifier getNextInputTriggerIdentifier(const CIdentifier& previousID) const = 0;

@@ -21,7 +21,7 @@ public:
 	double getLabel() const override { return m_Buffer[m_Size]; }
 	bool setLabel(const double /*label*/) override { return false; }
 
-	_IsDerivedFromClass_Final_(IFeatureVector, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IFeatureVector, CIdentifier::undefined())
 
 	const CMatrix* m_Matrix = nullptr;
 	uint32_t m_DimensionIdx = 0;
@@ -41,7 +41,7 @@ public:
 	const IFeatureVector& getFeatureVector(const size_t index) const override;
 	size_t getLabelCount() const override;
 
-	_IsDerivedFromClass_Final_(IFeatureVectorSet, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IFeatureVectorSet, CIdentifier::undefined())
 
 protected:
 

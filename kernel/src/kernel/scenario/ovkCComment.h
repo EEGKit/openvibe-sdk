@@ -29,7 +29,7 @@ protected:
 
 	CScenario& m_rOwnerScenario;
 
-	CIdentifier m_id = OV_UndefinedIdentifier;
+	CIdentifier m_id = CIdentifier::undefined();
 	CString m_text;
 };
 }  // namespace Kernel

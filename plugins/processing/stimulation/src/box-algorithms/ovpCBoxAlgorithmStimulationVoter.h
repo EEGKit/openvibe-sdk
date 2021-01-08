@@ -26,9 +26,9 @@ protected:
 	uint64_t m_minimumVotes         = 0;
 	double m_timeWindow             = 0;
 	uint64_t m_rejectClassLabel     = 0;
-	CIdentifier m_clearVotes        = OV_UndefinedIdentifier;
-	CIdentifier m_outputDateMode    = OV_UndefinedIdentifier;
-	CIdentifier m_rejectClassCanWin = OV_UndefinedIdentifier;
+	CIdentifier m_clearVotes        = CIdentifier::undefined();
+	CIdentifier m_outputDateMode    = CIdentifier::undefined();
+	CIdentifier m_rejectClassCanWin = CIdentifier::undefined();
 
 private:
 
@@ -50,11 +50,11 @@ public:
 
 	CBoxAlgorithmStimulationVoterListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
 protected:
 
-	CIdentifier m_inputTypeID = OV_UndefinedIdentifier;
+	CIdentifier m_inputTypeID = CIdentifier::undefined();
 };
 
 class CBoxAlgorithmStimulationVoterDesc final : public IBoxAlgorithmDesc

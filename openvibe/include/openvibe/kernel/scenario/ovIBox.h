@@ -80,29 +80,29 @@ public:
 
 	/**
 	 * \brief Requests for a suggested id. If it is already used in the box or
-	 * if it is OV_UndefinedIdentifier, a news random one is proposed uniq in the scope of settings.
+	 * if it is CIdentifier::undefined(), a news random one is proposed uniq in the scope of settings.
 	 * \param id [in] : the requested id
 	 * \return the proposed id
 	 */
-	virtual CIdentifier getUnusedSettingIdentifier(const CIdentifier& id = OV_UndefinedIdentifier) const = 0;
+	virtual CIdentifier getUnusedSettingIdentifier(const CIdentifier& id = CIdentifier::undefined()) const = 0;
 
 	/**
 	 * \brief Requests for a suggested id. If it is already used in the box or
-	 * if it is OV_UndefinedIdentifier, a news random one is proposed uniq in the scope of the inputs
+	 * if it is CIdentifier::undefined(), a news random one is proposed uniq in the scope of the inputs
 	 * of the given map object.
 	 * \param id [in] : the requested id
 	 * \return the proposed id
 	 */
-	virtual CIdentifier getUnusedInputIdentifier(const CIdentifier& id = OV_UndefinedIdentifier) const = 0;
+	virtual CIdentifier getUnusedInputIdentifier(const CIdentifier& id = CIdentifier::undefined()) const = 0;
 
 	/**
 	 * \brief Requests for a suggested id. If it is already used in the box or
-	 * if it is OV_UndefinedIdentifier, a news random one is proposed uniq in the scope of the outputs
+	 * if it is CIdentifier::undefined(), a news random one is proposed uniq in the scope of the outputs
 	 * of the given map object.
 	 * \param id [in] : the requested id
 	 * \return the proposed id
 	 */
-	virtual CIdentifier getUnusedOutputIdentifier(const CIdentifier& id = OV_UndefinedIdentifier) const = 0;
+	virtual CIdentifier getUnusedOutputIdentifier(const CIdentifier& id = CIdentifier::undefined()) const = 0;
 
 	//@}
 	/** \name Initialisation from prototypes etc... */
@@ -188,7 +188,7 @@ public:
 	 * The input is always added after the last
 	 * already existing input.
 	 */
-	virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+	virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) = 0;
 
 	/**
 	 * \brief Removes an input for this box
@@ -265,7 +265,7 @@ public:
 	 * The output is always added after the last
 	 * already existing output.
 	 */
-	virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier,
+	virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = CIdentifier::undefined(),
 						   const bool notify                                                     = true) = 0;
 
 	/**
@@ -351,7 +351,7 @@ public:
 	 */
 	virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const size_t index = size_t(-1),
 							const bool modifiability = false,
-							const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) = 0;
+							const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) = 0;
 
 	/**
 	 * \brief Removes a setting for this box

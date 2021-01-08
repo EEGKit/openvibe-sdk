@@ -67,13 +67,13 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	if (pod.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_scenario->addBox(boxID, dynamic_cast<const IBoxAlgorithmDesc&>(pod), OV_UndefinedIdentifier))
+		if (!m_scenario->addBox(boxID, dynamic_cast<const IBoxAlgorithmDesc&>(pod), CIdentifier::undefined()))
 		{
 			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
-	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
+	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), CIdentifier::undefined()))
 	{
 		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 		return true;

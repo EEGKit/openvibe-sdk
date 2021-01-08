@@ -27,21 +27,21 @@ protected:
 		m_kernelCtx.initialize();
 		m_kernelCtx->getPluginManager().addPluginsFromFiles(m_kernelCtx->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
-		m_decoderId = OV_UndefinedIdentifier;
+		m_decoderId = CIdentifier::undefined();
 		m_decoderId = m_kernelCtx->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixDecoder);
-		ASSERT_NE(OV_UndefinedIdentifier, m_decoderId);
+		ASSERT_NE(CIdentifier::undefined(), m_decoderId);
 
-		m_encoderId = OV_UndefinedIdentifier;
+		m_encoderId = CIdentifier::undefined();
 		m_encoderId = m_kernelCtx->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixEncoder);
-		ASSERT_NE(OV_UndefinedIdentifier, m_encoderId);
+		ASSERT_NE(CIdentifier::undefined(), m_encoderId);
 	}
 
 	void TearDown() override
 	{
 		ASSERT_TRUE(m_kernelCtx->getAlgorithmManager().releaseAlgorithm(m_decoderId));
-		m_decoderId = OV_UndefinedIdentifier;
+		m_decoderId = CIdentifier::undefined();
 		ASSERT_TRUE(m_kernelCtx->getAlgorithmManager().releaseAlgorithm(m_encoderId));
-		m_encoderId = OV_UndefinedIdentifier;
+		m_encoderId = CIdentifier::undefined();
 		m_kernelCtx.uninitialize();
 	}
 

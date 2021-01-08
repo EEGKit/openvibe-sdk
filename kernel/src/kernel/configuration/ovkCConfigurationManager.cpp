@@ -104,7 +104,7 @@ public:
 				else
 				{
 					CIdentifier tokenID = m_configManager.lookUpConfigurationTokenIdentifier(name.c_str());
-					if (tokenID == OV_UndefinedIdentifier)
+					if (tokenID == CIdentifier::undefined())
 					{
 						m_logManager << LogLevel_Trace << "Adding configuration token " << name << " : " << value << "\n";
 						m_configManager.createConfigurationToken(name.c_str(), value.c_str());
@@ -172,7 +172,7 @@ CIdentifier CConfigurationManager::createConfigurationToken(const CString& name,
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == CIdentifier::undefined(),
 						"Configuration token name " << name << " already exists", ErrorType::BadResourceCreation);
 
 	CIdentifier id           = this->getUnusedIdentifier();
@@ -199,15 +199,15 @@ CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(const CId
 
 	std::map<CIdentifier, config_token_t>::const_iterator it;
 
-	if (prevConfigTokenID == OV_UndefinedIdentifier) { it = m_ConfigTokens.begin(); }
+	if (prevConfigTokenID == CIdentifier::undefined()) { it = m_ConfigTokens.begin(); }
 	else
 	{
 		it = m_ConfigTokens.find(prevConfigTokenID);
-		if (it == m_ConfigTokens.end()) { return OV_UndefinedIdentifier; }
+		if (it == m_ConfigTokens.end()) { return CIdentifier::undefined(); }
 		++it;
 	}
 
-	return it != m_ConfigTokens.end() ? it->first : OV_UndefinedIdentifier;
+	return it != m_ConfigTokens.end() ? it->first : CIdentifier::undefined();
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -236,7 +236,7 @@ bool CConfigurationManager::setConfigurationTokenName(const CIdentifier& identif
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == OV_UndefinedIdentifier,
+	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == CIdentifier::undefined(),
 						"Configuration token name " << name << " already exists", ErrorType::BadResourceCreation);
 
 	auto it = m_ConfigTokens.find(identifier);
@@ -264,7 +264,7 @@ bool CConfigurationManager::setConfigurationTokenValue(const CIdentifier& identi
 bool CConfigurationManager::addOrReplaceConfigurationToken(const CString& name, const CString& value)
 {
 	const CIdentifier oldID = this->lookUpConfigurationTokenIdentifier(name, false);
-	if (oldID == OV_UndefinedIdentifier) { return OV_UndefinedIdentifier != this->createConfigurationToken(name, value); }
+	if (oldID == CIdentifier::undefined()) { return CIdentifier::undefined() != this->createConfigurationToken(name, value); }
 	return this->setConfigurationTokenValue(oldID, value);
 }
 
@@ -281,7 +281,7 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(const CStr
 		++it;
 	}
 	if (recursive && m_parentConfigManager) { return m_parentConfigManager->lookUpConfigurationTokenIdentifier(name, recursive); }
-	return OV_UndefinedIdentifier;
+	return CIdentifier::undefined();
 }
 
 CString CConfigurationManager::lookUpConfigurationTokenValue(const CString& name) const
@@ -371,7 +371,7 @@ CIdentifier CConfigurationManager::getUnusedIdentifier() const
 		id++;
 		res = CIdentifier(id);
 		i   = m_ConfigTokens.find(res);
-	} while (i != m_ConfigTokens.end() || res == OV_UndefinedIdentifier);
+	} while (i != m_ConfigTokens.end() || res == CIdentifier::undefined());
 	return res;
 }
 
@@ -631,7 +631,7 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& name, std::string& value) const
 {
 	const CIdentifier tokenID = this->lookUpConfigurationTokenIdentifier(name.c_str(), false);
-	if (tokenID == OV_UndefinedIdentifier)
+	if (tokenID == CIdentifier::undefined())
 	{
 		OV_ERROR_UNLESS_KRF(m_parentConfigManager,
 							"Could not expand token [" << name <<

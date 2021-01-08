@@ -67,14 +67,14 @@ class CBoxAlgorithmZeroCrossingDetectorListener final : public Toolkit::TBoxList
 public:
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 		return onConnectorTypeChanged(box, index, typeID, false);
 	}
 
 	bool onOutputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 		return onConnectorTypeChanged(box, index, typeID, true);
 	}
@@ -96,7 +96,7 @@ public:
 			else
 			{
 				// Invalid i/o type identifier
-				CIdentifier originalTypeID = OV_UndefinedIdentifier;
+				CIdentifier originalTypeID = CIdentifier::undefined();
 				if (outputChanged)
 				{
 					// Restores output
@@ -117,7 +117,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
 class CBoxAlgorithmZeroCrossingDetectorDesc final : public IBoxAlgorithmDesc
