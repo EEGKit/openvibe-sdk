@@ -54,7 +54,6 @@ OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 OPTION(BUILD_VALIDATION_TEST "Build the validation tests" ON)
 OPTION(BUILD_UNIT_TEST "Build the unit tests" ON)
 OPTION(OV_PACKAGE "Create a package in build directory" OFF)
-SET(CMAKE_BUILD_TYPE "Release") # CACHE STRING "Build type: Debug / Release / RelWithDebInfo")
 SET(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/sdk-${CMAKE_BUILD_TYPE}")
 
 MESSAGE(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
