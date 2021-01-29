@@ -332,8 +332,8 @@ INSTALL(FILES scripts/AddOpenViBESDKComponents.cmake DESTINATION ${DIST_DATADIR}
 ADD_CUSTOM_TARGET(openvibe-scripts SOURCES ${script_files})
 
 # Enable/Disable unit test
-SET(BUILD_UNIT_TEST true CACHE BOOL "Set this flag to true/false to enable/disable unit test building")
-SET(BUILD_VALIDATION_TEST true CACHE BOOL "Set this flag to true/false to enable/disable validation test building")
+#SET(BUILD_UNIT_TEST true CACHE BOOL "Set this flag to true/false to enable/disable unit test building")
+#SET(BUILD_VALIDATION_TEST true CACHE BOOL "Set this flag to true/false to enable/disable validation test building")
 
 IF(BUILD_UNIT_TEST) 
 	ADD_SUBDIRECTORY("unit-test/")

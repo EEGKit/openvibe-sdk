@@ -46,6 +46,7 @@ set PATH=%PATH_DEPENDENCIES%/tvicport/bin;%PATH%
 set PATH=%PATH_DEPENDENCIES%/vcredist;%PATH%
 set PATH=%PATH_DEPENDENCIES%/zip;%PATH%
 set PATH=%PATH_DEPENDENCIES%/xerces-c/lib;%PATH%
+set PATH=%PATH_DEPENDENCIES%/gtk/bin;%PATH%
 
 REM ########################################################################################################################
 
