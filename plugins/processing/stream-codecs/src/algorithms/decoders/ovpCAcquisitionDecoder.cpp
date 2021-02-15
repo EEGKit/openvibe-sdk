@@ -1,9 +1,8 @@
 #include "ovpCAcquisitionDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 CAcquisitionDecoder::CAcquisitionDecoder() {}
 
@@ -140,3 +139,6 @@ void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* memoryBuffer, const 
 		memcpy(memoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);
 	}
 }
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

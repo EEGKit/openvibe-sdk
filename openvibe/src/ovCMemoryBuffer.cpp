@@ -2,8 +2,6 @@
 
 #include <cstring> // memcpy
 
-using namespace OpenViBE;
-
 namespace OpenViBE {
 namespace {
 class CMemoryBufferImpl final : public IMemoryBuffer
@@ -31,7 +29,6 @@ protected:
 	size_t m_allocatedSize = 0;
 };
 }  // namespace
-}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //
@@ -147,3 +144,5 @@ const uint8_t* CMemoryBuffer::getDirectPointer() const { return m_impl->getDirec
 
 bool CMemoryBuffer::append(const uint8_t* buffer, const size_t size) { return m_impl->append(buffer, size); }
 bool CMemoryBuffer::append(const IMemoryBuffer& buffer) { return m_impl->append(buffer); }
+
+}  // namespace OpenViBE

@@ -4,7 +4,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {

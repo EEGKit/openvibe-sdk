@@ -6,7 +6,6 @@
 
 #include <map>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Classification {

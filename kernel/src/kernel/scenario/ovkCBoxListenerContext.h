@@ -24,7 +24,7 @@ public:
 
 	IScenario& getScenario() const override
 	{
-		OV_FATAL("Getting scenario from box listener context is not yet implemented", ErrorType::NotImplemented, this->getKernelContext().getLogManager());
+		OV_FATAL("Getting scenario from box listener context is not yet implemented", Kernel::ErrorType::NotImplemented, this->getKernelContext().getLogManager());
 	}
 
 	size_t getIndex() const override { return m_idx; }

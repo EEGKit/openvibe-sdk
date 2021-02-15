@@ -9,9 +9,6 @@
 
 #include <ovp_global_defines.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 namespace {
 const char* kernelConfig = nullptr;
 
@@ -27,26 +24,26 @@ protected:
 		m_kernelCtx.initialize();
 		m_kernelCtx->getPluginManager().addPluginsFromFiles(m_kernelCtx->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
-		m_decoderId = CIdentifier::undefined();
+		m_decoderId = OpenViBE::CIdentifier::undefined();
 		m_decoderId = m_kernelCtx->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixDecoder);
-		ASSERT_NE(CIdentifier::undefined(), m_decoderId);
+		ASSERT_NE(OpenViBE::CIdentifier::undefined(), m_decoderId);
 
-		m_encoderId = CIdentifier::undefined();
+		m_encoderId = OpenViBE::CIdentifier::undefined();
 		m_encoderId = m_kernelCtx->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixEncoder);
-		ASSERT_NE(CIdentifier::undefined(), m_encoderId);
+		ASSERT_NE(OpenViBE::CIdentifier::undefined(), m_encoderId);
 	}
 
 	void TearDown() override
 	{
 		ASSERT_TRUE(m_kernelCtx->getAlgorithmManager().releaseAlgorithm(m_decoderId));
-		m_decoderId = CIdentifier::undefined();
+		m_decoderId = OpenViBE::CIdentifier::undefined();
 		ASSERT_TRUE(m_kernelCtx->getAlgorithmManager().releaseAlgorithm(m_encoderId));
-		m_encoderId = CIdentifier::undefined();
+		m_encoderId = OpenViBE::CIdentifier::undefined();
 		m_kernelCtx.uninitialize();
 	}
 
-	CIdentifier m_decoderId;
-	CIdentifier m_encoderId;
+	OpenViBE::CIdentifier m_decoderId;
+	OpenViBE::CIdentifier m_encoderId;
 	OpenViBE::Test::ctx m_kernelCtx;
 };
 
@@ -66,12 +63,16 @@ TEST_F(StreamedMatrixTest, matrix_decoder_does_not_crash_when_given_an_empty_mat
 	auto& decoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_decoderId);
 	EXPECT_TRUE(encoder.initialize());
 	EXPECT_TRUE(decoder.initialize());
-	CMatrix mat(0);
+	OpenViBE::CMatrix mat(0);
 
-	TParameterHandler<const CMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<const IMemoryBuffer*> oBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
-	TParameterHandler<const IMemoryBuffer*> iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-	TParameterHandler<const CMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::CMatrix*> iMatrix(
+		encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> oBuffer(
+		encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> iBuffer(
+		decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::CMatrix*> oMatrix(
+		decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
 	iMatrix = &mat;
 	iBuffer.setReferenceTarget(oBuffer);
@@ -93,7 +94,7 @@ TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_origi
 	auto& decoder = m_kernelCtx->getAlgorithmManager().getAlgorithm(m_decoderId);
 	EXPECT_TRUE(encoder.initialize());
 	EXPECT_TRUE(decoder.initialize());
-	CMatrix mat(2, 3);
+	OpenViBE::CMatrix mat(2, 3);
 	size_t elemCount = 1;
 	for (size_t dim = 0; dim < mat.getDimensionCount(); ++dim)
 	{
@@ -107,10 +108,14 @@ TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_origi
 	}
 	for (size_t i = 0; i < elemCount; ++i) { mat.getBuffer()[i] = double(i); }
 
-	TParameterHandler<const CMatrix*> iMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<const IMemoryBuffer*> oBuffer(encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
-	TParameterHandler<const IMemoryBuffer*> iBuffer(decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-	TParameterHandler<const CMatrix*> oMatrix(decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::CMatrix*> iMatrix(
+		encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> oBuffer(
+		encoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> iBuffer(
+		decoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
+	OpenViBE::Kernel::TParameterHandler<const OpenViBE::CMatrix*> oMatrix(
+		decoder.getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 
 	iMatrix = &mat;
 	iBuffer.setReferenceTarget(oBuffer);

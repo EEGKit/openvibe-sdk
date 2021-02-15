@@ -12,21 +12,20 @@
 #define OV_DEBUG_K(message) this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
 #define OV_DEBUG_UNLESS_K(expression, message) if (!(expression)) { OV_DEBUG_K(message); }
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
+namespace OpenViBE {
+namespace Kernel {
 namespace {
-// because std::tolower has multiple signatures,
-// it can not be easily used in std::transform
-// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-template <class TCharT>
-TCharT ToLower(TCharT c) { return std::tolower(c); }
-
 struct SAInfB
 {
 	bool operator()(const std::pair<CIdentifier, CString> a, const std::pair<CIdentifier, CString>& b) const { return a.second < b.second; }
 };
 }  // namespace
+
+// because std::tolower has multiple signatures,
+// it can not be easily used in std::transform
+// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
+template <class TCharT>
+static TCharT ToLower(TCharT c) { return std::tolower(c); }
 
 CTypeManager::CTypeManager(const IKernelContext& ctx)
 	: TKernelObject<ITypeManager>(ctx)
@@ -38,7 +37,6 @@ CTypeManager::CTypeManager(const IKernelContext& ctx)
 CIdentifier CTypeManager::getNextTypeIdentifier(const CIdentifier& previousID) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
-
 	return getNextIdentifier<CString>(m_names, previousID);
 }
 
@@ -160,7 +158,7 @@ bool CTypeManager::registerBitMaskEntry(const CIdentifier& typeID, const CString
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	auto itBitMask = m_bitMasks.find(typeID);
-	OV_ERROR_UNLESS_KRF(itBitMask != m_bitMasks.end(), "Bitmask type [" << typeID.str() << "] does not exist.", ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(itBitMask != m_bitMasks.end(), "Bitmask type [" << typeID.str() << "] does not exist.", Kernel::ErrorType::BadArgument);
 
 	const auto itElem = itBitMask->second.find(value);
 	if (itElem != itBitMask->second.end())
@@ -295,11 +293,11 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& typeI
 
 	// then looks at the caseless std::string match
 	std::string nameLower = name.toASCIIString();
-	std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::ToLower<std::string::value_type>);
+	std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ToLower<std::string::value_type>);
 	for (const auto& entry : it->second)
 	{
 		std::string tmp = entry.second.toASCIIString();
-		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::ToLower<std::string::value_type>);
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ToLower<std::string::value_type>);
 		if (tmp == nameLower) { return entry.first; }
 	}
 
@@ -368,11 +366,11 @@ uint64_t CTypeManager::getBitMaskEntryValueFromName(const CIdentifier& typeID, c
 
 	// then looks at the caseless std::string match
 	std::string entryNameLower = name.toASCIIString();
-	std::transform(entryNameLower.begin(), entryNameLower.end(), entryNameLower.begin(), ::ToLower<std::string::value_type>);
+	std::transform(entryNameLower.begin(), entryNameLower.end(), entryNameLower.begin(), ToLower<std::string::value_type>);
 	for (const auto& mask : itBitMask->second)
 	{
 		std::string itEntryNameLower = mask.second.toASCIIString();
-		std::transform(itEntryNameLower.begin(), itEntryNameLower.end(), itEntryNameLower.begin(), ::ToLower<std::string::value_type>);
+		std::transform(itEntryNameLower.begin(), itEntryNameLower.end(), itEntryNameLower.begin(), ToLower<std::string::value_type>);
 		if (itEntryNameLower == entryNameLower) { return mask.first; }
 	}
 
@@ -460,3 +458,6 @@ bool CTypeManager::evaluateSettingValue(const CString value, double& result) con
 	catch (...) { return false; }
 	return true;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

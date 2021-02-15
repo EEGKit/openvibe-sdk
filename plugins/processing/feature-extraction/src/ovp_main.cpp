@@ -2,9 +2,14 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmFeatureAggregator.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
+namespace Plugins {
+namespace FeatureExtraction {
 
 OVP_Declare_Begin()
-	OVP_Declare_New(FeatureExtraction::CBoxAlgorithmFeatureAggregatorDesc);
+	OVP_Declare_New(CBoxAlgorithmFeatureAggregatorDesc);
 OVP_Declare_End()
+
+}  // namespace FeatureExtraction
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmSignalDecimation.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmSignalDecimation::initialize()
 {
@@ -12,7 +11,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 
 	m_decimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_decimationFactor > 1, "Invalid decimation factor [" << m_decimationFactor << "] (expected value > 1)",
-						ErrorType::BadSetting);
+						Kernel::ErrorType::BadSetting);
 
 	m_decoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalDecoder));
 	m_decoder->initialize();
@@ -78,7 +77,7 @@ bool CBoxAlgorithmSignalDecimation::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSignalDecimation::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
@@ -108,14 +107,14 @@ bool CBoxAlgorithmSignalDecimation::process()
 
 			OV_ERROR_UNLESS_KRF(m_iSampling%m_decimationFactor == 0,
 								"Failed to decimate: input sampling frequency [" << m_iSampling << "] not multiple of decimation factor [" <<
-								m_decimationFactor << "]", ErrorType::BadSetting);
+								m_decimationFactor << "]", Kernel::ErrorType::BadSetting);
 
 			m_oSampleIdx       = 0;
 			m_oNSamplePerBlock = size_t(m_iNSamplePerBlock / m_decimationFactor);
 			m_oNSamplePerBlock = (m_oNSamplePerBlock ? m_oNSamplePerBlock : 1);
 			m_oSampling        = op_sampling / m_decimationFactor;
 
-			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", ErrorType::BadOutput);
+			OV_ERROR_UNLESS_KRF(m_oSampling != 0, "Failed to decimate: output sampling frequency is 0", Kernel::ErrorType::BadOutput);
 
 			m_nChannel     = op_pMatrix->getDimensionSize(0);
 			m_nTotalSample = 0;
@@ -184,3 +183,6 @@ bool CBoxAlgorithmSignalDecimation::process()
 	}
 	return true;
 }
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

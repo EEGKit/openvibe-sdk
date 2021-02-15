@@ -18,8 +18,7 @@
 #include <cstdio>
 #include <cstring>
 
-using namespace FS;
-using namespace std;
+namespace FS {
 
 //  * 2006-08-30 YRD - Portability note : using namespace FS confuses windows platform SDK because it defines itself a 'boolean' type. Thus the following define to force the use of FS::boolean !
 
@@ -49,7 +48,7 @@ bool recursiveCopy(const boost::filesystem::path& source, const boost::filesyste
 	}
 	else if (is_regular_file(source))
 	{
-		try { boost::filesystem::copy(source, target); }
+		try { copy(source, target); }
 		catch (...) { return false; }
 	}
 	else { return false; }
@@ -86,8 +85,8 @@ FILE* Files::open(const char* file, const char* mode)
 
 	try
 	{
-		const wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
-		const wstring utf16Mode     = Common::Converter::Utf8ToUtf16(mode);
+		const std::wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
+		const std::wstring utf16Mode     = Common::Converter::Utf8ToUtf16(mode);
 
 		fHandle = _wfopen(utf16FileName.c_str(), utf16Mode.c_str());
 	}
@@ -102,8 +101,8 @@ FILE* Files::popen(const char* file, const char* mode)
 
 	try
 	{
-		const wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
-		const wstring utf16Mode     = Common::Converter::Utf8ToUtf16(mode);
+		const std::wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
+		const std::wstring utf16Mode     = Common::Converter::Utf8ToUtf16(mode);
 
 		fHandle = _wpopen(utf16FileName.c_str(), utf16Mode.c_str());
 	}
@@ -117,7 +116,7 @@ void openStream(T& stream, const char* file, std::ios_base::openmode mode)
 {
 	try
 	{
-		const wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
+		const std::wstring utf16FileName = Common::Converter::Utf8ToUtf16(file);
 		stream.open(utf16FileName.c_str(), mode);
 	}
 	catch (const std::logic_error&) { stream.open(file, mode); }
@@ -210,8 +209,8 @@ bool Files::directoryExists(const char* pathToCheck)
 {
 	if (!pathToCheck) { return false; }
 #if defined TARGET_OS_Windows
-	const wstring pathUTF16 = Common::Converter::Utf8ToUtf16(pathToCheck);
-	const DWORD ftyp        = GetFileAttributesW(pathUTF16.c_str());
+	const std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(pathToCheck);
+	const DWORD ftyp             = GetFileAttributesW(pathUTF16.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES) { return false; }
 	if (ftyp & FILE_ATTRIBUTE_DIRECTORY) { return true; }
 #endif
@@ -231,7 +230,7 @@ bool Files::createPath(const char* path)
 {
 	if (strcmp(path, "") == 0) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
+	std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
 	create_directories(boost::filesystem::wpath(pathUTF16));
 	return is_directory(boost::filesystem::wpath(pathUTF16));
 #else
@@ -243,7 +242,7 @@ bool Files::createParentPath(const char* path)
 {
 	if (strcmp(path, "") == 0) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
+	std::wstring pathUTF16 = Common::Converter::Utf8ToUtf16(path);
 	return create_directories(boost::filesystem::wpath(pathUTF16).parent_path());
 #else
 	return boost::filesystem::create_directories(boost::filesystem::path(path).parent_path());
@@ -344,8 +343,8 @@ bool Files::copyFile(const char* srcFile, const char* dstPath)
 {
 	if (!srcFile || !dstPath) { return false; }
 #if defined TARGET_OS_Windows
-	wstring pathSourceUTF16      = Common::Converter::Utf8ToUtf16(srcFile);
-	wstring pathDestinationUTF16 = Common::Converter::Utf8ToUtf16(dstPath);
+	std::wstring pathSourceUTF16      = Common::Converter::Utf8ToUtf16(srcFile);
+	std::wstring pathDestinationUTF16 = Common::Converter::Utf8ToUtf16(dstPath);
 	boost::filesystem::copy_file(pathSourceUTF16, pathDestinationUTF16);
 #else
 	boost::filesystem::copy_file(srcFile, dstPath);
@@ -357,8 +356,8 @@ bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 {
 	if (!srcDir || !dstDir) { return false; }
 #if defined TARGET_OS_Windows
-	const wstring pathSourceUTF16        = Common::Converter::Utf8ToUtf16(srcDir);
-	const wstring pathTargetUTF16        = Common::Converter::Utf8ToUtf16(dstDir);
+	const std::wstring pathSourceUTF16   = Common::Converter::Utf8ToUtf16(srcDir);
+	const std::wstring pathTargetUTF16   = Common::Converter::Utf8ToUtf16(dstDir);
 	const boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
 	const boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());
 #else
@@ -389,3 +388,4 @@ bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 	return (std::system(command.c_str()) != -1);	
 }
 #endif
+}  // namespace FS

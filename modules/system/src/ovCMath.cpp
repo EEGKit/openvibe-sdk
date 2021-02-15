@@ -17,7 +17,7 @@
 #include <cstdlib>
 #include <cstring>
 
-using namespace System;
+namespace System {
 
 class RandomGenerator
 {
@@ -65,3 +65,5 @@ uint64_t Math::random()
 	const uint64_t r4 = randomGenerator.rand();
 	return (r1 << 24) ^ (r2 << 16) ^ (r3 << 8) ^ (r4);
 }
+
+}  // namespace System

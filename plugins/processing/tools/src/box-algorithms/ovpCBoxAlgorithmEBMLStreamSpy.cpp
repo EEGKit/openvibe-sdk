@@ -61,9 +61,9 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 				|| (type == "binary(uinteger32)") || (type == "binary(uinteger64)")) { type = "binary"; }
 		}
 
-		// cout << "[" << identifier1 << "][" << identifier2 << "]" << endl;
+		// std::cout << "[" << identifier1 << "][" << identifier2 << "]" << std::endl;
 		// printf("[EBML::CIdentifier(0x%08X,][0x%08X]\n", id1, id2);
-		// cout << EBML::CIdentifier(id1, id2) << endl;
+		// std::cout << EBML::CIdentifier(id1, id2) << std::endl;
 
 		m_names[EBML::CIdentifier(id1, id2)] = name;
 		m_types[EBML::CIdentifier(id1, id2)] = type;

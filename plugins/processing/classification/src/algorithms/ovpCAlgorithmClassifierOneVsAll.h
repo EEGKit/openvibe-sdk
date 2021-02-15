@@ -8,7 +8,6 @@
 
 #include <vector>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Classification {

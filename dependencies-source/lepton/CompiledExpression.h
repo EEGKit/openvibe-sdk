@@ -57,14 +57,14 @@ namespace Lepton
 	class LEPTON_EXPORT CompiledExpression
 	{
 	public:
-		CompiledExpression();
-		CompiledExpression(const CompiledExpression& expression);
-		~CompiledExpression();
+		CompiledExpression() {}
+		CompiledExpression(const CompiledExpression& expression) { *this = expression; }
+		~CompiledExpression() { for (size_t i = 0; i < operation.size(); ++i) if (operation[i] != nullptr) delete operation[i]; }
 		CompiledExpression& operator=(const CompiledExpression& expression);
 		/**
 			* Get the names of all variables used by this expression.
 			*/
-		const std::set<std::string>& getVariables() const;
+		const std::set<std::string>& getVariables() const { return variableNames; }
 		/**
 			* Get a reference to the memory location where the value of a particular variable is stored.  This can be used
 			* to set the value of the variable before calling evaluate().

@@ -14,15 +14,8 @@
 #include <iostream>
 #include <fstream>
 
-//___________________________________________________________________//
-//                                                                   //
-
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
+namespace OpenViBE {
+namespace Kernel {
 
 const uint64_t SCHEDULER_DEFAULT_FREQUENCY      = 128;
 const uint64_t SCHEDULER_MAXIMUM_LOOPS_DURATION = (100LL << 22); /* 100/1024 seconds, approx 100ms */
@@ -58,7 +51,7 @@ CPlayer::~CPlayer()
 
 bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairList* localConfigurationTokens)
 {
-	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", Kernel::ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
@@ -75,7 +68,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 	m_runtimeScenarioManager->cloneScenarioImportersAndExporters(this->getKernelContext().getScenarioManager());
 
 	OV_ERROR_UNLESS_KRF(m_runtimeScenarioManager->createScenario(m_runtimeScenarioID),
-						"Fail to create a scenario duplicate for the current runtime session", ErrorType::BadResourceCreation);
+						"Fail to create a scenario duplicate for the current runtime session", Kernel::ErrorType::BadResourceCreation);
 
 	IScenario& runtimeScenario = m_runtimeScenarioManager->getScenario(m_runtimeScenarioID);
 	runtimeScenario.merge(originalScenario, nullptr, true, true);
@@ -128,13 +121,14 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 				// This should not happen
 			else
 			{
-				this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i << ".\n";
+				this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of localConfigurationTokens at index " << i <<
+						".\n";
 			}
 		}
 	}
 
 	OV_ERROR_UNLESS_KRF(runtimeScenario.checkSettings(m_runtimeConfigManager),
-						"Checking settings failed for scenario duplicate instantiated for the current runtime session", ErrorType::BadArgument);
+						"Checking settings failed for scenario duplicate instantiated for the current runtime session", Kernel::ErrorType::BadArgument);
 
 	return m_scheduler.setScenario(m_runtimeScenarioID);
 }
@@ -145,7 +139,8 @@ CIdentifier CPlayer::getRuntimeScenarioIdentifier() const { return m_runtimeScen
 
 EPlayerReturnCodes CPlayer::initialize()
 {
-	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall, EPlayerReturnCodes::Failed);
+	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", Kernel::ErrorType::BadCall,
+					  EPlayerReturnCodes::Failed);
 
 	this->getLogManager() << LogLevel_Trace << "Player initialized.\n";
 
@@ -156,10 +151,10 @@ EPlayerReturnCodes CPlayer::initialize()
 
 	const ESchedulerInitialization code = m_scheduler.initialize();
 
-	if (code == ESchedulerInitialization::Failed) { OV_ERROR_K("Failed to initialize player", ErrorType::Internal, EPlayerReturnCodes::Failed); }
+	if (code == ESchedulerInitialization::Failed) { OV_ERROR_K("Failed to initialize player", Kernel::ErrorType::Internal, EPlayerReturnCodes::Failed); }
 	if (code == ESchedulerInitialization::BoxInitializationFailed)
 	{
-		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, EPlayerReturnCodes::BoxInitializationFailed);
+		OV_ERROR_K("Failed to initialize player", Kernel::ErrorType::Internal, EPlayerReturnCodes::BoxInitializationFailed);
 	}
 
 	m_benchmarkChrono.reset(size_t(m_scheduler.getFrequency()));
@@ -192,7 +187,7 @@ bool CPlayer::uninitialize()
 
 bool CPlayer::stop()
 {
-	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", Kernel::ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player stop\n";
 	m_status = EPlayerStatus::Stop;
 	return true;
@@ -200,7 +195,7 @@ bool CPlayer::stop()
 
 bool CPlayer::pause()
 {
-	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", Kernel::ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player pause\n";
 	m_status = EPlayerStatus::Pause;
 	return true;
@@ -208,7 +203,7 @@ bool CPlayer::pause()
 
 bool CPlayer::step()
 {
-	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", Kernel::ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player step\n";
 	m_status = EPlayerStatus::Step;
 	return true;
@@ -216,7 +211,7 @@ bool CPlayer::step()
 
 bool CPlayer::play()
 {
-	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", Kernel::ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player play\n";
 	m_status = EPlayerStatus::Play;
 	return true;
@@ -224,7 +219,7 @@ bool CPlayer::play()
 
 bool CPlayer::forward()
 {
-	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", Kernel::ErrorType::BadCall);
 	this->getLogManager() << LogLevel_Trace << "Player forward\n";
 	m_status = EPlayerStatus::Forward;
 	return true;
@@ -244,7 +239,7 @@ bool CPlayer::isHoldingResources() const { return m_scheduler.isHoldingResources
 
 bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach)
 {
-	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", Kernel::ErrorType::BadCall);
 
 	if (m_status == EPlayerStatus::Stop) { return true; }
 
@@ -346,7 +341,7 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 
 	const uint64_t latenessSec     = lateness >> 32;
 	const uint64_t prevlatenessSec = m_lateness >> 32;
-	stringstream ss;
+	std::stringstream ss;
 	ss << "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit
 			<< LogColor_ForegroundBlue << "can not reach realtime" << LogColor_PopStateBit << "> " << latenessSec << " second(s) late...\n";
 	OV_WARNING_UNLESS_K(latenessSec == prevlatenessSec, ss.str());
@@ -356,3 +351,6 @@ bool CPlayer::loop(const uint64_t elapsedTime, const uint64_t maximumTimeToReach
 
 uint64_t CPlayer::getCurrentSimulatedTime() const { return m_scheduler.getCurrentTime(); }
 uint64_t CPlayer::getCurrentSimulatedLateness() const { return m_innerLateness; }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

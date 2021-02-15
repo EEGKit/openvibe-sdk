@@ -10,10 +10,6 @@
 #include <communication/ovCMessagingClient.h>
 
 static bool didRequestForcedQuit = false;
-
-using namespace Communication;
-using namespace std;
-
 static void signalHandler(int /* signal */) { didRequestForcedQuit = true; }
 
 int main(const int argc, char** argv)
@@ -30,15 +26,15 @@ int main(const int argc, char** argv)
 	}
 	didRequestForcedQuit = false;
 
-	MessagingClient client;
+	Communication::MessagingClient client;
 
 	client.setConnectionID(connectionID);
 
 	while (!client.connect("127.0.0.1", port))
 	{
-		const MessagingClient::ELibraryError error = client.getLastError();
+		const Communication::MessagingClient::ELibraryError error = client.getLastError();
 
-		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
+		if (error == Communication::MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{
 			std::cout << "Server not responding\n";
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
@@ -89,10 +85,10 @@ int main(const int argc, char** argv)
 
 	// Announce to server that the box has finished initializing and wait for acknowledgement
 	while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
-	client.pushLog(LogLevel_Info, "Received Ping");
+	client.pushLog(Communication::LogLevel_Info, "Received Ping");
 
 	client.pushSync();
-	client.pushLog(LogLevel_Info, "Sent Pong");
+	client.pushLog(Communication::LogLevel_Info, "Sent Pong");
 
 	// Process
 
@@ -170,7 +166,7 @@ int main(const int argc, char** argv)
 
 		// Errors
 
-		EError error;
+		Communication::EError error;
 		uint64_t guiltyId;
 
 		while (client.popError(packetId, error, guiltyId))

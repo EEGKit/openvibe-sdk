@@ -1,5 +1,3 @@
-// #if defined __MY_COMPILE_ALL
-
 #include "ovkCSimulatedBox.h"
 #include "ovkCPlayer.h"
 #include "ovkCBoxAlgorithmContext.h"
@@ -8,13 +6,8 @@
 #include <algorithm>
 #include <cassert>
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
-// ________________________________________________________________________________________________________________
-//
+namespace OpenViBE {
+namespace Kernel {
 
 #define OV_IncorrectTime 0xffffffffffffffffULL
 
@@ -35,7 +28,7 @@ bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioID)
 
 bool CSimulatedBox::getBoxIdentifier(CIdentifier& boxId) const
 {
-	OV_ERROR_UNLESS_KRF(m_box, "Simulated box not initialized", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_box, "Simulated box not initialized", Kernel::ErrorType::BadCall);
 
 	boxId = m_box->getIdentifier();
 	return true;
@@ -43,7 +36,7 @@ bool CSimulatedBox::getBoxIdentifier(CIdentifier& boxId) const
 
 bool CSimulatedBox::setBoxIdentifier(const CIdentifier& boxId)
 {
-	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", Kernel::ErrorType::BadCall);
 
 	m_box = m_scenario->getBoxDetails(boxId);
 	return m_box != nullptr;
@@ -51,8 +44,8 @@ bool CSimulatedBox::setBoxIdentifier(const CIdentifier& boxId)
 
 bool CSimulatedBox::initialize()
 {
-	OV_ERROR_UNLESS_KRF(m_box, "Simulated box not initialized", ErrorType::BadCall);
-	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_box, "Simulated box not initialized", Kernel::ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_scenario, "No scenario set", Kernel::ErrorType::BadCall);
 
 	m_chunkConsistencyChecking = this->getConfigurationManager().expandAsBoolean("${Kernel_CheckChunkConsistency}", true);
 	m_Inputs.resize(m_box->getInputCount());
@@ -73,7 +66,8 @@ bool CSimulatedBox::initialize()
 	{
 		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
-			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->initialize(context), "Box algorithm <" << m_box->getName() << "> initialization failed", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->initialize(context), "Box algorithm <" << m_box->getName() << "> initialization failed",
+								Kernel::ErrorType::Internal);
 		}
 	}
 
@@ -135,11 +129,11 @@ bool CSimulatedBox::processClock()
 			if (m_lastClockActivationDate == OV_IncorrectTime) { m_lastClockActivationDate = m_scheduler.getCurrentTime(); }
 			else { m_lastClockActivationDate = m_lastClockActivationDate + m_clockActivationStep; }
 
-			Kernel::CMessageClock message;
+			CMessageClock message;
 			message.setTime(m_lastClockActivationDate);
 
 			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processClock(context, message),
-								"Box algorithm <" << m_box->getName() << "> processClock() function failed", ErrorType::Internal);
+								"Box algorithm <" << m_box->getName() << "> processClock() function failed", Kernel::ErrorType::Internal);
 
 			m_readyToProcess |= context.isAlgorithmReadyToProcess();
 		}
@@ -156,7 +150,7 @@ bool CSimulatedBox::processInput(const size_t index, const CChunk& chunk)
 		CBoxAlgorithmCtx context(getKernelContext(), this, m_box);
 		{
 			OV_ERROR_UNLESS_KRF(m_boxAlgorithm->processInput(context, index),
-								"Box algorithm <" << m_box->getName() << "> processInput() function failed", ErrorType::Internal);
+								"Box algorithm <" << m_box->getName() << "> processInput() function failed", Kernel::ErrorType::Internal);
 		}
 		m_readyToProcess |= context.isAlgorithmReadyToProcess();
 	}
@@ -249,7 +243,7 @@ bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, 
 								  const uint8_t*& buffer) const
 {
 	OV_ERROR_UNLESS_KRF(inputIdx < m_Inputs.size(),
-						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_Inputs.size() - 1 << "])", ErrorType::OutOfBound);
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_Inputs.size() - 1 << "])", Kernel::ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRF(chunkIdx < m_Inputs[inputIdx].size(),
 						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << m_Inputs[inputIdx].size() - 1 << "])",
@@ -430,4 +424,5 @@ bool CSimulatedBox::markOutputAsReadyToSend(const size_t outputIdx, const uint64
 	return true;
 }
 
-// #endif // __MY_COMPILE_ALL
+}  // namespace Kernel
+}  // namespace OpenViBE

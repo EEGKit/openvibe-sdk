@@ -1,9 +1,8 @@
 #include "ovpCStreamStructureDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 CStreamStructureDecoder::CStreamStructureDecoder() {}
 
@@ -29,3 +28,7 @@ bool CStreamStructureDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 void CStreamStructureDecoder::openChild(const EBML::CIdentifier& identifier) { CEBMLBaseDecoder::openChild(identifier); }
 void CStreamStructureDecoder::processChildData(const void* buffer, const size_t size) { CEBMLBaseDecoder::processChildData(buffer, size); }
 void CStreamStructureDecoder::closeChild() { CEBMLBaseDecoder::closeChild(); }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

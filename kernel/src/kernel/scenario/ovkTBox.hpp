@@ -16,7 +16,6 @@
 #include <iostream>
 #include <memory>
 
-
 const std::map<OpenViBE::Kernel::EBoxInterfacorType, OpenViBE::CString> INTERFACOR_TYPE_TO_NAME = {
 	{ OpenViBE::Kernel::EBoxInterfacorType::Setting, "Setting" },
 	{ OpenViBE::Kernel::EBoxInterfacorType::Input, "Input" },
@@ -120,8 +119,8 @@ public:
 
 	bool setIdentifier(const CIdentifier& identifier) override
 	{
-		OV_ERROR_UNLESS_KRF(m_identifier == CIdentifier::undefined(), "Trying to overwrite an already set indentifier", ErrorType::BadCall);
-		OV_ERROR_UNLESS_KRF(identifier != CIdentifier::undefined(), "Trying to set an undefined identifier", ErrorType::BadArgument);
+		OV_ERROR_UNLESS_KRF(m_identifier == CIdentifier::undefined(), "Trying to overwrite an already set indentifier", Kernel::ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(identifier != CIdentifier::undefined(), "Trying to set an undefined identifier", Kernel::ErrorType::BadArgument);
 
 		m_identifier = identifier;
 		this->notify(EBoxModification::IdentifierChanged);
@@ -200,7 +199,7 @@ public:
 		if (!desc)
 		{
 			this->enableNotification();
-			OV_ERROR_KRF("Algorithm descriptor not found " << algorithmClassID.str(), ErrorType::ResourceNotFound);
+			OV_ERROR_KRF("Algorithm descriptor not found " << algorithmClassID.str(), Kernel::ErrorType::ResourceNotFound);
 		}
 
 		this->clearBox();
@@ -360,7 +359,7 @@ public:
 		m_interfacorNameToIdx[interfacorType][uniqueName] = position;
 
 		OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx[interfacorType].size() == m_interfacors[interfacorType].size(),
-							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
+							"Box " << m_name << " has corrupted name map storage", Kernel::ErrorType::BadResourceCreation);
 
 		if (notify)
 		{
@@ -431,7 +430,7 @@ public:
 		index         = size_t(-1);
 		const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
-							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		index = it->second;
 		return true;
@@ -441,7 +440,7 @@ public:
 	{
 		OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
 							INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = ["
-							<< m_interfacors.at(interfacorType).size() - 1 << "])", ErrorType::OutOfBound);
+							<< m_interfacors.at(interfacorType).size() - 1 << "])", Kernel::ErrorType::OutOfBound);
 
 		typeID = m_interfacors.at(interfacorType)[index]->m_TypeID;
 		return true;
@@ -461,7 +460,7 @@ public:
 	{
 		const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
-							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->getInterfacorType(interfacorType, it->second, typeID);
 	}
@@ -590,7 +589,7 @@ public:
 	{
 		const auto it = m_interfacorNameToIdx[interfacorType].find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx[interfacorType].end(),
-							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->setInterfacorType(interfacorType, it->second, typeID);
 	}
@@ -623,7 +622,7 @@ public:
 		m_interfacors[interfacorType][index]->m_Name      = uniqueName;
 
 		OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx[interfacorType].size() == m_interfacors[interfacorType].size(),
-							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
+							"Box " << m_name << " has corrupted name map storage", Kernel::ErrorType::BadResourceCreation);
 
 		switch (interfacorType)
 		{
@@ -733,10 +732,7 @@ public:
 				m_ownerScenario->getScenarioInputLink(scenarioInputIdx, boxID, boxConnectorIdx);
 				if (boxID == m_identifier)
 				{
-					if (boxConnectorIdx > index)
-					{
-						scenarioLinks.push_back(std::make_pair(scenarioInputIdx, std::make_pair(boxID.id(), boxConnectorIdx)));
-					}
+					if (boxConnectorIdx > index) { scenarioLinks.push_back(std::make_pair(scenarioInputIdx, std::make_pair(boxID.id(), boxConnectorIdx))); }
 					if (boxConnectorIdx >= index) { m_ownerScenario->removeScenarioInputLink(scenarioInputIdx, boxID, boxConnectorIdx); }
 				}
 			}
@@ -943,7 +939,7 @@ public:
 		const Plugins::IPluginObjectDesc* pluginObjectDesc = this->getKernelContext().getPluginManager().getPluginObjectDescCreating(typeID);
 		const Plugins::IBoxAlgorithmDesc* boxAlgorithmDesc = dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(pluginObjectDesc);
 
-		OV_ERROR_UNLESS_KRF(boxAlgorithmDesc, "Tried to initialize with an unregistered algorithm", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(boxAlgorithmDesc, "Tried to initialize with an unregistered algorithm", Kernel::ErrorType::Internal);
 
 		//We use the neutralized version of CBoxProto to just initialize the stream restriction mecanism
 		CBoxProtoRestriction oTempProto(this->getKernelContext(), *this);
@@ -1059,7 +1055,7 @@ public:
 		m_interfacorNameToIdx[Setting][newName]        = insertLocation;
 
 		OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx.at(Setting).size() == m_interfacors[Setting].size(),
-							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
+							"Box " << m_name << " has corrupted name map storage", Kernel::ErrorType::BadResourceCreation);
 
 		//if this setting is modifiable, keep its index
 		if (bModifiability) { m_modifiableSettingIndexes.push_back(idx); }
@@ -1081,7 +1077,7 @@ public:
 	bool removeSetting(const size_t index, const bool notify = true) override
 	{
 		auto it = m_interfacors[Setting].begin() + index;
-		OV_ERROR_UNLESS_KRF(it != m_interfacors[Setting].end(), "No setting found at index " << index, ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(it != m_interfacors[Setting].end(), "No setting found at index " << index, Kernel::ErrorType::ResourceNotFound);
 
 		const CIdentifier toBeRemovedId = m_interfacors[Setting][index]->m_ID;
 		CString toBeRemovedName         = m_interfacors[Setting][index]->m_Name;
@@ -1204,7 +1200,7 @@ public:
 	{
 		const auto it = m_interfacorIDToIdx.at(Setting).find(identifier);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(Setting).end(),
-							"Failed to find setting with id " << identifier.str(), ErrorType::ResourceNotFound);
+							"Failed to find setting with id " << identifier.str(), Kernel::ErrorType::ResourceNotFound);
 
 		return this->getSettingMod(it->second, value);
 	}
@@ -1213,7 +1209,7 @@ public:
 	{
 		const auto it = m_interfacorNameToIdx.at(Setting).find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(Setting).end(),
-							"Failed to find setting with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find setting with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->getSettingMod(it->second, value);
 	}
@@ -1285,7 +1281,7 @@ public:
 	bool setSettingValue(const CString& name, const CString& value) override
 	{
 		const auto it = m_interfacorNameToIdx.at(Setting).find(name);
-		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(Setting).end(), "Failed to find setting with name " << name, ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(Setting).end(), "Failed to find setting with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->setSettingValue(it->second, value);
 	}

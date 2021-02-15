@@ -2,11 +2,9 @@
 
 #include <cmath>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace std;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 void CBoxAlgorithmSignalAverage::computeAverage()
 {
@@ -92,3 +90,7 @@ bool CBoxAlgorithmSignalAverage::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

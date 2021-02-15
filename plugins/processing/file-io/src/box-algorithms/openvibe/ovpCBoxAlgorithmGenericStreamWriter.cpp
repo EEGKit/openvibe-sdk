@@ -2,10 +2,9 @@
 
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FileIO;
+namespace OpenViBE {
+namespace Plugins {
+namespace FileIO {
 
 CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter() : m_writer(*this) {}
 
@@ -27,7 +26,7 @@ bool CBoxAlgorithmGenericStreamWriter::uninitialize()
 
 bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 
 	m_swap.setSize(0, true);
 
@@ -65,7 +64,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 
 	FS::Files::openOFStream(m_file, m_filename.toASCIIString(), std::ios::binary | std::ios::trunc);
 
-	OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", Kernel::ErrorType::BadFileWrite);
 
 	m_file.write(reinterpret_cast<const char*>(m_swap.getDirectPointer()), std::streamsize(m_swap.getSize()));
 
@@ -81,8 +80,8 @@ bool CBoxAlgorithmGenericStreamWriter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmGenericStreamWriter::process()
 {
-	IBoxIO& boxContext  = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	const size_t nInput        = this->getStaticBoxContext().getInputCount();
 
 	if (!m_isHeaderGenerate) { if (!generateFileHeader()) { return false; } }
 
@@ -115,10 +114,14 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	if (m_swap.getSize() != 0)
 	{
 		m_file.write(reinterpret_cast<const char*>(m_swap.getDirectPointer()), std::streamsize(m_swap.getSize()));
-		OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(m_file.good(), "Error opening file [" << m_filename << "] for writing", Kernel::ErrorType::BadFileWrite);
 	}
 
 	return true;
 }
 
 void CBoxAlgorithmGenericStreamWriter::write(const void* buffer, const size_t size) { m_swap.append(reinterpret_cast<const uint8_t*>(buffer), size); }
+
+}  // namespace FileIO
+}  // namespace Plugins
+}  // namespace OpenViBE

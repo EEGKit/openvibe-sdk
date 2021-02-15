@@ -23,10 +23,6 @@
 
 #include "ovtKernelContext.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
 namespace OpenViBE {
 namespace Test {
 bool ctx::initialize()
@@ -49,7 +45,7 @@ bool ctx::initialize()
 
 	m_KernelLoader.initialize();
 
-	IKernelDesc* kernelDesc{ nullptr };
+	Kernel::IKernelDesc* kernelDesc{ nullptr };
 	m_KernelLoader.getKernelDesc(kernelDesc);
 
 	if (!kernelDesc)
@@ -60,7 +56,7 @@ bool ctx::initialize()
 
 	const CString configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 
-	IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
+	Kernel::IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 	if (!ctx)
 	{
@@ -79,7 +75,7 @@ bool ctx::uninitialize()
 {
 	if (m_Context)
 	{
-		IKernelDesc* kernelDesc{ nullptr };
+		Kernel::IKernelDesc* kernelDesc{ nullptr };
 		m_KernelLoader.getKernelDesc(kernelDesc);
 		kernelDesc->releaseKernel(m_Context);
 		m_Context = nullptr;

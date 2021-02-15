@@ -6,10 +6,9 @@
 #include "../../algorithms/encoders/ovpCChannelLocalisationEncoder.h"
 #include "../../algorithms/encoders/ovpCChannelUnitsEncoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 bool CMasterAcquisitionEncoder::initialize()
 {
@@ -36,74 +35,74 @@ bool CMasterAcquisitionEncoder::initialize()
 
 	// Declares parameter handlers for this algorithm
 
-	TParameterHandler<uint64_t> ip_subjectID(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectID));
-	TParameterHandler<uint64_t> ip_subjectAge(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectAge));
-	TParameterHandler<uint64_t> ip_subjectGender(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectGender));
-	TParameterHandler<CMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix));
-	TParameterHandler<uint64_t> ip_sampling(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling));
-	TParameterHandler<IStimulationSet*> ip_stimSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<uint64_t> ip_bufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration));
-	TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
-	TParameterHandler<CMatrix*> ip_channelLocalisationMaster(
+	Kernel::TParameterHandler<uint64_t> ip_subjectID(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectID));
+	Kernel::TParameterHandler<uint64_t> ip_subjectAge(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectAge));
+	Kernel::TParameterHandler<uint64_t> ip_subjectGender(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectGender));
+	Kernel::TParameterHandler<CMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix));
+	Kernel::TParameterHandler<uint64_t> ip_sampling(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling));
+	Kernel::TParameterHandler<IStimulationSet*> ip_stimSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
+	Kernel::TParameterHandler<uint64_t> ip_bufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration));
+	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	Kernel::TParameterHandler<CMatrix*> ip_channelLocalisationMaster(
 		this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelLocalisation));
-	TParameterHandler<CMatrix*> ip_channelUnitsMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits));
+	Kernel::TParameterHandler<CMatrix*> ip_channelUnitsMaster(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits));
 
 	// Declares parameter handlers for sub-algorithm acquisition
 
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelUnitsMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelUnitsMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ChannelUnitsStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelLocalisationMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelLocalisationMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ChannelLocalisationStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionExperimentInfoMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionExperimentInfoMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ExperimentInfoStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionSignalMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionSignalMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_SignalStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionStimulationMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionStimulationMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_StimulationStream));
-	TParameterHandler<uint64_t> ip_AcquisitionBufferDuration(
+	Kernel::TParameterHandler<uint64_t> ip_AcquisitionBufferDuration(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_BufferDuration));
-	TParameterHandler<IMemoryBuffer*> op_pAcquisitionMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> op_pAcquisitionMemoryBuffer(
 		m_acquisitionStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	// Declares parameter handlers for sub-algorithm experiment information
 
-	// TParameterHandler < uint64_t > ip_ExperimentInfoExperimentID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID));
-	// TParameterHandler < CString* > ip_experimentInfoExperimentDate(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate));
-	TParameterHandler<uint64_t> ip_ExperimentInfoSubjectID(
+	// Kernel::TParameterHandler<uint64_t> ip_ExperimentInfoExperimentID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID));
+	// Kernel::TParameterHandler<CString*> ip_experimentInfoExperimentDate(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate));
+	Kernel::TParameterHandler<uint64_t> ip_ExperimentInfoSubjectID(
 		m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID));
-	// TParameterHandler < CString* > ip_experimentInfoSubjectName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName));
-	TParameterHandler<uint64_t> ip_ExperimentInfoSubjectAge(
+	// Kernel::TParameterHandler< CString*> ip_experimentInfoSubjectName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName));
+	Kernel::TParameterHandler<uint64_t> ip_ExperimentInfoSubjectAge(
 		m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge));
-	TParameterHandler<uint64_t> ip_ExperimentInfoSubjectGender(
+	Kernel::TParameterHandler<uint64_t> ip_ExperimentInfoSubjectGender(
 		m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender));
-	// TParameterHandler < uint64_t > ip_ExperimentInfoLaboratoryID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID));
-	// TParameterHandler < CString* > ip_experimentInfoLaboratoryName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName));
-	// TParameterHandler < uint64_t > ip_ExperimentInfoTechnicianID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID));
-	// TParameterHandler < CString* > ip_experimentInfoTehnicianName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName));
-	TParameterHandler<IMemoryBuffer*> op_experimentInfoMemoryBuffer(
+	// Kernel::TParameterHandler<uint64_t> ip_ExperimentInfoLaboratoryID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID));
+	// Kernel::TParameterHandler<CString*> ip_experimentInfoLaboratoryName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName));
+	// Kernel::TParameterHandler<uint64_t> ip_ExperimentInfoTechnicianID(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID));
+	// Kernel::TParameterHandler<CString*> ip_experimentInfoTehnicianName(m_experimentInfoStreamEncoder->getInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName));
+	Kernel::TParameterHandler<IMemoryBuffer*> op_experimentInfoMemoryBuffer(
 		m_experimentInfoStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	// Declares parameter handlers for sub-algorithm signal
 
-	TParameterHandler<CMatrix*> ip_matrix(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<uint64_t> ip_signalSamplingRate(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling));
-	TParameterHandler<IMemoryBuffer*> op_signalMemoryBuffer(
+	Kernel::TParameterHandler<CMatrix*> ip_matrix(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	Kernel::TParameterHandler<uint64_t> ip_signalSamplingRate(m_signalStreamEncoder->getInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling));
+	Kernel::TParameterHandler<IMemoryBuffer*> op_signalMemoryBuffer(
 		m_signalStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	// Declares parameter handlers for sub-algorithm stimulation
 
-	TParameterHandler<IStimulationSet*> ip_stimulationStimulationSet(
+	Kernel::TParameterHandler<IStimulationSet*> ip_stimulationStimulationSet(
 		m_stimulationStreamEncoder->getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_stimulationMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> op_stimulationMemoryBuffer(
 		m_stimulationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	TParameterHandler<CMatrix*> ip_channelLocalisation(
+	Kernel::TParameterHandler<CMatrix*> ip_channelLocalisation(
 		m_channelLocalisationStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_channelLocalisationMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> op_channelLocalisationMemoryBuffer(
 		m_channelLocalisationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	TParameterHandler<CMatrix*> ip_pUnits(m_channelUnitsStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	TParameterHandler<IMemoryBuffer*> op_channelUnitsMemoryBuffer(
+	Kernel::TParameterHandler<CMatrix*> ip_pUnits(m_channelUnitsStreamEncoder->getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	Kernel::TParameterHandler<IMemoryBuffer*> op_channelUnitsMemoryBuffer(
 		m_channelUnitsStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 
@@ -152,17 +151,17 @@ bool CMasterAcquisitionEncoder::uninitialize()
 
 bool CMasterAcquisitionEncoder::process()
 {
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelUnitsMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelUnitsMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ChannelUnitsStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelLocalisationMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelLocalisationMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ChannelLocalisationStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionExperimentInfoMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionExperimentInfoMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_ExperimentInfoStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionSignalMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionSignalMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_SignalStream));
-	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionStimulationMemoryBuffer(
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_pAcquisitionStimulationMemoryBuffer(
 		m_acquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionEncoder_InputParameterId_StimulationStream));
-	// TParameterHandler < IMemoryBuffer* > op_pAcquisitionMemoryBuffer(m_acquisitionStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	// Kernel::TParameterHandler < IMemoryBuffer* > op_pAcquisitionMemoryBuffer(m_acquisitionStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	if (this->isInputTriggerActive(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader))
 	{
@@ -190,15 +189,15 @@ bool CMasterAcquisitionEncoder::process()
 		// op_pAcquisitionMemoryBuffer->setSize(0, true);
 
 		// For these streams, we only send the buffer if there is something to send
-		const TParameterHandler<bool>
+		const Kernel::TParameterHandler<bool>
 				ip_bEncodeUnitData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelUnitData));
 		if (ip_bEncodeUnitData)
 		{
-			// this->getLogManager() << LogLevel_Info << "Encoding units " << ip_pUnits->getBufferElementCount() << "\n";
+			// this->getLogManager() << Kernel::LogLevel_Info << "Encoding units " << ip_pUnits->getBufferElementCount() << "\n";
 			m_channelUnitsStreamEncoder->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		const TParameterHandler<bool> ip_encodeChannelLocalisationData(
+		const Kernel::TParameterHandler<bool> ip_encodeChannelLocalisationData(
 			this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelLocalisationData));
 		if (ip_encodeChannelLocalisationData) { m_channelLocalisationStreamEncoder->process(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer); }
 
@@ -226,3 +225,7 @@ bool CMasterAcquisitionEncoder::process()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

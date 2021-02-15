@@ -6,7 +6,6 @@
 
 #include "ovpCAlgorithmPairwiseDecision.h"
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Classification {

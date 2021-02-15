@@ -25,10 +25,6 @@
 
 #include "ovtTestFixtureCommon.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
 namespace OpenViBE {
 namespace Test {
 void SKernelFixture::setUp()
@@ -51,7 +47,7 @@ void SKernelFixture::setUp()
 
 	m_kernelLoader.initialize();
 
-	IKernelDesc* kernelDesc = nullptr;
+	Kernel::IKernelDesc* kernelDesc = nullptr;
 	m_kernelLoader.getKernelDesc(kernelDesc);
 
 	if (!kernelDesc)
@@ -66,7 +62,7 @@ void SKernelFixture::setUp()
 	else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-	IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
+	Kernel::IKernelContext* ctx = kernelDesc->createKernel("test-kernel", configFile);
 
 	if (!ctx)
 	{
@@ -84,7 +80,7 @@ void SKernelFixture::tearDown()
 	if (context)
 	{
 		Toolkit::uninitialize(*context);
-		IKernelDesc* kernelDesc = nullptr;
+		Kernel::IKernelDesc* kernelDesc = nullptr;
 		m_kernelLoader.getKernelDesc(kernelDesc);
 		kernelDesc->releaseKernel(context);
 		context = nullptr;

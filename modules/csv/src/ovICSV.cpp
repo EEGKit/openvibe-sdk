@@ -2,9 +2,10 @@
 
 #include <ovICSV.h>
 
-using namespace OpenViBE::CSV;
-namespace {
-const std::map<ELogErrorCodes, std::string> ERROR_MAP =
+namespace OpenViBE {
+namespace CSV {
+
+static const std::map<ELogErrorCodes, std::string> ERROR_MAP =
 {
 	{ LogErrorCodes_ErrorWhileClosing, "Error while closing the file" },
 	{ LogErrorCodes_NoFileDefined, "No file defined yet" },
@@ -38,10 +39,12 @@ const std::map<ELogErrorCodes, std::string> ERROR_MAP =
 	{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s)" },
 	{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
 };
-}	// namespace 
 
 std::string ICSVHandler::getLogError(const ELogErrorCodes code)
 {
 	if (ERROR_MAP.count(code) != 0) { return ERROR_MAP.at(code); }
 	return "Unknow error";
 }
+
+}	// namespace CSV
+}	// namespace OpenViBE

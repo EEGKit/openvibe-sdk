@@ -1,24 +1,22 @@
 #include "ovpCBoxAlgorithmFrequencyBandSelector.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-using namespace std;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 #include <vector>
 #include <string>
 
 namespace {
-vector<string> split(const string& str, const char c)
+std::vector<std::string> split(const std::string& str, const char c)
 {
-	vector<string> result;
+	std::vector<std::string> result;
 	size_t i = 0;
 	while (i < str.length())
 	{
 		size_t j = i;
 		while (j < str.length() && str[j] != c) { j++; }
-		if (i != j) { result.push_back(string(str, i, j - i)); }
+		if (i != j) { result.push_back(std::string(str, i, j - i)); }
 		i = j + 1;
 	}
 	return result;
@@ -27,15 +25,15 @@ vector<string> split(const string& str, const char c)
 
 bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {
-	const CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	vector<string> setting     = split(settingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
-	bool hadError              = false;
+	const CString settingValue       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	std::vector<std::string> setting = split(settingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
+	bool hadError                    = false;
 	CString errorMsg;
 	m_selecteds.clear();
 	for (auto it = setting.begin(); it != setting.end(); ++it)
 	{
-		bool good                   = true;
-		vector<string> settingRange = split(*it, OV_Value_RangeStringSeparator);
+		bool good                             = true;
+		std::vector<std::string> settingRange = split(*it, OV_Value_RangeStringSeparator);
 		if (settingRange.size() == 1)
 		{
 			try
@@ -84,7 +82,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	ip_matrix = &m_oMatrix;
 	op_matrix = &m_oMatrix;
 
-	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(!hadError || !m_selecteds.empty(), errorMsg, Kernel::ErrorType::BadSetting);
 
 	return true;
 }
@@ -118,7 +116,7 @@ bool CBoxAlgorithmFrequencyBandSelector::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmFrequencyBandSelector::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
@@ -165,3 +163,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

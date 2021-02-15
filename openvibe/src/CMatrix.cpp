@@ -187,10 +187,7 @@ void CMatrix::resetBuffer() const
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-void CMatrix::setNumLabels() const
-{
-	for (auto& dim : *m_dimLabels) { for (size_t i = 0; i < dim.size(); ++i) { dim[i] = std::to_string(i + 1); } }
-}
+void CMatrix::setNumLabels() const { for (auto& dim : *m_dimLabels) { for (size_t i = 0; i < dim.size(); ++i) { dim[i] = std::to_string(i + 1); } } }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------

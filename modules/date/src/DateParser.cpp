@@ -1,6 +1,6 @@
 #include "DateParser.h"
 
-using namespace DateParser;
+namespace DateParser {
 
 char* CDateParser::strpTime(const char* sStringToParse, const char* sDateFormat, struct tm* tmParsed)
 {
@@ -10,3 +10,5 @@ char* CDateParser::strpTime(const char* sStringToParse, const char* sDateFormat,
 	return strptime(sStringToParse, sDateFormat, tmParsed);
 #endif
 }
+
+}  // namespace DateParser

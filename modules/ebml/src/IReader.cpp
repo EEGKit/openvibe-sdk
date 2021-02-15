@@ -5,12 +5,6 @@
 #include <cstring>
 #include <iostream>
 
-using namespace EBML;
-using namespace std;
-
-// ________________________________________________________________________________________________________________
-//
-
 #if 0
 #define _Debug_ _is_in_debug_mode_(m_totalBytes)
 static bool _is_in_debug_mode_(uint64_t value)
@@ -120,7 +114,6 @@ protected:
 	size_t m_totalBytes         = 0;
 };
 }  // namespace
-}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -359,4 +352,6 @@ void CReader::release() { delete this; }
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IReader* EBML::createReader(IReaderCallback& callback) { return new CReader(callback); }
+EBML_API IReader* createReader(IReaderCallback& callback) { return new CReader(callback); }
+
+}  // namespace EBML

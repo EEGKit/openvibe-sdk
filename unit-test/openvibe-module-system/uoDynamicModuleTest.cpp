@@ -29,8 +29,6 @@
 
 #include <algorithm>
 
-using namespace System;
-
 namespace {
 #if defined TARGET_OS_Windows
 //const std::string LIB_PATH = OV_CMAKE_PATH_LIB;
@@ -76,7 +74,7 @@ static const std::string NON_EXISTING_MODULE_NAME = "randomRandomRandom.so";
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, loadFromExistingSuccessNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromExisting(EXISTING_MODULE_NAME.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -93,17 +91,17 @@ TEST(DynamicModule_Test_Case, loadFromExistingSuccessNoSymbolCheck)
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, loadFromExistingFailNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromExisting(NON_EXISTING_MODULE_NAME.c_str()));
-	ASSERT_EQ(CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
+	ASSERT_EQ(System::CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 #endif
 
 TEST(DynamicModule_Test_Case, loadFromPathSuccessNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromPath(existingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -118,17 +116,17 @@ TEST(DynamicModule_Test_Case, loadFromPathSuccessNoSymbolCheck)
 
 TEST(DynamicModule_Test_Case, loadFromPathFailNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromPath(NON_EXISTING_MODULE_NAME.c_str()));
-	ASSERT_EQ(CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
+	ASSERT_EQ(System::CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 
 #if defined TARGET_OS_Windows // Must be tested on Linux
 TEST(DynamicModule_Test_Case, loadFromPathSuccessSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromPath(existingModulePathName.c_str(), SYMBOL_NAME_NTDLL.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -144,17 +142,17 @@ TEST(DynamicModule_Test_Case, loadFromPathSuccessSymbolCheck)
 
 TEST(DynamicModule_Test_Case, loadFromPathSymbolCheckFail)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromPath(existingModulePathName.c_str(), NON_EXISTING_SYMBOL.c_str()));
-	ASSERT_EQ(CDynamicModule::LogErrorCodes_InvalidSymbol, dynamicModule.getLastError());
+	ASSERT_EQ(System::CDynamicModule::LogErrorCodes_InvalidSymbol, dynamicModule.getLastError());
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, loadFromKnownPathSuccessNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM_PLATFORM, EXISTING_MODULE_NAME.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -164,17 +162,17 @@ TEST(DynamicModule_Test_Case, loadFromKnownPathSuccessNoSymbolCheck)
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
-	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
+	ASSERT_TRUE(System::CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
 	ASSERT_TRUE(dynamicModule.unload());
 }
 
 TEST(DynamicModule_Test_Case, loadFromKnownPathFailNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM_PLATFORM, NON_EXISTING_MODULE_NAME.c_str()));
-	ASSERT_EQ(CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
+	ASSERT_EQ(System::CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 #endif
@@ -182,7 +180,7 @@ TEST(DynamicModule_Test_Case, loadFromKnownPathFailNoSymbolCheck)
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, loadFromEnvironmentSuccessNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromEnvironment(EXISTING_ENVIRONMENT_PATH.c_str(), EXISTING_MODULE_NAME.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -191,17 +189,17 @@ TEST(DynamicModule_Test_Case, loadFromEnvironmentSuccessNoSymbolCheck)
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
-	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
+	ASSERT_TRUE(System::CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
 	ASSERT_TRUE(dynamicModule.unload());
 }
 
 TEST(DynamicModule_Test_Case, loadFromEnvironmentFailNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromEnvironment(EXISTING_ENVIRONMENT_PATH.c_str(), NON_EXISTING_MODULE_NAME.c_str()));
-	ASSERT_EQ(CDynamicModule::LogErrorCodes_ModuleNotFound, dynamicModule.getLastError());
+	ASSERT_EQ(System::CDynamicModule::LogErrorCodes_ModuleNotFound, dynamicModule.getLastError());
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 #endif
@@ -209,7 +207,7 @@ TEST(DynamicModule_Test_Case, loadFromEnvironmentFailNoSymbolCheck)
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, loadFromRegistrySuccessNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(
 		dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, EXISTING_REGISTRY_MODULE_NAME
@@ -221,14 +219,14 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessNoSymbolCheck)
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
-	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
+	ASSERT_TRUE(System::CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
 	ASSERT_TRUE(dynamicModule.unload());
 }
 
 TEST(DynamicModule_Test_Case, loadFromRegistrySuccessSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(
 		dynamicModule.loadFromRegistry(EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, EXISTING_REGISTRY_MODULE_NAME
@@ -240,14 +238,14 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessSymbolCheck)
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
-	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
+	ASSERT_TRUE(System::CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
 	ASSERT_TRUE(dynamicModule.unload());
 }
 
 TEST(DynamicModule_Test_Case, loadFromRegistryFailNoSymbolCheck)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(
 		dynamicModule.loadFromRegistry(NON_EXISTING_REGISTRY_KEY, EXISTING_REGISTRY_PATH.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY,
@@ -269,7 +267,7 @@ TEST(DynamicModule_Test_Case, loadFromRegistryFailNoSymbolCheck)
 #if defined TARGET_OS_Windows // Must be tested on Linux
 TEST(DynamicModule_Test_Case, getSymbolSuccess)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromPath(existingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -278,7 +276,7 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
-	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
+	ASSERT_TRUE(System::CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, SYMBOL_NAME_NTDLL.c_str(), &toupperSymbol));
 
 	const char lowerCase = 'r';
 	char upperCase       = char(toupperSymbol(lowerCase));
@@ -290,7 +288,7 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 
 TEST(DynamicModule_Test_Case, getSymbolFail)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromPath(existingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
@@ -299,7 +297,7 @@ TEST(DynamicModule_Test_Case, getSymbolFail)
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
-	ASSERT_FALSE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, NON_EXISTING_SYMBOL.c_str(), &randomRandomRandomSymbol));
+	ASSERT_FALSE(System::CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, NON_EXISTING_SYMBOL.c_str(), &randomRandomRandomSymbol));
 }
 #endif
 
@@ -307,13 +305,13 @@ TEST(DynamicModule_Test_Case, getSymbolFail)
 TEST(DynamicModule_Test_Case, isModulecompatibleSuccess)
 {
 #if defined _WIN64
-	ASSERT_FALSE(CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x014c)); // x86
-	ASSERT_TRUE(CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x8664)); // x64
-	ASSERT_FALSE(CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x0200)); // ia64
+	ASSERT_FALSE(System::CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x014c)); // x86
+	ASSERT_TRUE(System::CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x8664)); // x64
+	ASSERT_FALSE(System::CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x0200)); // ia64
 #else
-	ASSERT_TRUE(CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x014c)); // x86
-	ASSERT_FALSE(CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x8664)); // x64
-	ASSERT_FALSE(CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x0200)); // ia64
+	ASSERT_TRUE(System::CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x014c)); // x86
+	ASSERT_FALSE(System::CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x8664)); // x64
+	ASSERT_FALSE(System::CDynamicModule::isModuleCompatible(existingModulePathName.c_str(), 0x0200)); // ia64
 #endif
 }
 #endif
@@ -321,7 +319,7 @@ TEST(DynamicModule_Test_Case, isModulecompatibleSuccess)
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, isModulecompatibleFail)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromPath(NON_EXISTING_MODULE_NAME.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
@@ -330,7 +328,7 @@ TEST(DynamicModule_Test_Case, isModulecompatibleFail)
 
 TEST(DynamicModule_Test_Case, unloadSuccess)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_TRUE(dynamicModule.loadFromPath(existingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.unload());
@@ -338,7 +336,7 @@ TEST(DynamicModule_Test_Case, unloadSuccess)
 
 TEST(DynamicModule_Test_Case, unloadFail)
 {
-	CDynamicModule dynamicModule;
+	System::CDynamicModule dynamicModule;
 
 	ASSERT_FALSE(dynamicModule.loadFromPath(NON_EXISTING_MODULE_NAME.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());

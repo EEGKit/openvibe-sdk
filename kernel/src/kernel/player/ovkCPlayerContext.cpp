@@ -3,8 +3,8 @@
 #include "ovkCScheduler.h"
 #include "ovkCPlayer.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
+namespace OpenViBE {
+namespace Kernel {
 
 CPlayerContext::CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox)
 	: TKernelObject<IPlayerContext>(ctx), m_simulatedBox(*pSimulatedBox), m_pluginManager(ctx.getPluginManager()),
@@ -23,3 +23,6 @@ bool CPlayerContext::play() { return m_simulatedBox.getScheduler().getPlayer().p
 bool CPlayerContext::forward() { return m_simulatedBox.getScheduler().getPlayer().forward(); }
 
 EPlayerStatus CPlayerContext::getStatus() const { return m_simulatedBox.getScheduler().getPlayer().getStatus(); }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

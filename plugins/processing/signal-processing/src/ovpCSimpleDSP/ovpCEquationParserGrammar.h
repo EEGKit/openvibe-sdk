@@ -7,7 +7,6 @@
 #include <boost/spirit/include/classic_symbols.hpp>
 #include <boost/spirit/include/classic_ast.hpp>
 
-
 /**
 * Enum of parent nodes identifiers.
 */

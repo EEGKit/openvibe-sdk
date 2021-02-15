@@ -5,12 +5,9 @@
 #include "ovtAssert.h"
 #include "ovtTestFixtureCommon.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 // DO NOT USE a global Test::ScopedTest<Test::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before the kernel context.
-IKernelContext* context = nullptr;
+OpenViBE::Kernel::IKernelContext* context = nullptr;
 
 TEST(error_manager_test_case, test_init)
 {
@@ -24,7 +21,7 @@ TEST(error_manager_test_case, test_init)
 	EXPECT_FALSE(errorManager.hasError());
 	EXPECT_TRUE(errorManager.getLastError() == nullptr);
 	EXPECT_TRUE(std::string(errorManager.getLastErrorString()).empty());
-	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::NoErrorFound);
+	EXPECT_EQ(errorManager.getLastErrorType(), OpenViBE::Kernel::ErrorType::NoErrorFound);
 
 	EXPECT_NO_THROW(errorManager.releaseErrors());
 }
@@ -38,38 +35,38 @@ TEST(error_manager_test_case, test_push)
 	auto& errorManager = context->getErrorManager();
 
 	// push an error
-	errorManager.pushError(ErrorType::Overflow, "An integer overflow error occurred");
+	errorManager.pushError(OpenViBE::Kernel::ErrorType::Overflow, "An integer overflow error occurred");
 
 	EXPECT_TRUE(errorManager.hasError());
 	EXPECT_STREQ(errorManager.getLastErrorString(), "An integer overflow error occurred");
-	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::Overflow);
+	EXPECT_EQ(errorManager.getLastErrorType(), OpenViBE::Kernel::ErrorType::Overflow);
 
 	// test match error features returned direclty by manager match error features
 	auto error = errorManager.getLastError();
 
 	ASSERT_TRUE(error != nullptr);
 	EXPECT_STREQ(error->getErrorString(), "An integer overflow error occurred");
-	EXPECT_EQ(error->getErrorType(), ErrorType::Overflow);
+	EXPECT_EQ(error->getErrorType(), OpenViBE::Kernel::ErrorType::Overflow);
 	EXPECT_STREQ(error->getErrorLocation(), "NoLocationInfo:0");
 	EXPECT_TRUE(error->getNestedError() == nullptr);
 
 	// push another error
-	errorManager.pushErrorAtLocation(ErrorType::BadAlloc, "Memory allocation failed", "urErrorManagerTest.cpp", 64);
+	errorManager.pushErrorAtLocation(OpenViBE::Kernel::ErrorType::BadAlloc, "Memory allocation failed", "urErrorManagerTest.cpp", 64);
 
 	// test top error has changed
 	EXPECT_STREQ(errorManager.getLastErrorString(), "Memory allocation failed");
-	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::BadAlloc);
+	EXPECT_EQ(errorManager.getLastErrorType(), OpenViBE::Kernel::ErrorType::BadAlloc);
 
 	error = errorManager.getLastError();
 	ASSERT_TRUE(error != nullptr);
 	EXPECT_STREQ(error->getErrorString(), "Memory allocation failed");
-	EXPECT_EQ(error->getErrorType(), ErrorType::BadAlloc);
+	EXPECT_EQ(error->getErrorType(), OpenViBE::Kernel::ErrorType::BadAlloc);
 	EXPECT_STREQ(error->getErrorLocation(), "urErrorManagerTest.cpp:64");
 
 	auto nestedError = error->getNestedError();
 	ASSERT_TRUE(nestedError != nullptr);
 	EXPECT_STREQ(nestedError->getErrorString(), "An integer overflow error occurred");
-	EXPECT_EQ(nestedError->getErrorType(), ErrorType::Overflow);
+	EXPECT_EQ(nestedError->getErrorType(), OpenViBE::Kernel::ErrorType::Overflow);
 	EXPECT_STREQ(nestedError->getErrorLocation(), "NoLocationInfo:0");
 	EXPECT_TRUE(nestedError->getNestedError() == nullptr);
 }
@@ -87,20 +84,20 @@ TEST(error_manager_test_case, test_release)
 	EXPECT_FALSE(errorManager.hasError());
 	EXPECT_TRUE(errorManager.getLastError() == nullptr);
 	EXPECT_TRUE(std::string(errorManager.getLastErrorString()).empty());
-	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::NoErrorFound);
+	EXPECT_EQ(errorManager.getLastErrorType(), OpenViBE::Kernel::ErrorType::NoErrorFound);
 
 	// add an error after release
-	errorManager.pushErrorAtLocation(ErrorType::ResourceNotFound, "File not found on system", "urErrorManagerTest.cpp", 93);
+	errorManager.pushErrorAtLocation(OpenViBE::Kernel::ErrorType::ResourceNotFound, "File not found on system", "urErrorManagerTest.cpp", 93);
 
 	EXPECT_TRUE(errorManager.hasError());
 	EXPECT_STREQ(errorManager.getLastErrorString(), "File not found on system");
-	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::ResourceNotFound);
+	EXPECT_EQ(errorManager.getLastErrorType(), OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	auto error = errorManager.getLastError();
 
 	ASSERT_TRUE(error != nullptr);
 	EXPECT_STREQ(error->getErrorString(), "File not found on system");
-	EXPECT_EQ(error->getErrorType(), ErrorType::ResourceNotFound);
+	EXPECT_EQ(error->getErrorType(), OpenViBE::Kernel::ErrorType::ResourceNotFound);
 	EXPECT_STREQ(error->getErrorLocation(), "urErrorManagerTest.cpp:93");
 	EXPECT_TRUE(error->getNestedError() == nullptr);
 }
@@ -115,7 +112,7 @@ TEST(error_manager_test_case, test_stress_push)
 
 	errorManager.releaseErrors();
 	const size_t expectedErrorCount = 10;
-	for (size_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(ErrorType::Unknown, "Error"); }
+	for (size_t i = 0; i < expectedErrorCount; ++i) { errorManager.pushError(OpenViBE::Kernel::ErrorType::Unknown, "Error"); }
 
 	size_t errorCount = 0;
 	auto error        = errorManager.getLastError();
@@ -132,7 +129,7 @@ int urErrorManagerTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc >= 2, "Failure retrieve test parameters");
 
-	Test::ScopedTest<Test::SKernelFixture> fixture;
+	OpenViBE::Test::ScopedTest<OpenViBE::Test::SKernelFixture> fixture;
 	fixture->setConfigFile(argv[1]);
 
 	context = fixture->context;

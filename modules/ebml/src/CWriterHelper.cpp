@@ -1,6 +1,6 @@
 #include "ebml/CWriterHelper.h"
 
-using namespace EBML;
+namespace EBML {
 
 CWriterHelper::CWriterHelper() { m_impl = createWriterHelper(); }
 CWriterHelper::~CWriterHelper() { m_impl->release(); }
@@ -17,3 +17,5 @@ bool CWriterHelper::setFloat(const float value) { return m_impl->setFloat(value)
 bool CWriterHelper::setDouble(const double value) { return m_impl->setDouble(value); }
 bool CWriterHelper::setBinary(const void* buffer, const size_t size) { return m_impl->setBinary(buffer, size); }
 bool CWriterHelper::setStr(const char* value) { return m_impl->setStr(value); }
+
+}  // namespace EBML

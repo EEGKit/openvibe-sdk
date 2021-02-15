@@ -4,7 +4,6 @@
 
 #include <toolkit/ovtk_all.h>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace DataGeneration {
@@ -12,9 +11,8 @@ class CBoxAlgorithmTimeSignalGenerator final : public Toolkit::TBoxAlgorithm<IBo
 {
 public:
 
-	CBoxAlgorithmTimeSignalGenerator();
-
-	void release() override;
+	CBoxAlgorithmTimeSignalGenerator() {}
+	void release() override { delete this; }
 
 	uint64_t getClockFrequency() override { return 128LL << 32; }
 

@@ -24,11 +24,9 @@
 #include <vector>
 #include <iostream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace /*OpenViBE::Plugins::*/SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmZeroCrossingDetector::initialize()
 {
@@ -38,7 +36,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	m_hysteresis  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_windowTimeD = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(m_windowTimeD > 0, "Invalid negative number for window length", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_windowTimeD > 0, "Invalid negative number for window length", Kernel::ErrorType::BadSetting);
 
 	m_stimId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_stimId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -48,20 +46,20 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 
 	if (typeID == OV_TypeId_Signal)
 	{
-		TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>* decoder = new TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
-		TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>* encoder = new TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		Toolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>* decoder = new Toolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		Toolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>* encoder = new Toolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
 		encoder->getInputSamplingRate().setReferenceTarget(decoder->getOutputSamplingRate());
 		m_decoder  = decoder;
 		m_encoder0 = encoder;
 	}
 	else if (typeID == OV_TypeId_StreamedMatrix)
 	{
-		TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>* decoder = new TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
-		TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>* encoder = new TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>* decoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>* encoder = new Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
 		m_decoder                                                          = decoder;
 		m_encoder0                                                         = encoder;
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", Kernel::ErrorType::BadInput); }
 
 	return true;
 }
@@ -83,7 +81,7 @@ bool CBoxAlgorithmZeroCrossingDetector::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmZeroCrossingDetector::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	size_t j, k;
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
@@ -148,7 +146,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					else
 					{
 						OV_ERROR_KRF("Can only process chunks with sampling rate larger or equal to 1 or chunks with exactly one sample.",
-									 ErrorType::OutOfBound);
+									 Kernel::ErrorType::OutOfBound);
 					}
 
 					if ((m_states[j] == 1) && (signals[k] > -m_hysteresis) && (signals[k + 1] < -m_hysteresis))
@@ -212,3 +210,6 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 
 	return true;
 }
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -34,7 +34,6 @@
 #include "ParsedExpression.h"
 
 using namespace Lepton;
-using namespace std;
 
 ExpressionProgram::ExpressionProgram() : maxArgs(0), stackSize(0) {}
 
@@ -76,11 +75,11 @@ const Operation& ExpressionProgram::getOperation(int index) const { return *oper
 
 int ExpressionProgram::getStackSize() const { return stackSize; }
 
-double ExpressionProgram::evaluate() const { return evaluate(map<string, double>()); }
+double ExpressionProgram::evaluate() const { return evaluate(std::map<std::string, double>()); }
 
 double ExpressionProgram::evaluate(const std::map<std::string, double>& variables) const
 {
-	vector<double> stack(stackSize + 1);
+	std::vector<double> stack(stackSize + 1);
 	int stackPointer = stackSize;
 	for (size_t i = 0; i < operations.size(); ++i)
 	{

@@ -10,11 +10,9 @@
 #include "ovCMessaging.h"
 #include "ovCMessagingImpl.hpp"
 
-using namespace Communication;
+namespace Communication {
 
-
-namespace {
-const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
+static const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
 {
 	{ CMessaging::NoError, "No error" },
 	{ CMessaging::Socket_NotConnected, "Not connected" },
@@ -44,7 +42,6 @@ const std::map<CMessaging::ELibraryError, std::string> ERRORS_STRING =
 	{ CMessaging::NoAuthenticationReceived, "No authentication received before the timeout" },
 	{ CMessaging::ThreadJoinFailed, "Failed to terminate the thread" }
 };
-}	// namespace 
 
 CMessaging::CMessaging()
 {
@@ -494,3 +491,4 @@ bool CMessaging::waitForSyncMessage()
 	}
 	return false;
 }
+}  // namespace Communication

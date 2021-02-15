@@ -1,8 +1,7 @@
 #include "system/ovCChrono.h"
 #include "system/ovCTime.h"
 
-using namespace System;
-using namespace std;
+namespace System {
 
 CChrono::~CChrono()
 {
@@ -99,4 +98,4 @@ double CChrono::getStepOutPercentage() const
 	return totalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / totalStepDuration : 0;
 }
 
-bool CChrono::hasNewEstimation() { return m_hasNewEstimation; }
+}  // namespace System

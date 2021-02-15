@@ -5,11 +5,9 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 enum class EGenerationTypes { CPP, MATLAB, PYTHON, LUA, UNKNOWN };
 
-EGenerationTypes parse_argument(string option)
+EGenerationTypes parse_argument(std::string option)
 {
 	if (option == "--cpp") { return EGenerationTypes::CPP; }
 	if (option == "--matlab") { return EGenerationTypes::MATLAB; }
@@ -18,7 +16,7 @@ EGenerationTypes parse_argument(string option)
 	return EGenerationTypes::UNKNOWN;
 }
 
-int generate_generator_list(vector<CFileGeneratorBase*>& list, EGenerationTypes type, int argc, char** argv)
+int generate_generator_list(std::vector<CFileGeneratorBase*>& list, EGenerationTypes type, int argc, char** argv)
 {
 	switch (type)
 	{
@@ -28,7 +26,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, EGenerationTypes 
 			CFileGeneratorBase* gen = new CCppDefineGenerator();
 			if (!gen->openFile(argv[3]))
 			{
-				cerr << "Unable to open " << argv[3] << endl;
+				std::cerr << "Unable to open " << argv[3] << std::endl;
 				return -1;
 			}
 			list.push_back(gen);
@@ -36,7 +34,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, EGenerationTypes 
 			gen = new CCppCodeGenerator();
 			if (!gen->openFile(argv[4]))
 			{
-				cerr << "Unable to open " << argv[4] << endl;
+				std::cerr << "Unable to open " << argv[4] << std::endl;
 				return -1;
 			}
 			list.push_back(gen);
@@ -48,7 +46,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, EGenerationTypes 
 			CFileGeneratorBase* gen = new CMatlabGenerator();
 			if (!gen->openFile(argv[3]))
 			{
-				cerr << "Unable to open " << argv[3] << endl;
+				std::cerr << "Unable to open " << argv[3] << std::endl;
 				return -1;
 			}
 			list.push_back(gen);
@@ -59,7 +57,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& list, EGenerationTypes 
 		case EGenerationTypes::UNKNOWN:
 		default:
 		{
-			cerr << "Unhandle type. Fatal error" << endl;
+			std::cerr << "Unhandle type. Fatal error" << std::endl;
 			return -1;
 		}
 	}
@@ -70,11 +68,11 @@ int main(int argc, char** argv)
 	if (argc < 3) { return -1; }
 	EGenerationTypes type = parse_argument(argv[1]);
 
-	vector<SStimulation> stimulations;
-	vector<CFileGeneratorBase*> generators;
+	std::vector<SStimulation> stimulations;
+	std::vector<CFileGeneratorBase*> generators;
 
-	ifstream file(argv[2]);
-	string name, id, hexaCode;
+	std::ifstream file(argv[2]);
+	std::string name, id, hexaCode;
 	while (file >> name >> id >> hexaCode)
 	{
 		SStimulation temp = { name, id, hexaCode };

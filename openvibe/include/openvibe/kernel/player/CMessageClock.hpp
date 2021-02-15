@@ -18,7 +18,7 @@ class OV_API CMessageClock
 {
 public:
 	CMessageClock() = default;
-	
+
 	CIdentifier getIdentifier() const { return m_id; }
 	uint64_t getTime() const { return m_time; }
 
@@ -26,10 +26,10 @@ public:
 	void setTime(const uint64_t time) { m_time = time; }
 protected:
 	CIdentifier m_id = CIdentifier::undefined();
-	uint64_t m_time = 0;
+	uint64_t m_time  = 0;
 };
 
-typedef Kernel::CMessageClock IMessageClock;
+typedef CMessageClock IMessageClock;
 
 }  // namespace Kernel
 }  // namespace OpenViBE

@@ -1,12 +1,9 @@
 #include "ovkCObjectVisitorContext.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
+namespace Kernel {
 
-CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& ctx)
-	: TKernelObject<IObjectVisitorContext>(ctx) {}
-
+CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& ctx) : TKernelObject<IObjectVisitorContext>(ctx) {}
 CObjectVisitorContext::~CObjectVisitorContext() {}
 
 IAlgorithmManager& CObjectVisitorContext::getAlgorithmManager() const { return TKernelObject<IObjectVisitorContext>::getAlgorithmManager(); }
@@ -14,3 +11,6 @@ IConfigurationManager& CObjectVisitorContext::getConfigurationManager() const { 
 ITypeManager& CObjectVisitorContext::getTypeManager() const { return TKernelObject<IObjectVisitorContext>::getTypeManager(); }
 ILogManager& CObjectVisitorContext::getLogManager() const { return TKernelObject<IObjectVisitorContext>::getLogManager(); }
 IErrorManager& CObjectVisitorContext::getErrorManager() const { return TKernelObject<IObjectVisitorContext>::getErrorManager(); }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

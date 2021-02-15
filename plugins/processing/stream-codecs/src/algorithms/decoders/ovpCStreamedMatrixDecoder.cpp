@@ -2,10 +2,9 @@
 
 #include <string>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 namespace {
 // removes pre and post spaces, tabs and carriage returns
@@ -156,3 +155,6 @@ void CStreamedMatrixDecoder::closeChild()
 
 	m_nodes.pop();
 }
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

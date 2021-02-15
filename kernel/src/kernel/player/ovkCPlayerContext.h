@@ -13,7 +13,7 @@ public:
 
 	CPlayerContext(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox);
 	~CPlayerContext() override { }
-	
+
 	uint64_t getCurrentTime() const override;
 	uint64_t getCurrentLateness() const override;
 	double getCurrentCPUUsage() const override;
