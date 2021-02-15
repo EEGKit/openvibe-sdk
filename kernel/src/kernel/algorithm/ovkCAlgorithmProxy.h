@@ -13,9 +13,9 @@ public:
 	CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& algorithmDesc);
 	~CAlgorithmProxy() override;
 
-	Plugins::IAlgorithm& getAlgorithm();
-	const Plugins::IAlgorithm& getAlgorithm() const;
-	const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
+	Plugins::IAlgorithm& getAlgorithm() { return m_algorithm; }
+	const Plugins::IAlgorithm& getAlgorithm() const { return m_algorithm; }
+	const Plugins::IAlgorithmDesc& getAlgorithmDesc() const { return m_algorithmDesc; }
 
 	bool addInputParameter(const CIdentifier& parameterID, const CString& name, EParameterType parameterType, const CIdentifier& subTypeID);
 	CIdentifier getNextInputParameterIdentifier(const CIdentifier& parameterID) const override;

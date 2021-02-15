@@ -21,7 +21,7 @@ TEST(CIdentifier_Tests, constructors)
 {
 	OpenViBE::CIdentifier id1, id2(10), id3(-1), id4(10, 10), id5("false string"), id6("(0x00000000, 0x0000000A)");
 	const uint64_t undef = std::numeric_limits<uint64_t>::max();
-	
+
 	EXPECT_EQ(id1.id(), undef) << ErrorMsg("Default Constructor", id1.id(), undef);
 	EXPECT_EQ(id2.id(), 10) << ErrorMsg("Integer Constructor", id2.id(), 10);
 	EXPECT_EQ(id3.id(), undef) << ErrorMsg("Negative value Constructor", id3.id(), undef);
@@ -37,17 +37,17 @@ TEST(CIdentifier_Tests, operators)
 	OpenViBE::CIdentifier id(10);
 	const OpenViBE::CIdentifier id2(10);
 	const uint64_t undef = std::numeric_limits<uint64_t>::max();
-	
+
 	id = 0;
 	EXPECT_EQ(id.id(), 0) << ErrorMsg("Assignement operator with unsigned", id.id(), 0);
 	id = OpenViBE::CIdentifier::undefined();
 	EXPECT_EQ(id.id(), undef) << ErrorMsg("Assignement operator with CIdentifier", id.id(), undef);
-	
+
 	++id;		// No change if undef
 	EXPECT_EQ(id.id(), undef) << ErrorMsg("++ operator with undefined Identifier", id.id(), undef);
 	--id;		// No change if undef
 	EXPECT_EQ(id.id(), undef) << ErrorMsg("-- operator with undefined Identifier", id.id(), undef);
-	
+
 	id = 0;
 	--id;		// 0 became max - 1
 	EXPECT_EQ(id.id(), undef - 1) << ErrorMsg("-- operator with Identifier 0", id.id(), undef - 1);
@@ -60,6 +60,5 @@ TEST(CIdentifier_Tests, operators)
 	std::stringstream ss;
 	ss << id;
 	EXPECT_EQ(ss.str(), "(0x00000000, 0x00000000)") << ErrorMsg("ostream operator", ss.str(), "(0x00000000, 0x00000000)");
-
 }
 //---------------------------------------------------------------------------------------------------

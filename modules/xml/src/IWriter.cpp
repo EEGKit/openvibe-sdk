@@ -3,14 +3,11 @@
 #include <stack>
 #include <string>
 
-using namespace XML;
-using namespace std;
-
 namespace XML {
 class CWriter final : public IWriter
 {
 public:
-	explicit CWriter(IWriterCallback& callback);
+	explicit CWriter(IWriterCallback& callback) : m_callback(callback) {}
 	bool openChild(const char* name) override;
 	bool setChildData(const char* data) override;
 	bool setAttribute(const char* name, const char* value) override;
@@ -18,18 +15,15 @@ public:
 	void release() override;
 
 private:
-	static void sanitize(string& str, bool escapeQuotes = true);
+	static void sanitize(std::string& str, bool escapeQuotes = true);
 
 protected:
 	IWriterCallback& m_callback;
-	stack<string> m_nodes;
+	std::stack<std::string> m_nodes;
 	bool m_hasChild             = false;
 	bool m_hasData              = false;
 	bool m_hasClosedOpeningNode = true;
 };
-}  // namespace XML
-
-CWriter::CWriter(IWriterCallback& callback) : m_callback(callback) {}
 
 bool CWriter::openChild(const char* name)
 {
@@ -43,8 +37,8 @@ bool CWriter::openChild(const char* name)
 		m_hasClosedOpeningNode = true;
 	}
 
-	const string indent(m_nodes.size(), '\t');
-	const string res = (!m_nodes.empty() ? string("\n") : string("")) + indent + string("<") + string(name);
+	const std::string indent(m_nodes.size(), '\t');
+	const std::string res = (!m_nodes.empty() ? std::string("\n") : std::string("")) + indent + "<" + name;
 	m_callback.write(res.c_str());
 	m_nodes.push(name);
 	m_hasChild             = false;
@@ -65,7 +59,7 @@ bool CWriter::setChildData(const char* data)
 		m_hasClosedOpeningNode = true;
 	}
 
-	string str(data);
+	std::string str(data);
 	this->sanitize(str, false);
 
 	m_callback.write(str.c_str());
@@ -78,10 +72,10 @@ bool CWriter::setAttribute(const char* name, const char* value)
 {
 	if (name == nullptr || value == nullptr || m_hasChild || m_hasData || m_hasClosedOpeningNode) { return false; }
 
-	string str(value);
+	std::string str(value);
 	this->sanitize(str);
 
-	const string res = string(" ") + string(name) + string("=\"") + string(str) + string("\"");
+	const std::string res = std::string(" ") + name + "=\"" + str + "\"";
 	m_callback.write(res.c_str());
 	return true;
 }
@@ -96,8 +90,8 @@ bool CWriter::closeChild()
 		m_hasClosedOpeningNode = true;
 	}
 
-	const string indent(m_nodes.size() - 1, '\t');
-	const string res = ((m_hasData || !m_hasChild) ? string("") : string("\n") + indent) + string("</") + m_nodes.top() + string(">");
+	const std::string indent(m_nodes.size() - 1, '\t');
+	const std::string res = ((m_hasData || !m_hasChild) ? std::string("") : std::string("\n") + indent) + "</" + m_nodes.top() + ">";
 	m_callback.write(res.c_str());
 	m_nodes.pop();
 	m_hasChild = true;
@@ -111,23 +105,25 @@ void CWriter::release()
 	delete this;
 }
 
-void CWriter::sanitize(string& str, const bool escapeQuotes)
+void CWriter::sanitize(std::string& str, const bool escapeQuotes)
 {
-	string::size_type i;
+	std::string::size_type i;
 	if (str.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = str.find("&", 0); i != string::npos; i = str.find("&", i + 1)) { str.replace(i, 1, "&amp;"); }
-		for (i = str.find('<', 0); i != string::npos; i = str.find('<', i + 1)) { str.replace(i, 1, "&lt;"); }
-		for (i = str.find('>', 0); i != string::npos; i = str.find('>', i + 1)) { str.replace(i, 1, "&gt;"); }
+		for (i = str.find("&", 0); i != std::string::npos; i = str.find("&", i + 1)) { str.replace(i, 1, "&amp;"); }
+		for (i = str.find('<', 0); i != std::string::npos; i = str.find('<', i + 1)) { str.replace(i, 1, "&lt;"); }
+		for (i = str.find('>', 0); i != std::string::npos; i = str.find('>', i + 1)) { str.replace(i, 1, "&gt;"); }
 
 		// Quotes need only be escaped in attributes
 		if (escapeQuotes)
 		{
-			for (i = str.find('\'', 0); i != string::npos; i = str.find('\'', i + 1)) { str.replace(i, 1, "&apos;"); }
-			for (i = str.find('\"', 0); i != string::npos; i = str.find('\"', i + 1)) { str.replace(i, 1, "&quot;"); }
+			for (i = str.find('\'', 0); i != std::string::npos; i = str.find('\'', i + 1)) { str.replace(i, 1, "&apos;"); }
+			for (i = str.find('\"', 0); i != std::string::npos; i = str.find('\"', i + 1)) { str.replace(i, 1, "&quot;"); }
 		}
 	}
 }
 
-XML_API IWriter* XML::createWriter(IWriterCallback& callback) { return new CWriter(callback); }
+XML_API IWriter* createWriter(IWriterCallback& callback) { return new CWriter(callback); }
+
+}  // namespace XML

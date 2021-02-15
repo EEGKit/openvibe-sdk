@@ -39,10 +39,9 @@
 #include <iostream>
 
 using namespace Lepton;
-using namespace std;
 
-static const string Digits               = "0123456789";
-static const string Operators            = "+-*/^";
+static const std::string Digits               = "0123456789";
+static const std::string Operators            = "+-*/^";
 static const bool LeftAssociative[]      = { true, true, true, true, false };
 static const int Precedence[]            = { 0, 0, 1, 1, 3 };
 static const Operation::Id OperationId[] = { Operation::ADD, Operation::SUBTRACT, Operation::MULTIPLY, Operation::DIVIDE, Operation::POWER };
@@ -52,18 +51,18 @@ class Lepton::ParseToken
 public:
 	enum Type { Number, Operator, Variable, Function, LeftParen, RightParen, Comma, Whitespace };
 
-	ParseToken(string text, Type type) : text(text), type(type) { }
+	ParseToken(std::string text, Type type) : text(text), type(type) { }
 
-	const string& getText() const { return text; }
+	const std::string& getText() const { return text; }
 
 	Type getType() const { return type; }
 
 private:
-	string text;
+	std::string text;
 	Type type;
 };
 
-string Parser::trim(const string& expression)
+std::string Parser::trim(const std::string& expression)
 {
 	// Remove leading and trailing spaces.
 
@@ -74,13 +73,13 @@ string Parser::trim(const string& expression)
 	return expression.substr(start, end - start + 1);
 }
 
-ParseToken Parser::getNextToken(const string& expression, size_t start)
+ParseToken Parser::getNextToken(const std::string& expression, size_t start)
 {
 	char c = expression[start];
 	if (c == '(') { return ParseToken("(", ParseToken::LeftParen); }
 	if (c == ')') { return ParseToken(")", ParseToken::RightParen); }
 	if (c == ',') { return ParseToken(",", ParseToken::Comma); }
-	if (Operators.find(c) != string::npos) { return ParseToken(string(1, c), ParseToken::Operator); }
+	if (Operators.find(c) != std::string::npos) { return ParseToken(std::string(1, c), ParseToken::Operator); }
 	if (isspace(c))
 	{
 		// White space
@@ -89,9 +88,9 @@ ParseToken Parser::getNextToken(const string& expression, size_t start)
 		{
 			if (!isspace(expression[pos])) { return ParseToken(expression.substr(start, pos - start), ParseToken::Whitespace); }
 		}
-		return ParseToken(expression.substr(start, string::npos), ParseToken::Whitespace);
+		return ParseToken(expression.substr(start, std::string::npos), ParseToken::Whitespace);
 	}
-	if (c == '.' || Digits.find(c) != string::npos)
+	if (c == '.' || Digits.find(c) != std::string::npos)
 	{
 		// A number
 
@@ -101,7 +100,7 @@ ParseToken Parser::getNextToken(const string& expression, size_t start)
 		for (; pos < expression.size(); ++pos)
 		{
 			c = expression[pos];
-			if (Digits.find(c) != string::npos) { continue; }
+			if (Digits.find(c) != std::string::npos) { continue; }
 			if (c == '.' && !foundDecimal)
 			{
 				foundDecimal = true;
@@ -124,17 +123,17 @@ ParseToken Parser::getNextToken(const string& expression, size_t start)
 	{
 		c = expression[pos];
 		if (c == '(') { return ParseToken(expression.substr(start, pos - start + 1), ParseToken::Function); }
-		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c))
+		if (Operators.find(c) != std::string::npos || c == ',' || c == ')' || isspace(c))
 		{
 			return ParseToken(expression.substr(start, pos - start), ParseToken::Variable);
 		}
 	}
-	return ParseToken(expression.substr(start, string::npos), ParseToken::Variable);
+	return ParseToken(expression.substr(start, std::string::npos), ParseToken::Variable);
 }
 
-vector<ParseToken> Parser::tokenize(const string& expression)
+std::vector<ParseToken> Parser::tokenize(const std::string& expression)
 {
-	vector<ParseToken> tokens;
+	std::vector<ParseToken> tokens;
 	size_t pos = 0;
 	while (pos < expression.size())
 	{
@@ -145,33 +144,33 @@ vector<ParseToken> Parser::tokenize(const string& expression)
 	return tokens;
 }
 
-ParsedExpression Parser::parse(const string& expression) { return parse(expression, map<string, CustomFunction*>()); }
+ParsedExpression Parser::parse(const std::string& expression) { return parse(expression, std::map<std::string, CustomFunction*>()); }
 
-ParsedExpression Parser::parse(const string& expression, const map<string, CustomFunction*>& customFunctions)
+ParsedExpression Parser::parse(const std::string& expression, const std::map<std::string, CustomFunction*>& customFunctions)
 {
 	// First split the expression into subexpressions.
 
-	string primaryExpression = expression;
-	vector<string> subexpressions;
+	std::string primaryExpression = expression;
+	std::vector<std::string> subexpressions;
 	while (true)
 	{
-		string::size_type pos = primaryExpression.find_last_of(';');
-		if (pos == string::npos) { break; }
-		string sub = trim(primaryExpression.substr(pos + 1));
+		std::string::size_type pos = primaryExpression.find_last_of(';');
+		if (pos == std::string::npos) { break; }
+		std::string sub = trim(primaryExpression.substr(pos + 1));
 		if (!sub.empty()) { subexpressions.push_back(sub); }
 		primaryExpression = primaryExpression.substr(0, pos);
 	}
 
 	// Parse the subexpressions.
 
-	map<string, ExpressionTreeNode> subexpDefs;
+	std::map<std::string, ExpressionTreeNode> subexpDefs;
 	for (size_t i = 0; i < subexpressions.size(); ++i)
 	{
 		size_t equalsPos = subexpressions[i].find('=');
-		if (equalsPos == string::npos) { throw Exception("Parse error: subexpression does not specify a name"); }
-		string name = trim(subexpressions[i].substr(0, equalsPos));
+		if (equalsPos == std::string::npos) { throw Exception("Parse error: subexpression does not specify a name"); }
+		std::string name = trim(subexpressions[i].substr(0, equalsPos));
 		if (name.empty()) { throw Exception("Parse error: subexpression does not specify a name"); }
-		vector<ParseToken> tokens = tokenize(subexpressions[i].substr(equalsPos + 1));
+		std::vector<ParseToken> tokens = tokenize(subexpressions[i].substr(equalsPos + 1));
 		size_t pos                = 0;
 		subexpDefs[name]          = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
 		if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of subexpression: " + tokens[pos].getText()); }
@@ -179,15 +178,15 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 
 	// Now parse the primary expression.
 
-	vector<ParseToken> tokens = tokenize(primaryExpression);
+	std::vector<ParseToken> tokens = tokenize(primaryExpression);
 	size_t pos                = 0;
 	ExpressionTreeNode result = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
 	if (pos != tokens.size()) { throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText()); }
 	return ParsedExpression(result);
 }
 
-ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, size_t& pos, const map<string, CustomFunction*>& customFunctions,
-										   const map<string, ExpressionTreeNode>& subexpressionDefs, int precedence)
+ExpressionTreeNode Parser::parsePrecedence(const std::vector<ParseToken>& tokens, size_t& pos, const std::map<std::string, CustomFunction*>& customFunctions,
+										   const std::map<std::string, ExpressionTreeNode>& subexpressionDefs, int precedence)
 {
 	if (pos == tokens.size()) { throw Exception("Parse error: unexpected end of expression"); }
 
@@ -198,7 +197,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, siz
 	if (token.getType() == ParseToken::Number)
 	{
 		double value;
-		stringstream(token.getText()) >> value;
+		std::stringstream(token.getText()) >> value;
 		result = ExpressionTreeNode(new Operation::Constant(value));
 		pos++;
 	}
@@ -223,7 +222,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, siz
 	else if (token.getType() == ParseToken::Function)
 	{
 		pos++;
-		vector<ExpressionTreeNode> args;
+		std::vector<ExpressionTreeNode> args;
 		bool moreArgs;
 		do
 		{
@@ -289,9 +288,9 @@ Operation* Parser::getOperatorOperation(const std::string& name)
 	}
 }
 
-Operation* Parser::getFunctionOperation(const std::string& name, const map<string, CustomFunction*>& customFunctions)
+Operation* Parser::getFunctionOperation(const std::string& name, const std::map<std::string, CustomFunction*>& customFunctions)
 {
-	static map<string, Operation::Id> opMap;
+	static std::map<std::string, Operation::Id> opMap;
 	if (opMap.empty())
 	{
 		opMap["sqrt"]   = Operation::SQRT;
@@ -320,7 +319,7 @@ Operation* Parser::getFunctionOperation(const std::string& name, const map<strin
 		opMap["max"]    = Operation::MAX;
 		opMap["abs"]    = Operation::ABS;
 	}
-	const string trimmed = name.substr(0, name.size() - 1);
+	const std::string trimmed = name.substr(0, name.size() - 1);
 
 	// First check custom functions.
 

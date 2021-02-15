@@ -1,7 +1,6 @@
 #include "ovIObserver.h"
 #include "ovCObservable.h"
 
-
 #include "ov_defines.h"
 #include <iostream>
 #include <vector>

@@ -1,7 +1,7 @@
 ﻿#include "ovCMessagingClient.h"
 #include "ovCMessagingImpl.hpp"
 
-using namespace Communication;
+namespace Communication {
 
 MessagingClient::MessagingClient() : CMessaging(), m_Client(Socket::createConnectionClient()) {}
 
@@ -168,3 +168,5 @@ bool MessagingClient::pushEBML(const size_t index, const uint64_t startTime, con
 
 bool MessagingClient::pushSync() const { return this->pushMessage(SyncMessage()); }
 bool MessagingClient::waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }
+
+}  // namespace Communication

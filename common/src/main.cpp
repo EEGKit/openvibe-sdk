@@ -2,7 +2,6 @@
 #include "ov_common_defines.h"
 #include <cstdint>
 
-
 int main()
 {
 #if defined(WIN32) || (defined(LINUX) && defined(__GXX_EXPERIMENTAL_CXX0X__))

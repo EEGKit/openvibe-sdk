@@ -1,7 +1,7 @@
 #include "ovCMessagingServer.h"
 #include "ovCMessagingImpl.hpp"
 
-using namespace Communication;
+namespace Communication {
 
 MessagingServer::~MessagingServer()
 {
@@ -146,3 +146,5 @@ bool MessagingServer::pushEBML(const size_t index, const uint64_t startTime, con
 {
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
 }
+
+}  // namespace Communication

@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmTemporalFilter.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 namespace {
 typedef Dsp::SmoothedFilterDesign<Dsp::Butterworth::Design::BandPass<32>, 1, Dsp::DirectFormII> CButterworthBandPass;
@@ -105,27 +104,27 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 	m_lowCut            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	m_highCut           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	OV_ERROR_UNLESS_KRF(order >= 1, "Invalid filter order [" << order << "] (expected value >= 1)", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(order >= 1, "Invalid filter order [" << order << "] (expected value >= 1)", Kernel::ErrorType::BadSetting);
 
 	m_order = size_t(order);
 
 	if (m_type == EFilterType::LowPass)
 	{
-		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", Kernel::ErrorType::BadSetting);
 	}
 	else if (m_type == EFilterType::HighPass)
 	{
-		OV_ERROR_UNLESS_KRF(m_lowCut > 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value > 0)", ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_lowCut > 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value > 0)", Kernel::ErrorType::BadSetting);
 	}
 	else if (m_type == EFilterType::BandPass || m_type == EFilterType::BandStop)
 	{
-		OV_ERROR_UNLESS_KRF(m_lowCut >= 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value >= 0)", ErrorType::BadSetting);
-		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_lowCut >= 0, "Invalid low cut-off frequency [" << m_lowCut << "] (expected value >= 0)", Kernel::ErrorType::BadSetting);
+		OV_ERROR_UNLESS_KRF(m_highCut > 0, "Invalid high cut-off frequency [" << m_highCut << "] (expected value > 0)", Kernel::ErrorType::BadSetting);
 		OV_ERROR_UNLESS_KRF(m_highCut > m_lowCut,
 							"Invalid cut-off frequencies [" << m_lowCut << "," << m_highCut << "] (expected low frequency < high frequency)",
-							ErrorType::BadSetting);
+							Kernel::ErrorType::BadSetting);
 	}
-	else { OV_ERROR_KRF("Invalid filter type", ErrorType::BadSetting); }
+	else { OV_ERROR_KRF("Invalid filter type", Kernel::ErrorType::BadSetting); }
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -152,7 +151,7 @@ bool CBoxAlgorithmTemporalFilter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmTemporalFilter::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	size_t j;
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
@@ -168,13 +167,13 @@ bool CBoxAlgorithmTemporalFilter::process()
 			{
 				OV_ERROR_UNLESS_KRF(m_lowCut <= m_decoder.getOutputSamplingRate()*.5,
 									"Invalid low cut-off frequency [" << m_lowCut << "] (expected value must meet nyquist criteria for sampling rate "
-									<< m_decoder.getOutputSamplingRate() << ")", ErrorType::BadConfig);
+									<< m_decoder.getOutputSamplingRate() << ")", Kernel::ErrorType::BadConfig);
 			}
 			if (m_type != EFilterType::HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
 				OV_ERROR_UNLESS_KRF(m_highCut <= m_decoder.getOutputSamplingRate()*.5,
 									"Invalid high cut-off frequency [" << m_highCut << "] (expected value must meet nyquist criteria for sampling rate "
-									<< m_decoder.getOutputSamplingRate() << ")", ErrorType::BadConfig);
+									<< m_decoder.getOutputSamplingRate() << ")", Kernel::ErrorType::BadConfig);
 			}
 
 			m_filters.clear();
@@ -189,25 +188,25 @@ bool CBoxAlgorithmTemporalFilter::process()
 			}
 			else if (m_method == EFilterMethod::Chebyshev) // Chebyshev
 			{
-				OV_ERROR_KRF("Chebyshev method not implemented", ErrorType::NotImplemented);
+				OV_ERROR_KRF("Chebyshev method not implemented", Kernel::ErrorType::NotImplemented);
 				//fpGetParameters = getChebishevParameters;
 				//fpCreateFilter = createChebishevFilter;
 			}
 			else if (m_method == EFilterMethod::YuleWalker) // YuleWalker
 			{
-				OV_ERROR_KRF("YuleWalker method not implemented", ErrorType::NotImplemented);
+				OV_ERROR_KRF("YuleWalker method not implemented", Kernel::ErrorType::NotImplemented);
 				//fpGetParameters = getYuleWalkerParameters;
 				//fpCreateFilter = createYuleWalkerFilter;
 			}
-			else { OV_ERROR_KRF("Invalid filter method", ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("Invalid filter method", Kernel::ErrorType::BadSetting); }
 
 			if (m_type == EFilterType::HighPass)
 			{
-				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
+				this->getLogManager() << Kernel::LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_lowCut << "Hz\n";
 			}
 			if (m_type == EFilterType::LowPass)
 			{
-				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
+				this->getLogManager() << Kernel::LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_highCut << "Hz\n";
 			}
 
 			const size_t frequency = m_decoder.getOutputSamplingRate();
@@ -328,3 +327,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 	}
 }
 */
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

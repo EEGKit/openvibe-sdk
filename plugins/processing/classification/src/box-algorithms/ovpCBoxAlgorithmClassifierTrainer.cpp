@@ -24,23 +24,18 @@ const char* const REJECTED_CLASS_NODE_NAME       = "Rejected-Class";
 const char* const CLASS_STIMULATION_NODE_NAME    = "Class-Stimulation";
 const char* const CLASSIFICATION_BOX_ROOT        = "OpenViBE-Classifier-Box";
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-
-using namespace /*OpenViBE::*/Plugins;
-using namespace Classification;
-using namespace std;
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
 bool CBoxAlgorithmClassifierTrainer::initialize()
 {
 	m_classifier = nullptr;
 	m_parameter  = nullptr;
 
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 	//As we add some parameter in the middle of "static" parameters, we cannot rely on settings index.
-	m_parameter = new map<CString, CString>();
+	m_parameter = new std::map<CString, CString>();
 	for (size_t i = 0; i < boxContext.getSettingCount(); ++i)
 	{
 		CString name;
@@ -53,7 +48,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	const CString configFilename(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
 
-	OV_ERROR_UNLESS_KRF(configFilename != CString(""), "Invalid empty configuration filename", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(configFilename != CString(""), "Invalid empty configuration filename", Kernel::ErrorType::BadSetting);
 
 	CIdentifier classifierAlgorithmClassID;
 
@@ -68,7 +63,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 		const CIdentifier classifierAlgorithmID = this->getAlgorithmManager().createAlgorithm(classifierAlgorithmClassID);
 
 		OV_ERROR_UNLESS_KRF(classifierAlgorithmID != CIdentifier::undefined(),
-							"Unable to instantiate classifier for class [" << classifierAlgorithmID.str() << "]", ErrorType::BadConfig);
+							"Unable to instantiate classifier for class [" << classifierAlgorithmID.str() << "]", Kernel::ErrorType::BadConfig);
 
 		m_classifier = &this->getAlgorithmManager().getAlgorithm(classifierAlgorithmID);
 		m_classifier->initialize();
@@ -83,19 +78,20 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	const int64_t nPartition = this->getConfigurationManager().expandAsInteger((*m_parameter)[FOLD_SETTING_NAME]);
 
-	OV_ERROR_UNLESS_KRF(nPartition >= 0, "Invalid partition count [" << nPartition << "] (expected value >= 0)", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(nPartition >= 0, "Invalid partition count [" << nPartition << "] (expected value >= 0)", Kernel::ErrorType::BadSetting);
 
 	m_nPartition = uint64_t(nPartition);
 
 	m_stimDecoder.initialize(*this, 0);
 	for (size_t i = 1; i < boxContext.getInputCount(); ++i)
 	{
-		m_sampleDecoder.push_back(new TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
+		m_sampleDecoder.push_back(new Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
 		m_sampleDecoder.back()->initialize(*this, i);
 	}
 
 	//We link the parameters to the extra parameters input parameter to transmit them
-	TParameterHandler<map<CString, CString>*> ip_parameter(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+	Kernel::TParameterHandler<std::map<CString, CString>*> ip_parameter(
+		m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 	ip_parameter = m_parameter;
 
 	m_encoder.initialize(*this, 0);
@@ -103,21 +99,22 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	m_nFeatures.clear();
 
 	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() >= 2, "Invalid input count [" << boxContext.getInputCount() << "] (at least 2 input expected)",
-						ErrorType::BadSetting);
+						Kernel::ErrorType::BadSetting);
 
 	// Provide the number of classes to the classifier
 	const size_t nClass = boxContext.getInputCount() - 1;
-	TParameterHandler<uint64_t> ip_nClasses(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
+	Kernel::TParameterHandler<uint64_t> ip_nClasses(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
 	ip_nClasses = nClass;
 
 	//If we have to deal with a pairing strategy we have to pass argument
 	if (isPairing)
 	{
-		TParameterHandler<CIdentifier*> ip_classId(m_classifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
+		Kernel::TParameterHandler<CIdentifier*> ip_classId(
+			m_classifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
 		ip_classId = &classifierAlgorithmClassID;
 
 		OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture), "Failed to design architecture",
-							ErrorType::Internal);
+							Kernel::ErrorType::Internal);
 	}
 
 	return true;
@@ -178,10 +175,10 @@ bool CBoxAlgorithmClassifierTrainer::processInput(const size_t /*index*/)
 // Find the most likely class and resample the dataset so that each class is as likely
 bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
-	const size_t nClass    = boxContext.getInputCount() - 1;
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
+	const size_t nClass            = boxContext.getInputCount() - 1;
 
-	this->getLogManager() << LogLevel_Info << "Balancing dataset...\n";
+	this->getLogManager() << Kernel::LogLevel_Info << "Balancing dataset...\n";
 
 	// Collect index set of feature vectors per class
 	std::vector<std::vector<size_t>> classIndexes;
@@ -201,10 +198,10 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 		const size_t paddingNeeded   = nMax - examplesInClass;
 		if (examplesInClass == 0)
 		{
-			this->getLogManager() << LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
+			this->getLogManager() << Kernel::LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
 			continue;
 		}
-		if (paddingNeeded > 0) { this->getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << paddingNeeded << " examples\n"; }
+		if (paddingNeeded > 0) { this->getLogManager() << Kernel::LogLevel_Debug << "Padding class " << i << " with " << paddingNeeded << " examples\n"; }
 
 		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_datasets owns the data pointer.
@@ -224,8 +221,8 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 
 bool CBoxAlgorithmClassifierTrainer::process()
 {
-	IBoxIO& boxContext  = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	const size_t nInput        = this->getStaticBoxContext().getInputCount();
 
 	bool startTrain = false;
 
@@ -296,15 +293,15 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	{
 		OV_ERROR_UNLESS_KRF(m_datasets.size() >= m_nPartition,
 							"Received fewer examples (" << m_datasets.size() << ") than specified partition count (" << m_nPartition << ")",
-							ErrorType::BadInput);
+							Kernel::ErrorType::BadInput);
 
-		OV_ERROR_UNLESS_KRF(!m_datasets.empty(), "No training example received", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!m_datasets.empty(), "No training example received", Kernel::ErrorType::BadInput);
 
-		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
+		this->getLogManager() << Kernel::LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
 				<< m_datasets[0].sampleMatrix->getBufferElementCount() << "]\n";
 		for (size_t i = 1; i < nInput; ++i)
 		{
-			this->getLogManager() << LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
 		}
 
 		const bool balancedDataset = this->getConfigurationManager().expandAsBoolean((*m_parameter)[BALANCE_SETTING_NAME]);
@@ -312,7 +309,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		const std::vector<sample_t>& actualDataset = (balancedDataset ? m_balancedDatasets : m_datasets);
 
-		vector<double> partitionAccuracies(m_nPartition);
+		std::vector<double> partitionAccuracies(m_nPartition);
 
 		const bool randomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
 
@@ -323,7 +320,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		// randomize the vector if necessary
 		if (randomizeVectorOrder)
 		{
-			this->getLogManager() << LogLevel_Info << "Randomizing the feature vector set\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "Randomizing the feature vector set\n";
 			random_shuffle(featurePermutation.begin(), featurePermutation.end(), System::Math::randomWithCeiling);
 		}
 
@@ -335,23 +332,23 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			double partitionAccuracy = 0;
 			double finalAccuracy     = 0;
 
-			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (size_t i = 0; i < m_nPartition; ++i)
 			{
 				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_nPartition);
 				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_nPartition);
 
-				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << startIdx << " to " <<
+				this->getLogManager() << Kernel::LogLevel_Trace << "Training on partition " << i << " (feature vectors " << startIdx << " to " <<
 						stopIdx - 1 << ")...\n";
 
 				OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, startIdx, stopIdx), "Training failed: bailing out (from xval)",
-									ErrorType::Internal);
+									Kernel::ErrorType::Internal);
 
 				partitionAccuracy      = this->getAccuracy(actualDataset, featurePermutation, startIdx, stopIdx, confusion);
 				partitionAccuracies[i] = partitionAccuracy;
 				finalAccuracy += partitionAccuracy;
 
-				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_nPartition << " (performance : "
+				this->getLogManager() << Kernel::LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_nPartition << " (performance : "
 						<< partitionAccuracy << "%)\n";
 			}
 
@@ -365,30 +362,30 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			}
 			deviation = sqrt(deviation / m_nPartition);
 
-			this->getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << mean << "% (sigma = " << deviation << "%)\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "Cross-validation test accuracy is " << mean << "% (sigma = " << deviation << "%)\n";
 
 			printConfusionMatrix(confusion);
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Info << "Training without cross-validation.\n";
-			this->getLogManager() << LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "Training without cross-validation.\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
 		}
 
 
-		this->getLogManager() << LogLevel_Trace << "Training final classifier on the whole set...\n";
+		this->getLogManager() << Kernel::LogLevel_Trace << "Training final classifier on the whole set...\n";
 
 		OV_ERROR_UNLESS_KRF(this->train(actualDataset, featurePermutation, 0, 0),
-							"Training failed: bailing out (from whole set training)", ErrorType::Internal);
+							"Training failed: bailing out (from whole set training)", Kernel::ErrorType::Internal);
 
 		confusion.resetBuffer();
 		const double accuracy = this->getAccuracy(actualDataset, featurePermutation, 0, actualDataset.size(), confusion);
 
-		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
+		this->getLogManager() << Kernel::LogLevel_Info << "Training set accuracy is " << accuracy << "% (optimistic)\n";
 
 		printConfusionMatrix(confusion);
 
-		OV_ERROR_UNLESS_KRF(this->saveConfig(), "Failed to save configuration", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(this->saveConfig(), "Failed to save configuration", Kernel::ErrorType::Internal);
 	}
 
 	return true;
@@ -397,12 +394,12 @@ bool CBoxAlgorithmClassifierTrainer::process()
 bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation, const size_t startIdx,
 										   const size_t stopIdx)
 {
-	OV_ERROR_UNLESS_KRF(stopIdx - startIdx != 1, "Invalid indexes: stopIdx - trainIndex = 1", ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(stopIdx - startIdx != 1, "Invalid indexes: stopIdx - trainIndex = 1", Kernel::ErrorType::BadArgument);
 
 	const size_t nSample  = dataset.size() - (stopIdx - startIdx);
 	const size_t nFeature = dataset[0].sampleMatrix->getBufferElementCount();
 
-	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	Kernel::TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 
 	ip_sample->resize(nSample, nFeature + 1);
 
@@ -417,9 +414,9 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 		buffer += (nFeature + 1);
 	}
 
-	OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train), "Training failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train), "Training failed", Kernel::ErrorType::Internal);
 
-	TParameterHandler<XML::IXMLNode*> op_configuration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> op_configuration(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* node = static_cast<XML::IXMLNode*>(op_configuration);
 
 	if (node != nullptr) { node->release(); }
@@ -432,19 +429,19 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& dataset, const std::vector<size_t>& permutation,
 												   const size_t startIdx, const size_t stopIdx, CMatrix& confusionMatrix)
 {
-	OV_ERROR_UNLESS_KRF(stopIdx != startIdx, "Invalid indexes: start index equals stop index", ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(stopIdx != startIdx, "Invalid indexes: start index equals stop index", Kernel::ErrorType::BadArgument);
 
 	const size_t nFeature = dataset[0].sampleMatrix->getBufferElementCount();
 
-	TParameterHandler<XML::IXMLNode*> op_config(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> op_config(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* node = op_config;//Requested for affectation
-	TParameterHandler<XML::IXMLNode*> ip_config(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> ip_config(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 	ip_config = node;
 
 	m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfig);
 
-	TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-	TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+	Kernel::TParameterHandler<CMatrix*> ip_sample(m_classifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+	Kernel::TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	ip_sample->resize(nFeature);
 
 	size_t nSuccess = 0;
@@ -456,7 +453,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 		double* buffer            = ip_sample->getBuffer();
 		const double correctValue = double(dataset[k].inputIdx);
 
-		this->getLogManager() << LogLevel_Debug << "Try to recognize " << correctValue << "\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << "Try to recognize " << correctValue << "\n";
 
 		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
 
@@ -464,7 +461,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 		const double predictedValue = op_classificationState;
 
-		this->getLogManager() << LogLevel_Debug << "Recognize " << predictedValue << "\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << "Recognize " << predictedValue << "\n";
 
 		if (predictedValue == correctValue) { nSuccess++; }
 
@@ -484,13 +481,13 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	OV_ERROR_UNLESS_KRF(oMatrix.getDimensionCount() == 2 && oMatrix.getDimensionSize(0) == oMatrix.getDimensionSize(1),
 						"Invalid confution matrix [dim count = " << oMatrix.getDimensionCount() << ", dim size 0 = "
 						<< oMatrix.getDimensionSize(0) << ", dim size 1 = "<< oMatrix.getDimensionSize(1) << "] (expected 2 dimensions with same size)",
-						ErrorType::BadArgument);
+						Kernel::ErrorType::BadArgument);
 
 	const size_t rows = oMatrix.getDimensionSize(0);
 
 	if (rows > 10 && !this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_ForceConfusionMatrixPrint}"))
 	{
-		this->getLogManager() << LogLevel_Info <<
+		this->getLogManager() << Kernel::LogLevel_Info <<
 				"Over 10 classes, not printing the confusion matrix. If needed, override with setting Plugin_Classification_ForceConfusionMatrixPrint token to true.\n";
 		return true;
 	}
@@ -508,16 +505,16 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	ss << std::fixed;
 
 	ss << "  Cls vs cls ";
-	for (size_t i = 0; i < rows; ++i) { ss << setw(6) << (i + 1); }
-	this->getLogManager() << LogLevel_Info << ss.str() << "\n";
+	for (size_t i = 0; i < rows; ++i) { ss << std::setw(6) << (i + 1); }
+	this->getLogManager() << Kernel::LogLevel_Info << ss.str() << "\n";
 
 	ss.precision(1);
 	for (size_t i = 0; i < rows; ++i)
 	{
 		ss.str("");
-		ss << "  Target " << setw(2) << (i + 1) << ": ";
-		for (size_t j = 0; j < rows; ++j) { ss << setw(6) << tmp[i * rows + j] * 100; }
-		this->getLogManager() << LogLevel_Info << ss.str() << " %, " << size_t(rowSum[i]) << " examples\n";
+		ss << "  Target " << std::setw(2) << (i + 1) << ": ";
+		for (size_t j = 0; j < rows; ++j) { ss << std::setw(6) << tmp[i * rows + j] * 100; }
+		this->getLogManager() << Kernel::LogLevel_Info << ss.str() << " %, " << size_t(rowSum[i]) << " examples\n";
 	}
 
 	return true;
@@ -525,9 +522,9 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 bool CBoxAlgorithmClassifierTrainer::saveConfig()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 
-	TParameterHandler<XML::IXMLNode*> op_config(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> op_config(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	XML::IXMLNode* algorithmConfigNode = XML::createNode(CLASSIFIER_ROOT);
 	algorithmConfigNode->addChild(static_cast<XML::IXMLNode*>(op_config));
 
@@ -581,9 +578,13 @@ bool CBoxAlgorithmClassifierTrainer::saveConfig()
 	if (!handler->writeXMLInFile(*root, configurationFilename.toASCIIString()))
 	{
 		cleanup();
-		OV_ERROR_KRF("Failed saving configuration to file [" << configurationFilename << "]", ErrorType::BadFileWrite);
+		OV_ERROR_KRF("Failed saving configuration to file [" << configurationFilename << "]", Kernel::ErrorType::BadFileWrite);
 	}
 
 	cleanup();
 	return true;
 }
+
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE

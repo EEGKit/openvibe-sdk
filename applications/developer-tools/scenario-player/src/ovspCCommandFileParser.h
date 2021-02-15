@@ -29,7 +29,6 @@
 #include <vector>
 #include <map>
 
-
 namespace OpenViBE {
 /**
 * \class CommandFileParser

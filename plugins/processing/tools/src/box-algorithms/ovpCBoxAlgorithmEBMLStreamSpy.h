@@ -10,7 +10,6 @@
 #include <stack>
 #include <string>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Tools {

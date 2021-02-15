@@ -1,9 +1,7 @@
 #include "ovtkCFeatureVectorSet.hpp"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Toolkit {
 
 CFeatureVectorSet::CFeatureVectorSet(const CMatrix& matrix) : m_matrix(matrix)
 {
@@ -28,3 +26,6 @@ size_t CFeatureVectorSet::getLabelCount() const
 	for (auto it = m_features.begin(); it != m_features.end(); ++it) { labels[it->second.getLabel()] = true; }
 	return labels.size();
 }
+
+}  // namespace Toolkit
+}  // namespace OpenViBE

@@ -19,7 +19,6 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "ovspCCommand.h"
 #include "ovsp_base.h"
 #include "ovspCKernelFacade.h"
@@ -31,23 +30,19 @@
 #include <limits>
 #include <cassert>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
-namespace {
-void setConfigTokens(IConfigurationManager& configsManager, const TokenList& tokens)
+static void setConfigTokens(Kernel::IConfigurationManager& configsManager, const TokenList& tokens)
 {
-	for (auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
+	for (const auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
 }
-}  // namespace
 
 struct CKernelFacade::SKernelFacadeImpl
 {
 	CKernelLoader loader;
-	IKernelContext* ctx = nullptr;
+	Kernel::IKernelContext* ctx = nullptr;
 	std::map<std::string, CIdentifier> scenarios;
 	std::map<std::string, TokenList> scenarioTokens;
 };
@@ -64,7 +59,7 @@ CKernelFacade::~CKernelFacade()
 	uninitialize();
 }
 
-OpenViBE::EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
+EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
 {
 	if (m_impl->ctx)
 	{
@@ -91,7 +86,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& com
 
 	kernelLoader.initialize();
 
-	IKernelDesc* kernelDesc = nullptr;
+	Kernel::IKernelDesc* kernelDesc = nullptr;
 	kernelLoader.getKernelDesc(kernelDesc);
 
 	if (!kernelDesc)
@@ -106,7 +101,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& com
 	else { configFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf"); }
 
 
-	IKernelContext* ctx = kernelDesc->createKernel("scenario-player", configFile);
+	Kernel::IKernelContext* ctx = kernelDesc->createKernel("scenario-player", configFile);
 
 	if (!ctx)
 	{
@@ -118,14 +113,14 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& com
 	m_impl->ctx = ctx;
 	Toolkit::initialize(*ctx);
 
-	IConfigurationManager& configurationManager = ctx->getConfigurationManager();
+	Kernel::IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
 	ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCodes CKernelFacade::unloadKernel() const
+EPlayerReturnCodes CKernelFacade::unloadKernel() const
 {
 	if (m_impl->ctx)
 	{
@@ -137,7 +132,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::unloadKernel() const
 
 		Toolkit::uninitialize(*m_impl->ctx);
 		// m_impl->ctx->uninitialize();
-		IKernelDesc* kernelDesc = nullptr;
+		Kernel::IKernelDesc* kernelDesc = nullptr;
 		m_impl->loader.getKernelDesc(kernelDesc);
 		kernelDesc->releaseKernel(m_impl->ctx);
 		m_impl->ctx = nullptr;
@@ -149,7 +144,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::unloadKernel() const
 	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) const
 {
 	assert(command.scenarioFile && command.scenarioName);
 
@@ -181,7 +176,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd&
 	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& command) const
 {
 	assert(command.scenarioFile && command.scenarioName);
 
@@ -217,7 +212,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenario
 	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
 {
 	if (!m_impl->ctx)
 	{
@@ -246,7 +241,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCm
 	return EPlayerReturnCodes::Success;
 }
 
-OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command) const
 {
 	assert(command.scenarioList);
 
@@ -270,7 +265,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 	// Keep 2 different containers because identifier information is
 	// not relevant during the performance sensitive loop task.
 	// This might be premature optimization...
-	std::vector<IPlayer*> players;
+	std::vector<Kernel::IPlayer*> players;
 	std::vector<CIdentifier> playerIDs;
 
 	// attach players to scenario
@@ -287,7 +282,7 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 			break;
 		}
 
-		IPlayer* player = &playerManager.getPlayer(id);
+		Kernel::IPlayer* player = &playerManager.getPlayer(id);
 
 		// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
 		playerIDs.push_back(id);
@@ -340,16 +335,16 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 		{
 			const uint64_t currentTime = System::Time::zgetTime();
 			allStopped                 = true;
-			for (auto p : players)
+			for (auto* p : players)
 			{
-				if (p->getStatus() != EPlayerStatus::Stop)
+				if (p->getStatus() != Kernel::EPlayerStatus::Stop)
 				{
 					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; }
 				}
 
 				if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
 
-				allStopped &= (p->getStatus() == EPlayerStatus::Stop);
+				allStopped &= (p->getStatus() == Kernel::EPlayerStatus::Stop);
 			}
 
 			lastLoopTime = currentTime;
@@ -365,3 +360,5 @@ OpenViBE::EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCm
 
 	return returnCode;
 }
+
+}  // namespace OpenViBE

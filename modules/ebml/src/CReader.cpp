@@ -1,6 +1,6 @@
 #include "ebml/CReader.h"
 
-using namespace EBML;
+namespace EBML {
 
 CReader::CReader(IReaderCallback& callback) { m_impl = createReader(callback); }
 CReader::~CReader() { m_impl->release(); }
@@ -10,3 +10,5 @@ CIdentifier CReader::getCurrentNodeID() const { return m_impl->getCurrentNodeID(
 size_t CReader::getCurrentNodeSize() const { return m_impl->getCurrentNodeSize(); }
 
 void CReader::release() {}
+
+}  // namespace EBML

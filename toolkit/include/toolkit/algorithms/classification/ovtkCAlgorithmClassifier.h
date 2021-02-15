@@ -31,7 +31,6 @@
 #define OVTK_Algorithm_Classifier_OutputTriggerId_Success					OpenViBE::CIdentifier(0x24FAB755, 0x78868782)
 #define OVTK_Algorithm_Classifier_OutputTriggerId_Failed					OpenViBE::CIdentifier(0x6E72B255, 0x317FAA04)
 
-
 namespace OpenViBE {
 namespace Toolkit {
 class OVTK_API CAlgorithmClassifier : public TAlgorithm<Plugins::IAlgorithm>
@@ -84,10 +83,8 @@ public:
 		algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter, "Extra parameter", Kernel::ParameterType_Pointer);
 
 		algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class, "Class", Kernel::ParameterType_Float);
-		algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues, "Hyperplane distance",
-											  Kernel::ParameterType_Matrix);
-		algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues, "Probability values",
-											  Kernel::ParameterType_Matrix);
+		algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues, "Hyperplane distance", Kernel::ParameterType_Matrix);
+		algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues, "Probability values", Kernel::ParameterType_Matrix);
 		algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config, "Configuration", Kernel::ParameterType_Pointer);
 
 		algorithmPrototype.addInputTrigger(OVTK_Algorithm_Classifier_InputTriggerId_Train, "Train");

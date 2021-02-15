@@ -1,16 +1,6 @@
 #include "ovpCBoxAlgorithmFeatureAggregator.h"
 #include <iostream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FeatureExtraction;
-
-using namespace /*OpenViBE::*/Toolkit;
-
-using namespace std;
-
 namespace OpenViBE {
 namespace Plugins {
 namespace FeatureExtraction {
@@ -21,11 +11,11 @@ bool CBoxAlgorithmFeatureAggregator::initialize()
 	// Prepares decoders
 	for (size_t i = 0; i < m_nInput; ++i)
 	{
-		TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* streamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
+		Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* streamedMatrixDecoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
 		m_decoder.push_back(streamedMatrixDecoder);
 		m_decoder.back()->initialize(*this, i);
 	}
-	m_encoder = new TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>;
+	m_encoder = new Toolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>;
 	m_encoder->initialize(*this, 0);
 
 	//resizes everything as needed
@@ -61,7 +51,7 @@ bool CBoxAlgorithmFeatureAggregator::uninitialize()
 
 bool CBoxAlgorithmFeatureAggregator::processInput(const size_t index)
 {
-	IBoxIO* boxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
+	Kernel::IBoxIO* boxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	size_t lastBufferChunkSize;
 	const uint8_t* lastBuffer;
@@ -95,7 +85,7 @@ bool CBoxAlgorithmFeatureAggregator::processInput(const size_t index)
 				}
 
 				//readyToProcess = false;
-				OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", ErrorType::BadInput);
+				OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", Kernel::ErrorType::BadInput);
 			}
 		}
 		else { readyToProcess = false; }
@@ -109,8 +99,8 @@ bool CBoxAlgorithmFeatureAggregator::processInput(const size_t index)
 
 bool CBoxAlgorithmFeatureAggregator::process()
 {
-	const IBox* boxContext = getBoxAlgorithmContext()->getStaticBoxContext();
-	IBoxIO* boxIO          = getBoxAlgorithmContext()->getDynamicBoxContext();
+	const Kernel::IBox* boxContext = getBoxAlgorithmContext()->getStaticBoxContext();
+	Kernel::IBoxIO* boxIO          = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	CMatrix* oMatrix = m_encoder->getInputMatrix();
 	std::vector<double> bufferElements;
@@ -123,7 +113,7 @@ bool CBoxAlgorithmFeatureAggregator::process()
 		//*
 		if ((m_decoder[input]->isHeaderReceived()) && !m_headerSent)
 		{
-			//getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "header " << input << "\n";
+			//getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << Kernel::LogLevel_Warning << "header " << input << "\n";
 			CMatrix* iMatrix = m_decoder[input]->getOutputMatrix();
 			totalBufferSize += iMatrix->getBufferElementCount();
 			if (input == boxContext->getInputCount() - 1)

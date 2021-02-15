@@ -1,6 +1,6 @@
 #include "ebml/CReaderHelper.h"
 
-using namespace EBML;
+namespace EBML {
 
 CReaderHelper::CReaderHelper() { m_impl = createReaderHelper(); }
 CReaderHelper::~CReaderHelper() { m_impl->release(); }
@@ -11,3 +11,5 @@ double CReaderHelper::getDouble(const void* buffer, const size_t size) { return 
 const char* CReaderHelper::getStr(const void* buffer, const size_t size) { return m_impl->getStr(buffer, size); }
 
 void CReaderHelper::release() {}
+
+}  // namespace EBML

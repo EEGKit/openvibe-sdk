@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmSignalMerger.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/Streaming;
+namespace OpenViBE {
+namespace Plugins {
+namespace Streaming {
 
 bool CBoxAlgorithmSignalMerger::initialize()
 {
@@ -46,12 +45,12 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 		OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0),
 							"Invalid start time [" << boxContext.getInputChunkStartTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match start time on input 0 [" << tStart << "])",
-							ErrorType::BadInput);
+							Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(tEnd == boxContext.getInputChunkEndTime(i, 0),
 							"Invalid end time [" << boxContext.getInputChunkEndTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match end time on input 0 [" << tEnd << "])",
-							ErrorType::BadInput);
+							Kernel::ErrorType::BadInput);
 	}
 
 	if (index == nInput - 1)
@@ -61,7 +60,7 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 			OV_ERROR_UNLESS_KRF(boxContext.getInputChunkCount(0) >= boxContext.getInputChunkCount(i),
 								"Invalid input chunk count [" << boxContext.getInputChunkCount(i) << "] on input [" << i
 								<< "] (expected value must be <= to chunk count on input 0 [" << boxContext.getInputChunkCount(0) << "])",
-								ErrorType::BadInput);
+								Kernel::ErrorType::BadInput);
 		}
 	}
 
@@ -71,8 +70,8 @@ bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 
 bool CBoxAlgorithmSignalMerger::process()
 {
-	IBoxIO& boxContext  = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	const size_t nInput        = this->getStaticBoxContext().getInputCount();
 
 	size_t nChunk = boxContext.getInputChunkCount(0);
 
@@ -105,12 +104,12 @@ bool CBoxAlgorithmSignalMerger::process()
 					OV_ERROR_UNLESS_KRF(nSamplePerBlock == op_matrix->getDimensionSize(1),
 										"Output matrix dimension [" << op_matrix->getDimensionSize(1) << "] on input [" << i
 										<< "] must match sample count per block [" << nSamplePerBlock << "]",
-										ErrorType::BadInput);
+										Kernel::ErrorType::BadInput);
 
 					OV_ERROR_UNLESS_KRF(m_decoders[0]->getOutputSamplingRate() == m_decoders[i]->getOutputSamplingRate(),
 										"Output sampling rate [" << m_decoders[i]->getOutputSamplingRate() << "] on input [" << i
 										<< "] must match the sampling rate on input 0 [" << m_decoders[0]->getOutputSamplingRate() << "]",
-										ErrorType::BadInput);
+										Kernel::ErrorType::BadInput);
 
 					nChannel += op_matrix->getDimensionSize(0);
 				}
@@ -119,9 +118,9 @@ bool CBoxAlgorithmSignalMerger::process()
 			if (m_decoders[i]->isEndReceived()) { nEnd++; }
 		}
 
-		OV_ERROR_UNLESS_KRF(!nHeader || nHeader == nInput, "Received [" << nHeader << "] headers for [" << nInput << "] declared inputs", ErrorType::BadInput);
-		OV_ERROR_UNLESS_KRF(!nBuffer || nBuffer == nInput, "Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", ErrorType::BadInput);
-		OV_ERROR_UNLESS_KRF(!nEnd || nEnd == nInput, "Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!nHeader || nHeader == nInput, "Received [" << nHeader << "] headers for [" << nInput << "] declared inputs", Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!nBuffer || nBuffer == nInput, "Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!nEnd || nEnd == nInput, "Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", Kernel::ErrorType::BadInput);
 
 		if (nHeader)
 		{
@@ -137,7 +136,7 @@ bool CBoxAlgorithmSignalMerger::process()
 			const uint64_t sampling           = m_decoders[0]->getOutputSamplingRate();
 			m_encoder->getInputSamplingRate() = sampling;
 
-			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << sampling << "\n";
+			this->getLogManager() << Kernel::LogLevel_Debug << "Setting sampling rate to " << sampling << "\n";
 
 			m_encoder->encodeHeader();
 
@@ -174,3 +173,6 @@ bool CBoxAlgorithmSignalMerger::process()
 
 	return true;
 }
+}  // namespace Streaming
+}  // namespace Plugins
+}  // namespace OpenViBE

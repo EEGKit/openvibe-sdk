@@ -1,9 +1,8 @@
 #include "ovpCAlgorithmOVMatrixFileWriter.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FileIO;
+namespace OpenViBE {
+namespace Plugins {
+namespace FileIO {
 
 bool CAlgorithmOVMatrixFileWriter::initialize()
 {
@@ -22,7 +21,11 @@ bool CAlgorithmOVMatrixFileWriter::uninitialize()
 bool CAlgorithmOVMatrixFileWriter::process()
 {
 	OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
-						"Writing matrix file " << *ip_sFilename << " failed", ErrorType::BadFileWrite);
+						"Writing matrix file " << *ip_sFilename << " failed", Kernel::ErrorType::BadFileWrite);
 
 	return true;
 }
+
+}  // namespace FileIO
+}  // namespace Plugins
+}  // namespace OpenViBE

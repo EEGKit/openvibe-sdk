@@ -5,23 +5,22 @@
 #include <string>
 #include <algorithm>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Stimulation;
+namespace OpenViBE {
+namespace Plugins {
+namespace Stimulation {
 
 bool CBoxAlgorithmStimulationVoter::initialize()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 
 	OV_ERROR_UNLESS_KRF(boxContext.getInputCount() == 1, "Invalid number of inputs [" << boxContext.getInputCount() << "] (expected 1 single input)",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	CIdentifier typeID;
 	boxContext.getInputType(0, typeID);
 
 	OV_ERROR_UNLESS_KRF(typeID == OV_TypeId_Stimulations, "Invalid input type [" << typeID.str() << "] (expected OV_TypeId_Stimulations type)",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	m_encoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationEncoder));
 	m_encoder->initialize();
@@ -39,7 +38,7 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 	m_rejectClassLabel  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 	m_rejectClassCanWin = uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
 
-	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_clearVotes << ", timestamp at " << m_outputDateMode << ", reject mode " <<
+	this->getLogManager() << Kernel::LogLevel_Debug << "Vote clear mode " << m_clearVotes << ", timestamp at " << m_outputDateMode << ", reject mode " <<
 			m_rejectClassCanWin << "\n";
 
 	m_latestStimulusDate = 0;
@@ -69,10 +68,10 @@ bool CBoxAlgorithmStimulationVoter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmStimulationVoter::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	TParameterHandler<IStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
-	TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
+	Kernel::TParameterHandler<IStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_buffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
@@ -119,7 +118,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		}
 	}
 
-	this->getLogManager() << LogLevel_Debug << "Queue size is " << m_oStimulusDeque.size() << "\n";
+	this->getLogManager() << Kernel::LogLevel_Debug << "Queue size is " << m_oStimulusDeque.size() << "\n";
 
 	if (m_oStimulusDeque.size() < m_minimumVotes)
 	{
@@ -180,7 +179,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	if (m_rejectClassCanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && resultClassLabel == m_rejectClassLabel)
 	{
-		this->getLogManager() << LogLevel_Debug << "Winning class " << resultClassLabel << " was 'rejected' with " << maxVotes << "votes. Dropped.\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << "Winning class " << resultClassLabel << " was 'rejected' with " << maxVotes << "votes. Dropped.\n";
 	}
 	else
 	{
@@ -191,7 +190,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		else if (m_outputDateMode == OVP_TypeId_Voting_OutputTime_Winner) { timeStamp = lastSeen[resultClassLabel]; }
 		else { timeStamp = m_latestStimulusDate; }
 
-		this->getLogManager() << LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
 
 		ip_stimSet->setStimulationCount(0);
 		ip_stimSet->appendStimulation(resultClassLabel, timeStamp, 0);
@@ -204,3 +203,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 	return true;
 }
+
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

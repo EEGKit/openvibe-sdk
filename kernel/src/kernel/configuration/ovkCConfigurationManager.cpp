@@ -26,20 +26,14 @@
 #else
 #endif
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
-namespace {
+namespace OpenViBE {
+namespace Kernel {
 // because std::tolower has multiple signatures,
 // it can not be easily used in std::transform
 // this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 template <class TCharT>
-TCharT ToLower(TCharT c) { return std::tolower(c); }
-}  // namespace
+static TCharT ToLower(TCharT c) { return std::tolower(c); }
 
-namespace OpenViBE {
-namespace Kernel {
 class CConfigurationManagerEntryEnumeratorCallBack final : public FS::IEntryEnumeratorCallBack
 {
 public:
@@ -65,7 +59,7 @@ public:
 		std::ifstream file;
 		FS::Files::openIFStream(file, rEntry.getName());
 
-		OV_ERROR_UNLESS(file.good(), "Could not open file " << rEntry.getName(), ErrorType::ResourceNotFound, false, m_errorManager, m_logManager);
+		OV_ERROR_UNLESS(file.good(), "Could not open file " << rEntry.getName(), Kernel::ErrorType::ResourceNotFound, false, m_errorManager, m_logManager);
 		m_logManager << LogLevel_Trace << "Processing configuration file " << rEntry.getName() << "\n";
 
 		do
@@ -135,8 +129,6 @@ protected:
 	IErrorManager& m_errorManager;
 	IConfigurationManager& m_configManager;
 };
-}  // namespace Kernel
-}  // namespace OpenViBE
 
 CConfigurationManager::CConfigurationManager(const IKernelContext& ctx, IConfigurationManager* parentConfigManager)
 	: TKernelObject<IConfigurationManager>(ctx), m_parentConfigManager(parentConfigManager)
@@ -173,7 +165,7 @@ CIdentifier CConfigurationManager::createConfigurationToken(const CString& name,
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == CIdentifier::undefined(),
-						"Configuration token name " << name << " already exists", ErrorType::BadResourceCreation);
+						"Configuration token name " << name << " already exists", Kernel::ErrorType::BadResourceCreation);
 
 	CIdentifier id           = this->getUnusedIdentifier();
 	m_ConfigTokens[id].name  = name;
@@ -187,7 +179,7 @@ bool CConfigurationManager::releaseConfigurationToken(const CIdentifier& identif
 
 	const auto it = m_ConfigTokens.find(identifier);
 
-	OV_ERROR_UNLESS_KRF(it != m_ConfigTokens.end(), "Configuration token not found " << identifier.str(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(it != m_ConfigTokens.end(), "Configuration token not found " << identifier.str(), Kernel::ErrorType::ResourceNotFound);
 
 	m_ConfigTokens.erase(it);
 	return true;
@@ -237,7 +229,7 @@ bool CConfigurationManager::setConfigurationTokenName(const CIdentifier& identif
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(name, false) == CIdentifier::undefined(),
-						"Configuration token name " << name << " already exists", ErrorType::BadResourceCreation);
+						"Configuration token name " << name << " already exists", Kernel::ErrorType::BadResourceCreation);
 
 	auto it = m_ConfigTokens.find(identifier);
 
@@ -317,7 +309,7 @@ bool CConfigurationManager::unregisterKeywordParser(const CString& keyword)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	OV_ERROR_UNLESS_KRF(m_keywordOverrides.count(keyword), "Override for keyword [" << keyword << "] was not found", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(m_keywordOverrides.count(keyword), "Override for keyword [" << keyword << "] was not found", Kernel::ErrorType::ResourceNotFound);
 
 	m_keywordOverrides.erase(keyword);
 
@@ -342,7 +334,7 @@ bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordE
 		++it;
 	}
 
-	OV_ERROR_UNLESS_KRF(res, "Override for the callback was not found", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(res, "Override for the callback was not found", Kernel::ErrorType::ResourceNotFound);
 
 	return res;
 }
@@ -403,21 +395,21 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 
 			case '{':
 				OV_ERROR_UNLESS_KRF(children.top().first == ENodeType::NamePrefix,
-									"Could not expand token with syntax error while expanding " << sValue, ErrorType::BadFileParsing);
+									"Could not expand token with syntax error while expanding " << sValue, Kernel::ErrorType::BadFileParsing);
 				children.push(std::make_pair(ENodeType::NamePostfix, std::string()));
 				break;
 
 			case '}':
 				OV_ERROR_UNLESS_KRF(children.top().first == ENodeType::NamePostfix,
-									"Could not expand token with syntax error while expanding " << sValue, ErrorType::BadFileParsing);
+									"Could not expand token with syntax error while expanding " << sValue, Kernel::ErrorType::BadFileParsing);
 				postfix = children.top().second;
 				lowerPostfix.resize(postfix.size());
-				std::transform(postfix.begin(), postfix.end(), lowerPostfix.begin(), ::ToLower<std::string::value_type>);
+				std::transform(postfix.begin(), postfix.end(), lowerPostfix.begin(), ToLower<std::string::value_type>);
 				children.pop();
 
 				prefix = children.top().second;
 				lowerPrefix.resize(prefix.size());
-				std::transform(prefix.begin(), prefix.end(), lowerPrefix.begin(), ::ToLower<std::string::value_type>);
+				std::transform(prefix.begin(), prefix.end(), lowerPrefix.begin(), ToLower<std::string::value_type>);
 				children.pop();
 
 				shouldExpand = true;
@@ -570,8 +562,8 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 
 				lowerPrefix  = prefix;
 				lowerPostfix = postfix;
-				std::transform(lowerPrefix.begin(), lowerPrefix.end(), lowerPrefix.begin(), ::ToLower<std::string::value_type>);
-				std::transform(lowerPostfix.begin(), lowerPostfix.end(), lowerPostfix.begin(), ::ToLower<std::string::value_type>);
+				std::transform(lowerPrefix.begin(), lowerPrefix.end(), lowerPrefix.begin(), ToLower<std::string::value_type>);
+				std::transform(lowerPostfix.begin(), lowerPostfix.end(), lowerPostfix.begin(), ToLower<std::string::value_type>);
 
 				if (lowerPrefix == sKeyword)
 				{
@@ -690,7 +682,7 @@ uint64_t CConfigurationManager::expandAsUInteger(const CString& expression, cons
 bool CConfigurationManager::expandAsBoolean(const CString& expression, const bool fallbackValue) const
 {
 	std::string res = this->expand(expression).toASCIIString();
-	std::transform(res.begin(), res.end(), res.begin(), ::ToLower<std::string::value_type>);
+	std::transform(res.begin(), res.end(), res.begin(), ToLower<std::string::value_type>);
 
 	if (res == "true" || res == "on" || res == "1") { return true; }
 	if (res == "false" || res == "off" || res == "0") { return false; }
@@ -747,3 +739,6 @@ size_t CConfigurationManager::getProcessId()
 	#error TODO
 #endif
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

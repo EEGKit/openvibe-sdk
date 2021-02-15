@@ -29,8 +29,7 @@
 #include "ovspCCommandLineOptionParser.h"
 #include "ovspCCommandFileParser.h"
 
-using namespace OpenViBE;
-
+namespace OpenViBE {
 void initializeParser(ProgramOptionParser& parser)
 {
 	const std::string desc =
@@ -54,9 +53,8 @@ Program can be run in command mode to execute list of commands from a file
 															 "",
 															 "Enable update process instead of playing scenario. Path to the updated scenario file (express mode only)."
 														 });
-	parser.addValueOption<SProgramOptionsTraits::String>("play-mode", {
-															 "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]"
-														 });
+	parser.addValueOption<SProgramOptionsTraits::String>("play-mode",
+														 { "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]" });
 	parser.addValueOption<SProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
 	parser.addValueOption<SProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)" });
 	parser.addValueOption<SProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });
@@ -65,52 +63,54 @@ Program can be run in command mode to execute list of commands from a file
 	parser.addValueOption<SProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only) [mandatory]" });
 }
 
+}  // namespace OpenViBE
+
 int main(int argc, char** argv)
 {
-	ProgramOptionParser optionParser;
+	OpenViBE::ProgramOptionParser optionParser;
 	initializeParser(optionParser);
 
 	if (!optionParser.parse(argc, argv))
 	{
 		std::cerr << "ERROR: Failed to parse arguments" << std::endl;
-		return int(EPlayerReturnCodes::InvalidArg);
+		return int(OpenViBE::EPlayerReturnCodes::InvalidArg);
 	}
 	if (optionParser.hasOption("help"))
 	{
 		optionParser.printOptionsDesc();
-		return int(EPlayerReturnCodes::Success);
+		return int(OpenViBE::EPlayerReturnCodes::Success);
 	}
 	if (optionParser.hasOption("version"))
 	{
 		// PROJECT_VERSION is added to definition from cmake
 		std::cout << "version: " << PROJECT_VERSION << std::endl;
-		return int(EPlayerReturnCodes::Success);
+		return int(OpenViBE::EPlayerReturnCodes::Success);
 	}
 	if (optionParser.hasOption("mode") || optionParser.hasOption("updated-scenario-file"))
 	{
 		// command parser type is selected from mode
-		std::unique_ptr<ICommandParser> commandParser{ nullptr };
-		const auto mode = optionParser.getOptionValue<SProgramOptionsTraits::String>("mode");
+		std::unique_ptr<OpenViBE::ICommandParser> commandParser{ nullptr };
+		const auto mode = optionParser.getOptionValue<OpenViBE::SProgramOptionsTraits::String>("mode");
 
 		if (mode == "c")
 		{
 			// check for the mandatory commad file
 			if (optionParser.hasOption("command-file"))
 			{
-				commandParser.reset(new CommandFileParser(optionParser.getOptionValue<std::string>("command-file")));
+				commandParser.reset(new OpenViBE::CommandFileParser(optionParser.getOptionValue<std::string>("command-file")));
 			}
 			else
 			{
 				std::cerr << "ERROR: mandatory option 'command-file' not set" << std::endl;
-				return int(EPlayerReturnCodes::MissingMandatoryArgument);
+				return int(OpenViBE::EPlayerReturnCodes::MissingMandatoryArgument);
 			}
 		}
-		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file")) { commandParser.reset(new CommandLineOptionParser(optionParser)); }
+		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file")) { commandParser.reset(new OpenViBE::CommandLineOptionParser(optionParser)); }
 		else
 		{
 			std::cerr << "ERROR: unknown mode set" << std::endl;
 			std::cerr << "Mode must be 'x' or 'c'" << std::endl;
-			return int(EPlayerReturnCodes::InvalidArg);
+			return int(OpenViBE::EPlayerReturnCodes::InvalidArg);
 		}
 
 		commandParser->initialize();
@@ -119,14 +119,14 @@ int main(int argc, char** argv)
 		{
 			auto returnCode = commandParser->parse();
 
-			if (returnCode == EPlayerReturnCodes::Success)
+			if (returnCode == OpenViBE::EPlayerReturnCodes::Success)
 			{
-				CKernelFacade kernel;
+				OpenViBE::CKernelFacade kernel;
 
 				for (auto& cmd : commandParser->getCommandList())
 				{
 					returnCode = cmd->execute(kernel);
-					if (returnCode != EPlayerReturnCodes::Success) { return int(returnCode); }
+					if (returnCode != OpenViBE::EPlayerReturnCodes::Success) { return int(returnCode); }
 				}
 			}
 			else { return int(returnCode); }
@@ -134,14 +134,14 @@ int main(int argc, char** argv)
 		catch (const std::exception& e)
 		{
 			std::cerr << "ERROR: received unexpected exception: " << e.what() << std::endl;
-			return int(EPlayerReturnCodes::UnkownFailure);
+			return int(OpenViBE::EPlayerReturnCodes::UnkownFailure);
 		}
 	}
 	else
 	{
 		std::cerr << "ERROR: mandatory option 'mode' not set" << std::endl;
-		return int(EPlayerReturnCodes::MissingMandatoryArgument);
+		return int(OpenViBE::EPlayerReturnCodes::MissingMandatoryArgument);
 	}
 
-	return int(EPlayerReturnCodes::Success);
+	return int(OpenViBE::EPlayerReturnCodes::Success);
 }

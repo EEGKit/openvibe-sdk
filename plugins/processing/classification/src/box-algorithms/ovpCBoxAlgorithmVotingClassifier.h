@@ -50,7 +50,6 @@ private:
 	bool m_matrixBased  = false;
 };
 
-
 class CBoxAlgorithmVotingClassifierListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:

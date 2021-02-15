@@ -3,15 +3,8 @@
 
 #include "../ovkCObjectVisitorContext.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
-//___________________________________________________________________//
-//                                                                   //
-
-CLink::CLink(const IKernelContext& ctx, CScenario& ownerScenario)
-	: TAttributable<TKernelObject<ILink>>(ctx), m_ownerScenario(ownerScenario), m_id(CIdentifier::undefined()), m_srcBoxID(CIdentifier::undefined()),
-	  m_dstBoxID(CIdentifier::undefined()) {}
+namespace OpenViBE {
+namespace Kernel {
 
 bool CLink::initializeFromExistingLink(const ILink& link)
 {
@@ -34,8 +27,6 @@ bool CLink::setIdentifier(const CIdentifier& identifier)
 	m_id = identifier;
 	return true;
 }
-
-CIdentifier CLink::getIdentifier() const { return m_id; }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -64,10 +55,6 @@ bool CLink::getSource(CIdentifier& boxId, size_t& boxOutputIdx, CIdentifier& box
 	return true;
 }
 
-CIdentifier CLink::getSourceBoxIdentifier() const { return m_srcBoxID; }
-size_t CLink::getSourceBoxOutputIndex() const { return m_srcOutputIdx; }
-CIdentifier CLink::getSourceBoxOutputIdentifier() const { return m_srcBoxOutputID; }
-
 bool CLink::getTarget(CIdentifier& dstBoxID, size_t& boxInputIndex, CIdentifier& dstBoxInputID) const
 {
 	dstBoxID      = m_dstBoxID;
@@ -75,10 +62,6 @@ bool CLink::getTarget(CIdentifier& dstBoxID, size_t& boxInputIndex, CIdentifier&
 	dstBoxInputID = m_dstBoxInputID;
 	return true;
 }
-
-CIdentifier CLink::getTargetBoxIdentifier() const { return m_dstBoxID; }
-size_t CLink::getTargetBoxInputIndex() const { return m_dstInputIdx; }
-CIdentifier CLink::getTargetBoxInputIdentifier() const { return m_dstBoxInputID; }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -88,3 +71,6 @@ bool CLink::acceptVisitor(IObjectVisitor& visitor)
 	CObjectVisitorContext context(getKernelContext());
 	return visitor.processBegin(context, *this) && visitor.processEnd(context, *this);
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

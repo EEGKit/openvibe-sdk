@@ -1,11 +1,9 @@
 #include "ovpCBoxAlgorithmChannelSelector.h"
 #include <limits>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace /*OpenViBE::Plugins::*/SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 
 namespace {
@@ -18,7 +16,7 @@ size_t FindChannel(const CMatrix& matrix, const CString& channel, const EMatchMe
 	{
 		for (size_t i = start; i < matrix.getDimensionSize(0); ++i)
 		{
-			if (String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
+			if (Toolkit::String::isAlmostEqual(matrix.getDimensionLabel(0, i), channel, false)) { result = i; }
 		}
 	}
 	else if (matchMethod == EMatchMethod::Index)
@@ -59,7 +57,7 @@ size_t FindChannel(const CMatrix& matrix, const CString& channel, const EMatchMe
 
 bool CBoxAlgorithmChannelSelector::initialize()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 
 	CIdentifier typeID;
 	boxContext.getOutputType(0, typeID);
@@ -69,8 +67,8 @@ bool CBoxAlgorithmChannelSelector::initialize()
 
 	if (typeID == OV_TypeId_Signal)
 	{
-		TSignalEncoder<CBoxAlgorithmChannelSelector>* encoder = new TSignalEncoder<CBoxAlgorithmChannelSelector>;
-		TSignalDecoder<CBoxAlgorithmChannelSelector>* decoder = new TSignalDecoder<CBoxAlgorithmChannelSelector>;
+		auto* encoder = new Toolkit::TSignalEncoder<CBoxAlgorithmChannelSelector>;
+		auto* decoder = new Toolkit::TSignalDecoder<CBoxAlgorithmChannelSelector>;
 		encoder->initialize(*this, 0);
 		decoder->initialize(*this, 0);
 		encoder->getInputSamplingRate().setReferenceTarget(decoder->getOutputSamplingRate());
@@ -81,8 +79,8 @@ bool CBoxAlgorithmChannelSelector::initialize()
 	}
 	else if (typeID == OV_TypeId_Spectrum)
 	{
-		TSpectrumEncoder<CBoxAlgorithmChannelSelector>* encoder = new TSpectrumEncoder<CBoxAlgorithmChannelSelector>;
-		TSpectrumDecoder<CBoxAlgorithmChannelSelector>* decoder = new TSpectrumDecoder<CBoxAlgorithmChannelSelector>;
+		auto* encoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmChannelSelector>;
+		auto* decoder = new Toolkit::TSpectrumDecoder<CBoxAlgorithmChannelSelector>;
 		encoder->initialize(*this, 0);
 		decoder->initialize(*this, 0);
 		encoder->getInputFrequencyAbscissa().setReferenceTarget(decoder->getOutputFrequencyAbscissa());
@@ -95,8 +93,8 @@ bool CBoxAlgorithmChannelSelector::initialize()
 	}
 	else if (typeID == OV_TypeId_StreamedMatrix)
 	{
-		TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>* encoder = new TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>;
-		TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>* decoder = new TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>;
+		auto* encoder = new Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>;
+		auto* decoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>;
 		encoder->initialize(*this, 0);
 		decoder->initialize(*this, 0);
 		m_decoder = decoder;
@@ -104,7 +102,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_iMatrix = decoder->getOutputMatrix();
 		m_oMatrix = encoder->getInputMatrix();
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.str() << "]", Kernel::ErrorType::BadInput); }
 
 	m_vLookup.clear();
 	return true;
@@ -134,7 +132,7 @@ bool CBoxAlgorithmChannelSelector::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmChannelSelector::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_decoder->decode(i);
@@ -162,7 +160,7 @@ bool CBoxAlgorithmChannelSelector::process()
 				{
 					for (size_t k = 0; k < nToken; ++k)
 					{
-						if (String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
+						if (Toolkit::String::isAlmostEqual(m_iMatrix->getDimensionLabel(0, j), token[k], false)) { m_vLookup.push_back(j); }
 					}
 				}
 			}
@@ -198,14 +196,14 @@ bool CBoxAlgorithmChannelSelector::process()
 						OV_ERROR_UNLESS_KRF(
 							startIdx != std::numeric_limits<size_t>::max() && endIdx != std::numeric_limits<size_t>::max() && startIdx <= endIdx,
 							"Invalid channel range [" << tokens[j] << "] - splitted as [" << subTokens[0] << "][" << subTokens[1] << "]",
-							ErrorType::BadSetting);
+							Kernel::ErrorType::BadSetting);
 
 						// The range is valid so selects all the channels in this range
-						this->getLogManager() << LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
+						this->getLogManager() << Kernel::LogLevel_Debug << "For range [" << tokens[j] << "] :\n";
 						for (size_t k = startIdx; k <= endIdx; ++k)
 						{
 							m_vLookup.push_back(k);
-							this->getLogManager() << LogLevel_Debug << "  Selected channel [" << k + 1 << "]\n";
+							this->getLogManager() << Kernel::LogLevel_Debug << "  Selected channel [" << k + 1 << "]\n";
 						}
 					}
 					else
@@ -219,10 +217,10 @@ bool CBoxAlgorithmChannelSelector::process()
 						{
 							found = true;
 							m_vLookup.push_back(index);
-							this->getLogManager() << LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
+							this->getLogManager() << Kernel::LogLevel_Debug << "Selected channel [" << index + 1 << "]\n";
 						}
 
-						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", ErrorType::BadSetting);
+						OV_ERROR_UNLESS_KRF(found, "Invalid channel [" << tokens[j] << "]", Kernel::ErrorType::BadSetting);
 					}
 				}
 
@@ -252,7 +250,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			// ______________________________________________________________________________________________________________________________________________________
 			//
 
-			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", ErrorType::BadConfig);
+			OV_ERROR_UNLESS_KRF(!m_vLookup.empty(), "No channel selected", Kernel::ErrorType::BadConfig);
 
 			m_oMatrix->resize(m_vLookup.size(), m_iMatrix->getDimensionSize(1));
 			for (size_t j = 0; j < m_vLookup.size(); ++j)
@@ -289,3 +287,6 @@ bool CBoxAlgorithmChannelSelector::process()
 
 	return true;
 }
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

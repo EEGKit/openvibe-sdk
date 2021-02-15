@@ -1,10 +1,10 @@
 #include "ovkCScenarioSettingKeywordParserCallback.h"
 #include <openvibe/ov_all.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 #include <iostream>
+
+namespace OpenViBE {
+namespace Kernel {
 
 bool CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpand, CString& rExpandedString) const
 {
@@ -31,3 +31,6 @@ bool CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpan
 
 	return false;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

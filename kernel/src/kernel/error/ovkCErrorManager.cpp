@@ -23,9 +23,6 @@
 
 #include "ovkCErrorManager.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 // Error manager IError internal implementation
 namespace OpenViBE {
 namespace Kernel {
@@ -52,18 +49,8 @@ private:
 	std::string m_description;
 	std::string m_location;
 };
-}  // namespace Kernel
-}  // namespace OpenViBE
 
 // Error manager implementation
-namespace OpenViBE {
-namespace Kernel {
-CErrorManager::CErrorManager(const IKernelContext& context) : TKernelObject<IErrorManager>(context), m_topError(nullptr) { }
-
-CErrorManager::~CErrorManager() { this->releaseErrors(); }
-
-void CErrorManager::pushError(const ErrorType type, const char* description) { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
-
 void CErrorManager::pushErrorAtLocation(const ErrorType type, const char* description, const char* filename, const size_t line)
 {
 	std::lock_guard<std::mutex> lock(m_managerGuard);
@@ -100,5 +87,6 @@ ErrorType CErrorManager::getLastErrorType() const
 	std::lock_guard<std::mutex> lock(m_managerGuard);
 	return (m_topError ? m_topError->getErrorType() : ErrorType::NoErrorFound);
 }
+
 }  // namespace Kernel
 }  // namespace OpenViBE

@@ -3,12 +3,8 @@
 
 #include <system/ovCMath.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace std;
-
-CAlgorithmManager::CAlgorithmManager(const IKernelContext& ctx) : TKernelObject<IAlgorithmManager>(ctx) {}
+namespace OpenViBE {
+namespace Kernel {
 
 CAlgorithmManager::~CAlgorithmManager()
 {
@@ -16,8 +12,8 @@ CAlgorithmManager::~CAlgorithmManager()
 
 	for (auto& algorithm : m_algorithms)
 	{
-		CAlgorithmProxy* algorithmProxy = algorithm.second;
-		IAlgorithm& tmpAlgorithm        = algorithmProxy->getAlgorithm();
+		CAlgorithmProxy* algorithmProxy   = algorithm.second;
+		Plugins::IAlgorithm& tmpAlgorithm = algorithmProxy->getAlgorithm();
 		delete algorithmProxy;
 
 		getKernelContext().getPluginManager().releasePluginObject(&tmpAlgorithm);
@@ -28,8 +24,8 @@ CAlgorithmManager::~CAlgorithmManager()
 
 CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& algorithmClassID)
 {
-	const IAlgorithmDesc* algorithmDesc = nullptr;
-	IAlgorithm* algorithm               = getKernelContext().getPluginManager().createAlgorithm(algorithmClassID, &algorithmDesc);
+	const Plugins::IAlgorithmDesc* algorithmDesc = nullptr;
+	Plugins::IAlgorithm* algorithm               = getKernelContext().getPluginManager().createAlgorithm(algorithmClassID, &algorithmDesc);
 
 	OV_ERROR_UNLESS_KRU(algorithm && algorithmDesc, "Algorithm creation failed, class identifier :" << algorithmClassID.str(),
 						ErrorType::BadResourceCreation);
@@ -47,11 +43,11 @@ CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& algorithmClass
 	return algorithmId;
 }
 
-CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& algorithmDesc)
+CIdentifier CAlgorithmManager::createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	IAlgorithm* algorithm = getKernelContext().getPluginManager().createAlgorithm(algorithmDesc);
+	Plugins::IAlgorithm* algorithm = getKernelContext().getPluginManager().createAlgorithm(algorithmDesc);
 
 	OV_ERROR_UNLESS_KRU(algorithm, "Algorithm creation failed, class identifier :" << algorithmDesc.getClassIdentifier().str(),
 						ErrorType::BadResourceCreation);
@@ -79,7 +75,7 @@ bool CAlgorithmManager::releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier
 	CAlgorithmProxy* algorithmProxy = itAlgorithm->second;
 	if (algorithmProxy)
 	{
-		IAlgorithm& algorithm = algorithmProxy->getAlgorithm();
+		Plugins::IAlgorithm& algorithm = algorithmProxy->getAlgorithm();
 
 		delete algorithmProxy;
 		algorithmProxy = nullptr;
@@ -101,7 +97,7 @@ bool CAlgorithmManager::releaseAlgorithm(IAlgorithmProxy& rAlgorithm)
 		CAlgorithmProxy* algorithmProxy = algorithm.second;
 		if (algorithmProxy == &rAlgorithm)
 		{
-			IAlgorithm& tmpAlgorithm = algorithmProxy->getAlgorithm();
+			Plugins::IAlgorithm& tmpAlgorithm = algorithmProxy->getAlgorithm();
 			getLogManager() << LogLevel_Debug << "Releasing algorithm with class id " << tmpAlgorithm.getClassIdentifier() << "\n";
 
 			delete algorithmProxy;
@@ -114,7 +110,7 @@ bool CAlgorithmManager::releaseAlgorithm(IAlgorithmProxy& rAlgorithm)
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(result, "Algorithm release failed", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(result, "Algorithm release failed", Kernel::ErrorType::ResourceNotFound);
 
 	return result;
 }
@@ -125,7 +121,7 @@ IAlgorithmProxy& CAlgorithmManager::getAlgorithm(const CIdentifier& rAlgorithmId
 
 	const auto itAlgorithm = m_algorithms.find(rAlgorithmIdentifier);
 
-	OV_FATAL_UNLESS_K(itAlgorithm != m_algorithms.end(), "Algorithm " << rAlgorithmIdentifier << " does not exist !", ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itAlgorithm != m_algorithms.end(), "Algorithm " << rAlgorithmIdentifier << " does not exist !", Kernel::ErrorType::ResourceNotFound);
 
 	return *itAlgorithm->second;
 }
@@ -161,3 +157,6 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier() const
 
 	return result;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

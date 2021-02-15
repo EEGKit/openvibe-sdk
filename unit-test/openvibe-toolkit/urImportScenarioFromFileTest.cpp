@@ -5,9 +5,6 @@
 #include "ovtTestFixtureCommon.h"
 #include "urSimpleTestScenarioDefinition.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 #define to_cppstring(str) std::string(str.toASCIIString())
 
 int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
@@ -74,10 +71,10 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		OVT_ASSERT(scenario.isBox(s_ClockStimulatorBoxId), "Imported scenario does not contain the Clock Stimulator Box");
 		OVT_ASSERT(scenario.isBox(s_StimulationListenerBoxId), "Imported scenario does not contain the Stimulation Listener Box");
 
-		const IBox* clockStimulatorBox = scenario.getBoxDetails(s_ClockStimulatorBoxId);
+		const Kernel::IBox* clockStimulatorBox = scenario.getBoxDetails(s_ClockStimulatorBoxId);
 		OVT_ASSERT_STREQ(to_cppstring(clockStimulatorBox->getName()), std::string("Clock stimulator"), "Badly imported Clock Stimulator name");
 
-		const IBox* stimulationListenerBox = scenario.getBoxDetails(s_StimulationListenerBoxId);
+		const Kernel::IBox* stimulationListenerBox = scenario.getBoxDetails(s_StimulationListenerBoxId);
 		OVT_ASSERT_STREQ(to_cppstring(stimulationListenerBox->getName()), std::string("Stimulation listener"), "Badly imported Stimulation Listener name");
 
 		// Test inputs
@@ -128,7 +125,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		OVT_ASSERT(scenario.isLink(s_ClockStimulatorToStimulationListenerLinkId),
 				   "Imported scenario does not contain a link between the Clock Stimulator and Stimulation Listener boxes");
 
-		const ILink* clockStimulatorToStimulationListenerLink = scenario.getLinkDetails(s_ClockStimulatorToStimulationListenerLinkId);
+		const Kernel::ILink* clockStimulatorToStimulationListenerLink = scenario.getLinkDetails(s_ClockStimulatorToStimulationListenerLinkId);
 
 		CIdentifier linkSourceBoxId;
 		size_t linkSourceOutputIndex;
@@ -155,12 +152,12 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		OVT_ASSERT(scenario.isComment(s_SimpleCommentId), "Imported scenario does not contain the simple comment");
 		OVT_ASSERT(scenario.isComment(s_UnicodeCommentId), "Imported scenario does not contain the comment containing unicode");
 
-		const IComment* simpleComment = scenario.getCommentDetails(s_SimpleCommentId);
+		const Kernel::IComment* simpleComment = scenario.getCommentDetails(s_SimpleCommentId);
 
 		const CString simpleCommentText = simpleComment->getText();
 		OVT_ASSERT_STREQ(std::string("Content of a comment"), to_cppstring(simpleCommentText), "The imported scenario comment contains a wrong text");
 
-		const IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
+		const Kernel::IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
 
 		const CString unicodeCommentText = unicodeComment->getText();
 		OVT_ASSERT_STREQ(std::string("This comment contains a newline\nand unicode characters 日本語"), to_cppstring(unicodeCommentText),

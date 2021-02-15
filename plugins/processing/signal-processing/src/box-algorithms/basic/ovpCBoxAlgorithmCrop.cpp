@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmCrop.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmCrop::initialize()
 {
@@ -50,8 +49,8 @@ bool CBoxAlgorithmCrop::initialize()
 	}
 
 	m_matrix = new CMatrix();
-	TParameterHandler<CMatrix*>(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)).setReferenceTarget(m_matrix);
-	TParameterHandler<CMatrix*>(m_decoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix)).setReferenceTarget(m_matrix);
+	Kernel::TParameterHandler<CMatrix*>(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix)).setReferenceTarget(m_matrix);
+	Kernel::TParameterHandler<CMatrix*>(m_decoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix)).setReferenceTarget(m_matrix);
 
 	m_cropMethod   = ECropMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));
 	m_minCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -59,7 +58,7 @@ bool CBoxAlgorithmCrop::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_minCropValue < m_maxCropValue,
 						"Invalid crop values: minimum crop value [" << m_minCropValue << "] should be lower than the maximum crop value ["
-						<< m_maxCropValue << "]", ErrorType::BadSetting);
+						<< m_maxCropValue << "]", Kernel::ErrorType::BadSetting);
 
 	return true;
 }
@@ -85,13 +84,13 @@ bool CBoxAlgorithmCrop::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmCrop::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		TParameterHandler<const IMemoryBuffer*> iHandle(
+		Kernel::TParameterHandler<const IMemoryBuffer*> iHandle(
 			m_decoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-		TParameterHandler<IMemoryBuffer*> oHandle(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+		Kernel::TParameterHandler<IMemoryBuffer*> oHandle(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 		iHandle = boxContext.getInputChunk(0, i);
 		oHandle = boxContext.getOutputChunk(0);
 
@@ -123,3 +122,7 @@ bool CBoxAlgorithmCrop::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

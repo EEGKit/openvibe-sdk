@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "ovCObservable.h"
 #include "ov_defines.h"
 

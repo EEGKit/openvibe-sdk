@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmStreamedMatrixMultiplexer.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/Streaming;
+namespace OpenViBE {
+namespace Plugins {
+namespace Streaming {
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 {
@@ -24,8 +23,8 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(const size_t /*index*/
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 {
-	IBoxIO& boxContext  = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	const size_t nInput        = this->getStaticBoxContext().getInputCount();
 
 	for (size_t i = 0; i < nInput; ++i)
 	{
@@ -45,7 +44,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 				OV_ERROR_UNLESS_KRF(tStart >= m_lastStartTime && tEnd >= m_lastEndTime,
 									"Invalid chunk times with start = [" << tStart << "] and end = [" << tEnd << "] while last chunk has start = [" <<
 									m_lastStartTime << "] and end = [" << m_lastEndTime << "]",
-									ErrorType::BadInput);
+									Kernel::ErrorType::BadInput);
 
 				m_lastStartTime = tStart;
 				m_lastEndTime   = tEnd;
@@ -60,3 +59,6 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 
 	return true;
 }
+}  // namespace Streaming
+}  // namespace Plugins
+}  // namespace OpenViBE

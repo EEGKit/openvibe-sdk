@@ -5,14 +5,13 @@
 #include <string>
 #include <algorithm>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Classification;
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
 bool CBoxAlgorithmVotingClassifier::initialize()
 {
-	const IBox& boxContext = this->getStaticBoxContext();
+	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 
 	m_classificationChoiceEncoder.initialize(*this, 0);
 
@@ -80,8 +79,8 @@ bool CBoxAlgorithmVotingClassifier::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmVotingClassifier::process()
 {
-	IBoxIO& boxContext  = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	const size_t nInput        = this->getStaticBoxContext().getInputCount();
 
 	bool canChoose = true;
 
@@ -100,9 +99,9 @@ bool CBoxAlgorithmVotingClassifier::process()
 					{
 						OV_ERROR_UNLESS_KRF(input.op_matrix->getBufferElementCount() == 2,
 											"Invalid input matrix with [" << input.op_matrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
-											ErrorType::BadInput);
+											Kernel::ErrorType::BadInput);
 
-						this->getLogManager() << LogLevel_Debug <<
+						this->getLogManager() << Kernel::LogLevel_Debug <<
 								"Input got two dimensions, the value use for the vote will be the difference between the two values\n";
 						input.twoValueInput = true;
 					}
@@ -170,17 +169,17 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 			input.scores.erase(input.scores.begin(), input.scores.begin() + int(m_nRepetitions));
 
-			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << scores[i] << "\n";
+			this->getLogManager() << Kernel::LogLevel_Debug << "Input " << i << " got score " << scores[i] << "\n";
 		}
 
 		if (classLabel != m_rejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel)
+			this->getLogManager() << Kernel::LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel)
 					<< " with score " << score << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen rejection "
+			this->getLogManager() << Kernel::LogLevel_Debug << "Chosen rejection "
 					<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel) << "\n";
 		}
 		m_classificationChoiceEncoder.getInputStimulationSet()->clear();
@@ -193,3 +192,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 	return true;
 }
+
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE
