@@ -1,56 +1,44 @@
-PROJECT(openvibe-module-socket)
+project(openvibe-module-socket VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h include/*.hpp)
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h include/*.hpp)
-INCLUDE_DIRECTORIES(include/socket)
-INCLUDE("FindSourceRCProperties")
+include("FindSourceRCProperties")
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DSocket_Shared -DSocket_Exports")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-common)
 
-ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DSocket_Static -DSocket_Exports")
+target_include_directories(${PROJECT_NAME}
+                           PRIVATE include/socket
+                           PUBLIC  include)
 
-IF(UNIX)
-	SET_PROPERTY(TARGET ${PROJECT_NAME}-static APPEND_STRING PROPERTY COMPILE_FLAGS " -fPIC")
-ELSEIF(WIN32)
-#	SET_PROPERTY(TARGET ${PROJECT_NAME}-static APPEND_STRING PROPERTY COMPILE_FLAGS " /SAFESEH:NO")
-#	SET_PROPERTY(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS " /SAFESEH:NO")
-ENDIF()
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                      VERSION ${PROJECT_VERSION}
+                      SOVERSION ${PROJECT_VERSION_MAJOR}
+                      FOLDER ${MODULES_FOLDER}
+)
 
-INCLUDE("FindOpenViBECommon")
+target_compile_options(${PROJECT_NAME}
+                       PRIVATE -DSocket_Exports
+                       PUBLIC -DSocket_Shared 
+)
 
-#INCLUDE("FindThirdPartyTVicPort")
-	
 # ---------------------------------
 # Finds standard library winsock
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(WIN32)
-	INCLUDE("OvSetWindowsSDKPath")
-	FIND_LIBRARY(LIB_STANDARD_MODULE_WINSOCK ws2_32 ${OV_MS_SDK_PATH}/lib)
-	IF(LIB_STANDARD_MODULE_WINSOCK)
-		MESSAGE(STATUS "  Found ws2_32...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINSOCK})
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME}-static ${LIB_STANDARD_MODULE_WINSOCK})
-	ELSE(LIB_STANDARD_MODULE_WINSOCK)
-		MESSAGE(STATUS "  FAILED to find ws2_32...")
-	ENDIF(LIB_STANDARD_MODULE_WINSOCK)
-ENDIF(WIN32)
+if(WIN32)
+    include("OvSetWindowsSDKPath")
+    find_library(LIB_STANDARD_MODULE_WINSOCK ws2_32 ${OV_MS_SDK_PATH}/lib)
+    if(LIB_STANDARD_MODULE_WINSOCK)
+        message(STATUS "  Found ws2_32...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINSOCK})
+    else(LIB_STANDARD_MODULE_WINSOCK)
+        message(STATUS "  FAILED to find ws2_32...")
+    endif(LIB_STANDARD_MODULE_WINSOCK)
+endif(WIN32)
 
 # ---------------------------------
 # Target macros
@@ -61,13 +49,7 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-INSTALL(TARGETS ${PROJECT_NAME}-static
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-
-INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.h")
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})

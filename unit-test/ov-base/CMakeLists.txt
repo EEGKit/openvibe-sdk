@@ -3,16 +3,18 @@
 # https://choosealicense.com/licenses/agpl-3.0/ 
 #######################################################################
 
-PROJECT(ov-base-test)
-
-FILE(GLOB_RECURSE SRC_FILES *.cpp *.hpp)
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
+project(ov-base-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 SET_BUILD_PLATFORM()	# Default build Platform
-INCLUDE("FindOpenViBE")											# Find OpenViBE base includes and library
-INCLUDE("FindOpenViBECommon")									# Find OpenViBE Common includes and library
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})	# Add google Test
+file(GLOB_RECURSE SRC_FILES *.cpp *.hpp)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-ADD_TEST(NAME base COMMAND ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}
+                      ${GTEST_BOTH_LIBRARIES}
+                      openvibe
+                      openvibe-common)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})  # Place project in folder unit-test (for some IDE)
+
+add_test(NAME base COMMAND ${PROJECT_NAME})

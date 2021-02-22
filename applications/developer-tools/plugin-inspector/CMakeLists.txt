@@ -19,18 +19,23 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-plugin-inspector)
+project(openvibe-plugin-inspector VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEToolkit")
-INCLUDE("FindOpenViBEModuleSystem")
-INCLUDE("FindOpenViBEModuleFS")
-INCLUDE("FindThirdPartyBoost")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-toolkit
+                      openvibe-module-system
+                      openvibe-module-fs
+) 
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
+
+add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
+
+include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros
@@ -41,8 +46,8 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})
 

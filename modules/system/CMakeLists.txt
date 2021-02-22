@@ -1,93 +1,82 @@
-PROJECT(openvibe-module-system)
+project(openvibe-module-system VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+set(SRC_FILES
+    include/system/defines.h
+    include/system/ovCChrono.h
+    include/system/ovCMath.h
+    include/system/ovCMemory.h
+    include/system/ovCTime.h
+    include/system/ovCDynamicModule.h
+    src/ovCChrono.cpp
+    src/ovCMath.cpp
+    src/ovCMemory.cpp
+    src/ovCTime.cpp
+    src/ovCDynamicModule.cpp
+    )
 
-SET(SRC_FILES
-	include/system/defines.h
-	include/system/ovCChrono.h
-	include/system/ovCMath.h
-	include/system/ovCMemory.h
-	include/system/ovCTime.h
-	include/system/ovCDynamicModule.h
-	src/ovCChrono.cpp
-	src/ovCMath.cpp
-	src/ovCMemory.cpp
-	src/ovCTime.cpp
-	src/ovCDynamicModule.cpp
-	)
+if(WIN32)
+    list(APPEND SRC_FILES
+        "include/system/WindowsUtilities.h"
+        "src/WindowsUtilities.cpp"
+        )
+endif()
 
-IF(WIN32)
-	LIST(APPEND SRC_FILES
-		"include/system/WindowsUtilities.h"
-		"src/WindowsUtilities.cpp"
-		)
-ENDIF()
+include("FindSourceRCProperties")
 
-INCLUDE_DIRECTORIES(include)
-INCLUDE("FindSourceRCProperties")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DSystem_Shared -DSystem_Exports")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-common)
 
-ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DSystem_Static -DSystem_Exports")
+target_include_directories(${PROJECT_NAME} 
+                           PUBLIC include)
 
-IF(UNIX)
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS "-fPIC")
-ENDIF()
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                      VERSION ${PROJECT_VERSION}
+                      SOVERSION ${PROJECT_VERSION_MAJOR}
+                      FOLDER ${MODULES_FOLDER}
+)
 
-INCLUDE("FindOpenViBECommon")
+target_compile_options(${PROJECT_NAME}
+                       PRIVATE -DSystem_Exports
+                       PUBLIC -DSystem_Shared 
+)
 
-IF(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0")
-	INCLUDE("FindThirdPartyBoost")
-	OV_LINK_BOOST_LIB("system" ${OV_WIN32_BOOST_VERSION})
-	OV_LINK_BOOST_LIB("thread" ${OV_WIN32_BOOST_VERSION})
-	INCLUDE("FindThirdPartyBoost_Chrono")
-ENDIF()
-
-
+if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0")
+    include("FindThirdPartyBoost")
+    OV_LINK_BOOST_LIB("system" ${OV_WIN32_BOOST_VERSION})
+    OV_LINK_BOOST_LIB("thread" ${OV_WIN32_BOOST_VERSION})
+    include("FindThirdPartyBoost_Chrono")
+endif()
 
 # ---------------------------------
 # Finds standard library winmm
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(WIN32)
-	INCLUDE("OvSetWindowsSDKPath")
-	
-	FIND_LIBRARY(LIB_STANDARD_MODULE_WINMM winmm ${OV_MS_SDK_PATH}/lib)
-	
-	IF(LIB_STANDARD_MODULE_WINMM)
-		MESSAGE(STATUS "  Found winmm...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINMM})
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME}-static ${LIB_STANDARD_MODULE_WINMM})
-	ELSE(LIB_STANDARD_MODULE_WINMM)
-		MESSAGE(STATUS "  FAILED to find winmm...")
-	ENDIF(LIB_STANDARD_MODULE_WINMM)
+if(WIN32)
+    include("OvSetWindowsSDKPath")
+    
+    find_library(LIB_STANDARD_MODULE_WINMM winmm ${OV_MS_SDK_PATH}/lib)
+    
+    if(LIB_STANDARD_MODULE_WINMM)
+        message(STATUS "  Found winmm...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINMM})
+    else(LIB_STANDARD_MODULE_WINMM)
+        message(STATUS "  FAILED to find winmm...")
+    endif(LIB_STANDARD_MODULE_WINMM)
 
-	FIND_LIBRARY(LIB_STANDARD_MODULE_DBGHELP dbghelp ${OV_MS_SDK_PATH}/lib)
+    find_library(LIB_STANDARD_MODULE_DBGHELP dbghelp ${OV_MS_SDK_PATH}/lib)
 
-	IF(LIB_STANDARD_MODULE_DBGHELP)
-		MESSAGE(STATUS "  Found dbghelp...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DBGHELP})
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME}-static ${LIB_STANDARD_MODULE_DBGHELP})
-	ELSE(LIB_STANDARD_MODULE_DBGHELP)
-		MESSAGE(STATUS "  FAILED to find dbghelp...")
-	ENDIF(LIB_STANDARD_MODULE_DBGHELP)
-ELSE()
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_DL_LIBS})
-ENDIF()
+    if(LIB_STANDARD_MODULE_DBGHELP)
+        message(STATUS "  Found dbghelp...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DBGHELP})
+    else(LIB_STANDARD_MODULE_DBGHELP)
+        message(STATUS "  FAILED to find dbghelp...")
+    endif(LIB_STANDARD_MODULE_DBGHELP)
+else()
+    target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
+endif()
 
 # ---------------------------------
 # Target macros
@@ -98,12 +87,7 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-INSTALL(TARGETS ${PROJECT_NAME}-static
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-INSTALL(DIRECTORY include/   DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.h")
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})

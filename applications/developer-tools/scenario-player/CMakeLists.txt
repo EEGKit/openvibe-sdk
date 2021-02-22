@@ -19,35 +19,36 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-scenario-player)
+PROJECT(openvibe-scenario-player VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 # ----------------------
 # Project variables
 # ----------------------
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 # ----------------------
 # Add executable
 # ----------------------
-ADD_DEFINITIONS( -DPROJECT_VERSION="${PROJECT_VERSION}" )
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp)
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
+add_definitions( -DPROJECT_VERSION="${PROJECT_VERSION}" )
+
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-toolkit
+                      openvibe-module-system)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
+
+add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
 # ----------------------
 # External dependecies 
 # ----------------------
 
 # To be done after add executable because FindOpenViBEXXX files need a target name
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEToolkit")
-INCLUDE("FindOpenViBEModuleSystem")
-INCLUDE("FindOpenViBEModuleFS")
-INCLUDE("FindThirdPartyBoost")
+
+include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros
@@ -58,7 +59,7 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})

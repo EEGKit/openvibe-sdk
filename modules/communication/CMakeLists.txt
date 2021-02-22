@@ -1,52 +1,34 @@
-PROJECT(openvibe-module-communication)
+project(openvibe-module-communication VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-INCLUDE_DIRECTORIES("include/communication/")
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp include/*.h include/*.hpp)
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp include/*.h include/*.hpp)
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-common
+                      openvibe-module-socket)
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DCommunication_Shared -DCommunication_Exports")
+target_include_directories(${PROJECT_NAME}
+                           PRIVATE include/communication
+                           PUBLIC include)
 
-ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DCommunication_Static -DCommunication_Exports")
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                      VERSION ${PROJECT_VERSION}
+                      SOVERSION ${PROJECT_VERSION_MAJOR}
+                      FOLDER ${MODULES_FOLDER}
+)
 
-IF(UNIX)
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS "-fPIC")
-ENDIF(UNIX)
-
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleSocket")
+target_compile_options(${PROJECT_NAME}
+                       PRIVATE -DCommunication_Exports
+                       PUBLIC -DCommunication_Shared
+)
 
 SET_BUILD_PLATFORM()
 
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-INSTALL(TARGETS ${PROJECT_NAME}-static
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-
-INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR})
-
-# Link the socket library to the static version of lib-communication
-
-SET(PROJECT_NAME ${PROJECT_NAME}-static)
-SET(DYNAMIC_LINK_OPENVIBE_SDK false)
-INCLUDE("FindOpenViBEModuleSocket")
-
-
-#add_subdirectory(test)
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})

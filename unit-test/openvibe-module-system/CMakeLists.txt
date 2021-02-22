@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-module-system-test)
+project(openvibe-module-system-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 # ---------------------------------
 # Target macros
@@ -32,11 +32,11 @@ SET_BUILD_PLATFORM()
 # ----------------------
 
 # Test that needs to called with parameters
-SET(TEST_WITH_PARAM
+set(TEST_WITH_PARAM
 )
 
 # Test that needs to called without parameters
-SET(TEST_NO_PARAM
+set(TEST_NO_PARAM
   uoTimeTest.cpp
   uoDynamicModuleTest.cpp
 )
@@ -46,23 +46,27 @@ SET(TEST_NO_PARAM
 # in the build tree. ${PROJECT_NAME}.cpp is 
 # the test driver called by ctest to run 
 # the different tests added to this target.
-CREATE_TEST_SOURCELIST (Tests
+create_test_sourcelist(Tests
 	${PROJECT_NAME}.cpp
 	${TEST_WITH_PARAM}
 	${TEST_NO_PARAM}
 )
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${Tests})
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleSystem")
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${OV_LIBS} ${GTEST_BOTH_LIBRARIES})
+add_executable(${PROJECT_NAME} ${Tests})
+
+target_link_libraries(${PROJECT_NAME}
+                      ${GTEST_BOTH_LIBRARIES}
+                      openvibe
+                      openvibe-common
+                      openvibe-module-system
+                      openvibe-test-unit-toolkit)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
 
 # Add test without parameter to driver 
-FOREACH(test ${TEST_NO_PARAM})
-	GET_FILENAME_COMPONENT(TName ${test} NAME_WE)
-	ADD_TEST(NAME ${TName} COMMAND ${PROJECT_NAME} ${TName})
-ENDFOREACH()
+foreach(test ${TEST_NO_PARAM})
+	get_filename_component(TName ${test} NAME_WE)
+	add_test(NAME ${TName} COMMAND ${PROJECT_NAME} ${TName})
+endforeach()
 
 # Add test with parameter to driver

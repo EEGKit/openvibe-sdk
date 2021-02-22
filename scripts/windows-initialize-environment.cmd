@@ -11,6 +11,7 @@ if /i "%1" == "--dependencies-dir" (
 	SHIFT
 	Goto parameter_parse
 ) else if /i "%1" == "--platform-target" (
+	set PlatformTarget=%2
 	if "%2"=="x64" (
 		set PLATFORM=x64
 		set VSPLATFORMGENERATOR=Win64

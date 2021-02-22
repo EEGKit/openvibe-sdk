@@ -1,38 +1,37 @@
-PROJECT(sdk-examples-communication-client-generator)
+project(sdk-examples-communication-client-generator VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(SRC_FILES src/main-generator.cpp)
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
-ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-toolkit)
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
+set(SRC_FILES src/main-generator.cpp)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleEBML")
-INCLUDE("FindOpenViBEModuleSocket")
-INCLUDE("FindOpenViBEModuleCommunication")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-module-ebml
+                      openvibe-module-communication
+                      openvibe-toolkit)
 
-SET_BUILD_PLATFORM()
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
 
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-
-PROJECT(sdk-examples-communication-client-filter)
-
-SET(SRC_FILES src/main-filter.cpp)
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
-
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleSocket")
-INCLUDE("FindOpenViBEModuleCommunication")
-INCLUDE("FindOpenViBEToolkit")
 
 SET_BUILD_PLATFORM()
 
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})
+
+project(sdk-examples-communication-client-filter VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
+
+set(SRC_FILES src/main-filter.cpp)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-module-communication)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
+
+SET_BUILD_PLATFORM()
+
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})

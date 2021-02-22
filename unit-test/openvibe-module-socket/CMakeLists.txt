@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-module-socket-test)
+project(openvibe-module-socket-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 # ---------------------------------
 # Target macros
@@ -32,14 +32,14 @@ SET_BUILD_PLATFORM()
 # ----------------------
 
 # Test that needs to called with parameters
-SET(TEST_WITH_PARAM
+set(TEST_WITH_PARAM
  uoSocketClientServerBaseTest.cpp
  uoSocketClientServerSyncCommunicationTest.cpp
  uoSocketClientServerASyncCommunicationTest.cpp
 )
 
 # Test that needs to called without parameters
-SET(TEST_NO_PARAM
+set(TEST_NO_PARAM
 )
 
 # Create test sources list
@@ -47,29 +47,33 @@ SET(TEST_NO_PARAM
 # in the build tree. ${PROJECT_NAME}.cpp is 
 # the test driver called by ctest to run 
 # the different tests added to this target.
-CREATE_TEST_SOURCELIST (Tests
+create_test_sourcelist(Tests
 	${PROJECT_NAME}.cpp
 	${TEST_WITH_PARAM}
 	${TEST_NO_PARAM}
 )
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${Tests})
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleSocket")
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${OV_MODULE_SOCKET})
+add_executable(${PROJECT_NAME} ${Tests})
+
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-common
+                      openvibe-module-socket
+                      openvibe-test-unit-toolkit)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
+
 
 # Add test without parameter to driver 
-FOREACH(test ${TEST_NO_PARAM})
-	GET_FILENAME_COMPONENT(TName ${test} NAME_WE)
-	ADD_TEST(NAME ${TName} COMMAND ${PROJECT_NAME} ${TName})
-ENDFOREACH()
+foreach(test ${TEST_NO_PARAM})
+	get_filename_component(TName ${test} NAME_WE)
+	add_test(NAME ${TName} COMMAND ${PROJECT_NAME} ${TName})
+endforeach()
 
 # Add test with parameter to driver
-SET(LOCALHOST "127.0.0.1")
-SET(TEST_PORT "1024")
-ADD_TEST(NAME uoSocketClientServerBaseTest COMMAND ${PROJECT_NAME} uoSocketClientServerBaseTest ${LOCALHOST} ${TEST_PORT})
-ADD_TEST(NAME uoSocketClientServerHostNameTest COMMAND ${PROJECT_NAME} uoSocketClientServerBaseTest "localhost" ${TEST_PORT})
-ADD_TEST(NAME uoSocketClientServerSyncCommunicationTest COMMAND ${PROJECT_NAME} uoSocketClientServerSyncCommunicationTest ${LOCALHOST} ${TEST_PORT} "1000")
-ADD_TEST(NAME uoSocketClientServerASyncCommunicationTest COMMAND ${PROJECT_NAME} uoSocketClientServerASyncCommunicationTest ${LOCALHOST} ${TEST_PORT} "1000")
+set(LOCALHOST "127.0.0.1")
+set(TEST_PORT "1024")
+add_test(NAME uoSocketClientServerBaseTest COMMAND ${PROJECT_NAME} uoSocketClientServerBaseTest ${LOCALHOST} ${TEST_PORT})
+add_test(NAME uoSocketClientServerHostNameTest COMMAND ${PROJECT_NAME} uoSocketClientServerBaseTest "localhost" ${TEST_PORT})
+add_test(NAME uoSocketClientServerSyncCommunicationTest COMMAND ${PROJECT_NAME} uoSocketClientServerSyncCommunicationTest ${LOCALHOST} ${TEST_PORT} "1000")
+add_test(NAME uoSocketClientServerASyncCommunicationTest COMMAND ${PROJECT_NAME} uoSocketClientServerASyncCommunicationTest ${LOCALHOST} ${TEST_PORT} "1000")

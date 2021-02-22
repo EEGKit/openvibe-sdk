@@ -18,7 +18,7 @@ function(OV_SET_PROJECT_VERSION)
 \n[BuildBranch]=${PROJECT_BRANCH}\
 \n[BuildDate]=${BUILD_DATE}"
 		)
-	file(WRITE ${CMAKE_BINARY_DIR}/.install "${INSTALL_MANIFEST_STR}")
+	file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.install "${INSTALL_MANIFEST_STR}")
 
 endfunction()
 
