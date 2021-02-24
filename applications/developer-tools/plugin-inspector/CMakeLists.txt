@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-project(openvibe-plugin-inspector VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
+project(openvibe-plugin-inspector-sdk VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
