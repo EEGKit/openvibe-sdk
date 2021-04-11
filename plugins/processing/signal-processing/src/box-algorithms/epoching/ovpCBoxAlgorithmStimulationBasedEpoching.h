@@ -4,6 +4,8 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#include <iostream>
+#include <iomanip>
 #include <deque>
 #include <memory>
 
@@ -22,12 +24,25 @@ public:
 
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching)
 
+	static constexpr size_t NON_CUE_SETTINGS_COUNT = 3; // duration + offset + first stimulation
+
 private:
 	Toolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_signalDecoder;
 	Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimDecoder;
 	Toolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_encoder;
 
-	uint64_t m_stimulationID        = 0;
+	bool isWatchedStimulation(const uint64_t& stim) const {
+		for (const auto& id : m_stimulationIDs)
+		{
+			if (id == stim)
+				return true;
+		}
+		return false;
+	}
+
+	size_t m_numberOfStimulations = 1;
+	std::vector<uint64_t> m_stimulationIDs;
+
 	double m_epochDurationInSeconds = 0;
 	uint64_t m_epochDuration        = 0;
 	int64_t m_epochOffset           = 0;
@@ -67,6 +82,49 @@ private:
 	std::deque<SCachedChunk> m_cachedChunks;
 };
 
+class CBoxAlgorithmStimulationBasedEpochingListener final : public Toolkit::TBoxListener<IBoxListener>
+{
+public:
+
+	bool onSettingAdded(Kernel::IBox& box, const size_t index) override
+	{
+		const size_t previousCues = index - CBoxAlgorithmStimulationBasedEpoching::NON_CUE_SETTINGS_COUNT;
+		const size_t cueNumber    = previousCues + 1;
+
+		std::stringstream ss;
+		ss << std::setfill('0') << std::setw(2) << cueNumber;
+
+		const std::string value = "OVTK_StimulationId_Label_" + ss.str();
+		box.setSettingDefaultValue(index, value.c_str());
+		box.setSettingValue(index, value.c_str());
+
+		checkSettingNames(box);
+		return true;
+	}
+
+	bool onSettingRemoved(Kernel::IBox& box, const size_t index) override
+	{
+		checkSettingNames(box);
+		return true;
+	}
+
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+
+private:
+
+	// This function is used to make sure the setting names and types are correct
+	bool checkSettingNames(Kernel::IBox& box) const
+	{
+		for (size_t i = CBoxAlgorithmStimulationBasedEpoching::NON_CUE_SETTINGS_COUNT; i < box.getSettingCount() ; ++i )
+		{
+			const std::string idx = std::to_string(i - 1);
+			box.setSettingName(i, ("Stimulation " + idx).c_str());
+			box.setSettingType(i, OV_TypeId_Stimulation);
+		}
+		return true;
+	}
+};
+
 class CBoxAlgorithmStimulationBasedEpochingDesc final : public IBoxAlgorithmDesc
 {
 public:
@@ -86,6 +144,7 @@ public:
 	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationBasedEpoching; }
+	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationBasedEpochingListener; }
 	CString getStockItemName() const override { return "gtk-cut"; }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
@@ -97,14 +156,14 @@ public:
 
 		prototype.addSetting("Epoch duration (in sec)", OV_TypeId_Float, "1");
 		prototype.addSetting("Epoch offset (in sec)", OV_TypeId_Float, "0.5");
-		prototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+		prototype.addSetting("Stimulation 1", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+		prototype.addFlag(Kernel::BoxFlag_CanAddSetting);
 
 		return true;
 	}
 
 	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc)
 };
-
 }  // namespace SignalProcessing
 }  // namespace Plugins
 }  // namespace OpenViBE
