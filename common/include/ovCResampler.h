@@ -210,7 +210,7 @@ public:
 			}
 		}
 
-#undef NEW_SAMPLER(Len, Fracs)
+#undef NEW_SAMPLER
 		
 		return true;
 	}
