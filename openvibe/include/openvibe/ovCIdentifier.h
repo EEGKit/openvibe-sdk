@@ -21,7 +21,7 @@ namespace OpenViBE {
  * The identification of the OpenViBE platform is based on 64 bits integers.
  *
  * This class is heavily used in the OpenViBE::IObject class.
- * Also, the OpenViBE specification gives serveral already defined class identifiers the developer should know of.
+ * Also, the OpenViBE specification gives several already defined class identifiers the developer should know of.
  * For this, let you have a look to the documentation of ov_defines.h !
  *
  * \sa ov_defines.h
