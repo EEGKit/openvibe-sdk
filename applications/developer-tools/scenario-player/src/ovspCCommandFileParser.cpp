@@ -23,7 +23,6 @@
 #include "ovspCCommandFileParser.h"
 
 namespace OpenViBE {
-using namespace std::placeholders;
 
 // should be moved in a utility class/file
 std::string CommandFileParser::trim(const std::string& str)
@@ -141,12 +140,12 @@ void CommandFileParser::initialize()
 {
 	// using a callback mechanism allows us to implement the core parse() method
 	// very easily (no need to put some if/else blocks everywhere depending on which command is encountered)
-	m_callbacks["Init"]          = std::bind(&CommandFileParser::initCommandCb, this, _1);
-	m_callbacks["Reset"]         = std::bind(&CommandFileParser::resetCommandCb, this, _1);
-	m_callbacks["LoadKernel"]    = std::bind(&CommandFileParser::loadKernelCommandCb, this, _1);
-	m_callbacks["LoadScenario"]  = std::bind(&CommandFileParser::loadScenarioCommandCb, this, _1);
-	m_callbacks["SetupScenario"] = std::bind(&CommandFileParser::setupScenarioCommandCb, this, _1);
-	m_callbacks["RunScenario"]   = std::bind(&CommandFileParser::runScenarioCommandCb, this, _1);
+	m_callbacks["Init"]          = std::bind(&CommandFileParser::initCommandCb, this, std::placeholders::_1);
+	m_callbacks["Reset"]         = std::bind(&CommandFileParser::resetCommandCb, this, std::placeholders::_1);
+	m_callbacks["LoadKernel"]    = std::bind(&CommandFileParser::loadKernelCommandCb, this, std::placeholders::_1);
+	m_callbacks["LoadScenario"]  = std::bind(&CommandFileParser::loadScenarioCommandCb, this, std::placeholders::_1);
+	m_callbacks["SetupScenario"] = std::bind(&CommandFileParser::setupScenarioCommandCb, this, std::placeholders::_1);
+	m_callbacks["RunScenario"]   = std::bind(&CommandFileParser::runScenarioCommandCb, this, std::placeholders::_1);
 }
 
 void CommandFileParser::uninitialize()
@@ -231,7 +230,7 @@ EPlayerReturnCodes CommandFileParser::initCommandCb(const std::vector<std::strin
 {
 	std::shared_ptr<SInitCmd> command = std::make_shared<SInitCmd>();
 
-	for (auto& line : sectionContent)
+	for (const auto& line : sectionContent)
 	{
 		// lines are expected to be trimmed
 		// a:b pattern expected
@@ -260,7 +259,7 @@ EPlayerReturnCodes CommandFileParser::loadKernelCommandCb(const std::vector<std:
 	std::shared_ptr<SLoadKernelCmd> command = std::make_shared<SLoadKernelCmd>();
 
 	// cf. initCommandCb
-	for (auto& line : sectionContent)
+	for (const auto& line : sectionContent)
 	{
 		if (!line.empty() && line[0] != '#')
 		{
@@ -278,7 +277,7 @@ EPlayerReturnCodes CommandFileParser::loadScenarioCommandCb(const std::vector<st
 	std::shared_ptr<SLoadScenarioCmd> command = std::make_shared<SLoadScenarioCmd>();
 
 	// cf. initCommandCb
-	for (auto& line : sectionContent)
+	for (const auto& line : sectionContent)
 	{
 		if (!line.empty() && line[0] != '#')
 		{
@@ -298,7 +297,7 @@ EPlayerReturnCodes CommandFileParser::setupScenarioCommandCb(const std::vector<s
 	std::shared_ptr<SSetupScenarioCmd> command = std::make_shared<SSetupScenarioCmd>();
 
 	// cf. initCommandCb
-	for (auto& line : sectionContent)
+	for (const auto& line : sectionContent)
 	{
 		if (!line.empty() && line[0] != '#')
 		{
@@ -318,7 +317,7 @@ EPlayerReturnCodes CommandFileParser::runScenarioCommandCb(const std::vector<std
 	std::shared_ptr<SRunScenarioCmd> command = std::make_shared<SRunScenarioCmd>();
 
 	// cf. initCommandCb
-	for (auto& line : sectionContent)
+	for (const auto& line : sectionContent)
 	{
 		if (!line.empty() && line[0] != '#')
 		{

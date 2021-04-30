@@ -1,9 +1,9 @@
 #include "ovtkISignalTrial.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Toolkit {
 
-ISignalTrial& Toolkit::copyHeader(ISignalTrial& trial, const ISignalTrial* srcTrial)
+ISignalTrial& copyHeader(ISignalTrial& trial, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 
@@ -18,7 +18,7 @@ ISignalTrial& Toolkit::copyHeader(ISignalTrial& trial, const ISignalTrial* srcTr
 	return trial;
 }
 
-ISignalTrial& Toolkit::copy(ISignalTrial& trial, const ISignalTrial* srcTrial)
+ISignalTrial& copy(ISignalTrial& trial, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 
@@ -35,7 +35,7 @@ ISignalTrial& Toolkit::copy(ISignalTrial& trial, const ISignalTrial* srcTrial)
 	return trial;
 }
 
-ISignalTrial& Toolkit::selectSamples(ISignalTrial& trial, const size_t sampleStart, const size_t sampleEnd, const ISignalTrial* srcTrial)
+ISignalTrial& selectSamples(ISignalTrial& trial, const size_t sampleStart, const size_t sampleEnd, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 	if (srcTrial == &trial) { return trial; }	// $$$ NOT YET IMPLEMENTED
@@ -54,7 +54,7 @@ ISignalTrial& Toolkit::selectSamples(ISignalTrial& trial, const size_t sampleSta
 	return trial;
 }
 
-ISignalTrial& Toolkit::selectTime(ISignalTrial& trial, const uint64_t timeStart, const uint64_t timeEnd, const ISignalTrial* srcTrial)
+ISignalTrial& selectTime(ISignalTrial& trial, const uint64_t timeStart, const uint64_t timeEnd, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 	if (srcTrial == &trial) { return trial; }	// $$$ NOT YET IMPLEMENTED
@@ -64,7 +64,7 @@ ISignalTrial& Toolkit::selectTime(ISignalTrial& trial, const uint64_t timeStart,
 	return selectSamples(trial, sampleStart, sampleEnd, srcTrial);
 }
 
-ISignalTrial& Toolkit::removeSamples(ISignalTrial& trial, const size_t sampleStart, const size_t sampleEnd, const ISignalTrial* srcTrial)
+ISignalTrial& removeSamples(ISignalTrial& trial, const size_t sampleStart, const size_t sampleEnd, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 	if (srcTrial == &trial) { return trial; } 	// $$$ NOT YET IMPLEMENTED
@@ -84,7 +84,7 @@ ISignalTrial& Toolkit::removeSamples(ISignalTrial& trial, const size_t sampleSta
 	return trial;
 }
 
-ISignalTrial& Toolkit::removeTime(ISignalTrial& trial, const uint64_t timeStart, const uint64_t timeEnd, const ISignalTrial* srcTrial)
+ISignalTrial& removeTime(ISignalTrial& trial, const uint64_t timeStart, const uint64_t timeEnd, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 	if (srcTrial == &trial) { return trial; }	// $$$ NOT YET IMPLEMENTED
@@ -94,8 +94,7 @@ ISignalTrial& Toolkit::removeTime(ISignalTrial& trial, const uint64_t timeStart,
 	return removeSamples(trial, sampleStart, sampleEnd, srcTrial);
 }
 
-ISignalTrial& Toolkit::insertBufferSamples(ISignalTrial& trial, const size_t sampleStart, const size_t nSample, const double* buffer,
-										   const ISignalTrial* srcTrial)
+ISignalTrial& insertBufferSamples(ISignalTrial& trial, const size_t sampleStart, const size_t nSample, const double* buffer, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 
@@ -116,11 +115,13 @@ ISignalTrial& Toolkit::insertBufferSamples(ISignalTrial& trial, const size_t sam
 	return trial;
 }
 
-ISignalTrial& Toolkit::insertBufferTime(ISignalTrial& trial, const uint64_t timeStart, const size_t nSample, const double* buffer,
-										const ISignalTrial* srcTrial)
+ISignalTrial& insertBufferTime(ISignalTrial& trial, const uint64_t timeStart, const size_t nSample, const double* buffer, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == nullptr) { srcTrial = &trial; }
 
 	const size_t sampleStart = size_t((timeStart * srcTrial->getSamplingRate()) >> 32);
 	return insertBufferSamples(trial, sampleStart, nSample, buffer, srcTrial);
 }
+
+}  // namespace Toolkit
+}  // namespace OpenViBE

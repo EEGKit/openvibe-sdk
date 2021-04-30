@@ -9,29 +9,23 @@
 #include <iostream>
 #include <functional>
 
-using namespace Eigen;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-using namespace /*OpenViBE::*/Toolkit;
-
-namespace {
-double amplitude(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
+static double amplitude(const size_t channelIdx, const size_t fftIdx, const Eigen::MatrixXcd& matrix)
 {
 	return sqrt(matrix(channelIdx, fftIdx).real() * matrix(channelIdx, fftIdx).real() + matrix(channelIdx, fftIdx).imag() * matrix(channelIdx, fftIdx).imag());
 }
 
-double phase(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix)
+static double phase(const size_t channelIdx, const size_t fftIdx, const Eigen::MatrixXcd& matrix)
 {
 	return atan2(matrix(channelIdx, fftIdx).imag(), matrix(channelIdx, fftIdx).real());
 }
 
-double realPart(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).real(); }
+static double realPart(const size_t channelIdx, const size_t fftIdx, const Eigen::MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).real(); }
 
-double imaginaryPart(const size_t channelIdx, const size_t fftIdx, const MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).imag(); }
-}  // namespace
+static double imaginaryPart(const size_t channelIdx, const size_t fftIdx, const Eigen::MatrixXcd& matrix) { return matrix(channelIdx, fftIdx).imag(); }
 
 bool CBoxAlgorithmSpectralAnalysis::initialize()
 {
@@ -40,19 +34,19 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 	m_frequencyAbscissa = new CMatrix();
 
 	// Amplitude
-	m_spectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 0));
+	m_spectrumEncoders.push_back(new Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 0));
 	m_isSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 
 	// Phase
-	m_spectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 1));
+	m_spectrumEncoders.push_back(new Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 1));
 	m_isSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
 
 	//Real Part
-	m_spectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 2));
+	m_spectrumEncoders.push_back(new Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 2));
 	m_isSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
 
 	// Imaginary part
-	m_spectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 3));
+	m_spectrumEncoders.push_back(new Toolkit::TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 3));
 	m_isSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
 
 	for (auto& curEncoder : m_spectrumEncoders)
@@ -61,7 +55,7 @@ bool CBoxAlgorithmSpectralAnalysis::initialize()
 		curEncoder->getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate());
 	}
 
-	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
+	this->getLogManager() << Kernel::LogLevel_Trace << "Spectral components selected : [ "
 			<< (m_isSpectrumEncoderActive[0] ? CString("AMP ") : "") << (m_isSpectrumEncoderActive[1] ? CString("PHASE ") : "")
 			<< (m_isSpectrumEncoderActive[2] ? CString("REAL ") : "") << (m_isSpectrumEncoderActive[3] ? CString("IMG ") : "") << "]\n";
 
@@ -90,7 +84,7 @@ bool CBoxAlgorithmSpectralAnalysis::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSpectralAnalysis::process()
 {
-	IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	Kernel::IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
 	for (size_t i = 0; i < boxContext->getInputChunkCount(0); ++i)
@@ -99,25 +93,24 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 		const uint64_t endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
-		IMatrix* matrix = m_decoder.getOutputMatrix();
+		CMatrix* matrix = m_decoder.getOutputMatrix();
 
 		if (m_decoder.isHeaderReceived())
 		{
 			m_nChannel = matrix->getDimensionSize(0);
 			m_nSample  = matrix->getDimensionSize(1);
 
-			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_nSample > 1, "Input sample count lower or equal to 1 is not supported by the box.", Kernel::ErrorType::BadInput);
 
 			m_sampling = size_t(m_decoder.getOutputSamplingRate());
 
-			OV_ERROR_UNLESS_KRF(m_sampling > 0, "Invalid sampling rate [" << m_sampling << "] (expected value > 0)", ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(m_sampling > 0, "Invalid sampling rate [" << m_sampling << "] (expected value > 0)", Kernel::ErrorType::BadInput);
 
 			// size of the spectrum
 			m_sizeFFT = m_nSample / 2 + 1;
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
-			m_frequencyAbscissa->setDimensionCount(1);  // a list of frequencies
-			m_frequencyAbscissa->setDimensionSize(0, m_sizeFFT); // FFTSize frquency abscissa
+			m_frequencyAbscissa->resize(m_sizeFFT); // FFTSize frequency abscissa
 
 			// Frequency values
 			for (size_t frequencyAbscissaIdx = 0; frequencyAbscissaIdx < m_sizeFFT; ++frequencyAbscissaIdx)
@@ -132,10 +125,8 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				if (m_isSpectrumEncoderActive[encoderIdx])
 				{
 					// Spectrum matrix
-					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
-					spectrum->setDimensionCount(2);
-					spectrum->setDimensionSize(0, m_nChannel);
-					spectrum->setDimensionSize(1, m_sizeFFT);
+					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
+					spectrum->resize(m_nChannel, m_sizeFFT);
 
 					// Spectrum channel names
 					for (size_t j = 0; j < m_nChannel; ++j) { spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j)); }
@@ -152,19 +143,19 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 		if (m_decoder.isBufferReceived())
 		{
 			// Compute the FFT
-			FFT<double> eigenFFT;
+			Eigen::FFT<double> eigenFFT;
 			eigenFFT.SetFlag(eigenFFT.HalfSpectrum); // REAL signal => spectrum with conjugate symmetry
 
 			// This matrix will contain the channels spectra (COMPLEX values, RowMajor for copy into openvibe matrix)
-			MatrixXcd spectra = MatrixXcd::Zero(m_nChannel, m_sizeFFT);
+			Eigen::MatrixXcd spectra = Eigen::MatrixXcd::Zero(m_nChannel, m_sizeFFT);
 
 			for (size_t j = 0; j < m_nChannel; ++j)
 			{
-				VectorXd samples = VectorXd::Zero(m_nSample);
+				Eigen::VectorXd samples = Eigen::VectorXd::Zero(m_nSample);
 
 				for (size_t k = 0; k < m_nSample; ++k) { samples(k) = matrix->getBuffer()[j * m_nSample + k]; }
 
-				VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
+				Eigen::VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
 
 				// EigenFFT
 				eigenFFT.fwd(spectrum, samples);
@@ -190,7 +181,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				// We build the chunk only if the encoder is activated
 				if (m_isSpectrumEncoderActive[encoderIdx])
 				{
-					std::function<double(size_t, size_t, const MatrixXcd&)> processResult;
+					std::function<double(size_t, size_t, const Eigen::MatrixXcd&)> processResult;
 
 					switch (encoderIdx)
 					{
@@ -211,10 +202,10 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 							break;
 
 						default:
-							OV_ERROR_KRF("Invalid decoder output.\n", ErrorType::BadProcessing);
+							OV_ERROR_KRF("Invalid decoder output.\n", Kernel::ErrorType::BadProcessing);
 					}
 
-					IMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
+					CMatrix* spectrum = m_spectrumEncoders[encoderIdx]->getInputMatrix();
 
 					for (size_t j = 0; j < m_nChannel; ++j)
 					{
@@ -243,3 +234,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

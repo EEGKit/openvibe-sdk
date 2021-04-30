@@ -6,8 +6,8 @@
 
 #include <algorithm>
 
-using namespace std;
-using namespace OpenViBE;
+namespace OpenViBE {
+namespace Kernel {
 
 #define create(rcid,cid,sptr,cl) \
 	if(rcid==cid) \
@@ -16,7 +16,7 @@ using namespace OpenViBE;
 		if(sptr) { m_oCreatedObjects.push_back(sptr); } \
 	}
 
-IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& classID)
+IObject* CKernelObjectFactory::createObject(const CIdentifier& classID)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 	IObject* res = nullptr;
@@ -24,12 +24,12 @@ IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& classID)
 	create(classID, OV_ClassId_Kernel_Plugins_PluginModule, res, Kernel::CPluginModule);
 	create(classID, OV_ClassId_Kernel_Configurable, res, Kernel::CConfigurable);
 
-	OV_ERROR_UNLESS_KRN(res, "Unable to allocate object with class id " << classID.str(), ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRN(res, "Unable to allocate object with class id " << classID.str(), Kernel::ErrorType::BadAlloc);
 
 	return res;
 }
 
-bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
+bool CKernelObjectFactory::releaseObject(IObject* pObject)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
@@ -50,3 +50,6 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 
 	return true;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

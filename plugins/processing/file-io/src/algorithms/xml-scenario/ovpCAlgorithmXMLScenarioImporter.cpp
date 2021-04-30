@@ -14,11 +14,9 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FileIO;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Plugins {
+namespace FileIO {
 
 namespace {
 class _AutoBind_
@@ -49,7 +47,7 @@ class CErrorHandler final : public HandlerBase
 {
 public:
 
-	explicit CErrorHandler(IAlgorithmContext& algorithmCtx)
+	explicit CErrorHandler(Kernel::IAlgorithmContext& algorithmCtx)
 		: m_algorithmContext(algorithmCtx) { }
 
 	void fatalError(const SAXParseException& exception) override { this->error(exception); }
@@ -59,7 +57,7 @@ public:
 		// we just issue a trace here because the calling method
 		// implements a fallback mechanism and we don't want to populate
 		// the error manager if the importer returns gracefully.
-		m_algorithmContext.getLogManager() << LogLevel_Trace << "Failed to validate xml: error [" << xercesToString(exception.getMessage())
+		m_algorithmContext.getLogManager() << Kernel::LogLevel_Trace << "Failed to validate xml: error [" << xercesToString(exception.getMessage())
 				<< "], line number [" << size_t(exception.getLineNumber()) << "]" << "\n";
 	}
 
@@ -70,7 +68,7 @@ public:
 	}
 
 private:
-	IAlgorithmContext& m_algorithmContext;
+	Kernel::IAlgorithmContext& m_algorithmContext;
 };
 } //namespace
 
@@ -405,7 +403,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 
 	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), buffer, size))
 	{
-		this->getLogManager() << LogLevel_Trace <<
+		this->getLogManager() << Kernel::LogLevel_Trace <<
 				"Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
 		return true;
 	}
@@ -426,12 +424,12 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* buffer, con
 		return false;
 	}
 
-	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", ErrorType::BadXMLSchemaValidation);
+	OV_ERROR_KRF("Failed to validate scenario against XSD schemas", Kernel::ErrorType::BadXMLSchemaValidation);
 }
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* buffer, const size_t size)
 {
-	this->getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
+	this->getLogManager() << Kernel::LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
 
 	size_t errorCount;
 	XMLPlatformUtils::Initialize();
@@ -465,3 +463,7 @@ bool CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rC
 	if (!this->validateXML(memoryBuffer.getDirectPointer(), memoryBuffer.getSize())) { return false; }	// error handling is handled in validateXML
 	return m_reader->processData(memoryBuffer.getDirectPointer(), memoryBuffer.getSize());
 }
+
+}  // namespace FileIO
+}  // namespace Plugins
+}  // namespace OpenViBE

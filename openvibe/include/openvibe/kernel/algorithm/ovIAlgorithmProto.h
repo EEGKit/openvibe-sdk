@@ -30,7 +30,7 @@ public:
 	 * \sa IParameter
 	 */
 	virtual bool addInputParameter(const CIdentifier& id, const CString& name, EParameterType type,
-								   const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
+								   const CIdentifier& subTypeID = CIdentifier::undefined()) = 0;
 	/**
 	 * \brief Adds an output parameter
 	 * \param id [in] : the identifier for this parameter
@@ -42,7 +42,7 @@ public:
 	 * \sa IParameter
 	 */
 	virtual bool addOutputParameter(const CIdentifier& id, const CString& name, EParameterType type,
-									const CIdentifier& subTypeID = OV_UndefinedIdentifier) = 0;
+									const CIdentifier& subTypeID = CIdentifier::undefined()) = 0;
 	/**
 	 * \brief Adds an input trigger
 	 * \param id [in] : the identifier for this trigger

@@ -8,34 +8,25 @@
 #include <functional>
 #include <cctype>
 
-using namespace boost::spirit;
-using namespace /*boost::spirit::*/classic;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-
 #define _EQ_PARSER_DEBUG_LOG_(level, message) m_parentPlugin.getLogManager() << level << message << "\n";
 #define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_parentPlugin.getLogManager() << level; m_tree->printTree(m_parentPlugin.getLogManager()); m_parentPlugin.getLogManager() << "\n"; }
 
-namespace {
 // because std::tolower has multiple signatures,
 // it can not be easily used in std::transform
 // this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-template <class TChar>
-TChar ToLower(TChar c) { return std::tolower(c); }
+template <class T>
+static T ToLower(T c) { return std::tolower(c); }
 
 // BOOST::Ast should be able to remove spaces / tabs etc but
 // unfortunately, it seems it does not work correcly in some
 // cases so I add this sanitizer function to clear the Simple DSP
 // equation before sending it to BOOST::Ast
-std::string FindAndReplace(std::string s, const std::string& f, const std::string& r)
+static std::string FindAndReplace(std::string s, const std::string& f, const std::string& r)
 {
 	size_t i;
 	while ((i = s.find(f)) != std::string::npos) { s.replace(i, f.length(), r); }
 	return s;
 }
-}  // namespace
 
 std::array<functionPointer, 32> CEquationParser::m_functionTable =
 {
@@ -77,43 +68,43 @@ bool CEquationParser::compileEquation(const char* equation)
 	str = FindAndReplace(str, "\n", "");
 
 	//parses the equation
-	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << str << "]...");
-	const tree_parse_info<> info = ast_parse(str.c_str(), m_grammar >> end_p, space_p);
+	_EQ_PARSER_DEBUG_LOG_(OpenViBE::Kernel::LogLevel_Trace, "Parsing equation [" << str << "]...");
+	const boost::spirit::classic::tree_parse_info<> info = ast_parse(str.c_str(), m_grammar >> boost::spirit::classic::end_p, boost::spirit::classic::space_p);
 
 	//If the parsing was successful
 	if (info.full)
 	{
 		//creates the AST
-		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Creating abstract tree...");
+		_EQ_PARSER_DEBUG_LOG_(OpenViBE::Kernel::LogLevel_Trace, "Creating abstract tree...");
 		createAbstractTree(info);
-		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
+		_EQ_PARSER_DEBUG_PRINT_TREE_(OpenViBE::Kernel::LogLevel_Debug);
 
 #if 0
 		//CONSTANT FOLDING
 		//levels the associative/commutative operators (+ and *)
-		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Leveling tree...");
+		_EQ_PARSER_DEBUG_LOG_(OpenViBE::Kernel::LogLevel_Trace, "Leveling tree...");
 		m_tree->levelOperators();
-		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
+		_EQ_PARSER_DEBUG_PRINT_TREE_(OpenViBE::Kernel::LogLevel_Debug);
 
 		//simplifies the AST
-		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Simplifying tree...");
+		_EQ_PARSER_DEBUG_LOG_(OpenViBE::Kernel::LogLevel_Trace, "Simplifying tree...");
 		m_tree->simplifyTree();
-		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
+		_EQ_PARSER_DEBUG_PRINT_TREE_(OpenViBE::Kernel::LogLevel_Debug);
 
 		//tries to replace nodes to use the NEG operator and reduce complexity
-		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Generating bytecode...");
+		_EQ_PARSER_DEBUG_LOG_(OpenViBE::Kernel::LogLevel_Trace, "Generating bytecode...");
 		m_tree->useNegationOperator();
-		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
+		_EQ_PARSER_DEBUG_PRINT_TREE_(OpenViBE::Kernel::LogLevel_Debug);
 
 		//Detects if it is a special tree (updates m_treeCategory and m_treeParameter)
-		_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Recognizing special tree...");
+		_EQ_PARSER_DEBUG_LOG_(OpenViBE::Kernel::LogLevel_Trace, "Recognizing special tree...");
 		m_tree->recognizeSpecialTree(m_treeCategory, m_treeParameter);
-		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
+		_EQ_PARSER_DEBUG_PRINT_TREE_(OpenViBE::Kernel::LogLevel_Debug);
 
 		//Unrecognize special tree
 		_EQ_PARSER_DEBUG_LOG_("Unrecognizing special tree...");
 		m_treeCategory = OP_USERDEF;
-		_EQ_PARSER_DEBUG_PRINT_TREE_(LogLevel_Debug);
+		_EQ_PARSER_DEBUG_PRINT_TREE_(OpenViBE::Kernel::LogLevel_Debug);
 #endif
 
 		//If it is not a special tree, we need to generate some code to reach the result
@@ -145,12 +136,12 @@ bool CEquationParser::compileEquation(const char* equation)
 		error += "^--Here\n";
 	}
 
-	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error, ErrorType::BadParsing, false,
+	OV_ERROR("Failed parsing equation \n[" << equation << "]\n " << error, OpenViBE::Kernel::ErrorType::BadParsing, false,
 			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
 			 m_parentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 }
 
-void CEquationParser::createAbstractTree(tree_parse_info<> oInfo) { m_tree = new CAbstractTree(createNode(oInfo.trees.begin())); }
+void CEquationParser::createAbstractTree(boost::spirit::classic::tree_parse_info<> oInfo) { m_tree = new CAbstractTree(createNode(oInfo.trees.begin())); }
 
 CAbstractTreeNode* CEquationParser::createNode(iter_t const& i) const
 {

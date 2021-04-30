@@ -2,9 +2,6 @@
 
 #include <vector>
 
-using namespace OpenViBE;
-using namespace std;
-
 namespace OpenViBE {
 namespace {
 class CStimulation
@@ -41,10 +38,9 @@ public:
 
 private:
 
-	vector<CStimulation> m_stimulations;
+	std::vector<CStimulation> m_stimulations;
 };
 }  // namespace
-}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //
@@ -98,3 +94,5 @@ bool CStimulationSetImpl::removeStimulation(const size_t index)
 //
 
 CStimulationSet::CStimulationSet() { m_stimSet = new CStimulationSetImpl(); }
+
+}  // namespace OpenViBE

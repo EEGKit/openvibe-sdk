@@ -1,16 +1,8 @@
 #include "ovpCBoxAlgorithmTimeSignalGenerator.h"
 
-
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace DataGeneration;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace std;
-
-CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator() {}
-
-void CBoxAlgorithmTimeSignalGenerator::release() { delete this; }
+namespace OpenViBE {
+namespace Plugins {
+namespace DataGeneration {
 
 bool CBoxAlgorithmTimeSignalGenerator::initialize()
 {
@@ -32,7 +24,7 @@ bool CBoxAlgorithmTimeSignalGenerator::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& /*msg*/)
+bool CBoxAlgorithmTimeSignalGenerator::processClock(Kernel::CMessageClock& /*msg*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -40,17 +32,15 @@ bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& /*msg*/)
 
 bool CBoxAlgorithmTimeSignalGenerator::process()
 {
-	IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	Kernel::IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	if (!m_headerSent)
 	{
 		m_encoder.getInputSamplingRate() = m_sampling;
 
-		IMatrix* matrix = m_encoder.getInputMatrix();
+		CMatrix* matrix = m_encoder.getInputMatrix();
 
-		matrix->setDimensionCount(2);
-		matrix->setDimensionSize(0, 1);
-		matrix->setDimensionSize(1, m_nGeneratedEpochSample);
+		matrix->resize(1, m_nGeneratedEpochSample);
 		matrix->setDimensionLabel(0, 0, "Time signal");
 
 		m_encoder.encodeHeader();
@@ -82,3 +72,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 	return true;
 }
+
+}  // namespace DataGeneration
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -6,21 +6,25 @@
 #include <string>
 #include <vector>
 
+namespace OpenViBE {
+namespace PluginInspector {
 class CPluginObjectDescEnum
 {
 public:
 
-	explicit CPluginObjectDescEnum(const OpenViBE::Kernel::IKernelContext& ctx) : m_kernelCtx(ctx) { }
+	explicit CPluginObjectDescEnum(const Kernel::IKernelContext& ctx) : m_kernelCtx(ctx) { }
 	virtual ~CPluginObjectDescEnum() { }
 
-	virtual bool enumeratePluginObjectDesc(std::vector<const OpenViBE::Plugins::IPluginObjectDesc*>& pod);
-	virtual bool enumeratePluginObjectDesc(const OpenViBE::CIdentifier& parentClassID);
+	virtual bool enumeratePluginObjectDesc(std::vector<const Plugins::IPluginObjectDesc*>& pod);
+	virtual bool enumeratePluginObjectDesc(const CIdentifier& parentClassID);
 
-	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pod) = 0;
+	virtual bool callback(const Plugins::IPluginObjectDesc& pod) = 0;
 
 	static std::string transform(const std::string& in, bool removeSlash = false);
 
 protected:
 
-	const OpenViBE::Kernel::IKernelContext& m_kernelCtx;
+	const Kernel::IKernelContext& m_kernelCtx;
 };
+}  // namespace PluginInspector
+}  // namespace OpenViBE

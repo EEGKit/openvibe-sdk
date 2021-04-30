@@ -38,10 +38,10 @@ class CErrorManager final : public TKernelObject<IErrorManager>
 {
 public:
 
-	explicit CErrorManager(const IKernelContext& context);
-	~CErrorManager() override;
+	explicit CErrorManager(const IKernelContext& context) : TKernelObject<IErrorManager>(context), m_topError(nullptr) { }
+	~CErrorManager() override { this->releaseErrors(); }
 
-	void pushError(ErrorType type, const char* description) override;
+	void pushError(ErrorType type, const char* description) override { this->pushErrorAtLocation(type, description, "NoLocationInfo", 0); }
 	void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, size_t line) override;
 	void releaseErrors() override;
 	bool hasError() const override;

@@ -6,11 +6,6 @@
 
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace std;
-
 int main(int argc, char** argv)
 {
 	//___________________________________________________________________//
@@ -21,92 +16,90 @@ int main(int argc, char** argv)
 	                 <--box-doc-directory dir>
 	*/
 
-	vector<string> pluginFilestoLoad;
+	std::vector<std::string> pluginFilestoLoad;
 
-	string docTemplateDir;
+	std::string docTemplateDir;
 	bool ignoreMetaboxes = false;
-	vector<string> metaboxExtensionsToLoad;
+	std::vector<std::string> metaboxExtensionsToLoad;
 
 	for (int i = 1; i < argc; ++i)
 	{
 		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
-			cout << "[ USAGE ]\n"
-					<< "plugin-inspector <plugin1 plugin2 ...>\n"
-					<< "  <--box-doc-directory dir>\n";
+			std::cout << "[ USAGE ]\n" << "plugin-inspector <plugin1 plugin2 ...>\n" << "  <--box-doc-directory dir>\n";
 			return 0;
 		}
-		cout << "Analyze parameter: [" << i << " : " << argv[i] << "]." << endl;
+		std::cout << "Analyze parameter: [" << i << " : " << argv[i] << "]." << std::endl;
 
 		if (strcmp(argv[i], "--ignore-metaboxes") == 0) { ignoreMetaboxes = true; }
 		else if (i < argc && strcmp(argv[i], "--box-doc-directory") == 0)
 		{
 			if (++i >= argc)
 			{
-				cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards." << endl;
+				std::cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards." << std::endl;
 				return 0;
 			}
 			docTemplateDir = argv[i];
-			cout << "Templates will be generated in folder: [" << docTemplateDir << "]." << endl;
+			std::cout << "Templates will be generated in folder: [" << docTemplateDir << "]." << std::endl;
 		}
-		else if (i < argc) { pluginFilestoLoad.push_back(string(argv[i])); }
+		else if (i < argc) { pluginFilestoLoad.push_back(std::string(argv[i])); }
 	}
 
-	CKernelLoader kernelLoader;
+	OpenViBE::CKernelLoader kernelLoader;
 
-	cout << "[  INF  ] Created kernel loader, trying to load kernel module" << endl;
-	CString errorMsg;
+	std::cout << "[  INF  ] Created kernel loader, trying to load kernel module" << std::endl;
+	OpenViBE::CString errorMsg;
 #if defined TARGET_OS_Windows
-	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
+	const OpenViBE::CString kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
+	const OpenViBE::CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	const OpenViBE::CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
-	if (!kernelLoader.load(kernelFile, &errorMsg)) { cout << "[ FAILED ] Error loading kernel (" << errorMsg << ")" << " from [" << kernelFile << "]\n"; }
+	if (!kernelLoader.load(kernelFile, &errorMsg)) { std::cout << "[ FAILED ] Error loading kernel (" << errorMsg << ")" << " from [" << kernelFile << "]\n"; }
 	else
 	{
-		cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << endl;
-		IKernelDesc* kernelDesc = nullptr;
+		std::cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << std::endl;
+		OpenViBE::Kernel::IKernelDesc* kernelDesc = nullptr;
 		kernelLoader.initialize();
 		kernelLoader.getKernelDesc(kernelDesc);
-		if (!kernelDesc) { cout << "[ FAILED ] No kernel descriptor" << endl; }
+		if (!kernelDesc) { std::cout << "[ FAILED ] No kernel descriptor" << std::endl; }
 		else
 		{
-			cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
+			std::cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << std::endl;
 
-			IKernelContext* ctx = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
-			if (!ctx) { cout << "[ FAILED ] No kernel created by kernel descriptor" << endl; }
+			OpenViBE::Kernel::IKernelContext* ctx = kernelDesc->createKernel("plugin-inspector", OpenViBE::Directories::getDataDir() + "/kernel/openvibe.conf");
+			if (!ctx) { std::cout << "[ FAILED ] No kernel created by kernel descriptor" << std::endl; }
 			else
 			{
 				ctx->initialize();
-				Toolkit::initialize(*ctx);
+				OpenViBE::Toolkit::initialize(*ctx);
 
-				IConfigurationManager& configurationManager = ctx->getConfigurationManager();
+				OpenViBE::Kernel::IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 
 				if (pluginFilestoLoad.empty()) { ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}")); }
 				else
 				{
-					for (const string& file : pluginFilestoLoad)
+					for (const std::string& file : pluginFilestoLoad)
 					{
-						ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(file.c_str())));
+						ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(OpenViBE::CString(file.c_str())));
 					}
 				}
 
-				ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << docTemplateDir << "]\n";
+				ctx->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "[  INF  ] Generate boxes templates in [" << docTemplateDir << "]\n";
 
-				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*ctx, string(docTemplateDir));
+				OpenViBE::PluginInspector::CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*ctx, std::string(docTemplateDir));
 				if (!boxTemplateGenerator.initialize())
 				{
-					cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << endl;
+					std::cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << std::endl;
 					return 0;
 				}
 				boxTemplateGenerator.enumeratePluginObjectDesc(OV_ClassId_Plugins_BoxAlgorithmDesc);
 
 				if (!ignoreMetaboxes)
 				{
-					ctx->getLogManager() << LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << docTemplateDir << "]\n";
+					ctx->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << docTemplateDir << "]\n";
 					// Do not load the binary metaboxes as they would only be duplicated
 					//ctx->getScenarioManager().unregisterScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mbb");
 					configurationManager.addOrReplaceConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/");
@@ -114,9 +107,9 @@ int main(int argc, char** argv)
 					ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
-					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
-					CIdentifier id;
-					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != OV_UndefinedIdentifier)
+					std::vector<const OpenViBE::Plugins::IPluginObjectDesc*> metaboxPluginObjectDescriptors;
+					OpenViBE::CIdentifier id;
+					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != OpenViBE::CIdentifier::undefined())
 					{
 						metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(id));
 					}
@@ -125,12 +118,12 @@ int main(int argc, char** argv)
 
 				if (!boxTemplateGenerator.uninitialize())
 				{
-					cout << "[ FAILED ] Could not uninitialize boxTemplateGenerator" << endl;
+					std::cout << "[ FAILED ] Could not uninitialize boxTemplateGenerator" << std::endl;
 					return 0;
 				}
-				ctx->getLogManager() << LogLevel_Info << "Application terminated, releasing allocated objects \n";
+				ctx->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "Application terminated, releasing allocated objects \n";
 
-				Toolkit::uninitialize(*ctx);
+				OpenViBE::Toolkit::uninitialize(*ctx);
 
 				kernelDesc->releaseKernel(ctx);
 			}

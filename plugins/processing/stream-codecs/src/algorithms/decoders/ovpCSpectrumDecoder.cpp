@@ -1,9 +1,8 @@
 #include "ovpCSpectrumDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 // ________________________________________________________________________________________________________________
 //
@@ -46,8 +45,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& identifier)
 
 	if (top == OVTK_NodeId_Header_Spectrum)
 	{
-		op_frequencyAbscissa->setDimensionCount(1);
-		op_frequencyAbscissa->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
+		op_frequencyAbscissa->resize(op_pMatrix->getDimensionSize(1));
 		m_frequencyBandIdx = 0;
 	}
 	else if (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { }
@@ -90,7 +88,7 @@ void CSpectrumDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_Spectrum) 
+	if ((top == OVTK_NodeId_Header_Spectrum)
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)) { }
 	else if ((top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) || (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)) { m_frequencyBandIdx++; }
@@ -98,3 +96,7 @@ void CSpectrumDecoder::closeChild()
 
 	m_nodes.pop();
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

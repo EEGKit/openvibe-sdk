@@ -23,7 +23,7 @@ public:
 	double getStepInPercentage() const;
 	double getStepOutPercentage() const;
 
-	bool hasNewEstimation();
+	bool hasNewEstimation() const { return m_hasNewEstimation; }
 
 private:
 

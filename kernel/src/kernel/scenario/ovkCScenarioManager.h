@@ -21,7 +21,7 @@ public:
 	bool importScenario(CIdentifier& scenarioID, const IMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID) override;
 	bool importScenarioFromFile(CIdentifier& scenarioID, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmID) override;
 	bool importScenarioFromFile(CIdentifier& scenarioID, const CIdentifier& importContext, const CString& fileName) override;
-	bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension, 
+	bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension,
 								  const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
 	bool unregisterScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) override;
 	CIdentifier getNextScenarioImportContext(const CIdentifier& importContext) const override;

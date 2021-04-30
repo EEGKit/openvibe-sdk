@@ -27,10 +27,10 @@ public:
 	bool initialize() override
 	{
 		//Even if everything should have been set in constructor, we still set everything in initialize (in case of)
-		m_classifierClassID = OV_UndefinedIdentifier;
+		m_classifierClassID = CIdentifier::undefined();
 		m_classifier        = nullptr;
 
-		//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
+		//CIdentifier::undefined() is already use for the native, We initialize to an unused identifier in the strategy list
 		m_strategyClassID = 0x0;
 		m_strategy        = nullptr;
 
@@ -167,7 +167,7 @@ public:
 			const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(
 				OVP_TypeId_OneVsOne_DecisionAlgorithms, classifierName);
 
-			OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
+			OV_ERROR_UNLESS_KRF(typeID != CIdentifier::undefined(),
 								"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "] (" << classifierName << ")",
 								Kernel::ErrorType::BadConfig);
 
@@ -182,8 +182,8 @@ public:
 			box.getSettingValue(i, name);
 
 			const uint64_t oldID = this->getTypeManager().getEnumerationEntryValueFromName(typeID, name);
-			if (oldID == OV_UndefinedIdentifier
-			) { idx = 0; }	//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
+			//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
+			if (oldID == CIdentifier::undefined().id()) { idx = 0; }
 			else { idx = oldID; }
 
 			this->getTypeManager().getEnumerationEntry(typeID, idx, name, value);
@@ -211,9 +211,9 @@ public:
 				m_strategy->uninitialize();
 				this->getAlgorithmManager().releaseAlgorithm(*m_strategy);
 				m_strategy        = nullptr;
-				m_strategyClassID = OV_UndefinedIdentifier;
+				m_strategyClassID = CIdentifier::undefined();
 			}
-			if (id != OV_UndefinedIdentifier)
+			if (id != CIdentifier::undefined())
 			{
 				m_strategy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(id));
 				m_strategy->initialize();
@@ -237,7 +237,7 @@ public:
 			{
 				const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(
 					OVP_TypeId_OneVsOne_DecisionAlgorithms, name);
-				OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
+				OV_ERROR_UNLESS_KRF(typeID != CIdentifier::undefined(),
 									"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "]",
 									Kernel::ErrorType::BadConfig);
 
@@ -271,9 +271,9 @@ public:
 				m_classifier->uninitialize();
 				this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
 				m_classifier        = nullptr;
-				m_classifierClassID = OV_UndefinedIdentifier;
+				m_classifierClassID = CIdentifier::undefined();
 			}
-			if (id != OV_UndefinedIdentifier)
+			if (id != CIdentifier::undefined())
 			{
 				m_classifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(id));
 				m_classifier->initialize();
@@ -291,7 +291,7 @@ public:
 		if (m_classifier)
 		{
 			size_t i = getClassifierIndex(box) + 1;
-			while ((id = m_classifier->getNextInputParameterIdentifier(id)) != OV_UndefinedIdentifier)
+			while ((id = m_classifier->getNextInputParameterIdentifier(id)) != CIdentifier::undefined())
 			{
 				if ((id != OVTK_Algorithm_Classifier_InputParameterId_FeatureVector)
 					&& (id != OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet)
@@ -358,13 +358,13 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
 protected:
 
-	CIdentifier m_classifierClassID = OV_UndefinedIdentifier;
+	CIdentifier m_classifierClassID = CIdentifier::undefined();
 	CIdentifier m_strategyClassID   =
-			0x0;	// OV_UndefinedIdentifier is already use, We initialize to an unused identifier in the strategy list
+			0x0;	// CIdentifier::undefined() is already use, We initialize to an unused identifier in the strategy list
 	Kernel::IAlgorithmProxy* m_classifier = nullptr;
 	Kernel::IAlgorithmProxy* m_strategy   = nullptr;
 	const size_t m_customSettingBase      = 0;

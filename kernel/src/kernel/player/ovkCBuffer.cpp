@@ -1,7 +1,7 @@
 #include "ovkCBuffer.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
+namespace OpenViBE {
+namespace Kernel {
 
 CBuffer::CBuffer(const CBuffer& buffer)
 {
@@ -15,3 +15,6 @@ CBuffer& CBuffer::operator=(const CBuffer& buffer)
 	memcpy(this->CMemoryBuffer::getDirectPointer(), buffer.getDirectPointer(), buffer.getSize());
 	return *this;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

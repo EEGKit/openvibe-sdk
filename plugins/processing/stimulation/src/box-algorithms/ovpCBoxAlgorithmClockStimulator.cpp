@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmClockStimulator.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Stimulation;
+namespace OpenViBE {
+namespace Plugins {
+namespace Stimulation {
 
 bool CBoxAlgorithmClockStimulator::initialize()
 {
@@ -12,7 +11,7 @@ bool CBoxAlgorithmClockStimulator::initialize()
 	const double minInterstimulationInterval = 0.0001;
 	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval),
 						"Invalid stimulation interval [" << interstimulationInterval << "] (expected value > " << minInterstimulationInterval << ")",
-						ErrorType::BadSetting);
+						Kernel::ErrorType::BadSetting);
 
 	m_stimulationInterval = interstimulationInterval;
 	m_nSentStimulation    = 0;
@@ -41,7 +40,7 @@ bool CBoxAlgorithmClockStimulator::processClock(Kernel::CMessageClock& /*msg*/)
 
 bool CBoxAlgorithmClockStimulator::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	const uint64_t currentTime = getPlayerContext().getCurrentTime();
 
@@ -69,3 +68,7 @@ bool CBoxAlgorithmClockStimulator::process()
 
 	return true;
 }
+
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

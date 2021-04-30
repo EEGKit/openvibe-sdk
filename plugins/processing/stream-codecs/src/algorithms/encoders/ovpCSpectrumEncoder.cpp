@@ -1,9 +1,8 @@
 #include "ovpCSpectrumEncoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 bool CSpectrumEncoder::initialize()
 {
@@ -31,7 +30,7 @@ bool CSpectrumEncoder::processHeader()
 	// ip_frequencyAbscissa dimension count should be 1
 	// ip_frequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1
 
-	IMatrix* frequencyAbscissa = ip_frequencyAbscissa;
+	CMatrix* frequencyAbscissa = ip_frequencyAbscissa;
 	const uint64_t sampling    = ip_sampling;
 	CStreamedMatrixEncoder::processHeader();
 	m_writerHelper->openChild(OVTK_NodeId_Header_Spectrum);
@@ -48,3 +47,7 @@ bool CSpectrumEncoder::processHeader()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

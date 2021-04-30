@@ -1,15 +1,13 @@
 #include "ovpCBoxAlgorithmStimulationMultiplexer.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Stimulation;
+namespace OpenViBE {
+namespace Plugins {
+namespace Stimulation {
 
-using namespace std;
 
 bool CBoxAlgorithmStimulationMultiplexer::initialize()
 {
-	const IBox& staticBoxContext = this->getStaticBoxContext();
+	const Kernel::IBox& staticBoxContext = this->getStaticBoxContext();
 
 	m_decoders.resize(staticBoxContext.getInputCount());
 	size_t index = 0;
@@ -47,8 +45,8 @@ bool CBoxAlgorithmStimulationMultiplexer::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmStimulationMultiplexer::process()
 {
-	const IBox& staticBoxContext = this->getStaticBoxContext();
-	IBoxIO& dynamicBoxContext    = this->getDynamicBoxContext();
+	const Kernel::IBox& staticBoxContext = this->getStaticBoxContext();
+	Kernel::IBoxIO& dynamicBoxContext    = this->getDynamicBoxContext();
 
 	if (!m_wasHeaderSent)
 	{
@@ -108,3 +106,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 
 	return true;
 }
+
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

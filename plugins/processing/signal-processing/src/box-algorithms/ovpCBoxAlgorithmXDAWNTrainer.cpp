@@ -5,10 +5,9 @@
 #include <cstdio>
 #include <iostream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() {}
 
@@ -17,20 +16,20 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 	m_trainStimulationID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_filterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(m_filterFilename.length() != 0, "The filter filename is empty.\n", ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_filterFilename.length() != 0, "The filter filename is empty.\n", Kernel::ErrorType::BadSetting);
 
 	if (FS::Files::fileExists(m_filterFilename))
 	{
 		FILE* file = FS::Files::open(m_filterFilename, "wt");
 
-		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", ErrorType::BadFileRead);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", Kernel::ErrorType::BadFileRead);
 
 		fclose(file);
 	}
 
 	const int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", Kernel::ErrorType::OutOfBound);
 
 	m_filterDim = size_t(filterDimension);
 
@@ -64,7 +63,7 @@ bool CBoxAlgorithmXDAWNTrainer::processInput(const size_t index)
 
 bool CBoxAlgorithmXDAWNTrainer::process()
 {
-	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	bool train = false;
 
@@ -104,7 +103,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		std::array<size_t, 2> n;
 		size_t nChannel = 0;
 
-		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
+		this->getLogManager() << Kernel::LogLevel_Info << "Received train stimulation...\n";
 
 		// Decodes input signals
 
@@ -117,17 +116,17 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
 
-				IMatrix* matrix       = decoder.getOutputMatrix();
+				CMatrix* matrix       = decoder.getOutputMatrix();
 				nChannel              = matrix->getDimensionSize(0);
 				const size_t nSample  = matrix->getDimensionSize(1);
 				const size_t sampling = size_t(decoder.getOutputSamplingRate());
 
 				if (decoder.isHeaderReceived())
 				{
-					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -174,7 +173,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 #endif
 			}
 
-			OV_ERROR_UNLESS_KRF(n[j] != 0, "Did not have input signal for condition " << j + 1 << "\n", ErrorType::BadValue);
+			OV_ERROR_UNLESS_KRF(n[j] != 0, "Did not have input signal for condition " << j + 1 << "\n", Kernel::ErrorType::BadValue);
 
 			switch (j)
 			{
@@ -194,7 +193,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		OV_ERROR_UNLESS_KRF(X[0].rows() == X[1].rows(),
 							"Dimension mismatch, first input had " << size_t(X[0].rows()) << " channels while second input had " << size_t(X[1].rows()) <<
 							" channels\n",
-							ErrorType::BadValue);
+							Kernel::ErrorType::BadValue);
 
 		// Grabs usefull values
 
@@ -233,15 +232,13 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			}
 
 			OV_ERROR_KRF("Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n",
-						 ErrorType::BadProcessing);
+						 Kernel::ErrorType::BadProcessing);
 		}
 
 		// Create a CMatrix mapper that can spool the filters to a file
 
 		CMatrix eigenVectors;
-		eigenVectors.setDimensionCount(2);
-		eigenVectors.setDimensionSize(0, m_filterDim);
-		eigenVectors.setDimensionSize(1, nChannel);
+		eigenVectors.resize(m_filterDim, nChannel);
 
 		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_filterDim, nChannel);
 
@@ -251,7 +248,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		FILE* file = FS::Files::open(m_filterFilename.toASCIIString(), "wt");
 
-		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_filterFilename << "] for writing.\n", ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_filterFilename << "] for writing.\n", Kernel::ErrorType::BadFileWrite);
 
 		if (m_saveAsBoxConfig)
 		{
@@ -269,13 +266,17 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		else
 		{
 			OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
-								"Unable to save to [" << m_filterFilename << "]\n", ErrorType::BadFileWrite);
+								"Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite);
 		}
 
-		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
+		OV_WARNING_UNLESS_K(fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
 
-		this->getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_filterFilename << "]!\n";
+		this->getLogManager() << Kernel::LogLevel_Info << "Training finished and saved to [" << m_filterFilename << "]!\n";
 	}
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

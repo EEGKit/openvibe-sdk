@@ -2,11 +2,9 @@
 
 #include <cmath>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace std;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 void CBoxAlgorithmSignalAverage::computeAverage()
 {
@@ -58,8 +56,8 @@ bool CBoxAlgorithmSignalAverage::process()
 		if (m_decoder.isHeaderReceived())
 		{
 			// Construct the properties of the output stream
-			const IMatrix* iMatrix = m_decoder.getOutputMatrix();
-			IMatrix* oMatrix       = m_encoder.getInputMatrix();
+			const CMatrix* iMatrix = m_decoder.getOutputMatrix();
+			CMatrix* oMatrix       = m_encoder.getInputMatrix();
 
 			// Sampling rate will be decimated in the output
 			const uint64_t iSampling   = m_decoder.getOutputSamplingRate();
@@ -69,9 +67,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			m_encoder.getInputSamplingRate() = newSampling;
 
 			// We keep the number of channels, but the output chunk size will be 1
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, iMatrix->getDimensionSize(0));
-			oMatrix->setDimensionSize(1, 1);
+			oMatrix->resize(iMatrix->getDimensionSize(0), 1);
 
 			for (size_t j = 0; j < oMatrix->getDimensionSize(0); ++j) { oMatrix->setDimensionLabel(0, j, iMatrix->getDimensionLabel(0, j)); }
 
@@ -94,3 +90,7 @@ bool CBoxAlgorithmSignalAverage::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

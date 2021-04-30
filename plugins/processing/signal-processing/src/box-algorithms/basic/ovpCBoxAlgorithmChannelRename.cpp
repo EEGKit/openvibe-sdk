@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmChannelRename.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmChannelRename::initialize()
 {
@@ -31,7 +30,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 		m_decoder = new Toolkit::TSpectrumDecoder<CBoxAlgorithmChannelRename>(*this, 0);
 		m_encoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmChannelRename>(*this, 0);
 	}
-	else { OV_ERROR_KRF("Incompatible stream type", ErrorType::BadConfig); }
+	else { OV_ERROR_KRF("Incompatible stream type", Kernel::ErrorType::BadConfig); }
 
 	ip_Matrix = m_encoder.getInputMatrix();
 	op_Matrix = m_decoder.getOutputMatrix();
@@ -65,14 +64,14 @@ bool CBoxAlgorithmChannelRename::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmChannelRename::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t chunk = 0; chunk < boxContext.getInputChunkCount(0); ++chunk)
 	{
 		m_decoder.decode(chunk);
 		if (m_decoder.isHeaderReceived())
 		{
-			Toolkit::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
+			ip_Matrix->copyDescription(*op_Matrix);
 			for (size_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_names.size(); ++channel)
 			{
 				ip_Matrix->setDimensionLabel(0, channel, m_names[channel].c_str());
@@ -88,3 +87,7 @@ bool CBoxAlgorithmChannelRename::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

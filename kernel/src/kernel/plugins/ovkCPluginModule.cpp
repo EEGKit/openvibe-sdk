@@ -10,11 +10,6 @@
 #else
 #endif
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
 namespace OpenViBE {
 namespace Kernel {
 class CPluginModuleBase : public TKernelObject<IPluginModule>
@@ -25,29 +20,25 @@ public:
 
 	~CPluginModuleBase() override { }
 	bool initialize() override;
-	bool getPluginObjectDescription(size_t index, IPluginObjectDesc*& pluginObjectDesc) override;
+	bool getPluginObjectDescription(size_t index, Plugins::IPluginObjectDesc*& pluginObjectDesc) override;
 	bool uninitialize() override;
 	bool getFileName(CString& fileName) const override;
 
-	_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TKernelObject<IPluginModule>, CIdentifier::undefined())
 
 protected:
 
 	virtual bool isOpen() const = 0;
 
-	vector<IPluginObjectDesc*> m_pluginObjectDescs;
+	std::vector<Plugins::IPluginObjectDesc*> m_pluginObjectDescs;
 	CString m_filename;
 	bool m_gotDesc = false;
 
 	bool (*m_onInitializeCB)(const IPluginModuleContext&);
-	bool (*m_onGetPluginObjectDescCB)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&);
+	bool (*m_onGetPluginObjectDescCB)(const IPluginModuleContext&, size_t, Plugins::IPluginObjectDesc*&);
 	bool (*m_onUninitializeCB)(const IPluginModuleContext&);
 };
-}  // namespace Kernel
-}  // namespace OpenViBE
 
-namespace OpenViBE {
-namespace Kernel {
 namespace {
 class CPluginModuleContext final : public TKernelObject<IPluginModuleContext>
 {
@@ -70,11 +61,6 @@ protected:
 	IScenarioManager& m_scenarioManager;
 };
 }  // namespace
-}  // namespace Kernel
-}  // namespace OpenViBE
-
-//___________________________________________________________________//
-//                                                                   //
 
 bool CPluginModuleBase::initialize()
 {
@@ -83,14 +69,14 @@ bool CPluginModuleBase::initialize()
 	return m_onInitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-bool CPluginModuleBase::getPluginObjectDescription(const size_t index, IPluginObjectDesc*& pluginObjectDesc)
+bool CPluginModuleBase::getPluginObjectDescription(const size_t index, Plugins::IPluginObjectDesc*& pluginObjectDesc)
 {
 	if (!m_gotDesc)
 	{
 		if (!isOpen() || !m_onGetPluginObjectDescCB) { return false; }
 
-		size_t idx             = 0;
-		IPluginObjectDesc* pod = nullptr;
+		size_t idx                      = 0;
+		Plugins::IPluginObjectDesc* pod = nullptr;
 		while (m_onGetPluginObjectDescCB(CPluginModuleContext(getKernelContext()), idx, pod))
 		{
 			if (pod) { m_pluginObjectDescs.push_back(pod); }
@@ -123,12 +109,6 @@ bool CPluginModuleBase::getFileName(CString& fileName) const
 	fileName = m_filename;
 	return true;
 }
-
-//___________________________________________________________________//
-//                                                                   //
-
-namespace OpenViBE {
-namespace Kernel {
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 class CPluginModuleLinux : public CPluginModuleBase
@@ -181,8 +161,6 @@ protected:
 };
 #endif
 
-}  // namespace Kernel
-}  // namespace OpenViBE
 // 
 //___________________________________________________________________//
 //                                                                   //
@@ -213,7 +191,7 @@ bool CPluginModuleLinux::load(const CString& filename, CString* pError)
 
 	m_onInitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_fileHandle, "onInitialize");
 	m_onUninitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_fileHandle, "onUninitialize");
-	m_onGetPluginObjectDescCB=(bool (*)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&))dlsym(m_fileHandle, "onGetPluginObjectDescription");
+	m_onGetPluginObjectDescCB=(bool (*)(const IPluginModuleContext&, size_t, Plugins::IPluginObjectDesc*&))dlsym(m_fileHandle, "onGetPluginObjectDescription");
 
 	if(!m_onGetPluginObjectDescCB)
 	{
@@ -270,7 +248,7 @@ bool CPluginModuleWindows::load(const CString& filename, CString* pError)
 
 	m_onInitializeCB          = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_fileHandle, "onInitialize"));
 	m_onUninitializeCB        = reinterpret_cast<bool (*)(const IPluginModuleContext&)>(GetProcAddress(m_fileHandle, "onUninitialize"));
-	m_onGetPluginObjectDescCB = reinterpret_cast<bool (*)(const IPluginModuleContext&, size_t, IPluginObjectDesc*&)>(GetProcAddress(
+	m_onGetPluginObjectDescCB = reinterpret_cast<bool (*)(const IPluginModuleContext&, size_t, Plugins::IPluginObjectDesc*&)>(GetProcAddress(
 		m_fileHandle, "onGetPluginObjectDescription"));
 	if (!m_onGetPluginObjectDescCB)
 	{
@@ -346,10 +324,13 @@ bool CPluginModule::load(const CString& filename, CString* error) { return !m_im
 bool CPluginModule::unload(CString* error) { return !m_impl ? false : m_impl->unload(error); }
 bool CPluginModule::initialize() { return !m_impl ? false : m_impl->initialize(); }
 
-bool CPluginModule::getPluginObjectDescription(const size_t index, IPluginObjectDesc*& desc)
+bool CPluginModule::getPluginObjectDescription(const size_t index, Plugins::IPluginObjectDesc*& desc)
 {
 	return !m_impl ? false : m_impl->getPluginObjectDescription(index, desc);
 }
 
 bool CPluginModule::uninitialize() { return !m_impl ? false : m_impl->uninitialize(); }
 bool CPluginModule::getFileName(CString& rFileName) const { return !m_impl ? false : m_impl->getFileName(rFileName); }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

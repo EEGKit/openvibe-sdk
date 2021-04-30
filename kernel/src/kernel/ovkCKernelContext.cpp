@@ -2,7 +2,7 @@
 #include "ovkCKernelObjectFactory.h"
 #include "ovkCTypeManager.h"
 
-#include <openvibe/ovCIdentifier.h>
+#include <openvibe/CIdentifier.hpp>
 
 #include "algorithm/ovkCAlgorithmManager.h"
 #include "configuration/ovkCConfigurationManager.h"
@@ -23,8 +23,8 @@
 
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
+namespace OpenViBE {
+namespace Kernel {
 
 CKernelContext::CKernelContext(const IKernelContext* masterKernelCtx, const CString& applicationName, const CString& configFile)
 	: m_masterKernelCtx(masterKernelCtx ? *masterKernelCtx : *this), m_algorithmManager(nullptr), m_configManager(nullptr),
@@ -108,7 +108,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_configFile << "]\n";
 
 	OV_ERROR_UNLESS_KRF(m_configManager->addConfigurationFromFile(m_configFile),
-						"Problem parsing config file [" << m_configFile << "]", ErrorType::Internal);
+						"Problem parsing config file [" << m_configFile << "]", Kernel::ErrorType::Internal);
 
 	CString pathTmp = m_configManager->expand("${Path_UserData}");
 	FS::Files::createPath(pathTmp.toASCIIString());
@@ -168,7 +168,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 	m_typeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Error", LogLevel_Error);
 	m_typeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Fatal error", LogLevel_Fatal);
 
-	m_typeManager->registerStreamType(OV_TypeId_EBMLStream, "EBML stream", OV_UndefinedIdentifier);
+	m_typeManager->registerStreamType(OV_TypeId_EBMLStream, "EBML stream", CIdentifier::undefined());
 	m_typeManager->registerStreamType(OV_TypeId_ExperimentInfo, "Experiment information", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_Stimulations, "Stimulations", OV_TypeId_EBMLStream);
 	m_typeManager->registerStreamType(OV_TypeId_StreamedMatrix, "Streamed matrix", OV_TypeId_EBMLStream);
@@ -196,13 +196,13 @@ bool CKernelContext::uninitialize()
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
 	// before Plugin Manager destructor needs it.
 	CIdentifier scenarioID;
-	while ((scenarioID = m_scenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	while ((scenarioID = m_scenarioManager->getNextScenarioIdentifier(CIdentifier::undefined())) != CIdentifier::undefined())
 	{
 		m_scenarioManager->releaseScenario(scenarioID);
 	}
 
 	CIdentifier algorithmIdentifier;
-	while ((algorithmIdentifier = m_algorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	while ((algorithmIdentifier = m_algorithmManager->getNextAlgorithmIdentifier(CIdentifier::undefined())) != CIdentifier::undefined())
 	{
 		m_algorithmManager->releaseAlgorithm(algorithmIdentifier);
 	}
@@ -311,3 +311,6 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 
 	return LogLevel_Debug;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

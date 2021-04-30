@@ -5,66 +5,64 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Toolkit {
 
 namespace {
 typedef struct SScenarioInput
 {
-	CIdentifier id     = OV_UndefinedIdentifier;
-	CIdentifier typeID = OV_UndefinedIdentifier;
+	CIdentifier id     = CIdentifier::undefined();
+	CIdentifier typeID = CIdentifier::undefined();
 	CString name;
-	CIdentifier linkedBoxID      = OV_UndefinedIdentifier;
+	CIdentifier linkedBoxID      = CIdentifier::undefined();
 	size_t linkedBoxInputIdx     = size_t(-1);
-	CIdentifier linkedBoxInputID = OV_UndefinedIdentifier;
+	CIdentifier linkedBoxInputID = CIdentifier::undefined();
 } scenario_input_t;
 
 typedef struct SScenarioOutput
 {
-	CIdentifier id     = OV_UndefinedIdentifier;
-	CIdentifier typeID = OV_UndefinedIdentifier;
+	CIdentifier id     = CIdentifier::undefined();
+	CIdentifier typeID = CIdentifier::undefined();
 	CString name;
-	CIdentifier linkedBoxID       = OV_UndefinedIdentifier;
+	CIdentifier linkedBoxID       = CIdentifier::undefined();
 	size_t linkedBoxOutputIdx     = size_t(-1);
-	CIdentifier linkedBoxOutputID = OV_UndefinedIdentifier;
+	CIdentifier linkedBoxOutputID = CIdentifier::undefined();
 } scenario_output_t;
 
 typedef struct SInput
 {
-	CIdentifier id     = OV_UndefinedIdentifier;
-	CIdentifier typeID = OV_UndefinedIdentifier;
+	CIdentifier id     = CIdentifier::undefined();
+	CIdentifier typeID = CIdentifier::undefined();
 	CString name;
 } input_t;
 
 typedef struct SOutput
 {
-	CIdentifier id     = OV_UndefinedIdentifier;
-	CIdentifier typeID = OV_UndefinedIdentifier;
+	CIdentifier id     = CIdentifier::undefined();
+	CIdentifier typeID = CIdentifier::undefined();
 	CString name;
 } output_t;
 
 typedef struct SSetting
 {
-	CIdentifier typeID = OV_UndefinedIdentifier;
+	CIdentifier typeID = CIdentifier::undefined();
 	CString name;
 	CString defaultValue;
 	CString value;
 	bool modifiability = false;
-	CIdentifier id     = OV_UndefinedIdentifier;
+	CIdentifier id     = CIdentifier::undefined();
 } setting_t;
 
 typedef struct SAttribute
 {
-	CIdentifier id = OV_UndefinedIdentifier;
+	CIdentifier id = CIdentifier::undefined();
 	CString value;
 } attribute_t;
 
 typedef struct SBox
 {
-	CIdentifier id               = OV_UndefinedIdentifier;
-	CIdentifier algorithmClassID = OV_UndefinedIdentifier;
+	CIdentifier id               = CIdentifier::undefined();
+	CIdentifier algorithmClassID = CIdentifier::undefined();
 	CString name;
 	std::vector<input_t> inputs;
 	std::vector<output_t> outputs;
@@ -90,14 +88,14 @@ typedef struct SLinkSrc
 {
 	CIdentifier boxID;
 	size_t boxOutputIdx     = size_t(-1);
-	CIdentifier boxOutputID = OV_UndefinedIdentifier;
+	CIdentifier boxOutputID = CIdentifier::undefined();
 } link_src_t;
 
 typedef struct SLinkDst
 {
 	CIdentifier boxID;
 	size_t boxInputIdx     = size_t(-1);
-	CIdentifier boxInputID = OV_UndefinedIdentifier;
+	CIdentifier boxInputID = CIdentifier::undefined();
 } link_dst_t;
 
 typedef struct SLink
@@ -121,42 +119,42 @@ typedef struct SScenario
 } scenario_t;
 }  // namespace
 
-class CAlgorithmScenarioImporterContext final : public IAlgorithmScenarioImporterContext
+class CAlgorithmScenarioImporterContext final : public Plugins::IAlgorithmScenarioImporterContext
 {
 public:
 
-	explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& algorithmCtx) : m_AlgorithmContext(algorithmCtx) { }
+	explicit CAlgorithmScenarioImporterContext(Kernel::IAlgorithmContext& algorithmCtx) : m_AlgorithmContext(algorithmCtx) { }
 
 	bool processStart(const CIdentifier& identifier) override;
 	bool processIdentifier(const CIdentifier& identifier, const CIdentifier& value) override;
 	bool processString(const CIdentifier& identifier, const CString& value) override;
 	bool processUInteger(const CIdentifier& identifier, uint64_t value) override;
-	bool processStop() override;
+	bool processStop() override { return true; }
 
-	_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, CIdentifier::undefined())
 
-	IAlgorithmContext& m_AlgorithmContext;
+	Kernel::IAlgorithmContext& m_AlgorithmContext;
 	scenario_t m_SymbolicScenario;
 };
 
 
 bool CAlgorithmScenarioImporter::process()
 {
-	TParameterHandler<IScenario*> op_scenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
-	IScenario* scenario = op_scenario;
+	Kernel::TParameterHandler<Kernel::IScenario*> op_scenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
+	Kernel::IScenario* scenario = op_scenario;
 
-	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", ErrorType::BadOutput);
+	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", Kernel::ErrorType::BadOutput);
 
-	TParameterHandler<IMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
+	Kernel::TParameterHandler<IMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
 	IMemoryBuffer* memoryBuffer = ip_buffer;
 
-	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", Kernel::ErrorType::BadInput);
 
 	std::map<CIdentifier, CIdentifier> boxIdMapping;
 
 	CAlgorithmScenarioImporterContext context(this->getAlgorithmContext());
 
-	OV_ERROR_UNLESS_KRF(this->import(context, *memoryBuffer), "Import failed", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->import(context, *memoryBuffer), "Import failed", Kernel::ErrorType::Internal);
 
 	scenario_t& symbolicScenario = context.m_SymbolicScenario;
 
@@ -166,7 +164,7 @@ bool CAlgorithmScenarioImporter::process()
 	{
 		CIdentifier settingID = s->id;
 		// compute identifier only if it does not exists
-		if (settingID == OV_UndefinedIdentifier) { settingID = scenario->getUnusedSettingIdentifier(); }
+		if (settingID == CIdentifier::undefined()) { settingID = scenario->getUnusedSettingIdentifier(); }
 		scenario->addSetting(s->name, s->typeID, s->defaultValue, size_t(-1), false, settingID);
 		scenario->setSettingValue(scenario->getSettingCount() - 1, s->value);
 	}
@@ -174,7 +172,7 @@ bool CAlgorithmScenarioImporter::process()
 
 	for (auto b = symbolicScenario.boxes.begin(); b != symbolicScenario.boxes.end(); ++b)
 	{
-		IBox* box = nullptr;
+		Kernel::IBox* box = nullptr;
 		CIdentifier newBoxID;
 
 		scenario->addBox(newBoxID, b->id);
@@ -196,7 +194,7 @@ bool CAlgorithmScenarioImporter::process()
 
 					if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportOnUnknownSetting}", true))
 					{
-						OV_ERROR_KRF(msg, ErrorType::BadSetting);
+						OV_ERROR_KRF(msg, Kernel::ErrorType::BadSetting);
 					}
 					OV_WARNING_K(msg);
 				}
@@ -215,7 +213,7 @@ bool CAlgorithmScenarioImporter::process()
 
 	for (auto c = symbolicScenario.comments.begin(); c != symbolicScenario.comments.end(); ++c)
 	{
-		IComment* comment = nullptr;
+		Kernel::IComment* comment = nullptr;
 		CIdentifier newCommentID;
 
 		scenario->addComment(newCommentID, c->id);
@@ -232,7 +230,7 @@ bool CAlgorithmScenarioImporter::process()
 	{
 		CIdentifier newMetadataIdentifier;
 		scenario->addMetadata(newMetadataIdentifier, symbolicMetadata.identifier);
-		IMetadata* metadata = scenario->getMetadataDetails(newMetadataIdentifier);
+		Kernel::IMetadata* metadata = scenario->getMetadataDetails(newMetadataIdentifier);
 		if (metadata)
 		{
 			metadata->setType(symbolicMetadata.type);
@@ -242,7 +240,7 @@ bool CAlgorithmScenarioImporter::process()
 
 	for (auto l = symbolicScenario.links.begin(); l != symbolicScenario.links.end(); ++l)
 	{
-		ILink* link = nullptr;
+		Kernel::ILink* link = nullptr;
 		CIdentifier newLinkID;
 
 		size_t srcBoxOutputIdx = l->linkSrc.boxOutputIdx;
@@ -251,13 +249,13 @@ bool CAlgorithmScenarioImporter::process()
 		CIdentifier srcBoxOutputID = l->linkSrc.boxOutputID;
 		CIdentifier dstBoxInputID  = l->linkDst.boxInputID;
 
-		if (srcBoxOutputID != OV_UndefinedIdentifier) { scenario->getSourceBoxOutputIndex(boxIdMapping[l->linkSrc.boxID], srcBoxOutputID, srcBoxOutputIdx); }
+		if (srcBoxOutputID != CIdentifier::undefined()) { scenario->getSourceBoxOutputIndex(boxIdMapping[l->linkSrc.boxID], srcBoxOutputID, srcBoxOutputIdx); }
 
-		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found", ErrorType::BadOutput);
+		OV_ERROR_UNLESS_KRF(srcBoxOutputIdx != size_t(-1), "Output index of the source box could not be found", Kernel::ErrorType::BadOutput);
 
-		if (dstBoxInputID != OV_UndefinedIdentifier) { scenario->getTargetBoxInputIndex(boxIdMapping[l->linkDst.boxID], dstBoxInputID, dstBoxInputIdx); }
+		if (dstBoxInputID != CIdentifier::undefined()) { scenario->getTargetBoxInputIndex(boxIdMapping[l->linkDst.boxID], dstBoxInputID, dstBoxInputIdx); }
 
-		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found", ErrorType::BadOutput);
+		OV_ERROR_UNLESS_KRF(dstBoxInputIdx != size_t(-1), "Input index of the target box could not be found", Kernel::ErrorType::BadOutput);
 
 		scenario->connect(newLinkID, boxIdMapping[l->linkSrc.boxID], srcBoxOutputIdx, boxIdMapping[l->linkDst.boxID], dstBoxInputIdx, l->id);
 
@@ -270,9 +268,9 @@ bool CAlgorithmScenarioImporter::process()
 	{
 		CIdentifier scenarioInputID = symbolicScenarioInput.id;
 		// compute identifier only if it does not exists
-		if (scenarioInputID == OV_UndefinedIdentifier) { scenarioInputID = scenario->getUnusedInputIdentifier(); }
+		if (scenarioInputID == CIdentifier::undefined()) { scenarioInputID = scenario->getUnusedInputIdentifier(); }
 		scenario->addInput(symbolicScenarioInput.name, symbolicScenarioInput.typeID, scenarioInputID);
-		if (symbolicScenarioInput.linkedBoxID != OV_UndefinedIdentifier)
+		if (symbolicScenarioInput.linkedBoxID != CIdentifier::undefined())
 		{
 			// Only try to set scenario output links from boxes that actually exist
 			// This enables the usage of header-only importers
@@ -283,13 +281,13 @@ bool CAlgorithmScenarioImporter::process()
 				CIdentifier linkedBoxInputIdentifier = symbolicScenarioInput.linkedBoxInputID;
 				size_t linkedBoxInputIndex           = symbolicScenarioInput.linkedBoxInputIdx;
 
-				if (linkedBoxInputIdentifier != OV_UndefinedIdentifier)
+				if (linkedBoxInputIdentifier != CIdentifier::undefined())
 				{
 					scenario->getTargetBoxInputIndex(symbolicScenarioInput.linkedBoxID, linkedBoxInputIdentifier, linkedBoxInputIndex);
 				}
 
 				OV_ERROR_UNLESS_KRF(linkedBoxInputIndex != size_t(-1), "Input index of the target box could not be found",
-									ErrorType::BadOutput);
+									Kernel::ErrorType::BadOutput);
 
 				scenario->setScenarioInputLink(scenarioInputIdx, symbolicScenarioInput.linkedBoxID, linkedBoxInputIndex);
 			}
@@ -302,9 +300,9 @@ bool CAlgorithmScenarioImporter::process()
 	{
 		CIdentifier scenarioOutputID = symbolicScenarioOutput.id;
 		// compute identifier only if it does not exists
-		if (scenarioOutputID == OV_UndefinedIdentifier) { scenarioOutputID = scenario->getUnusedOutputIdentifier(); }
+		if (scenarioOutputID == CIdentifier::undefined()) { scenarioOutputID = scenario->getUnusedOutputIdentifier(); }
 		scenario->addOutput(symbolicScenarioOutput.name, symbolicScenarioOutput.typeID, scenarioOutputID);
-		if (symbolicScenarioOutput.linkedBoxID != OV_UndefinedIdentifier)
+		if (symbolicScenarioOutput.linkedBoxID != CIdentifier::undefined())
 		{
 			// Only try to set scenario output links from boxes that actually exist
 			// This enables the usage of header-only importers
@@ -316,13 +314,13 @@ bool CAlgorithmScenarioImporter::process()
 				CIdentifier linkedBoxOutputIdentifier = symbolicScenarioOutput.linkedBoxOutputID;
 				size_t linkedBoxOutputIndex           = symbolicScenarioOutput.linkedBoxOutputIdx;
 
-				if (linkedBoxOutputIdentifier != OV_UndefinedIdentifier)
+				if (linkedBoxOutputIdentifier != CIdentifier::undefined())
 				{
 					scenario->getSourceBoxOutputIndex(symbolicScenarioOutput.linkedBoxID, linkedBoxOutputIdentifier, linkedBoxOutputIndex);
 				}
 
 				OV_ERROR_UNLESS_KRF(linkedBoxOutputIndex != size_t(-1), "Output index of the target box could not be found",
-									ErrorType::BadOutput);
+									Kernel::ErrorType::BadOutput);
 				scenario->setScenarioOutputLink(scenarioOutputIdx, symbolicScenarioOutput.linkedBoxID, linkedBoxOutputIndex);
 			}
 		}
@@ -338,7 +336,7 @@ bool CAlgorithmScenarioImporter::process()
 		scenario->getOutdatedBoxIdentifierList(&listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const IBox* box = scenario->getBoxDetails(listID[i]);
+			const Kernel::IBox* box = scenario->getBoxDetails(listID[i]);
 			OV_WARNING_K(std::string("Box ") + box->getName().toASCIIString() + " [" + box->getAlgorithmClassIdentifier().str() + "] should be updated");
 		}
 		scenario->releaseIdentifierList(listID);
@@ -385,7 +383,7 @@ bool CAlgorithmScenarioImporterContext::processStart(const CIdentifier& identifi
 		//
 	else
 	{
-		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument, false,
+		OV_ERROR("(start) Unexpected node identifier " << identifier.str(), Kernel::ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -436,7 +434,7 @@ bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& ide
 	else
 	{
 		OV_ERROR("(id) Unexpected node identifier " << identifier.str(),
-				 ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
+				 Kernel::ErrorType::BadArgument, false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
 }
@@ -476,7 +474,7 @@ bool CAlgorithmScenarioImporterContext::processString(const CIdentifier& identif
 
 	else
 	{
-		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument,
+		OV_ERROR("(string) Unexpected node identifier " << identifier.str(), Kernel::ErrorType::BadArgument,
 				 false, m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
@@ -501,10 +499,11 @@ bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& ident
 
 	else
 	{
-		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), ErrorType::BadArgument, false,
+		OV_ERROR("(uint) Unexpected node identifier " << identifier.str(), Kernel::ErrorType::BadArgument, false,
 				 m_AlgorithmContext.getErrorManager(), m_AlgorithmContext.getLogManager());
 	}
 	return true;
 }
 
-bool CAlgorithmScenarioImporterContext::processStop() { return true; }
+}  // namespace Toolkit
+}  // namespace OpenViBE

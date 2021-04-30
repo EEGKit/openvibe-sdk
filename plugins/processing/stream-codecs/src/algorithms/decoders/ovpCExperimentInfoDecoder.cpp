@@ -1,9 +1,8 @@
 #include "ovpCExperimentInfoDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 CExperimentInfoDecoder::CExperimentInfoDecoder() {}
 
@@ -146,3 +145,7 @@ void CExperimentInfoDecoder::closeChild()
 
 	m_nodes.pop();
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

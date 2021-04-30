@@ -1,9 +1,8 @@
 #include "ovpCChannelUnitsDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 // ________________________________________________________________________________________________________________
 //
@@ -77,3 +76,6 @@ void CChannelUnitsDecoder::closeChild()
 
 	m_nodes.pop();
 }
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

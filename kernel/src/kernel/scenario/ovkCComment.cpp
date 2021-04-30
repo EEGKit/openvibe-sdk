@@ -3,29 +3,18 @@
 
 #include "../ovkCObjectVisitorContext.h"
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
-//___________________________________________________________________//
-//                                                                   //
+namespace OpenViBE {
+namespace Kernel {
 
 CComment::CComment(const IKernelContext& ctx, CScenario& rOwnerScenario)
 	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_text("") {}
 
-CComment::~CComment() {}
-
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CComment::getIdentifier() const { return m_id; }
-
-CString CComment::getText() const { return m_text; }
-
 bool CComment::setIdentifier(const CIdentifier& id)
 {
-	if (m_id != OV_UndefinedIdentifier || id == OV_UndefinedIdentifier) { return false; }
+	if (m_id != CIdentifier::undefined() || id == CIdentifier::undefined()) { return false; }
 	m_id = id;
 	return true;
 }
@@ -43,8 +32,8 @@ bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
 	m_text = rExisitingComment.getText();
 
-	CIdentifier id = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-	while (id != OV_UndefinedIdentifier)
+	CIdentifier id = rExisitingComment.getNextAttributeIdentifier(CIdentifier::undefined());
+	while (id != CIdentifier::undefined())
 	{
 		addAttribute(id, rExisitingComment.getAttributeValue(id));
 		id = rExisitingComment.getNextAttributeIdentifier(id);
@@ -61,3 +50,6 @@ bool CComment::acceptVisitor(IObjectVisitor& rObjectVisitor)
 	CObjectVisitorContext context(getKernelContext());
 	return rObjectVisitor.processBegin(context, *this) && rObjectVisitor.processEnd(context, *this);
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

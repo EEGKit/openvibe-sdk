@@ -1,22 +1,23 @@
 #include "ovtkStimulationSet.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Toolkit {
+namespace StimulationSet {
 
-bool StimulationSet::shift(IStimulationSet& stimSet, const uint64_t timeShift)
+bool shift(IStimulationSet& stimSet, const uint64_t timeShift)
 {
 	const size_t count = stimSet.getStimulationCount();
 	for (size_t i = 0; i < count; ++i) { stimSet.setStimulationDate(i, stimSet.getStimulationDate(i) + timeShift); }
 	return true;
 }
 
-bool StimulationSet::copy(IStimulationSet& dst, const IStimulationSet& src, const uint64_t timeShift)
+bool copy(IStimulationSet& dst, const IStimulationSet& src, const uint64_t timeShift)
 {
 	dst.clear();
 	return append(dst, src, timeShift);
 }
 
-bool StimulationSet::append(IStimulationSet& dst, const IStimulationSet& src, const uint64_t timeShift)
+bool append(IStimulationSet& dst, const IStimulationSet& src, const uint64_t timeShift)
 {
 	const size_t count = src.getStimulationCount();
 	for (size_t i = 0; i < count; ++i)
@@ -26,8 +27,7 @@ bool StimulationSet::append(IStimulationSet& dst, const IStimulationSet& src, co
 	return true;
 }
 
-bool StimulationSet::appendRange(IStimulationSet& dst, const IStimulationSet& src, const uint64_t srcStartTime, const uint64_t srcEndTime,
-								 const uint64_t timeShift)
+bool appendRange(IStimulationSet& dst, const IStimulationSet& src, const uint64_t srcStartTime, const uint64_t srcEndTime, const uint64_t timeShift)
 {
 	const size_t count = src.getStimulationCount();
 	for (size_t i = 0; i < count; ++i)
@@ -41,7 +41,7 @@ bool StimulationSet::appendRange(IStimulationSet& dst, const IStimulationSet& sr
 	return true;
 }
 
-bool StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
+bool removeRange(IStimulationSet& stimSet, const uint64_t startTime, const uint64_t endTime)
 {
 	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
 	{
@@ -50,3 +50,7 @@ bool StimulationSet::removeRange(IStimulationSet& stimSet, const uint64_t startT
 	}
 	return true;
 }
+
+}  // namespace StimulationSet
+}  // namespace Toolkit
+}  // namespace OpenViBE

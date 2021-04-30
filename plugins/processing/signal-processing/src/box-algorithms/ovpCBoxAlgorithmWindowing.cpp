@@ -3,11 +3,9 @@
 
 #include "ovpCBoxAlgorithmWindowing.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmWindowing::initialize()
 {
@@ -16,7 +14,7 @@ bool CBoxAlgorithmWindowing::initialize()
 
 	if (m_windowMethod != EWindowMethod::None && m_windowMethod != EWindowMethod::Hamming && m_windowMethod != EWindowMethod::Hanning
 		&& m_windowMethod != EWindowMethod::Hann && m_windowMethod != EWindowMethod::Blackman && m_windowMethod != EWindowMethod::Triangular
-		&& m_windowMethod != EWindowMethod::SquareRoot) { OV_ERROR_KRF("No valid windowing method set.\n", ErrorType::BadSetting); }
+		&& m_windowMethod != EWindowMethod::SquareRoot) { OV_ERROR_KRF("No valid windowing method set.\n", Kernel::ErrorType::BadSetting); }
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -42,7 +40,7 @@ bool CBoxAlgorithmWindowing::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmWindowing::process()
 {
-	IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	Kernel::IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
 	for (size_t i = 0; i < boxContext->getInputChunkCount(0); ++i)
@@ -51,7 +49,7 @@ bool CBoxAlgorithmWindowing::process()
 		const uint64_t endTime   = boxContext->getInputChunkEndTime(0, i);
 
 		m_decoder.decode(i);
-		IMatrix* matrix = m_decoder.getOutputMatrix();
+		CMatrix* matrix = m_decoder.getOutputMatrix();
 
 		if (m_decoder.isHeaderReceived())
 		{
@@ -107,7 +105,7 @@ bool CBoxAlgorithmWindowing::process()
 				}
 			}
 			else if (m_windowMethod == EWindowMethod::None) { for (size_t k = 0; k < n; ++k) { m_windowCoefs[k] = 1; } }
-			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", ErrorType::BadSetting); }
+			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", Kernel::ErrorType::BadSetting); }
 
 			m_encoder.encodeHeader();
 		}
@@ -133,3 +131,7 @@ bool CBoxAlgorithmWindowing::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

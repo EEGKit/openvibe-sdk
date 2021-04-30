@@ -12,8 +12,8 @@ namespace Kernel {
 typedef struct _InterfacorRequest
 {
 	size_t index           = size_t(-1);
-	CIdentifier identifier = OV_UndefinedIdentifier;
-	CIdentifier typeID     = OV_UndefinedIdentifier;
+	CIdentifier identifier = CIdentifier::undefined();
+	CIdentifier typeID     = CIdentifier::undefined();
 	CString name;
 	bool toBeRemoved;
 
@@ -41,7 +41,7 @@ public:
 
 	bool flaggedForManualUpdate() const
 	{
-		OV_FATAL_UNLESS_K(m_initialized, "Box Updater is not initialized", ErrorType::BadCall);
+		OV_FATAL_UNLESS_K(m_initialized, "Box Updater is not initialized", Kernel::ErrorType::BadCall);
 
 		return m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
 			   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)

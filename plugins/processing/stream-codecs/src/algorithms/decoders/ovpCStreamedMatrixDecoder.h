@@ -26,7 +26,7 @@ public:
 
 protected:
 
-	Kernel::TParameterHandler<IMatrix*> op_pMatrix;
+	Kernel::TParameterHandler<CMatrix*> op_pMatrix;
 
 private:
 

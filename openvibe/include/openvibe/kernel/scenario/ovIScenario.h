@@ -72,8 +72,8 @@ public:
 	 * \param previousID The identifier
 	 *        for the preceeding box
 	 * \return The identifier of the next box in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first box
 	 *       identifier.
 	 */
@@ -102,7 +102,7 @@ public:
 	 * \brief Adds a new box in the scenario
 	 * \param[out] boxID The identifier of the created box
 	 * \param suggestedBoxID A suggestion for the new box identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c boxID remains unchanged.
@@ -114,7 +114,7 @@ public:
 	 * \param[out] boxID The identifier of the created box
 	 * \param box The box to copy in this scenario
 	 * \param suggestedBoxID a suggestion for the new box identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c boxID remains unchanged.
@@ -125,7 +125,7 @@ public:
 	 * \param[out] boxID The identifier of the created box
 	 * \param boxAlgorithmClassID The class identifier of the algorithm for this box
 	 * \param suggestedBoxID a suggestion for the new box identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c boxID remains unchanged.
@@ -153,8 +153,8 @@ public:
 	 * \brief Gets next link identifier
 	 * \param previousID The identifier for the preceeding link
 	 * \return The identifier of the next link in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first link identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first link identifier.
 	 */
 	virtual CIdentifier getNextLinkIdentifier(const CIdentifier& previousID) const = 0;
 
@@ -163,8 +163,8 @@ public:
 	 * \param previousID The identifier for the preceeding link
 	 * \param boxID The box identifier which the link should end to
 	 * \return The identifier of the next link in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first link identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first link identifier.
 	 */
 	virtual CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousID, const CIdentifier& boxID) const = 0;
 
@@ -174,8 +174,8 @@ public:
 	 * \param boxID The box identifier which the link should end to
 	 * \param outputIdx The input index which the link should end to
 	 * \return The identifier of the next link in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first link identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first link identifier.
 	 */
 	virtual CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousID, const CIdentifier& boxID, size_t outputIdx) const = 0;
 
@@ -184,8 +184,8 @@ public:
 	 * \param previousID The identifier for the preceeding link
 	 * \param boxID The box identifier which the link should start from
 	 * \return The identifier of the next link in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first link identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first link identifier.
 	 */
 	virtual CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousID, const CIdentifier& boxID) const = 0;
 
@@ -195,8 +195,8 @@ public:
 	 * \param boxID The box identifier which the link should start from
 	 * \param index The input index which the link should start from
 	 * \return The identifier of the next link in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first link identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first link identifier.
 	 */
 	virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousID, const CIdentifier& boxID, size_t index) const = 0;
 
@@ -227,7 +227,7 @@ public:
 	 * \param dstBoxID The target box identifier
 	 * \param dstBoxInputIndex The input index for the given target box
 	 * \param suggestedLinkID a suggestion for the new link identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c linkID remains unchanged.
@@ -243,7 +243,7 @@ public:
 	 * \param dstBoxID The target box identifier
 	 * \param dstBoxInputID The input identifier for the given target box
 	 * \param suggestedLinkID a suggestion for the new link identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c linkID remains unchanged.
@@ -349,8 +349,8 @@ public:
 	 * \brief Gets next comment identifier
 	 * \param previousID The identifier for the preceeding comment
 	 * \return The identifier of the next comment in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first comment identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first comment identifier.
 	 */
 	virtual CIdentifier getNextCommentIdentifier(const CIdentifier& previousID) const = 0;
 
@@ -377,7 +377,7 @@ public:
 	 * \brief Adds a new comment in the scenario
 	 * \param[out] commentID The identifier of the created comment
 	 * \param suggestedCommentID a suggestion for the new comment identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c commentID remains unchanged.
@@ -390,7 +390,7 @@ public:
 	 * \param[out] commentID The identifier of the created comment
 	 * \param comment the comment to copy in this scenario
 	 * \param suggestedCommentID a suggestion for the new comment identifier. If this specific identifier is not
-	 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 *        yet used, this scenario might use it. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In such case, \c commentID remains unchanged.
@@ -411,10 +411,10 @@ public:
 	/**
 	 * \brief Get next metadata identifier in regards to another
 	 * \param previousID The identifier of the metadata
-	 * \retval OV_UndefinedIdentifier In case when metadata with the \c previousID is not present
-	 * \retval OV_UndefinedIdentifier In case when metadata with the \c previousID is last in the scenario
+	 * \retval CIdentifier::undefined() In case when metadata with the \c previousID is not present
+	 * \retval CIdentifier::undefined() In case when metadata with the \c previousID is last in the scenario
 	 * \return The identifier of the next metadata
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first metadata identifier.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first metadata identifier.
 	 */
 	virtual CIdentifier getNextMetadataIdentifier(const CIdentifier& previousID) const = 0;
 
@@ -438,7 +438,7 @@ public:
 	/**
 	 * \brief Add new metadata in the scenario
 	 * \param[out] metadataID The identifier of the newly created metadata
-	 * \param suggestedMetadataID A suggestion for the new identifier. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+	 * \param suggestedMetadataID A suggestion for the new identifier. If the identifier is already used or \c CIdentifier::undefined() is passed,
 	 *        then a random unused identifier will be used.
 	 * \retval true In case of success.
 	 * \retval false In case of error. In this case, \c metadataID remains unchanged.
@@ -478,8 +478,8 @@ public:
 	* \brief Gets identifier of next outdated box
 	 * \param previousID The identifier for the preceeding outdated box
 	 * \return The identifier of the next box that needs updates in case of success.
-	 * \retval OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID will cause this function to return the first processing unit identifier.
+	 * \retval CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID will cause this function to return the first processing unit identifier.
 	 * \note Warning: You need to call at least once the function "checkOutdatedBoxes", before calling this function
 	 */
 	virtual CIdentifier getNextOutdatedBoxIdentifier(const CIdentifier& previousID) const = 0;

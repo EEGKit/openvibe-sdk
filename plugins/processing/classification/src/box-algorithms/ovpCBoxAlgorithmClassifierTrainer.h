@@ -10,10 +10,10 @@
 #include <vector>
 #include <iostream>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Classification {
+
 const char* const TRAIN_TRIGGER_SETTING_NAME       = "Train trigger";
 const char* const FILENAME_SETTING_NAME            = "Filename to save configuration to";
 const char* const MULTICLASS_STRATEGY_SETTING_NAME = "Multiclass strategy to apply";

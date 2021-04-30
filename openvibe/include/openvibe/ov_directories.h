@@ -3,7 +3,6 @@
 #include "ov_directories_string.h"
 #include "ovCString.h"
 
-
 namespace OpenViBE {
 class Directories
 {

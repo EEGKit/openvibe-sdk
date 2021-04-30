@@ -10,12 +10,12 @@ public:
 
 	CBoxProto(const IKernelContext& ctx, IBox& box) : TKernelObject<IBoxProto>(ctx), m_box(box) {}
 	~CBoxProto() override = default;
-	bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) override;
-	bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) override;
+	bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) override;
+	bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) override;
 
 	//virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value); 
 	bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value,
-					const bool modifiable = false, const CIdentifier& id = OV_UndefinedIdentifier, const bool notify = true) override;
+					const bool modifiable = false, const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) override;
 	bool addFlag(const EBoxFlag boxFlag) override;
 	bool addFlag(const CIdentifier& flagID) override;
 	bool addInputSupport(const CIdentifier& typeID) override { return m_box.addInputSupport(typeID); }

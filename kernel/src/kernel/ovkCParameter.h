@@ -12,7 +12,7 @@ namespace Kernel {
 			class _CName_ : public _Base_##_CName_ \
 			{ \
 			public: \
-				_CName_(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = OV_UndefinedIdentifier) \
+				_CName_(const IKernelContext& ctx, EParameterType eParameterType, const CIdentifier& subTypeID = CIdentifier::undefined()) \
 					:TBaseParameter < TKernelObject < IParameter >, IType >(ctx, eParameterType, subTypeID) \
 				{ \
 					m_defaultValue = 0; \
@@ -70,7 +70,7 @@ _parameter_template_instance_object_(CStringParameter, CString, CString*, OVK_Cl
 
 _parameter_template_instance_object_(CIdentifierParameter, CIdentifier, CIdentifier*, OVK_ClassId_Kernel_IdentifierParameter)
 
-_parameter_template_instance_object_(CMatrixParameter, CMatrix, IMatrix*, OVK_ClassId_Kernel_MatrixParameter)
+_parameter_template_instance_object_(CMatrixParameter, CMatrix, CMatrix*, OVK_ClassId_Kernel_MatrixParameter)
 
 _parameter_template_instance_object_(CStimulationSetParameter, CStimulationSet, IStimulationSet*, OVK_ClassId_Kernel_StimulationSetParameter)
 

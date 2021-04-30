@@ -5,9 +5,8 @@
 
 #include "ovCMessaging.h"
 
-using namespace Communication;
+namespace Communication {
 
-namespace {
 /**
  * \brief Copy a string to buffer
  *
@@ -18,7 +17,7 @@ namespace {
  * \retval True if it succeeds
  * \retval False if it fails.
  */
-bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const std::string& value)
+static bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const std::string& value)
 {
 	if (dest.size() < bufferIndex + value.size()) { return false; }
 	memcpy(dest.data() + bufferIndex, value.data(), value.size());
@@ -36,7 +35,7 @@ bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const std::st
  * \return	True if it succeeds, false if it fails.
  */
 template <class T>
-bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const T& value)
+static bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const T& value)
 {
 	if (dest.size() < bufferIndex + sizeof(value)) { return false; }
 	memcpy(dest.data() + bufferIndex, &value, sizeof(value));
@@ -45,7 +44,7 @@ bool copyTobuffer(std::vector<uint8_t>& dest, size_t& bufferIndex, const T& valu
 }
 
 template <class T>
-bool copyToVariable(const std::vector<uint8_t>& src, const size_t bufferIndex, T& destVariable)
+static bool copyToVariable(const std::vector<uint8_t>& src, const size_t bufferIndex, T& destVariable)
 {
 	if (src.size() < bufferIndex + sizeof(destVariable)) { return false; }
 	memcpy(&destVariable, src.data() + bufferIndex, sizeof(destVariable));
@@ -65,7 +64,7 @@ bool copyToVariable(const std::vector<uint8_t>& src, const size_t bufferIndex, T
  *
  * \sa copyToVariable
  */
-bool copyToString(const std::vector<uint8_t>& src, const size_t bufferIndex, const size_t size, std::string& string)
+static bool copyToString(const std::vector<uint8_t>& src, const size_t bufferIndex, const size_t size, std::string& string)
 {
 	if (src.size() < bufferIndex + size) { return false; }
 
@@ -74,7 +73,6 @@ bool copyToString(const std::vector<uint8_t>& src, const size_t bufferIndex, con
 
 	return true;
 }
-}	// namespace 
 
 /******************************************************************************
 *
@@ -563,3 +561,5 @@ bool TimeMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 	return true;
 }
+
+}	// namespace Communication

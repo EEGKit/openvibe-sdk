@@ -64,10 +64,10 @@ protected:
 	std::string m_workspaceConfigFile;
 
 	// Stores the identifier of the scenario that is being played
-	CIdentifier m_scenarioID = OV_UndefinedIdentifier;
+	CIdentifier m_scenarioID = CIdentifier::undefined();
 
 private:
-	CIdentifier m_runtimeScenarioID = OV_UndefinedIdentifier;
+	CIdentifier m_runtimeScenarioID = CIdentifier::undefined();
 
 	System::CChrono m_benchmarkChrono;
 };

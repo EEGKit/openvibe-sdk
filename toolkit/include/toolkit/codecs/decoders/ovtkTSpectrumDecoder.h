@@ -13,7 +13,7 @@ class TSpectrumDecoderLocal : public T
 {
 protected:
 
-	Kernel::TParameterHandler<IMatrix*> m_frequencyAbscissa;
+	Kernel::TParameterHandler<CMatrix*> m_frequencyAbscissa;
 	Kernel::TParameterHandler<uint64_t> m_sampling;
 
 
@@ -54,7 +54,7 @@ public:
 	}
 
 	Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate() { return m_sampling; }
-	Kernel::TParameterHandler<IMatrix*>& getOutputFrequencyAbscissa() { return m_frequencyAbscissa; }
+	Kernel::TParameterHandler<CMatrix*>& getOutputFrequencyAbscissa() { return m_frequencyAbscissa; }
 
 	virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedHeader); }
 	virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedBuffer); }

@@ -23,7 +23,6 @@ extern char **environ;
 
 #include <system/ovCTime.h>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Tools {
@@ -75,7 +74,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 		const CString value = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 
-		OV_FATAL_UNLESS_K(m_messaging.addParameter(i, type.toUInteger(), name.toASCIIString(), value.toASCIIString()),
+		OV_FATAL_UNLESS_K(m_messaging.addParameter(i, type.id(), name.toASCIIString(), value.toASCIIString()),
 						  "Failed to add a parameter: " << i, Kernel::ErrorType::Internal);
 	}
 
@@ -90,7 +89,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		CString name;
 		staticboxCtx.getInputName(i, name);
 
-		OV_FATAL_UNLESS_K(m_messaging.addInput(i, type.toUInteger(), name.toASCIIString()),
+		OV_FATAL_UNLESS_K(m_messaging.addInput(i, type.id(), name.toASCIIString()),
 						  "Failed to add an input: " << i, Kernel::ErrorType::Internal);
 	}
 
@@ -103,7 +102,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 		CString name;
 		staticboxCtx.getOutputName(i, name);
 
-		if (!m_messaging.addOutput(i, type.toUInteger(), name.toASCIIString()))
+		if (!m_messaging.addOutput(i, type.id(), name.toASCIIString()))
 		{
 			this->getLogManager() << Kernel::LogLevel_Error << "Failed to add an output: " << i << "\n";
 			return false;
@@ -215,7 +214,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 			if (exitCode == STILL_ACTIVE)
 			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_extProcessId), EXIT_FAILURE), "Failed to kill third party program.",
+				OV_ERROR_UNLESS_KRF(TerminateProcess(HANDLE(m_extProcessId), EXIT_FAILURE), "Failed to kill third party program.",
 									Kernel::ErrorType::Unknown);
 			}
 			else if (exitCode != 0) { OV_WARNING_K("Third party program [" << m_extProcessId << "] has terminated with exit code [" << int(exitCode) << "]"); }

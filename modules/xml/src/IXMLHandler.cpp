@@ -7,8 +7,6 @@
 #include <sstream>
 #include <fs/Files.h>
 
-using namespace std;
-
 namespace XML {
 class IXMLHandlerImpl final : public IXMLHandler
 {
@@ -47,11 +45,6 @@ private:
 static void XMLCALL ExpatXMLStart(void* pData, const char* element, const char** attribute);
 static void XMLCALL ExpatXMLEnd(void* data, const char* element);
 static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
-}  // namespace XML
-
-using namespace std;
-using namespace XML;
-
 
 IXMLHandlerImpl::~IXMLHandlerImpl()
 {
@@ -77,14 +70,14 @@ IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(nullptr), m_pRootNode(nullptr)
 
 IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 {
-	ifstream file;
-	FS::Files::openIFStream(file, sPath, ios::binary);
+	std::ifstream file;
+	FS::Files::openIFStream(file, sPath, std::ios::binary);
 	if (file.is_open())
 	{
 		//Compute size
-		file.seekg(0, ios::end);
+		file.seekg(0, std::ios::end);
 		const size_t fileLen = size_t(file.tellg());
-		file.seekg(0, ios::beg);
+		file.seekg(0, std::ios::beg);
 
 		//Read the file
 		char* buffer = new char[fileLen];
@@ -128,7 +121,7 @@ IXMLNode* IXMLHandlerImpl::parseString(const char* str, const size_t& size)
 bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) const
 {
 	std::ofstream file;
-	FS::Files::openOFStream(file, sPath, ios::binary);
+	FS::Files::openOFStream(file, sPath, std::ios::binary);
 	if (file.is_open())
 	{
 		char* xml = rNode.getXML();
@@ -177,7 +170,7 @@ std::stringstream& IXMLHandlerImpl::getErrorStringStream() const
 
 std::string IXMLHandlerImpl::getLastErrorString() const { return m_ssErrorStringStream.str(); }
 
-static void XMLCALL XML::ExpatXMLStart(void* pData, const char* element, const char** attribute)
+static void XMLCALL ExpatXMLStart(void* pData, const char* element, const char** attribute)
 {
 	size_t nAttribute = 0;
 	while (attribute[nAttribute++]) { }
@@ -199,12 +192,14 @@ static void XMLCALL XML::ExpatXMLStart(void* pData, const char* element, const c
 	delete [] value;
 }
 
-static void XMLCALL XML::ExpatXMLEnd(void* data, const char* /*element*/) { static_cast<IXMLHandlerImpl*>(data)->closeChild(); }
+static void XMLCALL ExpatXMLEnd(void* data, const char* /*element*/) { static_cast<IXMLHandlerImpl*>(data)->closeChild(); }
 
-static void XMLCALL XML::ExpatXMLData(void* data, const char* value, const int length)
+static void XMLCALL ExpatXMLData(void* data, const char* value, const int length)
 {
-	const string str(value, length);
+	const std::string str(value, length);
 	static_cast<IXMLHandlerImpl*>(data)->processChildData(str.c_str());
 }
 
-OV_API IXMLHandler* XML::createXMLHandler() { return new IXMLHandlerImpl(); }
+OV_API IXMLHandler* createXMLHandler() { return new IXMLHandlerImpl(); }
+
+}  // namespace XML

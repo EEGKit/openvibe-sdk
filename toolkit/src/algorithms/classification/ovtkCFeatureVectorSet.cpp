@@ -1,11 +1,9 @@
 #include "ovtkCFeatureVectorSet.hpp"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Toolkit {
 
-CFeatureVectorSet::CFeatureVectorSet(const IMatrix& matrix) : m_matrix(matrix)
+CFeatureVectorSet::CFeatureVectorSet(const CMatrix& matrix) : m_matrix(matrix)
 {
 	if (matrix.getDimensionCount() != 2) { throw std::runtime_error("Fetaure vector set matrix must be 2 dimensions"); }
 
@@ -28,3 +26,6 @@ size_t CFeatureVectorSet::getLabelCount() const
 	for (auto it = m_features.begin(); it != m_features.end(); ++it) { labels[it->second.getLabel()] = true; }
 	return labels.size();
 }
+
+}  // namespace Toolkit
+}  // namespace OpenViBE

@@ -30,8 +30,8 @@ public:
 	 * \param previousID [in] : The identifier
 	 *        for the preceeding type
 	 * \return The identifier of the next type in case of success.
-	 * \return \c OV_UndefinedIdentifier on error.
-	 * \note Giving \c OV_UndefinedIdentifier as \c previousID
+	 * \return \c CIdentifier::undefined() on error.
+	 * \note Giving \c CIdentifier::undefined() as \c previousID
 	 *       will cause this function to return the first type
 	 *       identifier.
 	 */
@@ -176,7 +176,7 @@ public:
 	 * \brief Gets the parent stream type for a stream type
 	 * \param typeID [in] : the stream type identifier which parent stream type be returned
 	 * \return the parent stream type on success.
-	 * \return \c OV_UndefinedIdentifier on error.
+	 * \return \c CIdentifier::undefined() on error.
 	 * \note The specified type identifier has to be a stream type.
 	 */
 	virtual CIdentifier getStreamParentType(const CIdentifier& typeID) const = 0;

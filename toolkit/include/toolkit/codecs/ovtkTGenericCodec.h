@@ -101,7 +101,7 @@ public:
 
 	void uninitialize() { this->reset(); }
 
-	Kernel::TParameterHandler<IMatrix*>& getOutputMatrix()
+	Kernel::TParameterHandler<CMatrix*>& getOutputMatrix()
 	{
 		decoder_return_impl(getOutputMatrix());
 	}
@@ -112,7 +112,7 @@ public:
 		return m_spectrumDecoder->getOutputSamplingRate();
 	}
 
-	Kernel::TParameterHandler<IMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
+	Kernel::TParameterHandler<CMatrix*>& getOutputFrequencyAbcissa() { return m_spectrumDecoder->getOutputFrequencyAbscissa(); }
 
 	bool decode(int, int)       = delete;
 	bool decode(size_t, size_t) = delete;
@@ -207,7 +207,7 @@ public:
 
 	void uninitialize() { this->reset(); }
 
-	Kernel::TParameterHandler<IMatrix*>& getInputMatrix()
+	Kernel::TParameterHandler<CMatrix*>& getInputMatrix()
 	{
 		encoder_return_impl(getInputMatrix());
 	}
@@ -218,7 +218,7 @@ public:
 		return m_spectrumEncoder->getInputSamplingRate();
 	}
 
-	Kernel::TParameterHandler<IMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
+	Kernel::TParameterHandler<CMatrix*>& getInputFrequencyAbcissa() { return m_spectrumEncoder->getInputFrequencyAbscissa(); }
 
 	bool encodeHeader()
 	{
@@ -278,7 +278,7 @@ public:
 
 	virtual bool onInputTypeChanged(Kernel::IBox& box, const size_t index)
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 		if (this->isValidInputType(typeID, index)) { box.setOutputType(index, typeID); }
 		else
@@ -297,7 +297,7 @@ public:
 
 	virtual bool onOutputTypeChanged(Kernel::IBox& box, const size_t index)
 	{
-		CIdentifier typeID = OV_UndefinedIdentifier;
+		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 		if (this->isValidOutputType(typeID, index)) { box.setInputType(index, typeID); }
 		else
@@ -308,7 +308,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(T, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(T, CIdentifier::undefined())
 
 private:
 

@@ -7,15 +7,13 @@
 #include "../algorithms/decoders/ovpCStimulationDecoder.h"
 #include "../algorithms/decoders/ovpCChannelLocalisationDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
-using namespace std;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
-static stringstream print(IMatrix& matrix)
+static std::stringstream print(CMatrix& matrix)
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "Matrix :\n";
 	ss << " | Dimension count : " << matrix.getDimensionCount() << "\n";
 	for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
@@ -29,9 +27,9 @@ static stringstream print(IMatrix& matrix)
 	return ss;
 }
 
-static stringstream print(IStimulationSet& stimSet)
+static std::stringstream print(IStimulationSet& stimSet)
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << "Stimulation set :\n";
 	ss << " | Number of elements : " << stimSet.getStimulationCount() << "\n";
 	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
@@ -84,8 +82,8 @@ bool CDecoderAlgorithmTest::processInput(const size_t /*index*/)
 
 bool CDecoderAlgorithmTest::process()
 {
-	IBoxIO& boxContext  = getDynamicBoxContext();
-	const size_t nInput = getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxContext = getDynamicBoxContext();
+	const size_t nInput        = getStaticBoxContext().getInputCount();
 
 	for (size_t i = 0; i < nInput; ++i)
 	{
@@ -97,17 +95,17 @@ bool CDecoderAlgorithmTest::process()
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader))
 			{
 				{
-					TParameterHandler<IMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
+					Kernel::TParameterHandler<CMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 					if (handler.exists()) { OV_WARNING_K(print(*handler).str()); }
 				}
 
 				{
-					TParameterHandler<IMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
+					Kernel::TParameterHandler<CMatrix*> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SpectrumDecoder_OutputParameterId_FrequencyAbscissa));
 					if (handler.exists()) { OV_WARNING_K(print(*handler).str()); }
 				}
 
 				{
-					TParameterHandler<uint64_t> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling));
+					Kernel::TParameterHandler<uint64_t> handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling));
 					if (handler.exists()) { OV_WARNING_K(handler); }
 				}
 			}
@@ -115,9 +113,9 @@ bool CDecoderAlgorithmTest::process()
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer))
 			{
 				{
-					TParameterHandler<IStimulationSet*>
+					Kernel::TParameterHandler<IStimulationSet*>
 							handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
-					if (handler.exists()) { getLogManager() << LogLevel_Warning << print(*handler).str() << "\n"; }
+					if (handler.exists()) { getLogManager() << Kernel::LogLevel_Warning << print(*handler).str() << "\n"; }
 				}
 			}
 
@@ -127,3 +125,7 @@ bool CDecoderAlgorithmTest::process()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -26,8 +26,6 @@
 
 #include "csv/ovICSV.h"
 
-using namespace OpenViBE::CSV;
-
 struct SSignalFile
 {
 	std::vector<std::string> m_ChannelNames;
@@ -59,7 +57,7 @@ const struct SSignalFile SIMPLE_SIGNAL_FILE = {
 	}
 };
 
-void compareChunks(const std::pair<std::pair<double, double>, std::vector<double>>& expected, const SMatrixChunk& actual)
+void compareChunks(const std::pair<std::pair<double, double>, std::vector<double>>& expected, const OpenViBE::CSV::SMatrixChunk& actual)
 {
 	ASSERT_EQ(expected.first.first, actual.startTime);
 	ASSERT_EQ(expected.first.second, actual.endTime);
@@ -70,16 +68,16 @@ void compareChunks(const std::pair<std::pair<double, double>, std::vector<double
 
 TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 {
-	ICSVHandler* csv           = createCSVHandler();
-	const std::string filepath = dataDirectory + "/testCSVSignalUNIXEndlines.csv";
+	OpenViBE::CSV::ICSVHandler* csv = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath      = dataDirectory + "/testCSVSignalUNIXEndlines.csv";
 
-	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
-	csv->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(csv->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	csv->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	std::vector<std::string> channelNames;
 	size_t sampling;
 	size_t nSamplePerBuffer;
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
 	ASSERT_TRUE(csv->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(1, chunks, stimulations));
@@ -96,16 +94,16 @@ TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 
 TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 {
-	ICSVHandler* csv           = createCSVHandler();
-	const std::string filepath = dataDirectory + "/testCSVSignalWindowsEndlines.csv";
+	OpenViBE::CSV::ICSVHandler* csv = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath      = dataDirectory + "/testCSVSignalWindowsEndlines.csv";
 
-	ASSERT_TRUE(csv->openFile(filepath, EFileAccessMode::Read));
-	csv->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(csv->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	csv->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	std::vector<std::string> channelNames;
 	size_t sampling;
 	size_t nSamplePerBuffer;
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
 	ASSERT_TRUE(csv->getSignalInformation(channelNames, sampling, nSamplePerBuffer));
 	ASSERT_TRUE(csv->readSamplesAndEventsFromFile(1, chunks, stimulations));
@@ -122,13 +120,13 @@ TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 
 TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 {
-	ICSVHandler* signalReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVSignalReader01.csv";
+	OpenViBE::CSV::ICSVHandler* signalReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVSignalReader01.csv";
 
-	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
-	signalReaderTest->setFormatType(EStreamType::Signal);
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	ASSERT_TRUE(signalReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	signalReaderTest->setFormatType(OpenViBE::CSV::EStreamType::Signal);
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
 	const std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
 	size_t sampling;
@@ -149,13 +147,13 @@ TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 
 TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 {
-	ICSVHandler* signalReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVSignalReader01.csv";
+	OpenViBE::CSV::ICSVHandler* signalReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVSignalReader01.csv";
 
-	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
-	signalReaderTest->setFormatType(EStreamType::Signal);
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	ASSERT_TRUE(signalReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	signalReaderTest->setFormatType(OpenViBE::CSV::EStreamType::Signal);
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
 	const std::vector<std::string> expectedChannels = { "O1", "O2", "Pz", "P1", "P2" };
 	size_t sampling;
@@ -175,18 +173,18 @@ TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 
 TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
 {
-	ICSVHandler* signalReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVSignalEmptyFile.csv";
-	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
+	OpenViBE::CSV::ICSVHandler* signalReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVSignalEmptyFile.csv";
+	ASSERT_TRUE(signalReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	releaseCSVHandler(signalReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, SignalReaderWrongHeader)
 {
-	ICSVHandler* signalReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVSignalWrongHeader.csv";
-	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
-	signalReaderTest->setFormatType(EStreamType::Signal);
+	OpenViBE::CSV::ICSVHandler* signalReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVSignalWrongHeader.csv";
+	ASSERT_TRUE(signalReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	signalReaderTest->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	std::vector<std::string> channelNames;
 	size_t sampling;
 	size_t nSamplePerBuffer;
@@ -198,12 +196,12 @@ TEST(CSV_Reader_Test_Case, SignalReaderWrongHeader)
 
 TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
 {
-	ICSVHandler* spectrumReaderTest = createCSVHandler();
-	std::string filepath            = dataDirectory + "testCSVSpectrumReader01.csv";
-	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, EFileAccessMode::Read));
-	spectrumReaderTest->setFormatType(EStreamType::Spectrum);
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	OpenViBE::CSV::ICSVHandler* spectrumReaderTest = OpenViBE::CSV::createCSVHandler();
+	std::string filepath                           = dataDirectory + "testCSVSpectrumReader01.csv";
+	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	spectrumReaderTest->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
 	std::vector<std::string> expectedChannels = { "O1", "O2" };
 	std::vector<double> expectedData(128);
@@ -236,12 +234,12 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
 
 TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
 {
-	ICSVHandler* spectrumReaderTest = createCSVHandler();
-	const std::string filepath      = dataDirectory + "testCSVSpectrumReader01.csv";
-	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, EFileAccessMode::Read));
-	spectrumReaderTest->setFormatType(EStreamType::Spectrum);
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	OpenViBE::CSV::ICSVHandler* spectrumReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                     = dataDirectory + "testCSVSpectrumReader01.csv";
+	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	spectrumReaderTest->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 	std::vector<std::string> channelNames;
 	const std::vector<std::string> expectedChannels = { "O1", "O2" };
 	std::vector<double> frequencyAbscissa;
@@ -262,10 +260,10 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
 
 TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
 {
-	ICSVHandler* spectrumReaderTest = createCSVHandler();
-	const std::string filepath      = dataDirectory + "testCSVSpectrumWrongHeader.csv";
-	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, EFileAccessMode::Read));
-	spectrumReaderTest->setFormatType(EStreamType::Spectrum);
+	OpenViBE::CSV::ICSVHandler* spectrumReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                     = dataDirectory + "testCSVSpectrumWrongHeader.csv";
+	ASSERT_TRUE(spectrumReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	spectrumReaderTest->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
 	std::vector<std::string> channelNames;
 	std::vector<double> frequencyAbscissa;
 	size_t originalSampling;
@@ -277,13 +275,13 @@ TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
 
 TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVMatrixReader01.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
-	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVMatrixReader01.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	const std::vector<std::string> expectedLabels = { "", "", "", "", "", "" };
@@ -303,10 +301,10 @@ TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 
 TEST(CSV_Reader_Test_Case, matrixReaderWrongHeader)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVMatrixWrongHeader.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
-	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVMatrixWrongHeader.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
@@ -318,10 +316,10 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongHeader)
 
 TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVMatrixTooManyLabels.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
-	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVMatrixTooManyLabels.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
@@ -333,17 +331,17 @@ TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
 
 TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVMatrixWrongStimulation.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
-	matrixReaderTest->setFormatType(EStreamType::StreamedMatrix);
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVMatrixWrongStimulation.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
 	ASSERT_FALSE(matrixReaderTest->readSamplesAndEventsFromFile(1, chunks, stimulations));
 
@@ -354,13 +352,13 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
 
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVCovarMatrixReader01.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
-	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVCovarMatrixReader01.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::CovarianceMatrix);
 
-	std::vector<SMatrixChunk> chunks;
-	std::vector<SStimulationChunk> stimulations;
+	std::vector<OpenViBE::CSV::SMatrixChunk> chunks;
+	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
 	const std::vector<std::string> expectedLabels = { "X", "Y", "X", "Y", "Z1", "Z2", "Z3", "Z4", "Z5" };
@@ -380,11 +378,11 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVCovarMatrixWrongHeader.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVCovarMatrixWrongHeader.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 
-	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::CovarianceMatrix);
 
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;
@@ -396,10 +394,10 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
 
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 {
-	ICSVHandler* matrixReaderTest = createCSVHandler();
-	const std::string filepath    = dataDirectory + "testCSVCovarMatrixTooManyLabels.csv";
-	ASSERT_TRUE(matrixReaderTest->openFile(filepath, EFileAccessMode::Read));
-	matrixReaderTest->setFormatType(EStreamType::CovarianceMatrix);
+	OpenViBE::CSV::ICSVHandler* matrixReaderTest = OpenViBE::CSV::createCSVHandler();
+	const std::string filepath                   = dataDirectory + "testCSVCovarMatrixTooManyLabels.csv";
+	ASSERT_TRUE(matrixReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
+	matrixReaderTest->setFormatType(OpenViBE::CSV::EStreamType::CovarianceMatrix);
 
 	std::vector<size_t> dimensionSizes;
 	std::vector<std::string> labels;

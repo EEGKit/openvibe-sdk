@@ -16,7 +16,6 @@
 #include <iostream>
 #include <memory>
 
-
 const std::map<OpenViBE::Kernel::EBoxInterfacorType, OpenViBE::CString> INTERFACOR_TYPE_TO_NAME = {
 	{ OpenViBE::Kernel::EBoxInterfacorType::Setting, "Setting" },
 	{ OpenViBE::Kernel::EBoxInterfacorType::Input, "Input" },
@@ -33,13 +32,13 @@ public:
 	CBoxProtoRestriction(const OpenViBE::Kernel::IKernelContext& ctx, OpenViBE::Kernel::IBox& box): CBoxProto(ctx, box) {}
 
 	bool addInput(const OpenViBE::CString& /*name*/, const OpenViBE::CIdentifier& /*typeID*/,
-				  const OpenViBE::CIdentifier& /*identifier*/ = OV_UndefinedIdentifier, const bool /*notify*/  = true) override { return true; }
+				  const OpenViBE::CIdentifier& /*identifier*/ = OpenViBE::CIdentifier::undefined(), const bool /*notify*/  = true) override { return true; }
 
 	bool addOutput(const OpenViBE::CString& /*name*/, const OpenViBE::CIdentifier& /*typeID*/,
-				   const OpenViBE::CIdentifier& /*identifier*/ = OV_UndefinedIdentifier, const bool /*notify*/  = true) override { return true; }
+				   const OpenViBE::CIdentifier& /*identifier*/ = OpenViBE::CIdentifier::undefined(), const bool /*notify*/  = true) override { return true; }
 
 	bool addSetting(const OpenViBE::CString& /*name*/, const OpenViBE::CIdentifier& /*typeID*/, const OpenViBE::CString& /*defaultValue*/,
-					const bool /*modifiable*/  = false, const OpenViBE::CIdentifier& /*identifier*/ = OV_UndefinedIdentifier,
+					const bool /*modifiable*/  = false, const OpenViBE::CIdentifier& /*identifier*/ = OpenViBE::CIdentifier::undefined(),
 					const bool /*notify*/      = true) override { return true; }
 
 	bool addFlag(const OpenViBE::Kernel::EBoxFlag /*boxFlag*/) override { return true; }
@@ -58,8 +57,8 @@ public:
 		: m_Name(name), m_TypeID(idType), m_ID(id) {}
 
 	OpenViBE::CString m_Name;
-	OpenViBE::CIdentifier m_TypeID = OV_UndefinedIdentifier;
-	OpenViBE::CIdentifier m_ID     = OV_UndefinedIdentifier;
+	OpenViBE::CIdentifier m_TypeID = OpenViBE::CIdentifier::undefined();
+	OpenViBE::CIdentifier m_ID     = OpenViBE::CIdentifier::undefined();
 	bool m_Deprecated              = false;
 };
 
@@ -92,8 +91,8 @@ class TBox : public TAttributable<TKernelObject<T>>
 {
 public:
 
-	explicit TBox(const IKernelContext& ctx) : TAttributable<TKernelObject<T>>(ctx), m_identifier(OV_UndefinedIdentifier),
-											   m_algorithmClassID(OV_UndefinedIdentifier)
+	explicit TBox(const IKernelContext& ctx) : TAttributable<TKernelObject<T>>(ctx), m_identifier(CIdentifier::undefined()),
+											   m_algorithmClassID(CIdentifier::undefined())
 	{
 		for (auto i : { Input, Output, Setting })
 		{
@@ -120,8 +119,8 @@ public:
 
 	bool setIdentifier(const CIdentifier& identifier) override
 	{
-		OV_ERROR_UNLESS_KRF(m_identifier == OV_UndefinedIdentifier, "Trying to overwrite an already set indentifier", ErrorType::BadCall);
-		OV_ERROR_UNLESS_KRF(identifier != OV_UndefinedIdentifier, "Trying to set an undefined identifier", ErrorType::BadArgument);
+		OV_ERROR_UNLESS_KRF(m_identifier == CIdentifier::undefined(), "Trying to overwrite an already set indentifier", Kernel::ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(identifier != CIdentifier::undefined(), "Trying to set an undefined identifier", Kernel::ErrorType::BadArgument);
 
 		m_identifier = identifier;
 		this->notify(EBoxModification::IdentifierChanged);
@@ -200,7 +199,7 @@ public:
 		if (!desc)
 		{
 			this->enableNotification();
-			OV_ERROR_KRF("Algorithm descriptor not found " << algorithmClassID.str(), ErrorType::ResourceNotFound);
+			OV_ERROR_KRF("Algorithm descriptor not found " << algorithmClassID.str(), Kernel::ErrorType::ResourceNotFound);
 		}
 
 		this->clearBox();
@@ -266,8 +265,8 @@ public:
 		{
 			for (size_t i = 0; i < rExistingBox.getInterfacorCountIncludingDeprecated(interfacorType); ++i)
 			{
-				CIdentifier identifier = OV_UndefinedIdentifier;
-				CIdentifier type       = OV_UndefinedIdentifier;
+				CIdentifier identifier = CIdentifier::undefined();
+				CIdentifier type       = CIdentifier::undefined();
 				CString name;
 				bool isDeprecated;
 				rExistingBox.getInterfacorIdentifier(interfacorType, i, identifier);
@@ -293,16 +292,16 @@ public:
 			}
 		}
 
-		CIdentifier id = rExistingBox.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-		while (id != OV_UndefinedIdentifier)
+		CIdentifier id = rExistingBox.getNextAttributeIdentifier(CIdentifier::undefined());
+		while (id != CIdentifier::undefined())
 		{
 			this->addAttribute(id, rExistingBox.getAttributeValue(id));
 			id = rExistingBox.getNextAttributeIdentifier(id);
 		}
 
-		CIdentifier streamTypeID = OV_UndefinedIdentifier;
+		CIdentifier streamTypeID = CIdentifier::undefined();
 		while ((streamTypeID = this->getKernelContext().getTypeManager().getNextTypeIdentifier(streamTypeID)) !=
-			   OV_UndefinedIdentifier)
+			   CIdentifier::undefined())
 		{
 			if (this->getKernelContext().getTypeManager().isStream(streamTypeID))
 			{
@@ -352,7 +351,7 @@ public:
 			default: break;
 		}
 
-		if (identifier != OV_UndefinedIdentifier) { m_interfacorIDToIdx[interfacorType][identifier] = position; }
+		if (identifier != CIdentifier::undefined()) { m_interfacorIDToIdx[interfacorType][identifier] = position; }
 
 		const CString uniqueName = this->getUnusedName(m_interfacorNameToIdx[interfacorType], newName);
 
@@ -360,7 +359,7 @@ public:
 		m_interfacorNameToIdx[interfacorType][uniqueName] = position;
 
 		OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx[interfacorType].size() == m_interfacors[interfacorType].size(),
-							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
+							"Box " << m_name << " has corrupted name map storage", Kernel::ErrorType::BadResourceCreation);
 
 		if (notify)
 		{
@@ -403,7 +402,7 @@ public:
 
 	bool getInterfacorIdentifier(const EBoxInterfacorType interfacorType, const size_t index, CIdentifier& identifier) const override
 	{
-		identifier = OV_UndefinedIdentifier;
+		identifier = CIdentifier::undefined();
 		OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
 							INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << m_interfacors.
 							at(
@@ -431,7 +430,7 @@ public:
 		index         = size_t(-1);
 		const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
-							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		index = it->second;
 		return true;
@@ -441,7 +440,7 @@ public:
 	{
 		OV_ERROR_UNLESS_KRF(index < m_interfacors.at(interfacorType).size(),
 							INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " index = [" << index << "] is out of range (max index = ["
-							<< m_interfacors.at(interfacorType).size() - 1 << "])", ErrorType::OutOfBound);
+							<< m_interfacors.at(interfacorType).size() - 1 << "])", Kernel::ErrorType::OutOfBound);
 
 		typeID = m_interfacors.at(interfacorType)[index]->m_TypeID;
 		return true;
@@ -461,7 +460,7 @@ public:
 	{
 		const auto it = m_interfacorNameToIdx.at(interfacorType).find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(interfacorType).end(),
-							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->getInterfacorType(interfacorType, it->second, typeID);
 	}
@@ -526,7 +525,7 @@ public:
 	{
 		if (index < this->getInterfacorCount(interfacorType))
 		{
-			CIdentifier type = OV_UndefinedIdentifier;
+			CIdentifier type = CIdentifier::undefined();
 			this->getInterfacorType(interfacorType, index, type);
 			return (type == typeID);
 		}
@@ -590,7 +589,7 @@ public:
 	{
 		const auto it = m_interfacorNameToIdx[interfacorType].find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx[interfacorType].end(),
-							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find " << INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->setInterfacorType(interfacorType, it->second, typeID);
 	}
@@ -623,7 +622,7 @@ public:
 		m_interfacors[interfacorType][index]->m_Name      = uniqueName;
 
 		OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx[interfacorType].size() == m_interfacors[interfacorType].size(),
-							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
+							"Box " << m_name << " has corrupted name map storage", Kernel::ErrorType::BadResourceCreation);
 
 		switch (interfacorType)
 		{
@@ -713,8 +712,8 @@ public:
 				ILink* link    = m_ownerScenario->getLinkDetails(id);
 				if (link->getTargetBoxInputIndex() > index)
 				{
-					links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().toUInteger(), link->getSourceBoxOutputIndex()),
-												   std::make_pair(link->getTargetBoxIdentifier().toUInteger(), link->getTargetBoxInputIndex())));
+					links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().id(), link->getSourceBoxOutputIndex()),
+												   std::make_pair(link->getTargetBoxIdentifier().id(), link->getTargetBoxInputIndex())));
 
 					if (m_ownerScenario->isLink(id)) { m_ownerScenario->disconnect(id); }
 				}
@@ -723,20 +722,17 @@ public:
 		}
 
 		// This reorganizes the parent's scenario links if this box is not actually a scenario itself
-		if (m_identifier != OV_UndefinedIdentifier)
+		if (m_identifier != CIdentifier::undefined())
 		{
 			std::vector<std::pair<size_t, std::pair<uint64_t, size_t>>> scenarioLinks;
 			for (size_t scenarioInputIdx = 0; scenarioInputIdx < m_ownerScenario->getInterfacorCount(Input); ++scenarioInputIdx)
 			{
-				CIdentifier boxID      = OV_UndefinedIdentifier;
+				CIdentifier boxID      = CIdentifier::undefined();
 				size_t boxConnectorIdx = size_t(-1);
 				m_ownerScenario->getScenarioInputLink(scenarioInputIdx, boxID, boxConnectorIdx);
 				if (boxID == m_identifier)
 				{
-					if (boxConnectorIdx > index)
-					{
-						scenarioLinks.push_back(std::make_pair(scenarioInputIdx, std::make_pair(boxID.toUInteger(), boxConnectorIdx)));
-					}
+					if (boxConnectorIdx > index) { scenarioLinks.push_back(std::make_pair(scenarioInputIdx, std::make_pair(boxID.id(), boxConnectorIdx))); }
 					if (boxConnectorIdx >= index) { m_ownerScenario->removeScenarioInputLink(scenarioInputIdx, boxID, boxConnectorIdx); }
 				}
 			}
@@ -754,8 +750,8 @@ public:
 		// Reconnects box links
 		for (const auto& link : links)
 		{
-			CIdentifier newId = OV_UndefinedIdentifier;
-			m_ownerScenario->connect(newId, link.first.first, link.first.second, link.second.first, link.second.second - 1, OV_UndefinedIdentifier);
+			CIdentifier newId = CIdentifier::undefined();
+			m_ownerScenario->connect(newId, link.first.first, link.first.second, link.second.first, link.second.second - 1, CIdentifier::undefined());
 		}
 
 		// erase name key
@@ -765,7 +761,7 @@ public:
 		m_interfacorNameToIdx[Input].erase(itName);
 
 		// erase identifier key if defined
-		if (toBeRemovedId != OV_UndefinedIdentifier)
+		if (toBeRemovedId != CIdentifier::undefined())
 		{
 			const auto itIdent = m_interfacorIDToIdx[Input].find(toBeRemovedId);
 			OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx[Input].end(), "No input found with id " << toBeRemovedId.str(),
@@ -825,8 +821,8 @@ public:
 					ILink* link              = m_ownerScenario->getLinkDetails(curID);
 					if (link->getSourceBoxOutputIndex() > index)
 					{
-						links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().toUInteger(), link->getSourceBoxOutputIndex()),
-													   std::make_pair(link->getTargetBoxIdentifier().toUInteger(), link->getTargetBoxInputIndex())));
+						links.push_back(std::make_pair(std::make_pair(link->getSourceBoxIdentifier().id(), link->getSourceBoxOutputIndex()),
+													   std::make_pair(link->getTargetBoxIdentifier().id(), link->getTargetBoxInputIndex())));
 						if (m_ownerScenario->isLink(curID)) { m_ownerScenario->disconnect(curID); }
 					}
 				}
@@ -834,19 +830,19 @@ public:
 			}
 
 			// This reorganizes the parent's scenario links if this box is not actually a scenario
-			if (m_identifier != OV_UndefinedIdentifier)
+			if (m_identifier != CIdentifier::undefined())
 			{
 				std::vector<std::pair<size_t, std::pair<uint64_t, size_t>>> scenarioLinks;
 				for (size_t scenarioOutputIdx = 0; scenarioOutputIdx < m_ownerScenario->getOutputCount(); ++scenarioOutputIdx)
 				{
-					CIdentifier boxID      = OV_UndefinedIdentifier;
+					CIdentifier boxID      = CIdentifier::undefined();
 					size_t boxConnectorIdx = size_t(-1);
 					m_ownerScenario->getScenarioOutputLink(scenarioOutputIdx, boxID, boxConnectorIdx);
 					if (boxID == m_identifier)
 					{
 						if (boxConnectorIdx > index)
 						{
-							scenarioLinks.push_back(std::make_pair(scenarioOutputIdx, std::make_pair(boxID.toUInteger(), boxConnectorIdx)));
+							scenarioLinks.push_back(std::make_pair(scenarioOutputIdx, std::make_pair(boxID.id(), boxConnectorIdx)));
 						}
 						if (boxConnectorIdx >= index) { m_ownerScenario->removeScenarioOutputLink(scenarioOutputIdx, boxID, boxConnectorIdx); }
 					}
@@ -867,9 +863,9 @@ public:
 		{
 			for (const auto& link : links)
 			{
-				CIdentifier newId = OV_UndefinedIdentifier;
+				CIdentifier newId = CIdentifier::undefined();
 				m_ownerScenario->connect(newId, link.first.first, link.first.second - 1, link.second.first, link.second.second,
-										 OV_UndefinedIdentifier);
+										 CIdentifier::undefined());
 			}
 		}
 
@@ -881,7 +877,7 @@ public:
 		m_interfacorNameToIdx.at(Output).erase(itName);
 
 		// erase identifier key if defined
-		if (toBeRemovedId != OV_UndefinedIdentifier)
+		if (toBeRemovedId != CIdentifier::undefined())
 		{
 			const auto itIdent = m_interfacorIDToIdx.at(Output).find(toBeRemovedId);
 			OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx.at(Output).end(), "No output found with id " << toBeRemovedId.str(),
@@ -943,7 +939,7 @@ public:
 		const Plugins::IPluginObjectDesc* pluginObjectDesc = this->getKernelContext().getPluginManager().getPluginObjectDescCreating(typeID);
 		const Plugins::IBoxAlgorithmDesc* boxAlgorithmDesc = dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(pluginObjectDesc);
 
-		OV_ERROR_UNLESS_KRF(boxAlgorithmDesc, "Tried to initialize with an unregistered algorithm", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(boxAlgorithmDesc, "Tried to initialize with an unregistered algorithm", Kernel::ErrorType::Internal);
 
 		//We use the neutralized version of CBoxProto to just initialize the stream restriction mecanism
 		CBoxProtoRestriction oTempProto(this->getKernelContext(), *this);
@@ -958,35 +954,35 @@ public:
 
 private:
 	CIdentifier getUnusedInterfacorIdentifier(const EBoxInterfacorType interfacorType,
-											  const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+											  const CIdentifier& suggestedIdentifier = CIdentifier::undefined()) const
 	{
-		uint64_t identifier = CIdentifier::random().toUInteger();
-		if (suggestedIdentifier != OV_UndefinedIdentifier) { identifier = suggestedIdentifier.toUInteger(); }
+		uint64_t identifier = CIdentifier::random().id();
+		if (suggestedIdentifier != CIdentifier::undefined()) { identifier = suggestedIdentifier.id(); }
 
-		CIdentifier resultIdentifier = OV_UndefinedIdentifier;
+		CIdentifier resultIdentifier = CIdentifier::undefined();
 		std::map<CIdentifier, size_t>::const_iterator it;
 		do
 		{
 			resultIdentifier = CIdentifier(identifier);
 			it               = m_interfacorIDToIdx.at(interfacorType).find(resultIdentifier);
 			identifier++;
-		} while (it != m_interfacorIDToIdx.at(interfacorType).end() || resultIdentifier == OV_UndefinedIdentifier);
+		} while (it != m_interfacorIDToIdx.at(interfacorType).end() || resultIdentifier == CIdentifier::undefined());
 		return resultIdentifier;
 	}
 
 public:
 
-	CIdentifier getUnusedSettingIdentifier(const CIdentifier& /*suggestedID*/ = OV_UndefinedIdentifier) const
+	CIdentifier getUnusedSettingIdentifier(const CIdentifier& /*suggestedID*/ = CIdentifier::undefined()) const
 	{
 		return this->getUnusedInterfacorIdentifier(Setting);
 	}
 
-	CIdentifier getUnusedInputIdentifier(const CIdentifier& /*suggestedID*/ = OV_UndefinedIdentifier) const
+	CIdentifier getUnusedInputIdentifier(const CIdentifier& /*suggestedID*/ = CIdentifier::undefined()) const
 	{
 		return this->getUnusedInterfacorIdentifier(Input);
 	}
 
-	CIdentifier getUnusedOutputIdentifier(const CIdentifier& /*suggestedID*/ = OV_UndefinedIdentifier) const
+	CIdentifier getUnusedOutputIdentifier(const CIdentifier& /*suggestedID*/ = CIdentifier::undefined()) const
 	{
 		return this->getUnusedInterfacorIdentifier(Output);
 	}
@@ -997,7 +993,7 @@ public:
 		CString value(sDefaultValue);
 		if (this->getTypeManager().isEnumeration(typeID))
 		{
-			if (this->getTypeManager().getEnumerationEntryValueFromName(typeID, sDefaultValue) == OV_UndefinedIdentifier)
+			if (this->getTypeManager().getEnumerationEntryValueFromName(typeID, sDefaultValue) == CIdentifier::undefined().id())
 			{
 				if (this->getTypeManager().getEnumerationEntryCount(typeID) != 0)
 				{
@@ -1007,12 +1003,12 @@ public:
 					this->getTypeManager().getEnumerationEntry(typeID, 0, value, v);
 
 					// Find if the default value string actually is an identifier, otherwise just keep the zero index name as default.
-					CIdentifier defaultValueID = OV_UndefinedIdentifier;
+					CIdentifier defaultValueID = CIdentifier::undefined();
 					defaultValueID.fromString(sDefaultValue);
 
 					// Finally, if it is an identifier, then a name should be found
 					// from the type manager ! Otherwise value is left to the default.
-					const CString candidateValue = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, defaultValueID.toUInteger());
+					const CString candidateValue = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, defaultValueID.id());
 					if (candidateValue != CString("")) { value = candidateValue; }
 				}
 			}
@@ -1048,7 +1044,7 @@ public:
 			insertLocation = index;
 		}
 
-		if (s.m_ID != OV_UndefinedIdentifier)
+		if (s.m_ID != CIdentifier::undefined())
 		{
 			// add access by CIdentifier key if defined so that size differs from m_settings
 			m_interfacorIDToIdx[Setting][s.m_ID] = insertLocation;
@@ -1059,7 +1055,7 @@ public:
 		m_interfacorNameToIdx[Setting][newName]        = insertLocation;
 
 		OV_ERROR_UNLESS_KRF(m_interfacorNameToIdx.at(Setting).size() == m_interfacors[Setting].size(),
-							"Box " << m_name << " has corrupted name map storage", ErrorType::BadResourceCreation);
+							"Box " << m_name << " has corrupted name map storage", Kernel::ErrorType::BadResourceCreation);
 
 		//if this setting is modifiable, keep its index
 		if (bModifiability) { m_modifiableSettingIndexes.push_back(idx); }
@@ -1081,7 +1077,7 @@ public:
 	bool removeSetting(const size_t index, const bool notify = true) override
 	{
 		auto it = m_interfacors[Setting].begin() + index;
-		OV_ERROR_UNLESS_KRF(it != m_interfacors[Setting].end(), "No setting found at index " << index, ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(it != m_interfacors[Setting].end(), "No setting found at index " << index, Kernel::ErrorType::ResourceNotFound);
 
 		const CIdentifier toBeRemovedId = m_interfacors[Setting][index]->m_ID;
 		CString toBeRemovedName         = m_interfacors[Setting][index]->m_Name;
@@ -1106,7 +1102,7 @@ public:
 		m_interfacorNameToIdx.at(Setting).erase(itName);
 
 		// erase identifier key if defined
-		if (toBeRemovedId != OV_UndefinedIdentifier)
+		if (toBeRemovedId != CIdentifier::undefined())
 		{
 			const auto itIdent = m_interfacorIDToIdx.at(Setting).find(toBeRemovedId);
 			OV_ERROR_UNLESS_KRF(itIdent != m_interfacorIDToIdx.at(Setting).end(), "No setting found with id " << toBeRemovedId.str(),
@@ -1204,7 +1200,7 @@ public:
 	{
 		const auto it = m_interfacorIDToIdx.at(Setting).find(identifier);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorIDToIdx.at(Setting).end(),
-							"Failed to find setting with id " << identifier.str(), ErrorType::ResourceNotFound);
+							"Failed to find setting with id " << identifier.str(), Kernel::ErrorType::ResourceNotFound);
 
 		return this->getSettingMod(it->second, value);
 	}
@@ -1213,7 +1209,7 @@ public:
 	{
 		const auto it = m_interfacorNameToIdx.at(Setting).find(name);
 		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(Setting).end(),
-							"Failed to find setting with name " << name, ErrorType::ResourceNotFound);
+							"Failed to find setting with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->getSettingMod(it->second, value);
 	}
@@ -1285,7 +1281,7 @@ public:
 	bool setSettingValue(const CString& name, const CString& value) override
 	{
 		const auto it = m_interfacorNameToIdx.at(Setting).find(name);
-		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(Setting).end(), "Failed to find setting with name " << name, ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(it != m_interfacorNameToIdx.at(Setting).end(), "Failed to find setting with name " << name, Kernel::ErrorType::ResourceNotFound);
 
 		return this->setSettingValue(it->second, value);
 	}
@@ -1334,9 +1330,9 @@ public:
 							ErrorType::OutOfBound);
 
 		CString nameA;
-		CIdentifier identifierA = OV_UndefinedIdentifier;
+		CIdentifier identifierA = CIdentifier::undefined();
 		CString nameB;
-		CIdentifier identifierB = OV_UndefinedIdentifier;
+		CIdentifier identifierB = CIdentifier::undefined();
 
 		this->getInterfacorName(interfacorType, indexA, nameA);
 		this->getInterfacorIdentifier(interfacorType, indexA, identifierA);
@@ -1395,10 +1391,10 @@ public:
 								Setting).size() - 1 << "])",
 							ErrorType::OutOfBound);
 
-		OV_ERROR_UNLESS_KRF(newID != OV_UndefinedIdentifier, INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " identifier can not be undefined",
+		OV_ERROR_UNLESS_KRF(newID != CIdentifier::undefined(), INTERFACOR_TYPE_TO_NAME.at(interfacorType) << " identifier can not be undefined",
 							ErrorType::BadArgument);
 
-		CIdentifier oldIdentifier = OV_UndefinedIdentifier;
+		CIdentifier oldIdentifier = CIdentifier::undefined();
 		this->getInterfacorIdentifier(interfacorType, index, oldIdentifier);
 
 		if (oldIdentifier != newID)
@@ -1431,7 +1427,7 @@ protected:
 	void clearBox()
 	{
 		m_boxAlgorithmDesc = nullptr;
-		m_algorithmClassID = OV_UndefinedIdentifier;
+		m_algorithmClassID = CIdentifier::undefined();
 		m_name             = "";
 		m_interfacors[Input].clear();
 		m_interfacors[Output].clear();
@@ -1489,8 +1485,8 @@ protected:
 	bool m_isNotificationActive                          = true;
 	bool m_isObserverNotificationActive                  = true;
 
-	CIdentifier m_identifier       = OV_UndefinedIdentifier;
-	CIdentifier m_algorithmClassID = OV_UndefinedIdentifier;
+	CIdentifier m_identifier       = CIdentifier::undefined();
+	CIdentifier m_algorithmClassID = CIdentifier::undefined();
 	CString m_name                 = "unnamed";
 
 	std::map<EBoxInterfacorType, std::map<CIdentifier, size_t>> m_interfacorIDToIdx;

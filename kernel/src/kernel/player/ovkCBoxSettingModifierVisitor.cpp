@@ -13,18 +13,13 @@
 #define OVD_AttributeId_SettingOverrideFilename     		OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
 #define OV_AttributeId_Box_Disabled                 		OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
 
-//___________________________________________________________________//
-//                                                                   //
-
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
+namespace Kernel {
 
 void CBoxSettingModifierVisitor::openChild(const char* name, const char** /*sAttributeName*/, const char** /*sAttributeValue*/, const size_t /*nAttribute*/)
 {
-	if (!m_IsParsingSettingOverride) { if (string(name) == string("OpenViBE-SettingsOverride")) { m_IsParsingSettingOverride = true; } }
-	else if (string(name) == string("SettingValue")) { m_IsParsingSettingValue = true; }
+	if (!m_IsParsingSettingOverride) { if (std::string(name) == std::string("OpenViBE-SettingsOverride")) { m_IsParsingSettingOverride = true; } }
+	else if (std::string(name) == std::string("SettingValue")) { m_IsParsingSettingValue = true; }
 	else { m_IsParsingSettingValue = false; }
 }
 
@@ -32,7 +27,7 @@ void CBoxSettingModifierVisitor::processChildData(const char* data)
 {
 	if (m_IsParsingSettingValue)
 	{
-		m_ObjectVisitorCtx->getLogManager() << LogLevel_Debug << "Using [" << CString(data) << "] as setting " << m_SettingIdx << "...\n";
+		m_ObjectVisitorCtx->getLogManager() << LogLevel_Debug << "Using [" << data << "] as setting " << m_SettingIdx << "...\n";
 		m_Box->setSettingValue(m_SettingIdx, data);
 	}
 }
@@ -87,15 +82,15 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& visitorCtx,
 		// 2. Loop until end of file, reading it
 		//    and sending what is read to the XML parser
 		// 3. Close the settings file
-		ifstream file;
-		FS::Files::openIFStream(file, settingOverrideFilenameFinal.toASCIIString(), ios::binary);
+		std::ifstream file;
+		FS::Files::openIFStream(file, settingOverrideFilenameFinal.toASCIIString(), std::ios::binary);
 		if (file.is_open())
 		{
 			char buffer[1024];
 			bool statusOk = true;
-			file.seekg(0, ios::end);
+			file.seekg(0, std::ios::end);
 			std::streamoff fileLen = file.tellg();
-			file.seekg(0, ios::beg);
+			file.seekg(0, std::ios::beg);
 			while (fileLen && statusOk)
 			{
 				// File length is always positive so this is safe
@@ -168,3 +163,6 @@ bool CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& visitorCtx, I
 	m_ObjectVisitorCtx = &visitorCtx;
 	return true;
 }
+
+}  //namespace Kernel
+}  //namespace OpenViBE

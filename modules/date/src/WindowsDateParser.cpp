@@ -40,7 +40,7 @@
 #include <iostream>
 #include "WindowsDateParser.h"
 
-using namespace DateParser;
+namespace DateParser {
 
 /*
 * We do not implement alternate representations. However, we always
@@ -352,4 +352,6 @@ static int ConvNum(const char** buf, int* dest, const int llim, const int ulim)
 	*dest = result;
 	return 1;
 }
+
+}  // namespace DateParser
 #endif

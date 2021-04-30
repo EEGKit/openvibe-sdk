@@ -20,7 +20,7 @@ class CScenario final : public TBox<IScenario>
 public:
 
 	CScenario(const IKernelContext& ctx, const CIdentifier& identifier);
-	~CScenario() override;
+	~CScenario() override { this->clear(); }
 
 	bool clear() override;
 	bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool preserveIDs) override;
@@ -142,7 +142,7 @@ private:
 	// Helper members. These are used for quick lookup of next identifiers for the purpose
 	// of the getNextMetadataIdentifier function.
 	std::map<CIdentifier, CIdentifier> m_nextMetadataID;
-	CIdentifier m_firstMetadataID = OV_UndefinedIdentifier;
+	CIdentifier m_firstMetadataID = CIdentifier::undefined();
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

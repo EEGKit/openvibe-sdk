@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmSpectrumAverage.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmSpectrumAverage::initialize()
 {
@@ -53,7 +52,7 @@ bool CBoxAlgorithmSpectrumAverage::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSpectrumAverage::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
@@ -63,7 +62,7 @@ bool CBoxAlgorithmSpectrumAverage::process()
 		m_decoder->process();
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumDecoder_OutputTriggerId_ReceivedHeader))
 		{
-			Toolkit::Matrix::copyDescription(*ip_matrix, *op_matrix);
+			ip_matrix->copyDescription(*op_matrix);
 			ip_matrix->setDimensionSize(1, 1);
 
 			m_encoder->process(OVP_GD_Algorithm_StreamedMatrixEncoder_InputTriggerId_EncodeHeader);
@@ -100,3 +99,7 @@ bool CBoxAlgorithmSpectrumAverage::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

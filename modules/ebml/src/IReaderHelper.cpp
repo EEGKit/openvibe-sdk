@@ -3,9 +3,6 @@
 #include <string>
 #include <cstring>
 
-using namespace EBML;
-using namespace std;
-
 namespace EBML {
 namespace {
 class CReaderHelper final : public IReaderHelper
@@ -21,7 +18,6 @@ public:
 	std::string m_Str;
 };
 }  // namespace
-}  // namespace EBML
 
 uint64_t CReaderHelper::getUInt(const void* buffer, const size_t size)
 {
@@ -84,4 +80,6 @@ const char* CReaderHelper::getStr(const void* buffer, const size_t size)
 
 void CReaderHelper::release() { delete this; }
 
-EBML_API IReaderHelper* EBML::createReaderHelper() { return new CReaderHelper(); }
+EBML_API IReaderHelper* createReaderHelper() { return new CReaderHelper(); }
+
+}  // namespace EBML

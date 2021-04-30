@@ -4,10 +4,9 @@
 #include <limits>
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FileIO;
+namespace OpenViBE {
+namespace Plugins {
+namespace FileIO {
 
 CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader() : m_reader(*this) {}
 uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency() { return 128LL << 32; } // the box clock frequency
@@ -37,7 +36,7 @@ bool CBoxAlgorithmGenericStreamReader::initializeFile()
 {
 	m_file = FS::Files::open(m_filename.toASCIIString(), "rb");
 
-	OV_ERROR_UNLESS_KRF(m_file, "Error opening file [" << m_filename << "] for reading", ErrorType::BadFileRead);
+	OV_ERROR_UNLESS_KRF(m_file, "Error opening file [" << m_filename << "] for reading", Kernel::ErrorType::BadFileRead);
 
 	return true;
 }
@@ -52,10 +51,10 @@ bool CBoxAlgorithmGenericStreamReader::processClock(Kernel::CMessageClock& /*msg
 bool CBoxAlgorithmGenericStreamReader::process()
 {
 	if (m_file == nullptr) { if (!initializeFile()) { return false; } }
-	IBoxIO& boxContext  = this->getDynamicBoxContext();
-	const size_t nInput = this->getStaticBoxContext().getOutputCount();
-	const uint64_t time = this->getPlayerContext().getCurrentTime();
-	bool finished       = false;
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
+	const size_t nInput        = this->getStaticBoxContext().getOutputCount();
+	const uint64_t time        = this->getPlayerContext().getCurrentTime();
+	bool finished              = false;
 
 	while (!finished && (!feof(m_file) || m_pending))
 	{
@@ -65,7 +64,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 			{
 				OV_ERROR_UNLESS_KRF(m_outputIdx < nInput,
 									"Stream index " << m_outputIdx << " can not be output from this box because it does not have enough outputs",
-									ErrorType::BadOutput);
+									Kernel::ErrorType::BadOutput);
 
 				boxContext.getOutputChunk(m_outputIdx)->append(m_pendingChunk);
 				boxContext.markOutputAsReadyToSend(m_outputIdx, m_startTime, m_endTime);
@@ -81,7 +80,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				uint8_t byte;
 				const size_t s = fread(&byte, sizeof(uint8_t), 1, m_file);
 
-				OV_ERROR_UNLESS_KRF(s == 1 || justStarted, "Unexpected EOF in " << m_filename, ErrorType::BadParsing);
+				OV_ERROR_UNLESS_KRF(s == 1 || justStarted, "Unexpected EOF in " << m_filename, Kernel::ErrorType::BadParsing);
 
 				m_reader.processData(&byte, sizeof(byte));
 				justStarted = false;
@@ -91,7 +90,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				m_swap.setSize(m_reader.getCurrentNodeSize(), true);
 				const size_t s = size_t(fread(m_swap.getDirectPointer(), sizeof(uint8_t), size_t(m_swap.getSize()), m_file));
 
-				OV_ERROR_UNLESS_KRF(s == m_swap.getSize(), "Unexpected EOF in " << m_filename, ErrorType::BadParsing);
+				OV_ERROR_UNLESS_KRF(s == m_swap.getSize(), "Unexpected EOF in " << m_filename, Kernel::ErrorType::BadParsing);
 
 				m_pendingChunk.setSize(0, true);
 				m_startTime = std::numeric_limits<uint64_t>::max();
@@ -131,7 +130,7 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& identi
 	{
 		if (!m_hasEBMLHeader)
 		{
-			this->getLogManager() << LogLevel_Info << "The file " << m_filename << " uses an outdated (but still compatible) version of the .ov file format\n";
+			this->getLogManager() << Kernel::LogLevel_Info << "The file " << m_filename << " uses an outdated (but still compatible) version of the .ov file format\n";
 		}
 	}
 	if (top == OVP_NodeId_OpenViBEStream_Header)
@@ -174,7 +173,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 	if (top == OVP_NodeId_OpenViBEStream_Header)
 	{
-		const IBox& boxContext = this->getStaticBoxContext();
+		const Kernel::IBox& boxContext = this->getStaticBoxContext();
 
 		std::map<size_t, size_t> outputIndexToStreamIdx;
 
@@ -214,7 +213,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 						{
 							const CString srcTypeName = this->getTypeManager().getTypeName(it->second);
 							const CString dstTypeName = this->getTypeManager().getTypeName(typeID);
-							this->getLogManager() << LogLevel_Info << "Note: downcasting output " << i + 1 << " from " << srcTypeName
+							this->getLogManager() << Kernel::LogLevel_Info << "Note: downcasting output " << i + 1 << " from " << srcTypeName
 									<< " to " << dstTypeName << ", as there is no exactly type-matching output connector.\n";
 							index = i;
 						}
@@ -251,15 +250,19 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 
 		// When both outputs and streams were lost, there most probably was a damn mistake
 		OV_ERROR_UNLESS_KRV(!lastOutputs || !lostStreams, "Invalid configuration: missing output for stream(s) and missing stream for output(s)",
-							ErrorType::BadConfig);
+							Kernel::ErrorType::BadConfig);
 	}
 
 	if (top == OVP_NodeId_OpenViBEStream_Buffer)
 	{
-		m_pending = ((m_outputIdx != std::numeric_limits<size_t>::max()) && 
+		m_pending = ((m_outputIdx != std::numeric_limits<size_t>::max()) &&
 					 (m_startTime != std::numeric_limits<uint64_t>::max()) &&
 					 (m_endTime != std::numeric_limits<uint64_t>::max()));
 	}
 
 	m_nodes.pop();
 }
+
+}  // namespace FileIO
+}  // namespace Plugins
+}  // namespace OpenViBE

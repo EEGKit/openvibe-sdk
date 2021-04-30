@@ -12,7 +12,7 @@ class TSpectrumEncoderLocal : public T
 {
 protected:
 
-	Kernel::TParameterHandler<IMatrix*> m_iFrequencyAbscissa;
+	Kernel::TParameterHandler<CMatrix*> m_iFrequencyAbscissa;
 	Kernel::TParameterHandler<uint64_t> m_iSampling;
 
 	using T::m_codec;
@@ -53,7 +53,7 @@ public:
 	}
 
 	Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_iSampling; }
-	Kernel::TParameterHandler<IMatrix*>& getInputFrequencyAbscissa() { return m_iFrequencyAbscissa; }
+	Kernel::TParameterHandler<CMatrix*>& getInputFrequencyAbscissa() { return m_iFrequencyAbscissa; }
 
 	size_t getInputFrequencyAbscissaCount() { return m_iFrequencyAbscissa->getDimensionSize(0); }
 

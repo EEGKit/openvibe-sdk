@@ -34,9 +34,8 @@
 #include "Operation.h"
 
 using namespace Lepton;
-using namespace std;
 
-ExpressionTreeNode::ExpressionTreeNode(Operation* operation, const vector<ExpressionTreeNode>& children) : operation(operation), children(children)
+ExpressionTreeNode::ExpressionTreeNode(Operation* operation, const std::vector<ExpressionTreeNode>& children) : operation(operation), children(children)
 {
 	if (size_t(operation->getNumArguments()) != children.size())
 	{
@@ -101,4 +100,4 @@ ExpressionTreeNode& ExpressionTreeNode::operator=(const ExpressionTreeNode& node
 }
 
 const Operation& ExpressionTreeNode::getOperation() const { return *operation; }
-const vector<ExpressionTreeNode>& ExpressionTreeNode::getChildren() const { return children; }
+const std::vector<ExpressionTreeNode>& ExpressionTreeNode::getChildren() const { return children; }

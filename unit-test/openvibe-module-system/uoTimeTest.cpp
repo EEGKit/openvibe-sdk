@@ -26,13 +26,10 @@
 #include <tuple>
 #include <chrono>
 
-
 #include "openvibe/CTime.hpp"
 #include "system/ovCTime.h"
 
 #include "ovtAssert.h"
-
-using namespace System;
 
 //
 // \note This test should be improved. Some improvements could be:
@@ -162,14 +159,14 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	// assume that a steady clock is not available on the test
 	// platform. If it returns true, it just means that the internal clock
 	// says it is steady...
-	OVT_ASSERT(Time::isClockSteady(), "Failure to retrieve a steady clock");
+	OVT_ASSERT(System::Time::isClockSteady(), "Failure to retrieve a steady clock");
 
 	// Same as above.
 	// The test is set to 1ms at it is a requirement for OpenViBE clocks
-	OVT_ASSERT(Time::checkResolution(1), "Failure to check for resolution");
+	OVT_ASSERT(System::Time::checkResolution(1), "Failure to check for resolution");
 
 	// A stress test to check no overflow happens
-	OVT_ASSERT(Time::checkResolution(std::numeric_limits<size_t >::max()), "Failure to check for resolution");
+	OVT_ASSERT(System::Time::checkResolution(std::numeric_limits<size_t >::max()), "Failure to check for resolution");
 
 	//
 	// zSleep() function test
@@ -183,11 +180,11 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	};
 
 	// calibrate sleep function
-	const auto deltaTime = calibrateSleep(1000, Time::zsleep, Time::zgetTime);
+	const auto deltaTime = calibrateSleep(1000, System::Time::zsleep, System::Time::zgetTime);
 
 	std::cout << "INFO: Delta time for zsleep calibration = " << OpenViBE::CTime(deltaTime) << std::endl;
 
-	const auto resultSleepData = testSleep(expectedSleepData, Time::zsleep, Time::zgetTime);
+	const auto resultSleepData = testSleep(expectedSleepData, System::Time::zsleep, System::Time::zgetTime);
 
 	OVT_ASSERT(resultSleepData.size() == expectedSleepData.size(), "Failure to run zsleep tests");
 
@@ -202,7 +199,7 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	//
 
 	// the sample count guess was found in an empiric way
-	auto resultGetTimeData = testClock(OpenViBE::CTime(0.5).time(), 500000, Time::zgetTime);
+	auto resultGetTimeData = testClock(OpenViBE::CTime(0.5).time(), 500000, System::Time::zgetTime);
 
 	OVT_ASSERT(std::get<0>(resultGetTimeData), "Failure in zgetTime() test: the clock is not monotonic");
 

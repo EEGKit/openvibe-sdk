@@ -36,7 +36,7 @@ private:
 	{
 		Toolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
 		Kernel::TParameterHandler<IStimulationSet*> op_stimSet;
-		Kernel::TParameterHandler<IMatrix*> op_matrix;
+		Kernel::TParameterHandler<CMatrix*> op_matrix;
 		bool twoValueInput;
 		std::vector<std::pair<double, uint64_t>> scores;
 	} input_t;
@@ -50,7 +50,6 @@ private:
 	bool m_matrixBased  = false;
 };
 
-
 class CBoxAlgorithmVotingClassifierListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
@@ -59,7 +58,7 @@ public:
 
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		CIdentifier id = OV_UndefinedIdentifier;
+		CIdentifier id = CIdentifier::undefined();
 		box.getInputType(index, id);
 		if (id == OV_TypeId_Stimulations || id == OV_TypeId_StreamedMatrix)
 		{
@@ -80,11 +79,11 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
 protected:
 
-	CIdentifier m_inputTypeID = OV_UndefinedIdentifier;
+	CIdentifier m_inputTypeID = CIdentifier::undefined();
 };
 
 class CBoxAlgorithmVotingClassifierDesc final : public IBoxAlgorithmDesc

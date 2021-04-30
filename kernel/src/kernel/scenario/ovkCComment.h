@@ -15,9 +15,9 @@ class CComment final : public TAttributable<TKernelObject<IComment>>
 public:
 
 	CComment(const IKernelContext& ctx, CScenario& rOwnerScenario);
-	~CComment() override;
-	CIdentifier getIdentifier() const override;
-	CString getText() const override;
+	~CComment() override {}
+	CIdentifier getIdentifier() const override { return m_id; }
+	CString getText() const override { return m_text; }
 	bool setIdentifier(const CIdentifier& id) override;
 	bool setText(const CString& sText) override;
 	bool initializeFromExistingComment(const IComment& rExisitingComment) override;
@@ -29,7 +29,7 @@ protected:
 
 	CScenario& m_rOwnerScenario;
 
-	CIdentifier m_id = OV_UndefinedIdentifier;
+	CIdentifier m_id = CIdentifier::undefined();
 	CString m_text;
 };
 }  // namespace Kernel

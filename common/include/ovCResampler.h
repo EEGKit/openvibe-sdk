@@ -145,7 +145,7 @@ public:
 #define NEW_SAMPLER(Len, Fracs)\
 	new r8b::CDSPResampler<r8b::CDSPFracInterpolator<Len, Fracs>>(in, out, m_iMaxNSampleIn,\
 		m_transitionBandPercent, stopBandAttenuation,r8b::EDSPFilterPhaseResponse(0), false)
-		
+
 		for (size_t j = 0; j < m_nChannel; ++j)
 		{
 			switch (m_nFractionalDelayFilterSample) // it defines iFractionalDelayPositionCount 
@@ -211,7 +211,7 @@ public:
 		}
 
 #undef NEW_SAMPLER(Len, Fracs)
-		
+
 		return true;
 	}
 

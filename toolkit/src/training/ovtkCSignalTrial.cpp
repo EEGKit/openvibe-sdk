@@ -1,8 +1,7 @@
 #include "ovtkCSignalTrial.hpp"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace std;
+namespace OpenViBE {
+namespace Toolkit {
 
 bool CSignalTrial::setSamplingRate(const size_t sampling)
 {
@@ -82,5 +81,8 @@ double* CSignalTrial::getChannelSampleBuffer(const size_t index) const
 // ________________________________________________________________________________________________________________
 //
 
-ISignalTrial* Toolkit::createSignalTrial() { return new CSignalTrial(); }
-void Toolkit::releaseSignalTrial(ISignalTrial* trial) { delete trial; }
+ISignalTrial* createSignalTrial() { return new CSignalTrial(); }
+void releaseSignalTrial(ISignalTrial* trial) { delete trial; }
+
+}  // namespace Toolkit
+}  // namespace OpenViBE

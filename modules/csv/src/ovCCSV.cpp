@@ -45,32 +45,28 @@
 
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace CSV;
-using namespace boost::spirit;
-
-namespace {
-const size_t SIGNAL_EPOCH_COL_IDX = 1;
-const size_t TIME_COL_IDX         = 0;
-const size_t END_TIME_COL_IDX     = 1;
-const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
-const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
+namespace OpenViBE {
+namespace CSV {
+static const size_t SIGNAL_EPOCH_COL_IDX = 1;
+static const size_t TIME_COL_IDX         = 0;
+static const size_t END_TIME_COL_IDX     = 1;
+static const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
+static const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
 
 //Separators
-const char SEPARATOR(',');
-const char DATA_SEPARATOR(':');
-const char DIMENSION_SEPARATOR('x');
+static const char SEPARATOR(',');
+static const char DATA_SEPARATOR(':');
+static const char DIMENSION_SEPARATOR('x');
 
 // Columns Names
-const std::string EVENT_ID_COL       = "Event Id";
-const std::string EVENT_DATE_COL     = "Event Date";
-const std::string EVENT_DURATION_COL = "Event Duration";
+static const std::string EVENT_ID_COL       = "Event Id";
+static const std::string EVENT_DATE_COL     = "Event Date";
+static const std::string EVENT_DURATION_COL = "Event Duration";
 
-const size_t CHAR_TO_READ = 1000;
-//const size_t MAXIMUM_FLOAT_DECIMAL = 32;
+static const size_t CHAR_TO_READ = 1000;
+//static const size_t MAXIMUM_FLOAT_DECIMAL = 32;
 
-const char END_OF_LINE_CHAR('\n');
-}	// namespace 
+static const char END_OF_LINE_CHAR('\n');
 
 bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char delimiter, std::string& bufferHistory) const
 {
@@ -1591,7 +1587,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (lineNb % m_nSamplePerBuffer == 0)
 	{
-		if (!qi::parse(line.cbegin(), firstColumn, qi::double_, sample.startTime))
+		if (!boost::spirit::qi::parse(line.cbegin(), firstColumn, boost::spirit::qi::double_, sample.startTime))
 		{
 			m_lastStringError = "Invalid value for the start time. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1601,7 +1597,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (m_inputTypeID == EStreamType::Signal)
 	{
-		if (!qi::parse(firstColumn + 1, secondColumn, qi::ulong_long, sample.epoch))
+		if (!boost::spirit::qi::parse(firstColumn + 1, secondColumn, boost::spirit::qi::ulong_long, sample.epoch))
 		{
 			m_lastStringError = "Invalid value for the epoch. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1614,7 +1610,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 	{
 		sample.epoch = std::numeric_limits<uint64_t>::max();
 
-		if (!qi::parse(firstColumn + 1, secondColumn, qi::double_, sample.endTime))
+		if (!boost::spirit::qi::parse(firstColumn + 1, secondColumn, boost::spirit::qi::double_, sample.endTime))
 		{
 			m_lastStringError = "Invalid value for the end time. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1628,7 +1624,8 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	std::vector<double> colMatrix;
 
-	qi::phrase_parse(secondColumn + 1, line.cbegin() + eventIdCol, qi::double_ % SEPARATOR, ascii::space, colMatrix);
+	boost::spirit::qi::phrase_parse(secondColumn + 1, line.cbegin() + eventIdCol, boost::spirit::qi::double_ % SEPARATOR, boost::spirit::ascii::space,
+									colMatrix);
 
 	if (colMatrix.size() != m_nCol - N_POST_DATA_COL - N_PRE_DATA_COL)
 	{
@@ -1662,15 +1659,18 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 
 	std::vector<uint64_t> stimIDs;
 	// pick all time identifiers for the current time
-	qi::phrase_parse(line.cbegin() + eventIdCol + 1, line.cbegin() + eventDateCol, qi::ulong_long % DATA_SEPARATOR, ascii::space, stimIDs);
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventIdCol + 1, line.cbegin() + eventDateCol, boost::spirit::qi::ulong_long % DATA_SEPARATOR,
+									boost::spirit::ascii::space, stimIDs);
 
 	std::vector<double> stimDates;
 	// pick all time identifiers for the current time
-	qi::phrase_parse(line.cbegin() + eventDateCol + 1, line.cbegin() + eventDurationCol, qi::double_ % DATA_SEPARATOR, ascii::space, stimDates);
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventDateCol + 1, line.cbegin() + eventDurationCol, boost::spirit::qi::double_ % DATA_SEPARATOR,
+									boost::spirit::ascii::space, stimDates);
 
 	std::vector<double> stimDurations;
 	// pick all time identifiers for the current time
-	qi::phrase_parse(line.cbegin() + eventDurationCol + 1, line.cend(), qi::double_ % DATA_SEPARATOR, ascii::space, stimDurations);
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventDurationCol + 1, line.cend(), boost::spirit::qi::double_ % DATA_SEPARATOR, boost::spirit::ascii::space,
+									stimDurations);
 
 	if (stimIDs.size() != stimDates.size() || stimIDs.size() != stimDurations.size())
 	{
@@ -1751,6 +1751,9 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 }
 
 
-CSV_API ICSVHandler* CSV::createCSVHandler() { return new CCSVHandler(); }
+CSV_API ICSVHandler* createCSVHandler() { return new CCSVHandler(); }
 
-CSV_API void CSV::releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler*>(object); }
+CSV_API void releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler*>(object); }
+
+}  // namespace CSV
+}  // namespace OpenViBE

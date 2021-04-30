@@ -24,7 +24,7 @@ public:
 
 protected:
 
-	Kernel::TParameterHandler<IMatrix*> op_frequencyAbscissa;
+	Kernel::TParameterHandler<CMatrix*> op_frequencyAbscissa;
 	Kernel::TParameterHandler<uint64_t> op_sampling;
 
 

@@ -2,13 +2,12 @@
 
 #include <limits>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 namespace {
-size_t FindChannel(const IMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
+size_t FindChannel(const CMatrix& matrix, const CString& channel, const EMatchMethod matchMethod, const size_t start = 0)
 {
 	size_t res = std::numeric_limits<size_t>::max();
 
@@ -66,18 +65,18 @@ bool CBoxAlgorithmReferenceChannel::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmReferenceChannel::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		m_decoder.decode(i);
 		if (m_decoder.isHeaderReceived())
 		{
-			IMatrix& iMatrix = *m_decoder.getOutputMatrix();
-			IMatrix& oMatrix = *m_encoder.getInputMatrix();
+			CMatrix& iMatrix = *m_decoder.getOutputMatrix();
+			CMatrix& oMatrix = *m_encoder.getInputMatrix();
 
 			OV_ERROR_UNLESS_KRF(iMatrix.getDimensionSize(0) >= 2,
-								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)", ErrorType::BadInput);
+								"Invalid input matrix with [" << iMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)", Kernel::ErrorType::BadInput);
 
 			CString channel           = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			const EMatchMethod method = EMatchMethod(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)));
@@ -85,16 +84,14 @@ bool CBoxAlgorithmReferenceChannel::process()
 			m_referenceChannelIdx = FindChannel(iMatrix, channel, method, 0);
 
 			OV_ERROR_UNLESS_KRF(m_referenceChannelIdx != std::numeric_limits<size_t>::max(), "Invalid channel [" << channel << "]: channel not found",
-								ErrorType::BadSetting);
+								Kernel::ErrorType::BadSetting);
 
 			if (FindChannel(*m_decoder.getOutputMatrix(), channel, method, m_referenceChannelIdx + 1) != std::numeric_limits<size_t>::max())
 			{
 				OV_WARNING_K("Multiple channels match for setting [" << channel << "]. Selecting [" << m_referenceChannelIdx << "]");
 			}
 
-			oMatrix.setDimensionCount(2);
-			oMatrix.setDimensionSize(0, iMatrix.getDimensionSize(0) - 1);
-			oMatrix.setDimensionSize(1, iMatrix.getDimensionSize(1));
+			oMatrix.resize(iMatrix.getDimensionSize(0) - 1, iMatrix.getDimensionSize(1));
 			for (size_t j = 0, k = 0; j < iMatrix.getDimensionSize(0); ++j)
 			{
 				if (j != m_referenceChannelIdx) { oMatrix.setDimensionLabel(0, k++, iMatrix.getDimensionLabel(0, j)); }
@@ -104,8 +101,8 @@ bool CBoxAlgorithmReferenceChannel::process()
 		}
 		if (m_decoder.isBufferReceived())
 		{
-			IMatrix& iMatrix      = *m_decoder.getOutputMatrix();
-			IMatrix& oMatrix      = *m_encoder.getInputMatrix();
+			CMatrix& iMatrix      = *m_decoder.getOutputMatrix();
+			CMatrix& oMatrix      = *m_encoder.getInputMatrix();
 			double* iBuffer       = iMatrix.getBuffer();
 			double* oBuffer       = oMatrix.getBuffer();
 			double* refBuffer     = iMatrix.getBuffer() + m_referenceChannelIdx * iMatrix.getDimensionSize(1);
@@ -129,3 +126,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

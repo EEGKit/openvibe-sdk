@@ -8,11 +8,6 @@
 #include "ovp_global_defines.h"
 #include "ovkCMetaboxObjectDesc.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace Metabox;
-using namespace std;
-
 namespace OpenViBE {
 namespace Kernel {
 class CMetaboxManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
@@ -31,7 +26,7 @@ public:
 			CIdentifier scenarioID, metaboxId, metaboxHash;
 			this->getKernelContext().getScenarioManager().
 				  importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
-			if (scenarioID != OV_UndefinedIdentifier)
+			if (scenarioID != CIdentifier::undefined())
 			{
 				IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
 				const bool isValid         = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_ID));
@@ -45,7 +40,7 @@ public:
 					}
 					m_manager.setMetaboxFilePath(metaboxId, CString(fullFileName));
 					m_manager.setMetaboxHash(metaboxId, metaboxHash);
-					m_manager.setMetaboxObjectDesc(metaboxId, new CMetaboxObjectDesc(metaboxId.str().c_str(), metaboxScenario));
+					m_manager.setMetaboxObjectDesc(metaboxId, new Metabox::CMetaboxObjectDesc(metaboxId.str().c_str(), metaboxScenario));
 					m_n++;
 				}
 				else
@@ -66,13 +61,12 @@ public:
 		return res;
 	}
 
-	_IsDerivedFromClass_Final_(TKernelObject<IObject>, OV_UndefinedIdentifier)
+	_IsDerivedFromClass_Final_(TKernelObject<IObject>, CIdentifier::undefined())
 protected:
 	CMetaboxManager& m_manager;
 	size_t m_n;
 };
-}  // namespace Kernel
-}  // namespace OpenViBE
+
 
 CMetaboxManager::CMetaboxManager(const IKernelContext& ctx) : TKernelObject<IMetaboxManager>(ctx)
 {
@@ -82,16 +76,14 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& ctx) : TKernelObject<IMet
 		OV_ScenarioImportContext_OnLoadMetaboxImport, ".xml", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
-CMetaboxManager::~CMetaboxManager() { for (auto& desc : m_objectDesc) { delete desc.second; } }
-
 bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 {
 	this->getLogManager() << LogLevel_Info << "Adding metaboxes from [" << fileNameWildCard << "]\n";
 
 	CMetaboxManagerEntryEnumeratorCallBack callBack(this->getKernelContext(), *this); //, m_pluginModules, m_pluginObjectDescs, haveAllPluginsLoadedCorrectly);
 	FS::IEntryEnumerator* entryEnumerator = createEntryEnumerator(callBack);
-	stringstream ss(fileNameWildCard.toASCIIString());
-	string path;
+	std::stringstream ss(fileNameWildCard.toASCIIString());
+	std::string path;
 	while (getline(ss, path, ';'))
 	{
 		bool result = false; // Used to output imported metabox count
@@ -109,11 +101,11 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 
 CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& previousID) const
 {
-	if (m_objectDesc.empty()) { return OV_UndefinedIdentifier; }
-	if (previousID == OV_UndefinedIdentifier) { return m_objectDesc.begin()->first; }
+	if (m_objectDesc.empty()) { return CIdentifier::undefined(); }
+	if (previousID == CIdentifier::undefined()) { return m_objectDesc.begin()->first; }
 
 	const auto result = m_objectDesc.find(previousID);
-	if (result == m_objectDesc.end() || std::next(result, 1) == m_objectDesc.end()) { return OV_UndefinedIdentifier; }
+	if (result == m_objectDesc.end() || std::next(result, 1) == m_objectDesc.end()) { return CIdentifier::undefined(); }
 	return std::next(result, 1)->first;
 }
 
@@ -123,20 +115,17 @@ const Plugins::IPluginObjectDesc* CMetaboxManager::getMetaboxObjectDesc(const CI
 	return result != m_objectDesc.end() ? result->second : nullptr;
 }
 
-void CMetaboxManager::setMetaboxObjectDesc(const CIdentifier& metaboxID, Plugins::IPluginObjectDesc* metaboxDesc) { m_objectDesc[metaboxID] = metaboxDesc; }
-
 CString CMetaboxManager::getMetaboxFilePath(const CIdentifier& metaboxID) const
 {
 	const auto resultIt = m_filepath.find(metaboxID);
 	return resultIt != m_filepath.end() ? resultIt->second : CString();
 }
 
-void CMetaboxManager::setMetaboxFilePath(const CIdentifier& metaboxID, const CString& filePath) { m_filepath[metaboxID] = filePath; }
-
 CIdentifier CMetaboxManager::getMetaboxHash(const CIdentifier& metaboxID) const
 {
 	const auto resultIt = m_hash.find(metaboxID);
-	return resultIt != m_hash.end() ? resultIt->second : OV_UndefinedIdentifier;
+	return resultIt != m_hash.end() ? resultIt->second : CIdentifier::undefined();
 }
 
-void CMetaboxManager::setMetaboxHash(const CIdentifier& metaboxID, const CIdentifier& hash) { m_hash[metaboxID] = hash; }
+}  // namespace Kernel
+}  // namespace OpenViBE

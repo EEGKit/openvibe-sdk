@@ -17,27 +17,24 @@
 #define OV_AttributeId_Box_Disabled                   		OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
 #define OVD_AttributeId_SettingOverrideFilename       		OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
 // The following is a hack, can be removed once there is a copy constructor for scenarios, boxes, etc
 #include <ovp_global_defines.h>
 //___________________________________________________________________//
 //                                                                   //
+namespace OpenViBE {
+namespace Kernel {
 
 namespace {
 template <class T>
 struct STestTrue
 {
-	bool operator()(typename map<CIdentifier, T>::const_iterator /*it*/) const { return true; }
+	bool operator()(typename std::map<CIdentifier, T>::const_iterator /*it*/) const { return true; }
 };
 
 struct STestEqSourceBox
 {
 	explicit STestEqSourceBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
-	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getSourceBoxIdentifier() == m_BoxId; }
+	bool operator()(const std::map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getSourceBoxIdentifier() == m_BoxId; }
 	const CIdentifier& m_BoxId;
 };
 
@@ -45,7 +42,7 @@ struct STestEqSourceBoxOutput
 {
 	STestEqSourceBoxOutput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_OutputIdx(index) { }
 
-	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
+	bool operator()(const std::map<CIdentifier, CLink*>::const_iterator& it) const
 	{
 		return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIdx;
 	}
@@ -57,7 +54,7 @@ struct STestEqSourceBoxOutput
 struct STestEqTargetBox
 {
 	explicit STestEqTargetBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
-	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getTargetBoxIdentifier() == m_BoxId; }
+	bool operator()(const std::map<CIdentifier, CLink*>::const_iterator& it) const { return it->second->getTargetBoxIdentifier() == m_BoxId; }
 	const CIdentifier& m_BoxId;
 };
 
@@ -65,7 +62,7 @@ struct STestEqTargetBoxInput
 {
 	STestEqTargetBoxInput(const CIdentifier& boxId, const size_t index) : m_BoxId(boxId), m_InputIdx(index) { }
 
-	bool operator()(const map<CIdentifier, CLink*>::const_iterator& it) const
+	bool operator()(const std::map<CIdentifier, CLink*>::const_iterator& it) const
 	{
 		return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIdx;
 	}
@@ -75,15 +72,15 @@ struct STestEqTargetBoxInput
 };
 
 template <class T, class TTest>
-CIdentifier getNextID(const map<CIdentifier, T>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+CIdentifier getNextID(const std::map<CIdentifier, T>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
 {
-	typename map<CIdentifier, T>::const_iterator it;
+	typename std::map<CIdentifier, T>::const_iterator it;
 
-	if (previousID == OV_UndefinedIdentifier) { it = elementMap.begin(); }
+	if (previousID == CIdentifier::undefined()) { it = elementMap.begin(); }
 	else
 	{
 		it = elementMap.find(previousID);
-		if (it == elementMap.end()) { return OV_UndefinedIdentifier; }
+		if (it == elementMap.end()) { return CIdentifier::undefined(); }
 		++it;
 	}
 
@@ -93,23 +90,23 @@ CIdentifier getNextID(const map<CIdentifier, T>& elementMap, const CIdentifier& 
 		++it;
 	}
 
-	return OV_UndefinedIdentifier;
+	return CIdentifier::undefined();
 }
 
 /*
 template <class T, class TTest>
-CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
+CIdentifier getNextID(const std::map<CIdentifier, T*>& elementMap, const CIdentifier& previousID, const TTest& testFunctor)
 {
-	typename map<CIdentifier, T*>::const_iterator it;
+	typename std::map<CIdentifier, T*>::const_iterator it;
 
-	if(previousID==OV_UndefinedIdentifier)
+	if(previousID==CIdentifier::undefined())
 	{
 		it=elementMap.begin();
 	}
 	else
 	{
 		it=elementMap.find(previousID);
-		if(it==elementMap.end()) { return OV_UndefinedIdentifier; }
+		if(it==elementMap.end()) { return CIdentifier::undefined(); }
 		++it;
 	}
 
@@ -119,7 +116,7 @@ CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier&
 		++it;
 	}
 
-	return OV_UndefinedIdentifier;
+	return CIdentifier::undefined();
 }
 */
 }  // namespace
@@ -127,15 +124,13 @@ CIdentifier getNextID(const map<CIdentifier, T*>& elementMap, const CIdentifier&
 //___________________________________________________________________//
 //                                                                   //
 
-CScenario::CScenario(const IKernelContext& ctx, const CIdentifier& identifier) : TBox<IScenario>(ctx), m_firstMetadataID(OV_UndefinedIdentifier)
+CScenario::CScenario(const IKernelContext& ctx, const CIdentifier& identifier) : TBox<IScenario>(ctx), m_firstMetadataID(CIdentifier::undefined())
 {
 	// Some operations on boxes manipulate the owner scenario, for example removing inputs
 	// by default we set the scenario as owning itself to avoid segfaults
-	this->TBox<IScenario>::setOwnerScenario(this);
+	this->setOwnerScenario(this);
 	this->m_identifier = identifier;
 }
-
-CScenario::~CScenario() { this->clear(); }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -152,7 +147,7 @@ bool CScenario::clear()
 
 	for (auto& metadata : m_metadatas) { delete metadata.second; }
 	m_metadatas.clear();
-	m_firstMetadataID = OV_UndefinedIdentifier;
+	m_firstMetadataID = CIdentifier::undefined();
 	m_nextMetadataID.clear();
 
 	for (auto& link : m_links) { delete link.second; }
@@ -185,7 +180,8 @@ bool CScenario::removeScenarioInput(const size_t index)
 bool CScenario::removeScenarioOutput(const size_t index)
 {
 	OV_ERROR_UNLESS_KRF(index < this->getOutputCount(),
-						"Output index = [" << index << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])", ErrorType::OutOfBound);
+						"Output index = [" << index << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+						Kernel::ErrorType::OutOfBound);
 
 	this->removeOutput(index);
 
@@ -197,7 +193,7 @@ bool CScenario::removeScenarioOutput(const size_t index)
 
 bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, const bool mergeSettings, const bool preserveIDs)
 {
-	map<CIdentifier, CIdentifier> oldToNewIdMap;
+	std::map<CIdentifier, CIdentifier> oldToNewIdMap;
 
 	// Copy boxes
 	{
@@ -209,7 +205,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CIdentifier boxID = listID[i];
 			const IBox* box   = scenario.getBoxDetails(boxID);
 			CIdentifier newID;
-			CIdentifier suggestedNewID = preserveIDs ? box->getIdentifier() : OV_UndefinedIdentifier;
+			CIdentifier suggestedNewID = preserveIDs ? box->getIdentifier() : CIdentifier::undefined();
 			this->addBox(newID, *box, suggestedNewID);
 			oldToNewIdMap[boxID] = newID;
 
@@ -230,7 +226,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CIdentifier newID;
 			this->connect(newID, oldToNewIdMap[link->getSourceBoxIdentifier()],
 						  link->getSourceBoxOutputIndex(), oldToNewIdMap[link->getTargetBoxIdentifier()],
-						  link->getTargetBoxInputIndex(), OV_UndefinedIdentifier);
+						  link->getTargetBoxInputIndex(), CIdentifier::undefined());
 
 			if (scenarioMergeCallback) { scenarioMergeCallback->process(linkID, newID); }
 		}
@@ -248,7 +244,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CIdentifier metadataID    = listID[i];
 			const IMetadata* metadata = scenario.getMetadataDetails(metadataID);
 			CIdentifier newID;
-			CIdentifier suggestedNewID = preserveIDs ? metadataID : OV_UndefinedIdentifier;
+			CIdentifier suggestedNewID = preserveIDs ? metadataID : CIdentifier::undefined();
 			this->addMetadata(newID, suggestedNewID);
 			IMetadata* newMetadata = this->getMetadataDetails(newID);
 			newMetadata->initializeFromExistingMetadata(*metadata);
@@ -283,7 +279,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 
 		// In this case we also merge the attributes
 		CIdentifier attributeIdentifier;
-		while ((attributeIdentifier = scenario.getNextAttributeIdentifier(attributeIdentifier)) != OV_UndefinedIdentifier)
+		while ((attributeIdentifier = scenario.getNextAttributeIdentifier(attributeIdentifier)) != CIdentifier::undefined())
 		{
 			CString attributeValue = scenario.getAttributeValue(attributeIdentifier);
 			this->addAttribute(attributeIdentifier, attributeValue);
@@ -304,7 +300,7 @@ CIdentifier CScenario::getNextBoxIdentifier(const CIdentifier& previousID) const
 const IBox* CScenario::getBoxDetails(const CIdentifier& boxID) const
 {
 	const auto it = m_boxes.find(boxID);
-	OV_ERROR_UNLESS_KRN(it != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
@@ -312,9 +308,9 @@ bool CScenario::isBox(const CIdentifier& boxID) const { return m_boxes.count(box
 
 IBox* CScenario::getBoxDetails(const CIdentifier& boxID)
 {
-	// this->getLogManager() << LogLevel_Debug << "Getting box details from scenario\n";
+	// this->getLogManager() << Kernel::LogLevel_Debug << "Getting box details from scenario\n";
 	const auto it = m_boxes.find(boxID);
-	OV_ERROR_UNLESS_KRN(it != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
@@ -365,7 +361,7 @@ bool CScenario::addBox(CIdentifier& boxID, const CIdentifier& boxAlgorithmID, co
 	return newBox->initializeFromAlgorithmClassIdentifier(boxAlgorithmID);
 }
 
-bool CScenario::addBox(CIdentifier& boxID, const IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxID)
+bool CScenario::addBox(CIdentifier& boxID, const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxID)
 {
 	if (!addBox(boxID, suggestedBoxID))
 	{
@@ -388,7 +384,7 @@ bool CScenario::removeBox(const CIdentifier& boxID)
 	// Finds the box according to its identifier
 	auto itBox = m_boxes.find(boxID);
 
-	OV_ERROR_UNLESS_KRF(itBox != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itBox != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
 	// Find all the links that are used by this box
 	auto itLink = m_links.begin();
@@ -426,7 +422,7 @@ CIdentifier CScenario::getNextCommentIdentifier(const CIdentifier& previousID) c
 const IComment* CScenario::getCommentDetails(const CIdentifier& commentID) const
 {
 	const auto it = m_comments.find(commentID);
-	OV_ERROR_UNLESS_KRN(it != m_comments.end(), "Comment [" << commentID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_comments.end(), "Comment [" << commentID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
@@ -435,7 +431,7 @@ bool CScenario::isComment(const CIdentifier& commentID) const { return m_comment
 IComment* CScenario::getCommentDetails(const CIdentifier& commentID)
 {
 	const auto it = m_comments.find(commentID);
-	OV_ERROR_UNLESS_KRN(it != m_comments.end(), "Comment [" << commentID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_comments.end(), "Comment [" << commentID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
@@ -471,7 +467,7 @@ bool CScenario::removeComment(const CIdentifier& commentID)
 {
 	// Finds the comment according to its identifier
 	auto it = m_comments.find(commentID);
-	OV_ERROR_UNLESS_KRF(it != m_comments.end(), "Comment [" << commentID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(it != m_comments.end(), "Comment [" << commentID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	delete it->second;		// Deletes the comment itself
 	m_comments.erase(it);	// Removes comment from the comment list
 	return true;
@@ -479,22 +475,22 @@ bool CScenario::removeComment(const CIdentifier& commentID)
 
 CIdentifier CScenario::getNextMetadataIdentifier(const CIdentifier& previousID) const
 {
-	if (previousID == OV_UndefinedIdentifier) { return m_firstMetadataID; }
-	if (m_metadatas.count(previousID) == 0) { return OV_UndefinedIdentifier; }
+	if (previousID == CIdentifier::undefined()) { return m_firstMetadataID; }
+	if (m_metadatas.count(previousID) == 0) { return CIdentifier::undefined(); }
 	return m_nextMetadataID.at(previousID);
 }
 
 const IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataID) const
 {
 	const auto it = m_metadatas.find(metadataID);
-	OV_ERROR_UNLESS_KRN(it != m_metadatas.end(), "Metadata [" << metadataID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_metadatas.end(), "Metadata [" << metadataID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
 IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataID)
 {
 	const auto it = m_metadatas.find(metadataID);
-	OV_ERROR_UNLESS_KRN(it != m_metadatas.end(), "Metadata [" << metadataID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_metadatas.end(), "Metadata [" << metadataID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
@@ -517,7 +513,8 @@ bool CScenario::removeMetadata(const CIdentifier& metadataID)
 	// Finds the comment according to its identifier
 	auto itMetadata = m_metadatas.find(metadataID);
 
-	OV_ERROR_UNLESS_KRF(itMetadata != m_metadatas.end(), "Comment [" << metadataID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itMetadata != m_metadatas.end(), "Comment [" << metadataID.str() << "] is not part of the scenario",
+						Kernel::ErrorType::ResourceNotFound);
 
 	// Deletes the metadata and remove it from the cache
 	delete itMetadata->second;
@@ -536,7 +533,8 @@ bool CScenario::removeMetadata(const CIdentifier& metadataID)
 			return v.second == metadataID;
 		});
 
-		OV_FATAL_UNLESS_K(previousID != m_nextMetadataID.end(), "Removing metadata [" << metadataID << "] which is not in the cache ", ErrorType::Internal);
+		OV_FATAL_UNLESS_K(previousID != m_nextMetadataID.end(), "Removing metadata [" << metadataID << "] which is not in the cache ",
+						  Kernel::ErrorType::Internal);
 
 		m_nextMetadataID[previousID->first] = m_nextMetadataID[metadataID];
 		m_nextMetadataID.erase(metadataID);
@@ -588,7 +586,7 @@ bool CScenario::hasIO() const { return m_hasIO; }
 
 bool CScenario::setScenarioInputLink(const size_t scenarioInputIdx, const CIdentifier& boxID, const size_t boxInputIdx)
 {
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
 		OV_ERROR_UNLESS_KRF(
 			scenarioInputIdx < this->getInputCount(),
@@ -634,9 +632,9 @@ bool CScenario::setScenarioInputLink(const size_t scenarioInputIdx, const CIdent
 {
 	size_t boxInputIdx = size_t(-1);
 
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
-		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 		this->getBoxDetails(boxID)->getInterfacorIndex(Input, boxInputID, boxInputIdx);
 	}
 	return this->setScenarioInputLink(scenarioInputIdx, boxID, boxInputIdx);
@@ -644,7 +642,7 @@ bool CScenario::setScenarioInputLink(const size_t scenarioInputIdx, const CIdent
 
 bool CScenario::setScenarioOutputLink(const size_t scenarioOutputIdx, const CIdentifier& boxID, const size_t boxOutputIdx)
 {
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
 		OV_ERROR_UNLESS_KRF(scenarioOutputIdx < this->getOutputCount(),
 							"Scenario output index = [" << scenarioOutputIdx << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
@@ -681,9 +679,9 @@ bool CScenario::setScenarioOutputLink(const size_t scenarioOutputIdx, const CIde
 {
 	size_t boxOutputIdx = size_t(-1);
 
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
-		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 		this->getBoxDetails(boxID)->getInterfacorIndex(Output, boxOutputID, boxOutputIdx);
 	}
 	return this->setScenarioOutputLink(scenarioOutputIdx, boxID, boxOutputIdx);
@@ -706,11 +704,11 @@ bool CScenario::getScenarioInputLink(const size_t scenarioInputIdx, CIdentifier&
 bool CScenario::getScenarioInputLink(const size_t scenarioInputIdx, CIdentifier& boxID, CIdentifier& boxOutputID) const
 {
 	size_t index;
-	boxOutputID = OV_UndefinedIdentifier;
+	boxOutputID = CIdentifier::undefined();
 
 	this->getScenarioInputLink(scenarioInputIdx, boxID, index);
 
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
 		if (m_boxes.find(boxID) != m_boxes.end()) { this->getBoxDetails(boxID)->getInterfacorIdentifier(Input, index, boxOutputID); }
 	}
@@ -735,11 +733,11 @@ bool CScenario::getScenarioOutputLink(const size_t scenarioOutputIdx, CIdentifie
 bool CScenario::getScenarioOutputLink(const size_t scenarioOutputIdx, CIdentifier& boxID, CIdentifier& boxOutputID) const
 {
 	size_t index;
-	boxOutputID = OV_UndefinedIdentifier;
+	boxOutputID = CIdentifier::undefined();
 
 	this->getScenarioOutputLink(scenarioOutputIdx, boxID, index);
 
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
 		if (m_boxes.find(boxID) != m_boxes.end()) { this->getBoxDetails(boxID)->getInterfacorIdentifier(Output, index, boxOutputID); }
 	}
@@ -751,13 +749,13 @@ bool CScenario::getScenarioOutputLink(const size_t scenarioOutputIdx, CIdentifie
 // but to keep things simpler we give it all the info
 bool CScenario::removeScenarioInputLink(const size_t scenarioInputIdx, const CIdentifier& boxID, const size_t boxInputIdx)
 {
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
 		OV_ERROR_UNLESS_KRF(scenarioInputIdx < this->getInputCount(),
 							"Scenario Input index = [" << scenarioInputIdx << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
 							ErrorType::OutOfBound);
 
-		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
 		OV_ERROR_UNLESS_KRF(boxInputIdx < this->getBoxDetails(boxID)->getInputCount(),
 							"Box Input index = [" << boxInputIdx << "] is out of range (max index = [" << (this->getBoxDetails(boxID)->getInputCount() - 1) <<
@@ -768,7 +766,7 @@ bool CScenario::removeScenarioInputLink(const size_t scenarioInputIdx, const CId
 	// This should not happen either
 	if (scenarioInputIdx >= m_scenarioInputLinks.size()) { m_scenarioInputLinks.resize(this->getInputCount()); }
 
-	m_scenarioInputLinks[scenarioInputIdx] = std::make_pair(OV_UndefinedIdentifier, 0);
+	m_scenarioInputLinks[scenarioInputIdx] = std::make_pair(CIdentifier::undefined(), 0);
 	return true;
 }
 
@@ -776,13 +774,13 @@ bool CScenario::removeScenarioInputLink(const size_t scenarioInputIdx, const CId
 // but to keep things simpler we give it all the info
 bool CScenario::removeScenarioOutputLink(const size_t scenarioOutputIdx, const CIdentifier& boxID, const size_t boxOutputIdx)
 {
-	if (boxID != OV_UndefinedIdentifier)
+	if (boxID != CIdentifier::undefined())
 	{
 		OV_ERROR_UNLESS_KRF(scenarioOutputIdx < this->getOutputCount(),
 							"Scenario output index = [" << scenarioOutputIdx << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
 							ErrorType::OutOfBound);
 
-		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(this->isBox(boxID), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
 		OV_ERROR_UNLESS_KRF(boxOutputIdx < this->getBoxDetails(boxID)->getOutputCount(),
 							"Box output index = [" << boxOutputIdx << "] is out of range (max index = [" << (this->getBoxDetails(boxID)->getOutputCount() - 1)
@@ -793,21 +791,21 @@ bool CScenario::removeScenarioOutputLink(const size_t scenarioOutputIdx, const C
 	// This should not happen either
 	if (scenarioOutputIdx >= m_scenarioOutputLinks.size()) { m_scenarioOutputLinks.resize(this->getOutputCount()); }
 
-	m_scenarioOutputLinks[scenarioOutputIdx] = std::make_pair(OV_UndefinedIdentifier, 0);
+	m_scenarioOutputLinks[scenarioOutputIdx] = std::make_pair(CIdentifier::undefined(), 0);
 	return true;
 }
 
 const ILink* CScenario::getLinkDetails(const CIdentifier& linkID) const
 {
 	const auto it = m_links.find(linkID);
-	OV_ERROR_UNLESS_KRN(it != m_links.end(), "link [" << linkID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_links.end(), "link [" << linkID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
 ILink* CScenario::getLinkDetails(const CIdentifier& linkID)
 {
 	const auto it = m_links.find(linkID);
-	OV_ERROR_UNLESS_KRN(it != m_links.end(), "Link [" << linkID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(it != m_links.end(), "Link [" << linkID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	return it->second;
 }
 
@@ -817,9 +815,9 @@ bool CScenario::connect(CIdentifier& linkID, const CIdentifier& srcBoxID, const 
 	const auto itBox1 = m_boxes.find(srcBoxID);
 	const auto itBox2 = m_boxes.find(dstBoxID);
 
-	OV_ERROR_UNLESS_KRF(itBox1 != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itBox1 != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
-	OV_ERROR_UNLESS_KRF(itBox2 != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itBox2 != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
 	CBox* srcBox = itBox1->second;
 	CBox* dstBox = itBox2->second;
@@ -903,7 +901,7 @@ bool CScenario::disconnect(const CIdentifier& srcBoxID, const size_t srcBoxOutpu
 		}
 	}
 
-	OV_ERROR_KRF("Link is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_KRF("Link is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 }
 
 bool CScenario::disconnect(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID)
@@ -922,7 +920,7 @@ bool CScenario::disconnect(const CIdentifier& linkID)
 	// Finds the link according to its identifier
 	auto itLink = m_links.find(linkID);
 
-	OV_ERROR_UNLESS_KRF(itLink != m_links.end(), "Link [" << linkID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itLink != m_links.end(), "Link [" << linkID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
 	// Deletes the link itself
 	delete itLink->second;
@@ -1000,12 +998,12 @@ bool CScenario::acceptVisitor(IObjectVisitor& objectVisitor)
 CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedID) const
 {
 	uint64_t newID = (uint64_t(rand()) << 32) + uint64_t(rand());
-	if (suggestedID != OV_UndefinedIdentifier) { newID = suggestedID.toUInteger() - 1; }
+	if (suggestedID != CIdentifier::undefined()) { newID = suggestedID.id() - 1; }
 
 	CIdentifier result;
-	map<CIdentifier, CBox*>::const_iterator itBox;
-	map<CIdentifier, CComment*>::const_iterator itComment;
-	map<CIdentifier, CLink*>::const_iterator itLink;
+	std::map<CIdentifier, CBox*>::const_iterator itBox;
+	std::map<CIdentifier, CComment*>::const_iterator itComment;
+	std::map<CIdentifier, CLink*>::const_iterator itLink;
 	do
 	{
 		newID++;
@@ -1013,7 +1011,7 @@ CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedID) const
 		itBox     = m_boxes.find(result);
 		itComment = m_comments.find(result);
 		itLink    = m_links.find(result);
-	} while (itBox != m_boxes.end() || itComment != m_comments.end() || itLink != m_links.end() || result == OV_UndefinedIdentifier);
+	} while (itBox != m_boxes.end() || itComment != m_comments.end() || itLink != m_links.end() || result == CIdentifier::undefined());
 	return result;
 }
 
@@ -1089,7 +1087,7 @@ bool CScenario::isBoxOutdated(const CIdentifier& boxId)
 
 	boxHashCode2.fromString(box->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
 
-	if (!(boxHashCode1 == OV_UndefinedIdentifier || boxHashCode1 == boxHashCode2)) { return true; }
+	if (!(boxHashCode1 == CIdentifier::undefined() || boxHashCode1 == boxHashCode2)) { return true; }
 
 	return false;
 }
@@ -1107,7 +1105,7 @@ bool CScenario::checkOutdatedBoxes()
 		// Do not attempt to update boxes which do not have existing box algorithm identifiers
 		auto boxAlgorithmClassID = box.second->getAlgorithmClassIdentifier();
 		if (boxAlgorithmClassID != OVP_ClassId_BoxAlgorithm_Metabox
-			&& !dynamic_cast<const IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassID)))
+			&& !dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassID)))
 		{
 			continue;
 		}
@@ -1170,7 +1168,7 @@ bool CScenario::checkOutdatedBoxes()
 
 
 template <class T, class TTest>
-void getIdentifierList(const map<CIdentifier, T>& elementMap, const TTest& testFunctor, CIdentifier** listID, size_t* size)
+void getIdentifierList(const std::map<CIdentifier, T>& elementMap, const TTest& testFunctor, CIdentifier** listID, size_t* size)
 {
 	*listID = new CIdentifier[elementMap.size()];
 
@@ -1229,7 +1227,7 @@ void CScenario::releaseIdentifierList(CIdentifier* listID) const { delete[] list
 bool CScenario::getSourceBoxOutputIndex(const CIdentifier& srcBoxID, const CIdentifier& srcBoxOutputID, size_t& srcBoxOutputIdx)
 {
 	const auto itSourceBox = m_boxes.find(srcBoxID);
-	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	m_boxes[srcBoxID]->getInterfacorIndex(Output, srcBoxOutputID, srcBoxOutputIdx);
 	return true;
 }
@@ -1237,7 +1235,7 @@ bool CScenario::getSourceBoxOutputIndex(const CIdentifier& srcBoxID, const CIden
 bool CScenario::getTargetBoxInputIndex(const CIdentifier& dstBoxID, const CIdentifier& dstBoxInputID, size_t& dstBoxInputIdx)
 {
 	const auto itTargetBox = m_boxes.find(dstBoxID);
-	OV_ERROR_UNLESS_KRF(itTargetBox != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itTargetBox != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	m_boxes[dstBoxID]->getInterfacorIndex(Input, dstBoxInputID, dstBoxInputIdx);
 	return true;
 }
@@ -1245,7 +1243,7 @@ bool CScenario::getTargetBoxInputIndex(const CIdentifier& dstBoxID, const CIdent
 bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& srcBoxID, const size_t& srcBoxOutputIdx, CIdentifier& srcBoxOutputID)
 {
 	const auto itSourceBox = m_boxes.find(srcBoxID);
-	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Source Box [" << srcBoxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	m_boxes[srcBoxID]->getInterfacorIdentifier(Output, srcBoxOutputIdx, srcBoxOutputID);
 	return true;
 }
@@ -1253,7 +1251,7 @@ bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& srcBoxID, const 
 bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& dstBoxID, const size_t& dstBoxInputIdx, CIdentifier& dstBoxInputID)
 {
 	const auto itTargetBox = m_boxes.find(dstBoxID);
-	OV_ERROR_UNLESS_KRF(itTargetBox != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itTargetBox != m_boxes.end(), "Target Box [" << dstBoxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 	m_boxes[dstBoxID]->getInterfacorIdentifier(Input, dstBoxInputIdx, dstBoxInputID);
 	return true;
 }
@@ -1269,7 +1267,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 {
 	// Check if box must be updated
 	const auto itSourceBox = m_boxes.find(boxID);
-	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itSourceBox != m_boxes.end(), "Box [" << boxID.str() << "] is not part of the scenario", Kernel::ErrorType::ResourceNotFound);
 
 	auto itUpdateBox = m_outdatedBoxes.find(boxID);
 
@@ -1279,7 +1277,7 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		itUpdateBox = m_outdatedBoxes.find(boxID);
 	}
 
-	OV_ERROR_UNLESS_KRF(itUpdateBox != m_outdatedBoxes.end(), "Box [" << boxID.str() << "] misses an updated version", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itUpdateBox != m_outdatedBoxes.end(), "Box [" << boxID.str() << "] misses an updated version", Kernel::ErrorType::ResourceNotFound);
 
 
 	if (itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
@@ -1290,15 +1288,15 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		|| itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
 		|| itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting))
 	{
-		OV_ERROR_KRF(m_boxes[boxID]->getName() << " must be manually updated. Its prototype is too complex.", ErrorType::NotImplemented);
+		OV_ERROR_KRF(m_boxes[boxID]->getName() << " must be manually updated. Its prototype is too complex.", Kernel::ErrorType::NotImplemented);
 	}
-	OV_ERROR_UNLESS_KRF(itUpdateBox != m_outdatedBoxes.end(), "Box [" << boxID.str() << "] does not have to be updated", ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itUpdateBox != m_outdatedBoxes.end(), "Box [" << boxID.str() << "] does not have to be updated", Kernel::ErrorType::ResourceNotFound);
 
 	// get all non-updatable attributes from the source box
 	std::map<CIdentifier, CString> nonUpdatableAttributes;
 	{
-		CIdentifier attributeId = OV_UndefinedIdentifier;
-		while ((attributeId = itSourceBox->second->getNextAttributeIdentifier(attributeId)) != OV_UndefinedIdentifier)
+		CIdentifier attributeId = CIdentifier::undefined();
+		while ((attributeId = itSourceBox->second->getNextAttributeIdentifier(attributeId)) != CIdentifier::undefined())
 		{
 			const auto& updatableAttrs = CBoxUpdater::UPDATABLE_ATTRIBUTES;
 			if (std::find(updatableAttrs.cbegin(), updatableAttrs.cend(), attributeId) == updatableAttrs.cend())
@@ -1309,10 +1307,10 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 	}
 
 	// gather links coming to and from the box
-	std::map<EBoxInterfacorType, std::vector<shared_ptr<CLink>>> links;
+	std::map<EBoxInterfacorType, std::vector<std::shared_ptr<CLink>>> links;
 	for (auto interfacorType : { Input, Output })
 	{
-		links[interfacorType] = std::vector<shared_ptr<CLink>>();
+		links[interfacorType] = std::vector<std::shared_ptr<CLink>>();
 		for (size_t index = 0; index < itUpdateBox->second->getInterfacorCountIncludingDeprecated(interfacorType); ++index)
 		{
 			CIdentifier* linkIdentifierList = nullptr;
@@ -1335,11 +1333,12 @@ bool CScenario::updateBox(const CIdentifier& boxID)
 		}
 	}
 
-	OV_FATAL_UNLESS_K(this->removeBox(boxID), "Failed to remove redundant box", ErrorType::Internal);
+	OV_FATAL_UNLESS_K(this->removeBox(boxID), "Failed to remove redundant box", Kernel::ErrorType::Internal);
 
 	CIdentifier updatedBoxIdentifier;
-	OV_FATAL_UNLESS_K(this->addBox(updatedBoxIdentifier, *(itUpdateBox->second.get()), boxID), "Failed to add box to the scenario", ErrorType::Internal);
-	OV_FATAL_UNLESS_K(updatedBoxIdentifier == boxID, "Updated box failed to initialize with same identifier", ErrorType::Internal);
+	OV_FATAL_UNLESS_K(this->addBox(updatedBoxIdentifier, *(itUpdateBox->second.get()), boxID), "Failed to add box to the scenario",
+					  Kernel::ErrorType::Internal);
+	OV_FATAL_UNLESS_K(updatedBoxIdentifier == boxID, "Updated box failed to initialize with same identifier", Kernel::ErrorType::Internal);
 
 	auto updatedBox = this->getBoxDetails(boxID);
 
@@ -1447,7 +1446,7 @@ bool CScenario::removeDeprecatedInterfacorsFromBox(const CIdentifier& boxID)
 
 bool CScenario::containsBoxWithDeprecatedInterfacors() const
 {
-	for (auto& box : m_boxes)
+	for (const auto& box : m_boxes)
 	{
 		for (const auto interfacorType : { Input, Output, Setting })
 		{
@@ -1456,3 +1455,6 @@ bool CScenario::containsBoxWithDeprecatedInterfacors() const
 	}
 	return false;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

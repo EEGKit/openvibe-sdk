@@ -9,21 +9,16 @@
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
+namespace PluginInspector {
 
-namespace {
-std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
-
-std::string generateRstTitle(const std::string& title, const int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
+static std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
+static std::string generateRstTitle(const std::string& title, const int level)
+{
+	return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------------------------------
-
 bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {
 	if (!m_kernelCtx.getScenarioManager().createScenario(m_scenarioID)) { return false; }
@@ -31,6 +26,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 	return true;
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------
 bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 {
 	if (!m_kernelCtx.getScenarioManager().releaseScenario(m_scenarioID)) { return false; }
@@ -40,7 +36,8 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 
 	if (!ofBoxIdx.good())
 	{
-		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDirectory + "/index-boxes.rst").c_str() << "]\n";
+		m_kernelCtx.getLogManager() << Kernel::LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDirectory + "/index-boxes.rst").c_str() <<
+				"]\n";
 		return false;
 	}
 
@@ -59,30 +56,31 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 	return true;
 }
 
-bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc& pod)
+// ------------------------------------------------------------------------------------------------------------------------------------
+bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginObjectDesc& pod)
 {
-	const string fileName = "BoxAlgorithm_" + transform(pod.getName().toASCIIString());
+	const std::string fileName = "BoxAlgorithm_" + transform(pod.getName().toASCIIString());
 	CIdentifier boxID;
 
 	if (pod.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_scenario->addBox(boxID, dynamic_cast<const IBoxAlgorithmDesc&>(pod), OV_UndefinedIdentifier))
+		if (!m_scenario->addBox(boxID, dynamic_cast<const Plugins::IBoxAlgorithmDesc&>(pod), CIdentifier::undefined()))
 		{
-			m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
+			m_kernelCtx.getLogManager() << Kernel::LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
-	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
+	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), CIdentifier::undefined()))
 	{
-		m_kernelCtx.getLogManager() << LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
+		m_kernelCtx.getLogManager() << Kernel::LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 		return true;
 	}
 
 
-	IBox& box = *m_scenario->getBoxDetails(boxID);
+	Kernel::IBox& box = *m_scenario->getBoxDetails(boxID);
 
-	m_kernelCtx.getLogManager() << LogLevel_Trace << "Working on [" << fileName << "]\n";
+	m_kernelCtx.getLogManager() << Kernel::LogLevel_Trace << "Working on [" << fileName << "]\n";
 
 	// --------------------------------------------------------------------------------------------------------------------
 	std::ofstream ofs;
@@ -90,7 +88,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 	if (!ofs.good())
 	{
-		m_kernelCtx.getLogManager() << LogLevel_Error << "Error while trying to open file ["
+		m_kernelCtx.getLogManager() << Kernel::LogLevel_Error << "Error while trying to open file ["
 				<< (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str()
 				<< "]\n";
 		return false;
@@ -188,35 +186,36 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	// should remain available if needed but not be listed
 	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier()))
 	{
-		m_deprecatedBoxesCategories.push_back(pair<string, string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString()));
+		m_deprecatedBoxesCategories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString()));
 	}
-	else { m_categories.push_back(pair<string, string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
+	else { m_categories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
 
 	return true;
 }
 
-string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<std::pair<std::string, std::string>> categories) const
+// ------------------------------------------------------------------------------------------------------------------------------------
+std::string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<std::pair<std::string, std::string>> categories) const
 {
-	string res;
+	std::string res;
 
-	string lastCategoryName;
-	vector<string> lastSplittedCategories;
+	std::string lastCategoryName;
+	std::vector<std::string> lastSplittedCategories;
 	std::sort(categories.begin(), categories.end());
 
 	for (auto& category : categories)
 	{
-		string categoryName = category.first;
-		string name         = category.second;
+		std::string categoryName = category.first;
+		std::string name         = category.second;
 
 		if (lastCategoryName != categoryName)
 		{
-			vector<string> splittedCategories;
+			std::vector<std::string> splittedCategories;
 			size_t i        = size_t(-1);
 			bool isFinished = false;
 			while (!isFinished)
 			{
 				size_t j = categoryName.find('/', i + 1);
-				if (j == string::npos)
+				if (j == std::string::npos)
 				{
 					j          = categoryName.length();
 					isFinished = true;
@@ -247,3 +246,6 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 	}
 	return res;
 }
+
+}  // namespace PluginInspector
+}  // namespace OpenViBE

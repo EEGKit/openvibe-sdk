@@ -11,7 +11,7 @@ class TBaseParameter : public TBase
 {
 public:
 
-	TBaseParameter(const IKernelContext& ctx, const EParameterType type, const CIdentifier& subTypeID = OV_UndefinedIdentifier)
+	TBaseParameter(const IKernelContext& ctx, const EParameterType type, const CIdentifier& subTypeID = CIdentifier::undefined())
 		: TBase(ctx), m_valueRef(nullptr), m_value(0), m_parameterType(type), m_subTypeID(subTypeID) { }
 
 	uint64_t getParameterSize() const override { return sizeof(TType); }
@@ -75,7 +75,7 @@ protected:
 	TType* m_valueRef          = nullptr;
 	TType m_value;
 	EParameterType m_parameterType;
-	CIdentifier m_subTypeID = OV_UndefinedIdentifier;
+	CIdentifier m_subTypeID = CIdentifier::undefined();
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

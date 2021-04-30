@@ -134,13 +134,13 @@ public:
 	 * \brief Cast operator
 	 * \return \e the 64 bits value contained by this identifier.
 	 */
-	operator uint64_t() const { return this->toUInteger(); }
+	operator uint64_t() const { return this->id(); }
 
 	/**
 	 * \brief Conversion to 64 bits uint32_t (should be used instead of the cast)
 	 * \return \e the 64 bits value contained by this identifier.
 	 */
-	uint64_t toUInteger() const { return m_id; }
+	uint64_t id() const { return m_id; }
 
 	//@}
 

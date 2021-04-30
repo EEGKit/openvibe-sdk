@@ -4,29 +4,24 @@
 
 #include <iostream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace SignalProcessing;
-
-
-using namespace Eigen;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 #define COV_DEBUG 0
 #if COV_DEBUG
 void CAlgorithmOnlineCovariance::dumpMatrix(Kernel::ILogManager &rMgr, const MatrixXdRowMajor &mat, const CString &desc)
 {
-	rMgr << LogLevel_Info << desc << "\n";
+	rMgr << Kernel::LogLevel_Info << desc << "\n";
 	for (int i = 0 ; i < mat.rows() ; i++) 
 	{
-		rMgr << LogLevel_Info << "Row " << i << ": ";
+		rMgr << Kernel::LogLevel_Info << "Row " << i << ": ";
 		for (int j = 0 ; j < mat.cols() ; j++) { rMgr << mat(i,j) << " "; }
 		rMgr << "\n";
 	}
 }
 #else
-void CAlgorithmOnlineCovariance::dumpMatrix(ILogManager& /* mgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
+void CAlgorithmOnlineCovariance::dumpMatrix(Kernel::ILogManager& /* mgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
 bool CAlgorithmOnlineCovariance::initialize()
@@ -40,38 +35,34 @@ bool CAlgorithmOnlineCovariance::uninitialize() { return true; }
 bool CAlgorithmOnlineCovariance::process()
 {
 	// Note: The input parameters must have been set by the caller by now
-	const TParameterHandler<double> ip_Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
-	const TParameterHandler<bool> ip_TraceNormalization(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
-	const TParameterHandler<uint64_t> ip_UpdateMethod(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
-	const TParameterHandler<IMatrix*> ip_FeatureVectorSet(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
-	TParameterHandler<IMatrix*> op_Mean(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean));
-	TParameterHandler<IMatrix*> op_CovarianceMatrix(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
+	const Kernel::TParameterHandler<double> ip_Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
+	const Kernel::TParameterHandler<bool> ip_TraceNormalization(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
+	const Kernel::TParameterHandler<uint64_t> ip_UpdateMethod(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
+	const Kernel::TParameterHandler<CMatrix*> ip_FeatureVectorSet(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
+	Kernel::TParameterHandler<CMatrix*> op_Mean(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean));
+	Kernel::TParameterHandler<CMatrix*> op_CovarianceMatrix(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Reset))
 	{
-		OV_ERROR_UNLESS_KRF(ip_Shrinkage >= 0.0 && ip_Shrinkage <= 1.0, "Invalid shrinkage parameter (expected value between 0 and 1)", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(ip_Shrinkage >= 0.0 && ip_Shrinkage <= 1.0, "Invalid shrinkage parameter (expected value between 0 and 1)", Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(ip_FeatureVectorSet->getDimensionCount() == 2,
 							"Invalid feature vector with " << ip_FeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
-							ErrorType::BadInput);
+							Kernel::ErrorType::BadInput);
 
 		const size_t nRows = ip_FeatureVectorSet->getDimensionSize(0);
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1, "Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(nRows >= 1 && nCols >= 1, "Invalid input matrix [" << nRows << "x" << nCols << "(minimum expected = 1x1)", Kernel::ErrorType::BadInput);
 
-		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_Shrinkage << " ...\n";
-		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_TraceNormalization ? "[on]" : "[off]") << "\n";
-		this->getLogManager() << LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(
+		this->getLogManager() << Kernel::LogLevel_Debug << "Using shrinkage coeff " << ip_Shrinkage << " ...\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << "Trace normalization is " << (ip_TraceNormalization ? "[on]" : "[off]") << "\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << "Using update method " << getTypeManager().getEnumerationEntryNameFromValue(
 			OVP_TypeId_OnlineCovariance_UpdateMethod, ip_UpdateMethod) << "\n";
 
 		// Set the output buffers
-		op_Mean->setDimensionCount(2);
-		op_Mean->setDimensionSize(0, 1);
-		op_Mean->setDimensionSize(1, nCols);
-		op_CovarianceMatrix->setDimensionCount(2);
-		op_CovarianceMatrix->setDimensionSize(0, nCols);
-		op_CovarianceMatrix->setDimensionSize(1, nCols);
+		op_Mean->resize(1, nCols);
+		op_CovarianceMatrix->resize(nCols, nCols);
 
 		// These keep track of the non-normalized incremental estimates
 		m_mean.resize(1, nCols);
@@ -89,10 +80,10 @@ bool CAlgorithmOnlineCovariance::process()
 
 		const double* buffer = ip_FeatureVectorSet->getBuffer();
 
-		OV_ERROR_UNLESS_KRF(buffer, "Input buffer is NULL", ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(buffer, "Input buffer is NULL", Kernel::ErrorType::BadInput);
 
 		// Cast our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
-		const Map<MatrixXdRowMajor> sampleChunk(const_cast<double*>(buffer), nRows, nCols);
+		const Eigen::Map<MatrixXdRowMajor> sampleChunk(const_cast<double*>(buffer), nRows, nCols);
 
 		// Update the mean & cov estimates
 
@@ -101,10 +92,10 @@ bool CAlgorithmOnlineCovariance::process()
 			// 'Average of per-chunk covariance matrices'. This might not be a proper cov over
 			// the dataset, but seems occasionally produce nicely smoothed results when used for CSP.
 
-			const MatrixXd chunkMean     = sampleChunk.colwise().mean();
-			const MatrixXd chunkCentered = sampleChunk.rowwise() - chunkMean.row(0);
+			const Eigen::MatrixXd chunkMean     = sampleChunk.colwise().mean();
+			const Eigen::MatrixXd chunkCentered = sampleChunk.rowwise() - chunkMean.row(0);
 
-			MatrixXd chunkCov = (1.0 / double(nRows)) * chunkCentered.transpose() * chunkCentered;
+			Eigen::MatrixXd chunkCov = (1.0 / double(nRows)) * chunkCentered.transpose() * chunkCentered;
 
 			if (ip_TraceNormalization)
 			{
@@ -139,7 +130,7 @@ bool CAlgorithmOnlineCovariance::process()
 				m_n    = 1;
 			}
 
-			MatrixXd chunkContribution;
+			Eigen::MatrixXd chunkContribution;
 			chunkContribution.resizeLike(m_cov);
 			chunkContribution.setZero();
 
@@ -147,8 +138,8 @@ bool CAlgorithmOnlineCovariance::process()
 			{
 				m_mean += sampleChunk.row(i);
 
-				const MatrixXd diff      = (m_n + 1.0) * sampleChunk.row(i) - m_mean;
-				const MatrixXd outerProd = diff.transpose() * diff;
+				const Eigen::MatrixXd diff      = (m_n + 1.0) * sampleChunk.row(i) - m_mean;
+				const Eigen::MatrixXd outerProd = diff.transpose() * diff;
 
 				chunkContribution += 1.0 / (m_n * (m_n + 1.0)) * outerProd;
 
@@ -226,7 +217,7 @@ bool CAlgorithmOnlineCovariance::process()
 			m_n = countAfter;
 		}
 #endif
-		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_UpdateMethod).str() << "]", ErrorType::BadSetting); }
+		else { OV_ERROR_KRF("Unknown update method [" << CIdentifier(ip_UpdateMethod).str() << "]", Kernel::ErrorType::BadSetting); }
 	}
 
 	// Give output with regularization (mix prior + cov)?
@@ -234,14 +225,14 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
-		Map<MatrixXdRowMajor> outputMean(op_Mean->getBuffer(), 1, nCols);
-		Map<MatrixXdRowMajor> outputCov(op_CovarianceMatrix->getBuffer(), nCols, nCols);
+		Eigen::Map<MatrixXdRowMajor> outputMean(op_Mean->getBuffer(), 1, nCols);
+		Eigen::Map<MatrixXdRowMajor> outputCov(op_CovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// The shrinkage parameter pulls the covariance matrix towards diagonal covariance
-		MatrixXd priorCov;
+		Eigen::MatrixXd priorCov;
 		priorCov.resizeLike(m_cov);
 		priorCov.setIdentity();
 
@@ -261,11 +252,11 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const size_t nCols = ip_FeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_n > 0, "No sample to compute covariance", Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
-		Map<MatrixXdRowMajor> outputMean(op_Mean->getBuffer(), 1, nCols);
-		Map<MatrixXdRowMajor> outputCov(op_CovarianceMatrix->getBuffer(), nCols, nCols);
+		Eigen::Map<MatrixXdRowMajor> outputMean(op_Mean->getBuffer(), 1, nCols);
+		Eigen::Map<MatrixXdRowMajor> outputCov(op_CovarianceMatrix->getBuffer(), nCols, nCols);
 
 		// We scale by 1/n to normalize
 		outputMean = m_mean / double(m_n);
@@ -280,3 +271,7 @@ bool CAlgorithmOnlineCovariance::process()
 }
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

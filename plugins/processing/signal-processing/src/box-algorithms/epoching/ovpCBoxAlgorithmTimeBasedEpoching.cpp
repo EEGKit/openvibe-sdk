@@ -2,11 +2,9 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace /*OpenViBE::Plugins::*/SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmTimeBasedEpoching::initialize()
 {
@@ -15,7 +13,7 @@ bool CBoxAlgorithmTimeBasedEpoching::initialize()
 
 	OV_ERROR_UNLESS_KRF(m_duration>0 && m_interval>0,
 						"Epocher settings are invalid (duration:" << m_duration << "|interval:"
-						<< m_interval << "). These parameters should be strictly positive.", ErrorType::Internal);
+						<< m_interval << "). These parameters should be strictly positive.", Kernel::ErrorType::Internal);
 
 	m_decoder.initialize(*this, 0);
 	m_encoder.initialize(*this, 0);
@@ -44,10 +42,10 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_decoder.decode(i), "Failed to decode chunk", Kernel::ErrorType::Internal);
 
-		IMatrix* iMatrix = m_decoder.getOutputMatrix();
-		IMatrix* oMatrix = m_encoder.getInputMatrix();
+		CMatrix* iMatrix = m_decoder.getOutputMatrix();
+		CMatrix* oMatrix = m_encoder.getInputMatrix();
 
 		const size_t nChannel = iMatrix->getDimensionSize(0);
 		const size_t nISample = iMatrix->getDimensionSize(1);
@@ -60,18 +58,16 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			m_referenceTime    = 0;
 
 			m_sampling = m_decoder.getOutputSamplingRate();
-			OV_ERROR_UNLESS_KRZ(m_sampling, "Input sampling frequency is equal to 0. Plugin can not process.", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRZ(m_sampling, "Input sampling frequency is equal to 0. Plugin can not process.", Kernel::ErrorType::Internal);
 
 			m_oNSample             = size_t(m_duration * m_sampling); // sample count per output epoch
 			m_oNSampleBetweenEpoch = size_t(m_interval * m_sampling);
 
 			OV_ERROR_UNLESS_KRF(m_oNSample>0 && m_oNSampleBetweenEpoch>0,
 								"Input sampling frequency is [" << m_sampling << "]. This is too low in order to produce epochs of ["
-								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", ErrorType::Internal);
+								<< m_duration << "] seconds with an interval of [" << m_interval << "] seconds.", Kernel::ErrorType::Internal);
 
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, nChannel);
-			oMatrix->setDimensionSize(1, m_oNSample);
+			oMatrix->resize(nChannel, m_oNSample);
 			for (size_t c = 0; c < nChannel; ++c) { oMatrix->setDimensionLabel(0, c, iMatrix->getDimensionLabel(0, c)); }
 
 			m_encoder.encodeHeader();
@@ -166,3 +162,6 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 
 	return true;
 }
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

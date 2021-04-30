@@ -67,13 +67,13 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	for (size_t chunk = 0; chunk < boxCtx.getInputChunkCount(INPUT_SIGNAL_IDX); ++chunk)
 	{
 		OV_ERROR_UNLESS_KRF(m_signalDecoder.decode(chunk), "Failed to decode chunk", Kernel::ErrorType::Internal);
-		IMatrix* iMatrix         = m_signalDecoder.getOutputMatrix();
+		CMatrix* iMatrix         = m_signalDecoder.getOutputMatrix();
 		uint64_t iChunkStartTime = boxCtx.getInputChunkStartTime(INPUT_SIGNAL_IDX, chunk);
 		uint64_t iChunkEndTime   = boxCtx.getInputChunkEndTime(INPUT_SIGNAL_IDX, chunk);
 
 		if (m_signalDecoder.isHeaderReceived())
 		{
-			IMatrix* oMatrix = m_encoder.getInputMatrix();
+			CMatrix* oMatrix = m_encoder.getInputMatrix();
 
 			m_nChannel              = iMatrix->getDimensionSize(0);
 			m_nSamplePerInputBuffer = iMatrix->getDimensionSize(1);
@@ -84,9 +84,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 			m_nSampleCountOutputEpoch = size_t(CTime(m_epochDurationInSeconds).toSampleCount(m_sampling));
 
-			oMatrix->setDimensionCount(2);
-			oMatrix->setDimensionSize(0, m_nChannel);
-			oMatrix->setDimensionSize(1, m_nSampleCountOutputEpoch);
+			oMatrix->resize(m_nChannel, m_nSampleCountOutputEpoch);
 
 			for (size_t channel = 0; channel < m_nChannel; ++channel) { oMatrix->setDimensionLabel(0, channel, iMatrix->getDimensionLabel(0, channel)); }
 			m_encoder.encodeHeader();
@@ -99,7 +97,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								Kernel::ErrorType::Internal);
 			// Cache the signal data
 			m_cachedChunks.emplace_back(iChunkStartTime, iChunkEndTime, new CMatrix());
-			Toolkit::Matrix::copy(*m_cachedChunks.back().matrix, *iMatrix);
+			m_cachedChunks.back().matrix->copy(*iMatrix);
 
 			m_lastSignalChunkEndTime = iChunkEndTime;
 		}

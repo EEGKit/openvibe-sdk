@@ -9,35 +9,29 @@
 #include <xml/IXMLNode.h>
 #include <xml/IXMLHandler.h>
 
-namespace {
-const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
-const char* const REPARTITION_NODE_NAME = "Repartition";
-}
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
-
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Classification;
-
-using namespace /*OpenViBE::*/Toolkit;
+static const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
+static const char* const REPARTITION_NODE_NAME = "Repartition";
 
 bool CAlgorithmPairwiseDecisionHT::parameterize()
 {
-	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	Kernel::TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", Kernel::ErrorType::BadInput);
 
 	return true;
 }
 
 
-bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, IMatrix* probabilities)
+bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_nClass << "] found", Kernel::ErrorType::BadConfig);
 
-	TParameterHandler<IMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	Kernel::TParameterHandler<CMatrix*> ip_Repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	std::vector<double> probability(m_nClass * m_nClass);
 
 	//First we set the diagonal to 0
@@ -149,8 +143,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<classification_info_t>& c
 	std::cout << std::endl << std::endl;
 #endif
 
-	probabilities->setDimensionCount(1);
-	probabilities->setDimensionSize(0, m_nClass);
+	probabilities->resize(m_nClass);
 	for (size_t i = 0; i < m_nClass; ++i) { probabilities->getBuffer()[i] = p[i]; }
 	return true;
 }
@@ -159,8 +152,8 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 {
 	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
 
-	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	const size_t nClass                        = ip_repartition->getDimensionSize(0);
+	Kernel::TParameterHandler<CMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	const size_t nClass                                = ip_repartition->getDimensionSize(0);
 
 	std::stringstream ss;
 	for (size_t i = 0; i < nClass; ++i) { ss << ip_repartition->getBuffer()[i] << " "; }
@@ -174,7 +167,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfig()
 bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 {
 	std::stringstream ss(node.getChildByName(REPARTITION_NODE_NAME)->getPCData());
-	TParameterHandler<IMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+	Kernel::TParameterHandler<CMatrix*> ip_repartition = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 
 
 	std::vector<double> repartition;
@@ -185,8 +178,11 @@ bool CAlgorithmPairwiseDecisionHT::loadConfig(XML::IXMLNode& node)
 		repartition.push_back(value);
 	}
 
-	ip_repartition->setDimensionCount(1);
-	ip_repartition->setDimensionSize(0, repartition.size());
+	ip_repartition->resize(repartition.size());
 	for (size_t i = 0; i < repartition.size(); ++i) { ip_repartition->getBuffer()[i] = repartition[i]; }
 	return true;
 }
+
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE

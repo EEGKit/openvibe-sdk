@@ -1,9 +1,8 @@
 #include "ovpCStreamedMatrixEncoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 bool CStreamedMatrixEncoder::initialize()
 {
@@ -25,7 +24,7 @@ bool CStreamedMatrixEncoder::uninitialize()
 
 bool CStreamedMatrixEncoder::processHeader()
 {
-	IMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_pMatrix;
 	size_t j;
 
 	m_size = (matrix->getDimensionCount() == 0 ? 0 : 1);
@@ -64,7 +63,7 @@ bool CStreamedMatrixEncoder::processHeader()
 
 bool CStreamedMatrixEncoder::processBuffer()
 {
-	IMatrix* matrix = ip_pMatrix;
+	CMatrix* matrix = ip_pMatrix;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);
@@ -74,3 +73,7 @@ bool CStreamedMatrixEncoder::processBuffer()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

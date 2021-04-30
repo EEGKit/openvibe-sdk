@@ -34,11 +34,10 @@
 #include "MSVC_erfc.h"
 
 using namespace Lepton;
-using namespace std;
 
-double Operation::Erf::evaluate(double* args, const map<string, double>& /*variable*/) const { return erf(args[0]); }
+double Operation::Erf::evaluate(double* args, const std::map<std::string, double>& /*variable*/) const { return erf(args[0]); }
 
-double Operation::Erfc::evaluate(double* args, const map<string, double>& /*variable*/) const { return erfc(args[0]); }
+double Operation::Erfc::evaluate(double* args, const std::map<std::string, double>& /*variable*/) const { return erfc(args[0]); }
 
 ExpressionTreeNode Operation::Constant::differentiate(const std::vector<ExpressionTreeNode>& /*children*/,
 													  const std::vector<ExpressionTreeNode>& /*childDerivs*/, const std::string& /*variable*/) const

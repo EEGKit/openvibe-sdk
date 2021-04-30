@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 
-
 namespace OpenViBE {
 
 struct CNameValuePairListImpl

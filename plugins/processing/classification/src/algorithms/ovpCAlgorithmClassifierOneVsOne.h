@@ -20,7 +20,7 @@ typedef struct
 	double secondClass;
 	double classLabel;
 	//This output is probabilist
-	IMatrix* classificationValue;
+	CMatrix* classificationValue;
 } classification_info_t;
 
 
@@ -51,7 +51,7 @@ private:
 	fClassifierComparison m_algorithmComparison = nullptr;
 
 	Kernel::IAlgorithmProxy* m_decisionStrategyAlgorithm = nullptr;
-	CIdentifier m_pairwiseDecisionID                     = OV_UndefinedIdentifier;
+	CIdentifier m_pairwiseDecisionID                     = CIdentifier::undefined();
 
 	static XML::IXMLNode* getClassifierConfig(double firstClass, double secondClass, Kernel::IAlgorithmProxy* subClassifier);
 	XML::IXMLNode* getPairwiseDecisionConfiguration() const;

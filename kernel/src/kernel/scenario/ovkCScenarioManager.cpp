@@ -8,9 +8,8 @@
 #include <openvibe/kernel/scenario/ovIAlgorithmScenarioExporter.h>
 #include "../../tools/ovkSBoxProto.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace std;
+namespace OpenViBE {
+namespace Kernel {
 
 CScenarioManager::CScenarioManager(const IKernelContext& ctx) : TKernelObject<IScenarioManager>(ctx) {}
 
@@ -18,9 +17,9 @@ CScenarioManager::~CScenarioManager() { for (auto i = m_scenarios.begin(); i != 
 
 void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager)
 {
-	CIdentifier importContextId = OV_UndefinedIdentifier;
+	CIdentifier importContextId = CIdentifier::undefined();
 	// Copy the registered importers from the parent Scenario Manager
-	while ((importContextId = scenarioManager.getNextScenarioImportContext(importContextId)) != OV_UndefinedIdentifier)
+	while ((importContextId = scenarioManager.getNextScenarioImportContext(importContextId)) != CIdentifier::undefined())
 	{
 		CString fileNameExtension = "";
 		while ((fileNameExtension = scenarioManager.getNextScenarioImporter(importContextId, fileNameExtension)) != CString(""))
@@ -31,8 +30,8 @@ void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager
 		}
 	}
 
-	CIdentifier exportContextId = OV_UndefinedIdentifier;
-	while ((exportContextId = scenarioManager.getNextScenarioExportContext(exportContextId)) != OV_UndefinedIdentifier)
+	CIdentifier exportContextId = CIdentifier::undefined();
+	while ((exportContextId = scenarioManager.getNextScenarioExportContext(exportContextId)) != CIdentifier::undefined())
 	{
 		CString fileNameExtension = "";
 		while ((fileNameExtension = scenarioManager.getNextScenarioExporter(exportContextId, fileNameExtension)) != CString(""))
@@ -46,17 +45,17 @@ void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager
 
 CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& previousID) const
 {
-	map<CIdentifier, CScenario*>::const_iterator itScenario;
+	std::map<CIdentifier, CScenario*>::const_iterator itScenario;
 
-	if (previousID == OV_UndefinedIdentifier) { itScenario = m_scenarios.begin(); }
+	if (previousID == CIdentifier::undefined()) { itScenario = m_scenarios.begin(); }
 	else
 	{
 		itScenario = m_scenarios.find(previousID);
-		if (itScenario == m_scenarios.end()) { return OV_UndefinedIdentifier; }
+		if (itScenario == m_scenarios.end()) { return CIdentifier::undefined(); }
 		++itScenario;
 	}
 
-	return itScenario != m_scenarios.end() ? itScenario->first : OV_UndefinedIdentifier;
+	return itScenario != m_scenarios.end() ? itScenario->first : CIdentifier::undefined();
 }
 
 bool CScenarioManager::isScenario(const CIdentifier& scenarioID) const { return m_scenarios.find(scenarioID) != m_scenarios.end(); }
@@ -73,9 +72,9 @@ bool CScenarioManager::createScenario(CIdentifier& scenarioID)
 
 bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID)
 {
-	scenarioID = OV_UndefinedIdentifier;
+	scenarioID = CIdentifier::undefined();
 
-	OV_ERROR_UNLESS_KRF(this->createScenario(scenarioID), "Error creating new scenario", ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(this->createScenario(scenarioID), "Error creating new scenario", Kernel::ErrorType::BadResourceCreation);
 
 	const auto releaseScenario = [&]()
 	{
@@ -83,7 +82,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 		// means we are in an unexpected state
 		OV_FATAL_UNLESS_K(this->releaseScenario(scenarioID), "Releasing just created scenario failed for " << scenarioID.str(),
 						  ErrorType::Internal);
-		scenarioID = OV_UndefinedIdentifier;
+		scenarioID = CIdentifier::undefined();
 	};
 
 	IScenario& newScenarioInstance = this->getScenario(scenarioID);
@@ -91,15 +90,15 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 	if (!iMemoryBuffer.getSize())
 	{
 		releaseScenario();
-		OV_ERROR_KRF("Buffer containing scenario data is empty", ErrorType::BadValue);
+		OV_ERROR_KRF("Buffer containing scenario data is empty", Kernel::ErrorType::BadValue);
 	}
 
 	CIdentifier importerInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioImporterAlgorithmID);
 
-	if (importerInstanceIdentifier == OV_UndefinedIdentifier)
+	if (importerInstanceIdentifier == CIdentifier::undefined())
 	{
 		releaseScenario();
-		OV_ERROR_KRF("Can not create the requested scenario importer", ErrorType::BadResourceCreation);
+		OV_ERROR_KRF("Can not create the requested scenario importer", Kernel::ErrorType::BadResourceCreation);
 	}
 
 	IAlgorithmProxy* importer = &this->getKernelContext().getAlgorithmManager().getAlgorithm(importerInstanceIdentifier);
@@ -123,7 +122,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 	{
 		releaseScenario();
 		releaseAlgorithm();
-		OV_ERROR_KRF("Can not initialize the requested scenario importer", ErrorType::Internal);
+		OV_ERROR_KRF("Can not initialize the requested scenario importer", Kernel::ErrorType::Internal);
 	}
 
 	IParameter* memoryBufferParameter = importer->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer);
@@ -137,13 +136,12 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
 			"The requested importer does not have a MemoryBuffer input parameter with scenarioID " <<
-			OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.toString(),
+			OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer,
 			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
-			"The requested importer does not have a Scenario output parameter with scenarioID " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.
-			toString(),
+			"The requested importer does not have a Scenario output parameter with scenarioID " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario,
 			ErrorType::BadOutput);
 	}
 
@@ -158,14 +156,14 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 	{
 		releaseScenario();
 		releaseAlgorithm();
-		OV_ERROR_KRF("Can not process data using the requested scenario importer", ErrorType::Internal);
+		OV_ERROR_KRF("Can not process data using the requested scenario importer", Kernel::ErrorType::Internal);
 	}
 
 	if (!importer->uninitialize())
 	{
 		releaseScenario();
 		releaseAlgorithm();
-		OV_ERROR_KRF("Can not uninitialize the requested scenario importer", ErrorType::Internal);
+		OV_ERROR_KRF("Can not uninitialize the requested scenario importer", Kernel::ErrorType::Internal);
 	}
 
 	releaseAlgorithm();
@@ -175,7 +173,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 
 bool CScenarioManager::importScenarioFromFile(CIdentifier& scenarioID, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmID)
 {
-	scenarioID = OV_UndefinedIdentifier;
+	scenarioID = CIdentifier::undefined();
 
 	CMemoryBuffer memoryBuffer;
 
@@ -193,7 +191,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& scenarioID, const CSt
 	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), size_t(memoryBuffer.getSize()), 1, inputFile) != 1)
 	{
 		fclose(inputFile);
-		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);
+		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", Kernel::ErrorType::BadFileRead);
 	}
 	fclose(inputFile);
 
@@ -254,12 +252,12 @@ bool CScenarioManager::unregisterScenarioImporter(const CIdentifier& importConte
 
 CIdentifier CScenarioManager::getNextScenarioImportContext(const CIdentifier& importContext) const
 {
-	if (m_importers.empty()) { return OV_UndefinedIdentifier; }
+	if (m_importers.empty()) { return CIdentifier::undefined(); }
 
-	if (importContext == OV_UndefinedIdentifier) { return m_importers.cbegin()->first; }
+	if (importContext == CIdentifier::undefined()) { return m_importers.cbegin()->first; }
 
 	auto current = m_importers.find(importContext);
-	if (current == m_importers.end() || ++current == m_importers.end()) { return OV_UndefinedIdentifier; }
+	if (current == m_importers.end() || ++current == m_importers.end()) { return CIdentifier::undefined(); }
 
 	return current->first;
 }
@@ -357,7 +355,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 	CIdentifier exporterInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioExporterAlgorithmID);
 
 	OV_ERROR_UNLESS_KRF(
-		exporterInstanceIdentifier != OV_UndefinedIdentifier,
+		exporterInstanceIdentifier != CIdentifier::undefined(),
 		"Can not create the requested scenario exporter",
 		ErrorType::BadResourceCreation);
 
@@ -381,7 +379,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 	if (!exporter->initialize())
 	{
 		releaseAlgorithm();
-		OV_ERROR_KRF("Can not initialize the requested scenario exporter", ErrorType::Internal);
+		OV_ERROR_KRF("Can not initialize the requested scenario exporter", Kernel::ErrorType::Internal);
 	}
 
 	IParameter* scenarioParameter     = exporter->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario);
@@ -393,14 +391,13 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
-			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.
-			toString(),
+			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario,
 			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
 			"The requested exporter does not have a MemoryBuffer output parameter with identifier " <<
-			OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.toString(),
+			OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer,
 			ErrorType::BadOutput);
 	}
 
@@ -413,13 +410,13 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 	if (!exporter->process())
 	{
 		releaseAlgorithm();
-		OV_ERROR_KRF("Can not process data using the requested scenario exporter", ErrorType::Internal);
+		OV_ERROR_KRF("Can not process data using the requested scenario exporter", Kernel::ErrorType::Internal);
 	}
 
 	if (!exporter->uninitialize())
 	{
 		releaseAlgorithm();
-		OV_ERROR_KRF("Can not uninitialize the requested scenario exporter", ErrorType::Internal);
+		OV_ERROR_KRF("Can not uninitialize the requested scenario exporter", Kernel::ErrorType::Internal);
 	}
 
 	releaseAlgorithm();
@@ -442,7 +439,7 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 	this->exportScenario(memoryBuffer, scenarioID, scenarioExporterAlgorithmID);
 
 	std::ofstream outputFileStream;
-	FS::Files::openOFStream(outputFileStream, fileName, ios::binary);
+	FS::Files::openOFStream(outputFileStream, fileName, std::ios::binary);
 
 	OV_ERROR_UNLESS_KRF(
 		outputFileStream.good(),
@@ -509,12 +506,12 @@ bool CScenarioManager::unregisterScenarioExporter(const CIdentifier& exportConte
 
 CIdentifier CScenarioManager::getNextScenarioExportContext(const CIdentifier& exportContext) const
 {
-	if (m_exporters.empty()) { return OV_UndefinedIdentifier; }
+	if (m_exporters.empty()) { return CIdentifier::undefined(); }
 
-	if (exportContext == OV_UndefinedIdentifier) { return m_exporters.cbegin()->first; }
+	if (exportContext == CIdentifier::undefined()) { return m_exporters.cbegin()->first; }
 
 	auto current = m_exporters.find(exportContext);
-	if (current == m_exporters.end() || ++current == m_exporters.end()) { return OV_UndefinedIdentifier; }
+	if (current == m_exporters.end() || ++current == m_exporters.end()) { return CIdentifier::undefined(); }
 
 	return current->first;
 }
@@ -536,7 +533,7 @@ CString CScenarioManager::getNextScenarioExporter(const CIdentifier& exportConte
 CIdentifier CScenarioManager::getScenarioExporterAlgorithmIdentifier(const CIdentifier& exportContext, const CString& fileNameExtension) const
 {
 	OV_ERROR_UNLESS_KRU(!m_exporters.empty() && m_exporters.count(exportContext) && m_exporters.at(exportContext).count(fileNameExtension.toASCIIString()),
-						"Scenario importer not found", ErrorType::OutOfBound);
+						"Scenario importer not found", Kernel::ErrorType::OutOfBound);
 
 	return m_exporters.at(exportContext).at(fileNameExtension.toASCIIString());
 }
@@ -563,7 +560,7 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioID)
 
 	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
 	// At least, here the abortion is handled!
-	OV_FATAL_UNLESS_K(itScenario != m_scenarios.end(), "Scenario " << scenarioID.str() << " does not exist !", ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itScenario != m_scenarios.end(), "Scenario " << scenarioID.str() << " does not exist !", Kernel::ErrorType::ResourceNotFound);
 
 	return *itScenario->second;
 }
@@ -574,12 +571,15 @@ CIdentifier CScenarioManager::getUnusedIdentifier() const
 {
 	uint64_t id = (uint64_t(rand()) << 32) + uint64_t(rand());
 	CIdentifier res;
-	map<CIdentifier, CScenario*>::const_iterator i;
+	std::map<CIdentifier, CScenario*>::const_iterator i;
 	do
 	{
 		id++;
 		res = CIdentifier(id);
 		i   = m_scenarios.find(res);
-	} while (i != m_scenarios.end() || res == OV_UndefinedIdentifier);
+	} while (i != m_scenarios.end() || res == CIdentifier::undefined());
 	return res;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

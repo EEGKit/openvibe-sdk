@@ -4,10 +4,8 @@
 #include "ovkCBoxUpdater.h"
 #include "ovkTBox.hpp"
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
+namespace OpenViBE {
+namespace Kernel {
 
 const std::array<CIdentifier, 10> CBoxUpdater::UPDATABLE_ATTRIBUTES = {
 	OV_AttributeId_Box_InitialPrototypeHashValue,
@@ -49,13 +47,13 @@ bool CBoxUpdater::initialize()
 	if (m_sourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		const CString metaboxID = m_sourceBox->getAttributeValue(OVP_AttributeId_Metabox_ID);
-		OV_ERROR_UNLESS_KRF(metaboxID != CString(""), "Failed to find metabox with id " << metaboxID, ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(metaboxID != CString(""), "Failed to find metabox with id " << metaboxID, Kernel::ErrorType::BadCall);
 
 		CIdentifier metaboxId;
 		metaboxId.fromString(metaboxID);
 		const CString path(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-		OV_ERROR_UNLESS_KRF(path != CString(""), "Metabox scenario is not available for " << m_sourceBox->getName(), ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(path != CString(""), "Metabox scenario is not available for " << m_sourceBox->getName(), Kernel::ErrorType::BadCall);
 
 
 		// We are going to copy the template scenario, flatten it and then copy all
@@ -87,7 +85,7 @@ bool CBoxUpdater::initialize()
 
 	// initialize updated box attribute to kernel ones
 	CIdentifier attributeIdentifier;
-	while ((attributeIdentifier = m_kernelBox->getNextAttributeIdentifier(attributeIdentifier)) != OV_UndefinedIdentifier)
+	while ((attributeIdentifier = m_kernelBox->getNextAttributeIdentifier(attributeIdentifier)) != CIdentifier::undefined())
 	{
 		CString attributeValue = m_kernelBox->getAttributeValue(attributeIdentifier);
 		m_updatedBox->addAttribute(attributeIdentifier, attributeValue);
@@ -288,8 +286,11 @@ bool CBoxUpdater::updateInterfacors(const EBoxInterfacorType interfacorType)
 size_t CBoxUpdater::getInterfacorIndex(const EBoxInterfacorType type, const IBox& box, const CIdentifier& typeID, const CIdentifier& id, const CString& name)
 {
 	size_t index = size_t(-1);
-	if (id != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(type, id)) { box.getInterfacorIndex(type, id, index); }
+	if (id != CIdentifier::undefined() && box.hasInterfacorWithIdentifier(type, id)) { box.getInterfacorIndex(type, id, index); }
 	else if (box.hasInterfacorWithNameAndType(type, name, typeID)) { box.getInterfacorIndex(type, name, index); }
 
 	return index;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

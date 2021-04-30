@@ -6,19 +6,13 @@
 #include <sstream>
 #include <vector>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::Plugins::*/Classification;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace Eigen;
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
-
-namespace {
-const char* const BASE_NODE_NAME   = "Class-config";
-const char* const WEIGHT_NODE_NAME = "Weights";
-const char* const BIAS_NODE_NAME   = "Bias";
-}  // namespace
+static const char* const BASE_NODE_NAME   = "Class-config";
+static const char* const WEIGHT_NODE_NAME = "Weights";
+static const char* const BIAS_NODE_NAME   = "Bias";
 
 bool CAlgorithmLDADiscriminantFunction::loadConfig(const XML::IXMLNode* configuration)
 {
@@ -61,4 +55,7 @@ XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration()
 	return rootNode;
 }
 
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE
 #endif

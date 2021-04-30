@@ -43,28 +43,28 @@ public:
 	// will also hold the information about the settings, inputs and outputs of the box
 	typedef struct SStream
 	{
-		SStream() : m_name(""), m_typeID(OV_UndefinedIdentifier), m_id(OV_UndefinedIdentifier) {}
+		SStream() : m_name(""), m_typeID(CIdentifier::undefined()), m_id(CIdentifier::undefined()) {}
 
 		SStream(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier)
 			: m_name(name), m_typeID(typeID), m_id(identifier) {}
 
 		CString m_name;
-		CIdentifier m_typeID = OV_UndefinedIdentifier;
-		CIdentifier m_id     = OV_UndefinedIdentifier;
+		CIdentifier m_typeID = CIdentifier::undefined();
+		CIdentifier m_id     = CIdentifier::undefined();
 	} io_stream_t;
 
 	typedef struct SSetting
 	{
 		SSetting()
-			: m_name(""), m_typeID(OV_UndefinedIdentifier), m_defaultValue(""), m_id(OV_UndefinedIdentifier) {}
+			: m_name(""), m_typeID(CIdentifier::undefined()), m_defaultValue(""), m_id(CIdentifier::undefined()) {}
 
 		SSetting(const CString& name, const CIdentifier& typeID, const CString& value, const CIdentifier& id)
 			: m_name(name), m_typeID(typeID), m_defaultValue(value), m_id(id) { }
 
 		CString m_name;
-		CIdentifier m_typeID = OV_UndefinedIdentifier;
+		CIdentifier m_typeID = CIdentifier::undefined();
 		CString m_defaultValue;
-		CIdentifier m_id = OV_UndefinedIdentifier;
+		CIdentifier m_id = CIdentifier::undefined();
 	} setting_t;
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override;
