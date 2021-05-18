@@ -1,4 +1,28 @@
-#include "ovpCBoxAlgorithmOVCSVFileWriter.h"
+///-------------------------------------------------------------------------------------------------
+/// Software License Agreement (AGPL-3 License)
+///
+/// \file CBoxAlgorithmOVCSVFileWriter.cpp
+/// \brief Implementation of the box CSV File Writer
+/// \author Victor Herlin (Mensia)
+/// \version 1.1.0
+/// \date Fri May 7 16:40:49 2021.
+///
+/// \copyright (C) 2021 INRIA
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///------------------------------------------------------------------------------------------------
+#include "CBoxAlgorithmOVCSVFileWriter.hpp"
 
 #include <fs/Files.h>
 
@@ -72,8 +96,6 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 								"Details: " + m_writerLib->getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
 	}
 
-	m_isHeaderReceived = false;
-
 	return true;
 }
 
@@ -132,8 +154,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 		if (m_streamDecoder.isHeaderReceived())
 		{
-			OV_ERROR_UNLESS_KRF(!m_isHeaderReceived, "Multiple streamed matrix headers received", Kernel::ErrorType::BadInput);
-			m_isHeaderReceived = true;
+			OV_ERROR_UNLESS_KRF(!m_isStimulationsHeaderReceived, "Header received late. Stimulations header already received", Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(!m_isStreamedMatrixHeaderReceived, "Multiple streamed matrix headers received", Kernel::ErrorType::BadInput);
+
+			m_isStreamedMatrixHeaderReceived = true;
 
 			if (m_typeID == OV_TypeId_Signal)
 			{
@@ -304,8 +328,30 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(1); ++i)
 	{
 		OV_ERROR_UNLESS_KRF(m_stimDecoder.decode(i), "Failed to decode stimulation chunk", Kernel::ErrorType::Internal);
+		if (m_stimDecoder.isHeaderReceived())
+		{
+			OV_ERROR_UNLESS_KRF(!m_isStimulationsHeaderReceived, "Multiple Stimulations headers received", Kernel::ErrorType::BadInput);
 
-		if (m_stimDecoder.isBufferReceived())
+			m_isStimulationsHeaderReceived = true;
+
+			if (!m_isStreamedMatrixHeaderReceived)
+			{
+				// processStreamedMatrix() is called first and should therefore receive a header first unless there is
+				// no connection on the streamed matrix input.
+				// If so, the CSV is containing stimulations only
+				this->getLogManager() << Kernel::LogLevel_Info << "Stimulation header received first. No signal to be written in file\n";
+
+				m_writerLib->setFormatType(CSV::EStreamType::Stimulations);
+				if (m_writeHeader)
+				{
+					OV_ERROR_UNLESS_KRF(m_writerLib->writeHeaderToFile(),
+					                    (CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ?
+					                                                                                      "" : "Details: " + m_writerLib->getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
+				}
+
+			}
+ 		}
+		else if (m_stimDecoder.isBufferReceived())
 		{
 			const IStimulationSet* stimulationSet = m_stimDecoder.getOutputStimulationSet();
 			// for each stimulation, get its informations

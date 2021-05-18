@@ -956,6 +956,8 @@ std::string CCSVHandler::createHeaderString()
 				addColumn(timeColumn);
 			}
 			break;
+		default:
+			break;
 	}
 
 	// add Epoch Header to signal
@@ -971,14 +973,19 @@ std::string CCSVHandler::createHeaderString()
 		case EStreamType::FeatureVector:
 			addColumn("End Time");
 			break;
+		default:
+			break;
 	}
 
-	// add matrix columns names
-	if (m_dimLabels.empty())
+	if (m_inputTypeID != EStreamType::Stimulations)
 	{
-		m_lastStringError.clear();
-		m_logError = LogErrorCodes_NoMatrixLabels;
-		return invalidHeader;
+		// add matrix columns names
+		if (m_dimLabels.empty())
+		{
+			m_lastStringError.clear();
+			m_logError = LogErrorCodes_NoMatrixLabels;
+			return invalidHeader;
+		}
 	}
 
 	switch (m_inputTypeID)
@@ -1025,6 +1032,9 @@ std::string CCSVHandler::createHeaderString()
 				for (double frequencyAbscissa : m_frequencyAbscissa) { addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa)); }
 			}
 			break;
+
+		default:
+			break;
 	}
 
 	addColumn(EVENT_ID_COL);
@@ -1036,109 +1046,143 @@ std::string CCSVHandler::createHeaderString()
 bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& csv)
 {
 	// if chunks is empty, their is no more lines to write
-	if (m_chunks.empty()) { return true; }
-
-	// if header isn't written, size of first line to write will be the reference
-	if (m_nCol == 0)
+	if (!m_chunks.empty())
 	{
-		m_nCol = m_chunks.front().matrix.size();
-		m_nCol += N_PRE_DATA_COL + N_POST_DATA_COL; // Will be set correctly with call to setFormatType
-	}
-
-	// loop will add a line to the buffer while the last stimulation date registered is greater than the end of the current chunk or until their is an event
-	uint64_t linesWritten = 0;
-
-	while (!m_chunks.empty() && (canWriteAll
-								 || (m_stimulations.empty() && m_chunks.front().endTime <= m_noEventSince)
-								 || (!m_stimulations.empty() && m_chunks.front().startTime <= m_stimulations.back().date))
-	)
-	{
-		// Signal data must be written as sampleCounterPerBuffer th lines;
-		if (m_inputTypeID == EStreamType::Signal && canWriteAll == false && linesWritten != 0 && linesWritten % m_nSamplePerBuffer == 0) { break; }
-		// check line size
-
-		if ((m_inputTypeID == EStreamType::Signal || m_inputTypeID == EStreamType::Spectrum)
-			&& (m_chunks.front().matrix.size() + N_PRE_DATA_COL + N_POST_DATA_COL) != m_nCol)
+		// if header isn't written, size of first line to write will be the reference
+		if (m_nCol == 0)
 		{
-			m_lastStringError.clear();
-			m_logError = LogErrorCodes_WrongLineSize;
-			return false;
+			m_nCol = m_chunks.front().matrix.size();
+			m_nCol += N_PRE_DATA_COL + N_POST_DATA_COL; // Will be set correctly with call to setFormatType
 		}
 
-		if (m_inputTypeID == EStreamType::FeatureVector || m_inputTypeID == EStreamType::CovarianceMatrix || m_inputTypeID == EStreamType::StreamedMatrix)
-		{
-			size_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
-			columnstoHave += N_PRE_DATA_COL + N_POST_DATA_COL;
+		// loop will add a line to the buffer while the last stimulation date registered is greater than the end of the current chunk or until their is an event
+		uint64_t linesWritten = 0;
 
-			if (columnstoHave != m_nCol)
+		while (!m_chunks.empty() && (canWriteAll
+		                             || (m_stimulations.empty() && m_chunks.front().endTime <= m_noEventSince)
+		                             || (!m_stimulations.empty() &&
+		                                 m_chunks.front().startTime <= m_stimulations.back().date))
+				)
+		{
+			// Signal data must be written as sampleCounterPerBuffer th lines;
+			if (m_inputTypeID == EStreamType::Signal && canWriteAll == false && linesWritten != 0 &&
+			    linesWritten % m_nSamplePerBuffer == 0)
 			{
-				m_lastStringError = "Line size is " + std::to_string(columnstoHave) + " but must be " + std::to_string(m_nCol);
-				m_logError        = LogErrorCodes_WrongLineSize;
+				break;
+			}
+			// check line size
+
+			if ((m_inputTypeID == EStreamType::Signal || m_inputTypeID == EStreamType::Spectrum)
+			    && (m_chunks.front().matrix.size() + N_PRE_DATA_COL + N_POST_DATA_COL) != m_nCol)
+			{
+				m_lastStringError.clear();
+				m_logError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
-		}
 
-		// Time and Epoch
-		const std::pair<double, double> currentTime = { m_chunks.front().startTime, m_chunks.front().endTime };
-		std::stringstream ss;
-		ss.str("");
-		ss.precision(m_oPrecision);
-		ss << std::fixed << currentTime.first;
-
-		csv += ss.str();
-
-		switch (m_inputTypeID)
-		{
-			case EStreamType::Spectrum:
-			case EStreamType::StreamedMatrix:
-			case EStreamType::CovarianceMatrix:
-			case EStreamType::FeatureVector:
-				ss.str("");
-				ss << std::fixed << currentTime.second;
-				csv += std::string(1, SEPARATOR) + ss.str();
-				break;
-
-			case EStreamType::Signal:
-				csv += std::string(1, SEPARATOR) + std::to_string(m_chunks.front().epoch);
-				break;
-		}
-
-		// Matrix
-		for (const double& value : m_chunks.front().matrix)
-		{
-			csv += SEPARATOR;
-			ss.str("");
-			ss << std::fixed << value;
-			csv += ss.str();
-		}
-
-		m_chunks.pop_front();
-
-		csv += SEPARATOR;
-
-		// Stimulations
-		if (!m_stimulations.empty())
-		{
-			std::vector<SStimulationChunk> stimulationsToWrite;
-
-			double stimulationTime = m_stimulations.front().date;
-
-			while ((stimulationTime - currentTime.first) < (currentTime.second - currentTime.first))
+			if (m_inputTypeID == EStreamType::FeatureVector || m_inputTypeID == EStreamType::CovarianceMatrix ||
+			    m_inputTypeID == EStreamType::StreamedMatrix)
 			{
-				stimulationsToWrite.push_back(m_stimulations.front());
-				m_stimulations.pop_front();
+				size_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U,
+				                                       std::multiplies<size_t>());
+				columnstoHave += N_PRE_DATA_COL + N_POST_DATA_COL;
 
-				if (m_stimulations.empty()) { break; }
-
-				stimulationTime = m_stimulations.front().date;
+				if (columnstoHave != m_nCol)
+				{
+					m_lastStringError =
+							"Line size is " + std::to_string(columnstoHave) + " but must be " + std::to_string(m_nCol);
+					m_logError = LogErrorCodes_WrongLineSize;
+					return false;
+				}
 			}
 
-			csv += stimulationsToString(stimulationsToWrite);
-		}
-		else { csv += std::string(2, SEPARATOR); }
+			// Time and Epoch
+			const std::pair<double, double> currentTime = {m_chunks.front().startTime, m_chunks.front().endTime};
+			std::stringstream ss;
+			ss.str("");
+			ss.precision(m_oPrecision);
+			ss << std::fixed << currentTime.first;
 
-		csv += "\n";
-		linesWritten++;
+			csv += ss.str();
+
+			switch (m_inputTypeID)
+			{
+				case EStreamType::Spectrum:
+				case EStreamType::StreamedMatrix:
+				case EStreamType::CovarianceMatrix:
+				case EStreamType::FeatureVector:
+					ss.str("");
+					ss << std::fixed << currentTime.second;
+					csv += std::string(1, SEPARATOR) + ss.str();
+					break;
+
+				case EStreamType::Signal:
+					csv += std::string(1, SEPARATOR) + std::to_string(m_chunks.front().epoch);
+					break;
+
+				case EStreamType::Stimulations:
+					m_lastStringError =
+							"Stream samples were received while only Stimulations were expected";
+					m_logError = LogErrorCodes_WrongInputType;
+					return false;
+					break;
+			}
+
+			// Matrix
+			for (const double& value : m_chunks.front().matrix)
+			{
+				csv += SEPARATOR;
+				ss.str("");
+				ss << std::fixed << value;
+				csv += ss.str();
+			}
+
+			m_chunks.pop_front();
+
+			csv += SEPARATOR;
+
+			// Stimulations
+			if (!m_stimulations.empty())
+			{
+				std::vector <SStimulationChunk> stimulationsToWrite;
+
+				double stimulationTime = m_stimulations.front().date;
+
+				while ((stimulationTime - currentTime.first) < (currentTime.second - currentTime.first))
+				{
+					stimulationsToWrite.push_back(m_stimulations.front());
+					m_stimulations.pop_front();
+
+					if (m_stimulations.empty())
+					{
+						break;
+					}
+
+					stimulationTime = m_stimulations.front().date;
+				}
+
+				csv += stimulationsToString(stimulationsToWrite);
+			}
+			else
+			{
+				csv += std::string(2, SEPARATOR);
+			}
+
+			csv += "\n";
+			linesWritten++;
+		}
+	}
+	else if (!m_stimulations.empty())
+	{
+		if (m_inputTypeID == EStreamType::Stimulations)
+		{
+			for (auto stim = m_stimulations.cbegin(); stim != m_stimulations.end(); stim++)
+			{
+				csv += stimulationsToString(std::vector<SStimulationChunk>(1, *stim));
+				csv += "\n";
+			}
+			m_stimulations.clear();
+		}
 	}
 
 	return true;
@@ -1221,6 +1265,9 @@ bool CCSVHandler::parseHeader()
 				m_logError = LogErrorCodes_WrongHeader;
 				return false;
 			}
+			break;
+		case EStreamType::Stimulations:
+			// To-Do
 			break;
 	}
 

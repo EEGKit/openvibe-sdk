@@ -49,13 +49,19 @@ struct SStimulationChunk
 	SStimulationChunk(const uint64_t id, const double date, const double duration) : id(id), date(date), duration(duration) { }
 };
 
+
+/**
+ * Stimulations are added at the end of line for each stream type.
+ * However, they can be handled as a stream type if no signal is provided.
+ */
 enum class EStreamType
 {
 	StreamedMatrix = 0,
 	FeatureVector = 1,
 	Signal = 2,
 	Spectrum = 3,
-	CovarianceMatrix = 4
+	CovarianceMatrix = 4,
+	Stimulations = 5
 };
 
 enum ELogErrorCodes
