@@ -12,6 +12,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	m_sampling                = 0;
 	m_isHeaderSent            = false;
 	m_isStimulationHeaderSent = false;
+	m_nSamplePerBuffer = 1;
 
 	this->getStaticBoxContext().getOutputType(0, m_typeID);
 
@@ -20,49 +21,42 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 						(CSV::ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " +
 							m_readerLib->getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
 
-	m_nSamplePerBuffer = 1;
-
-	if (m_typeID == OV_TypeId_Signal)
-	{
-		m_algorithmEncoder = new Toolkit::TSignalEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
-		m_readerLib->setFormatType(CSV::EStreamType::Signal);
-	}
-	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
-	{
-		m_algorithmEncoder = new Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
-		m_readerLib->setFormatType(CSV::EStreamType::StreamedMatrix);
-	}
-	else if (m_typeID == OV_TypeId_FeatureVector)
-	{
-		m_algorithmEncoder = new Toolkit::TFeatureVectorEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
-		m_readerLib->setFormatType(CSV::EStreamType::FeatureVector);
-	}
-	else if (m_typeID == OV_TypeId_Spectrum)
-	{
-		m_algorithmEncoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
-		m_readerLib->setFormatType(CSV::EStreamType::Spectrum);
-	}
-	else { OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", Kernel::ErrorType::BadInput); }
 
 	OV_ERROR_UNLESS_KRF(m_stimEncoder.initialize(*this, 1), "Error during stimulation encoder initialize", Kernel::ErrorType::Internal);
 
-	const char* msg = (CSV::ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? ""
-																							: ". Details: " + m_readerLib->getLastErrorString())).c_str();
-	if (m_typeID == OV_TypeId_Signal)
+	OV_ERROR_UNLESS_KRF(m_readerLib->parseHeader(),
+	                   (CSV::ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: " +
+	                                                                                                                                      m_readerLib->getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
+
+	if (m_typeID == OV_TypeId_Signal && m_readerLib->getFormatType() == CSV::EStreamType::Signal)
 	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getSignalInformation(m_channelNames, m_sampling, m_nSamplePerBuffer), msg, Kernel::ErrorType::Internal);
+		m_algorithmEncoder = new Toolkit::TSignalEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_readerLib->getSignalInformation(m_channelNames, m_sampling, m_nSamplePerBuffer);
 	}
-	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
+	else if ((m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
+	         && m_readerLib->getFormatType() == CSV::EStreamType::StreamedMatrix)
 	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getStreamedMatrixInformation(m_dimSizes, m_channelNames), msg, Kernel::ErrorType::Internal);
+		m_algorithmEncoder = new Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_readerLib->getStreamedMatrixInformation(m_dimSizes, m_channelNames);
 	}
-	else if (m_typeID == OV_TypeId_FeatureVector)
+	else if (m_typeID == OV_TypeId_FeatureVector && m_readerLib->getFormatType() == CSV::EStreamType::FeatureVector)
 	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getFeatureVectorInformation(m_channelNames), msg, Kernel::ErrorType::Internal);
+		m_algorithmEncoder = new Toolkit::TFeatureVectorEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_readerLib->getFeatureVectorInformation(m_channelNames);
 	}
-	else if (m_typeID == OV_TypeId_Spectrum)
+	else if (m_typeID == OV_TypeId_Spectrum && m_readerLib->getFormatType() == CSV::EStreamType::Spectrum)
 	{
-		OV_ERROR_UNLESS_KRF(m_readerLib->getSpectrumInformation(m_channelNames, m_frequencyAbscissa, m_sampling), msg, Kernel::ErrorType::Internal);
+		m_algorithmEncoder = new Toolkit::TSpectrumEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
+		m_readerLib->getSpectrumInformation(m_channelNames, m_frequencyAbscissa, m_sampling);
+	}
+	else if (m_readerLib->getFormatType() == CSV::EStreamType::Stimulations)
+	{
+		this->getLogManager() << Kernel::LogLevel_Info << "File contains only stimulations\n" ;
+	}
+	else
+	{
+		this->getLogManager() << Kernel::LogLevel_Error << "File content type not matching box output type\n" ;
+		return false;
 	}
 
 	return true;
@@ -89,6 +83,38 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(Kernel::CMessageClock& /*msg*/)
 }
 
 bool CBoxAlgorithmOVCSVFileReader::process()
+{
+	if (m_readerLib->getFormatType() == CSV::EStreamType::Stimulations)
+	{
+		// If the file contains only stimulations
+		const double currentTime = CTime(this->getPlayerContext().getCurrentTime()).toSeconds();
+		std::vector<CSV::SStimulationChunk> stimulationChunk;
+
+		if (!m_readerLib->hasDataToRead() && m_savedStimulations.empty()) { return true; }
+		if (m_savedStimulations.empty())
+		{
+			OV_ERROR_UNLESS_KRF(m_readerLib->readEventsFromFile(5, stimulationChunk),
+			                    (CSV::ICSVHandler::getLogError(m_readerLib->getLastLogError()) +
+			                     (m_readerLib->getLastErrorString().empty() ? "" : ". Details: "
+			                                                                       + m_readerLib->getLastErrorString())).c_str(),
+			                    Kernel::ErrorType::Internal);
+			m_savedStimulations.insert(m_savedStimulations.end(), stimulationChunk.begin(), stimulationChunk.end());
+		}
+
+		return processStimulation(CTime(m_lastStimulationDate).toSeconds(), currentTime);
+	}
+	else if (m_readerLib->getFormatType() != CSV::EStreamType::Undefined)
+	{
+		// If the file contains data chunks and potentially stimulations.
+		return processChunksAndStimulations();
+	}
+
+	// Undefined Stream Type.
+	this->getLogManager() << Kernel::LogLevel_Error << "Cannot process file with undefined format\n";
+	return false;
+}
+
+bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 {
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	CMatrix* matrix            = m_algorithmEncoder.getInputMatrix();
@@ -120,7 +146,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				for (size_t d2 = 0; d2 < m_dimSizes[d1]; ++d2)
 				{
 					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()), "Failed to set dimension label",
-									  Kernel::ErrorType::Internal);
+					                  Kernel::ErrorType::Internal);
 				}
 
 				prevDimSize += m_dimSizes[d1];
@@ -154,7 +180,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			{
 				frequencyAbscissaMatrix->getBuffer()[index] = frequencyAbscissaValue;
 				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()), "Failed to set dimension label",
-								  Kernel::ErrorType::Internal);
+				                  Kernel::ErrorType::Internal);
 			}
 
 			m_algorithmEncoder.getInputSamplingRate() = m_sampling;
@@ -165,7 +191,6 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 		m_isHeaderSent = true;
 		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(0, 0, 0), "Failed to mark signal header as ready to send", Kernel::ErrorType::Internal);
 	}
-
 	const double currentTime = CTime(this->getPlayerContext().getCurrentTime()).toSeconds();
 
 	if (!m_readerLib->hasDataToRead() && m_savedChunks.empty()) { return true; }
@@ -179,9 +204,9 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			std::vector<CSV::SStimulationChunk> stimulationChunk;
 
 			OV_ERROR_UNLESS_KRF(m_readerLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
-								(CSV::ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: "
-									+ m_readerLib->getLastErrorString())).c_str(),
-								Kernel::ErrorType::Internal);
+			                    (CSV::ICSVHandler::getLogError(m_readerLib->getLastLogError()) + (m_readerLib->getLastErrorString().empty() ? "" : ". Details: "
+			                                                                                                                                       + m_readerLib->getLastErrorString())).c_str(),
+			                    Kernel::ErrorType::Internal);
 
 			m_savedChunks.insert(m_savedChunks.end(), matrixChunk.begin(), matrixChunk.end());
 			m_savedStimulations.insert(m_savedStimulations.end(), stimulationChunk.begin(), stimulationChunk.end());
@@ -208,9 +233,9 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 				OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeBuffer(), "Failed to encode signal buffer", Kernel::ErrorType::Internal);
 
 				OV_ERROR_UNLESS_KRF(
-					boxContext.markOutputAsReadyToSend(0, CTime(chunk.startTime).time(), CTime(chunk.endTime).time()),
-					"Failed to mark signal output as ready to send",
-					Kernel::ErrorType::Internal);
+						boxContext.markOutputAsReadyToSend(0, CTime(chunk.startTime).time(), CTime(chunk.endTime).time()),
+						"Failed to mark signal output as ready to send",
+						Kernel::ErrorType::Internal);
 
 				chunksToRemove++;
 			}
@@ -223,8 +248,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", Kernel::ErrorType::Internal);
 
 			OV_ERROR_UNLESS_KRF(
-				boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime).time(), CTime(m_savedChunks.back().endTime).time()),
-				"Failed to mark signal output as ready to send", Kernel::ErrorType::Internal);
+					boxContext.markOutputAsReadyToSend(0, CTime(m_savedChunks.back().startTime).time(), CTime(m_savedChunks.back().endTime).time()),
+					"Failed to mark signal output as ready to send", Kernel::ErrorType::Internal);
 		}
 
 		if (chunksToRemove != 0) { m_savedChunks.erase(m_savedChunks.begin(), m_savedChunks.begin() + chunksToRemove); }
@@ -265,7 +290,6 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 	else
 	{
 		auto it = m_savedStimulations.begin();
-
 		for (; it != m_savedStimulations.end(); ++it)
 		{
 			const double stimulationDate = it->date;
@@ -277,30 +301,40 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 			}
 			else
 			{
-				const std::string message = "The stimulation is not synced with the stream and will be ignored: [Value: "
-											+ std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
-											" | Duration: " + std::to_string(it->duration) + "]";
+				if (startTime < stimulationDate)
+				{
+					// stimulation is in the future of the current time frame. Stop looping
+					break;
+				}
+				else
+				{
+					// Stimulation is in the past of the current time frame, we can discard it
+					const std::string message = "The stimulation is not synced with the stream and will be ignored: [Value: "
+					                            + std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
+					                            " | Duration: " + std::to_string(it->duration) + "]";
 
-				OV_WARNING_K(message.c_str());
+					OV_WARNING_K(message.c_str());
+				}
 			}
 		}
 
-		if (it != m_savedStimulations.begin()) { m_savedStimulations.erase(m_savedStimulations.begin(), it); }
-
+		if (it != m_savedStimulations.begin())
+		{
+			m_savedStimulations.erase(m_savedStimulations.begin(), it);
+		}
 
 		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeBuffer(), "Failed to encode stimulation buffer", Kernel::ErrorType::Internal);
-
 		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, m_lastStimulationDate),
-							"Failed to mark stimulation output as ready to send", Kernel::ErrorType::Internal);
+		                    "Failed to mark stimulation output as ready to send", Kernel::ErrorType::Internal);
 
-		// If there is no more data to send, we push the end.
-		if (m_savedStimulations.empty() && !m_readerLib->hasDataToRead())
-		{
-			OV_ERROR_UNLESS_KRF(m_algorithmEncoder.encodeEnd(), "Failed to encode end.", Kernel::ErrorType::Internal);
+	}
 
-			OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, stimulationChunkStartTime, currentTime),
-								"Failed to mark signal output as ready to send", Kernel::ErrorType::Internal);
-		}
+	if (m_savedStimulations.empty() && !m_readerLib->hasDataToRead())
+	{
+		OV_ERROR_UNLESS_KRF(m_stimEncoder.encodeEnd(), "Failed to encode end.", Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, m_lastStimulationDate, currentTime),
+		                    "Failed to mark signal output as ready to send", Kernel::ErrorType::Internal);
+
 	}
 
 	return true;

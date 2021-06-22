@@ -27,6 +27,7 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_OVCSVFileReader)
 
 private:
+	bool processChunksAndStimulations();
 	bool processStimulation(double startTime, double endTime);
 
 	std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_readerLib;

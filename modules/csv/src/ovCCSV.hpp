@@ -113,6 +113,17 @@ public:
 	bool readSamplesAndEventsFromFile(size_t lineNb, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations) override;
 
 	/**
+	 * \brief Reads the specified amount of events from the file
+	 *
+	 * \param stimsToRead Number of stimulations to read
+	 * \param events Reference to a vector of event structure to put the data in
+	 *
+	 * \retval true in case of success
+	 * \retval false in case of error while reading
+	 */
+	virtual bool readEventsFromFile(size_t stimsToRead, std::vector<SStimulationChunk>& events) override;
+
+	/**
 	 * \brief Open a OV CSV file.
 	 *
 	 * \retval True in case of success.
@@ -127,6 +138,14 @@ public:
 	 * \retval False in case of error.
 	 */
 	bool closeFile() override;
+
+	/**
+	 * \brief Parsing header of opened file
+	 *
+	 * \retval true if the header was read correctly
+	 * \retval false if no header or header corrupted
+	 */
+	bool parseHeader() override;
 
 	/**
 	 * \brief Add a single sample.
@@ -222,12 +241,13 @@ private:
 	bool createCSVStringFromData(bool canWriteAll, std::string& csv);
 
 	/**
-	 * \brief Parsing header to read data.
+	 * \brief Extracts file format from header
+	 * Sets member variable m_inputTypeID accordingly
 	 *
-	 * \retval true in case of correct header
-	 * \retval false in case of incorrect header
+	 * \param header The header of the file
+	 *
 	 */
-	bool parseHeader();
+	void extractFormatType(const std::string& header);
 
 	/**
 	 * \brief Parsing header to read signal data.
@@ -318,7 +338,7 @@ private:
 	ELogErrorCodes m_logError     = LogErrorCodes_NoError;
 	std::string m_lastStringError = "";
 
-	EStreamType m_inputTypeID;
+	EStreamType m_inputTypeID = EStreamType::Undefined;
 
 	typedef std::istream& GetLine(std::istream& in, std::string& out, char delimiter);
 	size_t m_nDim = 0;
@@ -332,7 +352,6 @@ private:
 	size_t m_sampling = 0;
 	size_t m_nCol     = 0;
 
-	bool m_hasInputType       = false;
 	bool m_isFirstLineWritten = false;
 	bool m_isHeaderRead       = false;
 	bool m_isSetInfoCalled    = false;

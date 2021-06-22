@@ -61,7 +61,8 @@ enum class EStreamType
 	Signal = 2,
 	Spectrum = 3,
 	CovarianceMatrix = 4,
-	Stimulations = 5
+	Stimulations = 5,
+	Undefined = 6
 };
 
 enum ELogErrorCodes
@@ -256,7 +257,7 @@ public:
 	 * \brief Write the matrix data in the opened file
 	 *
 	 * \retval true in case of success
-	 * \return false in case of error while writing
+	 * \retval false in case of error while writing
 	 */
 	virtual bool writeDataToFile() = 0;
 
@@ -276,10 +277,20 @@ public:
 	 * \param events reference to a vector of event structure to put the data in
 	 *
 	 * \retval true in case of sucess
-	 * \retval false in case of error while writing
+	 * \retval false in case of error while reading
 	 */
 	virtual bool readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
 
+	/**
+	 * \brief Reads the specified amount of events from the file
+	 *
+	 * \param stimsToRead Number of stimulations to read
+	 * \param events Reference to a vector of event structure to put the data in
+	 *
+	 * \retval true in case of success
+	 * \retval false in case of error while reading
+	 */
+	virtual bool readEventsFromFile(size_t stimsToRead, std::vector<SStimulationChunk>& events) = 0;
 	/**
 	 * \brief Open file specified on parameter
 	 *
@@ -298,6 +309,14 @@ public:
 	 * \retval false in case of error while closing
 	 */
 	virtual bool closeFile() = 0;
+
+	/**
+	 * \brief Parsing header from opened file
+	 *
+	 * \retval true if the header was read correctly
+	 * \retval false if no header or header corrupted
+	 */
+	virtual bool parseHeader() = 0;
 
 	/**
 	 * \brief Add a sample of the data type
