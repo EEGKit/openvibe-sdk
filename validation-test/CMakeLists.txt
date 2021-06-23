@@ -127,7 +127,7 @@ SET(OVT_VALIDATION_TOOLKIT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/python-toolkit)
 
 # Process validation tests
 # When adding a new set of validation tests, test directory must be added here
-#ADD_SUBDIRECTORY(openvibe-file-io-csv)
+ADD_SUBDIRECTORY(openvibe-file-io-csv)
 ADD_SUBDIRECTORY(openvibe-file-io-openvibe)
 ADD_SUBDIRECTORY(openvibe-stimulation-timeout)
 ADD_SUBDIRECTORY(openvibe-regularized-csp)

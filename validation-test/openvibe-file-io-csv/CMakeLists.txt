@@ -41,7 +41,6 @@ SET(TEST_SCENARIOS
 	signal
 	stimulation
 	signal-badtimes
-	signal-nofiletime
 )
 
 # ----------------------
