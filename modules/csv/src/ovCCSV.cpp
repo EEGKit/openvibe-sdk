@@ -1092,8 +1092,7 @@ bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& c
 					break;
 
 				case EStreamType::Stimulations:
-					m_lastStringError =
-							"Stream samples were received while only Stimulations were expected";
+					m_lastStringError = "Stream samples were received while only Stimulations were expected";
 					m_logError = LogErrorCodes_WrongInputType;
 					return false;
 					break;

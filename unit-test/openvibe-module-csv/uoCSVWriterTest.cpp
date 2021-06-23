@@ -585,6 +585,79 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 	releaseCSVHandler(handler);
 }
 
+TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterHeader)
+{
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVStimulationsWriter01.csv";
+	const std::string expectedFileContent = "Event Id,Event Date,Event Duration";
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
+
+	ASSERT_TRUE(handler->writeHeaderToFile());
+	ASSERT_TRUE(handler->closeFile());
+	releaseCSVHandler(handler);
+
+	// Verification
+	std::ifstream ifs(filename);
+	std::string line;
+	ASSERT_TRUE(std::getline(ifs, line));
+	ifs.close();
+
+	ASSERT_STREQ(line.c_str(), expectedFileContent.c_str());
+}
+
+
+
+TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterGoodStims)
+{
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVStimulations02.csv";
+	const std::vector<uint64_t> stimCodes = {33025, 33026, 33027};
+	const std::vector<std::string> expectedStims = {"33025,1.0000000000,0.0000000000",
+												    "33026,2.0000000000,0.0000000000",
+												    "33027,3.0000000000,0.0000000000"};
+
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
+
+	for (size_t i = 0; i < stimCodes.size(); ++i)
+	{
+		handler->addEvent(stimCodes[i],
+						  double(i+1),
+						  0.0 );
+	}
+
+
+	ASSERT_TRUE(handler->writeHeaderToFile());
+	ASSERT_TRUE(handler->writeAllDataToFile());
+	ASSERT_TRUE(handler->closeFile());
+	releaseCSVHandler(handler);
+
+	std::ifstream ifs(filename);
+	std::string line;
+	size_t i = 0;
+	ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignore header
+	while (std::getline(ifs, line))
+	{
+		ASSERT_LT(i, expectedStims.size());
+		ASSERT_STREQ(line.c_str(), expectedStims[i++].c_str());
+	}
+	ifs.close();
+}
+
+TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterUnexpectedData)
+{
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVStimulations03.csv";
+
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
+
+	ASSERT_FALSE(handler->addSample({ 0.0, 0.5, { -10.10, -5.05, 0.00, 5.05, 10.10 }, 1 }));
+
+	ASSERT_TRUE(handler->closeFile());
+	releaseCSVHandler(handler);
+}
 
 int uoCSVWriterTest(int argc, char* argv[])
 {
