@@ -995,7 +995,7 @@ std::string CCSVHandler::createHeaderString()
 				}
 			} while (this->increasePositionIndexes(position));
 		}
-		break;
+			break;
 
 		case EStreamType::Spectrum:
 			for (const std::string& label : m_dimLabels)
@@ -1232,14 +1232,14 @@ bool CCSVHandler::parseHeader()
 
 	m_fs.clear();				   // Useful if the end of file is reached before.
 	// Set stream to the line after the header.
-	if (m_isCRLFEOL)
+	m_fs.seekg(header.size() + 2);
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	// If not CRLF ending, seek one character less
+	if (!m_isCRLFEOL)
 	{
-		m_fs.seekg(header.size() + 2); // Go to the begin of the next line
+		m_fs.seekg(header.size() + 1);
 	}
-	else
-	{
-		m_fs.seekg(header.size() + 1); // Go to the begin of the next line
-	}
+#endif
 	m_bufferReadFileLine.clear();
 
 	switch (m_inputTypeID)
@@ -1282,14 +1282,14 @@ bool CCSVHandler::parseHeader()
 
 	m_fs.clear();				   // Useful if the end of file is reached before.
 	// Reset stream to the line after the header
-	if (m_isCRLFEOL)
-	{
-		m_fs.seekg(header.size() + 2);
-	}
-	else
+	m_fs.seekg(header.size() + 2);
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	// If not CRLF ending, seek one character less
+	if (!m_isCRLFEOL)
 	{
 		m_fs.seekg(header.size() + 1);
 	}
+#endif
 	m_bufferReadFileLine.clear();
 
 	return true;
