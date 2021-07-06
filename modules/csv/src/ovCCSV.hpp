@@ -114,6 +114,7 @@ public:
 
 	/**
 	 * \brief Reads the specified amount of events from the file
+	 * If end of file is reached, then less than the required amount of stims may be returned.
 	 *
 	 * \param stimsToRead Number of stimulations to read
 	 * \param events Reference to a vector of event structure to put the data in

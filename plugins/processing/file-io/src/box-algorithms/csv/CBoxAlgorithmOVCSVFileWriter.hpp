@@ -1,27 +1,28 @@
-///-------------------------------------------------------------------------------------------------
-/// Software License Agreement (AGPL-3 License)
-///
-/// \file CBoxAlgorithmOVCSVFileWriter.hpp
-/// \brief Classes of the box CSV File Writer
-/// \author Victor Herlin (Mensia)
-/// \version 1.1.0
-/// \date Fri May 7 16:40:49 2021.
-///
-/// \copyright (C) 2021 INRIA
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU Affero General Public License as published
-/// by the Free Software Foundation, either version 3 of the License, or
-/// (at your option) any later version.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU Affero General Public License for more details.
-///
-/// You should have received a copy of the GNU Affero General Public License
-/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-///------------------------------------------------------------------------------------------------
+/*********************************************************************
+ * Software License Agreement (AGPL-3 License)
+ *
+ * \file CBoxAlgorithmOVCSVFileWriter.hpp
+ * \brief Classes of the box CSV File Writer
+ * \author Victor Herlin (Mensia)
+ * \version 1.1.0
+ * \date Fri May 7 16:40:49 2021.
+ *
+ * \copyright (C) 2006-2021 INRIA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include "../../ovp_defines.h"
@@ -103,7 +104,7 @@ public:
 	CString getShortDescription() const override { return CString("Writes signal in a CSV (text based) file"); }
 	CString getDetailedDescription() const override { return CString(""); }
 	CString getCategory() const override { return CString("File reading and writing/CSV"); }
-	CString getVersion() const override { return CString("1.1"); }
+	CString getVersion() const override { return CString("1.2"); }
 	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
 	CString getAddedSoftwareVersion() const override { return CString("0.1.0"); }
 	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
