@@ -1229,9 +1229,17 @@ bool CCSVHandler::parseHeader()
 			return false;
 		}
 	}
-	
+
 	m_fs.clear();				   // Useful if the end of file is reached before.
-	m_fs.seekg(header.size() + 1); // Go to the begin of the next line
+	// Set stream to the line after the header.
+	if (m_isCRLFEOL)
+	{
+		m_fs.seekg(header.size() + 2); // Go to the begin of the next line
+	}
+	else
+	{
+		m_fs.seekg(header.size() + 1); // Go to the begin of the next line
+	}
 	m_bufferReadFileLine.clear();
 
 	switch (m_inputTypeID)
@@ -1273,7 +1281,15 @@ bool CCSVHandler::parseHeader()
 	}
 
 	m_fs.clear();				   // Useful if the end of file is reached before.
-	m_fs.seekg(header.size() + 1); // Go to the begin of the next line
+	// Reset stream to the line after the header
+	if (m_isCRLFEOL)
+	{
+		m_fs.seekg(header.size() + 2);
+	}
+	else
+	{
+		m_fs.seekg(header.size() + 1);
+	}
 	m_bufferReadFileLine.clear();
 
 	return true;
