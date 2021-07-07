@@ -264,7 +264,10 @@ bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 
 				chunksToRemove++;
 			}
-			else { break; }
+			else
+			{
+				break;
+			}
 		}
 
 		// If there is no more data to send, we push the end.
@@ -277,7 +280,10 @@ bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 					"Failed to mark signal output as ready to send", Kernel::ErrorType::Internal);
 		}
 
-		if (chunksToRemove != 0) { m_savedChunks.erase(m_savedChunks.begin(), m_savedChunks.begin() + chunksToRemove); }
+		if (chunksToRemove != 0)
+		{
+			m_savedChunks.erase(m_savedChunks.begin(), m_savedChunks.begin() + chunksToRemove);
+		}
 	}
 
 	return true;

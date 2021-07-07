@@ -117,7 +117,9 @@ bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char de
 	buffer.back().erase(lineBreakPos, buffer.back().size());
 
 	out.clear();
-	out.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), size_t(0), [](const size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
+	out.reserve(std::accumulate(buffer.cbegin(), buffer.cend(),
+				size_t(0),
+				[](const size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
 
 	// Let's join the strings !
 	for_each(buffer.begin(), buffer.end(), [&out](const std::string& s) { out += s; });
@@ -139,15 +141,21 @@ void CCSVHandler::split(const std::string& in, const char delimiter, std::vector
 	std::string buffer;
 
 	// Loop until the last delimiter
-	while (this->streamReader(stringStream, item, delimiter, buffer)) { out.push_back(item); }
+	while (this->streamReader(stringStream, item, delimiter, buffer))
+	{
+		out.push_back(item);
+	}
 
 	// Get the part after the last delimiter
-	if (this->streamReader(stringStream, item, '\0', buffer)) { out.push_back(item); }
+	if (this->streamReader(stringStream, item, '\0', buffer))
+	{
+		out.push_back(item);
+	}
 }
 
 void CCSVHandler::setFormatType(const EStreamType typeID)
 {
-	m_inputTypeID  = typeID;
+	m_inputTypeID = typeID;
 }
 
 bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, const size_t sampling, const size_t nSamplePerBuffer)
@@ -460,7 +468,10 @@ bool CCSVHandler::readSamplesAndEventsFromFile(const size_t lineNb, std::vector<
 		const size_t spectrumSize = m_dimSizes[0] * m_dimSizes[1];
 		matrixSize *= spectrumSize;
 	}
-	else { matrixSize = 0; }
+	else
+	{
+		matrixSize = 0;
+	}
 
 	SMatrixChunk chunk(0, 0, std::vector<double>(matrixSize), 0);
 
@@ -565,7 +576,10 @@ bool CCSVHandler::writeHeaderToFile()
 	if (header.empty()) { return false; }
 
 	m_isFirstLineWritten = true;
-	try { m_fs << header; }
+	try
+	{
+		m_fs << header;
+	}
 	catch (std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error occured while writing: ";
@@ -591,7 +605,10 @@ bool CCSVHandler::writeDataToFile()
 	// set matrix (in case of error, logError set in the function)
 	if (!this->createCSVStringFromData(false, csv)) { return false; }
 
-	try { m_fs << csv; }
+	try
+	{
+		m_fs << csv;
+	}
 	catch (std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error occured while writing: ";
@@ -610,7 +627,10 @@ bool CCSVHandler::writeAllDataToFile()
 	// in case of error, logError set in the function
 	if (!createCSVStringFromData(true, csv)) { return false; }
 
-	try { m_fs << csv; }
+	try
+	{
+		m_fs << csv;
+	}
 	catch (std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error occured while writing: ";
@@ -635,7 +655,10 @@ bool CCSVHandler::closeFile()
 	m_isFirstLineWritten = false;
 	m_isSetInfoCalled    = false;
 
-	try { m_fs.close(); }
+	try
+	{
+		m_fs.close();
+	}
 	catch (const std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error while closing file: ";
@@ -775,7 +798,10 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 												[curTime](const SStimulationChunk& chunk) { return chunk.date < curTime; }), m_stimulations.end());
 		}
 	}
-	else { m_chunks.insert(m_chunks.end(), samples.begin(), samples.end()); }
+	else
+	{
+		m_chunks.insert(m_chunks.end(), samples.begin(), samples.end());
+	}
 
 	return true;
 }
@@ -1000,7 +1026,10 @@ std::string CCSVHandler::createHeaderString()
 		case EStreamType::Spectrum:
 			for (const std::string& label : m_dimLabels)
 			{
-				for (double frequencyAbscissa : m_frequencyAbscissa) { addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa)); }
+				for (double frequencyAbscissa : m_frequencyAbscissa)
+				{
+					addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa));
+				}
 			}
 			break;
 
@@ -1437,7 +1466,10 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			{
 				double frequency;
 
-				try { frequency = std::stod(dimensionData); }
+				try
+				{
+					frequency = std::stod(dimensionData);
+				}
 				catch (const std::exception& e)
 				{
 					m_lastStringError = "On entry \"" + dimensionData + "\", exception have been thrown: ";
@@ -1451,7 +1483,10 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			{
 				double frequency;
 
-				try { frequency = std::stod(dimensionData); }
+				try
+				{
+					frequency = std::stod(dimensionData);
+				}
 				catch (const std::exception& e)
 				{
 					m_lastStringError = "On entry \"" + dimensionData + "\", exception have been thrown: ";
@@ -1459,7 +1494,10 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 					return false;
 				}
 
-				if (labelSizeCounter == 0) { lastFrequency = frequency; }
+				if (labelSizeCounter == 0)
+				{
+					lastFrequency = frequency;
+				}
 				else if (frequency < lastFrequency)
 				{
 					m_lastStringError = "Frequencies must be in ascending order";
@@ -1510,7 +1548,10 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	{
 		size_t size = 0;
 
-		try { size = std::stoul(dimensionSize); }
+		try
+		{
+			size = std::stoul(dimensionSize);
+		}
 		catch (std::exception& e)
 		{
 			m_lastStringError = "Error on a dimension size, exception have been thrown: ";
@@ -1583,10 +1624,13 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 			if (columnLabels[dimensionIndex].empty())
 			{
 				// if saved label is empty, mark it as saved (even if it is already)
-				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty()) { filledLabel[dimensionIndex][positionInCurrentDimension] = true; }
-					// else,there is an error, it means that label is already set
+				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty())
+				{
+					filledLabel[dimensionIndex][positionInCurrentDimension] = true;
+				}
 				else
 				{
+					// else,there is an error, it means that label is already set
 					m_lastStringError = "Error at column " + std::to_string(columnIndex + 1)
 										+ " for the label \"" + columnLabels[dimensionIndex]
 										+ "\" in dimension " + std::to_string(dimensionIndex + 1)
@@ -1732,7 +1776,10 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 		return false;
 	}
 
-	for (size_t index = 0; index < stimIDs.size(); ++index) { stimulations.emplace_back(stimIDs[index], stimDates[index], stimDurations[index]); }
+	for (size_t index = 0; index < stimIDs.size(); ++index)
+	{
+		stimulations.emplace_back(stimIDs[index], stimDates[index], stimDurations[index]);
+	}
 
 	return true;
 }

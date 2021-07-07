@@ -122,7 +122,9 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 
 bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 {
-	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Error while marking algorithm as ready to process", Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(),
+					    "Error while marking algorithm as ready to process",
+					    Kernel::ErrorType::Internal);
 	return true;
 }
 
@@ -165,7 +167,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				OV_ERROR_UNLESS_KRF(m_streamDecoder.getOutputSamplingRate() != 0, "Sampling rate can not be 0", Kernel::ErrorType::BadInput);
 				std::vector<std::string> dimensionLabels;
 
-				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { dimensionLabels.push_back(matrix->getDimensionLabel(0, j)); }
+				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j)
+				{
+					dimensionLabels.push_back(matrix->getDimensionLabel(0, j));
+				}
 
 				OV_ERROR_UNLESS_KRF(
 					m_writerLib->setSignalInformation(dimensionLabels, m_streamDecoder.getOutputSamplingRate(), matrix->getDimensionSize(1)),
@@ -212,7 +217,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			{
 				std::vector<std::string> channelsLabels;
 
-				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { channelsLabels.push_back(matrix->getDimensionLabel(0, j)); }
+				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j)
+				{
+					channelsLabels.push_back(matrix->getDimensionLabel(0, j));
+				}
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->setFeatureVectorInformation(channelsLabels),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
@@ -231,7 +239,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				std::vector<std::string> channelsLabels;
 				std::vector<double> frequencyAbscissa;
 
-				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { channelsLabels.push_back(matrix->getDimensionLabel(0, j)); }
+				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j)
+				{
+					channelsLabels.push_back(matrix->getDimensionLabel(0, j));
+				}
 
 				for (size_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); ++j)
 				{
