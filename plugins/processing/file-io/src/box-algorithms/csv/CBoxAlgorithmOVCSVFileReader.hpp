@@ -25,22 +25,25 @@
 
 #pragma once
 
-#include "../../ovp_defines.h"
 #include <cstdio>
 #include <memory>
+#include <vector>
+#include <string>
+#include <deque>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#include "../../ovp_defines.h"
 #include "csv/ovICSV.h"
 
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
+
 class CBoxAlgorithmOVCSVFileReader final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	CBoxAlgorithmOVCSVFileReader() : m_readerLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) { }
 	void release() override { delete this; }
 	uint64_t getClockFrequency() override { return 128LL << 32; }
@@ -92,7 +95,10 @@ public:
 		{
 			OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations), "Failed to reset output type to stimulations", Kernel::ErrorType::Internal);
 		}
-		else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", Kernel::ErrorType::Internal); }
+		else if (index > 1)
+		{
+			OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", Kernel::ErrorType::Internal);
+		}
 
 		return true;
 	}

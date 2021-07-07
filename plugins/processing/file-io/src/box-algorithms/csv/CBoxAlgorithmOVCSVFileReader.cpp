@@ -23,10 +23,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CBoxAlgorithmOVCSVFileReader.hpp"
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <utility>
+
+#include "CBoxAlgorithmOVCSVFileReader.hpp"
 
 namespace OpenViBE {
 namespace Plugins {
@@ -76,11 +78,11 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	}
 	else if (m_readerLib->getFormatType() == CSV::EStreamType::Stimulations)
 	{
-		this->getLogManager() << Kernel::LogLevel_Info << "File contains only stimulations\n" ;
+		this->getLogManager() << Kernel::LogLevel_Info << "File contains only stimulations\n";
 	}
 	else
 	{
-		this->getLogManager() << Kernel::LogLevel_Error << "File content type not matching box output type\n" ;
+		this->getLogManager() << Kernel::LogLevel_Error << "File content type not matching box output type\n";
 		return false;
 	}
 
@@ -102,7 +104,8 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 
 bool CBoxAlgorithmOVCSVFileReader::processClock(Kernel::CMessageClock& /*msg*/)
 {
-	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Failed to mark clock algorithm as ready to process",
+	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(),
+						"Failed to mark clock algorithm as ready to process",
 						Kernel::ErrorType::Internal);
 	return true;
 }

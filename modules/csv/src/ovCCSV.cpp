@@ -27,9 +27,11 @@
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #else
-#include <stdio.h> //sprintf
+#include <stdio.h>  //sprintf
 #endif
 
+#include <utility>
+#include <functional>
 #include <cstdio>
 #include <sstream>
 #include <numeric>
@@ -52,8 +54,8 @@ namespace CSV {
 static const size_t SIGNAL_EPOCH_COL_IDX = 1;
 static const size_t TIME_COL_IDX         = 0;
 static const size_t END_TIME_COL_IDX     = 1;
-static const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
-static const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
+static const size_t N_PRE_DATA_COL       = 2;  // Number of columns before data (Time/Epoch)
+static const size_t N_POST_DATA_COL      = 3;  // Number of columns after data (Events)
 
 //Stream types regexes
 static const boost::regex HEADER_SPECTRUM_REGEX{"Time:\\d+x\\d+\\:\\d+,End Time,([\\w\\s]+:((\\d+)|(\\d+\\.\\d+)),)+Event Id,Event Date,Event Duration"};
@@ -94,8 +96,8 @@ bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char de
 	// If it's not the case, we have to read the stream.
 	while (lineBreakPos == std::string::npos)
 	{
-		buffer.emplace_back(CHAR_TO_READ, '\0');		   // Construct a string that will store the characters.
-		in.read(&buffer.back()[0], CHAR_TO_READ); // Read X chars by X chars
+		buffer.emplace_back(CHAR_TO_READ, '\0');  // Construct a string that will store the characters.
+		in.read(&buffer.back()[0], CHAR_TO_READ);  // Read X chars by X chars
 		lineBreakPos = buffer.back().find_first_of(delimiter);
 
 		// If it's the end of the file and no delimiter has been found...
@@ -126,7 +128,7 @@ bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char de
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	// Check if we are looking for an end of line char and handle the CR/LF Windows/Linux cases.
-	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !out.empty()) { out.pop_back(); }	// Remove the carriage return char.
+	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !out.empty()) { out.pop_back(); }  // Remove the carriage return char.
 #endif
 
 	return true;
@@ -1052,7 +1054,7 @@ bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& c
 		if (m_nCol == 0)
 		{
 			m_nCol = m_chunks.front().matrix.size();
-			m_nCol += N_PRE_DATA_COL + N_POST_DATA_COL; // Will be set correctly with call to setFormatType
+			m_nCol += N_PRE_DATA_COL + N_POST_DATA_COL;  // Will be set correctly with call to setFormatType
 		}
 
 		// loop will add a line to the buffer while the last stimulation date registered is greater than the end of the current chunk or until their is an event
@@ -1226,7 +1228,7 @@ bool CCSVHandler::parseHeader()
 	if (m_isHeaderRead) { return true; }
 
 	std::string header;
-	m_fs.clear(); // Useful if the end of file is reached before.
+	m_fs.clear();  // Useful if the end of file is reached before.
 	m_fs.seekg(0);
 
 	if (!this->streamReader(m_fs, header, END_OF_LINE_CHAR, m_bufferReadFileLine))
@@ -1259,7 +1261,7 @@ bool CCSVHandler::parseHeader()
 		}
 	}
 
-	m_fs.clear();				   // Useful if the end of file is reached before.
+	m_fs.clear();  // Useful if the end of file is reached before.
 	// Set stream to the line after the header.
 	m_fs.seekg(header.size() + 2);
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -1326,7 +1328,7 @@ bool CCSVHandler::parseHeader()
 
 bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 {
-	//check time
+	// check time
 	if (header[TIME_COL_IDX].substr(0, 5) != "Time:"
 		|| header[TIME_COL_IDX].substr(header[TIME_COL_IDX].size() - 2) != "Hz"
 		|| header[TIME_COL_IDX].size() <= 7)
@@ -1352,7 +1354,10 @@ bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 	}
 
 	// get dimension labels
-	for (size_t index = N_PRE_DATA_COL; index < header.size() - N_POST_DATA_COL; ++index) { m_dimLabels.push_back(header[index]); }
+	for (size_t index = N_PRE_DATA_COL; index < header.size() - N_POST_DATA_COL; ++index)
+	{
+		m_dimLabels.push_back(header[index]);
+	}
 
 	if (!this->calculateSampleCountPerBuffer()) { return false; }  // m_LastErrorString set in the function, m_LogError set outside the function
 
@@ -1416,7 +1421,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 		return false;
 	}
 
-	//check Time End column
+	// check Time End column
 	if (header[END_TIME_COL_IDX] != "End Time")
 	{
 		m_lastStringError = "Second column (" + header[END_TIME_COL_IDX] + ") must be End Time Column";
@@ -1504,7 +1509,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 					return false;
 				}
 
-				if (!(std::fabs(frequency - m_frequencyAbscissa[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
+				if ((std::fabs(frequency - m_frequencyAbscissa[labelSizeCounter]) >= std::numeric_limits<double>::epsilon()))
 				{
 					m_lastStringError = "Channels must have the same frequency bands";
 					return false;
@@ -1732,11 +1737,17 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (m_inputTypeID == EStreamType::Signal)
 	{
-		for (size_t index = 0; index < m_dimLabels.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index]; }
+		for (size_t index = 0; index < m_dimLabels.size(); ++index)
+		{
+			sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index];
+		}
 	}
 	else if (m_inputTypeID == EStreamType::Spectrum)
 	{
-		for (size_t index = 0; index < colMatrix.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index]; }
+		for (size_t index = 0; index < colMatrix.size(); ++index)
+		{
+			sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index];
+		}
 	}
 	else
 	{
@@ -1799,7 +1810,10 @@ bool CCSVHandler::increasePositionIndexes(std::vector<size_t>& position)
 				position[index] = 0;
 				position[index - 1]++;
 			}
-			else if ((position[index] + 1) > m_dimSizes[index]) { return false; }
+			else if ((position[index] + 1) > m_dimSizes[index])
+			{
+				return false;
+			}
 		}
 	}
 	return true;

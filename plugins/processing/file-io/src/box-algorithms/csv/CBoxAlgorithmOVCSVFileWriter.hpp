@@ -25,22 +25,22 @@
 
 #pragma once
 
-#include "../../ovp_defines.h"
 #include <cstdio>
 #include <memory>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#include "../../ovp_defines.h"
 #include "csv/ovICSV.h"
 
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
+
 class CBoxAlgorithmOVCSVFileWriter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	CBoxAlgorithmOVCSVFileWriter();
 	void release() override { delete this; }
 
