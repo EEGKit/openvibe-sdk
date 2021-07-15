@@ -40,7 +40,7 @@ public:
 	/**
 	 * \brief Close the file if it is open.
 	 */
-	~CCSVHandler() override { this->closeFile(); }
+	~CCSVHandler() { this->closeFile(); }
 
 	/**
 	 * \brief Get the floating point precision used to write float values.

@@ -3,7 +3,7 @@
  *
  * \file CBoxAlgorithmOVCSVFileWriter.hpp
  * \brief Classes of the box CSV File Writer
- * \author Victor Herlin (Mensia)
+ * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
  * \version 1.1.0
  * \date Fri May 7 16:40:49 2021.
  *
@@ -99,7 +99,7 @@ class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc
 public:
 	void release() override { }
 	CString getName() const override { return CString("CSV File Writer"); }
-	CString getAuthorName() const override { return CString("Victor Herlin"); }
+	CString getAuthorName() const override { return CString("Victor Herlin / Thomas Prampart"); }
 	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
 	CString getShortDescription() const override { return CString("Writes signal in a CSV (text based) file"); }
 	CString getDetailedDescription() const override { return CString(""); }

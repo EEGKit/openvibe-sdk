@@ -59,9 +59,9 @@ static const size_t N_POST_DATA_COL      = 3;  // Number of columns after data (
 
 //Stream types regexes
 static const boost::regex HEADER_SPECTRUM_REGEX{"Time:\\d+x\\d+\\:\\d+,End Time,([\\w\\s]+:((\\d+)|(\\d+\\.\\d+)),)+Event Id,Event Date,Event Duration"};
-static const boost::regex HEADER_MATRIX_REGEX{"Time:\\d+(x\\d+){1,},End Time,([\\w\\s]*(\\:\\w*){1,},)+Event Id,Event Date,Event Duration"};
-static const boost::regex HEADER_FEATURE_VEC_REGEX{"Time:\\d+,End Time,([\\w\\s]+,)+Event Id,Event Date,Event Duration"};
-static const boost::regex HEADER_SIGNAL_REGEX{"Time:\\d+Hz,Epoch,([\\w\\s]+,)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_MATRIX_REGEX{"Time:\\d+(x\\d+){1,},End Time,(([\\w\\s]*(\\:[\\w\\s]*){1,})*,)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_VECTOR_REGEX{"Time:\\d+,End Time,([\\w\\s]*,)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_SIGNAL_REGEX{"Time:\\d+Hz,Epoch,([\\w\\s]*,)+Event Id,Event Date,Event Duration"};
 static const boost::regex HEADER_STIMULATIONS_REGEX{"Event Id,Event Date,Event Duration"};
 
 //Separators
@@ -336,7 +336,7 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimSiz
 
 bool CCSVHandler::getStreamedMatrixInformation(std::vector<size_t>& dimSizes, std::vector<std::string>& labels)
 {
-	if (m_inputTypeID != EStreamType::StreamedMatrix && m_inputTypeID != EStreamType::CovarianceMatrix)
+	if (m_inputTypeID != EStreamType::StreamedMatrix && m_inputTypeID != EStreamType::CovarianceMatrix && m_inputTypeID != EStreamType::FeatureVector)
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_WrongInputType;
@@ -701,16 +701,25 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 			}
 			break;
 
-		default:
+		case EStreamType::StreamedMatrix:
+		case EStreamType::CovarianceMatrix:
+		case EStreamType::FeatureVector:
+		{
 			const size_t columnsToHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
 
 			if (sample.matrix.size() != columnsToHave)
 			{
-				m_lastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " + std::to_string(columnsToHave);
-				m_logError        = LogErrorCodes_WrongMatrixSize;
+				m_lastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " +
+				                    std::to_string(columnsToHave);
+				m_logError = LogErrorCodes_WrongMatrixSize;
 				return false;
 			}
 			break;
+		}
+		default:
+			m_lastStringError = "Cannot add Sample in " + toString(m_inputTypeID) + " file type";
+			m_logError = LogErrorCodes_WrongStreamType;
+			return false;
 	}
 
 	// Check timestamps
@@ -905,7 +914,6 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 
 std::string CCSVHandler::createHeaderString()
 {
-	const std::string invalidHeader;
 	std::string header;
 
 	const auto addColumn = [&](const std::string& columnLabel)
@@ -915,6 +923,13 @@ std::string CCSVHandler::createHeaderString()
 		header += columnLabel;
 		m_nCol++;
 	};
+
+	if (m_inputTypeID == EStreamType::Undefined)
+	{
+		m_lastStringError = "Cannot write header for Undefined stream Type";
+		m_logError = LogErrorCodes_WrongStreamType;
+		return "";
+	}
 
 	// add Time Header
 	switch (m_inputTypeID)
@@ -927,7 +942,7 @@ std::string CCSVHandler::createHeaderString()
 			if (m_dimSizes.size() != 2)
 			{
 				m_lastStringError = "Channel names and number of frequency are needed to write time column";
-				return invalidHeader;
+				return "";
 			}
 
 			addColumn(
@@ -942,7 +957,7 @@ std::string CCSVHandler::createHeaderString()
 			{
 				m_lastStringError.clear();
 				m_logError = LogErrorCodes_DimensionCountZero;
-				return invalidHeader;
+				return "";
 			}
 			{
 				std::string timeColumn = "Time" + std::string(1, DATA_SEPARATOR);
@@ -983,7 +998,7 @@ std::string CCSVHandler::createHeaderString()
 		{
 			m_lastStringError.clear();
 			m_logError = LogErrorCodes_NoMatrixLabels;
-			return invalidHeader;
+			return "";
 		}
 	}
 
@@ -1003,7 +1018,7 @@ std::string CCSVHandler::createHeaderString()
 			{
 				m_lastStringError.clear();
 				m_logError = LogErrorCodes_DimensionSizeZero;
-				return invalidHeader;
+				return "";
 			}
 
 			std::vector<size_t> position(m_nDim, 0);
@@ -1126,12 +1141,10 @@ bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& c
 					m_lastStringError = "Stream samples were received while only Stimulations were expected";
 					m_logError = LogErrorCodes_WrongInputType;
 					return false;
-					break;
 				case EStreamType::Undefined:
 					m_lastStringError = "StreamType is undefined. Cannot format data. Please set Stream Type before writing to file";
 					m_logError = LogErrorCodes_WrongInputType;
 					return false;
-					break;
 			}
 
 			// Matrix
@@ -1205,7 +1218,7 @@ void CCSVHandler::extractFormatType(const std::string& header)
 	{
 		m_inputTypeID = EStreamType::StreamedMatrix;
 	}
-	else if (regex_match(header.c_str(), match, HEADER_FEATURE_VEC_REGEX))
+	else if (regex_match(header.c_str(), match, HEADER_VECTOR_REGEX))
 	{
 		m_inputTypeID = EStreamType::FeatureVector;
 	}
@@ -1249,16 +1262,6 @@ bool CCSVHandler::parseHeader()
 		m_lastStringError = "No header in the file or file empty";
 		m_logError        = LogErrorCodes_EmptyColumn;
 		return false;
-	}
-
-	for (const std::string& columnPart : columns)
-	{
-		if (columnPart.empty())
-		{
-			m_lastStringError.clear();
-			m_logError = LogErrorCodes_EmptyColumn;
-			return false;
-		}
 	}
 
 	m_fs.clear();  // Useful if the end of file is reached before.

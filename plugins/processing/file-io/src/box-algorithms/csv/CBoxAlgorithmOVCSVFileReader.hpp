@@ -3,7 +3,7 @@
  *
  * \file CBoxAlgorithmOVCSVFileReader.hpp
  * \brief Classes of the box CSV File Reader
- * \author Victor Herlin (Mensia)
+ * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
  * \version 1.1.0
  * \date Fri May 7 16:40:49 2021.
  *
@@ -111,7 +111,7 @@ class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public IBoxAlgorithmDesc
 public:
 	void release() override { }
 	CString getName() const override { return CString("CSV File Reader"); }
-	CString getAuthorName() const override { return CString("Victor Herlin"); }
+	CString getAuthorName() const override { return CString("Victor Herlin / Thomas Prampart"); }
 	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
 	CString getShortDescription() const override { return CString("Read signal in a CSV (text based) file"); }
 	CString getDetailedDescription() const override { return CString(""); }
@@ -125,20 +125,20 @@ public:
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileReaderListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-	bool getBoxPrototype(Kernel::IBoxProto& BoxAlgorithmPrototype) const override
+	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 	{
-		BoxAlgorithmPrototype.addOutput("Output stream", OV_TypeId_Signal);
-		BoxAlgorithmPrototype.addOutput("Output stimulation", OV_TypeId_Stimulations);
-		BoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");
+		prototype.addOutput("Output stream", OV_TypeId_Signal);
+		prototype.addOutput("Output stimulation", OV_TypeId_Stimulations);
+		prototype.addSetting("Filename", OV_TypeId_Filename, "");
 
-		BoxAlgorithmPrototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
+		prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
 
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Signal);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Spectrum);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_FeatureVector);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_CovarianceMatrix);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Stimulations);
+		prototype.addOutputSupport(OV_TypeId_Signal);
+		prototype.addOutputSupport(OV_TypeId_Spectrum);
+		prototype.addOutputSupport(OV_TypeId_FeatureVector);
+		prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+		prototype.addOutputSupport(OV_TypeId_CovarianceMatrix);
+		prototype.addOutputSupport(OV_TypeId_Stimulations);
 		return true;
 	}
 

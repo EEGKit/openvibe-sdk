@@ -65,8 +65,45 @@ enum class EStreamType
 	Undefined = 6
 };
 
+/**
+ * @brief Convert stream type to string
+ * \param streamType The stream type enumeration value
+ * \return The corresponding stream type string
+ */
+inline std::string toString(const EStreamType streamType)
+{
+	std::string strType;
+	switch (streamType)
+	{
+		case EStreamType::StreamedMatrix:
+			strType = "Streamed Matrix";
+			break;
+		case EStreamType::FeatureVector:
+			strType = "Feature Vector";
+			break;
+		case EStreamType::Signal:
+			strType = "Signal";
+			break;
+		case EStreamType::Spectrum:
+			strType = "Spectrum";
+			break;
+		case EStreamType::CovarianceMatrix:
+			strType = "Covariance Matrix";
+			break;
+		case EStreamType::Stimulations:
+			strType = "Stimulations";
+			break;
+		case EStreamType::Undefined:
+		default:
+			strType = "Undefined";
+			break;
+	}
+	return strType;
+}
+
 enum ELogErrorCodes
 {
+	LogErrorCodes_WrongStreamType = -33,
 	LogErrorCodes_HeaderNotRead = -32,
 	LogErrorCodes_MissingData = -31,
 	LogErrorCodes_WrongParameters = -30,
@@ -237,7 +274,7 @@ public:
 	/**
 	 * \brief Get streamed or covariance matrix information in file
 	 *
-	 * \param dimensionSizes
+	 * \param dimensionSizes size of each dimension
 	 * \param labels reference to fill with file channel names
 	 *
 	 * \retval true in case of success
@@ -295,7 +332,7 @@ public:
 	 * \brief Open file specified on parameter
 	 *
 	 * \param filename is the filename of the file to open
-	 * \param mode
+	 * \param mode The mode to use to open the file
 	 *
 	 * \retval true in case of success
 	 * \retval false in case of error while opening the file
@@ -394,8 +431,6 @@ public:
 	virtual std::string getLastErrorString() = 0;
 
 	virtual bool hasDataToRead() const = 0;
-protected:
-	virtual ~ICSVHandler() {}
 };
 
 extern CSV_API ICSVHandler* createCSVHandler();

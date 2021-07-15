@@ -3,7 +3,7 @@
  *
  * \file CBoxAlgorithmOVCSVFileWriter.cpp
  * \brief Implementation of the box CSV File Writer
- * \author Victor Herlin (Mensia)
+ * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
  * \version 1.1.0
  * \date Fri May 7 16:40:49 2021.
  *
@@ -191,13 +191,10 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 				for (size_t d1 = 0; d1 < matrix->getDimensionCount(); ++d1)
 				{
-					this->getLogManager() << Kernel::LogLevel_Info << "Dimension " << d1 << "\n";
 					dimensionSizes.push_back(matrix->getDimensionSize(d1));
 
-					this->getLogManager() << Kernel::LogLevel_Info << "  Dimension size: " << matrix->getDimensionSize(d1) << "\n";
 					for (size_t d2 = 0; d2 < matrix->getDimensionSize(d1); ++d2)
 					{
-						this->getLogManager() << Kernel::LogLevel_Info << "  Label " << matrix->getDimensionLabel(d1, d2) << "\n";
 						dimensionLabels.push_back(matrix->getDimensionLabel(d1, d2));
 					}
 				}

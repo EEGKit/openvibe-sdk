@@ -58,7 +58,8 @@ static const std::map<ELogErrorCodes, std::string> ERROR_MAP =
 	{ LogErrorCodes_CantWriteHeader, "Can not write header, data already began to be written or header already written" },
 	{ LogErrorCodes_ErrorWhileWriting, "Error occured while trying to write" },
 	{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s)" },
-	{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
+	{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" },
+	{ LogErrorCodes_WrongStreamType, "Stream type does not compatible with this action" }
 };
 
 std::string ICSVHandler::getLogError(const ELogErrorCodes code)

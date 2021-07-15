@@ -3,7 +3,7 @@
  *
  * \file CBoxAlgorithmOVCSVFileReader.cpp
  * \brief Implementation of the box CSV File Reader
- * \author Victor Herlin (Mensia)
+ * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
  * \version 1.1.0
  * \date Fri May 7 16:40:49 2021.
  *
@@ -61,7 +61,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 		m_readerLib->getSignalInformation(m_channelNames, m_sampling, m_nSamplePerBuffer);
 	}
 	else if ((m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
-	         && m_readerLib->getFormatType() == CSV::EStreamType::StreamedMatrix)
+	         && (m_readerLib->getFormatType() == CSV::EStreamType::StreamedMatrix || m_readerLib->getFormatType() == CSV::EStreamType::FeatureVector))
 	{
 		m_algorithmEncoder = new Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmOVCSVFileReader>(*this, 0);
 		m_readerLib->getStreamedMatrixInformation(m_dimSizes, m_channelNames);
@@ -82,7 +82,9 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 	}
 	else
 	{
-		this->getLogManager() << Kernel::LogLevel_Error << "File content type not matching box output type\n";
+		this->getLogManager() << Kernel::LogLevel_Error
+							  << "File content type [" << CSV::toString(m_readerLib->getFormatType())
+							  << "] not matching box output [" << this->getTypeManager().getTypeName(m_typeID) << "].\n";
 		return false;
 	}
 
@@ -340,15 +342,12 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 					// stimulation is in the future of the current time frame. Stop looping
 					break;
 				}
-				else
-				{
-					// Stimulation is in the past of the current time frame, we can discard it
-					const std::string message = "The stimulation is not synced with the stream and will be ignored: [Value: "
-					                            + std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
-					                            " | Duration: " + std::to_string(it->duration) + "]";
+				// Stimulation is in the past of the current time frame, we can discard it
+				const std::string message = "The stimulation is not synced with the stream and will be ignored: [Value: "
+				                            + std::to_string(it->id) + " | Date: " + std::to_string(it->date) +
+				                            " | Duration: " + std::to_string(it->duration) + "]";
 
-					OV_WARNING_K(message.c_str());
-				}
+				OV_WARNING_K(message.c_str());
 			}
 		}
 
