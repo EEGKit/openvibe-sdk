@@ -37,6 +37,11 @@
 #define OVP_ClassId_BoxAlgorithm_ClassifierTrainerDesc							OpenViBE::CIdentifier(0xFE277C91, 0x1593B824)
 #define OVP_ClassId_BoxAlgorithm_VotingClassifier								OpenViBE::CIdentifier(0xFAF62C2B, 0x0B75D1B3)
 #define OVP_ClassId_BoxAlgorithm_VotingClassifierDesc							OpenViBE::CIdentifier(0x97E3CCC5, 0xAC353ED2)
+#define OVP_ClassId_BoxAlgorithm_AdaptativeClassifier                           OpenViBE::CIdentifier(0xc4fc21d5, 0x55f7565e)
+#define OVP_ClassId_BoxAlgorithm_AdaptativeClassifierDesc                       OpenViBE::CIdentifier(0x8dbd5ec7, 0xfb22087b)
+#define OVP_ClassId_BoxAlgorithm_AdaptativeClassifier_InputParameterId_UseShrinkage				OpenViBE::CIdentifier(0x6ddcdec7, 0xa33f7c3e)
+#define OVP_ClassId_BoxAlgorithm_AdaptativeClassifier_InputParameterId_Shrinkage					OpenViBE::CIdentifier(0x1f9bb522, 0x0a78f4ca)
+#define OVP_ClassId_BoxAlgorithm_AdaptativeClassifier_InputParameterId_DiagonalCov				OpenViBE::CIdentifier(0x95ff8d88, 0x160f8947)
 
 #define OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage				OpenViBE::CIdentifier(0x01357534, 0x028312A0)
 #define OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage					OpenViBE::CIdentifier(0x01357534, 0x028312A1)

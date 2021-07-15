@@ -15,10 +15,12 @@
 #include "box-algorithms/ovpCBoxAlgorithmVotingClassifier.h"
 #include "box-algorithms/ovpCBoxAlgorithmClassifierTrainer.h"
 #include "box-algorithms/ovpCBoxAlgorithmClassifierProcessor.h"
+#include "box-algorithms/ovpCBoxAlgorithmAdaptativeClassifier.h"
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 #include "algorithms/ovpCAlgorithmConditionedCovariance.h"
 #include "algorithms/ovpCAlgorithmClassifierLDA.h"
+
 #endif // TARGET_HAS_ThirdPartyEIGEN
 
 #include<cmath>
@@ -45,7 +47,7 @@ OVP_Declare_Begin()
 
 	OVP_Declare_New(CAlgorithmClassifierOneVsAllDesc);
 	OVP_Declare_New(CAlgorithmClassifierOneVsOneDesc);
-
+	OVP_Declare_New(CBoxAlgorithmAdaptativeClassifierDesc);
 	// Functions related to deciding winner in OneVsOne multiclass decision strategy
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_ClassificationPairwiseStrategy, PAIRWISE_STRATEGY_ENUMERATION_NAME);
 
@@ -58,7 +60,6 @@ OVP_Declare_Begin()
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	OVP_Declare_New(CAlgorithmConditionedCovarianceDesc);
-
 	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)",
 													  OVP_ClassId_Algorithm_ClassifierLDA.id());
 	Toolkit::registerClassificationComparisonFunction(OVP_ClassId_Algorithm_ClassifierLDA, LDAClassificationCompare);
@@ -75,8 +76,9 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OneVsOne_DecisionAlgorithms, "Linear Discrimimant Analysis (LDA)",
 													  OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable.id());
 
+	
 #endif // TARGET_HAS_ThirdPartyEIGEN
-
+	//
 OVP_Declare_End()
 
 }  // namespace Classification

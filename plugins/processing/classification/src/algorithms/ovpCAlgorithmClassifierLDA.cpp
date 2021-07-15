@@ -206,6 +206,7 @@ bool CAlgorithmClassifierLDA::train(const Toolkit::IFeatureVectorSet& dataset)
 		// Get the results from the cov algorithm
 		Eigen::Map<MatrixXdRowMajor> covMapper(op_covMatrix->getBuffer(), nCols, nCols);
 		globalCov = covMapper;
+		//std::cout << globalCov;
 	}
 
 	//dumpMatrix(this->getLogManager(), mean[l_classIdx], "Mean");
@@ -230,7 +231,7 @@ bool CAlgorithmClassifierLDA::train(const Toolkit::IFeatureVectorSet& dataset)
 	Eigen::VectorXd eigenValues = solver.eigenvalues();
 	for (size_t i = 0; i < nCols; ++i) { if (eigenValues(i) >= tolerance) { eigenValues(i) = 1.0 / eigenValues(i); } }
 	const Eigen::MatrixXd globalCovInv = solver.eigenvectors() * eigenValues.asDiagonal() * solver.eigenvectors().inverse();
-
+	std::cout << globalCovInv;
 	// const MatrixXd globalCovInv = globalCov.inverse();
 	//We send the bias and the weight of each class to ComputationHelper
 	for (size_t i = 0; i < getClassCount(); ++i)
