@@ -76,7 +76,7 @@ public:
 
 	CString getCategory() const override { return CString("Streaming"); }
 	CString getVersion() const override { return CString("1.1"); }
-	CString getStockItemName() const override { return CString("gtk-sort-ascending"); }
+	CString getIconName() const override { return CString("gtk-sort-ascending"); }
 	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
 	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
 	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }

@@ -110,6 +110,7 @@
 namespace OpenViBE {
 namespace Plugins {
 // Backward compatibility
+typedef Kernel::CMessageClock CMessageClock;
 typedef Kernel::IBox IStaticBoxContext;
 typedef Kernel::IBoxIO IDynamicBoxContext;
 }  // namespace Plugins

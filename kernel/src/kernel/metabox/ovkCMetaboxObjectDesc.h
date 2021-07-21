@@ -31,7 +31,7 @@ public:
 	CString getDetailedDescription() const override { return m_detailedDesc; }
 	CString getCategory() const override { return m_category; }
 	CString getVersion() const override { return m_version; }
-	CString getStockItemName() const override { return m_stockItemName; }
+	CString getIconName() const override { return m_stockItemName; }
 	CString getAddedSoftwareVersion() const override { return m_addedSoftwareVersion; }
 	CString getUpdatedSoftwareVersion() const override { return m_updatedSoftwareVersion; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Metabox; }

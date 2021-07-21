@@ -110,7 +110,7 @@ public:
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "1.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "1.0.0"; }
-	CString getStockItemName() const override { return "gtk-edit"; }
+	CString getIconName() const override { return "gtk-edit"; }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
 	IPluginObject* create() override { return new CBoxAlgorithmExternalProcessing; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmExternalProcessingListener; }

@@ -145,7 +145,7 @@ public:
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationBasedEpoching; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationBasedEpochingListener; }
-	CString getStockItemName() const override { return "gtk-cut"; }
+	CString getIconName() const override { return "gtk-cut"; }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 	{

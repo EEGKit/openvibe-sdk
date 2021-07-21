@@ -1,6 +1,5 @@
 #include "ovpCBoxAlgorithmGenericStreamReader.h"
 
-#include <iostream>
 #include <limits>
 #include <fs/Files.h>
 
@@ -36,16 +35,13 @@ bool CBoxAlgorithmGenericStreamReader::uninitialize()
 bool CBoxAlgorithmGenericStreamReader::initializeFile()
 {
 	m_file = FS::Files::open(m_filename.toASCIIString(), "rb");
-
 	OV_ERROR_UNLESS_KRF(m_file, "Error opening file [" << m_filename << "] for reading", ErrorType::BadFileRead);
-
 	return true;
 }
 
 bool CBoxAlgorithmGenericStreamReader::processClock(Kernel::CMessageClock& /*msg*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
 	return true;
 }
 

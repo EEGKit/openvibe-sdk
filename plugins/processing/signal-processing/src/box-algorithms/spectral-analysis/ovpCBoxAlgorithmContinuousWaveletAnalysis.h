@@ -53,7 +53,7 @@ public:
 	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
 	CString getAddedSoftwareVersion() const override { return CString("1.0.0"); }
 	CString getUpdatedSoftwareVersion() const override { return CString("1.0.0"); }
-	CString getStockItemName() const override { return CString("gtk-execute"); }
+	CString getIconName() const override { return CString("gtk-execute"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_ContinuousWaveletAnalysis; }
 	IPluginObject* create() override { return new CBoxAlgorithmContinuousWaveletAnalysis(); }
 

@@ -50,7 +50,7 @@ public:
 	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
 	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
 	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getStockItemName() const override { return CString("gtk-cut"); }
+	CString getIconName() const override { return CString("gtk-cut"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
 	IPluginObject* create() override { return new CBoxAlgorithmTimeBasedEpoching(); }
 
