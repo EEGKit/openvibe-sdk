@@ -20,7 +20,7 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Inputs|
 The box can run two modes.\n
-"Modde 1", there are two inputs: one for time series, and the second for stimulations.\n
+"Mode 1", there are two inputs: one for time series, and the second for stimulations.\n
 "Mode 2" is to record stimulations only. Then there is only one input for stimulations.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Inputs|
 
