@@ -90,15 +90,12 @@ public:
 					box.removeInput(0);
 				}
 			}
-			else
+			else if (box.getInputCount() == 1)
 			{
-				if (box.getInputCount() == 1)
-				{
 					box.addInput("Stimulations stream", OV_TypeId_Stimulations);
-				}
 			}
 		}
-		if (index == 1 && typeID != OV_TypeId_Stimulations)
+		else if (index == 1 && typeID != OV_TypeId_Stimulations)
 		{
 			OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations), "Failed to reset input type to stimulations", Kernel::ErrorType::Internal);
 			this->getLogManager() << Kernel::LogLevel_Warning << "Input type not changed: 2nd input reserved for stimulations\n";
