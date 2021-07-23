@@ -160,24 +160,26 @@ bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 
 			for (const std::string& channelName : m_channelNames)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal);
+				OV_ERROR_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal, false);
 			}
 
 			m_algorithmEncoder.getInputSamplingRate() = m_sampling;
 		}
 		else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(m_dimSizes.size()), "Failed to set dimension count", Kernel::ErrorType::Internal);
+			OV_ERROR_UNLESS_K(matrix->setDimensionCount(m_dimSizes.size()), "Failed to set dimension count", Kernel::ErrorType::Internal, false);
 			size_t prevDimSize = 0;
 
 			for (size_t d1 = 0; d1 < m_dimSizes.size(); ++d1)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionSize(d1, m_dimSizes[d1]), "Failed to set dimension size " << d1 + 1, Kernel::ErrorType::Internal);
+				OV_ERROR_UNLESS_K(matrix->setDimensionSize(d1, m_dimSizes[d1]), "Failed to set dimension size " << d1 + 1, Kernel::ErrorType::Internal, false);
 
 				for (size_t d2 = 0; d2 < m_dimSizes[d1]; ++d2)
 				{
-					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()), "Failed to set dimension label",
-					                  Kernel::ErrorType::Internal);
+					OV_ERROR_UNLESS_K(matrix->setDimensionLabel(d1, d2, m_channelNames[prevDimSize + d2].c_str()),
+									  "Failed to set dimension label",
+					                  Kernel::ErrorType::Internal,
+					                  false);
 				}
 
 				prevDimSize += m_dimSizes[d1];
@@ -190,7 +192,7 @@ bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 			size_t index = 0;
 			for (const std::string& channelName : m_channelNames)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal);
+				OV_ERROR_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal, false);
 			}
 		}
 		else if (m_typeID == OV_TypeId_Spectrum)
@@ -203,15 +205,17 @@ bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 			size_t index = 0;
 			for (const std::string& channelName : m_channelNames)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal);
+				OV_ERROR_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()), "Failed to set dimension label", Kernel::ErrorType::Internal, false);
 			}
 
 			index = 0;
 			for (const double& frequencyAbscissaValue : m_frequencyAbscissa)
 			{
 				frequencyAbscissaMatrix->getBuffer()[index] = frequencyAbscissaValue;
-				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()), "Failed to set dimension label",
-				                  Kernel::ErrorType::Internal);
+				OV_ERROR_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()),
+					              "Failed to set dimension label",
+				                  Kernel::ErrorType::Internal,
+				                  false);
 			}
 
 			m_algorithmEncoder.getInputSamplingRate() = m_sampling;

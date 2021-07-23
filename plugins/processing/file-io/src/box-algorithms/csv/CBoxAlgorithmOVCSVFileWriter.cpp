@@ -41,31 +41,46 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 {
 	m_isFileOpen = false;
 	m_epoch      = 0;
-	OV_ERROR_UNLESS_KRF(this->getStaticBoxContext().getInputType(0, m_typeID), "Error while getting input type", Kernel::ErrorType::Internal);
 
-	if (m_typeID == OV_TypeId_Signal)
+	// If there is only 1 input, it is stimulation only
+	if (this->getStaticBoxContext().getInputCount() > 1)
 	{
-		m_writerLib->setFormatType(CSV::EStreamType::Signal);
-		m_streamDecoder = new Toolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		OV_ERROR_UNLESS_KRF(this->getStaticBoxContext().getInputType(0, m_typeID), "Error while getting input type",
+		                    Kernel::ErrorType::Internal);
+		if (m_typeID == OV_TypeId_Signal)
+		{
+			m_writerLib->setFormatType(CSV::EStreamType::Signal);
+			m_streamDecoder = new Toolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		}
+		else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
+		{
+			m_writerLib->setFormatType(CSV::EStreamType::StreamedMatrix);
+			m_streamDecoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		}
+		else if (m_typeID == OV_TypeId_FeatureVector)
+		{
+			m_writerLib->setFormatType(CSV::EStreamType::FeatureVector);
+			m_streamDecoder = new Toolkit::TFeatureVectorDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		}
+		else if (m_typeID == OV_TypeId_Spectrum)
+		{
+			m_writerLib->setFormatType(CSV::EStreamType::Spectrum);
+			m_streamDecoder = new Toolkit::TSpectrumDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		}
+		else
+		{
+			OV_ERROR_KRF("Input is a type derived from matrix that the box doesn't recognize",
+			             Kernel::ErrorType::BadInput);
+		}
 	}
-	else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix)
+	else
 	{
-		m_writerLib->setFormatType(CSV::EStreamType::StreamedMatrix);
-		m_streamDecoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
+		m_stimulationInputIndex = 0;
+		m_writerLib->setFormatType(CSV::EStreamType::Stimulations);
 	}
-	else if (m_typeID == OV_TypeId_FeatureVector)
-	{
-		m_writerLib->setFormatType(CSV::EStreamType::FeatureVector);
-		m_streamDecoder = new Toolkit::TFeatureVectorDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
-	}
-	else if (m_typeID == OV_TypeId_Spectrum)
-	{
-		m_writerLib->setFormatType(CSV::EStreamType::Spectrum);
-		m_streamDecoder = new Toolkit::TSpectrumDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
-	}
-	else { OV_ERROR_KRF("Input is a type derived from matrix that the box doesn't recognize", Kernel::ErrorType::BadInput); }
 
-	OV_ERROR_UNLESS_KRF(m_stimDecoder.initialize(*this, 1), "Error while stimulation decoder initialization", Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_stimDecoder.initialize(*this, m_stimulationInputIndex), "Error while stimulation decoder initialization", Kernel::ErrorType::Internal);
+
 
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -130,7 +145,11 @@ bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmOVCSVFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(this->processStreamedMatrix(), "Error have been thrown during streamed matrix process", Kernel::ErrorType::Internal);
+	if (this->getStaticBoxContext().getInputCount() > 1)
+	{
+		OV_ERROR_UNLESS_KRF(this->processStreamedMatrix(), "Error have been thrown during streamed matrix process",
+		                    Kernel::ErrorType::Internal);
+	}
 	OV_ERROR_UNLESS_KRF(this->processStimulation(), "Error have been thrown during stimulation process", Kernel::ErrorType::Internal);
 
 	// write into the library
@@ -157,7 +176,6 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 		if (m_streamDecoder.isHeaderReceived())
 		{
-			OV_ERROR_UNLESS_KRF(!m_isStimulationsHeaderReceived, "Header received late. Stimulations header already received", Kernel::ErrorType::BadInput);
 			OV_ERROR_UNLESS_KRF(!m_isStreamedMatrixHeaderReceived, "Multiple streamed matrix headers received", Kernel::ErrorType::BadInput);
 
 			m_isStreamedMatrixHeaderReceived = true;
@@ -340,7 +358,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 	Kernel::IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// add every stimulation received
-	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(1); ++i)
+	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(m_stimulationInputIndex); ++i)
 	{
 		OV_ERROR_UNLESS_KRF(m_stimDecoder.decode(i), "Failed to decode stimulation chunk", Kernel::ErrorType::Internal);
 		if (m_stimDecoder.isHeaderReceived())
@@ -349,21 +367,14 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 
 			m_isStimulationsHeaderReceived = true;
 
-			if (!m_isStreamedMatrixHeaderReceived)
+			if (this->getStaticBoxContext().getInputCount() == 1)
 			{
-				// processStreamedMatrix() is called first and should therefore receive a header first unless there is
-				// no connection on the streamed matrix input.
-				// If so, the CSV is containing stimulations only
-				this->getLogManager() << Kernel::LogLevel_Info << "Stimulation header received first. No signal to be written in file\n";
-
-				m_writerLib->setFormatType(CSV::EStreamType::Stimulations);
 				if (m_writeHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_writerLib->writeHeaderToFile(),
 					                    (CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ?
 					                                                                                      "" : "Details: " + m_writerLib->getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
 				}
-
 			}
  		}
 		else if (m_stimDecoder.isBufferReceived())
@@ -382,12 +393,13 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 
 			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
 			OV_ERROR_UNLESS_KRF(
-				m_writerLib->noEventsUntilDate(CTime(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1))).toSeconds()),
+				m_writerLib->noEventsUntilDate(CTime(dynamicBoxContext.getInputChunkEndTime(m_stimulationInputIndex,
+																							(dynamicBoxContext.getInputChunkCount(m_stimulationInputIndex) - 1))).toSeconds()),
 				(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" : "Details: " + m_writerLib->
 					getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
 		}
 
-		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(1, i), "Failed to mark stimulations input as deprecated", Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(m_stimulationInputIndex, i), "Failed to mark stimulations input as deprecated", Kernel::ErrorType::Internal);
 	}
 
 	return true;

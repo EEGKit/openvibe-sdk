@@ -7,17 +7,13 @@
 	<Outputs></Outputs>
 	<Boxes>
 		<Box>
-			<Identifier>(0x41231a4e, 0x7ee4a9d6)</Identifier>
+			<Identifier>(0x09d359c7, 0x0f5b12a2)</Identifier>
 			<Name>CSV File Writer</Name>
 			<AlgorithmClassIdentifier>(0x428375e8, 0x325f2db9)</AlgorithmClassIdentifier>
 			<Inputs>
 				<Input>
-					<TypeIdentifier>(0x5ba36127, 0x195feae1)</TypeIdentifier>
-					<Name>Input stream</Name>
-				</Input>
-				<Input>
 					<TypeIdentifier>(0x6f752dd0, 0x082a321e)</TypeIdentifier>
-					<Name>Stimulations stream</Name>
+					<Name>Input stream</Name>
 				</Input>
 			</Inputs>
 			<Settings>
@@ -53,15 +49,15 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>336</Value>
+					<Value>352</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>320</Value>
+					<Value>544</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0xee4b6d30, 0x788aed29)</Value>
+					<Value>(0xc33e47e0, 0x70e5f31b)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -78,7 +74,7 @@
 			</Attributes>
 		</Box>
 		<Box>
-			<Identifier>(0x6c5b180a, 0x064f0587)</Identifier>
+			<Identifier>(0x4ac6bbc1, 0x36494668)</Identifier>
 			<Name>CSV File Reader</Name>
 			<AlgorithmClassIdentifier>(0x336a3d9a, 0x753f1ba4)</AlgorithmClassIdentifier>
 			<Outputs>
@@ -107,7 +103,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>320</Value>
+					<Value>544</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -115,7 +111,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0xa9cdc629, 0xb153eb33)</Value>
+					<Value>(0xb7b8f4f9, 0xb979c65c)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xc80ce8af, 0xf699f813)</Identifier>
@@ -130,14 +126,14 @@
 	</Boxes>
 	<Links>
 		<Link>
-			<Identifier>(0x776c0727, 0x3cecdc50)</Identifier>
+			<Identifier>(0x13816405, 0x0ab0f8b9)</Identifier>
 			<Source>
-				<BoxIdentifier>(0x6c5b180a, 0x064f0587)</BoxIdentifier>
+				<BoxIdentifier>(0x4ac6bbc1, 0x36494668)</BoxIdentifier>
 				<BoxOutputIndex>1</BoxOutputIndex>
 			</Source>
 			<Target>
-				<BoxIdentifier>(0x41231a4e, 0x7ee4a9d6)</BoxIdentifier>
-				<BoxInputIndex>1</BoxInputIndex>
+				<BoxIdentifier>(0x09d359c7, 0x0f5b12a2)</BoxIdentifier>
+				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
 		</Link>
 	</Links>

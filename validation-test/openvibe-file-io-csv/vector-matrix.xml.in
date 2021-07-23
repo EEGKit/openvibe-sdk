@@ -7,7 +7,7 @@
 	<Outputs></Outputs>
 	<Boxes>
 		<Box>
-			<Identifier>(0x108ed875, 0x779cebdd)</Identifier>
+			<Identifier>(0x185b9ebe, 0x31184d9d)</Identifier>
 			<Name>CSV File Writer</Name>
 			<AlgorithmClassIdentifier>(0x428375e8, 0x325f2db9)</AlgorithmClassIdentifier>
 			<Inputs>
@@ -53,15 +53,15 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>432</Value>
+					<Value>416</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>208</Value>
+					<Value>400</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0xee4b6d30, 0x788aed29)</Value>
+					<Value>(0xc33e47e0, 0x70e5f31b)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -78,7 +78,7 @@
 			</Attributes>
 		</Box>
 		<Box>
-			<Identifier>(0x71033291, 0x4702e531)</Identifier>
+			<Identifier>(0x353ccd4f, 0x456e5afa)</Identifier>
 			<Name>CSV File Reader</Name>
 			<AlgorithmClassIdentifier>(0x336a3d9a, 0x753f1ba4)</AlgorithmClassIdentifier>
 			<Outputs>
@@ -107,7 +107,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>192</Value>
+					<Value>400</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -115,7 +115,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0xa9cdc629, 0xb153eb33)</Value>
+					<Value>(0xb7b8f4f9, 0xb979c65c)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xc80ce8af, 0xf699f813)</Identifier>
@@ -130,13 +130,13 @@
 	</Boxes>
 	<Links>
 		<Link>
-			<Identifier>(0x4f3cfedf, 0x6d5cc653)</Identifier>
+			<Identifier>(0x063bb16c, 0x66d489fe)</Identifier>
 			<Source>
-				<BoxIdentifier>(0x71033291, 0x4702e531)</BoxIdentifier>
+				<BoxIdentifier>(0x353ccd4f, 0x456e5afa)</BoxIdentifier>
 				<BoxOutputIndex>0</BoxOutputIndex>
 			</Source>
 			<Target>
-				<BoxIdentifier>(0x108ed875, 0x779cebdd)</BoxIdentifier>
+				<BoxIdentifier>(0x185b9ebe, 0x31184d9d)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
 		</Link>

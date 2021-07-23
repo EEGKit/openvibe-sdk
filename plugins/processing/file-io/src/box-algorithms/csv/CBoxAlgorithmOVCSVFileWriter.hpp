@@ -61,6 +61,7 @@ private:
 
 	Toolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
 	Toolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
+	size_t m_stimulationInputIndex = 1;
 
 	uint64_t m_epoch = 0;
 
@@ -77,15 +78,34 @@ class CBoxAlgorithmOVCSVFileWriterListener final : public Toolkit::TBoxListener<
 public:
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		if (index == 1)
+		CIdentifier typeID = CIdentifier::undefined();
+		box.getInputType(index, typeID);
+
+		if (index == 0)
 		{
-			CIdentifier typeID = CIdentifier::undefined();
-			box.getInputType(1, typeID);
-			if (typeID != OV_TypeId_Stimulations)
+			if (typeID == OV_TypeId_Stimulations)
 			{
-				box.setInputType(1, OV_TypeId_Stimulations);
-				return true;
+				if (box.getInputCount() > 1)
+				{
+					box.removeInput(0);
+				}
 			}
+			else
+			{
+				if (box.getInputCount() == 1)
+				{
+					box.addInput("Stimulations stream", OV_TypeId_Stimulations);
+				}
+			}
+		}
+		if (index == 1 && typeID != OV_TypeId_Stimulations)
+		{
+			OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations), "Failed to reset input type to stimulations", Kernel::ErrorType::Internal);
+			this->getLogManager() << Kernel::LogLevel_Warning << "Input type not changed: 2nd input reserved for stimulations\n";
+		}
+		else if (index > 1)
+		{
+			OV_ERROR_UNLESS_KRF(false, "The index of the input does not exist", Kernel::ErrorType::Internal);
 		}
 
 		return true;
@@ -128,6 +148,7 @@ public:
 		prototype.addInputSupport(OV_TypeId_Spectrum);
 		prototype.addInputSupport(OV_TypeId_FeatureVector);
 		prototype.addInputSupport(OV_TypeId_CovarianceMatrix);
+		prototype.addInputSupport(OV_TypeId_Stimulations);
 
 		return true;
 	}
