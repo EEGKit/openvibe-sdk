@@ -7,12 +7,12 @@
 	<Outputs></Outputs>
 	<Boxes>
 		<Box>
-			<Identifier>(0x2f15aeb8, 0x3744ee1e)</Identifier>
+			<Identifier>(0x629997b7, 0x44e1a54f)</Identifier>
 			<Name>CSV File Writer</Name>
 			<AlgorithmClassIdentifier>(0x428375e8, 0x325f2db9)</AlgorithmClassIdentifier>
 			<Inputs>
 				<Input>
-					<TypeIdentifier>(0x5ba36127, 0x195feae1)</TypeIdentifier>
+					<TypeIdentifier>(0x544a003e, 0x6dcba5f6)</TypeIdentifier>
 					<Name>Input stream</Name>
 				</Input>
 				<Input>
@@ -25,7 +25,7 @@
 					<TypeIdentifier>(0x330306dd, 0x74a95f98)</TypeIdentifier>
 					<Name>Filename</Name>
 					<DefaultValue>record-[$core{date}-$core{time}].csv</DefaultValue>
-					<Value>@OVT_TEST_TEMPORARY_DIR@/output-signal.csv</Value>
+					<Value>@OVT_TEST_TEMPORARY_DIR@/output-empty-labels-vector.csv</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
@@ -53,11 +53,11 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>368</Value>
+					<Value>288</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>720</Value>
+					<Value>528</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -78,12 +78,12 @@
 			</Attributes>
 		</Box>
 		<Box>
-			<Identifier>(0x57abe5a1, 0x5aacb642)</Identifier>
+			<Identifier>(0x7ed7b717, 0x48355f39)</Identifier>
 			<Name>CSV File Reader</Name>
 			<AlgorithmClassIdentifier>(0x336a3d9a, 0x753f1ba4)</AlgorithmClassIdentifier>
 			<Outputs>
 				<Output>
-					<TypeIdentifier>(0x5ba36127, 0x195feae1)</TypeIdentifier>
+					<TypeIdentifier>(0x544a003e, 0x6dcba5f6)</TypeIdentifier>
 					<Name>Output stream</Name>
 				</Output>
 				<Output>
@@ -96,18 +96,18 @@
 					<TypeIdentifier>(0x330306dd, 0x74a95f98)</TypeIdentifier>
 					<Name>Filename</Name>
 					<DefaultValue></DefaultValue>
-					<Value>@CMAKE_CURRENT_SOURCE_DIR@/input-signal.csv</Value>
+					<Value>@CMAKE_CURRENT_SOURCE_DIR@/input-empty-labels-vector.csv</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>144</Value>
+					<Value>160</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>720</Value>
+					<Value>528</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -130,13 +130,13 @@
 	</Boxes>
 	<Links>
 		<Link>
-			<Identifier>(0x62b4791d, 0x7306bef6)</Identifier>
+			<Identifier>(0x68a05e0d, 0x411181c4)</Identifier>
 			<Source>
-				<BoxIdentifier>(0x57abe5a1, 0x5aacb642)</BoxIdentifier>
+				<BoxIdentifier>(0x7ed7b717, 0x48355f39)</BoxIdentifier>
 				<BoxOutputIndex>0</BoxOutputIndex>
 			</Source>
 			<Target>
-				<BoxIdentifier>(0x2f15aeb8, 0x3744ee1e)</BoxIdentifier>
+				<BoxIdentifier>(0x629997b7, 0x44e1a54f)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
 		</Link>
@@ -144,7 +144,7 @@
 	<Comments></Comments>
 	<Metadata>
 		<Entry>
-			<Identifier>(0x39f1030a, 0x4627cfee)</Identifier>
+			<Identifier>(0x20302b88, 0x36034edf)</Identifier>
 			<Type>(0x3bcce5d2, 0x43f2d968)</Type>
 			<Data>[]</Data>
 		</Entry>

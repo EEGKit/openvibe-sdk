@@ -32,6 +32,7 @@ INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleFS")
 INCLUDE("FindThirdPartyBoost")
 INCLUDE("FindThirdPartyBoost_FileSystem")
+INCLUDE("FindThirdPartyBoost_Regex")
 
 # ---------------------------------
 # Target macros
