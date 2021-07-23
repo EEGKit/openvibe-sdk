@@ -1195,7 +1195,7 @@ bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& c
 	{
 		if (m_inputTypeID == EStreamType::Stimulations)
 		{
-			for (auto stim = m_stimulations.cbegin(); stim != m_stimulations.end(); stim++)
+			for (auto stim = m_stimulations.cbegin(); stim != m_stimulations.end(); ++stim)
 			{
 				csv += stimulationsToString(std::vector<SStimulationChunk>(1, *stim));
 				csv += "\n";

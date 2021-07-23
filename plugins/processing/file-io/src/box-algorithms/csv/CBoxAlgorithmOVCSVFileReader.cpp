@@ -133,7 +133,8 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 
 		return processStimulation(CTime(m_lastStimulationDate).toSeconds(), currentTime);
 	}
-	else if (m_readerLib->getFormatType() != CSV::EStreamType::Undefined)
+
+	if (m_readerLib->getFormatType() != CSV::EStreamType::Undefined)
 	{
 		// If the file contains data chunks and potentially stimulations.
 		return processChunksAndStimulations();

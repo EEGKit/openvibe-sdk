@@ -87,13 +87,10 @@ public:
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 
-		if (index == 0 && typeID == OV_TypeId_Stimulations)
-		{
-			OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal), "Failed to reset output type to signal", Kernel::ErrorType::Internal);
-		}
-		else if (index == 1 && typeID != OV_TypeId_Stimulations)
+		if (index == 1 && typeID != OV_TypeId_Stimulations)
 		{
 			OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations), "Failed to reset output type to stimulations", Kernel::ErrorType::Internal);
+			this->getLogManager() << Kernel::LogLevel_Warning << "Output type not changed: 2nd output reserved for stimulations\n";
 		}
 		else if (index > 1)
 		{
@@ -138,7 +135,6 @@ public:
 		prototype.addOutputSupport(OV_TypeId_FeatureVector);
 		prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
 		prototype.addOutputSupport(OV_TypeId_CovarianceMatrix);
-		prototype.addOutputSupport(OV_TypeId_Stimulations);
 		return true;
 	}
 
