@@ -8,7 +8,6 @@
 #include <iostream>
 #include <fstream>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {

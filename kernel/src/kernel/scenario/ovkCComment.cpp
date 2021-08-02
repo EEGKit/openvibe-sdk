@@ -3,25 +3,14 @@
 
 #include "../ovkCObjectVisitorContext.h"
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
-//___________________________________________________________________//
-//                                                                   //
+namespace OpenViBE {
+namespace Kernel {
 
 CComment::CComment(const IKernelContext& ctx, CScenario& rOwnerScenario)
 	: TAttributable<TKernelObject<IComment>>(ctx), m_rOwnerScenario(rOwnerScenario), m_text("") {}
 
-CComment::~CComment() {}
-
 //___________________________________________________________________//
 //                                                                   //
-
-CIdentifier CComment::getIdentifier() const { return m_id; }
-
-CString CComment::getText() const { return m_text; }
 
 bool CComment::setIdentifier(const CIdentifier& id)
 {
@@ -61,3 +50,6 @@ bool CComment::acceptVisitor(IObjectVisitor& rObjectVisitor)
 	CObjectVisitorContext context(getKernelContext());
 	return rObjectVisitor.processBegin(context, *this) && rObjectVisitor.processEnd(context, *this);
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

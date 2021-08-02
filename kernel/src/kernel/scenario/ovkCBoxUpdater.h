@@ -41,7 +41,7 @@ public:
 
 	bool flaggedForManualUpdate() const
 	{
-		OV_FATAL_UNLESS_K(m_initialized, "Box Updater is not initialized", ErrorType::BadCall);
+		OV_FATAL_UNLESS_K(m_initialized, "Box Updater is not initialized", Kernel::ErrorType::BadCall);
 
 		return m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
 			   || m_kernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)

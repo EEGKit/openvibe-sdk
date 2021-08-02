@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-using namespace System;
+namespace System {
 
 // ________________________________________________________________________________________________________________
 //
@@ -165,3 +165,5 @@ bool Memory::bigEndianToHost(const uint8_t* /*buffer*/, long double* /*value*/)
 	// $$$ TODO
 	return false;
 }
+
+}  // namespace System

@@ -19,14 +19,19 @@ Inputs description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Inputs|
+The box can run two modes.\n
+"Mode 1", there are two inputs: one for time series, and the second for stimulations.\n
+"Mode 2" is to record stimulations only. Then there is only one input for stimulations.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Inputs|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Input1|
-Time series input, this can be either a Signal, Streamed Matrix, Spectrum, Covariance Matrix or Feature Vector stream.
+Mode 1: Time series input, this can be either a Signal, Streamed Matrix, Spectrum, Covariance Matrix or Feature Vector stream.\n
+Mode 2: Stimulations
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Input1|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Input2|
-Stimulations to be written alongside the signal. 
+Mode 1: Stimulations to be written alongside the signal.\n
+Mode 2: not applicable
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Input2|
 __________________________________________________________________
 

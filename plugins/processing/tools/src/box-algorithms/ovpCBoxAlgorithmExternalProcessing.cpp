@@ -23,7 +23,6 @@ extern char **environ;
 
 #include <system/ovCTime.h>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Tools {
@@ -215,7 +214,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 			if (exitCode == STILL_ACTIVE)
 			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_extProcessId), EXIT_FAILURE), "Failed to kill third party program.",
+				OV_ERROR_UNLESS_KRF(TerminateProcess(HANDLE(m_extProcessId), EXIT_FAILURE), "Failed to kill third party program.",
 									Kernel::ErrorType::Unknown);
 			}
 			else if (exitCode != 0) { OV_WARNING_K("Third party program [" << m_extProcessId << "] has terminated with exit code [" << int(exitCode) << "]"); }

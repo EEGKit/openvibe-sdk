@@ -18,14 +18,8 @@
 #include <openvibe/ovIMemoryBuffer.h>
 #include <openvibe/CTime.hpp>
 
-
 static bool didRequestForcedQuit = false;
-
-using namespace Communication;
-using namespace std;
-
 static void signalHandler(int /* signal */) { didRequestForcedQuit = true; }
-
 
 class EBMLWriterCallback
 {
@@ -67,22 +61,22 @@ int main(const int argc, char** argv)
 
 	didRequestForcedQuit = false;
 
-	MessagingClient client;
+	Communication::MessagingClient client;
 
 	client.setConnectionID(connectionID);
 
 	while (!client.connect("127.0.0.1", port))
 	{
-		const MessagingClient::ELibraryError error = client.getLastError();
+		const Communication::MessagingClient::ELibraryError error = client.getLastError();
 
-		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
+		if (error == Communication::MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{
 			std::cout << "Server not responding\n";
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 		else
 		{
-			std::cout << "Error " << error << endl;
+			std::cout << "Error " << error << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
@@ -95,7 +89,7 @@ int main(const int argc, char** argv)
 
 	if (client.getInputCount() > 0)
 	{
-		std::cerr << "The test generator can not take any inputs, was given " << client.getInputCount() << endl;
+		std::cerr << "The test generator can not take any inputs, was given " << client.getInputCount() << std::endl;
 		client.close();
 		exit(EXIT_FAILURE);
 	}
@@ -104,19 +98,19 @@ int main(const int argc, char** argv)
 	{
 		uint64_t id;
 		uint64_t type;
-		string name;
+		std::string name;
 
-		if (client.getOutput(i, id, type, name)) { cout << "Output:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
+		if (client.getOutput(i, id, type, name)) { std::cout << "Output:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
-	map<string, string> parameters;
+	std::map<std::string, std::string> parameters;
 
 	for (size_t i = 0; i < client.getParameterCount(); ++i)
 	{
 		uint64_t id;
 		uint64_t type;
-		string name;
-		string value;
+		std::string name;
+		std::string value;
 
 		client.getParameter(i, id, type, name, value);
 		parameters[name] = value;
@@ -124,7 +118,7 @@ int main(const int argc, char** argv)
 
 	if (!(parameters.count("Channel Count")))
 	{
-		cerr << "Missing parameter" << endl;
+		std::cerr << "Missing parameter" << std::endl;
 		client.close();
 		exit(EXIT_FAILURE);
 	}
@@ -134,15 +128,15 @@ int main(const int argc, char** argv)
 	const size_t samplesPerBuffer = size_t(std::stoul(parameters.at("Samples Per Buffer")));
 	const size_t samplesToSend    = size_t(std::stoul(parameters.at("Amount of Samples to Generate")));
 
-	vector<double> matrix;
+	std::vector<double> matrix;
 	matrix.resize(nChannel * samplesPerBuffer);
 
 	// Announce to server that the box has finished initializing and wait for acknowledgement
 	while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
-	client.pushLog(LogLevel_Info, "Received Ping");
+	client.pushLog(Communication::LogLevel_Info, "Received Ping");
 
 	client.pushSync();
-	client.pushLog(LogLevel_Info, "Sent Pong");
+	client.pushLog(Communication::LogLevel_Info, "Sent Pong");
 
 	// Process
 
@@ -200,10 +194,10 @@ int main(const int argc, char** argv)
 		}
 		helper->closeChild();
 	}
-	if (!client.pushEBML(0, 0, 0, std::make_shared<const vector<uint8_t>>(callback.data())))
+	if (!client.pushEBML(0, 0, 0, std::make_shared<const std::vector<uint8_t>>(callback.data())))
 	{
-		cerr << "Failed to push EBML.\n";
-		cerr << "Error " << client.getLastError() << "\n";
+		std::cerr << "Failed to push EBML.\n";
+		std::cerr << "Error " << client.getLastError() << "\n";
 		exit(EXIT_FAILURE);
 	}
 
@@ -214,19 +208,19 @@ int main(const int argc, char** argv)
 	{
 		if (client.isEndReceived())
 		{
-			cout << "End message received!\n";
+			std::cout << "End message received!\n";
 			break;
 		}
 
 		if (!client.isConnected())
 		{
-			cout << "Disconnected!\n";
+			std::cout << "Disconnected!\n";
 			break;
 		}
 
 		if (client.isInErrorState())
 		{
-			cerr << "Error state " << client.getLastError() << "\n";
+			std::cerr << "Error state " << client.getLastError() << "\n";
 			break;
 		}
 
@@ -267,8 +261,8 @@ int main(const int argc, char** argv)
 
 			if (!client.pushEBML(0, tStart, tEnd, std::make_shared<const std::vector<uint8_t>>(callback.data())))
 			{
-				cerr << "Failed to push EBML.\n";
-				cerr << "Error " << client.getLastError() << "\n";
+				std::cerr << "Failed to push EBML.\n";
+				std::cerr << "Error " << client.getLastError() << "\n";
 				exit(EXIT_FAILURE);
 			}
 
@@ -277,21 +271,21 @@ int main(const int argc, char** argv)
 
 		// Errors
 		uint64_t packetId;
-		EError error;
+		Communication::EError error;
 		uint64_t guiltyId;
 
-		while (client.popError(packetId, error, guiltyId)) { cerr << "Error received:\n\tError: " << int(error) << "\n\tGuilty Id: " << guiltyId << "\n"; }
+		while (client.popError(packetId, error, guiltyId)) { std::cerr << "Error received:\n\tError: " << int(error) << "\n\tGuilty Id: " << guiltyId << "\n"; }
 		// Here, we send a sync message to tell to the server that we have no more data to send and we can move forward.
 		if (!client.pushSync()) { exit(EXIT_FAILURE); }
 	}
 
-	cout << "Processing stopped.\n";
+	std::cout << "Processing stopped.\n";
 
 	helper->disconnect();
 	helper->release();
 	writer->release();
 
-	if (!client.close()) { cerr << "Failed to close the connection\n"; }
+	if (!client.close()) { std::cerr << "Failed to close the connection\n"; }
 
 	return 0;
 }

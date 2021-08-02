@@ -9,14 +9,11 @@
 
 #include <cstring>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Toolkit;
-
 namespace OpenViBE {
 namespace Toolkit {
 namespace String {
-namespace {
-bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
+
+static bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSeparator)
 {
 	for (size_t i = 0; i < nSeparator; ++i) { if (value == separator[i]) { return true; } }
 	return false;
@@ -25,16 +22,12 @@ bool isSeparator(const uint8_t value, const uint8_t* separator, const size_t nSe
 // because std::tolower has multiple signatures,
 // it can not be easily used in std::transform
 // this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-template <class TCharT>
-TCharT ToLower(TCharT c) { return std::tolower(c); }
-}  // namespace
-}  // namespace String
-}  // namespace Toolkit
-}  // namespace OpenViBE
+template <class T>
+static T ToLower(T c) { return std::tolower(c); }
 
-size_t String::split(const CString& str, const ISplitCallback& splitCB, uint8_t separator) { return split(str, splitCB, &separator, 1); }
+size_t split(const CString& str, const ISplitCallback& splitCB, uint8_t separator) { return split(str, splitCB, &separator, 1); }
 
-size_t String::split(const CString& str, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
+size_t split(const CString& str, const ISplitCallback& splitCB, uint8_t* separator, const size_t nSeparator)
 {
 	if (nSeparator == 0 || separator == nullptr) { return 0; }
 
@@ -62,7 +55,7 @@ size_t String::split(const CString& str, const ISplitCallback& splitCB, uint8_t*
 }
 
 
-bool String::isAlmostEqual(const CString& str1, const CString& str2, const bool caseSensitive, const bool removeStartSpaces, const bool removeEndSpaces)
+bool isAlmostEqual(const CString& str1, const CString& str2, const bool caseSensitive, const bool removeStartSpaces, const bool removeEndSpaces)
 {
 	const char* str1Start = str1.toASCIIString();
 	const char* str1End   = str1Start + strlen(str1Start) - 1;
@@ -93,3 +86,7 @@ bool String::isAlmostEqual(const CString& str1, const CString& str2, const bool 
 
 	return tmp1 == tmp2;
 }
+
+}  // namespace String
+}  // namespace Toolkit
+}  // namespace OpenViBE

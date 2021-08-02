@@ -36,13 +36,15 @@ namespace Timelib = std;
 using internal_clock = Timelib::chrono::steady_clock;
 // using internal_clock = chrono::high_resolution_clock;
 
-bool System::Time::sleep(const size_t milliSeconds)
+namespace System {
+
+bool Time::sleep(const size_t milliSeconds)
 {
 	Timelib::this_thread::sleep_for(Timelib::chrono::milliseconds(milliSeconds));
 	return true;
 }
 
-bool System::Time::zsleep(const uint64_t seconds)
+bool Time::zsleep(const uint64_t seconds)
 {
 	const uint32_t s = uint32_t(seconds >> 32);
 	// zero the seconds with 0xFFFFFFFF, multiply to get the rest as fixed point microsec, then grab them (now in the 32 msbs)
@@ -54,7 +56,7 @@ bool System::Time::zsleep(const uint64_t seconds)
 	return true;
 }
 
-uint64_t System::Time::zgetTimeRaw(const bool sinceFirstCall)
+uint64_t Time::zgetTimeRaw(const bool sinceFirstCall)
 {
 	static bool initialized = false;
 	static internal_clock::time_point start;
@@ -78,11 +80,13 @@ uint64_t System::Time::zgetTimeRaw(const bool sinceFirstCall)
 	return res;
 }
 
-bool System::Time::isClockSteady() { return internal_clock::is_steady; }
+bool Time::isClockSteady() { return internal_clock::is_steady; }
 
-bool System::Time::checkResolution(const size_t milliSeconds)
+bool Time::checkResolution(const size_t milliSeconds)
 {
 	assert(milliSeconds != 0);
 	const auto resolution = double(internal_clock::period::num) / internal_clock::period::den;
 	return (size_t(std::ceil(resolution * 1000)) <= milliSeconds);
 }
+
+}  // namespace System

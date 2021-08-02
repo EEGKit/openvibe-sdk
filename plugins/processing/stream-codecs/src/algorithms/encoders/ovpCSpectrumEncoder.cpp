@@ -1,9 +1,8 @@
 #include "ovpCSpectrumEncoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 bool CSpectrumEncoder::initialize()
 {
@@ -48,3 +47,7 @@ bool CSpectrumEncoder::processHeader()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

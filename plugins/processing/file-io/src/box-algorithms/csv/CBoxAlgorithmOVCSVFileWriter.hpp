@@ -1,21 +1,46 @@
+/*********************************************************************
+ * Software License Agreement (AGPL-3 License)
+ *
+ * \file CBoxAlgorithmOVCSVFileWriter.hpp
+ * \brief Classes of the box CSV File Writer
+ * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
+ * \version 1.1.0
+ * \date Fri May 7 16:40:49 2021.
+ *
+ * \copyright (C) 2006-2021 INRIA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
-#include "../../ovp_defines.h"
 #include <cstdio>
 #include <memory>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#include "../../ovp_defines.h"
 #include "csv/ovICSV.h"
 
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
+
 class CBoxAlgorithmOVCSVFileWriter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	CBoxAlgorithmOVCSVFileWriter();
 	void release() override { delete this; }
 
@@ -36,10 +61,12 @@ private:
 
 	Toolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
 	Toolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
+	size_t m_stimulationInputIndex = 1;
 
 	uint64_t m_epoch = 0;
 
-	bool m_isHeaderReceived = false;
+	bool m_isStreamedMatrixHeaderReceived = false;
+	bool m_isStimulationsHeaderReceived = false;
 	bool m_isFileOpen       = false;
 	bool m_appendData       = false;
 	bool m_lastMatrixOnly   = false;
@@ -51,15 +78,31 @@ class CBoxAlgorithmOVCSVFileWriterListener final : public Toolkit::TBoxListener<
 public:
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
-		if (index == 1)
+		CIdentifier typeID = CIdentifier::undefined();
+		box.getInputType(index, typeID);
+
+		if (index == 0)
 		{
-			CIdentifier typeID = CIdentifier::undefined();
-			box.getInputType(1, typeID);
-			if (typeID != OV_TypeId_Stimulations)
+			if (typeID == OV_TypeId_Stimulations)
 			{
-				box.setInputType(1, OV_TypeId_Stimulations);
-				return true;
+				if (box.getInputCount() > 1)
+				{
+					box.removeInput(0);
+				}
 			}
+			else if (box.getInputCount() == 1)
+			{
+					box.addInput("Stimulations stream", OV_TypeId_Stimulations);
+			}
+		}
+		else if (index == 1 && typeID != OV_TypeId_Stimulations)
+		{
+			OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations), "Failed to reset input type to stimulations", Kernel::ErrorType::Internal);
+			this->getLogManager() << Kernel::LogLevel_Warning << "Input type not changed: 2nd input reserved for stimulations\n";
+		}
+		else if (index > 1)
+		{
+			OV_ERROR_UNLESS_KRF(false, "The index of the input does not exist", Kernel::ErrorType::Internal);
 		}
 
 		return true;
@@ -73,12 +116,12 @@ class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc
 public:
 	void release() override { }
 	CString getName() const override { return CString("CSV File Writer"); }
-	CString getAuthorName() const override { return CString("Victor Herlin"); }
+	CString getAuthorName() const override { return CString("Victor Herlin / Thomas Prampart"); }
 	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
 	CString getShortDescription() const override { return CString("Writes signal in a CSV (text based) file"); }
 	CString getDetailedDescription() const override { return CString(""); }
 	CString getCategory() const override { return CString("File reading and writing/CSV"); }
-	CString getVersion() const override { return CString("1.0"); }
+	CString getVersion() const override { return CString("1.2"); }
 	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
 	CString getAddedSoftwareVersion() const override { return CString("0.1.0"); }
 	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
@@ -102,6 +145,7 @@ public:
 		prototype.addInputSupport(OV_TypeId_Spectrum);
 		prototype.addInputSupport(OV_TypeId_FeatureVector);
 		prototype.addInputSupport(OV_TypeId_CovarianceMatrix);
+		prototype.addInputSupport(OV_TypeId_Stimulations);
 
 		return true;
 	}

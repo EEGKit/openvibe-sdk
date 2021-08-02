@@ -7,10 +7,9 @@
 #include "../algorithms/encoders/ovpCStimulationEncoder.h"
 #include "../algorithms/encoders/ovpCChannelLocalisationEncoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 bool CEncoderAlgorithmTest::initialize()
 {
@@ -90,9 +89,9 @@ bool CEncoderAlgorithmTest::processClock(Kernel::CMessageClock& /*msg*/)
 
 bool CEncoderAlgorithmTest::process()
 {
-	IBoxIO& boxContext            = getDynamicBoxContext();
-	IPlayerContext& playerContext = getPlayerContext();
-	const size_t nInput           = getStaticBoxContext().getOutputCount();
+	Kernel::IBoxIO& boxContext            = getDynamicBoxContext();
+	Kernel::IPlayerContext& playerContext = getPlayerContext();
+	const size_t nInput                   = getStaticBoxContext().getOutputCount();
 
 	if (!m_hasSentHeader)
 	{
@@ -121,3 +120,7 @@ bool CEncoderAlgorithmTest::process()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

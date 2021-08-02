@@ -28,18 +28,15 @@
 #include <streambuf>
 #include <numeric>
 
-using namespace OpenViBE::CSV;
-using namespace std;
-
 static std::string directoryPath = "";
 
 TEST(CSV_Writer_Test_Case, signalWriterNormalGoodSignal)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter01.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSignalWriter01.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
@@ -60,11 +57,11 @@ TEST(CSV_Writer_Test_Case, signalWriterNormalGoodSignal)
 
 TEST(CSV_Writer_Test_Case, signalWriterNoStimulations)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter02.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSignalWriter02.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 	ASSERT_TRUE(handler->noEventsUntilDate(2.0));
@@ -85,8 +82,8 @@ TEST(CSV_Writer_Test_Case, signalWriterNoStimulations)
 
 TEST(CSV_Writer_Test_Case, signalWriterNoFileOpen)
 {
-	ICSVHandler* handler = createCSVHandler();
-	handler->setFormatType(EStreamType::Signal);
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
 	double index = 0.0;
@@ -104,19 +101,19 @@ TEST(CSV_Writer_Test_Case, signalWriterNoFileOpen)
 
 TEST(CSV_Writer_Test_Case, signalWriterWrongInputType)
 {
-	ICSVHandler* handler = createCSVHandler();
-	handler->setFormatType(EStreamType::Spectrum);
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
 	ASSERT_FALSE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 	releaseCSVHandler(handler);
 }
 
 TEST(CSV_Writer_Test_Case, signalWriterWrongMatrixSize)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter05.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSignalWriter05.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 	ASSERT_FALSE(handler->addSample({ 0, 0.125, { -20.20, -10.10, -5.05, 5.05, 10.10, 20.20 }, 0 }));
 	ASSERT_TRUE(handler->closeFile());
@@ -126,11 +123,11 @@ TEST(CSV_Writer_Test_Case, signalWriterWrongMatrixSize)
 // should have nothing in the file
 TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithoutSetNoEventsUntilDate)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter06.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSignalWriter06.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
 	double time = 0.0;
@@ -148,11 +145,11 @@ TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithoutSetNoEventsUntilDate)
 // file should be full
 TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithSetNoEventsUntilDate)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter07.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSignalWriter07.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 	ASSERT_TRUE(handler->noEventsUntilDate(100.001));
 
@@ -171,13 +168,13 @@ TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithSetNoEventsUntilDate)
 
 TEST(CSV_Writer_Test_Case, signalWriterOnlyLastMatrix)
 {
-	ICSVHandler* handler = createCSVHandler();
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
 	handler->setLastMatrixOnlyMode(true);
 	const std::string filename = directoryPath + "testCSVSignalWriter08.csv";
 	const std::string expectedFileContent(
 		"Time:8Hz,Epoch,O1,O2,Pz,P1,P2,Event Id,Event Date,Event Duration\n1.0000000000,2,-10.1000000000,-5.0500000000,0.0000000000,5.0500000000,10.1000000000,35000,1.0000000000,0.0000000000\n1.1250000000,2,-10.1000000000,-5.0500000000,0.0000000000,5.0500000000,10.1000000000,,,\n");
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
@@ -203,11 +200,11 @@ TEST(CSV_Writer_Test_Case, signalWriterOnlyLastMatrix)
 
 TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSpectrumWriter01.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSpectrumWriter01.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Spectrum);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
 
 	std::vector<double> frequencyAbscissa(64);
 	std::iota(frequencyAbscissa.begin(), frequencyAbscissa.end(), 0.0);
@@ -234,11 +231,11 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 
 TEST(CSV_Writer_Test_Case, spectrumWriterWrongInputType)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSpectrumWriter02.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSpectrumWriter02.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Signal);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	std::vector<double> frequencyAbscissa(64);
 	std::iota(frequencyAbscissa.begin(), frequencyAbscissa.end(), 0.0);
 
@@ -250,11 +247,11 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongInputType)
 
 TEST(CSV_Writer_Test_Case, spectrumWriterWrongMatrixSize)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSpectrumWriter03.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVSpectrumWriter03.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::Spectrum);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
 	std::vector<double> frequencyAbscissa(64);
 	std::iota(frequencyAbscissa.begin(), frequencyAbscissa.end(), 0.0);
 	ASSERT_TRUE(handler->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
@@ -267,11 +264,11 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongMatrixSize)
 
 TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter01.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter01.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 
@@ -291,11 +288,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 
 TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter02.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter02.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
@@ -315,11 +312,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 
 TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter03.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter03.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 1, 4 }, { "L1", "A", "B", "C", "D" }));
 
@@ -339,11 +336,11 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 
 TEST(CSV_Writer_Test_Case, matrixWriterWrongMatrixSize)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter04.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter04.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
 	ASSERT_FALSE(handler->addSample({ 0, 1.0, { -25.25, -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20, 25.25 }, 0 }));
@@ -354,11 +351,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterWrongMatrixSize)
 
 TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter05.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter05.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(
 		handler->setStreamedMatrixInformation({ 6, 8, 2 }, { "L1", "L2", "L3", "L4", "L5", "L6", "A1", "B2", "C3", "D4", "E5", "F6", "G7", "H8", "X", "Y" }));
@@ -382,11 +379,11 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 
 TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter06.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter06.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 4, 1, 4 }, { "L1", "L2", "L3", "L4", "X", "R1", "R2", "R3", "R4" }));
 
@@ -410,11 +407,11 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 // As of 10/01/2017 (commit a11210cf1c3fd81bb52095c7c9c6006c760218a2), this is valid for
 TEST(CSV_Writer_Test_Case, matrixWriterWithInvalidTime)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter07.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVMatrixWriter07.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 1, 1, 1 }, { "X", "Y", "Z" }));
 
@@ -430,13 +427,13 @@ TEST(CSV_Writer_Test_Case, matrixWriterWithInvalidTime)
 
 TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 {
-	ICSVHandler* handler = createCSVHandler();
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
 	handler->setLastMatrixOnlyMode(true);
 	const std::string filename = directoryPath + "testCSVMatrixWriter08.csv";
 	const std::string expectedFileContent(
 		"Time:2x2x2,End Time,LA:1:X,LA:1:Y,LA:2:X,LA:2:Y,LB:1:X,LB:1:Y,LB:2:X,LB:2:Y,Event Id,Event Date,Event Duration\n49.0000000000,50.0000000000,49.0000000000,1.0000000000,2.0000000000,3.0000000000,4.0000000000,5.0000000000,6.0000000000,7.0000000000,,,\n");
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::StreamedMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 	ASSERT_TRUE(handler->writeHeaderToFile());
@@ -462,11 +459,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 
 TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVFeatureVectorWriter01.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVFeatureVectorWriter01.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::FeatureVector);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::FeatureVector);
 
 	ASSERT_TRUE(handler->setFeatureVectorInformation({ "F1", "F2", "F3" }));
 
@@ -487,11 +484,11 @@ TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 
 TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVFeatureVectorWriter02.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVFeatureVectorWriter02.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::FeatureVector);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::FeatureVector);
 
 	ASSERT_TRUE(handler->setFeatureVectorInformation({ "", "", "" }));
 
@@ -510,11 +507,11 @@ TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 
 TEST(CSV_Writer_Test_Case, featureVectorWrongVectorSize)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVFeatureVectorWriter03.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVFeatureVectorWriter03.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::FeatureVector);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::FeatureVector);
 
 	ASSERT_TRUE(handler->setFeatureVectorInformation({ "F1", "F2", "F3" }));
 
@@ -529,11 +526,11 @@ TEST(CSV_Writer_Test_Case, featureVectorWrongVectorSize)
 
 TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVCovarMatrixWriter01.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVCovarMatrixWriter01.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::CovarianceMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::CovarianceMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "C1", "C2", "C1", "C2", "Matrix 1", "Matrix 2" }));
 
@@ -552,11 +549,11 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 
 TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVCovarMatrixWriter02.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVCovarMatrixWriter02.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::CovarianceMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::CovarianceMatrix);
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
@@ -575,11 +572,11 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 
 TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 {
-	ICSVHandler* handler       = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVCovarMatrixWriter04.csv";
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVCovarMatrixWriter04.csv";
 
-	ASSERT_TRUE(handler->openFile(filename, EFileAccessMode::Write));
-	handler->setFormatType(EStreamType::CovarianceMatrix);
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::CovarianceMatrix);
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
 	ASSERT_FALSE(handler->addSample({ 0, 1.0, { -25.25, -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20, 25.25 }, 0 }));
@@ -588,6 +585,79 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 	releaseCSVHandler(handler);
 }
 
+TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterHeader)
+{
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVStimulationsWriter01.csv";
+	const std::string expectedFileContent = "Event Id,Event Date,Event Duration";
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
+
+	ASSERT_TRUE(handler->writeHeaderToFile());
+	ASSERT_TRUE(handler->closeFile());
+	releaseCSVHandler(handler);
+
+	// Verification
+	std::ifstream ifs(filename);
+	std::string line;
+	ASSERT_TRUE(std::getline(ifs, line));
+	ifs.close();
+
+	ASSERT_STREQ(line.c_str(), expectedFileContent.c_str());
+}
+
+
+
+TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterGoodStims)
+{
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVStimulations02.csv";
+	const std::vector<uint64_t> stimCodes = {33025, 33026, 33027};
+	const std::vector<std::string> expectedStims = {"33025,1.0000000000,0.0000000000",
+												    "33026,2.0000000000,0.0000000000",
+												    "33027,3.0000000000,0.0000000000"};
+
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
+
+	for (size_t i = 0; i < stimCodes.size(); ++i)
+	{
+		handler->addEvent(stimCodes[i],
+						  double(i+1),
+						  0.0 );
+	}
+
+
+	ASSERT_TRUE(handler->writeHeaderToFile());
+	ASSERT_TRUE(handler->writeAllDataToFile());
+	ASSERT_TRUE(handler->closeFile());
+	releaseCSVHandler(handler);
+
+	std::ifstream ifs(filename);
+	std::string line;
+	size_t i = 0;
+	ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignore header
+	while (std::getline(ifs, line))
+	{
+		ASSERT_LT(i, expectedStims.size());
+		ASSERT_STREQ(line.c_str(), expectedStims[i++].c_str());
+	}
+	ifs.close();
+}
+
+TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterUnexpectedData)
+{
+	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
+	const std::string filename          = directoryPath + "testCSVStimulations03.csv";
+
+	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
+	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
+
+	ASSERT_FALSE(handler->addSample({ 0.0, 0.5, { -10.10, -5.05, 0.00, 5.05, 10.10 }, 1 }));
+
+	ASSERT_TRUE(handler->closeFile());
+	releaseCSVHandler(handler);
+}
 
 int uoCSVWriterTest(int argc, char* argv[])
 {

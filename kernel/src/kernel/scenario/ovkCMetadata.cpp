@@ -3,25 +3,10 @@
 #include "ovkCMetadata.h"
 #include "ovkCScenario.h"
 
-
 #include "../ovkCObjectVisitorContext.h"
 
-using namespace std;
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-
-//___________________________________________________________________//
-//                                                                   //
-
-CMetadata::CMetadata(const IKernelContext& ctx, CScenario& ownerScenario)
-	: TKernelObject<IMetadata>(ctx), m_ownerScenario(ownerScenario), m_id(CIdentifier::undefined()), m_type(CIdentifier::undefined()), m_data("") {}
-
-CMetadata::~CMetadata() {}
-
-CIdentifier CMetadata::getIdentifier() const { return m_id; }
-CIdentifier CMetadata::getType() const { return m_type; }
-CString CMetadata::getData() const { return m_data; }
+namespace OpenViBE {
+namespace Kernel {
 
 bool CMetadata::setIdentifier(const CIdentifier& identifier)
 {
@@ -71,3 +56,6 @@ bool CMetadata::acceptVisitor(IObjectVisitor& objectVisitor)
 	CObjectVisitorContext objectVisitorContext(this->getKernelContext());
 	return objectVisitor.processBegin(objectVisitorContext, *this) && objectVisitor.processEnd(objectVisitorContext, *this);
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmSpectrumAverage.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 bool CBoxAlgorithmSpectrumAverage::initialize()
 {
@@ -53,7 +52,7 @@ bool CBoxAlgorithmSpectrumAverage::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmSpectrumAverage::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
@@ -100,3 +99,7 @@ bool CBoxAlgorithmSpectrumAverage::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

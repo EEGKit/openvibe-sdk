@@ -52,10 +52,10 @@ def compareCells (file1,file2):
 try:
     #open files associated with the variables
     with open(referenceData, 'r') as fileReferenceData :
-        readerReferenceData = csv.reader(fileReferenceData, delimiter=';')
+        readerReferenceData = csv.reader(fileReferenceData, delimiter=',')
         inputData = [row for row in readerReferenceData]
     with open(testData, 'r') as fileTestData :
-        readerTestData = csv.reader(fileTestData, delimiter=';')
+        readerTestData = csv.reader(fileTestData, delimiter=',')
         outputData = [row for row in readerTestData]
 except IOError as err:
     print('missing input or ouput file')    

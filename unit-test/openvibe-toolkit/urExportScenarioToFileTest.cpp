@@ -5,15 +5,11 @@
 #include "ovtAssert.h"
 #include "ovtTestFixtureCommon.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 int urImportScenarioFromFileTest(int argc, char* argv[]);
 
 #define OVP_ClassId_BoxAlgorithm_ClockStimulator 		CIdentifier(0x4F756D3F, 0x29FF0B96)
 #define OVP_ClassId_BoxAlgorithm_ClockStimulatorDesc	CIdentifier(0x4FD067E9, 0x740D2AF0)
 #define OVP_ClassId_BoxAlgorithm_StimulationListener	CIdentifier(0x65731E1D, 0x47DE5276)
-
 
 #include "urSimpleTestScenarioDefinition.h"
 
@@ -59,7 +55,7 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		CIdentifier simpleScenarioIdentifier;
 		context->getScenarioManager().createScenario(simpleScenarioIdentifier);
 
-		IScenario& scenario = context->getScenarioManager().getScenario(simpleScenarioIdentifier);
+		Kernel::IScenario& scenario = context->getScenarioManager().getScenario(simpleScenarioIdentifier);
 
 		// Test scenario attributes
 		for (auto& attribute : simpleScenarioAttributes) { scenario.addAttribute(std::get<0>(attribute), std::get<1>(attribute).c_str()); }
@@ -78,7 +74,7 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		CIdentifier actualStimulationListenerBoxId;
 		scenario.addBox(actualStimulationListenerBoxId, OVP_ClassId_BoxAlgorithm_StimulationListener, s_StimulationListenerBoxId);
 
-		IBox* stimulatorListenerBox = scenario.getBoxDetails(s_StimulationListenerBoxId);
+		Kernel::IBox* stimulatorListenerBox = scenario.getBoxDetails(s_StimulationListenerBoxId);
 		stimulatorListenerBox->addInput("Stimulation stream 2", OV_TypeId_Stimulations);
 
 		int scenarioInputIdx = 0;
@@ -110,13 +106,13 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		CIdentifier actualSimpleCommentIdentifier;
 		scenario.addComment(actualSimpleCommentIdentifier, s_SimpleCommentId);
 
-		IComment* simpleComment = scenario.getCommentDetails(s_SimpleCommentId);
+		Kernel::IComment* simpleComment = scenario.getCommentDetails(s_SimpleCommentId);
 		simpleComment->setText("Content of a comment");
 
 		CIdentifier actualUnicodeCommentIdentifier;
 		scenario.addComment(actualUnicodeCommentIdentifier, s_UnicodeCommentId);
 
-		IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
+		Kernel::IComment* unicodeComment = scenario.getCommentDetails(s_UnicodeCommentId);
 		unicodeComment->setText("This comment contains a newline\nand unicode characters 日本語");
 
 

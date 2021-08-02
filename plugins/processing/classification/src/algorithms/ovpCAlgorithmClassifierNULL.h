@@ -6,7 +6,6 @@
 
 #include <xml/IXMLNode.h>
 
-
 namespace OpenViBE {
 namespace Plugins {
 namespace Classification {

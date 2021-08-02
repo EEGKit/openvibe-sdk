@@ -3,10 +3,9 @@
 #include <string>
 #include <iostream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace FileIO;
+namespace OpenViBE {
+namespace Plugins {
+namespace FileIO {
 
 bool CBoxAlgorithmCSVFileWriter::initialize()
 {
@@ -35,7 +34,7 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 		{
 			if (m_typeID != OV_TypeId_StreamedMatrix)
 			{
-				this->getLogManager() << LogLevel_Info << "Input is a type derived from matrix that the box doesn't recognize, decoding as Streamed Matrix\n";
+				this->getLogManager() << Kernel::LogLevel_Info << "Input is a type derived from matrix that the box doesn't recognize, decoding as Streamed Matrix\n";
 			}
 			m_decoder = new Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>();
 			m_decoder->initialize(*this, 0);
@@ -48,7 +47,7 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 		m_decoder->initialize(*this, 0);
 		m_realProcess = &CBoxAlgorithmCSVFileWriter::processStimulation;
 	}
-	else { OV_ERROR_KRF("Invalid input type identifier " << this->getTypeManager().getTypeName(m_typeID), ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type identifier " << this->getTypeManager().getTypeName(m_typeID), Kernel::ErrorType::BadInput); }
 
 	m_nSample = 0;
 
@@ -78,7 +77,7 @@ bool CBoxAlgorithmCSVFileWriter::initializeFile()
 
 	m_fileStream.open(filename.toASCIIString(), std::ios::trunc);
 
-	OV_ERROR_UNLESS_KRF(m_fileStream.is_open(), "Error opening file [" << filename << "] for writing", ErrorType::BadFileWrite);
+	OV_ERROR_UNLESS_KRF(m_fileStream.is_open(), "Error opening file [" << filename << "] for writing", Kernel::ErrorType::BadFileWrite);
 
 	m_fileStream << std::scientific;
 	m_fileStream.precision(std::streamsize(precision));
@@ -100,7 +99,7 @@ bool CBoxAlgorithmCSVFileWriter::process()
 
 bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
 		const uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
@@ -117,7 +116,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 				const CMatrix* matrix = static_cast<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->getOutputMatrix();
 
 				OV_ERROR_UNLESS_KRF(matrix->getDimensionCount() == 1 || matrix->getDimensionCount() == 2,
-									"Invalid input matrix: must have 1 or 2 dimensions", ErrorType::BadInput);
+									"Invalid input matrix: must have 1 or 2 dimensions", Kernel::ErrorType::BadInput);
 
 				if (matrix->getDimensionCount() == 1 || m_typeID == OV_TypeId_FeatureVector)
 				{
@@ -149,7 +148,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 
 				m_fileStream << "\n";
 			}
-			else { OV_ERROR_KRF("Multiple streamed matrix headers received", ErrorType::BadInput); }
+			else { OV_ERROR_KRF("Multiple streamed matrix headers received", Kernel::ErrorType::BadInput); }
 		}
 		if (m_decoder->isBufferReceived())
 		{
@@ -158,8 +157,8 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 			const size_t nChannel = m_oMatrix.getDimensionSize(0);
 			const size_t nSample  = m_oMatrix.getDimensionSize(1);
 
-			//this->getLogManager() << LogLevel_Info << " dimsIn " << matrix->getDimensionSize(0) << "," << matrix->getDimensionSize(1) << "\n";
-			//this->getLogManager() << LogLevel_Info << " dimsBuf " << m_oMatrix.getDimensionSize(0) << "," << m_oMatrix.getDimensionSize(1) << "\n";
+			//this->getLogManager() << Kernel::LogLevel_Info << " dimsIn " << matrix->getDimensionSize(0) << "," << matrix->getDimensionSize(1) << "\n";
+			//this->getLogManager() << Kernel::LogLevel_Info << " dimsBuf " << m_oMatrix.getDimensionSize(0) << "," << m_oMatrix.getDimensionSize(1) << "\n";
 
 			for (size_t s = 0; s < nSample; ++s)
 			{
@@ -222,7 +221,7 @@ bool CBoxAlgorithmCSVFileWriter::processStreamedMatrix()
 
 bool CBoxAlgorithmCSVFileWriter::processStimulation()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
@@ -234,7 +233,7 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 				m_headerReceived = true;
 				m_fileStream << "Time (s)" << m_separator.toASCIIString() << "Identifier" << m_separator.toASCIIString() << "Duration\n";
 			}
-			else { OV_ERROR_KRF("Multiple stimulation headers received", ErrorType::BadInput); }
+			else { OV_ERROR_KRF("Multiple stimulation headers received", Kernel::ErrorType::BadInput); }
 		}
 		if (m_decoder->isBufferReceived())
 		{
@@ -253,3 +252,7 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 
 	return true;
 }
+
+}  // namespace FileIO
+}  // namespace Plugins
+}  // namespace OpenViBE

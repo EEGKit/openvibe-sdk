@@ -4,10 +4,6 @@
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-using namespace boost::spirit;
-using namespace OpenViBE;
-
 //#define CABSTRACTTREE_DEBUG
 
 void CAbstractTree::simplifyTree()
@@ -45,7 +41,7 @@ void CAbstractTreeParentNode::levelOperators()
 {
 	const size_t nChildren = m_Children.size();
 
-	vector<CAbstractTreeNode*> newChildren;
+	std::vector<CAbstractTreeNode*> newChildren;
 
 	//for all the node's children
 	for (size_t i = 0; i < nChildren; ++i)
@@ -196,8 +192,8 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 			{
 				case OP_DIV:
 				{
-					const double total = reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue() / reinterpret_cast<CAbstractTreeValueNode*>(
-											 m_Children[1])->getValue();
+					const double total = reinterpret_cast<CAbstractTreeValueNode*>(m_Children[0])->getValue()
+										 / reinterpret_cast<CAbstractTreeValueNode*>(m_Children[1])->getValue();
 
 					//delete the old value nodes
 					delete m_Children[0];
@@ -251,7 +247,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& node)
 		sort(m_Children.begin(), m_Children.end(), CAbstractTreeNodeOrderingFunction());
 
 		//the new children if there are changes
-		vector<CAbstractTreeNode*> newChildren;
+		std::vector<CAbstractTreeNode*> newChildren;
 
 		//iterator on the children
 		size_t i     = 0;

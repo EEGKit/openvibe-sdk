@@ -3,7 +3,6 @@
 #include <sstream>
 #include <iostream>
 
-
 #include <fs/Files.h>
 
 namespace OpenViBE {

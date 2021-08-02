@@ -27,9 +27,11 @@
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #else
-#include <stdio.h> //sprintf
+#include <stdio.h>  //sprintf
 #endif
 
+#include <utility>
+#include <functional>
 #include <cstdio>
 #include <sstream>
 #include <numeric>
@@ -40,42 +42,47 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/algorithm/string/join.hpp>
-
-#include "ovCCSV.hpp"
+#include <boost/regex.hpp>
 
 #include <fs/Files.h>
 
-using namespace OpenViBE;
-using namespace CSV;
-using namespace boost::spirit;
+#include "ovCCSV.hpp"
 
-namespace {
-const size_t SIGNAL_EPOCH_COL_IDX = 1;
-const size_t TIME_COL_IDX         = 0;
-const size_t END_TIME_COL_IDX     = 1;
-const size_t N_PRE_DATA_COL       = 2;	// Number of columns before data (Time/Epoch)
-const size_t N_POST_DATA_COL      = 3;	// Number of columns after data (Events)
+
+namespace OpenViBE {
+namespace CSV {
+static const size_t SIGNAL_EPOCH_COL_IDX = 1;
+static const size_t TIME_COL_IDX         = 0;
+static const size_t END_TIME_COL_IDX     = 1;
+static const size_t N_PRE_DATA_COL       = 2;  // Number of columns before data (Time/Epoch)
+static const size_t N_POST_DATA_COL      = 3;  // Number of columns after data (Events)
+
+//Stream types regexes
+static const boost::regex HEADER_SPECTRUM_REGEX{"Time:\\d+x\\d+\\:\\d+,End Time,([\\w\\s]+:((\\d+)|(\\d+\\.\\d+)),)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_MATRIX_REGEX{"Time:\\d+(x\\d+){1,},End Time,(([\\w\\s]*(\\:[\\w\\s]*){1,})*,)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_VECTOR_REGEX{"Time:\\d+,End Time,([\\w\\s]*,)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_SIGNAL_REGEX{"Time:\\d+Hz,Epoch,([\\w\\s]*,)+Event Id,Event Date,Event Duration"};
+static const boost::regex HEADER_STIMULATIONS_REGEX{"Event Id,Event Date,Event Duration"};
 
 //Separators
-const char SEPARATOR(',');
-const char DATA_SEPARATOR(':');
-const char DIMENSION_SEPARATOR('x');
+static const char SEPARATOR(',');
+static const char DATA_SEPARATOR(':');
+static const char DIMENSION_SEPARATOR('x');
 
 // Columns Names
-const std::string EVENT_ID_COL       = "Event Id";
-const std::string EVENT_DATE_COL     = "Event Date";
-const std::string EVENT_DURATION_COL = "Event Duration";
+static const std::string EVENT_ID_COL       = "Event Id";
+static const std::string EVENT_DATE_COL     = "Event Date";
+static const std::string EVENT_DURATION_COL = "Event Duration";
 
-const size_t CHAR_TO_READ = 1000;
-//const size_t MAXIMUM_FLOAT_DECIMAL = 32;
+static const size_t CHAR_TO_READ = 1000;
+//static const size_t MAXIMUM_FLOAT_DECIMAL = 32;
 
-const char END_OF_LINE_CHAR('\n');
-}	// namespace 
+static const char END_OF_LINE_CHAR('\n');
 
 bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char delimiter, std::string& bufferHistory) const
 {
 	// To improve the performance of the reading, we read a bunch a chars rather one char by one char.
-	// We keep the part of the readed stream, that is not used, in a buffer history.
+	// We keep the part of the read stream, that is not used, in a buffer history.
 	std::vector<std::string> buffer;
 	size_t lineBreakPos = std::string::npos;
 
@@ -89,8 +96,8 @@ bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char de
 	// If it's not the case, we have to read the stream.
 	while (lineBreakPos == std::string::npos)
 	{
-		buffer.emplace_back(CHAR_TO_READ, '\0');		   // Construct a string that will store the characters.
-		in.read(&buffer.back()[0], CHAR_TO_READ); // Read X chars by X chars
+		buffer.emplace_back(CHAR_TO_READ, '\0');  // Construct a string that will store the characters.
+		in.read(&buffer.back()[0], CHAR_TO_READ);  // Read X chars by X chars
 		lineBreakPos = buffer.back().find_first_of(delimiter);
 
 		// If it's the end of the file and no delimiter has been found...
@@ -112,14 +119,16 @@ bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char de
 	buffer.back().erase(lineBreakPos, buffer.back().size());
 
 	out.clear();
-	out.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), size_t(0), [](const size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
+	out.reserve(std::accumulate(buffer.cbegin(), buffer.cend(),
+				size_t(0),
+				[](const size_t sumSize, const std::string& str) { return sumSize + str.size(); }));
 
 	// Let's join the strings !
 	for_each(buffer.begin(), buffer.end(), [&out](const std::string& s) { out += s; });
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	// Check if we are looking for an end of line char and handle the CR/LF Windows/Linux cases.
-	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !out.empty()) { out.pop_back(); }	// Remove the carriage return char.
+	if (delimiter == END_OF_LINE_CHAR && m_isCRLFEOL && !out.empty()) { out.pop_back(); }  // Remove the carriage return char.
 #endif
 
 	return true;
@@ -134,16 +143,21 @@ void CCSVHandler::split(const std::string& in, const char delimiter, std::vector
 	std::string buffer;
 
 	// Loop until the last delimiter
-	while (this->streamReader(stringStream, item, delimiter, buffer)) { out.push_back(item); }
+	while (this->streamReader(stringStream, item, delimiter, buffer))
+	{
+		out.push_back(item);
+	}
 
 	// Get the part after the last delimiter
-	if (this->streamReader(stringStream, item, '\0', buffer)) { out.push_back(item); }
+	if (this->streamReader(stringStream, item, '\0', buffer))
+	{
+		out.push_back(item);
+	}
 }
 
 void CCSVHandler::setFormatType(const EStreamType typeID)
 {
-	m_inputTypeID  = typeID;
-	m_hasInputType = true;
+	m_inputTypeID = typeID;
 }
 
 bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, const size_t sampling, const size_t nSamplePerBuffer)
@@ -182,29 +196,6 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, s
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-
-	if (!this->parseHeader()) { return false; }
-
-	if (m_dimLabels.empty())
-	{
-		m_lastStringError = "No dimension labels, header reading may have failed";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	if (m_sampling == 0)
-	{
-		m_lastStringError = "Sampling rate invalid";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	if (m_nSamplePerBuffer == 0)
-	{
-		m_lastStringError = "Sample count per buffer is invalid";
-		m_logError        = LogErrorCodes_WrongHeader;
 		return false;
 	}
 
@@ -255,29 +246,6 @@ bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames,
 		return false;
 	}
 
-	if (!this->parseHeader()) { return false; }
-
-	if (m_dimLabels.empty())
-	{
-		m_lastStringError = "No dimension labels, header reading may have failed";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	if (m_frequencyAbscissa.empty())
-	{
-		m_lastStringError = "No dimension labels, header reading may have failed";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	if (m_nSamplePerBuffer == 0)
-	{
-		m_lastStringError = "Sample count per buffer is invalid";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
 	channelNames      = m_dimLabels;
 	frequencyAbscissa = m_frequencyAbscissa;
 	sampling          = m_nSampleOriginal;
@@ -320,15 +288,6 @@ bool CCSVHandler::getFeatureVectorInformation(std::vector<std::string>& channelN
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-
-	if (!this->parseHeader()) { return false; }
-
-	if (m_dimLabels.empty())
-	{
-		m_lastStringError = "No dimension labels, header reading may have failed";
-		m_logError        = LogErrorCodes_WrongHeader;
 		return false;
 	}
 
@@ -377,26 +336,10 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<size_t>& dimSiz
 
 bool CCSVHandler::getStreamedMatrixInformation(std::vector<size_t>& dimSizes, std::vector<std::string>& labels)
 {
-	if (m_inputTypeID != EStreamType::StreamedMatrix && m_inputTypeID != EStreamType::CovarianceMatrix)
+	if (m_inputTypeID != EStreamType::StreamedMatrix && m_inputTypeID != EStreamType::CovarianceMatrix && m_inputTypeID != EStreamType::FeatureVector)
 	{
 		m_lastStringError.clear();
 		m_logError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-
-	if (!this->parseHeader()) { return false; }
-
-	if (m_dimSizes.empty())
-	{
-		m_lastStringError = "No dimension sizes, header reading may have failed";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	if (m_dimLabels.empty())
-	{
-		m_lastStringError = "No dimension labels, header reading may have failed";
-		m_logError        = LogErrorCodes_WrongHeader;
 		return false;
 	}
 
@@ -527,7 +470,10 @@ bool CCSVHandler::readSamplesAndEventsFromFile(const size_t lineNb, std::vector<
 		const size_t spectrumSize = m_dimSizes[0] * m_dimSizes[1];
 		matrixSize *= spectrumSize;
 	}
-	else { matrixSize = 0; }
+	else
+	{
+		matrixSize = 0;
+	}
 
 	SMatrixChunk chunk(0, 0, std::vector<double>(matrixSize), 0);
 
@@ -574,6 +520,42 @@ bool CCSVHandler::readSamplesAndEventsFromFile(const size_t lineNb, std::vector<
 	return true;
 }
 
+bool CCSVHandler::readEventsFromFile(size_t stimsToRead, std::vector<SStimulationChunk>& events)
+{
+	if (!m_hasDataToRead)
+	{
+		m_lastStringError = "There is no more data to read";
+		m_logError        = LogErrorCodes_DateError;
+		return false;
+	}
+
+	if (!m_isHeaderRead)
+	{
+		m_lastStringError = "Trying to read data without having read a header";
+		m_logError        = LogErrorCodes_HeaderNotRead;
+		return false;
+	}
+
+	events.clear();
+
+	std::string lineValue;
+	while (events.size() < stimsToRead && m_hasDataToRead)
+	{
+		if (!this->streamReader(m_fs, lineValue, END_OF_LINE_CHAR, m_bufferReadFileLine))
+		{
+			// There is no more data to read
+			m_hasDataToRead = false;
+			break;
+		}
+		if (!readStimulationChunk(lineValue, events, 0))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool CCSVHandler::writeHeaderToFile()
 {
 	if (!m_fs.is_open())
@@ -596,7 +578,10 @@ bool CCSVHandler::writeHeaderToFile()
 	if (header.empty()) { return false; }
 
 	m_isFirstLineWritten = true;
-	try { m_fs << header; }
+	try
+	{
+		m_fs << header;
+	}
 	catch (std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error occured while writing: ";
@@ -622,7 +607,10 @@ bool CCSVHandler::writeDataToFile()
 	// set matrix (in case of error, logError set in the function)
 	if (!this->createCSVStringFromData(false, csv)) { return false; }
 
-	try { m_fs << csv; }
+	try
+	{
+		m_fs << csv;
+	}
 	catch (std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error occured while writing: ";
@@ -641,7 +629,10 @@ bool CCSVHandler::writeAllDataToFile()
 	// in case of error, logError set in the function
 	if (!createCSVStringFromData(true, csv)) { return false; }
 
-	try { m_fs << csv; }
+	try
+	{
+		m_fs << csv;
+	}
 	catch (std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error occured while writing: ";
@@ -663,11 +654,13 @@ bool CCSVHandler::closeFile()
 	m_nDim               = 0;
 	m_nCol               = 0;
 	m_sampling           = 0;
-	m_hasInputType       = false;
 	m_isFirstLineWritten = false;
 	m_isSetInfoCalled    = false;
 
-	try { m_fs.close(); }
+	try
+	{
+		m_fs.close();
+	}
 	catch (const std::ios_base::failure& fail)
 	{
 		m_lastStringError = "Error while closing file: ";
@@ -708,16 +701,25 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 			}
 			break;
 
-		default:
+		case EStreamType::StreamedMatrix:
+		case EStreamType::CovarianceMatrix:
+		case EStreamType::FeatureVector:
+		{
 			const size_t columnsToHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
 
 			if (sample.matrix.size() != columnsToHave)
 			{
-				m_lastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " + std::to_string(columnsToHave);
-				m_logError        = LogErrorCodes_WrongMatrixSize;
+				m_lastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " +
+				                    std::to_string(columnsToHave);
+				m_logError = LogErrorCodes_WrongMatrixSize;
 				return false;
 			}
 			break;
+		}
+		default:
+			m_lastStringError = "Cannot add Sample in " + toString(m_inputTypeID) + " file type";
+			m_logError = LogErrorCodes_WrongStreamType;
+			return false;
 	}
 
 	// Check timestamps
@@ -807,7 +809,10 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 												[curTime](const SStimulationChunk& chunk) { return chunk.date < curTime; }), m_stimulations.end());
 		}
 	}
-	else { m_chunks.insert(m_chunks.end(), samples.begin(), samples.end()); }
+	else
+	{
+		m_chunks.insert(m_chunks.end(), samples.begin(), samples.end());
+	}
 
 	return true;
 }
@@ -909,7 +914,6 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 
 std::string CCSVHandler::createHeaderString()
 {
-	const std::string invalidHeader;
 	std::string header;
 
 	const auto addColumn = [&](const std::string& columnLabel)
@@ -919,6 +923,13 @@ std::string CCSVHandler::createHeaderString()
 		header += columnLabel;
 		m_nCol++;
 	};
+
+	if (m_inputTypeID == EStreamType::Undefined)
+	{
+		m_lastStringError = "Cannot write header for Undefined stream Type";
+		m_logError = LogErrorCodes_WrongStreamType;
+		return "";
+	}
 
 	// add Time Header
 	switch (m_inputTypeID)
@@ -931,7 +942,7 @@ std::string CCSVHandler::createHeaderString()
 			if (m_dimSizes.size() != 2)
 			{
 				m_lastStringError = "Channel names and number of frequency are needed to write time column";
-				return invalidHeader;
+				return "";
 			}
 
 			addColumn(
@@ -946,7 +957,7 @@ std::string CCSVHandler::createHeaderString()
 			{
 				m_lastStringError.clear();
 				m_logError = LogErrorCodes_DimensionCountZero;
-				return invalidHeader;
+				return "";
 			}
 			{
 				std::string timeColumn = "Time" + std::string(1, DATA_SEPARATOR);
@@ -959,6 +970,8 @@ std::string CCSVHandler::createHeaderString()
 
 				addColumn(timeColumn);
 			}
+			break;
+		default:
 			break;
 	}
 
@@ -975,14 +988,18 @@ std::string CCSVHandler::createHeaderString()
 		case EStreamType::FeatureVector:
 			addColumn("End Time");
 			break;
+		default:
+			break;
 	}
 
-	// add matrix columns names
-	if (m_dimLabels.empty())
+	if (m_inputTypeID != EStreamType::Stimulations)
 	{
-		m_lastStringError.clear();
-		m_logError = LogErrorCodes_NoMatrixLabels;
-		return invalidHeader;
+		if (m_dimLabels.empty())
+		{
+			m_lastStringError.clear();
+			m_logError = LogErrorCodes_NoMatrixLabels;
+			return "";
+		}
 	}
 
 	switch (m_inputTypeID)
@@ -1001,7 +1018,7 @@ std::string CCSVHandler::createHeaderString()
 			{
 				m_lastStringError.clear();
 				m_logError = LogErrorCodes_DimensionSizeZero;
-				return invalidHeader;
+				return "";
 			}
 
 			std::vector<size_t> position(m_nDim, 0);
@@ -1021,13 +1038,19 @@ std::string CCSVHandler::createHeaderString()
 				}
 			} while (this->increasePositionIndexes(position));
 		}
-		break;
+			break;
 
 		case EStreamType::Spectrum:
 			for (const std::string& label : m_dimLabels)
 			{
-				for (double frequencyAbscissa : m_frequencyAbscissa) { addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa)); }
+				for (double frequencyAbscissa : m_frequencyAbscissa)
+				{
+					addColumn(label + std::string(1, DATA_SEPARATOR) + std::to_string(frequencyAbscissa));
+				}
 			}
+			break;
+
+		default:
 			break;
 	}
 
@@ -1040,112 +1063,177 @@ std::string CCSVHandler::createHeaderString()
 bool CCSVHandler::createCSVStringFromData(const bool canWriteAll, std::string& csv)
 {
 	// if chunks is empty, their is no more lines to write
-	if (m_chunks.empty()) { return true; }
-
-	// if header isn't written, size of first line to write will be the reference
-	if (m_nCol == 0)
+	if (!m_chunks.empty())
 	{
-		m_nCol = m_chunks.front().matrix.size();
-		m_nCol += N_PRE_DATA_COL + N_POST_DATA_COL; // Will be set correctly with call to setFormatType
-	}
-
-	// loop will add a line to the buffer while the last stimulation date registered is greater than the end of the current chunk or until their is an event
-	uint64_t linesWritten = 0;
-
-	while (!m_chunks.empty() && (canWriteAll
-								 || (m_stimulations.empty() && m_chunks.front().endTime <= m_noEventSince)
-								 || (!m_stimulations.empty() && m_chunks.front().startTime <= m_stimulations.back().date))
-	)
-	{
-		// Signal data must be written as sampleCounterPerBuffer th lines;
-		if (m_inputTypeID == EStreamType::Signal && canWriteAll == false && linesWritten != 0 && linesWritten % m_nSamplePerBuffer == 0) { break; }
-		// check line size
-
-		if ((m_inputTypeID == EStreamType::Signal || m_inputTypeID == EStreamType::Spectrum)
-			&& (m_chunks.front().matrix.size() + N_PRE_DATA_COL + N_POST_DATA_COL) != m_nCol)
+		// if header isn't written, size of first line to write will be the reference
+		if (m_nCol == 0)
 		{
-			m_lastStringError.clear();
-			m_logError = LogErrorCodes_WrongLineSize;
-			return false;
+			m_nCol = m_chunks.front().matrix.size();
+			m_nCol += N_PRE_DATA_COL + N_POST_DATA_COL;  // Will be set correctly with call to setFormatType
 		}
 
-		if (m_inputTypeID == EStreamType::FeatureVector || m_inputTypeID == EStreamType::CovarianceMatrix || m_inputTypeID == EStreamType::StreamedMatrix)
-		{
-			size_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U, std::multiplies<size_t>());
-			columnstoHave += N_PRE_DATA_COL + N_POST_DATA_COL;
+		// loop will add a line to the buffer while the last stimulation date registered is greater than the end of the current chunk or until their is an event
+		uint64_t linesWritten = 0;
 
-			if (columnstoHave != m_nCol)
+		while (!m_chunks.empty() && (canWriteAll
+		                             || (m_stimulations.empty() && m_chunks.front().endTime <= m_noEventSince)
+		                             || (!m_stimulations.empty() &&
+		                                 m_chunks.front().startTime <= m_stimulations.back().date))
+				)
+		{
+			// Signal data must be written as sampleCounterPerBuffer th lines;
+			if (m_inputTypeID == EStreamType::Signal && canWriteAll == false && linesWritten != 0 &&
+			    linesWritten % m_nSamplePerBuffer == 0)
 			{
-				m_lastStringError = "Line size is " + std::to_string(columnstoHave) + " but must be " + std::to_string(m_nCol);
-				m_logError        = LogErrorCodes_WrongLineSize;
+				break;
+			}
+			// check line size
+
+			if ((m_inputTypeID == EStreamType::Signal || m_inputTypeID == EStreamType::Spectrum)
+			    && (m_chunks.front().matrix.size() + N_PRE_DATA_COL + N_POST_DATA_COL) != m_nCol)
+			{
+				m_lastStringError.clear();
+				m_logError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
-		}
 
-		// Time and Epoch
-		const std::pair<double, double> currentTime = { m_chunks.front().startTime, m_chunks.front().endTime };
-		std::stringstream ss;
-		ss.str("");
-		ss.precision(m_oPrecision);
-		ss << std::fixed << currentTime.first;
-
-		csv += ss.str();
-
-		switch (m_inputTypeID)
-		{
-			case EStreamType::Spectrum:
-			case EStreamType::StreamedMatrix:
-			case EStreamType::CovarianceMatrix:
-			case EStreamType::FeatureVector:
-				ss.str("");
-				ss << std::fixed << currentTime.second;
-				csv += std::string(1, SEPARATOR) + ss.str();
-				break;
-
-			case EStreamType::Signal:
-				csv += std::string(1, SEPARATOR) + std::to_string(m_chunks.front().epoch);
-				break;
-		}
-
-		// Matrix
-		for (const double& value : m_chunks.front().matrix)
-		{
-			csv += SEPARATOR;
-			ss.str("");
-			ss << std::fixed << value;
-			csv += ss.str();
-		}
-
-		m_chunks.pop_front();
-
-		csv += SEPARATOR;
-
-		// Stimulations
-		if (!m_stimulations.empty())
-		{
-			std::vector<SStimulationChunk> stimulationsToWrite;
-
-			double stimulationTime = m_stimulations.front().date;
-
-			while ((stimulationTime - currentTime.first) < (currentTime.second - currentTime.first))
+			if (m_inputTypeID == EStreamType::FeatureVector || m_inputTypeID == EStreamType::CovarianceMatrix ||
+			    m_inputTypeID == EStreamType::StreamedMatrix)
 			{
-				stimulationsToWrite.push_back(m_stimulations.front());
-				m_stimulations.pop_front();
+				size_t columnstoHave = std::accumulate(m_dimSizes.begin(), m_dimSizes.end(), 1U,
+				                                       std::multiplies<size_t>());
+				columnstoHave += N_PRE_DATA_COL + N_POST_DATA_COL;
 
-				if (m_stimulations.empty()) { break; }
-
-				stimulationTime = m_stimulations.front().date;
+				if (columnstoHave != m_nCol)
+				{
+					m_lastStringError =
+							"Line size is " + std::to_string(columnstoHave) + " but must be " + std::to_string(m_nCol);
+					m_logError = LogErrorCodes_WrongLineSize;
+					return false;
+				}
 			}
 
-			csv += stimulationsToString(stimulationsToWrite);
-		}
-		else { csv += std::string(2, SEPARATOR); }
+			// Time and Epoch
+			const std::pair<double, double> currentTime = {m_chunks.front().startTime, m_chunks.front().endTime};
+			std::stringstream ss;
+			ss.str("");
+			ss.precision(m_oPrecision);
+			ss << std::fixed << currentTime.first;
 
-		csv += "\n";
-		linesWritten++;
+			csv += ss.str();
+
+			switch (m_inputTypeID)
+			{
+				case EStreamType::Spectrum:
+				case EStreamType::StreamedMatrix:
+				case EStreamType::CovarianceMatrix:
+				case EStreamType::FeatureVector:
+					ss.str("");
+					ss << std::fixed << currentTime.second;
+					csv += std::string(1, SEPARATOR) + ss.str();
+					break;
+
+				case EStreamType::Signal:
+					csv += std::string(1, SEPARATOR) + std::to_string(m_chunks.front().epoch);
+					break;
+
+				case EStreamType::Stimulations:
+					m_lastStringError = "Stream samples were received while only Stimulations were expected";
+					m_logError = LogErrorCodes_WrongInputType;
+					return false;
+				case EStreamType::Undefined:
+					m_lastStringError = "StreamType is undefined. Cannot format data. Please set Stream Type before writing to file";
+					m_logError = LogErrorCodes_WrongInputType;
+					return false;
+			}
+
+			// Matrix
+			for (const double& value : m_chunks.front().matrix)
+			{
+				csv += SEPARATOR;
+				ss.str("");
+				ss << std::fixed << value;
+				csv += ss.str();
+			}
+
+			m_chunks.pop_front();
+
+			csv += SEPARATOR;
+
+			// Stimulations
+			if (!m_stimulations.empty())
+			{
+				std::vector <SStimulationChunk> stimulationsToWrite;
+
+				double stimulationTime = m_stimulations.front().date;
+
+				while ((stimulationTime - currentTime.first) < (currentTime.second - currentTime.first))
+				{
+					stimulationsToWrite.push_back(m_stimulations.front());
+					m_stimulations.pop_front();
+
+					if (m_stimulations.empty())
+					{
+						break;
+					}
+
+					stimulationTime = m_stimulations.front().date;
+				}
+
+				csv += stimulationsToString(stimulationsToWrite);
+			}
+			else
+			{
+				csv += std::string(2, SEPARATOR);
+			}
+
+			csv += "\n";
+			linesWritten++;
+		}
+	}
+	else if (!m_stimulations.empty())
+	{
+		if (m_inputTypeID == EStreamType::Stimulations)
+		{
+			for (auto stim = m_stimulations.cbegin(); stim != m_stimulations.end(); ++stim)
+			{
+				csv += stimulationsToString(std::vector<SStimulationChunk>(1, *stim));
+				csv += "\n";
+			}
+			m_stimulations.clear();
+		}
 	}
 
 	return true;
+}
+
+void CCSVHandler::extractFormatType(const std::string& header)
+{
+	boost::cmatch match;
+	if (regex_match(header.c_str(), match, HEADER_SIGNAL_REGEX))
+	{
+		m_inputTypeID = EStreamType::Signal;
+	}
+	else if (regex_match(header.c_str(), match, HEADER_MATRIX_REGEX))
+	{
+		m_inputTypeID = EStreamType::StreamedMatrix;
+	}
+	else if (regex_match(header.c_str(), match, HEADER_VECTOR_REGEX))
+	{
+		m_inputTypeID = EStreamType::FeatureVector;
+	}
+	else if (regex_match(header.c_str(), match, HEADER_SPECTRUM_REGEX))
+	{
+		m_inputTypeID = EStreamType::Spectrum;
+	}
+	else if (regex_match(header.c_str(), match, HEADER_STIMULATIONS_REGEX))
+	{
+		m_inputTypeID = EStreamType::Stimulations;
+	}
+	else
+	{
+		m_inputTypeID = EStreamType::Undefined;
+	}
 }
 
 bool CCSVHandler::parseHeader()
@@ -1153,7 +1241,7 @@ bool CCSVHandler::parseHeader()
 	if (m_isHeaderRead) { return true; }
 
 	std::string header;
-	m_fs.clear(); // Useful if the end of file is reached before.
+	m_fs.clear();  // Useful if the end of file is reached before.
 	m_fs.seekg(0);
 
 	if (!this->streamReader(m_fs, header, END_OF_LINE_CHAR, m_bufferReadFileLine))
@@ -1162,15 +1250,13 @@ bool CCSVHandler::parseHeader()
 		m_logError        = LogErrorCodes_EmptyColumn;
 		return false;
 	}
-
 	m_isHeaderRead = true;
 
+	extractFormatType(header);
+
 	std::vector<std::string> columns;
-
 	this->split(header, SEPARATOR, columns);
-
 	m_nCol = columns.size();
-
 	if (columns.empty())
 	{
 		m_lastStringError = "No header in the file or file empty";
@@ -1178,25 +1264,16 @@ bool CCSVHandler::parseHeader()
 		return false;
 	}
 
-	for (const std::string& columnPart : columns)
+	m_fs.clear();  // Useful if the end of file is reached before.
+	// Set stream to the line after the header.
+	m_fs.seekg(header.size() + 2);
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	// If not CRLF ending, seek one character less
+	if (!m_isCRLFEOL)
 	{
-		if (columnPart.empty())
-		{
-			m_lastStringError.clear();
-			m_logError = LogErrorCodes_EmptyColumn;
-			return false;
-		}
+		m_fs.seekg(header.size() + 1);
 	}
-
-	if (!m_hasInputType)
-	{
-		m_lastStringError = "Cannot read header without input type";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	m_fs.clear();				   // Useful if the end of file is reached before.
-	m_fs.seekg(header.size() + 2); // Go to the begin of the next line
+#endif
 	m_bufferReadFileLine.clear();
 
 	switch (m_inputTypeID)
@@ -1204,6 +1281,7 @@ bool CCSVHandler::parseHeader()
 		case EStreamType::Signal:
 			if (!this->parseSignalHeader(columns))
 			{
+				m_inputTypeID = EStreamType::Undefined;
 				m_logError = LogErrorCodes_WrongHeader;
 				return false;
 			}
@@ -1212,6 +1290,7 @@ bool CCSVHandler::parseHeader()
 		case EStreamType::Spectrum:
 			if (!this->parseSpectrumHeader(columns))
 			{
+				m_inputTypeID = EStreamType::Undefined;
 				m_logError = LogErrorCodes_WrongHeader;
 				return false;
 			}
@@ -1222,34 +1301,37 @@ bool CCSVHandler::parseHeader()
 		case EStreamType::FeatureVector:
 			if (!this->parseMatrixHeader(columns))
 			{
+				m_inputTypeID = EStreamType::Undefined;
 				m_logError = LogErrorCodes_WrongHeader;
 				return false;
 			}
 			break;
+		case EStreamType::Stimulations:
+			// Nothing more to do
+			break;
+		case EStreamType::Undefined:
+			m_logError = LogErrorCodes_WrongHeader;
+			return false;
 	}
 
 	m_fs.clear();				   // Useful if the end of file is reached before.
-	m_fs.seekg(header.size() + 2); // Go to the begin of the next line
-	m_bufferReadFileLine.clear();
-
-	// check stimulations
-	if (columns.cend()[-int(N_POST_DATA_COL)] != EVENT_ID_COL
-		|| columns.cend()[-int(N_PRE_DATA_COL)] != EVENT_DATE_COL
-		|| columns.back() != EVENT_DURATION_COL)
+	// Reset stream to the line after the header
+	m_fs.seekg(header.size() + 2);
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	// If not CRLF ending, seek one character less
+	if (!m_isCRLFEOL)
 	{
-		m_lastStringError = "Three last column must be \"Even Id\", \"Event Date\" and \"Event Duration\"";
-		m_logError        = LogErrorCodes_WrongHeader;
-		return false;
+		m_fs.seekg(header.size() + 1);
 	}
-
-	m_nCol = columns.size();
+#endif
+	m_bufferReadFileLine.clear();
 
 	return true;
 }
 
 bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 {
-	//check time
+	// check time
 	if (header[TIME_COL_IDX].substr(0, 5) != "Time:"
 		|| header[TIME_COL_IDX].substr(header[TIME_COL_IDX].size() - 2) != "Hz"
 		|| header[TIME_COL_IDX].size() <= 7)
@@ -1275,9 +1357,12 @@ bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 	}
 
 	// get dimension labels
-	for (size_t index = N_PRE_DATA_COL; index < header.size() - N_POST_DATA_COL; ++index) { m_dimLabels.push_back(header[index]); }
+	for (size_t index = N_PRE_DATA_COL; index < header.size() - N_POST_DATA_COL; ++index)
+	{
+		m_dimLabels.push_back(header[index]);
+	}
 
-	if (!this->calculateSampleCountPerBuffer()) { return false; } // m_LastErrorString set in the function, m_LogError set outside the function
+	if (!this->calculateSampleCountPerBuffer()) { return false; }  // m_LastErrorString set in the function, m_LogError set outside the function
 
 	return true;
 }
@@ -1339,7 +1424,7 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 		return false;
 	}
 
-	//check Time End column
+	// check Time End column
 	if (header[END_TIME_COL_IDX] != "End Time")
 	{
 		m_lastStringError = "Second column (" + header[END_TIME_COL_IDX] + ") must be End Time Column";
@@ -1389,7 +1474,10 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			{
 				double frequency;
 
-				try { frequency = std::stod(dimensionData); }
+				try
+				{
+					frequency = std::stod(dimensionData);
+				}
 				catch (const std::exception& e)
 				{
 					m_lastStringError = "On entry \"" + dimensionData + "\", exception have been thrown: ";
@@ -1403,7 +1491,10 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 			{
 				double frequency;
 
-				try { frequency = std::stod(dimensionData); }
+				try
+				{
+					frequency = std::stod(dimensionData);
+				}
 				catch (const std::exception& e)
 				{
 					m_lastStringError = "On entry \"" + dimensionData + "\", exception have been thrown: ";
@@ -1411,14 +1502,17 @@ bool CCSVHandler::parseSpectrumHeader(const std::vector<std::string>& header)
 					return false;
 				}
 
-				if (labelSizeCounter == 0) { lastFrequency = frequency; }
+				if (labelSizeCounter == 0)
+				{
+					lastFrequency = frequency;
+				}
 				else if (frequency < lastFrequency)
 				{
 					m_lastStringError = "Frequencies must be in ascending order";
 					return false;
 				}
 
-				if (!(std::fabs(frequency - m_frequencyAbscissa[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
+				if ((std::fabs(frequency - m_frequencyAbscissa[labelSizeCounter]) >= std::numeric_limits<double>::epsilon()))
 				{
 					m_lastStringError = "Channels must have the same frequency bands";
 					return false;
@@ -1462,7 +1556,10 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 	{
 		size_t size = 0;
 
-		try { size = std::stoul(dimensionSize); }
+		try
+		{
+			size = std::stoul(dimensionSize);
+		}
 		catch (std::exception& e)
 		{
 			m_lastStringError = "Error on a dimension size, exception have been thrown: ";
@@ -1535,10 +1632,13 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 			if (columnLabels[dimensionIndex].empty())
 			{
 				// if saved label is empty, mark it as saved (even if it is already)
-				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty()) { filledLabel[dimensionIndex][positionInCurrentDimension] = true; }
-					// else,there is an error, it means that label is already set
+				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty())
+				{
+					filledLabel[dimensionIndex][positionInCurrentDimension] = true;
+				}
 				else
 				{
+					// else,there is an error, it means that label is already set
 					m_lastStringError = "Error at column " + std::to_string(columnIndex + 1)
 										+ " for the label \"" + columnLabels[dimensionIndex]
 										+ "\" in dimension " + std::to_string(dimensionIndex + 1)
@@ -1591,7 +1691,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (lineNb % m_nSamplePerBuffer == 0)
 	{
-		if (!qi::parse(line.cbegin(), firstColumn, qi::double_, sample.startTime))
+		if (!boost::spirit::qi::parse(line.cbegin(), firstColumn, boost::spirit::qi::double_, sample.startTime))
 		{
 			m_lastStringError = "Invalid value for the start time. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1601,7 +1701,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (m_inputTypeID == EStreamType::Signal)
 	{
-		if (!qi::parse(firstColumn + 1, secondColumn, qi::ulong_long, sample.epoch))
+		if (!boost::spirit::qi::parse(firstColumn + 1, secondColumn, boost::spirit::qi::ulong_long, sample.epoch))
 		{
 			m_lastStringError = "Invalid value for the epoch. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1614,7 +1714,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 	{
 		sample.epoch = std::numeric_limits<uint64_t>::max();
 
-		if (!qi::parse(firstColumn + 1, secondColumn, qi::double_, sample.endTime))
+		if (!boost::spirit::qi::parse(firstColumn + 1, secondColumn, boost::spirit::qi::double_, sample.endTime))
 		{
 			m_lastStringError = "Invalid value for the end time. Error on line " + std::to_string(lineNb);
 			m_logError        = LogErrorCodes_InvalidArgumentException;
@@ -1628,7 +1728,8 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	std::vector<double> colMatrix;
 
-	qi::phrase_parse(secondColumn + 1, line.cbegin() + eventIdCol, qi::double_ % SEPARATOR, ascii::space, colMatrix);
+	boost::spirit::qi::phrase_parse(secondColumn + 1, line.cbegin() + eventIdCol, boost::spirit::qi::double_ % SEPARATOR, boost::spirit::ascii::space,
+									colMatrix);
 
 	if (colMatrix.size() != m_nCol - N_POST_DATA_COL - N_PRE_DATA_COL)
 	{
@@ -1639,11 +1740,17 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 
 	if (m_inputTypeID == EStreamType::Signal)
 	{
-		for (size_t index = 0; index < m_dimLabels.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index]; }
+		for (size_t index = 0; index < m_dimLabels.size(); ++index)
+		{
+			sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index];
+		}
 	}
 	else if (m_inputTypeID == EStreamType::Spectrum)
 	{
-		for (size_t index = 0; index < colMatrix.size(); ++index) { sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index]; }
+		for (size_t index = 0; index < colMatrix.size(); ++index)
+		{
+			sample.matrix[(index * m_nSamplePerBuffer) + lineNb] = colMatrix[index];
+		}
 	}
 	else
 	{
@@ -1662,15 +1769,18 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 
 	std::vector<uint64_t> stimIDs;
 	// pick all time identifiers for the current time
-	qi::phrase_parse(line.cbegin() + eventIdCol + 1, line.cbegin() + eventDateCol, qi::ulong_long % DATA_SEPARATOR, ascii::space, stimIDs);
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventIdCol + 1, line.cbegin() + eventDateCol, boost::spirit::qi::ulong_long % DATA_SEPARATOR,
+									boost::spirit::ascii::space, stimIDs);
 
 	std::vector<double> stimDates;
 	// pick all time identifiers for the current time
-	qi::phrase_parse(line.cbegin() + eventDateCol + 1, line.cbegin() + eventDurationCol, qi::double_ % DATA_SEPARATOR, ascii::space, stimDates);
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventDateCol + 1, line.cbegin() + eventDurationCol, boost::spirit::qi::double_ % DATA_SEPARATOR,
+									boost::spirit::ascii::space, stimDates);
 
 	std::vector<double> stimDurations;
 	// pick all time identifiers for the current time
-	qi::phrase_parse(line.cbegin() + eventDurationCol + 1, line.cend(), qi::double_ % DATA_SEPARATOR, ascii::space, stimDurations);
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventDurationCol + 1, line.cend(), boost::spirit::qi::double_ % DATA_SEPARATOR, boost::spirit::ascii::space,
+									stimDurations);
 
 	if (stimIDs.size() != stimDates.size() || stimIDs.size() != stimDurations.size())
 	{
@@ -1680,7 +1790,10 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 		return false;
 	}
 
-	for (size_t index = 0; index < stimIDs.size(); ++index) { stimulations.emplace_back(stimIDs[index], stimDates[index], stimDurations[index]); }
+	for (size_t index = 0; index < stimIDs.size(); ++index)
+	{
+		stimulations.emplace_back(stimIDs[index], stimDates[index], stimDurations[index]);
+	}
 
 	return true;
 }
@@ -1700,7 +1813,10 @@ bool CCSVHandler::increasePositionIndexes(std::vector<size_t>& position)
 				position[index] = 0;
 				position[index - 1]++;
 			}
-			else if ((position[index] + 1) > m_dimSizes[index]) { return false; }
+			else if ((position[index] + 1) > m_dimSizes[index])
+			{
+				return false;
+			}
 		}
 	}
 	return true;
@@ -1751,6 +1867,9 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 }
 
 
-CSV_API ICSVHandler* CSV::createCSVHandler() { return new CCSVHandler(); }
+CSV_API ICSVHandler* createCSVHandler() { return new CCSVHandler(); }
 
-CSV_API void CSV::releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler*>(object); }
+CSV_API void releaseCSVHandler(ICSVHandler* object) { delete dynamic_cast<CCSVHandler*>(object); }
+
+}  // namespace CSV
+}  // namespace OpenViBE

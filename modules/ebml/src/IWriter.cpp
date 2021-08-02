@@ -3,12 +3,6 @@
 #include <vector>
 #include <cstring>
 
-using namespace EBML;
-using namespace std;
-
-// ________________________________________________________________________________________________________________
-//
-
 inline size_t getCodedSizeLength(const uint64_t value)
 {
 	if (value < 0x000000000000007fLL) { return 1; }
@@ -72,10 +66,9 @@ public:
 	size_t m_BufferLength     = 0;
 	unsigned char* m_Buffer   = nullptr;
 	bool m_Buffered           = false;
-	vector<CWriterNode*> m_Childrens;
+	std::vector<CWriterNode*> m_Childrens;
 };
 }  // namespace
-}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -128,7 +121,6 @@ size_t CWriterNode::getTotalContentSize(const bool identifierAndSize)
 // ________________________________________________________________________________________________________________
 //
 
-namespace EBML {
 namespace {
 class CWriter final : public IWriter
 {
@@ -149,7 +141,6 @@ private:
 	CWriter() = delete;
 };
 }  // namespace
-}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -218,4 +209,6 @@ void CWriter::release()
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IWriter* EBML::createWriter(IWriterCallback& callback) { return new CWriter(callback); }
+EBML_API IWriter* createWriter(IWriterCallback& callback) { return new CWriter(callback); }
+
+}  // namespace EBML

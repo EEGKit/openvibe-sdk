@@ -10,10 +10,9 @@
 #include <vector>
 #include <cstring>
 
-using namespace System;
+namespace System {
 
-namespace {
-const std::map<CDynamicModule::ELogErrorCodes, std::string> ERROR_MAP =
+static const std::map<CDynamicModule::ELogErrorCodes, std::string> ERROR_MAP =
 {
 	{ CDynamicModule::LogErrorCodes_ModuleAlreadyLoaded, "A module is already loaded." },
 	{ CDynamicModule::LogErrorCodes_NoModuleLoaded, "No module loaded." },
@@ -27,7 +26,7 @@ const std::map<CDynamicModule::ELogErrorCodes, std::string> ERROR_MAP =
 };
 
 #if defined TARGET_OS_Windows
-std::vector<std::string> split(char* str, const char* delim)
+static std::vector<std::string> split(char* str, const char* delim)
 {
 	char* token = strtok(str, delim);
 
@@ -42,24 +41,23 @@ std::vector<std::string> split(char* str, const char* delim)
 	return result;
 }
 
-std::string formatWindowsError(const DWORD code)
+static std::string formatWindowsError(const DWORD code)
 {
 	LPTSTR text;
 
-	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
-				  FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
-				  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-				  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |				// use system message tables to retrieve error text
+				  FORMAT_MESSAGE_ALLOCATE_BUFFER |			// allocate buffer on local heap for error text
+				  FORMAT_MESSAGE_IGNORE_INSERTS,			// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+				  nullptr,									// unused with FORMAT_MESSAGE_FROM_SYSTEM
 				  code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				  LPTSTR(&text),                        // output
-				  0,                                           // minimum size for output buffer
+				  LPTSTR(&text),							// output
+				  0,										// minimum size for output buffer
 				  nullptr
-	);                                           // arguments - see note
+	);														// arguments - see note
 
 	return std::string(text);
 }
 #endif
-}  // namespace
 
 const char* CDynamicModule::getErrorString(size_t errorCode)
 {
@@ -395,3 +393,4 @@ void CDynamicModule::setError(const ELogErrorCodes errorCode, const std::string&
 	m_ErrorCode = errorCode;
 	strcpy(m_ErrorDetails, details.c_str());
 }
+}  // namespace System

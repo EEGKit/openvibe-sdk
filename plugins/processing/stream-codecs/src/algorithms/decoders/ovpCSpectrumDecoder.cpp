@@ -1,9 +1,8 @@
 #include "ovpCSpectrumDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 // ________________________________________________________________________________________________________________
 //
@@ -89,7 +88,7 @@ void CSpectrumDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_Spectrum) 
+	if ((top == OVTK_NodeId_Header_Spectrum)
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
 		|| (top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)) { }
 	else if ((top == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) || (top == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)) { m_frequencyBandIdx++; }
@@ -97,3 +96,7 @@ void CSpectrumDecoder::closeChild()
 
 	m_nodes.pop();
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

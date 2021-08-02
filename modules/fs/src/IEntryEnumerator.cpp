@@ -19,28 +19,17 @@
 
 #include <iostream>
 
-using namespace std;
-using namespace FS;
-
-// ________________________________________________________________________________________________________________
-//
-
 namespace FS {
 class CEntry final : public IEntryEnumerator::IEntry
 {
 public:
 
-	explicit CEntry(const string& name) : m_Name(name) {}
+	explicit CEntry(const std::string& name) : m_Name(name) {}
 	const char* getName() override { return m_Name.c_str(); }
 
-	string m_Name;
+	std::string m_Name;
 };
-}  // namespace FS
 
-// ________________________________________________________________________________________________________________
-//
-
-namespace FS {
 class CAttributes final : public IEntryEnumerator::IAttributes
 {
 public:
@@ -67,12 +56,7 @@ public:
 	bool m_IsExecutable   = false;
 	size_t m_Size         = 0;
 };
-}  // namespace FS
 
-// ________________________________________________________________________________________________________________
-//
-
-namespace FS {
 class CEntryEnumerator : public IEntryEnumerator
 {
 public:
@@ -82,8 +66,6 @@ protected:
 	IEntryEnumeratorCallBack& m_entryEnumeratorCB;
 };
 
-// ________________________________________________________________________________________________________________
-//
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	class CEntryEnumeratorLinux final : public CEntryEnumerator
 	{
@@ -109,10 +91,6 @@ public:
 	};
 
 #endif
-}  // namespace FS
-
-// ________________________________________________________________________________________________________________
-//
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -284,7 +262,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 
 #endif
 
-FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack)
+FS_API IEntryEnumerator* createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	IEntryEnumerator* res = new CEntryEnumeratorLinux(rCallBack);
@@ -295,3 +273,5 @@ FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rCa
 #endif
 	return res;
 }
+
+}  // namespace FS

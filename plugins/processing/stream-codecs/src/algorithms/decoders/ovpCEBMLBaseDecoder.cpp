@@ -1,9 +1,8 @@
 #include "ovpCEBMLBaseDecoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 CEBMLBaseDecoder::CEBMLBaseDecoder()
 	: m_callbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild, &CEBMLBaseDecoder::processChildData,
@@ -62,3 +61,7 @@ void CEBMLBaseDecoder::openChild(const EBML::CIdentifier& identifier)
 	if (identifier == OVTK_NodeId_Buffer) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, true); }
 	if (identifier == OVTK_NodeId_End) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, true); }
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

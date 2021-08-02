@@ -13,7 +13,7 @@ class CAlgorithmManager final : public TKernelObject<IAlgorithmManager>
 {
 public:
 
-	explicit CAlgorithmManager(const IKernelContext& ctx);
+	explicit CAlgorithmManager(const IKernelContext& ctx) : TKernelObject<IAlgorithmManager>(ctx) {}
 	~CAlgorithmManager() override;
 	CIdentifier createAlgorithm(const CIdentifier& algorithmClassID) override;
 	CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& algorithmDesc) override;

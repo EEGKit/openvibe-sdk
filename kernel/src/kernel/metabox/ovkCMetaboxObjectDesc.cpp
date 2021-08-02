@@ -1,7 +1,7 @@
 #include "ovkCMetaboxObjectDesc.h"
 
-using namespace OpenViBE;
-using namespace Metabox;
+namespace OpenViBE {
+namespace Metabox {
 
 CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario)
 	: m_metaboxDesc(rMetaboxDescriptor)
@@ -55,18 +55,17 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 		metaboxScenario.getSettingDefaultValue(scenarioSettingIdx, defaultValue);
 		metaboxScenario.getInterfacorIdentifier(Kernel::EBoxInterfacorType::Setting, scenarioSettingIdx, id);
 
-
 		m_settings.push_back(setting_t(name, typeID, defaultValue, id));
 	}
 }
 
 bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& prototype) const
 {
-	for (auto& input : m_inputs) { prototype.addInput(input.m_name, input.m_typeID, input.m_id); }
-
-	for (auto& output : m_outputs) { prototype.addOutput(output.m_name, output.m_typeID, output.m_id); }
-
-	for (auto& setting : m_settings) { prototype.addSetting(setting.m_name, setting.m_typeID, setting.m_defaultValue, false, setting.m_id); }
-
+	for (const auto& input : m_inputs) { prototype.addInput(input.m_name, input.m_typeID, input.m_id); }
+	for (const auto& output : m_outputs) { prototype.addOutput(output.m_name, output.m_typeID, output.m_id); }
+	for (const auto& setting : m_settings) { prototype.addSetting(setting.m_name, setting.m_typeID, setting.m_defaultValue, false, setting.m_id); }
 	return true;
 }
+
+}  // namespace Metabox
+}  // namespace OpenViBE

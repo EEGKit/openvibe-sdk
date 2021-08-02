@@ -9,13 +9,10 @@
 #include <ovp_global_defines.h>
 #include <array>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-
 // DO NOT USE a global Test::ScopedTest<Test::SKernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before
 // the kernel context.
-IKernelContext* context = nullptr;
+OpenViBE::Kernel::IKernelContext* context = nullptr;
 std::string g_dataDirectory;
 
 
@@ -25,7 +22,7 @@ bool importScenarioFromFile(const char* filename)
 
 	context->getErrorManager().releaseErrors();
 
-	CIdentifier scenarioID;
+	OpenViBE::CIdentifier scenarioID;
 	if (context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 	{
 		context->getScenarioManager().releaseScenario(scenarioID);
@@ -43,7 +40,7 @@ bool checkForSchemaValidationError()
 
 	while (error)
 	{
-		if (error->getErrorType() == ErrorType::BadXMLSchemaValidation) { return true; }
+		if (error->getErrorType() == OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation) { return true; }
 		error = error->getNestedError();
 	}
 
@@ -289,24 +286,24 @@ int urValidateScenarioTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc >= 3, "Failure retrieve test parameters");
 
-	Test::ScopedTest<Test::SKernelFixture> fixture;
+	OpenViBE::Test::ScopedTest<OpenViBE::Test::SKernelFixture> fixture;
 	fixture->setConfigFile(argv[1]);
 
 	g_dataDirectory = argv[2];
 	context         = fixture->context;
 
 #if defined TARGET_OS_Windows
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
 #elif defined TARGET_OS_Linux
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
 #elif defined TARGET_OS_MacOS
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
-	context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
+	context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
 #endif
 
 	testing::InitGoogleTest(&argc, argv);

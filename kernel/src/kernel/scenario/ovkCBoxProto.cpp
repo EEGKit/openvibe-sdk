@@ -1,8 +1,7 @@
 #include "ovkCBoxProto.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
+namespace Kernel {
 
 bool CBoxProto::addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& id, const bool notify)
 {
@@ -69,7 +68,6 @@ bool CBoxProto::addFlag(const EBoxFlag boxFlag)
 		case BoxFlag_ManualUpdate: m_box.addAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate, "");
 			break;
 		case BoxFlag_IsDeprecated: break;
-		default: return false;
 	}
 	return true;
 }
@@ -81,3 +79,6 @@ bool CBoxProto::addFlag(const CIdentifier& flagID)
 	m_box.addAttribute(flagID, "");
 	return true;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

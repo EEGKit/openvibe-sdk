@@ -25,7 +25,6 @@
 
 #include "ovtAssert.h"
 
-
 int uoSocketClientServerBaseTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: server_name port_number");

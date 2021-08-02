@@ -1,9 +1,8 @@
 #include "ovpCAlgorithmMatrixAverage.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace SignalProcessing;
+namespace OpenViBE {
+namespace Plugins {
+namespace SignalProcessing {
 
 // ________________________________________________________________________________________________________________
 //
@@ -120,7 +119,7 @@ bool CAlgorithmMatrixAverage::process()
 	if (shouldPerformAverage)
 	{
 		oMatrix->resetBuffer();
-		
+
 		if (ip_averagingMethod == uint64_t(EEpochAverageMethod::Cumulative))
 		{
 			CMatrix* matrix = m_history.at(0);
@@ -188,3 +187,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	return true;
 }
+
+}  // namespace SignalProcessing
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -12,28 +12,21 @@
 
 #include "../algorithms/ovpCAlgorithmConditionedCovariance.h"
 
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace /*OpenViBE::*/Toolkit;
-using namespace /*OpenViBE::Plugins::*/Classification;
-
-using namespace Eigen;
-
-namespace {
-const char* const TYPE_NODE_NAME    = "LDA";
-const char* const CLASSES_NODE_NAME = "Classes";
-//const char* const COEFFICIENTS_NODE_NAME = "Weights";
-//const char* const BIAS_DISTANCE_NODE_NAME = "Bias-distance";
-//const char* const COEFFICIENT_PROBABILITY_NODE_NAME = "Coefficient-probability";
-const char* const COMPUTATION_HELPERS_CONFIGURATION_NODE = "Class-config-list";
-const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
-}
+static const char* const TYPE_NODE_NAME    = "LDA";
+static const char* const CLASSES_NODE_NAME = "Classes";
+//static const char* const COEFFICIENTS_NODE_NAME = "Weights";
+//static const char* const BIAS_DISTANCE_NODE_NAME = "Bias-distance";
+//static const char* const COEFFICIENT_PROBABILITY_NODE_NAME = "Coefficient-probability";
+static const char* const COMPUTATION_HELPERS_CONFIGURATION_NODE = "Class-config-list";
+static const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME = "version";
 
 extern const char* const CLASSIFIER_ROOT;
 
-int Classification::LDAClassificationCompare(CMatrix& first, CMatrix& second)
+int LDAClassificationCompare(CMatrix& first, CMatrix& second)
 {
 	//We first need to find the best classification of each.
 	double* buffer        = first.getBuffer();
@@ -53,16 +46,16 @@ int Classification::LDAClassificationCompare(CMatrix& first, CMatrix& second)
 #if LDA_DEBUG
 void CAlgorithmClassifierLDA::dumpMatrix(ILogManager &rMgr, const MatrixXdRowMajor &mat, const CString &desc)
 {
-	rMgr << LogLevel_Info << desc << "\n";
+	rMgr << Kernel::LogLevel_Info << desc << "\n";
 	for (int i = 0 ; i < mat.rows() ; i++) 
 	{
-		rMgr << LogLevel_Info << "Row " << i << ": ";
+		rMgr << Kernel::LogLevel_Info << "Row " << i << ": ";
 		for (int j = 0 ; j < mat.cols() ; j++) { rMgr << mat(i,j) << " "; }
 		rMgr << "\n";
 	}
 }
 #else
-void CAlgorithmClassifierLDA::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
+void CAlgorithmClassifierLDA::dumpMatrix(Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
 bool CAlgorithmClassifierLDA::initialize()
@@ -70,16 +63,16 @@ bool CAlgorithmClassifierLDA::initialize()
 	// Initialize the Conditioned Covariance Matrix algorithm
 	m_covAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
 
-	OV_ERROR_UNLESS_KRF(m_covAlgorithm->initialize(), "Failed to initialize covariance algorithm", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_covAlgorithm->initialize(), "Failed to initialize covariance algorithm", Kernel::ErrorType::Internal);
 
 	// This is the weight parameter local to this module and automatically exposed to the GUI. Its redirected to the corresponding parameter of the cov alg.
-	TParameterHandler<double> ip_shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));
+	Kernel::TParameterHandler<double> ip_shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));
 	ip_shrinkage.setReferenceTarget(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
 
-	TParameterHandler<bool> ip_diagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
+	Kernel::TParameterHandler<bool> ip_diagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 	ip_diagonalCov = false;
 
-	TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	op_configuration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
@@ -87,16 +80,16 @@ bool CAlgorithmClassifierLDA::initialize()
 
 bool CAlgorithmClassifierLDA::uninitialize()
 {
-	OV_ERROR_UNLESS_KRF(m_covAlgorithm->uninitialize(), "Failed to uninitialize covariance algorithm", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_covAlgorithm->uninitialize(), "Failed to uninitialize covariance algorithm", Kernel::ErrorType::Internal);
 
 	this->getAlgorithmManager().releaseAlgorithm(*m_covAlgorithm);
 
 	return CAlgorithmClassifier::uninitialize();
 }
 
-bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
+bool CAlgorithmClassifierLDA::train(const Toolkit::IFeatureVectorSet& dataset)
 {
-	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to unitialize extra parameters", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to unitialize extra parameters", Kernel::ErrorType::Internal);
 
 	//We need to clear list because a instance of this class should support more that one training.
 	m_labels.clear();
@@ -113,30 +106,30 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	else
 	{
 		//If we don't use shrinkage we need to set lambda to 0.
-		TParameterHandler<double> ip_shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));
+		Kernel::TParameterHandler<double> ip_shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));
 		ip_shrinkage = 0.0;
 
-		TParameterHandler<bool> ip_diagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
+		Kernel::TParameterHandler<bool> ip_diagonalCov(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov));
 		ip_diagonalCov = false;
 		diagonalCov    = false;
 	}
 
-	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", Kernel::ErrorType::Internal);
 
 	// IO to the covariance alg
-	TParameterHandler<CMatrix*> op_mean(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	TParameterHandler<CMatrix*> op_covMatrix(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
-	TParameterHandler<CMatrix*> ip_dataset(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	Kernel::TParameterHandler<CMatrix*> op_mean(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
+	Kernel::TParameterHandler<CMatrix*> op_covMatrix(m_covAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	Kernel::TParameterHandler<CMatrix*> ip_dataset(m_covAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
 	const size_t nRows = dataset.getFeatureVectorCount();
 	const size_t nCols = (nRows > 0 ? dataset[0].getSize() : 0);
-	this->getLogManager() << LogLevel_Debug << "Feature set input dims [" << dataset.getFeatureVectorCount() << "x" << nCols << "]\n";
+	this->getLogManager() << Kernel::LogLevel_Debug << "Feature set input dims [" << dataset.getFeatureVectorCount() << "x" << nCols << "]\n";
 
 	OV_ERROR_UNLESS_KRF(nRows != 0 && nCols != 0, "Input data has a zero-size dimension, dims = [" << nRows << "x" << nCols << "]",
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
 	// The max amount of classes to be expected
-	TParameterHandler<uint64_t> ip_pNClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
+	Kernel::TParameterHandler<uint64_t> ip_pNClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NClasses));
 	m_nClasses = size_t(ip_pNClasses);
 
 	// Count the classes actually present
@@ -157,8 +150,8 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	}
 
 	// Per-class means and a global covariance are used to form the LDA model
-	std::vector<MatrixXd> classMeans(m_nClasses);
-	MatrixXd globalCov = MatrixXd::Zero(nCols, nCols);
+	std::vector<Eigen::MatrixXd> classMeans(m_nClasses);
+	Eigen::MatrixXd globalCov = Eigen::MatrixXd::Zero(nCols, nCols);
 
 	// We need the means per class
 	for (size_t classIdx = 0; classIdx < m_nClasses; classIdx++)
@@ -182,13 +175,13 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 			}
 
 			// Get the mean out of it
-			Map<MatrixXdRowMajor> dataMapper(classData.getBuffer(), examplesInClass, nCols);
-			const MatrixXd classMean = dataMapper.colwise().mean().transpose();
-			classMeans[classIdx]     = classMean;
+			Eigen::Map<MatrixXdRowMajor> dataMapper(classData.getBuffer(), examplesInClass, nCols);
+			const Eigen::MatrixXd classMean = dataMapper.colwise().mean().transpose();
+			classMeans[classIdx]            = classMean;
 		}
 		else
 		{
-			MatrixXd tmp;
+			Eigen::MatrixXd tmp;
 			tmp.resize(nCols, 1);
 			tmp.setZero();
 			classMeans[classIdx] = tmp;
@@ -208,10 +201,10 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 		}
 
 		// Compute cov
-		if (!m_covAlgorithm->process()) { OV_ERROR_KRF("Global covariance computation failed", ErrorType::Internal); }
+		if (!m_covAlgorithm->process()) { OV_ERROR_KRF("Global covariance computation failed", Kernel::ErrorType::Internal); }
 
 		// Get the results from the cov algorithm
-		Map<MatrixXdRowMajor> covMapper(op_covMatrix->getBuffer(), nCols, nCols);
+		Eigen::Map<MatrixXdRowMajor> covMapper(op_covMatrix->getBuffer(), nCols, nCols);
 		globalCov = covMapper;
 	}
 
@@ -232,11 +225,11 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 
 	// Get the pseudoinverse of the global cov using eigen decomposition for self-adjoint matrices
 	const double tolerance = 1e-10;
-	SelfAdjointEigenSolver<MatrixXd> solver;
+	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver;
 	solver.compute(globalCov);
-	VectorXd eigenValues = solver.eigenvalues();
+	Eigen::VectorXd eigenValues = solver.eigenvalues();
 	for (size_t i = 0; i < nCols; ++i) { if (eigenValues(i) >= tolerance) { eigenValues(i) = 1.0 / eigenValues(i); } }
-	const MatrixXd globalCovInv = solver.eigenvectors() * eigenValues.asDiagonal() * solver.eigenvectors().inverse();
+	const Eigen::MatrixXd globalCovInv = solver.eigenvectors() * eigenValues.asDiagonal() * solver.eigenvectors().inverse();
 
 	// const MatrixXd globalCovInv = globalCov.inverse();
 	//We send the bias and the weight of each class to ComputationHelper
@@ -248,18 +241,18 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 			const size_t totalExamples = dataset.getFeatureVectorCount();
 
 			// This formula e.g. in Hastie, Tibshirani & Friedman: "Elements...", 2nd ed., p. 109
-			const VectorXd weigth = (globalCovInv * classMeans[i]);
-			const MatrixXd inter  = -0.5 * classMeans[i].transpose() * globalCovInv * classMeans[i];
-			const double bias     = inter(0, 0) + std::log(examplesInClass / totalExamples);
+			const Eigen::VectorXd weigth = (globalCovInv * classMeans[i]);
+			const Eigen::MatrixXd inter  = -0.5 * classMeans[i].transpose() * globalCovInv * classMeans[i];
+			const double bias            = inter(0, 0) + std::log(examplesInClass / totalExamples);
 
-			this->getLogManager() << LogLevel_Debug << "Bias for " << i << " is " << bias << ", from " << examplesInClass / totalExamples
+			this->getLogManager() << Kernel::LogLevel_Debug << "Bias for " << i << " is " << bias << ", from " << examplesInClass / totalExamples
 					<< ", " << examplesInClass << "/" << totalExamples << ", int = " << inter(0, 0) << "\n";
 			// dumpMatrix(this->getLogManager(), perClassMeans[i], "Means");
 
 			m_discriminantFunctions[i].setWeight(weigth);
 			m_discriminantFunctions[i].setBias(bias);
 		}
-		else { this->getLogManager() << LogLevel_Debug << "Class " << i << " has no examples\n"; }
+		else { this->getLogManager() << Kernel::LogLevel_Debug << "Class " << i << " has no examples\n"; }
 	}
 
 	// Hack for classes with zero examples, give them valid models but such that will always lose
@@ -293,17 +286,17 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& dataset)
 	return true;
 }
 
-bool CAlgorithmClassifierLDA::classify(const IFeatureVector& sample, double& classId, IVector& distance, IVector& probability)
+bool CAlgorithmClassifierLDA::classify(const Toolkit::IFeatureVector& sample, double& classId, Toolkit::IVector& distance, Toolkit::IVector& probability)
 {
-	OV_ERROR_UNLESS_KRF(!m_discriminantFunctions.empty(), "LDA discriminant function list is empty", ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(!m_discriminantFunctions.empty(), "LDA discriminant function list is empty", Kernel::ErrorType::BadConfig);
 
 	OV_ERROR_UNLESS_KRF(sample.getSize() == m_discriminantFunctions[0].getNWeight(),
 						"Classifier expected " << m_discriminantFunctions[0].getNWeight() << " features, got " << sample.getSize(),
-						ErrorType::BadInput);
+						Kernel::ErrorType::BadInput);
 
-	const Map<VectorXd> featureVec(const_cast<double*>(sample.getBuffer()), sample.getSize());
-	const VectorXd weights = featureVec;
-	const size_t nClass    = getClassCount();
+	const Eigen::Map<Eigen::VectorXd> featureVec(const_cast<double*>(sample.getBuffer()), sample.getSize());
+	const Eigen::VectorXd weights = featureVec;
+	const size_t nClass           = getClassCount();
 
 	std::vector<double> buffer(nClass);
 	std::vector<double> probabBuffer(nClass);
@@ -378,14 +371,14 @@ double getFloatFromNode(XML::IXMLNode* pNode)
 bool CAlgorithmClassifierLDA::loadConfig(XML::IXMLNode* configNode)
 {
 	OV_ERROR_UNLESS_KRF(configNode->hasAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME),
-						"Invalid model: model trained with an obsolete version of LDA", ErrorType::BadConfig);
+						"Invalid model: model trained with an obsolete version of LDA", Kernel::ErrorType::BadConfig);
 
 	m_labels.clear();
 	m_discriminantFunctions.clear();
 
 	XML::IXMLNode* tmpNode = configNode->getChildByName(CLASSES_NODE_NAME);
 
-	OV_ERROR_UNLESS_KRF(tmpNode != nullptr, "Failed to retrieve xml node", ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(tmpNode != nullptr, "Failed to retrieve xml node", Kernel::ErrorType::BadParsing);
 
 	loadClassesFromNode(tmpNode);
 
@@ -424,4 +417,7 @@ void CAlgorithmClassifierLDA::loadCoefsFromNode(XML::IXMLNode* node)
 	for (size_t i = 0; i < coefs.size(); ++i) { m_weights(0, i) = coefs[i]; }
 }
 
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE
 #endif // TARGET_HAS_ThirdPartyEIGEN

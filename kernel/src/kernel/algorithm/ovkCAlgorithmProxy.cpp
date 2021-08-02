@@ -8,12 +8,10 @@
 
 #include <openvibe/ovExceptionHandler.h>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace std;
+namespace OpenViBE {
+namespace Kernel {
 
-CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, IAlgorithm& rAlgorithm, const IAlgorithmDesc& algorithmDesc)
+CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& ctx, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& algorithmDesc)
 	: TKernelObject<IAlgorithmProxy>(ctx), m_algorithmDesc(algorithmDesc), m_algorithm(rAlgorithm)
 {
 	m_iConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
@@ -29,12 +27,6 @@ CAlgorithmProxy::~CAlgorithmProxy()
 	getKernelContext().getKernelObjectFactory().releaseObject(m_oConfigurable);
 	getKernelContext().getKernelObjectFactory().releaseObject(m_iConfigurable);
 }
-
-IAlgorithm& CAlgorithmProxy::getAlgorithm() { return m_algorithm; }
-
-const IAlgorithm& CAlgorithmProxy::getAlgorithm() const { return m_algorithm; }
-
-const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const { return m_algorithmDesc; }
 
 bool CAlgorithmProxy::addInputParameter(const CIdentifier& parameterID, const CString& name, const EParameterType parameterType,
 										const CIdentifier& subTypeID)
@@ -145,7 +137,7 @@ bool CAlgorithmProxy::addInputTrigger(const CIdentifier& triggerID, const CStrin
 
 CIdentifier CAlgorithmProxy::getNextInputTriggerIdentifier(const CIdentifier& triggerID) const
 {
-	return getNextIdentifier<pair<CString, bool>>(m_iTriggers, triggerID);
+	return getNextIdentifier<std::pair<CString, bool>>(m_iTriggers, triggerID);
 }
 
 CString CAlgorithmProxy::getInputTriggerName(const CIdentifier& triggerID) const
@@ -188,7 +180,7 @@ bool CAlgorithmProxy::addOutputTrigger(const CIdentifier& triggerID, const CStri
 
 CIdentifier CAlgorithmProxy::getNextOutputTriggerIdentifier(const CIdentifier& triggerID) const
 {
-	return getNextIdentifier<pair<CString, bool>>(m_oTriggers, triggerID);
+	return getNextIdentifier<std::pair<CString, bool>>(m_oTriggers, triggerID);
 }
 
 CString CAlgorithmProxy::getOutputTriggerName(const CIdentifier& triggerID) const
@@ -286,5 +278,8 @@ void CAlgorithmProxy::handleException(const char* errorHint, const std::exceptio
 	this->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
 	this->getLogManager() << LogLevel_Error << "  [cause: " << exception.what() << "]\n";
 
-	OV_ERROR_KRV("Caught exception: " << exception.what(), ErrorType::ExceptionCaught);
+	OV_ERROR_KRV("Caught exception: " << exception.what(), Kernel::ErrorType::ExceptionCaught);
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

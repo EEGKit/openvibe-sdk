@@ -14,10 +14,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	m_logLevel            = Kernel::ELogLevel(logLevel);
 	m_validityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (boxCtx.getSettingCount() == 1
-	)
-	{
-		m_validityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.id();
-	} // note that for boxes with one setting, we fallback to the old behavior 
+	) { m_validityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.id(); } // note that for boxes with one setting, we fallback to the old behavior 
 
 	OV_ERROR_UNLESS_KRF(boxCtx.getSettingCount() <= 1 || boxCtx.getInputCount() == boxCtx.getOutputCount(),
 						"Invalid input count [" << boxCtx.getInputCount() << "] (expected same value as output count [" << boxCtx.getOutputCount() <<

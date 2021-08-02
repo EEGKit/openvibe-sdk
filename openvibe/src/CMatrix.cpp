@@ -152,6 +152,7 @@ void CMatrix::clean()
 //--------------------------------------------------------------------------------
 void CMatrix::copy(const CMatrix& m)
 {
+	if (this == &m) { return; }
 	copyDescription(m);
 	copyContent(m);
 }
@@ -160,6 +161,7 @@ void CMatrix::copy(const CMatrix& m)
 //--------------------------------------------------------------------------------
 void CMatrix::copyDescription(const CMatrix& m)
 {
+	if (this == &m) { return; }
 	clear();
 	m_dimSizes  = new std::vector<size_t>(*m.m_dimSizes);						// Copy sizes
 	m_dimLabels = new std::vector<std::vector<std::string>>(*m.m_dimLabels);	// Copy Labels
@@ -170,6 +172,7 @@ void CMatrix::copyDescription(const CMatrix& m)
 //--------------------------------------------------------------------------------
 void CMatrix::copyContent(const CMatrix& m) const
 {
+	if (this == &m) { return; }
 	initBuffer();
 	if (m_buffer && m.getSize() == getSize()) { std::copy_n(m.getBuffer(), getSize(), m_buffer); }
 }
@@ -184,10 +187,7 @@ void CMatrix::resetBuffer() const
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-void CMatrix::setNumLabels() const
-{
-	for (auto& dim : *m_dimLabels) { for (size_t i = 0; i < dim.size(); ++i) { dim[i] = std::to_string(i + 1); } }
-}
+void CMatrix::setNumLabels() const { for (auto& dim : *m_dimLabels) { for (size_t i = 0; i < dim.size(); ++i) { dim[i] = std::to_string(i + 1); } } }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
@@ -316,6 +316,7 @@ bool CMatrix::bufferFromString(const std::string& in, const std::string& before,
 //--------------------------------------------------------------------------------
 std::string CMatrix::bufferToString(const std::string& before, const std::string& start, const std::string& sep, const std::string& end) const
 {
+	if (!m_buffer) { resetBuffer(); }
 	std::stringstream ss;
 	ss.precision(10);
 	if (getDimensionCount() == 2)

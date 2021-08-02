@@ -6,7 +6,6 @@
 #include "algorithms/xml-scenario/ovpCAlgorithmXMLScenarioExporter.h"
 #include "algorithms/xml-scenario/ovpCAlgorithmXMLScenarioImporter.h"
 
-
 #include "box-algorithms/csv/ovpCBoxAlgorithmCSVFileWriter.h"
 #include "box-algorithms/csv/ovpCBoxAlgorithmCSVFileReader.h"
 
@@ -15,29 +14,30 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmElectrodeLocalizationFileReader.h"
 
-#include "box-algorithms/csv/ovpCBoxAlgorithmOVCSVFileWriter.h"
-#include "box-algorithms/csv/ovpCBoxAlgorithmOVCSVFileReader.h"
+#include "box-algorithms/csv/CBoxAlgorithmOVCSVFileWriter.hpp"
+#include "box-algorithms/csv/CBoxAlgorithmOVCSVFileReader.hpp"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Plugins;
+namespace OpenViBE {
+namespace Plugins {
+namespace FileIO {
 
 OVP_Declare_Begin()
-	OVP_Declare_New(FileIO::CAlgorithmOVMatrixFileReaderDesc)
-	OVP_Declare_New(FileIO::CAlgorithmOVMatrixFileWriterDesc)
+	OVP_Declare_New(CAlgorithmOVMatrixFileReaderDesc)
+	OVP_Declare_New(CAlgorithmOVMatrixFileWriterDesc)
 
-	OVP_Declare_New(FileIO::CAlgorithmXMLScenarioExporterDesc)
-	OVP_Declare_New(FileIO::CAlgorithmXMLScenarioImporterDesc)
+	OVP_Declare_New(CAlgorithmXMLScenarioExporterDesc)
+	OVP_Declare_New(CAlgorithmXMLScenarioImporterDesc)
 
-	OVP_Declare_New(FileIO::CBoxAlgorithmCSVFileWriterDesc)
-	OVP_Declare_New(FileIO::CBoxAlgorithmCSVFileReaderDesc)
+	OVP_Declare_New(CBoxAlgorithmCSVFileWriterDesc)
+	OVP_Declare_New(CBoxAlgorithmCSVFileReaderDesc)
 
-	OVP_Declare_New(FileIO::CBoxAlgorithmGenericStreamReaderDesc)
-	OVP_Declare_New(FileIO::CBoxAlgorithmGenericStreamWriterDesc)
+	OVP_Declare_New(CBoxAlgorithmGenericStreamReaderDesc)
+	OVP_Declare_New(CBoxAlgorithmGenericStreamWriterDesc)
 
-	OVP_Declare_New(FileIO::CBoxAlgorithmElectrodeLocalisationFileReaderDesc)
+	OVP_Declare_New(CBoxAlgorithmElectrodeLocalisationFileReaderDesc)
 
-	OVP_Declare_New(FileIO::CBoxAlgorithmOVCSVFileWriterDesc)
-	OVP_Declare_New(FileIO::CBoxAlgorithmOVCSVFileReaderDesc)
+	OVP_Declare_New(CBoxAlgorithmOVCSVFileWriterDesc)
+	OVP_Declare_New(CBoxAlgorithmOVCSVFileReaderDesc)
 
 	context.getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_SchedulerMetaboxImport, ".mxb", OVP_ClassId_Algorithm_XMLScenarioImporter);
 	context.getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_SchedulerMetaboxImport, ".xml", OVP_ClassId_Algorithm_XMLScenarioImporter);
@@ -46,3 +46,7 @@ OVP_Declare_Begin()
 	context.getConfigurationManager().createConfigurationToken("ScenarioFileNameExtension.mxb", "Mensia XML Component");
 
 OVP_Declare_End()
+
+}  // namespace FileIO
+}  // namespace Plugins
+}  // namespace OpenViBE

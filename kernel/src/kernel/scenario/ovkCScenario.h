@@ -20,7 +20,7 @@ class CScenario final : public TBox<IScenario>
 public:
 
 	CScenario(const IKernelContext& ctx, const CIdentifier& identifier);
-	~CScenario() override;
+	~CScenario() override { this->clear(); }
 
 	bool clear() override;
 	bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool preserveIDs) override;

@@ -3,9 +3,8 @@
 #include <openvibe/kernel/scenario/ovIBoxProto.h>
 #include <system/ovCMemory.h>
 
-namespace {
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
+namespace OpenViBE {
+namespace Kernel {
 
 struct SBoxProto final : IBoxProto
 {
@@ -152,4 +151,5 @@ struct SBoxProto final : IBoxProto
 	uint64_t m_settingCountHash = 0x6BDFB15B54B09F63LL;
 	ITypeManager& m_TypeManager;
 };
-}  // namespace
+}  // namespace Kernel
+}  // namespace OpenViBE

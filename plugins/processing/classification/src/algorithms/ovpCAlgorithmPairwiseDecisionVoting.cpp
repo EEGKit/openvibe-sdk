@@ -5,30 +5,25 @@
 
 #include <xml/IXMLNode.h>
 
-namespace {
-const char* const TYPE_NODE_NAME = "PairwiseDecision_Voting";
-}
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Classification;
-
-using namespace /*OpenViBE::*/Toolkit;
+static const char* const TYPE_NODE_NAME = "PairwiseDecision_Voting";
 
 bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
-	TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	Kernel::TParameterHandler<uint64_t> ip_nClass(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_nClass = size_t(ip_nClass);
 
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found", Kernel::ErrorType::BadInput);
 
 	return true;
 }
 
 bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities)
 {
-	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found", ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_nClass >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_nClass << "] found", Kernel::ErrorType::BadInput);
 
 #if VOTING_DEBUG
 	std::cout << classifications.size() << std::endl;
@@ -67,3 +62,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfig()
 	XML::IXMLNode* node = XML::createNode(TYPE_NODE_NAME);
 	return node;
 }
+
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE

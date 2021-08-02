@@ -11,8 +11,6 @@
 #define strdup _strdup
 #endif
 
-using namespace std;
-
 namespace XML {
 class IXMLNodeImpl final : public IXMLNode
 {
@@ -54,10 +52,6 @@ private:
 	std::string m_pcData = "";
 	bool m_hasPCData     = false;
 };
-}	// namespace XML
-
-using namespace std;
-using namespace XML;
 
 
 bool IXMLNodeImpl::addAttribute(const char* name, const char* value)
@@ -101,57 +95,54 @@ IXMLNode* IXMLNodeImpl::getChildByName(const char* name) const
 
 size_t IXMLNodeImpl::getChildCount() const { return m_nodes.size(); }
 
-std::string IXMLNodeImpl::sanitize(const string& str)
+std::string IXMLNodeImpl::sanitize(const std::string& str)
 {
-	string::size_type i;
-	string res(str);
+	std::string::size_type i;
+	std::string res(str);
 	if (res.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for (i = res.find('&', 0); i != string::npos; i = res.find('&', i + 1)) { res.replace(i, 1, "&amp;"); }
+		for (i = res.find('&', 0); i != std::string::npos; i = res.find('&', i + 1)) { res.replace(i, 1, "&amp;"); }
 		// other escape sequences
-		for (i = res.find('\"', 0); i != string::npos; i = res.find('\"', i + 1)) { res.replace(i, 1, "&quot;"); }
-		for (i = res.find('<', 0); i != string::npos; i = res.find('<', i + 1)) { res.replace(i, 1, "&lt;"); }
-		for (i = res.find('>', 0); i != string::npos; i = res.find('>', i + 1)) { res.replace(i, 1, "&gt;"); }
+		for (i = res.find('\"', 0); i != std::string::npos; i = res.find('\"', i + 1)) { res.replace(i, 1, "&quot;"); }
+		for (i = res.find('<', 0); i != std::string::npos; i = res.find('<', i + 1)) { res.replace(i, 1, "&lt;"); }
+		for (i = res.find('>', 0); i != std::string::npos; i = res.find('>', i + 1)) { res.replace(i, 1, "&gt;"); }
 	}
 	return res;
 }
 
-void IXMLNodeImpl::applyIndentation(string& str, const size_t depth)
+void IXMLNodeImpl::applyIndentation(std::string& str, const size_t depth)
 {
-	const string indent(depth, '\t');
+	const std::string indent(depth, '\t');
 	str.append(indent);
 }
 
 char* IXMLNodeImpl::getXML(const size_t depth) const
 {
-	string str;
+	std::string str;
 	applyIndentation(str, depth);
 	str += "<" + m_name;
 
 	//Add attributes if we have some
 	if (!m_attibutes.empty())
 	{
-		for (auto it = m_attibutes.begin(); it != m_attibutes.end(); ++it)
-		{
-			str += string(" ") + it->first + string("=\"") + sanitize(it->second) + string("\"");
-		}
+		for (auto it = m_attibutes.begin(); it != m_attibutes.end(); ++it) { str += " " + it->first + "=\"" + sanitize(it->second) + "\""; }
 	}
 	//If we have nothing else to print let's close the node and return
 	if (!m_hasPCData && m_nodes.empty())
 	{
-		str = str + string("/>");
+		str += "/>";
 		return ::strdup(str.c_str());
 	}
 
-	str = str + string(">");
+	str += ">";
 
 	if (m_hasPCData) { str = str + sanitize(m_pcData); }
 
 	for (auto it = m_nodes.begin(); it != m_nodes.end(); ++it)
 	{
 		IXMLNode* node = static_cast<IXMLNode*>(*it);
-		str += string("\n") + node->getXML(depth + 1);
+		str += std::string("\n") + node->getXML(depth + 1);
 	}
 
 	if (!m_nodes.empty())
@@ -164,4 +155,6 @@ char* IXMLNodeImpl::getXML(const size_t depth) const
 	return ::strdup(str.c_str());
 }
 
-OV_API IXMLNode* XML::createNode(const char* name) { return new IXMLNodeImpl(name); }
+OV_API IXMLNode* createNode(const char* name) { return new IXMLNodeImpl(name); }
+
+}	// namespace XML

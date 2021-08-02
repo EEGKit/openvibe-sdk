@@ -1,6 +1,6 @@
 #include "ebml/CWriter.h"
 
-using namespace EBML;
+namespace EBML {
 
 CWriter::CWriter(IWriterCallback& callback) { m_impl = createWriter(callback); }
 CWriter::~CWriter() { m_impl->release(); }
@@ -10,3 +10,5 @@ bool CWriter::setChildData(const void* buffer, const size_t size) { return m_imp
 bool CWriter::closeChild() { return m_impl->closeChild(); }
 
 void CWriter::release() {}
+
+}  // namespace EBML

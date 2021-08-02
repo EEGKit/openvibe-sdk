@@ -4,11 +4,6 @@
 #include <cstdlib>
 #include <cstring>
 
-using namespace EBML;
-
-// ________________________________________________________________________________________________________________
-//
-
 namespace EBML {
 namespace {
 class CWriterHelper final : public IWriterHelper
@@ -33,10 +28,6 @@ protected:
 	IWriter* m_writer = nullptr;
 };
 }  // namespace
-}  // namespace EBML
-
-// ________________________________________________________________________________________________________________
-//
 
 bool CWriterHelper::connect(IWriter* writer)
 {
@@ -133,4 +124,6 @@ void CWriterHelper::release() { delete this; }
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IWriterHelper* EBML::createWriterHelper() { return new CWriterHelper(); }
+EBML_API IWriterHelper* createWriterHelper() { return new CWriterHelper(); }
+
+}  // namespace EBML

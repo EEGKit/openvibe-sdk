@@ -1,10 +1,32 @@
+/*********************************************************************
+ * Software License Agreement (AGPL-3 License)
+ *
+ * OpenViBE SDK
+ * Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
+ * Copyright (C) Inria, 2015-2017,V1.0
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <map>
 
 #include <ovICSV.h>
 
-using namespace OpenViBE::CSV;
-namespace {
-const std::map<ELogErrorCodes, std::string> ERROR_MAP =
+namespace OpenViBE {
+namespace CSV {
+
+static const std::map<ELogErrorCodes, std::string> ERROR_MAP =
 {
 	{ LogErrorCodes_ErrorWhileClosing, "Error while closing the file" },
 	{ LogErrorCodes_NoFileDefined, "No file defined yet" },
@@ -36,12 +58,15 @@ const std::map<ELogErrorCodes, std::string> ERROR_MAP =
 	{ LogErrorCodes_CantWriteHeader, "Can not write header, data already began to be written or header already written" },
 	{ LogErrorCodes_ErrorWhileWriting, "Error occured while trying to write" },
 	{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s)" },
-	{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
+	{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" },
+	{ LogErrorCodes_WrongStreamType, "Stream type does not compatible with this action" }
 };
-}	// namespace 
 
 std::string ICSVHandler::getLogError(const ELogErrorCodes code)
 {
 	if (ERROR_MAP.count(code) != 0) { return ERROR_MAP.at(code); }
 	return "Unknow error";
 }
+
+}	// namespace CSV
+}	// namespace OpenViBE

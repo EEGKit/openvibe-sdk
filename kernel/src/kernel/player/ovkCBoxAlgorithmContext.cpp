@@ -2,11 +2,11 @@
 #include "ovkCPlayerContext.h"
 #include "ovkCSimulatedBox.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
+namespace OpenViBE {
+namespace Kernel {
 
-CBoxAlgorithmCtx::CBoxAlgorithmCtx(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox, const IBox* pBox)
-	: TKernelObject<IBoxAlgorithmContext>(ctx), m_pStaticBoxContext(pBox), m_pDynamicBoxContext(pSimulatedBox), m_oPlayerContext(ctx, pSimulatedBox) {}
+CBoxAlgorithmCtx::CBoxAlgorithmCtx(const IKernelContext& ctx, CSimulatedBox* simulatedBox, const IBox* box)
+	: TKernelObject<IBoxAlgorithmContext>(ctx), m_pStaticBoxContext(box), m_pDynamicBoxContext(simulatedBox), m_oPlayerContext(ctx, simulatedBox) {}
 
 
 bool CBoxAlgorithmCtx::markAlgorithmAsReadyToProcess()
@@ -14,3 +14,6 @@ bool CBoxAlgorithmCtx::markAlgorithmAsReadyToProcess()
 	m_bReadyToProcess = true;
 	return true;
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

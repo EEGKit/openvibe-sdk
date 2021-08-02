@@ -4,9 +4,6 @@
 #include <string>
 #include <iostream>
 
-using namespace XML;
-using namespace std;
-
 namespace XML {
 class CReader final : public IReader
 {
@@ -29,7 +26,6 @@ protected:
 static void XMLCALL ExpatXMLStart(void* data, const char* element, const char** attribute);
 static void XMLCALL ExpatXMLEnd(void* data, const char* element);
 static void XMLCALL ExpatXMLData(void* data, const char* value, int length);
-}  // namespace XML
 
 CReader::CReader(IReaderCallback& callback) : m_callback(callback), m_pXMLParser(nullptr)
 {
@@ -74,9 +70,9 @@ void CReader::closeChild()
 	m_callback.closeChild();
 }
 
-XML_API IReader* XML::createReader(IReaderCallback& callback) { return new CReader(callback); }
+XML_API IReader* createReader(IReaderCallback& callback) { return new CReader(callback); }
 
-static void XMLCALL XML::ExpatXMLStart(void* data, const char* element, const char** attribute)
+static void XMLCALL ExpatXMLStart(void* data, const char* element, const char** attribute)
 {
 	size_t nAttribute = 0;
 	while (attribute[nAttribute++]) { }
@@ -98,10 +94,12 @@ static void XMLCALL XML::ExpatXMLStart(void* data, const char* element, const ch
 	delete [] value;
 }
 
-static void XMLCALL XML::ExpatXMLEnd(void* data, const char* /*element*/) { static_cast<CReader*>(data)->closeChild(); }
+static void XMLCALL ExpatXMLEnd(void* data, const char* /*element*/) { static_cast<CReader*>(data)->closeChild(); }
 
-static void XMLCALL XML::ExpatXMLData(void* data, const char* value, const int length)
+static void XMLCALL ExpatXMLData(void* data, const char* value, const int length)
 {
-	const string str(value, length);
+	const std::string str(value, length);
 	static_cast<CReader*>(data)->processChildData(str.c_str());
 }
+
+}  // namespace XML

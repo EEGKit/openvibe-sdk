@@ -11,7 +11,7 @@ class CBoxAlgorithmCtx final : public TKernelObject<IBoxAlgorithmContext>
 {
 public:
 
-	CBoxAlgorithmCtx(const IKernelContext& ctx, CSimulatedBox* pSimulatedBox, const IBox* pBox);
+	CBoxAlgorithmCtx(const IKernelContext& ctx, CSimulatedBox* simulatedBox, const IBox* box);
 	~CBoxAlgorithmCtx() override {}
 	const IBox* getStaticBoxContext() override { return m_pStaticBoxContext; }
 	IBoxIO* getDynamicBoxContext() override { return m_pDynamicBoxContext; }

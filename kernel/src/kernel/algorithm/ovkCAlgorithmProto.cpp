@@ -1,13 +1,13 @@
 #include "ovkCAlgorithmProto.h"
 #include "ovkCAlgorithmProxy.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
+namespace OpenViBE {
+namespace Kernel {
 
 CAlgorithmProto::CAlgorithmProto(const IKernelContext& ctx, CAlgorithmProxy& rAlgorithmProxy)
 	: TKernelObject<IAlgorithmProto>(ctx), m_algorithmProxy(rAlgorithmProxy) {}
 
-bool CAlgorithmProto::addInputParameter(const CIdentifier& inputParameterID, const CString& sInputName, 
+bool CAlgorithmProto::addInputParameter(const CIdentifier& inputParameterID, const CString& sInputName,
 										const EParameterType eParameterType, const CIdentifier& subTypeID)
 {
 	return m_algorithmProxy.addInputParameter(inputParameterID, sInputName, eParameterType, subTypeID);
@@ -28,3 +28,6 @@ bool CAlgorithmProto::addOutputTrigger(const CIdentifier& outputTriggerID, const
 {
 	return m_algorithmProxy.addOutputTrigger(outputTriggerID, rOutputTriggerName);
 }
+
+}  // namespace Kernel
+}  // namespace OpenViBE

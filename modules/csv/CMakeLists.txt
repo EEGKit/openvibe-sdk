@@ -27,6 +27,7 @@ target_compile_options(${PROJECT_NAME}
 
 include("FindThirdPartyBoost")
 include("FindThirdPartyBoost_FileSystem")
+INCLUDE("FindThirdPartyBoost_Regex")
 
 # ---------------------------------
 # Target macros

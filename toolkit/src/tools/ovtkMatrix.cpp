@@ -14,8 +14,9 @@
 #include <locale> // std::isspace
 #include <sstream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Toolkit;
+namespace OpenViBE {
+namespace Toolkit {
+namespace Matrix {
 
 enum class EParsingStatus { Nothing, ParsingHeader, ParsingHeaderDimension, ParsingHeaderLabel, ParsingBuffer, ParsingBufferValue };
 
@@ -29,7 +30,7 @@ const char CONSTANT_CARRIAGE_RETURN      = '\r';
 const char CONSTANT_EOL                  = '\n';
 const char CONSTANT_SPACE                = ' ';
 
-bool Matrix::fromString(CMatrix& matrix, const CString& str)
+bool fromString(CMatrix& matrix, const CString& str)
 {
 	std::stringstream buffer;
 
@@ -62,7 +63,7 @@ bool Matrix::fromString(CMatrix& matrix, const CString& str)
 		if (what.length() == 0) { continue; } //skip it
 
 		//output line to be parsed in debug level
-		// getLogManager() << LogLevel_Debug << what << "\n";
+		// getLogManager() << Kernel::LogLevel_Debug << what << "\n";
 
 		//remove ending carriage return (if any) for windows / linux compatibility
 		if (what[what.length() - 1] == CONSTANT_CARRIAGE_RETURN) { what.erase(what.length() - 1, 1); }
@@ -296,7 +297,7 @@ bool dumpMatrixBuffer(const CMatrix& matrix, std::stringstream& buffer, const si
 	return true;
 }
 
-bool Matrix::toString(const CMatrix& matrix, CString& str, const size_t precision /* = 6 */)
+bool toString(const CMatrix& matrix, CString& str, const size_t precision /* = 6 */)
 {
 	std::stringstream buffer;
 
@@ -333,7 +334,7 @@ bool Matrix::toString(const CMatrix& matrix, CString& str, const size_t precisio
 	return true;
 }
 
-bool Matrix::loadFromTextFile(CMatrix& matrix, const CString& filename)
+bool loadFromTextFile(CMatrix& matrix, const CString& filename)
 {
 	std::ifstream dataFile;
 	FS::Files::openIFStream(dataFile, filename.toASCIIString(), std::ios_base::in);
@@ -350,7 +351,7 @@ bool Matrix::loadFromTextFile(CMatrix& matrix, const CString& filename)
 	return res;
 }
 
-bool Matrix::saveToTextFile(const CMatrix& matrix, const CString& filename, const size_t precision /* = 6 */)
+bool saveToTextFile(const CMatrix& matrix, const CString& filename, const size_t precision /* = 6 */)
 {
 	std::ofstream dataFile;
 	FS::Files::openOFStream(dataFile, filename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
@@ -367,21 +368,21 @@ bool Matrix::saveToTextFile(const CMatrix& matrix, const CString& filename, cons
 }
 
 
-bool Matrix::copy(CMatrix& dst, const CMatrix& src)
+bool copy(CMatrix& dst, const CMatrix& src)
 {
 	if (&dst == &src) { return true; }
 	dst.copy(src);
 	return true;
 }
 
-bool Matrix::copyDescription(CMatrix& dst, const CMatrix& src)
+bool copyDescription(CMatrix& dst, const CMatrix& src)
 {
 	if (&dst == &src) { return true; }
 	dst.copyDescription(src);
 	return true;
 }
 
-bool Matrix::copyContent(CMatrix& dst, const CMatrix& src)
+bool copyContent(CMatrix& dst, const CMatrix& src)
 {
 	if (&dst == &src) { return true; }
 	const size_t nElementIn  = src.getBufferElementCount();
@@ -391,25 +392,26 @@ bool Matrix::copyContent(CMatrix& dst, const CMatrix& src)
 	return true;
 }
 
-bool Matrix::clearContent(CMatrix& matrix)
+bool clearContent(CMatrix& matrix)
 {
 	matrix.resetBuffer();
 	return true;
 }
 
-bool Matrix::isDescriptionSimilar(const CMatrix& src1, const CMatrix& src2, const bool checkLabels)
+bool isDescriptionSimilar(const CMatrix& src1, const CMatrix& src2, const bool checkLabels)
 {
 	if (&src1 == &src2) { return true; }
 	return src1.isDescriptionEqual(src2, checkLabels);
 }
 
-bool Matrix::isContentSimilar(const CMatrix& src1, const CMatrix& src2)
+bool isContentSimilar(const CMatrix& src1, const CMatrix& src2)
 {
 	if (&src1 == &src2) { return true; }
 	return src1.isBufferEqual(src2);
 }
 
-bool Matrix::isContentValid(const CMatrix& src, const bool checkNotANumber, const bool checkInfinity)
-{
-	return src.isBufferValid(checkNotANumber, checkInfinity);
-}
+bool isContentValid(const CMatrix& src, const bool checkNotANumber, const bool checkInfinity) { return src.isBufferValid(checkNotANumber, checkInfinity); }
+
+}  // namespace Matrix
+}  // namespace Toolkit
+}  // namespace OpenViBE

@@ -36,20 +36,13 @@
 #include <cstdint>
 
 using namespace Lepton;
-using namespace std;
-
-CompiledExpression::CompiledExpression() {}
 
 CompiledExpression::CompiledExpression(const ParsedExpression& expression)
 {
 	ParsedExpression expr = expression.optimize(); // Just in case it wasn't already optimized.
-	vector<pair<ExpressionTreeNode, int>> temps;
+	std::vector<std::pair<ExpressionTreeNode, int>> temps;
 	compileExpression(expr.getRootNode(), temps);
 }
-
-CompiledExpression::~CompiledExpression() { for (size_t i = 0; i < operation.size(); ++i) if (operation[i] != nullptr) delete operation[i]; }
-
-CompiledExpression::CompiledExpression(const CompiledExpression& expression) { *this = expression; }
 
 CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expression)
 {
@@ -64,13 +57,13 @@ CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expr
 	return *this;
 }
 
-void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
+void CompiledExpression::compileExpression(const ExpressionTreeNode& node, std::vector<std::pair<ExpressionTreeNode, int>>& temps)
 {
 	if (findTempIndex(node, temps) != -1) { return; }	// We have already processed a node identical to this one. 
 
 	// Process the child nodes.
 
-	vector<int> args;
+	std::vector<int> args;
 	for (size_t i = 0; i < node.getChildren().size(); ++i)
 	{
 		compileExpression(node.getChildren()[i], temps);
@@ -87,7 +80,7 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 	else
 	{
 		int stepIndex = int(arguments.size());
-		arguments.push_back(vector<int>());
+		arguments.push_back(std::vector<int>());
 		target.push_back(int(workspace.size()));
 		operation.push_back(node.getOperation().clone());
 		if (args.size() == 0) arguments[stepIndex].push_back(0); // The value won't actually be used.  We just need something there.
@@ -105,19 +98,17 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 			}
 		}
 	}
-	temps.push_back(make_pair(node, workspace.size()));
+	temps.push_back(std::make_pair(node, workspace.size()));
 	workspace.push_back(0.0);
 }
 
-int CompiledExpression::findTempIndex(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
+int CompiledExpression::findTempIndex(const ExpressionTreeNode& node, std::vector<std::pair<ExpressionTreeNode, int>>& temps)
 {
 	for (size_t i = 0; i < temps.size(); ++i) { if (temps[i].first == node) { return int(i); } }
 	return -1;
 }
 
-const set<string>& CompiledExpression::getVariables() const { return variableNames; }
-
-double& CompiledExpression::getVariableReference(const string& name)
+double& CompiledExpression::getVariableReference(const std::string& name)
 {
 	auto index = variableIndices.find(name);
 	if (index == variableIndices.end()) throw Exception("getVariableReference: Unknown variable '" + name + "'");
@@ -130,7 +121,7 @@ double CompiledExpression::evaluate() const
 
 	for (size_t step = 0; step < operation.size(); ++step)
 	{
-		const vector<int>& args = arguments[step];
+		const std::vector<int>& args = arguments[step];
 		if (args.size() == 1) workspace[target[step]] = operation[step]->evaluate(&workspace[args[0]], dummyVariables);
 		else
 		{

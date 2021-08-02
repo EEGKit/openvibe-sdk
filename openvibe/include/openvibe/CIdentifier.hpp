@@ -187,7 +187,7 @@ public:
 	/// <remarks> Use this function with care, identifiers should not be considered as integers.
 	/// Actually, the internal 64 bits representation may change, resulting in code port needs if you use this function. </remarks>
 	uint64_t id() const { return m_id; }
-	
+
 	/// <summary> Get the ID. </summary>
 	/// <returns> The unsigned integer identifier. </returns>
 	/// <remarks> Use this function with care, identifiers should not be considered as integers.

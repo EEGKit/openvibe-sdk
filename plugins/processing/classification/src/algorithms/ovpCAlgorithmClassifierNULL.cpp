@@ -3,34 +3,32 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Classification;
+namespace OpenViBE {
+namespace Plugins {
+namespace Classification {
 
-using namespace /*OpenViBE::*/Toolkit;
 
 bool CAlgorithmClassifierNULL::initialize()
 {
-	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
-	TParameterHandler<double> ip_Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
-	TParameterHandler<uint64_t> ip_parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
+	Kernel::TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
+	Kernel::TParameterHandler<double> ip_Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
+	Kernel::TParameterHandler<uint64_t> ip_parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
 	ip_bParameter1 = true;
 	ip_Parameter2  = 3.141592654;
 	ip_parameter3  = OVTK_StimulationId_Label_00;
 
-	TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	op_configuration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
 }
 
-bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& /*featureVectorSet*/)
+bool CAlgorithmClassifierNULL::train(const Toolkit::IFeatureVectorSet& /*featureVectorSet*/)
 {
-	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
-	TParameterHandler<double> ip_Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
-	TParameterHandler<uint64_t> ip_parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
+	Kernel::TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
+	Kernel::TParameterHandler<double> ip_Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
+	Kernel::TParameterHandler<uint64_t> ip_parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
 	OV_WARNING_K("Parameter 1 : " << ip_bParameter1);
 	OV_WARNING_K("Parameter 2 : " << ip_Parameter2);
@@ -39,7 +37,7 @@ bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& /*featureVectorSet
 	return true;
 }
 
-bool CAlgorithmClassifierNULL::classify(const IFeatureVector& /*featureVector*/, double& classId, IVector& distance, IVector& probability)
+bool CAlgorithmClassifierNULL::classify(const Toolkit::IFeatureVector& /*featureVector*/, double& classId, Toolkit::IVector& distance, Toolkit::IVector& probability)
 {
 	classId = 1 + (rand() % 3);
 
@@ -57,3 +55,6 @@ bool CAlgorithmClassifierNULL::classify(const IFeatureVector& /*featureVector*/,
 	}
 	return true;
 }
+}  // namespace Classification
+}  // namespace Plugins
+}  // namespace OpenViBE

@@ -1,9 +1,8 @@
 #include "ovpCBoxAlgorithmPlayerController.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace Stimulation;
+namespace OpenViBE {
+namespace Plugins {
+namespace Stimulation {
 
 bool CBoxAlgorithmPlayerController::initialize()
 {
@@ -42,7 +41,7 @@ bool CBoxAlgorithmPlayerController::processInput(const size_t /*index*/)
 
 bool CBoxAlgorithmPlayerController::process()
 {
-	IBoxIO& boxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
@@ -56,7 +55,7 @@ bool CBoxAlgorithmPlayerController::process()
 			{
 				if (stimSet->getStimulationIdentifier(j) == m_stimulationID)
 				{
-					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
+					this->getLogManager() << Kernel::LogLevel_Trace << "Received stimulation ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) << "] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]\n";
 
@@ -68,7 +67,7 @@ bool CBoxAlgorithmPlayerController::process()
 
 					OV_ERROR_UNLESS_KRF(res, "Failed to request player action ["
 										<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_actionID) << "]",
-										ErrorType::BadConfig);
+										Kernel::ErrorType::BadConfig);
 				}
 			}
 		}
@@ -79,3 +78,7 @@ bool CBoxAlgorithmPlayerController::process()
 
 	return true;
 }
+
+}  // namespace Stimulation
+}  // namespace Plugins
+}  // namespace OpenViBE

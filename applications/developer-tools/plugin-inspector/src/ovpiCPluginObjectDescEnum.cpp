@@ -1,12 +1,10 @@
 #include "ovpiCPluginObjectDescEnum.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace std;
+namespace OpenViBE {
+namespace PluginInspector {
 
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes
-bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pod)
+bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const Plugins::IPluginObjectDesc*>& pod)
 {
 	for (auto* plugin : pod) { this->callback(*plugin); }
 	return true;
@@ -47,3 +45,6 @@ std::string CPluginObjectDescEnum::transform(const std::string& in, const bool r
 	}
 	return out;
 }
+
+}  // namespace PluginInspector
+}  // namespace OpenViBE

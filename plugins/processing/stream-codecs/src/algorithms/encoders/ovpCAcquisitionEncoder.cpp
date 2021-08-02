@@ -1,9 +1,8 @@
 #include "ovpCAcquisitionEncoder.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Kernel;
-using namespace /*OpenViBE::*/Plugins;
-using namespace StreamCodecs;
+namespace OpenViBE {
+namespace Plugins {
+namespace StreamCodecs {
 
 bool CAcquisitionEncoder::initialize()
 {
@@ -80,3 +79,7 @@ bool CAcquisitionEncoder::processBuffer()
 
 	return true;
 }
+
+}  // namespace StreamCodecs
+}  // namespace Plugins
+}  // namespace OpenViBE

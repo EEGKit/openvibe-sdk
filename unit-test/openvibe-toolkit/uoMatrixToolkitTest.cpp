@@ -26,13 +26,10 @@
 
 #include "ovtAssert.h"
 
-using namespace OpenViBE;
-using namespace /*OpenViBE::*/Toolkit;
-
 static std::default_random_engine gen(777);
 static std::uniform_real_distribution<double> dist(0.0, 100.0);
 
-void fillMatrix(CMatrix& matrix)
+void fillMatrix(OpenViBE::CMatrix& matrix)
 {
 	for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
 	{
@@ -46,27 +43,27 @@ void fillMatrix(CMatrix& matrix)
 
 	for (size_t i = 0; i < matrix.getBufferElementCount(); ++i) { matrix.getBuffer()[i] = dist(gen); }
 }
-bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, const size_t precision = 6)
+bool testMatrix(OpenViBE::CMatrix& expectedMatrix, const std::string& textFile, const size_t precision = 6)
 {
 	const double threshold = 1.0 / std::pow(10.0, double(precision - 2));
 
 	fillMatrix(expectedMatrix);
 
-	if (!Matrix::saveToTextFile(expectedMatrix, textFile.c_str(), precision))
+	if (!OpenViBE::Toolkit::Matrix::saveToTextFile(expectedMatrix, textFile.c_str(), precision))
 	{
 		std::cerr << "Error: saving matrix to file " << textFile << "\n";
 		return false;
 	}
 
-	CMatrix resultMatrix;
+	OpenViBE::CMatrix resultMatrix;
 
-	if (!Matrix::loadFromTextFile(resultMatrix, textFile.c_str()))
+	if (!OpenViBE::Toolkit::Matrix::loadFromTextFile(resultMatrix, textFile.c_str()))
 	{
 		std::cerr << "Error: loading matrix from file " << textFile << "\n";
 		return false;
 	}
 
-	if (!Matrix::isDescriptionSimilar(expectedMatrix, resultMatrix))
+	if (!OpenViBE::Toolkit::Matrix::isDescriptionSimilar(expectedMatrix, resultMatrix))
 	{
 		std::cerr << "Error: Descriptions differ between expected matrix and result matrix after save/load\n";
 		return false;
@@ -92,7 +89,7 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 
 	const std::string oMatrixFile = std::string(argv[1]) + "uoMatrixToolkitTest.txt";
 
-	CMatrix source;
+	OpenViBE::CMatrix source;
 
 	source.resize(1);
 	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [1; {0,1}]");
@@ -131,7 +128,7 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 	source.resize(0, 0);
 	OVT_ASSERT(testMatrix(source, oMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,0},{1,0}]");
 
-	CMatrix emptySource;
+	OpenViBE::CMatrix emptySource;
 	OVT_ASSERT(!testMatrix(emptySource, oMatrixFile), "Failed to test matrix with no parameter");
 
 	return EXIT_SUCCESS;
