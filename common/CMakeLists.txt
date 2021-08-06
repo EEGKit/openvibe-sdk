@@ -27,3 +27,4 @@ SET_BUILD_PLATFORM()
 # Install files
 # -----------------------------
 
+INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} COMPONENT headers FILES_MATCHING PATTERN "*.h")
