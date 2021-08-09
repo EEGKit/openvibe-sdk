@@ -5,9 +5,8 @@ set(CMAKE_MODULE_PATH
 	${CMAKE_SOURCE_DIR}/sdk/cmake-modules
 	# ${CMAKE_MODULE_PATH}
 	)
-
-include("Utilities")
 include("SetProjectVersion")
+
 set_version()
 OV_SET_PROJECT_VERSION()
 message(STATUS "BUILDING VERSION OpenViBE SDK: ${OV_GLOBAL_VERSION_STRING} Branch : ${OV_PROJECT_BRANCH}~${OV_PROJECT_COMMITHASH}")
@@ -251,7 +250,6 @@ set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO "TARGE
 
 # OpenViBE-specific helper functions that are used by the CMakeLists of the subprojects.
 include("OvAddProjects")
-include("OvInstallLaunchScript")
 include("OvLinkBoostLib")
 include("OvDelayLoad")
 

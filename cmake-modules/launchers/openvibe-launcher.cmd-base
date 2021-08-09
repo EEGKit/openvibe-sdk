@@ -7,12 +7,9 @@ SET "OMP_WAIT_POLICY=@OV_OMP_WAIT_POLICY@"
 
 REM Get the directory location of this script, assume it contains the OpenViBE dist tree. These variables will be used by OpenViBE executables.
 SET "OV_PATH_ROOT=%~dp0"
-SET "OV_PATH_BIN=%OV_PATH_ROOT%\bin"
-SET "OV_PATH_LIB=%OV_PATH_ROOT%\bin"
-SET "OV_PATH_DATA=%OV_PATH_ROOT%\share\openvibe"
 
 REM Default behavior
-SET OV_PAUSE=@OV_PAUSE@
+SET OV_PAUSE=PAUSE
 SET OV_RUN_IN_BG=
 
 REM Parse out Windows specific args ...
@@ -23,10 +20,6 @@ SET "STRIPPEDARG=%~1"
 if NOT !STRIPPEDARG! == !EMPTY! (
 	IF /i "!STRIPPEDARG!" == "--no-pause" (
 		SET OV_PAUSE=
-		goto found:
-	)
-	IF /i "!STRIPPEDARG!" == "--pause" (
-		SET OV_PAUSE=PAUSE
 		goto found:
 	)
 	IF /i "!STRIPPEDARG!" == "--run-bg" (
@@ -45,21 +38,18 @@ if NOT !STRIPPEDARG! == !EMPTY! (
 )
 
 REM Set dependency paths etc...
-REM SET "OV_ENVIRONMENT_FILE=%OV_PATH_ROOT%\bin\OpenViBE-set-env.cmd"
-
-REM IF NOT EXIST "%OV_ENVIRONMENT_FILE%" (
-REM	ECHO Error: "%OV_ENVIRONMENT_FILE%" was not found
-REM	GOTO EndOfScript
-REM )
-REM CALL "%OV_ENVIRONMENT_FILE%"
-
-SET PATH=%OV_PATH_LIB%;%PATH%
-
+SET "OV_ENVIRONMENT_FILE=%OV_PATH_ROOT%\bin\OpenViBE-set-env.cmd"
+IF NOT EXIST "%OV_ENVIRONMENT_FILE%" (
+	ECHO Error: "%OV_ENVIRONMENT_FILE%" was not found
+	GOTO EndOfScript
+)
+CALL "%OV_ENVIRONMENT_FILE%"
 
 REM cmake variable OV_CMD_ARGS below may specify additional arguments outside this script
 
-%OV_RUN_IN_BG% "@OV_CMD_EXECUTABLE@" @OV_CMD_ARGS@ %ARGS%
-
+%OV_RUN_IN_BG% "%OV_PATH_ROOT%\bin\@OV_CMD_EXECUTABLE@" @OV_CMD_ARGS@ %ARGS%
+	
 :EndOfScript
 
 %OV_PAUSE%
+
