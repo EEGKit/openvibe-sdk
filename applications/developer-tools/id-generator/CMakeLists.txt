@@ -14,7 +14,7 @@ SET_BUILD_PLATFORM()
 # ----------------------
 # Generate launch script
 # ----------------------
-OV_INSTALL_LAUNCH_SCRIPT(SCRIPT_PREFIX "openvibe-id-generator" EXECUTABLE_NAME "${PROJECT_NAME}" PAUSE)
+OV_INSTALL_LAUNCH_SCRIPT(SCRIPT_PREFIX "openvibe-id-generator" EXECUTABLE_NAME "${PROJECT_NAME}" PAUSE CONFIG_RC)
 
 # -----------------------------
 # Install files
