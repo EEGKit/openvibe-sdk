@@ -14,8 +14,6 @@ message(STATUS "BUILDING VERSION OpenViBE SDK: ${OV_GLOBAL_VERSION_STRING} Branc
 # Default is to build to dist/. If you wish a custom install, set your own MAKE_INSTALL_PREFIX when you call CMake. Safest to do under a fakeroot.
 message(STATUS "Appending compilation flags...")
 
-set(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
-
 
 set(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/sdk/dependencies-source")
 
@@ -36,10 +34,6 @@ option(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 option(BUILD_VALIDATION_TEST "Build the validation tests" ON)
 option(BUILD_UNIT_TEST "Build the unit tests" ON)
 
-set(CMAKE_INSTALL_LIBDIR lib)  # Enforce as all distros may not have the same default (e.g. lib, lib32/lib64)
-include("GNUInstallDirs")  # Setup knowledge of GNU-style install path variables
-
-message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 
 if(NOT(${Flag_VerboseOutput}))
 	set(CMAKE_INSTALL_MESSAGE LAZY)
@@ -81,99 +75,6 @@ elseif(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${OV_EIGEN_FLAGS}")
 else()
 	message(WARNING "Warning: unknown platform")
-endif()
-
-
-get_property (GENERATOR_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-if(${GENERATOR_IS_MULTI_CONFIG})
-	set(MULTI_BUILD TRUE)
-	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin" )
-	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/lib" )
-	# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/archive" )
-	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
-		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
-		# set_target_properties( ${target} PROPERTIES CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/bin")
-		set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/bin" )
-		set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/lib" )
-		# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/archive" )
-		string(CONCAT DIST_ROOT ${DIST_ROOT} $<$<CONFIG:${OUTPUTCONFIGU}>:${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}>)
-	endforeach()
-	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_ROOT=\"${DIST_ROOT}\"")
-	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_BIN=\"${DIST_ROOT}/bin\"")
-	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_LIB=\"${DIST_ROOT}/lib\"")
-	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_DATA=\"${DIST_ROOT}/share/openvibe\"")
-	set(DIST_BINDIR ${DIST_ROOT}/bin)
-	set(DIST_LIBDIR ${DIST_ROOT}/lib)
-	set(DIST_INCLUDEDIR ${DIST_ROOT}/include)
-	set(DIST_DATADIR ${DIST_ROOT}/share)
-	set(DIST_DOCDIR ${DIST_ROOT}/doc)
-	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
-	
-	set(DIST_BINDIR_ABSOLUTE ${DIST_BINDIR})
-	# Also install it on the base dir for convenience
-	
-	# Install the .install file inside the dists folders
-	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/.install DESTINATION ${DIST_ROOT})
-elseif(CMAKE_BUILD_TYPE AND OV_PACKAGE)
-	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
-	# These defines should only be used in "openvibe/ov_directories.h".
-
-	# We use absolute paths to avoid issue for unit and validation tests
-	get_filename_component(DIST_ROOT_ABSOLUTE "." REALPATH BASE_DIR "${CMAKE_BINARY_DIR}")
-	set(DIST_BINDIR_ABSOLUTE ${DIST_ROOT_ABSOLUTE}/bin)
-
-	set(CMAKE_INSTALL_PREFIX .)
-
-	add_definitions(-DOV_CMAKE_PATH_ROOT="${DIST_ROOT_ABSOLUTE}")
-	add_definitions(-DOV_CMAKE_PATH_BIN="${DIST_ROOT_ABSOLUTE}/bin")
-	add_definitions(-DOV_CMAKE_PATH_LIB="${DIST_ROOT_ABSOLUTE}/lib")
-	add_definitions(-DOV_CMAKE_PATH_DATA="${DIST_ROOT_ABSOLUTE}/share/openvibe")
-
-	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
-	set(DIST_BINDIR ${CMAKE_INSTALL_BINDIR})
-	set(DIST_LIBDIR ${CMAKE_INSTALL_LIBDIR})
-	set(DIST_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
-	set(DIST_DATADIR ${CMAKE_INSTALL_DATADIR})
-	set(DIST_DOCDIR doc)
-	set(DIST_DOCTMP doc-tmp)
-	set(CPACK_GENERATOR "ZIP")
-	set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
-	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${BRAND_NAME})
-	set(CPACK_PACKAGE_VENDOR "Inria & Mensia Technologies")
-	set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-	set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.md")
-	set(CPACK_PACKAGE_VERSION ${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MINOR}.${OV_GLOBAL_VERSION_PATCH}.${OV_GLOBAL_VERSION_BUILD})
-	set(CPACK_PACKAGE_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-	set(CPACK_PACKAGE_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-	set(CPACK_PACKAGE_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-
-	if(UNIX)
-		execute_process(
-			COMMAND bash -c "echo -n $(lsb_release -i -s)$(lsb_release -r -s)"
-			OUTPUT_VARIABLE CPACK_SYSTEM_NAME)
-	endif()
-
-	set(CPACK_PACKAGE_NAME "OpenViBE-${CMAKE_BUILD_TYPE}")
-	include(CPack)
-elseif(CMAKE_BUILD_TYPE)
-	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
-	# These defines should only be used in "openvibe/ov_directories.h".
-	add_definitions(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
-	add_definitions(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_PREFIX}/bin")
-	add_definitions(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_PREFIX}/lib")
-	add_definitions(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_PREFIX}/share/openvibe")
-	
-	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
-	set(DIST_BINDIR ${CMAKE_INSTALL_FULL_BINDIR})
-	set(DIST_LIBDIR ${CMAKE_INSTALL_FULL_LIBDIR})
-	set(DIST_INCLUDEDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR})
-	set(DIST_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
-	set(DIST_DOCDIR ${DIST_ROOT}/doc)
-	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
-	
-	set(DIST_BINDIR_ABSOLUTE ${DIST_BINDIR})
-else()
-	message(FATAL_ERROR "Build should specify a type or use a multi-type generator (like Visual Studio)")
 endif()
 
 # Print the used compilation parameters (for transparency)
@@ -290,7 +191,7 @@ if(NOT(SKIP_APPLICATIONS))
     add_subdirectory("applications/")
 endif()
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/.install" DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/.install-sdk" DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 
 option(BUILD_TESTING "Include and build unit tests" ON)
