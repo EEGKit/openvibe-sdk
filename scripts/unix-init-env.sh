@@ -2,7 +2,7 @@
 
 # This script performs any environment initialisation needed for the build of OpenViBE.
 
-function usage()
+function usage
 {
 		echo "usage: ./unix-init-env.sh [options]"
 		echo ""
