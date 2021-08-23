@@ -62,7 +62,7 @@ if(WIN32)
 	set(LIB_EXT lib)
 	set(DLL_EXT dll)
 	set(EXE_EXT .exe)
-	if(MULTI_BUILD)  # Replace with generator expression in CMake 3.5+
+	if(${GENERATOR_IS_MULTI_CONFIG})
 		foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 			string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 			install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/bin/ DESTINATION ${DIST_BINDIR} CONFIGURATIONS ${OUTPUTCONFIG} FILES_MATCHING PATTERN "*cmd")
@@ -89,7 +89,7 @@ endif()
 function(add_component TOKEN MODULE_NAME)
 	if(${TOKEN} IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 		target_link_libraries(${PROJECT_NAME} "${OPENVIBE_SDK_PATH}/lib/${LIB_PREFIX}${MODULE_NAME}${OPENVIBE_SDK_LINKING}.${LIB_EXT}")
-		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
+		if(${GENERATOR_IS_MULTI_CONFIG})
 			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 				install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} CONFIGURATIONS ${OUTPUTCONFIG} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
@@ -108,7 +108,7 @@ endfunction(add_component)
 
 function(add_plugin TOKEN MODULE_NAME)
 	if(${TOKEN} IN_LIST INCLUDED_OV_SDK_COMPONENTS)
-		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
+		if(${GENERATOR_IS_MULTI_CONFIG})
 			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 				install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} CONFIGURATIONS ${OUTPUTCONFIG} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
@@ -149,7 +149,7 @@ add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 # Install binary dependencies if requested
 if(DEPENDENCIES IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 	if(WIN32)
-		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
+		if(${GENERATOR_IS_MULTI_CONFIG}) # Replace with generator expression in CMake 3.5+
 			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 				install(FILES
@@ -174,7 +174,7 @@ endif()
 
 # Install applications if required
 if(DEVELOPER_TOOLS IN_LIST INCLUDED_OV_SDK_COMPONENTS)
-	if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
+	if(${GENERATOR_IS_MULTI_CONFIG}) # Replace with generator expression in CMake 3.5+
 		foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 			string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 			install(FILES
@@ -200,7 +200,7 @@ if(WIN32 AND SOCKET IN_LIST INCLUDED_OV_SDK_COMPONENTS AND NOT DYNAMIC_LINK_OPEN
 	include("FindThirdPartyFTDI")
 endif()
 
-if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
+if(${GENERATOR_IS_MULTI_CONFIG}) # Replace with generator expression in CMake 3.5+
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 		install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/share/ DESTINATION ${DIST_DATADIR} CONFIGURATIONS ${OUTPUTCONFIG})

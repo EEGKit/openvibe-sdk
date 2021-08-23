@@ -1,5 +1,7 @@
 @echo off
-
+setlocal EnableDelayedExpansion
+setlocal enableextensions 
+ 
 set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%
 set "SCRIPT_PATH=%~dp0"
 

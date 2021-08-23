@@ -191,7 +191,7 @@ if(NOT(SKIP_APPLICATIONS))
     add_subdirectory("applications/")
 endif()
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/.install-sdk" DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/.install-sdk" DESTINATION ${DIST_ROOT})
 
 
 option(BUILD_TESTING "Include and build unit tests" ON)
