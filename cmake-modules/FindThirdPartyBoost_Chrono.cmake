@@ -3,8 +3,8 @@
 # Adds a def that its present
 # ---------------------------------
 
-FIND_PATH(PATH_BOOST_CHRONO "include/boost/chrono.hpp" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/boost ${OV_CUSTOM_DEPENDENCIES_PATH} NO_DEFAULT_PATH)
-FIND_PATH(PATH_BOOST_CHRONO "include/boost/chrono.hpp" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/boost)
+FIND_PATH(PATH_BOOST_CHRONO "include/boost/chrono.hpp" PATHS ${LIST_DEPENDENCIES_PATH}/boost ${LIST_DEPENDENCIES_PATH} NO_DEFAULT_PATH)
+FIND_PATH(PATH_BOOST_CHRONO "include/boost/chrono.hpp" PATHS ${LIST_DEPENDENCIES_PATH}/boost)
 
 IF(PATH_BOOST_CHRONO)
 	debug_message( "  Found boost chrono includes...")
@@ -14,8 +14,8 @@ ELSE(PATH_BOOST_CHRONO)
 ENDIF(PATH_BOOST_CHRONO)
 
 IF(UNIX)
-	FIND_LIBRARY(LIB_Boost_Chrono NAMES "boost_chrono-mt" "boost_chrono" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/lib NO_DEFAULT_PATH)
-	FIND_LIBRARY(LIB_Boost_Chrono NAMES "boost_chrono-mt" "boost_chrono" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/lib)
+	FIND_LIBRARY(LIB_Boost_Chrono NAMES "boost_chrono-mt" "boost_chrono" PATHS ${LIST_DEPENDENCIES_PATH}/lib NO_DEFAULT_PATH)
+	FIND_LIBRARY(LIB_Boost_Chrono NAMES "boost_chrono-mt" "boost_chrono" PATHS ${LIST_DEPENDENCIES_PATH}/lib)
 	
 	IF(LIB_Boost_Chrono)
 		debug_message( "    [  OK  ] lib ${LIB_Boost_Chrono}")
