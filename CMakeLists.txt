@@ -154,15 +154,6 @@ include("OvAddProjects")
 include("OvLinkBoostLib")
 include("OvDelayLoad")
 
-# Sort target into directories for better visualization in IDE
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(APP_FOLDER Applications)
-set(KERNEL_FOLDER Kernel)
-set(MODULES_FOLDER Modules)
-set(PLUGINS_FOLDER Plugins)
-set(TESTS_FOLDER Unit-Tests)
-set(VALIDATION_FOLDER Validation-Tests)
-
 # Traverse these directories and build their components
 add_subdirectory("build-tool/")
 
