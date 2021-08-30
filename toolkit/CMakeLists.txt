@@ -20,6 +20,11 @@ add_custom_command(
 add_custom_target(openvibe-generate-stimulation-file
 	DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h ${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp)
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	                  VERSION ${PROJECT_VERSION}
+	                  FOLDER ${MISC_FOLDER}
+)
+
 file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.inl src/*.hpp include/*.h)
 include("FindSourceRCProperties")
 
