@@ -195,6 +195,9 @@ endif()
 # add the scripts to the project so IDEs using the CMake file are aware of them
 file(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/*.cmake)
 add_custom_target(openvibe-scripts SOURCES ${script_files})
+set_target_properties(openvibe-scripts PROPERTIES
+	FOLDER ${MISC_FOLDER}
+)
 
 if(BUILD_UNIT_TEST) 
 	add_subdirectory("unit-test/")

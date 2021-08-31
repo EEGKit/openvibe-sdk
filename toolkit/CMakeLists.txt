@@ -20,7 +20,7 @@ add_custom_command(
 add_custom_target(openvibe-generate-stimulation-file
 	DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h ${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
+set_target_properties(openvibe-generate-stimulation-file PROPERTIES
 	                  VERSION ${PROJECT_VERSION}
 	                  FOLDER ${MISC_FOLDER}
 )

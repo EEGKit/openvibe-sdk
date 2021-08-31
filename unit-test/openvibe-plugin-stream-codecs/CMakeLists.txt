@@ -31,6 +31,11 @@ endfunction()
 
 project(openvibe-plugin-stream-codecs-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 add_executable(${PROJECT_NAME} uoStreamedMatrixTest.cpp ../common/ovtKernelContext.cpp)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	VERSION ${PROJECT_VERSION}
+	FOLDER ${MISC_FOLDER}
+)
+
 SETUP_TEST()
 
 add_test(NAME uoStreamedMatrixTest COMMAND ${PROJECT_NAME})
