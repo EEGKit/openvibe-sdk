@@ -19,16 +19,12 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-test-unit-toolkit)
+project(openvibe-test-unit-toolkit VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 # ------------------
 # Project variables
 # ------------------
 
-SET(PROJECT_VERSION_MAJOR ${OVT_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OVT_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OVT_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 # ---------------------------------
 # Target macros
@@ -41,25 +37,32 @@ SET_BUILD_PLATFORM()
 # Generate target
 # ----------------------
 
-ADD_DEFINITIONS( -DPROJECT_VERSION="${PROJECT_VERSION}" )
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp include/*.h)
-ADD_LIBRARY(${PROJECT_NAME} ${SRC_FILES})
+add_definitions( -DPROJECT_VERSION="${PROJECT_VERSION}" )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+file(GLOB_RECURSE SRC_FILES src/*.cpp include/*.h)
+
+add_library(${PROJECT_NAME} ${SRC_FILES})
+
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-common
+                      openvibe-toolkit)
+
+target_include_directories(${PROJECT_NAME}
+                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	FOLDER ${TESTS_FOLDER})
 
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEToolkit")
+add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
 # -------------
 # External Use
 # -------------
 
 # Target name used by other target for linking purpose
-SET(OVT_UNIT_TOOLKIT_LIB ${PROJECT_NAME} PARENT_SCOPE)
-SET(OVT_UNIT_TOOLKIT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include PARENT_SCOPE)
+set(OVT_UNIT_TOOLKIT_LIB ${PROJECT_NAME} PARENT_SCOPE)
+set(OVT_UNIT_TOOLKIT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include PARENT_SCOPE)
 

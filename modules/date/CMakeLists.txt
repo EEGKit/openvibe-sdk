@@ -1,47 +1,42 @@
-PROJECT(openvibe-module-date)
+project(openvibe-module-date VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+set(SRC_FILES
+    include/date/defines.h
+    include/date/DateParser.h
+    src/DateParser.cpp
+    )
 
-SET(SRC_FILES
-	include/date/defines.h
-	include/date/DateParser.h
-	src/DateParser.cpp
-	)
+if(WIN32)
+    list(APPEND SRC_FILES
+        "include/date/WindowsDateParser.h"
+        "src/WindowsDateParser.cpp"
+        )
+endif()
 
-IF(WIN32)
-	LIST(APPEND SRC_FILES
-		"include/date/WindowsDateParser.h"
-		"src/WindowsDateParser.cpp"
-		)
-ENDIF()
+include("FindSourceRCProperties")
 
-INCLUDE_DIRECTORIES(include/date)
-INCLUDE("FindSourceRCProperties")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DDate_Shared -DDate_Exports")
-	
-ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DDate_Static -DDate_Exports")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-common)
 
-IF(UNIX)
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS "-fPIC")
-ENDIF(UNIX)
-	
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindThirdPartyBoost")
-INCLUDE("FindThirdPartyExpat")
+target_include_directories(${PROJECT_NAME}
+                           PRIVATE include/date
+                           PUBLIC include)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    FOLDER ${MODULES_FOLDER}
+)
+
+target_compile_options(${PROJECT_NAME}
+                       PRIVATE -DDate_Exports
+                       PUBLIC -DDate_Shared 
+)
+
+include("FindThirdPartyBoost")
+include("FindThirdPartyExpat")
 
 # ---------------------------------
 # Target macros
@@ -52,13 +47,9 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-INSTALL(TARGETS ${PROJECT_NAME}-static
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})
 
-INSTALL(DIRECTORY include/   DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.h" PATTERN)
+INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} COMPONENT headers FILES_MATCHING PATTERN "*.h")

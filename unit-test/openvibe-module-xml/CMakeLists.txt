@@ -19,31 +19,32 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-FUNCTION(SETUP_TEST)
+function(SETUP_TEST)
 	SET_BUILD_PLATFORM()
 
-	INCLUDE("FindOpenViBE")
-	INCLUDE("FindOpenViBECommon")
-	INCLUDE("FindOpenViBEModuleXML")
-	INCLUDE("FindOpenViBEModuleFS")
-	INCLUDE("FindThirdPartyBoost")
-	INCLUDE("FindThirdPartyBoost_FileSystem")
+	target_link_libraries(${PROJECT_NAME}
+                          ${GTEST_BOTH_LIBRARIES}
+                          openvibe
+                          openvibe-common
+                          openvibe-module-xml
+                          openvibe-module-fs)
 	
-	SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
-
-	TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})
+	include("FindThirdPartyBoost")
+	include("FindThirdPartyBoost_FileSystem")
+	
+	set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 
 	# Add test with parameter to driver
-	ADD_DEFINITIONS("-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
-	ADD_DEFINITIONS("-DTEMP_DIR=\"${OVT_TEST_TEMPORARY_DIR}\"")
-ENDFUNCTION()
+	add_definitions("-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
+	add_definitions("-DTEMP_DIR=\"${OVT_TEST_TEMPORARY_DIR}\"")
+endfunction()
 
-PROJECT(openvibe-module-xml-reader-test)
-ADD_EXECUTABLE(${PROJECT_NAME} uoXMLReaderTest.cpp)
+project(openvibe-module-xml-reader-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
+add_executable(${PROJECT_NAME} uoXMLReaderTest.cpp)
 SETUP_TEST()
-ADD_TEST(NAME uoXMLReaderTest COMMAND ${PROJECT_NAME})
+add_test(NAME uoXMLReaderTest COMMAND ${PROJECT_NAME})
 
-PROJECT(openvibe-module-xml-writer-test)
-ADD_EXECUTABLE(${PROJECT_NAME} uoXMLWriterTest.cpp)
+project(openvibe-module-xml-writer-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
+add_executable(${PROJECT_NAME} uoXMLWriterTest.cpp)
 SETUP_TEST()
-ADD_TEST(NAME uoXMLWriterTest COMMAND ${PROJECT_NAME})
+add_test(NAME uoXMLWriterTest COMMAND ${PROJECT_NAME})

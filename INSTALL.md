@@ -92,7 +92,7 @@ The main index file is in `doc-tmp/sphinx/source/index.rst` and should almost al
 need to add something to the documentation.
 
 Box list is in `doc-tmp/sphinx/source/boxes/index-boxes.rst`. The plugin-inspector can generate this file
-for you using the `openvibe-plugin-inspector --box-doc-directory <WHERE>` template. It will also generate
+for you using the `openvibe-plugin-inspector-sdk --box-doc-directory <WHERE>` template. It will also generate
 templates for all boxes that can be loaded by the kernel.
 
 

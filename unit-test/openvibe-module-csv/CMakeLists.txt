@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-module-csv-test)
+PROJECT(openvibe-module-csv-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 # ---------------------------------
 # Target macros
@@ -32,13 +32,13 @@ SET_BUILD_PLATFORM()
 # ----------------------
 
 # Test that needs to called with parameters
-SET(TEST_WITH_PARAM
+set(TEST_WITH_PARAM
 	uoCSVWriterTest.cpp
 	uoCSVReaderTest.cpp
 )
 
 # Test that needs to called without parameters
-SET(TEST_NO_PARAM
+set(TEST_NO_PARAM
 )
 
 # Create test sources list
@@ -46,29 +46,33 @@ SET(TEST_NO_PARAM
 # in the build tree. ${PROJECT_NAME}.cpp is
 # the test driver called by ctest to run
 # the different tests added to this target.
-CREATE_TEST_SOURCELIST (Tests
+create_test_sourcelist (Tests
 	${PROJECT_NAME}.cpp
 	${TEST_WITH_PARAM}
 	${TEST_NO_PARAM}
 	)
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${Tests})
+add_executable(${PROJECT_NAME} ${Tests})
 
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBEModuleCSV")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-module-csv 
+                      ${OVT_UNIT_TOOLKIT_LIB}
+                      ${GTEST_BOTH_LIBRARIES}
+                      ${OV_LIBS} ${OV_MODULE_CSV})
 
-SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
-# set(OV_MODULE_CSV "C:/gitdir/build/openvibe-sdk-debug/modules/csv/openvibe-module-csv")
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${GTEST_BOTH_LIBRARIES} ${OV_LIBS} ${OV_MODULE_CSV})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                      FOLDER ${TESTS_FOLDER})
+
 
 # Add test without parameter to driver
-FOREACH(test ${TEST_NO_PARAM})
-	GET_FILENAME_COMPONENT(TName ${test} NAME_WE)
-	ADD_TEST(NAME ${TName} COMMAND ${PROJECT_NAME} ${TName})
-ENDFOREACH()
+foreach(test ${TEST_NO_PARAM})
+	get_filename_component(TName ${test} NAME_WE)
+	add_test(NAME ${TName} COMMAND ${PROJECT_NAME} ${TName})
+endforeach()
 
 # Add test with parameter to driver
-ADD_TEST(NAME uoCSVWriterTest COMMAND ${PROJECT_NAME} uoCSVWriterTest "${OVT_TEST_TEMPORARY_DIR}")
-ADD_TEST(NAME uoCSVReaderTest COMMAND ${PROJECT_NAME} uoCSVReaderTest "${CMAKE_CURRENT_SOURCE_DIR}/data/")
+add_test(NAME uoCSVWriterTest COMMAND ${PROJECT_NAME} uoCSVWriterTest "${OVT_TEST_TEMPORARY_DIR}")
+add_test(NAME uoCSVReaderTest COMMAND ${PROJECT_NAME} uoCSVReaderTest "${CMAKE_CURRENT_SOURCE_DIR}/data/")
 #ADD_TEST(NAME uoCSVWriterTest COMMAND ${PROJECT_NAME} uoCSVWriter)
 #ADD_TEST(NAME uoCSVReaderTest COMMAND ${PROJECT_NAME} uoCSVReader)

@@ -1,21 +1,21 @@
-PROJECT(openvibe-common)
+project(openvibe-common VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+add_library(${PROJECT_NAME} INTERFACE)
 
-FILE(GLOB_RECURSE SRC_FILES src/*.h src/*.cpp include/*.h include/*.hpp)
-INCLUDE_DIRECTORIES(include)
+target_include_directories(${PROJECT_NAME} INTERFACE include)
 
 # A headers-only project, the executable is a NOP having some static asserts, not to be installed.
-ADD_EXECUTABLE(${PROJECT_NAME} ${SRC_FILES})
-INCLUDE("FindThirdPartyBoost")
+add_executable(${PROJECT_NAME}-nop src/main.cpp)
+
+target_link_libraries(${PROJECT_NAME}-nop
+					  ${PROJECT_NAME})
 	
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+set_target_properties(${PROJECT_NAME}-nop PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	FOLDER ${KERNEL_FOLDER})
+
+include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros
@@ -27,4 +27,4 @@ SET_BUILD_PLATFORM()
 # Install files
 # -----------------------------
 
-INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h" PATTERN "doc" EXCLUDE)
+INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} COMPONENT headers FILES_MATCHING PATTERN "*.h")

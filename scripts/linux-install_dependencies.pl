@@ -186,7 +186,7 @@ if (!$no_install) {
 # Obtain specific dependencies that we dont get from packages
 opendir(my $dir_handle, $helper_script_dir) or die("unable to open $helper_script_dir");
 while(my $filename = readdir($dir_handle)) {
-  if($filename =~ /^linux-compile.*pl/) {
+  if($filename =~ /^linux-compile.*pl/ || $filename =~ /^linux-install.*pl/) {
 	print "Running $helper_script_dir/$filename ...\n";
 	open(my $pl_file_handle, '<', "$helper_script_dir/$filename") 
     		or die "Unable to open file, $helper_script_dir/$filename";
