@@ -9,7 +9,7 @@ use strict;
 use warnings;
 
 my $install_dir = "$dependencies_dir/test-input";
-my $url = "http://openvibe.inria.fr/dependencies/win32/3.1.0/data";
+my $url = "http://openvibe.inria.fr/dependencies/win32/3.2.0/data";
 
 my $old_dir = Cwd::getcwd();
 chdir "$dependencies_arch_dir";
