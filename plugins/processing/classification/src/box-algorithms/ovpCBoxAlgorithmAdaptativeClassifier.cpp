@@ -578,7 +578,7 @@ namespace OpenViBE {
 								}
 								MapType X_sum_class_1(sum_class_1.data(), nFeature);
 								X_mean_class_1 = X_sum_class_1 / number_Samples;
-								//std::cout << "Mean1 = " << X_mean_class_1 << "\n";
+								std::cout << "Mean1 = " << X_mean_class_1 << "\n";
 								X_mean_class_1_save = X_mean_class_1;
 
 							}
