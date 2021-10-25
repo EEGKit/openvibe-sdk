@@ -1,37 +1,33 @@
-PROJECT(openvibe-module-csv)
+project(openvibe-module-csv VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+file(GLOB_RECURSE SRC_FILES src/*.cpp include/*.h src/*.hpp)
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp include/*.h src/*.hpp)
-INCLUDE_DIRECTORIES(include/csv)
-INCLUDE("FindSourceRCProperties")
+include("FindSourceRCProperties")
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DCSV_Shared -DCSV_Exports")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${MODULES_FOLDER}
-	COMPILE_FLAGS "-DCSV_Static -DCSV_Exports")
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-common
+                      openvibe-module-fs)
 
-IF(UNIX)
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS "-fPIC")
-ENDIF(UNIX)
+target_include_directories(${PROJECT_NAME}
+                           PRIVATE include/csv
+                           PUBLIC  include)
 
-SET(DYNAMIC_LINK_OPENVIBE_MODULE_FS OFF)
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleFS")
-INCLUDE("FindThirdPartyBoost")
-INCLUDE("FindThirdPartyBoost_FileSystem")
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                      VERSION ${PROJECT_VERSION}
+                      SOVERSION ${PROJECT_VERSION_MAJOR}
+                      FOLDER ${MODULES_FOLDER}
+)
+
+target_compile_options(${PROJECT_NAME}
+                       PRIVATE -DCSV_Exports
+                       PUBLIC -DCSV_Shared 
+)
+
+include("FindThirdPartyBoost")
+include("FindThirdPartyBoost_FileSystem")
+include("FindThirdPartyBoost_Regex")
 
 # ---------------------------------
 # Target macros
@@ -42,14 +38,10 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-
-INSTALL(TARGETS ${PROJECT_NAME}-static
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR}
+)
 
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} COMPONENT headers FILES_MATCHING PATTERN "*.h")

@@ -4,7 +4,7 @@ setlocal
 
 REM Set test environment
 set OV_PATH_ROOT=@DIST_BINDIR_ABSOLUTE@\..
-set "PATH=@DIST_BINDIR_ABSOLUTE@;@OV_CUSTOM_DEPENDENCIES_PATH@\cmake\bin\;%PATH%"
+set "PATH=@DIST_BINDIR_ABSOLUTE@;@LIST_DEPENDENCIES_PATH@\cmake\bin\;%PATH%"
 
 if /i "%1" == "--python-dir" (
 	set "PYTHONHOME="

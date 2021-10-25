@@ -1,58 +1,57 @@
-PROJECT(openvibe-kernel)
+project(openvibe-kernel VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 OV_ADD_THIS_TO_PROJECT_LIST()
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
-INCLUDE("FindSourceDependencyLepton")
-INCLUDE("FindSourceRCProperties")
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${KERNEL_FOLDER}
-	COMPILE_FLAGS "-DOVK_Exports -DOVK_Shared")
+include("FindSourceDependencyLepton")
+include("FindSourceRCProperties")
 
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEModuleFS")
-INCLUDE("FindOpenViBEModuleSystem")
-INCLUDE("FindOpenViBEModuleXML")
-INCLUDE("FindThirdPartyBoost")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-common
+                      openvibe-module-fs
+                      openvibe-module-system
+                      openvibe-module-xml)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+                      VERSION ${PROJECT_VERSION}
+                      SOVERSION ${PROJECT_VERSION_MAJOR}
+                      FOLDER ${KERNEL_FOLDER}
+                      COMPILE_FLAGS "-DOVK_Exports -DOVK_Shared")
+
+include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Finds standard library dl
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(UNIX)
-	FIND_LIBRARY(LIB_STANDARD_MODULE_DL dl)
-	IF(LIB_STANDARD_MODULE_DL)
-		MESSAGE(STATUS "  Found dl...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DL})
-	ELSE(LIB_STANDARD_MODULE_PTHREAD)
-		MESSAGE(STATUS "  FAILED to find dl...")
-	ENDIF(LIB_STANDARD_MODULE_DL)
-ENDIF(UNIX)
+if(UNIX)
+    find_library(LIB_STANDARD_MODULE_DL dl)
+    if(LIB_STANDARD_MODULE_DL)
+        message(STATUS "  Found dl...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DL})
+    else(LIB_STANDARD_MODULE_PTHREAD)
+        message(STATUS "  FAILED to find dl...")
+    endif(LIB_STANDARD_MODULE_DL)
+endif(UNIX)
 
 # ---------------------------------
 # Finds standard library pthread
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(UNIX)
-	FIND_LIBRARY(LIB_STANDARD_MODULE_PTHREAD pthread)
-	IF(LIB_STANDARD_MODULE_PTHREAD)
-		MESSAGE(STATUS "  Found pthread...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_PTHREAD})
-	ELSE(LIB_STANDARD_MODULE_PTHREAD)
-		MESSAGE(STATUS "  FAILED to find pthread...")
-	ENDIF(LIB_STANDARD_MODULE_PTHREAD)
-ENDIF(UNIX)
+if(UNIX)
+    find_library(LIB_STANDARD_MODULE_PTHREAD pthread)
+    if(LIB_STANDARD_MODULE_PTHREAD)
+        message(STATUS "  Found pthread...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_PTHREAD})
+    else(LIB_STANDARD_MODULE_PTHREAD)
+        message(STATUS "  FAILED to find pthread...")
+    endif(LIB_STANDARD_MODULE_PTHREAD)
+endif(UNIX)
 
 # ---------------------------------
 # Target macros
@@ -60,23 +59,21 @@ ENDIF(UNIX)
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
-
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})
 
-INSTALL(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/kernel PATTERN "*-base" EXCLUDE)
+install(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/kernel PATTERN "*-base" EXCLUDE)
 
 # -----------------------------
 # Install and configure .conf
 # -----------------------------
-
 # This construct is to fetch the documentation specific to this version. 
 # In addition, it tweaks the patch version to allow the "1.0.0+git" style version to 
 # fetch the "1.0.0" (base) version documentation as we don't have git version docs on the web.
-STRING(REGEX REPLACE "[^0-9]" "" PROJECT_VERSION_PATCH_PRUNED ${PROJECT_VERSION_PATCH})
-SET(OV_PROJECT_BASE_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH_PRUNED})
+string(REGEX REPLACE "[^0-9]" "" PROJECT_VERSION_PATCH_PRUNED ${PROJECT_VERSION_PATCH})
+set(OV_PROJECT_BASE_VERSION ${PROJECT_VERSION})

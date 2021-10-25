@@ -1,21 +1,49 @@
+/*********************************************************************
+ * Software License Agreement (AGPL-3 License)
+ *
+ * \file CBoxAlgorithmOVCSVFileReader.hpp
+ * \brief Classes of the box CSV File Reader
+ * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
+ * \version 1.1.0
+ * \date Fri May 7 16:40:49 2021.
+ *
+ * \copyright (C) 2006-2021 INRIA
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
-#include "../../ovp_defines.h"
 #include <cstdio>
 #include <memory>
+#include <vector>
+#include <string>
+#include <deque>
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#include "../../ovp_defines.h"
 #include "csv/ovICSV.h"
 
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
+
 class CBoxAlgorithmOVCSVFileReader final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	CBoxAlgorithmOVCSVFileReader() : m_readerLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) { }
 	void release() override { delete this; }
 	uint64_t getClockFrequency() override { return 128LL << 32; }
@@ -27,6 +55,7 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_OVCSVFileReader)
 
 private:
+	bool processChunksAndStimulations();
 	bool processStimulation(double startTime, double endTime);
 
 	std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_readerLib;
@@ -58,15 +87,15 @@ public:
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(index, typeID);
 
-		if (index == 0 && typeID == OV_TypeId_Stimulations)
-		{
-			OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal), "Failed to reset output type to signal", Kernel::ErrorType::Internal);
-		}
-		else if (index == 1 && typeID != OV_TypeId_Stimulations)
+		if (index == 1 && typeID != OV_TypeId_Stimulations)
 		{
 			OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations), "Failed to reset output type to stimulations", Kernel::ErrorType::Internal);
+			this->getLogManager() << Kernel::LogLevel_Warning << "Output type not changed: 2nd output reserved for stimulations\n";
 		}
-		else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", Kernel::ErrorType::Internal); }
+		else if (index > 1)
+		{
+			OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", Kernel::ErrorType::Internal);
+		}
 
 		return true;
 	}
@@ -79,12 +108,12 @@ class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public IBoxAlgorithmDesc
 public:
 	void release() override { }
 	CString getName() const override { return CString("CSV File Reader"); }
-	CString getAuthorName() const override { return CString("Victor Herlin"); }
+	CString getAuthorName() const override { return CString("Victor Herlin / Thomas Prampart"); }
 	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
 	CString getShortDescription() const override { return CString("Read signal in a CSV (text based) file"); }
 	CString getDetailedDescription() const override { return CString(""); }
 	CString getCategory() const override { return CString("File reading and writing/CSV"); }
-	CString getVersion() const override { return CString("1.1"); }
+	CString getVersion() const override { return CString("1.2"); }
 	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
 	CString getAddedSoftwareVersion() const override { return CString("0.1.0"); }
 	CString getUpdatedSoftwareVersion() const override { return CString("0.3.3"); }
@@ -93,20 +122,19 @@ public:
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileReaderListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-	bool getBoxPrototype(Kernel::IBoxProto& BoxAlgorithmPrototype) const override
+	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
 	{
-		BoxAlgorithmPrototype.addOutput("Output stream", OV_TypeId_Signal);
-		BoxAlgorithmPrototype.addOutput("Output stimulation", OV_TypeId_Stimulations);
-		BoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");
+		prototype.addOutput("Output stream", OV_TypeId_Signal);
+		prototype.addOutput("Output stimulation", OV_TypeId_Stimulations);
+		prototype.addSetting("Filename", OV_TypeId_Filename, "");
 
-		BoxAlgorithmPrototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
+		prototype.addFlag(Kernel::BoxFlag_CanModifyOutput);
 
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Signal);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Spectrum);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_FeatureVector);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_CovarianceMatrix);
-		BoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Stimulations);
+		prototype.addOutputSupport(OV_TypeId_Signal);
+		prototype.addOutputSupport(OV_TypeId_Spectrum);
+		prototype.addOutputSupport(OV_TypeId_FeatureVector);
+		prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+		prototype.addOutputSupport(OV_TypeId_CovarianceMatrix);
 		return true;
 	}
 
