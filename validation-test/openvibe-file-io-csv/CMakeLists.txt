@@ -37,11 +37,14 @@ SET(TEST_MODULE FileIO-CSV)
 # Test scenario for CSV reading and writing test purpose
 SET(TEST_SCENARIOS 
 	streamed-matrix
+	empty-labels-matrix
+	vector-matrix
+	empty-labels-vector
 	features
 	signal
 	stimulation
 	signal-badtimes
-	signal-nofiletime
+	spectrum
 )
 
 # ----------------------

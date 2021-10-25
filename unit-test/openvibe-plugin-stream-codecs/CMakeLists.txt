@@ -20,17 +20,22 @@
 #######################################################################
 
 
-FUNCTION(SETUP_TEST)
+function(SETUP_TEST)
 	SET_BUILD_PLATFORM()
 
-	TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})
+	target_link_libraries(${PROJECT_NAME}
+                          ${GTEST_BOTH_LIBRARIES}
+                          openvibe
+                          openvibe-common)
+endfunction()
 
-	INCLUDE("FindOpenViBE")
-	INCLUDE("FindOpenViBECommon")
-ENDFUNCTION()
+project(openvibe-plugin-stream-codecs-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
+add_executable(${PROJECT_NAME} uoStreamedMatrixTest.cpp ../common/ovtKernelContext.cpp)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	VERSION ${PROJECT_VERSION}
+	FOLDER ${MISC_FOLDER}
+)
 
-PROJECT(openvibe-plugin-stream-codecs-test)
-ADD_EXECUTABLE(${PROJECT_NAME} uoStreamedMatrixTest.cpp ../common/ovtKernelContext.cpp)
 SETUP_TEST()
 
-ADD_TEST(NAME uoStreamedMatrixTest COMMAND ${PROJECT_NAME})
+add_test(NAME uoStreamedMatrixTest COMMAND ${PROJECT_NAME})

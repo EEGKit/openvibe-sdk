@@ -21,6 +21,7 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileReader_Output1|
 This output can carry Signal, Streamed Matrix, Covariance, Spectrum and Feature Vector data.
+\note This maybe unused if the file read contains only stimulations.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileReader_Output1|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileReader_Output2|

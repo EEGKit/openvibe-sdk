@@ -49,17 +49,61 @@ struct SStimulationChunk
 	SStimulationChunk(const uint64_t id, const double date, const double duration) : id(id), date(date), duration(duration) { }
 };
 
+
+/**
+ * Stimulations are added at the end of line for each stream type.
+ * However, they can be handled as a stream type if no signal is provided.
+ */
 enum class EStreamType
 {
 	StreamedMatrix = 0,
 	FeatureVector = 1,
 	Signal = 2,
 	Spectrum = 3,
-	CovarianceMatrix = 4
+	CovarianceMatrix = 4,
+	Stimulations = 5,
+	Undefined = 6
 };
+
+/**
+ * @brief Convert stream type to string
+ * \param streamType The stream type enumeration value
+ * \return The corresponding stream type string
+ */
+inline std::string toString(const EStreamType streamType)
+{
+	std::string strType;
+	switch (streamType)
+	{
+		case EStreamType::StreamedMatrix:
+			strType = "Streamed Matrix";
+			break;
+		case EStreamType::FeatureVector:
+			strType = "Feature Vector";
+			break;
+		case EStreamType::Signal:
+			strType = "Signal";
+			break;
+		case EStreamType::Spectrum:
+			strType = "Spectrum";
+			break;
+		case EStreamType::CovarianceMatrix:
+			strType = "Covariance Matrix";
+			break;
+		case EStreamType::Stimulations:
+			strType = "Stimulations";
+			break;
+		case EStreamType::Undefined:
+		default:
+			strType = "Undefined";
+			break;
+	}
+	return strType;
+}
 
 enum ELogErrorCodes
 {
+	LogErrorCodes_WrongStreamType = -33,
 	LogErrorCodes_HeaderNotRead = -32,
 	LogErrorCodes_MissingData = -31,
 	LogErrorCodes_WrongParameters = -30,
@@ -230,7 +274,7 @@ public:
 	/**
 	 * \brief Get streamed or covariance matrix information in file
 	 *
-	 * \param dimensionSizes
+	 * \param dimensionSizes size of each dimension
 	 * \param labels reference to fill with file channel names
 	 *
 	 * \retval true in case of success
@@ -250,7 +294,7 @@ public:
 	 * \brief Write the matrix data in the opened file
 	 *
 	 * \retval true in case of success
-	 * \return false in case of error while writing
+	 * \retval false in case of error while writing
 	 */
 	virtual bool writeDataToFile() = 0;
 
@@ -270,15 +314,25 @@ public:
 	 * \param events reference to a vector of event structure to put the data in
 	 *
 	 * \retval true in case of sucess
-	 * \retval false in case of error while writing
+	 * \retval false in case of error while reading
 	 */
 	virtual bool readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
 
 	/**
+	 * \brief Reads the specified amount of events from the file
+	 *
+	 * \param stimsToRead Number of stimulations to read
+	 * \param events Reference to a vector of event structure to put the data in
+	 *
+	 * \retval true in case of success
+	 * \retval false in case of error while reading
+	 */
+	virtual bool readEventsFromFile(size_t stimsToRead, std::vector<SStimulationChunk>& events) = 0;
+	/**
 	 * \brief Open file specified on parameter
 	 *
 	 * \param filename is the filename of the file to open
-	 * \param mode
+	 * \param mode The mode to use to open the file
 	 *
 	 * \retval true in case of success
 	 * \retval false in case of error while opening the file
@@ -292,6 +346,14 @@ public:
 	 * \retval false in case of error while closing
 	 */
 	virtual bool closeFile() = 0;
+
+	/**
+	 * \brief Parsing header from opened file
+	 *
+	 * \retval true if the header was read correctly
+	 * \retval false if no header or header corrupted
+	 */
+	virtual bool parseHeader() = 0;
 
 	/**
 	 * \brief Add a sample of the data type
@@ -369,8 +431,6 @@ public:
 	virtual std::string getLastErrorString() = 0;
 
 	virtual bool hasDataToRead() const = 0;
-protected:
-	virtual ~ICSVHandler() {}
 };
 
 extern CSV_API ICSVHandler* createCSVHandler();

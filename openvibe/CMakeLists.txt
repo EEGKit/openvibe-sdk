@@ -1,53 +1,59 @@
-PROJECT(openvibe)
+project(openvibe VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 OV_ADD_THIS_TO_PROJECT_LIST()
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h include/*.hpp)
-INCLUDE_DIRECTORIES(include/openvibe)
-INCLUDE("FindSourceRCProperties")
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h include/*.hpp)
+include("FindSourceRCProperties")
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${KERNEL_FOLDER}
-	COMPILE_FLAGS "-DOV_Exports -DOV_Shared")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-INCLUDE("FindOpenViBECommon")
-	
+target_link_libraries(${PROJECT_NAME}
+                      openvibe-common)
+
+target_include_directories(${PROJECT_NAME} 
+                           PRIVATE include/openvibe
+                           PUBLIC include)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    FOLDER ${KERNEL_FOLDER}
+    COMPILE_FLAGS "-DOV_Exports -DOV_Shared")
+
+target_compile_options(${PROJECT_NAME}
+                       PRIVATE -DOV_Exports
+                       PUBLIC -DOV_Shared 
+)
+    
 # ---------------------------------
 # Finds standard library dl
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(UNIX)
-	FIND_LIBRARY(LIB_STANDARD_MODULE_DL dl)
-	IF(LIB_STANDARD_MODULE_DL)
-		MESSAGE(STATUS "  Found dl...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DL})
-	ELSE(LIB_STANDARD_MODULE_PTHREAD)
-		MESSAGE(STATUS "  FAILED to find dl...")
-	ENDIF(LIB_STANDARD_MODULE_DL)
-ENDIF(UNIX)
+if(UNIX)
+    find_library(LIB_STANDARD_MODULE_DL dl)
+    if(LIB_STANDARD_MODULE_DL)
+        message(STATUS "  Found dl...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DL})
+    else(LIB_STANDARD_MODULE_PTHREAD)
+        message(STATUS "  FAILED to find dl...")
+    endif(LIB_STANDARD_MODULE_DL)
+endif(UNIX)
 
 # ---------------------------------
 # Finds standard library pthread
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(UNIX)
-	FIND_LIBRARY(LIB_STANDARD_MODULE_PTHREAD pthread)
-	IF(LIB_STANDARD_MODULE_PTHREAD)
-		MESSAGE(STATUS "  Found pthread...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_PTHREAD})
-	ELSE(LIB_STANDARD_MODULE_PTHREAD)
-		MESSAGE(STATUS "  FAILED to find pthread...")
-	ENDIF(LIB_STANDARD_MODULE_PTHREAD)
-ENDIF(UNIX)
+if(UNIX)
+    find_library(LIB_STANDARD_MODULE_PTHREAD pthread)
+    if(LIB_STANDARD_MODULE_PTHREAD)
+        message(STATUS "  Found pthread...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_PTHREAD})
+    else(LIB_STANDARD_MODULE_PTHREAD)
+        message(STATUS "  FAILED to find pthread...")
+    endif(LIB_STANDARD_MODULE_PTHREAD)
+endif(UNIX)
 
 # ---------------------------------
 # Target macros
@@ -58,10 +64,10 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})
 
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.h")
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp")

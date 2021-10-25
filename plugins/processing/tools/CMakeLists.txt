@@ -1,27 +1,30 @@
-PROJECT(openvibe-plugins-sdk-tools)
+project(openvibe-plugins-sdk-tools VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
-INCLUDE("FindSourceRCProperties")
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
+include("FindSourceRCProperties")
+
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
+
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-common
+                      openvibe-toolkit
+                      openvibe-module-system
+                      openvibe-module-fs
+                      openvibe-module-socket
+                      openvibe-module-communication
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	FOLDER ${PLUGINS_FOLDER}
 	COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
 
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEToolkit")
-INCLUDE("FindOpenViBEModuleEBML")
-INCLUDE("FindOpenViBEModuleSystem")
-INCLUDE("FindOpenViBEModuleFS")
-INCLUDE("FindOpenViBEModuleSocket")
-INCLUDE("FindOpenViBEModuleCommunication")
+
+ADD_DEFINITIONS(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
+#ADD_DEFINITIONS(-DCommunication_Shared)
 
 # ---------------------------------
 # Target macros
@@ -32,11 +35,11 @@ SET_BUILD_PLATFORM()
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
+install(TARGETS ${PROJECT_NAME}
+		RUNTIME DESTINATION ${DIST_BINDIR}
+		LIBRARY DESTINATION ${DIST_LIBDIR}
+		ARCHIVE DESTINATION ${DIST_LIBDIR})
 
-INSTALL(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/plugins/tools)
-INSTALL(DIRECTORY box-tutorials DESTINATION ${DIST_DATADIR}/openvibe/scenarios/)
+install(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/plugins/tools)
+install(DIRECTORY box-tutorials DESTINATION ${DIST_DATADIR}/openvibe/scenarios/)
 

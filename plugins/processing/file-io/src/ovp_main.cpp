@@ -14,8 +14,8 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmElectrodeLocalizationFileReader.h"
 
-#include "box-algorithms/csv/ovpCBoxAlgorithmOVCSVFileWriter.h"
-#include "box-algorithms/csv/ovpCBoxAlgorithmOVCSVFileReader.h"
+#include "box-algorithms/csv/CBoxAlgorithmOVCSVFileWriter.hpp"
+#include "box-algorithms/csv/CBoxAlgorithmOVCSVFileReader.hpp"
 
 namespace OpenViBE {
 namespace Plugins {

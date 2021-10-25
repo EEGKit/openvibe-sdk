@@ -1,41 +1,42 @@
-PROJECT(openvibe-plugins-sdk-stimulation)
+project(openvibe-plugins-sdk-stimulation VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
+include("FindSourceRCProperties")
 
-FILE(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
-INCLUDE("FindSourceRCProperties")
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRC_FILES})
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${PLUGINS_FOLDER}
-	COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
-	
-INCLUDE("FindOpenViBE")
-INCLUDE("FindOpenViBECommon")
-INCLUDE("FindOpenViBEToolkit")
-INCLUDE("FindOpenViBEModuleEBML")
-INCLUDE("FindOpenViBEModuleSystem")
-INCLUDE("FindOpenViBEModuleFS")
-INCLUDE("FindThirdPartyBoost")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
+
+target_link_libraries(${PROJECT_NAME}
+                      openvibe
+                      openvibe-common
+                      openvibe-toolkit
+                      openvibe-module-ebml
+                      openvibe-module-system
+                      openvibe-module-fs)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    FOLDER ${PLUGINS_FOLDER}
+    COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
+    
+add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
+
+include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Finds standard library winmm
 # Adds library to target
 # Adds include path
 # ---------------------------------
-IF(WIN32)
-	FIND_LIBRARY(LIB_STANDARD_MODULE_WINMM winmm)
-	IF(LIB_STANDARD_MODULE_WINMM)
-		MESSAGE(STATUS "  Found winmm...")
-		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINMM})
-	ELSE(LIB_STANDARD_MODULE_WINMM)
-		MESSAGE(STATUS "  FAILED to find winmm...")
-	ENDIF(LIB_STANDARD_MODULE_WINMM)
-ENDIF(WIN32)
+if(WIN32)
+    find_library(LIB_STANDARD_MODULE_WINMM winmm)
+    if(LIB_STANDARD_MODULE_WINMM)
+        message(STATUS "  Found winmm...")
+        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINMM})
+    else(LIB_STANDARD_MODULE_WINMM)
+        message(STATUS "  FAILED to find winmm...")
+    endif(LIB_STANDARD_MODULE_WINMM)
+endif(WIN32)
 
 # ---------------------------------
 # Target macros
@@ -43,12 +44,10 @@ ENDIF(WIN32)
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
-
 # -----------------------------
 # Install files
 # -----------------------------
-INSTALL(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION ${DIST_BINDIR}
-	LIBRARY DESTINATION ${DIST_LIBDIR}
-	ARCHIVE DESTINATION ${DIST_LIBDIR})
-
+install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION ${DIST_BINDIR}
+        LIBRARY DESTINATION ${DIST_LIBDIR}
+        ARCHIVE DESTINATION ${DIST_LIBDIR})

@@ -22,6 +22,6 @@ IF NOT EXIST "%OV_ENVIRONMENT_FILE%" (
 CALL "%OV_ENVIRONMENT_FILE%"
 @ECHO ON
 
-"%OV_BUILD%\applications\developer-tools\plugin-inspector\openvibe-plugin-inspector.exe"  %*
+"%OV_BUILD%\applications\developer-tools\plugin-inspector\openvibe-plugin-inspector-sdk.exe"  %*
 	
 :EndOfScript

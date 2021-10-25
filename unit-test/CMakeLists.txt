@@ -1,88 +1,83 @@
-PROJECT(OpenViBESDKTest)
+project(OpenViBESDKTest VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
 # ------------------
 # Project variables
 # ------------------
 
-SET(OVT_GLOBAL_VERSION_MAJOR 0)
-SET(OVT_GLOBAL_VERSION_MINOR 1)
-SET(OVT_GLOBAL_VERSION_PATCH 0)
-SET(OVT_GLOBAL_VERSION_STRING "${OVT_GLOBAL_VERSION_MAJOR}.${OVT_GLOBAL_VERSION_MINOR}.${OVT_GLOBAL_VERSION_PATCH}")
-
-IF(NOT DEFINED OVT_TEST_DATA_DIR)
+if(NOT DEFINED OVT_TEST_DATA_DIR)
 	MESSAGE(FATAL_ERROR "Path to tests input data files is not set")
-ENDIF()
+endif()
 
 # ---------------------
 # Project dependencies
 # ---------------------
 
 # Add some search directory to module path
-SET(OVT_CMAKE_DIR ${OV_BASE_DIR}/cmake-modules)
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${OVT_CMAKE_DIR})
+set(OVT_CMAKE_DIR ${OV_BASE_DIR}/cmake-modules)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${OVT_CMAKE_DIR})
 
 # Modify library prefixes and suffixes to comply to Windows or Linux naming
-IF(WIN32)
+if(WIN32)
 	SET(CMAKE_FIND_LIBRARY_PREFIXES "")
 	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
-ELSEIF(APPLE)
+elseif(APPLE)
 	SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
 	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a")
-ELSE()
+else()
 	SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
 	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
-ENDIF()
+endif()
 
-SET(GTEST_ROOT ${OV_CUSTOM_DEPENDENCIES_PATH}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest)
-FIND_PACKAGE(GTest REQUIRED)
-INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
+set(GTEST_ROOT ${LIST_DEPENDENCIES_PATH}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest)
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
 
 # --------------------
 # Test configuration
 # --------------------
 
 # On Windows and Linux, some environment setting scripts are needed to ease the testing process
-SET(OVT_SCRIPT_DIR ${OV_BASE_BIN_DIR}/scripts)
-IF(WIN32)
+set(OVT_SCRIPT_DIR ${OV_BASE_BIN_DIR}/scripts)
+if(WIN32)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
-	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-ctest-launcher.cmd-base
+	configure_file(${OV_BASE_DIR}/scripts/windows-ctest-launcher.cmd-base
 				   ${OV_BASE_BIN_DIR}/ctest-launcher.cmd)
-ELSEIF(UNIX)
+elseif(UNIX)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
-	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/unix-ctest-launcher.sh-base
+	configure_file(${OV_BASE_DIR}/scripts/unix-ctest-launcher.sh-base
 				   ${OV_BASE_BIN_DIR}/ctest-launcher.sh)
 
-ENDIF()
+endif()
 
 # ${PROJECT_BINARY_DIR}/Testing/Temporary is automatically created by CTest for log files
 # We create a temporary subdir for our test that will be create before each test is run
 # and removed afterwards (see CTestCustom.cmake.in)
-SET(OVT_TEST_TEMPORARY_DIR ${OV_BASE_BIN_DIR}/Testing/Temporary/OVT/)
+set(OVT_TEST_TEMPORARY_DIR ${OV_BASE_BIN_DIR}/Testing/Temporary/OVT/)
 
 # Create test data directory for big or binary files
-FILE(MAKE_DIRECTORY ${OVT_TEST_DATA_DIR})
+file(MAKE_DIRECTORY ${OVT_TEST_DATA_DIR})
 
 # Ctest custom options
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake @ONLY)
 
 # Memcheck configuration
 IF(UNIX)
-	FIND_PROGRAM(MEMORYCHECK_COMMAND valgrind /usr/bin/valgrind)
-	FILE(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/data/resources/valgrind.supp" MEMORYCHECK_SUPPRESSIONS_FILE)
-	SET(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full --run-libc-freeres=no --show-possibly-lost=no" )
+	find_program(MEMORYCHECK_COMMAND valgrind /usr/bin/valgrind)
+	file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/data/resources/valgrind.supp" MEMORYCHECK_SUPPRESSIONS_FILE)
+	set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full --run-libc-freeres=no --show-possibly-lost=no" )
 ELSEIF(WIN32)
-	FIND_PROGRAM(MEMORYCHECK_COMMAND purify "C:/Program Files (x86)/")
+	find_program(MEMORYCHECK_COMMAND purify "C:/Program Files (x86)/")
 ENDIF()
 
 # Timeout must be set first
-SET (DART_TESTING_TIMEOUT 72000 CACHE STRING "Maximum time allowed before CTest will kill the test." FORCE)
-INCLUDE(CTest)
-ENABLE_TESTING()
+set (DART_TESTING_TIMEOUT 72000 CACHE STRING "Maximum time allowed before CTest will kill the test." FORCE)
+include(CTest)
+enable_testing()
 
 # Utility variable for subproject
-SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
+set(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
 
 # ----------------------
 # CMake tree processing
@@ -94,19 +89,19 @@ SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
 # - OVT_UNIT_TOOLKIT_INCLUDE_DIR
 # - OVT_UNIT_TOOLKIT_TARGET_FILE
 # - OVT_ACCURACY_TARGET_FILE
-ADD_SUBDIRECTORY(unit-toolkit)
+add_subdirectory(unit-toolkit)
 
-INCLUDE_DIRECTORIES(${OVT_UNIT_TOOLKIT_INCLUDE_DIR})
+include_directories(${OVT_UNIT_TOOLKIT_INCLUDE_DIR})
 
 # Process unit tests
 # When adding a new test driver, driver directory must be added here
-ADD_SUBDIRECTORY(ov-base)
-ADD_SUBDIRECTORY(openvibe-module-csv)
-ADD_SUBDIRECTORY(openvibe-module-fs)
-ADD_SUBDIRECTORY(openvibe-module-ebml)
-ADD_SUBDIRECTORY(openvibe-module-xml)
-ADD_SUBDIRECTORY(openvibe-module-socket)
-ADD_SUBDIRECTORY(openvibe-module-system)
-ADD_SUBDIRECTORY(openvibe-toolkit)
-ADD_SUBDIRECTORY(openvibe-kernel)
-ADD_SUBDIRECTORY(openvibe-plugin-stream-codecs)
+add_subdirectory(ov-base)
+add_subdirectory(openvibe-module-csv)
+add_subdirectory(openvibe-module-fs)
+add_subdirectory(openvibe-module-ebml)
+add_subdirectory(openvibe-module-xml)
+add_subdirectory(openvibe-module-socket)
+add_subdirectory(openvibe-module-system)
+add_subdirectory(openvibe-toolkit)
+add_subdirectory(openvibe-kernel)
+add_subdirectory(openvibe-plugin-stream-codecs)
