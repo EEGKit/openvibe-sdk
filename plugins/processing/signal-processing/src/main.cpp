@@ -12,7 +12,7 @@
 #include "box-algorithms/epoching/ovpCBoxAlgorithmTimeBasedEpoching.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmCommonAverageReference.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmSpatialFilter.h"
-#include "box-algorithms/filters/ovpCBoxAlgorithmTemporalFilter.h"
+#include "box-algorithms/filters/CBoxAlgorithmTemporalFilter.hpp"
 
 #include "box-algorithms/filters/ovpCBoxAlgorithmRegularizedCSPTrainer.h"
 #include "algorithms/basic/ovpCAlgorithmOnlineCovariance.h"
@@ -58,21 +58,16 @@ OVP_Declare_Begin()
 
 
 	// Temporal filter
-	context.getTypeManager().registerEnumerationType(OVP_TypeId_FilterMethod, "Filter method");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Butterworth", size_t(EFilterMethod::Butterworth));
-	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Chebishev", size_t(EFilterMethod::Chebyshev));
-	// context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterMethod, "Yule Walked", size_t(EFilterMethod::YuleWalker));
-
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_FilterType, "Filter type");
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Low Pass", size_t(EFilterType::LowPass));
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "High Pass", size_t(EFilterType::HighPass));
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Pass", size_t(EFilterType::BandPass));
-	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Stop", size_t(EFilterType::BandStop));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, toString(EFilterType::BandPass).c_str(), size_t(EFilterType::BandPass));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, toString(EFilterType::BandStop).c_str(), size_t(EFilterType::BandStop));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, toString(EFilterType::HighPass).c_str(), size_t(EFilterType::HighPass));
+	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, toString(EFilterType::LowPass).c_str(), size_t(EFilterType::LowPass));
 
 	OVP_Declare_New(CAlgorithmMatrixAverageDesc)
 
-	OVP_Declare_New(CBoxAlgorithmIdentityDesc);
-	OVP_Declare_New(CBoxAlgorithmTimeBasedEpochingDesc);
+	OVP_Declare_New(CBoxAlgorithmIdentityDesc)
+	OVP_Declare_New(CBoxAlgorithmTimeBasedEpochingDesc)
 	OVP_Declare_New(CBoxAlgorithmChannelRenameDesc)
 	OVP_Declare_New(CBoxAlgorithmChannelSelectorDesc)
 	OVP_Declare_New(CBoxAlgorithmReferenceChannelDesc)
