@@ -123,6 +123,23 @@ TEST_F(CMatrix_Tests, Operators)
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
+TEST_F(CMatrix_Tests, SetBuffer)
+{
+	OpenViBE::CMatrix res(1, 2);
+	std::vector<double> buffer = { 10, 20 };
+	EXPECT_TRUE(res.setBuffer(buffer)) << "setBuffer function fail.";
+	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0])) << "Matrix 1st value isn't 10.";
+	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
+
+	buffer = { 1, 2, 3 };
+	EXPECT_FALSE(res.setBuffer(buffer)) << "setBuffer function must fail with bad input.";
+	EXPECT_TRUE(res.setBuffer(buffer.data(),1)) << "setBuffer function fail.";
+	EXPECT_TRUE(AlmostEqual(1, res.getBuffer()[0])) << "Matrix 1st value isn't 1.";
+	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
+}
+//---------------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------
 TEST_F(CMatrix_Tests, Resize)
 {
 	OpenViBE::CMatrix res(1, 2);
