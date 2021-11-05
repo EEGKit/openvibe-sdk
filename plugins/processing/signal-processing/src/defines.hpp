@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 // Boxes
 //---------------------------------------------------------------------------------------------------
@@ -65,24 +66,58 @@
 #define OVP_TypeId_SelectionMethod								OpenViBE::CIdentifier(0x3BCF9E67, 0x0C23994D)
 #define OVP_TypeId_MatchMethod									OpenViBE::CIdentifier(0x666F25E9, 0x3E5738D6)
 #define OVP_TypeId_WindowMethod									OpenViBE::CIdentifier(0x0A430FE4, 0x4F318280)
-#include <string>
 
-enum class EFilterMethod { Butterworth, Chebyshev, YuleWalker };
 
+//enum class EFilterMethod { Butterworth, Chebyshev, YuleWalker };
+
+//--------------------------------------------------------------------------------
 enum class EFilterType { LowPass, BandPass, HighPass, BandStop };
 
+/// <summary>	Convert filter type to string. </summary>
+/// <param name="type">	The Filter type. </param>
+/// <returns>	<c>std::string</c> </returns>
+inline std::string toString(const EFilterType type)
+{
+	switch (type) {
+		case EFilterType::BandPass: return "Band Pass";
+		case EFilterType::BandStop: return "Band Stop";
+		case EFilterType::HighPass: return "High Pass";
+		case EFilterType::LowPass: return "Low Pass";
+		default: return "Invalid Filter Type";
+	}
+}
+
+/// <summary>	Convert string to filter type. </summary>
+/// <param name="type">	The Filter type. </param>
+/// <returns>	<see cref="EFilterType"/> </returns>
+inline EFilterType StringToFilterType(const std::string& type)
+{
+	if (type == "Band Pass") { return EFilterType::BandPass; }
+	if (type == "Band Stop") { return EFilterType::BandStop; }
+	if (type == "High Pass") { return EFilterType::HighPass; }
+	if (type == "Low Pass") { return EFilterType::LowPass; }
+	return EFilterType::BandPass;
+}
+
+//--------------------------------------------------------------------------------
 enum class EUpdateMethod { ChunkAverage, Incremental };
 
+//--------------------------------------------------------------------------------
 enum class EEpochAverageMethod { Moving, MovingImmediate, Block, Cumulative };
 
+//--------------------------------------------------------------------------------
 enum class EContinuousWaveletType { Morlet, Paul, DOG };
 
+//--------------------------------------------------------------------------------
 enum class ECropMethod { Min, Max, MinMax };
 
+//--------------------------------------------------------------------------------
 enum class ESelectionMethod { Select, Reject, Select_EEG };
 
+//--------------------------------------------------------------------------------
 enum class EMatchMethod { Name, Index, Smart };
 
+//--------------------------------------------------------------------------------
 enum class EWindowMethod { None, Hamming, Hanning, Hann, Blackman, Triangular, SquareRoot };
 
 // Global defines

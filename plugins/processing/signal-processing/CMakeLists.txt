@@ -16,6 +16,8 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-module-system
                       openvibe-module-fs)
 
+target_include_directories(${PROJECT_NAME} PRIVATE src)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}

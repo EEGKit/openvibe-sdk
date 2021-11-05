@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ovp_defines.h"
+#include "defines.hpp"
 
 #include "ovpCEquationParserGrammar.h"
 #include "ovpCEquationParser.h"
