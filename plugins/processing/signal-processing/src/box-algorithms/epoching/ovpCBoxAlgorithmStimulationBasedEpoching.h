@@ -24,7 +24,7 @@ public:
 
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching)
 
-	static constexpr size_t NON_CUE_SETTINGS_COUNT = 3; // duration + offset + first stimulation
+	static const size_t NON_CUE_SETTINGS_COUNT = 3; // duration + offset + first stimulation
 
 private:
 	Toolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_signalDecoder;
