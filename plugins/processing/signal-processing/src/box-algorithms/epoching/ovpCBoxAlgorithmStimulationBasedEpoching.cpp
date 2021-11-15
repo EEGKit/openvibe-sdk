@@ -13,14 +13,23 @@ static const int OUTPUT_SIGNAL_IDX      = 0;
 
 bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 {
+	//Number of Cues:
+	m_numberOfStimulations = getStaticBoxContext().getSettingCount() - NON_CUE_SETTINGS_COUNT + 1;
+
 	m_epochDurationInSeconds = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	const double epochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_stimulationID          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	m_epochDuration = CTime(m_epochDurationInSeconds).time();
 
 	const int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
 	m_epochOffset             = epochOffsetSign * int64_t(CTime(std::fabs(epochOffset)).time());
+
+	//Stimulation IDs
+	m_stimulationIDs.resize(m_numberOfStimulations);
+	for (size_t i = 0; i < m_numberOfStimulations; ++i)
+	{
+		m_stimulationIDs[i] = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), NON_CUE_SETTINGS_COUNT - 1 + i);
+	}
 
 	m_lastReceivedStimulationDate   = 0;
 	m_lastStimulationChunkStartTime = 0;
@@ -117,20 +126,22 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		{
 			for (size_t stimulation = 0; stimulation < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 			{
-				if (m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation) == m_stimulationID)
+				if (isWatchedStimulation(m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation)))
 				{
 					// Stimulations are put into cache, we ignore stimulations that would produce output chunks with negative start date (after applying the offset)
-					uint64_t date = m_stimDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
+					const uint64_t date = m_stimDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
 					if (date < m_lastReceivedStimulationDate)
 					{
 						OV_WARNING_K(
 							"Skipping stimulation (received at date " << CTime(date) << ") that predates an already received stimulation (at date "
 							<< CTime(m_lastReceivedStimulationDate) << ")");
 					}
-					else if (int64_t(date) + m_epochOffset >= 0)
+					else if (date + m_epochOffset >= 0 && date > m_lastReceivedStimulationDate)
 					{
-						m_receivedStimulations.push_back(date);
-						m_lastReceivedStimulationDate = date;
+                        // Create epoch only if it is complete (at beginning of signal).
+                        // Create only one epoch for several stims that are at exactly the same date.
+                        m_receivedStimulations.push_back(date);
+                        m_lastReceivedStimulationDate = date;
 					}
 				}
 				m_lastStimulationChunkStartTime = boxCtx.getInputChunkEndTime(INPUT_STIMULATIONS_IDX, chunk);
