@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
-	<FormatVersion>1</FormatVersion>
-	<Creator>OpenVIBE</Creator>
-	<CreatorVersion>0.0.0</CreatorVersion>
+	<FormatVersion>2</FormatVersion>
+	<Creator>OpenViBE Designer</Creator>
+	<CreatorVersion>3.2.0</CreatorVersion>
 	<Settings></Settings>
 	<Inputs></Inputs>
 	<Outputs></Outputs>
@@ -103,10 +103,6 @@
 					<Value></Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0xc67a01dc, 0x28ce06c1)</Identifier>
-					<Value></Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0xce18836a, 0x9c0eb403)</Identifier>
 					<Value>9</Value>
 				</Attribute>
@@ -158,7 +154,7 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>224</Value>
+					<Value>240</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
@@ -210,7 +206,7 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>112</Value>
+					<Value>128</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
@@ -412,7 +408,7 @@ sinusoid in the [-4 +4] range.</Text>
 		<Entry>
 			<Identifier>(0x0000775c, 0x000078ff)</Identifier>
 			<Type>(0x3bcce5d2, 0x43f2d968)</Type>
-			<Data>[{"boxIdentifier":"(0x00004a0e, 0x000044ab)","childCount":0,"identifier":"(0x000020ad, 0x000032d0)","index":0,"parentIdentifier":"(0xffffffff, 0xffffffff)","type":3},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"height":1,"identifier":"(0x57071613, 0x5293bfef)","index":0,"name":"Default window","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":1},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x38bf53e5, 0x226f5320)","index":0,"name":"Default tab","parentIdentifier":"(0x57071613, 0x5293bfef)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":0,"identifier":"(0x5a0201c7, 0x2a9c34e2)","index":0,"name":"Empty","parentIdentifier":"(0x38bf53e5, 0x226f5320)","type":0}]</Data>
+			<Data>[{"boxIdentifier":"(0x00004a0e, 0x000044ab)","childCount":0,"identifier":"(0x000020ad, 0x000032d0)","parentIdentifier":"(0xffffffff, 0xffffffff)","type":3},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"height":1,"identifier":"(0x57071613, 0x5293bfef)","name":"Default window","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":1},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x38bf53e5, 0x226f5320)","index":0,"name":"Default tab","parentIdentifier":"(0x57071613, 0x5293bfef)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":0,"identifier":"(0x5a0201c7, 0x2a9c34e2)","index":0,"name":"Empty","parentIdentifier":"(0x38bf53e5, 0x226f5320)","type":0}]</Data>
 		</Entry>
 	</Metadata>
 </OpenViBE-Scenario>
