@@ -309,7 +309,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 		boxContext.markOutputAsReadyToSend(0, 0, 0);
 	}
 
-	IStimulationSet* ip_stimSet = static_cast<Toolkit::TStimulationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputStimulationSet();
+	CStimulationSet* ip_stimSet = static_cast<Toolkit::TStimulationEncoder<CBoxAlgorithmCSVFileReader>*>(m_encoder)->getInputStimulationSet();
 	ip_stimSet->clear();
 
 	for (size_t i = 0; i < m_dataMatrices.size(); ++i)
@@ -321,7 +321,7 @@ bool CBoxAlgorithmCSVFileReader::processStimulation()
 		const uint64_t id       = uint64_t(atof(m_dataMatrices[i][1].c_str()));
 		const uint64_t duration = CTime(atof(m_dataMatrices[i][2].c_str())).time();
 
-		ip_stimSet->appendStimulation(id, date, duration);
+		ip_stimSet->push_back(id, date, duration);
 	}
 
 	m_encoder->encodeBuffer();

@@ -72,7 +72,7 @@ public:
 	/// <returns> The buffer. </returns>
 	double* getBuffer()
 	{
-		if (!m_buffer) { initBuffer(); }				// Initialize buffer if needed
+		if (!m_buffer) { initBuffer(); }	// Initialize buffer if needed
 		return m_buffer;
 	}
 
@@ -316,6 +316,7 @@ private:
 	std::vector<std::vector<std::string>>* m_dimLabels = nullptr;	///< Labels of all dimensions (pointer to avoid export warning C4251)
 };
 
+OV_Deprecated("Use the CMatrix class instead")
 typedef CMatrix IMatrix;	// Keep previous compatibility. Avoid to used it, intended to be removed. 
 
 }  // namespace OpenViBE

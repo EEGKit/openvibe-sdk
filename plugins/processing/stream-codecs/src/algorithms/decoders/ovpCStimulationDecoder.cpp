@@ -63,20 +63,20 @@ void CStimulationDecoder::processChildData(const void* buffer, const size_t size
 	{
 		if (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
 		{
-			op_stimulationSet->setStimulationCount(m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->resize(m_readerHelper->getUInt(buffer, size));
 			m_stimulationIdx = 0;
 		}
 		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID)
 		{
-			op_stimulationSet->setStimulationIdentifier(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setId(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		{
-			op_stimulationSet->setStimulationDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
 		{
-			op_stimulationSet->setStimulationDuration(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
+			op_stimulationSet->setDuration(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 	}
 	else { CEBMLBaseDecoder::processChildData(buffer, size); }

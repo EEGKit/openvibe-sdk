@@ -379,14 +379,14 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
  		}
 		else if (m_stimDecoder.isBufferReceived())
 		{
-			const IStimulationSet* stimulationSet = m_stimDecoder.getOutputStimulationSet();
+			const CStimulationSet* stimulationSet = m_stimDecoder.getOutputStimulationSet();
 			// for each stimulation, get its informations
 
-			for (size_t j = 0; j < stimulationSet->getStimulationCount(); ++j)
+			for (size_t j = 0; j < stimulationSet->size(); ++j)
 			{
-				OV_ERROR_UNLESS_KRF(m_writerLib->addEvent({ stimulationSet->getStimulationIdentifier(j),
-										CTime(stimulationSet->getStimulationDate(j)).toSeconds(),
-										CTime(stimulationSet->getStimulationDuration(j)).toSeconds() }),
+				OV_ERROR_UNLESS_KRF(m_writerLib->addEvent({ stimulationSet->getId(j),
+										CTime(stimulationSet->getDate(j)).toSeconds(),
+										CTime(stimulationSet->getDuration(j)).toSeconds() }),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty() ? "" :
 										"Details: " + m_writerLib->getLastErrorString())).c_str(), Kernel::ErrorType::Internal);
 			}

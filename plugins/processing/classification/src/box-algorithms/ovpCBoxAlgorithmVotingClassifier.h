@@ -35,7 +35,7 @@ private:
 	typedef struct
 	{
 		Toolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
-		Kernel::TParameterHandler<IStimulationSet*> op_stimSet;
+		Kernel::TParameterHandler<CStimulationSet*> op_stimSet;
 		Kernel::TParameterHandler<CMatrix*> op_matrix;
 		bool twoValueInput;
 		std::vector<std::pair<double, uint64_t>> scores;
@@ -44,7 +44,7 @@ private:
 	std::map<uint32_t, input_t> m_results;
 
 	Toolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
-	Kernel::TParameterHandler<const IStimulationSet*> ip_classificationChoiceStimSet;
+	Kernel::TParameterHandler<const CStimulationSet*> ip_classificationChoiceStimSet;
 
 	uint64_t m_lastTime = 0;
 	bool m_matrixBased  = false;

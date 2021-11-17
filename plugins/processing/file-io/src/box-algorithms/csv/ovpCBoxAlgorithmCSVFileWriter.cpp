@@ -237,13 +237,13 @@ bool CBoxAlgorithmCSVFileWriter::processStimulation()
 		}
 		if (m_decoder->isBufferReceived())
 		{
-			const IStimulationSet* stimSet = static_cast<Toolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
+			const CStimulationSet* stimSet = static_cast<Toolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*>(m_decoder)->
 					getOutputStimulationSet();
-			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
+			for (size_t j = 0; j < stimSet->size(); ++j)
 			{
-				m_fileStream << CTime(stimSet->getStimulationDate(j)).toSeconds() << m_separator.toASCIIString()
-						<< stimSet->getStimulationIdentifier(j) << m_separator.toASCIIString()
-						<< CTime(stimSet->getStimulationDuration(j)).toSeconds() << "\n";
+				m_fileStream << CTime(stimSet->getDate(j)).toSeconds() << m_separator.toASCIIString()
+						<< stimSet->getId(j) << m_separator.toASCIIString()
+						<< CTime(stimSet->getDuration(j)).toSeconds() << "\n";
 			}
 		}
 		if (m_decoder->isEndReceived()) { }

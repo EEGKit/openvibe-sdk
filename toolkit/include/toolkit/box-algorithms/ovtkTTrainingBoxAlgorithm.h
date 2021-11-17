@@ -27,7 +27,7 @@ public:
 	virtual void setSampleBuffer(const double* buffer);
 
 	// Stimulation input reader callback
-	virtual void setStimulationCount(size_t /*count*/) {}
+	virtual void resize(size_t /*count*/) {}
 	virtual void setStimulation(const size_t index, uint64_t identifier, uint64_t date);
 
 	// What should be implemented by the derived class

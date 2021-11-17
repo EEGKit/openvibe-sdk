@@ -65,13 +65,13 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 
 			if (m_decoders[input].isBufferReceived())
 			{
-				for (size_t stimulation = 0; stimulation < m_decoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+				for (size_t stimulation = 0; stimulation < m_decoders[input].getOutputStimulationSet()->size(); ++stimulation)
 				{
-					m_stimulations.insert(std::make_pair(m_decoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+					m_stimulations.insert(std::make_pair(m_decoders[input].getOutputStimulationSet()->getDate(stimulation),
 														 std::make_tuple(
-															 m_decoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
-															 m_decoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-															 m_decoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
+															 m_decoders[input].getOutputStimulationSet()->getId(stimulation),
+															 m_decoders[input].getOutputStimulationSet()->getDate(stimulation),
+															 m_decoders[input].getOutputStimulationSet()->getDuration(stimulation))));
 				}
 			}
 
@@ -89,7 +89,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 		{
 			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				m_encoder.getInputStimulationSet()->appendStimulation(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
+				m_encoder.getInputStimulationSet()->push_back(std::get<0>(stimulation->second), std::get<1>(stimulation->second),
 																	  std::get<2>(stimulation->second));
 				stimulation = m_stimulations.erase(stimulation);
 			}

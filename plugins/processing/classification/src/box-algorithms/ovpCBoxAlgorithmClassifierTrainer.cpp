@@ -238,17 +238,17 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		}
 		if (m_stimDecoder.isBufferReceived())
 		{
-			const IStimulationSet* iStimulationSet = m_stimDecoder.getOutputStimulationSet();
-			IStimulationSet* oStimulationSet       = m_encoder.getInputStimulationSet();
+			const CStimulationSet* iStimulationSet = m_stimDecoder.getOutputStimulationSet();
+			CStimulationSet* oStimulationSet       = m_encoder.getInputStimulationSet();
 			oStimulationSet->clear();
 
-			for (size_t j = 0; j < iStimulationSet->getStimulationCount(); ++j)
+			for (size_t j = 0; j < iStimulationSet->size(); ++j)
 			{
-				if (iStimulationSet->getStimulationIdentifier(j) == m_trainStimulation)
+				if (iStimulationSet->getId(j) == m_trainStimulation)
 				{
 					startTrain        = true;
 					const uint64_t id = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, "OVTK_StimulationId_TrainCompleted");
-					oStimulationSet->appendStimulation(id, iStimulationSet->getStimulationDate(j), 0);
+					oStimulationSet->push_back(id, iStimulationSet->getDate(j), 0);
 				}
 			}
 			m_encoder.encodeBuffer();
