@@ -4,6 +4,7 @@
 #include "CMatrixTest.hpp"
 #include "CTimeTest.hpp"
 #include "CIdentifierTest.hpp"
+#include "CStimulationSetTest.hpp"
 
 int main(int argc, char* argv[])
 {

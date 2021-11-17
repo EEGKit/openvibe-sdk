@@ -75,16 +75,16 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		if (m_stimDecoder.isHeaderReceived()) { m_stimEncoder.encodeHeader(); }
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->size(); ++j)
 			{
-				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
+				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getId(j);
 
 				if (stimulationId == m_trainStimulationID)
 				{
 					train = true;
 
-					m_stimEncoder.getInputStimulationSet()->appendStimulation(
-						OVTK_StimulationId_TrainCompleted, m_stimDecoder.getOutputStimulationSet()->getStimulationDate(j), 0);
+					m_stimEncoder.getInputStimulationSet()->push_back(
+						OVTK_StimulationId_TrainCompleted, m_stimDecoder.getOutputStimulationSet()->getDate(j), 0);
 				}
 			}
 

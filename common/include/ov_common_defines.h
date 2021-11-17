@@ -96,6 +96,17 @@
 #define OV_API OV_API_Import
 #endif
 
+
+//[[deprecated(message)]] after c++14
+#if defined TARGET_OS_Windows
+#define OV_Deprecated(message) __declspec(deprecated(message))
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#define OV_Deprecated(message) __attribute__((deprecated))
+#else
+#define OV_Deprecated(message)
+#endif
+
+
 //___________________________________________________________________//
 //                                                                   //
 // API Definition for plugins                                        //

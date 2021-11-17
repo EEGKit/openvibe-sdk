@@ -65,14 +65,14 @@ bool CBoxAlgorithmStreamEndDetector::process()
 		m_isHeaderSent = true;
 	}
 
-	IStimulationSet* stimulationSet = m_encoder.getInputStimulationSet();
+	CStimulationSet* stimulationSet = m_encoder.getInputStimulationSet();
 	stimulationSet->clear();
 
 
 	// If the timeout is reached we send the stimulation on the output 0
 	if (m_endState == EEndState::EndReceived)
 	{
-		stimulationSet->appendStimulation(m_stimulationID, m_endDate, 0);
+		stimulationSet->push_back(m_stimulationID, m_endDate, 0);
 		m_endState = EEndState::StimulationSent;
 	}
 

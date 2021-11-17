@@ -18,8 +18,7 @@
 
 #include "CMatrix.hpp"
 
-#include "ovIStimulationSet.h"
-#include "ovCStimulationSet.h"
+#include "CStimulationSet.hpp"
 
 #include "ovIMemoryBuffer.h"
 #include "ovCMemoryBuffer.h"

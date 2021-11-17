@@ -31,11 +31,12 @@ private:
 	Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_stimDecoder;
 	Toolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_encoder;
 
-	bool isWatchedStimulation(const uint64_t& stim) const {
-		for (const auto& id : m_stimulationIDs)
-		{
-			if (id == stim)
+	bool isWatchedStimulation(const uint64_t& stim) const
+	{
+		for (const auto& id : m_stimulationIDs) {
+			if (id == stim) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -115,8 +116,7 @@ private:
 	// This function is used to make sure the setting names and types are correct
 	bool checkSettingNames(Kernel::IBox& box) const
 	{
-		for (size_t i = CBoxAlgorithmStimulationBasedEpoching::NON_CUE_SETTINGS_COUNT; i < box.getSettingCount() ; ++i )
-		{
+		for (size_t i = CBoxAlgorithmStimulationBasedEpoching::NON_CUE_SETTINGS_COUNT; i < box.getSettingCount(); ++i) {
 			const std::string idx = std::to_string(i - 1);
 			box.setSettingName(i, ("Stimulation " + idx).c_str());
 			box.setSettingType(i, OV_TypeId_Stimulation);

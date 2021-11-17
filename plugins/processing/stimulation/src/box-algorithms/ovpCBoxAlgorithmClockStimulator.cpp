@@ -45,13 +45,13 @@ bool CBoxAlgorithmClockStimulator::process()
 	const uint64_t currentTime = getPlayerContext().getCurrentTime();
 
 	CStimulationSet stimulationSet;
-	stimulationSet.setStimulationCount(0);
+	stimulationSet.resize(0);
 
 	while (CTime(double(m_nSentStimulation + 1) * m_stimulationInterval).time() < currentTime)
 	{
 		m_nSentStimulation += 1;
 		m_lastStimulationDate = CTime(double(m_nSentStimulation) * m_stimulationInterval).time();
-		stimulationSet.appendStimulation(m_stimulationID, m_lastStimulationDate, 0);
+		stimulationSet.push_back(m_stimulationID, m_lastStimulationDate, 0);
 	}
 
 	if (currentTime == 0)

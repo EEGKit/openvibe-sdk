@@ -193,6 +193,7 @@ public:
 	/// <remarks> Use this function with care, identifiers should not be considered as integers.
 	/// Actually, the internal 64 bits representation may change, resulting in code port needs if you use this function.
 	/// Avoid this, this function keep previous compatibility with heavy name. </remarks>
+	OV_Deprecated("Use id() method instead.")
 	uint64_t toUInteger() const { return m_id; }
 
 	/// <summary> Creates a random identifier. </summary>
