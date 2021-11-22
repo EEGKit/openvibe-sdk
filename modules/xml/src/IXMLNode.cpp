@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 //This is to remove the warning on windows about strdup
 #if defined TARGET_OS_Windows
@@ -79,8 +80,14 @@ void IXMLNodeImpl::setPCData(const char* data)
 
 void IXMLNodeImpl::appendPCData(const char* data)
 {
-	m_pcData += data;
-	m_hasPCData = true;
+    std::string strData(data);
+    size_t nTabs = std::count(strData.begin(), strData.end(), '\t');
+
+    // Only add PC Data if it is not a newline feed, or tab(s).
+    if (strData.size() > nTabs && strData != "\n") {
+        m_pcData += data;
+        m_hasPCData = true;
+    }
 }
 
 IXMLNode* IXMLNodeImpl::getChildByName(const char* name) const
