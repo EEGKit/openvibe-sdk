@@ -317,6 +317,6 @@ private:
 };
 
 OV_Deprecated("Use the CMatrix class instead")
-typedef CMatrix IMatrix;	// Keep previous compatibility. Avoid to used it, intended to be removed. 
+typedef CMatrix IMatrix;	///< Keep previous compatibility. Avoid to used it, intended to be removed. 
 
 }  // namespace OpenViBE

@@ -131,7 +131,7 @@ do { \
  */
 #define OV_ERROR(description, type, returnValue, errorManager, logManager) \
 do { \
-	errorManager.pushErrorAtLocation(type, static_cast<const OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), __FILE__, __LINE__ ); \
+	errorManager.pushError(type, static_cast<const OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), __FILE__, __LINE__ ); \
 	OV_ERROR_LOG(description, type, __FILE__, __LINE__ , logManager); \
 	return returnValue; \
 } while (0)

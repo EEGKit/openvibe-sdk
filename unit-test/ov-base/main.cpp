@@ -1,15 +1,15 @@
 #include <gtest/gtest.h>
 
 // ReSharper disable CppUnusedIncludeDirective
-#include "CMatrixTest.hpp"
-#include "CTimeTest.hpp"
-#include "CIdentifierTest.hpp"
-#include "CStimulationSetTest.hpp"
+#include "CMatrixTests.hpp"
+#include "CTimeTests.hpp"
+#include "CIdentifierTests.hpp"
+#include "CStimulationSetTests.hpp"
+#include "CErrorManagerTests.hpp"
 
 int main(int argc, char* argv[])
 {
-	try
-	{
+	try {
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
 	}
