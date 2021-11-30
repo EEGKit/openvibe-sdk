@@ -295,6 +295,6 @@ private:
 
 //[[deprecated("Use CStimulationSet instead")]]
 OV_Deprecated("Use CStimulationSet instead")
-typedef CStimulationSet IStimulationSet;	// Keep previous compatibility. Avoid to used it, intended to be removed. 
+typedef CStimulationSet IStimulationSet;	///< Keep previous compatibility. Avoid to used it, intended to be removed. 
 
 }  // namespace OpenViBE

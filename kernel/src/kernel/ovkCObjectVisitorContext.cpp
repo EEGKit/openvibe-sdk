@@ -10,7 +10,7 @@ IAlgorithmManager& CObjectVisitorContext::getAlgorithmManager() const { return T
 IConfigurationManager& CObjectVisitorContext::getConfigurationManager() const { return TKernelObject<IObjectVisitorContext>::getConfigurationManager(); }
 ITypeManager& CObjectVisitorContext::getTypeManager() const { return TKernelObject<IObjectVisitorContext>::getTypeManager(); }
 ILogManager& CObjectVisitorContext::getLogManager() const { return TKernelObject<IObjectVisitorContext>::getLogManager(); }
-IErrorManager& CObjectVisitorContext::getErrorManager() const { return TKernelObject<IObjectVisitorContext>::getErrorManager(); }
+CErrorManager& CObjectVisitorContext::getErrorManager() const { return TKernelObject<IObjectVisitorContext>::getErrorManager(); }
 
 }  // namespace Kernel
 }  // namespace OpenViBE

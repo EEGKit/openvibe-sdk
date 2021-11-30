@@ -14,7 +14,7 @@ public:
 	IConfigurationManager& getConfigurationManager() const override;
 	ITypeManager& getTypeManager() const override;
 	ILogManager& getLogManager() const override;
-	IErrorManager& getErrorManager() const override;
+	CErrorManager& getErrorManager() const override;
 
 	_IsDerivedFromClass_Final_(TKernelObject<IObjectVisitorContext>, OVK_ClassId_Kernel_ObjectVisitorContext)
 };

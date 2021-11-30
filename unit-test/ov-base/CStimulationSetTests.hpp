@@ -1,6 +1,6 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CStimulationSetTest.hpp
+/// \file CStimulationSetTests.hpp
 /// \brief Test Definitions for OpenViBE Stimulation Set Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.

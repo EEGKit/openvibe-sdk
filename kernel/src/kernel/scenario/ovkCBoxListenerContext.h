@@ -18,7 +18,7 @@ public:
 	IScenarioManager& getScenarioManager() const override { return this->getKernelContext().getScenarioManager(); }
 	ITypeManager& getTypeManager() const override { return this->getKernelContext().getTypeManager(); }
 	ILogManager& getLogManager() const override { return this->getKernelContext().getLogManager(); }
-	IErrorManager& getErrorManager() const override { return this->getKernelContext().getErrorManager(); }
+	CErrorManager& getErrorManager() const override { return this->getKernelContext().getErrorManager(); }
 	IConfigurationManager& getConfigurationManager() const override { return this->getKernelContext().getConfigurationManager(); }
 	IBox& getBox() const override { return m_box; }
 

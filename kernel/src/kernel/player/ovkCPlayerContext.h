@@ -28,7 +28,7 @@ public:
 	IAlgorithmManager& getAlgorithmManager() const override { return m_algorithmManager; }
 	IConfigurationManager& getConfigurationManager() const override { return m_configManager; }
 	ILogManager& getLogManager() const override { return m_boxLogManager; }
-	IErrorManager& getErrorManager() const override { return m_errorManager; }
+	CErrorManager& getErrorManager() const override { return m_errorManager; }
 	IScenarioManager& getScenarioManager() const override { return m_scenarioManager; }
 	ITypeManager& getTypeManager() const override { return m_typeManager; }
 	bool canCreatePluginObject(const CIdentifier& pluginID) const override { return m_pluginManager.canCreatePluginObject(pluginID); }
@@ -44,7 +44,7 @@ private:
 	IAlgorithmManager& m_algorithmManager;
 	IConfigurationManager& m_configManager;
 	ILogManager& m_logManager;
-	IErrorManager& m_errorManager;
+	CErrorManager& m_errorManager;
 	IScenarioManager& m_scenarioManager;
 	ITypeManager& m_typeManager;
 	mutable CBoxAlgorithmLogManager m_boxLogManager;

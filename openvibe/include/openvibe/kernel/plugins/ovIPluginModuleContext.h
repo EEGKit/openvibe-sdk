@@ -7,7 +7,7 @@ namespace Kernel {
 class ILogManager;
 class ITypeManager;
 class IScenarioManager;
-class IErrorManager;
+class CErrorManager;
 class IConfigurationManager;
 
 /**
@@ -42,7 +42,7 @@ public:
 	 * \brief Gets the current error manager
 	 * \return a reference on the current error manager
 	 */
-	virtual IErrorManager& getErrorManager() const = 0;
+	virtual CErrorManager& getErrorManager() const = 0;
 	/**
 	 * \brief Gets the current configuration manager
 	 * \return a reference on the current configuration manager

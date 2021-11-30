@@ -47,7 +47,7 @@ protected:
 	virtual Kernel::IConfigurationManager& getConfigurationManager() { return m_algorithmCtx->getConfigurationManager(); } // should never be null
 	virtual Kernel::IAlgorithmManager& getAlgorithmManager() { return m_algorithmCtx->getAlgorithmManager(); } // should never be null
 	virtual Kernel::ILogManager& getLogManager() { return m_algorithmCtx->getLogManager(); } // should never be null
-	virtual Kernel::IErrorManager& getErrorManager() { return m_algorithmCtx->getErrorManager(); } // should never be null
+	virtual Kernel::CErrorManager& getErrorManager() { return m_algorithmCtx->getErrorManager(); } // should never be null
 	virtual Kernel::ITypeManager& getTypeManager() { return m_algorithmCtx->getTypeManager(); } // should never be null
 
 	virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const

@@ -13,7 +13,6 @@
 #include "log/ovkCLogManager.h"
 #include "log/ovkCLogListenerConsole.h"
 #include "log/ovkCLogListenerFile.h"
-#include "error/ovkCErrorManager.h"
 
 #include <cassert>
 #include <string>
@@ -46,7 +45,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 		initializationTokens[*key] = *value;
 	}
 
-	m_errorManager.reset(new CErrorManager(m_masterKernelCtx));
+	m_errorManager.reset(new CErrorManager());
 
 	m_kernelObjectFactory.reset(new CKernelObjectFactory(m_masterKernelCtx));
 
@@ -284,7 +283,7 @@ ILogManager& CKernelContext::getLogManager() const
 	return *m_logManager;
 }
 
-IErrorManager& CKernelContext::getErrorManager() const
+CErrorManager& CKernelContext::getErrorManager() const
 {
 	assert(m_errorManager);
 	return *m_errorManager;

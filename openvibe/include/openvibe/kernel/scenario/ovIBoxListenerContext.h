@@ -60,7 +60,7 @@ public:
 	 * \brief Gets a reference on the current error manager
 	 * \return a reference on the current error manager
 	 */
-	virtual IErrorManager& getErrorManager() const = 0;
+	virtual CErrorManager& getErrorManager() const = 0;
 
 	/**
 	 * \brief Gets a reference on the current configuration manager
