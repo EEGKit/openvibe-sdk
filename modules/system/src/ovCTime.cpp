@@ -11,7 +11,7 @@
 // time handling strategy selection
 // \note With officialy supported compilers and required boost version
 //       it should never fallback in a OV_USE_SYSTEM case
-#if (defined(_MSC_VER) && _MSC_VER <= 1800 && defined(TARGET_HAS_Boost_Chrono))
+#if (defined(_MSC_VER) && _MSC_VER <= 1800)
 
 #include <boost/chrono/config.hpp>
 
@@ -25,13 +25,13 @@ namespace Timelib = boost;
 #error "Please use OpenViBE recommended version of Boost"
 #endif // BOOST_CHRONO_HAS_CLOCK_STEADY
 
-#else // defined(_MSC_VER) && _MSC_VER <= 1800 && defined(TARGET_HAS_Boost_Chrono)
+#else // defined(_MSC_VER) && _MSC_VER <= 1800
 
 #include <chrono>
 #include <thread>
 namespace Timelib = std;
 
-#endif // defined(_MSC_VER) && _MSC_VER <= 1800 && defined(TARGET_HAS_Boost_Chrono)
+#endif // defined(_MSC_VER) && _MSC_VER <= 1800
 
 using internal_clock = Timelib::chrono::steady_clock;
 // using internal_clock = chrono::high_resolution_clock;

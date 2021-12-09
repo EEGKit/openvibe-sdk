@@ -22,7 +22,7 @@ namespace FS {
 
 //  * 2006-08-30 YRD - Portability note : using namespace FS confuses windows platform SDK because it defines itself a 'boolean' type. Thus the following define to force the use of FS::boolean !
 
-#if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
+#if BOOST_VERSION / 100 % 1000 >= 55
 /**
  * \brief Makes a recursive copy of source folder to target folder.
  *        Operation can fail in several cases:
@@ -337,7 +337,7 @@ bool Files::removeAll(const char* path)
 // old boost compliance
 // manage cases here
 
-#if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
+#if BOOST_VERSION / 100 % 1000 >= 55
 
 bool Files::copyFile(const char* srcFile, const char* dstPath)
 {

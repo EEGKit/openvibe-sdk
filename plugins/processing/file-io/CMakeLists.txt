@@ -18,7 +18,9 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-module-csv
                       openvibe-module-ebml
                       openvibe-module-xml
-                      openvibe-module-fs)
+                      openvibe-module-fs
+                      Boost::boost
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
@@ -28,7 +30,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
-include("FindThirdPartyBoost")
 include("FindThirdPartyXerces")
 
 # ---------------------------------

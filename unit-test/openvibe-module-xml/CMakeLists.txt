@@ -18,7 +18,6 @@
 # along with this program.
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
-
 function(SETUP_TEST)
 	SET_BUILD_PLATFORM()
 
@@ -27,10 +26,9 @@ function(SETUP_TEST)
                           openvibe
                           openvibe-common
                           openvibe-module-xml
-                          openvibe-module-fs)
-	
-	include("FindThirdPartyBoost")
-	include("FindThirdPartyBoost_FileSystem")
+                          openvibe-module-fs
+                          Boost::boost			 
+                          Boost::filesystem)
 	
 	set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 
