@@ -1,4 +1,4 @@
-﻿///-------------------------------------------------------------------------------------------------
+///-------------------------------------------------------------------------------------------------
 /// 
 /// \file CStimulationSet.hpp
 /// \brief Basic standalone OpenViBE Stimulation Set implementation.
@@ -47,6 +47,7 @@ public:
 	//--------------------------------------------------
 	//----------------- Getter/Setter ------------------
 	//--------------------------------------------------
+	
 	/// <summary> Clears this stimulation set removing every existing stimulation. </summary>
 	void clear() const { m_set->clear(); }
 
