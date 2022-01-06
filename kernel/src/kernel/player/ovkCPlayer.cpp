@@ -107,16 +107,15 @@ bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairLis
 	if (localConfigurationTokens != nullptr)
 	{
 		this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
-		for (size_t i = 0; i < localConfigurationTokens->getSize(); ++i)
+		for (size_t i = 0; i < localConfigurationTokens->size(); ++i)
 		{
-			CString name;
-			CString value;
+			std::string name, value;
 			if (localConfigurationTokens->getValue(i, name, value))
 			{
 				this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: [" << name << "] = [" << value << "].\n";
-				CIdentifier tokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name);
-				if (tokenID == CIdentifier::undefined()) { m_runtimeConfigManager->createConfigurationToken(name, value); }
-				else { m_runtimeConfigManager->setConfigurationTokenValue(tokenID, value); }
+				CIdentifier tokenID = m_runtimeConfigManager->lookUpConfigurationTokenIdentifier(name.c_str());
+				if (tokenID == CIdentifier::undefined()) { m_runtimeConfigManager->createConfigurationToken(name.c_str(), value.c_str()); }
+				else { m_runtimeConfigManager->setConfigurationTokenValue(tokenID, value.c_str()); }
 			}
 				// This should not happen
 			else

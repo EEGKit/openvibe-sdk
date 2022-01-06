@@ -14,7 +14,7 @@
 #include "CIdentifier.hpp"
 #include "CTime.hpp"
 #include "ovCString.h"
-#include "ovCNameValuePairList.h"
+#include "CNameValuePairList.hpp"
 
 #include "CMatrix.hpp"
 
