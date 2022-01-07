@@ -6,7 +6,7 @@
 #include "CIdentifierTest.hpp"
 #include "CStimulationSetTest.hpp"
 #include "CNameValuePairListTest.hpp"
-#include "CErrorManagerTests.hpp"
+#include "CErrorManagerTest.hpp"
 
 int main(int argc, char* argv[])
 {
