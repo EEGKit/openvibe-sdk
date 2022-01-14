@@ -51,3 +51,5 @@ install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION ${DIST_BINDIR}
         LIBRARY DESTINATION ${DIST_LIBDIR}
         ARCHIVE DESTINATION ${DIST_LIBDIR})
+
+install(DIRECTORY box-tutorials/ DESTINATION ${DIST_DATADIR}/openvibe/scenarios/box-tutorials)
