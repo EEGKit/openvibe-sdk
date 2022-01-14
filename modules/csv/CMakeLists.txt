@@ -9,7 +9,7 @@ add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME}
                       openvibe-common
                       openvibe-module-fs
-		      Boost::boost
+					  Boost::boost
                       Boost::filesystem
                       Boost::regex
 )
