@@ -34,15 +34,14 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-common
                       openvibe-module-fs
                       openvibe-test-unit-toolkit
+                      Boost::boost
+                      Boost::filesystem
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 
 add_definitions("-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
 add_definitions("-DTMP_DIR=\"${OVT_TEST_TEMPORARY_DIR}\"")
-
-include("FindThirdPartyBoost")
-include("FindThirdPartyBoost_FileSystem")
 
 add_test(NAME uoFSTestUTF COMMAND ${PROJECT_NAME})
 

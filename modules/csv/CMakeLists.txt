@@ -8,7 +8,11 @@ add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
                       openvibe-common
-                      openvibe-module-fs)
+                      openvibe-module-fs
+					  Boost::boost
+                      Boost::filesystem
+                      Boost::regex
+)
 
 target_include_directories(${PROJECT_NAME}
                            PRIVATE include/csv
@@ -24,10 +28,6 @@ target_compile_options(${PROJECT_NAME}
                        PRIVATE -DCSV_Exports
                        PUBLIC -DCSV_Shared 
 )
-
-include("FindThirdPartyBoost")
-include("FindThirdPartyBoost_FileSystem")
-include("FindThirdPartyBoost_Regex")
 
 # ---------------------------------
 # Target macros

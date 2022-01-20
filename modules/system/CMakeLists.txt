@@ -43,10 +43,12 @@ target_compile_options(${PROJECT_NAME}
 )
 
 if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0")
-    include("FindThirdPartyBoost")
-    OV_LINK_BOOST_LIB("system" ${OV_WIN32_BOOST_VERSION})
-    OV_LINK_BOOST_LIB("thread" ${OV_WIN32_BOOST_VERSION})
-    include("FindThirdPartyBoost_Chrono")
+    target_link_libraries(${PROJECT_NAME}
+                          Boost::boost
+                          Boost::system
+                          Boost::thread
+                          Boost::chrono
+    )
 endif()
 
 # ---------------------------------

@@ -151,7 +151,6 @@ set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO "TARGE
 
 # OpenViBE-specific helper functions that are used by the CMakeLists of the subprojects.
 include("OvAddProjects")
-include("OvLinkBoostLib")
 include("OvDelayLoad")
 
 # Traverse these directories and build their components

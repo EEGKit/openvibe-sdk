@@ -14,7 +14,9 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-toolkit
                       openvibe-module-ebml
                       openvibe-module-system
-                      openvibe-module-fs)
+                      openvibe-module-fs
+                      Boost::boost
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
@@ -26,7 +28,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
-include("FindThirdPartyBoost")
 include("FindThirdPartyEigen")
 
 # ---------------------------------

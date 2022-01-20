@@ -36,7 +36,9 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME}
                       openvibe
                       openvibe-toolkit
-                      openvibe-module-system)
+                      openvibe-module-system
+                      Boost::boost
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
 
@@ -45,10 +47,6 @@ add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 # ----------------------
 # External dependecies 
 # ----------------------
-
-# To be done after add executable because FindOpenViBEXXX files need a target name
-
-include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros

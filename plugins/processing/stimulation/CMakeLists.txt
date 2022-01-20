@@ -11,7 +11,9 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-toolkit
                       openvibe-module-ebml
                       openvibe-module-system
-                      openvibe-module-fs)
+                      openvibe-module-fs
+                      Boost::boost
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -20,8 +22,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
     
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
-
-include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Finds standard library winmm
