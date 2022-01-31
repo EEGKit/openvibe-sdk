@@ -1,30 +1,54 @@
-#include "ovpCBoxAlgorithmXDAWNTrainer.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxXDAWNTrainer.cpp
+/// \brief Class of the box XDAWN Trainer.
+/// \author Yann Renard (Mensia Technologies SA).
+/// \version 1.0.
+/// \copyright (C) 2022 INRIA
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+#include "CBoxXDAWNTrainer.hpp"
 
 #include "fs/Files.h"
 
 #include <cstdio>
+#include <fstream>
 #include <iostream>
 
 namespace OpenViBE {
 namespace Plugins {
 namespace SignalProcessing {
 
-CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() {}
+//--------------------------------------------------------------------------------
+CBoxXDAWNTrainer::CBoxXDAWNTrainer() {}
+//--------------------------------------------------------------------------------
 
-bool CBoxAlgorithmXDAWNTrainer::initialize()
+//--------------------------------------------------------------------------------
+bool CBoxXDAWNTrainer::initialize()
 {
 	m_trainStimulationID = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_filterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_filename           = CString(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1)).toASCIIString();
 
-	OV_ERROR_UNLESS_KRF(m_filterFilename.length() != 0, "The filter filename is empty.\n", Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_filename.length() != 0, "The filter filename is empty.\n", Kernel::ErrorType::BadSetting);
 
-	if (FS::Files::fileExists(m_filterFilename))
-	{
-		FILE* file = FS::Files::open(m_filterFilename, "wt");
-
-		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", Kernel::ErrorType::BadFileRead);
-
-		fclose(file);
+	if (FS::Files::fileExists(m_filename.c_str())) {
+		std::ofstream file;
+		file.open(m_filename, std::ios_base::out | std::ios_base::trunc);
+		OV_ERROR_UNLESS_KRF(file.is_open(), "The filter file exists but cannot be used.\n", Kernel::ErrorType::BadFileRead);
+		file.close();
 	}
 
 	const int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
@@ -43,8 +67,10 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 
 	return true;
 }
+//--------------------------------------------------------------------------------
 
-bool CBoxAlgorithmXDAWNTrainer::uninitialize()
+//--------------------------------------------------------------------------------
+bool CBoxXDAWNTrainer::uninitialize()
 {
 	m_stimDecoder.uninitialize();
 	m_signalDecoder[0].uninitialize();
@@ -53,34 +79,34 @@ bool CBoxAlgorithmXDAWNTrainer::uninitialize()
 
 	return true;
 }
+//--------------------------------------------------------------------------------
 
-bool CBoxAlgorithmXDAWNTrainer::processInput(const size_t index)
+//--------------------------------------------------------------------------------
+bool CBoxXDAWNTrainer::processInput(const size_t index)
 {
 	if (index == 0) { this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
 	return true;
 }
+//--------------------------------------------------------------------------------
 
-bool CBoxAlgorithmXDAWNTrainer::process()
+//--------------------------------------------------------------------------------
+bool CBoxXDAWNTrainer::process()
 {
 	Kernel::IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	bool train = false;
 
-	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i)
-	{
+	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i) {
 		m_stimEncoder.getInputStimulationSet()->clear();
 		m_stimDecoder.decode(i);
 
 		if (m_stimDecoder.isHeaderReceived()) { m_stimEncoder.encodeHeader(); }
-		if (m_stimDecoder.isBufferReceived())
-		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->size(); ++j)
-			{
+		if (m_stimDecoder.isBufferReceived()) {
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->size(); ++j) {
 				const uint64_t stimulationId = m_stimDecoder.getOutputStimulationSet()->getId(j);
 
-				if (stimulationId == m_trainStimulationID)
-				{
+				if (stimulationId == m_trainStimulationID) {
 					train = true;
 
 					m_stimEncoder.getInputStimulationSet()->push_back(
@@ -95,8 +121,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, i), dynamicBoxContext.getInputChunkEndTime(0, i));
 	}
 
-	if (train)
-	{
+	if (train) {
 		std::vector<size_t> erpSampleIndexes;
 		std::array<Eigen::MatrixXd, 2> X; // X[0] is session matrix, X[1] is averaged ERP
 		std::array<Eigen::MatrixXd, 2> C; // Covariance matrices
@@ -107,13 +132,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		// Decodes input signals
 
-		for (size_t j = 0; j < 2; ++j)
-		{
+		for (size_t j = 0; j < 2; ++j) {
 			n[j] = 0;
 
-			for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i)
-			{
-				Toolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer>& decoder = m_signalDecoder[j];
+			for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i) {
+				Toolkit::TSignalDecoder<CBoxXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
 
 				CMatrix* matrix       = decoder.getOutputMatrix();
@@ -121,12 +144,12 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				const size_t nSample  = matrix->getDimensionSize(1);
 				const size_t sampling = size_t(decoder.getOutputSamplingRate());
 
-				if (decoder.isHeaderReceived())
-				{
+				if (decoder.isHeaderReceived()) {
 					OV_ERROR_UNLESS_KRF(sampling > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(nChannel > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", Kernel::ErrorType::OutOfBound);
 					OV_ERROR_UNLESS_KRF(nSample > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", Kernel::ErrorType::OutOfBound);
-					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n", Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(m_filterDim <= nChannel, "The filter dimension must not be superior than the channel count.\n",
+										Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -138,13 +161,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 					}
 				}
 
-				if (decoder.isBufferReceived())
-				{
+				if (decoder.isBufferReceived()) {
 					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
 						matrix->getBuffer(), nChannel, nSample);
 
-					switch (j)
-					{
+					switch (j) {
 						case 0: // Session							
 							X[j].block(0, n[j] * A.cols(), A.rows(), A.cols()) = A;
 							break;
@@ -175,8 +196,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 			OV_ERROR_UNLESS_KRF(n[j] != 0, "Did not have input signal for condition " << j + 1 << "\n", Kernel::ErrorType::BadValue);
 
-			switch (j)
-			{
+			switch (j) {
 				case 0: // Session
 					break;
 
@@ -216,13 +236,11 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		const Eigen::GeneralizedSelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(C[0].selfadjointView<Eigen::Lower>(), C[1].selfadjointView<Eigen::Lower>());
 
-		if (eigenSolver.info() != Eigen::Success)
-		{
+		if (eigenSolver.info() != Eigen::Success) {
 			const enum Eigen::ComputationInfo error = eigenSolver.info();
 			const char* errorMessage                = "unknown";
 
-			switch (error)
-			{
+			switch (error) {
 				case Eigen::NumericalIssue: errorMessage = "Numerical issue";
 					break;
 				case Eigen::NoConvergence: errorMessage = "No convergence";
@@ -245,37 +263,44 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		vectorsMapper.block(0, 0, m_filterDim, nChannel) = eigenSolver.eigenvectors().block(0, 0, nChannel, m_filterDim).transpose();
 
 		// Saves filters
-
-		FILE* file = FS::Files::open(m_filterFilename.toASCIIString(), "wt");
-
-		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_filterFilename << "] for writing.\n", Kernel::ErrorType::BadFileWrite);
-
-		if (m_saveAsBoxConfig)
-		{
-			fprintf(file, "<OpenViBE-SettingsOverride>\n");
-			fprintf(file, "\t<SettingValue>");
-
-			for (size_t i = 0; i < eigenVectors.getBufferElementCount(); ++i) { fprintf(file, "%e ", eigenVectors.getBuffer()[i]); }
-
-			fprintf(file, "</SettingValue>\n");
-			fprintf(file, "\t<SettingValue>%zu</SettingValue>\n", m_filterDim);
-			fprintf(file, "\t<SettingValue>%zu</SettingValue>\n", nChannel);
-			fprintf(file, "\t<SettingValue></SettingValue>\n");
-			fprintf(file, "</OpenViBE-SettingsOverride>");
-		}
-		else
-		{
-			OV_ERROR_UNLESS_KRF(Toolkit::Matrix::saveToTextFile(eigenVectors, m_filterFilename),
-								"Unable to save to [" << m_filterFilename << "]\n", Kernel::ErrorType::BadFileWrite);
-		}
-
-		OV_WARNING_UNLESS_K(fclose(file) == 0, "Could not close file[" << m_filterFilename << "].\n");
-
-		this->getLogManager() << Kernel::LogLevel_Info << "Training finished and saved to [" << m_filterFilename << "]!\n";
+		if (!saveFilter(eigenVectors, nChannel)) { return false; }
+		this->getLogManager() << Kernel::LogLevel_Info << "Training finished and saved to [" << m_filename << "]!\n";
 	}
 
 	return true;
 }
+//--------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------
+bool CBoxXDAWNTrainer::saveFilter(const CMatrix& m, const size_t nChannel)
+{
+	if (m_saveAsBoxConfig) {
+		std::ofstream file;
+		file.open(m_filename, std::ios_base::out | std::ios_base::trunc);
+		if (!file.is_open()) {
+			getLogManager() << Kernel::LogLevel_Error << "The file [" << m_filename << "] could not be opened for writing...";
+			return false;
+		}
+
+		file << "<OpenViBE-SettingsOverride>" << std::endl;
+		file << "\t<SettingValue>";
+		for (size_t i = 0; i < m.getBufferElementCount(); ++i) { file << std::scientific << m.getBuffer()[i] << " "; }
+		file << "</SettingValue>" << std::endl;
+		file << "\t<SettingValue>" << m_filterDim << "</SettingValue>" << std::endl;
+		file << "\t<SettingValue>" << nChannel << "</SettingValue>" << std::endl;
+		file << "\t<SettingValue></SettingValue>" << std::endl;
+		file << "</OpenViBE-SettingsOverride>";
+		file.close();
+	}
+	else {
+		if (!m.toTextFile(m_filename)) {
+			getLogManager() << Kernel::LogLevel_Error << "Unable to save to [" << m_filename << "]\n";
+			return false;
+		}
+	}
+	return true;
+}
+//--------------------------------------------------------------------------------
 
 }  // namespace SignalProcessing
 }  // namespace Plugins
