@@ -27,7 +27,7 @@
 #include "box-algorithms/ovpCBoxAlgorithmSimpleDSP.h"
 #include "box-algorithms/ovpCBoxAlgorithmSignalAverage.h"
 #include "box-algorithms/ovpCBoxAlgorithmWindowing.h"
-#include "box-algorithms/ovpCBoxAlgorithmXDAWNTrainer.h"
+#include "box-algorithms/CBoxXDAWNTrainer.hpp"
 
 namespace OpenViBE {
 namespace Plugins {
@@ -120,7 +120,7 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Triangular", size_t(EWindowMethod::Triangular));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Square root", size_t(EWindowMethod::SquareRoot));
 
-	OVP_Declare_New(CBoxAlgorithmXDAWNTrainerDesc);
+	OVP_Declare_New(CBoxXDAWNTrainerDesc);
 
 OVP_Declare_End()
 
