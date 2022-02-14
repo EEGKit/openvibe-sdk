@@ -28,7 +28,7 @@ else()
 	set(COMPANY_NAME "Inria")
 endif()
 
-# Options and cahce variables
+# Options and cache variables
 
 option(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 option(BUILD_VALIDATION_TEST "Build the validation tests" ON)
@@ -133,11 +133,6 @@ endif()
 
 set(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/sdk/cmake-modules/launchers")
 
-# By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
-# Skip building documentation
-# a list of all project which will be filled by the directory traversal. This is needed to generate the documentation.
-set_property(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS "")
-set_property(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS_BUILD_DIR "")
 
 # Used by the various Find* scripts to locate OpenViBE modules
 set(OV_BASE_DIR ${CMAKE_SOURCE_DIR}/sdk)
@@ -156,7 +151,6 @@ include("OvDelayLoad")
 # Traverse these directories and build their components
 add_subdirectory("build-tool/")
 
-add_subdirectory("documentation/")
 add_subdirectory("common/")
 
 if(NOT(SKIP_OPENVIBE))
