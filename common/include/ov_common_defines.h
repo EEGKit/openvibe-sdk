@@ -97,7 +97,7 @@
 #endif
 
 
-//[[deprecated(message)]] after c++14
+//[[deprecated(message)]] after c++14 for all OS
 #if defined TARGET_OS_Windows
 #define OV_Deprecated(message) __declspec(deprecated(message))
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS

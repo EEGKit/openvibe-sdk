@@ -101,6 +101,7 @@ private:
 	std::string* m_location;				///< The error location (pointer for shared library).
 };
 
+/// \deprecated Use the CError class instead
 OV_Deprecated("Use the CError class instead")
 typedef CError IError;	///< Keep previous compatibility. Avoid to used it, intended to be removed.
 

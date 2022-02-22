@@ -193,21 +193,21 @@ public:
 
 	/// <summary> Clears this stimulation set removing every existing stimulation. </summary>
 	/// <return> Clears this stimulation set removing every existing stimulation. </return>
-	//[[deprecated("Use size instead (more std::vector naming style)")]]
+	/// \deprecated Use size() method instead (more standard naming style).
 	OV_Deprecated("Use size() method instead (more standard naming style).")
 	size_t getStimulationCount() const { return m_set->size(); }
 
 	/// <summary> Changes the stimulation count in this stimulation set. </summary>
 	/// <param name="n">the new number of stimulations. </param>
 	/// <remarks> Prefer use resize (more stl naming style). </remarks>
-	//[[deprecated("Use resize instead (more std::vector naming style)")]]
+	/// \deprecated Use resize() method instead (more standard naming style).
 	OV_Deprecated("Use resize() method instead (more standard naming style).")
 	void setStimulationCount(const size_t n) const { m_set->resize(n); }
 
 	/// <summary> Gets the identifier of a specific stimulation in this stimulation set. </summary>
 	/// <param name="index"> The index of the stimulation which identifier has to be returned. </param>
 	/// <return> The identifier for the specified stimulation. </return>
-	//[[deprecated("Use getId instead (shorter and enough understable)")]]
+	/// \deprecated Use getId() method instead.
 	OV_Deprecated("Use getId() method instead.")
 	uint64_t getStimulationIdentifier(const size_t index) const { return m_set->at(index).id; }
 
@@ -216,7 +216,7 @@ public:
 	/// <return> the date for the specified stimulation. </return>
 	/// <remarks> The returned date is relative to the beginning of this stimulation set. </remarks>
 	/// <remarks> Dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details. </remarks>
-	//[[deprecated("Use getDate instead (shorter and enough understable)")]]
+	/// \deprecated Use getDate() method instead.
 	OV_Deprecated("Use getDate() method instead.")
 	uint64_t getStimulationDate(const size_t index) const { return m_set->at(index).date; }
 
@@ -224,14 +224,14 @@ public:
 	/// <param name="index"> The index of the stimulation which duration has to be returned. </param>
 	/// <return> the duration for the specified stimulation. </return>
 	/// <remarks> Dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details. </remarks>
-	//[[deprecated("Use getDuration instead (shorter and enough understable)")]]
+	/// \deprecated Use getDuration() method instead.
 	OV_Deprecated("Use getDuration() method instead.")
 	uint64_t getStimulationDuration(const size_t index) const { return m_set->at(index).duration; }
 
 	/// <summary> Changes the identifier of a specific stimulation in this stimulation set. </summary>
 	/// <param name="index">the index of the stimulation which id should be changed. </param>
 	/// <param name="id">the new id for the specified stimulation. </param>
-	//[[deprecated("Use setId instead (shorter and enough understable)")]]
+	/// \deprecated Use setId() method instead.
 	OV_Deprecated("Use setId() method instead.")
 	void setStimulationIdentifier(const size_t index, const uint64_t id) const { m_set->at(index).id = id; }
 
@@ -239,7 +239,7 @@ public:
 	/// <param name="index">the index of the stimulation which date should be changed. </param>
 	/// <param name="date">the new date for the specified stimulation. </param>
 	/// <remarks> Dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details. </remarks>
-	//[[deprecated("Use setDate instead (shorter and enough understable)")]]
+	/// \deprecated Use setDate() method instead.
 	OV_Deprecated("Use setDate() method instead.")
 	void setStimulationDate(const size_t index, const uint64_t date) const { m_set->at(index).date = date; }
 
@@ -248,7 +248,7 @@ public:
 	/// <param name="duration">the new duration for the specified stimulation. </param>
 	/// <remarks> The returned date is relative to the beginning of this stimulation set. </remarks>
 	/// <remarks> Dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details. </remarks>
-	//[[deprecated("Use setDuration instead (shorter and enough understable)")]]
+	/// \deprecated Use setDuration() method instead.
 	OV_Deprecated("Use setDuration() method instead.")
 	void setStimulationDuration(const size_t index, const uint64_t duration) const { m_set->at(index).duration = duration; }
 
@@ -256,7 +256,7 @@ public:
 	/// <param name="id">the identifier of the stimulation to append. </param>
 	/// <param name="date">the date of the stimulation. </param>
 	/// <param name="duration">the duration of the stimulation. </param>
-	//[[deprecated("Use push_back instead (more std::vector naming style)")]]
+	/// \deprecated Use push_back() method instead (more standard naming style).
 	OV_Deprecated("Use push_back() method instead (more standard naming style).")
 	void appendStimulation(const uint64_t id, const uint64_t date, const uint64_t duration) const { m_set->push_back(SStimulation(id, date, duration)); }
 
@@ -266,7 +266,7 @@ public:
 	/// <param name="date"> The date of the stimulation. </param>
 	/// <param name="duration"> The duration of the stimulation. </param>
 	/// <remarks> Stimulation indexing change after call to this function : following stimulation(s) get one more indexed. </remarks>
-	//[[deprecated("Use insert instead (more std::vector naming style)")]]
+	/// \deprecated Use insert() method instead (more standard naming style).
 	OV_Deprecated("Use insert() method instead (more standard naming style).")
 	void insertStimulation(const size_t index, const uint64_t id, const uint64_t date, const uint64_t duration) const
 	{
@@ -276,7 +276,7 @@ public:
 	/// <summary> Removes a stimulation from this stimulation set. </summary>
 	/// <param name="index">the index of the stimulation to remove. </param>
 	/// <remarks> Stimulation indexing change after call to this function : following stimulation(s) get one less indexed. </remarks>
-	//[[deprecated("Use erase instead (more std::vector naming style)")]]
+	/// \deprecated Use erase() method instead (more standard naming style)
 	OV_Deprecated("Use erase() method instead (more standard naming style)")
 	void removeStimulation(const size_t index) const { m_set->erase(m_set->begin() + index); }
 
@@ -294,7 +294,7 @@ private:
 	std::vector<SStimulation>* m_set;
 };
 
-//[[deprecated("Use CStimulationSet instead")]]
+/// \deprecated Use CStimulationSet instead
 OV_Deprecated("Use CStimulationSet instead")
 typedef CStimulationSet IStimulationSet;	///< Keep previous compatibility. Avoid to used it, intended to be removed. 
 
