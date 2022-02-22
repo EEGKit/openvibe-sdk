@@ -67,6 +67,7 @@ public:
 	/// <param name="type"> The error type. </param>
 	/// <param name="description"> A self-explanatory description of the error. </param>
 	/// <remarks> Errors already added to the manager will be nested in the newly added error. </remarks>
+	/// \deprecated Use same method with std::string parameter instead.
 	OV_Deprecated("Use same method with std::string parameter instead.")
 	void pushError(const ErrorType type, const char* description) const { this->pushError(type, description, "NoLocationInfo", 0); }
 
@@ -76,6 +77,7 @@ public:
 	/// <param name="filename"> The source file where the error was detected. </param>
 	/// <param name="line"> The line number where the error was detected. </param>
 	/// <remarks> Errors already added to the manager will be nested in the newly added error. </remarks>
+	/// \deprecated Use the pushError() method with std::string parameter instead.
 	OV_Deprecated("Use the pushError() method with std::string parameter instead.")
 	void pushErrorAtLocation(const ErrorType type, const char* description, const char* filename, size_t line) const
 	{
@@ -110,6 +112,7 @@ private:
 	std::unique_ptr<CError>* m_topError;	///< The top error.
 };
 
+/// \deprecated Use the CErrorManager class instead
 OV_Deprecated("Use the CErrorManager class instead")
 typedef CErrorManager IErrorManager;	///< Keep previous compatibility. Avoid to used it, intended to be removed.
 

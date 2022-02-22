@@ -316,6 +316,7 @@ private:
 	std::vector<std::vector<std::string>>* m_dimLabels = nullptr;	///< Labels of all dimensions (pointer to avoid export warning C4251)
 };
 
+/// \deprecated Use the CMatrix class instead.
 OV_Deprecated("Use the CMatrix class instead")
 typedef CMatrix IMatrix;	///< Keep previous compatibility. Avoid to used it, intended to be removed. 
 

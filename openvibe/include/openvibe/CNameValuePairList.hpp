@@ -138,6 +138,7 @@ public:
 	/// <param name="name"> Name to add to the list. </param>
 	/// <param name="value"> Value to associate with the name. </param>
 	/// <returns> <c>true</c> </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool setValue(const CString& name, const CString& value) const;
 
@@ -145,6 +146,7 @@ public:
 	/// <param name="name"> Name to add to the list. </param>
 	/// <param name="value"> Value to associate with the name. </param>
 	/// <returns> <false> if pointer is <c>nullptr</c>, <c>true</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool setValue(const CString& name, const char* value) const;
 
@@ -152,6 +154,7 @@ public:
 	/// <param name="name"> Name to add to the list. </param>
 	/// <param name="value"> Value to associate with the name. </param>
 	/// <returns> <c>true</c> </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool setValue(const CString& name, const double& value) const;
 
@@ -159,6 +162,7 @@ public:
 	/// <param name="name"> Name to add to the list. </param>
 	/// <param name="value"> Value to associate with the name. </param>
 	/// <returns> <c>true</c> </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool setValue(const CString& name, bool value) const;
 
@@ -166,6 +170,7 @@ public:
 	/// <param name="name"> Name whose value is to be retrieved. </param>
 	/// <param name="value"> String value to be retrieved from the list. </param>
 	/// <returns> <c>true</c> if value could be retrieved, <c>false</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool getValue(const CString& name, CString& value) const;
 
@@ -173,6 +178,7 @@ public:
 	/// <param name="name"> Name whose value is to be retrieved. </param>
 	/// <param name="value"> Double value to be retrieved from the list. </param>
 	/// <returns> <c>true</c> if value could be retrieved, <c>false</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool getValue(const CString& name, double& value) const;
 
@@ -182,6 +188,7 @@ public:
 	/// <param name="name"> Name whose value is to be retrieved. </param>
 	/// <param name="value"> boolean value to be retrieved from the list. </param>
 	/// <returns> <c>true</c> if value could be retrieved and evaluates to a boolean, <c>false</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool getValue(const CString& name, bool& value) const;
 
@@ -190,11 +197,13 @@ public:
 	/// <param name="name"> Name of the value stored in index. </param>
 	/// <param name="value"> Value stored in index. </param>
 	/// <returns> <c>true</c> if value could be retrieved, <c>false</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	bool getValue(const size_t index, CString& name, CString& value) const;
 
 	/// <summary> Retrieve the number of stored elements. </summary>
 	/// <returns> The number of stored elements. </returns>
+	/// \deprecated Use size() method instead.
 	OV_Deprecated("Use size() method instead.")
 	size_t getSize() const { return m_map->size(); }
 
