@@ -16,6 +16,7 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-module-system
                       openvibe-module-fs
                       Boost::boost
+                      Eigen3::Eigen
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
@@ -27,8 +28,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
-
-include("FindThirdPartyEigen")
 
 # ---------------------------------
 # Target macros

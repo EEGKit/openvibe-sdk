@@ -4,7 +4,6 @@ gcc
 g++
 libexpat1-dev
 libncurses5-dev
-libeigen3-dev
 ninja-build
 libzzip-dev
 libxerces-c-dev
