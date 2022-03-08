@@ -7,4 +7,3 @@ libncurses5-dev
 ninja-build
 libzzip-dev
 libxerces-c-dev
-libgtest-dev
