@@ -11,9 +11,11 @@ file(GLOB_RECURSE SRC_FILES *.cpp *.hpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      ${GTEST_BOTH_LIBRARIES}
-                      openvibe
-                      openvibe-common)
+					  ${GTEST_BOTH_LIBRARIES}
+					  openvibe
+					  openvibe-common
+					  GTest::GTest
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})  # Place project in folder unit-test (for some IDE)
 

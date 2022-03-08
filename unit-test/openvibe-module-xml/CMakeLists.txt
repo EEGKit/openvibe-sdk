@@ -22,13 +22,15 @@ function(SETUP_TEST)
 	SET_BUILD_PLATFORM()
 
 	target_link_libraries(${PROJECT_NAME}
-                          ${GTEST_BOTH_LIBRARIES}
-                          openvibe
-                          openvibe-common
-                          openvibe-module-xml
-                          openvibe-module-fs
-                          Boost::boost			 
-                          Boost::filesystem)
+						  ${GTEST_BOTH_LIBRARIES}
+						  openvibe
+						  openvibe-common
+						  openvibe-module-xml
+						  openvibe-module-fs
+						  Boost::boost
+						  Boost::filesystem
+						  GTest::GTest
+	)
 	
 	set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 

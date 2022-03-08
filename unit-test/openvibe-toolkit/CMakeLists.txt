@@ -58,12 +58,14 @@ create_test_sourcelist(Tests
 add_executable(${PROJECT_NAME} ${Tests})
 
 target_link_libraries(${PROJECT_NAME}
-                      ${GTEST_BOTH_LIBRARIES}
-                      openvibe
-                      openvibe-common
-                      openvibe-module-system
-                      openvibe-toolkit
-                      openvibe-test-unit-toolkit)
+					  ${GTEST_BOTH_LIBRARIES}
+					  openvibe
+					  openvibe-common
+					  openvibe-module-system
+					  openvibe-toolkit
+					  openvibe-test-unit-toolkit
+					  GTest::GTest
+)
 
 SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
 
