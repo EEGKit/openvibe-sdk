@@ -11,7 +11,6 @@ file(GLOB_RECURSE SRC_FILES *.cpp *.hpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-					  ${GTEST_BOTH_LIBRARIES}
 					  openvibe
 					  openvibe-common
 					  GTest::GTest

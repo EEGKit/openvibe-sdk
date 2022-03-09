@@ -24,7 +24,6 @@ function(SETUP_TEST)
 	SET_BUILD_PLATFORM()
 
 	target_link_libraries(${PROJECT_NAME}
-						  ${GTEST_BOTH_LIBRARIES}
 						  openvibe
 						  openvibe-common
 						  GTest::GTest
