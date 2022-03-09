@@ -28,14 +28,15 @@ SET_BUILD_PLATFORM()
 
 add_executable(${PROJECT_NAME} uoFilesTestUTF.cpp)
 
-target_link_libraries(${PROJECT_NAME} 
-                      ${GTEST_BOTH_LIBRARIES}
-                      openvibe
-                      openvibe-common
-                      openvibe-module-fs
-                      openvibe-test-unit-toolkit
-                      Boost::boost
-                      Boost::filesystem
+target_link_libraries(${PROJECT_NAME}
+					  openvibe
+					  openvibe-common
+					  openvibe-module-fs
+					  openvibe-test-unit-toolkit
+					  Boost::boost
+					  Boost::filesystem
+					  GTest::GTest
+					  GTest::Main
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
