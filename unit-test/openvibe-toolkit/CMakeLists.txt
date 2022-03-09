@@ -64,6 +64,7 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe-toolkit
 					  openvibe-test-unit-toolkit
 					  GTest::GTest
+					  GTest::Main
 )
 
 SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})

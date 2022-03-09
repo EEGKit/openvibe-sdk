@@ -27,6 +27,7 @@ function(SETUP_TEST)
 						  openvibe
 						  openvibe-common
 						  GTest::GTest
+						  GTest::Main
 	)
 endfunction()
 

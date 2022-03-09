@@ -59,6 +59,7 @@ target_link_libraries(${PROJECT_NAME}
 					  ${OVT_UNIT_TOOLKIT_LIB}
 					  ${OV_LIBS} ${OV_MODULE_CSV}
 					  GTest::GTest
+					  GTest::Main
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

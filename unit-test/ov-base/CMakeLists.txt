@@ -14,6 +14,7 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe
 					  openvibe-common
 					  GTest::GTest
+					  GTest::Main
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})  # Place project in folder unit-test (for some IDE)
