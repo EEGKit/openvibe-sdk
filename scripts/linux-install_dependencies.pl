@@ -134,7 +134,7 @@ closedir($dir_handle);
 my $pkg_file = "";
 
 if ($distribution =~ 'Ubuntu') {
-  if (int(lsb_release) <= '14') {
+  if (int($lsb_release) <= '14') {
     $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
   } else {
     $pkg_file = "$manifest_dir/linux-dependencies-ubuntu16_plus.txt";
