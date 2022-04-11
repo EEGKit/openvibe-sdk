@@ -85,7 +85,7 @@ my $add_repository_command  = '';
 
 my $os_release = `cat /etc/os-release`;
 # Check for NAME= and VERSION_ID=
-# Take into account distros placing quotes around values
+# Take into account distros placing quotes around value
 my ($lsb_distributor, $lsb_release) = ($os_release =~ m/NAME=["'\`]*([a-zA-Z]+).*VERSION_ID=["'\`]*([0-9.]+)/s);
 
 if ($lsb_distributor =~ 'Ubuntu') {
@@ -99,13 +99,8 @@ if ($lsb_distributor =~ 'Ubuntu') {
       $add_repository_command  = 'sudo add-apt-repository universe';
     }
   }
+  $distribution = 'Ubuntu ' . $lsb_release;
 
-  if ($lsb_release =~ '14.04'
-      || $lsb_release =~ '16.04'
-      || $lsb_release =~ '18.04'
-      || $lsb_release =~ '19.10') {
-    $distribution = 'Ubuntu ' . $lsb_release;
-  }
 } elsif ($lsb_distributor =~ 'Fedora') {
   if (!$no_install) {
     if ($assume_yes) {
@@ -114,7 +109,7 @@ if ($lsb_distributor =~ 'Ubuntu') {
       $package_install_command = 'sudo dnf install';
     }
   }
-  $distribution = 'Fedora';
+  $distribution = 'Fedora' . $lsb_release;
 }
 
 $distribution eq $unsupported_distribution and die('This distribution is unsupported');
@@ -138,10 +133,12 @@ closedir($dir_handle);
 
 my $pkg_file = "";
 
-if ($distribution eq 'Ubuntu 14.04') {
-  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
-} elsif ($distribution =~ 'Ubuntu') {
-  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu16_plus.txt";
+if ($distribution =~ 'Ubuntu') {
+  if (int($lsb_release) <= '14') {
+    $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
+  } else {
+    $pkg_file = "$manifest_dir/linux-dependencies-ubuntu16_plus.txt";
+  }
 } elsif ($distribution eq 'Fedora') {
   $pkg_file = "$manifest_dir/linux-dependencies-fedora.txt";
 }
