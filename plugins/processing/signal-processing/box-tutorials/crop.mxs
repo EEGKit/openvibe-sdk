@@ -140,14 +140,14 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Min crop value</Name>
 					<DefaultValue>-1</DefaultValue>
-					<Value>-3.000000</Value>
+					<Value>-3</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Max crop value</Name>
 					<DefaultValue>1</DefaultValue>
-					<Value>3.000000</Value>
+					<Value>3</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
