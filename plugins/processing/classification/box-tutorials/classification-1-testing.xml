@@ -2178,11 +2178,11 @@ transformations.</Text>
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x473d9a43, 0x97fc0a97)</Identifier>
-					<Value>784.000000</Value>
+					<Value>784</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x7234b86b, 0x2b8651a5)</Identifier>
-					<Value>304.000000</Value>
+					<Value>304</Value>
 				</Attribute>
 			</Attributes>
 		</Comment>
@@ -2203,11 +2203,11 @@ from the lua chain. </Text>
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x473d9a43, 0x97fc0a97)</Identifier>
-					<Value>752.000000</Value>
+					<Value>752</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x7234b86b, 0x2b8651a5)</Identifier>
-					<Value>800.000000</Value>
+					<Value>800</Value>
 				</Attribute>
 			</Attributes>
 		</Comment>

@@ -626,7 +626,7 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Shrinkage coefficient (-1 == auto)</Name>
 					<DefaultValue>-1.000000</DefaultValue>
-					<Value>-1.000000</Value>
+					<Value>-1</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
