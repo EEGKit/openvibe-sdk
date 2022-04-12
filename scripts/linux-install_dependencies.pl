@@ -139,7 +139,7 @@ if ($distribution =~ 'Ubuntu') {
   } else {
     $pkg_file = "$manifest_dir/linux-dependencies-ubuntu16_plus.txt";
   }
-} elsif ($distribution eq 'Fedora') {
+} elsif ($distribution =~ 'Fedora') {
   $pkg_file = "$manifest_dir/linux-dependencies-fedora.txt";
 }
 
