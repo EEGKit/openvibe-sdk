@@ -8,14 +8,14 @@ target_include_directories(${PROJECT_NAME} INTERFACE include)
 add_executable(${PROJECT_NAME}-nop src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME}-nop
-					  ${PROJECT_NAME})
+					  ${PROJECT_NAME}
+					  Boost::boost
+)
 	
 set_target_properties(${PROJECT_NAME}-nop PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR}
 	FOLDER ${KERNEL_FOLDER})
-
-include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros

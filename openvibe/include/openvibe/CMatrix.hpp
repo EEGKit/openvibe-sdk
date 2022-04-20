@@ -72,7 +72,7 @@ public:
 	/// <returns> The buffer. </returns>
 	double* getBuffer()
 	{
-		if (!m_buffer) { initBuffer(); }				// Initialize buffer if needed
+		if (!m_buffer) { initBuffer(); }	// Initialize buffer if needed
 		return m_buffer;
 	}
 
@@ -115,6 +115,27 @@ public:
 	/// <summary> Set the label of the index in the selected dimension (keep previous compatibility with char* for CString). </summary>
 	/// <remarks> keep previous compatibility with heavy name. Avoid to used it, intended to be removed. </remakrs>
 	bool setDimensionLabel(const size_t dim, const size_t idx, const char* label) const { return setDimensionLabel(dim, idx, std::string(label)); }
+
+	/// <summary> Fill the matrix with the buffer. </summary>
+	/// <param name="buffer"> The buffer to copy. </param>
+	/// <param name="size"> The size of the buffer. </param>
+	/// <returns> <c>True</c> if the matrix is filled with buffer, <c>False</c> if the buffer size exceeds the matrix size. </returns>
+	/// <remarks> The buffer can contain any numeric type. The CMatrix class stores them as double. </remakrs>
+	template <class T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	bool setBuffer(const T* buffer, const size_t size)
+	{
+		if (!m_buffer) { initBuffer(); }				// Initialize buffer if needed
+		if (size > m_size) { return false; }
+		for (size_t i = 0; i < size; ++i) { m_buffer[i] = double(buffer[i]); }
+		return true;
+	}
+
+	/// <summary> Fill the matrix with the buffer. </summary>
+	/// <param name="buffer"> The buffer to copy. </param>
+	/// <returns> <c>True</c> if the matrix is filled with buffer, <c>False</c> if the buffer size exceeds the matrix size. </returns>
+	/// <remarks> The buffer can contain any numeric type. The CMatrix class stores them as double. </remakrs>
+	template <class T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+	bool setBuffer(const std::vector<T>& buffer) { return setBuffer(buffer.data(), buffer.size()); }
 
 	//--------------------------------------------------
 	//------------------- Operators --------------------
@@ -295,6 +316,8 @@ private:
 	std::vector<std::vector<std::string>>* m_dimLabels = nullptr;	///< Labels of all dimensions (pointer to avoid export warning C4251)
 };
 
-typedef CMatrix IMatrix;	// Keep previous compatibility. Avoid to used it, intended to be removed. 
+/// \deprecated Use the CMatrix class instead.
+OV_Deprecated("Use the CMatrix class instead")
+typedef CMatrix IMatrix;	///< Keep previous compatibility. Avoid to used it, intended to be removed. 
 
 }  // namespace OpenViBE

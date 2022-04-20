@@ -26,7 +26,7 @@ namespace Kernel {
  *  - for \c ParameterType_String : \c CString
  *  - for \c ParameterType_Identifier : \c CIdentifier
  *  - for \c ParameterType_Matrix : \c CMatrix*
- *  - for \c ParameterType_StimulationSet : \c IStimulationSet*
+ *  - for \c ParameterType_StimulationSet : \c CStimulationSet*
  *  - for \c ParameterType_MemoryBuffer : \c IMemoryBuffer*
  *  - for \c ParameterType_Object : \c IObject*
  *  - for \c ParameterType_Pointer : \c uint8_t*

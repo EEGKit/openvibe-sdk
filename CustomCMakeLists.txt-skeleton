@@ -3,14 +3,6 @@
 # In order to use the file make a copy of it an rename it "CustomCMakeLists.txt"
 
 # ----------------------------------
-# USEFUL ELEMENTS
-# ----------------------------------
-
-# Uncomment the following to build documentation
-# both the global project and the specific projects are affected by this token
-#SET(SKIP_DOCUMENTATION OFF)
-
-# ----------------------------------
 # OPENVIBE
 # ----------------------------------
 

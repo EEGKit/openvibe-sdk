@@ -39,7 +39,9 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-common
                       openvibe-module-ebml
                       openvibe-module-xml
-                      openvibe-module-fs)
+                      openvibe-module-fs
+					  Boost::filesystem
+)
 
 add_dependencies(${PROJECT_NAME} openvibe-generate-stimulation-file)
 
@@ -65,9 +67,6 @@ target_include_directories(${PROJECT_NAME}
 )
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
-
-# ---------------------------------
-include("FindThirdPartyBoost_FileSystem")
 
 # ---------------------------------
 # Target macros

@@ -18,7 +18,9 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe-common)
+                      openvibe-common
+                      Boost::boost
+)
 
 target_include_directories(${PROJECT_NAME}
                            PRIVATE include/date
@@ -35,7 +37,6 @@ target_compile_options(${PROJECT_NAME}
                        PUBLIC -DDate_Shared 
 )
 
-include("FindThirdPartyBoost")
 include("FindThirdPartyExpat")
 
 # ---------------------------------

@@ -13,15 +13,15 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-common
                       openvibe-module-fs
                       openvibe-module-system
-                      openvibe-module-xml)
+                      openvibe-module-xml
+                      Boost::boost
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${PROJECT_VERSION}
                       SOVERSION ${PROJECT_VERSION_MAJOR}
                       FOLDER ${KERNEL_FOLDER}
                       COMPILE_FLAGS "-DOVK_Exports -DOVK_Shared")
-
-include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Finds standard library dl

@@ -51,7 +51,7 @@ public:
 	 * \warning The algorithm should not use this reference after it
 	 *          has finished its work, it could be deprecated.
 	 */
-	virtual IErrorManager& getErrorManager() const = 0;
+	virtual CErrorManager& getErrorManager() const = 0;
 	/**
 	 * \brief Gets a reference on the current type manager
 	 * \return a reference on the current type manager

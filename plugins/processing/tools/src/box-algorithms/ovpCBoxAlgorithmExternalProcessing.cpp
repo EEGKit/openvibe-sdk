@@ -309,7 +309,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 					maybeStimulationDecoder->second.decode(j, false); // The input will be marked as deprecated later
 
 					// Cache empty chunks, we will send them when a stimulation or a signal chunk arrives
-					if (maybeStimulationDecoder->second.getOutputStimulationSet()->getStimulationCount() == 0)
+					if (maybeStimulationDecoder->second.getOutputStimulationSet()->size() == 0)
 					{
 						m_packetHistory.emplace(startTime, endTime, i, ebml);
 						OV_FATAL_UNLESS_K(boxCtx.markInputAsDeprecated(i, j), "Failed to mark input as deprecated", Kernel::ErrorType::Internal);

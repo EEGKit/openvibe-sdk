@@ -12,7 +12,9 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-module-ebml
                       openvibe-module-system
                       openvibe-module-xml
-                      openvibe-module-fs)
+                      openvibe-module-fs
+                      Eigen3::Eigen
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -22,7 +24,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
-include("FindThirdPartyEigen")
 
 # ---------------------------------
 # Target macros

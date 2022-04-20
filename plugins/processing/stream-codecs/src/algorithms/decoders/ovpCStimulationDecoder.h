@@ -24,7 +24,7 @@ public:
 
 protected:
 
-	Kernel::TParameterHandler<IStimulationSet*> op_stimulationSet;
+	Kernel::TParameterHandler<CStimulationSet*> op_stimulationSet;
 
 private:
 

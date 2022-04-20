@@ -23,23 +23,23 @@ bool CStimulationEncoder::uninitialize()
 
 bool CStimulationEncoder::processBuffer()
 {
-	IStimulationSet* stimulationSet = ip_stimSet;
+	CStimulationSet* stimulationSet = ip_stimSet;
 
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation);
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations);
-	m_writerHelper->setUInt(stimulationSet->getStimulationCount());
+	m_writerHelper->setUInt(stimulationSet->size());
 	m_writerHelper->closeChild();
-	for (size_t i = 0; i < stimulationSet->getStimulationCount(); ++i)
+	for (size_t i = 0; i < stimulationSet->size(); ++i)
 	{
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation);
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_ID);
-		m_writerHelper->setUInt(stimulationSet->getStimulationIdentifier(i));
+		m_writerHelper->setUInt(stimulationSet->getId(i));
 		m_writerHelper->closeChild();
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_Date);
-		m_writerHelper->setUInt(stimulationSet->getStimulationDate(i));
+		m_writerHelper->setUInt(stimulationSet->getDate(i));
 		m_writerHelper->closeChild();
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration);
-		m_writerHelper->setUInt(stimulationSet->getStimulationDuration(i));
+		m_writerHelper->setUInt(stimulationSet->getDuration(i));
 		m_writerHelper->closeChild();
 		m_writerHelper->closeChild();
 	}

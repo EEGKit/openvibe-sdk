@@ -47,23 +47,23 @@ bool CBoxAlgorithmStimulationListener::process()
 			if (m_stimulationDecoders[i]->isHeaderReceived()) { }
 			if (m_stimulationDecoders[i]->isBufferReceived())
 			{
-				const IStimulationSet* stimSet = m_stimulationDecoders[i]->getOutputStimulationSet();
+				const CStimulationSet* stimSet = m_stimulationDecoders[i]->getOutputStimulationSet();
 
 				CString inputName;
 				staticboxCtx.getInputName(i, inputName);
-				for (size_t k = 0; k < stimSet->getStimulationCount(); ++k)
+				for (size_t k = 0; k < stimSet->size(); ++k)
 				{
 					this->getLogManager() << m_logLevel
 							<< "For input " << i << " with name " << inputName
-							<< " got stimulation " << stimSet->getStimulationIdentifier(k)
-							<< "[" << getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, stimSet->getStimulationIdentifier(k)) << "]"
-							<< " at date " << CTime(stimSet->getStimulationDate(k))
-							<< " and duration " << CTime(stimSet->getStimulationDuration(k)) << "\n";
+							<< " got stimulation " << stimSet->getId(k)
+							<< "[" << getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, stimSet->getId(k)) << "]"
+							<< " at date " << CTime(stimSet->getDate(k))
+							<< " and duration " << CTime(stimSet->getDuration(k)) << "\n";
 
 					OV_WARNING_UNLESS_K(
-						stimSet->getStimulationDate(k) >= boxCtx.getInputChunkStartTime(i, j)
-						&& stimSet->getStimulationDate(k) <= boxCtx.getInputChunkEndTime(i, j),
-						"Invalid out of range date [" << CTime(stimSet->getStimulationDate(k)) << "] (expected value between ["
+						stimSet->getDate(k) >= boxCtx.getInputChunkStartTime(i, j)
+						&& stimSet->getDate(k) <= boxCtx.getInputChunkEndTime(i, j),
+						"Invalid out of range date [" << CTime(stimSet->getDate(k)) << "] (expected value between ["
 						<< CTime(boxCtx.getInputChunkStartTime(i, j)) << "] and [" << CTime(boxCtx.getInputChunkEndTime(i, j)) << "])");
 				}
 			}

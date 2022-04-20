@@ -13,7 +13,7 @@ class IMetaboxManager;
 class IScenarioManager;
 class ITypeManager;
 class ILogManager;
-class IErrorManager;
+class CErrorManager;
 
 /**
  * \class IKernelContext
@@ -93,7 +93,7 @@ public:
 	 * \brief Gets a reference on the kernel's error manager
 	 * \return a reference on the kernel's error manager
 	 */
-	virtual IErrorManager& getErrorManager() const = 0;
+	virtual CErrorManager& getErrorManager() const = 0;
 
 
 	// backward compatibility

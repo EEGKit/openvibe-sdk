@@ -40,7 +40,7 @@ bool CMasterAcquisitionEncoder::initialize()
 	Kernel::TParameterHandler<uint64_t> ip_subjectGender(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectGender));
 	Kernel::TParameterHandler<CMatrix*> ip_pMatrix(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix));
 	Kernel::TParameterHandler<uint64_t> ip_sampling(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling));
-	Kernel::TParameterHandler<IStimulationSet*> ip_stimSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
+	Kernel::TParameterHandler<CStimulationSet*> ip_stimSet(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet));
 	Kernel::TParameterHandler<uint64_t> ip_bufferDuration(this->getInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration));
 	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 	Kernel::TParameterHandler<CMatrix*> ip_channelLocalisationMaster(
@@ -91,7 +91,7 @@ bool CMasterAcquisitionEncoder::initialize()
 
 	// Declares parameter handlers for sub-algorithm stimulation
 
-	Kernel::TParameterHandler<IStimulationSet*> ip_stimulationStimulationSet(
+	Kernel::TParameterHandler<CStimulationSet*> ip_stimulationStimulationSet(
 		m_stimulationStreamEncoder->getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
 	Kernel::TParameterHandler<IMemoryBuffer*> op_stimulationMemoryBuffer(
 		m_stimulationStreamEncoder->getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));

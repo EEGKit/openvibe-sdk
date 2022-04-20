@@ -310,7 +310,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 		OV_ERROR_UNLESS_KRF(boxContext.markOutputAsReadyToSend(1, 0, 0), "Failed to mark stimulation header as ready to send", Kernel::ErrorType::Internal);
 	}
 
-	IStimulationSet* stimulationSet = m_stimEncoder.getInputStimulationSet();
+	CStimulationSet* stimulationSet = m_stimEncoder.getInputStimulationSet();
 	stimulationSet->clear();
 
 	const uint64_t stimulationChunkStartTime = m_lastStimulationDate;
@@ -337,7 +337,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 
 			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
-				stimulationSet->appendStimulation(it->id, CTime(it->date).time(), CTime(it->duration).time());
+				stimulationSet->push_back(it->id, CTime(it->date).time(), CTime(it->duration).time());
 				m_lastStimulationDate = CTime(it->date).time();
 			}
 			else

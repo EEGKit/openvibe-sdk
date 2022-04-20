@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
 	<FormatVersion>2</FormatVersion>
 	<Creator>OpenViBE Designer</Creator>
-	<CreatorVersion>2.2.0</CreatorVersion>
+	<CreatorVersion>3.2.0</CreatorVersion>
 	<Settings></Settings>
 	<Inputs></Inputs>
 	<Outputs></Outputs>
@@ -343,7 +343,7 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Interstimulation interval (in sec)</Name>
 					<DefaultValue>1.0</DefaultValue>
-					<Value>2.0</Value>
+					<Value>2</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
@@ -714,7 +714,7 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Shrinkage coefficient (-1 == auto)</Name>
 					<DefaultValue>-1.000000</DefaultValue>
-					<Value>-1.000000</Value>
+					<Value>-1</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
@@ -3136,11 +3136,11 @@ transformations.</Text>
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x473d9a43, 0x97fc0a97)</Identifier>
-					<Value>784.000000</Value>
+					<Value>784</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x7234b86b, 0x2b8651a5)</Identifier>
-					<Value>304.000000</Value>
+					<Value>304</Value>
 				</Attribute>
 			</Attributes>
 		</Comment>

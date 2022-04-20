@@ -28,21 +28,21 @@ SET_BUILD_PLATFORM()
 
 add_executable(${PROJECT_NAME} uoFilesTestUTF.cpp)
 
-target_link_libraries(${PROJECT_NAME} 
-                      ${GTEST_BOTH_LIBRARIES}
-                      openvibe
-                      openvibe-common
-                      openvibe-module-fs
-                      openvibe-test-unit-toolkit
+target_link_libraries(${PROJECT_NAME}
+					  openvibe
+					  openvibe-common
+					  openvibe-module-fs
+					  openvibe-test-unit-toolkit
+					  Boost::boost
+					  Boost::filesystem
+					  GTest::GTest
+					  GTest::Main
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})	# Place project in folder unit-test (for some IDE)
 
 add_definitions("-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
 add_definitions("-DTMP_DIR=\"${OVT_TEST_TEMPORARY_DIR}\"")
-
-include("FindThirdPartyBoost")
-include("FindThirdPartyBoost_FileSystem")
 
 add_test(NAME uoFSTestUTF COMMAND ${PROJECT_NAME})
 

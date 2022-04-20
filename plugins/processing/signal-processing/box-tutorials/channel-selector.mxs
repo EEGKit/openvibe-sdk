@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
-	<FormatVersion>1</FormatVersion>
-	<Creator>OpenVIBE</Creator>
-	<CreatorVersion>0.2.99</CreatorVersion>
+	<FormatVersion>2</FormatVersion>
+	<Creator>OpenViBE Designer</Creator>
+	<CreatorVersion>3.2.0</CreatorVersion>
 	<Settings></Settings>
 	<Inputs></Inputs>
 	<Outputs></Outputs>
@@ -88,11 +88,11 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>192</Value>
+					<Value>112</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>176</Value>
+					<Value>240</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -258,7 +258,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>304</Value>
+					<Value>368</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -463,10 +463,4 @@ a 4 channels sinusoidal signal</Text>
 			<Data>[{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"height":678,"identifier":"(0x02b6d4f0, 0x103dc3fd)","name":"Default window","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":950},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x1722ecef, 0x1695d0b2)","index":0,"name":"Default tab","parentIdentifier":"(0x02b6d4f0, 0x103dc3fd)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":463,"identifier":"(0x00004bd5, 0x00001389)","index":0,"maxDividerPosition":930,"name":"Horizontal split","parentIdentifier":"(0x1722ecef, 0x1695d0b2)","type":5},{"boxIdentifier":"(0x0000478e, 0x000023b0)","childCount":0,"identifier":"(0x00002c70, 0x000006ef)","index":0,"parentIdentifier":"(0x00004bd5, 0x00001389)","type":3},{"boxIdentifier":"(0x0000478e, 0x000023b1)","childCount":0,"identifier":"(0x000048d3, 0x0000443a)","index":1,"parentIdentifier":"(0x00004bd5, 0x00001389)","type":3}]</Data>
 		</Entry>
 	</Metadata>
-	<Attributes>
-		<Attribute>
-			<Identifier>(0x4c536d0a, 0xb23dc545)</Identifier>
-			<Value>channel-selector.mxs</Value>
-		</Attribute>
-	</Attributes>
 </OpenViBE-Scenario>

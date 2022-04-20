@@ -288,7 +288,7 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 		playerIDs.push_back(id);
 
 		CNameValuePairList configTokens;
-		for (auto& token : m_impl->scenarioTokens[name]) { configTokens.setValue(token.first.c_str(), token.second.c_str()); }
+		for (auto& token : m_impl->scenarioTokens[name]) { configTokens.setValue(token.first, token.second); }
 
 		// Scenario attachment with setup of local token
 		if (!player->setScenario(pair.second, &configTokens))

@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
 	<FormatVersion>2</FormatVersion>
 	<Creator>OpenViBE Designer</Creator>
-	<CreatorVersion>2.2.0</CreatorVersion>
+	<CreatorVersion>3.2.0</CreatorVersion>
 	<Settings></Settings>
 	<Inputs></Inputs>
 	<Outputs></Outputs>
@@ -32,11 +32,11 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>400.000000</Value>
+					<Value>496</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>288.000000</Value>
+					<Value>368</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -90,11 +90,11 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>400.000000</Value>
+					<Value>496</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>464.000000</Value>
+					<Value>512</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -148,11 +148,11 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>400.000000</Value>
+					<Value>496</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>640.000000</Value>
+					<Value>656</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -206,11 +206,11 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>400.000000</Value>
+					<Value>496</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>816.000000</Value>
+					<Value>800</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x30a4e5c9, 0x83502953)</Identifier>
@@ -267,11 +267,11 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>688.000000</Value>
+					<Value>640</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>576.000000</Value>
+					<Value>576</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -387,7 +387,7 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Shrinkage coefficient (-1 == auto)</Name>
 					<DefaultValue>-1.000000</DefaultValue>
-					<Value>-1.000000</Value>
+					<Value>-1</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
@@ -415,11 +415,11 @@
 			<Attributes>
 				<Attribute>
 					<Identifier>(0x1fa7a38f, 0x54edbe0b)</Identifier>
-					<Value>577.000000</Value>
+					<Value>577</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
-					<Value>576.000000</Value>
+					<Value>576</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -428,10 +428,6 @@
 				<Attribute>
 					<Identifier>(0xc46b3d00, 0x3e0454e1)</Identifier>
 					<Value>(0x00000000, 0x00ca1a5c)</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0xc67a01dc, 0x28ce06c1)</Identifier>
-					<Value></Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xc73e83ec, 0xf855c5bc)</Identifier>
@@ -467,7 +463,6 @@
 				<BoxIdentifier>(0x56fbfd1a, 0x2c474c9e)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
-			<Attributes></Attributes>
 		</Link>
 		<Link>
 			<Identifier>(0x00001a7f, 0x00007594)</Identifier>
@@ -479,7 +474,6 @@
 				<BoxIdentifier>(0x56fbfd1a, 0x2c474c9e)</BoxIdentifier>
 				<BoxInputIndex>2</BoxInputIndex>
 			</Target>
-			<Attributes></Attributes>
 		</Link>
 		<Link>
 			<Identifier>(0x00003f05, 0x00000e40)</Identifier>
@@ -491,7 +485,6 @@
 				<BoxIdentifier>(0x56fbfd1a, 0x2c474c9e)</BoxIdentifier>
 				<BoxInputIndex>1</BoxInputIndex>
 			</Target>
-			<Attributes></Attributes>
 		</Link>
 		<Link>
 			<Identifier>(0x00006145, 0x000035ca)</Identifier>
@@ -503,7 +496,6 @@
 				<BoxIdentifier>(0x2a62aa62, 0x22b9aa6a)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
-			<Attributes></Attributes>
 		</Link>
 		<Link>
 			<Identifier>(0x00007b19, 0x000024cd)</Identifier>
@@ -515,10 +507,16 @@
 				<BoxIdentifier>(0x56fbfd1a, 0x2c474c9e)</BoxIdentifier>
 				<BoxInputIndex>3</BoxInputIndex>
 			</Target>
-			<Attributes></Attributes>
 		</Link>
 	</Links>
 	<Comments></Comments>
+	<Metadata>
+		<Entry>
+			<Identifier>(0x00005548, 0x00004d89)</Identifier>
+			<Type>(0x3bcce5d2, 0x43f2d968)</Type>
+			<Data>[]</Data>
+		</Entry>
+	</Metadata>
 	<Attributes>
 		<Attribute>
 			<Identifier>(0x4c90d4ad, 0x7a2554ec)</Identifier>

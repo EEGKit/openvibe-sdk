@@ -118,12 +118,12 @@ bool CBoxAlgorithmVotingClassifier::process()
 				}
 				else
 				{
-					for (size_t k = 0; k < input.op_stimSet->getStimulationCount(); ++k)
+					for (size_t k = 0; k < input.op_stimSet->size(); ++k)
 					{
-						const uint64_t id = input.op_stimSet->getStimulationIdentifier(k);
+						const uint64_t id = input.op_stimSet->getId(k);
 						if (id == m_targetClassLabel || id == m_nonTargetClassLabel || id == m_rejectClassLabel)
 						{
-							input.scores.push_back(std::pair<double, uint64_t>(id == m_targetClassLabel ? 1 : 0, input.op_stimSet->getStimulationDate(k)));
+							input.scores.push_back(std::pair<double, uint64_t>(id == m_targetClassLabel ? 1 : 0, input.op_stimSet->getDate(k)));
 						}
 					}
 				}
@@ -183,7 +183,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 					<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, classLabel) << "\n";
 		}
 		m_classificationChoiceEncoder.getInputStimulationSet()->clear();
-		m_classificationChoiceEncoder.getInputStimulationSet()->appendStimulation(classLabel, time, 0);
+		m_classificationChoiceEncoder.getInputStimulationSet()->push_back(classLabel, time, 0);
 
 		m_classificationChoiceEncoder.encodeBuffer();
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, time);

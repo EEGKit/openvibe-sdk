@@ -174,9 +174,9 @@ bool CBoxAlgorithmClassifierProcessor::process()
 		if (m_stimDecoder.isHeaderReceived()) { }
 		if (m_stimDecoder.isBufferReceived())
 		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->getStimulationCount(); ++j)
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->size(); ++j)
 			{
-				if (m_stimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
+				if (m_stimDecoder.getOutputStimulationSet()->getId(j) == OVTK_StimulationId_TrainCompleted)
 				{
 					CString configFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 					if (!loadClassifier(configFilename.toASCIIString())) { return false; }
@@ -211,12 +211,12 @@ bool CBoxAlgorithmClassifierProcessor::process()
 
 			Kernel::TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
-			IStimulationSet* set = m_labelsEncoder.getInputStimulationSet();
+			CStimulationSet* set = m_labelsEncoder.getInputStimulationSet();
 
-			set->setStimulationCount(1);
-			set->setStimulationIdentifier(0, m_stimulations[op_classificationState]);
-			set->setStimulationDate(0, endTime);
-			set->setStimulationDuration(0, 0);
+			set->resize(1);
+			set->setId(0, m_stimulations[op_classificationState]);
+			set->setDate(0, endTime);
+			set->setDuration(0, 0);
 
 			m_labelsEncoder.encodeBuffer();
 			m_hyperplanesEncoder.encodeBuffer();

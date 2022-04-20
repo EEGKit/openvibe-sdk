@@ -71,7 +71,7 @@ Settings
 
    "Epoch duration (in sec)", "Float", "1"
    "Epoch offset (in sec)", "Float", "0.5"
-   "Stimulation to epoch from", "Stimulation", "OVTK_StimulationId_Label_00"
+   "Stimulation 1", "Stimulation", "OVTK_StimulationId_Label_00"
 
 Epoch duration (in sec)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,7 +89,7 @@ offset is less than 0, then the signal selection starts *before* the actual
 stimulation. Refer to :ref:`Doc_BoxAlgorithm_StimulationBasedEpoching_Miscellaneous` for
 more detailed examples
 
-Stimulation to epoch from
+Stimulation 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This setting defines the stimulation identifier which should trigger

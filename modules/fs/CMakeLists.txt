@@ -7,7 +7,10 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe-common)
+                      openvibe-common
+					  Boost::boost
+					  Boost::filesystem
+)
 
 target_include_directories(${PROJECT_NAME}
                            PRIVATE include/fs 
@@ -23,9 +26,6 @@ target_compile_options(${PROJECT_NAME}
                        PRIVATE -DFS_Exports
                        PUBLIC -DFS_Shared 
 )
-
-include("FindThirdPartyBoost")
-include("FindThirdPartyBoost_FileSystem")
 
 # ---------------------------------
 # Target macros
