@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
 	<FormatVersion>2</FormatVersion>
 	<Creator>OpenViBE Designer</Creator>
-	<CreatorVersion>2.2.0</CreatorVersion>
+	<CreatorVersion>3.2.0</CreatorVersion>
 	<Settings>
 		<Setting>
 			<Identifier>(0x460057cc, 0xfaa7362d)</Identifier>
@@ -131,7 +131,7 @@
 			</Attributes>
 		</Box>
 		<Box>
-			<Identifier>(0x00003e6a, 0x00004b24)</Identifier>
+			<Identifier>(0x000035ab, 0x00003bb4)</Identifier>
 			<Name>CSV File Writer</Name>
 			<AlgorithmClassIdentifier>(0x428375e8, 0x325f2db9)</AlgorithmClassIdentifier>
 			<Inputs>
@@ -185,7 +185,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0xee4b6d30, 0x788aed29)</Value>
+					<Value>(0xc33e47e0, 0x70e5f31b)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -366,6 +366,17 @@
 	</Boxes>
 	<Links>
 		<Link>
+			<Identifier>(0x00000585, 0x00003c98)</Identifier>
+			<Source>
+				<BoxIdentifier>(0x000003fa, 0x00002132)</BoxIdentifier>
+				<BoxOutputIndex>0</BoxOutputIndex>
+			</Source>
+			<Target>
+				<BoxIdentifier>(0x000035ab, 0x00003bb4)</BoxIdentifier>
+				<BoxInputIndex>0</BoxInputIndex>
+			</Target>
+		</Link>
+		<Link>
 			<Identifier>(0x00000c57, 0x00001eb3)</Identifier>
 			<Source>
 				<BoxIdentifier>(0x00004e4d, 0x000039e9)</BoxIdentifier>
@@ -384,17 +395,6 @@
 			</Source>
 			<Target>
 				<BoxIdentifier>(0x00004e4d, 0x000039e9)</BoxIdentifier>
-				<BoxInputIndex>0</BoxInputIndex>
-			</Target>
-		</Link>
-		<Link>
-			<Identifier>(0x0000651e, 0x000040fc)</Identifier>
-			<Source>
-				<BoxIdentifier>(0x000003fa, 0x00002132)</BoxIdentifier>
-				<BoxOutputIndex>0</BoxOutputIndex>
-			</Source>
-			<Target>
-				<BoxIdentifier>(0x00003e6a, 0x00004b24)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
 		</Link>

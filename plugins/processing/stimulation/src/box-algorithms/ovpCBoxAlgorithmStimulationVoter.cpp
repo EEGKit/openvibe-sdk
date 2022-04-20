@@ -70,7 +70,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 {
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	Kernel::TParameterHandler<IStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	Kernel::TParameterHandler<CStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
 	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_buffer = boxContext.getOutputChunk(0);
 
@@ -83,10 +83,10 @@ bool CBoxAlgorithmStimulationVoter::process()
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			for (size_t k = 0; k < op_stimulationSet->getStimulationCount(); ++k)
+			for (size_t k = 0; k < op_stimulationSet->size(); ++k)
 			{
-				uint64_t stimulationId   = op_stimulationSet->getStimulationIdentifier(k);
-				uint64_t stimulationDate = op_stimulationSet->getStimulationDate(k);
+				uint64_t stimulationId   = op_stimulationSet->getId(k);
+				uint64_t stimulationDate = op_stimulationSet->getDate(k);
 				m_latestStimulusDate     = std::max(m_latestStimulusDate, stimulationDate);
 				if (CTime(m_latestStimulusDate - stimulationDate).toSeconds() <= m_timeWindow)
 				{
@@ -192,8 +192,8 @@ bool CBoxAlgorithmStimulationVoter::process()
 
 		this->getLogManager() << Kernel::LogLevel_Debug << "Appending winning stimulus " << resultClassLabel << " at " << timeStamp << " (" << maxVotes << " votes)\n";
 
-		ip_stimSet->setStimulationCount(0);
-		ip_stimSet->appendStimulation(resultClassLabel, timeStamp, 0);
+		ip_stimSet->resize(0);
+		ip_stimSet->push_back(resultClassLabel, timeStamp, 0);
 		m_encoder->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeBuffer);
 		boxContext.markOutputAsReadyToSend(0, m_lastTime, currentTime);
 		m_lastTime = currentTime;

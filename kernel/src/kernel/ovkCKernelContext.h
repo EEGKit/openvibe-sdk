@@ -26,7 +26,7 @@ public:
 	IScenarioManager& getScenarioManager() const override;
 	ITypeManager& getTypeManager() const override;
 	ILogManager& getLogManager() const override;
-	IErrorManager& getErrorManager() const override;
+	CErrorManager& getErrorManager() const override;
 
 	_IsDerivedFromClass_Final_(IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
@@ -47,7 +47,7 @@ private:
 	std::unique_ptr<IScenarioManager> m_scenarioManager;
 	std::unique_ptr<ITypeManager> m_typeManager;
 	std::unique_ptr<ILogManager> m_logManager;
-	std::unique_ptr<IErrorManager> m_errorManager;
+	std::unique_ptr<CErrorManager> m_errorManager;
 
 	CString m_applicationName;
 	CString m_configFile;
@@ -76,7 +76,7 @@ public:
 	void setScenarioManager(IScenarioManager* manager) { m_scenarioManager = manager; }
 	void setTypeManager(ITypeManager* manager) { m_typeManager = manager; }
 	void setLogManager(ILogManager* manager) { m_logManager = manager; }
-	void setErrorManager(IErrorManager* manager) { m_errorManager = manager; }
+	void setErrorManager(CErrorManager* manager) { m_errorManager = manager; }
 
 	IAlgorithmManager& getAlgorithmManager() const override { return m_algorithmManager ? *m_algorithmManager : m_kernelCtx.getAlgorithmManager(); }
 
@@ -93,7 +93,7 @@ public:
 	IScenarioManager& getScenarioManager() const override { return m_scenarioManager ? *m_scenarioManager : m_kernelCtx.getScenarioManager(); }
 	ITypeManager& getTypeManager() const override { return m_typeManager ? *m_typeManager : m_kernelCtx.getTypeManager(); }
 	ILogManager& getLogManager() const override { return m_logManager ? *m_logManager : m_kernelCtx.getLogManager(); }
-	IErrorManager& getErrorManager() const override { return m_errorManager ? *m_errorManager : m_kernelCtx.getErrorManager(); }
+	CErrorManager& getErrorManager() const override { return m_errorManager ? *m_errorManager : m_kernelCtx.getErrorManager(); }
 
 	_IsDerivedFromClass_Final_(IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
@@ -110,7 +110,7 @@ protected:
 	mutable IScenarioManager* m_scenarioManager         = nullptr;
 	mutable ITypeManager* m_typeManager                 = nullptr;
 	mutable ILogManager* m_logManager                   = nullptr;
-	mutable IErrorManager* m_errorManager               = nullptr;
+	mutable CErrorManager* m_errorManager               = nullptr;
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

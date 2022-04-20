@@ -27,17 +27,17 @@ static std::stringstream print(CMatrix& matrix)
 	return ss;
 }
 
-static std::stringstream print(IStimulationSet& stimSet)
+static std::stringstream print(CStimulationSet& stimSet)
 {
 	std::stringstream ss;
 	ss << "Stimulation set :\n";
-	ss << " | Number of elements : " << stimSet.getStimulationCount() << "\n";
-	for (size_t i = 0; i < stimSet.getStimulationCount(); ++i)
+	ss << " | Number of elements : " << stimSet.size() << "\n";
+	for (size_t i = 0; i < stimSet.size(); ++i)
 	{
 		ss << " |   Stimulation " << i << " : "
-				<< "id = " << stimSet.getStimulationIdentifier(i) << " "
-				<< "date = " << stimSet.getStimulationDate(i) << " "
-				<< "duration = " << stimSet.getStimulationDuration(i) << "\n";
+				<< "id = " << stimSet.getId(i) << " "
+				<< "date = " << stimSet.getDate(i) << " "
+				<< "duration = " << stimSet.getDuration(i) << "\n";
 	}
 	return ss;
 }
@@ -113,7 +113,7 @@ bool CDecoderAlgorithmTest::process()
 			if (m_decoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer))
 			{
 				{
-					Kernel::TParameterHandler<IStimulationSet*>
+					Kernel::TParameterHandler<CStimulationSet*>
 							handler(m_decoder[i]->getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
 					if (handler.exists()) { getLogManager() << Kernel::LogLevel_Warning << print(*handler).str() << "\n"; }
 				}

@@ -4,13 +4,6 @@ gcc
 g++
 libexpat1-dev
 libncurses5-dev
-libeigen3-dev
-libboost-dev
-libboost-thread-dev
-libboost-regex-dev
-libboost-chrono-dev
-libboost-filesystem1.54-dev
 ninja-build
 libzzip-dev
 libxerces-c-dev
-libgtest-dev

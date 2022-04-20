@@ -1,11 +1,24 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CMatrixTest.hpp
-/// \brief Test Definitions for OpenViBE Matrix Class.
+/// \file CTimeTests.hpp
+/// \brief Test Definitions for OpenViBE CTime Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 11/05/2020.
-/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// \copyright (C) 2021 INRIA
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
 

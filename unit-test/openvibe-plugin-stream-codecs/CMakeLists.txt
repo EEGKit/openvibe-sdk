@@ -24,9 +24,11 @@ function(SETUP_TEST)
 	SET_BUILD_PLATFORM()
 
 	target_link_libraries(${PROJECT_NAME}
-                          ${GTEST_BOTH_LIBRARIES}
-                          openvibe
-                          openvibe-common)
+						  openvibe
+						  openvibe-common
+						  GTest::GTest
+						  GTest::Main
+	)
 endfunction()
 
 project(openvibe-plugin-stream-codecs-test VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})

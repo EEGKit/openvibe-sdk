@@ -3,7 +3,7 @@
 #include "../ovIKernelObject.h"
 
 namespace OpenViBE {
-class IStimulationSet;
+class CStimulationSet;
 
 namespace Kernel {
 
@@ -30,7 +30,7 @@ public:
 	virtual double* getBuffer() = 0;
 	virtual uint64_t getStimulationSetStartTime() = 0;
 	virtual uint64_t getStimulationSetEndTime() = 0;
-	virtual IStimulationSet& getStimulationSet() = 0;
+	virtual CStimulationSet& getStimulationSet() = 0;
 };
 }  // namespace Kernel
 }  // namespace OpenViBE

@@ -29,13 +29,12 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-toolkit
                       openvibe-module-system
                       openvibe-module-fs
+                      Boost::boost
 ) 
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
-
-include("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros

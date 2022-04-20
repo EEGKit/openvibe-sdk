@@ -247,12 +247,12 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 		if (m_stimDecoder.isBufferReceived())
 		{
-			const Kernel::TParameterHandler<IStimulationSet*> stimSet(m_stimDecoder.getOutputStimulationSet());
-			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
+			const Kernel::TParameterHandler<CStimulationSet*> stimSet(m_stimDecoder.getOutputStimulationSet());
+			for (size_t j = 0; j < stimSet->size(); ++j)
 			{
-				if (stimSet->getStimulationIdentifier(j) == m_stimID)
+				if (stimSet->getId(j) == m_stimID)
 				{
-					date        = stimSet->getStimulationDate(stimSet->getStimulationCount() - 1);
+					date        = stimSet->getDate(stimSet->size() - 1);
 					startTime   = boxContext.getInputChunkStartTime(0, i);
 					endTime     = boxContext.getInputChunkEndTime(0, i);
 					shouldTrain = true;
@@ -378,7 +378,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		}
 
 		m_encoder.getInputStimulationSet()->clear();
-		m_encoder.getInputStimulationSet()->appendStimulation(OVTK_StimulationId_TrainCompleted, date, 0);
+		m_encoder.getInputStimulationSet()->push_back(OVTK_StimulationId_TrainCompleted, date, 0);
 		m_encoder.encodeBuffer();
 
 		boxContext.markOutputAsReadyToSend(0, startTime, endTime);

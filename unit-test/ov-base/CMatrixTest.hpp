@@ -1,11 +1,24 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CMatrixTest.hpp
+/// \file CMatrixTests.hpp
 /// \brief Test Definitions for OpenViBE Matrix Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 11/05/2020.
-/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// \copyright (C) 2021 INRIA
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
 
@@ -119,6 +132,23 @@ TEST_F(CMatrix_Tests, Operators)
 	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0])) << "New Matrix 1st value isn't 10.";
 	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "New Matrix 2nd value isn't 20.";
 	EXPECT_STREQ("dim1e0", res.getDimensionLabel(1, 0)) << "New Matrix 1st Column Label isn't dim1e0.";
+}
+//---------------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------------
+TEST_F(CMatrix_Tests, SetBuffer)
+{
+	OpenViBE::CMatrix res(1, 2);
+	std::vector<double> buffer = { 10, 20 };
+	EXPECT_TRUE(res.setBuffer(buffer)) << "setBuffer function fail.";
+	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0])) << "Matrix 1st value isn't 10.";
+	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
+
+	buffer = { 1, 2, 3 };
+	EXPECT_FALSE(res.setBuffer(buffer)) << "setBuffer function must fail with bad input.";
+	EXPECT_TRUE(res.setBuffer(buffer.data(),1)) << "setBuffer function fail.";
+	EXPECT_TRUE(AlmostEqual(1, res.getBuffer()[0])) << "Matrix 1st value isn't 1.";
+	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
 }
 //---------------------------------------------------------------------------------------------------
 

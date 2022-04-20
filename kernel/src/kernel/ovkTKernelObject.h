@@ -27,7 +27,7 @@ public:
 	virtual IScenarioManager& getScenarioManager() const { return m_kernelCtx.getScenarioManager(); }
 	virtual ITypeManager& getTypeManager() const { return m_kernelCtx.getTypeManager(); }
 	virtual ILogManager& getLogManager() const { return m_kernelCtx.getLogManager(); }
-	virtual IErrorManager& getErrorManager() const { return m_kernelCtx.getErrorManager(); }
+	virtual CErrorManager& getErrorManager() const { return m_kernelCtx.getErrorManager(); }
 
 	_IsDerivedFromClass_(T, OVK_ClassId_Kernel_KernelObjectT)
 

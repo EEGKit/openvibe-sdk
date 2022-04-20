@@ -54,8 +54,7 @@ bool fromString(CMatrix& matrix, const CString& str)
 	//current quote-delimited string
 	std::string curString;
 
-	do
-	{
+	do {
 		//read current line
 		std::getline(buffer, what, CONSTANT_EOL);
 
@@ -72,10 +71,8 @@ bool fromString(CMatrix& matrix, const CString& str)
 		auto it = what.begin();
 
 		//parse current line
-		while (it != what.end())
-		{
-			switch (status)
-			{
+		while (it != what.end()) {
+			switch (status) {
 					//initial parsing status
 				case EParsingStatus::Nothing:
 
@@ -92,23 +89,20 @@ bool fromString(CMatrix& matrix, const CString& str)
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }	//ignore rest of line by skipping to last character
 						//new dimension opened
-					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET)
-					{
+					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET) {
 						dimSize.resize(dimSize.size() + 1);					//increment dimension count
 						curDimIdx++;										//update current dimension index
 						status = EParsingStatus::ParsingHeaderDimension;	//update status
 					}
 						//finished parsing header
-					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
-					{
+					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET) {
 						if (dimSize.empty()) { return false; }	//ensure at least one dimension was found
 						matrix.resize(dimSize);					//resize matrix
 						nValue.resize(matrix.getDimensionCount());
 
 						// set labels now that we know the matrix size
 						size_t idx = 0;
-						for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
-						{
+						for (size_t i = 0; i < matrix.getDimensionCount(); ++i) {
 							for (size_t j = 0; j < matrix.getDimensionSize(i); ++j) { matrix.setDimensionLabel(i, j, labels[idx++].c_str()); }
 						}
 
@@ -125,8 +119,7 @@ bool fromString(CMatrix& matrix, const CString& str)
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }	//ignore rest of line by skipping to last character
 						//new label found
-					else if (*it == CONSTANT_DOUBLE_QUOTE)
-					{
+					else if (*it == CONSTANT_DOUBLE_QUOTE) {
 						//new element found in current dimension
 						dimSize[curDimIdx]++;
 						//update status
@@ -141,8 +134,7 @@ bool fromString(CMatrix& matrix, const CString& str)
 				case EParsingStatus::ParsingHeaderLabel:
 
 					//found '"' char not preceded by escape char : end of label reached
-					if (*it == CONSTANT_DOUBLE_QUOTE && *(it - 1) != '\\')
-					{
+					if (*it == CONSTANT_DOUBLE_QUOTE && *(it - 1) != '\\') {
 						// We can only attach the label later after we know the size
 						labels.push_back(curString);
 
@@ -163,8 +155,7 @@ bool fromString(CMatrix& matrix, const CString& str)
 					//comments starting
 					if (*it == CONSTANT_HASHTAG) { it = what.end() - 1; }	//ignore rest of line by skipping to last character
 						//going down one dimension
-					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET)
-					{
+					else if (*it == CONSTANT_LEFT_SQUARE_BRACKET) {
 						//update dimension index
 						curDimIdx++;
 						//ensure dimension count remains in allocated range
@@ -175,11 +166,9 @@ bool fromString(CMatrix& matrix, const CString& str)
 						if (curDimIdx < matrix.getDimensionCount() - 1) { nValue[curDimIdx]++; }
 					}
 						//going up one dimension
-					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
-					{
+					else if (*it == CONSTANT_RIGHT_SQUARE_BRACKET) {
 						//if we are not in innermost dimension
-						if (curDimIdx < matrix.getDimensionCount() - 1)
-						{
+						if (curDimIdx < matrix.getDimensionCount() - 1) {
 							//ensure the right number of values was parsed in lower dimension
 							if (nValue[curDimIdx + 1] != matrix.getDimensionSize(curDimIdx + 1)) { return false; }
 							//reset values count of lower dimension to 0
@@ -192,11 +181,9 @@ bool fromString(CMatrix& matrix, const CString& str)
 						curDimIdx--;
 					}
 						//non whitespace character found
-					else if (!std::isspace(*it, locale))
-					{
+					else if (!std::isspace(*it, locale)) {
 						//if we are in innermost dimension, assume a value is starting here
-						if (curDimIdx == matrix.getDimensionCount() - 1)
-						{
+						if (curDimIdx == matrix.getDimensionCount() - 1) {
 							//ensure values parsed so far in current dimension doesn't exceed current dimension size
 							if (nValue.back() == matrix.getDimensionSize(curDimIdx)) { return false; }
 
@@ -217,11 +204,9 @@ bool fromString(CMatrix& matrix, const CString& str)
 				case EParsingStatus::ParsingBufferValue:
 
 					//values end at first whitespace character or ']' character
-					if (std::isspace(*it, locale) == true || *it == CONSTANT_RIGHT_SQUARE_BRACKET)
-					{
+					if (std::isspace(*it, locale) == true || *it == CONSTANT_RIGHT_SQUARE_BRACKET) {
 						//if dimension closing bracket is found
-						if (*it == CONSTANT_RIGHT_SQUARE_BRACKET)
-						{
+						if (*it == CONSTANT_RIGHT_SQUARE_BRACKET) {
 							//move back iterator by one character so that closing bracket is taken into account in EParsingStatus::ParsingBuffer case
 							--it;
 						}
@@ -265,8 +250,7 @@ bool fromString(CMatrix& matrix, const CString& str)
 bool dumpMatrixBuffer(const CMatrix& matrix, std::stringstream& buffer, const size_t index1, size_t& index2)
 {
 	//are we in innermost dimension?
-	if (index1 == matrix.getDimensionCount() - 1)
-	{
+	if (index1 == matrix.getDimensionCount() - 1) {
 		//dimension start
 		for (size_t j = 0; j < index1; ++j) { buffer << CONSTANT_TAB; }
 		buffer << CONSTANT_LEFT_SQUARE_BRACKET;
@@ -277,11 +261,9 @@ bool dumpMatrixBuffer(const CMatrix& matrix, std::stringstream& buffer, const si
 		//dimension end
 		buffer << CONSTANT_SPACE << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
 	}
-	else
-	{
+	else {
 		//dump all entries in current dimension
-		for (size_t i = 0; i < matrix.getDimensionSize(index1); ++i)
-		{
+		for (size_t i = 0; i < matrix.getDimensionSize(index1); ++i) {
 			//dimension start
 			for (size_t j = 0; j < index1; ++j) { buffer << CONSTANT_TAB; }
 			buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
@@ -310,12 +292,10 @@ bool toString(const CMatrix& matrix, CString& str, const size_t precision /* = 6
 	buffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
 	//dump labels for each dimension
-	for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
-	{
+	for (size_t i = 0; i < matrix.getDimensionCount(); ++i) {
 		buffer << CONSTANT_TAB << CONSTANT_LEFT_SQUARE_BRACKET;
 
-		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j)
-		{
+		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j) {
 			buffer << CONSTANT_SPACE << CONSTANT_DOUBLE_QUOTE << matrix.getDimensionLabel(i, j) << CONSTANT_DOUBLE_QUOTE;
 		}
 
@@ -413,5 +393,38 @@ bool isContentSimilar(const CMatrix& src1, const CMatrix& src2)
 bool isContentValid(const CMatrix& src, const bool checkNotANumber, const bool checkInfinity) { return src.isBufferValid(checkNotANumber, checkInfinity); }
 
 }  // namespace Matrix
+
+namespace MatrixManipulation {
+
+bool copy(CMatrix& dst, const CMatrix& src)
+{
+	if (&dst == &src) { return true; }
+	dst.copy(src);
+	return true;
+}
+
+bool copyDescription(CMatrix& dst, const CMatrix& src)
+{
+	if (&dst == &src) { return true; }
+	dst.copyDescription(src);
+	return true;
+}
+
+bool copyContent(CMatrix& dst, const CMatrix& src)
+{
+	if (&dst == &src) { return true; }
+	const size_t nElementIn  = src.getBufferElementCount();
+	const size_t nElementOut = dst.getBufferElementCount();
+	if (nElementOut != nElementIn) { return false; }
+	dst.copyContent(src);
+	return true;
+}
+bool clearContent(CMatrix& matrix)
+{
+	matrix.resetBuffer();
+	return true;
+}
+
+}  // namespace MatrixManipulation
 }  // namespace Toolkit
 }  // namespace OpenViBE

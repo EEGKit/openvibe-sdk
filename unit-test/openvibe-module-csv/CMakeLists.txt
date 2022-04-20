@@ -38,8 +38,7 @@ set(TEST_WITH_PARAM
 )
 
 # Test that needs to called without parameters
-set(TEST_NO_PARAM
-)
+set(TEST_NO_PARAM)
 
 # Create test sources list
 # This macro auto-generate ${PROJECT_NAME}.cpp
@@ -50,16 +49,18 @@ create_test_sourcelist (Tests
 	${PROJECT_NAME}.cpp
 	${TEST_WITH_PARAM}
 	${TEST_NO_PARAM}
-	)
+)
 
 add_executable(${PROJECT_NAME} ${Tests})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-module-csv 
-                      ${OVT_UNIT_TOOLKIT_LIB}
-                      ${GTEST_BOTH_LIBRARIES}
-                      ${OV_LIBS} ${OV_MODULE_CSV})
+					  openvibe
+					  openvibe-module-csv
+					  ${OVT_UNIT_TOOLKIT_LIB}
+					  ${OV_LIBS} ${OV_MODULE_CSV}
+					  GTest::GTest
+					  GTest::Main
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       FOLDER ${TESTS_FOLDER})

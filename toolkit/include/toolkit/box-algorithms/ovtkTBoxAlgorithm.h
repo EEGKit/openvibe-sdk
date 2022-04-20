@@ -74,7 +74,7 @@ public:
 	virtual Kernel::IAlgorithmManager& getAlgorithmManager() { return getPlayerContext().getAlgorithmManager(); }
 	virtual Kernel::IConfigurationManager& getConfigurationManager() { return getPlayerContext().getConfigurationManager(); }
 	virtual Kernel::ILogManager& getLogManager() { return getPlayerContext().getLogManager(); }
-	virtual Kernel::IErrorManager& getErrorManager() { return getPlayerContext().getErrorManager(); }
+	virtual Kernel::CErrorManager& getErrorManager() { return getPlayerContext().getErrorManager(); }
 	virtual Kernel::IScenarioManager& getScenarioManager() { return getPlayerContext().getScenarioManager(); }
 	virtual Kernel::ITypeManager& getTypeManager() { return getPlayerContext().getTypeManager(); }
 
@@ -216,7 +216,7 @@ protected:
 
 	private:
 		Kernel::ILogManager& m_logManager;
-		Kernel::IErrorManager& m_errorManager;
+		Kernel::CErrorManager& m_errorManager;
 		Kernel::ITypeManager& m_typeManager;
 		Kernel::IConfigurationManager& m_configManager;
 		CString m_settingValue;
@@ -334,7 +334,7 @@ public:
 	virtual Kernel::IScenarioManager& getScenarioManager() const { return m_boxListenerCtx->getScenarioManager(); }
 	virtual Kernel::ITypeManager& getTypeManager() const { return m_boxListenerCtx->getTypeManager(); }
 	virtual Kernel::ILogManager& getLogManager() const { return m_boxListenerCtx->getLogManager(); }
-	virtual Kernel::IErrorManager& getErrorManager() const { return m_boxListenerCtx->getErrorManager(); }
+	virtual Kernel::CErrorManager& getErrorManager() const { return m_boxListenerCtx->getErrorManager(); }
 	virtual Kernel::IConfigurationManager& getConfigurationManager() const { return m_boxListenerCtx->getConfigurationManager(); }
 
 	virtual Kernel::IScenario& getScenario() const { return m_boxListenerCtx->getScenario(); }

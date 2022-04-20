@@ -5,12 +5,6 @@ g++
 libssl-dev
 libexpat1-dev
 libncurses5-dev
-libboost-dev
-libboost-thread-dev
-libboost-regex-dev
-libboost-chrono-dev
-libboost-filesystem-dev
 ninja-build
 libzzip-dev
 libxerces-c-dev
-libgtest-dev

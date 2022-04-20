@@ -14,12 +14,11 @@
 #include "CIdentifier.hpp"
 #include "CTime.hpp"
 #include "ovCString.h"
-#include "ovCNameValuePairList.h"
+#include "CNameValuePairList.hpp"
 
 #include "CMatrix.hpp"
 
-#include "ovIStimulationSet.h"
-#include "ovCStimulationSet.h"
+#include "CStimulationSet.hpp"
 
 #include "ovIMemoryBuffer.h"
 #include "ovCMemoryBuffer.h"
@@ -62,9 +61,9 @@
 #include "kernel/log/ovILogManager.h"
 #include "kernel/log/ovILogListener.h"
 
-#include "kernel/error/ovIErrorManager.h"
-#include "kernel/error/ovIError.h"
-#include "kernel/error/ovErrorType.h"
+#include "kernel/error/CError.hpp"
+#include "kernel/error/CErrorManager.hpp"
+#include "kernel/error/ErrorType.hpp"
 
 #include "kernel/player/ovIBoxAlgorithmContext.h"
 #include "kernel/player/CMessageClock.hpp"

@@ -16,7 +16,7 @@ public:
 	IConfigurationManager& getConfigurationManager() const override { return getKernelContext().getConfigurationManager(); }
 	IAlgorithmManager& getAlgorithmManager() const override { return getKernelContext().getAlgorithmManager(); }
 	ILogManager& getLogManager() const override { return m_logManager; }
-	IErrorManager& getErrorManager() const override { return getKernelContext().getErrorManager(); }
+	CErrorManager& getErrorManager() const override { return getKernelContext().getErrorManager(); }
 	ITypeManager& getTypeManager() const override { return getKernelContext().getTypeManager(); }
 
 	CIdentifier getNextInputParameterIdentifier(const CIdentifier& previous) const override

@@ -4,11 +4,13 @@
 #include "CMatrixTest.hpp"
 #include "CTimeTest.hpp"
 #include "CIdentifierTest.hpp"
+#include "CStimulationSetTest.hpp"
+#include "CNameValuePairListTest.hpp"
+#include "CErrorManagerTest.hpp"
 
 int main(int argc, char* argv[])
 {
-	try
-	{
+	try {
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
 	}

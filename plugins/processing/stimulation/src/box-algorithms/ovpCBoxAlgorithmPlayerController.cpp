@@ -50,10 +50,10 @@ bool CBoxAlgorithmPlayerController::process()
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_decoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			IStimulationSet* stimSet = op_stimulationSet;
-			for (size_t j = 0; j < stimSet->getStimulationCount(); ++j)
+			CStimulationSet* stimSet = op_stimulationSet;
+			for (size_t j = 0; j < stimSet->size(); ++j)
 			{
-				if (stimSet->getStimulationIdentifier(j) == m_stimulationID)
+				if (stimSet->getId(j) == m_stimulationID)
 				{
 					this->getLogManager() << Kernel::LogLevel_Trace << "Received stimulation ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_stimulationID) << "] causing action ["

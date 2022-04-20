@@ -16,22 +16,6 @@ endif()
 set(OVT_CMAKE_DIR ${OV_BASE_DIR}/cmake-modules)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${OVT_CMAKE_DIR})
 
-# Modify library prefixes and suffixes to comply to Windows or Linux naming
-if(WIN32)
-	SET(CMAKE_FIND_LIBRARY_PREFIXES "")
-	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
-elseif(APPLE)
-	SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
-	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a")
-else()
-	SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
-	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
-endif()
-
-set(GTEST_ROOT ${LIST_DEPENDENCIES_PATH}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest)
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-
 # --------------------
 # Test configuration
 # --------------------
@@ -103,5 +87,4 @@ add_subdirectory(openvibe-module-xml)
 add_subdirectory(openvibe-module-socket)
 add_subdirectory(openvibe-module-system)
 add_subdirectory(openvibe-toolkit)
-add_subdirectory(openvibe-kernel)
 add_subdirectory(openvibe-plugin-stream-codecs)

@@ -38,7 +38,7 @@ class CConfigurationManagerEntryEnumeratorCallBack final : public FS::IEntryEnum
 {
 public:
 
-	CConfigurationManagerEntryEnumeratorCallBack(ILogManager& logManager, IErrorManager& errorManager, IConfigurationManager& configManger)
+	CConfigurationManagerEntryEnumeratorCallBack(ILogManager& logManager, CErrorManager& errorManager, IConfigurationManager& configManger)
 		: m_logManager(logManager), m_errorManager(errorManager), m_configManager(configManger) { }
 
 	static std::string reduce(const std::string& value)
@@ -126,7 +126,7 @@ public:
 protected:
 
 	ILogManager& m_logManager;
-	IErrorManager& m_errorManager;
+	CErrorManager& m_errorManager;
 	IConfigurationManager& m_configManager;
 };
 

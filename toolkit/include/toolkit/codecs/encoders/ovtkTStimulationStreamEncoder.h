@@ -13,7 +13,7 @@ class TStimulationEncoderLocal : public T
 {
 protected:
 
-	Kernel::TParameterHandler<IStimulationSet*> m_iStimulationSet;
+	Kernel::TParameterHandler<CStimulationSet*> m_iStimulationSet;
 
 	using T::m_codec;
 	using T::m_boxAlgorithm;
@@ -46,7 +46,7 @@ public:
 		return true;
 	}
 
-	Kernel::TParameterHandler<IStimulationSet*>& getInputStimulationSet() { return m_iStimulationSet; }
+	Kernel::TParameterHandler<CStimulationSet*>& getInputStimulationSet() { return m_iStimulationSet; }
 
 protected:
 	bool encodeHeaderImpl() { return m_codec->process(OVP_GD_Algorithm_StimulationEncoder_InputTriggerId_EncodeHeader); }

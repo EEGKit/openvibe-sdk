@@ -3,7 +3,7 @@
 #include "box-algorithms/ovpCBoxAlgorithmClockStimulator.h"
 #include "box-algorithms/ovpCBoxAlgorithmPlayerController.h"
 
-#include "box-algorithms/ovpCBoxAlgorithmStimulationMultiplexer.h"
+#include "box-algorithms/CBoxStimulationMultiplexer.hpp"
 #include "box-algorithms/ovpCBoxAlgorithmStimulationVoter.h"
 
 #include "box-algorithms/ovpCBoxAlgorithmStreamEndDetector.h"
@@ -22,7 +22,7 @@ OVP_Declare_Begin()
 
 	OVP_Declare_New(CBoxAlgorithmClockStimulatorDesc);
 	OVP_Declare_New(CBoxAlgorithmPlayerControllerDesc);
-	OVP_Declare_New(CBoxAlgorithmStimulationMultiplexerDesc);
+	OVP_Declare_New(CBoxStimulationMultiplexerDesc);
 
 	OVP_Declare_New(CBoxAlgorithmStreamEndDetectorDesc);
 	OVP_Declare_New(CBoxAlgorithmTimeoutDesc);

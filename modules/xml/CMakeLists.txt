@@ -7,11 +7,14 @@ add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
                       openvibe-common
-                      openvibe-module-fs)
+                      openvibe-module-fs
+                      Boost::boost
+)
 
 target_include_directories(${PROJECT_NAME} 
                            PRIVATE include/xml
-                           PUBLIC include)
+                           PUBLIC include
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       VERSION ${PROJECT_VERSION}
@@ -23,8 +26,7 @@ target_compile_options(${PROJECT_NAME}
                        PRIVATE -DXML_Exports
                        PUBLIC -DXML_Shared 
 )
-    
-include("FindThirdPartyBoost")
+
 include("FindThirdPartyExpat")
 
 # ---------------------------------
