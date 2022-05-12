@@ -1,7 +1,7 @@
 <OpenViBE-Scenario>
 	<FormatVersion>2</FormatVersion>
 	<Creator>OpenViBE Designer</Creator>
-	<CreatorVersion>3.2.0</CreatorVersion>
+	<CreatorVersion>3.3.0</CreatorVersion>
 	<Settings></Settings>
 	<Inputs></Inputs>
 	<Outputs></Outputs>
@@ -79,12 +79,8 @@
 			<AlgorithmClassIdentifier>(0x336a3d9a, 0x753f1ba4)</AlgorithmClassIdentifier>
 			<Outputs>
 				<Output>
-					<TypeIdentifier>(0x5ba36127, 0x195feae1)</TypeIdentifier>
-					<Name>Output stream</Name>
-				</Output>
-				<Output>
 					<TypeIdentifier>(0x6f752dd0, 0x082a321e)</TypeIdentifier>
-					<Name>Output stimulation</Name>
+					<Name>Output stream</Name>
 				</Output>
 			</Outputs>
 			<Settings>
@@ -111,7 +107,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0xb7b8f4f9, 0xb979c65c)</Value>
+					<Value>(0xa9cdc629, 0xb153eb33)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xc80ce8af, 0xf699f813)</Identifier>
@@ -126,10 +122,10 @@
 	</Boxes>
 	<Links>
 		<Link>
-			<Identifier>(0x13816405, 0x0ab0f8b9)</Identifier>
+			<Identifier>(0x000069e5, 0x0000188f)</Identifier>
 			<Source>
 				<BoxIdentifier>(0x4ac6bbc1, 0x36494668)</BoxIdentifier>
-				<BoxOutputIndex>1</BoxOutputIndex>
+				<BoxOutputIndex>0</BoxOutputIndex>
 			</Source>
 			<Target>
 				<BoxIdentifier>(0x09d359c7, 0x0f5b12a2)</BoxIdentifier>
