@@ -145,7 +145,7 @@ bool CAlgorithmClassifierLDA::train(const Toolkit::IFeatureVectorSet& dataset)
 	// Get class labels
 	for (size_t i = 0; i < m_nClasses; ++i)
 	{
-		m_labels.push_back(i);
+		m_labels.push_back(double(i));
 		m_discriminantFunctions.push_back(CAlgorithmLDADiscriminantFunction());
 	}
 
@@ -235,7 +235,7 @@ bool CAlgorithmClassifierLDA::train(const Toolkit::IFeatureVectorSet& dataset)
 	//We send the bias and the weight of each class to ComputationHelper
 	for (size_t i = 0; i < getClassCount(); ++i)
 	{
-		const double examplesInClass = nClasses[i];
+		const double examplesInClass = double(nClasses[i]);
 		if (examplesInClass > 0)
 		{
 			const size_t totalExamples = dataset.getFeatureVectorCount();

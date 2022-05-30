@@ -144,7 +144,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 		uint64_t classLabel = m_rejectClassLabel;
 		uint64_t time       = 0;
 
-		std::map<uint32_t, double> scores;
+		std::map<size_t, double> scores;
 		for (size_t i = 0; i < nInput; ++i)
 		{
 			input_t& input = m_results[i];

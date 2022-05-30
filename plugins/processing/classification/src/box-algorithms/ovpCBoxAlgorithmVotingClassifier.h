@@ -41,7 +41,7 @@ private:
 		std::vector<std::pair<double, uint64_t>> scores;
 	} input_t;
 
-	std::map<uint32_t, input_t> m_results;
+	std::map<size_t, input_t> m_results;
 
 	Toolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_classificationChoiceEncoder;
 	Kernel::TParameterHandler<const CStimulationSet*> ip_classificationChoiceStimSet;
