@@ -1,6 +1,5 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file utils.hpp
 /// \brief Some constants and functions for google tests
 /// \author Thibaut Monseigne (Inria).
 /// \version 0.1.
@@ -8,7 +7,6 @@
 /// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
 /// 
 ///-------------------------------------------------------------------------------------------------
-
 #pragma once
 
 #include "openvibe/CIdentifier.hpp"
@@ -18,7 +16,7 @@
 #include <cmath>
 #include <sstream>
 
-const std::string SEP = "\n====================\n";
+#define SEP "\n====================\n"	//const std::string cause Clang warning (with new compiler constexpr change defines)
 
 //---------------------------------------------------------------------------------------------------
 /// <summary> Check if double are almost equals. </summary>
@@ -38,7 +36,7 @@ inline bool AlmostEqual(const double a, const double b, const double epsilon = O
 /// <param name="calc">	The calculate value. </param>
 /// <returns>	Error message. </returns>
 /// <typeparam name="T">	Generic numeric type parameter. </typeparam>
-template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+template <typename T, typename = std::enable_if_t<std::is_arithmetic<T>::value, T>>
 std::string ErrorMsg(const std::string& name, const T ref, const T calc)
 {
 	std::stringstream ss;

@@ -1,6 +1,5 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CStimulationSetTests.hpp
 /// \brief Test Definitions for OpenViBE Stimulation Set Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
@@ -21,7 +20,6 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
-
 #pragma once
 
 #include <gtest/gtest.h>
@@ -65,7 +63,7 @@ TEST_F(CStimulationSet_Tests, Constructor)
 //---------------------------------------------------------------------------------------------------
 TEST_F(CStimulationSet_Tests, Accessor)
 {
-	OpenViBE::CStimulationSet res;
+	const OpenViBE::CStimulationSet res;
 	res.resize(3);
 	res.setId(0, m_set.getId(0));
 	res.setDate(0, m_set.getDate(0));
