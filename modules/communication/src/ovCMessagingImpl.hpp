@@ -42,10 +42,10 @@ struct CMessaging::SMessagingImpl
 	std::mutex m_IncEndMutex;
 	std::queue<std::pair<uint64_t, EndMessage>> m_IncomingEnds;
 
-	static const size_t s_BufferSize = 1024 * 64; //< Empirical value
+	static const size_t BUFFER_SIZE = 1024 * 64; ///< Empirical value
 
 	std::vector<uint8_t> m_RcvBuffer;
-	std::array<uint8_t, s_BufferSize> m_TempRcvBuffer;
+	std::array<uint8_t, BUFFER_SIZE> m_TempRcvBuffer;
 
 	std::mutex m_SendBufferMutex;
 	std::vector<uint8_t> m_SendBuffer;

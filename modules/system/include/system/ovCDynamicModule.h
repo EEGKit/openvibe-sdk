@@ -40,7 +40,7 @@ public:
 	/**
 	 * \brief Load module from a path.
 	 *
-	 * \param modulePath
+	 * \param modulePath Path of the module.
 	 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 	 *
 	 * \retval true If the module loaded successfully.

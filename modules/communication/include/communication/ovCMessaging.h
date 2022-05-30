@@ -155,61 +155,61 @@ protected:
 
 	/**
 	 * @brief Get the oldest authentication message
-	 * @param id[out] Identifier of the message
-	 * @param connectionID[out] Connection Id
+	 * @param id [out] Identifier of the message
+	 * @param connectionID [out] Connection Id
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popAuthentication(uint64_t& id, std::string& connectionID);
 
 	/**
 	 * @brief Get the oldest box description message
-	 * @param id[out] Identifier of the message
-	 * @param boxDescription[out] Descriptor of the box
+	 * @param id [out] Identifier of the message
+	 * @param boxDescription [out] Descriptor of the box
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popBoxDescriptions(uint64_t& id, BoxDescriptionMessage& boxDescription);
 
 	/**
 	 * @brief popCommunicationProtocolVersion
-	 * @param id[out] Identifier of the message
-	 * @param majorVersion[out] major version of the protocol
-	 * @param minorVersion[out] minor version of the protocol
+	 * @param id [out] Identifier of the message
+	 * @param majorVersion [out] major version of the protocol
+	 * @param minorVersion [out] minor version of the protocol
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popCommunicationProtocolVersion(uint64_t& id, uint8_t& majorVersion, uint8_t& minorVersion);
 
 	/**
 	 * @brief Pop the oldest EBML message from the queue
-	 * @param id[out] Identifier of the message
-	 * @param index[out] Input index to which the EBML should be directed
-	 * @param startTime[out] Start time of the buffer
-	 * @param endTime[out] End time of the buffer
-	 * @param ebml[out] The encoded EBML buffer
+	 * @param id [out] Identifier of the message
+	 * @param index [out] Input index to which the EBML should be directed
+	 * @param startTime [out] Start time of the buffer
+	 * @param endTime [out] End time of the buffer
+	 * @param ebml [out] The encoded EBML buffer
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popEBML(uint64_t& id, size_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml);
 
 	/**
 	 * @brief Pop the oldest log message from the queue
-	 * @param id[out] Identifier of the message
-	 * @param type[out] Log level of the message
-	 * @param message[out] Message text
+	 * @param id [out] Identifier of the message
+	 * @param type [out] Log level of the message
+	 * @param message [out] Message text
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popLog(uint64_t& id, ELogLevel& type, std::string& message);
 
 	/**
 	 * @brief Pop the oldest error message from the queue
-	 * @param id[out] Identifier of the message
-	 * @param type[out] Error code
-	 * @param guiltyId[out] If of the sent message that caused this error
+	 * @param id [out] Identifier of the message
+	 * @param type [out] Error code
+	 * @param guiltyId [out] If of the sent message that caused this error
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popError(uint64_t& id, EError& type, uint64_t& guiltyId);
 
 	/**
 	 * @brief Get the oldes End message
-	 * @param id[out] Identifier of the message
+	 * @param id [out] Identifier of the message
 	 * @return true if a message was popped, false if the queue is empty
 	 */
 	virtual bool popEnd(uint64_t& id);
