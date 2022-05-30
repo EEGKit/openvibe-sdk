@@ -78,7 +78,7 @@ void CMessaging::reset() const
 
 	impl->m_RcvBuffer.clear();
 	impl->m_SendBuffer.clear();
-	impl->m_SendBuffer.reserve(impl->s_BufferSize);
+	impl->m_SendBuffer.reserve(impl->BUFFER_SIZE);
 
 	impl->m_Connection = nullptr;
 }

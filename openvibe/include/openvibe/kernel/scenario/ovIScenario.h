@@ -463,7 +463,7 @@ public:
 	/**
 	 * \brief Check settings before playing scenario, if the settings are not suitable, stop scenario
 	 * and launch a console warning. Only check numeric values in the beginning
-	 * \param configManager: local configuration manager that can contain the definition of local scenario settings
+	 * \param configManager local configuration manager that can contain the definition of local scenario settings
 	 */
 	virtual bool checkSettings(IConfigurationManager* configManager) = 0;
 
@@ -493,7 +493,7 @@ public:
 
 	/**
 	 * \brief Update the prototypes of the box identified by the given identifier.
-	 * \param boxID
+	 * \param boxID Identifier of box.
 	 * \retval true in case of success
 	 * \retval false in case of error
 	 */

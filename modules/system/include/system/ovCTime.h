@@ -41,7 +41,7 @@ public:
 
 	/**
 	 * \brief Retrieve time in fixed point 32:32 seconds 
-	 * \param sinceFirstCall: If sinceFirstCall is true, returns the time since the first call to the zgetTime function or getTime. 
+	 * \param sinceFirstCall : If sinceFirstCall is true, returns the time since the first call to the zgetTime function or getTime. 
 	 *        Otherwise, returns time since epoch of the clock.
 	 * \return Elapsed time 
 	 */

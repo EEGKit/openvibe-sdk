@@ -104,8 +104,8 @@ public:
 	 * \brief Read samples and stimulations.
 	 *
 	 * \param lineNb Maximum number of lines to read. If there is no more data in the file, the number of lines read can be lower.
-	 * \param chunks[out] Valid chunks read.
-	 * \param stimulations[out] Valid stimulations read.
+	 * \param chunks [out] Valid chunks read.
+	 * \param stimulations [out] Valid stimulations read.
 	 *
 	 * \retval True in case of success, even if the number of lines is different than the lineNb parameter.
 	 * \retval False in case of error.
@@ -209,7 +209,7 @@ private:
 	 *
 	 * \param in String to split.
 	 * \param delimiter Delimitor.
-	 * \param out[out] Vector of string.
+	 * \param out [out] Vector of string.
 	 */
 	void split(const std::string& in, char delimiter, std::vector<std::string>& out) const;
 
@@ -253,7 +253,7 @@ private:
 	/**
 	 * \brief Parsing header to read signal data.
 	 *
-	 * \param header[out]
+	 * \param header Header to parse.
 	 *
 	 * \retval true in case of correct header
 	 * \retval false in case of incorrect header
@@ -263,7 +263,7 @@ private:
 	/**
 	* \brief Parsing header to read Spectrum data.
 	*
-	* \param header[out]
+	* \param header Header to parse.
 	*
 	* \retval true in case of correct header
 	* \retval false in case of incorrect header
@@ -273,7 +273,7 @@ private:
 	/**
 	* \brief Parsing header to read matrix data (Streamed Matrix, Covariance matrix and Feature Vector).
 	*
-	* \param header[out]
+	* \param header Header to parse.
 	*
 	* \retval true in case of correct header
 	* \retval false in case of incorrect header
@@ -284,7 +284,7 @@ private:
 	 * \brief Read line data concerning time, epoch and matrix.
 	 *
 	 * \param line line to read
-	 * \param sample[out] reference to stock data in
+	 * \param sample [out] : reference to stock data in
 	 * \param lineNb index of the read line
 	 *
 	 * \retval true in case of success
@@ -294,9 +294,8 @@ private:
 
 	/**
 	 * \brief Read line data conerning stimulations.
-	 *
 	 * \param line the line to read
-	 * \param stimulations[out] vector to stock stimulations in (identifier, date and duration)
+	 * \param stimulations [out] : vector to stock stimulations in (identifier, date and duration)
 	 * \param lineNb the line actually reading
 	 *
 	 * \retval true in case of success
@@ -306,8 +305,7 @@ private:
 
 	/**
 	 * \brief Update position into the matrix while reading or writing.
-	 *
-	 * \param position[out] is the position into the matrix
+	 * \param position [out] : is the position into the matrix
 	 *
 	 * \retval true in case of success
 	 * \retval false in case of browse matrix
@@ -327,8 +325,8 @@ private:
 	 *
 	 * \param in The stream to read.
 	 * \param out The string before the next delimitor.
-	 * \param delimiter The delimiter .
-	 * \param bufferHistory
+	 * \param delimiter The delimiter.
+	 * \param bufferHistory The buffer history.
 	 */
 	bool streamReader(std::istream& in, std::string& out, char delimiter, std::string& bufferHistory) const;
 

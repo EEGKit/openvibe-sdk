@@ -179,7 +179,7 @@ public:
 	bool waitForSyncMessage() override { return CMessaging::waitForSyncMessage(); }
 
 private:
-	Socket::IConnectionServer* m_Server = nullptr; //< Server connection
-	Socket::IConnection* m_Client       = nullptr;
+	Socket::IConnectionServer* m_Server = nullptr; ///< Server connection
+	Socket::IConnection* m_Client       = nullptr; ///< Client connection
 };
 }  // namespace Communication
