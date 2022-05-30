@@ -12,9 +12,9 @@ public:
 
 	explicit TVector(CMatrix& matrix) : m_matrix(matrix) { }
 
-	uint32_t getSize() const override { return m_matrix.getBufferElementCount(); }
+	size_t getSize() const override { return m_matrix.getBufferElementCount(); }
 
-	bool setSize(const uint32_t size) override
+	bool setSize(const size_t size) override
 	{
 		m_matrix.resize(size);
 		return true;
@@ -22,9 +22,9 @@ public:
 
 	double* getBuffer() override { return m_matrix.getBuffer(); }
 	const double* getBuffer() const override { return m_matrix.getBuffer(); }
-	const char* getElementLabel(const uint32_t index) const override { return m_matrix.getDimensionLabel(0, index); }
+	const char* getElementLabel(const size_t index) const override { return m_matrix.getDimensionLabel(0, index); }
 
-	bool setElementLabel(const uint32_t index, const char* label) override
+	bool setElementLabel(const size_t index, const char* label) override
 	{
 		m_matrix.setDimensionLabel(0, index, label);
 		return true;
