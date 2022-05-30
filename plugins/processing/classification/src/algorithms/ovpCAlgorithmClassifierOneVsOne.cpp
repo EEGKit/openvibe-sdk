@@ -218,7 +218,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const Toolkit::IFeatureVector& sampl
 		const double tmp = op_proba->getBuffer()[i];
 		if (tmp > maxProb)
 		{
-			selectedClassIdx = i;
+			selectedClassIdx = int(i);
 			maxProb          = tmp;
 		}
 		probability[i] = tmp;
@@ -329,7 +329,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfig()
 
 	XML::IXMLNode* subClassifersNode = XML::createNode(SUB_CLASSIFIERS_NODE_NAME);
 
-	for (auto& kv : m_subClassifiers) { subClassifersNode->addChild(getClassifierConfig(kv.first.first, kv.first.second, kv.second)); }
+	for (const auto& kv : m_subClassifiers) { subClassifersNode->addChild(getClassifierConfig(double(kv.first.first), double(kv.first.second), kv.second)); }
 	oneVsOneNode->addChild(subClassifersNode);
 
 	return oneVsOneNode;

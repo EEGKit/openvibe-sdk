@@ -144,7 +144,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 			if (best.second == nullptr)
 			{
 				best    = tmp;
-				classId = (double(nClassification));
+				classId = double(nClassification);
 			}
 			else
 			{
@@ -152,7 +152,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) < 0)
 				{
 					best    = tmp;
-					classId = nClassification;
+					classId = double(nClassification);
 				}
 			}
 		}
