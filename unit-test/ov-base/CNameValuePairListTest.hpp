@@ -1,6 +1,5 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CNameValuePairListTest.hpp
 /// \brief Test Definitions for OpenViBE Name/Value Pair List Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
@@ -21,7 +20,6 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
-
 #pragma once
 
 #include <gtest/gtest.h>

@@ -1,6 +1,5 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CErrorManagerTests.hpp
 /// \brief Test Definitions for OpenViBE CErrorManager Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
@@ -21,8 +20,8 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
-
 #pragma once
+
 #include <gtest/gtest.h>
 #include <openvibe/kernel/error/CErrorManager.hpp>
 
