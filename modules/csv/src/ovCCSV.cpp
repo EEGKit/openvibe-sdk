@@ -97,7 +97,7 @@ bool CCSVHandler::streamReader(std::istream& in, std::string& out, const char de
 	while (lineBreakPos == std::string::npos)
 	{
 		buffer.emplace_back(CHAR_TO_READ, '\0');  // Construct a string that will store the characters.
-		in.read(&buffer.back()[0], CHAR_TO_READ-1);  // Read X chars by X chars
+		in.read(&buffer.back()[0], CHAR_TO_READ);  // Read X chars by X chars
 		lineBreakPos = buffer.back().find_first_of(delimiter);
 
 		// If it's the end of the file and no delimiter has been found...
