@@ -74,7 +74,7 @@ static const std::string EVENT_ID_COL       = "Event Id";
 static const std::string EVENT_DATE_COL     = "Event Date";
 static const std::string EVENT_DURATION_COL = "Event Duration";
 
-static const size_t CHAR_TO_READ = 1000;
+static const size_t CHAR_TO_READ = 511;
 //static const size_t MAXIMUM_FLOAT_DECIMAL = 32;
 
 static const char END_OF_LINE_CHAR('\n');
@@ -1766,6 +1766,12 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 	const size_t eventDurationCol = line.find_last_of(SEPARATOR);
 	const size_t eventDateCol     = line.find_last_of(SEPARATOR, eventDurationCol - 1);
 	const size_t eventIdCol       = line.find_last_of(SEPARATOR, eventDateCol - 1);
+
+	if (eventDurationCol == eventDateCol && eventDurationCol == eventIdCol) {
+		m_lastStringError = "No separators found in line";
+		m_logError = LogErrorCodes_StimulationSize;
+		return false;
+	}
 
 	std::vector<uint64_t> stimIDs;
 	// pick all time identifiers for the current time
