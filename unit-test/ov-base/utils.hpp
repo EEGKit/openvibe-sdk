@@ -36,7 +36,7 @@ inline bool AlmostEqual(const double a, const double b, const double epsilon = O
 /// <param name="calc">	The calculate value. </param>
 /// <returns>	Error message. </returns>
 /// <typeparam name="T">	Generic numeric type parameter. </typeparam>
-template <typename T, typename = std::enable_if_t<std::is_arithmetic<T>::value, T>>
+template <typename T, typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 std::string ErrorMsg(const std::string& name, const T ref, const T calc)
 {
 	std::stringstream ss;
