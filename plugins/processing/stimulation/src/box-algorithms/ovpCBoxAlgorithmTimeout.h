@@ -55,10 +55,12 @@ class CBoxAlgorithmTimeoutDesc final : virtual public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "Timeout"; }
 	CString getAuthorName() const override { return "Jozef Legény"; }
 	CString getAuthorCompanyName() const override { return "Inria"; }
 	CString getShortDescription() const override { return "Sends a stimulation after a period of time without receiving signal"; }
+
 	CString getDetailedDescription() const override
 	{
 		return "Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection.";
@@ -69,6 +71,7 @@ public:
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Timeout; }
 	IPluginObject* create() override { return new CBoxAlgorithmTimeout; }
 

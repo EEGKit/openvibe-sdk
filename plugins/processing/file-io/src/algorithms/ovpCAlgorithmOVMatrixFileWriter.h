@@ -18,7 +18,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, OVP_ClassId_Algorithm_OVMatrixFileWriter)
 
 protected:
-
 	Kernel::TParameterHandler<CString*> ip_sFilename;
 	Kernel::TParameterHandler<CMatrix*> ip_pMatrix;
 };
@@ -27,16 +26,18 @@ class CAlgorithmOVMatrixFileWriterDesc final : public IAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("OpenViBE Matrix file writer"); }
-	CString getAuthorName() const override { return CString("Vincent Delannoy"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString(""); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("File reading and writing"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "OpenViBE Matrix file writer"; }
+	CString getAuthorName() const override { return "Vincent Delannoy"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return ""; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "File reading and writing"; }
+	CString getVersion() const override { return "1.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_OVMatrixFileWriter; }
 	IPluginObject* create() override { return new CAlgorithmOVMatrixFileWriter; }
 

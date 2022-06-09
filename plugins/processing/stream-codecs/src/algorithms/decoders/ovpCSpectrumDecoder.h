@@ -23,13 +23,11 @@ public:
 	void closeChild() override;
 
 protected:
-
 	Kernel::TParameterHandler<CMatrix*> op_frequencyAbscissa;
 	Kernel::TParameterHandler<uint64_t> op_sampling;
 
 
 private:
-
 	std::stack<EBML::CIdentifier> m_nodes;
 
 	size_t m_frequencyBandIdx = 0;
@@ -42,16 +40,18 @@ class CSpectrumDecoderDesc final : public CStreamedMatrixDecoderDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Spectrum stream decoder"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Decodes the Spectrum type streams."); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Stream codecs/Decoders"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+
+	CString getName() const override { return "Spectrum stream decoder"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Decodes the Spectrum type streams."; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Stream codecs/Decoders"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SpectrumDecoder; }
 	IPluginObject* create() override { return new CSpectrumDecoder(); }
 

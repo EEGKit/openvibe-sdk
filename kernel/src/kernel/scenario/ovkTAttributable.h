@@ -40,7 +40,7 @@ public:
 	CString getAttributeValue(const CIdentifier& attributeID) const override
 	{
 		const auto itAttribute = m_attributes.find(attributeID);
-		if (itAttribute == m_attributes.end()) { return CString(""); }
+		if (itAttribute == m_attributes.end()) { return ""; }
 		return itAttribute->second;
 	}
 

@@ -19,7 +19,6 @@ namespace Classification {
 class CAlgorithmPairwiseDecisionVoting final : virtual public CAlgorithmPairwiseDecision
 {
 public:
-
 	CAlgorithmPairwiseDecisionVoting() { }
 	void release() override { delete this; }
 	bool initialize() override { return true; }
@@ -39,16 +38,18 @@ class CAlgorithmPairwiseDecisionVotingDesc final : virtual public CAlgorithmPair
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Pairwise decision strategy based on Voting"); }
-	CString getAuthorName() const override { return CString("Serrière Guillaume"); }
-	CString getAuthorCompanyName() const override { return CString("Inria"); }
-	CString getShortDescription() const override { return CString("."); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString(""); }
-	CString getVersion() const override { return CString("0.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "Pairwise decision strategy based on Voting"; }
+	CString getAuthorName() const override { return "Serrière Guillaume"; }
+	CString getAuthorCompanyName() const override { return "Inria"; }
+	CString getShortDescription() const override { return "."; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return ""; }
+	CString getVersion() const override { return "0.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseDecision_Voting; }
 	IPluginObject* create() override { return new CAlgorithmPairwiseDecisionVoting; }
 

@@ -18,7 +18,6 @@ namespace Classification {
 class CAlgorithmPairwiseStrategyPKPD final : virtual public CAlgorithmPairwiseDecision
 {
 public:
-
 	CAlgorithmPairwiseStrategyPKPD() { }
 	void release() override { delete this; }
 	bool initialize() override { return true; }
@@ -38,25 +37,27 @@ class CAlgorithmPairwiseStrategyPKPDDesc final : virtual public CAlgorithmPairwi
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Pairwise decision strategy based on PKPD"); }
-	CString getAuthorName() const override { return CString("Serrière Guillaume"); }
-	CString getAuthorCompanyName() const override { return CString("Inria"); }
-	CString getShortDescription() const override { return CString("."); }
+
+	CString getName() const override { return "Pairwise decision strategy based on PKPD"; }
+	CString getAuthorName() const override { return "Serrière Guillaume"; }
+	CString getAuthorCompanyName() const override { return "Inria"; }
+	CString getShortDescription() const override { return "."; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString("Price, S. Knerr, L. Personnaz, and G. Dreyfus."
-			"Pairwise neural network classifiers with probabilistic outputs."
-			" In G. Tesauro, D. Touretzky, and T. Leen (eds.)"
-			"Advances in Neural Information Processing Systems 7 (NIPS-94), pp."
-			" 1109-1116. MIT Press, 1995.");
+		return "Price, S. Knerr, L. Personnaz, and G. Dreyfus."
+				"Pairwise neural network classifiers with probabilistic outputs."
+				" In G. Tesauro, D. Touretzky, and T. Leen (eds.)"
+				"Advances in Neural Information Processing Systems 7 (NIPS-94), pp."
+				" 1109-1116. MIT Press, 1995.";
 	}
 
-	CString getCategory() const override { return CString(""); }
-	CString getVersion() const override { return CString("0.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return ""; }
+	CString getVersion() const override { return "0.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
 	IPluginObject* create() override { return new CAlgorithmPairwiseStrategyPKPD; }
 

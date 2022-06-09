@@ -34,6 +34,7 @@ public:
 	CString getStockItemName() const override { return m_stockItemName; }
 	CString getAddedSoftwareVersion() const override { return m_addedSoftwareVersion; }
 	CString getUpdatedSoftwareVersion() const override { return m_updatedSoftwareVersion; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Metabox; }
 	Plugins::IPluginObject* create() override { return nullptr; }
 

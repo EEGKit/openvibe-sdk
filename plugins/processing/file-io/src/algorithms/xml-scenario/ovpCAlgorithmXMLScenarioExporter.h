@@ -12,7 +12,6 @@ namespace FileIO {
 class CAlgorithmXMLScenarioExporter final : public Toolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
 {
 public:
-
 	CAlgorithmXMLScenarioExporter();
 	~CAlgorithmXMLScenarioExporter() override;
 	bool exportStart(IMemoryBuffer& memoryBuffer, const CIdentifier& id) override;
@@ -34,19 +33,19 @@ class CAlgorithmXMLScenarioExporterDesc final : public Toolkit::CAlgorithmScenar
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("XML Scenario exporter"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("A sample XML scenario exporter"); }
 
-	CString getDetailedDescription() const override { return CString("This scenario exporter uses simple XML format to output the scenario"); }
+	CString getName() const override { return "XML Scenario exporter"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "A sample XML scenario exporter"; }
+	CString getDetailedDescription() const override { return "This scenario exporter uses simple XML format to output the scenario"; }
+	CString getCategory() const override { return "File reading and writing/XML Scenario"; }
+	CString getVersion() const override { return "1.0"; }
+	// virtual CString getFileExtension() const       { return "xml;XML"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CString getCategory() const override { return CString("File reading and writing/XML Scenario"); }
-	CString getVersion() const override { return CString("1.0"); }
-	// virtual CString getFileExtension() const       { return CString("xml;XML"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioExporter; }
 	IPluginObject* create() override { return new CAlgorithmXMLScenarioExporter(); }
 

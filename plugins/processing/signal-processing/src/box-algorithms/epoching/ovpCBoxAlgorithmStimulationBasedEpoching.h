@@ -33,11 +33,7 @@ private:
 
 	bool isWatchedStimulation(const uint64_t& stim) const
 	{
-		for (const auto& id : m_stimulationIDs) {
-			if (id == stim) {
-				return true;
-			}
-		}
+		for (const auto& id : m_stimulationIDs) { if (id == stim) { return true; } }
 		return false;
 	}
 
@@ -86,7 +82,6 @@ private:
 class CBoxAlgorithmStimulationBasedEpochingListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool onSettingAdded(Kernel::IBox& box, const size_t index) override
 	{
 		const size_t previousCues = index - CBoxAlgorithmStimulationBasedEpoching::NON_CUE_SETTINGS_COUNT;
@@ -112,7 +107,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, OV_UndefinedIdentifier)
 
 private:
-
 	// This function is used to make sure the setting names and types are correct
 	bool checkSettingNames(Kernel::IBox& box) const
 	{
@@ -129,19 +123,18 @@ class CBoxAlgorithmStimulationBasedEpochingDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "Stimulation based epoching"; }
 	CString getAuthorName() const override { return "Jozef Legeny"; }
 	CString getAuthorCompanyName() const override { return "Mensia Technologies"; }
-
 	CString getShortDescription() const override { return "Slices signal into chunks of a desired length following a stimulation event."; }
-
 	CString getDetailedDescription() const override { return "Slices signal into chunks of a desired length following a stimulation event."; }
-
 	CString getCategory() const override { return "Signal processing/Epoching"; }
 	CString getVersion() const override { return "2.0"; }
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationBasedEpoching; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationBasedEpochingListener; }

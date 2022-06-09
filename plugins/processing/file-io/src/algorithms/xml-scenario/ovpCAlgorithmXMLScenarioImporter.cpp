@@ -23,7 +23,7 @@ class _AutoBind_
 {
 public:
 	explicit _AutoBind_(const std::string& value) : m_value(value) { }
-	operator CString() const { return CString(m_value.c_str()); }
+	operator CString() const { return m_value.c_str(); }
 
 	operator CIdentifier() const
 	{
