@@ -21,7 +21,6 @@ namespace Classification {
 class CBoxAlgorithmCommonClassifierListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	explicit CBoxAlgorithmCommonClassifierListener(const size_t customSettingBase) : m_customSettingBase(customSettingBase) { }
 
 	bool initialize() override
@@ -332,7 +331,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
 protected:
-
 	CIdentifier m_classifierClassID       = CIdentifier::undefined();
 	CIdentifier m_strategyClassID         = 0x0;	// CIdentifier::undefined() is already use, We initialize to an unused identifier in the strategy list
 	Kernel::IAlgorithmProxy* m_classifier = nullptr;

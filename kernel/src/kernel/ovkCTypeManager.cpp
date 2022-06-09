@@ -232,7 +232,7 @@ CString CTypeManager::getTypeName(const CIdentifier& typeID) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-	if (!isRegistered(typeID)) { return CString(""); }
+	if (!isRegistered(typeID)) { return ""; }
 	return m_names.find(typeID)->second;
 }
 

@@ -24,7 +24,6 @@ protected:
 	bool loadClassifier(const char* filename);
 
 private:
-
 	Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_sampleDecoder;
 	Toolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_stimDecoder;
 	Toolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_labelsEncoder;
@@ -40,18 +39,18 @@ class CBoxAlgorithmClassifierProcessorDesc final : virtual public IBoxAlgorithmD
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Classifier processor"); }
-	CString getAuthorName() const override { return CString("Yann Renard, Guillaume Serriere"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Generic classification, relying on several box algorithms"); }
 
-	CString getDetailedDescription() const override { return CString("Classifies incoming feature vectors using a previously learned classifier."); }
+	CString getName() const override { return "Classifier processor"; }
+	CString getAuthorName() const override { return "Yann Renard, Guillaume Serriere"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Generic classification, relying on several box algorithms"; }
+	CString getDetailedDescription() const override { return "Classifies incoming feature vectors using a previously learned classifier."; }
+	CString getCategory() const override { return "Classification"; }
+	CString getVersion() const override { return "2.1"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
 
-	CString getCategory() const override { return CString("Classification"); }
-	CString getVersion() const override { return CString("2.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
 	IPluginObject* create() override { return new CBoxAlgorithmClassifierProcessor; }
 

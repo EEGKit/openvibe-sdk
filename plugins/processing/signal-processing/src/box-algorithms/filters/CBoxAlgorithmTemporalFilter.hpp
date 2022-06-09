@@ -48,7 +48,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TemporalFilter)
 
 private:
-
 	Toolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;					///< Decoder for input.
 	std::vector<Toolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter>> m_encoders;	///< Encoders for outputs.
 	std::vector<CMatrix*> m_oMatrix;												///< Matrix links with outputs (avoid to relink at each process).
@@ -78,7 +77,6 @@ private:
 class CBoxAlgorithmTemporalFilterListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool onOutputAdded(Kernel::IBox& box, const size_t index) override
 	{
 		box.setOutputType(index, OV_TypeId_Signal);
@@ -127,6 +125,7 @@ class CBoxAlgorithmTemporalFilterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "Temporal Filter"; }
 	CString getAuthorName() const override { return "Yann Renard & Laurent Bonnet, Thibaut Monseigne"; }
 	CString getAuthorCompanyName() const override { return "Mensia Technologies SA, Inria"; }

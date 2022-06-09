@@ -98,6 +98,7 @@ class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "CSV File Writer"; }
 	CString getAuthorName() const override { return "Victor Herlin / Thomas Prampart"; }
 	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
@@ -108,6 +109,7 @@ public:
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.1.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
 	IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileWriter; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileWriterListener; }

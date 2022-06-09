@@ -18,7 +18,6 @@ namespace FileIO {
 class CBoxAlgorithmGenericStreamReader final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>, public EBML::IReaderCallback
 {
 public:
-
 	CBoxAlgorithmGenericStreamReader();
 	void release() override { delete this; }
 	uint64_t getClockFrequency() override;
@@ -31,7 +30,6 @@ public:
 
 
 protected:
-
 	CString m_filename;
 
 	EBML::CReader m_reader;
@@ -61,7 +59,6 @@ private:
 class CBoxAlgorithmGenericStreamReaderListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
 		for (size_t i = 0; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str()); }
@@ -102,18 +99,18 @@ class CBoxAlgorithmGenericStreamReaderDesc final : virtual public IBoxAlgorithmD
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Generic stream reader"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Reads OpenViBE streams saved in the .ov format"); }
 
-	CString getDetailedDescription() const override { return CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
+	CString getName() const override { return "Generic stream reader"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Reads OpenViBE streams saved in the .ov format"; }
+	CString getDetailedDescription() const override { return "Generic Stream Writer box can be used to store data in the format read by this box"; }
+	CString getCategory() const override { return "File reading and writing/OpenViBE"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CString getCategory() const override { return CString("File reading and writing/OpenViBE"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_GenericStreamReader; }
 	IPluginObject* create() override { return new CBoxAlgorithmGenericStreamReader; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmGenericStreamReaderListener; }

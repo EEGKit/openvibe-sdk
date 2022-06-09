@@ -106,6 +106,7 @@ class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "CSV File Reader"; }
 	CString getAuthorName() const override { return "Victor Herlin / Thomas Prampart"; }
 	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
@@ -116,6 +117,7 @@ public:
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.1.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.3.3"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileReader; }
 	IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileReader; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileReaderListener; }

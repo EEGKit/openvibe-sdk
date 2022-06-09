@@ -22,7 +22,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_VotingClassifier)
 
 protected:
-
 	size_t m_nRepetitions         = 0;
 	size_t m_targetClassLabel     = 0;
 	size_t m_nonTargetClassLabel  = 0;
@@ -31,7 +30,6 @@ protected:
 	bool m_chooseOneIfExAequo     = false;
 
 private:
-
 	typedef struct
 	{
 		Toolkit::TDecoder<CBoxAlgorithmVotingClassifier>* decoder = nullptr;
@@ -53,15 +51,13 @@ private:
 class CBoxAlgorithmVotingClassifierListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	CBoxAlgorithmVotingClassifierListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
 
 	bool onInputTypeChanged(Kernel::IBox& box, const size_t index) override
 	{
 		CIdentifier id = CIdentifier::undefined();
 		box.getInputType(index, id);
-		if (id == OV_TypeId_Stimulations || id == OV_TypeId_StreamedMatrix)
-		{
+		if (id == OV_TypeId_Stimulations || id == OV_TypeId_StreamedMatrix) {
 			m_inputTypeID = id;
 			for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, m_inputTypeID); }
 		}
@@ -71,8 +67,7 @@ public:
 
 	bool onInputAdded(Kernel::IBox& box, const size_t /*index*/) override
 	{
-		for (size_t i = 0; i < box.getInputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getInputCount(); ++i) {
 			box.setInputType(i, m_inputTypeID);
 			box.setInputName(i, ("Classification result " + std::to_string(i)).c_str());
 		}
@@ -82,7 +77,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
 protected:
-
 	CIdentifier m_inputTypeID = CIdentifier::undefined();
 };
 
@@ -90,22 +84,23 @@ class CBoxAlgorithmVotingClassifierDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Voting Classifier"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Majority voting classifier. Returns the chosen class."); }
+
+	CString getName() const override { return "Voting Classifier"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Majority voting classifier. Returns the chosen class."; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.");
+		return "Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use.";
 	}
 
-	CString getCategory() const override { return CString("Classification"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Classification"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
 	IPluginObject* create() override { return new CBoxAlgorithmVotingClassifier; }
 

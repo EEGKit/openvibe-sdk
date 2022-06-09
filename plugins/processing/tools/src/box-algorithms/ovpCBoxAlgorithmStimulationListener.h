@@ -21,7 +21,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationListener)
 
 protected:
-
 	Kernel::ELogLevel m_logLevel = Kernel::LogLevel_None;
 	std::vector<Toolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>*> m_stimulationDecoders;
 };
@@ -29,11 +28,9 @@ protected:
 class CBoxAlgorithmStimulationListenerListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
-		for (size_t i = 0; i < box.getInputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getInputCount(); ++i) {
 			box.setInputName(i, ("Stimulation stream " + std::to_string(i + 1)).c_str());
 			box.setInputType(i, OV_TypeId_Stimulations);
 		}
@@ -51,18 +48,18 @@ class CBoxAlgorithmStimulationListenerDesc final : virtual public IBoxAlgorithmD
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "Stimulation listener"; }
 	CString getAuthorName() const override { return "Yann Renard"; }
 	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
 	CString getShortDescription() const override { return "Prints stimulation codes in the log manager"; }
-
 	CString getDetailedDescription() const override { return "Prints each received stimulationto the log using the log level specified in the box config."; }
-
 	CString getCategory() const override { return "Tools"; }
 	CString getVersion() const override { return "1.0"; }
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationListener; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationListener; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationListenerListener; }

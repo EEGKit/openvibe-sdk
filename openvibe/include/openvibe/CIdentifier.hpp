@@ -174,7 +174,7 @@ public:
 	/// <summary> Converts this identifier into an OpenViBE string. </summary>
 	/// <returns> This identifier represented as an OpenViBE string. </returns>
 	/// <remarks> Avoid this, this function keep previous compatibility with CString. </remarks>
-	CString toString() const { return CString(str().c_str()); }
+	CString toString() const { return str().c_str(); }
 
 	/// <summary> Reads a a string to extract this identifier. </summary>
 	/// <param name="str"> the string to convert. </param>

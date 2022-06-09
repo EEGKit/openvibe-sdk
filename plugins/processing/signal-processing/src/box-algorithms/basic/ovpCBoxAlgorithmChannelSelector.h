@@ -21,7 +21,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ChannelSelector)
 
 protected:
-
 	Toolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_decoder = nullptr;
 	Toolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_encoder = nullptr;
 
@@ -38,8 +37,7 @@ public:
 	{
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
-		if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix)
-		{
+		if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix) {
 			box.setInputType(0, typeID);
 			return true;
 		}
@@ -52,8 +50,7 @@ public:
 	{
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(0, typeID);
-		if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix)
-		{
+		if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix) {
 			box.setOutputType(0, typeID);
 			return true;
 		}
@@ -66,8 +63,7 @@ public:
 	bool onSettingValueChanged(Kernel::IBox& box, const size_t index) override
 	{
 		//we are only interested in the setting 0 and the type changes (select or reject)
-		if ((index == 0 || index == 1) && (!m_hasUserSetName))
-		{
+		if ((index == 0 || index == 1) && (!m_hasUserSetName)) {
 			CString channels;
 			box.getSettingValue(0, channels);
 
@@ -87,11 +83,9 @@ public:
 	bool onNameChanged(Kernel::IBox& box) override
 	//when user set box name manually
 	{
-		if (m_hasUserSetName)
-		{
+		if (m_hasUserSetName) {
 			const CString rename = box.getName();
-			if (rename == CString("Channel Selector"))
-			{//default name, we switch back to default behaviour
+			if (rename == CString("Channel Selector")) {//default name, we switch back to default behaviour
 				m_hasUserSetName = false;
 			}
 		}
@@ -115,18 +109,18 @@ class CBoxAlgorithmChannelSelectorDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Channel Selector"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Select a subset of signal channels"); }
 
-	CString getDetailedDescription() const override { return CString("Selection can be based on channel name (case-sensitive) or index starting from 0"); }
+	CString getName() const override { return "Channel Selector"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Select a subset of signal channels"; }
+	CString getDetailedDescription() const override { return "Selection can be based on channel name (case-sensitive) or index starting from 0"; }
+	CString getCategory() const override { return "Signal processing/Channels"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CString getCategory() const override { return CString("Signal processing/Channels"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ChannelSelector; }
 	IPluginObject* create() override { return new CBoxAlgorithmChannelSelector; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmChannelSelectorListener; }

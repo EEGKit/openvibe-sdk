@@ -38,7 +38,6 @@ namespace Stimulation {
 class CBoxStimulationMultiplexer final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	void release() override { delete this; }
 
 	bool initialize() override;
@@ -49,7 +48,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationMultiplexer)
 
 private:
-
 	std::vector<Toolkit::TStimulationDecoder<CBoxStimulationMultiplexer>> m_decoders;
 	Toolkit::TStimulationEncoder<CBoxStimulationMultiplexer> m_encoder;
 
@@ -66,7 +64,6 @@ private:
 class CBoxStimulationMultiplexerListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
 		for (size_t input = 0; input < box.getInputCount(); ++input) {
@@ -87,7 +84,6 @@ public:
 class CBoxStimulationMultiplexerDesc final : public IBoxAlgorithmDesc
 {
 public:
-
 	void release() override { }
 
 	CString getName() const override { return "Stimulation multiplexer"; }

@@ -19,7 +19,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer)
 
 protected:
-
 	uint64_t m_lastStartTime = 0;
 	uint64_t m_lastEndTime   = 0;
 	bool m_headerSent        = false;
@@ -28,7 +27,6 @@ protected:
 class CBoxAlgorithmStreamedMatrixMultiplexerListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
 		for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str()); }
@@ -58,14 +56,12 @@ public:
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 
-		if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
-		{
+		if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix)) {
 			for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 
 			box.setOutputType(0, typeID);
 		}
-		else
-		{
+		else {
 			box.getOutputType(0, typeID);
 			box.setInputType(index, typeID);
 		}
@@ -78,12 +74,10 @@ public:
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getOutputType(0, typeID);
 
-		if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix))
-		{
+		if (this->getTypeManager().isDerivedFromStream(typeID, OV_TypeId_StreamedMatrix)) {
 			for (size_t i = 0; i < box.getInputCount(); ++i) { box.setInputType(i, typeID); }
 		}
-		else
-		{
+		else {
 			box.getInputType(0, typeID);
 			box.setOutputType(0, typeID);
 		}
@@ -98,16 +92,18 @@ class CBoxAlgorithmStreamedMatrixMultiplexerDesc final : virtual public IBoxAlgo
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Streamed matrix multiplexer"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Multiplexes streamed matrix buffers in a new stream"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Streaming"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "Streamed matrix multiplexer"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Multiplexes streamed matrix buffers in a new stream"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Streaming"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer; }
 	IPluginObject* create() override { return new CBoxAlgorithmStreamedMatrixMultiplexer; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStreamedMatrixMultiplexerListener; }

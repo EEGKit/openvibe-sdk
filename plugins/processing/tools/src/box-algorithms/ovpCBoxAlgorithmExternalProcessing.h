@@ -29,7 +29,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ExternalProcessing)
 
 private:
-
 	struct SPacket
 	{
 		uint64_t startTime;
@@ -111,6 +110,7 @@ public:
 	CString getAddedSoftwareVersion() const override { return "1.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "1.0.0"; }
 	CString getStockItemName() const override { return "gtk-edit"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
 	IPluginObject* create() override { return new CBoxAlgorithmExternalProcessing; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmExternalProcessingListener; }

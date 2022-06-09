@@ -48,7 +48,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer)
 
 protected:
-
 	Toolkit::TStimulationDecoder<CBoxXDAWNTrainer> m_stimDecoder;
 	std::array<Toolkit::TSignalDecoder<CBoxXDAWNTrainer>, 2> m_signalDecoder;
 	Toolkit::TStimulationEncoder<CBoxXDAWNTrainer> m_stimEncoder;
@@ -77,6 +76,7 @@ public:
 	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CString getStockItemName() const override { return "gtk-zoom-100"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
 	IPluginObject* create() override { return new CBoxXDAWNTrainer; }
 

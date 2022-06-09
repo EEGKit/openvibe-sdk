@@ -19,7 +19,6 @@ namespace FeatureExtraction {
 class CBoxAlgorithmFeatureAggregator final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	CBoxAlgorithmFeatureAggregator() { }
 	void release() override { delete this; }
 	bool initialize() override;
@@ -56,11 +55,9 @@ protected:
 class CBoxAlgorithmFeatureAggregatorListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
-		for (size_t i = 0; i < box.getInputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getInputCount(); ++i) {
 			box.setInputName(i, ("Input stream " + std::to_string(i + 1)).c_str());
 			box.setInputType(i, OV_TypeId_StreamedMatrix);
 		}
@@ -80,19 +77,19 @@ public:
 class CBoxAlgorithmFeatureAggregatorDesc final : public IBoxAlgorithmDesc
 {
 public:
-	CString getName() const override { return CString("Feature aggregator"); }
-	CString getAuthorName() const override { return CString("Bruno Renier"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Aggregates input to feature vectors"); }
-
-	CString getDetailedDescription() const override { return CString("Each chunk of input will be catenated into one feature vector."); }
-
-	CString getCategory() const override { return CString("Feature extraction"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
 	void release() override { }
+
+	CString getName() const override { return "Feature aggregator"; }
+	CString getAuthorName() const override { return "Bruno Renier"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Aggregates input to feature vectors"; }
+	CString getDetailedDescription() const override { return "Each chunk of input will be catenated into one feature vector."; }
+	CString getCategory() const override { return "Feature extraction"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_FeatureAggregator; }
 	IPluginObject* create() override { return new CBoxAlgorithmFeatureAggregator(); }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmFeatureAggregatorListener; }

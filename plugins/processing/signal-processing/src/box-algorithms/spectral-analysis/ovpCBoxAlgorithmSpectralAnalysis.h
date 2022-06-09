@@ -36,17 +36,19 @@ class CBoxAlgorithmSpectralAnalysisDesc final : virtual public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Spectral Analysis"); }
-	CString getAuthorName() const override { return CString("Laurent Bonnet / Quentin Barthelemy"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
-	CString getShortDescription() const override { return CString("Performs a Spectral Analysis using FFT."); }
-	CString getDetailedDescription() const override { return CString("Performs a Spectral Analysis using FFT."); }
-	CString getCategory() const override { return CString("Signal processing/Spectral Analysis"); }
-	CString getVersion() const override { return CString("1.2"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
-	CString getStockItemName() const override { return CString("gtk-execute"); }
+
+	CString getName() const override { return "Spectral Analysis"; }
+	CString getAuthorName() const override { return "Laurent Bonnet / Quentin Barthelemy"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getShortDescription() const override { return "Performs a Spectral Analysis using FFT."; }
+	CString getDetailedDescription() const override { return "Performs a Spectral Analysis using FFT."; }
+	CString getCategory() const override { return "Signal processing/Spectral Analysis"; }
+	CString getVersion() const override { return "1.2"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
+	CString getStockItemName() const override { return "gtk-execute"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_SpectralAnalysis; }
 	IPluginObject* create() override { return new CBoxAlgorithmSpectralAnalysis(); }
 

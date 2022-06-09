@@ -17,7 +17,6 @@ namespace Tools {
 class CBoxAlgorithmEBMLStreamSpy final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>, virtual public EBML::IReaderCallback
 {
 public:
-
 	CBoxAlgorithmEBMLStreamSpy() { }
 	void release() override { delete this; }
 	bool initialize() override;
@@ -32,7 +31,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EBMLStreamSpy)
 
 protected:
-
 	template <class T>
 	void processBinaryBlock(const void* buffer, size_t size);
 
@@ -48,11 +46,9 @@ protected:
 class CBoxAlgorithmEBMLStreamSpyListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
-		for (size_t i = 0; i < box.getInputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getInputCount(); ++i) {
 			box.setInputName(i, ("Spied EBML stream " + std::to_string(i + 1)).c_str());
 			box.setInputType(i, OV_TypeId_EBMLStream);
 		}
@@ -70,18 +66,18 @@ class CBoxAlgorithmEBMLStreamSpyDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "EBML stream spy"; }
 	CString getAuthorName() const override { return "Yann Renard"; }
 	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
 	CString getShortDescription() const override { return "EBML stream tree viewer"; }
-
 	CString getDetailedDescription() const override { return "This sample EBML stream analyzer prints the EBML tree structure to the console"; }
-
 	CString getCategory() const override { return "Tools"; }
 	CString getVersion() const override { return "1.0"; }
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EBMLStreamSpy; }
 	IPluginObject* create() override { return new CBoxAlgorithmEBMLStreamSpy(); }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEBMLStreamSpyListener; }

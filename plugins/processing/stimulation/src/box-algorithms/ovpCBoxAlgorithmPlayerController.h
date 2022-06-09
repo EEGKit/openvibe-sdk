@@ -19,7 +19,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_PlayerController)
 
 protected:
-
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
 	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CStimulationSet*> op_stimulationSet;
@@ -32,18 +31,18 @@ class CBoxAlgorithmPlayerControllerDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Player Controller"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
-	CString getShortDescription() const override { return CString("Controls the player execution"); }
 
-	CString getDetailedDescription() const override { return CString("Add some settings to configure the way you want to control the player"); }
+	CString getName() const override { return "Player Controller"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
+	CString getShortDescription() const override { return "Controls the player execution"; }
+	CString getDetailedDescription() const override { return "Add some settings to configure the way you want to control the player"; }
+	CString getCategory() const override { return "Stimulation"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CString getCategory() const override { return CString("Stimulation"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_PlayerController; }
 	IPluginObject* create() override { return new CBoxAlgorithmPlayerController; }
 

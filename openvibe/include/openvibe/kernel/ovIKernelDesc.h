@@ -65,28 +65,28 @@ public:
 	 *
 	 * Default implementation simply returns empty string.
 	 */
-	virtual CString getName() const { return CString("no name"); }
+	virtual CString getName() const { return "no name"; }
 	/**
 	 * \brief Gets the author name for this plugin
 	 * \return The author name for this plugin.
 	 *
 	 * Default implementation simply returns empty string.
 	 */
-	virtual CString getAuthorName() const { return CString("unknown"); }
+	virtual CString getAuthorName() const { return "unknown"; }
 	/**
 	 * \brief Gets the author company name for this plugin
 	 * \return The author company name for this plugin.
 	 *
 	 * Default implementation simply returns empty string.
 	 */
-	virtual CString getAuthorCompanyName() const { return CString("unknown"); }
+	virtual CString getAuthorCompanyName() const { return "unknown"; }
 	/**
 	 * \brief Gets a short description of the plugin
 	 * \return A short description of the plugin.
 	 *
 	 * Default implementation simply returns empty string.
 	 */
-	virtual CString getShortDescription() const { return CString(""); }
+	virtual CString getShortDescription() const { return ""; }
 	/**
 	 * \brief Gets a detailed description of the plugin
 	 * \return A detailed description of the plugin.
@@ -96,14 +96,14 @@ public:
 	 * \note You can use std::endl to have the description
 	 *       on several lines when needed.
 	 */
-	virtual CString getDetailedDescription() const { return CString(""); }
+	virtual CString getDetailedDescription() const { return ""; }
 	/**
 	 * \brief Gets the version of the plugin
 	 * \return the version of the plugin.
 	 *
 	 * Default implementation simply returns empty string.
 	 */
-	virtual CString getVersion() const { return CString("unknown"); }
+	virtual CString getVersion() const { return "unknown"; }
 
 	//@}
 

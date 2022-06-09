@@ -40,7 +40,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
 
 protected:
-
 	bool createSubClassifiers();
 
 private:
@@ -68,16 +67,18 @@ class CAlgorithmClassifierOneVsOneDesc final : public Toolkit::CAlgorithmPairing
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("OneVsOne pairing classifier"); }
-	CString getAuthorName() const override { return CString("Guillaume Serriere"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/Loria"); }
-	CString getShortDescription() const override { return CString(""); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString(""); }
-	CString getVersion() const override { return CString("0.2"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "OneVsOne pairing classifier"; }
+	CString getAuthorName() const override { return "Guillaume Serriere"; }
+	CString getAuthorCompanyName() const override { return "INRIA/Loria"; }
+	CString getShortDescription() const override { return ""; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return ""; }
+	CString getVersion() const override { return "0.2"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
 	IPluginObject* create() override { return new CAlgorithmClassifierOneVsOne; }
 

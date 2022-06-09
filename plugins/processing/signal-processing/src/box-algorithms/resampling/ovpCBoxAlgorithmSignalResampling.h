@@ -48,7 +48,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_SignalResampling)
 
 protected:
-
 	Toolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_decoder;
 	mutable Toolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_encoder;
 
@@ -69,22 +68,23 @@ class CBoxAlgorithmSignalResamplingDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Signal Resampling"); }
-	CString getAuthorName() const override { return CString("Quentin Barthelemy"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
 
-	CString getShortDescription() const override { return CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
+	CString getName() const override { return "Signal Resampling"; }
+	CString getAuthorName() const override { return "Quentin Barthelemy"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getShortDescription() const override { return "Resamples and re-epochs input signal to chosen sampling frequency"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched.");
+		return "The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched.";
 	}
 
-	CString getCategory() const override { return CString("Signal processing/Temporal Filtering"); }
-	CString getVersion() const override { return CString("2.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Signal processing/Temporal Filtering"; }
+	CString getVersion() const override { return "2.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
 	IPluginObject* create() override { return new CBoxAlgorithmSignalResampling; }
 

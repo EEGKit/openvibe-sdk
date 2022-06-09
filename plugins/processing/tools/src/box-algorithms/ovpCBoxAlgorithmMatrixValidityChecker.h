@@ -19,7 +19,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker)
 
 protected:
-
 	std::vector<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
 	std::vector<Toolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_encoders;
 	Kernel::ELogLevel m_logLevel   = Kernel::ELogLevel::LogLevel_None;
@@ -33,16 +32,13 @@ protected:
 class CBoxAlgorithmMatrixValidityCheckerListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	bool check(Kernel::IBox& box) const
 	{
-		for (size_t i = 0; i < box.getInputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getInputCount(); ++i) {
 			box.setInputName(i, ("Stream " + std::to_string(i + 1)).c_str());
 			box.setInputType(i, OV_TypeId_StreamedMatrix);
 		}
-		for (size_t i = 0; i < box.getOutputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getOutputCount(); ++i) {
 			box.setOutputName(i, ("Output stream " + std::to_string(i + 1)).c_str());
 			box.setInputType(i, OV_TypeId_StreamedMatrix);
 		}
@@ -87,10 +83,10 @@ class CBoxAlgorithmMatrixValidityCheckerDesc final : virtual public IBoxAlgorith
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "Matrix validity checker"; }
 	CString getAuthorName() const override { return "Yann Renard"; }
 	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
-
 	CString getShortDescription() const override { return "Checks if a matrix contains \"not a number\" or \"infinity\" elements"; }
 
 	CString getDetailedDescription() const override
@@ -104,6 +100,7 @@ public:
 	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
 	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
 	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_MatrixValidityChecker; }
 	IPluginObject* create() override { return new CBoxAlgorithmMatrixValidityChecker; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmMatrixValidityCheckerListener; }

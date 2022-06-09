@@ -22,7 +22,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationVoter)
 
 protected:
-
 	uint64_t m_minimumVotes         = 0;
 	double m_timeWindow             = 0;
 	uint64_t m_rejectClassLabel     = 0;
@@ -31,7 +30,6 @@ protected:
 	CIdentifier m_rejectClassCanWin = CIdentifier::undefined();
 
 private:
-
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
 	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
@@ -47,13 +45,11 @@ private:
 class CBoxAlgorithmStimulationVoterListener final : public Toolkit::TBoxListener<IBoxListener>
 {
 public:
-
 	CBoxAlgorithmStimulationVoterListener() : m_inputTypeID(OV_TypeId_Stimulations) { }
 
 	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
 protected:
-
 	CIdentifier m_inputTypeID = CIdentifier::undefined();
 };
 
@@ -61,22 +57,24 @@ class CBoxAlgorithmStimulationVoterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Stimulation Voter"); }
-	CString getAuthorName() const override { return CString("Jussi T. Lindgren"); }
-	CString getAuthorCompanyName() const override { return CString("Inria"); }
-	CString getShortDescription() const override { return CString("Performs majority vote on the input stimuli"); }
+
+	CString getName() const override { return "Stimulation Voter"; }
+	CString getAuthorName() const override { return "Jussi T. Lindgren"; }
+	CString getAuthorCompanyName() const override { return "Inria"; }
+	CString getShortDescription() const override { return "Performs majority vote on the input stimuli"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString(
-			"Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first.");
+		return
+				"Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first.";
 	}
 
-	CString getCategory() const override { return CString("Streaming"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getCategory() const override { return "Streaming"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationVoter; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationVoter; }
 

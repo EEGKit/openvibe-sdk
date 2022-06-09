@@ -25,7 +25,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FrequencyBandSelector)
 
 protected:
-
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
 	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CMatrix*> op_matrix;
@@ -45,22 +44,23 @@ class CBoxAlgorithmFrequencyBandSelectorDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Frequency Band Selector"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA"); }
+
+	CString getName() const override { return "Frequency Band Selector"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA"; }
 
 	CString getShortDescription() const override
 	{
-		return CString(
-			"Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select");
+		return "Preserves some spectrum coefficients and puts the others to zero depending on a list of frequencies / frequency bands to select";
 	}
 
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Signal processing/Spectral Analysis"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Signal processing/Spectral Analysis"; }
+	CString getVersion() const override { return "1.0"; }
+	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
+	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
+	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_FrequencyBandSelector; }
 	IPluginObject* create() override { return new CBoxAlgorithmFrequencyBandSelector; }
 
