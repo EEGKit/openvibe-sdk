@@ -80,6 +80,7 @@ include_directories(${OVT_UNIT_TOOLKIT_INCLUDE_DIR})
 # Process unit tests
 # When adding a new test driver, driver directory must be added here
 add_subdirectory(ov-base)
+add_subdirectory(module-fs)
 add_subdirectory(openvibe-module-csv)
 add_subdirectory(openvibe-module-fs)
 add_subdirectory(openvibe-module-ebml)
