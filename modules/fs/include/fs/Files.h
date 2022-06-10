@@ -90,12 +90,12 @@ public:
 	/// <summary> Check if files the exists. </summary>
 	/// <param name="file">The path to check.</param>
 	/// <returns> <c>true</c> if exist, <c>false</c> otherwise. </returns>
-	static bool FileExists(const std::string& file) { return boost::filesystem::exists(file); }
+	static bool FileExists(const std::string& file) { return boost::filesystem::exists(toBoostPath(file)); }
 
 	/// <summary> Directories the exists. </summary>
 	/// <param name="dir"> The path to check. </param>
 	/// <returns> <c>true</c> if exist, <c>false</c> otherwise. </returns>
-	static bool DirectoryExists(const std::string& dir) { return boost::filesystem::is_directory(dir); }
+	static bool DirectoryExists(const std::string& dir) { return boost::filesystem::is_directory(toBoostPath(dir)); }
 
 	/// <summary> Compare the information of 2 files. </summary>
 	/// <param name="file1">The first file.</param>
@@ -160,22 +160,22 @@ public:
 	/// <summary> Return filename. </summary>
 	/// <param name="path"> The path. </param>
 	/// <returns> The filename. </returns>
-	static std::string GetParentPath(const std::string& path) { return boost::filesystem::path(path).parent_path().string(); }
+	static std::string GetParentPath(const std::string& path) { return toBoostPath(path).parent_path().string(); }
 
 	/// <summary> Return filename. </summary>
 	/// <param name="path"> The path. </param>
 	/// <returns> The filename. </returns>
-	static std::string GetFilename(const std::string& path) { return boost::filesystem::path(path).filename().string(); }
+	static std::string GetFilename(const std::string& path) { return toBoostPath(path).filename().string(); }
 
 	/// <summary> Return filename without the extension. </summary>
 	/// <param name="path"> The path. </param>
 	/// <returns> The filename without the extension. </returns>
-	static std::string GetFilenameWithoutExtension(const std::string& path) { return boost::filesystem::path(path).filename().replace_extension("").string(); }
+	static std::string GetFilenameWithoutExtension(const std::string& path) { return toBoostPath(path).filename().replace_extension("").string(); }
 
 	/// <summary> Gets the filename extension. </summary>
 	/// <param name="path"> The path to test. </param>
 	/// <returns> the extension at end of the path. </returns>
-	static std::string GetFilenameExtension(const std::string& path) { return boost::filesystem::path(path).extension().string(); }
+	static std::string GetFilenameExtension(const std::string& path) { return toBoostPath(path).extension().string(); }
 
 	// Returns a path omitting the last part of it (essentially boost::filesystem::parent_path). Output sParentPath needs to be pre-allocated.
 	/// <summary>
