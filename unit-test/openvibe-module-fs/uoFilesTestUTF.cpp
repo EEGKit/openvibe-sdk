@@ -21,86 +21,71 @@
 
 TEST(FS_Files_Test_Directories_UTF, validateFileExists)
 {
-	ASSERT_TRUE(FS::Files::fileExists(TEST_ASCII_FILE_PATH));
-	ASSERT_TRUE(FS::Files::fileExists(TEST_UTF_FILE_PATH));
-	ASSERT_FALSE(FS::Files::fileExists(DATA_DIR "/オッペﾝヴィベ/file"));
-	ASSERT_FALSE(FS::Files::fileExists(DATA_DIR "/オッペﾝヴィベ/日本語"));
+	ASSERT_TRUE(FS::Files::FileExists(TEST_ASCII_FILE_PATH));
+	ASSERT_TRUE(FS::Files::FileExists(TEST_UTF_FILE_PATH));
+	ASSERT_FALSE(FS::Files::FileExists(DATA_DIR "/オッペﾝヴィベ/file"));
+	ASSERT_FALSE(FS::Files::FileExists(DATA_DIR "/オッペﾝヴィベ/日本語"));
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateDirectoryExists)
 {
-	ASSERT_FALSE(FS::Files::directoryExists(DATA_DIR "/inexistent"));
-	ASSERT_TRUE(FS::Files::directoryExists(DATA_DIR "/オッペﾝヴィベ"));
+	ASSERT_FALSE(FS::Files::DirectoryExists(DATA_DIR "/inexistent"));
+	ASSERT_TRUE(FS::Files::DirectoryExists(DATA_DIR "/オッペﾝヴィベ"));
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateGetParentPath)
 {
-	char parentPath[1024];
-	ASSERT_TRUE(FS::Files::getParentPath(TEST_ASCII_FILE_PATH, parentPath));
-	ASSERT_STREQ(DATA_DIR "/オッペﾝヴィベ", parentPath);
+	ASSERT_STREQ(TEST_ASCII_DIR, FS::Files::GetParentPath(TEST_ASCII_FILE_PATH).c_str());
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateGetFileName)
 {
-	char fileName[1024];
-	FS::Files::getFilename(TEST_ASCII_FILE_PATH, fileName);
-	ASSERT_STREQ("file.txt", fileName);
-	FS::Files::getFilename(TEST_UTF_FILE_PATH, fileName);
-	ASSERT_STREQ("日本語.txt", fileName);
+	ASSERT_STREQ("file.txt", FS::Files::GetFilename(TEST_ASCII_FILE_PATH).c_str());
+	ASSERT_STREQ("日本語.txt", FS::Files::GetFilename(TEST_UTF_FILE_PATH).c_str());
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateGetFileNameWithoutExtension)
 {
-	char fileName[1024];
-	FS::Files::getFilenameWithoutExtension(TEST_ASCII_FILE_PATH, fileName);
-	ASSERT_STREQ("file", fileName);
-	FS::Files::getFilenameWithoutExtension(TEST_UTF_FILE_PATH, fileName);
-	ASSERT_STREQ("日本語", fileName);
+	ASSERT_STREQ("file", FS::Files::GetFilenameWithoutExtension(TEST_ASCII_FILE_PATH).c_str());
+	ASSERT_STREQ("日本語", FS::Files::GetFilenameWithoutExtension(TEST_UTF_FILE_PATH).c_str());
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateGetFileNameExtension)
 {
-	char extension[1024];
-	FS::Files::getFilenameExtension(TEST_ASCII_FILE_PATH, extension);
-	ASSERT_STREQ(".txt", extension);
-	FS::Files::getFilenameExtension(TEST_UTF_FILE_PATH, extension);
-	ASSERT_STREQ(".txt", extension);
+	ASSERT_STREQ(".txt", FS::Files::GetFilenameExtension(TEST_ASCII_FILE_PATH).c_str());
+	ASSERT_STREQ(".txt", FS::Files::GetFilenameExtension(TEST_UTF_FILE_PATH).c_str());
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateCreatePath)
 {
-	FS::Files::removeAll(TEMP_OUTPUT_DIR);
-	ASSERT_FALSE(FS::Files::directoryExists(TEMP_OUTPUT_DIR));
-	ASSERT_TRUE(FS::Files::createPath(TEMP_OUTPUT_DIR));
-	ASSERT_TRUE(FS::Files::directoryExists(TEMP_OUTPUT_DIR));
+	FS::Files::RemoveAll(TEMP_OUTPUT_DIR);
+	ASSERT_FALSE(FS::Files::DirectoryExists(TEMP_OUTPUT_DIR));
+	ASSERT_TRUE(FS::Files::CreatePath(TEMP_OUTPUT_DIR));
+	ASSERT_TRUE(FS::Files::DirectoryExists(TEMP_OUTPUT_DIR));
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateCreateParentPath)
 {
-	FS::Files::removeAll(TEMP_OUTPUT_DIR);
-	ASSERT_FALSE(FS::Files::directoryExists(TEMP_OUTPUT_DIR));
-	ASSERT_TRUE(FS::Files::createParentPath(TEMP_OUTPUT_DIR "/file.txt"));
-	ASSERT_TRUE(FS::Files::directoryExists(TEMP_OUTPUT_DIR));
+	FS::Files::RemoveAll(TEMP_OUTPUT_DIR);
+	ASSERT_FALSE(FS::Files::DirectoryExists(TEMP_OUTPUT_DIR));
+	ASSERT_TRUE(FS::Files::CreateParentPath(TEMP_OUTPUT_DIR "/file.txt"));
+	ASSERT_TRUE(FS::Files::DirectoryExists(TEMP_OUTPUT_DIR));
 }
 
-#if BOOST_VERSION / 100 % 1000 >= 55
 TEST(FS_Files_Test_Directories_UTF, validateCopyFile)
 {
-	FS::Files::removeAll(TEMP_OUTPUT_ASCII_FILE_PATH);
-	FS::Files::createParentPath(TEMP_OUTPUT_ASCII_FILE_PATH);
-
-	ASSERT_TRUE(FS::Files::copyFile(TEST_ASCII_FILE_PATH, TEMP_OUTPUT_ASCII_FILE_PATH));
-	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_ASCII_FILE_PATH));
+	FS::Files::RemoveAll(TEMP_OUTPUT_ASCII_FILE_PATH);
+	FS::Files::CreateParentPath(TEMP_OUTPUT_ASCII_FILE_PATH);
+	FS::Files::Copyfile(TEST_ASCII_FILE_PATH, TEMP_OUTPUT_ASCII_FILE_PATH);
+	ASSERT_TRUE(FS::Files::FileExists(TEMP_OUTPUT_ASCII_FILE_PATH));
 }
 
 TEST(FS_Files_Test_Directories_UTF, validateCopyDirectory)
 {
-	ASSERT_TRUE(FS::Files::copyDirectory(TEST_ASCII_DIR, TEMP_OUTPUT_DIR_COPY));
-	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_UTF_FILE_PATH_COPY));
-	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_ASCII_FILE_PATH_COPY));
+	ASSERT_TRUE(FS::Files::CopyDirectory(TEST_ASCII_DIR, TEMP_OUTPUT_DIR_COPY));
+	ASSERT_TRUE(FS::Files::FileExists(TEMP_OUTPUT_UTF_FILE_PATH_COPY));
+	ASSERT_TRUE(FS::Files::FileExists(TEMP_OUTPUT_ASCII_FILE_PATH_COPY));
 }
-
-#endif
 
 int uoFSFilesTestUTF(int argc, char* argv[])
 {
