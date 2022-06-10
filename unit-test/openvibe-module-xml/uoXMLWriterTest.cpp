@@ -34,7 +34,6 @@
 class CWriterCallBack : public XML::IWriterCallBack
 {
 public:
-
 	CWriterCallBack(const char* filename) { m_file = FS::Files::open(filename, "wb"); }
 	~CWriterCallBack() override { if (m_file) { std::fclose(m_file); } }	// in case release is not called
 
@@ -48,7 +47,6 @@ public:
 	}
 
 private:
-
 	std::FILE* m_file{ nullptr };
 };
 
@@ -57,11 +55,11 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	std::string expectedFile = DATA_DIR "/ref_data.xml";
 	std::string outputFile   = TEMP_DIR "/uoXMLWriterTest.xml";
 
-	FS::Files::createPath(TEMP_DIR);
-	ASSERT_TRUE(FS::Files::directoryExists(TEMP_DIR));
+	FS::Files::CreatePath(TEMP_DIR);
+	ASSERT_TRUE(FS::Files::DirectoryExists(TEMP_DIR));
 
-	FS::Files::removeAll(outputFile.c_str());
-	ASSERT_FALSE(FS::Files::fileExists(outputFile.c_str()));
+	FS::Files::RemoveAll(outputFile);
+	ASSERT_FALSE(FS::Files::FileExists(outputFile));
 
 	// The test serializes a known xml sequence and compares the output
 	// to a reference.
@@ -109,8 +107,8 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	std::ifstream generatedStream;
 	std::ifstream expectedStream;
 
-	FS::Files::openIFStream(generatedStream, outputFile.c_str());
-	FS::Files::openIFStream(expectedStream, expectedFile.c_str());
+	FS::Files::OpenIFStream(generatedStream, outputFile);
+	FS::Files::OpenIFStream(expectedStream, expectedFile);
 
 	ASSERT_TRUE(generatedStream.is_open());
 	ASSERT_TRUE(expectedStream.is_open());
@@ -118,8 +116,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	std::string generatedString;
 	std::string expectedString;
 
-	while (std::getline(expectedStream, expectedString))
-	{
+	while (std::getline(expectedStream, expectedString)) {
 		std::getline(generatedStream, generatedString);
 		ASSERT_EQ(expectedString, generatedString);
 	}
@@ -133,11 +130,11 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 	std::string expectedFile = DATA_DIR "/日本語/ref_data_jp.xml";
 	std::string outputFile   = TEMP_DIR "/オッペﾝヴィベ/日本語.xml";
 
-	FS::Files::createPath(TEMP_DIR);
-	ASSERT_TRUE(FS::Files::directoryExists(TEMP_DIR));
+	FS::Files::CreatePath(TEMP_DIR);
+	ASSERT_TRUE(FS::Files::DirectoryExists(TEMP_DIR));
 
-	FS::Files::removeAll(outputFile.c_str());
-	ASSERT_FALSE(FS::Files::fileExists(outputFile.c_str()));
+	FS::Files::RemoveAll(outputFile);
+	ASSERT_FALSE(FS::Files::FileExists(outputFile));
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
 	std::string testData         = "<Document name=\"日本語\"><Node>日本語 1</Node><Node>日本語 2</Node><Node>日本語 3</Node></Document>";
@@ -148,8 +145,8 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 	std::ifstream generatedStream;
 	std::ifstream expectedStream;
 
-	FS::Files::openIFStream(generatedStream, outputFile.c_str());
-	FS::Files::openIFStream(expectedStream, expectedFile.c_str());
+	FS::Files::OpenIFStream(generatedStream, outputFile);
+	FS::Files::OpenIFStream(expectedStream, expectedFile);
 
 	ASSERT_TRUE(generatedStream.is_open());
 	ASSERT_TRUE(expectedStream.is_open());
@@ -157,8 +154,7 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 	std::string generatedString;
 	std::string expectedString;
 
-	while (std::getline(expectedStream, expectedString))
-	{
+	while (std::getline(expectedStream, expectedString)) {
 		std::getline(generatedStream, generatedString);
 		ASSERT_EQ(expectedString, generatedString);
 	}
