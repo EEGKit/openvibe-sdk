@@ -128,13 +128,15 @@ public:
 	/// <summary> Creates all components of a path to the filesystem </summary>
 	/// <param name="path">The path.</param>
 	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise or empty path. </returns>
-	static bool CreatePath(const std::string& path);
-
+	static bool CreatePath(const std::string& path) { return path.empty() ? false : boost::filesystem::create_directories(toBoostPath(path)); }
 
 	/// <summary> Creates all components of a path to the filesystem except the last part (i.e. for paths including a filename in the end). </summary>
 	/// <param name="path">The path.</param>
 	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise or empty path. </returns>
-	static bool CreateParentPath(const std::string& path);
+	static bool CreateParentPath(const std::string& path)
+	{
+		return path.empty() ? false : boost::filesystem::create_directories(toBoostPath(path).parent_path());
+	}
 
 	/// <summary> Creates all components of a path to the filesystem </summary>
 	/// <param name="path">The path.</param>
@@ -258,14 +260,14 @@ public:
 	/// <param name="dstPath"> The target path. </param>
 	/// <returns> <c>true</c> if input arguments are pre-allocated. </returns>
 	///	<remarks> Before Opening arguments are converted utf8 to utf16. Because mix of char*, std::string and other cause issue needed to pass to wstring on windows. </remarks>
-	static void Copyfile(const std::string& srcFile, const std::string& dstPath);
+	static void Copyfile(const std::string& srcFile, const std::string& dstPath) { boost::filesystem::copy_file(toBoostPath(srcFile), toBoostPath(dstPath)); }
 
 	/// <summary> Copies the directory and his contents. </summary>
 	/// <param name="srcDir"> The source dir. </param>
 	/// <param name="dstDir"> The target dir. </param>
 	/// <returns> <c>true</c> if input arguments are pre-allocated. </returns>
 	///	<remarks> Before Opening arguments are converted utf8 to utf16. Because mix of char*, std::string and other cause issue needed to pass to wstring on windows. </remarks>
-	static bool CopyDirectory(const std::string& srcDir, const std::string& dstDir);
+	static bool CopyDirectory(const std::string& srcDir, const std::string& dstDir) { return recursiveCopy(toBoostPath(srcDir), toBoostPath(dstDir)); }
 
 	/// <summary> Copies the file (Use boost::filesystem::copy_file). </summary>
 	/// <param name="srcFile"> The source file. </param>
@@ -293,6 +295,18 @@ public:
 	/// <param name="path"> The path. </param>
 	/// <returns> boost::filesystem::remove status. </returns>
 	///	<remarks> Before Opening path is converted utf8 to utf16. Because mix of char*, std::string and other cause issue needed to pass to wstring on windows. </remarks>
+	static bool Remove(const std::string& path) { return boost::filesystem::remove(toBoostPath(path)); }
+
+	/// <summary> Use boost::filesystem::remove_all function. </summary>
+	/// <param name="path"> The path. </param>
+	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise. </returns>
+	///	<remarks> Before Opening Filename is converted utf8 to utf16. Because mix of char*, std::string and other cause issue needed to pass to wstring on windows. </remarks>
+	static bool RemoveAll(const std::string& path) { return boost::filesystem::remove_all(toBoostPath(path)) != 0; }
+
+	/// <summary> Use boost::filesystem::remove function. </summary>
+	/// <param name="path"> The path. </param>
+	/// <returns> boost::filesystem::remove status. </returns>
+	///	<remarks> Before Opening path is converted utf8 to utf16. Because mix of char*, std::string and other cause issue needed to pass to wstring on windows. </remarks>
 	/// \deprecated Use the same method with std::string parameter instead.
 	OV_Deprecated("Use the same method with std::string parameter instead.")
 	static bool remove(const char* path);
@@ -306,6 +320,18 @@ public:
 	static bool removeAll(const char* path);
 
 private:
+	/// <summary> Convert string to boost path but convert in utf16 before. </summary>
+	/// <param name="path">The path.</param>
+	/// <returns> <c>boost::filesystem::path</c>. </returns>
+	static boost::filesystem::path toBoostPath(const std::string& path);
+
+	/// <summary> Makes a recursive copy of source folder to target folder.
+	/// Operation can fail in several cases: target path exists and bad permission rights. </summary>
+	/// <param name="source"> the source folder path. </param>
+	/// <param name="target"> the destination folder path. </param>
+	/// <returns> <c>true</c> if succeed, <c>false</c> otherwise. </returns>
+	static bool recursiveCopy(const boost::filesystem::path& source, const boost::filesystem::path& target);
+
 	Files() = delete;	///< Prevents a default instance of the <see cref="Files"/> class from being created.
 };
 }  // namespace FS

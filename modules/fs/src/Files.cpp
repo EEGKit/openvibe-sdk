@@ -22,47 +22,34 @@ namespace FS {
 
 //  * 2006-08-30 YRD - Portability note : using namespace FS confuses windows platform SDK because it defines itself a 'boolean' type. Thus the following define to force the use of FS::boolean !
 
-#if BOOST_VERSION / 100 % 1000 >= 55
+//---------------------------------------------------------------------------------------------------
+boost::filesystem::path Files::toBoostPath(const std::string& path)
+{
+#if defined TARGET_OS_Windows
+	return boost::filesystem::wpath(Common::Converter::Utf8ToUtf16(path));
+#else
+		return boost::filesystem::path(path);
+#endif
+}
 
 //---------------------------------------------------------------------------------------------------
-/**
- * \brief Makes a recursive copy of source folder to target folder.
- *        Operation can fail in several cases:
- *			- target path exists
- *			- bad permission rights 
- * \param source	the source folder path
- * \param target	the destination folder path
- * \return true if succeeded
- * \return false if failed
- */
-bool recursiveCopy(const boost::filesystem::path& source, const boost::filesystem::path& target)
+bool Files::recursiveCopy(const boost::filesystem::path& source, const boost::filesystem::path& target)
 {
-	if (exists(target)) { return false; }
+	if (boost::filesystem::exists(target)) { return false; }
 
-	if (is_directory(source)) {
+	if (boost::filesystem::is_directory(source)) {
 		if (!create_directories(target)) { return false; }
 		for (boost::filesystem::directory_entry& item : boost::filesystem::directory_iterator(source)) {
 			// boost::filesystem::path overlods '/' operator !
 			if (!recursiveCopy(item.path(), target / item.path().filename())) { return false; }
 		}
 	}
-	else if (is_regular_file(source)) {
-		try { copy(source, target); }
+	else if (boost::filesystem::is_regular_file(source)) {
+		try { boost::filesystem::copy(source, target); }
 		catch (...) { return false; }
 	}
 	else { return false; }
 	return true;
-}
-#endif
-
-//---------------------------------------------------------------------------------------------------
-boost::filesystem::path toBoostPath(const std::string& path)
-{
-#if defined TARGET_OS_Windows
-	return boost::filesystem::wpath(Common::Converter::Utf8ToUtf16(path));
-#else
-	return boost::filesystem::path(path);
-#endif
 }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -242,20 +229,6 @@ bool Files::directoryExists(const char* pathToCheck)
 }
 
 //---------------------------------------------------------------------------------------------------
-bool Files::CreatePath(const std::string& path)
-{
-	if (path.empty()) { return false; }
-	return boost::filesystem::create_directories(toBoostPath(path));
-}
-
-//---------------------------------------------------------------------------------------------------
-bool Files::CreateParentPath(const std::string& path)
-{
-	if (path.empty()) { return false; }
-	return boost::filesystem::create_directories(toBoostPath(path).parent_path());
-}
-
-//---------------------------------------------------------------------------------------------------
 bool Files::createPath(const char* path)
 {
 	if (strcmp(path, "") == 0) { return false; }
@@ -334,26 +307,6 @@ bool Files::getFilenameExtension(const char* path, char* extension, const size_t
 }
 
 //---------------------------------------------------------------------------------------------------
-bool Files::remove(const char* path)
-{
-	if (fileExists(path) || directoryExists(path)) { return boost::filesystem::remove(toBoostPath(path)); }
-	return true;
-}
-
-//---------------------------------------------------------------------------------------------------
-bool Files::removeAll(const char* path)
-{
-	if (fileExists(path) || directoryExists(path)) { return (boost::filesystem::remove_all(toBoostPath(path)) != 0); }
-	return true;
-}
-
-//---------------------------------------------------------------------------------------------------
-void Files::Copyfile(const std::string& srcFile, const std::string& dstPath) { boost::filesystem::copy_file(toBoostPath(srcFile), toBoostPath(dstPath)); }
-
-//---------------------------------------------------------------------------------------------------
-bool Files::CopyDirectory(const std::string& srcDir, const std::string& dstDir) { return recursiveCopy(toBoostPath(srcDir), toBoostPath(dstDir)); }
-
-//---------------------------------------------------------------------------------------------------
 bool Files::copyFile(const char* srcFile, const char* dstPath)
 {
 	if (!srcFile || !dstPath) { return false; }
@@ -366,6 +319,20 @@ bool Files::copyDirectory(const char* srcDir, const char* dstDir)
 {
 	if (!srcDir || !dstDir) { return false; }
 	return recursiveCopy(toBoostPath(srcDir), toBoostPath(dstDir));
+}
+
+//---------------------------------------------------------------------------------------------------
+bool Files::remove(const char* path)
+{
+	if (fileExists(path) || directoryExists(path)) { return boost::filesystem::remove(toBoostPath(path)); }
+	return true;
+}
+
+//---------------------------------------------------------------------------------------------------
+bool Files::removeAll(const char* path)
+{
+	if (fileExists(path) || directoryExists(path)) { return (boost::filesystem::remove_all(toBoostPath(path)) != 0); }
+	return true;
 }
 
 }  // namespace FS
