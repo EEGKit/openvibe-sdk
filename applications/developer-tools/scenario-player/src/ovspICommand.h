@@ -28,7 +28,7 @@ class CKernelFacade;
 
 /**
 * \struct SCommand
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Base abstract struct for commands
 * \ingroup ScenarioPlayer

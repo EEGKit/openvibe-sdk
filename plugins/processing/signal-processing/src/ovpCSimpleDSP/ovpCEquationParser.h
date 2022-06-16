@@ -1,3 +1,21 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+///-------------------------------------------------------------------------------------------------
 #pragma once
 
 #include "defines.hpp"
@@ -19,112 +37,81 @@ typedef parse_tree_match_t::tree_iterator iter_t;
 class CAbstractTree;
 class CAbstractTreeNode;
 
-/**
-* Used to store the optional parameter of the function used by the pseudo-VM.
-*
-*/
+///<summary> Used to store the optional parameter of the function used by the pseudo-VM. </summary>
 union UFunctionContext
 {
-	double direct_value = 0;	//if the parameter if a value (push_val)
-	double** indirect_value;		//if it is a pointer to a value (push_var)
+	double direct_value = 0;	///< if the parameter if a value (push_val)
+	double** indirect_value;	///< if it is a pointer to a value (push_var)
 };
 
-//! Type of the functions in the function stack generated from the equation.
+///<summary> Type of the functions in the function stack generated from the equation. </summary>
 typedef void (*functionPointer)(double*& stack, UFunctionContext& oContext);
 
+/// <summary> Equation Parser. </summary>
 class CEquationParser
 {
 protected:
+	CAbstractTree* m_tree = nullptr;	///< The AST produced by the parsing of the equation
 
-	//! The AST produced by the parsing of the equation
-	CAbstractTree* m_tree = nullptr;
+	SEquationGrammar m_grammar;	///< Grammar to use
 
-	//! Grammar to use
-	SEquationGrammar m_grammar;
+	double** m_variable = nullptr;	///< Pointer to the data referenced by X in the equation
+	size_t m_nVariable  = 0;		///< Number of accessible variables
 
-	//! Pointer to the data referenced by X in the equation
-	double** m_variable = nullptr;
-	//! Number of accessible variables
-	size_t m_nVariable = 0;
+	const size_t m_functionStackSize    = 1024;		///< Size of the "function stack" (where the sucessive function pointers are stored)
+	functionPointer* m_functionList     = nullptr;	///< Pointer to the top of the function stack
+	functionPointer* m_functionListBase = nullptr;	///< Pointer to the base of the function stack
 
-	//! Size of the "function stack" (where the sucessive function pointers are stored)
-	const size_t m_functionStackSize = 1024;
-	//! Pointer to the top of the function stack
-	functionPointer* m_functionList = nullptr;
-	//! Pointer to the base of the function stack
-	functionPointer* m_functionListBase = nullptr;
+	const size_t m_functionContextStackSize     = 1024;		///< Size of the "function context stack" (where the sucessive function context are stored)
+	UFunctionContext* m_functionContextList     = nullptr;	///< Pointer to the top of the function context stack
+	UFunctionContext* m_functionContextListBase = nullptr;	///< Pointer to the base of the function context stack
 
-	//! Size of the "function context stack" (where the sucessive function context are stored)
-	const size_t m_functionContextStackSize = 1024;
-	//! Pointer to the top of the function context stack
-	UFunctionContext* m_functionContextList = nullptr;
-	//! Pointer to the base of the function context stack
-	UFunctionContext* m_functionContextListBase = nullptr;
+	const size_t m_stackSize = 1024;	///< Size of the "local" stack
+	double* m_stack          = nullptr;	///< Pointer to the top of the "local" stack
 
-	//! Size of the "local" stack
-	const size_t m_stackSize = 1024;
-	//! Pointer to the top of the "local" stack
-	double* m_stack = nullptr;
+	size_t m_nOperations = 0;	///< Number of pointers/contexts in the function/context stacks (same for both)
 
-	//! Number of pointers/contexts in the function/context stacks (same for both)
-	size_t m_nOperations = 0;
+	static std::array<functionPointer, 32> m_functionTable;	///< Table of function pointers
 
-	//! Table of function pointers
-	static std::array<functionPointer, 32> m_functionTable;
-
-	//! Category of the tree (OP_USERDEF or Special tree)
-	size_t m_treeCategory = OP_USERDEF;
-	//! Optional parameter in case of a special tree
-	double m_treeParameter = 0;
+	size_t m_treeCategory  = OP_USERDEF;	///< Category of the tree (OP_USERDEF or Special tree)
+	double m_treeParameter = 0;				///< Optional parameter in case of a special tree
 
 	OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& m_parentPlugin;
 
 public:
-
-	/**
-	* Constructor.
-	* \param plugin
-	* \param variable Pointer to the data known as X in the equation.
-	* \param nVariable
-	*/
+	/// <summary> Initializes a new instance of the <see cref="CEquationParser"/> class. </summary>
+	/// <param name="plugin"> The plugin. </param>
+	/// <param name="variable"> Pointer to the data known as X in the equation. </param>
+	/// <param name="nVariable"> The number of variable. </param>
 	CEquationParser(OpenViBE::Toolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& plugin, double** variable, const size_t nVariable)
 		: m_variable(variable), m_nVariable(nVariable), m_parentPlugin(plugin) {}
 
-	//! Destructor.
+	/// <summary> Finalizes an instance of the <see cref="CEquationParser"/> class. </summary>
 	~CEquationParser();
 
 #if 0
 	void setVariable(double * pVariable){ m_pVariable=pVariable; }
 #endif
 
-	/**
-	* Compiles the given equation, and generates the successive function calls to achieve the
-	* same result if needed (depends on m_treeCategory).
-	* \param equation The equation to use.
-	*/
+	/// <summary> Compiles the given equation, and generates the successive function calls to achieve the same result if needed (depends on m_treeCategory). </summary>
+	/// <param name="equation"> The equation to use. </param>
+	/// <returns></returns>
 	bool compileEquation(const char* equation);
 
 	void push_value(double value);
 	void push_var(size_t index);
 	void push_op(size_t op);
 
-	/**
-	* Returns the tree's category.
-	* \return The tree's category.
-	*/
+	/// <summary> Gets the tree category. </summary>
+	/// <returns> The tree's category. </returns>
 	size_t getTreeCategory() const { return m_treeCategory; }
 
-	/**
-	 * Returns the optional parameter.
-	 * \return The optional parameter.
-	 */
+	/// <summary> Gets the optional parameter. </summary>
+	/// <returns> The optional parameter. </returns>
 	double getTreeParameter() const { return m_treeParameter; }
 
-	/**
-	* Executes the successive function calls from the function stack and returns
-	* the result.
-	* \return The result of the equation applied to the value referenced by X.
-	*/
+	/// <summary> Executes the successive function calls from the function stack and returns the result. </summary>
+	/// <returns> The result of the equation applied to the value referenced by X. </returns>
 	double executeEquation()
 	{
 		functionPointer* currentFunction     = m_functionList - 1;
@@ -133,8 +120,7 @@ public:
 		UFunctionContext* currentFunctionContext = m_functionContextList - 1;
 
 		//while there are function pointers
-		while (currentFunction != lastFunctionPointer)
-		{
+		while (currentFunction != lastFunctionPointer) {
 			//calls the function with the current function context
 			(*currentFunction)(m_stack, *currentFunctionContext);
 
@@ -148,12 +134,10 @@ public:
 	}
 
 private:
-
 	void createAbstractTree(boost::spirit::classic::tree_parse_info<> oInfo);
 	CAbstractTreeNode* createNode(iter_t const& i) const;
 
 public:
-
 	static void op_neg(double*& stack, UFunctionContext& ctx);
 	static void op_add(double*& stack, UFunctionContext& ctx);
 	static void op_div(double*& stack, UFunctionContext& ctx);

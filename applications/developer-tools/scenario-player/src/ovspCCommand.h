@@ -28,7 +28,7 @@
 namespace OpenViBE {
 /**
 * \struct SInitCmd
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Command that drives the initialization of the tool
 * \ingroup ScenarioPlayer
@@ -51,7 +51,7 @@ protected:
 
 /**
 * \struct SLoadKernelCmd
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Command that drives kernel loading
 * \ingroup ScenarioPlayer
@@ -75,7 +75,7 @@ protected:
 
 /**
 * \struct SLoadScenarioCmd
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Command that drives scenario loading
 * \ingroup ScenarioPlayer
@@ -126,7 +126,7 @@ protected:
 
 /**
 * \struct SResetCmd
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Command that drives tool reset to its initial state
 * \ingroup ScenarioPlayer
@@ -142,7 +142,7 @@ protected:
 
 /**
 * \struct SRunScenarioCmd
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Command that drives the execution of a list of scenarios
 * \ingroup ScenarioPlayer
@@ -174,7 +174,7 @@ protected:
 
 /**
 * \struct SSetupScenarioCmd
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Command that drives the setup of a scenario
 * \ingroup ScenarioPlayer

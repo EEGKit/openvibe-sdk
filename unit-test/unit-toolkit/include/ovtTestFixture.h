@@ -1,39 +1,34 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
-
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \author Charles Garraud / Inria.
+/// \date 08/02/2016.
+/// \copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+///-------------------------------------------------------------------------------------------------
 #pragma once
 
 #include <memory>
 
 namespace OpenViBE {
 namespace Test {
-/**
-* \struct TestFixture
-* \author cgarraud (INRIA)
-* \date 2016-02-08
-* \brief Base abstract struct for test fixture
-*
-* A test fixture is used when an environment has to be set for a specific test.
-* TestFixture implementation should not be used directly but through ScopedTest.
-*/
+///-------------------------------------------------------------------------------------------------
+///<summary> Base abstract struct for test fixture
+///
+/// A test fixture is used when an environment has to be set for a specific test.
+/// TestFixture implementation should not be used directly but through ScopedTest. </summary>
 struct TestFixture
 {
 	virtual ~TestFixture() = default;
@@ -50,20 +45,14 @@ struct TestFixture
 	virtual void tearDown() = 0;
 
 private:
-
 	TestFixture& operator=(const TestFixture&) = delete;
 	TestFixture(const TestFixture&)            = delete;
 };
 
-/**
-* \struct ScopedTest
-* \author cgarraud (INRIA)
-* \date 2016-02-08
-* \brief Class used to ensure RAII when using TestFixture
-*
-* A scoped object is a wrapper around a test fixture used to
-* ensure RAII when running tests.
-*/
+///-------------------------------------------------------------------------------------------------
+///<summary> Class used to ensure RAII when using TestFixture.
+///
+/// A scoped object is a wrapper around a test fixture used to ensure RAII when running tests. </summary>
 template <typename T>
 struct ScopedTest
 {

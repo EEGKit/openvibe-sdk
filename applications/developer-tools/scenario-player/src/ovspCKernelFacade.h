@@ -35,7 +35,7 @@ struct SRunScenarioCmd;
 
 /**
 * \class CKernelFacade
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Wrapper class used to access Kernel features
 * \ingroup ScenarioPlayer

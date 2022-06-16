@@ -32,7 +32,7 @@
 namespace OpenViBE {
 /**
 * \class CommandFileParser
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-27
 * \brief Parser implementation that parses command a file
 * \ingroup ScenarioPlayer
