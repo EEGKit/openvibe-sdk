@@ -16,10 +16,10 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ValidityCheckerType, "Stop player", OVP_TypeId_ValidityCheckerType_StopPlayer.id());
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ValidityCheckerType, "Interpolate", OVP_TypeId_ValidityCheckerType_Interpolate.id());
 
-	OVP_Declare_New(CBoxAlgorithmStimulationListenerDesc);
-	OVP_Declare_New(CBoxAlgorithmEBMLStreamSpyDesc);
-	OVP_Declare_New(CBoxAlgorithmMatrixValidityCheckerDesc);
-	OVP_Declare_New(CBoxAlgorithmExternalProcessingDesc);
+	OVP_Declare_New(CBoxAlgorithmStimulationListenerDesc)
+	OVP_Declare_New(CBoxAlgorithmEBMLStreamSpyDesc)
+	OVP_Declare_New(CBoxAlgorithmMatrixValidityCheckerDesc)
+	OVP_Declare_New(CBoxAlgorithmExternalProcessingDesc)
 OVP_Declare_End()
 
 }  // namespace Tools
