@@ -104,13 +104,13 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Paul wavelet", size_t(EContinuousWaveletType::Paul));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet", size_t(EContinuousWaveletType::DOG));
 
-	OVP_Declare_New(CBoxAlgorithmContinuousWaveletAnalysisDesc);
+	OVP_Declare_New(CBoxAlgorithmContinuousWaveletAnalysisDesc)
 
 	OVP_Declare_New(CBoxAlgorithmFrequencyBandSelectorDesc)
 	OVP_Declare_New(CBoxAlgorithmSpectrumAverageDesc)
 
-	OVP_Declare_New(CBoxAlgorithmSpectralAnalysisDesc);
-	OVP_Declare_New(CBoxAlgorithmWindowingDesc);
+	OVP_Declare_New(CBoxAlgorithmSpectralAnalysisDesc)
+	OVP_Declare_New(CBoxAlgorithmWindowingDesc)
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_WindowMethod, "Window method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "None", size_t(EWindowMethod::None));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hamming", size_t(EWindowMethod::Hamming));
@@ -120,7 +120,7 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Triangular", size_t(EWindowMethod::Triangular));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Square root", size_t(EWindowMethod::SquareRoot));
 
-	OVP_Declare_New(CBoxXDAWNTrainerDesc);
+	OVP_Declare_New(CBoxXDAWNTrainerDesc)
 
 OVP_Declare_End()
 
