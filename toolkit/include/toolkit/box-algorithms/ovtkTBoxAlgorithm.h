@@ -9,13 +9,11 @@ template <class TBoxAlgorithmParentClass>
 class TBoxAlgorithm : public TBoxAlgorithmParentClass
 {
 public:
-
 	TBoxAlgorithm() { }
 
 	// ====================================================================================================================================
 
 private:
-
 	virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& ctx)
 	{
 		CScopedBoxAlgorithm scopedBoxAlgorithm(m_boxAlgorithmCtx, &ctx);
@@ -55,7 +53,6 @@ private:
 	// ====================================================================================================================================
 
 public:
-
 	virtual uint64_t getClockFrequency() { return 0; }
 	virtual bool initialize() { return true; }
 	virtual bool uninitialize() { return true; }
@@ -89,8 +86,7 @@ public:
 	virtual void appendOutputChunkData(const size_t outputIdx, const void* buffer, const size_t size)
 	{
 		Kernel::IBoxAlgorithmContext* context = this->getBoxAlgorithmContext();
-		if (context)
-		{
+		if (context) {
 			Kernel::IBoxIO* boxContext = context->getDynamicBoxContext();
 			if (boxContext) { boxContext->appendOutputChunkData(outputIdx, static_cast<const uint8_t*>(buffer), size); }
 		}
@@ -102,7 +98,6 @@ public:
 	_IsDerivedFromClass_(TBoxAlgorithmParentClass, OVTK_ClassId_)
 
 protected:
-
 	class FSettingValueAutoCast
 	{
 	public:
@@ -153,13 +148,11 @@ protected:
 			uint64_t stimId     = std::numeric_limits<uint64_t>::max();
 			const CString value = m_configManager.expand(m_settingValue);
 			double result;
-			if (m_typeManager.isEnumeration(m_settingType))
-			{
+			if (m_typeManager.isEnumeration(m_settingType)) {
 				stimId = m_typeManager.getEnumerationEntryValueFromName(m_settingType, value);
 
 				OV_ERROR_UNLESS(stimId != std::numeric_limits<uint64_t>::max(),
-								"Did not find an enumeration value for [" << m_typeManager.getTypeName(m_settingType) << "] = [" << m_settingValue <<
-								"]",
+								"Did not find an enumeration value for [" << m_typeManager.getTypeName(m_settingType) << "] = [" << m_settingValue << "]",
 								Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_errorManager, m_logManager);
 			}
 			else if (m_typeManager.evaluateSettingValue(value, result)) { return uint64_t(result); }
@@ -214,6 +207,8 @@ protected:
 
 		operator CString() const { return m_configManager.expand(m_settingValue); }
 
+		explicit operator std::string() const { return m_configManager.expand(m_settingValue).toASCIIString(); }
+
 	private:
 		Kernel::ILogManager& m_logManager;
 		Kernel::CErrorManager& m_errorManager;
@@ -224,7 +219,6 @@ protected:
 	};
 
 private:
-
 	class CScopedBoxAlgorithm final
 	{
 	public:
@@ -244,11 +238,9 @@ template <class TBoxListenerParentClass>
 class TBoxListener : public TBoxListenerParentClass
 {
 public:
-
 	TBoxListener() { }
 
 private:
-
 	virtual bool initialize(Kernel::IBoxListenerContext& ctx)
 	{
 		CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
@@ -261,11 +253,10 @@ private:
 		return uninitialize();
 	}
 
-	virtual bool process(Kernel::IBoxListenerContext& ctx, const Kernel::EBoxModification eBoxModificationType)
+	virtual bool process(Kernel::IBoxListenerContext& ctx, const Kernel::EBoxModification boxModificationType)
 	{
 		CScopedBoxListener scopedBoxListener(m_boxListenerCtx, &ctx);
-		switch (eBoxModificationType)
-		{
+		switch (boxModificationType) {
 			case Kernel::EBoxModification::Initialized: return this->onInitialized(m_boxListenerCtx->getBox());
 			case Kernel::EBoxModification::DefaultInitialized: return this->onDefaultInitialized(m_boxListenerCtx->getBox());
 			case Kernel::EBoxModification::NameChanged: return this->onNameChanged(m_boxListenerCtx->getBox());
@@ -290,7 +281,7 @@ private:
 			case Kernel::EBoxModification::SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(
 					m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
 			case Kernel::EBoxModification::SettingValueChanged: return this->onSettingValueChanged(m_boxListenerCtx->getBox(), m_boxListenerCtx->getIndex());
-			default: OV_ERROR_KRF("Unhandled box modification type " << size_t(eBoxModificationType), Kernel::ErrorType::BadArgument);
+			default: OV_ERROR_KRF("Unhandled box modification type " << size_t(boxModificationType), Kernel::ErrorType::BadArgument);
 		}
 		//return false;
 	}
@@ -298,7 +289,6 @@ private:
 	// ====================================================================================================================================
 
 public:
-
 	virtual bool initialize() { return true; }
 	virtual bool uninitialize() { return true; }
 	virtual bool onInitialized(Kernel::IBox& /*box*/) { return true; }
@@ -344,7 +334,6 @@ public:
 	_IsDerivedFromClass_(TBoxListenerParentClass, OVTK_ClassId_)
 
 private:
-
 	class CScopedBoxListener final
 	{
 	public:
