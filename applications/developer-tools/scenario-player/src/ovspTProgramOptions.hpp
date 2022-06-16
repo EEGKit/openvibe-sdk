@@ -37,7 +37,7 @@
 namespace OpenViBE {
 /**
 * \struct SProgramOptionsTraits
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-26
 * \brief Helper class for ProgramOptions type checking
 * \ingroup ScenarioPlayer
@@ -162,7 +162,7 @@ struct SHasDuplicate<THead, TTail...> : std::conditional<SIsIn<THead, TTail...>:
 
 /**
 * \class ProgramOptions
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-25
 * \brief Command-line options parser
 * \ingroup ScenarioPlayer

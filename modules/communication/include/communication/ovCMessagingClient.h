@@ -9,7 +9,6 @@ namespace Communication {
 class Communication_API MessagingClient : public CMessaging
 {
 public:
-
 	/**
 	 * \brief	Default constructor.
 	 */
@@ -124,7 +123,7 @@ public:
 	/**
 	 * \brief Get the oldest error message, if available.
 	 *
-	 * \param packetId
+	 * \param		packetId	Id of packet.
 	 * \param[out]	type		The error's type.
 	 * \param[out]	guiltyId	Identifier of the guilty message
 	 *
@@ -136,7 +135,7 @@ public:
 	/**
 	 * \brief Get the oldest EBML message, if available.
 	 *
-	 * \param packetId
+	 * \param		packetId	Id of packet.
 	 * \param[out]	index	 	Box input index.
 	 * \param[out]	startTime	The start time.
 	 * \param[out]	endTime  	The end time.
@@ -198,7 +197,6 @@ public:
 	bool waitForSyncMessage() override;
 
 private:
-
 	/**
 	 * \brief	Pushes an authentication message).
 	 *

@@ -30,7 +30,7 @@ struct SCommand;
 
 /**
 * \class ICommandParser
-* \author cgarraud (INRIA)
+* \author Charles Garraud (INRIA)
 * \date 2016-01-27
 * \brief Base abstract class for command parser
 * \ingroup ScenarioPlayer
