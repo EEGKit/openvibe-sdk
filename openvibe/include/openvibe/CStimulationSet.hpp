@@ -27,22 +27,23 @@
 ///-------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "ovIObject.h"
+#include "ov_defines.h"
 #include <vector>
+#include <string>
 #include <sstream>
 
 namespace OpenViBE {
 /// <summary> OpenViBE StimulationSet Class. </summary>
 /// <seealso cref="IObject" />
-class OV_API CStimulationSet final : public IObject
+class OV_API CStimulationSet final
 {
 public:
 	//--------------------------------------------------
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
 
-	CStimulationSet() { m_set = new std::vector<SStimulation>; }
-	~CStimulationSet() override { delete m_set; }
+	CStimulationSet() : m_set(new std::vector<SStimulation>) { }
+	~CStimulationSet() { delete m_set; }
 
 	//--------------------------------------------------
 	//----------------- Getter/Setter ------------------
@@ -279,8 +280,6 @@ public:
 	/// \deprecated Use erase() method instead (more standard naming style)
 	OV_Deprecated("Use erase() method instead (more standard naming style)")
 	void removeStimulation(const size_t index) const { m_set->erase(m_set->begin() + index); }
-
-	_IsDerivedFromClass_Final_(IObject, OV_ClassId_StimulationSet)
 
 private:
 	struct SStimulation

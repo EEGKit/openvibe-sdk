@@ -10,16 +10,17 @@
 ///-------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "ovIObject.h"
+#include "ov_defines.h"
 #include <vector>
+#include <string>
+
 
 namespace OpenViBE {
 
 /// <summary> OpenViBE Matrix Class. </summary>
-class OV_API CMatrix final : public IObject
+class OV_API CMatrix
 {
 public:
-
 	//--------------------------------------------------
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
@@ -40,7 +41,7 @@ public:
 	CMatrix(const CMatrix& m) { copy(m); }
 
 	/// <summary> Default destructor. </summary>
-	~CMatrix() override { clear(); }
+	~CMatrix() { clear(); }
 
 	//--------------------------------------------------
 	//----------------- Getter/Setter ------------------
@@ -289,8 +290,6 @@ public:
 		os << obj.bufferToString();
 		return os;
 	}
-
-	_IsDerivedFromClass_Final_(IObject, OV_ClassId_Matrix)
 
 private:
 	/// <summary> Init Buffer and number of element. </summary>
