@@ -38,7 +38,7 @@ namespace FileIO {
 class CBoxAlgorithmOVCSVFileWriter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-	CBoxAlgorithmOVCSVFileWriter();
+	CBoxAlgorithmOVCSVFileWriter(): m_writerLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) {}
 	void release() override { delete this; }
 
 	bool initialize() override;
@@ -51,6 +51,10 @@ public:
 private:
 	bool processStreamedMatrix();
 	bool processStimulation();
+
+	static std::vector<std::string> get1DLabels(const CMatrix& matrix);
+	static std::vector<std::string> get2DLabels(const CMatrix& matrix);
+	static std::string transformLabel(const std::string& str);
 
 	std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_writerLib;
 

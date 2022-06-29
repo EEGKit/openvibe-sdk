@@ -20,17 +20,19 @@
 /// along with this program. If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+#include "CBoxAlgorithmOVCSVFileReader.hpp"
+
 #include <sstream>
 #include <map>
 #include <algorithm>
+#include <regex>
 #include <utility>
-
-#include "CBoxAlgorithmOVCSVFileReader.hpp"
 
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileReader::initialize()
 {
 	m_sampling         = 0;
@@ -77,12 +79,14 @@ bool CBoxAlgorithmOVCSVFileReader::initialize()
 		return false;
 	}
 
+	transformLabels();
 	m_stimIdx = m_typeID == OV_TypeId_Stimulations ? 0 : 1;
 	OV_ERROR_UNLESS_KRF(m_stimEncoder.initialize(*this, m_stimIdx), "Error during stimulation encoder initialize", Kernel::ErrorType::Internal);
 
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 {
 	m_channelNames.clear();
@@ -96,6 +100,7 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileReader::processClock(Kernel::CMessageClock& /*msg*/)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Failed to mark clock algorithm as ready to process",
@@ -103,6 +108,7 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(Kernel::CMessageClock& /*msg*/)
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileReader::process()
 {
 	if (m_readerLib->getFormatType() == CSV::EStreamType::Stimulations) {
@@ -129,6 +135,7 @@ bool CBoxAlgorithmOVCSVFileReader::process()
 	return false;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 {
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
@@ -252,6 +259,7 @@ bool CBoxAlgorithmOVCSVFileReader::processChunksAndStimulations()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, const double endTime)
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
@@ -316,6 +324,11 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const double startTime, co
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
+void CBoxAlgorithmOVCSVFileReader::transformLabels()
+{
+	for (auto& label : m_channelNames) { label = std::regex_replace(label, std::regex("_newLine_"), "\n"); }
+}
 }  // namespace FileIO
 }  // namespace Plugins
 }  // namespace OpenViBE
