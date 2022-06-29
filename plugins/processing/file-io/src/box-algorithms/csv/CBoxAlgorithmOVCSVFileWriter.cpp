@@ -205,7 +205,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_Spectrum) {
 				const CMatrix* frequencyAbscissaMatrix = m_streamDecoder.getOutputFrequencyAbcissa();
-				std::vector<std::string> labels = get1DLabels(*matrix);
+				std::vector<std::string> labels        = get1DLabels(*matrix);
 				std::vector<double> frequencyAbscissa;
 
 				for (size_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); ++j) {
@@ -364,10 +364,7 @@ std::vector<std::string> CBoxAlgorithmOVCSVFileWriter::get2DLabels(const CMatrix
 ///-------------------------------------------------------------------------------------------------
 std::string CBoxAlgorithmOVCSVFileWriter::transformLabel(const std::string& str)
 {
-	std::string res = str;
-	res = std::regex_replace(res, std::regex("\r\n"), "_newLine_");	// Windows Line Break
-	res = std::regex_replace(res, std::regex("\n"), "_newLine_");	// Classic Line Break
-	return res;
+	return std::regex_replace(str, std::regex("\r*\n"), "_newLine_");	// Windows Line Break with \r before \n
 }
 
 }  // namespace FileIO
