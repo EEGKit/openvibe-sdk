@@ -18,9 +18,7 @@ target_link_libraries(${PROJECT_NAME}
                       openvibe-module-csv
                       openvibe-module-ebml
                       openvibe-module-xml
-                      openvibe-module-fs
-                      Boost::boost
-)
+                      openvibe-module-fs)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
