@@ -47,7 +47,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 
 	OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << STRATEGY_NODE_NAME, Kernel::ErrorType::BadParsing);
 
-	algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
+	algorithmClassID.fromString(std::string(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME)));
 
 	//If the Identifier is undefined, that means we need to load a native algorithm
 	if (algorithmClassID == CIdentifier::undefined())
@@ -56,7 +56,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 
 		OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << ALGORITHM_NODE_NAME, Kernel::ErrorType::BadParsing);
 
-		algorithmClassID.fromString(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
+		algorithmClassID.fromString(std::string(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME)));
 
 		//If the algorithm is still unknown, that means that we face an error
 		OV_ERROR_UNLESS_KRF(algorithmClassID != CIdentifier::undefined(), "No classifier retrieved from configuration file [" << filename << "]",

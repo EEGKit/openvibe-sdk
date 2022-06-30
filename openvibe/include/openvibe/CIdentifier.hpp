@@ -52,7 +52,7 @@ public:
 	/// <summary> string based constructor. </summary>
 	/// <param name="str"> The string with identifier. </param>
 	/// <remarks> If string is invalid undefined ID is set. </remarks>
-	explicit CIdentifier(const std::string& str) { if (!fromString(CString(str.c_str()))) { m_id = std::numeric_limits<uint64_t>::max(); } }
+	explicit CIdentifier(const std::string& str) { if (!fromString(str)) { m_id = std::numeric_limits<uint64_t>::max(); } }
 
 	/// <summary> Copy constructor.\n Builds up the 64 bits identifier exacly the same as given identifier parameter. </summary>
 	/// <param name="id"> the identifier to initialize this identifier from. </param>
@@ -179,8 +179,14 @@ public:
 	/// <summary> Reads a a string to extract this identifier. </summary>
 	/// <param name="str"> the string to convert. </param>
 	/// <returns> <c>true</c> in case of success, <c>false</c> otherwise. </returns>
-	/// <remarks> Must be changed with std::string when possible. For now it keeps compatibility with CString. </remarks>
-	bool fromString(const CString& str);
+	bool fromString(const std::string& str);
+
+
+	/// <summary> Reads a a string to extract this identifier. </summary>
+	/// <param name="str"> the string to convert. </param>
+	/// <returns> <c>true</c> in case of success, <c>false</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
+	bool fromString(const CString& str) { return fromString(std::string(str.toASCIIString())); }
 
 	/// <summary> Get the ID. </summary>
 	/// <returns> The unsigned integer identifier. </returns>
