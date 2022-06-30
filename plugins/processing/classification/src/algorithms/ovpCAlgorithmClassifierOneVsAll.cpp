@@ -256,7 +256,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfig(XML::IXMLNode* configNode)
 {
 	XML::IXMLNode* tempNode = configNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	CIdentifier id;
-	id.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
+	id.fromString(std::string(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE)));
 	if (m_subClassifierAlgorithmID != id)
 	{
 		while (!m_subClassifiers.empty()) { this->removeClassifierAtBack(); }
