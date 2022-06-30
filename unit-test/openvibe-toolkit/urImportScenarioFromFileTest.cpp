@@ -16,19 +16,9 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 		Test::ScopedTest<Test::SKernelFixture> fixture(configFile);
 		auto& context = fixture->context;
 
-#if defined TARGET_OS_Windows
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
-#elif defined TARGET_OS_Linux
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
-#elif defined TARGET_OS_MacOS
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
-#endif
+		context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-file-io*"));
+		context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-stimulation*"));
+		context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-tools*"));
 
 		const std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 

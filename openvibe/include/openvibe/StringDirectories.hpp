@@ -27,7 +27,7 @@ public:
 	StringDirectories() = delete;
 
 #ifdef OV_USE_CMAKE_DEFAULT_PATHS
-		static std::string getDistRootDir() { return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT); }
+	static std::string getDistRootDir() { return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT); }
 #else
 	static std::string getDistRootDir() { return pathFromEnv("OV_PATH_ROOT", guessRootDir().c_str()); }
 #endif
@@ -55,9 +55,9 @@ public:
 #endif
 
 	static std::string getLogDir() { return getUserDataDir() + "/log"; }
+	static std::string getLib(const std::string& lib) { return getLibDir() + getLibPrefix() + lib + getLibExt(); }
 
 private:
-
 	// Used to convert \ in paths to /, we need this because \ is a special character for .conf token parsing
 	static std::string convertPath(const std::string& strIn)
 	{
@@ -80,8 +80,7 @@ private:
 		const std::unique_ptr<wchar_t> utf16value(new wchar_t[1024]);
 		GetModuleFileNameW(nullptr, utf16value.get(), 1024);
 		const int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
-		if (multiByteSize == 0)
-		{
+		if (multiByteSize == 0) {
 			// There are no sensible values to return if the above call fails and the program will not be
 			// able to run in any case.
 			std::abort();
@@ -137,8 +136,7 @@ private:
 	static std::string pathFromEnvOrExtendedRoot(const char* envVar, const char* rootPostfix, const char* defaultPath)
 	{
 		if (std::getenv(envVar)) { return pathFromEnv(envVar, defaultPath); }
-		if (std::getenv("OV_PATH_ROOT"))
-		{
+		if (std::getenv("OV_PATH_ROOT")) {
 			// the default case for this one is wrong but it should never happen
 			return pathFromEnv("OV_PATH_ROOT", "") + rootPostfix;
 		}
@@ -148,5 +146,19 @@ private:
 		return guessRootDir() + rootPostfix;
 #endif
 	}
+
+#if defined TARGET_OS_Windows
+	static std::string getLibPrefix() { return "/openvibe-"; }
+#else
+	static std::string getLibPrefix() { return "/libopenvibe-"; }
+#endif
+
+#if defined TARGET_OS_Windows
+	static std::string getLibExt() { return ".dll"; }
+#elif defined TARGET_OS_Linux
+	static std::string getLibExt() { return ".so"; }
+#elif defined TARGET_OS_MacOS
+	static std::string getLibExt() { return ".dylib"; }
+#endif
 };
 }  // namespace OpenViBE

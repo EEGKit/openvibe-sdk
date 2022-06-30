@@ -9,7 +9,7 @@
 //                                                                   //
 
 #include "ov_defines.h"
-#include "ov_directories.h"
+#include "Directories.hpp"
 
 #include "CIdentifier.hpp"
 #include "CTime.hpp"

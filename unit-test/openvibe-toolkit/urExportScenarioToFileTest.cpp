@@ -23,19 +23,9 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 
 		auto& context = fixture->context;
 
-#if defined TARGET_OS_Windows
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
-#elif defined TARGET_OS_Linux
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
-#elif defined TARGET_OS_MacOS
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
-		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
-#endif
+		context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-file-io*"));
+		context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-stimulation*"));
+		context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-tools*"));
 
 		CIdentifier emptyScenarioIdentifier;
 		context->getScenarioManager().createScenario(emptyScenarioIdentifier);
@@ -61,8 +51,7 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		for (auto& attribute : simpleScenarioAttributes) { scenario.addAttribute(std::get<0>(attribute), std::get<1>(attribute).c_str()); }
 
 		size_t settingIndex = 0;
-		for (auto& setting : simpleScenarioSettings)
-		{
+		for (auto& setting : simpleScenarioSettings) {
 			scenario.addSetting(std::get<1>(setting).c_str(), std::get<0>(setting), std::get<2>(setting).c_str());
 			scenario.setSettingValue(settingIndex, std::get<3>(setting).c_str());
 			settingIndex += 1;
@@ -78,22 +67,18 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 		stimulatorListenerBox->addInput("Stimulation stream 2", OV_TypeId_Stimulations);
 
 		int scenarioInputIdx = 0;
-		for (auto& scenarioInput : simpleScenarioInputs)
-		{
+		for (auto& scenarioInput : simpleScenarioInputs) {
 			scenario.addInput(std::get<1>(scenarioInput).c_str(), std::get<0>(scenarioInput));
-			if (std::get<2>(scenarioInput) != CIdentifier::undefined())
-			{
+			if (std::get<2>(scenarioInput) != CIdentifier::undefined()) {
 				scenario.setScenarioInputLink(scenarioInputIdx, std::get<2>(scenarioInput), std::get<3>(scenarioInput));
 			}
 			scenarioInputIdx += 1;
 		}
 
 		int scenarioOutputIdx = 0;
-		for (auto& scenarioOutput : simpleScenarioOutputs)
-		{
+		for (auto& scenarioOutput : simpleScenarioOutputs) {
 			scenario.addOutput(std::get<1>(scenarioOutput).c_str(), std::get<0>(scenarioOutput));
-			if (std::get<2>(scenarioOutput) != CIdentifier::undefined())
-			{
+			if (std::get<2>(scenarioOutput) != CIdentifier::undefined()) {
 				scenario.setScenarioOutputLink(scenarioOutputIdx, std::get<2>(scenarioOutput), std::get<3>(scenarioOutput));
 			}
 			scenarioOutputIdx += 1;

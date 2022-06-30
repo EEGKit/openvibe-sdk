@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ov_directories_string.h"
+#include "StringDirectories.hpp"
 #include "ovCString.h"
 
 namespace OpenViBE {
@@ -19,5 +19,6 @@ public:
 	static CString getUserHomeDir() { return StringDirectories::getUserHomeDir().c_str(); }
 	static CString getUserDataDir() { return StringDirectories::getUserDataDir().c_str(); }
 	static CString getLogDir() { return StringDirectories::getLogDir().c_str(); }
+	static CString getLib(const std::string& lib) { return StringDirectories::getLib(lib).c_str(); }
 };
 }  // namespace OpenViBE
