@@ -37,8 +37,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 {
 	std::map<std::string, std::string> initializationTokens;
 	const auto tokens = tokenList;
-	while (tokens && nToken > 0)
-	{
+	while (tokens && nToken > 0) {
 		const auto key   = tokenList++;
 		const auto value = tokenList++;
 		nToken--;
@@ -54,13 +53,11 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 
 	m_configManager.reset(new CConfigurationManager(m_masterKernelCtx));
 	// We create the configuration manager very soon to be able to deactivate the console log listener
-	if (initializationTokens.count("Kernel_SilentConsole"))
-	{
+	if (initializationTokens.count("Kernel_SilentConsole")) {
 		m_configManager->createConfigurationToken("Kernel_SilentConsole", initializationTokens.at("Kernel_SilentConsole").c_str());
 	}
 
-	if (!m_configManager->expandAsBoolean("${Kernel_SilentConsole}", false))
-	{
+	if (!m_configManager->expandAsBoolean("${Kernel_SilentConsole}", false)) {
 		m_logListenerConsole.reset(new CLogListenerConsole(m_masterKernelCtx, m_applicationName));
 		m_logListenerConsole->activate(false);
 		m_logListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
@@ -133,8 +130,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t nToken)
 	m_logListenerFile->configure(*m_configManager);
 	m_logListenerFile->configure(*m_configManager);
 
-	if (m_logListenerConsole)
-	{
+	if (m_logListenerConsole) {
 		m_logListenerConsole->activate(false);
 		m_logListenerConsole->activate(consoleLogLevel, LogLevel_Last, true);
 		m_logListenerConsole->configure(*m_configManager);
@@ -195,14 +191,12 @@ bool CKernelContext::uninitialize()
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
 	// before Plugin Manager destructor needs it.
 	CIdentifier scenarioID;
-	while ((scenarioID = m_scenarioManager->getNextScenarioIdentifier(CIdentifier::undefined())) != CIdentifier::undefined())
-	{
+	while ((scenarioID = m_scenarioManager->getNextScenarioIdentifier(CIdentifier::undefined())) != CIdentifier::undefined()) {
 		m_scenarioManager->releaseScenario(scenarioID);
 	}
 
 	CIdentifier algorithmIdentifier;
-	while ((algorithmIdentifier = m_algorithmManager->getNextAlgorithmIdentifier(CIdentifier::undefined())) != CIdentifier::undefined())
-	{
+	while ((algorithmIdentifier = m_algorithmManager->getNextAlgorithmIdentifier(CIdentifier::undefined())) != CIdentifier::undefined()) {
 		m_algorithmManager->releaseAlgorithm(algorithmIdentifier);
 	}
 

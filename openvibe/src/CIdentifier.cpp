@@ -56,9 +56,9 @@ std::string CIdentifier::str(const bool hexa) const
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CIdentifier::fromString(const CString& str)
+bool CIdentifier::fromString(const std::string& str)
 {
-	const char* buffer = str.toASCIIString();
+	const char* buffer = str.c_str();
 	uint32_t id1;
 	uint32_t id2;
 	if (sscanf(buffer, "(0x%x, 0x%x)", &id1, &id2) != 2) { return false; }

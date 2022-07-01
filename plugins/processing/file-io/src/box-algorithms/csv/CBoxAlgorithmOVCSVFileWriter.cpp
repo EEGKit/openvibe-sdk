@@ -26,14 +26,13 @@
 
 #include <string>
 #include <iostream>
+#include <regex>
 
 namespace OpenViBE {
 namespace Plugins {
 namespace FileIO {
 
-CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter()
-	: m_writerLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) {}
-
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileWriter::initialize()
 {
 	m_isFileOpen = false;
@@ -98,6 +97,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 {
 	m_streamDecoder.uninitialize();
@@ -118,6 +118,7 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Error while marking algorithm as ready to process",
@@ -125,6 +126,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processInput(const size_t /*index*/)
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileWriter::process()
 {
 	if (this->getStaticBoxContext().getInputCount() > 1) {
@@ -142,6 +144,7 @@ bool CBoxAlgorithmOVCSVFileWriter::process()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
@@ -159,9 +162,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 			if (m_typeID == OV_TypeId_Signal) {
 				OV_ERROR_UNLESS_KRF(m_streamDecoder.getOutputSamplingRate() != 0, "Sampling rate can not be 0", Kernel::ErrorType::BadInput);
-				std::vector<std::string> labels;
-
-				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { labels.push_back(matrix->getDimensionLabel(0, j)); }
+				std::vector<std::string> labels = get1DLabels(*matrix);
 
 				OV_ERROR_UNLESS_KRF(
 					m_writerLib->setSignalInformation(labels, m_streamDecoder.getOutputSamplingRate(), matrix->getDimensionSize(1)),
@@ -175,14 +176,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				}
 			}
 			else if (m_typeID == OV_TypeId_StreamedMatrix || m_typeID == OV_TypeId_CovarianceMatrix) {
-				std::vector<std::string> labels;
+				std::vector<std::string> labels = get2DLabels(*matrix);
 				std::vector<size_t> sizes;
-
-				for (size_t d1 = 0; d1 < matrix->getDimensionCount(); ++d1) {
-					sizes.push_back(matrix->getDimensionSize(d1));
-
-					for (size_t d2 = 0; d2 < matrix->getDimensionSize(d1); ++d2) { labels.push_back(matrix->getDimensionLabel(d1, d2)); }
-				}
+				for (size_t d1 = 0; d1 < matrix->getDimensionCount(); ++d1) { sizes.push_back(matrix->getDimensionSize(d1)); }
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->setStreamedMatrixInformation(sizes, labels),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty()
@@ -195,9 +191,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 				}
 			}
 			else if (m_typeID == OV_TypeId_FeatureVector) {
-				std::vector<std::string> labels;
-
-				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { labels.push_back(matrix->getDimensionLabel(0, j)); }
+				std::vector<std::string> labels = get1DLabels(*matrix);
 
 				OV_ERROR_UNLESS_KRF(m_writerLib->setFeatureVectorInformation(labels),
 									(CSV::ICSVHandler::getLogError(m_writerLib->getLastLogError()) + (m_writerLib->getLastErrorString().empty()
@@ -211,10 +205,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 			}
 			else if (m_typeID == OV_TypeId_Spectrum) {
 				const CMatrix* frequencyAbscissaMatrix = m_streamDecoder.getOutputFrequencyAbcissa();
-				std::vector<std::string> labels;
+				std::vector<std::string> labels        = get1DLabels(*matrix);
 				std::vector<double> frequencyAbscissa;
-
-				for (size_t j = 0; j < matrix->getDimensionSize(0); ++j) { labels.push_back(matrix->getDimensionLabel(0, j)); }
 
 				for (size_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); ++j) {
 					frequencyAbscissa.push_back(frequencyAbscissaMatrix->getBuffer()[j]);
@@ -301,6 +293,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 {
 	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
@@ -345,6 +338,33 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 	}
 
 	return true;
+}
+
+///-------------------------------------------------------------------------------------------------
+std::vector<std::string> CBoxAlgorithmOVCSVFileWriter::get1DLabels(const CMatrix& matrix)
+{
+	std::vector<std::string> labels;
+	for (size_t j = 0; j < matrix.getDimensionSize(0); ++j) {
+		labels.push_back(transformLabel(matrix.getDimensionLabel(0, j)));
+		std::cout << "Label " << j << " : " << labels[j] << std::endl;
+	}
+	return labels;
+}
+
+///-------------------------------------------------------------------------------------------------
+std::vector<std::string> CBoxAlgorithmOVCSVFileWriter::get2DLabels(const CMatrix& matrix)
+{
+	std::vector<std::string> labels;
+	for (size_t d1 = 0; d1 < matrix.getDimensionCount(); ++d1) {
+		for (size_t d2 = 0; d2 < matrix.getDimensionSize(d1); ++d2) { labels.push_back(transformLabel(matrix.getDimensionLabel(d1, d2))); }
+	}
+	return labels;
+}
+
+///-------------------------------------------------------------------------------------------------
+std::string CBoxAlgorithmOVCSVFileWriter::transformLabel(const std::string& str)
+{
+	return std::regex_replace(str, std::regex("\r*\n"), "_newLine_");	// Windows Line Break with \r before \n
 }
 
 }  // namespace FileIO

@@ -61,25 +61,17 @@ CKernelFacade::~CKernelFacade()
 
 EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
 {
-	if (m_impl->ctx)
-	{
+	if (m_impl->ctx) {
 		std::cout << "WARNING: The kernel is already loaded" << std::endl;
 		return EPlayerReturnCodes::Success;
 	}
 
-#if defined TARGET_OS_Windows
-	const CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
-#elif defined TARGET_OS_Linux
-	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.so";
-#elif defined TARGET_OS_MacOS
-	const CString kernelFile = Directories::getLibDir() + "/libopenvibe-kernel.dylib";
-#endif
+	const CString kernelFile = Directories::getLib("kernel");
 
 	CKernelLoader& kernelLoader = m_impl->loader;
 	CString error;
 
-	if (!kernelLoader.load(kernelFile, &error))
-	{
+	if (!kernelLoader.load(kernelFile, &error)) {
 		std::cerr << "ERROR: impossible to load kernel from file located at: " << kernelFile << std::endl;
 		return EPlayerReturnCodes::KernelLoadingFailure;
 	}
@@ -89,8 +81,7 @@ EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) cons
 	Kernel::IKernelDesc* kernelDesc = nullptr;
 	kernelLoader.getKernelDesc(kernelDesc);
 
-	if (!kernelDesc)
-	{
+	if (!kernelDesc) {
 		std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
 		return EPlayerReturnCodes::KernelInvalidDesc;
 	}
@@ -103,8 +94,7 @@ EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) cons
 
 	Kernel::IKernelContext* ctx = kernelDesc->createKernel("scenario-player", configFile);
 
-	if (!ctx)
-	{
+	if (!ctx) {
 		std::cerr << "ERROR: impossible to create kernel context " << std::endl;
 		return EPlayerReturnCodes::KernelInvalidDesc;
 	}
@@ -122,8 +112,7 @@ EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) cons
 
 EPlayerReturnCodes CKernelFacade::unloadKernel() const
 {
-	if (m_impl->ctx)
-	{
+	if (m_impl->ctx) {
 		// not releasing the scenario before releasing the kernel
 		// causes a segfault on linux
 		auto& scenarioManager = m_impl->ctx->getScenarioManager();
@@ -148,8 +137,7 @@ EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) 
 {
 	assert(command.scenarioFile && command.scenarioName);
 
-	if (!m_impl->ctx)
-	{
+	if (!m_impl->ctx) {
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 		return EPlayerReturnCodes::KernelInternalFailure;
 	}
@@ -160,8 +148,7 @@ EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) 
 	CIdentifier scenarioID;
 	auto& scenarioManager = m_impl->ctx->getScenarioManager();
 
-	if (!scenarioManager.importScenarioFromFile(scenarioID, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
-	{
+	if (!scenarioManager.importScenarioFromFile(scenarioID, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter)) {
 		std::cerr << "ERROR: failed to create scenario " << std::endl;
 		return EPlayerReturnCodes::KernelInternalFailure;
 	}
@@ -185,8 +172,7 @@ EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& comma
 	const auto scenarioName = command.scenarioName.get();
 	const auto scenarioFile = command.scenarioFile.get();
 
-	if (m_impl->scenarios.find(scenarioName) == m_impl->scenarios.end())
-	{
+	if (m_impl->scenarios.find(scenarioName) == m_impl->scenarios.end()) {
 		std::cerr << "ERROR: Trying to update a not loaded scenario " << scenarioName << std::endl;
 		return EPlayerReturnCodes::ScenarioNotLoaded;
 	}
@@ -203,8 +189,7 @@ EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& comma
 	for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(listID[i]); }
 
 	// export scenario to the destination file
-	if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_impl->scenarios[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
-	{
+	if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_impl->scenarios[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter)) {
 		std::cerr << "ERROR: failed to create scenario " << std::endl;
 		return EPlayerReturnCodes::KernelInternalFailure;
 	}
@@ -214,22 +199,19 @@ EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& comma
 
 EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
 {
-	if (!m_impl->ctx)
-	{
+	if (!m_impl->ctx) {
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
-	if (!command.scenarioName)
-	{
+	if (!command.scenarioName) {
 		std::cerr << "ERROR: Missing scenario name for setup" << std::endl;
 		return EPlayerReturnCodes::KernelInternalFailure;
 	}
 
 	const auto name = command.scenarioName.get();
 
-	if (m_impl->scenarios.find(name) == m_impl->scenarios.end())
-	{
+	if (m_impl->scenarios.find(name) == m_impl->scenarios.end()) {
 		std::cerr << "ERROR: Trying to configure not loaded scenario " << name << std::endl;
 		return EPlayerReturnCodes::ScenarioNotLoaded;
 	}
@@ -245,8 +227,7 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 {
 	assert(command.scenarioList);
 
-	if (!m_impl->ctx)
-	{
+	if (!m_impl->ctx) {
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 		return EPlayerReturnCodes::KernelInternalFailure;
 	}
@@ -269,14 +250,12 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 	std::vector<CIdentifier> playerIDs;
 
 	// attach players to scenario
-	for (auto& pair : m_impl->scenarios)
-	{
+	for (auto& pair : m_impl->scenarios) {
 		auto name = pair.first;
 		if (std::find(scenarios.begin(), scenarios.end(), name) == scenarios.end()) { continue; } // not in the list of scenario to run 
 
 		CIdentifier id;
-		if (!playerManager.createPlayer(id) || id == CIdentifier::undefined())
-		{
+		if (!playerManager.createPlayer(id) || id == CIdentifier::undefined()) {
 			std::cerr << "ERROR: impossible to create player" << std::endl;
 			returnCode = EPlayerReturnCodes::KernelInternalFailure;
 			break;
@@ -291,30 +270,26 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 		for (auto& token : m_impl->scenarioTokens[name]) { configTokens.setValue(token.first, token.second); }
 
 		// Scenario attachment with setup of local token
-		if (!player->setScenario(pair.second, &configTokens))
-		{
+		if (!player->setScenario(pair.second, &configTokens)) {
 			std::cerr << "ERROR: impossible to set player scenario " << name << std::endl;
 			returnCode = EPlayerReturnCodes::KernelInternalFailure;
 			break;
 		}
 
-		if (player->initialize() == Kernel::EPlayerReturnCodes::Success)
-		{
+		if (player->initialize() == Kernel::EPlayerReturnCodes::Success) {
 			if (command.playMode && command.playMode.get() == EPlayerPlayMode::Fastfoward) { player->forward(); }
 			else { player->play(); }
 
 			players.push_back(player);
 		}
-		else
-		{
+		else {
 			std::cerr << "ERROR: impossible to initialize player for scenario " << name << std::endl;
 			returnCode = EPlayerReturnCodes::KernelInternalFailure;
 			break;
 		}
 	}
 
-	if (returnCode == EPlayerReturnCodes::Success)
-	{
+	if (returnCode == EPlayerReturnCodes::Success) {
 		// loop until timeout
 		const uint64_t startTime = System::Time::zgetTime();
 		uint64_t lastLoopTime    = startTime;
@@ -324,8 +299,7 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 		const double boundedMaxExecutionTimeInS = CTime::max().toSeconds();
 
 		uint64_t maxExecutionTimeInFixedPoint;
-		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
-		{
+		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS) {
 			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time();
 		}
 		else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
@@ -335,10 +309,8 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 		{
 			const uint64_t currentTime = System::Time::zgetTime();
 			allStopped                 = true;
-			for (auto* p : players)
-			{
-				if (p->getStatus() != Kernel::EPlayerStatus::Stop)
-				{
+			for (auto* p : players) {
+				if (p->getStatus() != Kernel::EPlayerStatus::Stop) {
 					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; }
 				}
 
@@ -352,8 +324,7 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 	}
 
 	// release players
-	for (auto& id : playerIDs)
-	{
+	for (auto& id : playerIDs) {
 		playerManager.getPlayer(id).uninitialize();
 		playerManager.releasePlayer(id);
 	}

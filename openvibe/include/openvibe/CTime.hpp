@@ -22,7 +22,6 @@ namespace OpenViBE {
 class OV_API CTime
 {
 public:
-
 	//--------------------------------------------------
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
@@ -144,7 +143,6 @@ public:
 	/// <param name="time"> The time to compare. </param>
 	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
 	bool operator>=(const CTime& time) const { return m_time >= time.m_time; }
-
 
 	/// <summary> Implements the operator uint64_t. </summary>
 	/// <returns> The result of the operator. </returns>

@@ -340,7 +340,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 	XML::IXMLNode* tempNode = configNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 
 	CIdentifier algorithmID;
-	algorithmID.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
+	algorithmID.fromString(std::string(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE)));
 
 	if (!this->setSubClassifierIdentifier(algorithmID))
 	{
@@ -350,7 +350,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 
 	tempNode = configNode->getChildByName(PAIRWISE_DECISION_NAME);
 	CIdentifier pairwiseID;
-	pairwiseID.fromString(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE));
+	pairwiseID.fromString(std::string(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE)));
 	if (pairwiseID != m_pairwiseDecisionID)
 	{
 		if (m_decisionStrategyAlgorithm != nullptr)

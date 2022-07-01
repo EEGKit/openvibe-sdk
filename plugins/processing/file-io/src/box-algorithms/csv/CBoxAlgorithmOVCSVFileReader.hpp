@@ -54,6 +54,7 @@ public:
 private:
 	bool processChunksAndStimulations();
 	bool processStimulation(double startTime, double endTime);
+	void transformLabels();
 
 	std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_readerLib;
 
