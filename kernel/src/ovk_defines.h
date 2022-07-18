@@ -66,7 +66,6 @@
 // Tools Class Identifiers
 //---------------------------------------------------------------------------------------------------
 #define OVK_ClassId_Tools_ScopeTester							OpenViBE::CIdentifier(0x5978C732, 0x5903C7A2)
-#define OVK_ClassId_Tools_KernelObjectFactoryHelper				OpenViBE::CIdentifier(0x6059EA7C, 0x081FDAB5)
 #define OVK_ClassId_Tools_BoxProxyT								OpenViBE::CIdentifier(0x4DFDFCE4, 0x49EF078E)
 #define OVK_ClassId_Tools_BoxIOProxyT							OpenViBE::CIdentifier(0x25476613, 0x331633DA)
 

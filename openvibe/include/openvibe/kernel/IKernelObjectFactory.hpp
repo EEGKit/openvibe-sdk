@@ -33,7 +33,7 @@ namespace Kernel {
 /// This class allows to create kernel objects as needed.
 /// <seealso cref="IKernelObject" />
 /// \ingroup Group_Kernel
-///	\todo Can be removed with the CKernelObjectFactory and CKernelObjectFactoryHelper classes
+///	\todo Can be removed with the CKernelObjectFactory class ?
 class OV_API IKernelObjectFactory : public IKernelObject
 {
 public:
