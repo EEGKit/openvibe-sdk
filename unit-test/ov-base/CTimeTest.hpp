@@ -87,7 +87,7 @@ TEST(CTime_Tests, constructor_seconds)
 	// test construction & conversion second -> fixed point -> second 
 	for (const auto ref : Dataset::SECONDS) {
 		const auto res = OpenViBE::CTime(ref).toSeconds();
-		EXPECT_LT(std::abs(res - ref), Dataset::TOLERANCE) << ErrorMsg("Constructor with seconds and conversion to seconds", ref, res);
+		EXPECT_LT(std::fabs(res - ref), Dataset::TOLERANCE) << ErrorMsg("Constructor with seconds and conversion to seconds", ref, res);
 	}
 }
 //---------------------------------------------------------------------------------------------------

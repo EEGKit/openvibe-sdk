@@ -23,8 +23,7 @@ bool importScenarioFromFile(const char* filename)
 	context->getErrorManager().releaseErrors();
 
 	OpenViBE::CIdentifier scenarioID;
-	if (context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
-	{
+	if (context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter)) {
 		context->getScenarioManager().releaseScenario(scenarioID);
 		return true;
 	}
@@ -35,11 +34,10 @@ bool importScenarioFromFile(const char* filename)
 // should be called after importScenarioFromFile
 bool checkForSchemaValidationError()
 {
-	auto& errorManager = context->getErrorManager();
-	auto error         = errorManager.getLastError();
+	const auto& errorManager = context->getErrorManager();
+	auto error               = errorManager.getLastError();
 
-	while (error)
-	{
+	while (error) {
 		if (error->getErrorType() == OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation) { return true; }
 		error = error->getNestedError();
 	}
@@ -77,8 +75,7 @@ TEST(validate_scenario_test_case, test_root)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 9; ++i)
-	{
+	for (size_t i = 0; i < 9; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -97,8 +94,7 @@ TEST(validate_scenario_test_case, test_attribute)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 4; ++i)
-	{
+	for (size_t i = 0; i < 4; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -123,8 +119,7 @@ TEST(validate_scenario_test_case, test_box)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 10; ++i)
-	{
+	for (size_t i = 0; i < 10; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -144,8 +139,7 @@ TEST(validate_scenario_test_case, test_comment)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 5; ++i)
-	{
+	for (size_t i = 0; i < 5; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -164,8 +158,7 @@ TEST(validate_scenario_test_case, test_input)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 4; ++i)
-	{
+	for (size_t i = 0; i < 4; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -187,8 +180,7 @@ TEST(validate_scenario_test_case, test_link)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 7; ++i)
-	{
+	for (size_t i = 0; i < 7; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -207,8 +199,7 @@ TEST(validate_scenario_test_case, test_output)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 4; ++i)
-	{
+	for (size_t i = 0; i < 4; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -232,8 +223,7 @@ TEST(validate_scenario_test_case, test_setting)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 9; ++i)
-	{
+	for (size_t i = 0; i < 9; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -253,8 +243,7 @@ TEST(validate_scenario_test_case, test_source)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 5; ++i)
-	{
+	for (size_t i = 0; i < 5; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}
@@ -275,8 +264,7 @@ TEST(validate_scenario_test_case, test_target)
 	// in order to avoid a segfault
 	ASSERT_TRUE(context != nullptr);
 
-	for (size_t i = 0; i < 5; ++i)
-	{
+	for (size_t i = 0; i < 5; ++i) {
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
 	}

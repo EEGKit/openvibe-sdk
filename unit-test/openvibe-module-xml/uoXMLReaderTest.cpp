@@ -34,7 +34,6 @@
 class CReaderCallBack final : public XML::IReaderCallBack
 {
 public:
-
 	struct SNode
 	{
 		std::string name;
@@ -47,13 +46,11 @@ public:
 	std::shared_ptr<SNode> m_CurrentNode{ nullptr };
 
 protected:
-
 	void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 	{
-		auto node = std::make_shared<SNode>();
+		const auto node = std::make_shared<SNode>();
 
-		if (m_CurrentNode)
-		{
+		if (m_CurrentNode) {
 			node->parent = m_CurrentNode;
 			m_CurrentNode->children.push_back(node);
 		}
@@ -81,8 +78,7 @@ TEST(XML_Reader_Test_Case, validateReader)
 	ASSERT_NE(nullptr, inputTestDataFile);
 
 	char dataBuffer[1024];
-	while (!feof(inputTestDataFile))
-	{
+	while (!feof(inputTestDataFile)) {
 		size_t length = std::fread(dataBuffer, 1, sizeof(dataBuffer), inputTestDataFile);
 		xmlReader->processData(dataBuffer, length);
 	}

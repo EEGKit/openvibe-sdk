@@ -71,10 +71,8 @@ void onServerListening(const int port, const size_t packetCount)
 
 	gClientConnectedCondVar.notify_one();
 
-	while (gReceivedData.size() < packetCount)
-	{
-		if (clientConnection->isReadyToReceive())
-		{
+	while (gReceivedData.size() < packetCount) {
+		if (clientConnection->isReadyToReceive()) {
 			size_t dataSize = 0;
 			char dataBuffer[64];
 			clientConnection->receiveBufferBlocking(&dataSize, sizeof(dataSize));
@@ -124,8 +122,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	// transmission follows the protocol: data size transmission + data transmission
 	const std::string baseData = "Data packet index: ";
 
-	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
-	{
+	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex) {
 		std::string dataString = baseData + std::to_string(sendIndex);
 		size_t dataSize        = dataString.size();
 
@@ -142,8 +139,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	// do the assertion on the main thread
 	OVT_ASSERT(gReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
-	{
+	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex) {
 		OVT_ASSERT_STREQ(gReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
 	}
 
