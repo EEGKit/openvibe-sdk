@@ -1,7 +1,5 @@
 #include "ovpCAlgorithmClassifierLDA.h"
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include <sstream>
 #include <iostream>
 #include <algorithm>
@@ -420,4 +418,3 @@ void CAlgorithmClassifierLDA::loadCoefsFromNode(XML::IXMLNode* node)
 }  // namespace Classification
 }  // namespace Plugins
 }  // namespace OpenViBE
-#endif // TARGET_HAS_ThirdPartyEIGEN

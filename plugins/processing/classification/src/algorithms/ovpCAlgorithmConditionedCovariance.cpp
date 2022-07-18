@@ -6,7 +6,6 @@
  * Ledoit & Wolf: "A Well-Conditioned Estimator for Large-Dimensional Covariance Matrices", 2004.
  *
  */
-#if defined TARGET_HAS_ThirdPartyEIGEN
 #include <iostream>
 
 namespace OpenViBE {
@@ -116,8 +115,6 @@ bool CAlgorithmConditionedCovariance::process()
 
 	return true;
 }
-
-#endif // TARGET_HAS_ThirdPartyEIGEN
 
 }  // namespace Classification
 }  // namespace Plugins
