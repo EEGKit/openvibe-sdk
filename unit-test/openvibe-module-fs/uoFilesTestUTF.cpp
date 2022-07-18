@@ -4,12 +4,9 @@
 
 #include <gtest/gtest.h>
 
-#include <m_ConverterUtf8.h>
-
 #define TEMP_OUTPUT_DIR TMP_DIR "/オッペﾝヴィベ"
 #define TEMP_OUTPUT_DIR_COPY TMP_DIR "/オッペﾝヴィベ_Copy"
 #define TEMP_OUTPUT_ASCII_FILE_PATH TEMP_OUTPUT_DIR "/file.txt"
-#define TEMP_OUTPUT_UTF_FILE_PATH TEMP_OUTPUT_DIR "/日本語.txt"
 #define TEMP_OUTPUT_UTF_FILE_PATH_COPY TEMP_OUTPUT_DIR_COPY "/日本語.txt"
 #define TEMP_OUTPUT_ASCII_FILE_PATH_COPY TEMP_OUTPUT_DIR_COPY "/file.txt"
 

@@ -434,7 +434,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 TEST(CSV_Reader_Test_Case, stimulationsNormalGoodStims)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsReader01.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsReader01.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
@@ -451,7 +451,7 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalGoodStims)
 TEST(CSV_Reader_Test_Case, stimulationsNormalWrongStim)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsWrongStimulation.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsWrongStimulation.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
@@ -467,7 +467,7 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalWrongStim)
 TEST(CSV_Reader_Test_Case, stimulationsNormalWrongHeader)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsWrongHeader.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsWrongHeader.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 
 	ASSERT_FALSE(stimReaderTest->parseHeader());
@@ -476,7 +476,6 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalWrongHeader)
 	ASSERT_TRUE(stimReaderTest->closeFile());
 	releaseCSVHandler(stimReaderTest);
 }
-
 
 
 int uoCSVReaderTest(int argc, char* argv[])

@@ -34,8 +34,7 @@
 class CWriterCallBack : public XML::IWriterCallBack
 {
 public:
-
-	CWriterCallBack(const char* filename) { m_file = FS::Files::open(filename, "wb"); }
+	explicit CWriterCallBack(const char* filename) : m_file(FS::Files::open(filename, "wb")) { }
 	~CWriterCallBack() override { if (m_file) { std::fclose(m_file); } }	// in case release is not called
 
 	void write(const char* outputData) override { if (m_file) { std::fputs(outputData, m_file); } }
@@ -48,7 +47,6 @@ public:
 	}
 
 private:
-
 	std::FILE* m_file{ nullptr };
 };
 
@@ -118,8 +116,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	std::string generatedString;
 	std::string expectedString;
 
-	while (std::getline(expectedStream, expectedString))
-	{
+	while (std::getline(expectedStream, expectedString)) {
 		std::getline(generatedStream, generatedString);
 		ASSERT_EQ(expectedString, generatedString);
 	}
@@ -157,8 +154,7 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 	std::string generatedString;
 	std::string expectedString;
 
-	while (std::getline(expectedStream, expectedString))
-	{
+	while (std::getline(expectedStream, expectedString)) {
 		std::getline(generatedStream, generatedString);
 		ASSERT_EQ(expectedString, generatedString);
 	}
