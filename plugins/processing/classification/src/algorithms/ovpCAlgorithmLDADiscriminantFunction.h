@@ -1,7 +1,5 @@
 #pragma once
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 
@@ -40,5 +38,3 @@ private:
 }  // namespace Classification
 }  // namespace Plugins
 }  // namespace OpenViBE
-
-#endif

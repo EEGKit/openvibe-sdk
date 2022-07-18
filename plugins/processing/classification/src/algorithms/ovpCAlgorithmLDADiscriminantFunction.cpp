@@ -1,6 +1,4 @@
 #include "ovpCAlgorithmLDADiscriminantFunction.h"
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include <Eigen/Eigenvalues>
 
 #include <sstream>
@@ -58,4 +56,3 @@ XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration()
 }  // namespace Classification
 }  // namespace Plugins
 }  // namespace OpenViBE
-#endif

@@ -3,10 +3,8 @@
 #include <sstream>
 #include <string>
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
 #include <Eigen/Dense>
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
-#endif
 
 namespace OpenViBE {
 namespace Plugins {
@@ -216,25 +214,11 @@ bool CBoxAlgorithmSpatialFilter::process()
 			const size_t nChannelOut = oMatrix->getDimensionSize(0);
 			const size_t nSample     = iMatrix->getDimensionSize(1);
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
 			//@TODO check this part we only create matrix ?
 			const Eigen::Map<MatrixXdRowMajor> inMapper(const_cast<double*>(in), nChannelIn, nSample);
 			const Eigen::Map<MatrixXdRowMajor> filterMapper(m_filterBank.getBuffer(), m_filterBank.getDimensionSize(0), m_filterBank.getDimensionSize(1));
 			Eigen::Map<MatrixXdRowMajor> outMapper(out, nChannelOut, nSample);
 			outMapper = filterMapper * inMapper;
-#else
-			const double* filter = m_filterBank.getBuffer();
-
-			memset(out, 0, nSample*nChannelOut*sizeof(double));
-
-			for (size_t j = 0; j < nChannelOut; ++j)
-			{
-				for (size_t k = 0; k < nChannelIn; ++k)
-				{
-					for (size_t l = 0; l < nSample; ++l) { out[j*nSample+l] += filter[j * nChannelIn + k] * in[k * nSample + l]; }
-				}
-			}
-#endif
 			m_encoder->encodeBuffer();
 		}
 		if (m_decoder->isEndReceived()) { m_encoder->encodeEnd(); }

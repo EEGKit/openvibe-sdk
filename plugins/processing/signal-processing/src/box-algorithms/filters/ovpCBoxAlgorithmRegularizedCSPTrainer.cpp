@@ -1,5 +1,3 @@
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include "ovpCBoxAlgorithmRegularizedCSPTrainer.h"
 
 #include <sstream>
@@ -390,4 +388,3 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 }  // namespace SignalProcessing
 }  // namespace Plugins
 }  // namespace OpenViBE
-#endif // TARGET_HAS_ThirdPartyEIGEN

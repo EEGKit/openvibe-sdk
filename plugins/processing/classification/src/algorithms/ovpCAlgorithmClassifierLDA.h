@@ -1,7 +1,5 @@
 #pragma once
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include "../ovp_defines.h"
 #include "ovpCAlgorithmLDADiscriminantFunction.h"
 #include <openvibe/ov_all.h>
@@ -95,6 +93,3 @@ public:
 }  // namespace Classification
 }  // namespace Plugins
 }  // namespace OpenViBE
-
-
-#endif // TARGET_HAS_ThirdPartyEIGEN

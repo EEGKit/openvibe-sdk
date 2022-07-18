@@ -81,15 +81,12 @@ OVP_Declare_Begin()
 	OVP_Declare_New(CBoxAlgorithmSpatialFilterDesc)
 	OVP_Declare_New(CBoxAlgorithmTemporalFilterDesc)
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
 	context.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Chunk average", size_t(EUpdateMethod::ChunkAverage));
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_OnlineCovariance_UpdateMethod, "Per sample", size_t(EUpdateMethod::Incremental));
 
 	OVP_Declare_New(CBoxAlgorithmRegularizedCSPTrainerDesc)
 	OVP_Declare_New(CAlgorithmOnlineCovarianceDesc)
-
-#endif
 
 #if defined TARGET_HAS_R8BRAIN
 	OVP_Declare_New(CBoxAlgorithmSignalResamplingDesc)
