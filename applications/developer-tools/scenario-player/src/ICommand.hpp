@@ -1,35 +1,33 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \author Charles Garraud.
+/// \version 1.0.
+/// \date 25/01/2016.
+/// \copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+///-------------------------------------------------------------------------------------------------
 
 #pragma once
 
-#include "ovsp_defines.h"
+#include "defines.hpp"
 
 namespace OpenViBE {
 class CKernelFacade;
 
 /**
-* \struct SCommand
-* \author Charles Garraud (INRIA)
-* \date 2016-01-26
 * \brief Base abstract struct for commands
 * \ingroup ScenarioPlayer
 *
@@ -49,15 +47,13 @@ struct SCommand
 	* \brief Execute the command
 	* \param[in] kernelFacade the kernel facade that gives access to kernel features
 	*/
-	virtual EPlayerReturnCodes execute(CKernelFacade& kernelFacade) const = 0;
+	virtual EPlayerReturnCodes Execute(CKernelFacade& kernelFacade) const = 0;
 
 protected:
-
 	// use of the non-virtual interface pattern to implement printing in the class hierarchy
 	virtual void doPrint(std::ostream& os) const = 0;
 
 private:
-
 	// disable copy and assignment because it is not meant to used
 	// as a value class
 	SCommand(const SCommand&)            = delete;

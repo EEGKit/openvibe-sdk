@@ -1,16 +1,14 @@
-#include "ovpiCPluginObjectDescEnumBoxTemplateGenerator.h"
+#include "CPluginObjectDescEnumBoxTemplateGenerator.hpp"
 
+#include <cstring>
 #include <iostream>
 #include <vector>
-#include <cstring>
 
-#include <fs/Files.h>
+#include <toolkit/ovtk_all.h>
 
 int main(int argc, char** argv)
 {
-	//___________________________________________________________________//
-	//                                                                   //
-	/*
+	/* 
 	USAGE:
 	plugin-inspector <plugin1 plugin2 ...>
 	                 <--box-doc-directory dir>
@@ -20,7 +18,6 @@ int main(int argc, char** argv)
 
 	std::string docTemplateDir;
 	bool ignoreMetaboxes = false;
-	std::vector<std::string> metaboxExtensionsToLoad;
 
 	for (int i = 1; i < argc; ++i) {
 		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
@@ -67,20 +64,16 @@ int main(int argc, char** argv)
 				OpenViBE::Kernel::IConfigurationManager& configurationManager = ctx->getConfigurationManager();
 
 				if (pluginFilestoLoad.empty()) { ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}")); }
-				else {
-					for (const std::string& file : pluginFilestoLoad) {
-						ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(OpenViBE::CString(file.c_str())));
-					}
-				}
+				else { for (const std::string& file : pluginFilestoLoad) { ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand(OpenViBE::CString(file.c_str()))); } }
 
 				ctx->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "[  INF  ] Generate boxes templates in [" << docTemplateDir << "]\n";
 
 				OpenViBE::PluginInspector::CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*ctx, std::string(docTemplateDir));
-				if (!boxTemplateGenerator.initialize()) {
+				if (!boxTemplateGenerator.Initialize()) {
 					std::cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << std::endl;
 					return 0;
 				}
-				boxTemplateGenerator.enumeratePluginObjectDesc(OV_ClassId_Plugins_BoxAlgorithmDesc);
+				boxTemplateGenerator.EnumeratePluginObjectDesc(OV_ClassId_Plugins_BoxAlgorithmDesc);
 
 				if (!ignoreMetaboxes) {
 					ctx->getLogManager() << OpenViBE::Kernel::LogLevel_Info << "[  INF  ] Generate metaboxes templates in [" << docTemplateDir << "]\n";
@@ -93,13 +86,11 @@ int main(int argc, char** argv)
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
 					std::vector<const OpenViBE::Plugins::IPluginObjectDesc*> metaboxPluginObjectDescriptors;
 					OpenViBE::CIdentifier id;
-					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != OpenViBE::CIdentifier::undefined()) {
-						metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(id));
-					}
-					boxTemplateGenerator.enumeratePluginObjectDesc(metaboxPluginObjectDescriptors);
+					while ((id = ctx->getMetaboxManager().getNextMetaboxObjectDescIdentifier(id)) != OpenViBE::CIdentifier::undefined()) { metaboxPluginObjectDescriptors.push_back(ctx->getMetaboxManager().getMetaboxObjectDesc(id)); }
+					boxTemplateGenerator.EnumeratePluginObjectDesc(metaboxPluginObjectDescriptors);
 				}
 
-				if (!boxTemplateGenerator.uninitialize()) {
+				if (!boxTemplateGenerator.Uninitialize()) {
 					std::cout << "[ FAILED ] Could not uninitialize boxTemplateGenerator" << std::endl;
 					return 0;
 				}

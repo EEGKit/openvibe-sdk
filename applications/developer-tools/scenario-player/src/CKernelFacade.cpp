@@ -1,27 +1,28 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \author Charles Garraud.
+/// \version 1.0.
+/// \date 25/01/2016.
+/// \copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+///-------------------------------------------------------------------------------------------------
 
-#include "ovspCCommand.h"
-#include "ovsp_base.h"
-#include "ovspCKernelFacade.h"
+#include "CCommand.hpp"
+#include "base.hpp"
+#include "CKernelFacade.hpp"
 
 #include <system/ovCTime.h>
 
@@ -34,10 +35,7 @@ namespace OpenViBE {
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
-static void setConfigTokens(Kernel::IConfigurationManager& configsManager, const TokenList& tokens)
-{
-	for (const auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
-}
+static void setConfigTokens(Kernel::IConfigurationManager& configsManager, const TokenList& tokens) { for (const auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); } }
 
 struct CKernelFacade::SKernelFacadeImpl
 {
@@ -55,11 +53,11 @@ CKernelFacade::CKernelFacade() : m_impl(new SKernelFacadeImpl()) { }
 // on KernelFacadeImpl. Therefore it needs to know KernelFacadeImpl implementation.
 CKernelFacade::~CKernelFacade()
 {
-	this->unloadKernel();
-	uninitialize();
+	this->UnloadKernel();
+	Uninitialize();
 }
 
-EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) const
+EPlayerReturnCodes CKernelFacade::LoadKernel(const SLoadKernelCmd& command) const
 {
 	if (m_impl->ctx) {
 		std::cout << "WARNING: The kernel is already loaded" << std::endl;
@@ -103,14 +101,14 @@ EPlayerReturnCodes CKernelFacade::loadKernel(const SLoadKernelCmd& command) cons
 	m_impl->ctx = ctx;
 	Toolkit::initialize(*ctx);
 
-	Kernel::IConfigurationManager& configurationManager = ctx->getConfigurationManager();
-	ctx->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
-	ctx->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
+	const Kernel::IConfigurationManager& configManager = ctx->getConfigurationManager();
+	ctx->getPluginManager().addPluginsFromFiles(configManager.expand("${Kernel_Plugins}"));
+	ctx->getMetaboxManager().addMetaboxesFromFiles(configManager.expand("${Kernel_Metabox}"));
 
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CKernelFacade::unloadKernel() const
+EPlayerReturnCodes CKernelFacade::UnloadKernel() const
 {
 	if (m_impl->ctx) {
 		// not releasing the scenario before releasing the kernel
@@ -133,7 +131,7 @@ EPlayerReturnCodes CKernelFacade::unloadKernel() const
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::LoadScenario(const SLoadScenarioCmd& command) const
 {
 	assert(command.scenarioFile && command.scenarioName);
 
@@ -163,7 +161,7 @@ EPlayerReturnCodes CKernelFacade::loadScenario(const SLoadScenarioCmd& command) 
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::UpdateScenario(const SUpdateScenarioCmd& command) const
 {
 	assert(command.scenarioFile && command.scenarioName);
 
@@ -197,7 +195,7 @@ EPlayerReturnCodes CKernelFacade::updateScenario(const SUpdateScenarioCmd& comma
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::SetupScenario(const SSetupScenarioCmd& command) const
 {
 	if (!m_impl->ctx) {
 		std::cerr << "ERROR: Kernel is not loaded" << std::endl;
@@ -223,7 +221,7 @@ EPlayerReturnCodes CKernelFacade::setupScenario(const SSetupScenarioCmd& command
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command) const
+EPlayerReturnCodes CKernelFacade::RunScenarioList(const SRunScenarioCmd& command) const
 {
 	assert(command.scenarioList);
 
@@ -299,9 +297,7 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 		const double boundedMaxExecutionTimeInS = CTime::max().toSeconds();
 
 		uint64_t maxExecutionTimeInFixedPoint;
-		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS) {
-			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time();
-		}
+		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS) { maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time(); }
 		else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
 
 		bool allStopped{ false };
@@ -310,9 +306,7 @@ EPlayerReturnCodes CKernelFacade::runScenarioList(const SRunScenarioCmd& command
 			const uint64_t currentTime = System::Time::zgetTime();
 			allStopped                 = true;
 			for (auto* p : players) {
-				if (p->getStatus() != Kernel::EPlayerStatus::Stop) {
-					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; }
-				}
+				if (p->getStatus() != Kernel::EPlayerStatus::Stop) { if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; } }
 
 				if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
 

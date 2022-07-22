@@ -1,26 +1,27 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \author Charles Garraud.
+/// \version 1.0.
+/// \date 25/01/2016.
+/// \copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+///-------------------------------------------------------------------------------------------------
 
-#include "ovspCCommand.h"
-#include "ovspCCommandFileParser.h"
+#include "CCommand.hpp"
+#include "CCommandFileParser.hpp"
 
 namespace OpenViBE {
 
@@ -60,8 +61,7 @@ std::vector<std::string> CommandFileParser::split(const std::string& str, const 
 	auto trimmed = trim(str.substr(currentIdx, delimiterIdx));
 	if (!trimmed.empty()) { vec.push_back(trimmed); }
 
-	while (delimiterIdx != std::string::npos)
-	{
+	while (delimiterIdx != std::string::npos) {
 		// abc,cde,fgh
 		//     ^       -> current index points to the first element after a match
 		//        ^    -> delimiter index points to next match
@@ -109,8 +109,7 @@ std::vector<CommandFileParser::Token> CommandFileParser::toTokenList(const std::
 {
 	std::vector<Token> vec;
 
-	for (auto& rawToken : toList(str))
-	{
+	for (auto& rawToken : toList(str)) {
 		// rawToken is expected to be trimmed
 
 		const auto split = rawToken.find_first_of(':');
@@ -118,10 +117,7 @@ std::vector<CommandFileParser::Token> CommandFileParser::toTokenList(const std::
 
 		// (a:b) pattern expected
 		// minimal regex std::regex("\\(.+:.+\\)")
-		if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') || split == std::string::npos)
-		{
-			throw std::runtime_error("Failed to parse token pair from value: " + rawToken);
-		}
+		if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') || split == std::string::npos) { throw std::runtime_error("Failed to parse token pair from value: " + rawToken); }
 
 		Token token;
 		token.first = trim(rawToken.substr(1, split - 1));
@@ -136,7 +132,7 @@ std::vector<CommandFileParser::Token> CommandFileParser::toTokenList(const std::
 	return vec;
 }
 
-void CommandFileParser::initialize()
+void CommandFileParser::Initialize()
 {
 	// using a callback mechanism allows us to implement the core parse() method
 	// very easily (no need to put some if/else blocks everywhere depending on which command is encountered)
@@ -148,18 +144,17 @@ void CommandFileParser::initialize()
 	m_callbacks["RunScenario"]   = std::bind(&CommandFileParser::runScenarioCommandCb, this, std::placeholders::_1);
 }
 
-void CommandFileParser::uninitialize()
+void CommandFileParser::Uninitialize()
 {
 	m_callbacks.clear();
 	m_cmdList.clear();
 }
 
-EPlayerReturnCodes CommandFileParser::parse()
+EPlayerReturnCodes CommandFileParser::Parse()
 {
 	std::ifstream fileStream(m_cmdFile);
 
-	if (!fileStream.is_open())
-	{
+	if (!fileStream.is_open()) {
 		std::cerr << "ERROR: impossible to open file at location: " << m_cmdFile << std::endl;
 		return EPlayerReturnCodes::OpeningFileFailure;
 	}
@@ -169,16 +164,14 @@ EPlayerReturnCodes CommandFileParser::parse()
 	std::vector<std::string> sectionContent;
 	std::string sectionTag;
 
-	while (std::getline(fileStream, line))
-	{
+	while (std::getline(fileStream, line)) {
 		auto trimmedLine = trim(line);
 		const auto size  = trimmedLine.size();
 
 		// [a] pattern expected
 		// minimal regex std::regex("^(?!\\#)\\[.+\\])")
 		if (size >= 3 && trimmedLine[0] == '['
-			&& trimmedLine[size - 1] == ']')
-		{
+			&& trimmedLine[size - 1] == ']') {
 			if (isFillingSection) // flush the section that was beeing filled
 			{
 				const auto errorCode = this->flush(sectionTag, sectionContent);
@@ -190,8 +183,7 @@ EPlayerReturnCodes CommandFileParser::parse()
 			// 2 = remove the last ] + account for the first one
 			sectionTag = trimmedLine.substr(1, size - 2);
 
-			if (m_callbacks.find(sectionTag) == m_callbacks.end())
-			{
+			if (m_callbacks.find(sectionTag) == m_callbacks.end()) {
 				std::cerr << "ERROR: Unknown command = " << sectionTag << std::endl;
 				return EPlayerReturnCodes::ParsingCommandFailure;
 			}
@@ -202,41 +194,37 @@ EPlayerReturnCodes CommandFileParser::parse()
 		else { sectionContent.push_back(trimmedLine); }
 	}
 
-	if (isFillingSection)
-	{
+	if (isFillingSection) {
 		const auto errorCode = this->flush(sectionTag, sectionContent);
 		if (errorCode != EPlayerReturnCodes::Success) { return errorCode; }
 	}
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CommandFileParser::flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent)
+EPlayerReturnCodes CommandFileParser::flush(const std::string& tag, const std::vector<std::string>& content)
 {
 	try // try block here as some conversions are made with the stl in the callback and might throw
 	{
-		const auto returnCode = m_callbacks[sectionTag](sectionContent);
+		const auto returnCode = m_callbacks[tag](content);
 		if (returnCode != EPlayerReturnCodes::Success) { return returnCode; }
 	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "ERROR: Caught exception while parsing command = " << sectionTag << std::endl;
+	catch (const std::exception& e) {
+		std::cerr << "ERROR: Caught exception while parsing command = " << tag << std::endl;
 		std::cerr << "ERROR: Exception: " << e.what() << std::endl;
 		return EPlayerReturnCodes::ParsingCommandFailure;
 	}
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CommandFileParser::initCommandCb(const std::vector<std::string>& sectionContent)
+EPlayerReturnCodes CommandFileParser::initCommandCb(const std::vector<std::string>& content)
 {
-	std::shared_ptr<SInitCmd> command = std::make_shared<SInitCmd>();
+	const std::shared_ptr<SInitCmd> command = std::make_shared<SInitCmd>();
 
-	for (const auto& line : sectionContent)
-	{
+	for (const auto& line : content) {
 		// lines are expected to be trimmed
 		// a:b pattern expected
 		// minimal regex std::regex("^(?!\\#).+:.+")
-		if (!line.empty() && line[0] != '#')
-		{
+		if (!line.empty() && line[0] != '#') {
 			auto param = tokenize(line);
 
 			if (param.first == "Benchmark") { command->benchmark = toBool(param.second); }
@@ -254,15 +242,13 @@ EPlayerReturnCodes CommandFileParser::resetCommandCb(const std::vector<std::stri
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CommandFileParser::loadKernelCommandCb(const std::vector<std::string>& sectionContent)
+EPlayerReturnCodes CommandFileParser::loadKernelCommandCb(const std::vector<std::string>& content)
 {
-	std::shared_ptr<SLoadKernelCmd> command = std::make_shared<SLoadKernelCmd>();
+	const std::shared_ptr<SLoadKernelCmd> command = std::make_shared<SLoadKernelCmd>();
 
 	// cf. initCommandCb
-	for (const auto& line : sectionContent)
-	{
-		if (!line.empty() && line[0] != '#')
-		{
+	for (const auto& line : content) {
+		if (!line.empty() && line[0] != '#') {
 			auto param = tokenize(line);
 			if (param.first == "ConfigurationFile") { command->configFile = param.second; }
 			else { std::cout << "WARNING: Unknown parameter for LoadKernel command: " << param.first << std::endl; }
@@ -272,15 +258,13 @@ EPlayerReturnCodes CommandFileParser::loadKernelCommandCb(const std::vector<std:
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CommandFileParser::loadScenarioCommandCb(const std::vector<std::string>& sectionContent)
+EPlayerReturnCodes CommandFileParser::loadScenarioCommandCb(const std::vector<std::string>& content)
 {
-	std::shared_ptr<SLoadScenarioCmd> command = std::make_shared<SLoadScenarioCmd>();
+	const std::shared_ptr<SLoadScenarioCmd> command = std::make_shared<SLoadScenarioCmd>();
 
 	// cf. initCommandCb
-	for (const auto& line : sectionContent)
-	{
-		if (!line.empty() && line[0] != '#')
-		{
+	for (const auto& line : content) {
+		if (!line.empty() && line[0] != '#') {
 			auto param = tokenize(line);
 
 			if (param.first == "ScenarioName") { command->scenarioName = param.second; }
@@ -292,15 +276,13 @@ EPlayerReturnCodes CommandFileParser::loadScenarioCommandCb(const std::vector<st
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CommandFileParser::setupScenarioCommandCb(const std::vector<std::string>& sectionContent)
+EPlayerReturnCodes CommandFileParser::setupScenarioCommandCb(const std::vector<std::string>& content)
 {
-	std::shared_ptr<SSetupScenarioCmd> command = std::make_shared<SSetupScenarioCmd>();
+	const std::shared_ptr<SSetupScenarioCmd> command = std::make_shared<SSetupScenarioCmd>();
 
 	// cf. initCommandCb
-	for (const auto& line : sectionContent)
-	{
-		if (!line.empty() && line[0] != '#')
-		{
+	for (const auto& line : content) {
+		if (!line.empty() && line[0] != '#') {
 			auto param = tokenize(line);
 
 			if (param.first == "ScenarioName") { command->scenarioName = param.second; }
@@ -312,15 +294,13 @@ EPlayerReturnCodes CommandFileParser::setupScenarioCommandCb(const std::vector<s
 	return EPlayerReturnCodes::Success;
 }
 
-EPlayerReturnCodes CommandFileParser::runScenarioCommandCb(const std::vector<std::string>& sectionContent)
+EPlayerReturnCodes CommandFileParser::runScenarioCommandCb(const std::vector<std::string>& content)
 {
-	std::shared_ptr<SRunScenarioCmd> command = std::make_shared<SRunScenarioCmd>();
+	const std::shared_ptr<SRunScenarioCmd> command = std::make_shared<SRunScenarioCmd>();
 
 	// cf. initCommandCb
-	for (const auto& line : sectionContent)
-	{
-		if (!line.empty() && line[0] != '#')
-		{
+	for (const auto& line : content) {
+		if (!line.empty() && line[0] != '#') {
 			auto param = tokenize(line);
 
 			if (param.first == "ScenarioList") { command->scenarioList = toList(param.second); }

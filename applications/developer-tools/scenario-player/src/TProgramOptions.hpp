@@ -1,27 +1,27 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \author Charles Garraud.
+/// \version 1.0.
+/// \date 25/01/2016.
+/// \copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+///-------------------------------------------------------------------------------------------------
 
 #pragma once
 
-#include "ovsp_defines.h"
 #include <boost/variant.hpp>
 #include <iostream>
 #include <map>
@@ -36,9 +36,6 @@
 
 namespace OpenViBE {
 /**
-* \struct SProgramOptionsTraits
-* \author Charles Garraud (INRIA)
-* \date 2016-01-26
 * \brief Helper class for ProgramOptions type checking
 * \ingroup ScenarioPlayer
 *
@@ -69,13 +66,13 @@ namespace ProgramOptionsUtils {
 /* Base type that represents a true value at compile-time */
 struct STrueType
 {
-	static const bool value = true;
+	static const bool VALUE = true;
 };
 
 /* Base type that represents a false value at compile-time */
 struct SFalseType
 {
-	static const bool value = false;
+	static const bool VALUE = false;
 };
 
 /* SIsCompliant is used to statically check if a type is compliant with the handled types */
@@ -125,7 +122,7 @@ struct SIsSignatureCompliant<> : STrueType {};
 /* Specialization for non-empty list */
 template <typename THead, typename... TTail>
 struct SIsSignatureCompliant<THead, TTail...> :
-		std::conditional<SIsCompliant<THead>::value, SIsSignatureCompliant<TTail...>, SFalseType>::type { };
+		std::conditional<SIsCompliant<THead>::VALUE, SIsSignatureCompliant<TTail...>, SFalseType>::type { };
 
 /* SIsIn is used to statically check if a type T is in a list of types TList*/
 template <typename T, typename... TList>
@@ -157,7 +154,7 @@ struct SHasDuplicate<T> : SFalseType {};
 
 /* Specialization for list of many elements */
 template <typename THead, typename... TTail>
-struct SHasDuplicate<THead, TTail...> : std::conditional<SIsIn<THead, TTail...>::value, STrueType, SHasDuplicate<TTail...>>::type { };
+struct SHasDuplicate<THead, TTail...> : std::conditional<SIsIn<THead, TTail...>::VALUE, STrueType, SHasDuplicate<TTail...>>::type { };
 }  // namespace ProgramOptionsUtils
 
 /**
@@ -193,10 +190,9 @@ template <typename TFirst, typename... TTypes>
 class ProgramOptions final
 {
 public:
-
 	// static assert are used to raise understandable errors at compile time
-	static_assert(!ProgramOptionsUtils::SHasDuplicate<TFirst, TTypes...>::value, "Duplicates in the type list");
-	static_assert(ProgramOptionsUtils::SIsSignatureCompliant<TFirst, TTypes...>::value, "TTypes not handled by ProgramOptions");
+	static_assert(!ProgramOptionsUtils::SHasDuplicate<TFirst, TTypes...>::VALUE, "Duplicates in the type list");
+	static_assert(ProgramOptionsUtils::SIsSignatureCompliant<TFirst, TTypes...>::VALUE, "TTypes not handled by ProgramOptions");
 
 	/**
 	* Struct used to store used-defined option parameters.
@@ -217,7 +213,7 @@ public:
 	* when printOptionsDesc() is called.
 	*
 	*/
-	void setGlobalDesc(const std::string& desc);
+	void SetGlobalDesc(const std::string& desc);
 
 	/**
 	* \brief Add a simple option to the internal dictionary
@@ -227,7 +223,7 @@ public:
 	* Simple options are option withou value (e.g. --help or --version)
 	*
 	*/
-	void addSimpleOption(const std::string& name, const SOptionDesc& optionDesc);
+	void AddSimpleOption(const std::string& name, const SOptionDesc& optionDesc);
 
 
 	/**
@@ -238,7 +234,7 @@ public:
 	* Template paramter T: The type of the option to be added
 	*/
 	template <typename T>
-	void addValueOption(const std::string& name, const SOptionDesc& optionDesc);
+	void AddValueOption(const std::string& name, const SOptionDesc& optionDesc);
 
 	/**
 	* \brief Parse command line options
@@ -247,7 +243,7 @@ public:
 	* \param[in] argv pointer to the list of arguments
 	* \return: false if an error occurred during parsing, true otherwise
 	*/
-	bool parse(int argc, char** argv);
+	bool Parse(int argc, char** argv);
 
 	/**
 	* \brief Check if an option was parsed or not
@@ -255,7 +251,7 @@ public:
 	* \param[in] name the option name
 	* \return: true if the option was parsed, false otherwise
 	*/
-	bool hasOption(const std::string& name) const;
+	bool HasOption(const std::string& name) const;
 
 	/**
 	* \brief Get option value
@@ -264,19 +260,18 @@ public:
 	* \return the option value (will be the default value if the option was not parsed)
 	*
 	* Template paramter T: the type of the option to retrieve (must match the type used to set
-	* the option with addValueOption())
+	* the option with AddValueOption())
 	*/
 	template <typename T>
-	T getOptionValue(const std::string& name) const;
+	T GetOptionValue(const std::string& name) const;
 
 
 	/**
 	* \brief print all option descriptions
 	*/
-	void printOptionsDesc() const;
+	void PrintOptionsDesc() const;
 
 private:
-
 	// The visitor allows us to apply the correct parsing
 	// for any type (see boost::variant documentation for more details).
 	// Presently, it is pretty ugly. This should be refactored for 
@@ -284,8 +279,7 @@ private:
 	class OptionVisitor : public boost::static_visitor<>
 	{
 	public:
-
-		OptionVisitor(std::string& value) : m_value(value) { }
+		explicit OptionVisitor(std::string& value) : m_value(value) { }
 
 		void operator()(SProgramOptionsTraits::Integer& operand) const { operand = std::stoi(m_value); }
 		void operator()(SProgramOptionsTraits::Float& operand) const { operand = std::stod(m_value); }
@@ -297,7 +291,6 @@ private:
 		void operator()(SProgramOptionsTraits::TokenPairList& operand) const { operand.push_back(this->parsePair(m_value)); }
 
 	private:
-
 		static SProgramOptionsTraits::TokenPair parsePair(const std::string& str);
 
 		std::string& m_value;
@@ -320,35 +313,29 @@ private:
 ///////////////////////////////////////////
 
 template <typename TFirst, typename... TTypes>
-void ProgramOptions<TFirst, TTypes...>::setGlobalDesc(const std::string& desc) { m_globalDesc = desc; }
+void ProgramOptions<TFirst, TTypes...>::SetGlobalDesc(const std::string& desc) { m_globalDesc = desc; }
 
 template <typename TFirst, typename... TTypes>
-void ProgramOptions<TFirst, TTypes...>::addSimpleOption(const std::string& name, const SOptionDesc& optionDesc)
-{
-	m_descs[name] = std::make_pair(true, optionDesc);
-}
+void ProgramOptions<TFirst, TTypes...>::AddSimpleOption(const std::string& name, const SOptionDesc& optionDesc) { m_descs[name] = std::make_pair(true, optionDesc); }
 
 template <typename TFirst, typename... TTypes>
 template <typename T>
-void ProgramOptions<TFirst, TTypes...>::addValueOption(const std::string& name, const SOptionDesc& optionDesc)
+void ProgramOptions<TFirst, TTypes...>::AddValueOption(const std::string& name, const SOptionDesc& optionDesc)
 {
 	m_descs[name] = std::make_pair(false, optionDesc);
 
-	T defaultValue{}; // with this implementation, only default constructible type can be added 
+	T defaultValue{ }; // with this implementation, only default constructible type can be added 
 	m_values[name] = defaultValue;
 }
 
 template <typename TFirst, typename... TTypes>
-bool ProgramOptions<TFirst, TTypes...>::hasOption(const std::string& name) const
-{
-	return std::find(m_options.begin(), m_options.end(), name) != m_options.end();
-}
+bool ProgramOptions<TFirst, TTypes...>::HasOption(const std::string& name) const { return std::find(m_options.begin(), m_options.end(), name) != m_options.end(); }
 
 template <typename TFirst, typename... TTypes>
 template <typename T>
-T ProgramOptions<TFirst, TTypes...>::getOptionValue(const std::string& name) const
+T ProgramOptions<TFirst, TTypes...>::GetOptionValue(const std::string& name) const
 {
-	T value{};
+	T value{ };
 
 	try { value = boost::get<T>(m_values.at(name)); }
 	catch (const std::exception& e) { std::cerr << "ERROR: Caught exception during option value retrieval: " << e.what() << std::endl; }
@@ -357,20 +344,19 @@ T ProgramOptions<TFirst, TTypes...>::getOptionValue(const std::string& name) con
 }
 
 template <typename TFirst, typename... TTypes>
-bool ProgramOptions<TFirst, TTypes...>::parse(const int argc, char** argv)
+bool ProgramOptions<TFirst, TTypes...>::Parse(const int argc, char** argv)
 {
 	std::vector<std::string> args;
 #if defined TARGET_OS_Windows
 	int nArg;
-	LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &nArg);
+	const LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &nArg);
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 	for (int i = 0; i < nArg; ++i) { args.push_back(converter.to_bytes(argListUtf16[i])); }
 #else
 		args = std::vector<std::string>(argv, argv + argc);
 #endif
 
-	for (int i = 1; i < argc; ++i)
-	{
+	for (int i = 1; i < argc; ++i) {
 		std::string arg     = args[i];
 		const auto argSplit = arg.find_first_of('=');		// = is the separator for value option
 		std::string key;
@@ -387,17 +373,14 @@ bool ProgramOptions<TFirst, TTypes...>::parse(const int argc, char** argv)
 									 }
 		);
 
-		if (keyMatch == m_descs.end())
-		{
+		if (keyMatch == m_descs.end()) {
 			std::cout << "WARNING: Found unknown option: " << key << std::endl;
 			std::cout << "Skipping..." << std::endl;
 			continue;
 		}
 
-		if (!keyMatch->second.first) // value option
-		{
-			if (key == arg)
-			{
+		if (!keyMatch->second.first) { // value option
+			if (key == arg) {
 				std::cerr << "ERROR: No value set for argument: " << key << std::endl;
 				return false;
 			}
@@ -405,8 +388,7 @@ bool ProgramOptions<TFirst, TTypes...>::parse(const int argc, char** argv)
 			std::string val = arg.substr(argSplit + 1, arg.size() - argSplit - 1); // take value part of the arg
 
 			try { boost::apply_visitor(OptionVisitor(val), m_values[keyMatch->first]); }
-			catch (const std::exception& e)
-			{
+			catch (const std::exception& e) {
 				std::cerr << "ERROR: Caught exception during option parsing: " << e.what() << std::endl;
 				std::cerr << "Could not parse option with key = " << key << " and value = " << val << std::endl;
 				return false;
@@ -421,14 +403,13 @@ bool ProgramOptions<TFirst, TTypes...>::parse(const int argc, char** argv)
 }
 
 template <typename TFirst, typename... TTypes>
-void ProgramOptions<TFirst, TTypes...>::printOptionsDesc() const
+void ProgramOptions<TFirst, TTypes...>::PrintOptionsDesc() const
 {
 	if (!m_globalDesc.empty()) { std::cout << m_globalDesc << std::endl; }
 
 	std::cout << "TList of available options:\n" << std::endl;
 
-	for (auto& option : m_descs)
-	{
+	for (auto& option : m_descs) {
 		std::cout << "Option: --" << option.first << std::endl;
 		const auto& desc = option.second.second;
 		if (!desc.shortName.empty()) { std::cout << "Shortname: --" << desc.shortName << std::endl; }
@@ -449,10 +430,7 @@ SProgramOptionsTraits::TokenPair ProgramOptions<TFirst, TTypes...>::OptionVisito
 
 	// (a:b) pattern expected
 	// minimal regex std::regex("\\(.+:.+\\)")
-	if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') || split == std::string::npos)
-	{
-		throw std::runtime_error("Failed to parse token pair from value: " + str);
-	}
+	if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') || split == std::string::npos) { throw std::runtime_error("Failed to parse token pair from value: " + str); }
 
 	// magic 2 numbers is because substr takes a length as second parameter
 	// 2 = remove the last ) + account for the first one
