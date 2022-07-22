@@ -21,7 +21,7 @@
 ///-------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "ovspTProgramOptions.hpp"
+#include "TProgramOptions.hpp"
 
 namespace OpenViBE {
 /**

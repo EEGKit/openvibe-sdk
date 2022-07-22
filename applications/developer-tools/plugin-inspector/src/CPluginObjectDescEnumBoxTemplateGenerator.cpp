@@ -1,6 +1,5 @@
-#include "ovpiCPluginObjectDescEnumBoxTemplateGenerator.h"
+#include "CPluginObjectDescEnumBoxTemplateGenerator.hpp"
 
-#include <system/ovCTime.h>
 #include <fs/Files.h>
 
 #include <iostream>
@@ -13,13 +12,10 @@ namespace OpenViBE {
 namespace PluginInspector {
 
 static std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
-static std::string generateRstTitle(const std::string& title, const int level)
-{
-	return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
-}
+static std::string generateRstTitle(const std::string& title, const int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
-bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
+bool CPluginObjectDescEnumBoxTemplateGenerator::Initialize()
 {
 	if (!m_kernelCtx.getScenarioManager().createScenario(m_scenarioID)) { return false; }
 	m_scenario = &m_kernelCtx.getScenarioManager().getScenario(m_scenarioID);
@@ -27,27 +23,23 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
-bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
+bool CPluginObjectDescEnumBoxTemplateGenerator::Uninitialize() const
 {
 	if (!m_kernelCtx.getScenarioManager().releaseScenario(m_scenarioID)) { return false; }
 
 	std::ofstream ofBoxIdx;
-	FS::Files::openOFStream(ofBoxIdx, (m_docTemplateDirectory + "/index-boxes.rst").c_str());
+	FS::Files::openOFStream(ofBoxIdx, (m_docTemplateDir + "/index-boxes.rst").c_str());
 
-	if (!ofBoxIdx.good())
-	{
-		m_kernelCtx.getLogManager() << Kernel::LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDirectory + "/index-boxes.rst").c_str() <<
-				"]\n";
+	if (!ofBoxIdx.good()) {
+		m_kernelCtx.getLogManager() << Kernel::LogLevel_Error << "Error while trying to open file [" << (m_docTemplateDir + "/index-boxes.rst") << "]\n";
 		return false;
 	}
 
-	ofBoxIdx << ".. _Doc_BoxAlgorithms:\n\n" << generateRstTitle("Boxes list", 0) << "\nAvailable box algorithms are :\n\n" << generateRstIndex(m_categories) <<
-			" \n";
+	ofBoxIdx << ".. _Doc_BoxAlgorithms:\n\n" << generateRstTitle("Boxes list", 0) << "\nAvailable box algorithms are :\n\n" << generateRstIndex(m_categories) << " \n";
 
-	if (!m_deprecatedBoxesCategories.empty())
-	{
-		ofBoxIdx << "\n\n" << generateRstTitle("Deprecated boxes list", 0) <<
-				"\nThe following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n"
+	if (!m_deprecatedBoxesCategories.empty()) {
+		ofBoxIdx << "\n\n" << generateRstTitle("Deprecated boxes list", 0)
+				<< "\nThe following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n"
 				<< generateRstIndex(m_deprecatedBoxesCategories) << " \n";
 	}
 
@@ -57,39 +49,35 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------
-bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginObjectDesc& pod)
+bool CPluginObjectDescEnumBoxTemplateGenerator::Callback(const Plugins::IPluginObjectDesc& pod)
 {
-	const std::string fileName = "BoxAlgorithm_" + transform(pod.getName().toASCIIString());
+	const std::string fileName = "BoxAlgorithm_" + Transform(pod.getName().toASCIIString());
 	CIdentifier boxID;
 
-	if (pod.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
-	{
+	if (pod.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox) {
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_scenario->addBox(boxID, dynamic_cast<const Plugins::IBoxAlgorithmDesc&>(pod), CIdentifier::undefined()))
-		{
+		if (!m_scenario->addBox(boxID, dynamic_cast<const Plugins::IBoxAlgorithmDesc&>(pod), CIdentifier::undefined())) {
 			m_kernelCtx.getLogManager() << Kernel::LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
-	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), CIdentifier::undefined()))
-	{
+	else if (!m_scenario->addBox(boxID, pod.getCreatedClassIdentifier(), CIdentifier::undefined())) {
 		m_kernelCtx.getLogManager() << Kernel::LogLevel_Warning << "Skipped [" << fileName << "] (could not create corresponding box)\n";
 		return true;
 	}
 
 
-	Kernel::IBox& box = *m_scenario->getBoxDetails(boxID);
+	const Kernel::IBox& box = *m_scenario->getBoxDetails(boxID);
 
 	m_kernelCtx.getLogManager() << Kernel::LogLevel_Trace << "Working on [" << fileName << "]\n";
 
 	// --------------------------------------------------------------------------------------------------------------------
 	std::ofstream ofs;
-	FS::Files::openOFStream(ofs, (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str());
+	FS::Files::openOFStream(ofs, (m_docTemplateDir + "/Doc_" + fileName + ".rst-template").c_str());
 
-	if (!ofs.good())
-	{
+	if (!ofs.good()) {
 		m_kernelCtx.getLogManager() << Kernel::LogLevel_Error << "Error while trying to open file ["
-				<< (m_docTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str()
+				<< (m_docTemplateDir + "/Doc_" + fileName + ".rst-template").c_str()
 				<< "]\n";
 		return false;
 	}
@@ -100,14 +88,12 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginO
 			<< ".. todo::  Write general box description...\n\n\n";
 
 
-	if (box.getInputCount())
-	{
+	if (box.getInputCount()) {
 		ofs << ".. _Doc_" << fileName << "_Inputs:\n\n" << generateRstTitle("Inputs", 1).c_str()
 				<< ".. todo::  Write general input description...\n\n.. csv-table::\n   :header: \"Input Name\", \"Stream Type\"\n\n";
 
 		std::vector<CString> inputNames(box.getInputCount());
-		for (size_t i = 0; i < box.getInputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getInputCount(); ++i) {
 			CIdentifier typeID;
 			box.getInputName(i, inputNames[i]);
 			box.getInputType(i, typeID);
@@ -116,22 +102,19 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginO
 			ofs << "   \"" << inputNames[i] << "\", \"" << typeName << "\"\n";
 		}
 		size_t index = 1;
-		for (const auto& name : inputNames)
-		{
+		for (const auto& name : inputNames) {
 			ofs << "\n.. _Doc_" << fileName << "_Input_" << index << ":\n\n" << generateRstTitle(name.toASCIIString(), 2)
 					<< "\n.. todo::  Write input description...\n\n\n";
 			index++;
 		}
 	}
 
-	if (box.getOutputCount())
-	{
+	if (box.getOutputCount()) {
 		ofs << ".. _Doc_" << fileName << "_Outputs:\n\n" << generateRstTitle("Outputs", 1)
 				<< "\n.. todo::  Write general output description...\n\n.. csv-table::\n   :header: \"Output Name\", \"Stream Type\"\n\n";
 
 		std::vector<CString> outputNames(box.getOutputCount());
-		for (size_t i = 0; i < box.getOutputCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getOutputCount(); ++i) {
 			CIdentifier typeID;
 			box.getOutputName(i, outputNames[i]);
 			box.getOutputType(i, typeID);
@@ -140,22 +123,19 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginO
 			ofs << "   \"" << outputNames[i] << "\", \"" << typeName << "\"\n";
 		}
 		size_t index = 1;
-		for (const auto& outputName : outputNames)
-		{
+		for (const auto& outputName : outputNames) {
 			ofs << "\n.. _Doc_" << fileName << "_Output_" << index << ":\n\n" << generateRstTitle(outputName.toASCIIString(), 2)
 					<< "\n.. todo::  Write output description...\n\n\n";
 			index++;
 		}
 	}
 
-	if (box.getSettingCount())
-	{
+	if (box.getSettingCount()) {
 		ofs << ".. _Doc_" << fileName << "_Settings:\n\n" << generateRstTitle("Settings", 1) << "\n"
 				<< ".. todo::  Write settings general description...\n\n.. csv-table::\n   :header: \"Setting Name\", \"Type\", \"Default Value\"\n\n";
 
 		std::vector<CString> settingsNames(box.getSettingCount());
-		for (size_t i = 0; i < box.getSettingCount(); ++i)
-		{
+		for (size_t i = 0; i < box.getSettingCount(); ++i) {
 			CIdentifier typeID;
 			CString defaultValue;
 			box.getSettingName(i, settingsNames[i]);
@@ -166,8 +146,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginO
 			ofs << "   \"" << settingsNames[i] << "\", \"" << typeName << "\", \"" << defaultValue << "\"\n";
 		}
 		size_t index = 1;
-		for (const auto& name : settingsNames)
-		{
+		for (const auto& name : settingsNames) {
 			ofs << "\n.. _Doc_" << fileName << "_Setting_" << index << ":\n\n" << generateRstTitle(name.toASCIIString(), 2)
 					<< "\n.. todo:: Write setting description... \n\n\n";
 			index++;
@@ -184,10 +163,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const Plugins::IPluginO
 
 	// m_categories is used to generate the list of boxes. Documentation for deprecated boxes
 	// should remain available if needed but not be listed
-	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier()))
-	{
-		m_deprecatedBoxesCategories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString()));
-	}
+	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier())) { m_deprecatedBoxesCategories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
 	else { m_categories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
 
 	return true;
@@ -202,26 +178,21 @@ std::string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vec
 	std::vector<std::string> lastSplittedCategories;
 	std::sort(categories.begin(), categories.end());
 
-	for (auto& category : categories)
-	{
+	for (const auto& category : categories) {
 		std::string categoryName = category.first;
 		std::string name         = category.second;
 
-		if (lastCategoryName != categoryName)
-		{
+		if (lastCategoryName != categoryName) {
 			std::vector<std::string> splittedCategories;
 			size_t i        = size_t(-1);
 			bool isFinished = false;
-			while (!isFinished)
-			{
+			while (!isFinished) {
 				size_t j = categoryName.find('/', i + 1);
-				if (j == std::string::npos)
-				{
+				if (j == std::string::npos) {
 					j          = categoryName.length();
 					isFinished = true;
 				}
-				if (j != i + 1)
-				{
+				if (j != i + 1) {
 					splittedCategories.push_back(categoryName.substr(i + 1, j - i - 1));
 					i = j;
 				}
@@ -231,8 +202,7 @@ std::string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vec
 			auto it1    = splittedCategories.begin();
 			for (; itLast != lastSplittedCategories.end() && it1 != splittedCategories.end() && *itLast == *it1; ++itLast, ++it1) { }
 
-			for (; it1 != splittedCategories.end(); ++it1)
-			{
+			for (; it1 != splittedCategories.end(); ++it1) {
 				size_t level = 1;
 				for (auto it2 = splittedCategories.begin(); it2 != it1; ++it2) { level++; }
 				res += "\n\n" + generateRstTitle(*it1, int(level)) + "\n.. toctree::\n   :maxdepth: 1\n\n";
@@ -242,7 +212,7 @@ std::string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vec
 			lastSplittedCategories = splittedCategories;
 		}
 
-		res += "   Doc_BoxAlgorithm_" + transform(name) + "\n";
+		res += "   Doc_BoxAlgorithm_" + Transform(name) + "\n";
 	}
 	return res;
 }

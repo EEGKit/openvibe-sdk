@@ -8,11 +8,9 @@ int main(int /*argc*/, char** /*argv*/)
 {
 	std::random_device rd;
 	std::default_random_engine rng(rd());
-	std::uniform_int_distribution<size_t> uni(0, std::numeric_limits<size_t>::max() - 1);
+	std::uniform_int_distribution<uint32_t> uni(0, std::numeric_limits<uint32_t>::max() - 1);
 
-
-	for (int i = 0; i < 16; ++i)
-	{
+	for (int i = 0; i < 16; ++i) {
 		const uint32_t v1 = uni(rng), v2 = uni(rng);
 		std::stringstream ss;
 		ss.fill('0');

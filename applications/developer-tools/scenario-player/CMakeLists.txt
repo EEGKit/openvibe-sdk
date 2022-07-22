@@ -30,7 +30,7 @@ PROJECT(openvibe-scenario-player VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MI
 # ----------------------
 add_definitions( -DPROJECT_VERSION="${PROJECT_VERSION}" )
 
-file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp)
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.hpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
