@@ -9,7 +9,7 @@
 /// \author  Yann Renard (INRIA/IRISA) & Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 08/11/2021.
-/// \copyright (C) 2021 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -25,6 +25,7 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "ov_defines.h"
