@@ -1,11 +1,12 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
+/// \file IKernelContext.hpp
 /// \brief Kernel context interface, gives access to each manager the kernel owns.
 ///
 /// \author Yann Renard (INRIA/IRISA).
 /// \version 1.0.
 /// \date 24/10/2007.
-/// \copyright (C) 2022 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -21,6 +22,7 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "ovIKernelObject.h"

@@ -4,7 +4,7 @@
 /// \brief Class of the box XDAWN Trainer.
 /// \author Yann Renard (Mensia Technologies SA).
 /// \version 1.0.
-/// \copyright (C) 2022 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -20,6 +20,7 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #include "CBoxXDAWNTrainer.hpp"
 
 #include "fs/Files.h"
