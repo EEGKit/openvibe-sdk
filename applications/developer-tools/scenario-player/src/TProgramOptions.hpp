@@ -122,8 +122,7 @@ struct SIsSignatureCompliant<> : STrueType {};
 
 /* Specialization for non-empty list */
 template <typename THead, typename... TTail>
-struct SIsSignatureCompliant<THead, TTail...> :
-		std::conditional<SIsCompliant<THead>::VALUE, SIsSignatureCompliant<TTail...>, SFalseType>::type { };
+struct SIsSignatureCompliant<THead, TTail...> : std::conditional<SIsCompliant<THead>::VALUE, SIsSignatureCompliant<TTail...>, SFalseType>::type { };
 
 /* SIsIn is used to statically check if a type T is in a list of types TList*/
 template <typename T, typename... TList>
@@ -317,7 +316,10 @@ template <typename TFirst, typename... TTypes>
 void ProgramOptions<TFirst, TTypes...>::SetGlobalDesc(const std::string& desc) { m_globalDesc = desc; }
 
 template <typename TFirst, typename... TTypes>
-void ProgramOptions<TFirst, TTypes...>::AddSimpleOption(const std::string& name, const SOptionDesc& optionDesc) { m_descs[name] = std::make_pair(true, optionDesc); }
+void ProgramOptions<TFirst, TTypes...>::AddSimpleOption(const std::string& name, const SOptionDesc& optionDesc)
+{
+	m_descs[name] = std::make_pair(true, optionDesc);
+}
 
 template <typename TFirst, typename... TTypes>
 template <typename T>
@@ -330,7 +332,10 @@ void ProgramOptions<TFirst, TTypes...>::AddValueOption(const std::string& name, 
 }
 
 template <typename TFirst, typename... TTypes>
-bool ProgramOptions<TFirst, TTypes...>::HasOption(const std::string& name) const { return std::find(m_options.begin(), m_options.end(), name) != m_options.end(); }
+bool ProgramOptions<TFirst, TTypes...>::HasOption(const std::string& name) const
+{
+	return std::find(m_options.begin(), m_options.end(), name) != m_options.end();
+}
 
 template <typename TFirst, typename... TTypes>
 template <typename T>
@@ -367,12 +372,10 @@ bool ProgramOptions<TFirst, TTypes...>::Parse(const int argc, char** argv)
 
 		// first check if the key exists
 		auto keyMatch = std::find_if(m_descs.begin(), m_descs.end(), [&](const std::pair<std::string, FullOptionDesc>& p)
-									 {
-										 const auto& desc = p.second.second;
-										 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.shortName) == key) || (
-													("--" + desc.shortName) == key);
-									 }
-		);
+		{
+			const auto& desc = p.second.second;
+			return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.shortName) == key) || (("--" + desc.shortName) == key);
+		});
 
 		if (keyMatch == m_descs.end()) {
 			std::cout << "WARNING: Found unknown option: " << key << std::endl;
@@ -431,7 +434,9 @@ SProgramOptionsTraits::TokenPair ProgramOptions<TFirst, TTypes...>::OptionVisito
 
 	// (a:b) pattern expected
 	// minimal regex std::regex("\\(.+:.+\\)")
-	if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') || split == std::string::npos) { throw std::runtime_error("Failed to parse token pair from value: " + str); }
+	if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') || split == std::string::npos) {
+		throw std::runtime_error("Failed to parse token pair from value: " + str);
+	}
 
 	// magic 2 numbers is because substr takes a length as second parameter
 	// 2 = remove the last ) + account for the first one

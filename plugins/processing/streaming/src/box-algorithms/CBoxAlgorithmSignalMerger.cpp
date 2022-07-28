@@ -1,4 +1,27 @@
-#include "ovpCBoxAlgorithmSignalMerger.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmSignalMerger.cpp
+/// \brief Classes implementation for the Box Signal Merger.
+/// \author Yann Renard (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CBoxAlgorithmSignalMerger.hpp"
 
 namespace OpenViBE {
 namespace Plugins {
@@ -19,8 +42,7 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 	m_encoder->uninitialize();
 	delete m_encoder;
 
-	for (size_t i = 0; i < nInput; ++i)
-	{
+	for (size_t i = 0; i < nInput; ++i) {
 		m_decoders[i]->uninitialize();
 		delete m_decoders[i];
 	}
@@ -31,35 +53,32 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 
 bool CBoxAlgorithmSignalMerger::processInput(const size_t index)
 {
-	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
-	const size_t nInput            = this->getStaticBoxContext().getInputCount();
+	const IDynamicBoxContext& boxCtx = this->getDynamicBoxContext();
+	const size_t nInput              = this->getStaticBoxContext().getInputCount();
 
-	if (boxContext.getInputChunkCount(0) == 0) { return true; }
+	if (boxCtx.getInputChunkCount(0) == 0) { return true; }
 
-	const uint64_t tStart = boxContext.getInputChunkStartTime(0, 0);
-	const uint64_t tEnd   = boxContext.getInputChunkEndTime(0, 0);
-	for (size_t i = 1; i < nInput; ++i)
-	{
-		if (boxContext.getInputChunkCount(i) == 0) { return true; }
+	const uint64_t tStart = boxCtx.getInputChunkStartTime(0, 0);
+	const uint64_t tEnd   = boxCtx.getInputChunkEndTime(0, 0);
+	for (size_t i = 1; i < nInput; ++i) {
+		if (boxCtx.getInputChunkCount(i) == 0) { return true; }
 
-		OV_ERROR_UNLESS_KRF(tStart == boxContext.getInputChunkStartTime(i, 0),
-							"Invalid start time [" << boxContext.getInputChunkStartTime(i, 0) << "] on input [" << i
+		OV_ERROR_UNLESS_KRF(tStart == boxCtx.getInputChunkStartTime(i, 0),
+							"Invalid start time [" << boxCtx.getInputChunkStartTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match start time on input 0 [" << tStart << "])",
 							Kernel::ErrorType::BadInput);
 
-		OV_ERROR_UNLESS_KRF(tEnd == boxContext.getInputChunkEndTime(i, 0),
-							"Invalid end time [" << boxContext.getInputChunkEndTime(i, 0) << "] on input [" << i
+		OV_ERROR_UNLESS_KRF(tEnd == boxCtx.getInputChunkEndTime(i, 0),
+							"Invalid end time [" << boxCtx.getInputChunkEndTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match end time on input 0 [" << tEnd << "])",
 							Kernel::ErrorType::BadInput);
 	}
 
-	if (index == nInput - 1)
-	{
-		for (size_t i = 1; i < nInput; ++i)
-		{
-			OV_ERROR_UNLESS_KRF(boxContext.getInputChunkCount(0) >= boxContext.getInputChunkCount(i),
-								"Invalid input chunk count [" << boxContext.getInputChunkCount(i) << "] on input [" << i
-								<< "] (expected value must be <= to chunk count on input 0 [" << boxContext.getInputChunkCount(0) << "])",
+	if (index == nInput - 1) {
+		for (size_t i = 1; i < nInput; ++i) {
+			OV_ERROR_UNLESS_KRF(boxCtx.getInputChunkCount(0) >= boxCtx.getInputChunkCount(i),
+								"Invalid input chunk count [" << boxCtx.getInputChunkCount(i) << "] on input [" << i
+								<< "] (expected value must be <= to chunk count on input 0 [" << boxCtx.getInputChunkCount(0) << "])",
 								Kernel::ErrorType::BadInput);
 		}
 	}
@@ -77,32 +96,27 @@ bool CBoxAlgorithmSignalMerger::process()
 
 	for (size_t input = 1; input < nInput; ++input) { if (boxContext.getInputChunkCount(input) < nChunk) { nChunk = boxContext.getInputChunkCount(input); } }
 
-	for (size_t c = 0; c < nChunk; ++c)
-	{
+	for (size_t c = 0; c < nChunk; ++c) {
 		size_t nSamplePerBlock = 0;
 		size_t nChannel        = 0;
 		size_t nHeader         = 0;
 		size_t nBuffer         = 0;
 		size_t nEnd            = 0;
 
-		for (size_t i = 0; i < nInput; ++i)
-		{
+		for (size_t i = 0; i < nInput; ++i) {
 			m_decoders[i]->decode(c);
 
-			const CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
-			if (m_decoders[i]->isHeaderReceived())
-			{
+			const CMatrix* oMatrix = m_decoders[i]->getOutputMatrix();
+			if (m_decoders[i]->isHeaderReceived()) {
 				nHeader++;
-				if (i == 0)
-				{
-					nSamplePerBlock = op_matrix->getDimensionSize(1);
-					nChannel        = op_matrix->getDimensionSize(0);
+				if (i == 0) {
+					nSamplePerBlock = oMatrix->getDimensionSize(1);
+					nChannel        = oMatrix->getDimensionSize(0);
 				}
-				else
-				{
+				else {
 					// Check that properties agree
-					OV_ERROR_UNLESS_KRF(nSamplePerBlock == op_matrix->getDimensionSize(1),
-										"Output matrix dimension [" << op_matrix->getDimensionSize(1) << "] on input [" << i
+					OV_ERROR_UNLESS_KRF(nSamplePerBlock == oMatrix->getDimensionSize(1),
+										"Output matrix dimension [" << oMatrix->getDimensionSize(1) << "] on input [" << i
 										<< "] must match sample count per block [" << nSamplePerBlock << "]",
 										Kernel::ErrorType::BadInput);
 
@@ -111,7 +125,7 @@ bool CBoxAlgorithmSignalMerger::process()
 										<< "] must match the sampling rate on input 0 [" << m_decoders[0]->getOutputSamplingRate() << "]",
 										Kernel::ErrorType::BadInput);
 
-					nChannel += op_matrix->getDimensionSize(0);
+					nChannel += oMatrix->getDimensionSize(0);
 				}
 			}
 			if (m_decoders[i]->isBufferReceived()) { nBuffer++; }
@@ -122,16 +136,14 @@ bool CBoxAlgorithmSignalMerger::process()
 		OV_ERROR_UNLESS_KRF(!nBuffer || nBuffer == nInput, "Received [" << nBuffer << "] buffers for [" << nInput << "] declared inputs", Kernel::ErrorType::BadInput);
 		OV_ERROR_UNLESS_KRF(!nEnd || nEnd == nInput, "Received [" << nEnd << "] ends for [" << nInput << "] declared inputs", Kernel::ErrorType::BadInput);
 
-		if (nHeader)
-		{
+		if (nHeader) {
 			// We have received headers from all inputs
-			CMatrix* ip_matrix = m_encoder->getInputMatrix();
+			CMatrix* iMatrix = m_encoder->getInputMatrix();
 
-			ip_matrix->resize(nChannel, nSamplePerBlock);
-			for (size_t i = 0, k = 0; i < nInput; ++i)
-			{
-				const CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
-				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++) { ip_matrix->setDimensionLabel(0, k, op_matrix->getDimensionLabel(0, j)); }
+			iMatrix->resize(nChannel, nSamplePerBlock);
+			for (size_t i = 0, k = 0; i < nInput; ++i) {
+				const CMatrix* oMatrix = m_decoders[i]->getOutputMatrix();
+				for (size_t j = 0; j < oMatrix->getDimensionSize(0); j++, k++) { iMatrix->setDimensionLabel(0, k, oMatrix->getDimensionLabel(0, j)); }
 			}
 			const uint64_t sampling           = m_decoders[0]->getOutputSamplingRate();
 			m_encoder->getInputSamplingRate() = sampling;
@@ -143,19 +155,16 @@ bool CBoxAlgorithmSignalMerger::process()
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, c), boxContext.getInputChunkEndTime(0, c));
 		}
 
-		if (nBuffer)
-		{
+		if (nBuffer) {
 			// We have received one buffer from each input
-			CMatrix* ip_matrix = m_encoder->getInputMatrix();
+			CMatrix* iMatrix = m_encoder->getInputMatrix();
 
-			nSamplePerBlock = ip_matrix->getDimensionSize(1);
+			nSamplePerBlock = iMatrix->getDimensionSize(1);
 
-			for (size_t i = 0, k = 0; i < nInput; ++i)
-			{
-				CMatrix* op_matrix = m_decoders[i]->getOutputMatrix();
-				for (size_t j = 0; j < op_matrix->getDimensionSize(0); j++, k++)
-				{
-					memcpy(ip_matrix->getBuffer() + k * nSamplePerBlock, op_matrix->getBuffer() + j * nSamplePerBlock, nSamplePerBlock * sizeof(double));
+			for (size_t i = 0, k = 0; i < nInput; ++i) {
+				CMatrix* oMatrix = m_decoders[i]->getOutputMatrix();
+				for (size_t j = 0; j < oMatrix->getDimensionSize(0); j++, k++) {
+					memcpy(iMatrix->getBuffer() + k * nSamplePerBlock, oMatrix->getBuffer() + j * nSamplePerBlock, nSamplePerBlock * sizeof(double));
 				}
 			}
 			m_encoder->encodeBuffer();
@@ -163,8 +172,7 @@ bool CBoxAlgorithmSignalMerger::process()
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, c), boxContext.getInputChunkEndTime(0, c));
 		}
 
-		if (nEnd)
-		{
+		if (nEnd) {
 			// We have received one end from each input
 			m_encoder->encodeEnd();
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, c), boxContext.getInputChunkEndTime(0, c));

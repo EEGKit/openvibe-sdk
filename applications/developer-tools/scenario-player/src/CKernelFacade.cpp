@@ -36,7 +36,10 @@ namespace OpenViBE {
 
 using TokenList = std::vector<std::pair<std::string, std::string>>;
 
-static void setConfigTokens(Kernel::IConfigurationManager& configsManager, const TokenList& tokens) { for (const auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); } }
+static void setConfigTokens(Kernel::IConfigurationManager& configsManager, const TokenList& tokens)
+{
+	for (const auto& token : tokens) { configsManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str()); }
+}
 
 struct CKernelFacade::SKernelFacadeImpl
 {
@@ -298,7 +301,9 @@ EPlayerReturnCodes CKernelFacade::RunScenarioList(const SRunScenarioCmd& command
 		const double boundedMaxExecutionTimeInS = CTime::max().toSeconds();
 
 		uint64_t maxExecutionTimeInFixedPoint;
-		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS) { maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time(); }
+		if (command.maximumExecutionTime && command.maximumExecutionTime.get() > 0 && command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS) {
+			maxExecutionTimeInFixedPoint = CTime(double(command.maximumExecutionTime.get())).time();
+		}
 		else { maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max(); }
 
 		bool allStopped{ false };
@@ -307,7 +312,9 @@ EPlayerReturnCodes CKernelFacade::RunScenarioList(const SRunScenarioCmd& command
 			const uint64_t currentTime = System::Time::zgetTime();
 			allStopped                 = true;
 			for (auto* p : players) {
-				if (p->getStatus() != Kernel::EPlayerStatus::Stop) { if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; } }
+				if (p->getStatus() != Kernel::EPlayerStatus::Stop) {
+					if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint)) { returnCode = EPlayerReturnCodes::KernelInternalFailure; }
+				}
 
 				if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
 

@@ -192,8 +192,7 @@ protected:
 		if (m_strategyClassID == Algorithm_ClassifierOneVsOne) {
 			CString classifierName = "Unknown";
 			box.getSettingValue(getClassifierIndex(box), classifierName);
-			const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(
-				TypeId_OneVsOne_DecisionAlgorithms, classifierName);
+			const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(TypeId_OneVsOne_DecisionAlgorithms, classifierName);
 
 			OV_ERROR_UNLESS_KRF(typeID != CIdentifier::undefined(),
 								"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "] (" << classifierName << ")",

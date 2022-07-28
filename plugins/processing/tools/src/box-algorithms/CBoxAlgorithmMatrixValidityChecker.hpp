@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmMatrixValidityChecker.hpp
+/// \brief Classes for the Box Matrix validity checker.
+/// \author Yann Renard (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
@@ -16,7 +39,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_MatrixValidityChecker)
 
 protected:
 	std::vector<Toolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_decoders;
@@ -31,7 +54,6 @@ protected:
 
 class CBoxAlgorithmMatrixValidityCheckerListener final : public Toolkit::TBoxListener<IBoxListener>
 {
-public:
 	bool check(Kernel::IBox& box) const
 	{
 		for (size_t i = 0; i < box.getInputCount(); ++i) {
@@ -46,6 +68,7 @@ public:
 		return true;
 	}
 
+public:
 	bool onInputAdded(Kernel::IBox& box, const size_t index) override
 	{
 		box.setInputType(index, OV_TypeId_StreamedMatrix);
@@ -97,11 +120,8 @@ public:
 
 	CString getCategory() const override { return "Tools"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_MatrixValidityChecker; }
+	CIdentifier getCreatedClass() const override { return Box_MatrixValidityChecker; }
 	IPluginObject* create() override { return new CBoxAlgorithmMatrixValidityChecker; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmMatrixValidityCheckerListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
@@ -111,14 +131,14 @@ public:
 		prototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
 		prototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
 		prototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
-		prototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
+		prototype.addSetting("Action to do", TypeId_ValidityCheckerType, TypeId_ValidityCheckerType_LogWarning.toString());
 		prototype.addFlag(Kernel::BoxFlag_CanAddInput);
 		prototype.addFlag(Kernel::BoxFlag_CanAddOutput);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MatrixValidityCheckerDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_MatrixValidityCheckerDesc)
 };
 }  // namespace Tools
 }  // namespace Plugins

@@ -12,7 +12,10 @@ namespace OpenViBE {
 namespace PluginInspector {
 
 static std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
-static std::string generateRstTitle(const std::string& title, const int level) { return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n"; }
+static std::string generateRstTitle(const std::string& title, const int level)
+{
+	return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 bool CPluginObjectDescEnumBoxTemplateGenerator::Initialize()
@@ -163,7 +166,9 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::Callback(const Plugins::IPluginO
 
 	// m_categories is used to generate the list of boxes. Documentation for deprecated boxes
 	// should remain available if needed but not be listed
-	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier())) { m_deprecatedBoxesCategories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
+	if (m_kernelCtx.getPluginManager().isPluginObjectFlaggedAsDeprecated(box.getAlgorithmClassIdentifier())) {
+		m_deprecatedBoxesCategories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString()));
+	}
 	else { m_categories.push_back(std::pair<std::string, std::string>(pod.getCategory().toASCIIString(), pod.getName().toASCIIString())); }
 
 	return true;

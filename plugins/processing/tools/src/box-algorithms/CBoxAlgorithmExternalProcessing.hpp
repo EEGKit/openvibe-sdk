@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmExternalProcessing.hpp
+/// \brief Classes for the Box External Processing.
+/// \author Alexis Placet (Mensia Technologies SA).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
@@ -26,7 +49,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ExternalProcessing)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_ExternalProcessing)
 
 private:
 	struct SPacket
@@ -40,29 +63,18 @@ private:
 			: startTime(startTime), endTime(endTime), index(index), EBML(ebml) { }
 	};
 
-	/**
-	 * \brief generate a connection identifier.
-	 *
-	 * \param size Size of the connection identifier.
-	 *
-	 * \return A string composed of size characters in the A-Z,0-9 range
-	 */
+	/// <summary> Generates a connection identifier. </summary>
+	/// <param name="size"> Size of the connection identifier. </param>
+	/// <returns> A string composed of size characters in the A-Z,0-9 range. </returns>
 	static std::string generateConnectionID(const size_t size);
 
-	/**
-	 * \brief Launch a third party program
-	 *
-	 * \param programPath Executable path
-	 * \param arguments Arguments to pass to the program
-	 *
-	 * \retval true
-	 * \retval false
-	 */
+	/// <summary> Launches a third party program. </summary>
+	/// <param name="programPath"> The program path. </param>
+	/// <param name="arguments"> The arguments. </param>
+	/// <returns> <c>True</c> if it succeeds, <c>False</c> otherwise. </returns>
 	bool launchThirdPartyProgram(const std::string& programPath, const std::string& arguments);
 
-	/**
-	 * \brief Log in NeuroRT log from third party program
-	 */
+	/// <summary> Log in NeuroRT log from third party program. </summary>
 	void log();
 
 	Communication::MessagingServer m_messaging;
@@ -106,12 +118,9 @@ public:
 
 	CString getCategory() const override { return "Scripting"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "1.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "1.0.0"; }
 	CString getStockItemName() const override { return "gtk-edit"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
+	CIdentifier getCreatedClass() const override { return Box_ExternalProcessing; }
 	IPluginObject* create() override { return new CBoxAlgorithmExternalProcessing; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmExternalProcessingListener; }
 	void releaseBoxListener(IBoxListener* boxListener) const override { delete boxListener; }
@@ -136,7 +145,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_ExternalProcessingDesc)
 };
 }  // namespace Tools
 }  // namespace Plugins

@@ -92,8 +92,7 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 	//Create the decision strategy
 	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to initialize extra parameters", Kernel::ErrorType::Internal);
 
-	m_pairwiseDecisionID = this->getEnumerationParameter(
-		OneVsOneStrategy_InputParameterId_DecisionType, TypeId_ClassificationPairwiseStrategy);
+	m_pairwiseDecisionID = this->getEnumerationParameter(OneVsOneStrategy_InputParameterId_DecisionType, TypeId_ClassificationPairwiseStrategy);
 
 	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != CIdentifier::undefined(),
 						"Invalid pairwise decision strategy [" << TypeId_ClassificationPairwiseStrategy.str() << "]",
@@ -111,8 +110,7 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 	Kernel::TParameterHandler<CIdentifier*> ip_classificationAlgorithm(
 		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
 	ip_classificationAlgorithm = &m_subClassifierAlgorithmID;
-	Kernel::TParameterHandler<uint64_t> ip_classCount(
-		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassCount));
+	Kernel::TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassCount));
 	ip_classCount = m_nClasses;
 
 	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_Parameterize),
@@ -127,14 +125,13 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 		classLabels[dataset[i].getLabel()]++;
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		classLabels.size() == m_nClasses,
-		"There are samples for " << classLabels.size() << " classes but expected samples for " << m_nClasses << " classes.",
-		Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(classLabels.size() == m_nClasses,
+						"There are samples for " << classLabels.size() << " classes but expected samples for " << m_nClasses << " classes.",
+						Kernel::ErrorType::BadConfig);
 
 	//Now we create the corresponding repartition set
-	Kernel::TParameterHandler<CMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->getInputParameter(
-		Classifier_Pairwise_InputParameterId_SetRepartition);
+	Kernel::TParameterHandler<CMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->
+			getInputParameter(Classifier_Pairwise_InputParameterId_SetRepartition);
 	ip_pRepartitionSet->resize(m_nClasses);
 
 	const size_t size = dataset[0].getSize();
@@ -160,10 +157,8 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 				}
 			}
 
-			OV_ERROR_UNLESS_KRF(
-				subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
-				"Failed to train subclassifier [1st class = " << i << ", 2nd class = " << j << "]",
-				Kernel::ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(subClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
+								"Failed to train subclassifier [1st class = " << i << ", 2nd class = " << j << "]", Kernel::ErrorType::Internal);
 		}
 	}
 	return true;
@@ -252,10 +247,8 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 		for (size_t secondClass = firstClass + 1; secondClass < m_nClasses; ++secondClass) {
 			const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
-			OV_ERROR_UNLESS_KRF(
-				subClassifierAlgorithm != CIdentifier::undefined(),
-				"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.str() << "]",
-				Kernel::ErrorType::BadConfig);
+			OV_ERROR_UNLESS_KRF(subClassifierAlgorithm != CIdentifier::undefined(),
+								"Unable to instantiate classifier for class [" << this->m_subClassifierAlgorithmID.str() << "]", Kernel::ErrorType::BadConfig);
 
 			Kernel::IAlgorithmProxy* subClassifier = &this->getAlgorithmManager().getAlgorithm(subClassifierAlgorithm);
 			subClassifier->initialize();
@@ -323,8 +316,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfig()
 	XML::IXMLNode* tmp = XML::createNode(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, this->m_subClassifierAlgorithmID.str().c_str());
 	tmp->setPCData(
-		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.id()).
-			  toASCIIString());
+		this->getTypeManager().getEnumerationEntryNameFromValue(OVTK_TypeId_ClassificationAlgorithm, m_subClassifierAlgorithmID.id()).toASCIIString());
 	oneVsOneNode->addChild(tmp);
 
 	tmp = XML::createNode(SUB_CLASSIFIER_COUNT_NODE_NAME);
@@ -366,8 +358,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 		m_decisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_pairwiseDecisionID));
 		m_decisionStrategyAlgorithm->initialize();
 	}
-	Kernel::TParameterHandler<XML::IXMLNode*> ip_config(
-		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> ip_config(m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameterId_Config));
 	ip_config = tempNode->getChild(0);
 
 	Kernel::TParameterHandler<CIdentifier*> ip_algorithm(
@@ -382,8 +373,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 	const size_t deltaCarre = 1 + 8 * m_nSubClassifiers;
 	m_nClasses              = size_t((1 + sqrt(double(deltaCarre))) / 2);
 
-	Kernel::TParameterHandler<uint64_t> ip_classCount(
-		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassCount));
+	Kernel::TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassCount));
 	ip_classCount = m_nClasses;
 
 	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_LoadConfig),
