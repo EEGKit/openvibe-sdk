@@ -1,4 +1,27 @@
-#include "ovpCAlgorithmClassifierOneVsAll.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmClassifierOneVsAll.cpp
+/// \brief Classes implementation for the Algorithm One Vs All.
+/// \author Guillaume Serriere (Inria).
+/// \version 0.1.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CAlgorithmClassifierOneVsAll.hpp"
 
 #include <map>
 #include <sstream>
@@ -38,8 +61,7 @@ bool CAlgorithmClassifierOneVsAll::train(const Toolkit::IFeatureVectorSet& datas
 	const size_t nClass = m_subClassifiers.size();
 	std::map<double, size_t> classLabels;
 
-	for (size_t i = 0; i < dataset.getFeatureVectorCount(); ++i)
-	{
+	for (size_t i = 0; i < dataset.getFeatureVectorCount(); ++i) {
 		if (!classLabels.count(dataset[i].getLabel())) { classLabels[dataset[i].getLabel()] = 0; }
 		classLabels[dataset[i].getLabel()]++;
 	}
@@ -54,22 +76,19 @@ bool CAlgorithmClassifierOneVsAll::train(const Toolkit::IFeatureVectorSet& datas
 	reference->resize(dataset.getFeatureVectorCount(), size + 1);
 
 	double* buffer = reference->getBuffer();
-	for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j)
-	{
+	for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j) {
 		memcpy(buffer, dataset[j].getBuffer(), size * sizeof(double));
 		//We let the space for the label
 		buffer += (size + 1);
 	}
 
 	//And then we just change adapt the label for each feature vector but we don't copy them anymore
-	for (size_t c = 0; c < m_subClassifiers.size(); ++c)
-	{
+	for (size_t c = 0; c < m_subClassifiers.size(); ++c) {
 		Kernel::TParameterHandler<CMatrix*> ip_dataset(m_subClassifiers[c]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 		ip_dataset = static_cast<CMatrix*>(reference);
 
 		buffer = ip_dataset->getBuffer();
-		for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j)
-		{
+		for (size_t j = 0; j < dataset.getFeatureVectorCount(); ++j) {
 			//Modify the class of each featureVector
 			const double classLabel = dataset[j].getLabel();
 			if (size_t(classLabel) == c) { buffer[size] = 0; }
@@ -88,8 +107,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 
 	const size_t size = sample.getSize();
 
-	for (size_t i = 0; i < m_subClassifiers.size(); ++i)
-	{
+	for (size_t i = 0; i < m_subClassifiers.size(); ++i) {
 		Kernel::IAlgorithmProxy* subClassifier = this->m_subClassifiers[i];
 		Kernel::TParameterHandler<CMatrix*> ip_sample(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 		Kernel::TParameterHandler<double> op_class(subClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
@@ -113,20 +131,16 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 	CClassifierOutput best = CClassifierOutput(-1.0, static_cast<CMatrix*>(nullptr));
 	classId                = -1;
 
-	for (size_t i = 0; i < classification.size(); ++i)
-	{
-		CClassifierOutput& tmp = classification[i];
+	for (size_t i = 0; i < classification.size(); ++i) {
+		const CClassifierOutput& tmp = classification[i];
 		if (int(tmp.first) == 0)		// Predicts its "own" class, class=0
 		{
-			if (best.second == nullptr)
-			{
+			if (best.second == nullptr) {
 				best    = tmp;
 				classId = double(i);
 			}
-			else
-			{
-				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) > 0)
-				{
+			else {
+				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) > 0) {
 					best    = tmp;
 					classId = double(i);
 				}
@@ -135,22 +149,17 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 	}
 
 	//If no one recognize the class, let's take the more relevant
-	if (int(classId) == -1)
-	{
+	if (int(classId) == -1) {
 		this->getLogManager() << Kernel::LogLevel_Debug << "Unable to find a class in first instance\n";
-		for (size_t nClassification = 0; nClassification < classification.size(); ++nClassification)
-		{
-			CClassifierOutput& tmp = classification[nClassification];
-			if (best.second == nullptr)
-			{
+		for (size_t nClassification = 0; nClassification < classification.size(); ++nClassification) {
+			const CClassifierOutput& tmp = classification[nClassification];
+			if (best.second == nullptr) {
 				best    = tmp;
 				classId = double(nClassification);
 			}
-			else
-			{
+			else {
 				//We take the one that is the least like the second class
-				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) < 0)
-				{
+				if ((*m_fAlgorithmComparison)((*best.second), *(tmp.second)) < 0) {
 					best    = tmp;
 					classId = double(nClassification);
 				}
@@ -172,9 +181,9 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
 	double sum = 0;
 	probability.setSize(m_subClassifiers.size());
-	for (size_t i = 0; i < m_subClassifiers.size(); ++i)
-	{
-		Kernel::TParameterHandler<CMatrix*> op_Probabilities(m_subClassifiers[i]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+	for (size_t i = 0; i < m_subClassifiers.size(); ++i) {
+		Kernel::TParameterHandler<CMatrix*> op_Probabilities(
+			m_subClassifiers[i]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 		probability[i] = op_Probabilities->getBuffer()[0];
 		sum += probability[i];
 	}
@@ -198,7 +207,8 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 	ip_nClasses = 2;
 
 	//Set a references to the extra parameters input of the pairing strategy
-	Kernel::TParameterHandler<std::map<CString, CString>*> ip_params(subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+	Kernel::TParameterHandler<std::map<CString, CString>*> ip_params(
+		subClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 	ip_params.setReferenceTarget(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
 
 	this->m_subClassifiers.push_back(subClassifier);
@@ -257,11 +267,9 @@ bool CAlgorithmClassifierOneVsAll::loadConfig(XML::IXMLNode* configNode)
 	XML::IXMLNode* tempNode = configNode->getChildByName(SUB_CLASSIFIER_IDENTIFIER_NODE_NAME);
 	CIdentifier id;
 	id.fromString(std::string(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE)));
-	if (m_subClassifierAlgorithmID != id)
-	{
+	if (m_subClassifierAlgorithmID != id) {
 		while (!m_subClassifiers.empty()) { this->removeClassifierAtBack(); }
-		if (!this->setSubClassifierIdentifier(id))
-		{
+		if (!this->setSubClassifierIdentifier(id)) {
 			//if the sub classifier doesn't have comparison function it is an error
 			return false;
 		}
@@ -272,8 +280,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfig(XML::IXMLNode* configNode)
 	uint64_t nClass;
 	countData >> nClass;
 
-	while (nClass != getClassCount())
-	{
+	while (nClass != getClassCount()) {
 		if (nClass < getClassCount()) { this->removeClassifierAtBack(); }
 		else { if (!this->addNewClassifierAtBack()) { return false; } }
 	}
@@ -287,10 +294,9 @@ size_t CAlgorithmClassifierOneVsAll::getNDistances()
 	return op_distances->getDimensionSize(0);
 }
 
-bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfig(XML::IXMLNode* node)
+bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfig(const XML::IXMLNode* node)
 {
-	for (size_t i = 0; i < node->getChildCount(); ++i)
-	{
+	for (size_t i = 0; i < node->getChildCount(); ++i) {
 		XML::IXMLNode* subClassifierNode = node->getChild(i);
 		Kernel::TParameterHandler<XML::IXMLNode*> ip_config(m_subClassifiers[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Config));
 		ip_config = subClassifierNode;

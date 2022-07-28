@@ -1,9 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmCommonClassifierListener.inl
+/// \brief Base Classes for the classifiers Box.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-#include <cstdio>
 #include <iostream>
 #include <iomanip>
 
@@ -23,6 +43,7 @@ class CBoxAlgorithmCommonClassifierListener final : public Toolkit::TBoxListener
 public:
 	explicit CBoxAlgorithmCommonClassifierListener(const size_t customSettingBase) : m_customSettingBase(customSettingBase) { }
 
+	///-------------------------------------------------------------------------------------------------
 	bool initialize() override
 	{
 		//Even if everything should have been set in constructor, we still set everything in initialize (in case of)
@@ -38,6 +59,7 @@ public:
 		return true;
 	}
 
+	///-------------------------------------------------------------------------------------------------
 	bool uninitialize() override
 	{
 		if (m_classifier) {
@@ -53,32 +75,7 @@ public:
 		return true;
 	}
 
-	bool initializedStrategy(Kernel::IBox& box)
-	{
-		CString name;
-		box.getSettingName(getStrategyIndex() + 1, name);
-		if (name == CString(PAIRWISE_STRATEGY_ENUMERATION_NAME)) { m_strategyAmountSettings = 1; }
-		else { m_strategyAmountSettings = 0; }
-		return true;
-	}
-
-	int getStrategySettingsCount(Kernel::IBox& box)
-	{
-		if (m_strategyAmountSettings < 0) { initializedStrategy(box); }	//The value have never been initialized
-		return m_strategyAmountSettings;
-	}
-
-	static bool onInputAddedOrRemoved(Kernel::IBox& box)
-	{
-		box.setInputType(0, OV_TypeId_Stimulations);
-		box.setInputName(0, "Stimulations");
-		for (size_t i = 1; i < box.getInputCount(); ++i) {
-			box.setInputName(i, ("Features for class " + std::to_string(i)).c_str());
-			box.setInputType(i, OV_TypeId_FeatureVector);
-		}
-		return true;
-	}
-
+	///-------------------------------------------------------------------------------------------------
 	bool onInputAdded(Kernel::IBox& box, const size_t index) override
 	{
 		//index represent the number of the class (because of rejected offset)
@@ -92,6 +89,7 @@ public:
 		return onInputAddedOrRemoved(box);
 	}
 
+	///-------------------------------------------------------------------------------------------------
 	bool onInputRemoved(Kernel::IBox& box, const size_t index) override
 	{
 		//First remove the removed input from settings
@@ -107,6 +105,7 @@ public:
 		return onInputAddedOrRemoved(box);
 	}
 
+	///-------------------------------------------------------------------------------------------------
 	bool onInitialized(Kernel::IBox& box) override
 	{
 		//We need to know if the box is already initialized (can be called after a restore state)
@@ -131,12 +130,7 @@ public:
 		//return this->onAlgorithmClassifierChanged(box);
 	}
 
-	//Return the index of the combo box used to select the strategy (native/ OnevsOne...)
-	static size_t getStrategyIndex() { return 2; }
-
-	//Return the index of the combo box used to select the classification algorithm
-	size_t getClassifierIndex(Kernel::IBox& box) { return getStrategySettingsCount(box) + 3 + box.getInputCount() - 1; }
-
+	///-------------------------------------------------------------------------------------------------
 	bool onSettingValueChanged(Kernel::IBox& box, const size_t index) override
 	{
 		if (index == getClassifierIndex(box)) { return this->onAlgorithmClassifierChanged(box); }
@@ -144,21 +138,68 @@ public:
 		return true;
 	}
 
+	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 
+protected:
+	CIdentifier m_classifierClassID       = CIdentifier::undefined();
+	CIdentifier m_strategyClassID         = 0x0;	// CIdentifier::undefined() is already use, We initialize to an unused identifier in the strategy list
+	Kernel::IAlgorithmProxy* m_classifier = nullptr;
+	Kernel::IAlgorithmProxy* m_strategy   = nullptr;
+	const size_t m_customSettingBase      = 0;
+	int m_strategyAmountSettings          = -1;
+
+	///-------------------------------------------------------------------------------------------------
+	bool initializedStrategy(const Kernel::IBox& box)
+	{
+		CString name;
+		box.getSettingName(getStrategyIndex() + 1, name);
+		if (name == CString(PAIRWISE_STRATEGY_ENUMERATION_NAME)) { m_strategyAmountSettings = 1; }
+		else { m_strategyAmountSettings = 0; }
+		return true;
+	}
+
+	///-------------------------------------------------------------------------------------------------
+	int getStrategySettingsCount(const Kernel::IBox& box)
+	{
+		if (m_strategyAmountSettings < 0) { initializedStrategy(box); }	//The value have never been initialized
+		return m_strategyAmountSettings;
+	}
+
+	///-------------------------------------------------------------------------------------------------
+	static bool onInputAddedOrRemoved(Kernel::IBox& box)
+	{
+		box.setInputType(0, OV_TypeId_Stimulations);
+		box.setInputName(0, "Stimulations");
+		for (size_t i = 1; i < box.getInputCount(); ++i) {
+			box.setInputName(i, ("Features for class " + std::to_string(i)).c_str());
+			box.setInputType(i, OV_TypeId_FeatureVector);
+		}
+		return true;
+	}
+
+	///-------------------------------------------------------------------------------------------------
+	//Return the index of the combo box used to select the strategy (native/ OnevsOne...)
+	static size_t getStrategyIndex() { return 2; }
+
+	///-------------------------------------------------------------------------------------------------
+	//Return the index of the combo box used to select the classification algorithm
+	size_t getClassifierIndex(const Kernel::IBox& box) { return getStrategySettingsCount(box) + 3 + box.getInputCount() - 1; }
+
+	///-------------------------------------------------------------------------------------------------
 	bool updateDecision(Kernel::IBox& box)
 	{
 		const size_t i = getStrategyIndex() + 1;
-		if (m_strategyClassID == OVP_ClassId_Algorithm_ClassifierOneVsOne) {
+		if (m_strategyClassID == Algorithm_ClassifierOneVsOne) {
 			CString classifierName = "Unknown";
 			box.getSettingValue(getClassifierIndex(box), classifierName);
 			const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(
-				OVP_TypeId_OneVsOne_DecisionAlgorithms, classifierName);
+				TypeId_OneVsOne_DecisionAlgorithms, classifierName);
 
 			OV_ERROR_UNLESS_KRF(typeID != CIdentifier::undefined(),
 								"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "] (" << classifierName << ")",
 								Kernel::ErrorType::BadConfig);
 
-			Kernel::IParameter* param = m_strategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
+			Kernel::IParameter* param = m_strategy->getInputParameter(OneVsOneStrategy_InputParameterId_DecisionType);
 			Kernel::TParameterHandler<uint64_t> ip_parameter(param);
 
 			const CString entry = this->getTypeManager().getTypeName(typeID);
@@ -183,13 +224,14 @@ public:
 		return true;
 	}
 
+	///-------------------------------------------------------------------------------------------------
 	bool onStrategyChanged(Kernel::IBox& box)
 	{
-		CString name;
+		CString settingValue;
 
-		box.getSettingValue(getStrategyIndex(), name);
+		box.getSettingValue(getStrategyIndex(), settingValue);
 
-		const CIdentifier id = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, name);
+		const CIdentifier id = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, settingValue);
 		if (id != m_strategyClassID) {
 			if (m_strategy) {
 				m_strategy->uninitialize();
@@ -212,23 +254,23 @@ public:
 		else { return true; }	//If we don't change the strategy we just have to return
 
 		if (m_strategy) {
-			box.getSettingValue(getClassifierIndex(box), name);
+			box.getSettingValue(getClassifierIndex(box), settingValue);
 			const size_t i = getStrategyIndex() + 1;
-			if (m_strategyClassID == OVP_ClassId_Algorithm_ClassifierOneVsOne) {
-				const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(OVP_TypeId_OneVsOne_DecisionAlgorithms, name);
+			if (m_strategyClassID == Algorithm_ClassifierOneVsOne) {
+				const CIdentifier typeID = this->getTypeManager().getEnumerationEntryValueFromName(TypeId_OneVsOne_DecisionAlgorithms, settingValue);
 				OV_ERROR_UNLESS_KRF(typeID != CIdentifier::undefined(),
 									"Unable to find Pairwise Decision for the algorithm [" << m_classifierClassID.str() << "]", Kernel::ErrorType::BadConfig);
 
 				//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
-				Kernel::IParameter* param = m_strategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
+				Kernel::IParameter* param = m_strategy->getInputParameter(OneVsOneStrategy_InputParameterId_DecisionType);
 				const Kernel::TParameterHandler<uint64_t> ip_param(param);
 				const uint64_t value = ip_param;
-				name                 = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, value);
+				settingValue         = this->getTypeManager().getEnumerationEntryNameFromValue(typeID, value);
 
 				const CString paramName = this->getTypeManager().getTypeName(typeID);
 
-				DEBUG_PRINT(std::cout << "Adding setting (case C) " << paramName << " : '" << name << "' to index " << i << "\n";)
-				box.addSetting(paramName, typeID, name, i);
+				DEBUG_PRINT(std::cout << "Adding setting (case C) " << paramName << " : '" << settingValue << "' to index " << i << "\n";)
+				box.addSetting(paramName, typeID, settingValue, i);
 
 				m_strategyAmountSettings = 1;
 			}
@@ -237,6 +279,7 @@ public:
 		return true;
 	}
 
+	///-------------------------------------------------------------------------------------------------
 	bool onAlgorithmClassifierChanged(Kernel::IBox& box)
 	{
 		CString name;
@@ -327,16 +370,6 @@ public:
 		updateDecision(box);
 		return true;
 	}
-
-	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
-
-protected:
-	CIdentifier m_classifierClassID       = CIdentifier::undefined();
-	CIdentifier m_strategyClassID         = 0x0;	// CIdentifier::undefined() is already use, We initialize to an unused identifier in the strategy list
-	Kernel::IAlgorithmProxy* m_classifier = nullptr;
-	Kernel::IAlgorithmProxy* m_strategy   = nullptr;
-	const size_t m_customSettingBase      = 0;
-	int m_strategyAmountSettings          = -1;
 };
 }  // namespace Classification
 }  // namespace Plugins

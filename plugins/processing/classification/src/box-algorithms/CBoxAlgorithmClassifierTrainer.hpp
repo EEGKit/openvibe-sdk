@@ -1,14 +1,36 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmClassifierTrainer.hpp
+/// \brief Classes for the Box Classifier trainer.
+/// \author Yann Renard (Inria) / Guillaume Serrière (Inria).
+/// \version 2.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include "ovpCBoxAlgorithmCommonClassifierListener.inl"
+#include "CBoxAlgorithmCommonClassifierListener.inl"
 
 #include <map>
 #include <vector>
-#include <iostream>
 
 namespace OpenViBE {
 namespace Plugins {
@@ -30,7 +52,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ClassifierTrainer)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_ClassifierTrainer)
 
 protected:
 	typedef struct
@@ -79,11 +101,8 @@ public:
 	CString getDetailedDescription() const override { return "Performs classifier training with cross-validation -based error estimation"; }
 	CString getCategory() const override { return "Classification"; }
 	CString getVersion() const override { return "2.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClassifierTrainer; }
+	CIdentifier getCreatedClass() const override { return Box_ClassifierTrainer; }
 	IPluginObject* create() override { return new CBoxAlgorithmClassifierTrainer; }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
@@ -121,7 +140,7 @@ public:
 
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierTrainerDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_ClassifierTrainerDesc)
 };
 }  // namespace Classification
 }  // namespace Plugins

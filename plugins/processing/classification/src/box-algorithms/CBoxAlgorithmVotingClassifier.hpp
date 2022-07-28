@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmVotingClassifier.hpp
+/// \brief Classes for the Box Voting Classifier.
+/// \author Yann Renard (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
@@ -19,7 +42,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_VotingClassifier)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_VotingClassifier)
 
 protected:
 	size_t m_nRepetitions         = 0;
@@ -97,11 +120,8 @@ public:
 
 	CString getCategory() const override { return "Classification"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
+	CIdentifier getCreatedClass() const override { return Box_VotingClassifier; }
 	IPluginObject* create() override { return new CBoxAlgorithmVotingClassifier; }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
@@ -123,7 +143,7 @@ public:
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmVotingClassifierListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_VotingClassifierDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_VotingClassifierDesc)
 };
 }  // namespace Classification
 }  // namespace Plugins

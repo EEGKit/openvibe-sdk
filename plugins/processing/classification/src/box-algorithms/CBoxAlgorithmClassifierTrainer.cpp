@@ -1,4 +1,27 @@
-#include "ovpCBoxAlgorithmClassifierTrainer.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmClassifierTrainer.cpp
+/// \brief Classes implementation for the Box Classifier trainer.
+/// \author Yann Renard (Inria) / Guillaume Serrière (Inria).
+/// \version 2.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CBoxAlgorithmClassifierTrainer.hpp"
 #include <system/ovCMath.h>
 
 #include <xml/IXMLHandler.h>
@@ -36,8 +59,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	const Kernel::IBox& boxContext = this->getStaticBoxContext();
 	//As we add some parameter in the middle of "static" parameters, we cannot rely on settings index.
 	m_parameter = new std::map<CString, CString>();
-	for (size_t i = 0; i < boxContext.getSettingCount(); ++i)
-	{
+	for (size_t i = 0; i < boxContext.getSettingCount(); ++i) {
 		CString name;
 		boxContext.getSettingName(i, name);
 		const CString value  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
@@ -57,8 +79,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	classifierAlgorithmClassID = this->getTypeManager().getEnumerationEntryValueFromName(
 		OVTK_TypeId_ClassificationAlgorithm, (*m_parameter)[ALGORITHM_SETTING_NAME]);
 
-	if (strategyClassID == CIdentifier::undefined())
-	{
+	if (strategyClassID == CIdentifier::undefined()) {
 		//That means that we want to use a classical algorithm so just let's create it
 		const CIdentifier classifierAlgorithmID = this->getAlgorithmManager().createAlgorithm(classifierAlgorithmClassID);
 
@@ -68,8 +89,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 		m_classifier = &this->getAlgorithmManager().getAlgorithm(classifierAlgorithmID);
 		m_classifier->initialize();
 	}
-	else
-	{
+	else {
 		isPairing    = true;
 		m_classifier = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(strategyClassID));
 		m_classifier->initialize();
@@ -83,8 +103,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	m_nPartition = uint64_t(nPartition);
 
 	m_stimDecoder.initialize(*this, 0);
-	for (size_t i = 1; i < boxContext.getInputCount(); ++i)
-	{
+	for (size_t i = 1; i < boxContext.getInputCount(); ++i) {
 		m_sampleDecoder.push_back(new Toolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>());
 		m_sampleDecoder.back()->initialize(*this, i);
 	}
@@ -107,8 +126,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	ip_nClasses = nClass;
 
 	//If we have to deal with a pairing strategy we have to pass argument
-	if (isPairing)
-	{
+	if (isPairing) {
 		Kernel::TParameterHandler<CIdentifier*> ip_classId(
 			m_classifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
 		ip_classId = &classifierAlgorithmClassID;
@@ -125,14 +143,12 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	m_stimDecoder.uninitialize();
 	m_encoder.uninitialize();
 
-	if (m_classifier)
-	{
+	if (m_classifier) {
 		m_classifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
 	}
 
-	for (size_t i = 0; i < m_sampleDecoder.size(); ++i)
-	{
+	for (size_t i = 0; i < m_sampleDecoder.size(); ++i) {
 		m_sampleDecoder[i]->uninitialize();
 		delete m_sampleDecoder[i];
 	}
@@ -141,15 +157,13 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	m_encoder.uninitialize();
 	m_stimDecoder.uninitialize();
 
-	for (size_t i = 0; i < m_datasets.size(); ++i)
-	{
+	for (size_t i = 0; i < m_datasets.size(); ++i) {
 		delete m_datasets[i].sampleMatrix;
 		m_datasets[i].sampleMatrix = nullptr;
 	}
 	m_datasets.clear();
 
-	if (m_parameter)
-	{
+	if (m_parameter) {
 		delete m_parameter;
 		m_parameter = nullptr;
 	}
@@ -192,12 +206,10 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 	m_balancedDatasets.clear();
 
 	// Pad those classes with resampled examples (sampling with replacement) that have fewer examples than the largest class
-	for (size_t i = 0; i < nClass; ++i)
-	{
+	for (size_t i = 0; i < nClass; ++i) {
 		const size_t examplesInClass = classIndexes[i].size();
 		const size_t paddingNeeded   = nMax - examplesInClass;
-		if (examplesInClass == 0)
-		{
+		if (examplesInClass == 0) {
 			this->getLogManager() << Kernel::LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
 			continue;
 		}
@@ -208,8 +220,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 		const std::vector<size_t>& thisClassesIndexes = classIndexes[i];
 		for (size_t j = 0; j < examplesInClass; ++j) { m_balancedDatasets.push_back(m_datasets[thisClassesIndexes[j]]); }
 
-		for (size_t j = 0; j < paddingNeeded; ++j)
-		{
+		for (size_t j = 0; j < paddingNeeded; ++j) {
 			const size_t sampledIndex    = System::Math::randomWithCeiling(examplesInClass);
 			const sample_t& sourceVector = m_datasets[thisClassesIndexes[sampledIndex]];
 			m_balancedDatasets.push_back(sourceVector);
@@ -227,25 +238,20 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	bool startTrain = false;
 
 	// Parses stimulations
-	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
-	{
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i) {
 		m_stimDecoder.decode(i);
 
-		if (m_stimDecoder.isHeaderReceived())
-		{
+		if (m_stimDecoder.isHeaderReceived()) {
 			m_encoder.encodeHeader();
 			boxContext.markOutputAsReadyToSend(0, 0, 0);
 		}
-		if (m_stimDecoder.isBufferReceived())
-		{
+		if (m_stimDecoder.isBufferReceived()) {
 			const CStimulationSet* iStimulationSet = m_stimDecoder.getOutputStimulationSet();
-			CStimulationSet* oStimulationSet       = m_encoder.getInputStimulationSet();
+			const CStimulationSet* oStimulationSet = m_encoder.getInputStimulationSet();
 			oStimulationSet->clear();
 
-			for (size_t j = 0; j < iStimulationSet->size(); ++j)
-			{
-				if (iStimulationSet->getId(j) == m_trainStimulation)
-				{
+			for (size_t j = 0; j < iStimulationSet->size(); ++j) {
+				if (iStimulationSet->getId(j) == m_trainStimulation) {
 					startTrain        = true;
 					const uint64_t id = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, "OVTK_StimulationId_TrainCompleted");
 					oStimulationSet->push_back(id, iStimulationSet->getDate(j), 0);
@@ -255,23 +261,19 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
-		if (m_stimDecoder.isEndReceived())
-		{
+		if (m_stimDecoder.isEndReceived()) {
 			m_encoder.encodeEnd();
 			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 	}
 
 	// Parses feature vectors
-	for (size_t i = 1; i < nInput; ++i)
-	{
-		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
-		{
+	for (size_t i = 1; i < nInput; ++i) {
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j) {
 			m_sampleDecoder[i - 1]->decode(j);
 
 			if (m_sampleDecoder[i - 1]->isHeaderReceived()) { }
-			if (m_sampleDecoder[i - 1]->isBufferReceived())
-			{
+			if (m_sampleDecoder[i - 1]->isBufferReceived()) {
 				const CMatrix* sampleMatrix = m_sampleDecoder[i - 1]->getOutputMatrix();
 
 				sample_t sample;
@@ -289,8 +291,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	}
 
 	// On train stimulation reception, build up the labelled feature vector set matrix and go on training
-	if (startTrain)
-	{
+	if (startTrain) {
 		OV_ERROR_UNLESS_KRF(m_datasets.size() >= m_nPartition,
 							"Received fewer examples (" << m_datasets.size() << ") than specified partition count (" << m_nPartition << ")",
 							Kernel::ErrorType::BadInput);
@@ -299,8 +300,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 		this->getLogManager() << Kernel::LogLevel_Info << "Received train stimulation. Data dim is [" << m_datasets.size() << "x"
 				<< m_datasets[0].sampleMatrix->getBufferElementCount() << "]\n";
-		for (size_t i = 1; i < nInput; ++i)
-		{
+		for (size_t i = 1; i < nInput; ++i) {
 			this->getLogManager() << Kernel::LogLevel_Info << "For information, we have " << m_nFeatures[i] << " feature vector(s) for input " << i << "\n";
 		}
 
@@ -318,8 +318,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		for (size_t i = 0; i < actualDataset.size(); ++i) { featurePermutation.push_back(i); }
 
 		// randomize the vector if necessary
-		if (randomizeVectorOrder)
-		{
+		if (randomizeVectorOrder) {
 			this->getLogManager() << Kernel::LogLevel_Info << "Randomizing the feature vector set\n";
 			random_shuffle(featurePermutation.begin(), featurePermutation.end(), System::Math::randomWithCeiling);
 		}
@@ -327,14 +326,12 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		const size_t nClass = nInput - 1;
 		CMatrix confusion(nClass, nClass);
 
-		if (m_nPartition >= 2)
-		{
+		if (m_nPartition >= 2) {
 			double partitionAccuracy = 0;
 			double finalAccuracy     = 0;
 
 			this->getLogManager() << Kernel::LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
-			for (size_t i = 0; i < m_nPartition; ++i)
-			{
+			for (size_t i = 0; i < m_nPartition; ++i) {
 				const size_t startIdx = size_t(((i) * actualDataset.size()) / m_nPartition);
 				const size_t stopIdx  = size_t(((i + 1) * actualDataset.size()) / m_nPartition);
 
@@ -352,22 +349,20 @@ bool CBoxAlgorithmClassifierTrainer::process()
 						<< partitionAccuracy << "%)\n";
 			}
 
-			const double mean = finalAccuracy / m_nPartition;
+			const double mean = finalAccuracy / double(m_nPartition);
 			double deviation  = 0;
 
-			for (size_t i = 0; i < m_nPartition; ++i)
-			{
+			for (size_t i = 0; i < m_nPartition; ++i) {
 				const double diff = partitionAccuracies[i] - mean;
 				deviation += diff * diff;
 			}
-			deviation = sqrt(deviation / m_nPartition);
+			deviation = sqrt(deviation / double(m_nPartition));
 
 			this->getLogManager() << Kernel::LogLevel_Info << "Cross-validation test accuracy is " << mean << "% (sigma = " << deviation << "%)\n";
 
 			printConfusionMatrix(confusion);
 		}
-		else
-		{
+		else {
 			this->getLogManager() << Kernel::LogLevel_Info << "Training without cross-validation.\n";
 			this->getLogManager() << Kernel::LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
 		}
@@ -404,8 +399,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<sample_t>& dataset,
 	ip_sample->resize(nSample, nFeature + 1);
 
 	double* buffer = ip_sample->getBuffer();
-	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); ++j)
-	{
+	for (size_t j = 0; j < dataset.size() - (stopIdx - startIdx); ++j) {
 		const size_t k       = permutation[(j < startIdx ? j : j + (stopIdx - startIdx))];
 		const double classId = double(dataset[k].inputIdx);
 		memcpy(buffer, dataset[k].sampleMatrix->getBuffer(), nFeature * sizeof(double));
@@ -446,8 +440,7 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 	size_t nSuccess = 0;
 
-	for (size_t j = startIdx; j < stopIdx; ++j)
-	{
+	for (size_t j = startIdx; j < stopIdx; ++j) {
 		const size_t k = permutation[j];
 
 		double* buffer            = ip_sample->getBuffer();
@@ -465,15 +458,14 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<sample_t>& 
 
 		if (predictedValue == correctValue) { nSuccess++; }
 
-		if (predictedValue < confusionMatrix.getDimensionSize(0) && correctValue < confusionMatrix.getDimensionSize(0))
-		{
+		if (size_t(predictedValue) < confusionMatrix.getDimensionSize(0) && size_t(correctValue) < confusionMatrix.getDimensionSize(0)) {
 			double* buf = confusionMatrix.getBuffer();
 			buf[size_t(correctValue) * confusionMatrix.getDimensionSize(1) + size_t(predictedValue)] += 1.0;
 		}
 		else { std::cout << "error\n"; }
 	}
 
-	return double((nSuccess * 100.0) / (stopIdx - startIdx));
+	return double(nSuccess * 100) / double(stopIdx - startIdx);
 }
 
 bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
@@ -485,8 +477,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	const size_t rows = oMatrix.getDimensionSize(0);
 
-	if (rows > 10 && !this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_ForceConfusionMatrixPrint}"))
-	{
+	if (rows > 10 && !this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_ForceConfusionMatrixPrint}")) {
 		this->getLogManager() << Kernel::LogLevel_Info <<
 				"Over 10 classes, not printing the confusion matrix. If needed, override with setting Plugin_Classification_ForceConfusionMatrixPrint token to true.\n";
 		return true;
@@ -494,8 +485,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 	CMatrix tmp(oMatrix), rowSum(rows);
 
-	for (size_t i = 0; i < rows; ++i)
-	{
+	for (size_t i = 0; i < rows; ++i) {
 		const size_t idx = i * rows;
 		for (size_t j = 0; j < rows; ++j) { rowSum[i] += tmp[idx + j]; }
 		for (size_t j = 0; j < rows; ++j) { tmp[idx + j] /= rowSum[i]; }
@@ -509,8 +499,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	this->getLogManager() << Kernel::LogLevel_Info << ss.str() << "\n";
 
 	ss.precision(1);
-	for (size_t i = 0; i < rows; ++i)
-	{
+	for (size_t i = 0; i < rows; ++i) {
 		ss.str("");
 		ss << "  Target " << std::setw(2) << (i + 1) << ": ";
 		for (size_t j = 0; j < rows; ++j) { ss << std::setw(6) << tmp[i * rows + j] * 100; }
@@ -533,7 +522,7 @@ bool CBoxAlgorithmClassifierTrainer::saveConfig()
 
 	XML::IXMLNode* root = XML::createNode(CLASSIFICATION_BOX_ROOT);
 	std::stringstream version;
-	version << OVP_Classification_BoxTrainerFormatVersion;
+	version << Classification_BoxTrainerFormatVersion;
 	root->addAttribute(FORMAT_VERSION_ATTRIBUTE_NAME, version.str().c_str());
 
 	const auto cleanup = [&]()
@@ -562,8 +551,7 @@ bool CBoxAlgorithmClassifierTrainer::saveConfig()
 
 	XML::IXMLNode* stimulationsNode = XML::createNode(STIMULATIONS_NODE_NAME);
 
-	for (size_t i = 1; i < boxContext.getInputCount(); ++i)
-	{
+	for (size_t i = 1; i < boxContext.getInputCount(); ++i) {
 		const std::string name = "Class " + std::to_string(i) + " label";
 		const std::string id   = std::to_string(i - 1);
 		tempNode               = XML::createNode(CLASS_STIMULATION_NODE_NAME);
@@ -575,8 +563,7 @@ bool CBoxAlgorithmClassifierTrainer::saveConfig()
 
 	root->addChild(algorithmConfigNode);
 
-	if (!handler->writeXMLInFile(*root, configurationFilename.toASCIIString()))
-	{
+	if (!handler->writeXMLInFile(*root, configurationFilename.toASCIIString())) {
 		cleanup();
 		OV_ERROR_KRF("Failed saving configuration to file [" << configurationFilename << "]", Kernel::ErrorType::BadFileWrite);
 	}
