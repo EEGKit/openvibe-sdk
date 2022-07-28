@@ -123,8 +123,8 @@ bool CAlgorithmClassifierOneVsAll::classify(const Toolkit::IFeatureVector& sampl
 		//If the algorithm give a probability we take it, instead we take the first value
 		if (probabilities->getDimensionCount() != 0) { classification.push_back(CClassifierOutput(double(op_class), probabilities)); }
 		else { classification.push_back(CClassifierOutput(double(op_class), static_cast<CMatrix*>(op_values))); }
-		this->getLogManager() << Kernel::LogLevel_Debug << i << " " << double(op_class) << " " << double((*op_probabilities)[0]) << " " << double(
-			(*op_probabilities)[1]) << "\n";
+		this->getLogManager() << Kernel::LogLevel_Debug << i << " " << double(op_class) << " " << double((*op_probabilities)[0])
+				<< " " << double((*op_probabilities)[1]) << "\n";
 	}
 
 	//Now, we determine the best classification

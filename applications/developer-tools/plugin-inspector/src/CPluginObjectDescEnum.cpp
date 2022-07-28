@@ -13,7 +13,9 @@ bool CPluginObjectDescEnum::EnumeratePluginObjectDesc(std::vector<const Plugins:
 bool CPluginObjectDescEnum::EnumeratePluginObjectDesc(const CIdentifier& parentClassID)
 {
 	CIdentifier id;
-	while ((id = m_kernelCtx.getPluginManager().getNextPluginObjectDescIdentifier(id, parentClassID)) != CIdentifier::undefined()) { this->Callback(*m_kernelCtx.getPluginManager().getPluginObjectDesc(id)); }
+	while ((id = m_kernelCtx.getPluginManager().getNextPluginObjectDescIdentifier(id, parentClassID)) != CIdentifier::undefined()) {
+		this->Callback(*m_kernelCtx.getPluginManager().getPluginObjectDesc(id));
+	}
 	return true;
 }
 

@@ -34,8 +34,7 @@
 namespace OpenViBE {
 void initializeParser(ProgramOptionParser& parser)
 {
-	const std::string desc =
-			R"d(Usage: program options
+	const std::string desc = R"d(Usage: program options
 
 Program can be run in express mode to directly execute a scenario
 Program can be run in command mode to execute list of commands from a file
@@ -88,7 +87,9 @@ int main(int argc, char** argv)
 
 		if (mode == "c") {
 			// check for the mandatory commad file
-			if (optionParser.HasOption("command-file")) { commandParser.reset(new OpenViBE::CommandFileParser(optionParser.GetOptionValue<std::string>("command-file"))); }
+			if (optionParser.HasOption("command-file")) {
+				commandParser.reset(new OpenViBE::CommandFileParser(optionParser.GetOptionValue<std::string>("command-file")));
+			}
 			else {
 				std::cerr << "ERROR: mandatory option 'command-file' not set" << std::endl;
 				return int(OpenViBE::EPlayerReturnCodes::MissingMandatoryArgument);

@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmEBMLStreamSpy.hpp
+/// \brief Classes for the Box EBML stream spy.
+/// \author Yann Renard (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 
 #include <toolkit/ovtk_all.h>
 #include <ebml/IReader.h>
@@ -28,7 +51,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EBMLStreamSpy)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_EBMLStreamSpy)
 
 protected:
 	template <class T>
@@ -45,7 +68,6 @@ protected:
 
 class CBoxAlgorithmEBMLStreamSpyListener final : public Toolkit::TBoxListener<IBoxListener>
 {
-public:
 	bool check(Kernel::IBox& box) const
 	{
 		for (size_t i = 0; i < box.getInputCount(); ++i) {
@@ -56,6 +78,7 @@ public:
 		return true;
 	}
 
+public:
 	bool onInputRemoved(Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 	bool onInputAdded(Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
@@ -74,11 +97,8 @@ public:
 	CString getDetailedDescription() const override { return "This sample EBML stream analyzer prints the EBML tree structure to the console"; }
 	CString getCategory() const override { return "Tools"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EBMLStreamSpy; }
+	CIdentifier getCreatedClass() const override { return Box_EBMLStreamSpy; }
 	IPluginObject* create() override { return new CBoxAlgorithmEBMLStreamSpy(); }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEBMLStreamSpyListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
@@ -94,7 +114,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_EBMLStreamSpyDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_EBMLStreamSpyDesc)
 };
 
 }  // namespace Tools

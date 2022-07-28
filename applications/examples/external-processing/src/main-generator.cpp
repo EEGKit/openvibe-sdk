@@ -45,8 +45,7 @@ int main(const int argc, char** argv)
 	std::string connectionID;
 	size_t port = 49687;
 
-	for (int i = 0; i < argc; ++i)
-	{
+	for (int i = 0; i < argc; ++i) {
 		if (std::strcmp(argv[i], "--connection-id") == 0) { if (argc > i + 1) { connectionID = argv[i + 1]; } }
 		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = size_t(std::stoi(argv[i + 1])); } }
 	}
@@ -65,17 +64,14 @@ int main(const int argc, char** argv)
 
 	client.setConnectionID(connectionID);
 
-	while (!client.connect("127.0.0.1", port))
-	{
+	while (!client.connect("127.0.0.1", port)) {
 		const Communication::MessagingClient::ELibraryError error = client.getLastError();
 
-		if (error == Communication::MessagingClient::ELibraryError::Socket_FailedToConnect)
-		{
+		if (error == Communication::MessagingClient::ELibraryError::Socket_FailedToConnect) {
 			std::cout << "Server not responding\n";
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
-		else
-		{
+		else {
 			std::cout << "Error " << error << std::endl;
 			exit(EXIT_FAILURE);
 		}
@@ -87,15 +83,13 @@ int main(const int argc, char** argv)
 
 	// Initialize
 
-	if (client.getInputCount() > 0)
-	{
+	if (client.getInputCount() > 0) {
 		std::cerr << "The test generator can not take any inputs, was given " << client.getInputCount() << std::endl;
 		client.close();
 		exit(EXIT_FAILURE);
 	}
 
-	for (size_t i = 0; i < client.getOutputCount(); ++i)
-	{
+	for (size_t i = 0; i < client.getOutputCount(); ++i) {
 		uint64_t id;
 		uint64_t type;
 		std::string name;
@@ -105,8 +99,7 @@ int main(const int argc, char** argv)
 
 	std::map<std::string, std::string> parameters;
 
-	for (size_t i = 0; i < client.getParameterCount(); ++i)
-	{
+	for (size_t i = 0; i < client.getParameterCount(); ++i) {
 		uint64_t id;
 		uint64_t type;
 		std::string name;
@@ -116,8 +109,7 @@ int main(const int argc, char** argv)
 		parameters[name] = value;
 	}
 
-	if (!(parameters.count("Channel Count")))
-	{
+	if (!(parameters.count("Channel Count"))) {
 		std::cerr << "Missing parameter" << std::endl;
 		client.close();
 		exit(EXIT_FAILURE);
@@ -194,8 +186,7 @@ int main(const int argc, char** argv)
 		}
 		helper->closeChild();
 	}
-	if (!client.pushEBML(0, 0, 0, std::make_shared<const std::vector<uint8_t>>(callback.data())))
-	{
+	if (!client.pushEBML(0, 0, 0, std::make_shared<const std::vector<uint8_t>>(callback.data()))) {
 		std::cerr << "Failed to push EBML.\n";
 		std::cerr << "Error " << client.getLastError() << "\n";
 		exit(EXIT_FAILURE);
@@ -204,22 +195,18 @@ int main(const int argc, char** argv)
 	client.pushSync();
 
 	size_t sentSamples = 0;
-	while (!didRequestForcedQuit || (samplesToSend != 0 && sentSamples < samplesToSend))
-	{
-		if (client.isEndReceived())
-		{
+	while (!didRequestForcedQuit || (samplesToSend != 0 && sentSamples < samplesToSend)) {
+		if (client.isEndReceived()) {
 			std::cout << "End message received!\n";
 			break;
 		}
 
-		if (!client.isConnected())
-		{
+		if (!client.isConnected()) {
 			std::cout << "Disconnected!\n";
 			break;
 		}
 
-		if (client.isInErrorState())
-		{
+		if (client.isInErrorState()) {
 			std::cerr << "Error state " << client.getLastError() << "\n";
 			break;
 		}
@@ -230,12 +217,9 @@ int main(const int argc, char** argv)
 
 		const uint64_t expectedSamples = OpenViBE::CTime(client.getTime()).toSampleCount(samplingRate);
 
-		while (sentSamples < expectedSamples && (samplesToSend == 0 || sentSamples < samplesToSend))
-		{
-			for (size_t channel = 0; channel < nChannel; ++channel)
-			{
-				for (size_t sample = 0; sample < samplesPerBuffer; ++sample)
-				{
+		while (sentSamples < expectedSamples && (samplesToSend == 0 || sentSamples < samplesToSend)) {
+			for (size_t channel = 0; channel < nChannel; ++channel) {
+				for (size_t sample = 0; sample < samplesPerBuffer; ++sample) {
 					matrix[channel * samplesPerBuffer + sample] = sin((sentSamples + sample) / double(samplingRate));
 				}
 			}
@@ -259,8 +243,7 @@ int main(const int argc, char** argv)
 			const uint64_t tStart = OpenViBE::CTime(samplingRate, sentSamples).time();
 			const uint64_t tEnd   = OpenViBE::CTime(samplingRate, sentSamples + samplesPerBuffer).time();
 
-			if (!client.pushEBML(0, tStart, tEnd, std::make_shared<const std::vector<uint8_t>>(callback.data())))
-			{
+			if (!client.pushEBML(0, tStart, tEnd, std::make_shared<const std::vector<uint8_t>>(callback.data()))) {
 				std::cerr << "Failed to push EBML.\n";
 				std::cerr << "Error " << client.getLastError() << "\n";
 				exit(EXIT_FAILURE);

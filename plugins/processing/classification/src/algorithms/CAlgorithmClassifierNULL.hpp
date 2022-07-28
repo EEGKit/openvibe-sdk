@@ -68,8 +68,7 @@ public:
 		CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
 		prototype.addInputParameter(ClassifierNULL_InputParameterId_Parameter1, "Parameter 1", Kernel::ParameterType_Boolean);
 		prototype.addInputParameter(ClassifierNULL_InputParameterId_Parameter2, "Parameter 2", Kernel::ParameterType_Float);
-		prototype.addInputParameter(ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", Kernel::ParameterType_Enumeration,
-									OV_TypeId_Stimulation);
+		prototype.addInputParameter(ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", Kernel::ParameterType_Enumeration, OV_TypeId_Stimulation);
 		return true;
 	}
 

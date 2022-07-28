@@ -118,7 +118,9 @@ std::vector<CommandFileParser::Token> CommandFileParser::toTokenList(const std::
 
 		// (a:b) pattern expected
 		// minimal regex std::regex("\\(.+:.+\\)")
-		if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') || split == std::string::npos) { throw std::runtime_error("Failed to parse token pair from value: " + rawToken); }
+		if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') || split == std::string::npos) {
+			throw std::runtime_error("Failed to parse token pair from value: " + rawToken);
+		}
 
 		Token token;
 		token.first = trim(rawToken.substr(1, split - 1));
@@ -171,8 +173,7 @@ EPlayerReturnCodes CommandFileParser::Parse()
 
 		// [a] pattern expected
 		// minimal regex std::regex("^(?!\\#)\\[.+\\])")
-		if (size >= 3 && trimmedLine[0] == '['
-			&& trimmedLine[size - 1] == ']') {
+		if (size >= 3 && trimmedLine[0] == '[' && trimmedLine[size - 1] == ']') {
 			if (isFillingSection) // flush the section that was beeing filled
 			{
 				const auto errorCode = this->flush(sectionTag, sectionContent);

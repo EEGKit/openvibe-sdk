@@ -60,10 +60,8 @@ public:
 		prototype.addInputParameter(Classifier_InputParameter_ProbabilityMatrix, "Probability Matrix", Kernel::ParameterType_Matrix);
 		prototype.addInputParameter(Classifier_Pairwise_InputParameterId_Config, "Configuration node", Kernel::ParameterType_Pointer);
 		prototype.addInputParameter(Classifier_Pairwise_InputParameterId_SetRepartition, "Set repartition", Kernel::ParameterType_Matrix);
-		prototype.addInputParameter(
-			Classifier_Pairwise_InputParameterId_AlgorithmIdentifier, "Classification Algorithm", Kernel::ParameterType_Identifier);
-		prototype.addInputParameter(
-			Classifier_Pairwise_InputParameter_ClassificationOutputs, "Classification Outputs", Kernel::ParameterType_Pointer);
+		prototype.addInputParameter(Classifier_Pairwise_InputParameterId_AlgorithmIdentifier, "Classification Algorithm", Kernel::ParameterType_Identifier);
+		prototype.addInputParameter(Classifier_Pairwise_InputParameter_ClassificationOutputs, "Classification Outputs", Kernel::ParameterType_Pointer);
 		prototype.addInputParameter(Classifier_Pairwise_InputParameter_ClassCount, "Class Count", Kernel::ParameterType_UInteger);
 
 		prototype.addOutputParameter(Classifier_OutputParameter_ProbabilityVector, "Probability Vector", Kernel::ParameterType_Matrix);

@@ -98,8 +98,7 @@ public:
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		prototype.addInputParameter(ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", Kernel::ParameterType_Boolean);
-		prototype.addInputParameter(ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)",
-									Kernel::ParameterType_Boolean);
+		prototype.addInputParameter(ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", Kernel::ParameterType_Boolean);
 		prototype.addInputParameter(ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", Kernel::ParameterType_Float);
 
 		CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);

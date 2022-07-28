@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmStimulationListener.hpp
+/// \brief Classes for the Box Stimulation listener.
+/// \author Yann Renard (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>
@@ -18,7 +41,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationListener)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_StimulationListener)
 
 protected:
 	Kernel::ELogLevel m_logLevel = Kernel::LogLevel_None;
@@ -27,7 +50,6 @@ protected:
 
 class CBoxAlgorithmStimulationListenerListener final : public Toolkit::TBoxListener<IBoxListener>
 {
-public:
 	bool check(Kernel::IBox& box) const
 	{
 		for (size_t i = 0; i < box.getInputCount(); ++i) {
@@ -38,6 +60,7 @@ public:
 		return true;
 	}
 
+public:
 	bool onInputRemoved(Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 	bool onInputAdded(Kernel::IBox& box, const size_t /*index*/) override { return this->check(box); }
 
@@ -56,11 +79,8 @@ public:
 	CString getDetailedDescription() const override { return "Prints each received stimulationto the log using the log level specified in the box config."; }
 	CString getCategory() const override { return "Tools"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationListener; }
+	CIdentifier getCreatedClass() const override { return Box_StimulationListener; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationListener; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationListenerListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
@@ -73,7 +93,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationListenerDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_StimulationListenerDesc)
 };
 
 }  // namespace Tools

@@ -19,8 +19,7 @@ int main(const int argc, char** argv)
 	std::string connectionID;
 	size_t port = 49687;
 
-	for (int i = 0; i < argc; ++i)
-	{
+	for (int i = 0; i < argc; ++i) {
 		if (std::strcmp(argv[i], "--connection-id") == 0) { if (argc > i + 1) { connectionID = argv[i + 1]; } }
 		else if (std::strcmp(argv[i], "--port") == 0) { if (argc > i + 1) { port = size_t(std::stoi(argv[i + 1])); } }
 	}
@@ -30,17 +29,14 @@ int main(const int argc, char** argv)
 
 	client.setConnectionID(connectionID);
 
-	while (!client.connect("127.0.0.1", port))
-	{
+	while (!client.connect("127.0.0.1", port)) {
 		const Communication::MessagingClient::ELibraryError error = client.getLastError();
 
-		if (error == Communication::MessagingClient::ELibraryError::Socket_FailedToConnect)
-		{
+		if (error == Communication::MessagingClient::ELibraryError::Socket_FailedToConnect) {
 			std::cout << "Server not responding\n";
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
-		else
-		{
+		else {
 			std::cout << "Error " << error << std::endl;
 			exit(EXIT_FAILURE);
 		}
@@ -52,8 +48,7 @@ int main(const int argc, char** argv)
 
 	// Initialize
 
-	for (size_t i = 0; i < client.getInputCount(); ++i)
-	{
+	for (size_t i = 0; i < client.getInputCount(); ++i) {
 		uint64_t id;
 		uint64_t type;
 		std::string name;
@@ -61,8 +56,7 @@ int main(const int argc, char** argv)
 		if (client.getInput(i, id, type, name)) { std::cout << "Input:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
-	for (size_t i = 0; i < client.getOutputCount(); ++i)
-	{
+	for (size_t i = 0; i < client.getOutputCount(); ++i) {
 		uint64_t id;
 		uint64_t type;
 		std::string name;
@@ -70,15 +64,13 @@ int main(const int argc, char** argv)
 		if (client.getOutput(i, id, type, name)) { std::cout << "Output:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\n"; }
 	}
 
-	for (size_t i = 0; i < client.getParameterCount(); ++i)
-	{
+	for (size_t i = 0; i < client.getParameterCount(); ++i) {
 		uint64_t id;
 		uint64_t type;
 		std::string name;
 		std::string value;
 
-		if (client.getParameter(i, id, type, name, value))
-		{
+		if (client.getParameter(i, id, type, name, value)) {
 			std::cout << "Parameter:\n\tIndex: " << id << "\n\tType: " << type << "\n\tName: " << name << "\n\tValue: " << value << "\n\n";
 		}
 	}
@@ -92,22 +84,18 @@ int main(const int argc, char** argv)
 
 	// Process
 
-	while (!didRequestForcedQuit)
-	{
-		if (client.isEndReceived())
-		{
+	while (!didRequestForcedQuit) {
+		if (client.isEndReceived()) {
 			std::cout << "End message received!\n";
 			break;
 		}
 
-		if (!client.isConnected())
-		{
+		if (!client.isConnected()) {
 			std::cout << "Disconnected!\n";
 			break;
 		}
 
-		if (client.isInErrorState())
-		{
+		if (client.isInErrorState()) {
 			std::cerr << "Error state " << client.getLastError() << "\n";
 			break;
 		}
@@ -122,13 +110,10 @@ int main(const int argc, char** argv)
 
 		// We wait for a synchronization message, this means that the client box has finished sending
 		// all of the data it has received during one process() method call.
-		while (!client.waitForSyncMessage())
-		{
-			while (client.popEBML(packetId, index, startTime, endtime, ebml))
-			{
+		while (!client.waitForSyncMessage()) {
+			while (client.popEBML(packetId, index, startTime, endtime, ebml)) {
 				// We just push out the received EBML as is
-				if (!client.pushEBML(index, startTime, endtime, ebml))
-				{
+				if (!client.pushEBML(index, startTime, endtime, ebml)) {
 					std::cerr << "Failed to push EBML.\n";
 					std::cerr << "Error " << client.getLastError() << "\n";
 					break;
@@ -147,10 +132,8 @@ int main(const int argc, char** argv)
 		// Sync message was received, this means that we are now sure that the buffer will not receive
 		// any additional data as the box is blocked until we acknowledge sending all of the processed
 		// data back
-		while (client.popEBML(packetId, index, startTime, endtime, ebml))
-		{
-			if (!client.pushEBML(index, startTime, endtime, ebml))
-			{
+		while (client.popEBML(packetId, index, startTime, endtime, ebml)) {
+			if (!client.pushEBML(index, startTime, endtime, ebml)) {
 				std::cerr << "Failed to push EBML.\n";
 				std::cerr << "Error " << client.getLastError() << "\n";
 				break;
@@ -169,8 +152,7 @@ int main(const int argc, char** argv)
 		Communication::EError error;
 		uint64_t guiltyId;
 
-		while (client.popError(packetId, error, guiltyId))
-		{
+		while (client.popError(packetId, error, guiltyId)) {
 			std::cerr << "Error received:\n";
 			std::cerr << "\tError: " << int(error) << "\n";
 			std::cerr << "\tGuilty Id: " << guiltyId << "\n";
