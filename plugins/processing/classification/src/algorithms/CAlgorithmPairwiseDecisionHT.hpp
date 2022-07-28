@@ -1,10 +1,33 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmPairwiseDecisionHT.hpp
+/// \brief Classes for the Algorithm Pairwise Decision HT.
+/// \author Guillaume Serrière (Inria).
+/// \version 0.1.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include "ovpCAlgorithmPairwiseDecision.h"
+#include "CAlgorithmPairwiseDecision.hpp"
 
 namespace OpenViBE {
 namespace Plugins {
@@ -22,12 +45,12 @@ public:
 	void release() override { delete this; }
 	bool initialize() override { return true; }
 	bool uninitialize() override { return true; }
-	bool parameterize() override;
-	bool compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities) override;
-	XML::IXMLNode* saveConfig() override;
-	bool loadConfig(XML::IXMLNode& node) override;
+	bool Parameterize() override;
+	bool Compute(std::vector<classification_info_t>& classifications, CMatrix* probabilities) override;
+	XML::IXMLNode* SaveConfig() override;
+	bool LoadConfig(XML::IXMLNode& node) override;
 
-	_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, OVP_ClassId_Algorithm_PairwiseDecision_HT)
+	_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecision, Algorithm_PairwiseDecision_HT)
 
 private:
 	size_t m_nClass = 0;
@@ -39,7 +62,7 @@ public:
 	void release() override { }
 
 	CString getName() const override { return "Pairwise decision strategy based on HT"; }
-	CString getAuthorName() const override { return "Serrière Guillaume"; }
+	CString getAuthorName() const override { return "Guillaume Serrière"; }
 	CString getAuthorCompanyName() const override { return "Inria"; }
 	CString getShortDescription() const override { return "."; }
 
@@ -52,11 +75,8 @@ public:
 
 	CString getCategory() const override { return ""; }
 	CString getVersion() const override { return "0.1"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseDecision_HT; }
+	CIdentifier getCreatedClass() const override { return Algorithm_PairwiseDecision_HT; }
 	IPluginObject* create() override { return new CAlgorithmPairwiseDecisionHT; }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
@@ -65,7 +85,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecisionDesc, OVP_ClassId_Algorithm_PairwiseDecision_HTDesc)
+	_IsDerivedFromClass_Final_(CAlgorithmPairwiseDecisionDesc, Algorithm_PairwiseDecision_HTDesc)
 };
 }  // namespace Classification
 }  // namespace Plugins

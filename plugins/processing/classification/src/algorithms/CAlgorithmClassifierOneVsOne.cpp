@@ -1,13 +1,34 @@
-#include "ovpCAlgorithmClassifierOneVsOne.h"
-#include "ovpCAlgorithmPairwiseDecision.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmClassifierOneVsOne.cpp
+/// \brief Classes implementation for the Algorithm One Vs One.
+/// \author Guillaume Serriere (Inria).
+/// \version 0.2.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CAlgorithmClassifierOneVsOne.hpp"
+#include "CAlgorithmPairwiseDecision.hpp"
 
 #include <map>
 #include <cmath>
 #include <sstream>
 #include <utility>
 #include <iostream>
-
-extern const char* const CLASSIFIER_ROOT;
 
 namespace OpenViBE {
 namespace Plugins {
@@ -31,7 +52,7 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 	Kernel::TParameterHandler<XML::IXMLNode*> op_configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Config));
 	op_configuration = nullptr;
 
-	Kernel::TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
+	Kernel::TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OneVsOneStrategy_InputParameterId_DecisionType));
 	ip_pPairwise = CIdentifier::undefined().id();
 
 	m_decisionStrategyAlgorithm = nullptr;
@@ -42,15 +63,13 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 
 bool CAlgorithmClassifierOneVsOne::uninitialize()
 {
-	if (m_decisionStrategyAlgorithm != nullptr)
-	{
+	if (m_decisionStrategyAlgorithm != nullptr) {
 		m_decisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_decisionStrategyAlgorithm);
 		m_decisionStrategyAlgorithm = nullptr;
 	}
 
-	for (auto& kv : m_subClassifiers)
-	{
+	for (const auto& kv : m_subClassifiers) {
 		Kernel::IAlgorithmProxy* subClassifier = kv.second;
 		subClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*subClassifier);
@@ -74,14 +93,13 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to initialize extra parameters", Kernel::ErrorType::Internal);
 
 	m_pairwiseDecisionID = this->getEnumerationParameter(
-		OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, OVP_TypeId_ClassificationPairwiseStrategy);
+		OneVsOneStrategy_InputParameterId_DecisionType, TypeId_ClassificationPairwiseStrategy);
 
 	OV_ERROR_UNLESS_KRF(m_pairwiseDecisionID != CIdentifier::undefined(),
-						"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.str() << "]",
+						"Invalid pairwise decision strategy [" << TypeId_ClassificationPairwiseStrategy.str() << "]",
 						Kernel::ErrorType::BadConfig);
 
-	if (m_decisionStrategyAlgorithm != nullptr)
-	{
+	if (m_decisionStrategyAlgorithm != nullptr) {
 		m_decisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_decisionStrategyAlgorithm);
 		m_decisionStrategyAlgorithm = nullptr;
@@ -91,20 +109,20 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->initialize(), "Failed to unitialize decision strategy algorithm", Kernel::ErrorType::Internal);
 
 	Kernel::TParameterHandler<CIdentifier*> ip_classificationAlgorithm(
-		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
+		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
 	ip_classificationAlgorithm = &m_subClassifierAlgorithmID;
-	Kernel::TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	Kernel::TParameterHandler<uint64_t> ip_classCount(
+		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassCount));
 	ip_classCount = m_nClasses;
 
-	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize),
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_Parameterize),
 						"Failed to run decision strategy algorithm", Kernel::ErrorType::Internal);
 
 	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to uninitialize extra parameters", Kernel::ErrorType::Internal);
 
 	//Calculate the amount of sample for each class
 	std::map<double, size_t> classLabels;
-	for (size_t i = 0; i < dataset.getFeatureVectorCount(); ++i)
-	{
+	for (size_t i = 0; i < dataset.getFeatureVectorCount(); ++i) {
 		if (!classLabels.count(dataset[i].getLabel())) { classLabels[dataset[i].getLabel()] = 0; }
 		classLabels[dataset[i].getLabel()]++;
 	}
@@ -116,17 +134,15 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 
 	//Now we create the corresponding repartition set
 	Kernel::TParameterHandler<CMatrix*> ip_pRepartitionSet = m_decisionStrategyAlgorithm->getInputParameter(
-		OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
+		Classifier_Pairwise_InputParameterId_SetRepartition);
 	ip_pRepartitionSet->resize(m_nClasses);
 
 	const size_t size = dataset[0].getSize();
 	//Now let's train each classifier
-	for (size_t i = 0; i < m_nClasses; ++i)
-	{
+	for (size_t i = 0; i < m_nClasses; ++i) {
 		ip_pRepartitionSet->getBuffer()[i] = double(classLabels[double(i)]);
 
-		for (size_t j = i + 1; j < m_nClasses; ++j)
-		{
+		for (size_t j = i + 1; j < m_nClasses; ++j) {
 			const size_t nFeature                  = classLabels[double(i)] + classLabels[double(j)];
 			Kernel::IAlgorithmProxy* subClassifier = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
 
@@ -134,11 +150,9 @@ bool CAlgorithmClassifierOneVsOne::train(const Toolkit::IFeatureVectorSet& datas
 			ip_dataset->resize(nFeature, size + 1);
 
 			double* buffer = ip_dataset->getBuffer();
-			for (size_t k = 0; k < dataset.getFeatureVectorCount(); ++k)
-			{
+			for (size_t k = 0; k < dataset.getFeatureVectorCount(); ++k) {
 				const double tmp = dataset[k].getLabel();
-				if (tmp == double(i) || tmp == double(j))
-				{
+				if (tmp == double(i) || tmp == double(j)) {
 					memcpy(buffer, dataset[k].getBuffer(), size * sizeof(double));
 
 					buffer[size] = size_t(tmp) == i ? 0 : 1;
@@ -162,7 +176,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const Toolkit::IFeatureVector& sampl
 	const size_t size = sample.getSize();
 	std::vector<classification_info_t> classificationList;
 
-	Kernel::TParameterHandler<CMatrix*> ip_proba = m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix);
+	Kernel::TParameterHandler<CMatrix*> ip_proba = m_decisionStrategyAlgorithm->getInputParameter(Classifier_InputParameter_ProbabilityMatrix);
 	CMatrix* matrix                              = static_cast<CMatrix*>(ip_proba);
 
 	matrix->resize(m_nClasses, m_nClasses);
@@ -170,10 +184,8 @@ bool CAlgorithmClassifierOneVsOne::classify(const Toolkit::IFeatureVector& sampl
 	for (size_t i = 0; i < matrix->getBufferElementCount(); ++i) { matrix->getBuffer()[i] = 0.0; }
 
 	//Let's generate the matrix of confidence score
-	for (size_t i = 0; i < m_nClasses; ++i)
-	{
-		for (size_t j = i + 1; j < m_nClasses; ++j)
-		{
+	for (size_t i = 0; i < m_nClasses; ++i) {
+		for (size_t j = i + 1; j < m_nClasses; ++j) {
 			Kernel::IAlgorithmProxy* tmp = m_subClassifiers[std::pair<size_t, size_t>(i, j)];
 			Kernel::TParameterHandler<CMatrix*> ip_sample(tmp->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 			Kernel::TParameterHandler<CMatrix*> op_values(tmp->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
@@ -197,27 +209,24 @@ bool CAlgorithmClassifierOneVsOne::classify(const Toolkit::IFeatureVector& sampl
 	//	std::cout << std::endl;
 
 	Kernel::TParameterHandler<std::vector<classification_info_t>*> ip_infos(
-		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassificationOutputs));
+		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassificationOutputs));
 	ip_infos = &classificationList;
 
 	//Then ask to the strategy to make the decision
-	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute), "Failed to compute decision strategy",
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_Compute), "Failed to compute decision strategy",
 						Kernel::ErrorType::Internal);
 
-	Kernel::TParameterHandler<CMatrix*> op_proba = m_decisionStrategyAlgorithm->getOutputParameter(
-		OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
-	double maxProb       = -1;
-	int selectedClassIdx = -1;
+	Kernel::TParameterHandler<CMatrix*> op_proba = m_decisionStrategyAlgorithm->getOutputParameter(Classifier_OutputParameter_ProbabilityVector);
+	double maxProb                               = -1;
+	int selectedClassIdx                         = -1;
 
 	distance.setSize(0);
 	probability.setSize(m_nClasses);
 
 	//We just have to take the most relevant now.
-	for (size_t i = 0; i < m_nClasses; ++i)
-	{
+	for (size_t i = 0; i < m_nClasses; ++i) {
 		const double tmp = op_proba->getBuffer()[i];
-		if (tmp > maxProb)
-		{
+		if (tmp > maxProb) {
 			selectedClassIdx = int(i);
 			maxProb          = tmp;
 		}
@@ -231,8 +240,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const Toolkit::IFeatureVector& sampl
 bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 {
 	// Clear any previous ones
-	for (auto& kv : m_subClassifiers)
-	{
+	for (const auto& kv : m_subClassifiers) {
 		Kernel::IAlgorithmProxy* subClassifier = kv.second;
 		subClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*subClassifier);
@@ -240,10 +248,8 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 	this->m_subClassifiers.clear();
 
 	//Now let's instantiate all the sub classifiers
-	for (size_t firstClass = 0; firstClass < m_nClasses; ++firstClass)
-	{
-		for (size_t secondClass = firstClass + 1; secondClass < m_nClasses; ++secondClass)
-		{
+	for (size_t firstClass = 0; firstClass < m_nClasses; ++firstClass) {
+		for (size_t secondClass = firstClass + 1; secondClass < m_nClasses; ++secondClass) {
 			const CIdentifier subClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_subClassifierAlgorithmID);
 
 			OV_ERROR_UNLESS_KRF(
@@ -298,8 +304,8 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration() 
 
 	XML::IXMLNode* tmp = XML::createNode(PAIRWISE_DECISION_NAME);
 
-	Kernel::TParameterHandler<XML::IXMLNode*> op_config(m_decisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_Pairwise_OutputParameterId_Config));
-	m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_SaveConfig);
+	Kernel::TParameterHandler<XML::IXMLNode*> op_config(m_decisionStrategyAlgorithm->getOutputParameter(Classifier_Pairwise_OutputParameterId_Config));
+	m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_SaveConfig);
 	tmp->addChild(static_cast<XML::IXMLNode*>(op_config));
 
 	tmp->addAttribute(ALGORITHM_ID_ATTRIBUTE, m_pairwiseDecisionID.str().c_str());
@@ -342,8 +348,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 	CIdentifier algorithmID;
 	algorithmID.fromString(std::string(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE)));
 
-	if (!this->setSubClassifierIdentifier(algorithmID))
-	{
+	if (!this->setSubClassifierIdentifier(algorithmID)) {
 		//if the sub classifier doesn't have comparison function it is an error
 		return false;
 	}
@@ -351,10 +356,8 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 	tempNode = configNode->getChildByName(PAIRWISE_DECISION_NAME);
 	CIdentifier pairwiseID;
 	pairwiseID.fromString(std::string(tempNode->getAttribute(ALGORITHM_ID_ATTRIBUTE)));
-	if (pairwiseID != m_pairwiseDecisionID)
-	{
-		if (m_decisionStrategyAlgorithm != nullptr)
-		{
+	if (pairwiseID != m_pairwiseDecisionID) {
+		if (m_decisionStrategyAlgorithm != nullptr) {
 			m_decisionStrategyAlgorithm->uninitialize();
 			this->getAlgorithmManager().releaseAlgorithm(*m_decisionStrategyAlgorithm);
 			m_decisionStrategyAlgorithm = nullptr;
@@ -363,11 +366,12 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 		m_decisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_pairwiseDecisionID));
 		m_decisionStrategyAlgorithm->initialize();
 	}
-	Kernel::TParameterHandler<XML::IXMLNode*> ip_config(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Config));
+	Kernel::TParameterHandler<XML::IXMLNode*> ip_config(
+		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameterId_Config));
 	ip_config = tempNode->getChild(0);
 
 	Kernel::TParameterHandler<CIdentifier*> ip_algorithm(
-		m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
+		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameterId_AlgorithmIdentifier));
 	ip_algorithm = &algorithmID;
 
 	tempNode = configNode->getChildByName(SUB_CLASSIFIER_COUNT_NODE_NAME);
@@ -378,28 +382,28 @@ bool CAlgorithmClassifierOneVsOne::loadConfig(XML::IXMLNode* configNode)
 	const size_t deltaCarre = 1 + 8 * m_nSubClassifiers;
 	m_nClasses              = size_t((1 + sqrt(double(deltaCarre))) / 2);
 
-	Kernel::TParameterHandler<uint64_t> ip_classCount(m_decisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	Kernel::TParameterHandler<uint64_t> ip_classCount(
+		m_decisionStrategyAlgorithm->getInputParameter(Classifier_Pairwise_InputParameter_ClassCount));
 	ip_classCount = m_nClasses;
 
-	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_LoadConfig),
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_LoadConfig),
 						"Loading decision strategy configuration failed", Kernel::ErrorType::Internal);
 
-	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Parameterize),
+	OV_ERROR_UNLESS_KRF(m_decisionStrategyAlgorithm->process(Classifier_Pairwise_InputTriggerId_Parameterize),
 						"Parameterizing decision strategy failed", Kernel::ErrorType::Internal);
 
 	return loadSubClassifierConfig(configNode->getChildByName(SUB_CLASSIFIERS_NODE_NAME));
 }
 
-bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfig(XML::IXMLNode* node)
+bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfig(const XML::IXMLNode* node)
 {
 	createSubClassifiers();
 
-	for (size_t i = 0; i < node->getChildCount(); ++i)
-	{
+	for (size_t i = 0; i < node->getChildCount(); ++i) {
 		double firstClass, secondClass;
 
 		//Now we have to restore class indexes
-		XML::IXMLNode* subClassifierNode = node->getChild(i);
+		const XML::IXMLNode* subClassifierNode = node->getChild(i);
 		std::stringstream ss1(subClassifierNode->getAttribute(FIRST_CLASS_ATRRIBUTE_NAME));
 		ss1 >> firstClass;
 		std::stringstream ss2(subClassifierNode->getAttribute(SECOND_CLASS_ATTRIBUTE_NAME));

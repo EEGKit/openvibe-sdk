@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmClassifierOneVsAll.hpp
+/// \brief Classes for the Algorithm One Vs All.
+/// \author Guillaume Serriere (Inria).
+/// \version 0.1.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
@@ -24,7 +47,7 @@ public:
 	size_t getNProbabilities() override { return m_subClassifiers.size(); }
 	size_t getNDistances() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsAll)
+	_IsDerivedFromClass_Final_(Toolkit::CAlgorithmPairingStrategy, Algorithm_ClassifierOneVsAll)
 
 
 private:
@@ -34,7 +57,7 @@ private:
 	bool setSubClassifierIdentifier(const CIdentifier& id);
 	size_t getClassCount() const { return m_subClassifiers.size(); }
 
-	bool loadSubClassifierConfig(XML::IXMLNode* node);
+	bool loadSubClassifierConfig(const XML::IXMLNode* node);
 
 	std::vector<Kernel::IAlgorithmProxy*> m_subClassifiers;
 	fClassifierComparison m_fAlgorithmComparison = nullptr;
@@ -52,11 +75,8 @@ public:
 	CString getDetailedDescription() const override { return ""; }
 	CString getCategory() const override { return ""; }
 	CString getVersion() const override { return "0.1"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierOneVsAll; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ClassifierOneVsAll; }
 	IPluginObject* create() override { return new CAlgorithmClassifierOneVsAll; }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
@@ -65,7 +85,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, OVP_ClassId_Algorithm_ClassifierOneVsAllDesc)
+	_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, Algorithm_ClassifierOneVsAllDesc)
 };
 }  // namespace Classification
 }  // namespace Plugins

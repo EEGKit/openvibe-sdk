@@ -1,4 +1,27 @@
-#include "ovpCAlgorithmConditionedCovariance.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmConditionedCovariance.cpp
+/// \brief Classes implementation for the Algorithm Conditioned Covariance.
+/// \author Jussi T. Lindgren (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CAlgorithmConditionedCovariance.hpp"
 
 /*
  * This implementation is based on the matlab code corresponding to
@@ -31,7 +54,7 @@ void CAlgorithmConditionedCovariance::dumpMatrix(Kernel::ILogManager& /* mgr */,
 bool CAlgorithmConditionedCovariance::initialize()
 {
 	// Default value setting
-	Kernel::TParameterHandler<double> ip_shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
+	Kernel::TParameterHandler<double> ip_shrinkage(getInputParameter(ConditionedCovariance_InputParameterId_Shrinkage));
 	ip_shrinkage = -1.0;
 
 	return true;
@@ -40,10 +63,10 @@ bool CAlgorithmConditionedCovariance::initialize()
 bool CAlgorithmConditionedCovariance::process()
 {
 	// Set up the IO
-	const Kernel::TParameterHandler<double> ip_shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
-	const Kernel::TParameterHandler<CMatrix*> ip_sample(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
-	Kernel::TParameterHandler<CMatrix*> op_mean(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
-	Kernel::TParameterHandler<CMatrix*> op_covMatrix(getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
+	const Kernel::TParameterHandler<double> ip_shrinkage(getInputParameter(ConditionedCovariance_InputParameterId_Shrinkage));
+	const Kernel::TParameterHandler<CMatrix*> ip_sample(getInputParameter(ConditionedCovariance_InputParameterId_FeatureVectorSet));
+	Kernel::TParameterHandler<CMatrix*> op_mean(getOutputParameter(ConditionedCovariance_OutputParameterId_Mean));
+	Kernel::TParameterHandler<CMatrix*> op_covMatrix(getOutputParameter(ConditionedCovariance_OutputParameterId_CovarianceMatrix));
 	double shrinkage = ip_shrinkage;
 
 	OV_ERROR_UNLESS_KRF(shrinkage <= 1.0, "Invalid shrinkage value " << shrinkage << "(expected value <= 1.0)", Kernel::ErrorType::BadConfig);
@@ -83,8 +106,7 @@ bool CAlgorithmConditionedCovariance::process()
 	priorCov.diagonal().setConstant(sampleCov.diagonal().mean());
 
 	// Compute shrinkage coefficient if its not given
-	if (shrinkage < 0)
-	{
+	if (shrinkage < 0) {
 		const Eigen::MatrixXd dataSquared = dataCentered.cwiseProduct(dataCentered);
 		const Eigen::MatrixXd phiMat      = (dataSquared.transpose() * dataSquared) / double(nRows) - sampleCov.cwiseAbs2();
 

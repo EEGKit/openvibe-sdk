@@ -1,6 +1,29 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmClassifierOneVsOne.hpp
+/// \brief Classes for the Algorithm One Vs One.
+/// \author Guillaume Serriere (Inria).
+/// \version 0.2.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
@@ -37,7 +60,7 @@ public:
 	size_t getNProbabilities() override { return m_nClasses; }
 	size_t getNDistances() override { return 0; }
 
-	_IsDerivedFromClass_Final_(Toolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
+	_IsDerivedFromClass_Final_(Toolkit::CAlgorithmPairingStrategy, Algorithm_ClassifierOneVsOne)
 
 protected:
 	bool createSubClassifiers();
@@ -57,7 +80,7 @@ private:
 
 	// size_t getClassCount() const;
 
-	bool loadSubClassifierConfig(XML::IXMLNode* node);
+	bool loadSubClassifierConfig(const XML::IXMLNode* node);
 
 	// SSubClassifierDescriptor& getSubClassifierDescriptor(const size_t FirstClass, const size_t SecondClass);
 	bool setSubClassifierIdentifier(const CIdentifier& id);
@@ -75,22 +98,19 @@ public:
 	CString getDetailedDescription() const override { return ""; }
 	CString getCategory() const override { return ""; }
 	CString getVersion() const override { return "0.2"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ClassifierOneVsOne; }
 	IPluginObject* create() override { return new CAlgorithmClassifierOneVsOne; }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(prototype);
-		prototype.addInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType, "Pairwise Decision Strategy",
-									Kernel::ParameterType_Enumeration, OVP_TypeId_ClassificationPairwiseStrategy);
+		prototype.addInputParameter(OneVsOneStrategy_InputParameterId_DecisionType, "Pairwise Decision Strategy",
+									Kernel::ParameterType_Enumeration, TypeId_ClassificationPairwiseStrategy);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, OVP_ClassId_Algorithm_ClassifierOneVsOneDesc)
+	_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, Algorithm_ClassifierOneVsOneDesc)
 };
 }  // namespace Classification
 }  // namespace Plugins

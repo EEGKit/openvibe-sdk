@@ -1,4 +1,27 @@
-#include "ovpCBoxAlgorithmClassifierProcessor.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmClassifierProcessor.cpp
+/// \brief Classes implementation for the Box Classifier processor.
+/// \author Yann Renard (Inria) / Guillaume Serrière (Inria).
+/// \version 2.1.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CBoxAlgorithmClassifierProcessor.hpp"
 
 #include <sstream>
 
@@ -11,8 +34,7 @@ namespace Classification {
 
 bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 {
-	if (m_classifier)
-	{
+	if (m_classifier) {
 		m_classifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
 		m_classifier = nullptr;
@@ -33,13 +55,13 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	size_t version;
 	data >> version;
 
-	OV_WARNING_UNLESS_K(version <= OVP_Classification_BoxTrainerFormatVersion,
+	OV_WARNING_UNLESS_K(version <= Classification_BoxTrainerFormatVersion,
 						"Classifier configuration in [" << filename << "] saved using a newer version: saved version = [" << version
-						<< "] vs current version = [" << OVP_Classification_BoxTrainerFormatVersion << "]");
+						<< "] vs current version = [" << Classification_BoxTrainerFormatVersion << "]");
 
-	OV_ERROR_UNLESS_KRF(version >= OVP_Classification_BoxTrainerFormatVersionRequired,
+	OV_ERROR_UNLESS_KRF(version >= Classification_BoxTrainerFormatVersionRequired,
 						"Classifier configuration in [" << filename << "] saved using an obsolete version [" << version << "] (minimum expected version = "
-						<< OVP_Classification_BoxTrainerFormatVersionRequired << ")", Kernel::ErrorType::BadVersion);
+						<< Classification_BoxTrainerFormatVersionRequired << ")", Kernel::ErrorType::BadVersion);
 
 	CIdentifier algorithmClassID = CIdentifier::undefined();
 
@@ -50,8 +72,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	algorithmClassID.fromString(std::string(tmp->getAttribute(IDENTIFIER_ATTRIBUTE_NAME)));
 
 	//If the Identifier is undefined, that means we need to load a native algorithm
-	if (algorithmClassID == CIdentifier::undefined())
-	{
+	if (algorithmClassID == CIdentifier::undefined()) {
 		tmp = rootNode->getChildByName(ALGORITHM_NODE_NAME);
 
 		OV_ERROR_UNLESS_KRF(tmp, "Configuration file [" << filename << "] has no node " << ALGORITHM_NODE_NAME, Kernel::ErrorType::BadParsing);
@@ -69,8 +90,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* filename)
 	OV_ERROR_UNLESS_KRF(stimNode, "Configuration file [" << filename << "] has no node " << STIMULATIONS_NODE_NAME, Kernel::ErrorType::BadParsing);
 
 	//Now load every stimulation and store them in the map with the right class id
-	for (size_t i = 0; i < stimNode->getChildCount(); ++i)
-	{
+	for (size_t i = 0; i < stimNode->getChildCount(); ++i) {
 		tmp = stimNode->getChild(i);
 
 		OV_ERROR_UNLESS_KRF(tmp, "Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]", Kernel::ErrorType::BadParsing);
@@ -140,8 +160,7 @@ bool CBoxAlgorithmClassifierProcessor::initialize()
 
 bool CBoxAlgorithmClassifierProcessor::uninitialize()
 {
-	if (m_classifier)
-	{
+	if (m_classifier) {
 		m_classifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_classifier);
 		m_classifier = nullptr;
@@ -168,16 +187,12 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Check if we have a command first
-	for (size_t i = 0; i < boxContext.getInputChunkCount(1); ++i)
-	{
+	for (size_t i = 0; i < boxContext.getInputChunkCount(1); ++i) {
 		m_stimDecoder.decode(i);
 		if (m_stimDecoder.isHeaderReceived()) { }
-		if (m_stimDecoder.isBufferReceived())
-		{
-			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->size(); ++j)
-			{
-				if (m_stimDecoder.getOutputStimulationSet()->getId(j) == OVTK_StimulationId_TrainCompleted)
-				{
+		if (m_stimDecoder.isBufferReceived()) {
+			for (size_t j = 0; j < m_stimDecoder.getOutputStimulationSet()->size(); ++j) {
+				if (m_stimDecoder.getOutputStimulationSet()->getId(j) == OVTK_StimulationId_TrainCompleted) {
 					CString configFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 					if (!loadClassifier(configFilename.toASCIIString())) { return false; }
 				}
@@ -187,14 +202,12 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	}
 
 	// Classify data
-	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
-	{
+	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i) {
 		const uint64_t startTime = boxContext.getInputChunkStartTime(0, i);
 		const uint64_t endTime   = boxContext.getInputChunkEndTime(0, i);
 
 		m_sampleDecoder.decode(i);
-		if (m_sampleDecoder.isHeaderReceived())
-		{
+		if (m_sampleDecoder.isHeaderReceived()) {
 			m_labelsEncoder.encodeHeader();
 			m_hyperplanesEncoder.encodeHeader();
 			m_probabilitiesEncoder.encodeHeader();
@@ -203,15 +216,14 @@ bool CBoxAlgorithmClassifierProcessor::process()
 			boxContext.markOutputAsReadyToSend(1, startTime, endTime);
 			boxContext.markOutputAsReadyToSend(2, startTime, endTime);
 		}
-		if (m_sampleDecoder.isBufferReceived())
-		{
+		if (m_sampleDecoder.isBufferReceived()) {
 			OV_ERROR_UNLESS_KRF(m_classifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify)
 								&& m_classifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
 								"Classification failed", Kernel::ErrorType::Internal);
 
 			Kernel::TParameterHandler<double> op_classificationState(m_classifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
-			CStimulationSet* set = m_labelsEncoder.getInputStimulationSet();
+			const CStimulationSet* set = m_labelsEncoder.getInputStimulationSet();
 
 			set->resize(1);
 			set->setId(0, m_stimulations[op_classificationState]);
@@ -227,8 +239,7 @@ bool CBoxAlgorithmClassifierProcessor::process()
 			boxContext.markOutputAsReadyToSend(2, startTime, endTime);
 		}
 
-		if (m_sampleDecoder.isEndReceived())
-		{
+		if (m_sampleDecoder.isEndReceived()) {
 			m_labelsEncoder.encodeEnd();
 			m_hyperplanesEncoder.encodeEnd();
 			m_probabilitiesEncoder.encodeEnd();

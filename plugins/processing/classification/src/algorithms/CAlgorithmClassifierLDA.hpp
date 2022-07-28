@@ -1,13 +1,34 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CAlgorithmClassifierLDA.hpp
+/// \brief Classes for the Algorithm LDA.
+/// \author Jussi T. Lindgren (Inria) / Guillaume Serrière (Inria).
+/// \version 2.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
-#include "ovpCAlgorithmLDADiscriminantFunction.h"
+#include "../defines.hpp"
+#include "CAlgorithmLDADiscriminantFunction.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <xml/IXMLNode.h>
-
-#include <stack>
 
 #include <Eigen/Dense>
 
@@ -28,11 +49,11 @@ public:
 	bool train(const Toolkit::IFeatureVectorSet& dataset) override;
 	bool classify(const Toolkit::IFeatureVector& sample, double& classId, Toolkit::IVector& distance, Toolkit::IVector& probability) override;
 	XML::IXMLNode* saveConfig() override;
-	bool loadConfig(XML::IXMLNode* configNode) override;
+	bool loadConfig(XML::IXMLNode* node) override;
 	size_t getNProbabilities() override { return m_discriminantFunctions.size(); }
 	size_t getNDistances() override { return m_discriminantFunctions.size(); }
 
-	_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA)
+	_IsDerivedFromClass_Final_(CAlgorithmClassifier, Algorithm_ClassifierLDA)
 
 protected:
 	// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
@@ -52,8 +73,8 @@ protected:
 	Kernel::IAlgorithmProxy* m_covAlgorithm = nullptr;
 
 private:
-	void loadClassesFromNode(XML::IXMLNode* node);
-	void loadCoefsFromNode(XML::IXMLNode* node);
+	void loadClassesFromNode(const XML::IXMLNode* node);
+	void loadCoefsFromNode(const XML::IXMLNode* node);
 
 	size_t getClassCount() const { return m_nClasses; }
 };
@@ -70,25 +91,22 @@ public:
 	CString getDetailedDescription() const override { return ""; }
 	CString getCategory() const override { return ""; }
 	CString getVersion() const override { return "2.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierLDA; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ClassifierLDA; }
 	IPluginObject* create() override { return new CAlgorithmClassifierLDA; }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
-		prototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", Kernel::ParameterType_Boolean);
-		prototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)",
+		prototype.addInputParameter(ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", Kernel::ParameterType_Boolean);
+		prototype.addInputParameter(ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)",
 									Kernel::ParameterType_Boolean);
-		prototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", Kernel::ParameterType_Float);
+		prototype.addInputParameter(ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", Kernel::ParameterType_Float);
 
 		CAlgorithmClassifierDesc::getAlgorithmPrototype(prototype);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc)
+	_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, Algorithm_ClassifierLDADesc)
 };
 }  // namespace Classification
 }  // namespace Plugins
