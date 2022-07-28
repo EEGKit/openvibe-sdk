@@ -14,7 +14,7 @@ public:
 	bool initialize() override;
 	bool uninitialize() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StreamStructureDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, Algorithm_StreamStructureDecoder)
 
 	// ebml callbacks
 	bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -36,7 +36,7 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamStructureDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_StreamStructureDecoder; }
 	IPluginObject* create() override { return new CStreamStructureDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
@@ -45,7 +45,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_StreamStructureDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, Algorithm_StreamStructureDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

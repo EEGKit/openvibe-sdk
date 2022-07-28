@@ -10,7 +10,7 @@ namespace StreamCodecs {
 bool CChannelLocalisationDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
-	op_bDynamic.initialize(getOutputParameter(OVP_Algorithm_ChannelLocalisationDecoder_OutputParameterId_Dynamic));
+	op_bDynamic.initialize(getOutputParameter(ChannelLocalisationDecoder_OutputParameterId_Dynamic));
 	return true;
 }
 
@@ -45,8 +45,7 @@ void CChannelLocalisationDecoder::processChildData(const void* buffer, const siz
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_ChannelLocalisation) || (top == OVTK_NodeId_Header_ChannelLocalisation_Dynamic))
-	{
+	if ((top == OVTK_NodeId_Header_ChannelLocalisation) || (top == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) {
 		if (top == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { op_bDynamic = (m_readerHelper->getUInt(buffer, size) ? true : false); }
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }

@@ -12,7 +12,7 @@ public:
 	void release() override { delete this; }
 	bool processHeader() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_FeatureVectorEncoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, Algorithm_FeatureVectorEncoder)
 };
 
 class CFeatureVectorEncoderDesc final : public CStreamedMatrixEncoderDesc
@@ -28,7 +28,7 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_FeatureVectorEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_FeatureVectorEncoder; }
 	IPluginObject* create() override { return new CFeatureVectorEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
@@ -37,7 +37,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_FeatureVectorEncoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, Algorithm_FeatureVectorEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

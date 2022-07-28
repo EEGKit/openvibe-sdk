@@ -10,7 +10,7 @@ namespace StreamCodecs {
 bool CChannelUnitsDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
-	op_bDynamic.initialize(getOutputParameter(OVP_Algorithm_ChannelUnitsDecoder_OutputParameterId_Dynamic));
+	op_bDynamic.initialize(getOutputParameter(ChannelUnitsDecoder_OutputParameterId_Dynamic));
 	return true;
 }
 
@@ -37,9 +37,7 @@ void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& identifier)
 
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_ChannelUnits)
-		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
-	) { }
+	if ((top == OVTK_NodeId_Header_ChannelUnits) || (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)) { }
 	else { CStreamedMatrixDecoder::openChild(identifier); }
 }
 
@@ -47,10 +45,7 @@ void CChannelUnitsDecoder::processChildData(const void* buffer, const size_t siz
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_ChannelUnits)
-		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
-	)
-	{
+	if ((top == OVTK_NodeId_Header_ChannelUnits) || (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)) {
 		if (top == OVTK_NodeId_Header_ChannelUnits_Dynamic) { op_bDynamic = (m_readerHelper->getUInt(buffer, size) ? true : false); }
 
 		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_unitIdx*2  ]=m_readerHelper->getDouble(buffer, size);
@@ -63,10 +58,7 @@ void CChannelUnitsDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_ChannelUnits)
-		|| (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)
-	)
-	{
+	if ((top == OVTK_NodeId_Header_ChannelUnits) || (top == OVTK_NodeId_Header_ChannelUnits_Dynamic)) {
 		//if(top==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit)
 		//{
 		// m_unitIdx++;

@@ -7,8 +7,8 @@ namespace StreamCodecs {
 bool CSpectrumEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
-	ip_frequencyAbscissa.initialize(getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa));
-	ip_sampling.initialize(getInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_Sampling));
+	ip_frequencyAbscissa.initialize(getInputParameter(SpectrumEncoder_InputParameterId_FrequencyAbscissa));
+	ip_sampling.initialize(getInputParameter(SpectrumEncoder_InputParameterId_Sampling));
 	return true;
 }
 
@@ -37,8 +37,7 @@ bool CSpectrumEncoder::processHeader()
 	m_writerHelper->openChild(OVTK_NodeId_Header_Spectrum_Sampling);
 	m_writerHelper->setUInt(sampling);
 	m_writerHelper->closeChild();
-	for (size_t i = 0; i < frequencyAbscissa->getDimensionSize(0); ++i)
-	{
+	for (size_t i = 0; i < frequencyAbscissa->getDimensionSize(0); ++i) {
 		m_writerHelper->openChild(OVTK_NodeId_Header_Spectrum_FrequencyAbscissa);
 		m_writerHelper->setDouble(frequencyAbscissa->getBuffer()[i]);
 		m_writerHelper->closeChild();

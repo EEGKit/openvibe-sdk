@@ -23,7 +23,7 @@ public:
 	virtual bool processBuffer() { return true; }
 	virtual bool processEnd() { return true; }
 
-	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, OVP_ClassId_Algorithm_EBMLBaseEncoder)
+	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, Algorithm_EBMLBaseEncoder)
 
 	// ebml callbacks
 	virtual void write(const void* buffer, size_t size);
@@ -41,16 +41,15 @@ class CEBMLBaseEncoderDesc : public IAlgorithmDesc
 public:
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
-		prototype.addOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer",
-									 Kernel::ParameterType_MemoryBuffer);
-		prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader, "Encode header");
-		prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer, "Encode buffer");
-		prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeEnd, "Encode end");
+		prototype.addOutputParameter(EBMLEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", Kernel::ParameterType_MemoryBuffer);
+		prototype.addInputTrigger(EBMLEncoder_InputTriggerId_EncodeHeader, "Encode header");
+		prototype.addInputTrigger(EBMLEncoder_InputTriggerId_EncodeBuffer, "Encode buffer");
+		prototype.addInputTrigger(EBMLEncoder_InputTriggerId_EncodeEnd, "Encode end");
 
 		return true;
 	}
 
-	_IsDerivedFromClass_(IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseEncoderDesc)
+	_IsDerivedFromClass_(IAlgorithmDesc, Algorithm_EBMLBaseEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

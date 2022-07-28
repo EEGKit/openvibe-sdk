@@ -14,7 +14,7 @@ public:
 	bool uninitialize() override;
 	bool processHeader() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SpectrumEncoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, Algorithm_SpectrumEncoder)
 
 protected:
 	Kernel::TParameterHandler<CMatrix*> ip_frequencyAbscissa;
@@ -34,20 +34,20 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SpectrumEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_SpectrumEncoder; }
 	IPluginObject* create() override { return new CSpectrumEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CStreamedMatrixEncoderDesc::getAlgorithmPrototype(prototype);
 
-		prototype.addInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_FrequencyAbscissa, "Frequency abscissa", Kernel::ParameterType_Matrix);
-		prototype.addInputParameter(OVP_Algorithm_SpectrumEncoder_InputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(SpectrumEncoder_InputParameterId_FrequencyAbscissa, "Frequency abscissa", Kernel::ParameterType_Matrix);
+		prototype.addInputParameter(SpectrumEncoder_InputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_SpectrumEncoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, Algorithm_SpectrumEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

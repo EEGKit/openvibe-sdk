@@ -10,7 +10,7 @@ namespace StreamCodecs {
 bool CStimulationDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
-	op_stimulationSet.initialize(getOutputParameter(OVP_Algorithm_StimulationDecoder_OutputParameterId_StimulationSet));
+	op_stimulationSet.initialize(getOutputParameter(StimulationDecoder_OutputParameterId_StimulationSet));
 	return true;
 }
 
@@ -59,23 +59,14 @@ void CStimulationDecoder::processChildData(const void* buffer, const size_t size
 		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation)
 		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID)
 		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration))
-	{
-		if (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
-		{
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) {
+		if (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) {
 			op_stimulationSet->resize(m_readerHelper->getUInt(buffer, size));
 			m_stimulationIdx = 0;
 		}
-		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID)
-		{
-			op_stimulationSet->setId(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
-		}
-		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		{
-			op_stimulationSet->setDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
-		}
-		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)
-		{
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID) { op_stimulationSet->setId(m_stimulationIdx, m_readerHelper->getUInt(buffer, size)); }
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { op_stimulationSet->setDate(m_stimulationIdx, m_readerHelper->getUInt(buffer, size)); }
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) {
 			op_stimulationSet->setDuration(m_stimulationIdx, m_readerHelper->getUInt(buffer, size));
 		}
 	}
@@ -86,12 +77,14 @@ void CStimulationDecoder::closeChild()
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Buffer_Stimulation)
-		|| (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
-		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation)
-		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID)
-		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
-		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) { if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_stimulationIdx++; } }
+	if ((top == OVTK_NodeId_Buffer_Stimulation) 
+		|| (top == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) 
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation) 
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_ID) 
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) 
+		|| (top == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) {
+		if (top == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_stimulationIdx++; }
+	}
 	else { CEBMLBaseDecoder::closeChild(); }
 
 	m_nodes.pop();

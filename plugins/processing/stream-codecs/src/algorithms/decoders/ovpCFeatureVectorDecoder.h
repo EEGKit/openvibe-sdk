@@ -13,7 +13,7 @@ public:
 	void openChild(const EBML::CIdentifier& identifier) override;
 	void processChildData(const void* buffer, const size_t size) override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_FeatureVectorDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, Algorithm_FeatureVectorDecoder)
 
 private:
 	EBML::CIdentifier m_oTop;
@@ -32,7 +32,7 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_FeatureVectorDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_FeatureVectorDecoder; }
 	IPluginObject* create() override { return new CFeatureVectorDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
@@ -41,7 +41,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_FeatureVectorDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, Algorithm_FeatureVectorDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

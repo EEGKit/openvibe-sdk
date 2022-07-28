@@ -14,7 +14,7 @@ public:
 	bool uninitialize() override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, OVP_ClassId_Algorithm_MasterAcquisitionEncoder)
+	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, Algorithm_MasterAcquisitionEncoder)
 
 protected:
 	Kernel::IAlgorithmProxy* m_acquisitionStreamEncoder         = nullptr;
@@ -38,39 +38,34 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.1"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_MasterAcquisitionEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_MasterAcquisitionEncoder; }
 	IPluginObject* create() override { return new CMasterAcquisitionEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
-		prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader, "Encode header");
-		prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer, "Encode buffer");
-		prototype.addInputTrigger(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeEnd, "Encode end");
+		prototype.addInputTrigger(EBMLEncoder_InputTriggerId_EncodeHeader, "Encode header");
+		prototype.addInputTrigger(EBMLEncoder_InputTriggerId_EncodeBuffer, "Encode buffer");
+		prototype.addInputTrigger(EBMLEncoder_InputTriggerId_EncodeEnd, "Encode end");
 
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalMatrix, "Signal matrix", Kernel::ParameterType_Matrix);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_SignalSampling, "Signal sampling rate",
-									Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_StimulationSet, "Stimulation set",
-									Kernel::ParameterType_StimulationSet);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_BufferDuration, "Buffer duration", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelLocalisation, "Channel localisation",
-									Kernel::ParameterType_Matrix);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_ChannelUnits, "Channel units", Kernel::ParameterType_Matrix);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelLocalisationData, "Encode channel localisation data",
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_SignalMatrix, "Signal matrix", Kernel::ParameterType_Matrix);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_SignalSampling, "Signal sampling rate", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_StimulationSet, "Stimulation set", Kernel::ParameterType_StimulationSet);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_BufferDuration, "Buffer duration", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_ChannelLocalisation, "Channel localisation", Kernel::ParameterType_Matrix);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_ChannelUnits, "Channel units", Kernel::ParameterType_Matrix);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_EncodeChannelLocalisationData, "Encode channel localisation data",
 									Kernel::ParameterType_Boolean);
-		prototype.addInputParameter(OVP_Algorithm_MasterAcquisitionEncoder_InputParameterId_EncodeChannelUnitData, "Encode channel unit data",
-									Kernel::ParameterType_Boolean);
+		prototype.addInputParameter(MasterAcquisition_InputParameterId_EncodeChannelUnitData, "Encode channel unit data", Kernel::ParameterType_Boolean);
 
-		prototype.addOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer",
-									 Kernel::ParameterType_MemoryBuffer);
+		prototype.addOutputParameter(EBMLEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", Kernel::ParameterType_MemoryBuffer);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IAlgorithmDesc, OVP_ClassId_Algorithm_MasterAcquisitionEncoderDesc)
+	_IsDerivedFromClass_Final_(IAlgorithmDesc, Algorithm_MasterAcquisitionEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

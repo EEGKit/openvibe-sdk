@@ -9,7 +9,7 @@ namespace StreamCodecs {
 
 bool CEBMLBaseEncoder::initialize()
 {
-	op_buffer.initialize(getOutputParameter(OVP_Algorithm_EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
+	op_buffer.initialize(getOutputParameter(EBMLEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_writer       = createWriter(m_callbackProxy);
 	m_writerHelper = EBML::createWriterHelper();
@@ -37,8 +37,7 @@ bool CEBMLBaseEncoder::uninitialize()
 
 bool CEBMLBaseEncoder::process()
 {
-	if (isInputTriggerActive(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeHeader))
-	{
+	if (isInputTriggerActive(EBMLEncoder_InputTriggerId_EncodeHeader)) {
 		m_writerHelper->openChild(OVTK_NodeId_Header);
 		m_writerHelper->openChild(OVTK_NodeId_Header_StreamType);
 		m_writerHelper->setUInt(0);
@@ -48,23 +47,21 @@ bool CEBMLBaseEncoder::process()
 		m_writerHelper->closeChild();
 		this->processHeader();
 		m_writerHelper->closeChild();
-		activateOutputTrigger(OVP_Algorithm_EBMLEncoder_OutputTriggerId_MemoryBufferUpdated, true);
+		activateOutputTrigger(EBMLEncoder_OutputTriggerId_MemoryBufferUpdated, true);
 	}
 
-	if (isInputTriggerActive(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeBuffer))
-	{
+	if (isInputTriggerActive(EBMLEncoder_InputTriggerId_EncodeBuffer)) {
 		m_writerHelper->openChild(OVTK_NodeId_Buffer);
 		this->processBuffer();
 		m_writerHelper->closeChild();
-		activateOutputTrigger(OVP_Algorithm_EBMLEncoder_OutputTriggerId_MemoryBufferUpdated, true);
+		activateOutputTrigger(EBMLEncoder_OutputTriggerId_MemoryBufferUpdated, true);
 	}
 
-	if (isInputTriggerActive(OVP_Algorithm_EBMLEncoder_InputTriggerId_EncodeEnd))
-	{
+	if (isInputTriggerActive(EBMLEncoder_InputTriggerId_EncodeEnd)) {
 		m_writerHelper->openChild(OVTK_NodeId_End);
 		this->processEnd();
 		m_writerHelper->closeChild();
-		activateOutputTrigger(OVP_Algorithm_EBMLEncoder_OutputTriggerId_MemoryBufferUpdated, true);
+		activateOutputTrigger(EBMLEncoder_OutputTriggerId_MemoryBufferUpdated, true);
 	}
 
 	return true;

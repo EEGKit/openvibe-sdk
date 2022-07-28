@@ -14,7 +14,7 @@ public:
 	bool uninitialize() override;
 	bool processHeader() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SignalEncoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, Algorithm_SignalEncoder)
 
 protected:
 	Kernel::TParameterHandler<uint64_t> ip_sampling;
@@ -34,17 +34,17 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_SignalEncoder; }
 	IPluginObject* create() override { return new CSignalEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CStreamedMatrixEncoderDesc::getAlgorithmPrototype(prototype);
-		prototype.addInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(SignalEncoder_InputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_SignalEncoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, Algorithm_SignalEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

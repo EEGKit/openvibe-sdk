@@ -14,7 +14,7 @@ public:
 	bool initialize() override;
 	bool uninitialize() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelLocalisationDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, Algorithm_ChannelLocalisationDecoder)
 
 	// ebml callbacks
 	bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -42,19 +42,19 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelLocalisationDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ChannelLocalisationDecoder; }
 	IPluginObject* create() override { return new CChannelLocalisationDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
 
-		prototype.addOutputParameter(OVP_Algorithm_ChannelLocalisationDecoder_OutputParameterId_Dynamic, "Dynamic", Kernel::ParameterType_Boolean);
+		prototype.addOutputParameter(ChannelLocalisationDecoder_OutputParameterId_Dynamic, "Dynamic", Kernel::ParameterType_Boolean);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_ChannelLocalisationDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, Algorithm_ChannelLocalisationDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

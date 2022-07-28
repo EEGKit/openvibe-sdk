@@ -4,16 +4,9 @@ namespace OpenViBE {
 namespace Plugins {
 namespace StreamCodecs {
 
-CEBMLBaseDecoder::CEBMLBaseDecoder()
-	: m_callbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild, &CEBMLBaseDecoder::processChildData,
-					  &CEBMLBaseDecoder::closeChild) {}
-
-// ________________________________________________________________________________________________________________
-//
-
 bool CEBMLBaseDecoder::initialize()
 {
-	ip_bufferToDecode.initialize(getInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode));
+	ip_bufferToDecode.initialize(getInputParameter(EBMLDecoder_InputParameterId_MemoryBufferToDecode));
 	m_readerHelper = EBML::createReaderHelper();
 	m_reader       = createReader(m_callbackProxy);
 
@@ -57,9 +50,9 @@ bool CEBMLBaseDecoder::isMasterChild(const EBML::CIdentifier& identifier)
 
 void CEBMLBaseDecoder::openChild(const EBML::CIdentifier& identifier)
 {
-	if (identifier == OVTK_NodeId_Header) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader, true); }
-	if (identifier == OVTK_NodeId_Buffer) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, true); }
-	if (identifier == OVTK_NodeId_End) { activateOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, true); }
+	if (identifier == OVTK_NodeId_Header) { activateOutputTrigger(EBMLDecoder_OutputTriggerId_ReceivedHeader, true); }
+	if (identifier == OVTK_NodeId_Buffer) { activateOutputTrigger(EBMLDecoder_OutputTriggerId_ReceivedBuffer, true); }
+	if (identifier == OVTK_NodeId_End) { activateOutputTrigger(EBMLDecoder_OutputTriggerId_ReceivedEnd, true); }
 }
 
 }  // namespace StreamCodecs

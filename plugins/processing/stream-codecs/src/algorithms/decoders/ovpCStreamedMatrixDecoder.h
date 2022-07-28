@@ -15,7 +15,7 @@ public:
 	bool initialize() override;
 	bool uninitialize() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_StreamedMatrixDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, Algorithm_StreamedMatrixDecoder)
 
 	// ebml callbacks
 	bool isMasterChild(const EBML::CIdentifier& id) override;
@@ -51,17 +51,17 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamedMatrixDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_StreamedMatrixDecoder; }
 	IPluginObject* create() override { return new CStreamedMatrixDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CEBMLBaseDecoderDesc::getAlgorithmPrototype(prototype);
-		prototype.addOutputParameter(OVP_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix, "Matrix", Kernel::ParameterType_Matrix);
+		prototype.addOutputParameter(StreamedMatrixDecoder_OutputParameterId_Matrix, "Matrix", Kernel::ParameterType_Matrix);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_StreamedMatrixDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, Algorithm_StreamedMatrixDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

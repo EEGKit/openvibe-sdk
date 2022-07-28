@@ -13,16 +13,16 @@ bool CExperimentInfoDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
-	op_ExperimentID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentID));
-	op_experimentDate.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentDate));
-	op_subjectID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectID));
-	op_subjectName.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectName));
-	op_subjectAge.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectAge));
-	op_subjectGender.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectGender));
-	op_LaboratoryID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryID));
-	op_pLaboratoryName.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryName));
-	op_TechnicianID.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianID));
-	op_pTechnicianName.initialize(getOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianName));
+	op_ExperimentID.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_ExperimentID));
+	op_experimentDate.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_ExperimentDate));
+	op_subjectID.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectID));
+	op_subjectName.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectName));
+	op_subjectAge.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectAge));
+	op_subjectGender.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectGender));
+	op_LaboratoryID.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_LaboratoryID));
+	op_pLaboratoryName.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_LaboratoryName));
+	op_TechnicianID.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_TechnicianID));
+	op_pTechnicianName.initialize(getOutputParameter(ExperimentInfoDecoder_OutputParameterId_TechnicianName));
 
 	return true;
 }
@@ -107,8 +107,7 @@ void CExperimentInfoDecoder::processChildData(const void* buffer, const size_t s
 		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryID)
 		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_LaboratoryName)
 		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianID)
-		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianName))
-	{
+		|| (top == OVTK_NodeId_Header_ExperimentInfo_Context_TechnicianName)) {
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Experiment_ID) { op_ExperimentID = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Experiment_Date) { op_experimentDate->set(m_readerHelper->getStr(buffer, size)); }
 		if (top == OVTK_NodeId_Header_ExperimentInfo_Subject_ID) { op_subjectID = m_readerHelper->getUInt(buffer, size); }

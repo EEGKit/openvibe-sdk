@@ -17,7 +17,7 @@ public:
 	bool processClock(Kernel::CMessageClock& msg) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_EncoderAlgorithmTest)
 
 protected:
 	std::array<Kernel::IAlgorithmProxy*, 7> m_encoders;
@@ -46,7 +46,7 @@ public:
 	CString getCategory() const override { return "Tests/Algorithms"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest; }
+	CIdentifier getCreatedClass() const override { return Box_EncoderAlgorithmTest; }
 	IPluginObject* create() override { return new CEncoderAlgorithmTest(); }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
@@ -62,7 +62,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTestDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_EncoderAlgorithmTestDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

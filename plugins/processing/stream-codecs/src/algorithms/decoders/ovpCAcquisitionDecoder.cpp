@@ -4,21 +4,16 @@ namespace OpenViBE {
 namespace Plugins {
 namespace StreamCodecs {
 
-CAcquisitionDecoder::CAcquisitionDecoder() {}
-
-// ________________________________________________________________________________________________________________
-//
-
 bool CAcquisitionDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
-	op_bufferDuration.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_BufferDuration));
-	op_experimentInfoStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ExperimentInfoStream));
-	op_signalStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_SignalStream));
-	op_stimulationStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_StimulationStream));
-	op_channelLocalisationStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelLocalisationStream));
-	op_channelUnitsStream.initialize(getOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelUnitsStream));
+	op_bufferDuration.initialize(getOutputParameter(AcquisitionDecoder_OutputParameterId_BufferDuration));
+	op_experimentInfoStream.initialize(getOutputParameter(AcquisitionDecoder_OutputParameterId_ExperimentInfoStream));
+	op_signalStream.initialize(getOutputParameter(AcquisitionDecoder_OutputParameterId_SignalStream));
+	op_stimulationStream.initialize(getOutputParameter(AcquisitionDecoder_OutputParameterId_StimulationStream));
+	op_channelLocalisationStream.initialize(getOutputParameter(AcquisitionDecoder_OutputParameterId_ChannelLocalisationStream));
+	op_channelUnitsStream.initialize(getOutputParameter(AcquisitionDecoder_OutputParameterId_ChannelUnitsStream));
 
 	return true;
 }
@@ -72,8 +67,7 @@ void CAcquisitionDecoder::openChild(const EBML::CIdentifier& identifier)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_Signal)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_Stimulation)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
-		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
-	) { }
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)) { }
 	else { CEBMLBaseDecoder::openChild(identifier); }
 }
 
@@ -91,9 +85,7 @@ void CAcquisitionDecoder::processChildData(const void* buffer, const size_t size
 		|| (top == OVTK_NodeId_Acquisition_Buffer_Signal)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_Stimulation)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
-		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
-	)
-	{
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)) {
 		if (top == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_bufferDuration = m_readerHelper->getUInt(buffer, size); }
 		if (top == OVTK_NodeId_Acquisition_Header_ExperimentInfo) { appendMemoryBuffer(op_experimentInfoStream, buffer, size); }
 		if (top == OVTK_NodeId_Acquisition_Header_Signal) { appendMemoryBuffer(op_signalStream, buffer, size); }
@@ -123,8 +115,7 @@ void CAcquisitionDecoder::closeChild()
 		|| (top == OVTK_NodeId_Acquisition_Buffer_Signal)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_Stimulation)
 		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
-		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
-	) { }
+		|| (top == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)) { }
 	else { CEBMLBaseDecoder::closeChild(); }
 
 	m_nodes.pop();
@@ -132,8 +123,7 @@ void CAcquisitionDecoder::closeChild()
 
 void CAcquisitionDecoder::appendMemoryBuffer(CMemoryBuffer* memoryBuffer, const void* buffer, const size_t size)
 {
-	if (memoryBuffer)
-	{
+	if (memoryBuffer) {
 		const size_t currentBufferSize = memoryBuffer->getSize();
 		memoryBuffer->setSize(currentBufferSize + size, false);
 		memcpy(memoryBuffer->getDirectPointer() + currentBufferSize, buffer, size);

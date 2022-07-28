@@ -7,7 +7,7 @@ namespace StreamCodecs {
 bool CSignalEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
-	ip_sampling.initialize(getInputParameter(OVP_Algorithm_SignalEncoder_InputParameterId_Sampling));
+	ip_sampling.initialize(getInputParameter(SignalEncoder_InputParameterId_Sampling));
 	return true;
 }
 

@@ -10,7 +10,7 @@ namespace StreamCodecs {
 bool CSignalDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
-	op_sampling.initialize(getOutputParameter(OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling));
+	op_sampling.initialize(getOutputParameter(SignalDecoder_OutputParameterId_Sampling));
 	return true;
 }
 
@@ -45,8 +45,7 @@ void CSignalDecoder::processChildData(const void* buffer, const size_t size)
 {
 	EBML::CIdentifier& top = m_nodes.top();
 
-	if ((top == OVTK_NodeId_Header_Signal) || (top == OVTK_NodeId_Header_Signal_Sampling))
-	{
+	if ((top == OVTK_NodeId_Header_Signal) || (top == OVTK_NodeId_Header_Signal_Sampling)) {
 		if (top == OVTK_NodeId_Header_Signal_Sampling) { op_sampling = m_readerHelper->getUInt(buffer, size); }
 	}
 	else { CStreamedMatrixDecoder::processChildData(buffer, size); }

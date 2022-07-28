@@ -7,7 +7,7 @@ namespace StreamCodecs {
 bool CStreamedMatrixEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
-	ip_pMatrix.initialize(getInputParameter(OVP_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
+	ip_pMatrix.initialize(getInputParameter(StreamedMatrixEncoder_InputParameterId_Matrix));
 	m_size = 0;
 	return true;
 }
@@ -33,22 +33,18 @@ bool CStreamedMatrixEncoder::processHeader()
 	m_writerHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_DimensionCount);
 	m_writerHelper->setUInt(matrix->getDimensionCount());
 	m_writerHelper->closeChild();
-	for (size_t i = 0; i < matrix->getDimensionCount(); ++i)
-	{
+	for (size_t i = 0; i < matrix->getDimensionCount(); ++i) {
 		m_size *= matrix->getDimensionSize(i);
 		m_writerHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension);
 		m_writerHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Size);
 		m_writerHelper->setUInt(matrix->getDimensionSize(i));
 		m_writerHelper->closeChild();
 		bool shouldSendLabels = false;
-		for (j = 0; j < matrix->getDimensionSize(i) && !shouldSendLabels; ++j)
-		{
+		for (j = 0; j < matrix->getDimensionSize(i) && !shouldSendLabels; ++j) {
 			if (matrix->getDimensionLabel(i, j) != nullptr && matrix->getDimensionLabel(i, j)[0] != '\0') { shouldSendLabels = true; }
 		}
-		if (shouldSendLabels)
-		{
-			for (j = 0; j < matrix->getDimensionSize(i); ++j)
-			{
+		if (shouldSendLabels) {
+			for (j = 0; j < matrix->getDimensionSize(i); ++j) {
 				m_writerHelper->openChild(OVTK_NodeId_Header_StreamedMatrix_Dimension_Label);
 				m_writerHelper->setStr(matrix->getDimensionLabel(i, j));
 				m_writerHelper->closeChild();

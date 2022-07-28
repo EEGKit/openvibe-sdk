@@ -14,7 +14,7 @@ public:
 	bool uninitialize() override;
 	bool processHeader() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_ExperimentInfoEncoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoder, Algorithm_ExperimentInfoEncoder)
 
 protected:
 	Kernel::TParameterHandler<uint64_t> ip_ExperimentID;
@@ -44,28 +44,28 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ExperimentInfoEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ExperimentInfoEncoder; }
 	IPluginObject* create() override { return new CExperimentInfoEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
 
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentID, "Experiment identifier", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_ExperimentDate, "Experiment date", Kernel::ParameterType_String);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectName, "Subject name", Kernel::ParameterType_String);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryID, "Laboratory identifier", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_LaboratoryName, "Laboratory name", Kernel::ParameterType_String);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianID, "Technician identifier", Kernel::ParameterType_UInteger);
-		prototype.addInputParameter(OVP_Algorithm_ExperimentInfoEncoder_InputParameterId_TechnicianName, "Technician name", Kernel::ParameterType_String);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_ExperimentID, "Experiment identifier", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_ExperimentDate, "Experiment date", Kernel::ParameterType_String);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_SubjectName, "Subject name", Kernel::ParameterType_String);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_LaboratoryID, "Laboratory identifier", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_LaboratoryName, "Laboratory name", Kernel::ParameterType_String);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_TechnicianID, "Technician identifier", Kernel::ParameterType_UInteger);
+		prototype.addInputParameter(ExperimentInfoEncoder_InputParameterId_TechnicianName, "Technician name", Kernel::ParameterType_String);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_ExperimentInfoEncoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoderDesc, Algorithm_ExperimentInfoEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

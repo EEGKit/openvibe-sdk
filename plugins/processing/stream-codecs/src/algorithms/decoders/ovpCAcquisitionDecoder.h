@@ -10,12 +10,12 @@ namespace StreamCodecs {
 class CAcquisitionDecoder final : public CEBMLBaseDecoder
 {
 public:
-	CAcquisitionDecoder();
+	CAcquisitionDecoder() { }
 	void release() override { delete this; }
 	bool initialize() override;
 	bool uninitialize() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_AcquisitionDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, Algorithm_AcquisitionDecoder)
 
 	// ebml callbacks
 	bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -50,28 +50,26 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.1"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_AcquisitionDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_AcquisitionDecoder; }
 	IPluginObject* create() override { return new CAcquisitionDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CEBMLBaseDecoderDesc::getAlgorithmPrototype(prototype);
 
-		prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_BufferDuration, "Buffer duration", Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ExperimentInfoStream, "Experiment information stream",
+		prototype.addOutputParameter(AcquisitionDecoder_OutputParameterId_BufferDuration, "Buffer duration", Kernel::ParameterType_UInteger);
+		prototype.addOutputParameter(AcquisitionDecoder_OutputParameterId_ExperimentInfoStream, "Experiment information stream",
 									 Kernel::ParameterType_MemoryBuffer);
-		prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_SignalStream, "Signal stream", Kernel::ParameterType_MemoryBuffer);
-		prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_StimulationStream, "Stimulation stream",
+		prototype.addOutputParameter(AcquisitionDecoder_OutputParameterId_SignalStream, "Signal stream", Kernel::ParameterType_MemoryBuffer);
+		prototype.addOutputParameter(AcquisitionDecoder_OutputParameterId_StimulationStream, "Stimulation stream", Kernel::ParameterType_MemoryBuffer);
+		prototype.addOutputParameter(AcquisitionDecoder_OutputParameterId_ChannelLocalisationStream, "Channel localisation stream",
 									 Kernel::ParameterType_MemoryBuffer);
-		prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelLocalisationStream, "Channel localisation stream",
-									 Kernel::ParameterType_MemoryBuffer);
-		prototype.addOutputParameter(OVP_Algorithm_AcquisitionDecoder_OutputParameterId_ChannelUnitsStream, "Channel units stream",
-									 Kernel::ParameterType_MemoryBuffer);
+		prototype.addOutputParameter(AcquisitionDecoder_OutputParameterId_ChannelUnitsStream, "Channel units stream", Kernel::ParameterType_MemoryBuffer);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_AcquisitionDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, Algorithm_AcquisitionDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

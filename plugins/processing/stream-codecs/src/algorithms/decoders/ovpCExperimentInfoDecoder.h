@@ -15,7 +15,7 @@ public:
 	bool initialize() override;
 	bool uninitialize() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, OVP_ClassId_Algorithm_ExperimentInfoDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoder, Algorithm_ExperimentInfoDecoder)
 
 	// ebml callbacks
 	bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -54,31 +54,31 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ExperimentInfoDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ExperimentInfoDecoder; }
 	IPluginObject* create() override { return new CExperimentInfoDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CEBMLBaseDecoderDesc::getAlgorithmPrototype(prototype);
 
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentID, "Experiment identifier",
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_ExperimentID, "Experiment identifier",
 									 Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_ExperimentDate, "Experiment date", Kernel::ParameterType_String);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectName, "Subject name", Kernel::ParameterType_String);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryID, "Laboratory identifier",
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_ExperimentDate, "Experiment date", Kernel::ParameterType_String);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectID, "Subject identifier", Kernel::ParameterType_UInteger);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectName, "Subject name", Kernel::ParameterType_String);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectAge, "Subject age", Kernel::ParameterType_UInteger);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_SubjectGender, "Subject gender", Kernel::ParameterType_UInteger);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_LaboratoryID, "Laboratory identifier",
 									 Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_LaboratoryName, "Laboratory name", Kernel::ParameterType_String);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianID, "Technician identifier",
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_LaboratoryName, "Laboratory name", Kernel::ParameterType_String);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_TechnicianID, "Technician identifier",
 									 Kernel::ParameterType_UInteger);
-		prototype.addOutputParameter(OVP_Algorithm_ExperimentInfoDecoder_OutputParameterId_TechnicianName, "Technician name", Kernel::ParameterType_String);
+		prototype.addOutputParameter(ExperimentInfoDecoder_OutputParameterId_TechnicianName, "Technician name", Kernel::ParameterType_String);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_ExperimentInfoDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseDecoderDesc, Algorithm_ExperimentInfoDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

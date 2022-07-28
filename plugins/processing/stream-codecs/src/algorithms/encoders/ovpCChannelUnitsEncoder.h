@@ -14,7 +14,7 @@ public:
 	bool uninitialize() override;
 	bool processHeader() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_ChannelUnitsEncoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoder, Algorithm_ChannelUnitsEncoder)
 
 protected:
 	Kernel::TParameterHandler<bool> ip_bDynamic;
@@ -34,20 +34,20 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ChannelUnitsEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_ChannelUnitsEncoder; }
 	IPluginObject* create() override { return new CChannelUnitsEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CStreamedMatrixEncoderDesc::getAlgorithmPrototype(prototype);
 
-		prototype.addInputParameter(OVP_Algorithm_ChannelUnitsEncoder_InputParameterId_Dynamic, "Dynamic", Kernel::ParameterType_Boolean);
-		// prototype.addInputParameter(OVP_Algorithm_ChannelUnitsEncoder_InputParameterId_MeasurementUnits, "Measurement units", Kernel::ParameterType_Matrix);
+		prototype.addInputParameter(ChannelUnitsEncoder_InputParameterId_Dynamic, "Dynamic", Kernel::ParameterType_Boolean);
+		// prototype.addInputParameter(ChannelUnitsEncoder_InputParameterId_MeasurementUnits, "Measurement units", Kernel::ParameterType_Matrix);
 
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_ChannelUnitsEncoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixEncoderDesc, Algorithm_ChannelUnitsEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

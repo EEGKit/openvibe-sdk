@@ -14,13 +14,15 @@ namespace StreamCodecs {
 class CEBMLBaseDecoder : public Toolkit::TAlgorithm<IAlgorithm>
 {
 public:
-	CEBMLBaseDecoder();
+	CEBMLBaseDecoder()
+		: m_callbackProxy(*this, &CEBMLBaseDecoder::isMasterChild, &CEBMLBaseDecoder::openChild,
+						  &CEBMLBaseDecoder::processChildData, &CEBMLBaseDecoder::closeChild) {}
 	void release() override { delete this; }
 	bool initialize() override;
 	bool uninitialize() override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, OVP_ClassId_Algorithm_EBMLBaseDecoder)
+	_IsDerivedFromClass_Final_(Toolkit::TAlgorithm<IAlgorithm>, Algorithm_EBMLBaseDecoder)
 
 	// ebml callbacks
 	virtual bool isMasterChild(const EBML::CIdentifier& identifier);
@@ -41,17 +43,16 @@ class CEBMLBaseDecoderDesc : public IAlgorithmDesc
 public:
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
-		prototype.addInputParameter(OVP_Algorithm_EBMLDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode",
-									Kernel::ParameterType_MemoryBuffer);
+		prototype.addInputParameter(EBMLDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode", Kernel::ParameterType_MemoryBuffer);
 
-		prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedHeader, "Received header");
-		prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");
-		prototype.addOutputTrigger(OVP_Algorithm_EBMLDecoder_OutputTriggerId_ReceivedEnd, "Received end");
+		prototype.addOutputTrigger(EBMLDecoder_OutputTriggerId_ReceivedHeader, "Received header");
+		prototype.addOutputTrigger(EBMLDecoder_OutputTriggerId_ReceivedBuffer, "Received buffer");
+		prototype.addOutputTrigger(EBMLDecoder_OutputTriggerId_ReceivedEnd, "Received end");
 
 		return true;
 	}
 
-	_IsDerivedFromClass_(IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseDecoderDesc)
+	_IsDerivedFromClass_(IAlgorithmDesc, Algorithm_EBMLBaseDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

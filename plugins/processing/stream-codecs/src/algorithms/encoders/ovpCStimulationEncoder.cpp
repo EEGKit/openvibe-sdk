@@ -7,7 +7,7 @@ namespace StreamCodecs {
 bool CStimulationEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
-	ip_stimSet.initialize(getInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
+	ip_stimSet.initialize(getInputParameter(StimulationEncoder_InputParameterId_StimulationSet));
 	return true;
 }
 
@@ -29,8 +29,7 @@ bool CStimulationEncoder::processBuffer()
 	m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations);
 	m_writerHelper->setUInt(stimulationSet->size());
 	m_writerHelper->closeChild();
-	for (size_t i = 0; i < stimulationSet->size(); ++i)
-	{
+	for (size_t i = 0; i < stimulationSet->size(); ++i) {
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation);
 		m_writerHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_ID);
 		m_writerHelper->setUInt(stimulationSet->getId(i));

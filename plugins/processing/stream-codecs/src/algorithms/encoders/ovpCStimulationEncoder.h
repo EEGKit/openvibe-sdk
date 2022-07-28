@@ -14,7 +14,7 @@ public:
 	bool uninitialize() override;
 	bool processBuffer() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoder, OVP_ClassId_Algorithm_StimulationEncoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoder, Algorithm_StimulationEncoder)
 
 protected:
 	Kernel::TParameterHandler<CStimulationSet*> ip_stimSet;
@@ -33,17 +33,17 @@ public:
 	CString getCategory() const override { return "Stream codecs/Encoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StimulationEncoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_StimulationEncoder; }
 	IPluginObject* create() override { return new CStimulationEncoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CEBMLBaseEncoderDesc::getAlgorithmPrototype(prototype);
-		prototype.addInputParameter(OVP_Algorithm_StimulationEncoder_InputParameterId_StimulationSet, "Stimulation set", Kernel::ParameterType_StimulationSet);
+		prototype.addInputParameter(StimulationEncoder_InputParameterId_StimulationSet, "Stimulation set", Kernel::ParameterType_StimulationSet);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoderDesc, OVP_ClassId_Algorithm_StimulationEncoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CEBMLBaseEncoderDesc, Algorithm_StimulationEncoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins

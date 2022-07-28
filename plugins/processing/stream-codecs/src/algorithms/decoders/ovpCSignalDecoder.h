@@ -14,7 +14,7 @@ public:
 	bool initialize() override;
 	bool uninitialize() override;
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_SignalDecoder)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoder, Algorithm_SignalDecoder)
 
 	// ebml callbacks
 	bool isMasterChild(const EBML::CIdentifier& identifier) override;
@@ -42,17 +42,17 @@ public:
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalDecoder; }
+	CIdentifier getCreatedClass() const override { return Algorithm_SignalDecoder; }
 	IPluginObject* create() override { return new CSignalDecoder(); }
 
 	bool getAlgorithmPrototype(Kernel::IAlgorithmProto& prototype) const override
 	{
 		CStreamedMatrixDecoderDesc::getAlgorithmPrototype(prototype);
-		prototype.addOutputParameter(OVP_Algorithm_SignalDecoder_OutputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
+		prototype.addOutputParameter(SignalDecoder_OutputParameterId_Sampling, "Sampling rate", Kernel::ParameterType_UInteger);
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, OVP_ClassId_Algorithm_SignalDecoderDesc)
+	_IsDerivedFromClass_Final_(StreamCodecs::CStreamedMatrixDecoderDesc, Algorithm_SignalDecoderDesc)
 };
 }  // namespace StreamCodecs
 }  // namespace Plugins
