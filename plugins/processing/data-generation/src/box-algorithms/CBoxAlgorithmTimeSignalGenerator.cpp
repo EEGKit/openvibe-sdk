@@ -1,4 +1,27 @@
-#include "ovpCBoxAlgorithmTimeSignalGenerator.h"
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmTimeSignalGenerator.cpp
+/// \brief Classes implementation for the Box Time signal.
+/// \author Yann Renard (Inria).
+/// \version 1.1.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
+#include "CBoxAlgorithmTimeSignalGenerator.hpp"
 
 namespace OpenViBE {
 namespace Plugins {
@@ -34,8 +57,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 {
 	Kernel::IBoxIO* boxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-	if (!m_headerSent)
-	{
+	if (!m_headerSent) {
 		m_encoder.getInputSamplingRate() = m_sampling;
 
 		CMatrix* matrix = m_encoder.getInputMatrix();
@@ -49,16 +71,14 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 		boxContext->markOutputAsReadyToSend(0, 0, 0);
 	}
-	else
-	{
+	else {
 		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
 		// This way we will always create the correct number of samples for frequencies that are above 128Hz
 		const uint64_t nextStepDate = CTime(uint64_t(this->getPlayerContext().getCurrentTime() + (1ULL << 25))).toSampleCount(m_sampling);
-		while (m_nSentSample + m_nGeneratedEpochSample < nextStepDate)
-		{
+		while (m_nSentSample + m_nGeneratedEpochSample < nextStepDate) {
 			double* buffer = m_encoder.getInputMatrix()->getBuffer();
 
-			for (size_t i = 0; i < m_nGeneratedEpochSample; ++i) { buffer[i] = (i + m_nSentSample) / double(m_sampling); }
+			for (size_t i = 0; i < m_nGeneratedEpochSample; ++i) { buffer[i] = double(i + m_nSentSample) / double(m_sampling); }
 
 			m_encoder.encodeBuffer();
 
