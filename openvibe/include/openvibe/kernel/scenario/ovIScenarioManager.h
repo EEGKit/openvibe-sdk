@@ -3,7 +3,7 @@
 #include "../ovIKernelObject.h"
 
 namespace OpenViBE {
-class IMemoryBuffer;
+class CMemoryBuffer;
 
 namespace Kernel {
 class IScenario;
@@ -53,7 +53,7 @@ public:
 	 * @retval true In case of success
 	 * @retval false In case of failure
 	 */
-	virtual bool importScenario(CIdentifier& newScenarioID, const IMemoryBuffer& buffer, const CIdentifier& scenarioImporterAlgorithmID) = 0;
+	virtual bool importScenario(CIdentifier& newScenarioID, const CMemoryBuffer& buffer, const CIdentifier& scenarioImporterAlgorithmID) = 0;
 
 	/**
 	 * @brief Import a scenario from a file and insert it in the scenario manager
@@ -73,7 +73,7 @@ public:
 	 * @retval true In case of success
 	 * @retval false In case of failure
 	 */
-	virtual bool exportScenario(IMemoryBuffer& buffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmID) const = 0;
+	virtual bool exportScenario(CMemoryBuffer& buffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmID) const = 0;
 
 	/**
 	 * @brief Export a scenario to a file

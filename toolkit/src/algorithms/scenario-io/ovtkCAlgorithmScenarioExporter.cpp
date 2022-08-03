@@ -11,14 +11,14 @@ class CAlgorithmScenarioExporterHelper
 public:
 
 	CAlgorithmScenarioExporterHelper(Kernel::IAlgorithmContext& context, CAlgorithmScenarioExporter& parent);
-	bool exportBox(IMemoryBuffer& buffer, const Kernel::IBox& box) const;
-	bool exportComment(IMemoryBuffer& buffer, const Kernel::IComment& comment) const;
-	bool exportMetadata(IMemoryBuffer& buffer, const Kernel::IMetadata& metadata) const;
-	bool exportSetting(IMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const;
-	bool exportInput(IMemoryBuffer& buffer, const Kernel::IScenario& scenario, size_t index) const;
-	bool exportOutput(IMemoryBuffer& buffer, const Kernel::IScenario& scenario, size_t index) const;
-	bool exportLink(IMemoryBuffer& buffer, const Kernel::ILink& link) const;
-	void exportAttributes(const Kernel::IAttributable& attributable, IMemoryBuffer& buffer, const CIdentifier& idAttributes,
+	bool exportBox(CMemoryBuffer& buffer, const Kernel::IBox& box) const;
+	bool exportComment(CMemoryBuffer& buffer, const Kernel::IComment& comment) const;
+	bool exportMetadata(CMemoryBuffer& buffer, const Kernel::IMetadata& metadata) const;
+	bool exportSetting(CMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const;
+	bool exportInput(CMemoryBuffer& buffer, const Kernel::IScenario& scenario, size_t index) const;
+	bool exportOutput(CMemoryBuffer& buffer, const Kernel::IScenario& scenario, size_t index) const;
+	bool exportLink(CMemoryBuffer& buffer, const Kernel::ILink& link) const;
+	void exportAttributes(const Kernel::IAttributable& attributable, CMemoryBuffer& buffer, const CIdentifier& idAttributes,
 						  const CIdentifier& idAttribute, const CIdentifier& idAttributeID, const CIdentifier& idAttributeValue) const;
 
 
@@ -39,7 +39,7 @@ protected:
 	OVTK_Algorithm_ScenarioExporter_NodeId_##AttributableName##_Attribute_Value); \
 	} while (0)
 
-void CAlgorithmScenarioExporterHelper::exportAttributes(const Kernel::IAttributable& attributable, IMemoryBuffer& buffer, const CIdentifier& idAttributes,
+void CAlgorithmScenarioExporterHelper::exportAttributes(const Kernel::IAttributable& attributable, CMemoryBuffer& buffer, const CIdentifier& idAttributes,
 														const CIdentifier& idAttribute, const CIdentifier& idAttributeID,
 														const CIdentifier& idAttributeValue) const
 {
@@ -76,8 +76,8 @@ bool CAlgorithmScenarioExporter::process()
 
 	OV_ERROR_UNLESS_KRF(scenario, "Input scenario is NULL", Kernel::ErrorType::BadInput);
 
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
-	IMemoryBuffer* buffer = op_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
+	CMemoryBuffer* buffer = op_buffer;
 
 	OV_ERROR_UNLESS_KRF(buffer, "Output memory buffer is NULL", Kernel::ErrorType::BadOutput);
 
@@ -155,7 +155,7 @@ bool CAlgorithmScenarioExporter::process()
 CAlgorithmScenarioExporterHelper::CAlgorithmScenarioExporterHelper(Kernel::IAlgorithmContext& context, CAlgorithmScenarioExporter& parent)
 	: m_algorithmContext(context), m_parent(parent) {}
 
-bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& buffer, const Kernel::IBox& box) const
+bool CAlgorithmScenarioExporterHelper::exportBox(CMemoryBuffer& buffer, const Kernel::IBox& box) const
 {
 	m_parent.exportStart(buffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box);
 	m_parent.exportIdentifier(buffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_ID, box.getIdentifier());
@@ -248,7 +248,7 @@ bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& buffer, const Ke
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportComment(IMemoryBuffer& buffer, const Kernel::IComment& comment) const
+bool CAlgorithmScenarioExporterHelper::exportComment(CMemoryBuffer& buffer, const Kernel::IComment& comment) const
 {
 	m_parent.exportStart(buffer, OVTK_Algorithm_ScenarioExporter_NodeId_Comment);
 	m_parent.exportIdentifier(buffer, OVTK_Algorithm_ScenarioExporter_NodeId_Comment_ID, comment.getIdentifier());
@@ -261,7 +261,7 @@ bool CAlgorithmScenarioExporterHelper::exportComment(IMemoryBuffer& buffer, cons
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportMetadata(IMemoryBuffer& buffer, const Kernel::IMetadata& metadata) const
+bool CAlgorithmScenarioExporterHelper::exportMetadata(CMemoryBuffer& buffer, const Kernel::IMetadata& metadata) const
 {
 	m_parent.exportStart(buffer, OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry);
 	m_parent.exportIdentifier(buffer, OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_ID, metadata.getIdentifier());
@@ -271,7 +271,7 @@ bool CAlgorithmScenarioExporterHelper::exportMetadata(IMemoryBuffer& buffer, con
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& buffer, const Kernel::ILink& link) const
+bool CAlgorithmScenarioExporterHelper::exportLink(CMemoryBuffer& buffer, const Kernel::ILink& link) const
 {
 	CIdentifier srcBoxID;
 	CIdentifier dstBoxID;
@@ -309,7 +309,7 @@ bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& buffer, const K
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const
+bool CAlgorithmScenarioExporterHelper::exportSetting(CMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const
 {
 	CIdentifier settingID;
 	CIdentifier settingTypeID;
@@ -335,7 +335,7 @@ bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& buffer, cons
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const
+bool CAlgorithmScenarioExporterHelper::exportInput(CMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const
 {
 	CIdentifier inputID;
 	CIdentifier inputTypeID;
@@ -367,7 +367,7 @@ bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& buffer, const 
 	return true;
 }
 
-bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const
+bool CAlgorithmScenarioExporterHelper::exportOutput(CMemoryBuffer& buffer, const Kernel::IScenario& scenario, const size_t index) const
 {
 	CIdentifier outputID;
 	CIdentifier outputTypeID;

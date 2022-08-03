@@ -17,7 +17,7 @@ CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter() { m_writer->rele
 
 void CAlgorithmXMLScenarioExporter::write(const char* str) { m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(str), strlen(str)); }
 
-bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& memoryBuffer, const CIdentifier& id)
+bool CAlgorithmXMLScenarioExporter::exportStart(CMemoryBuffer& memoryBuffer, const CIdentifier& id)
 {
 	m_pMemoryBuffer = &memoryBuffer;
 
@@ -122,7 +122,7 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& memoryBuffer, con
 	return true;
 }
 
-bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const CIdentifier& value)
+bool CAlgorithmXMLScenarioExporter::exportIdentifier(CMemoryBuffer& memoryBuffer, const CIdentifier& id, const CIdentifier& value)
 {
 	m_pMemoryBuffer = &memoryBuffer;
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting identifier failed", Kernel::ErrorType::Internal);
@@ -131,7 +131,7 @@ bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& memoryBuffer
 	return true;
 }
 
-bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const CString& value)
+bool CAlgorithmXMLScenarioExporter::exportString(CMemoryBuffer& memoryBuffer, const CIdentifier& id, const CString& value)
 {
 	m_pMemoryBuffer = &memoryBuffer;
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting string failed", Kernel::ErrorType::Internal);
@@ -140,7 +140,7 @@ bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& memoryBuffer, co
 	return true;
 }
 
-bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& memoryBuffer, const CIdentifier& id, const uint64_t value)
+bool CAlgorithmXMLScenarioExporter::exportUInteger(CMemoryBuffer& memoryBuffer, const CIdentifier& id, const uint64_t value)
 {
 	m_pMemoryBuffer = &memoryBuffer;
 	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, id), "Exporting uint failed", Kernel::ErrorType::Internal);
@@ -149,7 +149,7 @@ bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& memoryBuffer, 
 	return true;
 }
 
-bool CAlgorithmXMLScenarioExporter::exportStop(IMemoryBuffer& memoryBuffer)
+bool CAlgorithmXMLScenarioExporter::exportStop(CMemoryBuffer& memoryBuffer)
 {
 	m_pMemoryBuffer = &memoryBuffer;
 	m_writer->closeChild();

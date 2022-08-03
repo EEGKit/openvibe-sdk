@@ -19,11 +19,11 @@ public:
 
 protected:
 	Kernel::TParameterHandler<uint64_t> ip_bufferDuration;
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_experimentInfoStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_signalStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_stimulationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_channelLocalisationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_channelUnitsStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_experimentInfoStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_signalStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_stimulationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_channelLocalisationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_channelUnitsStream;
 };
 
 class CAcquisitionEncoderDesc final : public CEBMLBaseEncoderDesc

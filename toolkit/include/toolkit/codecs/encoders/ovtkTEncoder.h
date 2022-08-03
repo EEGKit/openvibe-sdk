@@ -13,16 +13,16 @@ class TEncoderLocal : public T
 {
 protected:
 
-	Kernel::TParameterHandler<IMemoryBuffer*> m_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> m_buffer;
 
 	using T::initialize;
 	using T::m_codec;
 	using T::m_boxAlgorithm;
 	using T::m_connectorIdx;
 
-	virtual void setOutputChunk(IMemoryBuffer* pOutputChunkMemoryBuffer) { m_buffer = pOutputChunkMemoryBuffer; }
+	virtual void setOutputChunk(CMemoryBuffer* pOutputChunkMemoryBuffer) { m_buffer = pOutputChunkMemoryBuffer; }
 
-	virtual Kernel::TParameterHandler<IMemoryBuffer*>& getOutputMemoryBuffer() { return m_buffer; }
+	virtual Kernel::TParameterHandler<CMemoryBuffer*>& getOutputMemoryBuffer() { return m_buffer; }
 
 	virtual bool isOutputTriggerActive(const CIdentifier oTrigger) { return m_codec->isOutputTriggerActive(oTrigger); }
 

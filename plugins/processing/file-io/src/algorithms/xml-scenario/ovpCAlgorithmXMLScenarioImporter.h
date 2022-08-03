@@ -15,7 +15,7 @@ class CAlgorithmXMLScenarioImporter final : public Toolkit::CAlgorithmScenarioIm
 public:
 	CAlgorithmXMLScenarioImporter();
 	~CAlgorithmXMLScenarioImporter() override;
-	bool import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& memoryBuffer) override;
+	bool import(IAlgorithmScenarioImporterContext& rContext, const CMemoryBuffer& memoryBuffer) override;
 	void openChild(const char* name, const char** attributeName, const char** sAttributeValue, const size_t nAttribute)
 	override; // XML::IReaderCallback
 	void processChildData(const char* data) override; // XML::IReaderCallback

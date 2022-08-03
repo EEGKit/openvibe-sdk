@@ -21,7 +21,7 @@ public:
 
 protected:
 	std::array<Kernel::IAlgorithmProxy*, 7> m_encoders;
-	std::array<Kernel::TParameterHandler<IMemoryBuffer*>, 7> op_buffer;
+	std::array<Kernel::TParameterHandler<CMemoryBuffer*>, 7> op_buffer;
 
 	bool m_hasSentHeader = false;
 	uint64_t m_startTime = 0;

@@ -34,14 +34,14 @@ protected:
 	uint64_t m_lastEndTime   = 0;
 
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
-	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CMatrix*> op_pMatrix;
 	Kernel::TParameterHandler<uint64_t> op_sampling;
 
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::TParameterHandler<uint64_t> ip_sampling;
 	Kernel::TParameterHandler<CMatrix*> ip_pMatrix;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer;
 };
 
 class CBoxAlgorithmSignalDecimationDesc final : public IBoxAlgorithmDesc

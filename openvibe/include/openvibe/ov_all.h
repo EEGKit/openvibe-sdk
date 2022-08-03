@@ -13,15 +13,12 @@
 
 #include "CIdentifier.hpp"
 #include "CTime.hpp"
-#include "ovCString.h"
 #include "CNameValuePairList.hpp"
-
 #include "CMatrix.hpp"
-
+#include "CMemoryBuffer.hpp"
 #include "CStimulationSet.hpp"
 
-#include "ovIMemoryBuffer.h"
-#include "ovCMemoryBuffer.h"
+#include "ovCString.h"
 
 #include "ovIObject.h"
 #include "ovIObjectVisitor.h"

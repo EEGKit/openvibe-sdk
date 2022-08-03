@@ -457,7 +457,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validat
 	return (errorCount == 0);
 }
 
-bool CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& memoryBuffer)
+bool CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rContext, const CMemoryBuffer& memoryBuffer)
 {
 	m_ctx = &rContext;
 	if (!this->validateXML(memoryBuffer.getDirectPointer(), memoryBuffer.getSize())) { return false; }	// error handling is handled in validateXML

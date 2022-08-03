@@ -71,7 +71,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	Kernel::IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	Kernel::TParameterHandler<CStimulationSet*> ip_stimSet(m_encoder->getInputParameter(OVP_GD_Algorithm_StimulationEncoder_InputParameterId_StimulationSet));
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StimulationEncoder_OutputParameterId_EncodedMemoryBuffer));
 	op_buffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue

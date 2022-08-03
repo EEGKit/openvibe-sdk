@@ -20,14 +20,14 @@ public:
 
 protected:
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
-	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CMatrix*> op_matrix;
 	Kernel::TParameterHandler<uint64_t> op_sampling;
 
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::TParameterHandler<CMatrix*> ip_matrix;
 	Kernel::TParameterHandler<uint64_t> ip_sampling;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer;
 
 	CMatrix m_oMatrix;
 };
