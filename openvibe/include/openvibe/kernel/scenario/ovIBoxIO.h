@@ -66,7 +66,7 @@ public:
 	 * \sa getInputChunkCount
 	 * \sa markInputAsDeprecated
 	 */
-	virtual const IMemoryBuffer* getInputChunk(const size_t inputIdx, const size_t chunkIdx) const = 0;
+	virtual const CMemoryBuffer* getInputChunk(const size_t inputIdx, const size_t chunkIdx) const = 0;
 	/**
 	 * \brief Gets an input chunk start time.
 	 * \param inputIdx [in] : the index of the desired input.
@@ -155,7 +155,7 @@ public:
 	 * \return \c NULL in case of error.
 	 * \sa markOutputAsReadyToSend
 	 */
-	virtual IMemoryBuffer* getOutputChunk(const size_t index) = 0;
+	virtual CMemoryBuffer* getOutputChunk(const size_t index) = 0;
 	/**
 	 * \brief Marks output buffer as 'ready to send'
 	 * \param index [in] : the index of the output to work on

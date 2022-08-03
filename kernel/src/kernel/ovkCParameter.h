@@ -74,7 +74,7 @@ _parameter_template_instance_object_(CMatrixParameter, CMatrix, CMatrix*, OVK_Cl
 
 _parameter_template_instance_object_(CStimulationSetParameter, CStimulationSet, CStimulationSet*, OVK_ClassId_Kernel_StimulationSetParameter)
 
-_parameter_template_instance_object_(CMemoryBufferParameter, CMemoryBuffer, IMemoryBuffer*, OVK_ClassId_Kernel_MemoryBufferParameter)
+_parameter_template_instance_object_(CMemoryBufferParameter, CMemoryBuffer, CMemoryBuffer*, OVK_ClassId_Kernel_MemoryBufferParameter)
 
 _parameter_template_instance_object_(CObjectParameter, CNullObject, IObject*, OVK_ClassId_Kernel_ObjectParameter)
 

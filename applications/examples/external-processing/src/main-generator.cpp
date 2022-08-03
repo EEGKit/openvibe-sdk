@@ -15,7 +15,7 @@
 #include <communication/ovCMessagingClient.h>
 
 #include <toolkit/ovtk_defines.h>
-#include <openvibe/ovIMemoryBuffer.h>
+#include <openvibe/CMemoryBuffer.hpp>
 #include <openvibe/CTime.hpp>
 
 static bool didRequestForcedQuit = false;

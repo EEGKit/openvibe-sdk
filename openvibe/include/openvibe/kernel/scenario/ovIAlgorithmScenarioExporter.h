@@ -3,7 +3,7 @@
 #include "../../plugins/ovIAlgorithm.h"
 #include "../../plugins/ovIAlgorithmDesc.h"
 #include "../algorithm/ovIAlgorithmProto.h"
-#include "../../ovIMemoryBuffer.h"
+#include "../../CMemoryBuffer.hpp"
 
 #define OV_Algorithm_ScenarioExporter_InputParameterId_Scenario     	OpenViBE::CIdentifier(0x5B9C0D54, 0x04BA2957)
 #define OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer	OpenViBE::CIdentifier(0x64030633, 0x419E3A33)
@@ -13,11 +13,11 @@ namespace Plugins {
 class OV_API IAlgorithmScenarioExporter : public IAlgorithm
 {
 public:
-	virtual bool exportStart(IMemoryBuffer& buffer, const CIdentifier& id) = 0;
-	virtual bool exportIdentifier(IMemoryBuffer& buffer, const CIdentifier& id, const CIdentifier& value) = 0;
-	virtual bool exportString(IMemoryBuffer& buffer, const CIdentifier& id, const CString& value) = 0;
-	virtual bool exportUInteger(IMemoryBuffer& buffer, const CIdentifier& id, uint64_t value) = 0;
-	virtual bool exportStop(IMemoryBuffer& buffer) = 0;
+	virtual bool exportStart(CMemoryBuffer& buffer, const CIdentifier& id) = 0;
+	virtual bool exportIdentifier(CMemoryBuffer& buffer, const CIdentifier& id, const CIdentifier& value) = 0;
+	virtual bool exportString(CMemoryBuffer& buffer, const CIdentifier& id, const CString& value) = 0;
+	virtual bool exportUInteger(CMemoryBuffer& buffer, const CIdentifier& id, uint64_t value) = 0;
+	virtual bool exportStop(CMemoryBuffer& buffer) = 0;
 
 	_IsDerivedFromClass_(IAlgorithm, CIdentifier::undefined())
 };

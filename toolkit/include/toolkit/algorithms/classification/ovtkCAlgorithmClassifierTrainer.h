@@ -20,7 +20,7 @@ public:
 	void release() override { delete this; }
 	bool process() override;
 	virtual bool train(const IFeatureVectorSet& dataset) = 0;
-	virtual bool saveConfig(IMemoryBuffer& buffer) = 0;
+	virtual bool saveConfig(CMemoryBuffer& buffer) = 0;
 
 	_IsDerivedFromClass_(TAlgorithm < Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_ClassifierTrainer)
 };

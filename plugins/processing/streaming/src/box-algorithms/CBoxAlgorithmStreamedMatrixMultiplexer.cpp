@@ -51,12 +51,12 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 
 	for (size_t i = 0; i < nInput; ++i) {
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j) {
-			const IMemoryBuffer* iBuffer = boxContext.getInputChunk(i, j);
+			const CMemoryBuffer* iBuffer = boxContext.getInputChunk(i, j);
 			const uint64_t tStart        = boxContext.getInputChunkStartTime(i, j);
 			const uint64_t tEnd          = boxContext.getInputChunkEndTime(i, j);
 
 			if ((!m_headerSent && tStart == tEnd) || (m_headerSent && tStart != tEnd)) {
-				IMemoryBuffer* oBuffer = boxContext.getOutputChunk(0);
+				CMemoryBuffer* oBuffer = boxContext.getOutputChunk(0);
 				oBuffer->setSize(iBuffer->getSize(), true);
 
 				memcpy(oBuffer->getDirectPointer(), iBuffer->getDirectPointer(), iBuffer->getSize());

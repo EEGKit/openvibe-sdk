@@ -31,8 +31,8 @@ protected:
 	Kernel::TParameterHandler<CMatrix*> ip_matrix;
 	Kernel::TParameterHandler<CMatrix*> op_matrix;
 
-	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer;
 
 	std::vector<size_t> m_selectedIndices;
 };

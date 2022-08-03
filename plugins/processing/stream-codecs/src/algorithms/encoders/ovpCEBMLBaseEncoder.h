@@ -29,7 +29,7 @@ public:
 	virtual void write(const void* buffer, size_t size);
 
 protected:
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer;
 
 	EBML::IWriterHelper* m_writerHelper = nullptr;
 	EBML::IWriter* m_writer             = nullptr;

@@ -145,8 +145,8 @@ bool CAlgorithmScenarioImporter::process()
 
 	OV_ERROR_UNLESS_KRF(scenario, "Output scenario is NULL", Kernel::ErrorType::BadOutput);
 
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
-	IMemoryBuffer* memoryBuffer = ip_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_buffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
+	CMemoryBuffer* memoryBuffer = ip_buffer;
 
 	OV_ERROR_UNLESS_KRF(memoryBuffer, "Input memory buffer is NULL", Kernel::ErrorType::BadInput);
 

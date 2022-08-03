@@ -88,9 +88,9 @@ bool CBoxAlgorithmCrop::process()
 
 	for (size_t i = 0; i < boxContext.getInputChunkCount(0); ++i)
 	{
-		Kernel::TParameterHandler<const IMemoryBuffer*> iHandle(
+		Kernel::TParameterHandler<const CMemoryBuffer*> iHandle(
 			m_decoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-		Kernel::TParameterHandler<IMemoryBuffer*> oHandle(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+		Kernel::TParameterHandler<CMemoryBuffer*> oHandle(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 		iHandle = boxContext.getInputChunk(0, i);
 		oHandle = boxContext.getOutputChunk(0);
 

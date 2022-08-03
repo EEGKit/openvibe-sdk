@@ -257,7 +257,7 @@ bool CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx, 
 	return true;
 }
 
-const IMemoryBuffer* CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx) const
+const CMemoryBuffer* CSimulatedBox::getInputChunk(const size_t inputIdx, const size_t chunkIdx) const
 {
 	OV_ERROR_UNLESS_KRN(inputIdx < m_Inputs.size(),
 						"Input index = [" << inputIdx << "] is out of range (max index = [" << m_Inputs.size() - 1 << "])",
@@ -351,7 +351,7 @@ bool CSimulatedBox::appendOutputChunkData(const size_t outputIdx, const uint8_t*
 	return m_CurrentOutputs[outputIdx].getBuffer().append(buffer, size);
 }
 
-IMemoryBuffer* CSimulatedBox::getOutputChunk(const size_t outputIdx)
+CMemoryBuffer* CSimulatedBox::getOutputChunk(const size_t outputIdx)
 {
 	OV_ERROR_UNLESS_KRN(outputIdx < m_CurrentOutputs.size(),
 						"Output index = [" << outputIdx << "] is out of range (max index = [" << m_CurrentOutputs.size() - 1 << "])",

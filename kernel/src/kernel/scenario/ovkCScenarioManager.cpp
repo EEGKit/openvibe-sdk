@@ -70,7 +70,7 @@ bool CScenarioManager::createScenario(CIdentifier& scenarioID)
 	return true;
 }
 
-bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID)
+bool CScenarioManager::importScenario(CIdentifier& scenarioID, const CMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID)
 {
 	scenarioID = CIdentifier::undefined();
 
@@ -146,7 +146,7 @@ bool CScenarioManager::importScenario(CIdentifier& scenarioID, const IMemoryBuff
 	}
 
 
-	TParameterHandler<const IMemoryBuffer*> memoryBufferParameterHandler(memoryBufferParameter);
+	TParameterHandler<const CMemoryBuffer*> memoryBufferParameterHandler(memoryBufferParameter);
 	TParameterHandler<IScenario*> scenarioParameterHandler(scenarioParameter);
 
 	memoryBufferParameterHandler = &iMemoryBuffer;
@@ -287,7 +287,7 @@ CIdentifier CScenarioManager::getScenarioImporterAlgorithmIdentifier(const CIden
 	return m_importers.at(importContext).at(fileNameExtension.toASCIIString());
 }
 
-bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdentifier& scenarioID,
+bool CScenarioManager::exportScenario(CMemoryBuffer& oMemoryBuffer, const CIdentifier& scenarioID,
 									  const CIdentifier& scenarioExporterAlgorithmID) const
 {
 	OV_ERROR_UNLESS_KRF(
@@ -402,7 +402,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdent
 	}
 
 	TParameterHandler<IScenario*> scenarioParameterHandler(scenarioParameter);
-	TParameterHandler<const IMemoryBuffer*> memoryBufferParameterHandler(memoryBufferParameter);
+	TParameterHandler<const CMemoryBuffer*> memoryBufferParameterHandler(memoryBufferParameter);
 
 	scenarioParameterHandler     = &scenario;
 	memoryBufferParameterHandler = &oMemoryBuffer;

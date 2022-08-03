@@ -130,7 +130,7 @@ void CAcquisitionDecoder::closeChild()
 	m_nodes.pop();
 }
 
-void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* memoryBuffer, const void* buffer, const size_t size)
+void CAcquisitionDecoder::appendMemoryBuffer(CMemoryBuffer* memoryBuffer, const void* buffer, const size_t size)
 {
 	if (memoryBuffer)
 	{

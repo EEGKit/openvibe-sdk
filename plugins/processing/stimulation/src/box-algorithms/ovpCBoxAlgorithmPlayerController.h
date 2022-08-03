@@ -20,7 +20,7 @@ public:
 
 protected:
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
-	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CStimulationSet*> op_stimulationSet;
 
 	uint64_t m_stimulationID = 0;
