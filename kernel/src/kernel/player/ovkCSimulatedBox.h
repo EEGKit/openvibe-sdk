@@ -79,7 +79,7 @@ public:
 	size_t getInputChunkCount(const size_t index) const override;
 	bool getInputChunk(const size_t inputIdx, const size_t chunkIdx, uint64_t& startTime, uint64_t& endTime, size_t& size,
 					   const uint8_t*& buffer) const override;
-	const IMemoryBuffer* getInputChunk(const size_t inputIdx, const size_t chunkIdx) const override;
+	const CMemoryBuffer* getInputChunk(const size_t inputIdx, const size_t chunkIdx) const override;
 	uint64_t getInputChunkStartTime(const size_t inputIdx, const size_t chunkIdx) const override;
 	uint64_t getInputChunkEndTime(const size_t inputIdx, const size_t chunkIdx) const override;
 	bool markInputAsDeprecated(const size_t inputIdx, const size_t chunkIdx) override;
@@ -91,7 +91,7 @@ public:
 	bool setOutputChunkSize(const size_t outputIdx, const size_t size, const bool discard = true) override;
 	uint8_t* getOutputChunkBuffer(const size_t outputIdx) override;
 	bool appendOutputChunkData(const size_t outputIdx, const uint8_t* buffer, const size_t size) override;
-	IMemoryBuffer* getOutputChunk(const size_t outputIdx) override;
+	CMemoryBuffer* getOutputChunk(const size_t outputIdx) override;
 	bool markOutputAsReadyToSend(const size_t outputIdx, const uint64_t startTime, const uint64_t endTime) override;
 	//@}
 

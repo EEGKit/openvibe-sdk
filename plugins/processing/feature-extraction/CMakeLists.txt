@@ -1,6 +1,6 @@
 project(openvibe-plugins-sdk-feature-extraction VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.inl)
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h src/*.hpp src/*.inl)
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}

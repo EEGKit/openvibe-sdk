@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoTimeTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <iostream>
 #include <limits>
@@ -42,8 +41,7 @@
 uint64_t calibrateSleep(const size_t nSample, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t maxTime = 0;
-	for (size_t i = 0; i < nSample; ++i)
-	{
+	for (size_t i = 0; i < nSample; ++i) {
 		const uint64_t preTime = timeFunction();
 		sleepFunction(0);
 		const uint64_t processingTime = timeFunction() - preTime;
@@ -58,8 +56,7 @@ uint64_t calibrateSleep(const size_t nSample, bool (*sleepFunction)(uint64_t), u
 std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	std::vector<uint64_t> effectiveSleepTimes;
-	for (auto time : sleepTimes)
-	{
+	for (const auto& time : sleepTimes) {
 		const uint64_t preTime = timeFunction();
 		sleepFunction(time);
 		effectiveSleepTimes.push_back(timeFunction() - preTime);
@@ -74,10 +71,8 @@ std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*
 size_t assessSleepTestResult(const std::vector<uint64_t>& expected, const std::vector<uint64_t>& result, const uint64_t delta, const uint64_t epsilon)
 {
 	size_t warningCount = 0;
-	for (size_t i = 0; i < expected.size(); ++i)
-	{
-		if (result[i] + epsilon < expected[i] || result[i] > (expected[i] + delta + epsilon))
-		{
+	for (size_t i = 0; i < expected.size(); ++i) {
+		if (result[i] + epsilon < expected[i] || result[i] > (expected[i] + delta + epsilon)) {
 			std::cerr << "WARNING: Failure to sleep the right amount of time: [expected|result] = "
 					<< OpenViBE::CTime(expected[i]) << "|" << OpenViBE::CTime(result[i]) << std::endl;
 			warningCount++;
@@ -100,12 +95,10 @@ std::tuple<bool, std::vector<uint64_t>> testClock(const uint64_t samplePeriod, c
 	uint64_t nowTime         = startTime;
 	uint64_t previousTime    = nowTime;
 
-	while (nowTime - startTime < samplePeriod)
-	{
+	while (nowTime - startTime < samplePeriod) {
 		nowTime = timeFunction();
 		if (nowTime > previousTime) { cumulativeSteps.push_back(nowTime - previousTime); }
-		else if (nowTime < previousTime)
-		{
+		else if (nowTime < previousTime) {
 			monotonic = false;
 			break;
 		}
@@ -126,26 +119,24 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 	double mean      = 0.0;
 
 	// compute mean
-	for (auto& data : measurements)
-	{
+	for (auto& data : measurements) {
 		// convert data
 		auto seconds                         = data >> 32;
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
-		mean += double(chronoData.count()) / (1000 * measurements.size());
+		mean += double(chronoData.count()) / double(1000 * measurements.size());
 	}
 
 	// compute deviations
-	for (auto& data : measurements)
-	{
+	for (auto& data : measurements) {
 		// convert data
 		auto seconds                         = data >> 32;
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
 		const double deviation = std::abs(double(chronoData.count()) / 1000 - mean);
-		jitterMSE += std::pow(deviation, 2) / measurements.size();
+		jitterMSE += std::pow(deviation, 2) / double(measurements.size());
 
 		if (deviation - jitterMax > std::numeric_limits<double>::epsilon()) { jitterMax = deviation; }
 	}
@@ -199,11 +190,11 @@ int uoTimeTest(int /*argc*/, char* /*argv*/[])
 	//
 
 	// the sample count guess was found in an empiric way
-	auto resultGetTimeData = testClock(OpenViBE::CTime(0.5).time(), 500000, System::Time::zgetTime);
+	const auto resultGetTimeData = testClock(OpenViBE::CTime(0.5).time(), 500000, System::Time::zgetTime);
 
 	OVT_ASSERT(std::get<0>(resultGetTimeData), "Failure in zgetTime() test: the clock is not monotonic");
 
-	auto clockMetrics = assessTimeClock(std::get<1>(resultGetTimeData));
+	const auto clockMetrics = assessTimeClock(std::get<1>(resultGetTimeData));
 
 	std::cout << "INFO: Sample count for getTime() = " << std::get<1>(resultGetTimeData).size() << std::endl;
 	std::cout << "INFO: Mean step in ms for getTime() = " << std::get<0>(clockMetrics) << std::endl;

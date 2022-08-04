@@ -1,8 +1,9 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
+/// \file ovtTestFixture.h
 /// \author Charles Garraud / Inria.
 /// \date 08/02/2016.
-/// \copyright (C) 2022 Inria
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -18,6 +19,7 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
 ///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include <memory>
@@ -25,10 +27,10 @@
 namespace OpenViBE {
 namespace Test {
 ///-------------------------------------------------------------------------------------------------
-///<summary> Base abstract struct for test fixture
+/// <summary> Base abstract struct for test fixture. </summary> 
 ///
 /// A test fixture is used when an environment has to be set for a specific test.
-/// TestFixture implementation should not be used directly but through ScopedTest. </summary>
+/// TestFixture implementation should not be used directly but through ScopedTest.
 struct TestFixture
 {
 	virtual ~TestFixture() = default;
@@ -50,9 +52,9 @@ private:
 };
 
 ///-------------------------------------------------------------------------------------------------
-///<summary> Class used to ensure RAII when using TestFixture.
+///<summary> Class used to ensure RAII when using TestFixture. </summary>
 ///
-/// A scoped object is a wrapper around a test fixture used to ensure RAII when running tests. </summary>
+/// A scoped object is a wrapper around a test fixture used to ensure RAII when running tests.
 template <typename T>
 struct ScopedTest
 {

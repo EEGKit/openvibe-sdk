@@ -24,14 +24,14 @@ public:
 	void closeChild() override;
 
 protected:
-	static void appendMemoryBuffer(IMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
+	static void appendMemoryBuffer(CMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
 
 	Kernel::TParameterHandler<uint64_t> op_bufferDuration;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_experimentInfoStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_signalStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_stimulationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_channelLocalisationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_channelUnitsStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_experimentInfoStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_signalStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_stimulationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_channelLocalisationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_channelUnitsStream;
 
 private:
 	std::stack<EBML::CIdentifier> m_nodes;

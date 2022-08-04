@@ -1,28 +1,27 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoSocketClientServerASyncCommunicationTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <string>
-#include <cstring>
 #include <thread>
 #include <condition_variable>
+#include <sstream>
 #include <vector>
 
 #include "socket/IConnection.h"
@@ -58,12 +57,10 @@ void onServerListening(const int port, const size_t expectedPacketCount)
 	gServerStartedCondVar.notify_one();
 
 	// loop until all packet are received
-	while (gReceivedData.size() < expectedPacketCount)
-	{
+	while (gReceivedData.size() < expectedPacketCount) {
 		if (server->isReadyToReceive()) { clientConnection = server->accept(); }
 
-		if (clientConnection && clientConnection->isReadyToReceive())
-		{
+		if (clientConnection && clientConnection->isReadyToReceive()) {
 			size_t dataSize       = 0;
 			size_t bytesToReceive = sizeof(dataSize);
 			size_t bytesReceived  = 0;
@@ -85,7 +82,7 @@ void onServerListening(const int port, const size_t expectedPacketCount)
 	server->release();
 }
 
-void sendData(Socket::IConnectionClient* client, void* data, const size_t size)
+void sendData(Socket::IConnectionClient* client, const void* data, const size_t size)
 {
 	const size_t bytesToSend = size;
 	size_t bytesSent         = 0;
@@ -99,8 +96,14 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
 	const std::string serverName = argv[1];
-	int portNumber               = std::atoi(argv[2]);
-	size_t packetCount           = size_t(std::atoi(argv[3]));
+	std::stringstream ssPort(argv[2]);
+	std::stringstream ssPacket(argv[3]);
+
+	int portNumber;
+	ssPort >> portNumber;
+
+	size_t packetCount;
+	ssPacket >> packetCount;
 
 	// test asynchronous data transmission from a single client to server:
 	// - launch a server on a background thread
@@ -125,8 +128,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	// transmission follows the protocol: data size transmission + data transmission
 	const std::string baseData = "Data packet index: ";
 
-	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex)
-	{
+	for (size_t sendIndex = 0; sendIndex < packetCount; ++sendIndex) {
 		std::string tmp = baseData + std::to_string(sendIndex);
 		size_t size     = tmp.size();
 		sendData(client, &size, sizeof(size));
@@ -142,8 +144,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	// do the assertion on the main thread
 	OVT_ASSERT(gReceivedData.size() == packetCount, "Failure to retrieve packet count");
 
-	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex)
-	{
+	for (size_t receivedIndex = 0; receivedIndex < packetCount; ++receivedIndex) {
 		OVT_ASSERT_STREQ(gReceivedData[receivedIndex], (baseData + std::to_string(receivedIndex)), "Failure to retrieve packet");
 	}
 

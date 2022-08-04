@@ -13,16 +13,16 @@ class TDecoderLocal : public T
 {
 protected:
 
-	Kernel::TParameterHandler<const IMemoryBuffer*> m_iBuffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> m_iBuffer;
 
 
 	using T::m_codec;
 	using T::m_boxAlgorithm;
 	using T::m_connectorIdx;
 
-	virtual void setInputChunk(const IMemoryBuffer* pInputChunkMemoryBuffer) { m_iBuffer = pInputChunkMemoryBuffer; }
+	virtual void setInputChunk(const CMemoryBuffer* pInputChunkMemoryBuffer) { m_iBuffer = pInputChunkMemoryBuffer; }
 
-	virtual Kernel::TParameterHandler<const IMemoryBuffer*>& getInputMemoryBuffer() { return m_iBuffer; }
+	virtual Kernel::TParameterHandler<const CMemoryBuffer*>& getInputMemoryBuffer() { return m_iBuffer; }
 
 	virtual bool isOutputTriggerActive(const CIdentifier oTrigger) { return m_codec->isOutputTriggerActive(oTrigger); }
 

@@ -22,7 +22,7 @@ public:
 
 protected:
 	std::array<Kernel::IAlgorithmProxy*, 7> m_decoder;
-	std::array<Kernel::TParameterHandler<const IMemoryBuffer*>, 7> ip_buffer;
+	std::array<Kernel::TParameterHandler<const CMemoryBuffer*>, 7> ip_buffer;
 };
 
 class CDecoderAlgorithmTestDesc final : public IBoxAlgorithmDesc

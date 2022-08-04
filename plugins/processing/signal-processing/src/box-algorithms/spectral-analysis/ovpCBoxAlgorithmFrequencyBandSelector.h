@@ -26,14 +26,14 @@ public:
 
 protected:
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
-	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CMatrix*> op_matrix;
 	Kernel::TParameterHandler<CMatrix*> op_bands;
 
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::TParameterHandler<CMatrix*> ip_matrix;
 	Kernel::TParameterHandler<CMatrix*> ip_frequencyAbscissa;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer;
 
 	CMatrix m_oMatrix;
 	std::vector<BandRange> m_selecteds;

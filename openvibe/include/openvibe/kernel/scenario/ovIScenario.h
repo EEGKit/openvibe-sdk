@@ -3,7 +3,7 @@
 #include "ovIBox.h"
 
 namespace OpenViBE {
-class IMemoryBuffer;
+class CMemoryBuffer;
 
 namespace Plugins {
 class IBoxAlgorithmDesc;

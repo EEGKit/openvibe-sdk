@@ -1,10 +1,11 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
+/// \file CBoxAlgorithmOVCSVFileReader.cpp
 /// \brief Classes of the box CSV File Reader.
 /// \author Victor Herlin (Mensia), Thomas Prampart (Inria).
 /// \version 1.2.0
 /// \date 07/05/2021
-/// \copyright (C) 2022 Inria
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -20,6 +21,7 @@
 /// along with this program. If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #include "CBoxAlgorithmOVCSVFileReader.hpp"
 
 #include <sstream>

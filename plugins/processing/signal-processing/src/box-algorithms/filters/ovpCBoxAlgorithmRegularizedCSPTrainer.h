@@ -1,7 +1,5 @@
 #pragma once
 
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include "defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
@@ -120,5 +118,3 @@ public:
 }  // namespace SignalProcessing
 }  // namespace Plugins
 }  // namespace OpenViBE
-
-#endif // TARGET_HAS_ThirdPartyEIGEN

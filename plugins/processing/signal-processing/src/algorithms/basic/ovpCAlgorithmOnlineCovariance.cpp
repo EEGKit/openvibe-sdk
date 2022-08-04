@@ -1,5 +1,3 @@
-#if defined TARGET_HAS_ThirdPartyEIGEN
-
 #include "ovpCAlgorithmOnlineCovariance.h"
 
 #include <iostream>
@@ -269,9 +267,6 @@ bool CAlgorithmOnlineCovariance::process()
 
 	return true;
 }
-
-#endif // TARGET_HAS_ThirdPartyEIGEN
-
 }  // namespace SignalProcessing
 }  // namespace Plugins
 }  // namespace OpenViBE

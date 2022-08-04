@@ -32,7 +32,7 @@ protected:
 private:
 	Kernel::IAlgorithmProxy* m_encoder = nullptr;
 	Kernel::IAlgorithmProxy* m_decoder = nullptr;
-	Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer;
+	Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer;
 	Kernel::TParameterHandler<CStimulationSet*> op_stimulationSet;
 
 	std::deque<std::pair<uint64_t, uint64_t>> m_oStimulusDeque; // <label,time>

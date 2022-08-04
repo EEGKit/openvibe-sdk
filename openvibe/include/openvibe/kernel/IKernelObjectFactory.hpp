@@ -1,11 +1,12 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
+/// \file IKernelObjectFactory.hpp
 /// \brief Kernel object factory, creates all kernel objects.
 ///
 /// \author Yann Renard (INRIA/IRISA).
 /// \version 1.0.
 /// \date 26/09/2006.
-/// \copyright (C) 2022 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -21,6 +22,7 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "ovIKernelObject.h"
@@ -33,7 +35,7 @@ namespace Kernel {
 /// This class allows to create kernel objects as needed.
 /// <seealso cref="IKernelObject" />
 /// \ingroup Group_Kernel
-///	\todo Can be removed with the CKernelObjectFactory and CKernelObjectFactoryHelper classes
+///	\todo Can be removed with the CKernelObjectFactory class ?
 class OV_API IKernelObjectFactory : public IKernelObject
 {
 public:

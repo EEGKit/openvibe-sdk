@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoMatrixToolkitTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <iostream>
 #include <random>
@@ -31,10 +30,8 @@ static std::uniform_real_distribution<double> dist(0.0, 100.0);
 
 void fillMatrix(OpenViBE::CMatrix& matrix)
 {
-	for (size_t i = 0; i < matrix.getDimensionCount(); ++i)
-	{
-		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j)
-		{
+	for (size_t i = 0; i < matrix.getDimensionCount(); ++i) {
+		for (size_t j = 0; j < matrix.getDimensionSize(i); ++j) {
 			std::stringstream label;
 			label << "Label " << j + 1 << " of Dimension " << i + 1;
 			matrix.setDimensionLabel(i, j, label.str());
@@ -49,32 +46,27 @@ bool testMatrix(OpenViBE::CMatrix& expectedMatrix, const std::string& textFile, 
 
 	fillMatrix(expectedMatrix);
 
-	if (!OpenViBE::Toolkit::Matrix::saveToTextFile(expectedMatrix, textFile.c_str(), precision))
-	{
+	if (!OpenViBE::Toolkit::Matrix::saveToTextFile(expectedMatrix, textFile.c_str(), precision)) {
 		std::cerr << "Error: saving matrix to file " << textFile << "\n";
 		return false;
 	}
 
 	OpenViBE::CMatrix resultMatrix;
 
-	if (!OpenViBE::Toolkit::Matrix::loadFromTextFile(resultMatrix, textFile.c_str()))
-	{
+	if (!OpenViBE::Toolkit::Matrix::loadFromTextFile(resultMatrix, textFile.c_str())) {
 		std::cerr << "Error: loading matrix from file " << textFile << "\n";
 		return false;
 	}
 
-	if (!OpenViBE::Toolkit::Matrix::isDescriptionSimilar(expectedMatrix, resultMatrix))
-	{
+	if (!OpenViBE::Toolkit::Matrix::isDescriptionSimilar(expectedMatrix, resultMatrix)) {
 		std::cerr << "Error: Descriptions differ between expected matrix and result matrix after save/load\n";
 		return false;
 	}
 
-	for (size_t i = 0; i < expectedMatrix.getBufferElementCount(); ++i)
-	{
+	for (size_t i = 0; i < expectedMatrix.getBufferElementCount(); ++i) {
 		const double error = std::fabs(expectedMatrix.getBuffer()[i] - resultMatrix.getBuffer()[i]);
 
-		if (error > threshold)
-		{
+		if (error > threshold) {
 			std::cerr << "Error: Data differs at index " << i << ", error " << error << " (thresold = " << threshold << ")\n";
 			return false;
 		}

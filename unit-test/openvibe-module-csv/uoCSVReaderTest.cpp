@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoCSVReaderTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <tuple>
 #include <numeric>
@@ -434,7 +433,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 TEST(CSV_Reader_Test_Case, stimulationsNormalGoodStims)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsReader01.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsReader01.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
@@ -451,7 +450,7 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalGoodStims)
 TEST(CSV_Reader_Test_Case, stimulationsNormalWrongStim)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsWrongStimulation.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsWrongStimulation.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
@@ -467,7 +466,7 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalWrongStim)
 TEST(CSV_Reader_Test_Case, stimulationsNormalWrongHeader)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsWrongHeader.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsWrongHeader.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 
 	ASSERT_FALSE(stimReaderTest->parseHeader());
@@ -476,7 +475,6 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalWrongHeader)
 	ASSERT_TRUE(stimReaderTest->closeFile());
 	releaseCSVHandler(stimReaderTest);
 }
-
 
 
 int uoCSVReaderTest(int argc, char* argv[])

@@ -161,14 +161,14 @@ bool CBoxAlgorithmSimpleDSP::process()
 	size_t nEnd    = 0;
 
 	Kernel::TParameterHandler<CMatrix*> ip_matrix(m_encoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_InputParameterId_Matrix));
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer(m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	m_matrices.clear();
 
 	op_buffer = boxContext.getOutputChunk(0);
 	for (size_t i = 0; i < nInput; ++i)
 	{
-		Kernel::TParameterHandler<const IMemoryBuffer*> ip_buffer(
+		Kernel::TParameterHandler<const CMemoryBuffer*> ip_buffer(
 			m_decoders[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
 		Kernel::TParameterHandler<CMatrix*> op_matrix(m_decoders[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_OutputParameterId_Matrix));
 		ip_buffer = boxContext.getInputChunk(i, 0);

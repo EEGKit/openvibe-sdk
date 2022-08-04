@@ -105,9 +105,9 @@ bool CBoxAlgorithmEpochAverage::process()
 	{
 		for (size_t j = 0; j < boxContext.getInputChunkCount(i); ++j)
 		{
-			Kernel::TParameterHandler<const IMemoryBuffer*> iMemoryBufferHandle(
+			Kernel::TParameterHandler<const CMemoryBuffer*> iMemoryBufferHandle(
 				m_decoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixDecoder_InputParameterId_MemoryBufferToDecode));
-			Kernel::TParameterHandler<IMemoryBuffer*> oMemoryBufferHandle(
+			Kernel::TParameterHandler<CMemoryBuffer*> oMemoryBufferHandle(
 				m_encoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixEncoder_OutputParameterId_EncodedMemoryBuffer));
 			iMemoryBufferHandle = boxContext.getInputChunk(i, j);
 			oMemoryBufferHandle = boxContext.getOutputChunk(i);

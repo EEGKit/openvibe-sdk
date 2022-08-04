@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoCSVWriterTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include "gtest/gtest.h"
 
@@ -41,8 +40,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNormalGoodSignal)
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
 	double index = 0.0;
-	while (index < 1.2)
-	{
+	while (index < 1.2) {
 		const double epoch = index / 0.5;
 		ASSERT_TRUE(handler->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, size_t(epoch) }));
 		if (index == 0.25 || index == 0.75) { ASSERT_TRUE(handler->addEvent(35000, index, 0.0)); }
@@ -67,8 +65,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNoStimulations)
 	ASSERT_TRUE(handler->noEventsUntilDate(2.0));
 
 	double index = 0.0;
-	while (index < 1.2)
-	{
+	while (index < 1.2) {
 		const double epoch = index / 0.5;
 		ASSERT_TRUE(handler->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, size_t(epoch) }));
 		index += 0.125;
@@ -87,8 +84,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNoFileOpen)
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
 	double index = 0.0;
-	while (index < 1.2)
-	{
+	while (index < 1.2) {
 		const double epoch = index / 0.5;
 		ASSERT_TRUE(handler->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, size_t(epoch) }));
 		index += 0.125;
@@ -131,8 +127,7 @@ TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithoutSetNoEventsUntilDate)
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
 	double time = 0.0;
-	while (time < 100.0)
-	{
+	while (time < 100.0) {
 		ASSERT_TRUE(handler->addSample({ time, time + 0.125, { -20.20, -10.10, 0.0, 10.10, 20.20 }, size_t(time / 0.125) }));
 		time += 0.125;
 	}
@@ -154,8 +149,7 @@ TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithSetNoEventsUntilDate)
 	ASSERT_TRUE(handler->noEventsUntilDate(100.001));
 
 	double time = 0.0;
-	while (time < 100.0)
-	{
+	while (time < 100.0) {
 		ASSERT_TRUE(handler->addSample({ time, time + 0.125, { -20.20, -10.10, 0.0, 10.10, 20.20 }, size_t(time / 0.5) }));
 		time += 0.125;
 	}
@@ -179,8 +173,7 @@ TEST(CSV_Writer_Test_Case, signalWriterOnlyLastMatrix)
 	ASSERT_TRUE(handler->setSignalInformation({ "O1", "O2", "Pz", "P1", "P2" }, 8, 8));
 
 	double index = 0.0;
-	while (index < 1.2)
-	{
+	while (index < 1.2) {
 		const double epoch = index / 0.5;
 		ASSERT_TRUE(handler->addSample({ index, index + 0.125, { -10.10, -5.05, 0.00, 5.05, 10.10 }, size_t(epoch) }));
 		if (index == 0.25 || index == 0.75 || index == 1.0) { ASSERT_TRUE(handler->addEvent(35000, index, 0.0)); }
@@ -211,8 +204,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 
 	ASSERT_TRUE(handler->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 	double time = 0;
-	for (size_t i = 0; i < 10; ++i)
-	{
+	for (size_t i = 0; i < 10; ++i) {
 		const size_t epoch = i / 4;
 		std::vector<double> sample(128);
 		std::iota(sample.begin(), sample.end(), -64);
@@ -272,8 +264,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 
@@ -296,8 +287,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 
@@ -320,8 +310,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 1, 4 }, { "L1", "A", "B", "C", "D" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -10.10, 10.10, 20.20 }, epoch }));
 
@@ -363,8 +352,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 	std::vector<double> values(96);
 	std::iota(values.begin(), values.end(), 0.0);
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, values, epoch }));
 
@@ -390,8 +378,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 	std::vector<double> values(16);
 	std::iota(values.begin(), values.end(), 0.0);
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, values, epoch }));
 
@@ -438,8 +425,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 	ASSERT_TRUE(handler->writeHeaderToFile());
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i) + 1.0, { double(i), 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 }, epoch }));
 
@@ -467,8 +453,7 @@ TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 
 	ASSERT_TRUE(handler->setFeatureVectorInformation({ "F1", "F2", "F3" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
 
@@ -492,8 +477,7 @@ TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 
 	ASSERT_TRUE(handler->setFeatureVectorInformation({ "", "", "" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
 	}
@@ -534,8 +518,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "C1", "C2", "C1", "C2", "Matrix 1", "Matrix 2" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 	}
@@ -557,8 +540,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 
 	ASSERT_TRUE(handler->setStreamedMatrixInformation({ 2, 2, 2 }, { "", "", "", "", "", "" }));
 
-	for (size_t i = 0; i < 50; ++i)
-	{
+	for (size_t i = 0; i < 50; ++i) {
 		const size_t epoch = i / 10;
 		ASSERT_TRUE(handler->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 	}
@@ -587,8 +569,8 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 
 TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterHeader)
 {
-	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
-	const std::string filename          = directoryPath + "testCSVStimulationsWriter01.csv";
+	OpenViBE::CSV::ICSVHandler* handler   = OpenViBE::CSV::createCSVHandler();
+	const std::string filename            = directoryPath + "testCSVStimulationsWriter01.csv";
 	const std::string expectedFileContent = "Event Id,Event Date,Event Duration";
 	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
 	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
@@ -607,24 +589,24 @@ TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterHeader)
 }
 
 
-
 TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterGoodStims)
 {
-	OpenViBE::CSV::ICSVHandler* handler = OpenViBE::CSV::createCSVHandler();
-	const std::string filename          = directoryPath + "testCSVStimulations02.csv";
-	const std::vector<uint64_t> stimCodes = {33025, 33026, 33027};
-	const std::vector<std::string> expectedStims = {"33025,1.0000000000,0.0000000000",
-												    "33026,2.0000000000,0.0000000000",
-												    "33027,3.0000000000,0.0000000000"};
+	OpenViBE::CSV::ICSVHandler* handler          = OpenViBE::CSV::createCSVHandler();
+	const std::string filename                   = directoryPath + "testCSVStimulations02.csv";
+	const std::vector<uint64_t> stimCodes        = { 33025, 33026, 33027 };
+	const std::vector<std::string> expectedStims = {
+		"33025,1.0000000000,0.0000000000",
+		"33026,2.0000000000,0.0000000000",
+		"33027,3.0000000000,0.0000000000"
+	};
 
 	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
 	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
 
-	for (size_t i = 0; i < stimCodes.size(); ++i)
-	{
+	for (size_t i = 0; i < stimCodes.size(); ++i) {
 		handler->addEvent(stimCodes[i],
-						  double(i+1),
-						  0.0 );
+						  double(i + 1),
+						  0.0);
 	}
 
 
@@ -637,8 +619,7 @@ TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterGoodStims)
 	std::string line;
 	size_t i = 0;
 	ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Ignore header
-	while (std::getline(ifs, line))
-	{
+	while (std::getline(ifs, line)) {
 		ASSERT_LT(i, expectedStims.size());
 		ASSERT_STREQ(line.c_str(), expectedStims[i++].c_str());
 	}

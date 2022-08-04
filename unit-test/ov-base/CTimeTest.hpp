@@ -1,10 +1,11 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
+/// \file CTimeTest.hpp
 /// \brief Test Definitions for OpenViBE CTime Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 11/05/2020.
-/// \copyright (C) 2021 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -20,6 +21,7 @@
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include <array>
@@ -87,7 +89,7 @@ TEST(CTime_Tests, constructor_seconds)
 	// test construction & conversion second -> fixed point -> second 
 	for (const auto ref : Dataset::SECONDS) {
 		const auto res = OpenViBE::CTime(ref).toSeconds();
-		EXPECT_LT(std::abs(res - ref), Dataset::TOLERANCE) << ErrorMsg("Constructor with seconds and conversion to seconds", ref, res);
+		EXPECT_LT(std::fabs(res - ref), Dataset::TOLERANCE) << ErrorMsg("Constructor with seconds and conversion to seconds", ref, res);
 	}
 }
 //---------------------------------------------------------------------------------------------------
