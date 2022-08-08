@@ -1,7 +1,7 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
 /// \file CBoxStimulationMultiplexer.hpp
-/// \brief Class of the box that merges several stimulation streams into one.
+/// \brief Classes implementation for the Box Stimulation Multiplexer.
 /// \author Yann Renard (INRIA/IRISA).
 /// \version 1.1.
 /// \date 19/07/2013
@@ -27,8 +27,7 @@
 namespace OpenViBE {
 namespace Plugins {
 namespace Stimulation {
-
-
+///-------------------------------------------------------------------------------------------------
 bool CBoxStimulationMultiplexer::initialize()
 {
 	const size_t nInput = this->getStaticBoxContext().getInputCount();
@@ -44,13 +43,14 @@ bool CBoxStimulationMultiplexer::initialize()
 
 	m_decoderEndTimes = std::vector<uint64_t>(nInput, 0ULL);
 
-	m_lastStartTime   = 0;
-	m_lastEndTime     = 0;
-	m_wasHeaderSent   = false;
+	m_lastStartTime = 0;
+	m_lastEndTime   = 0;
+	m_wasHeaderSent = false;
 
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxStimulationMultiplexer::uninitialize()
 {
 	for (auto& decoder : m_decoders) { decoder.uninitialize(); }
@@ -58,40 +58,41 @@ bool CBoxStimulationMultiplexer::uninitialize()
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxStimulationMultiplexer::processInput(const size_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
+///-------------------------------------------------------------------------------------------------
 bool CBoxStimulationMultiplexer::process()
 {
-	Kernel::IBoxIO& boxCtxt = this->getDynamicBoxContext();
-	const size_t nInput     = this->getStaticBoxContext().getInputCount();
+	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
+	const size_t nInput    = this->getStaticBoxContext().getInputCount();
 
 	if (!m_wasHeaderSent) {
 		m_encoder.encodeHeader();
-		boxCtxt.markOutputAsReadyToSend(0, m_lastEndTime, m_lastEndTime);
+		boxCtx.markOutputAsReadyToSend(0, m_lastEndTime, m_lastEndTime);
 		m_wasHeaderSent = true;
 	}
 
 	uint64_t earliestReceivedEndTime = 0xffffffffffffffffULL;
 
 	for (size_t i = 0; i < nInput; ++i) {
-		for (size_t chunk = 0; chunk < boxCtxt.getInputChunkCount(i); ++chunk) {
+		for (size_t chunk = 0; chunk < boxCtx.getInputChunkCount(i); ++chunk) {
 			m_decoders[i].decode(chunk);
 
 			if (m_decoders[i].isBufferReceived()) {
 				for (size_t stim = 0; stim < m_decoders[i].getOutputStimulationSet()->size(); ++stim) {
 					m_stimulations.insert(std::make_pair(m_decoders[i].getOutputStimulationSet()->getDate(stim),
-														 std::make_tuple(
-															 m_decoders[i].getOutputStimulationSet()->getId(stim),
-															 m_decoders[i].getOutputStimulationSet()->getDate(stim),
-															 m_decoders[i].getOutputStimulationSet()->getDuration(stim))));
+														 std::make_tuple(m_decoders[i].getOutputStimulationSet()->getId(stim),
+																		 m_decoders[i].getOutputStimulationSet()->getDate(stim),
+																		 m_decoders[i].getOutputStimulationSet()->getDuration(stim))));
 				}
 			}
 
-			m_decoderEndTimes[i] = boxCtxt.getInputChunkEndTime(i, chunk);
+			m_decoderEndTimes[i] = boxCtx.getInputChunkEndTime(i, chunk);
 		}
 
 		if (earliestReceivedEndTime > m_decoderEndTimes[i]) { earliestReceivedEndTime = m_decoderEndTimes[i]; }
@@ -110,7 +111,7 @@ bool CBoxStimulationMultiplexer::process()
 
 		m_encoder.encodeBuffer();
 
-		boxCtxt.markOutputAsReadyToSend(0, m_lastEndTime, earliestReceivedEndTime);
+		boxCtx.markOutputAsReadyToSend(0, m_lastEndTime, earliestReceivedEndTime);
 
 		m_lastStartTime = m_lastEndTime;
 		m_lastEndTime   = earliestReceivedEndTime;

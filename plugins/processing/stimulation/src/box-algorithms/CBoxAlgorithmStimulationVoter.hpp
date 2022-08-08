@@ -1,10 +1,32 @@
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmStimulationVoter.hpp
+/// \brief Classes for the Box Stimulation Voter.
+/// \author Jussi T. Lindgren (Inria).
+/// \version 1.0.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
-#include "../ovp_defines.h"
+#include "../defines.hpp"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <map>
 #include <deque>
 
 namespace OpenViBE {
@@ -19,7 +41,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StimulationVoter)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_StimulationVoter)
 
 protected:
 	uint64_t m_minimumVotes         = 0;
@@ -65,17 +87,14 @@ public:
 
 	CString getDetailedDescription() const override
 	{
-		return
-				"Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. To process multiple inputs, use Stimulation Multiplexer first.";
+		return "Votes the most frequent stimulus ID in a given time window. Outputs the winning stimulus type. Several options are possible. "
+				"To process multiple inputs, use Stimulation Multiplexer first.";
 	}
 
 	CString getCategory() const override { return "Streaming"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationVoter; }
+	CIdentifier getCreatedClass() const override { return Box_StimulationVoter; }
 	IPluginObject* create() override { return new CBoxAlgorithmStimulationVoter; }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
@@ -84,10 +103,10 @@ public:
 		prototype.addOutput("Selected stimulus", OV_TypeId_Stimulations);
 		prototype.addSetting("Number of stimuli required for vote", OV_TypeId_Integer, "4");
 		prototype.addSetting("Time window (secs)", OV_TypeId_Float, "2");
-		prototype.addSetting("Clear votes", OVP_TypeId_Voting_ClearVotes, "After output");
-		prototype.addSetting("Output timestamp", OVP_TypeId_Voting_OutputTime, "Time of last voting stimulus");
+		prototype.addSetting("Clear votes", Voting_ClearVotes, "After output");
+		prototype.addSetting("Output timestamp", Voting_OutputTime, "Time of last voting stimulus");
 		prototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
-		prototype.addSetting("Reject class can win", OVP_TypeId_Voting_RejectClass_CanWin, "No");
+		prototype.addSetting("Reject class can win", Voting_RejectClass_CanWin, "No");
 
 		return true;
 	}
@@ -95,7 +114,7 @@ public:
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationVoterListener; }
 	void releaseBoxListener(IBoxListener* listener) const override { delete listener; }
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationVoterDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_StimulationVoterDesc)
 };
 }  // namespace Stimulation
 }  // namespace Plugins
