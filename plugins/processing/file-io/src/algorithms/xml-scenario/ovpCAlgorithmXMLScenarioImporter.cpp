@@ -39,8 +39,8 @@ protected:
 
 std::string xercesToString(const XMLCh* xercesString)
 {
-	const std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
-	return std::string(charArray.get());
+	std::string transcodedString(XMLString::transcode(xercesString));
+	return std::string{transcodedString.c_str()};
 }
 
 class CErrorHandler final : public HandlerBase
