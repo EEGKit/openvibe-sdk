@@ -8,7 +8,7 @@ Signal average
    :Author:
       Bruno Renier
    :Company:
-      INRIA/IRISA
+      Inria/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_SignalAverage.png
 

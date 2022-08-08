@@ -8,7 +8,7 @@ Epoch average
    :Author:
       Yann Renard
    :Company:
-      INRIA/IRISA
+      Inria/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_EpochAverage.png
 

@@ -8,7 +8,7 @@ Simple DSP
    :Author:
       Bruno Renier / Yann Renard
    :Company:
-      INRIA / IRISA
+      Inria / IRISA
 
 .. image:: images/Doc_BoxAlgorithm_SimpleDSP.png
 

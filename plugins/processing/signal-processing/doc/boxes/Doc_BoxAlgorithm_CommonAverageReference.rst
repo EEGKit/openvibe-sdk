@@ -8,7 +8,7 @@ Common Average Reference
    :Author:
       Yann Renard
    :Company:
-      INRIA
+      Inria
 
 
 .. image:: images/Doc_BoxAlgorithm_CommonAverageReference.png

@@ -6,7 +6,6 @@ Copyright (c) 2016, Holger Nahrstaedt
 
 #include <stdio.h>
 #include "conv.h"
-#define _USE_MATH_DEFINES
 #include "math.h"
 
 #ifdef __cplusplus

@@ -8,7 +8,7 @@ Reference Channel
    :Author:
       Yann Renard
    :Company:
-      INRIA
+      Inria
 
 .. image:: images/Doc_BoxAlgorithm_ReferenceChannel.png
 

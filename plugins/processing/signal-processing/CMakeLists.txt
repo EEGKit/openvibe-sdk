@@ -28,6 +28,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared")
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
+add_definitions(-D_USE_MATH_DEFINES)	# Definition for constant math as M_PI
 
 # ---------------------------------
 # Target macros
