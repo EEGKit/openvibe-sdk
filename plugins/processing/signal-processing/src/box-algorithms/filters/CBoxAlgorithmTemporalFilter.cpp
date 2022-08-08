@@ -1,7 +1,7 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
 /// \file CBoxAlgorithmTemporalFilter.cpp
-/// \brief Class of the box Temporal Filter.
+/// \brief Classes implementation for the Box Temporal Filter.
 /// \author Thibaut Monseigne (Inria).
 /// \version 2.0.
 /// \date 14/10/2021
@@ -45,11 +45,9 @@ void CBoxAlgorithmTemporalFilter::setParameter(const size_t id)
 			m_parameters[id][2] = 0.5 * (m_frenquencies[id][1] + m_frenquencies[id][0]);
 			m_parameters[id][3] = 1.0 * (m_frenquencies[id][1] - m_frenquencies[id][0]);
 			break;
-		case EFilterType::HighPass:
-			m_parameters[id][2] = m_frenquencies[id][0];
+		case EFilterType::HighPass: m_parameters[id][2] = m_frenquencies[id][0];
 			break;
-		case EFilterType::LowPass:
-			m_parameters[id][2] = m_frenquencies[id][1];
+		case EFilterType::LowPass: m_parameters[id][2] = m_frenquencies[id][1];
 			break;
 		default: ;
 	}
@@ -104,8 +102,8 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 		OV_ERROR_UNLESS_KRF(m_frenquencies[i][1] > 0, "Invalid high cut-off frequency [" << m_frenquencies[i][1] << "] (expected value > 0)",
 							Kernel::ErrorType::BadSetting);
 		OV_ERROR_UNLESS_KRF(m_frenquencies[i][0] <= m_frenquencies[i][1],
-							"Invalid cut-off frequencies [" << m_frenquencies[i][0] << "," << m_frenquencies[i][1] <<
-							"] (expected low frequency <= high frequency)", Kernel::ErrorType::BadSetting);
+							"Invalid cut-off frequencies [" << m_frenquencies[i][0] << "," << m_frenquencies[i][1]
+							<<"] (expected low frequency <= high frequency)", Kernel::ErrorType::BadSetting);
 		// Create Default Parameter
 		setParameter(i);
 	}
@@ -162,15 +160,15 @@ bool CBoxAlgorithmTemporalFilter::process()
 				// Validation
 				if (m_type != EFilterType::LowPass) { // verification for high-pass, band-pass and band-stop filters
 					OV_ERROR_UNLESS_KRF(m_frenquencies[j][0] <= frequency * 0.5,
-										"Invalid low cut-off frequency [" << m_frenquencies[j][0] <<
-										"] (expected value must meet nyquist criteria for sampling rate "
-										<< frequency << ")", Kernel::ErrorType::BadConfig);
+										"Invalid low cut-off frequency [" << m_frenquencies[j][0]
+										<<"] (expected value must meet nyquist criteria for sampling rate " << frequency << ")",
+										Kernel::ErrorType::BadConfig);
 				}
 				if (m_type != EFilterType::HighPass) { // verification for low-pass, band-pass and band-stop filters
 					OV_ERROR_UNLESS_KRF(m_frenquencies[j][1] <= frequency * 0.5,
-										"Invalid high cut-off frequency [" << m_frenquencies[j][1] <<
-										"] (expected value must meet nyquist criteria for sampling rate "
-										<< frequency << ")", Kernel::ErrorType::BadConfig);
+										"Invalid high cut-off frequency [" << m_frenquencies[j][1]
+										<<"] (expected value must meet nyquist criteria for sampling rate " << frequency << ")",
+										Kernel::ErrorType::BadConfig);
 				}
 
 				// Filters
@@ -189,7 +187,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 			}
 		}
 		if (m_decoder.isBufferReceived()) {
-			double* input = m_decoder.getOutputMatrix()->getBuffer();
+			const double* input = m_decoder.getOutputMatrix()->getBuffer();
 
 			//"french cook" to reduce transient for bandpass and highpass filters
 			if (m_firstSamples.empty()) {

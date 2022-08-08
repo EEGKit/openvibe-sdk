@@ -1,8 +1,8 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
 /// \file CBoxXDAWNTrainer.hpp
-/// \brief Class of the box XDAWN Trainer.
-/// \author Yann Renard (Mensia Technologies SA).
+/// \brief Classes for the box XDAWN Trainer.
+/// \author Yann Renard (Mensia Technologies).
 /// \version 1.0.
 /// \copyright Copyright (C) 2022 Inria
 ///
@@ -46,7 +46,7 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_InriaXDAWNTrainer)
 
 protected:
 	Toolkit::TStimulationDecoder<CBoxXDAWNTrainer> m_stimDecoder;
@@ -68,17 +68,14 @@ public:
 	void release() override {}
 	CString getName() const override { return "xDAWN Trainer"; }
 	CString getAuthorName() const override { return "Yann Renard"; }
-	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies"; }
 	CString getShortDescription() const override { return "Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"; }
 	CString getDetailedDescription() const override { return "Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"; }
 	CString getCategory() const override { return "Signal processing/Spatial Filtering"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 	CString getStockItemName() const override { return "gtk-zoom-100"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
+	CIdentifier getCreatedClass() const override { return Box_InriaXDAWNTrainer; }
 	IPluginObject* create() override { return new CBoxXDAWNTrainer; }
 
 	bool getBoxPrototype(Kernel::IBoxProto& prototype) const override
@@ -96,7 +93,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainerDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_InriaXDAWNTrainerDesc)
 };
 }  // namespace SignalProcessing
 }  // namespace Plugins

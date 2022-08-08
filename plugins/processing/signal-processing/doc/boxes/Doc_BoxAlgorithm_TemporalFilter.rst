@@ -8,7 +8,7 @@ Temporal Filter
    :Author:
      Yann Renard & Laurent Bonnet 
    :Company:
-     Mensia Technologies SA
+     Mensia Technologies
 
 .. image:: images/Doc_BoxAlgorithm_TemporalFilter.png
 

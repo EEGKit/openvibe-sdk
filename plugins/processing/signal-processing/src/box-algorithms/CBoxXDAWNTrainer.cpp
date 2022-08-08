@@ -1,8 +1,8 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
 /// \file CBoxXDAWNTrainer.cpp
-/// \brief Class of the box XDAWN Trainer.
-/// \author Yann Renard (Mensia Technologies SA).
+/// \brief Classes implementation for the box XDAWN Trainer.
+/// \author Yann Renard (Mensia Technologies).
 /// \version 1.0.
 /// \copyright Copyright (C) 2022 Inria
 ///
@@ -25,7 +25,6 @@
 
 #include "fs/Files.h"
 
-#include <cstdio>
 #include <fstream>
 #include <iostream>
 
@@ -94,11 +93,11 @@ bool CBoxXDAWNTrainer::processInput(const size_t index)
 //--------------------------------------------------------------------------------
 bool CBoxXDAWNTrainer::process()
 {
-	Kernel::IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
+	Kernel::IBoxIO& boxCtx = this->getDynamicBoxContext();
 
 	bool train = false;
 
-	for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); ++i) {
+	for (size_t i = 0; i < boxCtx.getInputChunkCount(0); ++i) {
 		m_stimEncoder.getInputStimulationSet()->clear();
 		m_stimDecoder.decode(i);
 
@@ -119,7 +118,7 @@ bool CBoxXDAWNTrainer::process()
 		}
 		if (m_stimDecoder.isEndReceived()) { m_stimEncoder.encodeEnd(); }
 
-		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, i), dynamicBoxContext.getInputChunkEndTime(0, i));
+		boxCtx.markOutputAsReadyToSend(0, boxCtx.getInputChunkStartTime(0, i), boxCtx.getInputChunkEndTime(0, i));
 	}
 
 	if (train) {
@@ -136,7 +135,7 @@ bool CBoxXDAWNTrainer::process()
 		for (size_t j = 0; j < 2; ++j) {
 			n[j] = 0;
 
-			for (size_t i = 0; i < dynamicBoxContext.getInputChunkCount(j + 1); ++i) {
+			for (size_t i = 0; i < boxCtx.getInputChunkCount(j + 1); ++i) {
 				Toolkit::TSignalDecoder<CBoxXDAWNTrainer>& decoder = m_signalDecoder[j];
 				decoder.decode(i);
 
@@ -154,7 +153,7 @@ bool CBoxXDAWNTrainer::process()
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
-						X[j].resize(nChannel, (dynamicBoxContext.getInputChunkCount(j + 1) - 1) * nSample);
+						X[j].resize(nChannel, (boxCtx.getInputChunkCount(j + 1) - 1) * nSample);
 					}
 					else // otherwise, only ERP averaging buffer (X[1]) is reset
 					{
@@ -176,13 +175,12 @@ bool CBoxXDAWNTrainer::process()
 
 							// $$$ Assumes continuous session signal starting at date 0
 							{
-								size_t ERPSampleIndex = size_t(((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16) * sampling) >> 16);
-								erpSampleIndexes.push_back(ERPSampleIndex);
+								size_t erpSampleIndex = size_t(((boxCtx.getInputChunkStartTime(j + 1, i) >> 16) * sampling) >> 16);
+								erpSampleIndexes.push_back(erpSampleIndex);
 							}
 							break;
 
-						default:
-							break;
+						default: break;
 					}
 
 					n[j]++;
@@ -205,16 +203,14 @@ bool CBoxXDAWNTrainer::process()
 					X[j] = X[j] / double(n[j]); // Averages ERP
 					break;
 
-				default:
-					break;
+				default: break;
 			}
 		}
 
 		// We need equal number of channels
 		OV_ERROR_UNLESS_KRF(X[0].rows() == X[1].rows(),
-							"Dimension mismatch, first input had " << size_t(X[0].rows()) << " channels while second input had " << size_t(X[1].rows()) <<
-							" channels\n",
-							Kernel::ErrorType::BadValue);
+							"Dimension mismatch, first input had " << size_t(X[0].rows()) << " channels while second input had "
+							<< size_t(X[1].rows()) << " channels\n", Kernel::ErrorType::BadValue);
 
 		// Grabs usefull values
 
@@ -226,7 +222,7 @@ bool CBoxXDAWNTrainer::process()
 		const Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
 		Eigen::MatrixXd D        = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
-		for (size_t sampleIndex : erpSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
+		for (const size_t sampleIndex : erpSampleIndexes) { D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI; }
 
 		// Computes covariance matrices
 
@@ -246,12 +242,11 @@ bool CBoxXDAWNTrainer::process()
 					break;
 				case Eigen::NoConvergence: errorMessage = "No convergence";
 					break;
-					// case Eigen::InvalidInput: errorMessage="Invalid input"; break; // FIXME
+				// case Eigen::InvalidInput: errorMessage="Invalid input"; break; // FIXME
 				default: break;
 			}
 
-			OV_ERROR_KRF("Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n",
-						 Kernel::ErrorType::BadProcessing);
+			OV_ERROR_KRF("Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n", Kernel::ErrorType::BadProcessing);
 		}
 
 		// Create a CMatrix mapper that can spool the filters to a file

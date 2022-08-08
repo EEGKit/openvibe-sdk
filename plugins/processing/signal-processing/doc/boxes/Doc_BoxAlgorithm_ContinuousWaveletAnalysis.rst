@@ -8,7 +8,7 @@ Continuous Wavelet Analysis
    :Author:
       Quentin Barthelemy
    :Company:
-      Mensia Technologies SA
+      Mensia Technologies
 
 .. image:: images/Doc_BoxAlgorithm_ContinuousWaveletAnalysis.png
 

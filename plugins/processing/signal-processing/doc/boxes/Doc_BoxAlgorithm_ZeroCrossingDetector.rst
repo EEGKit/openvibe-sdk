@@ -8,7 +8,7 @@ Zero-Crossing Detector
    :Author:
       Quentin Barthelemy
    :Company:
-      Mensia Technologies SA
+      Mensia Technologies
 
 .. image:: images/Doc_BoxAlgorithm_ZeroCrossingDetector.png
 
