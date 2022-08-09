@@ -115,9 +115,6 @@ public:
 	CString getDetailedDescription() const override { return ""; }
 	CString getCategory() const override { return "File reading and writing/CSV"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
 	IPluginObject* create() override { return new CBoxAlgorithmCSVFileReader; }

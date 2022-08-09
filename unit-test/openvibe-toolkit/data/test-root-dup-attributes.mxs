@@ -82,10 +82,6 @@ and unicode characters 日本語</Text>
 		</Comment>
 	</Comments>
 	<Attributes>
-		<Attribute>
-			<Identifier>(0x079d1f09, 0x667c7871)</Identifier>
-			<Value>ADDED SOFTWARE VERSION</Value>
-		</Attribute>
 	</Attributes>
 </OpenViBE-Scenario>
 <OpenViBE-Scenario>
@@ -172,10 +168,6 @@ and unicode characters 日本語</Text>
 		</Comment>
 	</Comments>
 	<Attributes>
-		<Attribute>
-			<Identifier>(0x079d1f09, 0x667c7871)</Identifier>
-			<Value>ADDED SOFTWARE VERSION</Value>
-		</Attribute>
 	</Attributes>
 	<Attributes>
 	</Attributes>

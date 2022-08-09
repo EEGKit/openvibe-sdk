@@ -32,8 +32,6 @@ public:
 	CString getCategory() const override { return m_category; }
 	CString getVersion() const override { return m_version; }
 	CString getStockItemName() const override { return m_stockItemName; }
-	CString getAddedSoftwareVersion() const override { return m_addedSoftwareVersion; }
-	CString getUpdatedSoftwareVersion() const override { return m_updatedSoftwareVersion; }
 
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Metabox; }
 	Plugins::IPluginObject* create() override { return nullptr; }
@@ -83,8 +81,6 @@ private:
 	CString m_category;
 	CString m_version;
 	CString m_stockItemName;
-	CString m_addedSoftwareVersion;
-	CString m_updatedSoftwareVersion;
 	CString m_metaboxID;
 
 	std::vector<io_stream_t> m_inputs;
