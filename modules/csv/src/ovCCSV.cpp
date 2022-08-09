@@ -1533,7 +1533,7 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 {
 	const size_t eventDurationCol = line.find_last_of(SEPARATOR);
 	const size_t eventDateCol     = line.find_last_of(SEPARATOR, eventDurationCol - 1);
-	const size_t eventIdCol       = line.find_last_of(SEPARATOR, eventDateCol - 1);
+	const size_t eventIdCol       = line.find_last_of(SEPARATOR, eventDateCol - 1) + 1;
 
 	if (eventDurationCol == eventDateCol && eventDurationCol == eventIdCol) {
 		m_lastStringError = "No separators found in line";
@@ -1543,7 +1543,7 @@ bool CCSVHandler::readStimulationChunk(const std::string& line, std::vector<SSti
 
 	std::vector<uint64_t> stimIDs;
 	// pick all time identifiers for the current time
-	boost::spirit::qi::phrase_parse(line.cbegin() + eventIdCol + 1, line.cbegin() + eventDateCol, boost::spirit::qi::ulong_long % DATA_SEPARATOR,
+	boost::spirit::qi::phrase_parse(line.cbegin() + eventIdCol, line.cbegin() + eventDateCol, boost::spirit::qi::ulong_long % DATA_SEPARATOR,
 									boost::spirit::ascii::space, stimIDs);
 
 	std::vector<double> stimDates;
