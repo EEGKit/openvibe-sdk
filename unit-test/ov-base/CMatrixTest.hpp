@@ -79,7 +79,7 @@ TEST_F(CMatrix_Tests, Constructor_Copy)
 
 	res.getBuffer()[0] = 15;
 	res.getBuffer()[1] = 25;
-	EXPECT_TRUE(res.setDimensionLabel(1, 0, "changed")) << "Can't change Dimension Label.";
+	res.setDimensionLabel(1, 0, "changed");
 
 	EXPECT_TRUE(AlmostEqual(10, m_mat.getBuffer()[0])) << "Setup Matrix 1st value isn't 10.";
 	EXPECT_TRUE(AlmostEqual(20, m_mat.getBuffer()[1])) << "Setup Matrix 2nd value isn't 20.";
@@ -99,7 +99,7 @@ TEST_F(CMatrix_Tests, Constructor_copy_in_array_push)
 
 	res[0].getBuffer()[0] = 15;
 	res[0].getBuffer()[1] = 25;
-	EXPECT_TRUE(res[0].setDimensionLabel(1, 0, "changed")) << "Can't change Dimension Label.";
+	res[0].setDimensionLabel(1, 0, "changed");
 
 	EXPECT_TRUE(AlmostEqual(15, res[0].getBuffer()[0])) << "1st Matrix 1st value isn't 15.";
 	EXPECT_TRUE(AlmostEqual(25, res[0].getBuffer()[1])) << "1st Matrix 2nd value isn't 25.";
@@ -123,7 +123,7 @@ TEST_F(CMatrix_Tests, Operators)
 
 	m_mat.getBuffer()[0] = 15;
 	m_mat.getBuffer()[1] = 25;
-	EXPECT_TRUE(m_mat.setDimensionLabel(1, 0, "changed")) << "Can't change Dimension Label.";
+	m_mat.setDimensionLabel(1, 0, "changed");
 
 	EXPECT_TRUE(AlmostEqual(15, m_mat.getBuffer()[0])) << "Setup Matrix 1st value isn't 15.";
 	EXPECT_TRUE(AlmostEqual(25, m_mat.getBuffer()[1])) << "Setup Matrix 2nd value isn't 25.";
@@ -139,15 +139,16 @@ TEST_F(CMatrix_Tests, SetBuffer)
 {
 	OpenViBE::CMatrix res(1, 2);
 	std::vector<double> buffer = { 10, 20 };
-	EXPECT_TRUE(res.setBuffer(buffer)) << "setBuffer function fail.";
+	res.setBuffer(buffer);
 	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0])) << "Matrix 1st value isn't 10.";
 	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
 
 	buffer = { 1, 2, 3 };
-	EXPECT_FALSE(res.setBuffer(buffer)) << "setBuffer function must fail with bad input.";
-	EXPECT_TRUE(res.setBuffer(buffer.data(),1)) << "setBuffer function fail.";
+	res.setBuffer(buffer.data(), 1);
 	EXPECT_TRUE(AlmostEqual(1, res.getBuffer()[0])) << "Matrix 1st value isn't 1.";
 	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
+	res.setBuffer(buffer);	// Too big buffer data is copied until and of matrix buffer
+	EXPECT_TRUE(AlmostEqual(2, res.getBuffer()[1])) << "Matrix 2nd value isn't 2.";
 }
 //---------------------------------------------------------------------------------------------------
 
@@ -156,7 +157,7 @@ TEST_F(CMatrix_Tests, Resize)
 {
 	OpenViBE::CMatrix res(1, 2);
 	res.resetBuffer();
-	EXPECT_TRUE(res.setDimensionLabel(0, 0, "label")) << "Can't change Dimension Label.";
+	res.setDimensionLabel(0, 0, "label");
 	ASSERT_EQ(2, res.getDimensionCount()) << "Matrix doesn't have 2 Dimensions.";
 	ASSERT_EQ(1, res.getDimensionSize(0)) << "Matrix doesn't have 1 Row.";
 	ASSERT_EQ(2, res.getDimensionSize(1)) << "Matrix doesn't have 2 Columns.";
@@ -167,7 +168,7 @@ TEST_F(CMatrix_Tests, Resize)
 	EXPECT_STREQ("", res.getDimensionLabel(1, 1)) << "Matrix 2nd Col default Label isn't empty.";
 
 	res.resize(2, 2);
-	EXPECT_TRUE(res.setDimensionLabel(1, 1, "label")) << "Can't change Dimension Label.";
+	res.setDimensionLabel(1, 1, "label");
 	ASSERT_EQ(2, res.getDimensionCount()) << "Matrix doesn't have 2 Dimensions.";
 	ASSERT_EQ(2, res.getDimensionSize(0)) << "Matrix doesn't have 2 Row.";
 	ASSERT_EQ(2, res.getDimensionSize(1)) << "Matrix doesn't have 2 Columns.";
