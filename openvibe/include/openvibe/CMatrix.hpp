@@ -27,7 +27,7 @@
 #include "ov_defines.h"
 #include <vector>
 #include <string>
-
+#include <iostream>	// cerr
 
 namespace OpenViBE {
 
@@ -73,7 +73,7 @@ public:
 	/// <param name="dim"> The dimension concerned. </param>
 	/// <param name="idx"> The index on this dimension. </param>
 	/// <returns> The label. </returns>
-	/// <remarks> It's a <c>const char*</c> object to keep previous compatibility with CString, intended to be replace by std::string. </remakrs>
+	/// <remarks> It's a <c>const char*</c> object to keep previous compatibility with CString, intended to be replace by std::string. </remarks>
 	const char* getDimensionLabel(const size_t dim, const size_t idx) const
 	{
 		return (dim >= m_dimSizes->size() || idx >= m_dimSizes->at(dim)) ? "" : m_dimLabels->at(dim)[idx].c_str();
@@ -100,7 +100,7 @@ public:
 	}
 
 	/// <summary> Get the number of element in buffer. </summary>
-	/// <remarks> keep previous compatibility with heavy name. Avoid to used it, intended to be removed. </remakrs>
+	/// <remarks> keep previous compatibility with heavy name. Avoid to used it, intended to be removed. </remarks>
 	size_t getBufferElementCount() const { return getSize(); }
 
 
@@ -114,43 +114,44 @@ public:
 
 	/// <summary> Set the number of dimensions. </summary>
 	/// <param name="count">The number of dimensions. </param>
-	bool setDimensionCount(const size_t count) const;
+	void setDimensionCount(const size_t count) const;
 
 	/// <summary> Set the size of the selected dimension. </summary>
 	/// <param name="dim"> The selected dimension. </param>
 	/// <param name="size"> The new size. </param>
-	bool setDimensionSize(const size_t dim, const size_t size) const;
+	void setDimensionSize(const size_t dim, const size_t size) const;
 
 	/// <summary> Set the label of the index in the selected dimension. </summary>
 	/// <param name="dim"> The dimension concerned. </param>
 	/// <param name="idx"> The index concerned. </param>
 	/// <param name="label"> The Label to set. </param>
-	bool setDimensionLabel(const size_t dim, const size_t idx, const std::string& label) const;
+	void setDimensionLabel(const size_t dim, const size_t idx, const std::string& label) const;
 
 	/// <summary> Set the label of the index in the selected dimension (keep previous compatibility with char* for CString). </summary>
-	/// <remarks> keep previous compatibility with heavy name. Avoid to used it, intended to be removed. </remakrs>
-	bool setDimensionLabel(const size_t dim, const size_t idx, const char* label) const { return setDimensionLabel(dim, idx, std::string(label)); }
+	/// <remarks> keep previous compatibility with heavy name. Avoid to used it, intended to be removed. </remarks>
+	void setDimensionLabel(const size_t dim, const size_t idx, const char* label) const { setDimensionLabel(dim, idx, std::string(label)); }
 
 	/// <summary> Fill the matrix with the buffer. </summary>
 	/// <param name="buffer"> The buffer to copy. </param>
 	/// <param name="size"> The size of the buffer. </param>
-	/// <returns> <c>True</c> if the matrix is filled with buffer, <c>False</c> if the buffer size exceeds the matrix size. </returns>
-	/// <remarks> The buffer can contain any numeric type. The CMatrix class stores them as double. </remakrs>
+	/// <remarks> The buffer can contain any numeric type. The CMatrix class stores them as double. </remarks>
 	template <class T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
-	bool setBuffer(const T* buffer, const size_t size)
+	void setBuffer(const T* buffer, const size_t size)
 	{
 		if (!m_buffer) { initBuffer(); }				// Initialize buffer if needed
-		if (size > m_size) { return false; }
-		for (size_t i = 0; i < size; ++i) { m_buffer[i] = double(buffer[i]); }
-		return true;
+		const auto s = size > m_size ? m_size : size;
+		if (size > m_size) {
+			std::cerr << "[ERROR] CMatrix::setBuffer: Provided buffer (size: " << size << ") is bigger than the local buffer (size: "
+					<< m_size << "). Copy will be made up to " << m_size << " elements." << std::endl;
+		}
+		for (size_t i = 0; i < s; ++i) { m_buffer[i] = double(buffer[i]); }
 	}
 
 	/// <summary> Fill the matrix with the buffer. </summary>
 	/// <param name="buffer"> The buffer to copy. </param>
-	/// <returns> <c>True</c> if the matrix is filled with buffer, <c>False</c> if the buffer size exceeds the matrix size. </returns>
-	/// <remarks> The buffer can contain any numeric type. The CMatrix class stores them as double. </remakrs>
+	/// <remarks> The buffer can contain any numeric type. The CMatrix class stores them as double. </remarks>
 	template <class T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
-	bool setBuffer(const std::vector<T>& buffer) { return setBuffer(buffer.data(), buffer.size()); }
+	void setBuffer(const std::vector<T>& buffer) { return setBuffer(buffer.data(), buffer.size()); }
 
 	//--------------------------------------------------
 	//------------------- Operators --------------------
@@ -161,7 +162,7 @@ public:
 	/// <returns> Himself. </returns>
 	CMatrix& operator=(const CMatrix& m)
 	{
-		copy(m);
+		if (this != &m) { copy(m); }
 		return *this;
 	}
 
