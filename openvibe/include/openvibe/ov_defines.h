@@ -107,8 +107,6 @@
 #define OV_AttributeId_Scenario_Category						OpenViBE::CIdentifier(0xF6B2E3FA, 0x7BD43926)
 #define OV_AttributeId_Scenario_Version							OpenViBE::CIdentifier(0x8C1FC55B, 0x7B433DC2)
 #define OV_AttributeId_Scenario_DocumentationPage				OpenViBE::CIdentifier(0xF36A1567, 0xD13C53DA)
-#define OV_AttributeId_Scenario_AddedSoftwareVersion			OpenViBE::CIdentifier(0x079D1F09, 0x667C7871)
-#define OV_AttributeId_Scenario_UpdatedSoftwareVersion			OpenViBE::CIdentifier(0x60BC58AB, 0x7A1B4D83)
 #define OV_AttributeId_Scenario_MetaboxHash						OpenViBE::CIdentifier(0x20C6D158, 0xFE90AADD)
 
 #define OV_AttributeId_Box_XCenterPosition						OpenViBE::CIdentifier(0x207C9054, 0x3C841B63)

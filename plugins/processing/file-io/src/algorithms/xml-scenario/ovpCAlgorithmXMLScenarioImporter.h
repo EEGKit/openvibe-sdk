@@ -56,9 +56,6 @@ public:
 	CString getCategory() const override { return "Samples"; }
 	CString getVersion() const override { return "1.0"; }
 	// virtual CString getFileExtension() const       { return "xml;XML"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioImporter; }
 	IPluginObject* create() override { return new CAlgorithmXMLScenarioImporter(); }

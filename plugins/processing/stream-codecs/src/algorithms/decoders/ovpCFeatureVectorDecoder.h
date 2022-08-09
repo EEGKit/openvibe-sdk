@@ -31,9 +31,6 @@ public:
 	CString getDetailedDescription() const override { return ""; }
 	CString getCategory() const override { return "Stream codecs/Decoders"; }
 	CString getVersion() const override { return "1.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_FeatureVectorDecoder; }
 	IPluginObject* create() override { return new CFeatureVectorDecoder(); }

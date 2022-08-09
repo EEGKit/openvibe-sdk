@@ -121,33 +121,6 @@ public:
 	 */
 	virtual CString getVersion() const { return "unknown"; }
 	/**
-	 * \brief Gets the component in which the plugin is defined
-	 *
-	 * OpenViBE SDK is used to build platforms that are composed of several components.
-	 * Each component can come with its own set of plugins, and has its own version.
-	 * The \ref getAddedSoftwareVersion and \ref getUpdatedSoftwareVersion will return versions of the component in which the plugin belongs.
-	 *
-	 * \return a string identifier of the component
-	 * \retval "unknown" if not redefined
-	 */
-	virtual CString getSoftwareComponent() const { return "unknown"; }
-	/**
-	 * \brief Gets the version of the software in the one the plugin was added
-	 * \return the version of the software in the one the plugin was added.
-	 * \retval "unknown" if not redefined
-	 *
-	 * \sa getSoftwareComponent
-	 */
-	virtual CString getAddedSoftwareVersion() const { return "unknown"; }
-	/**
-	 * \brief Gets the version of the software in the one the plugin was last updated
-	 * \return the version of the software in the one the plugin was last updated
-	 * \retval "unknown" if not redefined
-	 *
-	 *  \sa getSoftwareComponent
-	 */
-	virtual CString getUpdatedSoftwareVersion() const { return "unknown"; }
-	/**
 	 * \brief Tests whether the plugin has a given functionality
 	 * \param functionality [in] : functionality of interest
 	 * \return \e true in case plugin has this functionality.
