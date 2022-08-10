@@ -15,7 +15,6 @@ const char* kernelConfig = nullptr;
 class StreamedMatrixTest : public testing::Test
 {
 protected:
-
 	StreamedMatrixTest() { }
 	~StreamedMatrixTest() override { }
 
@@ -96,11 +95,9 @@ TEST_F(StreamedMatrixTest, matrix_encoded_and_then_decoded_is_identical_to_origi
 	EXPECT_TRUE(decoder.initialize());
 	OpenViBE::CMatrix mat(2, 3);
 	size_t elemCount = 1;
-	for (size_t dim = 0; dim < mat.getDimensionCount(); ++dim)
-	{
+	for (size_t dim = 0; dim < mat.getDimensionCount(); ++dim) {
 		const auto size = mat.getDimensionSize(dim);
-		for (size_t entry = 0; entry < size; ++entry)
-		{
+		for (size_t entry = 0; entry < size; ++entry) {
 			std::string label = std::to_string(dim) + ":" + std::to_string(entry);
 			mat.setDimensionLabel(0, 0, label.c_str());
 		}

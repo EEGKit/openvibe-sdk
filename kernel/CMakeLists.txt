@@ -9,19 +9,19 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-common
-                      openvibe-module-fs
-                      openvibe-module-system
-                      openvibe-module-xml
-                      Boost::boost
+					  openvibe
+					  openvibe-common
+					  openvibe-module-fs
+					  openvibe-module-system
+					  openvibe-module-xml
+					  Boost::boost
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-                      VERSION ${PROJECT_VERSION}
-                      SOVERSION ${PROJECT_VERSION_MAJOR}
-                      FOLDER ${KERNEL_FOLDER}
-                      COMPILE_FLAGS "-DOVK_Exports -DOVK_Shared")
+					  VERSION ${PROJECT_VERSION}
+					  SOVERSION ${PROJECT_VERSION_MAJOR}
+					  FOLDER ${KERNEL_FOLDER}
+					  COMPILE_FLAGS "-DOVK_Exports -DOVK_Shared")
 
 # ---------------------------------
 # Finds standard library dl
@@ -29,13 +29,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Adds include path
 # ---------------------------------
 if(UNIX)
-    find_library(LIB_STANDARD_MODULE_DL dl)
-    if(LIB_STANDARD_MODULE_DL)
-        message(STATUS "  Found dl...")
-        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DL})
-    else(LIB_STANDARD_MODULE_PTHREAD)
-        message(STATUS "  FAILED to find dl...")
-    endif(LIB_STANDARD_MODULE_DL)
+	find_library(LIB_STANDARD_MODULE_DL dl)
+	if(LIB_STANDARD_MODULE_DL)
+		message(STATUS "  Found dl...")
+		target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DL})
+	else(LIB_STANDARD_MODULE_PTHREAD)
+		message(STATUS "  FAILED to find dl...")
+	endif(LIB_STANDARD_MODULE_DL)
 endif(UNIX)
 
 # ---------------------------------
@@ -44,13 +44,13 @@ endif(UNIX)
 # Adds include path
 # ---------------------------------
 if(UNIX)
-    find_library(LIB_STANDARD_MODULE_PTHREAD pthread)
-    if(LIB_STANDARD_MODULE_PTHREAD)
-        message(STATUS "  Found pthread...")
-        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_PTHREAD})
-    else(LIB_STANDARD_MODULE_PTHREAD)
-        message(STATUS "  FAILED to find pthread...")
-    endif(LIB_STANDARD_MODULE_PTHREAD)
+	find_library(LIB_STANDARD_MODULE_PTHREAD pthread)
+	if(LIB_STANDARD_MODULE_PTHREAD)
+		message(STATUS "  Found pthread...")
+		target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_PTHREAD})
+	else(LIB_STANDARD_MODULE_PTHREAD)
+		message(STATUS "  FAILED to find pthread...")
+	endif(LIB_STANDARD_MODULE_PTHREAD)
 endif(UNIX)
 
 # ---------------------------------
@@ -63,9 +63,9 @@ SET_BUILD_PLATFORM()
 # Install files
 # -----------------------------
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION ${DIST_BINDIR}
-        LIBRARY DESTINATION ${DIST_LIBDIR}
-        ARCHIVE DESTINATION ${DIST_LIBDIR})
+		RUNTIME DESTINATION ${DIST_BINDIR}
+		LIBRARY DESTINATION ${DIST_LIBDIR}
+		ARCHIVE DESTINATION ${DIST_LIBDIR})
 
 install(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/kernel PATTERN "*-base" EXCLUDE)
 

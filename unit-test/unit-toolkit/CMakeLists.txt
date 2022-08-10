@@ -44,12 +44,12 @@ file(GLOB_RECURSE SRC_FILES src/*.cpp include/*.h)
 add_library(${PROJECT_NAME} ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-common
-                      openvibe-toolkit)
+					  openvibe
+					  openvibe-common
+					  openvibe-toolkit)
 
 target_include_directories(${PROJECT_NAME}
-                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+						   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
