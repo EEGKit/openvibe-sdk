@@ -53,10 +53,9 @@ const std::array<double, 40> SECONDS =
 };
 
 /// <summary> Time values to test in fixed point format. </summary>
-const std::array<uint64_t, 16> FIXED_POINT =
-{
-	1LL << 8, 1LL << 16, 1L << 19, 1LL << 22, 1LL << 27, 1L << 30, 1LL << 32, 10LL << 32, 100LL << 32, 123LL << 32, 500LL << 32, 512LL << 32, 1000LL << 32,
-	1024LL << 32, 2001LL << 32, 5000LL << 32
+const std::array<uint64_t, 16> FIXED_POINT = {
+	1LL << 8, 1LL << 16, 1L << 19, 1LL << 22, 1LL << 27, 1L << 30, 1LL << 32, 10LL << 32, 100LL << 32,
+	123LL << 32, 500LL << 32, 512LL << 32, 1000LL << 32, 1024LL << 32, 2001LL << 32, 5000LL << 32
 };
 
 /// <summary> Sampling rates to test. </summary>
@@ -104,8 +103,7 @@ TEST(CTime_Tests, constructor_sampling)
 			EXPECT_EQ(ref, res) << ErrorMsg("Constructor with sampling and sample count and conversion to sample count", ref, res);
 		}
 	}
-	EXPECT_TRUE(OpenViBE::CTime(0, 1) == OpenViBE::CTime::max()) << ErrorMsg("Special Case if sampling = 0",
-																			 OpenViBE::CTime::max(), OpenViBE::CTime(0, 1));
+	EXPECT_TRUE(OpenViBE::CTime(0, 1) == OpenViBE::CTime::max()) << ErrorMsg("Special Case if sampling = 0", OpenViBE::CTime::max(), OpenViBE::CTime(0, 1));
 }
 //---------------------------------------------------------------------------------------------------
 
@@ -174,8 +172,7 @@ TEST(CTime_Tests, conversion_chain)
 			const uint64_t difference = uint64_t(std::abs(int64_t(compute) - int64_t(tmp)));
 
 			EXPECT_LT(OpenViBE::CTime(difference).toSeconds(), (1.0 / double(sampling)))
-				<< "Time difference too large between OV(" << seconds << ") and "
-				<< "SCtoOV(" << sampling << ", OVtoSC(" << sampling << "," << tmp << "))";
+			<< "Time difference too large between OV(" << seconds << ") and " << "SCtoOV(" << sampling << ", OVtoSC(" << sampling << "," << tmp << "))";
 		}
 	}
 }

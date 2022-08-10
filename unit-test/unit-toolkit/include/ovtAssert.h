@@ -40,13 +40,12 @@ std::string buildExpressionFromPair(const char* str1, const char* str2);
 * - msg: custom error message
 * WARNING: SHOULD NOT BE USED DIRECTLY
 */
-#define OVT_ASSERT_PRIV(expr, origin, msg)                             \
-do {                                                                   \
-	if (!(expr))                                                       \
-	{                                                                  \
-		OpenViBE::Test::printError(#origin, (msg), __FILE__, __LINE__);  \
-		return EXIT_FAILURE;                                           \
-	}                                                                  \
+#define OVT_ASSERT_PRIV(expr, origin, msg)								\
+do {																	\
+	if (!(expr)) {														\
+		OpenViBE::Test::printError(#origin, (msg), __FILE__, __LINE__);	\
+		return EXIT_FAILURE;											\
+	}																	\
 } while (0)
 
 /**
@@ -62,14 +61,13 @@ do {                                                                   \
 * - str2: compared string
 * - msg: custom error message
 */
-#define OVT_ASSERT_STREQ(str1, str2, msg)                                \
-do {                                                                     \
-	if (!((str1) == (str2)))                                             \
-	{                                                                    \
+#define OVT_ASSERT_STREQ(str1, str2, msg)																						\
+do {																															\
+	if (!((str1) == (str2))) {																									\
 		OpenViBE::Test::printError(OpenViBE::Test::buildExpressionFromPair(#str1, #str2).c_str(),(msg), __FILE__, __LINE__);	\
-		OpenViBE::Test::printExpressionPair((str1).c_str(),(str2).c_str());\
-		return EXIT_FAILURE;                                             \
-	}                                                                    \
+		OpenViBE::Test::printExpressionPair((str1).c_str(),(str2).c_str());														\
+		return EXIT_FAILURE;																									\
+	}																															\
 } while (0)
 
 /**
@@ -79,8 +77,8 @@ do {                                                                     \
 * - msg: custom error message
 */
 #define OVT_ASSERT_EX(expr, msg) 		\
-do {                             		\
-	bool hasTrown{ false };      		\
+do {									\
+	bool hasTrown{ false };				\
 	try { (expr); }						\
 	catch (...) { hasTrown = true; }	\
 	OVT_ASSERT_PRIV(hasTrown, (msg));	\

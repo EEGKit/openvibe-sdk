@@ -12,19 +12,19 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-common
-                      openvibe-toolkit
-                      openvibe-module-csv
+					  openvibe
+					  openvibe-common
+					  openvibe-toolkit
+					  openvibe-module-csv
                       openvibe-module-ebml
-                      openvibe-module-xml
-                      openvibe-module-fs)
+					  openvibe-module-xml
+					  openvibe-module-fs)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	FOLDER ${PLUGINS_FOLDER}
-	COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE")
+					  VERSION ${PROJECT_VERSION}
+					  SOVERSION ${PROJECT_VERSION_MAJOR}
+					  FOLDER ${PLUGINS_FOLDER}
+					  COMPILE_FLAGS "-DOVP_Exports -DOVP_Shared -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE")
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 

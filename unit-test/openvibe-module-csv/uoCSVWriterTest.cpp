@@ -603,11 +603,7 @@ TEST(CSV_Writer_Test_Case, stimulationsOnlyWriterGoodStims)
 	ASSERT_TRUE(handler->openFile(filename, OpenViBE::CSV::EFileAccessMode::Write));
 	handler->setFormatType(OpenViBE::CSV::EStreamType::Stimulations);
 
-	for (size_t i = 0; i < stimCodes.size(); ++i) {
-		handler->addEvent(stimCodes[i],
-						  double(i + 1),
-						  0.0);
-	}
+	for (size_t i = 0; i < stimCodes.size(); ++i) { handler->addEvent(stimCodes[i], double(i + 1), 0.0); }
 
 
 	ASSERT_TRUE(handler->writeHeaderToFile());

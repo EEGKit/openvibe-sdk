@@ -7,14 +7,14 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-common
-                      openvibe-toolkit
-                      openvibe-module-system
-                      openvibe-module-fs
-                      openvibe-module-socket
-                      openvibe-module-communication
-)
+					  openvibe
+					  openvibe-common
+					  openvibe-toolkit
+					  openvibe-module-system
+					  openvibe-module-ebml
+					  openvibe-module-fs
+					  openvibe-module-socket
+					  openvibe-module-communication)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}

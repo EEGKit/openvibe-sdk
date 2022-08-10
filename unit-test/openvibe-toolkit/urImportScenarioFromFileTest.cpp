@@ -114,8 +114,7 @@ int urImportScenarioFromFileTest(int /*argc*/, char* argv[])
 	CIdentifier linkSourceOutputIdentifier;
 	OVT_ASSERT(clockStimulatorToStimulationListenerLink->getSource(linkSourceBoxId, linkSourceOutputIndex, linkSourceOutputIdentifier),
 			   "Could not get link details");
-	OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId,
-			   "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
+	OVT_ASSERT(linkSourceBoxId == s_ClockStimulatorBoxId, "The Clock Stimulator to Stimulation Listener link does not have the Clock Stimulator as the source");
 	OVT_ASSERT(linkSourceOutputIndex == 0,
 			   "The Clock Stimulator to Stimulation Listener link does not have the first output of Clock Stimulator as the output");
 

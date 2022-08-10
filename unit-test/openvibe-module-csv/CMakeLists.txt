@@ -63,7 +63,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-                      FOLDER ${TESTS_FOLDER})
+					  FOLDER ${TESTS_FOLDER})
 
 
 # Add test without parameter to driver

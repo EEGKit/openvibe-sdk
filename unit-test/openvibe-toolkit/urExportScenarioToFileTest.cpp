@@ -16,7 +16,7 @@ int urExportScenarioToFileTest(const int argc, char* argv[])
 {
 	Test::ScopedTest<Test::SKernelFixture> fixture(argv[1]);
 
-	const auto& context = fixture->context;
+	const auto& context                  = fixture->context;
 	const std::string temporaryDirectory = argv[2];
 
 	context->getPluginManager().addPluginsFromFiles(Directories::getLib("plugins-sdk-file-io*"));

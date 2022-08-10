@@ -7,24 +7,24 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe-common
+					  openvibe-common
 					  Boost::boost
 					  Boost::filesystem
 )
 
 target_include_directories(${PROJECT_NAME}
-                           PRIVATE include/fs 
-                           PUBLIC include)
+						   PRIVATE include/fs 
+						   PUBLIC include)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-                      VERSION ${PROJECT_VERSION}
-                      SOVERSION ${PROJECT_VERSION_MAJOR}
-                      FOLDER ${MODULES_FOLDER}
+					  VERSION ${PROJECT_VERSION}
+					  SOVERSION ${PROJECT_VERSION_MAJOR}
+					  FOLDER ${MODULES_FOLDER}
 )
 
 target_compile_options(${PROJECT_NAME}
-                       PRIVATE -DFS_Exports
-                       PUBLIC -DFS_Shared 
+					   PRIVATE -DFS_Exports
+					   PUBLIC -DFS_Shared 
 )
 
 # ---------------------------------
@@ -37,8 +37,8 @@ SET_BUILD_PLATFORM()
 # Install files
 # -----------------------------
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION ${DIST_BINDIR}
-        LIBRARY DESTINATION ${DIST_LIBDIR}
-        ARCHIVE DESTINATION ${DIST_LIBDIR})
+		RUNTIME DESTINATION ${DIST_BINDIR}
+		LIBRARY DESTINATION ${DIST_LIBDIR}
+		ARCHIVE DESTINATION ${DIST_LIBDIR})
 
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} COMPONENT headers FILES_MATCHING PATTERN "*.h")
