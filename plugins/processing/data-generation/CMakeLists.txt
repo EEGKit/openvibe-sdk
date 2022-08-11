@@ -8,8 +8,7 @@ add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME}
 					  openvibe
 					  openvibe-common
-					  openvibe-toolkit
-					  openvibe-module-xml)
+					  openvibe-toolkit)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 					  VERSION ${PROJECT_VERSION}

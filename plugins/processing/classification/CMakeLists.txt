@@ -10,7 +10,6 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe-common
 					  openvibe-toolkit
 					  openvibe-module-system
-					  openvibe-module-xml
 					  openvibe-module-fs
 					  Eigen3::Eigen)
 

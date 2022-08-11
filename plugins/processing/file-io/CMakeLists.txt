@@ -17,7 +17,6 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe-toolkit
 					  openvibe-module-csv
                       openvibe-module-ebml
-					  openvibe-module-xml
 					  openvibe-module-fs)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
