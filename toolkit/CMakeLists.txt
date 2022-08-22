@@ -39,7 +39,8 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe-common
 					  openvibe-module-xml
 					  openvibe-module-fs
-					  Boost::filesystem)
+					  Boost::filesystem
+					  tinyxml2)
 
 add_dependencies(${PROJECT_NAME} openvibe-generate-stimulation-file)
 

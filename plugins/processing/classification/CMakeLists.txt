@@ -11,7 +11,8 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe-toolkit
 					  openvibe-module-system
 					  openvibe-module-fs
-					  Eigen3::Eigen)
+					  Eigen3::Eigen
+					  tinyxml2)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 					  VERSION ${PROJECT_VERSION}

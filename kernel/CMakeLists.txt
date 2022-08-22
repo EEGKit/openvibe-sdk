@@ -15,7 +15,7 @@ target_link_libraries(${PROJECT_NAME}
 					  openvibe-module-system
 					  openvibe-module-xml
 					  Boost::boost
-)
+					  tinyxml2)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 					  VERSION ${PROJECT_VERSION}
