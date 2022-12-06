@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoCSVReaderTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <tuple>
 #include <numeric>
@@ -38,22 +37,11 @@ namespace {
 std::string dataDirectory = "";
 
 const struct SSignalFile SIMPLE_SIGNAL_FILE = {
-	{ "Time Signal" },
-	32,
-	8,
+	{ "Time Signal" }, 32, 8,
 	{
-		{
-			{ 0.00000, 0.25000 },
-			{ 0.00000, 0.03125, 0.06250, 0.09375, 0.125, 0.15625, 0.1875, 0.21875 }
-		},
-		{
-			{ 0.250000, 0.500000 },
-			{ 0.250000, 0.281250, 0.312500, 0.343750, 0.375000, 0.406250, 0.437500, 0.468750 }
-		},
-		{
-			{ 0.500000, 0.750000 },
-			{ 0.500000, 0.531250, 0.562500, 0.593750, 0.625000, 0.656250, 0.687500, 0.718750 }
-		},
+		{ { 0.00000, 0.25000 }, { 0.00000, 0.03125, 0.06250, 0.09375, 0.12500, 0.15625, 0.18750, 0.21875 } },
+		{ { 0.25000, 0.50000 }, { 0.25000, 0.28125, 0.31250, 0.34375, 0.37500, 0.40625, 0.43750, 0.46875 } },
+		{ { 0.50000, 0.75000 }, { 0.50000, 0.53125, 0.56250, 0.59375, 0.62500, 0.65625, 0.68750, 0.71875 } },
 	}
 };
 
@@ -434,14 +422,14 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 TEST(CSV_Reader_Test_Case, stimulationsNormalGoodStims)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsReader01.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsReader01.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
 	ASSERT_TRUE(stimReaderTest->parseHeader());
 	ASSERT_EQ(stimReaderTest->getFormatType(), OpenViBE::CSV::EStreamType::Stimulations);
-	ASSERT_TRUE(stimReaderTest->readEventsFromFile(5, stimulations)) << stimReaderTest->getLastLogError() << ".Details: "
-																			  << stimReaderTest->getLastErrorString();
+	ASSERT_TRUE(stimReaderTest->readEventsFromFile(5, stimulations))
+	<< stimReaderTest->getLastLogError() << ".Details: " << stimReaderTest->getLastErrorString();
 
 	ASSERT_EQ(stimulations.size(), 3); //Only 3 stims in the file
 	ASSERT_TRUE(stimReaderTest->closeFile());
@@ -451,14 +439,14 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalGoodStims)
 TEST(CSV_Reader_Test_Case, stimulationsNormalWrongStim)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsWrongStimulation.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsWrongStimulation.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 	std::vector<OpenViBE::CSV::SStimulationChunk> stimulations;
 
 	ASSERT_TRUE(stimReaderTest->parseHeader());
 	ASSERT_EQ(stimReaderTest->getFormatType(), OpenViBE::CSV::EStreamType::Stimulations);
-	ASSERT_FALSE(stimReaderTest->readEventsFromFile(5, stimulations)) << stimReaderTest->getLastLogError() << ".Details: "
-																			  << stimReaderTest->getLastErrorString();
+	ASSERT_FALSE(stimReaderTest->readEventsFromFile(5, stimulations))
+	<< stimReaderTest->getLastLogError() << ".Details: " << stimReaderTest->getLastErrorString();
 
 	ASSERT_TRUE(stimReaderTest->closeFile());
 	releaseCSVHandler(stimReaderTest);
@@ -467,7 +455,7 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalWrongStim)
 TEST(CSV_Reader_Test_Case, stimulationsNormalWrongHeader)
 {
 	OpenViBE::CSV::ICSVHandler* stimReaderTest = OpenViBE::CSV::createCSVHandler();
-	const std::string filepath                   = dataDirectory + "testCSVStimulationsWrongHeader.csv";
+	const std::string filepath                 = dataDirectory + "testCSVStimulationsWrongHeader.csv";
 	ASSERT_TRUE(stimReaderTest->openFile(filepath, OpenViBE::CSV::EFileAccessMode::Read));
 
 	ASSERT_FALSE(stimReaderTest->parseHeader());
@@ -476,7 +464,6 @@ TEST(CSV_Reader_Test_Case, stimulationsNormalWrongHeader)
 	ASSERT_TRUE(stimReaderTest->closeFile());
 	releaseCSVHandler(stimReaderTest);
 }
-
 
 
 int uoCSVReaderTest(int argc, char* argv[])

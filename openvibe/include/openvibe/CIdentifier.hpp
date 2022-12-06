@@ -5,9 +5,23 @@
 /// \author  Yann Renard (INRIA/IRISA) & Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 16/06/2006.
-/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "ov_defines.h"
@@ -52,7 +66,7 @@ public:
 	/// <summary> string based constructor. </summary>
 	/// <param name="str"> The string with identifier. </param>
 	/// <remarks> If string is invalid undefined ID is set. </remarks>
-	explicit CIdentifier(const std::string& str) { if (!fromString(CString(str.c_str()))) { m_id = std::numeric_limits<uint64_t>::max(); } }
+	explicit CIdentifier(const std::string& str) { if (!fromString(str)) { m_id = std::numeric_limits<uint64_t>::max(); } }
 
 	/// <summary> Copy constructor.\n Builds up the 64 bits identifier exacly the same as given identifier parameter. </summary>
 	/// <param name="id"> the identifier to initialize this identifier from. </param>
@@ -174,13 +188,19 @@ public:
 	/// <summary> Converts this identifier into an OpenViBE string. </summary>
 	/// <returns> This identifier represented as an OpenViBE string. </returns>
 	/// <remarks> Avoid this, this function keep previous compatibility with CString. </remarks>
-	CString toString() const { return CString(str().c_str()); }
+	CString toString() const { return str().c_str(); }
 
 	/// <summary> Reads a a string to extract this identifier. </summary>
 	/// <param name="str"> the string to convert. </param>
 	/// <returns> <c>true</c> in case of success, <c>false</c> otherwise. </returns>
-	/// <remarks> Must be changed with std::string when possible. For now it keeps compatibility with CString. </remarks>
-	bool fromString(const CString& str);
+	bool fromString(const std::string& str);
+
+
+	/// <summary> Reads a a string to extract this identifier. </summary>
+	/// <param name="str"> the string to convert. </param>
+	/// <returns> <c>true</c> in case of success, <c>false</c> otherwise. </returns>
+	/// \deprecated Use the same method with std::string parameter instead.
+	bool fromString(const CString& str) { return fromString(std::string(str.toASCIIString())); }
 
 	/// <summary> Get the ID. </summary>
 	/// <returns> The unsigned integer identifier. </returns>

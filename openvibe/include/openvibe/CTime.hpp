@@ -5,7 +5,20 @@
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 04/05/2020.
-/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
 
@@ -22,7 +35,6 @@ namespace OpenViBE {
 class OV_API CTime
 {
 public:
-
 	//--------------------------------------------------
 	//------------ Constructor / Destructor ------------
 	//--------------------------------------------------
@@ -144,7 +156,6 @@ public:
 	/// <param name="time"> The time to compare. </param>
 	/// <returns> <c>true</c> if greater or equal than the test, <c>false</c> otherwise. </returns>
 	bool operator>=(const CTime& time) const { return m_time >= time.m_time; }
-
 
 	/// <summary> Implements the operator uint64_t. </summary>
 	/// <returns> The result of the operator. </returns>

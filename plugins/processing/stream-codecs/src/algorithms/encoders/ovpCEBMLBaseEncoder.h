@@ -14,7 +14,6 @@ namespace StreamCodecs {
 class CEBMLBaseEncoder : public Toolkit::TAlgorithm<IAlgorithm>
 {
 public:
-
 	CEBMLBaseEncoder() : m_callbackProxy(*this, &CEBMLBaseEncoder::write) {}
 	void release() override { delete this; }
 	bool initialize() override;
@@ -30,8 +29,7 @@ public:
 	virtual void write(const void* buffer, size_t size);
 
 protected:
-
-	Kernel::TParameterHandler<IMemoryBuffer*> op_buffer;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_buffer;
 
 	EBML::IWriterHelper* m_writerHelper = nullptr;
 	EBML::IWriter* m_writer             = nullptr;

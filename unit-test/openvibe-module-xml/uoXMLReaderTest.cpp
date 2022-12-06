@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoXMLReaderTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <iostream>
 #include <iomanip>
@@ -34,7 +33,6 @@
 class CReaderCallBack final : public XML::IReaderCallBack
 {
 public:
-
 	struct SNode
 	{
 		std::string name;
@@ -47,13 +45,11 @@ public:
 	std::shared_ptr<SNode> m_CurrentNode{ nullptr };
 
 protected:
-
 	void openChild(const char* name, const char** attributeName, const char** attributeValue, const size_t nAttribute) override
 	{
-		auto node = std::make_shared<SNode>();
+		const auto node = std::make_shared<SNode>();
 
-		if (m_CurrentNode)
-		{
+		if (m_CurrentNode) {
 			node->parent = m_CurrentNode;
 			m_CurrentNode->children.push_back(node);
 		}
@@ -81,8 +77,7 @@ TEST(XML_Reader_Test_Case, validateReader)
 	ASSERT_NE(nullptr, inputTestDataFile);
 
 	char dataBuffer[1024];
-	while (!feof(inputTestDataFile))
-	{
+	while (!feof(inputTestDataFile)) {
 		size_t length = std::fread(dataBuffer, 1, sizeof(dataBuffer), inputTestDataFile);
 		xmlReader->processData(dataBuffer, length);
 	}

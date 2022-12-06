@@ -10,7 +10,6 @@ namespace StreamCodecs {
 class CDecoderAlgorithmTest final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-
 	CDecoderAlgorithmTest() { }
 	~CDecoderAlgorithmTest() override { }
 	void release() override { delete this; }
@@ -22,28 +21,28 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest)
 
 protected:
-
 	std::array<Kernel::IAlgorithmProxy*, 7> m_decoder;
-	std::array<Kernel::TParameterHandler<const IMemoryBuffer*>, 7> ip_buffer;
+	std::array<Kernel::TParameterHandler<const CMemoryBuffer*>, 7> ip_buffer;
 };
 
 class CDecoderAlgorithmTestDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Decoder algorithm test"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
 
-	CString getShortDescription() const override { return CString("Decodes various types of streams and outputs some of the content parameters the log"); }
+	CString getName() const override { return "Decoder algorithm test"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Decodes various types of streams and outputs some of the content parameters the log"; }
 
 	CString getDetailedDescription() const override
 	{
-		return CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain.");
+		return "Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain.";
 	}
 
-	CString getCategory() const override { return CString("Tests/Algorithms"); }
-	CString getVersion() const override { return CString("1.0"); }
+	CString getCategory() const override { return "Tests/Algorithms"; }
+	CString getVersion() const override { return "1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_DecoderAlgorithmTest; }
 	IPluginObject* create() override { return new CDecoderAlgorithmTest(); }
 

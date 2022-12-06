@@ -8,7 +8,7 @@ Identity
    :Author:
       Yann Renard
    :Company:
-      INRIA/IRISA
+      Inria/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_Identity.png
 

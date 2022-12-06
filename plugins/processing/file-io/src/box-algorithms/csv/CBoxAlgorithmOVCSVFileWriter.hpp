@@ -1,27 +1,26 @@
-/*********************************************************************
- * Software License Agreement (AGPL-3 License)
- *
- * \file CBoxAlgorithmOVCSVFileWriter.hpp
- * \brief Classes of the box CSV File Writer
- * \author Victor Herlin (Mensia), Thomas Prampart (Inria)
- * \version 1.1.0
- * \date Fri May 7 16:40:49 2021.
- *
- * \copyright (C) 2006-2021 INRIA
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file CBoxAlgorithmOVCSVFileWriter.hpp
+/// \brief Classes of the box CSV File Writer.
+/// \author Victor Herlin (Mensia), Thomas Prampart (Inria).
+/// \version 1.2.0
+/// \date 07/05/2021
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program. If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #pragma once
 
@@ -41,7 +40,7 @@ namespace FileIO {
 class CBoxAlgorithmOVCSVFileWriter final : public Toolkit::TBoxAlgorithm<IBoxAlgorithm>
 {
 public:
-	CBoxAlgorithmOVCSVFileWriter();
+	CBoxAlgorithmOVCSVFileWriter(): m_writerLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) {}
 	void release() override { delete this; }
 
 	bool initialize() override;
@@ -55,22 +54,26 @@ private:
 	bool processStreamedMatrix();
 	bool processStimulation();
 
+	static std::vector<std::string> get1DLabels(const CMatrix& matrix);
+	static std::vector<std::string> get2DLabels(const CMatrix& matrix);
+	static std::string transformLabel(const std::string& str);
+
 	std::unique_ptr<CSV::ICSVHandler, decltype(&CSV::releaseCSVHandler)> m_writerLib;
 
 	CIdentifier m_typeID = CIdentifier::undefined();
 
 	Toolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_streamDecoder;
 	Toolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_stimDecoder;
-	size_t m_stimulationInputIndex = 1;
+	size_t m_stimIdx = 1;
 
 	uint64_t m_epoch = 0;
 
 	bool m_isStreamedMatrixHeaderReceived = false;
-	bool m_isStimulationsHeaderReceived = false;
-	bool m_isFileOpen       = false;
-	bool m_appendData       = false;
-	bool m_lastMatrixOnly   = false;
-	bool m_writeHeader      = true;
+	bool m_isStimulationsHeaderReceived   = false;
+	bool m_isFileOpen                     = false;
+	bool m_appendData                     = false;
+	bool m_lastMatrixOnly                 = false;
+	bool m_writeHeader                    = true;
 };
 
 class CBoxAlgorithmOVCSVFileWriterListener final : public Toolkit::TBoxListener<IBoxListener>
@@ -81,29 +84,15 @@ public:
 		CIdentifier typeID = CIdentifier::undefined();
 		box.getInputType(index, typeID);
 
-		if (index == 0)
-		{
-			if (typeID == OV_TypeId_Stimulations)
-			{
-				if (box.getInputCount() > 1)
-				{
-					box.removeInput(0);
-				}
-			}
-			else if (box.getInputCount() == 1)
-			{
-					box.addInput("Stimulations stream", OV_TypeId_Stimulations);
-			}
+		if (index == 0) {
+			if (typeID == OV_TypeId_Stimulations) { if (box.getInputCount() > 1) { box.removeInput(0); } }
+			else if (box.getInputCount() == 1) { box.addInput("Stimulations stream", OV_TypeId_Stimulations); }
 		}
-		else if (index == 1 && typeID != OV_TypeId_Stimulations)
-		{
+		else if (index == 1 && typeID != OV_TypeId_Stimulations) {
 			OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations), "Failed to reset input type to stimulations", Kernel::ErrorType::Internal);
 			this->getLogManager() << Kernel::LogLevel_Warning << "Input type not changed: 2nd input reserved for stimulations\n";
 		}
-		else if (index > 1)
-		{
-			OV_ERROR_UNLESS_KRF(false, "The index of the input does not exist", Kernel::ErrorType::Internal);
-		}
+		else if (index > 1) { OV_ERROR_UNLESS_KRF(false, "The index of the input does not exist", Kernel::ErrorType::Internal); }
 
 		return true;
 	}
@@ -115,16 +104,15 @@ class CBoxAlgorithmOVCSVFileWriterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("CSV File Writer"); }
-	CString getAuthorName() const override { return CString("Victor Herlin / Thomas Prampart"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies SA"); }
-	CString getShortDescription() const override { return CString("Writes signal in a CSV (text based) file"); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("File reading and writing/CSV"); }
-	CString getVersion() const override { return CString("1.2"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.1.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.1.0"); }
+
+	CString getName() const override { return "CSV File Writer"; }
+	CString getAuthorName() const override { return "Victor Herlin / Thomas Prampart"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies SA"; }
+	CString getShortDescription() const override { return "Writes signal in a CSV (text based) file"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "File reading and writing/CSV"; }
+	CString getVersion() const override { return "1.2"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
 	IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileWriter; }
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileWriterListener; }

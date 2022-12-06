@@ -73,28 +73,28 @@ public:
 	 *
 	 * Default implementation simply returns empty string.
 	 */
-	virtual CString getName() const { return CString("no name"); }
+	virtual CString getName() const { return "no name"; }
 	/**
 	 * \brief Gets the author name for this plugin
 	 * \return The author name for this plugin.
 	 *
 	 * Default implementation simply returns "no name".
 	 */
-	virtual CString getAuthorName() const { return CString("unknown"); }
+	virtual CString getAuthorName() const { return "unknown"; }
 	/**
 	 * \brief Gets the author company name for this plugin
 	 * \return The author company name for this plugin.
 	 *
 	 * Default implementation simply returns "unknown".
 	 */
-	virtual CString getAuthorCompanyName() const { return CString("unknown"); }
+	virtual CString getAuthorCompanyName() const { return "unknown"; }
 	/**
 	 * \brief Gets a short description of the plugin
 	 * \return A short description of the plugin.
 	 *
 	 * Default implementation simply returns "unknown".
 	 */
-	virtual CString getShortDescription() const { return CString(""); }
+	virtual CString getShortDescription() const { return ""; }
 	/**
 	 * \brief Gets a detailed description of the plugin
 	 * \return A detailed description of the plugin.
@@ -103,7 +103,7 @@ public:
 	 *
 	 * \note You can use std::endl to have the description on several lines when needed.
 	 */
-	virtual CString getDetailedDescription() const { return CString(""); }
+	virtual CString getDetailedDescription() const { return ""; }
 	/**
 	 * \brief Gets a basic category of the plugin
 	 * \return the category tokens of the plugin
@@ -112,41 +112,14 @@ public:
 	 *
 	 * Default implementation returns "unknown".
 	 */
-	virtual CString getCategory() const { return CString("unknown"); }
+	virtual CString getCategory() const { return "unknown"; }
 	/**
 	 * \brief Gets the version of the plugin
 	 * \return the version of the plugin.
 	 *
 	 * Default implementation simply returns "unknown".
 	 */
-	virtual CString getVersion() const { return CString("unknown"); }
-	/**
-	 * \brief Gets the component in which the plugin is defined
-	 *
-	 * OpenViBE SDK is used to build platforms that are composed of several components.
-	 * Each component can come with its own set of plugins, and has its own version.
-	 * The \ref getAddedSoftwareVersion and \ref getUpdatedSoftwareVersion will return versions of the component in which the plugin belongs.
-	 *
-	 * \return a string identifier of the component
-	 * \retval "unknown" if not redefined
-	 */
-	virtual CString getSoftwareComponent() const { return CString("unknown"); }
-	/**
-	 * \brief Gets the version of the software in the one the plugin was added
-	 * \return the version of the software in the one the plugin was added.
-	 * \retval "unknown" if not redefined
-	 *
-	 * \sa getSoftwareComponent
-	 */
-	virtual CString getAddedSoftwareVersion() const { return CString("unknown"); }
-	/**
-	 * \brief Gets the version of the software in the one the plugin was last updated
-	 * \return the version of the software in the one the plugin was last updated
-	 * \retval "unknown" if not redefined
-	 *
-	 *  \sa getSoftwareComponent
-	 */
-	virtual CString getUpdatedSoftwareVersion() const { return CString("unknown"); }
+	virtual CString getVersion() const { return "unknown"; }
 	/**
 	 * \brief Tests whether the plugin has a given functionality
 	 * \param functionality [in] : functionality of interest

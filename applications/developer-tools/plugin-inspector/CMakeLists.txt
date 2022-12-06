@@ -21,16 +21,15 @@
 
 project(openvibe-plugin-inspector-sdk VERSION ${OPENVIBE_MAJOR_VERSION}.${OPENVIBE_MINOR_VERSION}.${OPENVIBE_PATCH_VERSION})
 
-file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.hpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-toolkit
-                      openvibe-module-system
-                      openvibe-module-fs
-                      Boost::boost
-) 
+					  openvibe
+					  openvibe-toolkit
+					  openvibe-module-system
+					  openvibe-module-fs
+					  Boost::boost) 
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${APP_FOLDER})
 
@@ -46,7 +45,7 @@ SET_BUILD_PLATFORM()
 # Install files
 # -----------------------------
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION ${DIST_BINDIR}
-        LIBRARY DESTINATION ${DIST_LIBDIR}
-        ARCHIVE DESTINATION ${DIST_LIBDIR})
+		RUNTIME DESTINATION ${DIST_BINDIR}
+		LIBRARY DESTINATION ${DIST_LIBDIR}
+		ARCHIVE DESTINATION ${DIST_LIBDIR})
 

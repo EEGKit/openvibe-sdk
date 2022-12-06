@@ -18,7 +18,7 @@ public:
 	CIdentifier getNextScenarioIdentifier(const CIdentifier& previousID) const override;
 	bool isScenario(const CIdentifier& scenarioID) const override;
 	bool createScenario(CIdentifier& scenarioID) override;
-	bool importScenario(CIdentifier& scenarioID, const IMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID) override;
+	bool importScenario(CIdentifier& scenarioID, const CMemoryBuffer& iMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmID) override;
 	bool importScenarioFromFile(CIdentifier& scenarioID, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmID) override;
 	bool importScenarioFromFile(CIdentifier& scenarioID, const CIdentifier& importContext, const CString& fileName) override;
 	bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension,
@@ -27,7 +27,7 @@ public:
 	CIdentifier getNextScenarioImportContext(const CIdentifier& importContext) const override;
 	CString getNextScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) const override;
 	CIdentifier getScenarioImporterAlgorithmIdentifier(const CIdentifier& importContext, const CString& fileNameExtension) const override;
-	bool exportScenario(IMemoryBuffer& oMemoryBuffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmID) const override;
+	bool exportScenario(CMemoryBuffer& oMemoryBuffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmID) const override;
 	bool exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmID) const override;
 	bool exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioID) override;
 	bool registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension,

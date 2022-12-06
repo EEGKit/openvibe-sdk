@@ -20,7 +20,6 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader)
 
 protected:
-
 	Kernel::IAlgorithmProxy* m_pOVMatrixFileReader                                                = nullptr;
 	Toolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_encoder = nullptr;
 
@@ -33,18 +32,15 @@ class CBoxAlgorithmElectrodeLocalisationFileReaderDesc final : public IBoxAlgori
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Electrode localisation file reader"); }
-	CString getAuthorName() const override { return CString("Vincent Delannoy"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
 
-	CString getShortDescription() const override { return CString("Loads files containing the normalized coordinates of an electrode set"); }
+	CString getName() const override { return "Electrode localisation file reader"; }
+	CString getAuthorName() const override { return "Vincent Delannoy"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Loads files containing the normalized coordinates of an electrode set"; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "File reading and writing/OpenViBE"; }
+	CString getVersion() const override { return "1.0"; }
 
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("File reading and writing/OpenViBE"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader; }
 	IPluginObject* create() override { return new CBoxAlgorithmElectrodeLocalisationFileReader; }
 

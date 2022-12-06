@@ -20,9 +20,8 @@ public:
 	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest)
 
 protected:
-
 	std::array<Kernel::IAlgorithmProxy*, 7> m_encoders;
-	std::array<Kernel::TParameterHandler<IMemoryBuffer*>, 7> op_buffer;
+	std::array<Kernel::TParameterHandler<CMemoryBuffer*>, 7> op_buffer;
 
 	bool m_hasSentHeader = false;
 	uint64_t m_startTime = 0;
@@ -38,13 +37,15 @@ class CEncoderAlgorithmTestDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Encoder algorithm test"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString("Setups various streams and outputs them"); }
-	CString getDetailedDescription() const override { return CString("Note: Data sent in the streams does not change over time"); }
-	CString getCategory() const override { return CString("Tests/Algorithms"); }
-	CString getVersion() const override { return CString("1.0"); }
+
+	CString getName() const override { return "Encoder algorithm test"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return "Setups various streams and outputs them"; }
+	CString getDetailedDescription() const override { return "Note: Data sent in the streams does not change over time"; }
+	CString getCategory() const override { return "Tests/Algorithms"; }
+	CString getVersion() const override { return "1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EncoderAlgorithmTest; }
 	IPluginObject* create() override { return new CEncoderAlgorithmTest(); }
 

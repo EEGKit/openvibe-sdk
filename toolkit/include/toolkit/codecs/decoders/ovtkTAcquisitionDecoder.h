@@ -14,11 +14,11 @@ class TAcquisitionDecoderLocal : public T
 protected:
 
 	Kernel::TParameterHandler<uint64_t> op_bufferDuration;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_experimentInfoStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_signalStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_stimulationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_channelLocalisationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_channelUnitsStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_experimentInfoStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_signalStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_stimulationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_channelLocalisationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_channelUnitsStream;
 
 	using T::m_codec;
 	using T::m_boxAlgorithm;
@@ -66,11 +66,11 @@ public:
 	}
 
 	Kernel::TParameterHandler<uint64_t>& getBufferDuration() { return op_bufferDuration; }
-	Kernel::TParameterHandler<IMemoryBuffer*>& getExperimentInfoStream() { return op_experimentInfoStream; }
-	Kernel::TParameterHandler<IMemoryBuffer*>& getSignalStream() { return op_signalStream; }
-	Kernel::TParameterHandler<IMemoryBuffer*>& getStimulationStream() { return op_stimulationStream; }
-	Kernel::TParameterHandler<IMemoryBuffer*>& getChannelLocalisationStream() { return op_channelLocalisationStream; }
-	Kernel::TParameterHandler<IMemoryBuffer*>& getChannelUnitsStream() { return op_channelUnitsStream; }
+	Kernel::TParameterHandler<CMemoryBuffer*>& getExperimentInfoStream() { return op_experimentInfoStream; }
+	Kernel::TParameterHandler<CMemoryBuffer*>& getSignalStream() { return op_signalStream; }
+	Kernel::TParameterHandler<CMemoryBuffer*>& getStimulationStream() { return op_stimulationStream; }
+	Kernel::TParameterHandler<CMemoryBuffer*>& getChannelLocalisationStream() { return op_channelLocalisationStream; }
+	Kernel::TParameterHandler<CMemoryBuffer*>& getChannelUnitsStream() { return op_channelUnitsStream; }
 
 	virtual bool isHeaderReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_AcquisitionDecoder_OutputTriggerId_ReceivedHeader); }
 	virtual bool isBufferReceived() { return m_codec->isOutputTriggerActive(OVP_GD_Algorithm_AcquisitionDecoder_OutputTriggerId_ReceivedBuffer); }

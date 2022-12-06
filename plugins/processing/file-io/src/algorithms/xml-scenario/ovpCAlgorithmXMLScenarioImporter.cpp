@@ -23,12 +23,12 @@ class _AutoBind_
 {
 public:
 	explicit _AutoBind_(const std::string& value) : m_value(value) { }
-	operator CString() const { return CString(m_value.c_str()); }
+	operator CString() const { return m_value.c_str(); }
 
 	operator CIdentifier() const
 	{
 		CIdentifier res;
-		res.fromString(m_value.c_str());
+		res.fromString(m_value);
 		return res;
 	}
 
@@ -39,8 +39,8 @@ protected:
 
 std::string xercesToString(const XMLCh* xercesString)
 {
-	const std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
-	return std::string(charArray.get());
+	std::string transcodedString(XMLString::transcode(xercesString));
+	return std::string{transcodedString.c_str()};
 }
 
 class CErrorHandler final : public HandlerBase
@@ -457,7 +457,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validat
 	return (errorCount == 0);
 }
 
-bool CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& memoryBuffer)
+bool CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rContext, const CMemoryBuffer& memoryBuffer)
 {
 	m_ctx = &rContext;
 	if (!this->validateXML(memoryBuffer.getDirectPointer(), memoryBuffer.getSize())) { return false; }	// error handling is handled in validateXML

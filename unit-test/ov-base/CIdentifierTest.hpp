@@ -1,11 +1,11 @@
 ﻿///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CIdentifierTests.hpp
+/// \file CIdentifierTest.hpp
 /// \brief Test Definitions for OpenViBE Identifier Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 23/06/2020.
-/// \copyright (C) 2021 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -32,7 +32,7 @@
 //---------------------------------------------------------------------------------------------------
 TEST(CIdentifier_Tests, constructors)
 {
-	OpenViBE::CIdentifier id1, id2(10), id3(-1), id4(10, 10), id5("false string"), id6("(0x00000000, 0x0000000A)");
+	const OpenViBE::CIdentifier id1, id2(10), id3(-1), id4(10, 10), id5("false string"), id6("(0x00000000, 0x0000000A)");
 	const uint64_t undef = std::numeric_limits<uint64_t>::max();
 
 	EXPECT_EQ(id1.id(), undef) << ErrorMsg("Default Constructor", id1.id(), undef);
@@ -47,7 +47,7 @@ TEST(CIdentifier_Tests, constructors)
 //---------------------------------------------------------------------------------------------------
 TEST(CIdentifier_Tests, operators)
 {
-	OpenViBE::CIdentifier id(10);
+	OpenViBE::CIdentifier id(10);	// Keep this warning : variable 'id' is reassigned in all paths before being read it's to test asignement operator
 	const OpenViBE::CIdentifier id2(10);
 	const uint64_t undef = std::numeric_limits<uint64_t>::max();
 
@@ -62,7 +62,7 @@ TEST(CIdentifier_Tests, operators)
 	EXPECT_EQ(id.id(), undef) << ErrorMsg("-- operator with undefined Identifier", id.id(), undef);
 
 	id = 0;
-	--id;		// 0 became max - 1
+	--id;		// 0 became max - 1 because max is equal to undef
 	EXPECT_EQ(id.id(), undef - 1) << ErrorMsg("-- operator with Identifier 0", id.id(), undef - 1);
 	++id;		// max - 1 became 0
 	EXPECT_EQ(id.id(), 0) << ErrorMsg("++ operator with Identifier 0", id.id(), undef - 1);

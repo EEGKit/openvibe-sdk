@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file ovtAssert.h
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #pragma once
 
@@ -41,13 +40,12 @@ std::string buildExpressionFromPair(const char* str1, const char* str2);
 * - msg: custom error message
 * WARNING: SHOULD NOT BE USED DIRECTLY
 */
-#define OVT_ASSERT_PRIV(expr, origin, msg)                             \
-do {                                                                   \
-	if (!(expr))                                                       \
-	{                                                                  \
-		OpenViBE::Test::printError(#origin, (msg), __FILE__, __LINE__);  \
-		return EXIT_FAILURE;                                           \
-	}                                                                  \
+#define OVT_ASSERT_PRIV(expr, origin, msg)								\
+do {																	\
+	if (!(expr)) {														\
+		OpenViBE::Test::printError(#origin, (msg), __FILE__, __LINE__);	\
+		return EXIT_FAILURE;											\
+	}																	\
 } while (0)
 
 /**
@@ -63,14 +61,13 @@ do {                                                                   \
 * - str2: compared string
 * - msg: custom error message
 */
-#define OVT_ASSERT_STREQ(str1, str2, msg)                                \
-do {                                                                     \
-	if (!((str1) == (str2)))                                             \
-	{                                                                    \
+#define OVT_ASSERT_STREQ(str1, str2, msg)																						\
+do {																															\
+	if (!((str1) == (str2))) {																									\
 		OpenViBE::Test::printError(OpenViBE::Test::buildExpressionFromPair(#str1, #str2).c_str(),(msg), __FILE__, __LINE__);	\
-		OpenViBE::Test::printExpressionPair((str1).c_str(),(str2).c_str());\
-		return EXIT_FAILURE;                                             \
-	}                                                                    \
+		OpenViBE::Test::printExpressionPair((str1).c_str(),(str2).c_str());														\
+		return EXIT_FAILURE;																									\
+	}																															\
 } while (0)
 
 /**
@@ -80,8 +77,8 @@ do {                                                                     \
 * - msg: custom error message
 */
 #define OVT_ASSERT_EX(expr, msg) 		\
-do {                             		\
-	bool hasTrown{ false };      		\
+do {									\
+	bool hasTrown{ false };				\
 	try { (expr); }						\
 	catch (...) { hasTrown = true; }	\
 	OVT_ASSERT_PRIV(hasTrown, (msg));	\

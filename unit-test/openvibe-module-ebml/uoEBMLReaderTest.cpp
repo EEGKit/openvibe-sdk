@@ -1,23 +1,22 @@
-/*********************************************************************
-* Software License Agreement (AGPL-3 License)
-*
-* OpenViBE SDK Test Software
-* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
-* Copyright (C) Inria, 2015-2017,V1.0
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License version 3,
-* as published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
+///-------------------------------------------------------------------------------------------------
+/// 
+/// \file uoEBMLReaderTest.cpp
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/// 
+///-------------------------------------------------------------------------------------------------
 
 #include <iostream>
 #include <iomanip>
@@ -59,31 +58,25 @@ public:
 	{
 		for (int i = 0; i < m_Depth; ++i) { g_OutputStream << "   "; }
 		if (m_CurrentID == EBML_Identifier_DocType) { g_OutputStream << "Got doc type : [" << m_helper.getStr(buffer, size) << "]\n"; }
-		else if (m_CurrentID == EBML_Identifier_EBMLVersion)
-		{
+		else if (m_CurrentID == EBML_Identifier_EBMLVersion) {
 			g_OutputStream << "Got EBML version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n";
 		}
-		else if (m_CurrentID == EBML_Identifier_EBMLIdLength)
-		{
+		else if (m_CurrentID == EBML_Identifier_EBMLIdLength) {
 			g_OutputStream << "Got EBML ID length : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec <<
 					"]\n";
 		}
-		else if (m_CurrentID == EBML_Identifier_DocTypeVersion)
-		{
+		else if (m_CurrentID == EBML_Identifier_DocTypeVersion) {
 			g_OutputStream << "Got doc type version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec <<
 					"]\n";
 		}
-		else if (m_CurrentID == EBML_Identifier_DocTypeReadVersion)
-		{
+		else if (m_CurrentID == EBML_Identifier_DocTypeReadVersion) {
 			g_OutputStream << "Got doc type read version : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec
 					<< "]\n";
 		}
-		else if (m_CurrentID == EBML::CIdentifier(0x1234))
-		{
+		else if (m_CurrentID == EBML::CIdentifier(0x1234)) {
 			g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n";
 		}
-		else if (m_CurrentID == EBML::CIdentifier(0xffffffffffffffffLL))
-		{
+		else if (m_CurrentID == EBML::CIdentifier(0xffffffffffffffffLL)) {
 			g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_helper.getUInt(buffer, size) << std::dec << "]\n";
 		}
 		else if (m_CurrentID == EBML::CIdentifier(0x4321)) { g_OutputStream << "Got double : [" << m_helper.getDouble(buffer, size) << "]\n"; }
@@ -99,7 +92,6 @@ public:
 	}
 
 private:
-
 	int m_Depth = 0;
 
 	EBML::CReaderHelper m_helper;
@@ -124,8 +116,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	OVT_ASSERT(g_OutputStream.is_open(), "Failure to open output file for writing");
 
 	// parsing
-	for (size_t n = 17; n >= 1; n--)
-	{
+	for (size_t n = 17; n >= 1; n--) {
 		CReaderCallBack callback;
 		EBML::CReader reader(callback);
 
@@ -137,8 +128,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 
 		unsigned char* c = new unsigned char[n];
 		size_t i         = 0;
-		while (!feof(file))
-		{
+		while (!feof(file)) {
 			i = fread(c, 1, n * sizeof(unsigned char), file);
 			reader.processData(c, i);
 		}
@@ -155,8 +145,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 
 	std::string generatedString;
 	std::string expectedString;
-	while (std::getline(expectedStream, expectedString))
-	{
+	while (std::getline(expectedStream, expectedString)) {
 		OVT_ASSERT(std::getline(generatedStream, generatedString), "Failure to retrieve a line to match");
 		OVT_ASSERT_STREQ(expectedString, generatedString, "Failure to match expected line to generated line");
 	}
