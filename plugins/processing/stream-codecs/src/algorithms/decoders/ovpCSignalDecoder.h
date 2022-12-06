@@ -23,11 +23,9 @@ public:
 	void closeChild() override;
 
 protected:
-
 	Kernel::TParameterHandler<uint64_t> op_sampling;
 
 private:
-
 	std::stack<EBML::CIdentifier> m_nodes;
 };
 
@@ -35,16 +33,15 @@ class CSignalDecoderDesc final : public CStreamedMatrixDecoderDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Signal stream decoder"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString(""); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Stream codecs/Decoders"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "Signal stream decoder"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return ""; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Stream codecs/Decoders"; }
+	CString getVersion() const override { return "1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_SignalDecoder; }
 	IPluginObject* create() override { return new CSignalDecoder(); }
 

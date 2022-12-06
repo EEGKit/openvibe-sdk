@@ -27,6 +27,7 @@ use English;
 use FindBin;
 use File::Copy;
 use File::Spec;
+use File::Path qw(make_path);
 use Getopt::Long;
 
 sub usage {
@@ -70,10 +71,10 @@ my $dependencies_arch_dir = "$dependencies_dir/arch";
 my $helper_script_dir = "$manifest_dir/linux-dep-helpers/";
 
 if (! -e $dependencies_dir) {
-    mkdir($dependencies_dir) or die("Failed to create directory [$dependencies_dir]");
+    make_path($dependencies_dir) or die("Failed to create directory [$dependencies_dir]");
 }
 if (! -e $dependencies_arch_dir) {
-    mkdir($dependencies_arch_dir) or die("Failed to create directory [$dependencies_arch_dir]");
+    make_path($dependencies_arch_dir) or die("Failed to create directory [$dependencies_arch_dir]");
 }
 
 # Check for the release version and set the update and install commands

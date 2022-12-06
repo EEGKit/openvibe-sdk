@@ -7,7 +7,7 @@
 namespace XML {
 /**
  * @class IXMLNode
- * @author Serrière Guillaume (INRIA/Loria)
+ * @author Guillaume Serrière (INRIA/Loria)
  * @brief Symbolize a node in a XML tree structure.
  * @sa XML
  */

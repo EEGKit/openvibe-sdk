@@ -1,11 +1,11 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
 /// \file CBoxAlgorithmTemporalFilter.hpp
-/// \brief Class of the box Temporal Filter.
+/// \brief Classes for the Box Temporal Filter.
 /// \author Thibaut Monseigne (Inria).
 /// \version 2.0.
 /// \date 14/10/2021
-/// \copyright (C) 2020 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -45,10 +45,9 @@ public:
 	bool processInput(const size_t index) override;
 	bool process() override;
 
-	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TemporalFilter)
+	_IsDerivedFromClass_Final_(Toolkit::TBoxAlgorithm<IBoxAlgorithm>, Box_TemporalFilter)
 
 private:
-
 	Toolkit::TSignalDecoder<CBoxAlgorithmTemporalFilter> m_decoder;					///< Decoder for input.
 	std::vector<Toolkit::TSignalEncoder<CBoxAlgorithmTemporalFilter>> m_encoders;	///< Encoders for outputs.
 	std::vector<CMatrix*> m_oMatrix;												///< Matrix links with outputs (avoid to relink at each process).
@@ -77,31 +76,12 @@ private:
 /// <summary> Listener of the box Temporal Filter. </summary>
 class CBoxAlgorithmTemporalFilterListener final : public Toolkit::TBoxListener<IBoxListener>
 {
-public:
-
-	bool onOutputAdded(Kernel::IBox& box, const size_t index) override
-	{
-		box.setOutputType(index, OV_TypeId_Signal);
-		box.setOutputName(index, ("Output signal " + std::to_string(index + 1)).c_str());
-		changeSettings(box, true);
-		return true;
-	}
-
-	bool onOutputRemoved(Kernel::IBox& box, const size_t index) override
-	{
-		renameOutputs(box);
-		changeSettings(box, false);
-		return true;
-	}
-
-	bool onSettingValueChanged(Kernel::IBox& box, const size_t index) override { return true; }
-
 	void renameOutputs(Kernel::IBox& box) const
 	{
 		for (size_t i = 1; i < box.getOutputCount(); ++i) { box.setOutputName(i, ("Output " + std::to_string(i + 1)).c_str()); }
 	}
 
-	void changeSettings(Kernel::IBox& box, bool add) const
+	void changeSettings(Kernel::IBox& box, const bool add) const
 	{
 		const size_t idx = 2 + 2 * (box.getOutputCount() - 1); // First Setting Idx to Add
 		if (add) {
@@ -119,6 +99,24 @@ public:
 		return std::string(low ? "Low" : "High") + " Cut-off Frequency " + std::to_string(i) + " (Hz)";
 	}
 
+public:
+	bool onOutputAdded(Kernel::IBox& box, const size_t index) override
+	{
+		box.setOutputType(index, OV_TypeId_Signal);
+		box.setOutputName(index, ("Output signal " + std::to_string(index + 1)).c_str());
+		changeSettings(box, true);
+		return true;
+	}
+
+	bool onOutputRemoved(Kernel::IBox& box, const size_t /*index*/) override
+	{
+		renameOutputs(box);
+		changeSettings(box, false);
+		return true;
+	}
+
+	bool onSettingValueChanged(Kernel::IBox& /*box*/, const size_t /*index*/) override { return true; }
+
 	_IsDerivedFromClass_Final_(Toolkit::TBoxListener<IBoxListener>, CIdentifier::undefined())
 };
 
@@ -127,18 +125,16 @@ class CBoxAlgorithmTemporalFilterDesc final : public IBoxAlgorithmDesc
 {
 public:
 	void release() override { }
+
 	CString getName() const override { return "Temporal Filter"; }
 	CString getAuthorName() const override { return "Yann Renard & Laurent Bonnet, Thibaut Monseigne"; }
-	CString getAuthorCompanyName() const override { return "Mensia Technologies SA, Inria"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies, Inria"; }
 	CString getShortDescription() const override { return "Temporal filtering based on various one-way IIR filter designs"; }
 	CString getDetailedDescription() const override { return "Applies a temporal filter, based on various one-way IIR filter designs, to the input stream."; }
 	CString getCategory() const override { return "Signal processing/Temporal Filtering"; }
 	CString getVersion() const override { return "2.0"; }
-	CString getSoftwareComponent() const override { return "openvibe-sdk"; }
-	CString getAddedSoftwareVersion() const override { return "0.0.0"; }
-	CString getUpdatedSoftwareVersion() const override { return "0.0.0"; }
 
-	CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TemporalFilter; }
+	CIdentifier getCreatedClass() const override { return Box_TemporalFilter; }
 	IPluginObject* create() override { return new CBoxAlgorithmTemporalFilter; }
 
 	IBoxListener* createBoxListener() const override { return new CBoxAlgorithmTemporalFilterListener; }
@@ -148,7 +144,7 @@ public:
 	{
 		prototype.addInput("Input signal", OV_TypeId_Signal);
 		prototype.addOutput("Output signal", OV_TypeId_Signal);
-		prototype.addSetting("Filter Type", OVP_TypeId_FilterType, toString(EFilterType::BandPass).c_str());
+		prototype.addSetting("Filter Type", TypeId_FilterType, toString(EFilterType::BandPass).c_str());
 		prototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
 		prototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
 		prototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");
@@ -157,7 +153,7 @@ public:
 		return true;
 	}
 
-	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TemporalFilterDesc)
+	_IsDerivedFromClass_Final_(IBoxAlgorithmDesc, Box_TemporalFilterDesc)
 };
 }  // namespace SignalProcessing
 }  // namespace Plugins

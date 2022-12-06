@@ -8,7 +8,7 @@
 namespace XML {
 /**
  * @class IXMLHandler
- * @author Serrière Guillaume (INRIA/Loria)
+ * @author Guillaume Serrière (INRIA/Loria)
  * @brief This class is design to help about XML manipulation.
  * @sa XML
  */

@@ -83,10 +83,10 @@ create_test_sourcelist (Tests
 add_executable(${PROJECT_NAME} ${Tests})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe
-                      openvibe-common
-                      openvibe-module-fs
-                      openvibe-test-unit-toolkit)
+					  openvibe
+					  openvibe-common
+					  openvibe-module-fs
+					  openvibe-test-unit-toolkit)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${TESTS_FOLDER})
 

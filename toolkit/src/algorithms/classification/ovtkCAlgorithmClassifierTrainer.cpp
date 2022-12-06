@@ -7,7 +7,7 @@ namespace Toolkit {
 bool CAlgorithmClassifierTrainer::process()
 {
 	Kernel::TParameterHandler<CMatrix*> ip_featureVectorSet(this->getInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet));
-	Kernel::TParameterHandler<IMemoryBuffer*> op_config(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Config));
+	Kernel::TParameterHandler<CMemoryBuffer*> op_config(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Config));
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train))
 	{
@@ -28,7 +28,7 @@ bool CAlgorithmClassifierTrainer::process()
 
 	if (this->isInputTriggerActive(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfig))
 	{
-		IMemoryBuffer* config = op_config;
+		CMemoryBuffer* config = op_config;
 		if (!config)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);

@@ -27,7 +27,7 @@ namespace StreamCodecs {
 
 OVP_Declare_Begin()
 	OVP_Declare_New(CAcquisitionDecoderDesc)
-	OVP_Declare_New(CStreamStructureDecoderDesc);
+	OVP_Declare_New(CStreamStructureDecoderDesc)
 	OVP_Declare_New(CExperimentInfoDecoderDesc)
 	OVP_Declare_New(CChannelLocalisationDecoderDesc)
 	OVP_Declare_New(CChannelUnitsDecoderDesc)
@@ -36,7 +36,7 @@ OVP_Declare_Begin()
 	OVP_Declare_New(CSpectrumDecoderDesc)
 	OVP_Declare_New(CStimulationDecoderDesc)
 	OVP_Declare_New(CStreamedMatrixDecoderDesc)
-	// OVP_Declare_New(CMasterAcquisitionDecoderDesc);
+	// OVP_Declare_New(CMasterAcquisitionDecoderDesc)
 
 	OVP_Declare_New(CAcquisitionEncoderDesc)
 	OVP_Declare_New(CExperimentInfoEncoderDesc)
@@ -47,7 +47,7 @@ OVP_Declare_Begin()
 	OVP_Declare_New(CSpectrumEncoderDesc)
 	OVP_Declare_New(CStimulationEncoderDesc)
 	OVP_Declare_New(CStreamedMatrixEncoderDesc)
-	OVP_Declare_New(CMasterAcquisitionEncoderDesc);
+	OVP_Declare_New(CMasterAcquisitionEncoderDesc)
 
 OVP_Declare_End()
 

@@ -1,11 +1,11 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CMatrixTests.hpp
+/// \file CMatrixTest.hpp
 /// \brief Test Definitions for OpenViBE Matrix Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 11/05/2020.
-/// \copyright (C) 2021 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -39,17 +39,16 @@ protected:
 		m_mat.resize(1, 2);							// one row two column buffer not init
 		m_mat.getBuffer()[0] = 10;					// Buffer init with getBuffer and First element set
 		m_mat.getBuffer()[1] = 20;					// Second Element set (buffer already init so refresh function not run)
-		m_mat.setDimensionLabel(0, 0, "dim0e0");	// Row label set
+		m_mat.setDimensionLabel(0, 0, "dim0e0");	// Row label set (warning with setDimensionLabel unused return. Question to keep return true must be asked)
 		m_mat.setDimensionLabel(1, 0, "dim1e0");	// Column 1 Label set
 		m_mat.setDimensionLabel(1, 1, "dim1e1");	// Column 2 Label set
 	}
 };
-//---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
 TEST_F(CMatrix_Tests, Constructor)
 {
-	OpenViBE::CMatrix res;
+	const OpenViBE::CMatrix res;
 	ASSERT_EQ(0, res.getSize()) << "Default constructor doesn't have a size of 0.";
 	EXPECT_STREQ("", res.getDimensionLabel(0, 0)) << "Default constructor has no dimension so no label.";
 
@@ -140,15 +139,16 @@ TEST_F(CMatrix_Tests, SetBuffer)
 {
 	OpenViBE::CMatrix res(1, 2);
 	std::vector<double> buffer = { 10, 20 };
-	EXPECT_TRUE(res.setBuffer(buffer)) << "setBuffer function fail.";
+	res.setBuffer(buffer);
 	EXPECT_TRUE(AlmostEqual(10, res.getBuffer()[0])) << "Matrix 1st value isn't 10.";
 	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
 
 	buffer = { 1, 2, 3 };
-	EXPECT_FALSE(res.setBuffer(buffer)) << "setBuffer function must fail with bad input.";
-	EXPECT_TRUE(res.setBuffer(buffer.data(),1)) << "setBuffer function fail.";
+	res.setBuffer(buffer.data(), 1);
 	EXPECT_TRUE(AlmostEqual(1, res.getBuffer()[0])) << "Matrix 1st value isn't 1.";
 	EXPECT_TRUE(AlmostEqual(20, res.getBuffer()[1])) << "Matrix 2nd value isn't 20.";
+	res.setBuffer(buffer);	// Too big buffer data is copied until and of matrix buffer
+	EXPECT_TRUE(AlmostEqual(2, res.getBuffer()[1])) << "Matrix 2nd value isn't 2.";
 }
 //---------------------------------------------------------------------------------------------------
 
@@ -187,16 +187,16 @@ TEST_F(CMatrix_Tests, Resize)
 //---------------------------------------------------------------------------------------------------
 TEST_F(CMatrix_Tests, Save_Load)
 {
-	OpenViBE::CMatrix res;
+	OpenViBE::CMatrix calc;
 	EXPECT_TRUE(m_mat.toTextFile("Save_2DMatrix-output.txt")) << "Error during Saving 2D Matrix : " << std::endl << m_mat << std::endl;
-	EXPECT_TRUE(res.fromTextFile("Save_2DMatrix-output.txt")) << "Error during Loading 2D Matrix : " << std::endl << res << std::endl;
-	EXPECT_TRUE(m_mat == res) << ErrorMsg("Save", m_mat, res);
+	EXPECT_TRUE(calc.fromTextFile("Save_2DMatrix-output.txt")) << "Error during Loading 2D Matrix : " << std::endl << calc << std::endl;
+	EXPECT_TRUE(m_mat == calc) << ErrorMsg("Save", m_mat, calc);
 
-	OpenViBE::CMatrix row(2);
-	row.getBuffer()[0] = -1;
-	row.getBuffer()[1] = -4.549746549678;
-	EXPECT_TRUE(row.toTextFile("Save_2DMatrix-output.txt")) << "Error during Saving 1D Matrix : " << std::endl << row << std::endl;
-	EXPECT_TRUE(res.fromTextFile("Save_2DMatrix-output.txt")) << "Error during Loading 1D Matrix : " << std::endl << res << std::endl;
-	EXPECT_TRUE(row == res) << ErrorMsg("Save", row, res);
+	OpenViBE::CMatrix ref(2);
+	ref.getBuffer()[0] = -1;
+	ref.getBuffer()[1] = -4.549746549678;
+	EXPECT_TRUE(ref.toTextFile("Save_2DMatrix-output.txt")) << "Error during Saving 1D Matrix : " << std::endl << ref << std::endl;
+	EXPECT_TRUE(calc.fromTextFile("Save_2DMatrix-output.txt")) << "Error during Loading 1D Matrix : " << std::endl << calc << std::endl;
+	EXPECT_TRUE(ref == calc) << ErrorMsg("Save", ref, calc);
 }
 //---------------------------------------------------------------------------------------------------

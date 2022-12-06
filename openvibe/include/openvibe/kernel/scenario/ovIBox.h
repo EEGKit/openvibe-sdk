@@ -178,10 +178,9 @@ public:
 	/**
 	 * \brief Adds an input to this box
 	 * \param name [in] : The input name
-	 * \param typeID [in] : The
-	 *        input type id
+	 * \param typeID [in] : The input type id
 	 * \param id [in] : The input id
-	 * \param notify: if true, activate notification callback (true by default)
+	 * \param notify : if true, activate notification callback (true by default)
 	 * \return \e true in case of success.
 	 * \return \e false in case of error.
 	 *
@@ -258,7 +257,7 @@ public:
 	 * \param typeID [in] : The
 	 *        output type idenfitier
 	 * \param id [in] : The output id
-	 * \param notify: if true, activate notification callback (true by default)
+	 * \param notify : if true, activate notification callback (true by default)
 	 * \return \e true in case of success.
 	 * \return \e false in case of error.
 	 *
@@ -340,7 +339,7 @@ public:
 	 *        add the setting
 	 * \param modifiability [in] : true if modifiable setting
 	 * \param id [in] : The setting id
-	 * \param notify: if true, activate notification callback (true by default)
+	 * \param notify if true, activate notification callback (true by default)
 	 *
 	 * \return \e true in case of success.
 	 * \return \e false in case of error.
@@ -350,8 +349,7 @@ public:
 	 * will be add to the end.
 	 */
 	virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& value, const size_t index = size_t(-1),
-							const bool modifiability = false,
-							const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) = 0;
+							const bool modifiability = false, const CIdentifier& id = CIdentifier::undefined(), const bool notify = true) = 0;
 
 	/**
 	 * \brief Removes a setting for this box

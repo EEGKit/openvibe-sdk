@@ -9,24 +9,20 @@
 //                                                                   //
 
 #include "ov_defines.h"
-#include "ov_directories.h"
+#include "Directories.hpp"
 
 #include "CIdentifier.hpp"
 #include "CTime.hpp"
-#include "ovCString.h"
 #include "CNameValuePairList.hpp"
-
 #include "CMatrix.hpp"
-
+#include "CMemoryBuffer.hpp"
 #include "CStimulationSet.hpp"
 
-#include "ovIMemoryBuffer.h"
-#include "ovCMemoryBuffer.h"
+#include "ovCString.h"
 
 #include "ovIObject.h"
 #include "ovIObjectVisitor.h"
-#include "ovIKernelLoader.h"
-#include "ovCKernelLoader.h"
+#include "CKernelLoader.hpp"
 
 #include "ovIObserver.h"
 #include "ovCObservable.h"
@@ -39,10 +35,10 @@
 //___________________________________________________________________//
 //                                                                   //
 
-#include "kernel/ovIKernelContext.h"
-#include "kernel/ovIKernelDesc.h"
+#include "kernel/IKernelContext.hpp"
+#include "kernel/IKernelDesc.hpp"
 #include "kernel/ovIKernelObject.h"
-#include "kernel/ovIKernelObjectFactory.h"
+#include "kernel/IKernelObjectFactory.hpp"
 
 #include "kernel/ovITypeManager.h"
 #include "kernel/ovIParameter.h"

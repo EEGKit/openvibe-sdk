@@ -8,7 +8,7 @@ Spectral Analysis
    :Author:
       Laurent Bonnet / Quentin Barthelemy
    :Company:
-      Mensia Technologies SA
+      Mensia Technologies
 
 
 .. image:: images/Doc_BoxAlgorithm_SpectralAnalysis.png

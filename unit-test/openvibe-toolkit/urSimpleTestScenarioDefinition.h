@@ -20,8 +20,6 @@ static std::vector<std::tuple<CIdentifier, std::string>> simpleScenarioAttribute
 	std::make_tuple(OV_AttributeId_Scenario_Category, std::string("SCENARIO CATEGORY")),
 	std::make_tuple(OV_AttributeId_Scenario_Version, std::string("SCENARIO VERSION")),
 	std::make_tuple(OV_AttributeId_Scenario_DocumentationPage, std::string("DOCUMENTATION PAGE")),
-	std::make_tuple(OV_AttributeId_Scenario_AddedSoftwareVersion, std::string("ADDED SOFTWARE VERSION")),
-	std::make_tuple(OV_AttributeId_Scenario_UpdatedSoftwareVersion, std::string("UPDATED SOFTWARE VERSION"))
 };
 
 static std::vector<std::tuple<CIdentifier, std::string, std::string, std::string>> simpleScenarioSettings = {

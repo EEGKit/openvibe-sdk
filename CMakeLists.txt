@@ -154,25 +154,25 @@ add_subdirectory("build-tool/")
 add_subdirectory("common/")
 
 if(NOT(SKIP_OPENVIBE))
-    add_subdirectory("openvibe/")
+	add_subdirectory("openvibe/")
 endif()
 
 if(NOT(SKIP_KERNEL))
-    add_subdirectory("kernel/")
+	add_subdirectory("kernel/")
 endif()
 
 add_subdirectory("modules/")
 
 if(NOT(SKIP_TOOLKIT))
-    add_subdirectory("toolkit/")
+	add_subdirectory("toolkit/")
 endif()
 
 if(NOT(SKIP_PLUGINS))
-    add_subdirectory("plugins/")
+	add_subdirectory("plugins/")
 endif()
 
 if(NOT(SKIP_APPLICATIONS))
-    add_subdirectory("applications/")
+	add_subdirectory("applications/")
 endif()
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/.install-sdk" DESTINATION ${DIST_ROOT})

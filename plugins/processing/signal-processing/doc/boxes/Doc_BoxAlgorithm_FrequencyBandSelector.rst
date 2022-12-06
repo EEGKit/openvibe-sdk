@@ -8,7 +8,7 @@ Frequency Band Selector
    :Author:
       Yann Renard
    :Company:
-      INRIA
+      Inria
 
 .. image:: images/Doc_BoxAlgorithm_FrequencyBandSelector.png
 

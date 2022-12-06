@@ -5,7 +5,20 @@
 /// \author Thibaut Monseigne (Inria).
 /// \version 0.1.
 /// \date 26/10/2018.
-/// \copyright <a href="https://choosealicense.com/licenses/agpl-3.0/">GNU Affero General Public License v3.0</a>.
+/// \copyright Copyright (C) 2022 Inria
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /// 
 ///-------------------------------------------------------------------------------------------------
 
@@ -18,7 +31,7 @@
 #include <cmath>
 #include <sstream>
 
-const std::string SEP = "\n====================\n";
+#define SEP "\n====================\n"	//const std::string cause Clang warning (with new compiler constexpr change defines)
 
 //---------------------------------------------------------------------------------------------------
 /// <summary> Check if double are almost equals. </summary>
@@ -38,7 +51,7 @@ inline bool AlmostEqual(const double a, const double b, const double epsilon = O
 /// <param name="calc">	The calculate value. </param>
 /// <returns>	Error message. </returns>
 /// <typeparam name="T">	Generic numeric type parameter. </typeparam>
-template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+template <typename T, typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 std::string ErrorMsg(const std::string& name, const T ref, const T calc)
 {
 	std::stringstream ss;

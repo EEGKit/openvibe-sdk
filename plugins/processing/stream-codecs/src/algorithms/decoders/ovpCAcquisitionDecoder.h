@@ -10,7 +10,6 @@ namespace StreamCodecs {
 class CAcquisitionDecoder final : public CEBMLBaseDecoder
 {
 public:
-
 	CAcquisitionDecoder();
 	void release() override { delete this; }
 	bool initialize() override;
@@ -25,18 +24,16 @@ public:
 	void closeChild() override;
 
 protected:
-
-	static void appendMemoryBuffer(IMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
+	static void appendMemoryBuffer(CMemoryBuffer* memoryBuffer, const void* buffer, size_t size);
 
 	Kernel::TParameterHandler<uint64_t> op_bufferDuration;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_experimentInfoStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_signalStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_stimulationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_channelLocalisationStream;
-	Kernel::TParameterHandler<IMemoryBuffer*> op_channelUnitsStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_experimentInfoStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_signalStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_stimulationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_channelLocalisationStream;
+	Kernel::TParameterHandler<CMemoryBuffer*> op_channelUnitsStream;
 
 private:
-
 	std::stack<EBML::CIdentifier> m_nodes;
 };
 
@@ -44,16 +41,15 @@ class CAcquisitionDecoderDesc final : public CEBMLBaseDecoderDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Acquisition stream decoder"); }
-	CString getAuthorName() const override { return CString("Yann Renard"); }
-	CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
-	CString getShortDescription() const override { return CString(""); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Stream codecs/Decoders"); }
-	CString getVersion() const override { return CString("1.1"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("0.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "Acquisition stream decoder"; }
+	CString getAuthorName() const override { return "Yann Renard"; }
+	CString getAuthorCompanyName() const override { return "INRIA/IRISA"; }
+	CString getShortDescription() const override { return ""; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Stream codecs/Decoders"; }
+	CString getVersion() const override { return "1.1"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_AcquisitionDecoder; }
 	IPluginObject* create() override { return new CAcquisitionDecoder(); }
 

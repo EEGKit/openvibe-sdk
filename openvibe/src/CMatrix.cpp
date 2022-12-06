@@ -14,14 +14,12 @@ static std::string trim(const std::string& in, const bool space = true, const bo
 {
 	if (in.empty()) { return ""; }
 	std::string res(in);
-	if (comment)
-	{
+	if (comment) {
 		const std::string comments("#");
 		const size_t start = res.find_first_of(comments);
 		if (start != std::string::npos) { res.erase(start); }	// delete from start until the end
 	}
-	if (space)
-	{
+	if (space) {
 		const std::string spaces(" \t\f\v\n\r");
 		const size_t start = res.find_first_not_of(spaces);
 		const size_t end   = res.find_last_not_of(spaces);
@@ -36,8 +34,7 @@ static std::string trim(const std::string& in, const bool space = true, const bo
 //--------------------------------------------------------------------------------
 static bool getCleanLine(std::ifstream& file, std::string& line)
 {
-	if (std::getline(file, line))
-	{
+	if (std::getline(file, line)) {
 		line = trim(line);
 		return true;
 	}
@@ -50,33 +47,48 @@ static bool getCleanLine(std::ifstream& file, std::string& line)
 //--------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CMatrix::setDimensionCount(const size_t count) const
+void CMatrix::setDimensionCount(const size_t count) const
 {
-	if (count == 0) { return false; }				// If dimension number is 0, make nothing
-	clearBuffer();									// Reset Buffer pointer
+	if (count == 0) {	// If dimension number is 0, make nothing
+		std::cerr << "[ERROR] CMatrix::setDimensionCount: Dimension count can't be set to 0." << std::endl;
+		return;
+	}
+	clearBuffer();				// Reset Buffer pointer
 	m_dimSizes->resize(count);
 	m_dimLabels->resize(count);
-	return true;
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CMatrix::setDimensionSize(const size_t dim, const size_t size) const
+void CMatrix::setDimensionSize(const size_t dim, const size_t size) const
 {
-	if (dim >= m_dimSizes->size()) { return false; }// If out of dimension make nothing
-	clearBuffer();									// Reset Buffer pointer
+	if (dim >= m_dimSizes->size()) {	// If out of dimension make nothing
+		std::cerr << "[ERROR] CMatrix::setDimensionSize: Cannot set dimension " << dim << " as the matrix contains only "
+				<< m_dimSizes->size() << " dimensions." << std::endl;
+		return;
+	}
+	clearBuffer();								// Reset Buffer pointer
 	m_dimSizes->at(dim) = size;
 	m_dimLabels->at(dim).resize(size);
-	return true;
 }
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-bool CMatrix::setDimensionLabel(const size_t dim, const size_t idx, const std::string& label) const
+void CMatrix::setDimensionLabel(const size_t dim, const size_t idx, const std::string& label) const
 {
-	if (dim >= m_dimLabels->size() || idx >= m_dimLabels->at(dim).size()) { return false; }
+	// If out of dimension make nothing
+	if (dim >= m_dimLabels->size()) {
+		std::cerr << "[ERROR] CMatrix::setDimensionLabel: Cannot set label in dimension " << dim << " as the matrix contains only "
+				<< m_dimSizes->size() << " dimensions." << std::endl;
+		return;
+	}
+
+	if (idx >= m_dimLabels->at(dim).size()) {
+		std::cerr << "[ERROR] CMatrix::setDimensionLabel: Cannot set label in index " << idx << " of dimension " << dim << " as the dimension contains only "
+				<< m_dimLabels->at(dim).size() << " index." << std::endl;
+		return;
+	}
 	m_dimLabels->at(dim)[idx] = label;
-	return true;
 }
 //--------------------------------------------------------------------------------
 
@@ -98,12 +110,9 @@ bool CMatrix::isDescriptionEqual(const CMatrix& m, const bool checkLabels) const
 	if (getDimensionCount() != m.getDimensionCount()) { return false; }
 	for (size_t i = 0; i < getDimensionCount(); ++i) { if (getDimensionSize(i) != m.getDimensionSize(i)) { return false; } }
 
-	if (checkLabels)
-	{
-		for (size_t i = 0; i < getDimensionCount(); ++i)
-		{
-			for (size_t j = 0; j < getDimensionSize(i); ++j)
-			{
+	if (checkLabels) {
+		for (size_t i = 0; i < getDimensionCount(); ++i) {
+			for (size_t j = 0; j < getDimensionSize(i); ++j) {
 				// I use directly vectors to avoid conversion in char* (conversion is here to keep previous compability)
 				if (m_dimLabels->at(i)[j] != m.m_dimLabels->at(i)[j]) { return false; }
 			}
@@ -245,16 +254,13 @@ bool CMatrix::fromTextFile(const std::string& filename)
 	//---------- Labels ----------
 	bool done = false;
 	std::string line;
-	while (!done && getCleanLine(file, line))
-	{
+	while (!done && getCleanLine(file, line)) {
 		if (line.empty() || line == "[") { continue; }
 		if (line == "]") { done = true; }
-		else
-		{
+		else {
 			std::vector<std::string> labels;
 			size_t n1 = line.find('\"');
-			while (n1 != std::string::npos)
-			{
+			while (n1 != std::string::npos) {
 				line            = line.substr(n1 + 1);			// We remove all until the "
 				const size_t n2 = line.find('\"');				// Find the end of the label
 				if (n2 == std::string::npos) { return false; }	// We found a " but not the second
@@ -278,7 +284,7 @@ bool CMatrix::fromTextFile(const std::string& filename)
 
 	std::stringstream ss;										// cumulate matrix to a stringstream
 	while (getCleanLine(file, line) && line != "]") { if (!line.empty()) { ss << line << std::endl; } }
-	return bufferFromString(ss.str(), "\t", "[ ", " ", "]");			// use stringstream to parse the matrix
+	return bufferFromString(ss.str(), "\t", "[ ", " ", "]");	// use stringstream to parse the matrix
 }
 //--------------------------------------------------------------------------------
 
@@ -292,15 +298,13 @@ bool CMatrix::bufferFromString(const std::string& in, const std::string& before,
 	size_t d               = 0, idx = 0;								// Current Dimension and Current index
 	size_t n1              = 0, n2  = in.find('\n');					// Line delimiter
 
-	while (n2 != std::string::npos && n1 + startskip <= n2 - endskip)
-	{
+	while (n2 != std::string::npos && n1 + startskip <= n2 - endskip) {
 		const size_t i = idx;											// keep actual idx
 		std::istringstream ss(in.substr(n1 + startskip, n2 - endskip));	// We remove the begining and ending of the line
-		double v;
-		while (ss >> v)
-		{
+		double v = 0.0;
+		while (ss >> v) {
 			m_buffer[idx++] = v;										// Add to buffer and increment idx
-			ss.ignore(sep.size());										// Ignore separator between value
+			ss.ignore(std::streamsize(sep.size()));						// Ignore separator between value
 		}
 		if (getDimensionCount() == 1 && idx != getDimensionSize(0)) { return false; }
 		if (getDimensionCount() == 2 && idx - i != getDimensionSize(1)) { return false; }
@@ -319,18 +323,15 @@ std::string CMatrix::bufferToString(const std::string& before, const std::string
 	if (!m_buffer) { resetBuffer(); }
 	std::stringstream ss;
 	ss.precision(10);
-	if (getDimensionCount() == 2)
-	{
+	if (getDimensionCount() == 2) {
 		size_t i = 0;
-		for (size_t row = 0; row < getDimensionSize(0); ++row)
-		{
+		for (size_t row = 0; row < getDimensionSize(0); ++row) {
 			ss << before << start;
 			for (size_t col = 0; col < getDimensionSize(1); ++col) { ss << m_buffer[i++] << sep; }
 			ss << end << std::endl;
 		}
 	}
-	else
-	{
+	else {
 		ss << before << start;
 		for (size_t i = 0; i < m_size; ++i) { ss << m_buffer[i] << sep; }
 		ss << end << std::endl;
@@ -343,8 +344,7 @@ std::string CMatrix::bufferToString(const std::string& before, const std::string
 std::string CMatrix::labelsToString(const std::string& before, const std::string& start, const std::string& sep, const std::string& end) const
 {
 	std::stringstream ss;
-	for (const auto& dimension : *m_dimLabels)
-	{
+	for (const auto& dimension : *m_dimLabels) {
 		ss << before << start;
 		for (const auto& label : dimension) { ss << "\"" << label << "\"" << sep; }
 		ss << end << std::endl;
@@ -378,8 +378,7 @@ void CMatrix::initVector()
 //--------------------------------------------------------------------------------
 void CMatrix::clearBuffer() const
 {
-	if (m_buffer)
-	{
+	if (m_buffer) {
 		delete[] m_buffer;
 		m_buffer = nullptr;
 	}
@@ -390,13 +389,11 @@ void CMatrix::clearBuffer() const
 //--------------------------------------------------------------------------------
 void CMatrix::clearVector()
 {
-	if (m_dimSizes)
-	{
+	if (m_dimSizes) {
 		delete m_dimSizes;
 		m_dimSizes = nullptr;
 	}
-	if (m_dimLabels)
-	{
+	if (m_dimLabels) {
 		delete m_dimLabels;
 		m_dimLabels = nullptr;
 	}

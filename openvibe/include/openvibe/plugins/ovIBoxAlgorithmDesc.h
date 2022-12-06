@@ -59,7 +59,7 @@ public:
 	 * is returned, a default item will be displayed.
 	 *
 	 */
-	virtual CString getStockItemName() const { return CString(""); }
+	virtual CString getStockItemName() const { return ""; }
 
 	//@{
 	/** \name Box modification monitoring */

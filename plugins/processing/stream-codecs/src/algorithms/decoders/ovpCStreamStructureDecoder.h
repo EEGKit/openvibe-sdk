@@ -9,7 +9,6 @@ namespace StreamCodecs {
 class CStreamStructureDecoder final : public CEBMLBaseDecoder
 {
 public:
-
 	CStreamStructureDecoder();
 	void release() override { delete this; }
 	bool initialize() override;
@@ -28,16 +27,15 @@ class CStreamStructureDecoderDesc final : public CEBMLBaseDecoderDesc
 {
 public:
 	void release() override { }
-	CString getName() const override { return CString("Stream Structure Decoder"); }
-	CString getAuthorName() const override { return CString("Jozef Legeny"); }
-	CString getAuthorCompanyName() const override { return CString("Mensia Technologies"); }
-	CString getShortDescription() const override { return CString(""); }
-	CString getDetailedDescription() const override { return CString(""); }
-	CString getCategory() const override { return CString("Stream codecs/Decoders"); }
-	CString getVersion() const override { return CString("1.0"); }
-	CString getSoftwareComponent() const override { return CString("openvibe-sdk"); }
-	CString getAddedSoftwareVersion() const override { return CString("2.0.0"); }
-	CString getUpdatedSoftwareVersion() const override { return CString("0.0.0"); }
+
+	CString getName() const override { return "Stream Structure Decoder"; }
+	CString getAuthorName() const override { return "Jozef Legeny"; }
+	CString getAuthorCompanyName() const override { return "Mensia Technologies"; }
+	CString getShortDescription() const override { return ""; }
+	CString getDetailedDescription() const override { return ""; }
+	CString getCategory() const override { return "Stream codecs/Decoders"; }
+	CString getVersion() const override { return "1.0"; }
+
 	CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_StreamStructureDecoder; }
 	IPluginObject* create() override { return new CStreamStructureDecoder(); }
 

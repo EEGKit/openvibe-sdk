@@ -18,22 +18,19 @@ EGenerationTypes parse_argument(std::string option)
 
 int generate_generator_list(std::vector<CFileGeneratorBase*>& list, EGenerationTypes type, int argc, char** argv)
 {
-	switch (type)
-	{
+	switch (type) {
 		case EGenerationTypes::CPP:
 		{
 			if (argc < 4) { return -1; }
 			CFileGeneratorBase* gen = new CCppDefineGenerator();
-			if (!gen->openFile(argv[3]))
-			{
+			if (!gen->openFile(argv[3])) {
 				std::cerr << "Unable to open " << argv[3] << std::endl;
 				return -1;
 			}
 			list.push_back(gen);
 
 			gen = new CCppCodeGenerator();
-			if (!gen->openFile(argv[4]))
-			{
+			if (!gen->openFile(argv[4])) {
 				std::cerr << "Unable to open " << argv[4] << std::endl;
 				return -1;
 			}
@@ -44,8 +41,7 @@ int generate_generator_list(std::vector<CFileGeneratorBase*>& list, EGenerationT
 		case EGenerationTypes::MATLAB:
 		{
 			CFileGeneratorBase* gen = new CMatlabGenerator();
-			if (!gen->openFile(argv[3]))
-			{
+			if (!gen->openFile(argv[3])) {
 				std::cerr << "Unable to open " << argv[3] << std::endl;
 				return -1;
 			}
@@ -54,8 +50,7 @@ int generate_generator_list(std::vector<CFileGeneratorBase*>& list, EGenerationT
 		}
 		case EGenerationTypes::PYTHON:
 		case EGenerationTypes::LUA:
-		case EGenerationTypes::UNKNOWN:
-		default:
+		case EGenerationTypes::UNKNOWN: default:
 		{
 			std::cerr << "Unhandle type. Fatal error" << std::endl;
 			return -1;
@@ -73,8 +68,7 @@ int main(int argc, char** argv)
 
 	std::ifstream file(argv[2]);
 	std::string name, id, hexaCode;
-	while (file >> name >> id >> hexaCode)
-	{
+	while (file >> name >> id >> hexaCode) {
 		SStimulation temp = { name, id, hexaCode };
 		stimulations.push_back(temp);
 	}

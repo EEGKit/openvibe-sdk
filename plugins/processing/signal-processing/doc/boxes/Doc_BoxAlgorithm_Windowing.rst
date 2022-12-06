@@ -8,7 +8,7 @@ Windowing
    :Author:
       Laurent Bonnet
    :Company:
-      Mensia Technologies SA
+      Mensia Technologies
 
 
 .. image:: images/Doc_BoxAlgorithm_Windowing.png

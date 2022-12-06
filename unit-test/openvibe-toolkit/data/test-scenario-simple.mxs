@@ -197,16 +197,8 @@ and unicode characters 日本語</Text>
 	</Comments>
 	<Attributes>
 		<Attribute>
-			<Identifier>(0x079d1f09, 0x667c7871)</Identifier>
-			<Value>ADDED SOFTWARE VERSION</Value>
-		</Attribute>
-		<Attribute>
 			<Identifier>(0x20c6d158, 0xfe90aadd)</Identifier>
 			<Value>(0xa201286e, 0x9bdd6498)</Value>
-		</Attribute>
-		<Attribute>
-			<Identifier>(0x60bc58ab, 0x7a1b4d83)</Identifier>
-			<Value>UPDATED SOFTWARE VERSION</Value>
 		</Attribute>
 		<Attribute>
 			<Identifier>(0x790d75b8, 0x3bb90c33)</Identifier>

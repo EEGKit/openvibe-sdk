@@ -1,11 +1,11 @@
 ///-------------------------------------------------------------------------------------------------
 /// 
-/// \file CStimulationSetTests.hpp
+/// \file CStimulationSetTest.hpp
 /// \brief Test Definitions for OpenViBE Stimulation Set Class.
 /// \author Thibaut Monseigne (Inria).
 /// \version 1.0.
 /// \date 08/11/2021.
-/// \copyright (C) 2021 INRIA
+/// \copyright Copyright (C) 2022 Inria
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Affero General Public License as published
@@ -65,7 +65,7 @@ TEST_F(CStimulationSet_Tests, Constructor)
 //---------------------------------------------------------------------------------------------------
 TEST_F(CStimulationSet_Tests, Accessor)
 {
-	OpenViBE::CStimulationSet res;
+	const OpenViBE::CStimulationSet res;
 	res.resize(3);
 	res.setId(0, m_set.getId(0));
 	res.setDate(0, m_set.getDate(0));

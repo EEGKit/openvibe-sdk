@@ -14,7 +14,6 @@ namespace StreamCodecs {
 class CEBMLBaseDecoder : public Toolkit::TAlgorithm<IAlgorithm>
 {
 public:
-
 	CEBMLBaseDecoder();
 	void release() override { delete this; }
 	bool initialize() override;
@@ -30,12 +29,11 @@ public:
 	virtual void closeChild() { }
 
 protected:
-
 	EBML::IReaderHelper* m_readerHelper = nullptr;
 	EBML::IReader* m_reader             = nullptr;
 	EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_callbackProxy;
 
-	Kernel::TParameterHandler<IMemoryBuffer*> ip_bufferToDecode;
+	Kernel::TParameterHandler<CMemoryBuffer*> ip_bufferToDecode;
 };
 
 class CEBMLBaseDecoderDesc : public IAlgorithmDesc

@@ -7,21 +7,21 @@ include("FindSourceRCProperties")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_link_libraries(${PROJECT_NAME}
-                      openvibe-common)
+					  openvibe-common)
 
 target_include_directories(${PROJECT_NAME}
-                           PRIVATE include/socket
-                           PUBLIC  include)
+						   PRIVATE include/socket
+						   PUBLIC  include)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-                      VERSION ${PROJECT_VERSION}
-                      SOVERSION ${PROJECT_VERSION_MAJOR}
-                      FOLDER ${MODULES_FOLDER}
+					  VERSION ${PROJECT_VERSION}
+					  SOVERSION ${PROJECT_VERSION_MAJOR}
+					  FOLDER ${MODULES_FOLDER}
 )
 
 target_compile_options(${PROJECT_NAME}
-                       PRIVATE -DSocket_Exports
-                       PUBLIC -DSocket_Shared 
+					   PRIVATE -DSocket_Exports
+					   PUBLIC -DSocket_Shared 
 )
 
 # ---------------------------------
@@ -30,14 +30,14 @@ target_compile_options(${PROJECT_NAME}
 # Adds include path
 # ---------------------------------
 if(WIN32)
-    include("OvSetWindowsSDKPath")
-    find_library(LIB_STANDARD_MODULE_WINSOCK ws2_32 ${OV_MS_SDK_PATH}/lib)
-    if(LIB_STANDARD_MODULE_WINSOCK)
-        message(STATUS "  Found ws2_32...")
-        target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINSOCK})
-    else(LIB_STANDARD_MODULE_WINSOCK)
-        message(STATUS "  FAILED to find ws2_32...")
-    endif(LIB_STANDARD_MODULE_WINSOCK)
+	include("OvSetWindowsSDKPath")
+	find_library(LIB_STANDARD_MODULE_WINSOCK ws2_32 ${OV_MS_SDK_PATH}/lib)
+	if(LIB_STANDARD_MODULE_WINSOCK)
+		message(STATUS "  Found ws2_32...")
+		target_link_libraries(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINSOCK})
+	else(LIB_STANDARD_MODULE_WINSOCK)
+		message(STATUS "  FAILED to find ws2_32...")
+	endif(LIB_STANDARD_MODULE_WINSOCK)
 endif(WIN32)
 
 # ---------------------------------
@@ -50,8 +50,8 @@ SET_BUILD_PLATFORM()
 # Install files
 # -----------------------------
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION ${DIST_BINDIR}
-        LIBRARY DESTINATION ${DIST_LIBDIR}
-        ARCHIVE DESTINATION ${DIST_LIBDIR})
+		RUNTIME DESTINATION ${DIST_BINDIR}
+		LIBRARY DESTINATION ${DIST_LIBDIR}
+		ARCHIVE DESTINATION ${DIST_LIBDIR})
 
 INSTALL(DIRECTORY include/ DESTINATION ${DIST_INCLUDEDIR} COMPONENT headers FILES_MATCHING PATTERN "*.h")

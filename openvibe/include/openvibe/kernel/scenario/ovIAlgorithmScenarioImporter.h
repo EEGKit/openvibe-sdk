@@ -3,7 +3,7 @@
 #include "../../plugins/ovIAlgorithm.h"
 #include "../../plugins/ovIAlgorithmDesc.h"
 #include "../algorithm/ovIAlgorithmProto.h"
-#include "../../ovIMemoryBuffer.h"
+#include "../../CMemoryBuffer.hpp"
 
 #define OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario   		OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
 #define OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer		OpenViBE::CIdentifier(0x600463A3, 0x474B7F66)
@@ -26,7 +26,7 @@ public:
 class OV_API IAlgorithmScenarioImporter : public IAlgorithm
 {
 public:
-	virtual bool import(IAlgorithmScenarioImporterContext& ctx, const IMemoryBuffer& buffer) = 0;
+	virtual bool import(IAlgorithmScenarioImporterContext& ctx, const CMemoryBuffer& buffer) = 0;
 };
 
 
