@@ -84,7 +84,7 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 		m_encoders[i].getInputSamplingRate().setReferenceTarget(m_decoder.getOutputSamplingRate());
 		m_oMatrix[i] = m_encoders[i].getInputMatrix();
 	}
-
+	
 	// Settings
 	m_type  = EFilterType(uint64_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)));	// cast Needed to uint before enum
 	m_order = size_t(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
@@ -95,15 +95,24 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 		m_frenquencies[i].push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2 + i * 2));
 		m_frenquencies[i].push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3 + i * 2));
 		// Setting Validation
-		OV_ERROR_UNLESS_KRF(m_frenquencies[i][0] > 0 || m_type!= EFilterType::LowPass,
-							"Invalid low cut-off frequency [" << m_frenquencies[i][0] << "] (expected value > 0 for Low Pass)", Kernel::ErrorType::BadSetting);
-		OV_ERROR_UNLESS_KRF(m_frenquencies[i][0] >= 0, "Invalid low cut-off frequency [" << m_frenquencies[i][0] << "] (expected value >= 0)",
-							Kernel::ErrorType::BadSetting);
-		OV_ERROR_UNLESS_KRF(m_frenquencies[i][1] > 0, "Invalid high cut-off frequency [" << m_frenquencies[i][1] << "] (expected value > 0)",
-							Kernel::ErrorType::BadSetting);
-		OV_ERROR_UNLESS_KRF(m_frenquencies[i][0] <= m_frenquencies[i][1],
-							"Invalid cut-off frequencies [" << m_frenquencies[i][0] << "," << m_frenquencies[i][1]
-							<<"] (expected low frequency <= high frequency)", Kernel::ErrorType::BadSetting);
+		if (m_type == EFilterType::LowPass && m_frenquencies[i][1] <= 0) {
+			OV_ERROR_KRF("Invalid high cut-off frequency [" << m_frenquencies[i][1] << 
+				"](expected value > 0 for low-pass filters)", Kernel::ErrorType::BadSetting);
+		}		
+		if (m_type == EFilterType::HighPass && m_frenquencies[i][0] <= 0) {
+			OV_ERROR_KRF("Invalid low cut-off frequency [" << m_frenquencies[i][0] <<
+				"] (expected value > 0 for high-pass filters)", Kernel::ErrorType::BadSetting);
+		}
+		if (m_type == EFilterType::BandPass || m_type == EFilterType::BandStop) {
+			if (m_frenquencies[i][0] < 0) {
+				OV_ERROR_KRF("Invalid low cut-off frequency [" << m_frenquencies[i][0] <<
+					"](expected value >= 0 for band-pass and band-stop filters)", Kernel::ErrorType::BadSetting);
+			}			
+			if (m_frenquencies[i][1] <= m_frenquencies[i][0]) {
+				OV_ERROR_KRF("Invalid high cut-off frequency [" << m_frenquencies[i][1] <<
+					"](expected High cut-off frequency > Low cut-off frequency for band-pass and band-stop filters)", Kernel::ErrorType::BadSetting);
+			}
+		}
 		// Create Default Parameter
 		setParameter(i);
 	}
